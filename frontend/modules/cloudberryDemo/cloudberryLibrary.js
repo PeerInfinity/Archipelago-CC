@@ -35,6 +35,7 @@ import {
 } from './cloudberryZonePlan.js';
 import {
     cloudberryGenerator, cloudberryRefusalMessage, ensureCloudberryLevel, lookupCloudberryLevel,
+    settleCloudberryFailure, takeSettledCloudberryFailure,
 } from './cloudberryGeneration.js';
 import {
     CLOUDBERRY_GAME_ID, CLOUDBERRY_PAYLOAD_VERSION, CLOUDBERRY_LIBRARY_ITEMS, CLOUDBERRY_ITEM_NAMES,
@@ -347,21 +348,29 @@ export function buildCloudberryZoneSpecs(base, regionParams = {}) {
  * the cache; on a miss it YIELDS `{ type: 'attempt', …, await: <promise> }` — the
  * pipeline's asynchronous drivers await it — and reads the result after. A synchronous
  * caller cannot wait, so a miss there is refused by name; the generation it started keeps
- * running and is cached, so the same call made again once it is done succeeds (the APWorld
- * Editor's regenerate: press again).
+ * running and is cached, so the same call made again once it is done succeeds — or, if the
+ * generation FAILED, names that failure once (`takeSettledCloudberryFailure`). The APWorld
+ * Editor's Generate ▸ does exactly that in one press: it awaits the yielded promise
+ * (`procgenPipelineEngine.collectPendingGenerations`) and asks once more.
  *
  * `ctx.entrance` (the engine's zone context): the region's way back and entry gate.
  */
 export function* generateCloudberryZoneForSpecsGen(specs = {}, ctx = {}) {
     const plan = planCloudberryLevel(specs, ctx);
-    let result = lookupCloudberryLevel(plan);
+    let result = lookupCloudberryLevel(plan) ?? takeSettledCloudberryFailure(plan);
     if (!result) {
         const box = {};
-        const promise = ensureCloudberryLevel(plan).then((r) => { box.result = r; return r; });
+        const promise = ensureCloudberryLevel(plan).then((r) => {
+            box.result = r;
+            settleCloudberryFailure(plan, r);
+            return r;
+        });
         yield {
             type: 'attempt', attempt: 1, attempts: 1, substrate: CLOUDBERRY_SUBSTRATE_ID,
             note: `generating Cloudberry level ${plan.region_id}`, await: promise,
         };
+        // An asynchronous driver received the result (a failure too): it is delivered.
+        if (box.result) takeSettledCloudberryFailure(plan);
         result = box.result ?? lookupCloudberryLevel(plan);
         if (!result) {
             throw new Error(cloudberryGenerator()

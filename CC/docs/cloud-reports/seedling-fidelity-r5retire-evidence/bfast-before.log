@@ -1,0 +1,772 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/tmp/claude-0/base-wt[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/r5Totem.test.js [2m([22m[2m133 tests[22m[2m)[22m[33m 8315[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ the burn opens its OWN 2x2 — the "door" was the flood's policy [33m 349[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ each bait ends at its declared park, with ZERO contacts [33m 379[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ …and the third park PRESSES `button@248,232` — the cover opens [33m 547[2mms[22m[39m
+     [33m[2m✓[22m[39m drives all three baits, and each starts where the last one ended [33m 1056[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ …then six pushes, a fade nobody holds, and the fourth ceremony [33m 775[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ …with the crusher still on `button@248,232` and never once touched [33m 1144[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ A's chain goes W then S then E in one bait, 208 px, zero contacts [33m 592[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ walks A and then B to their parks, from the arrival, with zero contacts [33m 357[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ walks all three chains from the arrival, both bodies into the top room [33m 556[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ …and `tapeFormat` HAS a field for it now — checked, not described [33m 472[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r8Acceptance.test.js [2m([22m[2m94 tests[22m[2m)[22m[33m 9926[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the two exposed tapes are DERIVED by driving the roster, not declared [33m 9236[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/watchOverlays.test.js [2m([22m[2m88 tests[22m[2m)[22m[33m 9869[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ r8-solve-18: BOTH spinner paths, press markers at the recorded ticks, and ZERO damage markers [33m 389[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ L39's rope is SWAPPED, not gone — the builder's own shrunk box [33m 2152[2mms[22m[39m
+     [33m[2m✓[22m[39m a SPEAR press is THREE rows with spearGameTest ON: the thrust, then repeats 2 and 4 on T+3 / T+5 [33m 2384[2mms[22m[39m
+     [33m[2m✓[22m[39m ⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound (spearGameTest OFF) [33m 2329[2mms[22m[39m
+[centralRegistry] CentralRegistry initialized
+[discoveryState] [DiscoveryState] Constructed
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///tmp/claude-0/base-wt/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (file:///tmp/claude-0/base-wt/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at file:///tmp/claude-0/base-wt/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async loadRegistry (file:///tmp/claude-0/base-wt/scripts/procgen/reference/registry.mjs:99:17)
+    at async buildRegistry (file:///tmp/claude-0/base-wt/scripts/procgen/reference/registry.mjs:214:36)
+    at async file:///tmp/claude-0/base-wt/scripts/procgen/generate-procgen-reference.mjs:104:18
+ [32m✓[39m frontend/modules/seedlingDemo/dangerMap.test.js [2m([22m[2m62 tests[22m[2m)[22m[33m 13085[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the map really constrains the search — the two plans differ [33m 12103[2mms[22m[39m
+⚠ trackedFilesIn(d): git ls-files failed (Command failed: git -C /tmp/tracked-files-wG5ZPA ls-files -z -- d) — DEGRADED to the directory listing, untracked files included
+ [31m❯[39m frontend/modules/procgenDocs/generated.test.js [2m([22m[2m55 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m10 skipped[39m[2m)[22m[33m 9965[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files[39m[33m 9020[2mms[22m[39m
+     [32m✓[39m ⛔ carries the GENERATED header and NO timestamp — a stamp would make every regeneration a diff and the gate unfailable[32m 20[2mms[22m[39m
+     [32m✓[39m ⛔ every nested row is frozen — a reader cannot mutate the table it renders[32m 14[2mms[22m[39m
+     [32m✓[39m ⛔ every object's keys are SORTED — the diff of a regeneration is the diff of the CODE, never of a key order nobody chose[32m 33[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every URL parameter names at least one glossary term, and every term it names EXISTS[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every read*/write* export of urlParams.js is named (21 of them)[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every parameter one of them touches appears on at least one PAGE[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ every parameter carries a codec, a provenance and a default field or an explicit `null` — never a blank row[32m 20[2mms[22m[39m
+     [32m✓[39m ⛓ the RETIRED parameters carry the refusal the code ITSELF produced[32m 1[2mms[22m[39m
+     [32m✓[39m ⛔ the two pages' DEFAULTS are the readers' own answers, not a copy[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every PALETTE row of both Seedling biomes and of the maze[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every EXCLUDED row, with its cause and its measurement[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every ELEMENT_TABLE head, with its `needs` and its parameter schema[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every SKELETON KIND, per substrate, with `offered` telling the two apart[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓ the biome DEFAULT element spec, and the two biomes differ by exactly the sword-gated head[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓ the DEFAULT-IN column: which biome defaults draw each head (the ⚖ Q13 fold)[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ KILL_LOCK_TEMPLATES is EMPTY, and the table SAYS SO rather than omitting the row[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every name in KILL_GATE_REFUSALS / BLOCK_POCKET_REFUSALS / SEEDLING_ELEMENT_REFUSALS[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every loop-core ENUM value — VERDICT, ATTEMPT, KEEP_POLICY, KEPT_KIND, STOP[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ every row says WHICH kind of source it came from, and a constant row says whether the SCAN found it firing[32m 19[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ the SCAN is not empty for any source — an empty scan would make every coverage claim vacuous[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ the P3a findings, pinned — FOUR OF FIVE FIXED by P5[32m 2[2mms[22m[39m
+     [32m✓[39m ⛓⛓ exactly ONE refusal source is still a literal scan, and it is the one the record names as DELIBERATELY not fixed[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ replaces ONLY the text between the markers — the prose survives byte-for-byte[32m 1[2mms[22m[39m
+     [32m✓[39m ⛔ is IDEMPOTENT — writing the same body twice is the same file, which is what makes `--check` = regenerate-no-diff meaningful[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ REFUSES BY NAME when the BEGIN marker is missing[32m 1[2mms[22m[39m
+     [32m✓[39m ⛔ REFUSES BY NAME when the END marker is missing[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ REFUSES BY NAME when a marker is DUPLICATED — two regions for one table is a file where half the table rots unwatched[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ REFUSES BY NAME when the markers are INVERTED[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ the markers name the GENERATOR, so a reader who finds one knows what rewrites it[32m 0[2mms[22m[39m
+     [2m[90m↓[39m[22m ⛓⛓ every entry the REGISTRY returns is a column, in the same order
+     [2m[90m↓[39m[22m ⛓⛓ every FIELD on every entry is a row — the union of `Object.keys`, so a substrate that grows a field lands here without an edit
+     [2m[90m↓[39m[22m ⛓⛓ every `loopSupport.*` flag any entry declares is its OWN row — the expandable parents are derived from the doc, never listed
+     [2m[90m↓[39m[22m ⛔ a cell says PRESENT exactly when the entry carries the field
+     [2m[90m↓[39m[22m ⛔ every library the generator imports LOADED headless — and a failure would be NAMED rather than a quietly missing column
+     [2m[90m↓[39m[22m ⛔ every row is in a GROUP, and the groups partition the rows
+     [2m[90m↓[39m[22m ⛓⛓ the P3b registry findings, pinned — ALL EIGHT FIXED by P5
+     [2m[90m↓[39m[22m ⛓⛓ every statement id of the SOURCE module is a row of the page's tables
+     [2m[90m↓[39m[22m ⛓⛓ every loaded entry's label heads a card, and is a column, in registry order
+     [2m[90m↓[39m[22m ⛓ the checked-in module equals the in-memory build, and the region is its markdown
+     [32m✓[39m ⛓⛓ the TRACKED LISTING is the source — every tracked `.mjs` is a row, in order (524 of them); an UNTRACKED scratch file is not[32m 1[2mms[22m[39m
+     [32m✓[39m ⛔ every row carries a category, a path and a docblock STYLE or an explicit null — never a blank row[32m 47[2mms[22m[39m
+     [32m✓[39m ⛓⛓ a BROWSER row is exactly a file that imports playwright — asked of the files, not of the table[32m 56[2mms[22m[39m
+     [32m✓[39m ⛓ the categories partition the rows, and the counts add up[32m 2[2mms[22m[39m
+     [32m✓[39m ⛓⛓ the flags of `generate-seedling-level.mjs`, by hand[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ the P3b instrument findings, pinned — ALL SIX FIXED by P5[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓⛓ a citation MARKED `(never written)` or `(retired)` is dropped, and the marked set is published[32m 32[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every `.md` on disk is a row, README excepted (28)[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓⛓ …in the DECLARED reading order, not alphabetically — and the declaration covers the directory exactly, so a new document cannot arrive unindexed[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓⛓ every PAGE is a row too — three of README's entries point at a page rather than a `.md`, and dropping them would be a table that stopped covering its subject[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ every row carries the document's OWN H1 and its OWN first paragraph — read out of the file, never a summary kept here[32m 126[2mms[22m[39m
+     [32m✓[39m ⛓ the word count is the file's own, and the totals add up[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓ every row carries a heading count, and the corpus total is the rows PLUS the index file — two different denominators, said out loud[32m 1[2mms[22m[39m
+     [32m✓[39m ⛔ an UNTRACKED file is not listed; a COMMITTED and a newly ADDED one are[32m 138[2mms[22m[39m
+     [32m✓[39m ⛓ with no repository it DEGRADES to the directory listing, untracked included[32m 10[2mms[22m[39m
+file:///tmp/claude-0/base-wt/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///tmp/claude-0/base-wt/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-p4ehVE/snippet-1279944504.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ [32m✓[39m scripts/procgen/boxLock.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 17997[2mms[22m[39m
+     [33m[2m✓[22m[39m lets exactly ONE of eight simultaneous takers hold the box; the rest refuse [33m 3233[2mms[22m[39m
+     [33m[2m✓[22m[39m serialises four QUEUED simultaneous takers — every one takes, no two hold at once [33m 8907[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a QUEUED taker die on SIGTERM — it never takes the box later [33m 2617[2mms[22m[39m
+     [33m[2m✓[22m[39m makes a REAL browser gate refuse before it spends anything [33m 687[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r5Acceptance.test.js [2m([22m[2m86 tests[22m[2m)[22m[32m 100[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/arrowTrap.test.js [2m([22m[2m49 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/contactFidelity.test.js [2m([22m[2m62 tests[22m[2m)[22m[33m 3070[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick [33m 601[2mms[22m[39m
+[90mstdout[2m | frontend/modules/procgenDocs/docsRender.test.js[2m > [22m[2m⛓ the biggest document — the one the budget is about[2m > [22m[2mprints what it costs to render, so a page budget is not a guess
+[22m[39mseedling-bot-log.md: 1859130 bytes, 27362 lines → 382ms in node
+
+ [32m✓[39m frontend/modules/procgenDocs/docsRender.test.js [2m([22m[2m46 tests[22m[2m)[22m[33m 597[2mms[22m[39m
+     [33m[2m✓[22m[39m prints what it costs to render, so a page budget is not a guess [33m 395[2mms[22m[39m
+[90mstdout[2m | frontend/modules/procgenDocs/docLinks.test.js[2m > [22m[2mthe corpus census — printed, then pinned[2m > [22m[2mresolves all 387 links into five kinds and no others
+[22m[39mthe procgen corpus: 29 documents, 387 links — 292 doc, 22 external, 40 repo, 33 same-doc
+
+ [32m✓[39m frontend/modules/procgenDocs/docLinks.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/enemyDamage.test.js [2m([22m[2m47 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r5Swim.test.js [2m([22m[2m37 tests[22m[2m)[22m[33m 709[2mms[22m[39m
+     [33m[2m✓[22m[39m the SHIPPED predicate says what the pair is a witness for [33m 428[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/procgenRoam.test.js [2m([22m[2m23 tests[22m[2m)[22m[33m 6975[2mms[22m[39m
+     [33m[2m✓[22m[39m winding 14x14 seed 12, post-sword: certified at U4b; refuses by the DWELL since U6, with the count [33m 324[2mms[22m[39m
+     [33m[2m✓[22m[39m rooms s10 post-sword: COSTS — the route crosses the bodies (101 vs 69 ticks) (dashSpinnerForecast OFF) [33m 3509[2mms[22m[39m
+     [33m[2m✓[22m[39m rooms s10 post-sword: INERT — the struck bodies are priced where the strike left them (69 vs 69 ticks) [33m 1824[2mms[22m[39m
+     [33m[2m✓[22m[39m post-sword: drawn seed 16807 builds at re-roll 0, the through-room REFUSED, the torch kept, and location 0 on the goal cell [33m 384[2mms[22m[39m
+ [32m✓[39m scripts/procgen/gateRoster.test.js [2m([22m[2m42 tests[22m[2m)[22m[33m 1599[2mms[22m[39m
+     [33m[2m✓[22m[39m the roster reads the declarations off real gates [33m 317[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/levelRunStateDigest.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 2144[2mms[22m[39m
+     [33m[2m✓[22m[39m reading it changes nothing: a run digested every tick walks the tape as one that never is [33m 432[2mms[22m[39m
+     [33m[2m✓[22m[39m digest EQUAL below T = 355 and DIFFERENT from T on — the clear lands at T, in place and persist only [33m 685[2mms[22m[39m
+     [33m[2m✓[22m[39m a run with NO row (pass 1) digests equal below T too; its own advance at T is what tells (the kill-lock arm) [33m 380[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/pressKillCost.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 45768[2mms[22m[39m
+     [33m[2m✓[22m[39m a different world under the same run and the same opts re-derives the cells (the world is keyed by identity) [33m 368[2mms[22m[39m
+     [33m[2m✓[22m[39m answers what hammerHitsPlayer answers, every phase, boxes on and off the line [33m 4974[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-18 (presses land, bodies die): every row equal, and the shift is taken [33m 1330[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-press-glide (a block glides while the bodies move): every row equal [33m 5950[2mms[22m[39m
+     [33m[2m✓[22m[39m the kill-start derivation on spinner@880,848, continuation and all: the same strike ON and OFF [33m 2154[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-18 at residue 5: the same keys, records and trace ON and OFF, every cache exercised [33m 14837[2mms[22m[39m
+     [33m[2m✓[22m[39m the kill-start derivation, then two refused ones on the same run (lines carried): the same answers (the strike floor OFF) [33m 2068[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the strike floor ON: P2 keeps the same answers and the same counts (the far refusal's `etaSkipped` 8,084 both ways) [33m 4029[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-18 at residue 5: the same keys, records and trace with P2 ON and OFF (P1 ON both), the levers exercised [33m 9945[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverDeadline.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 8658[2mms[22m[39m
+     [33m[2m✓[22m[39m no hook, a `null` hook and a counter that never trips are byte-identical [33m 328[2mms[22m[39m
+     [33m[2m✓[22m[39m swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves [33m 3045[2mms[22m[39m
+     [33m[2m✓[22m[39m `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves) [33m 1432[2mms[22m[39m
+     [33m[2m✓[22m[39m `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why [33m 469[2mms[22m[39m
+     [33m[2m✓[22m[39m untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged [33m 2344[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/campaignChain.test.js [2m([22m[2m19 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/watchGenOverlay.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 688[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ …even when the certification's GEOMETRY is attached to the model [33m 528[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r5Shaft.test.js [2m([22m[2m28 tests[22m[2m)[22m[32m 232[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/dialogueAutoAdvance.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 23703[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the two derivations part on EXACTLY ONE committed tape, and the GAME picked it [33m 23621[2mms[22m[39m
+ [32m✓[39m scripts/procgen/rowInputKey.test.js [2m([22m[2m76 tests[22m[2m)[22m[33m 4946[2mms[22m[39m
+     [33m[2m✓[22m[39m every KEYED row whose code or spawn reaches a reader DECLARES a code population holding it [33m 3871[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgress.test.js [2m([22m[2m58 tests[22m[2m)[22m[33m 164669[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 18226[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 694[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L3 plain walk: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21), the strike floor at its shipped ON: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 13047[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count [33m 8184[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall [33m 6124[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises [33m 1901[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up [33m 11603[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up [33m 23397[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message [33m 2012[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read [33m 8468[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read [33m 15544[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read [33m 9812[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read [33m 19342[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses [33m 11592[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null [33m 12321[2mms[22m[39m
+[90mstdout[2m | frontend/modules/seedlingDemo/observationTolerance.test.js[2m > [22m[2mexact mode IS diffObservationStreams[2m > [22m[2magrees with it on all 293 committed recordings vs the model, and on 3 perturbations of each
+[22m[39mexact-mode equivalence: {"recorded":293,"pass":292,"fail":1,"nudged":293,"late":61,"swapped":293}
+
+ [32m✓[39m frontend/modules/seedlingDemo/observationTolerance.test.js [2m([22m[2m112 tests[22m[2m)[22m[33m 25725[2mms[22m[39m
+     [33m[2m✓[22m[39m agrees with it on all 293 committed recordings vs the model, and on 3 perturbations of each [33m 25672[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStagedHits.test.js [2m([22m[2m28 tests[22m[2m)[22m[33m 16196[2mms[22m[39m
+     [33m[2m✓[22m[39m the proof steps forks that carry the staging: at hitsMax − 1 every leaf is a death [33m 2239[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (⛓ FORCEDHITXC D2): at hitsMax − 1 the game's hitless X+C still crosses — no leaf of it is hit, so none dies [33m 1840[2mms[22m[39m
+     [33m[2m✓[22m[39m staged 0 (= absent): the FORCEDHIT plan, 4 ticks, billing the one hit [33m 3392[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (⛓ FORCEDHITXC D2) staged 0: the game's hitless X+C, 4 ticks, nothing billed [33m 3409[2mms[22m[39m
+     [33m[2m✓[22m[39m staged hits 1 of 3: the proof holds, and the budget refuses the crossing BY NAME (hits now 1, margin 1) [33m 2679[2mms[22m[39m
+     [33m[2m✓[22m[39m staged hits 2 of 3 (hitsMax − 1): every proof leaf DIES, so no crossing is planned — never a death [33m 2428[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js [2m([22m[2m36 tests[22m[2m)[22m[33m 360[2mms[22m[39m
+     [33m[2m✓[22m[39m end to end: L0 flag 4 from L13's stairs with the Sword — the mapped goal SOLVES and the flag lands on the ledger [33m 307[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/decisionTrace.test.js [2m([22m[2m25 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r5Chain.test.js [2m([22m[2m25 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingCanCross.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 17014[2mms[22m[39m
+     [33m[2m✓[22m[39m can: swordless L14 from the captured arrival, and the witness is the committed tape's keys [33m 1900[2mms[22m[39m
+     [33m[2m✓[22m[39m cannot: L22 from L25 toward L29, bare — the re-planned corridor stalls short of (88,88), a true refusal [33m 468[2mms[22m[39m
+     [33m[2m✓[22m[39m fresh-built and captured L14 arrivals give the same verdict and the same plan [33m 2549[2mms[22m[39m
+     [33m[2m✓[22m[39m the same call twice is the same verdict, plan and work; no hook at all is the same plan [33m 2888[2mms[22m[39m
+     [33m[2m✓[22m[39m L16 → L18 from L15 over {sword, conch}: {sword} is minimal and PROVED (route census), and {sword, conch} also CAN (ROBUST D3) [33m 6212[2mms[22m[39m
+     [33m[2m✓[22m[39m the default dash mode is the solver's, and its L16 → L17 plan IS `dash-l16-sword-all`, every field but its prose [33m 1990[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityApBosses.test.js [2m([22m[2m22 tests[22m[2m)[22m[33m 22656[2mms[22m[39m
+     [33m[2m✓[22m[39m fresh, Fire from the server: the fight anyway, {32,3} then {32,4}, no grant, no {31,29}; burn, pit [33m 9649[2mms[22m[39m
+     [33m[2m✓[22m[39m fresh, NO Fire: the fight and both reports, then the burn is refused BY NAME (a precondition) [33m 8248[2mms[22m[39m
+     [33m[2m✓[22m[39m slot held, wand: the sword is added and collected, {12,1} written in band, NO hasDarkSword grant [33m 2294[2mms[22m[39m
+     [33m[2m✓[22m[39m the sword ALREADY from the server and the slot held: she still adds it (the location is unreported) [33m 2199[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/entityBlocks.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 2313[2mms[22m[39m
+     [33m[2m✓[22m[39m is in neither the simulation closure nor the solver-family closure [33m 1251[2mms[22m[39m
+     [33m[2m✓[22m[39m is imported by nothing but its own test [33m 405[2mms[22m[39m
+     [33m[2m✓[22m[39m …and a grep of `entities('<family>')` over the family files finds the same files [33m 529[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingSkinRenderer.test.js [2m([22m[2m24 tests[22m[2m)[22m[33m 937[2mms[22m[39m
+     [33m[2m✓[22m[39m state, readState and every report are byte-identical with the renderer on and off [33m 814[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityMovingWait.test.js [2m([22m[2m25 tests[22m[2m)[22m[33m 10693[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 1015[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1007 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 667[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 1589[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 851[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 442[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1106 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 413[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 650[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 593[2mms[22m[39m
+     [33m[2m✓[22m[39m a tick off the previewed path fails "not the previewed" [33m 752[2mms[22m[39m
+     [33m[2m✓[22m[39m a pace with no stopping condition is refused before a tick is spent [33m 608[2mms[22m[39m
+     [33m[2m✓[22m[39m cycles that end before the lock opens fail with the still wait's bound sentence [33m 880[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 777[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 516[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 370[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 372[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeDeclarations.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 1933[2mms[22m[39m
+     [33m[2m✓[22m[39m L5: the solver KILLS from a live mid-room state, the lock opens on the LIVE run, the page crosses — end digest identical to the shadow [33m 761[2mms[22m[39m
+     [33m[2m✓[22m[39m the clear is reported ONCE as the game reports it ("<seq>|5|0|0"), and the host's check binding over its real tables makes NO location check of it [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m L8: no PendingDeclaration any more — ONE solve, no decline, the run clears {8,0} then {8,1} itself and crosses to L9 [33m 561[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLadder2.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 948[2mms[22m[39m
+     [33m[2m✓[22m[39m every arm agrees on K = 0, and each class has a positive control [33m 482[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityWatcher.test.js [2m([22m[2m28 tests[22m[2m)[22m[33m 2122[2mms[22m[39m
+     [33m[2m✓[22m[39m the solver crosses L37 past the silent watcher into L38 [33m 1042[2mms[22m[39m
+     [33m[2m✓[22m[39m the solver crosses L37 past the silent watcher into L44 [33m 706[2mms[22m[39m
+ [32m✓[39m scripts/procgen/checkProcgenHelp.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 37639[2mms[22m[39m
+     [33m[2m✓[22m[39m an import door killed at the short ceiling reports timedOut + the ceiling that killed it [33m 2719[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ MUTANT: with `timedOut` off the result, the killed door is indistinguishable from a clean exit [33m 2716[2mms[22m[39m
+     [33m[2m✓[22m[39m two `--write-baseline` runs record the late banner and write the SAME BYTES [33m 9596[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ NOT THE SEED: with `inheritedOutput` seeded EMPTY the FIRST write records the banner anyway [33m 4966[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ MUTANT + THE FALSE RED: the un-completed control records nothing, and `--doors=ci` reds the help door for it [33m 11960[2mms[22m[39m
+     [33m[2m✓[22m[39m a control killed at the LONG ceiling too is named as truncated, not silently recorded [33m 2521[2mms[22m[39m
+     [33m[2m✓[22m[39m the child honours the parent env: TMPDIR stays clean, the parent dir holds the scratch [33m 1527[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ NOT VACUOUS: without the env the killed child leaks under TMPDIR (the pre-fix shape) [33m 1543[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelitySecondaryUse.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 3618[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: "proven" at depth 2 over 36 held sets — a verdict the game refutes (its X+C+up crossing is hitless) [33m 2195[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (C4 modelled): the proof is no longer refused — it finds the game's hitless [up+primary+secondary] and (⛓ FORCEDHITXC D1) carries the open prefix on to the game's hitless crossing at t4 [33m 1265[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLapseCost.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 29917[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t) [33m 23221[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t) [33m 1586[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget [33m 2901[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit [33m 1682[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityForcedHit.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 6452[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 622: every input over 36 held sets is hit by t2 — proven at depth 2 (36 + 36² fork steps), least 1 hit [33m 1501[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the refusal is the BEFORE one (the ladder EXHAUSTED on lavarunner@72,24), and the rung is absent [33m 668[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED in 4 ticks by `forced-hit` — up, up, down+right, down+right — billing lavarunner@72,24 at t2 [33m 4120[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/breakableRocks.test.js [2m([22m[2m22 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/tapeEnvelope.test.js [2m([22m[2m23 tests[22m[2m)[22m[33m 1816[2mms[22m[39m
+     [33m[2m✓[22m[39m agrees with parseTape on every envelope field, for every committed tape [33m 1762[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLeash.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 5668[2mms[22m[39m
+     [33m[2m✓[22m[39m every two-tick prefix (the 8 directions + none, the sword, the secondary) takes a hit by t2 — the refusal is the game's [33m 917[2mms[22m[39m
+     [33m[2m✓[22m[39m the derivation at 629's stance: OFF offers the straight line's 84-tick bait; ON refuses it by the forecast's pin [33m 913[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 629 (L74 from L75 → the Darkshield): OFF refuses on the dwell; ON SOLVES — and the plan is the witness's tape [33m 2679[2mms[22m[39m
+     [33m[2m✓[22m[39m the input that separates the page (refused) from survey step 162 (solved) is `hasDarkSword` — measured both ways, OFF [33m 922[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityClearTag.test.js [2m([22m[2m37 tests[22m[2m)[22m[33m 3972[2mms[22m[39m
+     [33m[2m✓[22m[39m {12,7} magicallock from L0 [33m 996[2mms[22m[39m
+     [33m[2m✓[22m[39m {12,12} bosslock from L0 (every key) [33m 1168[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/ropeSword.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 3437[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ climbs AVOID → PULL: one swing at rope@32,16 from (5,2), group 0 latched, the lanes gone, no hit [33m 3222[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityArrival.test.js [2m([22m[2m94 tests[22m[2m)[22m[33m 739[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBeamTower.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 618[2mms[22m[39m
+ [32m✓[39m scripts/procgen/lintGateLabels.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 254[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Contact.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 4894[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the model walks `bob@736,752` through `spinner@880,848` and parts from the game at t1801 [33m 1973[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: every watched row from t1700 to the prefix's end is the game's, to the bit [33m 1425[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the chaser FORECAST meets the spinner where the drive does (t1790 + 40, both bobs, 0 px) [33m 1041[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL74Leg624.test.js [2m([22m[2m13 tests[22m[2m)[22m[32m 250[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCrusher.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 12682[2mms[22m[39m
+     [33m[2m✓[22m[39m returns R5's nine charges in three chains, and the library holds every chain [33m 1038[2mms[22m[39m
+     [33m[2m✓[22m[39m replays: the part, zero contacts, both top-room parks, the crossing into L40 [33m 790[2mms[22m[39m
+     [33m[2m✓[22m[39m is the solver's own plan with the flag ON, and the flag OFF refuses the same staging [33m 5870[2mms[22m[39m
+     [33m[2m✓[22m[39m L40 from the L41 door [33m 3831[2mms[22m[39m
+     [33m[2m✓[22m[39m L0, featherless, the waterfall live [33m 1101[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityFrontier3.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 2059[2mms[22m[39m
+     [33m[2m✓[22m[39m L87's pocket solves with the grant, on the 8 px lattice, up the 5 px column beside cliffside1@48,32 [33m 1080[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityF1.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 1992[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ lock OPEN (baitForecast ON): the arrival DETOURS round bob@48,80 — 90 ticks, zero hits [33m 343[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/bobSoldier.test.js [2m([22m[2m17 tests[22m[2m)[22m[32m 215[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 8005[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON: the dwell kills from the stance (88,56) inside its bound, 460 t [33m 1424[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF: the dwell refuses (the survey's text), and the keys it drove are `bobsoldier2-l30-dash-stance` [33m 916[2mms[22m[39m
+     [33m[2m✓[22m[39m D2a alone: the stance walk keeps the forecast, and the corpse's PAD refuses the next walk's gate [33m 480[2mms[22m[39m
+     [33m[2m✓[22m[39m D2b alone: the dashed stance walk still runs the dwell out [33m 851[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON: the solver's own plan IS the witness `bobsoldier2-l30-torch` (395 t); the collect first, then the walk towards the stance (72,88) kills the body with its own press [33m 1557[2mms[22m[39m
+     [33m[2m✓[22m[39m D2b alone: 404 t, the same kill on the walk (the stance walk dashed) [33m 1348[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect [33m 512[2mms[22m[39m
+     [33m[2m✓[22m[39m D2a alone: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect [33m 534[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBombPusher.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 7745[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the model reproduces every sampled tick through the respawn at 0 px — the player, each bomb to the bit, the anim [33m 1276[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the quiet room — no bomb, and the model leaves the game the tick after the first hit [33m 723[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the model reproduces every sampled tick through the respawn at 0 px — the player, each bomb to the bit, the anim [33m 757[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the quiet room — no bomb, and the model leaves the game the tick after the first hit [33m 407[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (movingWait, bombBlastBody OFF): the cluster boot's plan stops at buttonroom@272,208's hold, naming the lobber and the blast [33m 4410[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/moverSolids.test.js [2m([22m[2m13 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityArrowLane.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 1135[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 211 (to pit 12,3) is refused BY NAME — the billed hit leaves a Bob inside the camera band [33m 798[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityDarkTrap.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 1125[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCorpseBump.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 12265[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the pocket's pit goal refuses as before — the t2 lock's hold stance is the button, behind the turret [33m 959[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the solver kills the turret, bumps its corpse north twice onto button@480,384, waits the fade, reaches the pit [33m 2300[2mms[22m[39m
+     [33m[2m✓[22m[39m the recorded tape is the solver's plan, input for input [33m 1553[2mms[22m[39m
+     [33m[2m✓[22m[39m it needs `blockSweepBodies` ON (the bump arm's enemy-room refusal): OFF, the corpse source is not raised [33m 334[2mms[22m[39m
+     [33m[2m✓[22m[39m with the Sword alone (no Ghost Sword) the STANDING kill is never hitless, and the weigh refuses by name (turretCircleKill, iceTurretDeathAnim OFF) [33m 6144[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL39Shaft.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 49757[2mms[22m[39m
+     [33m[2m✓[22m[39m the solver reads which state the shaft is in, through D2: boot, one, two, all three inner, outer, open [33m 2461[2mms[22m[39m
+     [33m[2m✓[22m[39m the recording replays at 0 px: the player, every fire block, every spinner and L39's lock tags, every tick [33m 458[2mms[22m[39m
+     [33m[2m✓[22m[39m the recording replays at 0 px with `spinnerPointExact` ON, and the solved plan ends in L40 [33m 832[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT/CONTROL: with `spinnerPointExact` OFF the same recording disagrees on a spinner, by one ulp [33m 895[2mms[22m[39m
+     [33m[2m✓[22m[39m the solver, keys ON, plans exactly the recorded tape from the same boot (the survey's staging) [33m 9565[2mms[22m[39m
+     [33m[2m✓[22m[39m CONTROL: OFF, the same boot refuses three links deep — "no REACHABLE stance inside button@144,112" [33m 12813[2mms[22m[39m
+     [33m[2m✓[22m[39m CONTROL: `l39ShaftPress` ON without `collectSpanAim`, the shaft opens and the part's approach drifts into (4,1)'s wall [33m 9011[2mms[22m[39m
+     [33m[2m✓[22m[39m all three blocks already on the inner buttons (t2330): no route, one press between them, the fade [33m 2353[2mms[22m[39m
+     [33m[2m✓[22m[39m the blocks already on the outer buttons (t2420, the locks fading): neither route nor press, the fade alone [33m 2174[2mms[22m[39m
+     [33m[2m✓[22m[39m one block home (t300): the two other inner buttons are routed, then the press [33m 9164[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityAxeTiming.test.js [2m([22m[2m24 tests[22m[2m)[22m[33m 13924[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the ladder EXHAUSTS on the blade (the AXE arm's stalls are hit at every phase) [33m 3005[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED in 227 t — the witnessed plan [33m 1136[2mms[22m[39m
+     [33m[2m✓[22m[39m ON beside spinningAxePlayerHit: the same 227 t (the run bills no hit on the crossing) [33m 1063[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: refused — the full pass is cut at `axe-dodge` inside the AXE arm's stall search [33m 4317[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED 227 t in the full pass, inside its budget [33m 3788[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCeremonyShove.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 735[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Guard.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 5472[2mms[22m[39m
+     [33m[2m✓[22m[39m D2: OFF the arm refuses as before; ON the approach pass is asked and its refusal names REACH / TIMING / LEASH [33m 2976[2mms[22m[39m
+       [33m[2m✓[22m[39m OFF the live run throws the band at t878 (bob@736,752, at rest at home) [33m 406[2mms[22m[39m
+       [33m[2m✓[22m[39m ON it steps through, and both shaft bobs equal the game's rows t860–1000 [33m 388[2mms[22m[39m
+       [33m[2m✓[22m[39m OFF the press at t2166 throws the line-of-sight assertion [33m 747[2mms[22m[39m
+       [33m[2m✓[22m[39m ON the blocked test is a miss row and the spinner equals the game's rows t2160–2200 [33m 592[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityInventoryMenu.test.js [2m([22m[2m18 tests[22m[2m)[22m[32m 200[2mms[22m[39m
+ [32m✓[39m scripts/procgen/oneSpelling.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 9657[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ each transcription is defined EXACTLY ONCE in the model [33m 578[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ no live second spelling anywhere in the transcription's reach [33m 1050[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the subject is derived from imports, and prose does not join it [33m 1196[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the excluded population is enumerated, not implied [33m 3009[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the same spelling outside the subject is not a finding [33m 3814[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityWaterfall.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 5704[2mms[22m[39m
+     [33m[2m✓[22m[39m survey step 89 (L89 → L87): OFF keeps a stop ON the waterfall and re-plans; ON descends the column — the game witness [33m 3825[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a price, not a refusal — `plansReach` still answers `planWaypoints` cell for cell on L100 [33m 1328[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/ghostSword.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 427[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the ghost sword BREAKS the ghost rock and the room SOLVES [33m 320[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/outOfBandLedger.test.js [2m([22m[2m18 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityEncounters.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 60272[2mms[22m[39m
+     [33m[2m✓[22m[39m fresh (the survey's state): arm, seven landings, drop, burn, pit — 1042 t [33m 10234[2mms[22m[39m
+     [33m[2m✓[22m[39m rock fallen at the door: snapped onto the rock, no arm leg, untouched — 1041 t [33m 10414[2mms[22m[39m
+     [33m[2m✓[22m[39m rock fallen at the respawn (72,104): no snap, the fight — 1034 t [33m 14793[2mms[22m[39m
+     [33m[2m✓[22m[39m mid-fight continuations solve from wherever the prefix stops [33m 21799[2mms[22m[39m
+     [33m[2m✓[22m[39m SOLVES from the survey's step-140 arrival: talk, close, the sword at the feet next frame, hasDarkSword [33m 2843[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelitySpinningAxe.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 18941[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: step 163 solves in 366 t — the plan the game hits at t160 [33m 8008[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the re-probe meets the axe at its update 160 and the ladder refuses BY NAME [33m 10164[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 8468[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: step 47 SOLVES with the unbilled hit (the census window sees it, decides nothing) [33m 863[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: step 47 is REFUSED by name — obstacle.kind unbilled-damage, its tick, source and count [33m 515[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a hit inside a replayed PREFIX is the prefix's, not the segment's — the rest of step 47 solves [33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a BILLED forced hit is not unbilled — leg 622 still solves (the control) [33m 6545[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Res.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 74315[2mms[22m[39m
+     [33m[2m✓[22m[39m the measurement behind it: the south door is in the stance hypothesis, the west door is not [33m 1425[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey's text [33m 6411[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the re-entry passes to the chest (the south door's chain); the end is the chest walk's press kill [33m 63803[2mms[22m[39m
+     [33m[2m✓[22m[39m the model replays every game tick at 0 px and bills the same hit: spinner@192,144's hammer at t1222 [33m 897[2mms[22m[39m
+     [33m[2m✓[22m[39m spinnerLockLag OFF: spinner@192,160 passes wandlock@208,160 one tick early (the game reflects at t1172) [33m 476[2mms[22m[39m
+     [33m[2m✓[22m[39m spinnerLockLag ON: every spinner of the part room matches the game t1160-1230, the struck one too [33m 466[2mms[22m[39m
+     [33m[2m✓[22m[39m spinnerLockLag ON: the player still replays every game tick at 0 px with the one hammer hit at t1222 [33m 454[2mms[22m[39m
+     [33m[2m✓[22m[39m THE GAP (handed to the hammer arc): the press-blind forecast from before the strike misplaces it by 28.3 px [33m 377[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCorridorBody.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 63886[2mms[22m[39m
+     [33m[2m✓[22m[39m step 53 (L22): OFF the walk dies twice to wallflyers; ON it walks clean [33m 17430[2mms[22m[39m
+     [33m[2m✓[22m[39m step 45 (L22): ON keeps the base's clean 6-window dash chain — certified WHOLE (no 1-window prefix is clean) [33m 13912[2mms[22m[39m
+     [33m[2m✓[22m[39m step 170 (L77): the lavarunner's contact gate reads its own i-frame, not the dark shield's — ON walks clean [33m 32054[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityShakeExact.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 2879[2mms[22m[39m
+     [33m[2m✓[22m[39m the unsplit L42 game witness (rebootshake-l42-part0-damage) — ON, still banded, and the band holds the game [33m 1591[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: every sampled camera is the game's — a point at 0 px, or a kept band holding it [33m 503[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the band, which still holds the game (the 10-10 ruling's face) [33m 408[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityTurretCircle.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 12587[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the circle needs no key (0 px), and both shield stands part on the first volley (t52 / t51) [33m 418[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF (CORPSEBUMP's set): the Sword alone refuses by name, as CORPSEBUMP left it [33m 6499[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED — the corpse weigh's kill is a circling one (cw from corner 3, delay 0, three swings) [33m 1769[2mms[22m[39m
+     [33m[2m✓[22m[39m the Ghost Sword keeps CORPSEBUMP's standing kill: its recorded plan is unchanged with the key ON [33m 1489[2mms[22m[39m
+     [33m[2m✓[22m[39m the recorded tape is the solver's plan, input for input [33m 1577[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityFirePush.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 165698[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the frontier names the fire block and refuses "Strategy 'shove' failed to apply" (legs 869/870's answer) [33m 5368[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: hold button@816,400 until pulser@592,576 parks the block in (35,36), shove the walk block N to (36,32), collect the key [33m 77505[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a quiet pulser's ring is not a disc — the corridor cell beside it is clean, its own button is not [33m 1970[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (all three): the model replays the recorded tape at 0 px — the player and every pushable block, every tick [33m 1252[2mms[22m[39m
+     [33m[2m✓[22m[39m `pulserPublishLag` OFF: the pulse-pushed glide starts ONE tick early (the game's t5100 is the model's t5099) [33m 1239[2mms[22m[39m
+     [33m[2m✓[22m[39m `fireLiveTurretReach`: from (488,440) a Fire press does NOT reach the corpse at (488,407.5) — OFF it does [33m 746[2mms[22m[39m
+     [33m[2m✓[22m[39m the solver still makes the recorded plan (the tape's inputs are the witness's) [33m 77579[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/bossTotem.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelitySealDoor.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 612[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL74Arrival.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 841[2mms[22m[39m
+     [33m[2m✓[22m[39m SMALLGAPS D1 — the release step ON: every sample at 0 px, with the arm ON or OFF [33m 302[2mms[22m[39m
+ [32m✓[39m scripts/procgen/procgenHelpBaseline.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 4321[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: survey step 50 solves in 413 t with zero hits; the body dies on the walk, gone before the ceremony [33m 3006[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the plan is the pre-lapse witness (the retired 460-t `bobsoldier2-l30-torch`), key for key [33m 1270[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Button.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 83270[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF the hypothesis at leg 378's arrival holds the cluster's wandlocks and no rock; ON it adds the three [33m 1533[2mms[22m[39m
+     [33m[2m✓[22m[39m a run with no sword hypothesises no rock (the swing could not break it) [33m 9151[2mms[22m[39m
+     [33m[2m✓[22m[39m from the cluster's own boot, bombPusherLive ON (the default), movingWait + bombBlastBody OFF: the still hold inside the lobber's reach is refused by name [33m 3412[2mms[22m[39m
+     [33m[2m✓[22m[39m from the cluster's own boot (bombPusherLive OFF): OFF refuses with the legs' sentence, ON latches t0, breaks, latches t1, collects [33m 67435[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l41-part0 (leg 378): the model replays it to the part, through the cluster, with no hit [33m 888[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l42-part0 (leg 381): the model replays it to the part, through the cluster, with no hit [33m 846[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityTurretSnap.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 572[2mms[22m[39m
+     [33m[2m✓[22m[39m ON the volume is the cycle's hull with a why that says so; the run's turret is not moved by the read [33m 303[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityFireMove.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 9221[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the weigh skips the fire family by name ("it moves on a PRESS, not on a lean") [33m 2756[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the solver's own route is FIREPUSH_ROUTE, press for press (35 Fire presses, each stance and cell) [33m 4457[2mms[22m[39m
+     [33m[2m✓[22m[39m the recording replays at 0 px with the keys ON (the player and every pushable block, every tick) [33m 898[2mms[22m[39m
+     [33m[2m✓[22m[39m the solver's presses move the block one tile each, (7,9) to the button (11,11), and there it is PARKED [33m 732[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL67Bk4.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 4341[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the ladder is EXHAUSTED on arrowtrap@48,48's armed lane (the gap, measured) [33m 796[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the 640-unit request solves (shove, walk), and the replay parks the block on the button with no hit [33m 1319[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 862 solves inside 640 units, kills the Totem with no hit, and crosses to L37 [33m 1073[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 872 solves inside 640 units, kills the Totem with no hit, and crosses to L37 [33m 604[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, a VANILLA L43 (the Wand a real pickup): the verb refuses by name — the body sleeps until the Wand is taken [33m 444[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 209464[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: none of the chain's three weigh locks is in the hypothesis at the arrival (guard iii walls them) [33m 1502[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: t2's two locks (the corpse, behind the south door) and t5's (the fire block's route, across t2) join it [33m 8879[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: survey step 67 refuses at button@816,400 with the three locks walled — the sweep's text [33m 2874[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over) [33m 71513[2mms[22m[39m
+     [33m[2m✓[22m[39m the model (D1 ON) reproduces the game at 0 px — the player, every block, every chaser and the turret [33m 1340[2mms[22m[39m
+     [33m[2m✓[22m[39m the model at the shipped defaults (D1 OFF) reproduces it too: D1 is solver-only [33m 1085[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144's hammer at t1222 (L40RES's hit) [33m 31756[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold's refusal, no hit plan [33m 28011[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte [33m 62488[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityKillLock.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityAxe.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 4591[2mms[22m[39m
+     [33m[2m✓[22m[39m route step 128: the solver's plan is the DODGE rung's AXE arm, and it is the committed tape [33m 4029[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityEncounters2.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 5689[2mms[22m[39m
+     [33m[2m✓[22m[39m enc-l12-witch: ON lands hasDarkSword on the game's observation 378; OFF one early; the stream identical [33m 475[2mms[22m[39m
+     [33m[2m✓[22m[39m enc-l12-witch's staging: the encounter goal alone ends on the close frame + 1 (OFF: the flag; ON: the collect) [33m 4425[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/l60Kill.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m scripts/procgen/argvHelp.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverReachPit.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 656[2mms[22m[39m
+     [33m[2m✓[22m[39m with the BobSoldier LIVE and the timed gate (the default) the boot SOLVES: 178 t, 0 hits, break then fall [33m 360[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStaticSword.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 1545[2mms[22m[39m
+     [33m[2m✓[22m[39m c1-l62-turret: OFF refuses at t0 with the sweep's words; ON solves through the static sword arm [33m 969[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStatueTalk.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 240[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/tapeIndexManifest.test.js [2m([22m[2m296 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBeamLane.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 4347[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the 640-unit request runs out at the PHASE arm's stall grid (the gap, measured) [33m 1833[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: seam 5564 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model [33m 658[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: seam 5594 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model [33m 480[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: seam 5605 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model [33m 415[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: seam 5622 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model [33m 410[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 25761[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF the staging refuses with the sweep's words; ON it re-derives the committed tape byte for byte [33m 25489[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/shoveWeighParity.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 662[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/generated.test.js[2m > [22mthe registry matrix is one column per ENTRY and one row per FIELD
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/generated.test.js[2m > [22mthe capability chart is every statement × every registered entry
+[31m[1mError[22m: registerBackend: duplicate id 'empty'[39m
+[36m [2m❯[22m registerBackend ../../../home/user/Archipelago-CC/frontend/modules/shared/procgen/mazeAlgorithms/registry.js:[2m33:15[22m[39m
+    [90m 31| [39m    }
+    [90m 32| [39m    [35mif[39m (registry[33m.[39m[34mhas[39m(backend[33m.[39mid)) {
+    [90m 33| [39m        throw new Error(`registerBackend: duplicate id '${backend.id}'…
+    [90m   | [39m              [31m^[39m
+    [90m 34| [39m    }
+    [90m 35| [39m    registry[33m.[39m[35mset[39m(backend[33m.[39mid[33m,[39m backend)[33m;[39m
+[90m [2m❯[22m ../../../home/user/Archipelago-CC/frontend/modules/mazeRoom/mazeAlgorithms/empty.js:[2m26:16[22m[39m
+[90m [2m❯[22m ../../../home/user/Archipelago-CC/frontend/modules/mazeRoom/mazeAlgorithms/index.js:[2m16:1[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/generated.test.js[2m > [22mthe generated modules ARE what the code says[2m > [22m⛓⛓ `--check` exits 0 — regenerating produces byte-identical files
+[31m[1mAssertionError[22m: expected '1\nPASS: urlGrammar.js is what the co…' to contain 'GENERATED MODULES AND'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- GENERATED MODULES AND[39m
+[31m+ 1[39m
+[31m+ PASS: urlGrammar.js is what the code says[39m
+[31m+ PASS: catalogue.js is what the code says[39m
+[31m+ PASS: refusals.js is what the code says[39m
+[31m+ FAIL: registry.js DIFFERS from what the code says[39m
+[31m+   line 57[39m
+[31m+     on disk:             "fields": 35,[39m
+[31m+     the code:             "fields": 26,[39m
+[31m+   line 58[39m
+[31m+     on disk:             "id": "maze",[39m
+[31m+     the code:             "id": "noiz2sa",[39m
+[31m+   line 59[39m
+[31m+     on disk:             "label": "Maze",[39m
+[31m+     the code:             "label": "Noiz2sa",[39m
+[31m+   line 60[39m
+[31m+     on disk:             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"[39m
+[31m+     the code:             "registeredBy": "frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js"[39m
+[31m+   line 63[39m
+[31m+     on disk:             "fields": 26,[39m
+[31m+     the code:             "fields": 25,[39m
+[31m+   line 64[39m
+[31m+     on disk:             "id": "noiz2sa",[39m
+[31m+     the code:             "id": "omsi",[39m
+[31m+   line 65[39m
+[31m+     on disk:             "label": "Noiz2sa",[39m
+[31m+     the code:             "label": "Idle Loops",[39m
+[31m+   line 66[39m
+[31m+     on disk:             "registeredBy": "frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js"[39m
+[31m+     the code:             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"[39m
+[31m+   line 69[39m
+[31m+     on disk:             "fields": 25,[39m
+[31m+     the code:             "fields": 24,[39m
+[31m+   line 70[39m
+[31m+     on disk:             "id": "omsi",[39m
+[31m+     the code:             "id": "text_adventure",[39m
+[31m+   line 71[39m
+[31m+     on disk:             "label": "Idle Loops",[39m
+[31m+     the code:             "label": "Text Adventure",[39m
+[31m+   line 72[39m
+[31m+     on disk:             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"[39m
+[31m+     the code:             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"[39m
+[31m+   line 73[39m
+[31m+     on disk:         },[39m
+[31m+     the code:         }[39m
+[31m+   line 74[39m
+[31m+     on disk:         {[39m
+[31m+     the code:     ],[39m
+[31m+   line 75[39m
+[31m+     on disk:             "fields": 24,[39m
+[31m+     the code:     "findings": [[39m
+[31m+   line 76[39m
+[31m+     on disk:             "id": "text_adventure",[39m
+[31m+     the code:         {[39m
+[31m+   line 77[39m
+[31m+     on disk:             "label": "Text Adventure",[39m
+[31m+     the code:             "name": "applyContentModules",[39m
+[31m+   line 78[39m
+[31m+     on disk:             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"[39m
+[31m+     the code:             "severity": "documented as a field, carried by no entry",[39m
+[31m+   line 79[39m
+[31m+     on disk:         }[39m
+[31m+     the code:             "what": "`applyContentModules` has a row in `docs/json/developer/procgen/substrate-registry.md` § *Build-time — procedural substrates* and not one of the registered entries carries it. Either every substrate that had it has moved on, or the name in the doc is not the name in the code."[39m
+[31m+   line 80[39m
+[31m+     on disk:     ],[39m
+[31m+     the code:         },[39m
+[31m+   (8228 lines on disk, 7103 from the code)[39m
+[31m+ PASS: instruments.js is what the code says[39m
+[31m+ PASS: docsIndex.js is what the code says[39m
+[31m+ FAIL: capabilities.js DIFFERS from what the code says[39m
+[31m+   line 516[39m
+[31m+     on disk:             "id": "maze",[39m
+[31m+     the code:             "id": "noiz2sa",[39m
+[31m+   line 517[39m
+[31m+     on disk:             "label": "Maze",[39m
+[31m+     the code:             "label": "Noiz2sa",[39m
+[31m+   line 531[39m
+[31m+     on disk:                     "statement": "It draws its own picture on the composite map (else a labelled box)",[39m
+[31m+     the code:                     "statement": "It brings progression items of its own",[39m
+[31m+   line 532[39m
+[31m+     on disk:                     "text": null[39m
+[31m+     the code:                     "text": "Victory, Noiz2sa Star"[39m
+[31m+   line 536[39m
+[31m+     on disk:                     "statement": "It brings progression items of its own",[39m
+[31m+     the code:                     "statement": "What the generator may do with it",[39m
+[31m+   line 537[39m
+[31m+     on disk:                     "text": "Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key"[39m
+[31m+     the code:                     "text": "locations placed anywhere"[39m
+[31m+   line 540[39m
+[31m+     on disk:                     "group": "play",[39m
+[31m+     the code:                     "group": "loop",[39m
+[31m+   line 541[39m
+[31m+     on disk:                     "statement": "What the generator may do with it",[39m
+[31m+     the code:                     "statement": "You can play it in loop mode",[39m
+[31m+   line 542[39m
+[31m+     on disk:                     "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit"[39m
+[31m+     the code:                     "text": null[39m
+[31m+   line 545[39m
+[31m+     on disk:                     "group": "play",[39m
+[31m+     the code:                     "group": "loop",[39m
+[31m+   line 546[39m
+[31m+     on disk:                     "statement": "It can show the library's concepts in its own way",[39m
+[31m+     the code:                     "statement": "What you can queue for it",[39m
+[31m+   line 547[39m
+[31m+     on disk:                     "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …"[39m
+[31m+     the code:                     "text": "moves between regions, location checks"[39m
+[31m+   line 551[39m
+[31m+     on disk:                     "statement": "You can play it in loop mode",[39m
+[31m+     the code:                     "statement": "You can record a visit and replay it",[39m
+[31m+   line 556[39m
+[31m+     on disk:                     "statement": "What you can queue for it",[39m
+[31m+     the code:                     "statement": "How a replay works",[39m
+[31m+   line 557[39m
+[31m+     on disk:                     "text": "moves between regions, location checks, exploring"[39m
+[31m+     the code:                     "text": "applies the result instantly"[39m
+[31m+   line 561[39m
+[31m+     on disk:                     "statement": "You can record a visit and replay it",[39m
+[31m+     the code:                     "statement": "Instant fast-forward",[39m
+[31m+   line 562[39m
+[31m+     on disk:                     "text": null[39m
+[31m+     the code:                     "text": "always — a replay is already instant"[39m
+[31m+   line 566[39m
+[31m+     on disk:                     "statement": "How a replay works",[39m
+[31m+     the code:                     "statement": "A Bot block can play it for you",[39m
+[31m+   line 567[39m
+[31m+     on disk:                     "text": "replays your exact moves"[39m
+[31m+     the code:                     "text": "the game's own automation walks it"[39m
+[31m+   line 571[39m
+[31m+     on disk:                     "statement": "Instant fast-forward",[39m
+[31m+     the code:                     "statement": "You can play it outside loop mode",[39m
+[31m+   (5007 lines on disk, 4476 from the code)[39m
+[31m+ FAIL: docs/json/developer/procgen/substrate-registry.md § GENERATED:substrate-capability-matrix DIFFERS from what the code says[39m
+[31m+   region line 1[39m
+[31m+     on disk: **9 registered entries · 97 fields · 16 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.[39m
+[31m+     the code: **8 registered entries · 92 fields · 16 groups · 3 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.[39m
+[31m+   region line 11[39m
+[31m+     on disk: | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |[39m
+[31m+     the code: | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `noiz2sa` | `omsi` | `text_adventure` |[39m
+[31m+   region line 12[39m
+[31m+     on disk: |---|---|---|---|---|---|---|---|---|---|[39m
+[31m+     the code: |---|---|---|---|---|---|---|---|---|[39m
+[31m+   region line 13[39m
+[31m+     on disk: | `id` | bounce | cloudberry | flash_seedling | flash_seedling_gen | jta | maze | noiz2sa | omsi | text_adventure |[39m
+[31m+     the code: | `id` | bounce | cloudberry | flash_seedling | flash_seedling_gen | jta | noiz2sa | omsi | text_adventure |[39m
+[31m+   region line 14[39m
+[31m+     on disk: | `label` | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |[39m
+[31m+     the code: | `label` | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Noiz2sa | Idle Loops | Text Adventure |[39m
+[31m+   region line 18[39m
+[31m+     on disk: | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |[39m
+[31m+     the code: | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `noiz2sa` | `omsi` | `text_adventure` |[39m
+[31m+   region line 19[39m
+[31m+     on disk: |---|---|---|---|---|---|---|---|---|---|[39m
+[31m+     the code: |---|---|---|---|---|---|---|---|---|[39m
+[31m+   region line 20[39m
+[31m+     on disk: | `apExitNamesOf` | fn | fn | — | fn | fn | fn | fn | fn | fn |[39m
+[31m+     the code: | `apExitNamesOf` | fn | fn | — | fn | fn | fn | fn | fn |[39m
+[31m+   region line 21[39m
+[31m+     on disk: | `apLocationNamesOf` | fn | fn | — | fn | fn | fn | fn | fn | fn |[39m
+[31m+     the code: | `apLocationNamesOf` | fn | fn | — | fn | fn | fn | fn | fn |[39m
+[31m+   region line 22[39m
+[31m+     on disk: | `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |[39m
+[31m+     the code: | `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn |[39m
+[31m+   region line 23[39m
+[31m+     on disk: | `iframeId` | bounceDemo | cloudberryDemo | — | — | jtaSubstrateWrapper | — | noiz2saSubstrate | omsiSubstrateWrapper | textAdventureSubstrateWrapper |[39m
+[31m+     the code: | `iframeId` | bounceDemo | cloudberryDemo | — | — | jtaSubstrateWrapper | noiz2saSubstrate | omsiSubstrateWrapper | textAdventureSubstrateWrapper |[39m
+[31m+   region line 24[39m
+[31m+     on disk: | `loadRegionEvent` | bounce:loadRegion | cloudberry:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | maze:loadRegion | noiz2sa:loadRegion | omsi:loadRegion | textAdventure:loadRegion |[39m
+[31m+     the code: | `loadRegionEvent` | bounce:loadRegion | cloudberry:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | noiz2sa:loadRegion | omsi:loadRegion | textAdventure:loadRegion |[39m
+[31m+   region line 25[39m
+[31m+     on disk: | `panelComponentType` | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |[39m
+[31m+     the code: | `panelComponentType` | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |[39m
+[31m+   region line 26[39m
+[31m+     on disk: | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |[39m
+[31m+     the code: | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn |[39m
+[31m+   region line 27[39m
+[31m+     on disk: | `sharing` | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |[39m
+[31m+     the code: | `sharing` | — | — | — | — | {items, mana} | — | {items, mana} | {mana} |[39m
+[31m+   region line 28[39m
+[31m+     on disk: | `sidecarFields` | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 31 keys | 11 keys | 9 keys | 5 keys |[39m
+[31m+     the code: | `sidecarFields` | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 11 keys | 9 keys | 5 keys |[39m
+[31m+   region line 29[39m
+[31m+     on disk: | `supportedFeatures` | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |[39m
+[31m+     the code: | `supportedFeatures` | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | arbitrary_ap_locations | 2 items | 6 items |[39m
+[31m+   region line 33[39m
+[31m+     on disk: | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |[39m
+[31m+     the code: | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `noiz2sa` | `omsi` | `text_adventure` |[39m
+[31m+   region line 34[39m
+[31m+     on disk: |---|---|---|---|---|---|---|---|---|---|[39m
+[31m+     the code: |---|---|---|---|---|---|---|---|---|[39m
+[31m+   region line 35[39m
+[31m+     on disk: | `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn | fn |[39m
+[31m+     the code: | `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn |[39m
+[31m+   (198 region lines on disk, 201 from the code)[39m
+[31m+ PASS: docs/json/developer/procgen/architecture.md § GENERATED:procgen-instruments is what the code says[39m
+[31m+ PASS: docs/json/developer/procgen/README.md § GENERATED:procgen-docs-index is what the code says[39m
+[31m+ PASS: docs/json/developer/procgen/seedling-bot-log.md § GENERATED:campaign-chain is what the code says[39m
+[31m+ FAIL: docs/json/features/procgen-substrates.md § GENERATED:substrate-capability-chart DIFFERS from what the code says[39m
+[31m+   region line 1[39m
+[31m+     on disk: **29 statements · 9 substrates · 39 registry fields read (42 of the developer matrix's 97, counting the parents of the fields read) · 55 not yet read.**[39m
+[31m+     the code: **29 statements · 8 substrates · 39 registry fields read (41 of the developer matrix's 92, counting the parents of the fields read) · 51 not yet read.**[39m
+[31m+   region line 5[39m
+[31m+     on disk: | | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |[39m
+[31m+     the code: | | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Noiz2sa | Idle Loops | Text Adventure |[39m
+[31m+   region line 6[39m
+[31m+     on disk: |---|---|---|---|---|---|---|---|---|---|---|[39m
+[31m+     the code: |---|---|---|---|---|---|---|---|---|---|[39m
+[31m+   region line 7[39m
+[31m+     on disk: | P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+     the code: | P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+   region line 8[39m
+[31m+     on disk: | P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✓ | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ✓ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+     the code: | P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✓ | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+   region line 9[39m
+[31m+     on disk: | P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ |[39m
+[31m+     the code: | P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |[39m
+[31m+   region line 10[39m
+[31m+     on disk: | P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✓ 13 items | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory, Noiz2sa Star | ✓ Victory | ✗ |[39m
+[31m+     the code: | P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✓ 13 items | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Victory, Noiz2sa Star | ✓ Victory | ✗ |[39m
+[31m+   region line 11[39m
+[31m+     on disk: | P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |[39m
+[31m+     the code: | P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |[39m
+[31m+   region line 12[39m
+[31m+     on disk: | P6 | It can show the library's concepts in its own way | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), … | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), … |[39m
+[31m+     the code: | P6 | It can show the library's concepts in its own way | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), … |[39m
+[31m+   region line 16[39m
+[31m+     on disk: | | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |[39m
+[31m+     the code: | | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Noiz2sa | Idle Loops | Text Adventure |[39m
+[31m+   region line 17[39m
+[31m+     on disk: |---|---|---|---|---|---|---|---|---|---|---|[39m
+[31m+     the code: |---|---|---|---|---|---|---|---|---|---|[39m
+[31m+   region line 18[39m
+[31m+     on disk: | L1 | You can play it in loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+     the code: | L1 | You can play it in loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+   region line 19[39m
+[31m+     on disk: | L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring |[39m
+[31m+     the code: | L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring |[39m
+[31m+   region line 20[39m
+[31m+     on disk: | L3 | You can record a visit and replay it | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+     the code: | L3 | You can record a visit and replay it | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ |[39m
+[31m+   region line 21[39m
+[31m+     on disk: | L4 | How a replay works | ✓ applies the result instantly | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ re-runs the queued actions |[39m
+[31m+     the code: | L4 | How a replay works | ✓ applies the result instantly | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ re-runs the queued actions |[39m
+[31m+   region line 22[39m
+[31m+     on disk: | L5 | Instant fast-forward | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ a per-block toggle |[39m
+[31m+     the code: | L5 | Instant fast-forward | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ a per-block toggle |[39m
+[31m+   region line 23[39m
+[31m+     on disk: | L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it |[39m
+[31m+     the code: | L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it |[39m
+[31m+   region line 24[39m
+[31m+     on disk: | L7 | The Bot honours Instant | n/a | n/a | ✗ | ✗ | ✓ | ✗ | n/a | ✓ | n/a |[39m
+[31m+     the code: | L7 | The Bot honours Instant | n/a | n/a | ✗ | ✗ | ✓ | n/a | ✓ | n/a |[39m
+[31m+   region line 25[39m
+[31m+     on disk: | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ |[39m
+[31m+     the code: | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✗ (note 2) | ✓ |[39m
+[31m+   region line 26[39m
+[31m+     on disk: | L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ |[39m
+[31m+     the code: | L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✓ | ✓ |[39m
+[31m+   (303 region lines on disk, 275 from the code)[39m
+[31m+[39m
+[31m+ 4 GENERATED MODULE(S)/REGION(S) DIFFER — run the generator with no --check[39m
+[31m+ [centralRegistry] CentralRegistry initialized[39m
+[31m+ [discoveryState] [DiscoveryState] Constructed[39m
+[31m+ [stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined[39m
+[31m+     at StateManagerProxy.initializeWorker (file:///tmp/claude-0/base-wt/frontend/modules/stateManager/stateManagerProxy.js:251:25)[39m
+[31m+     at new StateManagerProxy (file:///tmp/claude-0/base-wt/frontend/modules/stateManager/stateManagerProxy.js:119:10)[39m
+[31m+     at file:///tmp/claude-0/base-wt/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)[39m
+[31m+     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)[39m
+[31m+     at async loadRegistry (file:///tmp/claude-0/base-wt/scripts/procgen/reference/registry.mjs:99:17)[39m
+[31m+     at async buildRegistry (file:///tmp/claude-0/base-wt/scripts/procgen/reference/registry.mjs:214:36)[39m
+[31m+     at async file:///tmp/claude-0/base-wt/scripts/procgen/generate-procgen-reference.mjs:104:18[39m
+[31m+[39m
+
+[36m [2m❯[22m frontend/modules/procgenDocs/generated.test.js:[2m103:35[22m[39m
+    [90m101| [39m            out [33m=[39m [32m`[39m[36m${[39me[33m.[39mstdout [33m??[39m [32m''[39m[36m}[39m[32m[39m[36m${[39me[33m.[39mstderr [33m??[39m [32m''[39m[36m}[39m[32m`[39m[33m;[39m
+    [90m102| [39m        }
+    [90m103| [39m        [34mexpect[39m([32m`[39m[36m${[39mcode[36m}[39m[32m\n[39m[36m${[39mout[36m}[39m[32m`[39m)[33m.[39m[34mtoContain[39m([32m'GENERATED MODULES AND'[39m)[33m;[39m
+    [90m   | [39m                                  [31m^[39m
+    [90m104| [39m        [34mexpect[39m([32m`[39m[36m${[39mcode[36m}[39m[32m\n[39m[36m${[39mout[36m}[39m[32m`[39m)[33m.[39m[34mtoContain[39m([32m'MATCH THE CODE'[39m)[33m;[39m
+    [90m105| [39m        /* ⛓ the capability chart's region is one of the regions it ch…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m99 passed[39m[22m[90m (100)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2671 passed[39m[22m[2m | [22m[33m10 skipped[39m[90m (2682)[39m
+[2m   Start at [22m 02:54:39
+[2m   Duration [22m 561.71s[2m (transform 12.90s, setup 0ms, import 235.50s, tests 1430.13s, environment 14ms)[22m
+
