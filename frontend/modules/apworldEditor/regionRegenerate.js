@@ -40,7 +40,7 @@
  */
 
 import {
-    DEFAULT_REGION_SIZE, LIBRARY_SLOT_FILLER_ITEM, assembleZoneRegion, exitTileForMirror, generateRegion,
+    DEFAULT_REGION_SIZE, LIBRARY_SLOT_FILLER_ITEM, assembleZoneRegion, collectUsedFreeItems, exitTileForMirror, generateRegion,
     getRegionExits, linkIsAdjacentOnSide, perimeterMidpoint, serializeRegionEntry,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
@@ -470,8 +470,10 @@ export function regenerateRegionEntry({
     //   follows it instead of saying items "rode free" that rode nowhere.
     const hostsSurplus = hostsSurplusExitsNatively(reg, params);
     let descriptor;
+    // ⛓ P5d — the free items this realise drifted onto (only those are granted).
+    let freeItemsUsed = [];
     try {
-        descriptor = generateRegion({
+        ({ value: descriptor, used: freeItemsUsed } = collectUsedFreeItems(() => generateRegion({
             substrate: target,
             region_id: region,
             size: spec.size,
@@ -489,7 +491,7 @@ export function regenerateRegionEntry({
             stampEntrance: true,
             freeItems: free,
             zoneOrdinal: regenerateZoneOrdinal(doc, player, region, target, reg),
-        });
+        })));
     } catch (e) {
         return { ok: false, threw: String(e?.message ?? e), freeItems: free, hostsSurplus, spec };
     }
@@ -504,7 +506,7 @@ export function regenerateRegionEntry({
     if (cell === undefined) delete built.grid_cell;
     else built.grid_cell = cell;
     return {
-        ok: true, entry: built, freeItems: free, hostsSurplus, exitsRelinked, spec,
+        ok: true, entry: built, freeItems: free, freeItemsUsed, hostsSurplus, exitsRelinked, spec,
         stranded: strandedReferences(doc, player, region, built),
     };
 }

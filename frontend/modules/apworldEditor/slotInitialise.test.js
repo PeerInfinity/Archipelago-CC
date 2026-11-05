@@ -745,13 +745,21 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
         expect(NON_GRANTING, 'every realiser grants something').toBeTruthy();
     });
 
-    it('⛓ the result carries the grants — the pipeline envelope\'s, defs by its id rule', () => {
+    it('⛓ the result carries the grants — the pipeline\'s compiled grants (P5d: only what the rooms lean on), defs by its id rule', async () => {
         const { res } = hubInitialised(NEEDER);
         const env = buildTopDownEnvelope({ source: DOCS.adventure, seed: 1, gridDims: GRID4,
             regionSizeBase: { width: 8, height: 6 }, substrateMix: { [NEEDER]: 1 } });
-        expect(res.grantedItems.length).toBeGreaterThan(0);
-        expect(res.grantedItems).toEqual(env.compileIn.grantedItems);
+        // the realiser is handed every CANDIDATE (unchanged, so the geometry is unchanged)…
         expect(res.freeItems).toEqual(env.compileIn.startingItems);
+        // …and the grant is the candidates a declared need names or a drift leaned on (P5d, ⚖ "Only what was used")
+        const named = new Set(substrateRegistry.get(NEEDER).startingInventory.needs.flatMap((n) => n.anyOf));
+        expect(res.grantedItems.length).toBeGreaterThan(0);
+        expect(res.grantedItems.length).toBeLessThan(env.compileIn.grantedItems.length);
+        expect(res.grantedItems).toEqual(env.compileIn.grantedItems.filter((n) => named.has(n)));
+        // the ONE rule (R9): the pipeline's compiled world grants the same names
+        // (mutant: stepCompile not narrowed → the pipeline grants every candidate)
+        const done = await runTopDownToStep(env, 'compile');
+        expect(done.compile.rulesJson.starting_items['1']).toEqual([...(DOCS.adventure.starting_items?.['1'] ?? []), ...res.grantedItems]);
         res.grantedItems.forEach((n, i) => expect(res.grantedDefs[n]).toEqual({
             name: n, id: GRANTED_ITEM_FIRST_ID - i, classification: 'progression', groups: ['Everything'],
         }));

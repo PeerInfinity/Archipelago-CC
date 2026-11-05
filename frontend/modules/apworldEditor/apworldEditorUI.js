@@ -7541,8 +7541,6 @@ class ApworldEditorUI {
     if (zone && gen.zone.selected === null) return null;
     const args = composeRegenerateArgs(doc, gen.player, gen.region, gen.target, gen.bag,
       { source: zone ? { kind: REGION_SOURCE_KINDS.ZONE, zoneIdx: gen.zone.selected } : pick?.source });
-    // ⛓ S1 — what the landing declares, composed from the SAME document.
-    const grants = regenerationGrants(doc, gen.player, gen.target, { source: args.source });
     const refusal = regenerateArgsRefusal(args, { fetched: this._zoneFetched ?? {} });
     if (refusal) {
       beside(refusal, true);
@@ -7611,6 +7609,9 @@ class ApworldEditorUI {
       run.landed = this._landRegionContent(gen, args, res);
       return res;
     }
+    // ⛓ S1 — what the landing declares, composed from the SAME document; P5d —
+    //   only the free items the realise drifted onto (`res.freeItemsUsed`).
+    const grants = regenerationGrants(doc, gen.player, gen.target, { source: args.source, used: res.freeItemsUsed ?? [] });
     this._saveRegionSidecar(gen.player, gen.region, res.entry, {
       provenance: regenerationProvenance(args, res), answer: withGrantsAnswer(answer.text, grants), grants,
     });
