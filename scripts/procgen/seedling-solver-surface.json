@@ -26,6 +26,7 @@
     "solveProgress.js",
     "solverBot.js",
     "spaceTimeReach.js",
+    "stagedHuntScanMemo.js",
     "strategySwitch.js",
     "strikePolicy.js",
     "strikeSlot.js",
@@ -1396,9 +1397,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 687
+        "solverBot.js": 688
       },
-      "sites": 828,
+      "sites": 829,
       "seen": "both",
       "via": [
         "direct",
@@ -1596,9 +1597,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 340
+        "solverBot.js": 341
       },
-      "sites": 413,
+      "sites": 414,
       "seen": "both",
       "via": [
         "direct",
@@ -5290,15 +5291,16 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "solverBot.js": 9
+        "solverBot.js": 9,
+        "stagedHuntScanMemo.js": 1
       },
-      "sites": 9,
+      "sites": 10,
       "seen": "static",
       "via": [
         "import"
       ],
       "dynamic": null,
-      "why": "A pure function: the canonical text of a value (insertion orders kept, no object identity, -0 its own token, no getter invoked), the one spelling run.stateDigest() hashes. solverBot's cross-pass escape cache (hammer-phase XC) spells the call's arguments and globals with it, so the key and the digest spell values alike."
+      "why": "A pure function: the canonical text of a value (insertion orders kept, no object identity, -0 its own token, no getter invoked), the one spelling run.stateDigest() hashes. solverBot's cross-pass escape cache (hammer-phase XC) spells the call's arguments and globals with it, so the key and the digest spell values alike. STAGED-HUNT-CHEAP's scan memo (stagedHuntScanMemo.js, STAGED_HUNT_SCAN_MEMO OFF) keys the staged hunt's leash-scan floods with it the same way (the player's state, the plan options, the teleporter grant, the aim)."
     },
     {
       "surface": "import",

@@ -199,6 +199,7 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
+import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -24448,7 +24449,9 @@ export function deriveKillByChaser(run, body, contacts,
      * different one is two builds pretending to be one.
      */
     { aim = null, allowTeleporter = null, tolerance = 0,
-        dashMode = DEFAULT_DASH_MODE } = {}) {
+        dashMode = DEFAULT_DASH_MODE,
+        // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): the staged hunt's memo of the scan's floods (`null`: none)
+        scanMemo = null } = {}) {
     if (!(run.entities('strikeBodies') ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
@@ -24577,8 +24580,16 @@ export function deriveKillByChaser(run, body, contacts,
             + '(`shouldStop`) was reached before this rung\'s stance scan, so the scan '
             + 'was not run' };
     }
-    const aimIsPlannable = aim !== null
-        && corridorPlans(run.world, run.state, aim, allowTeleporter, planOpts);
+    // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): with a memo, the floods and the aim's answer below are the
+    // memo's when everything they read is the memo's (`stagedScanEntry`); `cells` holds each cell's answer. OFF: none.
+    const scanEntry = stagedScanEntry(scanMemo,
+        { world: run.world, state: run.state, planOpts, allowTeleporter, aim }, () => {
+            const plannable = aim !== null
+                && corridorPlans(run.world, run.state, aim, allowTeleporter, planOpts);
+            return { aimIsPlannable: plannable, reach: plansReach(run.world, allowTeleporter, planOpts) };
+        });
+    const aimIsPlannable = scanEntry.aimIsPlannable;
+    const cellMemo = scanEntry.cells;
     // ── condition 1, and the cheap half of 3 and 4 ────────────────────
     const inLeash = [];
     const candidates = [];
@@ -24602,7 +24613,7 @@ export function deriveKillByChaser(run, body, contacts,
      * `fidelityCrusher.test.js`). Measured on L40 from the L41 door: the scan was
      * 210 s of a 262 s solve. `null` (a snapped start) keeps the A* asks.
      */
-    const reach = plansReach(run.world, allowTeleporter, planOpts);
+    const reach = scanEntry.reach;
     const fromHere = reach ? reach.from(run.state) : null;
     const toAim = reach && aim !== null ? reach.to(aim) : null;
     const scanAround = (here) => {
@@ -24613,12 +24624,24 @@ export function deriveKillByChaser(run, body, contacts,
                 const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
                 if (d > leash) continue;
                 inLeash.push(c);
-                if (fineDeadlineReached('kill-chaser')) { scanTripped = true; return; }
-                scanned += 1;
-                if (!(fromHere ? fromHere(c)
-                    : corridorPlans(run.world, run.state, c, allowTeleporter, planOpts))) continue;
-                if (aimIsPlannable && !(toAim ? toAim(c)
-                    : corridorPlans(run.world, c, aim, allowTeleporter, planOpts))) continue;
+                // ⛓ STAGED-HUNT-CHEAP: a cell the memo answered is a lookup — no flood, no planner, no work unit
+                const ck = cellMemo !== null ? `${c.x},${c.y}` : null;
+                let open = cellMemo !== null ? cellMemo.get(ck) : undefined;
+                if (open === undefined) {
+                    if (fineDeadlineReached('kill-chaser')) { scanTripped = true; return; }
+                    scanned += 1;
+                    open = Boolean(fromHere ? fromHere(c)
+                        : corridorPlans(run.world, run.state, c, allowTeleporter, planOpts))
+                        && (!aimIsPlannable || Boolean(toAim ? toAim(c)
+                            : corridorPlans(run.world, c, aim, allowTeleporter, planOpts)));
+                    if (cellMemo !== null) {
+                        cellMemo.set(ck, open);
+                        STAGED_HUNT_SCAN_MEMO_COUNTS.cellsAsked += 1;
+                    }
+                } else {
+                    STAGED_HUNT_SCAN_MEMO_COUNTS.cellsReused += 1;
+                }
+                if (!open) continue;
                 candidates.push({ ...c, d,
                     approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
             }
@@ -27529,7 +27552,10 @@ function solveSegmentUnder({
     const stagedChaserHunt = (hunted, first, { goal, aim, contacts, allowTeleporter, what }) => {
         if (!fork || !rewind) return first;
         const alive = (r) => (r.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id);
-        const ask = (r) => deriveKillByChaser(r, hunted, contacts, { aim, allowTeleporter, tolerance, dashMode });
+        // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): one memo of the scan's floods for every ask below
+        const scanMemo = newStagedHuntScanMemo();
+        const ask = (r) => deriveKillByChaser(r, hunted, contacts,
+            { aim, allowTeleporter, tolerance, dashMode, scanMemo });
         const whys = [];
         const cells = [...first.waits].sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
         for (const cell of cells) {
