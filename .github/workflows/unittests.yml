@@ -150,6 +150,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6.0.2
+    # Fork addition (sdc-apcalc-parity, 2026-11-04): worlds/apcalc/test/test_generator_parity.py
+    # runs the frontend APCalc engine under node (the runner images ship node), and the engine
+    # imports frontend/modules/shared/rng.js, a submodule the checkout above leaves empty.
+    - name: Init the shared submodule (the APCalc parity test imports it)
+      run: git submodule update --init frontend/modules/shared
     - name: Set up Python ${{ matrix.python.version }}
       uses: actions/setup-python@v6.2.0
       with:

@@ -433,6 +433,17 @@
                 "notPlaced": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}
               }
             },
+            "goalContainers": {
+              "type": "object",
+              "description": "How many regions configured for a goal CONTAINER (a generated Seedling room asked for a goal chest, `seedlingGenGoal: chest`) got one, and why the rest kept their default goal (goal-chest-pipeline, 2026-11-04: the user, \"I agree with your recommendations\": a room that cannot fit a goal chest keeps the torch, and that is reported). `requested` counts the regions whose substrate's `goalContainer.noteOf(payload)` answers a note; `placed` the ones whose goal IS the container (a generated room's location 0 is `kind: 'chest-goal'`); `notPlaced` the rest by reason: a substrate's own refusal names (flash_seedling_gen: the-goal-chest-has-no-stance-pocket, the-goal-chest-pocket-is-not-legal) or procgenCore/goalContainer.js `GOAL_CONTAINER_NOT_PLACED_REASONS` (no-ap-location). Producer: procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (`goalContainerReportOfSidecars`, read off the slot's own serialised sidecars). ABSENT, never empty, when no region was configured, so every other world's metadata is unchanged.",
+              "required": ["requested", "placed", "notPlaced"],
+              "additionalProperties": false,
+              "properties": {
+                "requested": {"type": "integer", "minimum": 1},
+                "placed": {"type": "integer", "minimum": 0},
+                "notPlaced": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}
+              }
+            },
             "substrate_configs": {
               "type": "object",
               "description": "The config each content source was installed with, by substrate id (APWORLD SUBSTRATE CHANGE R6b). Producer: procgenPipeline/procgenPipelineEngine.js `buildRulesJson` — for every registry entry that declares `recordablePipelineConfig` AND realised a region of the grid, whenever the compile writes procgen_metadata (procgenCore/substrateConfigRecord.js). Absent when no declaring source was realised. Consumer: the APWorld hub's zone read-back (apworldEditor/regionContent.js), which prefers a recorded field over its assumption.",
