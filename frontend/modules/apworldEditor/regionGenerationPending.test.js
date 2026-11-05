@@ -172,11 +172,11 @@ describe('ONE press: await the yielded work, then ask once more', () => {
         const never = { ok: false, threw: 'still generating' };
         const collect = (fn) => ({ value: fn(), pending: [Promise.resolve()] });
         const res = await regenerateAwaitingGeneration(() => { asks += 1; return never; }, { collect });
-        // mutant: a while loop → asks never stops (the test times out)
+        // mutant: a while loop with no bound → asks never stops (the test times out)
         expect(asks).toBe(2);
         expect(res.ok).toBe(false);
         expect(res.stillPending).toBe(true);
-        expect(res.threw).toBe(`${REGION_GENERATION_STILL_PENDING}; its last refusal: still generating`);
+        expect(res.threw).toBe(`${REGION_GENERATION_STILL_PENDING} (retried 1 of its bound 1); its last refusal: still generating`);
     });
 });
 

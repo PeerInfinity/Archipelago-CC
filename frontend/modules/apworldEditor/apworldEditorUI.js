@@ -165,7 +165,8 @@ import { collectPendingGenerations } from '../procgenPipeline/procgenPipelineEng
 import {
   INITIALISE_TIMEOUT_DEFAULT_S, INITIALISE_TIMEOUT_KEY, INITIALISE_TIMEOUT_SETTING,
   REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SETTING,
-  initialiseTimeoutSeconds, regionGenerationTimeoutSeconds, runRegenerateInWorker, runRegenerateOnPage,
+  initialisePageRetryBound, initialiseTimeoutSeconds, regionGenerationTimeoutSeconds, runRegenerateInWorker,
+  runRegenerateOnPage,
 } from './regionGenerationRun.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R7 — *Initialise procgen data* for a BARE slot: the
 //   door, the form's preview and answers (`initialiseFlow`), the op's record.
@@ -174,7 +175,8 @@ import {
   initialiseJob, initialiseLoopToggle, initialisePreview, initialiseTickerText, withInitialisePatch,
 } from './initialiseFlow.js';
 import {
-  BACK_EXITS, INITIALISE_XP_EFFECTS, SPHERE_LOG_SOURCE, initialiseOpFor, initialiseRegionSize, initialiseTargets,
+  BACK_EXITS, INITIALISE_XP_EFFECTS, SPHERE_LOG_SOURCE, initialiseOpFor, initialiseRegionSize, initialiseSlot,
+  initialiseTargets,
 } from './slotInitialise.js';
 // ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
@@ -7713,6 +7715,7 @@ class ApworldEditorUI {
       elapsedS: (performance.now() - run.handle.startedAt()) / 1000,
       budgetS: run.budgetS,
       progress: run.progress,
+      onPage: run.onPage === true,
     });
   }
 
@@ -7959,17 +7962,36 @@ class ApworldEditorUI {
       INITIALISE_TIMEOUT_SETTING, INITIALISE_TIMEOUT_DEFAULT_S));
     if (this._initialise !== ini || ini.run) return null;
     const run = { budgetS, args, progress: null, handle: null };
-    run.handle = runRegenerateInWorker(initialiseJob(doc, ini.player, ini.state, pageLog), {
+    const job = initialiseJob(doc, ini.player, ini.state, pageLog);
+    const onProgress = (ev) => { if (ev?.type === 'region') run.progress = ev; };
+    run.handle = runRegenerateInWorker(job, {
       timeoutMs: budgetS * 1000,
       onPhase: () => this._paintInitialiseElapsed(),
-      onProgress: (ev) => { if (ev?.type === 'region') run.progress = ev; },
+      onProgress,
     });
     ini.run = run;
     this._initialiseLastRun = run;
     this._initialiseTicker = setInterval(() => this._paintInitialiseElapsed(), 100);
     this._render();
 
-    const res = await run.handle.promise;
+    let res = await run.handle.promise;
+    // ⛓⛓ P5d — Generate ▸'s page finish (P5c), for the whole slot: a realiser yielded
+    //   work the worker cannot wait on (a generation only the page runs — cloudberry's
+    //   game page), so the same job is finished here in the same run. Each ask stops at
+    //   the first region still generating; the bound is the slot's region count.
+    if (res?.pendingGeneration && this._initialise === ini && ini.run === run) {
+      run.onPage = true;
+      run.progress = null;
+      run.handle = runRegenerateOnPage(job, {
+        timeoutMs: budgetS * 1000,
+        regenerate: (a) => initialiseSlot({ ...a, onProgress }),
+        collect: collectPendingGenerations,
+        maxRetries: initialisePageRetryBound(doc, ini.player),
+        onPhase: () => this._paintInitialiseElapsed(),
+      });
+      this._render();
+      res = await run.handle.promise;
+    }
     run.outcome = res;
     if (this._initialise !== ini || ini.run !== run) return res;
     ini.run = null;

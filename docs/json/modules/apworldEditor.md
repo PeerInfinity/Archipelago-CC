@@ -1023,6 +1023,24 @@ as before (unit pin: the same answer object, the bytes equal to the bare op).
   say) is answered exactly as before.
 
 Unit pins: `regionGenerationPending.test.js` (each pin names the mutant it kills).
+
+**Initialise procgen data takes the same road (P5d).** The worker's dispatch
+(`workerJobAnswer`) flags an initialise exactly as it flags a region regenerate, and
+*Initialise procgen data ▸ → Generate ▸* finishes a flagged run on the page in the
+same run; the ticker reads *(on this page) built 4 / 9 · 3.1 s of 300*. The one
+difference is **the bound**. A whole-slot realise stops at the FIRST region still
+generating, so each ask finishes at least one more region, and the bound is the
+slot's region count (`initialisePageRetryBound`), not one retry. Measured on the bare
+`adventure` slot as `cloudberry`: 9 regions placed, 9 retries, each level generated
+once. Two named refusals bound the loop:
+- `REGION_GENERATION_STILL_PENDING` once the bound is spent (the refusal names
+  *retried N of its bound M* and the realiser's last refusal);
+- `REGION_GENERATION_NO_PROGRESS` at once when a retry yields a promise it already
+  awaited (that work settled, but the realiser did not move on).
+
+The page run's timeout and Cancel have their own sentences (the generation already
+started keeps running and is cached). A generation that fails mid-slot is the answer
+by name, with its region. Unit pins: `initialisePending.test.js`.
 In-app row: `cloudberry-editor-regenerate-one-press` (the `cloudberry` batch: it
 needs the site copy). ⚠ *Initialise procgen data* is not covered: a slot
 initialised as `cloudberry` is still refused in the worker.
