@@ -27359,3 +27359,29 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling fidelity CEREMONY126 — the Ghostspear's ceremony: a swallowed strike and the walk it unmasked (`ceremonyPressForecast`, `ceremonyWalkHandoff`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37b (⚖ the user's GO 2026-11-04). The report is
+`CC/docs/cloud-reports/seedling-fidelity-ceremony126.md`.
+
+**W0.** At base `26ed405d3f` the L64 Ghostspear row is route-survey step **125** (not 126): `FROZEN_TICK_PRESS` at t43 —
+the walk's opportunistic strike presses on the tick before the pickup's touch, and the touch tick is the ceremony's
+first `Game.freezeObjects` frame, where `slash()` still runs and `genericHit` returns (`Player.as:560-563`, `:1075-1078`;
+`Mobile.as:35-41`; `Pickup.as:78-95`): the thrust is lost. FROZENPRESS's prototype guard unmasked a "stall" at
+(72.958, 34.784) that is the ceremony itself (started t44 at that point): the collect stance (72,24) lies beyond the
+pickup's rect, and `drive` held movement keys at a frozen player for 400 ticks — the dialogue pages only on X releases.
+
+**D1** (`ceremonyPressForecast`): `freezeForecast.pickupGap` (ON only; a pure read through `pickupUnderfoot`'s own skips)
+and `strikePolicy.ceremonyGuard` — an aim (2 ticks of travel) or a press (1) whose thrust could land on a ceremony's first
+frame stands down. **D2** (`ceremonyWalkHandoff`): the collect goal's stance walk lets its own pickup's avoid volume
+through and ends once `inCeremony` is up (`drive`'s `endOnCeremony`, `walkTo`'s `ceremonyEnds`); `runCollect` pages it.
+Both ON: step 125 SOLVED 150 t, 0 hits, 0 re-plans; step 183 (L79 Darksuit, the same stall class) SOLVED 102 t. Game
+witnesses (p4g, 0 px, `probe-seedling-ceremony126.mjs`): the solved tape, and a plain press into the first frozen frame
+= the press-free model. Local survey: OFF = base on all 236 rows; ON 204/32 (D1's conservative bound moves 141 −8,
+221 +27, 236 +1 ticks, 0 hits) and hammer's `solveProgress` L40 kill-rung pins (679 → 675 t, listed for hammer-3).
+
+**Trap candidates.** (1) A "walk stall" whose velocity is non-zero and whose box overlaps a pickup is a ceremony freeze,
+not geometry — check `inCeremony` first. (2) A live `botStatus` poll can read a tick while that tick's dead frames are
+still running (the first live tick after a ceremony read the frozen position); compare against the bot's own per-tick
+observations (`botDrain`).
