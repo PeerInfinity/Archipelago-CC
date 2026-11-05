@@ -19,7 +19,9 @@ import { localMultiworld } from '../steps/multiworld.js';
 
 const WASM_README = 'https://github.com/PeerInfinity/seedling-wasm#readme';
 const RECOMPILER = { panel: 'swfRecompilerPanel' };
-const PLAYTHROUGH = Object.freeze({ game: 'seedling_playthrough', seed: 1, title: 'Seedling Playthrough' });
+// MEASUREMENT-ONLY (seedling-whole-game-wasm-measure): ?measurePlaythroughSeed=<n> plays another committed-or-local seed.
+const MEASURE_SEED = (() => { try { return Number(new URLSearchParams(globalThis.location?.search ?? '').get('measurePlaythroughSeed')) || null; } catch { return null; } })();
+const PLAYTHROUGH = Object.freeze({ game: 'seedling_playthrough', seed: MEASURE_SEED ?? 1, title: 'Seedling Playthrough' });
 const botStatus = { ...BOT, selector: '.playback-bot .playback-bot-status' };
 const botButton = (name) => ({ ...BOT, selector: `.playback-bot .playback-control-bar-button-${name}` });
 

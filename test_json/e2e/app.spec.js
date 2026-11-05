@@ -68,6 +68,23 @@ test.describe('Application End-to-End Tests', () => {
   if (autoStartTimeoutMs) {
     APP_URL += `&autoStartTimeoutMs=${encodeURIComponent(autoStartTimeoutMs)}`;
   }
+  // MEASUREMENT-ONLY (cloud slice seedling-whole-game-wasm-measure): lift a tutorial walk's step
+  // timeout and the bot's stall window, so a long walk stops on its own, not on the harness clock.
+  if (process.env.TEST_MEASURE_STEP_TIMEOUT_MS) {
+    APP_URL += `&measureStepTimeoutMs=${encodeURIComponent(process.env.TEST_MEASURE_STEP_TIMEOUT_MS)}`;
+  }
+  if (process.env.TEST_MEASURE_PLAYTHROUGH_SEED) {
+    APP_URL += `&measurePlaythroughSeed=${encodeURIComponent(process.env.TEST_MEASURE_PLAYTHROUGH_SEED)}`;
+  }
+  if (process.env.TEST_MEASURE_FLASH_RUNTIME) {
+    APP_URL += `&measureFlashRuntime=${encodeURIComponent(process.env.TEST_MEASURE_FLASH_RUNTIME)}`;
+  }
+  if (process.env.TEST_MEASURE_SKIP_REFUSALS) {
+    APP_URL += `&measureSkipRefusals=${encodeURIComponent(process.env.TEST_MEASURE_SKIP_REFUSALS)}`;
+  }
+  if (process.env.TEST_MEASURE_BOT_STALL_MS) {
+    APP_URL += `&measureBotStallMs=${encodeURIComponent(process.env.TEST_MEASURE_BOT_STALL_MS)}`;
+  }
 
   test('run in-app tests and check results', async ({ page }) => {
     // Counted for the summary: a green run can hide a thrown handler, and the
