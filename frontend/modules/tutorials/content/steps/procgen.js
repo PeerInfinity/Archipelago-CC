@@ -47,8 +47,10 @@ export const BOT_STALL_MS = 60000;
 export function botCannotFinish(ctx) {
     const status = ctx.text(botStatus);
     if (status.startsWith('error')) return `the Playback Bot says "${status}"`;
-    if (ctx.unchangedFor('bot-status', status, BOT_STALL_MS)) {
-        return `the Playback Bot has said "${status}" for ${BOT_STALL_MS / 1000} s`;
+    // MEASUREMENT-ONLY (seedling-whole-game-wasm-measure): ?measureBotStallMs= lifts the stall window.
+    const stallMs = globalThis.__measureBotStallMs ?? BOT_STALL_MS;
+    if (ctx.unchangedFor('bot-status', status, stallMs)) {
+        return `the Playback Bot has said "${status}" for ${stallMs / 1000} s`;
     }
     return null;
 }
