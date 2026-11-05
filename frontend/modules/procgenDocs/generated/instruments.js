@@ -134,7 +134,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 95,
+            "count": 96,
             "id": "plan"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 506,
+        "blockStyle": 507,
         "browser": 205,
         "cited": 266,
-        "files": 524,
+        "files": 525,
         "lineStyle": 18,
-        "withDocblock": 524,
-        "withFlags": 444
+        "withDocblock": 525,
+        "withFlags": 445
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8019,6 +8019,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-binding-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-binding-witness — ⛓⛓ THE EVENT-LAYER BINDING LEDGER (slice rules-sharedbinding-witnesses): ONE GAME WITNESS PER RE-ADMITTED `sharedBinding` EVENT.",
+            "path": "scripts/procgen/plan-seedling-binding-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-bobsoldier.mjs",
             "flags": [
                 {
@@ -11912,6 +11939,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "only",
                 "record",
+                "repeat",
                 "set"
             ],
             "file": "probe-seedling-cleartag.mjs",
@@ -11927,6 +11955,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "record"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "repeat"
                 },
                 {
                     "how": [
