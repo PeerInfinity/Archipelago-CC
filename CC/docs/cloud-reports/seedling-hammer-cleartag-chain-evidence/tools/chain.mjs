@@ -1,4 +1,4 @@
-// scratch (L40-CENSUS): one captured request (--id, --i) solved under the env's switches with the anytime DEADLINE
+// scratch (L40-CENSUS; CLEARTAG-CHAIN adds the fresh run's `burned`/`clears`): one captured request (--id, --i) solved under the env's switches with the anytime DEADLINE
 // lifted to --cap work units (default 40960), every pass as `solveAnytime` runs them on ONE work clock (the upgrade
 // window only with a plan in hand, as there). Instruments (measure-only, nothing tracked is edited):
 //   - every work unit: its site and the innermost solver frame of interest (stack attribution);
@@ -103,7 +103,10 @@ function modelled(plan) {
         if (want && !same(rowOf(run), want)) return { gm: false, at: k, why: `row ${JSON.stringify(rowOf(run))} != ${JSON.stringify(want)}` };
     }
     const hits = run.playerHits.slice(hits0).map((h) => ({ t: h.t, source: h.source, id: h.id }));
-    return { gm: run.playerDeaths.length === deaths0, hits, deaths: run.playerDeaths.length - deaths0 };
+    // CLEARTAG-CHAIN: what the fresh run burnt and cleared (the chain's own post-conditions, read off the replay)
+    const burned = [...(run.entities('burnedTrees') ?? [])];
+    const clears = (run.ledger('earnedClears') ?? []).map((c) => `${c.level}:${c.tag}`);
+    return { gm: run.playerDeaths.length === deaths0, hits, deaths: run.playerDeaths.length - deaths0, burned, clears };
 }
 let gm = null;
 if (best.ok) { try { gm = modelled(best.plan); } catch (e) { gm = { gm: false, why: `THREW ${e?.message ?? e}` }; } }

@@ -9,6 +9,7 @@ tok() { case "$1" in
   CSH) echo SEEDLING_CHASER_STAGED_HUNT=1;; OPP) echo SEEDLING_OPPORTUNISTIC_STRIKE=1;; LWF) echo SEEDLING_LATCH_WEIGH_FIRST=1;;
   TA) echo SEEDLING_TURRET_APPROACH=1;; SD) echo SEEDLING_APPROACH_DOOR=1;; FO) echo SEEDLING_FIFTH_ORDER=1;;
   PEE) echo SEEDLING_PRESS_ESCAPE_EXACT=1;; FSB) echo SEEDLING_FORECAST_SHIELD_BUMP=1;;
+  ALL-*) for a in SB CSH OPP LWF TA SD FO PEE FSB; do [ "ALL-$a" = "$1" ] || tok $a; done;;
   ALL) for a in SB CSH OPP LWF TA SD FO PEE FSB; do tok $a; done;; p*) ;; *) echo "unknown $1" >&2; return 1;; esac; }
 mkdir -p "$OUT"
 for A in "$@"; do E=""; P=""
