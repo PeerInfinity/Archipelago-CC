@@ -675,7 +675,7 @@ export function buildPlaythroughMaze({
         },
     });
     mazeProjection.projectionRegion = (region) => projectionRegionOf(region, hand);
-    // `plainLevelWorlds: false` keeps every plain level per sub-region (a regression row of that path, which L12/L94 still take).
+    // `plainLevelWorlds: false` keeps every plain level per sub-region (a regression row of that path; on main certifyLandingArrivals.test.js uses it for L29 + L31, and L12's per-sub-region subjects run on it since tile-l12-one-world).
     const decided = new Map();
     if (plainLevelWorlds) {
         mazeProjection.plainLevelWorldFits = (world, region) => {
