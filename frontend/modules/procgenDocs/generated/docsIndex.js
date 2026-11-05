@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1245,
+        "headings": 1246,
         "indexHeadings": 2,
-        "lines": 34733,
+        "lines": 34742,
         "pages": 4,
-        "words": 506761
+        "words": 507715
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -89,8 +89,8 @@ export const DOCS_INDEX = frz({
             "description": "Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it.",
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
-            "headings": 42,
-            "lines": 233,
+            "headings": 43,
+            "lines": 237,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -101,7 +101,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 3965
+            "words": 4122
         },
         {
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
@@ -207,7 +207,7 @@ export const DOCS_INDEX = frz({
             "file": "maze.md",
             "h1": "Maze Substrate",
             "headings": 28,
-            "lines": 370,
+            "lines": 375,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -219,7 +219,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 18141
+            "words": 18938
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",

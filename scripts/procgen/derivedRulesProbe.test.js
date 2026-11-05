@@ -25,9 +25,12 @@ const plantedCompile = (levels) => compile(levels, { plant: plantEchoSentinels }
 const certify = (rules) => certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, rows: true });
 
 describe('the echo sentinels (L12, a plain world)', () => {
+    // ⛓ Since session tile-l12-one-world L12 is ONE level world in the preset (its crossings walked, not copied), so its
+    // per-sub-region shape — the largest internal-row echo — is held on the switch that still takes that path
+    // (`plainLevelWorlds: false`, as L20 and L94 do by their own tests). The one-world row below pins the delta.
     const LEVELS = ['level_12'];
-    const rules = compile(LEVELS);
-    const echoes = findEchoes(plantedCompile(LEVELS), rules);
+    const rules = compile(LEVELS, { plainLevelWorlds: false });
+    const echoes = findEchoes(compile(LEVELS, { plant: plantEchoSentinels, plainLevelWorlds: false }), rules);
     const witch = Object.entries(rules.regions['1']).find(([, r]) => (r.locations ?? []).some((l) => l.name === 'Level 012 - Witch'))[0];
 
     it('the Witch\'s location rule is copied into the payload (W0: every boss/combat location rule is)', () => {
@@ -42,6 +45,15 @@ describe('the echo sentinels (L12, a plain world)', () => {
         expect(echoes.unmapped).toEqual([]);
     });
 
+    it('as ONE level world (the preset since tile-l12-one-world) none of its lock rows is copied; the two HAND sentinels stay', () => {
+        const one = compile(['level_12', 'level_83']);
+        const e = findEchoes(plantedCompile(['level_12', 'level_83']), one);
+        expect(e.byKind.ix.filter((id) => id.startsWith('level_12/'))).toEqual([]);
+        expect(e.byKind.ixr.filter((id) => id.startsWith('level_12/'))).toEqual([]);
+        expect(e.byKind.loc).toEqual(['level_12/Level 012 - Witch']);
+        expect(e.byKind.ex).toEqual(['level_12/out_teleporter_32_848']);
+    });
+
     it('the certifier AGREES on the Witch either way; only the echo label says the agreement is by construction', () => {
         const { rows } = certify(rules);
         const witchRows = (set) => labelDerivedRows(rows, { rules, echoes: set }).elements.filter((e) => e.name === 'Level 012 - Witch');
@@ -51,7 +63,7 @@ describe('the echo sentinels (L12, a plain world)', () => {
     });
 
     it('a sentinel compile leaves the producer\'s cached event layer alone: the true compile after it is unchanged', () => {
-        expect(compile(LEVELS)).toEqual(rules);
+        expect(compile(LEVELS, { plainLevelWorlds: false })).toEqual(rules);
     });
 
     it('sentinels are delimited, so a composed obstacle name yields its rule id, not a fragment', () => {
@@ -133,7 +145,9 @@ describe('a row with skipped points is PARTIAL, never overridable (L12 r42c28 fr
     // The skip census names it: L12 r42c28 is entered only from L83, landing (2,54), and its magical lock's event is
     // asked there at no point at all (64 unadmitted + 8 own-event of 128 — every point skipped). The region is in the
     // overridable class (one arrival, rooted, no walk-in), so without the counts the event's "agrees" would be an override.
-    const rules = compile(['level_12', 'level_83']);
+    // ⛓ Per sub-region (`plainLevelWorlds: false`): as one level world (tile-l12-one-world) r42c28 is walked into from other
+    // members, so its region leaves the overridable class and this row's premise; the label logic is held on the old shape.
+    const rules = compile(['level_12', 'level_83'], { plainLevelWorlds: false });
     const { rows } = certify(rules);
     const flag7 = (rs) => labelDerivedRows(rs, { rules, echoes: new Set() }).elements
         .find((e) => e.name === 'L12 flag 7: magicallock@32,864 cleared');
