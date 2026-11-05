@@ -16500,7 +16500,9 @@ export function resetChooserPairCounts() {
  * in it — the hit's body first, then the rest by distance from the hit — so BAIT and the kill rung take the body the
  * walk actually met, and the next climb (a world edit re-plans) asks again of the room the kill left: CPAIR's shape,
  * one size up. A cut the hit's body is not part of is never offered (that body's removal changes no corridor).
- * Cost: one `plansReach` per live chaser, plus two.
+ * Cost: one `plansReach` per live chaser, plus two. ⛔ THE CUT DEFERS TO NARROW: where the NARROW rung (below KILL) is
+ * asked and its own probe walks clean, no cut is asked and NARROW answers as OFF (its probe made once, reused). Measured:
+ * without the deferral 13 already-solving L40 pit legs were re-planned through a kill, mostly longer.
  *
  * OFF by default. `SEEDLING_CHOOSER_CUT=1` turns it on in a node process (the page's worker reads it off the solver
  * env channel), `withChooserCut(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk and trace
@@ -16516,14 +16518,15 @@ export function withChooserCut(enabled, fn) {
 
 /**
  * The switch's instrument, written only with it ON and read by nothing that decides: `asked` climbs that asked a cut,
- * `plans` reach asks made, `admitted` climbs a cut answered, `cuts` each cut offered (`{t, hit, set}`, the hit's body
+ * `plans` reach asks made, `admitted` climbs a cut answered, `deferred` climbs NARROW would answer (no cut asked),
+ * `cuts` each cut offered (`{t, hit, set}`, the hit's body
  * first), `refused` each climb that asked and offered nothing (`{t, hit, why}`).
  */
-export const CHOOSER_CUT_COUNTS = { asked: 0, plans: 0, admitted: 0, cuts: [], refused: [] };
+export const CHOOSER_CUT_COUNTS = { asked: 0, plans: 0, admitted: 0, deferred: 0, cuts: [], refused: [] };
 
 /** Zero `CHOOSER_CUT_COUNTS`. */
 export function resetChooserCutCounts() {
-    Object.assign(CHOOSER_CUT_COUNTS, { asked: 0, plans: 0, admitted: 0, cuts: [], refused: [] });
+    Object.assign(CHOOSER_CUT_COUNTS, { asked: 0, plans: 0, admitted: 0, deferred: 0, cuts: [], refused: [] });
 }
 
 /**
@@ -29052,6 +29055,8 @@ function solveSegmentUnder({
          */
         if (activeProgress !== null) progressRung('bait');
         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
+        /** ⛓ PIT-WEST — NARROW's probe as the cut's deferral asked it (`null` OFF: never set). */
+        let cutNarrowProbe = null;
         /**
          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
          * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its
@@ -29079,7 +29084,24 @@ function solveSegmentUnder({
         // ⛓⛓ PIT-WEST (`CHOOSER_CUT`, OFF) — where the list is STILL empty, an irreducible cut of live chasers that
         // holds the hit's body (`chooseCutToRemove`), the hit's body first: the kill rung takes it and re-climbs.
         if (CHOOSER_CUT.enabled && removable.length === 0) {
-            removable = chooseCutToRemove(aim, contacts, allowTeleporter, hit);
+            /**
+             * ⛔ THE CUT DEFERS TO NARROW. OFF an empty list falls past KILL to NARROW (the same corridor walked with the
+             * pre-lapse strike admissions), which answers many L40 pit climbs; a cut handed to KILL (above NARROW) would
+             * replace that answer with a kill plan (measured: 13 solved pit legs re-planned, mostly longer). So the cut is
+             * asked only where NARROW is absent or its own probe (the call it makes, word for word) is dangerous.
+             */
+            const narrowAsked = Array.isArray(corridor) && corridor.length > 0 && !axisAligned
+                && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled
+                && strikePolicyFor(run, { dashMode }) !== null
+                && !(ACTIVE_DISABLE !== null && ACTIVE_DISABLE.rungs.has('narrow'));
+            if (narrowAsked) {
+                // the probe NARROW makes, kept so NARROW reuses it (no tick between: the work is OFF's)
+                cutNarrowProbe = { corridor, t: perTick.length, again: probeCorridor(corridor, dangerExcept, { axisAligned,
+                    walkCheck: true, ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true }) };
+            }
+            const narrowAnswers = narrowAsked && !cutNarrowProbe.again;
+            if (narrowAnswers) CHOOSER_CUT_COUNTS.deferred += 1;
+            else removable = chooseCutToRemove(aim, contacts, allowTeleporter, hit);
         }
         // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
         // is the body the single-return chooser used to hand them.
@@ -29822,8 +29844,11 @@ function solveSegmentUnder({
             && strikePolicyFor(run, { dashMode }) !== null && !rungGate('narrow')) {
             if (activeProgress !== null) progressRung('narrow');
             const killRefused = { rung: 'kill', why: killWhy };
-            const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
-                ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true });
+            // ⛓ PIT-WEST (`CHOOSER_CUT` ON only): the probe the cut's deferral made at this tick, reused
+            const again = cutNarrowProbe !== null && cutNarrowProbe.corridor === corridor && cutNarrowProbe.t === perTick.length
+                ? cutNarrowProbe.again
+                : probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
+                    ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true });
             if (!again) {
                 rowFor('narrow', killRefused, { waypoints: corridor.length });
                 lapseNarrowWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },

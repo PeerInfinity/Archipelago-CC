@@ -4396,10 +4396,10 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 145,
+        "solverBot.js": 146,
         "strikePolicy.js": 3
       },
-      "sites": 184,
+      "sites": 185,
       "seen": "static",
       "via": [
         "import"
