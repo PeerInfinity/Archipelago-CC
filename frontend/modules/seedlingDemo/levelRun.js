@@ -18231,6 +18231,127 @@ export function createLevelRun({
         return out;
     };
     /**
+     * ⛓ fidelity CEREMONYEXACT D1: `previewStepper`'s body, verbatim, as a const — so `ceremonyStepNow` asks the run's
+     * own stepper without a name for the run object (the solver-surface census reads a literal `return { … }`).
+     */
+    const previewStepperNow = () => {
+        if (noclip) {
+            throw new Error('levelRun.previewStepper: this run is noclip — the '
+                + 'mechanics are not stepped, so a preview would walk a world no '
+                + 'tick of the run consults.');
+        }
+        const opts = stepOptsFor({
+            beforeTypeFlip: false,
+            openActivators: openActivatorIds(activatorStateFor(level)),
+            inputBlocked: frozenTimer > 0,
+            steerBlocked: !canSteer(damage),
+        });
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c — **AND IT SPENDS A DASH IMPULSE, BECAUSE THE
+         * DRIVE DOES** (⚖ ruling 35).
+         *
+         * `advance` builds its options with `dashImpulse: slashPress
+         * ?.outcome === 'dash' ? slashPress.impulse : null` (`:13177`) and
+         * `stepV2` spends it as `useItemImpulse` — `useItem` is reached
+         * from inside `input()`, so the +2 knockback lands ABOVE this
+         * tick's sweep. A preview whose stepper could not carry it would
+         * price a corridor the drive walks 9 px further along (§23.11),
+         * which is exactly why `allowDash` was enforced OFF in 12b′ rather
+         * than acted on.
+         *
+         * ⛔ `stepOptsFor` STAYS THE ONE BUILDER AND STAYS ONE CALL. The
+         * spread overrides the single key that builder already declares
+         * and already defaults to `null`, so `{...opts, dashImpulse}` is
+         * field for field what `stepOptsFor({…, dashImpulse})` returns —
+         * asserted as a row rather than claimed here. It is a spread and
+         * not a second call because `stepOptsFor` re-runs `liveSolidOpts`
+         * on every invocation and the stance scan previews up to 289
+         * corridors of hundreds of ticks each.
+         *
+         * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID, so a
+         * tick that spends no impulse is field for field the tick 12b
+         * stepped.
+         *
+         * ⚠⚠ R9 SLICE 12i — **THIS PARAGRAPH USED TO SAY "the roster-wide
+         * default is `allowDash: false`, ⚖ ruling 42", AND THAT WENT FALSE
+         * AT ⚖ 41's FLIP** (12e′'s fourth run) without anything here
+         * moving. ⇒ it does not quote a state any more: the roster's dash
+         * permission is `solverBot.DEFAULT_DASH_MODE`, today `all`, and
+         * §42.7 counts 205 dashes on 16 committed tapes under it — so the
+         * dash arm below is LIVE on the roster and predicting "zero
+         * movers" from here would be exactly backwards. A comment that
+         * names a value instead of the name that holds it is a landmine
+         * under the next flip (kickoff §40.6).
+         */
+        /**
+         * ⛓⛓⛓ R4-swim D3 — **AND A PREVIEW STARTED INSIDE AN I-FRAME
+         * CARRIES IT**, the facing and the recovery both.
+         *
+         * The drive's own step passes `directionFace: damage.directionFace`
+         * (U11-swim D2) and `steerBlocked: !canSteer(damage)`, then runs
+         * `stepPlayerDamage` in the player's slot, which hands the parked
+         * facing back (`direction = directionFace`) on the recovery tick.
+         * A preview that froze both at the snapshot faced the way the
+         * knockback CARRIES the player for the whole window (measured on
+         * `u11-facing-knockback`'s staging: 18 of 18 ticks) and never
+         * steered again after it. The damage state rides the preview's own
+         * states on a SYMBOL key — `{...st}` copies it and `JSON.stringify`
+         * does not see it — and a caller's hand-built state falls back to
+         * the snapshot, which is exactly the old reading.
+         *
+         * ⛔ OUTSIDE AN I-FRAME NOTHING CHANGES: no hit has parked a facing
+         * and steering is open, so the closure is the one 12c built, field
+         * for field. No committed solve previews inside an i-frame.
+         */
+        const iFrame = damage.hitsTimer > 0 || damage.directionFace >= 0;
+        const damageAtStart = { ...damage };
+        /**
+         * ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF → null): a step told its PREVIEWED tick (`previewTick`,
+         * 1-based from the preview's start — `previewWalk` says it) sweeps against the towers' Solids as that
+         * frame's updates leave them (`beamTowerSolidForecast`). A step not told, or the forecast null: `opts`.
+         */
+        const towersAt = beamTowerSolidForecast();
+        const optsAt = (previewTick) => (towersAt && previewTick !== null
+            ? { ...opts, beamTowers: towersAt(previewTick) } : opts);
+        const step = (st, held, { dashImpulse = null, previewTick = null } = {}) => {
+            const opts = optsAt(previewTick);
+            if (!iFrame) {
+                const r = dashImpulse
+                    ? stepV2(st, held, { ...opts, dashImpulse })
+                    : stepV2(st, held, opts);
+                // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
+                // to reboot into, so it refuses with the words `step` used to
+                // throw — every planner caller already reads that refusal as a
+                // walk it cannot take.
+                if (r.death) throw deathRefusal(opts.level, st, r.death);
+                return r;
+            }
+            const d = st[PREVIEW_DAMAGE] ?? damageAtStart;
+            const r = stepV2(st, held, {
+                ...opts, dashImpulse, steerBlocked: !canSteer(d),
+                directionFace: d.directionFace,
+            });
+            if (r.death) throw deathRefusal(opts.level, st, r.death);
+            const nd = stepPlayerDamage(d);
+            return {
+                ...r,
+                ...(nd.recovered && nd.direction !== null ? { direction: nd.direction } : {}),
+                [PREVIEW_DAMAGE]: nd.state,
+            };
+        };
+        /**
+         * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`
+         * runs them — a preview across a current rides it. A room with no
+         * pull gets the same closure it always did.
+         */
+        const pulls = pullsFor(level);
+        if (pulls.length === 0) return step;
+        return (st, held, o = {}) => {
+            const r = pushBody(pulls, st, playerBoxAt);
+            return step(r.by.length > 0 ? { ...st, x: r.x, y: r.y } : st, held, o);
+        };
+    };
+    /**
      * ⛓ fidelity CEREMONYEXACT D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **ON WHICH TICK, IF ANY, WOULD A PICKUP'S
      * CEREMONY START, GIVEN THE KEYS ABOUT TO BE SENT?** `heldSeq` is one held set per tick from this boundary
      * (`[held]` for a press decided now; `[aimKeys, {primary}]` for an aim). A placed pickup is touched at a tick's TOP
@@ -18257,7 +18378,7 @@ export function createLevelRun({
         const swings = weapon === 'sword' || weapon === 'ghostsword';
         let step;
         let slash = null;
-        try { step = runApi.previewStepper(); } catch { return null; }
+        try { step = previewStepperNow(); } catch { return null; }
         let st = state;
         let was = prevHeld;
         for (let k = 0; k < heldSeq.length; k += 1) {
@@ -18672,9 +18793,7 @@ export function createLevelRun({
     // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
     tentacleMouthAtBuild();
 
-    // ⛓ fidelity CEREMONYEXACT D1: the run's own object, named so `ceremonyStepNow` can ask its `previewStepper`.
-    let runApi = null;
-    return (runApi = {
+    return {
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
@@ -20671,121 +20790,7 @@ export function createLevelRun({
          * ⛔ REFUSED under `noclip`, for `liveGeometryOpts`' own reason.
          */
         previewStepper() {
-            if (noclip) {
-                throw new Error('levelRun.previewStepper: this run is noclip — the '
-                    + 'mechanics are not stepped, so a preview would walk a world no '
-                    + 'tick of the run consults.');
-            }
-            const opts = stepOptsFor({
-                beforeTypeFlip: false,
-                openActivators: openActivatorIds(activatorStateFor(level)),
-                inputBlocked: frozenTimer > 0,
-                steerBlocked: !canSteer(damage),
-            });
-            /**
-             * ⛓⛓⛓ R9 SLICE 12c — **AND IT SPENDS A DASH IMPULSE, BECAUSE THE
-             * DRIVE DOES** (⚖ ruling 35).
-             *
-             * `advance` builds its options with `dashImpulse: slashPress
-             * ?.outcome === 'dash' ? slashPress.impulse : null` (`:13177`) and
-             * `stepV2` spends it as `useItemImpulse` — `useItem` is reached
-             * from inside `input()`, so the +2 knockback lands ABOVE this
-             * tick's sweep. A preview whose stepper could not carry it would
-             * price a corridor the drive walks 9 px further along (§23.11),
-             * which is exactly why `allowDash` was enforced OFF in 12b′ rather
-             * than acted on.
-             *
-             * ⛔ `stepOptsFor` STAYS THE ONE BUILDER AND STAYS ONE CALL. The
-             * spread overrides the single key that builder already declares
-             * and already defaults to `null`, so `{...opts, dashImpulse}` is
-             * field for field what `stepOptsFor({…, dashImpulse})` returns —
-             * asserted as a row rather than claimed here. It is a spread and
-             * not a second call because `stepOptsFor` re-runs `liveSolidOpts`
-             * on every invocation and the stance scan previews up to 289
-             * corridors of hundreds of ticks each.
-             *
-             * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID, so a
-             * tick that spends no impulse is field for field the tick 12b
-             * stepped.
-             *
-             * ⚠⚠ R9 SLICE 12i — **THIS PARAGRAPH USED TO SAY "the roster-wide
-             * default is `allowDash: false`, ⚖ ruling 42", AND THAT WENT FALSE
-             * AT ⚖ 41's FLIP** (12e′'s fourth run) without anything here
-             * moving. ⇒ it does not quote a state any more: the roster's dash
-             * permission is `solverBot.DEFAULT_DASH_MODE`, today `all`, and
-             * §42.7 counts 205 dashes on 16 committed tapes under it — so the
-             * dash arm below is LIVE on the roster and predicting "zero
-             * movers" from here would be exactly backwards. A comment that
-             * names a value instead of the name that holds it is a landmine
-             * under the next flip (kickoff §40.6).
-             */
-            /**
-             * ⛓⛓⛓ R4-swim D3 — **AND A PREVIEW STARTED INSIDE AN I-FRAME
-             * CARRIES IT**, the facing and the recovery both.
-             *
-             * The drive's own step passes `directionFace: damage.directionFace`
-             * (U11-swim D2) and `steerBlocked: !canSteer(damage)`, then runs
-             * `stepPlayerDamage` in the player's slot, which hands the parked
-             * facing back (`direction = directionFace`) on the recovery tick.
-             * A preview that froze both at the snapshot faced the way the
-             * knockback CARRIES the player for the whole window (measured on
-             * `u11-facing-knockback`'s staging: 18 of 18 ticks) and never
-             * steered again after it. The damage state rides the preview's own
-             * states on a SYMBOL key — `{...st}` copies it and `JSON.stringify`
-             * does not see it — and a caller's hand-built state falls back to
-             * the snapshot, which is exactly the old reading.
-             *
-             * ⛔ OUTSIDE AN I-FRAME NOTHING CHANGES: no hit has parked a facing
-             * and steering is open, so the closure is the one 12c built, field
-             * for field. No committed solve previews inside an i-frame.
-             */
-            const iFrame = damage.hitsTimer > 0 || damage.directionFace >= 0;
-            const damageAtStart = { ...damage };
-            /**
-             * ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF → null): a step told its PREVIEWED tick (`previewTick`,
-             * 1-based from the preview's start — `previewWalk` says it) sweeps against the towers' Solids as that
-             * frame's updates leave them (`beamTowerSolidForecast`). A step not told, or the forecast null: `opts`.
-             */
-            const towersAt = beamTowerSolidForecast();
-            const optsAt = (previewTick) => (towersAt && previewTick !== null
-                ? { ...opts, beamTowers: towersAt(previewTick) } : opts);
-            const step = (st, held, { dashImpulse = null, previewTick = null } = {}) => {
-                const opts = optsAt(previewTick);
-                if (!iFrame) {
-                    const r = dashImpulse
-                        ? stepV2(st, held, { ...opts, dashImpulse })
-                        : stepV2(st, held, opts);
-                    // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
-                    // to reboot into, so it refuses with the words `step` used to
-                    // throw — every planner caller already reads that refusal as a
-                    // walk it cannot take.
-                    if (r.death) throw deathRefusal(opts.level, st, r.death);
-                    return r;
-                }
-                const d = st[PREVIEW_DAMAGE] ?? damageAtStart;
-                const r = stepV2(st, held, {
-                    ...opts, dashImpulse, steerBlocked: !canSteer(d),
-                    directionFace: d.directionFace,
-                });
-                if (r.death) throw deathRefusal(opts.level, st, r.death);
-                const nd = stepPlayerDamage(d);
-                return {
-                    ...r,
-                    ...(nd.recovered && nd.direction !== null ? { direction: nd.direction } : {}),
-                    [PREVIEW_DAMAGE]: nd.state,
-                };
-            };
-            /**
-             * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`
-             * runs them — a preview across a current rides it. A room with no
-             * pull gets the same closure it always did.
-             */
-            const pulls = pullsFor(level);
-            if (pulls.length === 0) return step;
-            return (st, held, o = {}) => {
-                const r = pushBody(pulls, st, playerBoxAt);
-                return step(r.by.length > 0 ? { ...st, x: r.x, y: r.y } : st, held, o);
-            };
+            return previewStepperNow();
         },
         /**
          * ⛓ THE ARROW SUBSYSTEM, FORECAST — see `arrowForecastNow`. `null`
@@ -23782,5 +23787,5 @@ export function createLevelRun({
             });
             return { transition: record, grant, ...hits };
         },
-    });
+    };
 }
