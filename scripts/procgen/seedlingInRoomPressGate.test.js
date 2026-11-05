@@ -8,12 +8,13 @@
 // reaches `level_20__r1c4` on True_ and AP collects the Shield at sphere 0.3 — rows 1(a)–(c) go red on that AP_1.
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, isAbsolute, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { crossingPaysPress } from './make-seedling-playthrough-rules.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const read = (p) => readFileSync(join(REPO, p), 'utf8');
+// `R_A4_AP1` / `R_A4_SPHERES` (absolute paths) point the rows at another AP_1 / sphere log: the red-first runs.
+const read = (p) => readFileSync(isAbsolute(p) ? p : join(REPO, p), 'utf8');
 const AP1_FILE = process.env.R_A4_AP1 ?? 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json';
 const SPHERES_FILE = process.env.R_A4_SPHERES
     ?? 'frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl';
