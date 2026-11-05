@@ -131,6 +131,7 @@
  */
 import { buildLevelWorld, ENTITY_CLASSES, LevelWorldError, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
+import { routeDiffersLine } from './frontierReadout.js';
 /**
  * ⛓ THE ▶ LOAD-IN-WASM PAYLOAD BUILDERS — the ONE fold (`buildStagedTape`) and
  * the ONE exporter/validator/chunker the CLI rows already use. ⛔ All four are
@@ -1899,6 +1900,14 @@ function publishCampaign(seq, parsedTapes, names, run) {
                 refusal: artifact.refusal,
                 complete: artifact.complete === true,
                 why: artifact.why,
+                /**
+                 * ⛓ TILE-FRONTIER-ROUTE — the route the chain was recorded on,
+                 * and where TODAY's route-only route leaves it. `undefined` (the
+                 * field absent) means the census had no survey to compare, which
+                 * the readout says rather than reading it as "the same route".
+                 */
+                recordingRoute: artifact.recordingRoute ?? null,
+                routeDiffers: artifact.coverage?.['route-only']?.differsFromRecorded,
                 source: FRONTIER_PATH,
             }
             : { chain: null, lastArrival: null, nextStep: null, refusal: null,
@@ -1953,6 +1962,8 @@ function renderCampaign(c) {
         // ⛓ R9 slice L18b: the chain walks EVERY route step — nothing is in front
         //   of it on this route, which is not the same sentence as "no work order".
         parts.push(`<b>ROUTE COMPLETE</b> — ${esc(c.frontier.why)}`);
+        const moved = routeDiffersLine(c.frontier);
+        if (moved) parts.push(esc(moved));
     } else {
         parts.push(`⚠ no work order — ${esc(c.frontier.why ?? 'the frontier artifact '
             + 'names no refused step')}`);
