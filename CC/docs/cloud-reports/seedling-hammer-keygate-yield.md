@@ -152,7 +152,7 @@ certified with the approach it drives (⚖ 30(c)).
 | Gate | Result |
 |---|---|
 | Bounded vitest by path (⚖ 52): `hammerKeygateYield`, `solverEnvChannel`, `strategySwitch`, `contentIdentity`, `entityBlocks`, `boxLock`, `boxLockCommit` | 7 files, 132 passed |
-| Hammer `.slow` files (`hammerBk2Combat`, `hammerDashShape`, `hammerEscapeExact`, `hammerEscapeGenerated`), `vitest.slow.config.js` | PENDING (running at commit time; updated below when done) |
+| Hammer `.slow` files (`hammerBk2Combat`, `hammerDashShape`, `hammerEscapeExact`, `hammerEscapeGenerated`), `vitest.slow.config.js` | 4 files, **8 passed** (1596 s) |
 | `ci-producer-checks --jobs=4`, defaults (clean tree) | 97 run, **0 red**, 1 skipped (`plan-seedling-r7-ends-meet`, the standing browser-arm skip) |
 | `ci-producer-checks --jobs=4`, `SEEDLING_COLLECT_RESTANCE=1` | 97 run, **0 red**, 1 skipped |
 | `identity-block.sh` (dev server on :8000) | exit 0 (every row `[exit 0]`; reference: all 7 generated modules and 5 markdown regions match) |
