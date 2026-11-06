@@ -436,7 +436,7 @@ describe('S1 — the per-region Generate declares the grants in the SAME op', ()
 
     it('⛓ the form and the answer say it; a pipeline slot that already defines them grants nothing', () => {
         const { grants } = landing(HUB, NEEDER);
-        expect(grantsSentence(grants)).toContain(`will be ${GRANTED_AS_STARTING}`);
+        expect(grantsSentence(grants)).toContain(`may be ${GRANTED_AS_STARTING}`);
         for (const n of grants.starting) expect(grantsSentence(grants)).toContain(n);
         expect(grantsSentence(null)).toBeNull();
         expect(withGrantsAnswer('said', grants)).toBe(`said — ${grantsClause(grants.starting)}`);

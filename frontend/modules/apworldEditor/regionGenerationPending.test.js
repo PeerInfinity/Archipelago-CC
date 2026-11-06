@@ -172,11 +172,11 @@ describe('ONE press: await the yielded work, then ask once more', () => {
         const never = { ok: false, threw: 'still generating' };
         const collect = (fn) => ({ value: fn(), pending: [Promise.resolve()] });
         const res = await regenerateAwaitingGeneration(() => { asks += 1; return never; }, { collect });
-        // mutant: a while loop → asks never stops (the test times out)
+        // mutant: a while loop with no bound → asks never stops (the test times out)
         expect(asks).toBe(2);
         expect(res.ok).toBe(false);
         expect(res.stillPending).toBe(true);
-        expect(res.threw).toBe(`${REGION_GENERATION_STILL_PENDING}; its last refusal: still generating`);
+        expect(res.threw).toBe(`${REGION_GENERATION_STILL_PENDING} (retried 1 of its bound 1); its last refusal: still generating`);
     });
 });
 
@@ -200,12 +200,14 @@ describe('the worker flags it; the page finishes it', () => {
         expect(res.onPage).toBe(true);
         expect(Number.isFinite(res.ms)).toBe(true);
         expect(regenerationAnswer(args, res, 60).landed).toBe(true);
-        // the region whose way back needs Clouds: the PLAN refuses, nothing pending, answered as today
-        const back = { ...args, region: 'region_3_2' };
-        const r2 = await runRegenerateOnPage(back, { timeoutMs: 60000, regenerate: regenerateRegionEntry, collect: collectPendingGenerations }).promise;
+        // a refusal with nothing pending is answered as it stands, not retried (P5d: region_3_2's way back
+        //   no longer refuses — its entry gate is recovered — so the plan's own refusal is a wrong substrate here)
+        const bad = { ...args, region: 'nope' };
+        const r2 = await runRegenerateOnPage(bad, { timeoutMs: 60000, regenerate: () => ({ ok: false, threw: 'no such region', freeItems: [], hostsSurplus: false }),
+            collect: collectPendingGenerations }).promise;
         expect(r2.ok).toBe(false);
         expect(r2.retried).toBeUndefined();
-        expect(regenerationAnswer(back, r2, 60).text).toContain('the way back (W) needs platform items [Cloud]');
+        expect(regenerationAnswer(bad, r2, 60).text).toContain('no such region');
     });
 
     it('⛓ the page run\'s budget and Cancel: one outcome each, its own sentence, a late answer ignored', async () => {

@@ -19,11 +19,14 @@ import {
 } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 import { ENTITY_COLLIDERS } from '../../frontend/modules/flashPanel/seedlingEntityColliders.js';
 import { SEEDLING_PIXEL_MASKS } from '../../frontend/modules/seedlingDemo/seedlingPixelMasks.js';
-import { overlayEntitySemantics } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
+import { overlayEntitySemantics, buildGroupOpeners, buildScriptOpeners } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { ENTITY_CLASSES, entityRect, TILE_SIZE, buildLevelWorld, ROLES } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 
 const REPO = join(import.meta.dirname ?? new URL('.', import.meta.url).pathname, '..', '..');
 const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+// ⛓ tile-rules-automation-r-a4: a GROUPED_LOCK_EXCEPTIONS lock's cost is its group's press, read off this census.
+const GROUPS = buildGroupOpeners(MAP);
+const SCRIPTS = buildScriptOpeners(MAP);
 const ATLAS = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
 
 /**
@@ -85,7 +88,7 @@ describe('every semantics row claims the footprint the game collides with', () =
             for (const entity of level.entities ?? []) {
                 if (isLevelPropertyTag(entity.type)) continue;
                 const base = entitySemantics(entity);
-                const sem = overlayEntitySemantics(entity, base, { level: level.level }) ?? base;
+                const sem = overlayEntitySemantics(entity, base, { level: level.level, groupOpeners: GROUPS, scriptOpeners: SCRIPTS }) ?? base;
                 if (!sem || sem.kind === 'open') continue;
                 const cls = ENTITY_CLASSES[entity.type];
                 if (cls?.collider !== 'rect') continue;

@@ -89,10 +89,60 @@ export function filesNamedBy(relPath, text) {
     return [];
 }
 
-async function fetchOk(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
-    return Buffer.from(await res.arrayBuffer());
+/**
+ * ⛓ P5d — **THE RETRY POLICY** (a GitHub Pages 503 once turned a whole CI run red, P5c).
+ * A request is tried `tries` times in all. Only a 5xx answer or a network error (fetch
+ * threw, or the body failed mid-read) is retried, after `backoffMs[i]` before try i+2;
+ * a 4xx is a real answer and fails at once. Exhausted, it is `SITE_FETCH_FAILED` by
+ * name, with each try's reason. Each try awaits the request's own completion; the
+ * backoff is the only wait, and it is bounded by this table.
+ */
+export const FETCH_RETRY_POLICY = Object.freeze({ tries: 3, backoffMs: Object.freeze([2000, 6000]) });
+
+/** ⛓ The name of an exhausted (or a non-retriable) fetch. EXPORTED for the test. */
+export const SITE_FETCH_FAILED = 'CloudberrySiteFetchFailed';
+
+/** Is this try's failure worth another try? A 5xx status or a network error (no status). */
+export function retriableFetchFailure({ status }) {
+    return status === undefined || status >= 500;
+}
+
+const realSleep = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+/**
+ * GET `url` → its bytes, under `FETCH_RETRY_POLICY`. Throws `SITE_FETCH_FAILED: <url> …`
+ * naming every try (`503 Service Unavailable`, `network: …`).
+ *
+ * @param {string|URL} url
+ * @param {{fetchImpl?: Function, sleep?: Function, policy?: {tries: number, backoffMs: number[]}, log?: Function}} [io]
+ */
+export async function fetchOk(url, { fetchImpl = fetch, sleep = realSleep, policy = FETCH_RETRY_POLICY, log = console.warn } = {}) {
+    const reasons = [];
+    for (let attempt = 1; attempt <= policy.tries; attempt += 1) {
+        let failure;
+        try {
+            // eslint-disable-next-line no-await-in-loop
+            const res = await fetchImpl(url);
+            if (res.ok) {
+                // eslint-disable-next-line no-await-in-loop
+                return Buffer.from(await res.arrayBuffer());
+            }
+            failure = { status: res.status, why: `${res.status} ${res.statusText ?? ''}`.trim() };
+        } catch (e) {
+            failure = { why: `network: ${e?.cause?.code ?? e?.message ?? e}` };
+        }
+        reasons.push(failure.why);
+        if (!retriableFetchFailure(failure)) {
+            throw new Error(`${SITE_FETCH_FAILED}: ${url} answered ${failure.why} (not retried: not a 5xx or network error)`);
+        }
+        if (attempt < policy.tries) {
+            const wait = policy.backoffMs[Math.min(attempt - 1, policy.backoffMs.length - 1)] ?? 0;
+            log(`  ${url}: ${failure.why} — try ${attempt + 1} of ${policy.tries} in ${wait} ms`);
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(wait);
+        }
+    }
+    throw new Error(`${SITE_FETCH_FAILED}: ${url} after ${policy.tries} tries (${reasons.join('; ')})`);
 }
 
 const TEXT_EXT = /\.(html|js|mjs|json|css)$/;

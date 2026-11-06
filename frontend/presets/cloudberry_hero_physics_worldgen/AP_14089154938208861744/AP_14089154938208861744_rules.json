@@ -295,6 +295,10 @@
               "Conveyors": "Conveyor",
               "Fly Blobs": "FlyBlob",
               "Jetpack": "Jetpack"
+            },
+            "knobs": {
+              "cloudberryChecksPerPiece": 2,
+              "cloudberryDoubleJumpChance": 1
             }
           },
           "ap_locations": {
@@ -400,6 +404,10 @@
               "Jetpack": "Jetpack",
               "Double Jump": "DoubleJump"
             },
+            "knobs": {
+              "cloudberryChecksPerPiece": 2,
+              "cloudberryDoubleJumpChance": 1
+            },
             "backExitSide": "W"
           },
           "ap_locations": {
@@ -495,6 +503,10 @@
               "Conveyors": "Conveyor",
               "Fly Blobs": "FlyBlob",
               "Jetpack": "Jetpack"
+            },
+            "knobs": {
+              "cloudberryChecksPerPiece": 2,
+              "cloudberryDoubleJumpChance": 1
             },
             "backExitSide": "W"
           },

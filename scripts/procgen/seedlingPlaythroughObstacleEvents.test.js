@@ -183,16 +183,18 @@ describe('the playthrough\'s obstacle events', () => {
         ]);
     });
 
-    it('rules l20-button-latch: L20\'s in-room press is ONE event in the BUTTON\'s flag at the button, gating the lock\'s two internal crossings', () => {
+    it('rules l20-button-latch: L20\'s in-room press is ONE event in the BUTTON\'s flag at the button; its lock\'s two internal crossings cost it', () => {
         const e = buttons.events.find((x) => x.fields.event_id === 'flag:L20:4');
         expect(e).toMatchObject({ region_id: 'level_20', sub_region: 'r1c12', name: 'L20 flag 4: lock@32,80 cleared', access_rule: null });
         expect(e.fields).toMatchObject({ side: 'level_20__r1c12', across: [], obstacle: { level: 20, tag: 4, class: 'lock', x: 32, y: 80 },
             action: { verb: 'press', item: null, presser: { level: 20, class: 'buttonroom', x: 192, y: 16 } } });
         const has = { rule: 'Has', args: { item_name: e.name } };
-        expect(buttons.internalExitGates).toEqual([
-            { region_id: 'level_20', from: 'r1c4', to: 'r3c1', kind: 'in-room-press', rule: has },
-            { region_id: 'level_20', from: 'r3c1', to: 'r1c4', kind: 'in-room-press', rule: has },
-        ]);
+        // ⛓ tile-rules-automation-r-a4: NO event-layer gate any more. The overlay prices lock@32,80 as exactly its press
+        // (`GROUPED_LOCK_EXCEPTIONS`), so the grid already charges both crossings with the event, and a second gate would
+        // only spell And(e, e) (`crossingPaysPress`; its rows are in seedlingInRoomPressGate.test.js). The rules still name
+        // the event on both directions, below.
+        expect(buttons.internalExitGates).toEqual([]);
+        expect(has.args.item_name).toBe('L20 flag 4: lock@32,80 cleared');
         expect(gatesOf(RULES, new Set([e.name])).map((g) => `${g.from}->${g.to}`).sort())
             .toEqual(['level_20__r1c4->level_20__r3c1', 'level_20__r3c1->level_20__r1c4']);
     });

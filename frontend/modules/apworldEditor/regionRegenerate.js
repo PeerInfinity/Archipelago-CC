@@ -40,7 +40,7 @@
  */
 
 import {
-    DEFAULT_REGION_SIZE, LIBRARY_SLOT_FILLER_ITEM, assembleZoneRegion, exitTileForMirror, generateRegion,
+    DEFAULT_REGION_SIZE, LIBRARY_SLOT_FILLER_ITEM, assembleZoneRegion, collectUsedFreeItems, exitTileForMirror, generateRegion,
     getRegionExits, linkIsAdjacentOnSide, perimeterMidpoint, serializeRegionEntry,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
@@ -51,7 +51,8 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { createRng } from '../shared/rng.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { apExitNameCandidates } from '../procgenCore/apLocationNaming.js';
-import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { reachableRegions, regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { extractItemRequirementFromRule } from '../procgenPipeline/ruleRequirements.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { REALISER_KINDS, regionRealiserKind } from '../procgenCore/substratePredicates.js';
@@ -322,6 +323,105 @@ export function buildDocumentRegionSpec(doc, player, region, { size, substrate }
     };
 }
 
+/* ── P5d: the region's ENTRY GATE, recovered (⚖ Robert 2026-11-05) ────── */
+
+/**
+ * ⛓ The items every player inside `region` holds, among `candidates`: X is held
+ * when the region is UNREACHABLE once every exit whose rule needs X is closed
+ * (`extractItemRequirementFromRule`: the items every way of meeting the rule needs).
+ * Conservative: a rule shape it cannot read counts as passable, so X is dropped.
+ */
+export function regionHeldItems(doc, player, region, candidates) {
+    return [...new Set(candidates ?? [])].filter((x) => !reachableRegions(doc, player,
+        (rule) => !extractItemRequirementFromRule(rule).requirement.includes(x)).has(region));
+}
+
+/** ⛓ Where a recovered entry gate came from. EXPORTED for the rows. */
+export const ENTRY_GATE_SOURCES = Object.freeze({ SPHERE_TREE: 'sphere_tree', ENTERING_EXIT: 'entering_exit' });
+
+/** ⛓ The driver whose realise hands a ZONE region its entry gate (`buildSphereZoneRegion`). */
+const SPHERE_GROWTH_DRIVER = 'sphere-growth';
+
+/**
+ * ⛓⛓⛓ **THE REGION'S ENTRY GATE, RECOVERED** — what sphere growth handed the realiser
+ * as `entrance.requirement` ("the requirement every player inside holds"), which the
+ * document does not otherwise carry. Only where the ORIGINAL generator handed one, so a
+ * regenerate reproduces it (measured: the engine hands it to a ZONE region of sphere
+ * growth alone — `buildSphereZoneRegion`; a procedural region, and every top-down,
+ * initialise, spiral and grid-growth realise, gets none, so theirs stays none):
+ *   - a sphere-growth slot: the record it wrote (`procgen_metadata[p].sphere_tree.
+ *     nodes[].gate`, by the sidecar's `grid_cell`);
+ *   - a slot that records NO driver (its origin unknown): the BFS parent's ENTERING exit
+ *     rule's items.
+ * Either is intersected with what every player inside provably holds
+ * (`regionHeldItems`), so a gate is never assumed that a player could lack. `null` with
+ * no parent, or for any other driver.
+ *
+ * @returns {{requirement: string[], counts: object, source: string, dropped: string[]}|null}
+ */
+export function recoverEntryGate(doc, player, region, parent) {
+    if (!parent) return null;
+    const meta = doc?.procgen_metadata?.[player];
+    const driver = meta && typeof meta === 'object' ? meta.driver ?? null : null;
+    if (driver !== null && driver !== SPHERE_GROWTH_DRIVER) return null;
+    const cell = doc?.preset_sidecars?.[player]?.[region]?.grid_cell;
+    const nodes = meta?.sphere_tree?.nodes;
+    const node = Array.isArray(nodes) && cell
+        ? nodes.find((n) => n?.cell?.gx === cell.gx && n?.cell?.gy === cell.gy && Array.isArray(n.gate)) : null;
+    if (driver === SPHERE_GROWTH_DRIVER && !node) return null;
+    let found;
+    if (node) {
+        const terms = node.gate.map((t) => (typeof t === 'string' ? t : t?.item)).filter((t) => typeof t === 'string');
+        found = { requirement: terms, counts: { ...(node.gateCounts ?? {}) }, source: ENTRY_GATE_SOURCES.SPHERE_TREE };
+    } else {
+        const rule = (regionsOf(doc, player)[parent.name]?.exits ?? []).find((e) => e?.name === parent.exit)?.access_rule;
+        const r = extractItemRequirementFromRule(rule);
+        found = { requirement: r.requirement, counts: { ...r.counts }, source: ENTRY_GATE_SOURCES.ENTERING_EXIT };
+    }
+    const held = new Set(regionHeldItems(doc, player, region, found.requirement));
+    const requirement = found.requirement.filter((x) => held.has(x));
+    const counts = Object.fromEntries(Object.entries(found.counts).filter(([k, v]) => held.has(k) && v > 1));
+    return { requirement, counts, source: found.source, dropped: found.requirement.filter((x) => !held.has(x)) };
+}
+
+/**
+ * ⛓⛓ **THE SPEC SPHERE GROWTH WOULD HAVE BUILT** — `spec` with the recovered entry
+ * gate on its entrance, and the exit back to the BFS parent (pinned on the entrance
+ * side) realised as sphere growth realises the back portal:
+ *   - gated (`backPortalGated` true, the engine's default): the entry gate, when it is
+ *     sphere growth's record; a gate recovered from the entering exit leaves the
+ *     document's back rule (the entry gate need not be the way back);
+ *   - ungated (cloudberry, braid bounce): free, when every item the document's back
+ *     rule needs is held by every player inside (the engine's argument: you can only
+ *     BE here if you already used it); else the document's rule stays (a substrate
+ *     realises it as it can — cloudberry locks its start door).
+ * The document's rules are untouched (the back exit keeps its id and `access_rule`;
+ * only the realised `requirement` is set). `spec` unchanged with no gate, and for a
+ * PROCEDURAL target (`zone` false: the engine never hands one an entry gate).
+ */
+export function withRecoveredEntryGate(doc, player, region, spec, { backGated = true, zone = true } = {}) {
+    if (!zone) return { spec, gate: null };
+    const gate = recoverEntryGate(doc, player, region, spec.parent);
+    const ent = spec.entrances?.[0];
+    if (!gate || !ent) return { spec, gate: null };
+    const entrances = [{ ...ent, requirement: [...gate.requirement], counts: { ...gate.counts } }, ...spec.entrances.slice(1)];
+    const exitSpecs = spec.exitSpecs.map((x) => {
+        if (!(x.tile && x.side === ent.side && x.target_region === spec.parent.name)) return x;
+        // ⛓ A gated back portal IS the entry gate only in sphere growth (its own record);
+        //   for a recovered-from-the-exit gate the document's back rule stands (measured:
+        //   bounce_worldgen's west way back is `Left arrow`, its entry gate `Right arrow` —
+        //   directional, so the gate is not the way back).
+        if (backGated) {
+            return gate.source === ENTRY_GATE_SOURCES.SPHERE_TREE
+                ? { ...x, requirement: [...gate.requirement], counts: { ...gate.counts } } : x;
+        }
+        const need = extractItemRequirementFromRule(x.access_rule).requirement;
+        const held = new Set(regionHeldItems(doc, player, region, need));
+        return need.every((n) => held.has(n)) ? { ...x, requirement: [], counts: {} } : x;
+    });
+    return { spec: { ...spec, entrances, exitSpecs }, gate };
+}
+
 /**
  * ⛓ Does `entry` host surplus exits natively under `regionParams`? — its own
  * `hostsSurplusExitsNatively` hook, the one the engine asks before it drifts a
@@ -458,11 +558,14 @@ export function regenerateRegionEntry({
     const target = substrate ?? old.substrate;
     const reg = substrateRegistry.get(target);
     const free = Array.isArray(freeItems) ? [...freeItems] : freeItemsFor(doc, player, reg);
-    const spec = buildDocumentRegionSpec(doc, player, region, { size, substrate: target });
     const params = {
         ...REGENERATE_BASE_REGION_PARAMS,
         ...(regionParams && typeof regionParams === 'object' ? regionParams : defaultRegionParamsFor(reg)),
     };
+    // ⛓ P5d — the entry gate the document does not carry, recovered (sphere growth's own record first).
+    const { spec, gate: entryGate } = withRecoveredEntryGate(doc, player, region,
+        buildDocumentRegionSpec(doc, player, region, { size, substrate: target }),
+        { backGated: reg?.backPortalGated?.(params) ?? true, zone: regionRealiserKind(reg) === REALISER_KINDS.ZONE });
     const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, [target]);
     // ⛓ R2 — the free items are the engine's DRIFT device, and a target that
     //   hosts surplus exits natively under these params never drifts (the
@@ -470,8 +573,10 @@ export function regenerateRegionEntry({
     //   follows it instead of saying items "rode free" that rode nowhere.
     const hostsSurplus = hostsSurplusExitsNatively(reg, params);
     let descriptor;
+    // ⛓ P5d — the free items this realise drifted onto (only those are granted).
+    let freeItemsUsed = [];
     try {
-        descriptor = generateRegion({
+        ({ value: descriptor, used: freeItemsUsed } = collectUsedFreeItems(() => generateRegion({
             substrate: target,
             region_id: region,
             size: spec.size,
@@ -489,7 +594,7 @@ export function regenerateRegionEntry({
             stampEntrance: true,
             freeItems: free,
             zoneOrdinal: regenerateZoneOrdinal(doc, player, region, target, reg),
-        });
+        })));
     } catch (e) {
         return { ok: false, threw: String(e?.message ?? e), freeItems: free, hostsSurplus, spec };
     }
@@ -504,7 +609,7 @@ export function regenerateRegionEntry({
     if (cell === undefined) delete built.grid_cell;
     else built.grid_cell = cell;
     return {
-        ok: true, entry: built, freeItems: free, hostsSurplus, exitsRelinked, spec,
+        ok: true, entry: built, freeItems: free, freeItemsUsed, hostsSurplus, exitsRelinked, spec, entryGate,
         stranded: strandedReferences(doc, player, region, built),
     };
 }
