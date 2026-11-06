@@ -78,9 +78,8 @@ describe('hammer-phase KEYLOCK-TURRET: KEYLOCK_TURRET', () => {
         expect(on.reasonText).toMatch(/-> keylock -> kill \(iceturret@64,192\): no approach to iceturret@64,192 from the staging point \(\d+,\d+\) is hitless/);
         expect(KEYLOCK_TURRET_COUNTS.stances).toEqual([{ lock: 'bosslock@80,160', t: 0, turrets: ['iceturret@64,192'],
             live: ['iceturret@64,192'], stance: { x: 88, y: 184 } }]);
-        expect(KEYLOCK_TURRET_COUNTS.kills).toHaveLength(1);
-        expect(KEYLOCK_TURRET_COUNTS.kills[0]).toMatchObject({ lock: 'bosslock@80,160', turret: 'iceturret@64,192',
-            dead: false });
+        expect(KEYLOCK_TURRET_COUNTS.kills.map(({ lock, turret, dead }) => ({ lock, turret, dead })))
+            .toEqual([{ lock: 'bosslock@80,160', turret: 'iceturret@64,192', dead: false }]);
     }, 120000);
 
     it('the same room with no turret, and with the turret out of range: ON = OFF, nothing asked', () => {
