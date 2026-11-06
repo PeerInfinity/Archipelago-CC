@@ -6,7 +6,7 @@
 |---|---|
 | Session | `seedling-hammer-keylock-turret` (planner `seedling-hammer-phase-planning-3`), cloud, Opus. ⚖ queued by the user 2026-11-05 (the census's step 5) |
 | Start SHA | `97739720dd4121e306312a111b00873dda9d00a4` (origin/main at start; the brief's floor `2342e25604` is an ancestor) |
-| Head | W0 `4f440b9b`, M `7b036cd4`, I `149e7114` (the code and rows), D `4dd07abc` (docs, census write); the gate evidence and this report are the last commit(s) on the branch |
+| Head | W0 `4f440b9b`, M `7b036cd4`, I `149e7114` (the code and rows), D `4dd07abc` (docs, census write), `203a9f5d` (the lint fix: the CI-measured code head); the gate evidence and this report are the last commits on the branch |
 | Branch | `claude/seedling-keylock-turret-flag8-twuh7u` (the harness's designated branch) |
 | Switch | `solverBot.KEYLOCK_TURRET`, **OFF**. `SEEDLING_KEYLOCK_TURRET=1` / `withKeylockTurret(enabled, fn)`; its `SOLVER_ENV_NAMES` line is added |
 | Evidence | `CC/docs/cloud-reports/seedling-hammer-keylock-turret-evidence/` (its README names every file) |
@@ -166,7 +166,7 @@ atlas — the capture's own level records answer byte for byte, 412 SOLVED 748 a
 | `check-seedling-wasm-ship` headless (:8000) | **ALL PASS**, exit 0 (`gates/wasm-ship.txt`) |
 | `solverEnvChannel.test.js`, `strategySwitch.test.js`, `contentIdentity.test.js`, `entityBlocks.test.js`, `boxLock.test.js` | 5 files, **119/119** |
 | JSUT at `4dd07abc` (run 42131936402) | **red, 1 failure, mine**: `lintGateLabels.test.js` flagged the generated row's `toHaveLength(1)` on the counter (a pinned roster length). The slow battery was green there, 414/414. Fixed at `203a9f5d` (the counter compared by value); `lintGateLabels` + the row green locally |
-JSUT_ROW
+| **JSUT at `203a9f5d` (run 42137811842)** | **success**: vitest (unfiltered) **25668/25668** (0 failed), the **slow battery 414/414**; read with `ci-summary.mjs` |
 
 ## 7. What the harvest A/B should expect, and the ON dispatch
 
@@ -193,6 +193,7 @@ JSUT_ROW
 - *"a timing window on the key line if the hazard is intermittent"*: the latch is one tick, but the line is unreachable
   past the live body, so there is no window to time.
 - The brief's floor `2342e25604`: this slice started at `97739720`; the leg ids are unchanged.
+- The repo-wide gates the brief named (`contentIdentity`, `entityBlocks`, `boxLock`) were green; the one my first CI run met was another: `lintGateLabels.test.js` (no pinned roster length in a row), fixed at `203a9f5d`.
 
 ## 9. Residue and hand-overs
 
