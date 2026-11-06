@@ -1882,7 +1882,7 @@ export const CONTACT_FIDELITY = {
      * at the chest resolves strategy `apitem`. A chest that is NOT an AP location (a generated set's door / loot chest,
      * a vanilla-room tape) is untouched: no other reader consults this key. OFF: byte-identical. `SEEDLING_AP_CHEST_ITEM=0|1`.
      */
-    apChestItem: false,
+    apChestItem: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

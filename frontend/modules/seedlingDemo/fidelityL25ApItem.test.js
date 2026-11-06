@@ -40,8 +40,8 @@ const GOALS = [{ kind: 'collect-placement', placement: { x: 96, y: 96 } }, { kin
 describe('L25APITEM D1 — the room: the delivery\'s own apitem in place of each ledger chest', () => {
     const doc = deliveredChestDocument(MAP);
     const chestLevels = R7_GOAL_LEDGER.filter((r) => r.kind === 'chest').map((r) => r.level);
-    it('the key ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.apChestItem).toBe(false);
+    it('the key ships ON (⚖ user 2026-11-06 "Harvest, survey A/B, flip")', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.apChestItem).toBe(true);
     });
     it('replaces exactly the 16 ledger chests, at their cell, with their vanilla tag', () => {
         expect(chestLevels).toHaveLength(16);

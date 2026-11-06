@@ -304,7 +304,7 @@ function atlasEdges(from) {
 const LIGHTS_FIDELITY = await import(join(MODULE, 'contactFidelity.js'));
 const LIGHTS_WORLD = await import(join(MODULE, 'lightBossWorld.js'));
 /**
- * ⛓ fidelity L25APITEM D1 (`CONTACT_FIDELITY.apChestItem`, OFF = byte-identical): the MODEL's rooms. ON, each
+ * ⛓ fidelity L25APITEM D1 (`CONTACT_FIDELITY.apChestItem`, ON since its flip; OFF = the pre-flip bytes): the MODEL's rooms. ON, each
  * playthrough AP chest is the `apitem` the delivery writes in its place (`apChestDelivery.deliveredChestDocument`:
  * the rewriter's element, same cell, its vanilla tag), so the model and the solver take it on overlap from any side
  * as the game does. The ROUTE derivation (edges, goals, `levelsByNo`) still reads `atlas`: the apitem stands at the
