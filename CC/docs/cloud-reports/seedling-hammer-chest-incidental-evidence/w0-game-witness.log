@@ -1,0 +1,11 @@
+TAPE: 244 ticks · boot {"level":0,"x":16,"y":128} · model chestOpens [{"t":66,"id":"chest@64,48","persistTag":1},{"t":174,"id":"chest@96,48","persistTag":2}] · chest records [{"id":"chest@64,48","openedAt":66},{"id":"chest@96,48","openedAt":174,"openBefore":["chest@64,48"]}]
+PAGE: seedling_bot_ap_p4g · delivered chest-incidental-witness-c6430417
+# box lock: TAKEN by probe-seedling-chest-incidental.mjs (browser, pid 2661) — head 491f3286d, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"set_id":"chest-incidental-witness-c6430417","mounted":"chest-incidental-witness-c6430417","page":"seedling_bot_ap_p4g","tick_count":244,"observations":245,"clears":["0,1","0,2"],"model":{"chestOpens":[{"t":66,"id":"chest@64,48","persistTag":1},{"t":174,"id":"chest@96,48","persistTag":2}]},"chestRecords":[{"id":"chest@64,48","openedAt":66},{"id":"chest@96,48","openedAt":174,"openBefore":["chest@64,48"]}],"maxDrift":0,"firstDrift":null,"final":{"game":{"t":244,"x":104.68808207331546,"y":66.47796040886041,"level":0},"model":{"t":244,"x":104.68808207331546,"y":66.47796040886041,"level":0}}}
+PASS: the game ran the solver's tape to its end on the delivered set — 245 obs, chest-incidental-witness-c6430417
+PASS: the game opened BOTH chests on the one visit: {0,1} and {0,2} cleared — ["0,1","0,2"]
+PASS: the model's chestOpens names the same two chests, A then B, each once — [{"t":66,"id":"chest@64,48","persistTag":1},{"t":174,"id":"chest@96,48","persistTag":2}]
+PASS: the model reproduces the game at 0 px over the whole tape — {"maxDrift":0,"firstDrift":null}
+wrote the witness row to CC/docs/cloud-reports/seedling-hammer-chest-incidental-evidence/game
+ALL CHECKS PASSED

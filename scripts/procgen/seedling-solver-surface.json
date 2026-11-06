@@ -9,6 +9,7 @@
     "botDriverV2.js",
     "bulbPlacement.js",
     "campaignChain.js",
+    "chestLegDelta.js",
     "crusherBait.js",
     "dangerMap.js",
     "decisionTrace.js",

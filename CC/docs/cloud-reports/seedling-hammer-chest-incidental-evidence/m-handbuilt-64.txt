@@ -1,0 +1,6 @@
+== SEEDLING_CHEST_LEG_DELTA=0: 64 hand-built two-chest rooms (8 chest pairs x 4 starts x goals b|ab)
+     32     ab REFUSED the leg opened
+     32     b SOLVED   
+== SEEDLING_CHEST_LEG_DELTA=1: 64 hand-built two-chest rooms (8 chest pairs x 4 starts x goals b|ab)
+     32     ab SOLVED   
+     32     b SOLVED   
