@@ -27437,6 +27437,28 @@ the block at y 83.83, the game's number). No tape byte moved.
 `regenerate-*-tapes.mjs`): the retired probe's drive was dead and no gate saw it, and `probe-seedling-r5-spinner --check` —
 where its pair now lives — runs on no CI job either. Run it by hand; enrolling it is a planner call (it is a CI change).
 
+### Seedling fidelity R5PROTO — `probe-seedling-r5-spinner` speaks `seedling-probe.yml`'s protocol
+
+Wave 37c, planner `seedling-fidelity-planning-18`. Report: `CC/docs/cloud-reports/seedling-fidelity-r5proto.md`.
+
+**The red.** Run `42081119356` (js-land/train-2026-11-05-37, at 2342e25604) ran the probe to `16/16 claims PASS`, rc 0, wall
+0 s — and the job went red on BOTH of the wrapper's rules: *"printed no 'CHANNEL: headless logic-only' line"* and *"printed no
+PASS: row (0 SKIP)"*; the summary read `RED rc=1 (no verdict line) — NO PASS ROWS`. The probe printed `✓ name` rows and, on a
+fail, THREW (a stack trace, no verdict line).
+
+**The change (output only).** First line `CHANNEL: headless logic-only (no wasm: a node measurement of the L39 spinner model
+and the r5 press tapes)` — true by construction (the probe boots no page, GPU or wasm), and the spelling of the two node-only
+precedents (`probe-seedling-derived-rules`, `-whole-game-certify`); `PASS: <claim>` / `FAIL: <claim>` per claim (16); then
+`ALL CHECKS PASSED` / `N CHECK(S) FAILED` and `process.exitCode = 1` on a fail; a run that made NO claim prints
+`FAIL: no claim was made …` and `1 CHECK(S) FAILED`. The job's `--host` is ignored (it always was). No measurement, tape or
+emitted byte moved: `--check` `same` ×3 (`r5-press-delay-control` 2553 B, md5 `768269d90d4beab64049eb10e732986e`, before =
+after; `--write` rewrote the three tapes with no `git` diff). Mutants: a forced fail → `1 CHECK(S) FAILED` rc 1; zero claims
+→ rc 1 and the wrapper's PASS floor; the pre-R5PROTO file → the same two wrapper errors as `42081119356`.
+
+**Trap candidate.** The probe wrapper's contract is in the WORKFLOW, not in a shared helper: a node-only probe that ran green
+for months by hand reds on its first dispatch. `grep -a '^CHANNEL:\|^PASS:\|CHECK(S) FAILED' <probe>` before naming one in a
+dispatch.
+
 ### Seedling hammer-phase CHEST-INCIDENTAL — `CHEST_LEG_DELTA` (OFF): the chest leg's exact set is the leg's delta
 
 ⚖ User, queued 2026-11-03 (a lone slice; the lab routed its named gap from `seedling-gen-chest-loot-goal` to hammer).

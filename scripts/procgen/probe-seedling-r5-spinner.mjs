@@ -69,6 +69,18 @@
  *        delay-control — are, byte for byte, what this probe derives)
  *   node scripts/procgen/check-seedling-bot-differential.mjs --record --win \
  *       --only=r5-press-glide,r5-press-repeat
+ *
+ * ── OUTPUT PROTOCOL (R5PROTO, W37c): seedling-probe.yml's contract ────
+ *
+ * One `CHANNEL: headless logic-only (no wasm: …)` line first — this probe
+ * boots no page and no wasm, it steps the node model only (the precedent is
+ * `probe-seedling-derived-rules` / `-whole-game-certify`); one `PASS:` /
+ * `FAIL:` row per claim; then `ALL CHECKS PASSED` or `N CHECK(S) FAILED`, and
+ * exit 1 on any fail. A run that made no claim at all is a FAIL by name. The
+ * job's `--host` is accepted and ignored. CI (manual dispatch; not in a
+ * battery):
+ *   gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> \
+ *       -f probes=probe-seedling-r5-spinner.mjs
  */
 
 import { readFileSync } from 'node:fs';
@@ -99,10 +111,15 @@ const CHECK = process.argv.includes('--check');
 const levelSource = atlasLevelSource();
 const tapePath = (n) => join(MODULE, 'fixtures', 'tapes', `${n}.json`);
 
+// ⛓ R5PROTO: the channel line seedling-probe.yml requires, true by construction —
+// nothing below boots a page, a GPU or the wasm.
+console.log('CHANNEL: headless logic-only (no wasm: a node measurement of the L39 spinner model '
+    + 'and the r5 press tapes)');
+
 const checks = [];
 const check = (ok, name, detail) => {
     checks.push({ ok, name, detail });
-    console.log(`   ${ok ? '✓' : '✗'} ${name}`);
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}`);
     if (detail) console.log(`      ${detail}`);
 };
 const probe = (name) => {
@@ -363,5 +380,9 @@ const outputs = [
 if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the two tapes, --check to compare them)');
 }
-if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
-console.log(`\n${checks.length}/${checks.length} claims PASS`);
+// ⛓ R5PROTO: the verdict line, and a run that claimed nothing is not green.
+if (checks.length === 0) console.log('FAIL: no claim was made — a run that checked nothing is not green');
+const failed = bad + (checks.length === 0 ? 1 : 0);
+console.log(`\n${checks.length - bad}/${checks.length} claims PASS`);
+console.log(failed ? `${failed} CHECK(S) FAILED` : 'ALL CHECKS PASSED');
+process.exitCode = failed ? 1 : 0;
