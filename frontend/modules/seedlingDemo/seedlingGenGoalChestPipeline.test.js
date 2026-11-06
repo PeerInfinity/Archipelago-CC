@@ -8,13 +8,15 @@
  *      existing changes.
  *   3. A room that cannot fit one KEEPS the torch and that is REPORTED: `procgen_metadata["<p>"].goalContainers`,
  *      the `introductions` shape (`procgenCore/goalContainer.js`), read off each slot's serialised sidecars.
- *   4. NO loot chest in a goal-chest room (`chestloot-in-goal-chest-room`) until hammer's CHEST-INCIDENTAL lands.
+ *   4. NO loot chest in a goal-chest room until hammer's CHEST-INCIDENTAL lands. ⛓ LIFTED (goal-loot-lift): with
+ *      `CHEST_LEG_DELTA` ON a goal-chest room also carries a loot chest (§6, and the two-chest e2e).
  *
  * MUTANTS (measured, each reverted — the slice's as-built):
  *  g1  `placeApItems` keeps door/loot chests only (chest-goal dropped from `KEPT_CHEST_KINDS`) ⇒ the keep row, the
  *      built-world row, the resolver row and the e2e red (an apitem replaces the goal chest);
  *  g2  `seatRows` never marks the goal row (`chestTag` forced null) ⇒ location-0 rows, the report and e2e red;
- *  g3  the loot refusal off ⇒ the loot row reds;
+ *  g3  (retired by goal-loot-lift: the refusal is gone; its mutant is now "the refusal restored ⇒ §6 + the two-chest
+ *      e2e red", and "CHEST_LEG_DELTA OFF ⇒ the loot chest dropped" is §6's in-file dependency row);
  *  g4  the report written under a hardcoded slot '1' ⇒ the 2-player row reds;
  *  g5  `seedlingGenProcgenParamsFromPayload` drops `goal` ⇒ the regenerate row reds (the room comes back a torch).
  */
@@ -38,10 +40,10 @@ import { GOAL_CONTAINER_NOT_PLACED_REASONS, goalContainerReport } from '../procg
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { GOAL_CHEST_CLASS, GOAL_CHEST_REFUSALS } from './procgenSeedling.js';
 import {
-    CHEST_GOAL_KIND, certifyGenRoom, extractGenRules, generateGenRoom, placeGenItems, rerollGenRoom, serializeGenRoom,
+    CHEST_DOOR_ITEM, CHEST_GOAL_KIND, CHEST_LOOT_KIND, certifyGenRoom, extractGenRules, generateGenRoom, placeGenItems, rerollGenRoom, serializeGenRoom,
 } from './seedlingGenRoom.js';
 import {
-    CHEST_GOAL_KIND as PAYLOAD_CHEST_GOAL_KIND, CHESTLOOT_IN_GOAL_CHEST_ROOM_REFUSAL, GEN_ROOM_GOAL_CHEST,
+    CHEST_GOAL_KIND as PAYLOAD_CHEST_GOAL_KIND, GEN_ROOM_GOAL_CHEST,
     goalContainerNoteOf,
 } from './seedlingGenRoomPayload.js';
 import {
@@ -55,7 +57,8 @@ import { createJsRuntime, JS_RUNTIME_PINS } from './jsRuntimeCore.js';
 import { bootStaging } from './procgenOracle.js';
 import { ITEM_PROPERTIES } from './tapeFormat.js';
 import { solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from './jsRuntimeSolver.js';
-import { arrivalSolveRequest, arrivalSolverGoal } from './wasmArrival.js';
+import { arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest } from './wasmArrival.js';
+import { withChestLegDelta } from './chestLegDelta.js';
 import { SeedlingCheckBinding } from '../flashPanel/seedlingCheckBinding.js';
 import { resolveSeedlingGoal } from '../flashPanel/seedlingPlaybackController.js';
 import {
@@ -95,8 +98,12 @@ const build = async (state) => (await runPresetHeadless(buildRunFromState(struct
 let goalWorld = null;
 /** The committed sphere-growth host world, asked the same. */
 let hostWorld = null;
+/** ⛓ goal-loot-lift — the committed generated-room world asked for a goal chest AND `chestloot` in every room. */
+let lootGoalWorld = null;
 beforeAll(async () => {
     goalWorld = await build(withGoal(SEEDLING_GENERATED_ROOM_STATE));
+    lootGoalWorld = await build(withGoal(Object.freeze({ ...SEEDLING_GENERATED_ROOM_STATE,
+        params: Object.freeze({ ...SEEDLING_GENERATED_ROOM_STATE.params, seedlingGenElements: 'chestloot' }) })));
     hostWorld = await build(withGoal(SEEDLING_GENERATED_HOST_STATE));
 }, 120_000);
 
@@ -271,16 +278,67 @@ describe('5 — the report is PER PLAYER', () => {
     }, 120_000);
 });
 
-describe('6 — NO loot chest in a goal-chest room (until hammer\'s CHEST-INCIDENTAL lands)', () => {
-    it.each([['chestloot'], ['chestloot+guard'], ['guard+chestloot']])('elements %s + goal chest → refused by name', (elements) => {
-        expect(() => hookRoom(0.2, { elements })).toThrow(new RegExp(`^${CHESTLOOT_IN_GOAL_CHEST_ROOM_REFUSAL}: .*CHEST-INCIDENTAL`));
-    });
-    it('the controls: loot alone builds; goal chest with another element builds', () => {
-        expect(hookRoom(0.2, { elements: 'chestloot', goal: '' }).payload.locations.some((l) => l.kind === 'chest-loot')).toBe(true);
-        expect(() => hookRoom(0.2, { elements: 'guard' })).not.toThrow();
+/**
+ * ⛓ goal-loot-lift (⚖ the user 2026-11-04 rule 4 lifted, once hammer's CHEST-INCIDENTAL `CHEST_LEG_DELTA` shipped ON,
+ * f1e70ce021): a goal-chest room MAY also hold a LOOT chest. Both are locations (location 0 = the goal chest, the loot
+ * chest its own `- Chest` row), the set keeps both, and the goal-container report still counts the goal chest only.
+ * The OFF arm is the dependency: with the switch OFF the second chest leg refuses and the loot chest is dropped again.
+ */
+describe('6 — a goal-chest room ALSO carries a loot chest (rule 4 lifted: CHEST_LEG_DELTA ON)', () => {
+    const LOOT = (p) => p.locations.filter((l) => l.kind === CHEST_LOOT_KIND);
+    const chestsAt = (p, cell) => p.record.entities.filter((e) => e.type === 'chest' && e.x === cell.tx * 16 && e.y === cell.ty * 16);
+
+    it.each([[0.2, 'empty'], [0.5, 'winding'], [0.1, 'branchy']])('drawn %s %s: location 0 the goal chest, a loot chest beside it, both chests in the record, certified', (v, skeleton) => {
+        const { payload } = hookRoom(v, { skeleton, elements: 'chestloot' });
+        expect(payload.locations[0]).toMatchObject({ name: 'region_0_0__key_blue_pickup', kind: CHEST_GOAL_KIND, cell: payload.goal_cell });
+        const loot = LOOT(payload);
+        expect(loot).toHaveLength(1);
+        expect(loot[0]).toMatchObject({ name: 'region_0_0 - Chest', item: CHEST_DOOR_ITEM });
+        expect(loot[0].tag).not.toBe(payload.locations[0].tag);
+        expect(chestsAt(payload, payload.goal_cell).map((e) => Number(e.attrs.tag))).toEqual([payload.locations[0].tag]);
+        expect(chestsAt(payload, loot[0].cell).map((e) => Number(e.attrs.tag))).toEqual([loot[0].tag]);
+        expect(payload.generation.goal).toBe(GOAL_CHEST_CLASS);
+        expect(goalContainerNoteOf(payload)).toEqual({ placed: true });
+        expect(certifyGenRoom(payload, 'region_0_0')).toEqual({ certified: true, failures: [] });
     }, 60_000);
+
+    it('⛓ the DEPENDENCY: CHEST_LEG_DELTA forced OFF, the same room DROPS the loot chest again (the goal chest stays)', () => {
+        const off = withChestLegDelta(false, () => hookRoom(0.2, { elements: 'chestloot' })).payload;
+        expect(LOOT(off)).toEqual([]);
+        expect(off.locations[0].kind).toBe(CHEST_GOAL_KIND);
+        expect(LOOT(hookRoom(0.2, { elements: 'chestloot' }).payload)).toHaveLength(1);
+    }, 60_000);
+
+    it('the controls: loot alone (torch goal) and goal chest + another element still build as before', () => {
+        expect(LOOT(hookRoom(0.2, { elements: 'chestloot', goal: '' }).payload)).toHaveLength(1);
+        expect(hookRoom(0.2, { elements: 'guard' }).payload.locations[0].kind).toBe(CHEST_GOAL_KIND);
+    }, 60_000);
+
     it('a goal knob that is not `chest` is the knob\'s fault, by name', () => {
         expect(() => hookRoom(0.2, { goal: 'torchpickup' })).toThrow(/the generation knob `goal` = "torchpickup" is not usable/);
+    });
+
+    it('the BUILT world (spiral room, goal chest + chestloot): both kept as fixed table rows; goalContainers counts goal chests only', () => {
+        const a = assembleGeneratedSeedlingSet(lootGoalWorld, { selfPlayer: 1 });
+        expect(a.report.apitems).toEqual([]);
+        expect(a.report.goalChests.length).toBeGreaterThanOrEqual(1);
+        expect(a.report.lootChests.length).toBeGreaterThanOrEqual(1);
+        const records = mountedRecordsOf(a.set);
+        for (const c of [...a.report.goalChests, ...a.report.lootChests]) {
+            expect(a.table.get(placementKey(c.room, c.tag))).toMatchObject({ location: c.location, level: c.room, tag: c.tag,
+                tagSource: 'fixed', rewrite: false });
+            const at = records.get(c.room).entities.filter((e) => e.x === c.cell.tx * 16 && e.y === c.cell.ty * 16);
+            expect(at.map((e) => [e.type, e.attrs?.tag])).toEqual([['chest', String(c.tag)]]);
+        }
+        const gens = Object.values(lootGoalWorld.preset_sidecars['1']).filter((sc) => sc.substrate === GEN);
+        const fields = sidecarFieldsOf(substrateRegistry.get(GEN));
+        for (const sc of gens) expect(sidecarPayloadErrors(fields, sc.playable_payload)).toEqual([]);
+        const placed = gens.filter((sc) => sc.playable_payload.locations.some((l) => l.kind === CHEST_GOAL_KIND)).length;
+        const report = lootGoalWorld.procgen_metadata['1'].goalContainers;
+        expect(report).toMatchObject({ requested: gens.length, placed });
+        expect(placed).toBe(a.report.goalChests.length);
+        expect(Object.values(report.notPlaced).reduce((x, y) => x + y, 0)).toBe(report.requested - report.placed);
+        expect(rulesJsonSchemaErrors(lootGoalWorld, SCHEMA)).toEqual([]);
     });
 });
 
@@ -400,4 +458,60 @@ describe('⛓ END TO END on the JS runtime: open the goal chest → the check fi
         expect(binding.stats).toMatchObject({ checks: 1, unknown: 0 });
         expect(rt.deaths).toEqual([]);
     }, 120_000);
+
+    /** ⛓ goal-loot-lift — the room holding BOTH chests: the loot chest's leg, then the goal chest's continuation from
+     *  the shipped keys. Both open (their tags cleared), both checks fire, the binding checks both locations. */
+    it('goal chest + loot chest in one room: both open on the JS runtime, two checks, both locations checked', () => {
+        const assembled = assembleGeneratedSeedlingSet(lootGoalWorld, { selfPlayer: 1 });
+        const records = mountedRecordsOf(assembled.set);
+        const levelSource = levelSourceFromAtlas(records);
+        const arrival = { ...assembled.set.start };
+        const record = records.get(arrival.level);
+        const goalChest = assembled.report.goalChests.find((c) => c.room === arrival.level);
+        const lootChest = assembled.report.lootChests.find((c) => c.room === arrival.level);
+        expect(goalChest.location).toBe('region_0_0__key_blue_pickup');
+        expect(lootChest.location).toBe('region_0_0 - Chest');
+
+        const staging = bootStaging({ boot: arrival, items: { ...FLAGS }, pins: [...JS_RUNTIME_PINS] });
+        const solve = (request) => solveAnytime({ ...request, budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: SOLVER_UPGRADE_WINDOW_WORK }).plan;
+        const lootGoal = resolveSeedlingGoal({ kind: 'location', name: lootChest.location }, assembled.report).goal;
+        const mapped = arrivalSolverGoal(lootGoal, { staging, levelSource, record });
+        expect(mapped.goal).toEqual({ kind: 'collect-placement', placement: { x: lootChest.cell.tx * 16, y: lootChest.cell.ty * 16 } });
+        const leg1 = solve(arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource, records, name: 'loot-leg', scratchPersistence: true }));
+        expect(leg1?.solution?.length).toBeGreaterThan(0);
+        const shipped = leg1.solution.map((k) => [...k]);
+        const goalGoal = resolveSeedlingGoal({ kind: 'location', name: goalChest.location }, assembled.report).goal;
+        const cont = continuationSolveRequest({ staging, shipped, goal: goalGoal, levelSource, records, record, name: 'goal-leg' });
+        expect(cont.refusal).toBeUndefined();
+        const leg2 = solve(cont.request);
+        expect(leg2?.solution?.length).toBeGreaterThan(0);
+        /** the continuation's plan is the TAIL: its `prefixLength` is the shipped loot leg, not part of `solution` */
+        expect(leg2.prefixLength).toBe(shipped.length);
+        const tail = leg2.solution;
+
+        const reports = [];
+        const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
+        expect(rt.game.configure(BRIDGE_CONFIG)).toBe('ok');
+        for (const c of planLevelSetChunks(assembled.set).chunks) rt.game.botLoadLevels(JSON.stringify(c));
+        rt.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [arrival.level, arrival.x, arrival.y] }]);
+        rt.tick();
+        reports.length = 0;
+        for (const keys of [...leg1.solution, ...tail]) expect(rt.tick(new Set(keys)).halted ?? null).toBeNull();
+        for (let t = 0; t < 30; t += 1) rt.tick();
+
+        const cleared = JSON.parse(rt.game.botStatus()).persistence_cleared;
+        expect(cleared).toContainEqual({ level: lootChest.room, tag: lootChest.tag });
+        expect(cleared).toContainEqual({ level: goalChest.room, tag: goalChest.tag });
+        const checks = reports.filter(([p]) => p === 'pendingCheck').map(([, v]) => v);
+        /** the first field counts the run's checks: the loot chest's is the 1st, the goal chest's the 2nd */
+        expect(checks).toEqual([`1|${lootChest.room}|${lootChest.tag}|0`, `2|${goalChest.room}|${goalChest.tag}|0`]);
+
+        const binding = new SeedlingCheckBinding({ table: assembled.table, placementKey, selfPlayer: 1 });
+        expect(checks.flatMap((c) => binding.onStateReport('pendingCheck', c)).filter((e) => e.type === 'locationCheck')
+            .map((e) => [e.type, e.location]))
+            .toEqual([['locationCheck', lootChest.location], ['locationCheck', goalChest.location]]);
+        expect(binding.stats).toMatchObject({ checks: 2, unknown: 0 });
+        expect(rt.deaths).toEqual([]);
+    }, 180_000);
 });
