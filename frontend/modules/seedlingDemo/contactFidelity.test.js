@@ -383,7 +383,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⚖ (user, 2026-11-05) HELD at the W37b flip for an EXACT forecast (its conservative bound moves the L40 WANDHOLD/L100FIX witness plans).
             ceremonyPressForecast: false,
             // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ON since the W37b flip.
-            ceremonyWalkHandoff: true });
+            ceremonyWalkHandoff: true,
+            // ⛓ fidelity L25APITEM D1 (wave 37d): the survey stages a playthrough AP chest as its delivered apitem — ships OFF.
+            apChestItem: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
