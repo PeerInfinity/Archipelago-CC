@@ -27491,3 +27491,32 @@ train 42, because the lab's lift of its `chestloot-in-goal-chest-room` refusal i
 OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs by key. Re-pinned: `hammerChestIncidental`'s
 "ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
 the ON default (both chests collected, SOLVED).
+
+### Seedling fidelity L25APITEM — a playthrough AP chest is the `apitem` the delivery ships (`apChestItem`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37d (⚖ the user's GO 2026-11-06). Base `ac62c3d17e`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-l25apitem.md`.
+
+**W0.** At this base the L25 chest is route-survey step **34** (not 35): REFUSED STANCE-REENTRY (the bottom-line stance
+(104,114) is behind the chest itself). The delivery rewrites all 16 ledger chests into `<apitem>` (`rewriteRecordSet`,
+`seedlingRandomizerWiring`); `APItem.as:114-115` is a non-solid 8×8 box at the cell's centre, taken on overlap
+(`Pickup.as:78`), with no `checkBySeal`. The model already modelled an apitem exactly (F2) and the page plays the
+delivered rooms; only the survey staged the unrewritten map document.
+
+**D1** (`apChestItem`, OFF): `apChestDelivery.deliveredChestDocument` (the rewriter's element per ledger chest, pinned equal
+to the real rewrite) becomes the survey's model rooms under the key. No model or solver code reads it. Game witness
+`probe-seedling-l25-apitem.mjs` (p4g, delivered set, `fixtures/l25apitem-witness/`): the survey's ON tape takes
+`apitem@96,96` from the north-east at tick 48 (TAKE/BEFORE bracket 49/48), 0 px over 109 ticks, 0 hits; on the vanilla set
+the Chest stays Solid, 0 px. Rows `fidelityL25ApItem.test.js` (10); mutant `type: 'chest'` reds the 2 predicted rows.
+
+**D2** (key ON, local survey, 236 rows both arms): OFF = the base's 204/32; ON 206/30. Steps 18 (L36), 34 (L25), 45 (L12)
+REFUSED → SOLVED; 213 (L98) SOLVED → REFUSED (a pinned-jellyfish kill at the L99 exit, once the chest is really taken);
+197/204 (L63/L80) 0/5 → 464/523 t (with all 16 seals staged, OFF's `checkBySeal` deleted the vanilla chest — the
+apitem does not vanish); 10 more chest rows shorter; 66/94/175 still refused, obstacle text moved.
+
+**D3 STOP**: the `FLAG_ACTIONS.shieldlock`/`shieldlocknorm` text is pinned by `fidelityArrival.test.js:140`
+(`fixtures/arrival-solid-edges.json`) and baked into the rules export's obstacle events — not label-only.
+
+**Trap candidates.** (1) A survey row that is SOLVED in 0 ticks at a chest is the seal removal (`Chest.checkBySeal` with
+all seals held), not a take — the delivered game has no such removal. (2) Which world a "model" row stands in: the page's
+solver sees the DELIVERED rooms (`world.apItems`), the survey the vanilla ones — the same goal can be two verbs.
