@@ -49,9 +49,25 @@ export function ceremony126LostTape(withPress = true) {
     return { ...t, name: withPress ? 'ceremony126-lost' : 'ceremony126-lost-model', inputs };
 }
 
+/**
+ * ⛓ fidelity CEREMONYEXACT D1 — the KEPT press: the lost witness's tape with its press one input EARLIER (42). CEREMONY126's
+ * bound refused it (gap 1.16 px ≤ 4.45); the exact forecast does not (the box after input 42 is clear of the rect, so the
+ * ceremony starts on 44, not on the thrust's tick 43). The model authors it (no `FROZEN_TICK_PRESS`): its model is the
+ * tape itself.
+ */
+export const CEREMONYEXACT_KEPT_PRESS = 42;
+export function ceremonyExactKeptTape() {
+    const t = solvedTapeJson();
+    const inputs = withoutStrike(t.inputs);
+    inputs.push({ key: 'primary', from: CEREMONYEXACT_KEPT_PRESS, to: CEREMONYEXACT_KEPT_PRESS + 1 });
+    return { ...t, name: 'ceremonyexact-kept', inputs };
+}
+
 export const CEREMONY126_WITNESSES = Object.freeze({
     'ceremony126-solved': Object.freeze({ tape: () => ceremony126SolvedTape(), model: () => ceremony126SolvedTape() }),
     'ceremony126-lost': Object.freeze({ tape: () => ceremony126LostTape(true), model: () => ceremony126LostTape(false) }),
+    // ⛓ fidelity CEREMONYEXACT D1 (a row added at the end).
+    'ceremonyexact-kept': Object.freeze({ tape: () => ceremonyExactKeptTape(), model: () => ceremonyExactKeptTape() }),
 });
 
 /** The game poll's fold: the player (level, position, hits, frozen timer) and the dead-frame count. */
