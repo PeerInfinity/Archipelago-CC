@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 140,
-            "count": 190,
+            "browser": 141,
+            "count": 191,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 506,
-        "browser": 206,
-        "cited": 267,
-        "files": 524,
+        "blockStyle": 507,
+        "browser": 207,
+        "cited": 268,
+        "files": 525,
         "lineStyle": 18,
-        "withDocblock": 524,
-        "withFlags": 444
+        "withDocblock": 525,
+        "withFlags": 445
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11925,6 +11925,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-chaser-mobiles — ⛓ seedling-fidelity-staticladder D3: ONE BRIDGED CHASER CLASS, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-bobsoldier-mobiles.mjs` with the class and the tape as arguments).",
             "path": "scripts/procgen/probe-seedling-chaser-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "out"
+            ],
+            "file": "probe-seedling-chest-incidental.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tape-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING HAMMER CHEST-INCIDENTAL — two chests opened on ONE visit, witnessed on the game (W0's game witness).",
+            "path": "scripts/procgen/probe-seedling-chest-incidental.mjs"
         },
         {
             "argvHelpers": [
