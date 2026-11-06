@@ -131,13 +131,26 @@ describe('fidelity SHIELDBUMP — the game witness on `l40button-l42-part0` (p4g
         expect(off.F.shieldBumps).toBeUndefined();
     });
 
-    it('from t1331: ON equals the game through the t1332 and t1333 bumps; OFF leaves at t1333', () => {
-        const off = forecastsAt(1331, 1340, false);
-        const on = forecastsAt(1331, 1340, true);
-        expect(firstLeave(off.press, 1331, 1340)).toBe(1333);
-        expect(firstLeave(on.press, 1331, 1340)).toBe(null);
-        expect(firstLeave(on.cursor, 1331, 1340)).toBe(null);
-        expect(on.F.shieldBumps.map((b) => b.t)).toEqual([1332, 1333]);
+    it('from t1331 (rock cells at goneAt, `rockGoneFencepost` OFF): ON equals the game through the t1332 and t1333 bumps; OFF leaves at t1333', () => {
+        withContactFidelity({ rockGoneFencepost: false }, () => {
+            const off = forecastsAt(1331, 1340, false);
+            const on = forecastsAt(1331, 1340, true);
+            expect(firstLeave(off.press, 1331, 1340)).toBe(1333);
+            expect(firstLeave(on.press, 1331, 1340)).toBe(null);
+            expect(firstLeave(on.cursor, 1331, 1340)).toBe(null);
+            expect(on.F.shieldBumps.map((b) => b.t)).toEqual([1332, 1333]);
+        });
+    });
+
+    it('⚠ from t1331 with `rockGoneFencepost` ON: the frozen-world bound again — breakablerock@176,128/@176,144 (goneAt 1331) are still SOLID at the forecast\'s start and open at t1333 (as on the game), so both arms leave at t1333; the RUN still equals the game', () => {
+        // KNOCKBACK376 (wave 37c): a broken rock's cell opens two observations after goneAt. The forecast reuses the world
+        // as it stood at t1331 (the row below names that bound); the run's world drops the two cells at t1333.
+        withContactFidelity({ rockGoneFencepost: true }, () => {
+            const off = forecastsAt(1331, 1340, false);
+            const on = forecastsAt(1331, 1340, true);
+            expect(firstLeave(off.press, 1331, 1340)).toBe(1333);
+            expect(firstLeave(on.press, 1331, 1340)).toBe(1333);
+        });
     });
 
     it('⚠ the frozen-world bound is not the bump\'s: from t1310 past t1333 both arms leave the game on one collision', () => {

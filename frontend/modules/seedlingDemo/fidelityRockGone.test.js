@@ -30,9 +30,9 @@ const legWitness = () => JSON.parse(gunzipSync(readFileSync(join(ROCKGONE_WITNES
 
 describe('KNOCKBACK376 — the switch', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_ROCK_GONE_FENCEPOST)(
-        'D1 ships OFF, last in the defaults', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.rockGoneFencepost).toBe(false);
-            expect(CONTACT_FIDELITY.rockGoneFencepost).toBe(false);
+        'D1 ships ON (⚖ user 2026-11-05 "Flip + re-record"), last in the defaults', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.rockGoneFencepost).toBe(true);
+            expect(CONTACT_FIDELITY.rockGoneFencepost).toBe(true);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('rockGoneFencepost');
         });
     it('the env name is a known worker env name', () => {

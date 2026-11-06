@@ -1885,7 +1885,7 @@ export const CONTACT_FIDELITY = {
      * (2); `goneAt`, the write and `rocksBroken` are unchanged. OFF: byte-identical.
      * `SEEDLING_ROCK_GONE_FENCEPOST=0|1`.
      */
-    rockGoneFencepost: false,
+    rockGoneFencepost: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
