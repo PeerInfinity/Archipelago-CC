@@ -1,0 +1,17 @@
+# the rejected measurement arm: the cut only on the dashing pass
+id	i	key	arm	budget	end	work	ticks	verbs	digest	cut.asked	cut.admitted	cut.sets	bounded
+382	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20	CUT	640	SOLVED	277	913	narrow	ef65c44f9910	1	1	bob@208,448+bob@192,480+puncher@128,624	0
+383	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20	CUT	640	SOLVED	308	988	kill,walk	318aba2ac2d3	1	1	bob@208,448+bob@192,480+puncher@128,624	0
+384	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20	CUT	640	SOLVED	372	1073	kill,walk	32dfed9122a6	1	1	bob@208,448+bob@192,480+bob@352,416+puncher@128,624	0
+387	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	CUT	640	DEADLINE	642	-		918e176c5ea1	0	0		0
+387	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	CUT	2560	DEADLINE	2562	-		918e176c5ea1	0	0		0
+388	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	CUT	640	DEADLINE	642	-		1bbc0e5044ed	0	0		0
+388	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	CUT	2560	DEADLINE	2562	-		1bbc0e5044ed	0	0		0
+399	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20	CUT	640	SOLVED	260	655	narrow	a57c9b30c9a4	2	2	bob@208,448+bob@192,480+puncher@128,624 ; bob@192,480+bob@224,496+puncher@128,624	0
+400	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20	CUT	640	SOLVED	274	776	narrow	01efcfd24743	2	2	bob@208,448+bob@192,480+puncher@128,624 ; bob@192,480+bob@224,496+puncher@128,624	0
+401	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20	CUT	640	SOLVED	281	834	kill,walk	e289f153b5dc	2	2	bob@208,448+bob@192,480+bob@352,416+puncher@128,624 ; bob@192,480+bob@224,496+puncher@128,624	0
+403	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21	CUT	640	SOLVED	240	674	narrow	083708ddbf22	1	1	bob@192,480+bob@224,496+puncher@128,624	0
+404	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21	CUT	640	SOLVED	257	796	narrow	ce344ebd8881	1	1	bob@192,480+bob@224,496+bob@352,448+puncher@128,624	0
+405	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21	CUT	640	SOLVED	264	841	narrow	5a83b7d14227	1	1	bob@192,480+bob@224,496+bob@352,448+puncher@128,624	0
+407	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22	CUT	640	SOLVED	218	658	narrow	0d66c144058e	1	1	bob@192,480+bob@224,496+puncher@128,624	0
+409	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23	CUT	640	SOLVED	212	621	narrow	8a0535b0a00b	1	1	bob@192,480+bob@224,496+puncher@128,624	0

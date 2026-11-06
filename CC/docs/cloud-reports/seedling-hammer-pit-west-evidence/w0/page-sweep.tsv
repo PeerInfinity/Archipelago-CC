@@ -1,0 +1,3 @@
+387	failed	5192	the solver ran out of 640, then 2560 work units on its held retry on exit in level 40: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (23,28)->L4
+388	failed	5209	the solver ran out of 640, then 2560 work units on its held retry on exit in level 40: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (24,28)->L4
+871	failed	5194	the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (488,904): solverBot: no REACHABLE stance inside buttonroom@8

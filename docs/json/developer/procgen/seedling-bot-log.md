@@ -27488,3 +27488,28 @@ helped by this switch.
 - **Found on the way.** With L40 tag 12 staged, the flag-12 clear-tag goal does not finish `already-clear`: the door is
   latched open, the hold runs, and the arm refuses `not-written` because it reads `earnedClears`, not the staged
   persistence. This bears on the planner's door-carry staging question.
+
+### Seedling hammer-phase PIT-WEST — the L39 pit arrivals' bob cluster: a cut of any size, and DETOUR's no-answer bound
+
+⚖ User, queued 2026-11-05 (the L40 census's step 6, wall G; one of four parallel hammer slices). Two switches, both
+**OFF**: `solverBot.CHOOSER_CUT` (`SEEDLING_CHOOSER_CUT=1` / `withChooserCut`) and `solverBot.DETOUR_VIA_BOUND`
+(`SEEDLING_DETOUR_VIA_BOUND=1` / `withDetourViaBound`). The report is `CC/docs/cloud-reports/seedling-hammer-pit-west.md`.
+
+- **The wall, mapped.** L40's route from the L39 arrival to the west pits is a one-tile maze with four live chasers
+  standing in it at spawn: `puncher@128,624`, `bob@192,480`, one of `bob@208,448`/`bob@224,496`, one of
+  `bob@352,448`/`bob@352,416`. The smallest set whose removal admits a corridor has size 4, so the chooser, C1 and CPAIR
+  (size 3) answer empty and BAIT and KILL get no target. The bodies never move out of aggro range (600 idle ticks): no
+  timing window.
+- **The cut.** Where the list is still empty after CPAIR, the climb asks an irreducible cut of live chasers that holds
+  the hit's body (all removed must admit; put back the furthest first while the corridor survives), the hit's body
+  first. It defers to NARROW: where NARROW is asked and its own probe is clean, no cut is asked (the probe made once,
+  reused). Without the deferral, 13 already-solving pit legs were re-planned through a kill.
+- **Measured.** Legs 387/388 (→ `out_pit_13_21`/`_14_21`): OFF the page's deadline; ON SOLVED hitless inside the page's
+  640 units (1034 / 1156 ticks; the chaser arm kills `bob@192,480`, the walk's strikes the rest), replayed on a fresh
+  run and played on the game page (0 room hits, 0 divergences). The 70 captured L40 requests: only those four asks move.
+- **The bound.** DETOUR plans one via leg per lattice cell and previews only while fewer than 500 are planned, so a room
+  of ≥ 500 cells (L40: 3479) spends ~3,480 units a pass and previews nothing. ON, that case returns the same answer
+  before a leg is planned. Only 387/388 move (deadline → the named EXHAUSTED refusal at 96 units); 871 with the tree
+  banked drops 7236 → 278 units.
+- **Rows**: `hammerPitWest.test.js`, `hammerPitWest.train.test.js` (`fixtures/hammer-pit-west/`). The G1/SF L40
+  witnesses pin `CHOOSER_CUT` OFF beside their `CHOOSER_PAIR` pin.
