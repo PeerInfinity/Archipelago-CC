@@ -8,7 +8,7 @@ The document is written once, at build time, as ``_worldgen_rules.json`` in the 
 document after ``--apply-name-substitutions`` and the ``--game-name`` rename: the BUILT world's identity
 (game, every location and item name -> id, the region set), which is what the client's ID check compares.
 The research measured that identity equal to the exporter's export of the same world for all 16 committed
-packages that have one (``NewDocs`` research-embedded-rules §1).
+packages that have one (slice sdc-research-embedded-rules, §1).
 
 slot_data is readable by every client in the room, so the document carries no placement: every field that
 pairs a location with the item placed there is stripped (``strip_placements``), as are the seed- and
