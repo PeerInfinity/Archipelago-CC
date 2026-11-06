@@ -1,0 +1,42 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 279026[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 676[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF) [33m 190808[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF) [33m 87530[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerChooserPair.train.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 234451[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill [33m 80393[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF [33m 79247[2mms[22m[39m
+     [33m[2m✓[22m[39m 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF [33m 41421[2mms[22m[39m
+     [33m[2m✓[22m[39m the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit [33m 31267[2mms[22m[39m
+     [33m[2m✓[22m[39m the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed) [33m 2119[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 394063[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579) [33m 15717[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run [33m 210047[2mms[22m[39m
+     [33m[2m✓[22m[39m the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked [33m 138911[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked [33m 29384[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 611995[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 [33m 475910[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name [33m 136083[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 303212[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast [33m 135617[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run [33m 135580[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached [33m 32012[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 403901[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall) [33m 173733[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death [33m 230164[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 257307[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket shut, OFF: the latch hold's stance refuses on the tree, and its prerequisite list names no burn [33m 29682[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832) [33m 30630[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket open, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810 on a fresh run [33m 196990[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 661065[2mms[22m[39m
+     [33m[2m✓[22m[39m ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte [33m 463225[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit [33m 197837[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m      Tests [22m [1m[32m30 passed[39m[22m[90m (30)[39m
+[2m   Start at [22m 00:29:11
+[2m   Duration [22m 3156.03s[2m (transform 2.48s, setup 0ms, import 9.92s, tests 3145.02s, environment 1ms)[22m
+
+rc=0

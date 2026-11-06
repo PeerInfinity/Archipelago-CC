@@ -154,7 +154,7 @@ the census/surface tests, + `levelRunDigestRead`, `r6AnimClock`, `breakVerb`, `f
 
 **Hammer** (listed for hammer-3 whether or not they move; key ON): the 41 fast `hammer*` / `solveProgress` / `strikePolicy` /
 `pressKill*` / `ghostSpinner*` / `pressEscape*` files **41/41**; slow `hammerBk2Combat`, `hammerDashShape`,
-`hammerEscapeExact`, `hammerEscapeGenerated` **4/4 files green**; train (8 files) **5 of 8 green so far** (`hammerGhostKillRung`, `hammerChooserPair`, `hammerSouthDoor`, `hammerLatchWeigh`, `hammerTurretApproach`; the other 3 still running at this commit — see the follow-up). **No hammer pin moves.**
+`hammerEscapeExact`, `hammerEscapeGenerated` **4/4 files green**; train (8 files: `hammerChooserPair`, `hammerGhostKillRung`, `hammerIceTurretStatic`, `hammerLatchWeigh`, `hammerPocketBurn`, `hammerSouthDoor`, `hammerSpinnerPress`, `hammerTurretApproach`) **8/8, 30/30**. **No hammer pin moves.**
 
 Pins the first cut moved and the rework does not: CLEARTAG's 7 game-witness rows, `breakableRocks.test.js`' run row, the
 solids-skin goldens (`L3-rock-breaks`, `L3-ghost-rock-breaks`), ARRIVAL's 2 residue rows (they pin the recorded oracle and
