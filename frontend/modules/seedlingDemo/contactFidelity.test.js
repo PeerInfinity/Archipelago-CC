@@ -379,9 +379,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             frozenPressForecast: true,
             // ⛓ fidelity L105 D1 (wave 37): a preview steps the drifting BeamTower Solid per previewed tick — ON since the W37b flip.
             previewBeamTowerDrift: true,
-            // ⛓ fidelity CEREMONY126 D1 (wave 37b): the walk's strike stands down where a pickup ceremony would swallow its thrust — ships OFF;
-            // ⚖ (user, 2026-11-05) HELD at the W37b flip for an EXACT forecast (its conservative bound moves the L40 WANDHOLD/L100FIX witness plans).
-            ceremonyPressForecast: false,
+            // ⛓ fidelity CEREMONY126 D1 (wave 37b), made EXACT by CEREMONYEXACT (wave 37c): the walk's strike stands down only on a
+            // tick whose one-tick stepped forecast starts a pickup ceremony — ON since the CEREMONYEXACT flip (⚖ user 2026-11-05).
+            ceremonyPressForecast: true,
             // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ON since the W37b flip.
             ceremonyWalkHandoff: true });
     });

@@ -1861,7 +1861,7 @@ export const CONTACT_FIDELITY = {
      * 368/371 and the L40 kill rung was bound-only; ON they and survey steps 141/183/221/236 equal OFF, step 125 SOLVED.
      * A caller that passes no held sets (3 arguments) keeps CEREMONY126's bound.
      */
-    ceremonyPressForecast: false,
+    ceremonyPressForecast: true,
     /**
      * fidelity CEREMONY126 D2 (wave 37b) — A COLLECT GOAL'S STANCE WALK ENDS WHEN ITS PICKUP'S CEREMONY STARTS ON IT.
      * The walk to a collect stance can cross the pickup's own rect (L64's Ghostspear: rect [74,86)×[30,34), stance =
