@@ -27436,3 +27436,30 @@ the block at y 83.83, the game's number). No tape byte moved.
 **Trap candidate.** A `probe-*` producer is not in `ci-producer-checks`' roster (its globs are `plan-seedling-*.mjs` and
 `regenerate-*-tapes.mjs`): the retired probe's drive was dead and no gate saw it, and `probe-seedling-r5-spinner --check` —
 where its pair now lives — runs on no CI job either. Run it by hand; enrolling it is a planner call (it is a CI change).
+
+### Seedling hammer-phase STAGED-HUNT-CHEAP — the staged hunt's per-still-tick ask, made cheap and exact (`STAGED_HUNT_SCAN_MEMO`, OFF)
+
+⚖ The user queued it on 2026-11-05 (L40-CENSUS's step 2, wall A3). Planner `seedling-hammer-phase-planning-3`; the report
+is `CC/docs/cloud-reports/seedling-hammer-staged-hunt-cheap.md`.
+
+**What was slow.** `CHASER_STAGED_HUNT` asks `deriveKillByChaser` again on a fork after every still tick at a staging
+cell. Measured on L40's Chest leg 394/1: one ask is 177 work units, and ~160 of them are the leash scan's per-cell
+reachability lookups: the player's box and then the target's box (`KILL_STANCE_TARGET_RESCAN`), one `fineDeadlineReached`
+per cell, against two `plansReach` floods. The forecast's 8 candidates and the guard approach's 8 are the rest. The
+floods read the world, `solverPlanOpts`, the teleporter grant, the player's state and the aim; while the player stands
+still, none of these moves (the BobSoldier jitters < 1 px a tick, which only changes leash membership: arithmetic).
+
+**The switch.** `stagedHuntScanMemo.STAGED_HUNT_SCAN_MEMO` (OFF; `SEEDLING_STAGED_HUNT_SCAN_MEMO=1`), asked only inside
+`stagedChaserHunt`. It keeps one memo per call, holding the floods, the aim's answer and each cell's answer, under a key
+made of the run's `world` by identity and `canonicalDigestText` of the rest. A function in the key means no memo. A cell
+it has answered costs no unit, and everything else is computed as before. So the answers are exact: every request
+measured answers its base arm's digest.
+
+**The numbers** (uncapped node replays; page budget 640 → 2560): 394 OPP+CSH 2384 → **790**, CSH alone 1863 → **582**;
+411 OPP+CSH 2630 → **716**; 869/870 one-visit refusals ~7.8k → ~2.9k (same refusal); L12's 14 under CLEARTAG_STAND+CSH
+unchanged (no repeated ask). Wall time barely moves (the removed units were lookups), so the page's 90 s leg budget is not
+helped by this switch.
+
+**Flip proposal (not a flip):** `OPPORTUNISTIC_STRIKE` + `CHASER_STAGED_HUNT` + `STAGED_HUNT_SCAN_MEMO` together (+
+`CLEARTAG_STAND` for L12's 14). They carry CSH's pins (BK2COMBAT §7), and the memo adds none of its own.
+
