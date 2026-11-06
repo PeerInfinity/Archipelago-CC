@@ -151,7 +151,22 @@ atlas — the capture's own level records answer byte for byte, 412 SOLVED 748 a
 
 ## 6. D — the gates
 
-GATES_PLACEHOLDER
+| gate | result |
+|---|---|
+| bounded vitest by path (⚖ 52; `gates/bounded-files.txt`: every fast test naming the keylock arm, the clear-tag arm, APPROACH, `bosslock`, `iceturret@472,400` or the env channel) | OFF **93 files, 2588/2588** (`gates/bounded-off.txt`) · `SEEDLING_KEYLOCK_TURRET=1` **93 files, 2588/2588**, 0 movers (`gates/bounded-on.txt`) |
+| hammer `.slow` files + the slow files naming the arm (`hammerBk2Combat`, `hammerDashShape`, `hammerEscapeExact`, `hammerEscapeGenerated`, `strategySwitchApproach`, `strategySwitchGrade`, `fidelityCorpseBump2`) | **7 files, 23/23** (`gates/slow.txt`) |
+| `.train` files my change reaches, run locally by path | `hammerKeylockTurret.train` 1/1 (twice), `hammerTurretApproach.train` 3/3, `hammerSouthDoor.train` 4/4, `hammerLatchWeigh.train` 2/2, `hammerPocketBurn.train` 4/4, `hammerIceTurretStatic.train` 2/2 — **6 files, 16/16** (a container restart cut the first batch after four files; the last two were re-run) |
+| `ci-producer-checks --jobs=4` | defaults **97 run, 0 red, 1 skipped** (`plan-seedling-r7-ends-meet`, a browser arm CI runs) · `SEEDLING_KEYLOCK_TURRET=1` **97 run, 0 red, 1 skipped** (`gates/producers-*.txt`) |
+| identity block (`identity-block.sh`) | head (`gates/identity-head.txt`) vs a pristine base worktree at `97739720` (`gates/identity-base.txt`): **every row byte-identical**, every producer `--check` exit 0. The base's reference row reads "4 differ": the worktree's symlinked submodules (LWEIGH's known artifact); the head's tree reads ALL 7 MODULES AND 5 REGIONS MATCH |
+| `census-seedling-solver-surface --check` | RED on site counts only → `--write` → GREEN, **371 rows** (no new row to classify) |
+| `census-seedling-constants --check` | PASS (7061 literals, 0 new) |
+| `generate-procgen-reference` → `check-procgen-reference` | regenerated (README, docs index) → ALL CHECKS PASSED |
+| `generate-docs-index --check` | OK (193 docs) |
+| `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
+| `check-seedling-wasm-ship` headless (:8000) | **ALL PASS**, exit 0 (`gates/wasm-ship.txt`) |
+| `solverEnvChannel.test.js`, `strategySwitch.test.js`, `contentIdentity.test.js`, `entityBlocks.test.js`, `boxLock.test.js` | 5 files, **119/119** |
+| JSUT at `4dd07abc` (run 42131936402) | **red, 1 failure, mine**: `lintGateLabels.test.js` flagged the generated row's `toHaveLength(1)` on the counter (a pinned roster length). The slow battery was green there, 414/414. Fixed at `203a9f5d` (the counter compared by value); `lintGateLabels` + the row green locally |
+JSUT_ROW
 
 ## 7. What the harvest A/B should expect, and the ON dispatch
 
