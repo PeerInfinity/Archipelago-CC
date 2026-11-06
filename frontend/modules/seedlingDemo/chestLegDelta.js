@@ -1,6 +1,6 @@
 /**
  * chestLegDelta — ⛓⛓⛓ SEEDLING HAMMER-PHASE CHEST-INCIDENTAL: THE CHEST LEG'S EXACT SET IS THE LEG'S OWN DELTA
- * (`CHEST_LEG_DELTA`, OFF).
+ * (`CHEST_LEG_DELTA`, ON — ⚖ the user flipped it 2026-11-06, "Flip it ON (Recommended)"; it landed OFF in train 42).
  *
  * ⚖ The user queued this on 2026-11-03 (the hammer-phase CHEST-INCIDENTAL slice), from the lab's named gap in
  * `seedling-gen-chest-loot-goal` (B1 + B3): a loot chest in a goal-chest room is DROPPED, graded
@@ -22,15 +22,15 @@
  * see in the same set — still refuses by the same text. The record carries `openBefore` (the chests the check
  * excluded, sorted), present only when non-empty, so a one-chest leg's record is byte-identical ON and OFF.
  *
- * ⛓ THE SWITCH: `SEEDLING_CHEST_LEG_DELTA=1` in a node process (or the page's
- * `?seedlingSolverEnv=SEEDLING_CHEST_LEG_DELTA=1` through `solverEnvChannel`), `withChestLegDelta(enabled, fn)` for a
- * row or a witness. OFF, nothing new is read: the check reads the whole set, as before the slice.
+ * ⛓ THE SWITCH ships ON. `SEEDLING_CHEST_LEG_DELTA=0` in a node process (or the page's
+ * `?seedlingSolverEnv=SEEDLING_CHEST_LEG_DELTA=0` through `solverEnvChannel`) opts out, `withChestLegDelta(enabled, fn)`
+ * for a row or a witness. OFF, nothing new is read: the check reads the whole set, as before the slice.
  */
 
 export const CHEST_LEG_DELTA = {
-    enabled: globalThis.process?.env?.SEEDLING_CHEST_LEG_DELTA === '1',
+    enabled: globalThis.process?.env?.SEEDLING_CHEST_LEG_DELTA !== '0',
 };
-export const CHEST_LEG_DELTA_DEFAULT = false;
+export const CHEST_LEG_DELTA_DEFAULT = true;
 
 /** Run `fn` with `CHEST_LEG_DELTA` set to `enabled`, restoring the previous value (`withStrikeSlot`'s shape). */
 export function withChestLegDelta(enabled, fn) {

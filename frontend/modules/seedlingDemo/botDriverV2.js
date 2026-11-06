@@ -5366,7 +5366,7 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
             + 'impossible.');
     }
     // ── ⛓ THE EFFECT, AS AN EXACT SET ────────────────────────────────
-    // ⛓ hammer CHEST-INCIDENTAL (`CHEST_LEG_DELTA`, OFF): ON, the set is the LEG's delta — the chests open now
+    // ⛓ hammer CHEST-INCIDENTAL (`CHEST_LEG_DELTA`, ON since 2026-11-06): ON, the set is the LEG's delta — the chests open now
     // minus those open before its approach (`chestsBefore`), which an earlier leg of this visit opened by name.
     const { opened, openBefore, exact } = chestLegOpened(run.entities('openChests'), chestsBefore, target.id);
     if (!exact) {

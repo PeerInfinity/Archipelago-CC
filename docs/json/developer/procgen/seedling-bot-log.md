@@ -27482,3 +27482,12 @@ only at `botDriverV2.runChest`'s effect check). The report is `CC/docs/cloud-rep
   chests opened on one visit, both tags cleared, 0 px over the solver's 244-tick ON tape
   (`probe-seedling-chest-incidental.mjs`, `fixtures/chest-incidental-game-p4g.json`). Rows: `hammerChestIncidental.test.js`
   (12), mutants (a) drop the record, (b) accept an unseen open, (c) delta OFF too: each reds 2–3 rows.
+
+### Seedling hammer-phase CHEST-INCIDENTAL flip — `CHEST_LEG_DELTA` ships ON
+
+⚖ The user, 2026-11-06: *"Flip it ON (Recommended)"* (asked in the hammer planner's session after the switch landed OFF in
+train 42, because the lab's lift of its `chestloot-in-goal-chest-room` refusal is honest only once the switch is ON).
+`chestLegDelta.js`: `CHEST_LEG_DELTA_DEFAULT = true`, the env opts out with `SEEDLING_CHEST_LEG_DELTA=0`. ON = OFF wherever
+OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs by key. Re-pinned: `hammerChestIncidental`'s
+"ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
+the ON default (both chests collected, SOLVED).
