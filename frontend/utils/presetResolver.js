@@ -129,3 +129,45 @@ export function findPresetsForRoom(presetFilesData, { seedName, slotName, games 
   }
   return matches;
 }
+
+/**
+ * The committed presets of one game, at any seed: each (folder, player) whose
+ * player plays `game`. One-game folders come first (their plain rules file is
+ * that player's), then the rest, each group in preset_files.json order. The
+ * connect flow uses the first as the local rules of a generated world whose
+ * room has no preset of its own (client/core/localRulesOverlay.js).
+ *
+ * @param {Object} presetFilesData - Parsed content of preset_files.json
+ * @param {string} game
+ * @returns {Array<{ path: string, gameKey: string, folderName: string,
+ *   playerId: string, game: string }>}
+ */
+export function findPresetsForGame(presetFilesData, game) {
+  if (!presetFilesData || !game) return [];
+  const single = [];
+  const shared = [];
+  for (const [gameKey, entry] of Object.entries(presetFilesData)) {
+    if (gameKey === 'metadata') continue;
+    for (const [folderName, folder] of Object.entries(entry?.folders || {})) {
+      const files = folder?.files || [];
+      const players = folder?.games || [];
+      for (const player of players) {
+        if (player?.game !== game) continue;
+        const playerId = String(player.player);
+        const isRules = (f) => f.endsWith(RULES_SUFFIX);
+        const rulesFile =
+          files.find((f) => isRules(f) && f.includes(`_P${playerId}_rules.json`)) ||
+          files.find((f) => isRules(f) && !/_P\d+_rules\.json/.test(f));
+        if (!rulesFile) continue;
+        (players.length === 1 ? single : shared).push({
+          path: `./presets/${gameKey}/${folderName}/${rulesFile}`,
+          gameKey,
+          folderName,
+          playerId,
+          game,
+        });
+      }
+    }
+  }
+  return [...single, ...shared];
+}
