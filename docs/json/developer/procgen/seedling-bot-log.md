@@ -27458,3 +27458,27 @@ after; `--write` rewrote the three tapes with no `git` diff). Mutants: a forced 
 **Trap candidate.** The probe wrapper's contract is in the WORKFLOW, not in a shared helper: a node-only probe that ran green
 for months by hand reds on its first dispatch. `grep -a '^CHANNEL:\|^PASS:\|CHECK(S) FAILED' <probe>` before naming one in a
 dispatch.
+
+### Seedling hammer-phase CHEST-INCIDENTAL — `CHEST_LEG_DELTA` (OFF): the chest leg's exact set is the leg's delta
+
+⚖ User, queued 2026-11-03 (a lone slice; the lab routed its named gap from `seedling-gen-chest-loot-goal` to hammer).
+Module `chestLegDelta.js`, switch `CHEST_LEG_DELTA`, **OFF** (`SEEDLING_CHEST_LEG_DELTA=1` / `withChestLegDelta`; asked
+only at `botDriverV2.runChest`'s effect check). The report is `CC/docs/cloud-reports/seedling-hammer-chest-incidental.md`.
+
+- **The gap, measured** (start `491f3286d9`, the lab's `54abcfcaee` merged in a throwaway worktree). B1 + B3 drop the loot
+  chest in 11/12 rooms with *"A chest the leg did not name …"*. The brief and the lab read this as an INCIDENTAL open (the
+  walk crossing the other chest's trigger line). It is not: in all 11 the "unnamed" chest is the one the PREVIOUS chest
+  leg opened by name. `runChest` compared the VISIT's open set (`run.entities('openChests')`, which keeps an opened chest
+  for the rest of the visit) with `{target}`, so every second chest leg of a visit refused. No walk opened an unnamed chest
+  in 100 lab rooms or in 64 hand-built two-chest rooms (adjacent and diagonal chests, four starts).
+- **The design.** ON, the exact set is the chests open now minus those open before the leg's approach (the call site's
+  `before.chests`). It must still be exactly `{target}`, so an open the leg itself caused beyond its target still refuses.
+  The record carries `openBefore` (only when non-empty). Tolerating an incidental open (the brief's (1)) and walking
+  around trigger lines ((2)) had no case to act on; naming both chests ((3)) is what the lab already does, and it is what
+  refused.
+- **Measured.** The 12 rooms: 0/11 → 11/11 loot chests kept (the 12th refuses `the-stance-is-not-floor`, unrelated). 100
+  lab rooms: 19 → 97 kept (the 19 OFF keeps were all one-chest rooms). Hand-built: 32/64 → 64/64. ON = OFF wherever OFF
+  passes (the whole set was `{target}`), so ON moves only solves that met this refusal. Game witness: p4g headless, two
+  chests opened on one visit, both tags cleared, 0 px over the solver's 244-tick ON tape
+  (`probe-seedling-chest-incidental.mjs`, `fixtures/chest-incidental-game-p4g.json`). Rows: `hammerChestIncidental.test.js`
+  (12), mutants (a) drop the record, (b) accept an unseen open, (c) delta OFF too: each reds 2–3 rows.

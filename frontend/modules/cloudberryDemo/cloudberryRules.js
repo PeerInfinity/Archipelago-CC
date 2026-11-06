@@ -279,11 +279,11 @@ function payloadItems(doubleJump) {
  * (the exits, the side portals, entrySide — see the entry's deserializeWorld).
  *
  * @param {string} region_id
- * @param {object} region  { generate, docSha256, checks: [{name, coin}], gateRules?, doubleJump? }
+ * @param {object} region  { generate, docSha256, checks: [{name, coin}], gateRules?, doubleJump?, knobs? }
  *   doubleJump: the level is a Double-hero level — only then does `items` name Double Jump
  *   (the map every earlier payload carries stays byte-identical).
  */
-export function buildCloudberryPayload(region_id, { generate, docSha256, checks, gateRules = null, doubleJump = false }) {
+export function buildCloudberryPayload(region_id, { generate, docSha256, checks, gateRules = null, doubleJump = false, knobs = null }) {
     if (!generate || typeof generate !== 'object') throw new Error('buildCloudberryPayload: no generate request');
     if (generate.reroll !== undefined) throw new Error('buildCloudberryPayload: a reroll search, not the resolved request');
     if (!/^[0-9a-f]{64}$/.test(docSha256 ?? '')) throw new Error('buildCloudberryPayload: docSha256 is not 64 hex');
@@ -295,6 +295,8 @@ export function buildCloudberryPayload(region_id, { generate, docSha256, checks,
             docSha256,
             checks: Object.fromEntries(checks.map((c) => [c.name, c.coin])),
             items: payloadItems(doubleJump),
+            // ⛓ P5d — the knobs the request does not spell (only non-default ones: a default world's bytes stay).
+            ...(knobs && Object.keys(knobs).length ? { knobs } : {}),
         },
         ap_locations: Object.fromEntries(checks.map((c) => [c.name, `${region_id}__${c.name}`])),
         flashCapabilities: { locations: 'cooperative', items: 'pull', start: 'auto' },

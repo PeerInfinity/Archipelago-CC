@@ -65,6 +65,7 @@
  */
 
 import { activeProgress, progressHeartbeat, progressStringPull } from './solveProgress.js';
+import { chestLegOpened } from './chestLegDelta.js';
 // ⛓ fidelity FROZENPRESS D1: the run-side `decide` options (`frozenPressForecast` OFF: `{ slash }`, as before).
 import { strikeDecideOpts } from './strikePolicy.js';
 import {
@@ -5365,8 +5366,10 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
             + 'impossible.');
     }
     // ── ⛓ THE EFFECT, AS AN EXACT SET ────────────────────────────────
-    const opened = [...run.entities('openChests')];
-    if (opened.length !== 1 || opened[0] !== target.id) {
+    // ⛓ hammer CHEST-INCIDENTAL (`CHEST_LEG_DELTA`, OFF): ON, the set is the LEG's delta — the chests open now
+    // minus those open before its approach (`chestsBefore`), which an earlier leg of this visit opened by name.
+    const { opened, openBefore, exact } = chestLegOpened(run.entities('openChests'), chestsBefore, target.id);
+    if (!exact) {
         fail(`${what}: the leg opened [${opened.join(' ')}] and named only ${target.id}. `
             + 'A chest the leg did not name is a wall somewhere else that the plan '
             + 'still believes is standing.');
@@ -5396,6 +5399,8 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
         ticks: perTick.length - from,
         deadFrames: run.ledger('sealCollections')[run.ledger('sealCollections').length - 1].deadFrames,
         band: [...band],
+        /** ⛓ CHEST_LEG_DELTA ON only, and only when non-empty: the chests the exact set excluded. */
+        ...(openBefore.length > 0 ? { openBefore } : {}),
     };
 }
 

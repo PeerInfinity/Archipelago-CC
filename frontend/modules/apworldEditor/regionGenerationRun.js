@@ -102,6 +102,18 @@ export function initialiseTimeoutSentence(seconds, substrate, player, progress =
         + 'The worker was stopped; nothing was recorded.';
 }
 
+/**
+ * ⛓ P5d — an initialise FINISHED ON THE PAGE stopped no worker (the page cannot
+ * stop a generation it started): its own timeout sentence.
+ */
+export function initialisePageTimeoutSentence(seconds, substrate, player, progress = null) {
+    const got = progress && Number.isInteger(progress.index)
+        ? ` after building ${progress.index} / ${progress.total} regions` : '';
+    return `apworld: initialising player ${player}'s slot as \`${substrate}\` on this page ${REGION_GENERATION_GAVE_UP} `
+        + `${seconds} s${got} — \`${INITIALISE_TIMEOUT_KEY}\` = ${seconds} (${REGION_GENERATION_TIMEOUT_WHERE}). `
+        + 'Nothing was recorded; the generation already started keeps running and is cached.';
+}
+
 /** ⛓ The job kind the worker dispatches an initialise on. */
 export const INITIALISE_JOB = 'initialise';
 
@@ -337,35 +349,87 @@ export function flagPendingGeneration(run, collect) {
     return value && !value.ok && pending.length > 0 ? { ...value, pendingGeneration: true } : value;
 }
 
-/** ⛓ The refusal when the ONE retry after the awaited work still finds work pending. EXPORTED for the rows. */
+/**
+ * ⛓⛓ **THE WORKER'S DISPATCH** (`regionRegenerateWorker.js`; here so it is pinned
+ * without a Worker): an initialise (R7) and a region regenerate are each flagged
+ * when they left work pending (P5c; P5d for the initialise), so the page finishes
+ * them; a ZONE source (R5b) is answered as it stands (its realise is the zone fetch).
+ *
+ * @param {object} args the job
+ * @param {{progress?: Function, initialiseSlot: Function, zoneJobAnswer: Function,
+ *   regenerateRegionEntry: Function, collect: Function, fetchJson: Function}} libs
+ */
+export function workerJobAnswer(args, { progress, initialiseSlot, zoneJobAnswer, regenerateRegionEntry, collect, fetchJson }) {
+    if (args?.job === INITIALISE_JOB) {
+        return flagPendingGeneration(() => initialiseSlot({ ...args, onProgress: progress }), collect);
+    }
+    return args?.source?.kind === 'zone'
+        ? zoneJobAnswer(args, { fetchJson })
+        : flagPendingGeneration(() => regenerateRegionEntry(args), collect);
+}
+
+/** ⛓ The refusal when the retries the bound allows still find work pending. EXPORTED for the rows. */
 export const REGION_GENERATION_STILL_PENDING = 'the generation finished, but the realiser asked again still found '
-    + 'work pending (it was retried once)';
+    + 'work pending';
+
+/** ⛓ P5d — the refusal when a retry yields work it ALREADY awaited (it settled, yet the realiser is still waiting on it). */
+export const REGION_GENERATION_NO_PROGRESS = 'the realiser asked again yielded the same work it had already '
+    + 'awaited (no progress)';
 
 /**
- * ⛓⛓⛓ **AWAIT THE YIELDED WORK, THEN ASK ONCE MORE.** Runs `run` under `collect`;
- * a success, or a refusal with nothing pending, is the answer as it stands (a
- * synchronous substrate: one call, its own answer). A refusal with work pending
- * awaits EXACTLY that work (the promises the realiser yielded — no timer, no poll)
- * and runs `run` once more. The bound is that one retry: a retry that again leaves
- * work pending is refused as `REGION_GENERATION_STILL_PENDING`, never retried.
- * A generation that FAILED is the retry's own named refusal (the substrate reports
- * it; cloudberry: `CloudberryLevelRefused`, or the generator's failure).
+ * ⛓⛓⛓ **AWAIT THE YIELDED WORK, THEN ASK AGAIN — WITHIN A NAMED BOUND.** Runs
+ * `run` under `collect`; a success, or a refusal with nothing pending, is the
+ * answer as it stands (a synchronous substrate: one call, its own answer). A
+ * refusal with work pending awaits EXACTLY that work (the promises the realiser
+ * yielded — no timer, no poll) and runs `run` again.
  *
- * @param {Function} run a synchronous job answering `{ok, threw?, …}`
- * @param {{collect: Function, onPending?: Function}} io `onPending(promises)` is told when it waits
- * @returns {Promise<object>} the job's answer, `retried: true` when it waited
+ * **The bound** is `maxRetries` (P5c: 1 — one region's regenerate yields one
+ * generation). P5d: a whole-slot Initialise stops at the FIRST region still
+ * generating, so each ask finishes one more region; its bound is the slot's
+ * region count (`initialisePageRetryBound`). A retry still pending once the
+ * bound is spent is refused as `REGION_GENERATION_STILL_PENDING`; a retry that
+ * yields a promise it ALREADY awaited is refused at once as
+ * `REGION_GENERATION_NO_PROGRESS` (that work settled and the realiser did not
+ * advance — never re-awaited). A generation that FAILED is the retry's own named
+ * refusal (the substrate reports it; cloudberry: `CloudberryLevelRefused`, or the
+ * generator's failure).
+ *
+ * @param {Function} run a synchronous job answering `{ok, threw?|why?, …}`
+ * @param {{collect: Function, onPending?: Function, maxRetries?: number}} io
+ *   `onPending(promises)` is told each time it waits
+ * @returns {Promise<object>} the job's answer, `retried: true` and `retries: n` when it waited
  */
-export async function regenerateAwaitingGeneration(run, { collect, onPending = () => {} }) {
-    const first = collect(run);
-    if (first.value?.ok || first.pending.length === 0) return first.value;
-    onPending(first.pending);
-    await Promise.all(first.pending);
-    const again = collect(run);
-    if (again.value?.ok || again.pending.length === 0) return { ...again.value, retried: true };
-    return {
-        ...again.value, ok: false, retried: true, stillPending: true,
-        threw: `${REGION_GENERATION_STILL_PENDING}; its last refusal: ${again.value?.threw ?? 'none'}`,
+export async function regenerateAwaitingGeneration(run, { collect, onPending = () => {}, maxRetries = 1 }) {
+    let res = collect(run);
+    if (res.value?.ok || res.pending.length === 0) return res.value;
+    const awaited = new Set();
+    let retries = 0;
+    const refuse = (head) => {
+        const last = res.value?.threw ?? res.value?.why ?? 'none';
+        const threw = `${head} (retried ${retries} of its bound ${maxRetries}); its last refusal: ${last}`;
+        return { ...res.value, ok: false, retried: true, retries, stillPending: true, threw, ...(res.value && 'why' in res.value ? { why: threw } : {}) };
     };
+    while (retries < maxRetries) {
+        onPending(res.pending);
+        for (const p of res.pending) awaited.add(p);
+        // eslint-disable-next-line no-await-in-loop
+        await Promise.all(res.pending);
+        retries += 1;
+        res = collect(run);
+        if (res.value?.ok || res.pending.length === 0) return { ...res.value, retried: true, retries };
+        if (res.pending.some((p) => awaited.has(p))) return refuse(REGION_GENERATION_NO_PROGRESS);
+    }
+    return refuse(REGION_GENERATION_STILL_PENDING);
+}
+
+/**
+ * ⛓ P5d — **THE BOUND OF A WHOLE-SLOT INITIALISE FINISHED ON THE PAGE**: the
+ * number of regions the slot has. Each ask realises the regions in placement
+ * order and stops at the first still generating, so each awaited generation
+ * moves it at least one region on; a slot of N regions needs at most N retries.
+ */
+export function initialisePageRetryBound(doc, player) {
+    return Math.max(1, Object.keys(doc?.regions?.[String(player)] ?? {}).length);
 }
 
 /** ⛓ The Cancel and timeout sentences of a page run (the page cannot stop the generation it started). */
@@ -387,7 +451,8 @@ export function regionGenerationPageTimeoutSentence(seconds, substrate, region) 
  *
  * @param {object} args the job
  * @param {{timeoutMs: number, regenerate: Function, collect: Function, now?: Function,
- *   setTimer?: Function, clearTimer?: Function, onPhase?: Function}} opts
+ *   setTimer?: Function, clearTimer?: Function, onPhase?: Function, maxRetries?: number}} opts
+ *   `maxRetries` = `regenerateAwaitingGeneration`'s bound (1; an initialise: `initialisePageRetryBound`)
  */
 export function runRegenerateOnPage(args, {
     timeoutMs,
@@ -397,6 +462,7 @@ export function runRegenerateOnPage(args, {
     setTimer = (fn, ms) => setTimeout(fn, ms),
     clearTimer = (t) => clearTimeout(t),
     onPhase = () => {},
+    maxRetries = 1,
 } = {}) {
     let phase = 'running';
     const startedAt = now();
@@ -419,7 +485,7 @@ export function runRegenerateOnPage(args, {
     timer = setTimer(() => finish({ ok: false, timedOut: true, phase: 'running', ms: now() - startedAt, budgetMs: timeoutMs }),
         timeoutMs);
     onPhase(phase);
-    regenerateAwaitingGeneration(() => regenerate(args), { collect })
+    regenerateAwaitingGeneration(() => regenerate(args), { collect, maxRetries })
         .catch((e) => ({ ok: false, threw: String(e?.message ?? e), freeItems: [], hostsSurplus: false }))
         .then((res) => finish({ ...res, ms: now() - startedAt }));
     return {

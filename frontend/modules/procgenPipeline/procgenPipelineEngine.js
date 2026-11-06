@@ -2251,6 +2251,9 @@ export function* realiseTopDownGen(layout, opts) {
     // re-realise) re-runs ② over the same layout, so reset the per-run counter
     // rather than accumulate across runs. No-op (0→0) on the first run.
     stats.regionsBuilt = 0;
+    // ⛓ P5d — the free items this realise drifted onto (the grant is narrowed to
+    //   them). A hand-edited room clears it to null: "unknown", grant them all.
+    stats.freeItemsUsed = [];
 
     // ⛓ F2: refuse UP FRONT, by name, a region a zone substrate cannot hold —
     // before any region builds (see zoneExitCeilingRefusal).
@@ -2317,7 +2320,7 @@ export function* realiseTopDownGen(layout, opts) {
         // substrate edit replays the recording from a fresh ① (`topDownSteps.js`), so this pass sees exactly the
         // regions before this one in placement order — determined by config + seed + edits, never a hidden record.
         const introduced = introducedFromGrid(grid, name);
-        const region = generateRegion({
+        const { value: region, used: freeUsed } = collectUsedFreeItems(() => generateRegion({
             substrate: substrateId,
             region_id: name,
             size,
@@ -2336,7 +2339,8 @@ export function* realiseTopDownGen(layout, opts) {
             stampEntrance: true,
             freeItems,
             zoneOrdinal: (zoneOrdinals[substrateId] = (zoneOrdinals[substrateId] ?? -1) + 1),
-        });
+        }));
+        for (const item of freeUsed) if (!stats.freeItemsUsed.includes(item)) stats.freeItemsUsed.push(item);
 
         for (const placed of region.exits_placed) {
             exitSidesByExit.set(`${name}:${placed.exit_id}`, {
@@ -3701,7 +3705,10 @@ function* generateRegionZoneGen(spec) {
             const hasNonDriftableTop = arrowless.length > driftable.length;
             const toDrift = hasNonDriftableTop ? driftable : driftable.slice(1);
             toDrift.forEach(({ s }, k) => {
-                s.requirement = [...s.requirement, freeDrifts[k % freeDrifts.length]];
+                const item = freeDrifts[k % freeDrifts.length];
+                s.requirement = [...s.requirement, item];
+                // ⛓ P5d — the free item this region LEANS ON (only these are granted).
+                noteFreeItemUsed(item);
             });
         }
     }
@@ -3723,7 +3730,12 @@ function* generateRegionZoneGen(spec) {
     // keeps the gated back portal (it has the width for a back-portal branch
     // tip), so column output stays byte-identical.
     const ent = spec.entrances?.[0];
-    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
+    // ⛓ P5d — a caller that supplies the back exit itself (the APWorld Editor's
+    //   regenerate: the document's exit to the parent, pinned on the entrance side,
+    //   realised as below) gets no second one. Sphere growth never puts an exit on
+    //   the entrance side, so its regions are unchanged.
+    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)
+        && !exitSpecs.some((s) => s.side === ent.side)) {
         // Gated back portal (column) vs ungated (braid) — the substrate
         // decides from its regionParams; default gated.
         const backGated = adapter.backPortalGated?.(spec.params) ?? true;
@@ -3920,6 +3932,36 @@ export function generateRegion(spec) {
         r = gen.next();
     }
     return r.value;
+}
+
+// --- Free items a realise LEANED ON (P5d, ⚖ Robert 2026-11-05) ---
+//
+// A top-down caller hands the realiser `freeItems` (the slot's starting items +
+// the target's library items the source does not define, `grantedLibraryItems`).
+// The ONE reader is the surplus-exit drift above: a drifted exit's geometry needs
+// the item, its logic does not, so the item must be held from the start. Every
+// other free item is never leaned on. `collectUsedFreeItems(fn)` runs `fn` and
+// answers the free items the realises inside it drifted onto an exit (unique, in
+// first-use order), so the grant can be narrowed to exactly those. Nests: an
+// inner call's items are also reported to the outer one.
+
+let _freeItemCollector = null;
+
+function noteFreeItemUsed(item) {
+    if (_freeItemCollector && !_freeItemCollector.includes(item)) _freeItemCollector.push(item);
+}
+
+/** Run `fn` synchronously; answer `{ value, used }` — `fn`'s value and the free items it drifted onto. */
+export function collectUsedFreeItems(fn) {
+    const outer = _freeItemCollector;
+    const used = [];
+    _freeItemCollector = used;
+    try {
+        return { value: fn(), used };
+    } finally {
+        _freeItemCollector = outer;
+        if (outer) for (const item of used) if (!outer.includes(item)) outer.push(item);
+    }
 }
 
 // --- Pending generations (a synchronous drain that could not wait) ---
