@@ -27513,3 +27513,25 @@ helped by this switch.
   banked drops 7236 → 278 units.
 - **Rows**: `hammerPitWest.test.js`, `hammerPitWest.train.test.js` (`fixtures/hammer-pit-west/`). The G1/SF L40
   witnesses pin `CHOOSER_CUT` OFF beside their `CHOOSER_PAIR` pin.
+
+### Seedling hammer-phase KEYLOCK-TURRET — flag 8's key line inside the ice turret's range: the turret dies first (`KEYLOCK_TURRET`, OFF)
+
+Planner `seedling-hammer-phase-planning-3` (⚖ the user queued it 2026-11-05, the L40 census's step 5, wall F; ⚖ *"Carry
+the door for now, solve in visit after that works"*). The report is `CC/docs/cloud-reports/seedling-hammer-keylock-turret.md`.
+
+**The wall.** Legs 395/412 (L40 flag 8, `bosslock@480,352`) refuse *"no REACHABLE stance … 0 cell(s)"*, at the defaults and
+with L40 tag 12 staged. Tag 12 is the button room's flag; the south door `wandlock@480,560` (persistence tag 11) fades open
+~t100 after a build that holds it cleared. Every key-line cell is inside `iceturret@472,400`'s disc, and the disc is the
+game's interaction, not a planner margin: on the key line with the turret alive a blast lands at t54 of the stand, before
+the lock opens at t83; with no turret the same stand is hitless (a generated room, the model). Braved instead, L40's walk
+meets the live body, which fills the column to the pocket.
+
+**The switch.** ON, `deriveKeylockStance`'s 0-cell refusal path asks `keylockTurretStance` (the turret discs exempt, the
+stance derived again); a live turret is the resolution's `turretFirst`, killed in `execKeylock` by APPROACH's fork search
+(`approachKillForCorpse`, under `requireVerb('kill', …)`), then the stance walk and the hold. ICEST's `killIceTurretOnWalk`
+was measured and rejected (its waits are spent outside the range, where the turret's clock re-arms: 490 forks, all hit).
+
+**Measured.** Tag 12 staged: 412 SOLVED 748 t (323 work units), 395 SOLVED 718 t (2534), hitless on a fresh run; both
+`done` in the game (p4g, `--solver-env=SEEDLING_KEYLOCK_TURRET=1`, `--stage-flags`), 0 room hits, no divergence. Door shut:
+the kill refuses by name at APPROACH's staging point (488,579), 12 `no-plan` forks. OFF byte-identical. In the atlas, L40's
+`bosslock@480,352` is the only keylock with a key line inside a turret's disc.
