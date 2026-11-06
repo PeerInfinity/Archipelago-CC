@@ -81,6 +81,8 @@ export const CLOUDBERRY_SIDECAR_FIELDS = Object.freeze({
                 docSha256: Object.freeze({ type: 'string' }),
                 checks: Object.freeze({ type: 'object', additionalProperties: Object.freeze({ type: 'integer' }) }),
                 items: Object.freeze({ type: 'object', additionalProperties: Object.freeze({ type: 'string' }) }),
+                // ⛓ P5d — the generation knobs the request does not spell (`cloudberryRecordedKnobs`).
+                knobs: Object.freeze({ type: 'object' }),
                 backExitSide: Object.freeze({ enum: Object.freeze(Object.keys(PAGE_SIDE)) }),
                 fallBehavior: Object.freeze({ type: 'string' }),
             }),

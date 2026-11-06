@@ -63,7 +63,7 @@ import { makeTrueRule } from '../shared/rulesJsonBuilder.js';
 import { createRng } from '../shared/rng.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
-import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
+import { grantedLibraryItems, grantsUsedBy } from '../procgenPipeline/topDownSteps.js';
 import {
     DEFAULT_REGION_XP_EFFECT, VALID_REGION_XP_EFFECTS, generateLoopCosts,
 } from '../shared/procgen/loopCostGenerator.js';
@@ -570,8 +570,8 @@ export function initialiseSlot(args) {
     // ⛓ S1 — the pipeline's grant rule (`grantedLibraryItems`): the realiser is
     //   handed `startingItems` FREE, so the op must DECLARE the grants it built
     //   with (defs in `items[p]`, names in `starting_items[p]`).
-    const grant = grantedLibraryItems(doc, a.player, [a.substrate], { avoidIds: itemIdsOf(doc, a.player) });
-    const freeItems = grant.startingItems;
+    const candidates = grantedLibraryItems(doc, a.player, [a.substrate], { avoidIds: itemIdsOf(doc, a.player) });
+    const freeItems = candidates.startingItems;
     const { regionParams, hazardOpts } = initialiseKnobs(a.substrate, a.bag);
     let layout;
     let building = null;
@@ -594,6 +594,10 @@ export function initialiseSlot(args) {
     } catch (e) {
         return { ok: false, why: String(e?.message ?? e), ...(building ? { region: building } : {}) };
     }
+    // ⛓ P5d — the grant is narrowed to the free items the realise drifted onto.
+    const grant = grantsUsedBy(candidates, layout.stats.freeItemsUsed ?? null, {
+        substrateIds: [a.substrate], avoidIds: itemIdsOf(doc, a.player),
+    });
     const sidecars = buildPresetSidecars(layout.grid, {
         playerId: a.player,
         baseObstacleLib: DEFAULT_OBSTACLES,

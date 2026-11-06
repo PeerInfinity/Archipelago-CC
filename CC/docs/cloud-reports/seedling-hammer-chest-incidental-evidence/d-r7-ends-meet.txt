@@ -1,0 +1,10 @@
+== plan-seedling-r7-ends-meet --check, SEEDLING_PORT=9743, SEEDLING_CHEST_LEG_DELTA=0
+## chain r9-campaign — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+CHECK CLEAN — the committed chain is what the game produces today
+exit 0
+== plan-seedling-r7-ends-meet --check, SEEDLING_PORT=9743, SEEDLING_CHEST_LEG_DELTA=1
+## chain r9-campaign — SKIPPED: no `walk` block, so it is not a hand-planned chain (a solver authored its segments)
+
+CHECK CLEAN — the committed chain is what the game produces today
+exit 0

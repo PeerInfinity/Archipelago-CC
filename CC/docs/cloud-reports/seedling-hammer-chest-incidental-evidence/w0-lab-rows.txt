@@ -1,0 +1,41 @@
+== lab rows, SEEDLING_CHEST_LEG_DELTA=0
+ ✓ frontend/modules/procgenCore/elements/chestLoot.test.js (8 tests) 137ms
+ ✓ frontend/modules/seedlingDemo/procgenChestLoot.test.js (20 tests) 7839ms
+     ✓ pre-sword, empty 10x10 seeds 1..3: placed, goals [chest, goal], collected [chest, goal]  999ms
+     ✓ post-sword, empty 10x10 seeds 1..3: placed, goals [chest, goal], collected [chest, goal]  2888ms
+     ✓ carved kinds: winding/bushy/loopy seed 2 place and certify with the chest opened first  477ms
+     ✓ ⛔ identity: `none` and `chestdoor` levels carry no `lootChests` and keep their goal list  340ms
+     ✓ post-sword, empty 10x10 seeds 1..3: the goal IS a chest, certified by its chest record  1364ms
+     ✓ no `--goal` runs (exit 0, no goal row); `--goal=bogus` refuses by name (exit 2)  923ms
+ FAIL  frontend/modules/seedlingDemo/seedlingGenChestLootAp.test.js [ frontend/modules/seedlingDemo/seedlingGenChestLootAp.test.js ]
+ Test Files  1 failed | 2 passed (3)
+      Tests  28 passed (28)
+== lab rows, SEEDLING_CHEST_LEG_DELTA=1
+ ✓ frontend/modules/procgenCore/elements/chestLoot.test.js (8 tests) 59ms
+     ✓ the head is `chestloot`, LAST, needs no item, law `none`, opt-in, never a `require` head 5ms
+     ✓ the binding writes `chest {tag}` at the cell, ONE tag (the chest's check address) 2ms
+     ✓ a chest off the path whose stance the start reaches is COMMITTED (the door law is never asked) 2ms
+     ✓ `the-elements-open-cell-walls-off-the-room` — the chest cuts the room (on the path) 1ms
+     ✓ `the-elements-open-cell-walls-off-the-room` — its stance is behind it (a spur, no way round) 0ms
+     ✓ `the-elements-open-law-is-not-offered` — a binding with no `openLaw` 0ms
+     ✓ pre-sword, empty 10x10 seeds 1..3: placed, goals [chest, goal], collected [chest, goal]  997ms
+     ✓ post-sword, empty 10x10 seeds 1..3: placed, goals [chest, goal], collected [chest, goal]  2951ms
+     ✓ carved kinds: winding/bushy/loopy seed 2 place and certify with the chest opened first  412ms
+     ✓ a carved room with no legal cell refuses BY NAME and stays an ordinary certified level 33ms
+     ✓ the location: `summary.lootChests` = the chest's cell and tag; the tag is the engine's own `tagOf` 211ms
+     ✓ ⛔ identity: `none` and `chestdoor` levels carry no `lootChests` and keep their goal list  335ms
+     ✓ the class constant and the refusal names (both in the module's census key) 0ms
+     ✓ pre-sword, empty 10x10 seeds 1..3: the goal IS a chest, certified by its chest record 198ms
+     ✓ post-sword, empty 10x10 seeds 1..3: the goal IS a chest, certified by its chest record  1102ms
+     ✓ a carved room whose stance is wall gets the POCKET (winding seed 3: 3 cells) and certifies 67ms
+     ✓ a room that can give no stance REFUSES the goal chest BY NAME and keeps the torch (certified) 31ms
+     × B1 + B3 together: the loot chest is DROPPED (graded), the goal chest certifies 216ms
+     ✓ ⛔ identity: the default class builds no `goalChest`, no `goalChestRefused`, and a torch goal 115ms
+== seedlingGenChestLootAp.test.js (non-wasm submodules copied in), SEEDLING_CHEST_LEG_DELTA=0
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+== seedlingGenChestLootAp.test.js (non-wasm submodules copied in), SEEDLING_CHEST_LEG_DELTA=1
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+ Test Files  1 passed (1)
+      Tests  16 passed (16)

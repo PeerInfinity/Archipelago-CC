@@ -100,10 +100,34 @@ export function buildCloudberryRegionParams({ params } = {}) {
     return Object.fromEntries(Object.keys(D).map((k) => [k, p[k] ?? D[k]]));
 }
 
-/** The knobs a stored payload records (the panel's Edit flow): the request's own settings. */
+/** ⛓ P5d — the knobs the stored request spells itself (read back from `params.generate` below). */
+const READ_FROM_REQUEST = new Set(['cloudberryDifficulty', 'cloudberryPieceLength', 'cloudberryTileset',
+    ...CLOUDBERRY_HERO_PHYSICS.map((h) => h.key)]);
+
+/**
+ * ⛓⛓ P5d (⚖ Robert 2026-11-05, "Save it") — **THE KNOBS A PAYLOAD RECORDS BESIDE ITS
+ * REQUEST**: every Cloudberry knob the request does not spell (checks per piece, the
+ * minimum pieces, hazards, the ability chances, the Jump level, retries), so a
+ * Regenerate reads back what the region was built with. Not the hero variation: its draw
+ * is already in the recorded physics, which read back as the world's values. Derived from
+ * the defaults, never listed.
+ */
+export const CLOUDBERRY_RECORDED_KNOBS = Object.freeze(Object.keys(D)
+    .filter((k) => !READ_FROM_REQUEST.has(k) && k !== 'cloudberryHeroVariation'));
+
+/** ⛓ The recorded knobs of `params` that differ from the defaults (`{}` for a default world: its bytes stay). */
+export function cloudberryRecordedKnobs(params) {
+    const p = params ?? {};
+    return Object.fromEntries(CLOUDBERRY_RECORDED_KNOBS
+        .filter((k) => p[k] !== undefined && JSON.stringify(p[k]) !== JSON.stringify(D[k])).map((k) => [k, p[k]]));
+}
+
+/** The knobs a stored payload records (the panel's Edit flow): the request's own settings, then `params.knobs`. */
 export function cloudberryProcgenParamsFromPayload(payload) {
     const g = payload?.params?.generate ?? {};
     const out = {};
+    const recorded = payload?.params?.knobs ?? {};
+    for (const k of CLOUDBERRY_RECORDED_KNOBS) if (recorded[k] !== undefined) out[k] = recorded[k];
     if (typeof g.difficulty === 'number') out.cloudberryDifficulty = g.difficulty;
     if (typeof g.pieceLength === 'number') out.cloudberryPieceLength = g.pieceLength;
     if (typeof g.tileset === 'string') out.cloudberryTileset = g.tileset;

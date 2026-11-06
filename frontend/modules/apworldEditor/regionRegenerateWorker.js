@@ -11,7 +11,7 @@
  */
 
 import {
-    INITIALISE_JOB, REGENERATE_WORKER_LIBRARIES, flagPendingGeneration, runRegenerateJob,
+    REGENERATE_WORKER_LIBRARIES, runRegenerateJob, workerJobAnswer,
 } from './regionGenerationRun.js';
 
 let loaded = null;
@@ -54,12 +54,10 @@ function loadLibraries() {
             return {
                 registered: substrateRegistry.getAll().map((e) => e.id),
                 failed,
-                regenerate: (args, { progress } = {}) => {
-                    if (args?.job === INITIALISE_JOB) return initialiseSlot({ ...args, onProgress: progress });
-                    return args?.source?.kind === 'zone'
-                        ? zoneJobAnswer(args, { fetchJson: fetchServedJson })
-                        : flagPendingGeneration(() => regenerateRegionEntry(args), collectPendingGenerations);
-                },
+                regenerate: (args, { progress } = {}) => workerJobAnswer(args, {
+                    progress, initialiseSlot, zoneJobAnswer, regenerateRegionEntry,
+                    collect: collectPendingGenerations, fetchJson: fetchServedJson,
+                }),
             };
         })();
     }
