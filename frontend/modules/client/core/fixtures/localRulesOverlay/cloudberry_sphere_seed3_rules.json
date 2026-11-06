@@ -275,6 +275,9 @@
               "Conveyors": "Conveyor",
               "Fly Blobs": "FlyBlob",
               "Jetpack": "Jetpack"
+            },
+            "knobs": {
+              "cloudberryChecksPerPiece": 2
             }
           },
           "ap_locations": {
@@ -351,6 +354,9 @@
               "Conveyors": "Conveyor",
               "Fly Blobs": "FlyBlob",
               "Jetpack": "Jetpack"
+            },
+            "knobs": {
+              "cloudberryChecksPerPiece": 2
             },
             "backExitSide": "W"
           },
@@ -435,6 +441,9 @@
               "Conveyors": "Conveyor",
               "Fly Blobs": "FlyBlob",
               "Jetpack": "Jetpack"
+            },
+            "knobs": {
+              "cloudberryChecksPerPiece": 2
             },
             "backExitSide": "W"
           },
