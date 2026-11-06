@@ -27497,6 +27497,28 @@ be the re-plan's refusal source, not the planned hit's: read `playerHits[].sourc
 `WAIT_AFTER_PRESS_TICKS` (20) after its press, so no witness ever walked into the cell on the fencepost; a knocked-back
 player is the first thing that did (the burnable tree's SLOTS D4a lesson, one class over).
 
+### Seedling fidelity R5PROTO — `probe-seedling-r5-spinner` speaks `seedling-probe.yml`'s protocol
+
+Wave 37c, planner `seedling-fidelity-planning-18`. Report: `CC/docs/cloud-reports/seedling-fidelity-r5proto.md`.
+
+**The red.** Run `42081119356` (js-land/train-2026-11-05-37, at 2342e25604) ran the probe to `16/16 claims PASS`, rc 0, wall
+0 s — and the job went red on BOTH of the wrapper's rules: *"printed no 'CHANNEL: headless logic-only' line"* and *"printed no
+PASS: row (0 SKIP)"*; the summary read `RED rc=1 (no verdict line) — NO PASS ROWS`. The probe printed `✓ name` rows and, on a
+fail, THREW (a stack trace, no verdict line).
+
+**The change (output only).** First line `CHANNEL: headless logic-only (no wasm: a node measurement of the L39 spinner model
+and the r5 press tapes)` — true by construction (the probe boots no page, GPU or wasm), and the spelling of the two node-only
+precedents (`probe-seedling-derived-rules`, `-whole-game-certify`); `PASS: <claim>` / `FAIL: <claim>` per claim (16); then
+`ALL CHECKS PASSED` / `N CHECK(S) FAILED` and `process.exitCode = 1` on a fail; a run that made NO claim prints
+`FAIL: no claim was made …` and `1 CHECK(S) FAILED`. The job's `--host` is ignored (it always was). No measurement, tape or
+emitted byte moved: `--check` `same` ×3 (`r5-press-delay-control` 2553 B, md5 `768269d90d4beab64049eb10e732986e`, before =
+after; `--write` rewrote the three tapes with no `git` diff). Mutants: a forced fail → `1 CHECK(S) FAILED` rc 1; zero claims
+→ rc 1 and the wrapper's PASS floor; the pre-R5PROTO file → the same two wrapper errors as `42081119356`.
+
+**Trap candidate.** The probe wrapper's contract is in the WORKFLOW, not in a shared helper: a node-only probe that ran green
+for months by hand reds on its first dispatch. `grep -a '^CHANNEL:\|^PASS:\|CHECK(S) FAILED' <probe>` before naming one in a
+dispatch.
+
 ### Seedling hammer-phase CHEST-INCIDENTAL — `CHEST_LEG_DELTA` (OFF): the chest leg's exact set is the leg's delta
 
 ⚖ User, queued 2026-11-03 (a lone slice; the lab routed its named gap from `seedling-gen-chest-loot-goal` to hammer).
@@ -27520,3 +27542,12 @@ only at `botDriverV2.runChest`'s effect check). The report is `CC/docs/cloud-rep
   chests opened on one visit, both tags cleared, 0 px over the solver's 244-tick ON tape
   (`probe-seedling-chest-incidental.mjs`, `fixtures/chest-incidental-game-p4g.json`). Rows: `hammerChestIncidental.test.js`
   (12), mutants (a) drop the record, (b) accept an unseen open, (c) delta OFF too: each reds 2–3 rows.
+
+### Seedling hammer-phase CHEST-INCIDENTAL flip — `CHEST_LEG_DELTA` ships ON
+
+⚖ The user, 2026-11-06: *"Flip it ON (Recommended)"* (asked in the hammer planner's session after the switch landed OFF in
+train 42, because the lab's lift of its `chestloot-in-goal-chest-room` refusal is honest only once the switch is ON).
+`chestLegDelta.js`: `CHEST_LEG_DELTA_DEFAULT = true`, the env opts out with `SEEDLING_CHEST_LEG_DELTA=0`. ON = OFF wherever
+OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs by key. Re-pinned: `hammerChestIncidental`'s
+"ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
+the ON default (both chests collected, SOLVED).

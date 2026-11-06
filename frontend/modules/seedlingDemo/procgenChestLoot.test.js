@@ -43,6 +43,7 @@ import { ELEMENT_NAMES, ELEMENT_TABLE, headsNeeding, parseElementSpec } from '..
 import { CHEST_LOOT, CHEST_LOOT_CHEST_ID } from '../procgenCore/elements/chestLoot.js';
 import { LAW_NONE } from '../procgenCore/elements.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
+import { withChestLegDelta } from './chestLegDelta.js';
 
 const gen = (palette, { seed = 1, kind = 'empty', size = 10, elements = 'chestloot', goalClass } = {}) =>
     generateSeedlingLevel({
@@ -225,13 +226,23 @@ describe('⛓⛓⛓ B3 — `goalClass: \'chest\'`: the room\'s certified target 
      * not name is a wall somewhere else that the plan still believes is standing"). Measured 11/12 (empty and
      * winding, seeds 1–6). The level still certifies with its goal chest; the drop is graded, by name.
      */
-    it('B1 + B3 together: the loot chest is DROPPED (graded), the goal chest certifies', () => {
-        const out = gen(PRE_SWORD_PALETTE, { seed: 2, goalClass: 'chest' });
+    // ⚖ hammer CHEST_LEG_DELTA flipped ON (user 2026-11-06): the second chest leg of a visit no longer refuses, so
+    // the loot chest is KEPT. The OFF row stays as the BEFORE witness (the gap this pin recorded).
+    it('B1 + B3 together, CHEST_LEG_DELTA OFF (the BEFORE witness): the loot chest is DROPPED (graded), the goal chest certifies', () => {
+        const out = withChestLegDelta(false, () => gen(PRE_SWORD_PALETTE, { seed: 2, goalClass: 'chest' }));
         expect(out.model.elements.ran).toBe(false);
         expect(out.model.elements.refused.reason).toBe('the-skeleton-does-not-solve-with-the-element');
         expect(out.certification.reasonText).toMatch(/A chest the leg did not name/);
         expect(out.summary.goalClass).toBe('chest');
         expect(out.summary.finalCertification.collected.map((c) => c.tag)).toEqual(['chest']);
+    }, 60_000);
+
+    it('B1 + B3 together, CHEST_LEG_DELTA ON (the default): the loot chest is KEPT and both chests are collected', () => {
+        const out = withChestLegDelta(true, () => gen(PRE_SWORD_PALETTE, { seed: 2, goalClass: 'chest' }));
+        expect(out.model.elements.ran).toBe(true);
+        expect(out.certification.verdict).toBe('SOLVED');
+        expect(out.summary.goalClass).toBe('chest');
+        expect(out.summary.finalCertification.collected.map((c) => c.tag)).toEqual(['chest', 'chest']);
     }, 60_000);
 
     it('⛔ identity: the default class builds no `goalChest`, no `goalChestRefused`, and a torch goal', () => {

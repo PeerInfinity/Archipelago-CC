@@ -17,6 +17,7 @@ vi.mock('./apClient.js', () => ({ default: connectionMock }));
 
 // Stub the stateManager singleton (would otherwise spin up a worker proxy).
 vi.mock('../../stateManager/index.js', () => ({
+  getLastRawJsonData: () => null,
   stateManagerProxySingleton: {
     getLatestStateSnapshot: () => null,
     clearInventory: () => {},

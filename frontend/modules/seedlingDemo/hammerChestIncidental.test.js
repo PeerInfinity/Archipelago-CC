@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/hammerChestIncidental.test — ⛓⛓⛓ hammer-phase CHEST-INCIDENTAL: the chest leg's exact set is the
- * LEG's delta (`chestLegDelta.CHEST_LEG_DELTA`, OFF).
+ * LEG's delta (`chestLegDelta.CHEST_LEG_DELTA`, ON since 2026-11-06).
  *
  * The lab's named gap (`seedling-gen-chest-loot-goal`, B1 + B3): a loot chest in a goal-chest room is dropped,
  * because the room's SECOND chest leg refuses *"A chest the leg did not name …"*. Measured (W0): the "unnamed" chest is
@@ -52,10 +52,10 @@ function solveRoom(on, chests, goals) {
 }
 const chestRecords = (out) => (out.records ?? []).filter((r) => r.strategy === 'chest');
 
-describe('⛓ CHEST_LEG_DELTA ships OFF', () => {
+describe('⛓ CHEST_LEG_DELTA ships ON (⚖ user 2026-11-06)', () => {
     it('the default is false, the live value is the env\'s, and the page channel names it', () => {
-        expect(CHEST_LEG_DELTA_DEFAULT).toBe(false);
-        expect(CHEST_LEG_DELTA.enabled).toBe(ENV.SEEDLING_CHEST_LEG_DELTA === '1');
+        expect(CHEST_LEG_DELTA_DEFAULT).toBe(true);
+        expect(CHEST_LEG_DELTA.enabled).toBe(ENV.SEEDLING_CHEST_LEG_DELTA !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CHEST_LEG_DELTA');
     });
     it('`withChestLegDelta` restores the previous value, on a throw too', () => {
