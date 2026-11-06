@@ -1,0 +1,14 @@
+frontend/modules/seedlingDemo/hammerChestIncidental.test.js
+frontend/modules/seedlingDemo/solverEnvChannel.test.js
+frontend/modules/seedlingDemo/strategySwitch.test.js
+frontend/modules/seedlingDemo/botDriverV2.test.js
+frontend/modules/seedlingDemo/chest.test.js
+frontend/modules/seedlingDemo/fidelityChestSeal.test.js
+frontend/modules/seedlingDemo/fidelityL1516.test.js
+frontend/modules/seedlingDemo/procgenChestDoor.test.js
+frontend/modules/seedlingDemo/procgenChestGoal.test.js
+frontend/modules/seedlingDemo/seedlingGenChestDoorAp.test.js
+frontend/modules/seedlingDemo/jsRuntimeGeneratedSolver.test.js
+frontend/modules/seedlingDemo/jsRuntimeVerbs.test.js
+frontend/modules/seedlingDemo/solverBot.test.js
+frontend/modules/seedlingDemo/r7Acceptance.test.js

@@ -44,7 +44,8 @@ import {
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { LOCATION_CEILING_WORDING, unboundedCapacityIds } from '../procgenCore/locationCapacity.js';
 import {
-    INITIALISE_JOB, REGION_GENERATION_CANCELLED, initialiseTimeoutSentence, regionGenerationLoadTimeoutSentence,
+    INITIALISE_JOB, REGION_GENERATION_CANCELLED, REGION_GENERATION_CANCELLED_ON_PAGE, initialisePageTimeoutSentence,
+    initialiseTimeoutSentence, regionGenerationLoadTimeoutSentence,
 } from './regionGenerationRun.js';
 
 /** ⛓ The door's words, one place (the Map tab and the Sidecars tab draw the same button). */
@@ -265,10 +266,11 @@ export function initialisePreview(doc, player, state, pageLog = null) {
  * ⛓ The ticker's words: *"built 120 / 445 · 12.3 s of 300"* — or the library
  * load while the worker starts.
  */
-export function initialiseTickerText({ phase, elapsedS, budgetS, progress }) {
+export function initialiseTickerText({ phase, elapsedS, budgetS, progress, onPage = false }) {
     if (phase === 'loading') return `Loading the substrate libraries… ${elapsedS.toFixed(1)} s`;
     const built = progress && Number.isInteger(progress.index) ? `built ${progress.index} / ${progress.total} · ` : '';
-    return `${built}${elapsedS.toFixed(1)} s of ${budgetS}`;
+    // ⛓ P5d — a run the worker handed to the page (a generation only the page can run) says so.
+    return `${onPage ? '(on this page) ' : ''}${built}${elapsedS.toFixed(1)} s of ${budgetS}`;
 }
 
 /**
@@ -281,6 +283,11 @@ export function initialiseAnswer(args, res, budgetS, lastProgress = null) {
     if (res.timedOut && res.phase === 'loading') {
         return { landed: false, text: regionGenerationLoadTimeoutSentence(res.budgetMs) };
     }
+    // ⛓ P5d — a run finished on the page stopped no worker: its own sentences.
+    if (res.timedOut && res.onPage) {
+        return { landed: false, text: initialisePageTimeoutSentence(budgetS, args.substrate, args.player, lastProgress) };
+    }
+    if (res.cancelled && res.onPage) return { landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED_ON_PAGE}.` };
     if (res.timedOut) {
         return { landed: false, text: initialiseTimeoutSentence(budgetS, args.substrate, args.player, lastProgress) };
     }
