@@ -12825,6 +12825,10 @@ export const INSTRUMENTS = frz({
                     "name": "blocks"
                 },
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-route-flags"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
                 },
@@ -20979,6 +20983,10 @@ export const INSTRUMENTS = frz({
                     "name": "blocks"
                 },
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-route-flags"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
                 },
@@ -21006,7 +21014,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "seedling",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -21020,6 +21029,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "blocks"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "carry-route-flags"
                 },
                 {
                     "how": [
