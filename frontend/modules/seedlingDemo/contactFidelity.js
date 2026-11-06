@@ -1854,8 +1854,14 @@ export const CONTACT_FIDELITY = {
      * `strikePolicy.ceremonyGuard` drops an aim (two ticks of travel) or a press / scheduled press (one tick) whose
      * thrust could land on that first frozen frame — `owed` untouched, as the talk guard. Needs `frozenPressForecast`
      * (it rides `strikeDecideOpts`). OFF: byte-identical (`pickupGap` absent). `SEEDLING_CEREMONY_PRESS_FORECAST=0|1`.
+     * ⛓ fidelity CEREMONYEXACT D1 (wave 37c): EXACT, not a bound. The forecast also carries `ceremonyStep`
+     * (non-enumerable; `levelRun.ceremonyStepNow`), and the policy asks it with the held sets it is about to send (a
+     * press: its keys; an aim: its key, then the press alone) — stepped with the run's own stepper, a refusal only when
+     * the ceremony starts on the thrust's tick. Measured at 028da05be1: every one of the bound's stand-downs on L40 legs
+     * 368/371 and the L40 kill rung was bound-only; ON they and survey steps 141/183/221/236 equal OFF, step 125 SOLVED.
+     * A caller that passes no held sets (3 arguments) keeps CEREMONY126's bound.
      */
-    ceremonyPressForecast: false,
+    ceremonyPressForecast: true,
     /**
      * fidelity CEREMONY126 D2 (wave 37b) — A COLLECT GOAL'S STANCE WALK ENDS WHEN ITS PICKUP'S CEREMONY STARTS ON IT.
      * The walk to a collect stance can cross the pickup's own rect (L64's Ghostspear: rect [74,86)×[30,34), stance =

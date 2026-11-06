@@ -16,10 +16,10 @@
  * of an APCalc + APQuest room (APQuest items in its locations, its buttons in
  * APQuest's).
  *
- * The committed presets predate slot_data's per-edge path_costs and sphere and
- * its generation options. For them the test supplies what the current apworld
- * sends, from the file's own world.generated_edges and world.options; the
- * fixtures carry the real fields.
+ * Every case carries the real slot_data the current apworld sends (per-edge
+ * path_costs and sphere, and the generation options). The presets were
+ * regenerated for it on 2026-11-05; before that this test patched those
+ * fields in from world.generated_edges and world.options.
  *
  * The builder is registered for game "APCalc" (worlds/apcalc) only. A puzzle
  * built in the APCalc Generator panel is game "APCalc Puzzle <seed>-<hash>"
@@ -66,27 +66,6 @@ const readRules = (path) =>
   JSON.parse(path.endsWith('.gz') ? gunzipSync(readFileSync(path)).toString('utf8') : readFileSync(path, 'utf8'));
 
 const playerOf = (rules) => rules.playerId ?? Object.keys(rules.world)[0];
-
-/** A committed preset's slot_data as the current apworld sends it (see the header). */
-function withCurrentSlotData(rules) {
-  const p = playerOf(rules);
-  const world = rules.world[p];
-  const slotData = world.slot_data;
-  if (slotData.edges.every((edge) => Array.isArray(edge.path_costs))) return rules;
-  world.slot_data = {
-    ...slotData,
-    edges: slotData.edges.map((edge, i) => ({
-      ...edge,
-      sphere: world.generated_edges[i].sphere,
-      path_costs: world.generated_edges[i].path_costs,
-    })),
-  };
-  for (const key of ['ops_per_sphere', 'nums_per_sphere', 'trash_per_sphere', 'max_branches']) {
-    world.slot_data[key] = world.options[key];
-  }
-  world.slot_data.randomize_items = world.options.randomize_items;
-  return rules;
-}
 
 /** What the server would hand the client for this rules.json's player. */
 function serverDataFor(rules) {
@@ -193,6 +172,20 @@ describe('buildApcalcRules equivalence with the exporter', () => {
     ).toBe(true);
   });
 
+  it('every case carries the slot_data the builder needs (a stale preset fails here)', () => {
+    for (const { name, path } of CASES) {
+      const rules = readRules(path);
+      const slotData = rules.world[playerOf(rules)].slot_data;
+      for (const edge of slotData.edges) {
+        expect(Array.isArray(edge.path_costs), `${name}: edge path_costs`).toBe(true);
+        expect(Number.isInteger(edge.sphere), `${name}: edge sphere`).toBe(true);
+      }
+      for (const key of ['ops_per_sphere', 'nums_per_sphere', 'trash_per_sphere', 'max_branches', 'randomize_items']) {
+        expect(slotData, `${name}: slot_data.${key}`).toHaveProperty(key);
+      }
+    }
+  });
+
   it('keeps apcalcWorldInfo.json equal to every committed preset', () => {
     for (const { path } of CASES.filter((c) => c.preset)) {
       const rules = readRules(path);
@@ -207,9 +200,9 @@ describe('buildApcalcRules equivalence with the exporter', () => {
     }
   });
 
-  for (const { name, path, preset } of CASES) {
+  for (const { name, path } of CASES) {
     it(name, () => {
-      const expected = preset ? withCurrentSlotData(readRules(path)) : readRules(path);
+      const expected = readRules(path);
       const p = playerOf(expected);
       const built = build(expected);
 
@@ -255,7 +248,10 @@ describe('buildApcalcRules equivalence with the exporter', () => {
 
 describe('buildApcalcRules without the data it needs', () => {
   it('throws when slot_data edges carry no path_costs (an older apworld)', () => {
+    // The committed presets carry path_costs now, so strip them as an older apworld would.
     const rules = readRules(presetCases()[0].path);
+    const world = rules.world[playerOf(rules)];
+    world.slot_data.edges = world.slot_data.edges.map(({ path_costs: _pathCosts, ...edge }) => edge);
     const { slotData, scouts, context } = serverDataFor(rules);
     expect(() => buildApcalcRules(slotData, scouts, context)).toThrow(/path_costs/);
   });
