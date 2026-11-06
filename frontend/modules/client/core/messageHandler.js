@@ -11,7 +11,7 @@ import {
   getLocationNameForGame,
   initializeMappingsFromDataPackage,
 } from '../utils/idMapping.js';
-import { findPresetsForRoom } from '../../../utils/presetResolver.js';
+import { findPresetsForGame, findPresetsForRoom } from '../../../utils/presetResolver.js';
 import {
   buildRulesFromServerData,
   describeServerDataRules,
@@ -25,7 +25,8 @@ import {
   generateSphereLogFilename,
 } from '../utils/debugSphereLogger.js';
 import { sharedClientState } from './sharedState.js';
-import { stateManagerProxySingleton } from '../../stateManager/index.js';
+import { getLastRawJsonData, stateManagerProxySingleton } from '../../stateManager/index.js';
+import { checkLocalWorld, isGeneratedWorldDoc, overlayServerData } from './localRulesOverlay.js';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -45,6 +46,11 @@ export function roomGamesOf(roomInfo) {
   return [...games].filter((g) => typeof g === 'string' && g !== 'Archipelago');
 }
 
+
+/** Both seeds given and equal (a missing seed is seedless: never the same). */
+function isSameSeed(a, b) {
+  return a !== undefined && a !== null && a !== '' && b !== undefined && b !== null && b !== '' && String(a) === String(b);
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -136,6 +142,7 @@ export class MessageHandler {
       this.clientTeam = null;
       this._resetScouts();
       this._cancelServerBuild();
+      this._cancelRulesWait();
     });
     this.eventBus.subscribe('connection:close', () => {
       // The session is over: stop reporting a slot, or isHandshakeComplete()
@@ -145,6 +152,7 @@ export class MessageHandler {
       this.players = [];
       this._resetScouts();
       this._cancelServerBuild();
+      this._cancelRulesWait();
     });
     this.eventBus.subscribe('connection:message', (commands) => {
       commands.forEach((command) => this.processMessage(command));
@@ -297,11 +305,17 @@ export class MessageHandler {
 
     this.roomInfo = data;
     this._cancelServerBuild();
+    this._cancelRulesWait();
     const roomInfoSeq = ++this._roomInfoSeq;
     const roomGames = roomGamesOf(data);
     if (roomGames.length > 0) {
       log('info', `[MessageHandler] RoomInfo.games:`, roomGames);
     }
+    return this._connectForRoom(data, roomGames, roomInfoSeq);
+  }
+
+  /** Decide which rules this room's slot uses, and connect (see _handleRoomInfo). */
+  _connectForRoom(data, roomGames, roomInfoSeq) {
 
     // The loaded rules decide the game, as long as they are for a game this
     // room has. Rules for another game can't describe this slot (the app
@@ -321,6 +335,15 @@ export class MessageHandler {
         'info'
       );
       return this._connectWithoutRules(data, roomGames, roomInfoSeq, loadedGame);
+    }
+    // Rules a generated world was built from are the room's logic at any
+    // seed: the server's placements and slot_data are laid over them.
+    if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
+      const local = this._loadedGeneratedWorld(loadedGame);
+      if (local && !isSameSeed(local.doc.seed_name, data.seed_name)) {
+        this._connectWithOverlay(loadedGame, local);
+        return;
+      }
     }
     if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
       log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
@@ -380,6 +403,23 @@ export class MessageHandler {
       return;
     }
     if (game) {
+      const presetFiles = await this._readPresetFiles();
+      if (isStale()) return;
+      const candidates = presetFiles ? findPresetsForGame(presetFiles, game) : null;
+      if (candidates?.length > 0) {
+        // A generated world's preset at any seed is the room's logic too.
+        const local = await this._fetchGeneratedWorld(candidates[0]);
+        if (isStale()) return;
+        if (local) {
+          this._connectWithOverlay(game, local);
+          return;
+        }
+      } else if (candidates) {
+        // No rules for this game anywhere: the player loads them, then the
+        // client connects (the socket stays open meanwhile).
+        this._awaitLocalRules(game, roomInfoSeq);
+        return;
+      }
       log('info', `[MessageHandler] No usable rules; connecting as ${game}.`);
       this._sendConnect(game);
       return;
@@ -445,16 +485,9 @@ export class MessageHandler {
    */
   async _findPresetForRoom(seedName, games, roomGames = null) {
     const slotName = this.clientSlotName;
-    if (!seedName || !slotName || typeof fetch !== 'function') return null;
-    let presetFilesData;
-    try {
-      const response = await fetch('./presets/preset_files.json');
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      presetFilesData = await response.json();
-    } catch (e) {
-      log('warn', `[MessageHandler] Could not read preset_files.json: ${e.message}`);
-      return null;
-    }
+    if (!seedName || !slotName) return null;
+    const presetFilesData = await this._readPresetFiles();
+    if (!presetFilesData) return null;
     const matches = findPresetsForRoom(presetFilesData, {
       seedName,
       slotName,
@@ -470,6 +503,95 @@ export class MessageHandler {
       );
     }
     return null;
+  }
+
+  /** preset_files.json, or null when it can't be read. */
+  async _readPresetFiles() {
+    if (typeof fetch !== 'function') return null;
+    try {
+      const response = await fetch('./presets/preset_files.json');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (e) {
+      log('warn', `[MessageHandler] Could not read preset_files.json: ${e.message}`);
+      return null;
+    }
+  }
+
+  /**
+   * The loaded rules document, when it is `game`'s and a generated world's
+   * (localRulesOverlay.isGeneratedWorldDoc): { doc, player, source }, else null.
+   */
+  _loadedGeneratedWorld(game) {
+    const raw = getLastRawJsonData?.();
+    const doc = raw?.rawJsonData;
+    const player = raw?.selectedPlayerInfo?.playerId;
+    if (!doc || player === undefined || player === null) return null;
+    if (doc.world?.[String(player)]?.game !== game) return null;
+    if (!isGeneratedWorldDoc(doc, player)) return null;
+    return { doc, player: String(player), source: raw.source ?? 'loaded rules' };
+  }
+
+  /** A preset's rules document, when it is a generated world's; else null. */
+  async _fetchGeneratedWorld(preset) {
+    try {
+      const response = await fetch(preset.path);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const doc = await response.json();
+      if (!isGeneratedWorldDoc(doc, preset.playerId)) return null;
+      return { doc, player: String(preset.playerId), source: preset.path };
+    } catch (e) {
+      log('warn', `[MessageHandler] Could not fetch ${preset.path}: ${e.message}`);
+      return null;
+    }
+  }
+
+  /**
+   * Connect with a local generated world's rules: after login its locations
+   * are scouted, and the server's placements and slot_data are laid over the
+   * local document before the ONE load (_completeServerBuild).
+   */
+  _connectWithOverlay(game, local) {
+    this._serverBuild = { game, mode: 'overlay', local, connected: null, held: [], timer: null };
+    this._printToConsole(
+      `Using the local ${game} rules (${local.source}); the server's placements and slot data are applied after login…`,
+      'info'
+    );
+    this._sendConnect(game);
+  }
+
+  /**
+   * No rules for `game` are at hand: ask for them, and connect once rules of
+   * that game load (the room's decision is taken again then).
+   */
+  _awaitLocalRules(game, roomInfoSeq) {
+    this._cancelRulesWait();
+    this._printToConsole(
+      `No rules for ${game} are loaded. Load its rules.json (for example APCalc Generator → Load into frontend, ` +
+        'or the Files panel); the client connects when they load.',
+      'warning'
+    );
+    this.eventBus?.publish('client:rulesNeeded', { game });
+    const unsubscribe = this.eventBus?.subscribe('stateManager:rulesLoaded', () => {
+      if (roomInfoSeq !== this._roomInfoSeq) {
+        this._cancelRulesWait();
+        return;
+      }
+      if (this.getClientGameName() !== game) return;
+      this._cancelRulesWait();
+      this._connectForRoom(this.roomInfo || {}, roomGamesOf(this.roomInfo), roomInfoSeq);
+    });
+    this._rulesWait = { game, unsubscribe };
+  }
+
+  _cancelRulesWait() {
+    this._rulesWait?.unsubscribe?.();
+    this._rulesWait = null;
+  }
+
+  /** @returns {string|null} The game a connect is waiting for rules of. */
+  getAwaitedRulesGame() {
+    return this._rulesWait?.game ?? null;
   }
 
   /**
@@ -691,7 +813,12 @@ export class MessageHandler {
     this.slotInfo = data.slot_info || {};
     this.missingLocationIds = data.missing_locations || [];
     this.checkedLocationIds = data.checked_locations || [];
-    this._printToConsole(`Logged in; building ${build.game} rules from the server's data…`, 'info');
+    this._printToConsole(
+      build.mode === 'overlay'
+        ? `Logged in; applying the server's placements to the local ${build.game} rules…`
+        : `Logged in; building ${build.game} rules from the server's data…`,
+      'info'
+    );
     if (this.missingLocationIds.length + this.checkedLocationIds.length === 0) {
       // Nothing to scout: no LocationInfo will come.
       this.scoutedLocations = new Map();
@@ -721,14 +848,23 @@ export class MessageHandler {
     let error = failure;
     if (!error) {
       try {
-        const rules = this._buildRulesForSlot(build.game, data);
+        const rules =
+          build.mode === 'overlay' ? this._overlayRulesForSlot(build, data) : this._buildRulesForSlot(build.game, data);
         const playerName = this.slotInfo?.[String(data.slot)]?.name ?? this.clientSlotName;
         const sourceName = `server:${this.roomInfo?.seed_name ?? 'seedless'}:P${data.slot}`;
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
         if (this._serverBuild !== build) return; // a reconnect superseded this build
         if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
-        const summary = describeServerDataRules(build.game, data.slot_data, rules);
-        this._printToConsole(`Built ${build.game} rules${summary ? ` ${summary}` : ''} and loaded them.`, 'success');
+        if (build.mode === 'overlay') {
+          this._printToConsole(
+            `Loaded the local ${build.game} rules with the server's placements ` +
+              `(${this.getScoutedLocations().length} locations, room seed ${this.roomInfo?.seed_name ?? 'unknown'}).`,
+            'success'
+          );
+        } else {
+          const summary = describeServerDataRules(build.game, data.slot_data, rules);
+          this._printToConsole(`Built ${build.game} rules${summary ? ` ${summary}` : ''} and loaded them.`, 'success');
+        }
       } catch (e) {
         error = e;
       }
@@ -737,8 +873,11 @@ export class MessageHandler {
     if (error) {
       log('error', `[MessageHandler] Building ${build.game} rules from server data failed:`, error);
       this._printToConsole(
-        `Could not build ${build.game} rules from the server's data (${error.message}). ` +
-          'Staying connected with the rules already loaded.',
+        build.mode === 'overlay'
+          ? `Could not use the local ${build.game} rules for this room (${error.message}). ` +
+              'Staying connected with the rules already loaded.'
+          : `Could not build ${build.game} rules from the server's data (${error.message}). ` +
+              'Staying connected with the rules already loaded.',
         'error'
       );
     }
@@ -763,6 +902,35 @@ export class MessageHandler {
       itemNameToId: tables.item_name_to_id || {},
       locationNameToId: tables.location_name_to_id || {},
       archipelagoVersion: versionString(this.roomInfo?.version),
+    });
+  }
+
+  /**
+   * The room's rules from the local generated world's document: checked
+   * against the room first (a mismatch throws, naming what differs), then
+   * the server's placements and slot_data are laid over it.
+   */
+  _overlayRulesForSlot(build, connected) {
+    const tables = this.dataPackage?.games?.[build.game];
+    if (!tables) throw new Error(`the server's DataPackage has no ${build.game}`);
+    const { doc, player } = build.local;
+    const check = checkLocalWorld(doc, player, {
+      slotGame: connected.slot_info?.[String(connected.slot)]?.game ?? build.game,
+      locationIds: [...(connected.missing_locations || []), ...(connected.checked_locations || [])],
+      itemNameToId: tables.item_name_to_id || {},
+      locationNameToId: tables.location_name_to_id || {},
+    });
+    if (!check.ok) throw new Error(`the file doesn't match this room: ${check.problems.join('; ')}`);
+    const names = {};
+    for (const [slot, info] of Object.entries(connected.slot_info || {})) {
+      if (info?.name) names[slot] = info.name;
+    }
+    return overlayServerData(doc, player, {
+      slot: connected.slot,
+      names,
+      seedName: this.roomInfo?.seed_name ?? null,
+      slotData: connected.slot_data || {},
+      scouts: this.getScoutedLocations(),
     });
   }
 
