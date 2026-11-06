@@ -209,6 +209,8 @@ comma-joined; `evidence/on-plus.txt`). OFF = the 113 (`evidence/on-default.txt`)
    response — still the fidelity arc's, not hammer's or the JS arc's.
 3. *"113 default-ON keys of 125"* is right at the base; the brief's later "110 ON of 122" paragraph is stale (it predates W37b).
 4. The census leg id (376) and key are unchanged at the base.
+5. *"KNOCKBACK376 owns the player's knockback / hit response"* — the fix is not there (the knockback was right); it is the
+   rock's collision lifetime. No other wave-37c region is touched (`freezeForecastNow`, `ceremonyGuard`, `r5-spinner` untouched).
 
 ## 10. Residue, byte-inertia, rows to BANK
 
