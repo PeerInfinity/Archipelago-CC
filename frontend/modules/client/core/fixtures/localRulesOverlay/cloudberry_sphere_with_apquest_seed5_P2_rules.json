@@ -1,0 +1,690 @@
+{
+  "schema_version": 3,
+  "game_name": "Cloudberry Sphere WorldGen",
+  "game_directory": "cloudberry_sphere_worldgen",
+  "playerId": "2",
+  "archipelago_version": "0.6.8",
+  "generation_seed": 5,
+  "seed_name": "96945849220684217413",
+  "player_names": {
+    "1": "Questy",
+    "2": "Berry"
+  },
+  "regions": {
+    "2": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_2": {
+        "name": "region_2_2",
+        "exits": [
+          {
+            "name": "region_2_2__exit_E",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clouds"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_2__loc_0",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moving Blocks",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "region_2_2__loc_1",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Health Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_3_2": {
+        "name": "region_3_2",
+        "exits": [
+          {
+            "name": "region_3_2__exit_E",
+            "connected_region": "region_4_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Moving Blocks"
+              }
+            }
+          },
+          {
+            "name": "region_2_2",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clouds"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_2__loc_0",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Confetti Cannon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_4_2": {
+        "name": "region_4_2",
+        "exits": [
+          {
+            "name": "region_3_2",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Moving Blocks"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_4_2__loc_0",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cloudberry Gem",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "2": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "2": {
+      "Clouds": {
+        "name": "Clouds",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Cloudberry Gem": {
+        "name": "Cloudberry Gem",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Moving Blocks": {
+        "name": "Moving Blocks",
+        "id": 3,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 4,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Health Upgrade": {
+        "name": "Health Upgrade",
+        "id": 5,
+        "groups": [],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Confetti Cannon": {
+        "name": "Confetti Cannon",
+        "id": 6,
+        "groups": [],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "2": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "2": {
+      "Cloudberry Gem": 1,
+      "Clouds": 1,
+      "Moving Blocks": 1,
+      "Victory": 1
+    }
+  },
+  "canonical_placements": {
+    "2": {
+      "region_2_2__loc_0": "Clouds",
+      "region_2_2__loc_1": "Cloudberry Gem",
+      "region_3_2__loc_0": "Moving Blocks",
+      "region_4_2__loc_0": "Victory"
+    }
+  },
+  "progression_mapping": {
+    "2": {}
+  },
+  "starting_items": {
+    "2": []
+  },
+  "preset_sidecars": {
+    "2": {
+      "region_2_2": {
+        "substrate": "cloudberry",
+        "render_hint": "cloudberry",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "cloudberry",
+          "params": {
+            "payload": "cloudberry-region/1",
+            "generate": {
+              "seed": 914391991,
+              "difficulty": 2,
+              "tileset": "sea",
+              "pieceLength": 3500,
+              "pieces": [
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                },
+                {
+                  "upgrades": {
+                    "Cloud": 5,
+                    "Jump": 2
+                  }
+                }
+              ],
+              "trace": false,
+              "settings": false,
+              "rerolls": [
+                0,
+                0
+              ]
+            },
+            "docSha256": "381d7b30b731520e9c0f741937d9c0c2999cd932ec698fb6d2682f14ed2bb628",
+            "checks": {
+              "loc_0": 23,
+              "loc_1": 27
+            },
+            "items": {
+              "Moving Blocks": "MovingBlock",
+              "Falling Blocks": "FallingBlock",
+              "Bouncy Blocks": "BouncyBlock",
+              "Ghost Blocks": "GhostBlock",
+              "Clouds": "Cloud",
+              "Elevators": "Elevator",
+              "Pendulums": "Pendulum",
+              "Conveyors": "Conveyor",
+              "Fly Blobs": "FlyBlob",
+              "Jetpack": "Jetpack"
+            }
+          },
+          "ap_locations": {
+            "loc_0": "region_2_2__loc_0",
+            "loc_1": "region_2_2__loc_1"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_3_2",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_2_2"
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_3_2": {
+        "substrate": "cloudberry",
+        "render_hint": "cloudberry",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "cloudberry",
+          "params": {
+            "payload": "cloudberry-region/1",
+            "generate": {
+              "seed": 2136366007,
+              "difficulty": 2,
+              "tileset": "forest",
+              "pieceLength": 3500,
+              "pieces": [
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                },
+                {
+                  "upgrades": {
+                    "MovingBlock": 5,
+                    "Jump": 2
+                  }
+                }
+              ],
+              "trace": false,
+              "settings": false,
+              "rerolls": [
+                0,
+                0
+              ]
+            },
+            "docSha256": "3c7996e633e777b0ac9c7217f8c1645c1420475b11cb3435685cebc2a2f35637",
+            "checks": {
+              "loc_0": 30
+            },
+            "items": {
+              "Moving Blocks": "MovingBlock",
+              "Falling Blocks": "FallingBlock",
+              "Bouncy Blocks": "BouncyBlock",
+              "Ghost Blocks": "GhostBlock",
+              "Clouds": "Cloud",
+              "Elevators": "Elevator",
+              "Pendulums": "Pendulum",
+              "Conveyors": "Conveyor",
+              "Fly Blobs": "FlyBlob",
+              "Jetpack": "Jetpack"
+            },
+            "backExitSide": "W"
+          },
+          "ap_locations": {
+            "loc_0": "region_3_2__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_4_2",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_3_2"
+            },
+            {
+              "exit_id": "region_2_2",
+              "side": "W",
+              "exitName": "region_2_2",
+              "targetRegion": "region_2_2",
+              "targetExitId": "exit_E",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_4_2": {
+        "substrate": "cloudberry",
+        "render_hint": "cloudberry",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "cloudberry",
+          "params": {
+            "payload": "cloudberry-region/1",
+            "generate": {
+              "seed": 977687300,
+              "difficulty": 2,
+              "tileset": "forest_snow",
+              "pieceLength": 3500,
+              "pieces": [
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                },
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                }
+              ],
+              "trace": false,
+              "settings": false,
+              "rerolls": [
+                0,
+                0
+              ]
+            },
+            "docSha256": "c7b37a56111c699a9007fab5c816929a8cd24530b4c05c322f7ab4c70e186c26",
+            "checks": {
+              "loc_0": 35
+            },
+            "items": {
+              "Moving Blocks": "MovingBlock",
+              "Falling Blocks": "FallingBlock",
+              "Bouncy Blocks": "BouncyBlock",
+              "Ghost Blocks": "GhostBlock",
+              "Clouds": "Cloud",
+              "Elevators": "Elevator",
+              "Pendulums": "Pendulum",
+              "Conveyors": "Conveyor",
+              "Fly Blobs": "FlyBlob",
+              "Jetpack": "Jetpack"
+            },
+            "backExitSide": "W"
+          },
+          "ap_locations": {
+            "loc_0": "region_4_2__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_2",
+              "side": "W",
+              "exitName": "region_3_2",
+              "targetRegion": "region_3_2",
+              "targetExitId": "exit_E",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "2": {
+      "driver": "sphere-growth",
+      "stop_reason": "plan_complete",
+      "sphere_plan": {
+        "seed": 1,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Clouds",
+              "Cloudberry Gem"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "Moving Blocks"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "Victory"
+            ]
+          }
+        ]
+      },
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 2,
+              "gy": 2
+            },
+            "isTeleporter": false,
+            "substrate": "cloudberry",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Clouds",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 1,
+            "parent": 0,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 2
+            },
+            "isTeleporter": false,
+            "substrate": "cloudberry",
+            "gate": [
+              "Clouds"
+            ],
+            "gateCounts": {
+              "Clouds": 1
+            },
+            "usedSides": [
+              "W",
+              "N"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Moving Blocks",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 2,
+            "parent": 1,
+            "side": "E",
+            "cell": {
+              "gx": 4,
+              "gy": 2
+            },
+            "isTeleporter": false,
+            "substrate": "cloudberry",
+            "gate": [
+              "Moving Blocks"
+            ],
+            "gateCounts": {
+              "Moving Blocks": 1
+            },
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "cloudberry": 3
+        },
+        "quotaFallbacks": 0
+      },
+      "region_count": 3,
+      "grid_dims": {
+        "width": 5,
+        "height": 3
+      }
+    }
+  },
+  "world": {
+    "2": {
+      "game": "Cloudberry Sphere WorldGen",
+      "world_class_name": "ProcgenMazeWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": true,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "Cloudberry Sphere WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Cloudberry Sphere WorldGen world for Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Auto-generated"
+            ]
+          }
+        ]
+      },
+      "world_directory": "cloudberry_sphere_worldgen"
+    }
+  },
+  "exporter": {
+    "2": {
+      "assume_bidirectional_exits": true
+    }
+  },
+  "game_info": {
+    "2": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "is_canonical": {
+    "2": true
+  }
+}
