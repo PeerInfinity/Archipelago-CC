@@ -27,7 +27,11 @@ describe('CEREMONY126 — the switches', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(false);
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
             expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
+            // ⛓ wave 37d (L25APITEM) appended `apChestItem` after them: D1 then D2, adjacent, followed only by later-wave keys.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            const at = keys.indexOf('ceremonyPressForecast');
+            expect(keys.slice(at, at + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
+            expect(keys.slice(at + 2).filter((k) => !['apChestItem'].includes(k))).toEqual([]);
         });
     it('the env names are known worker env names', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CEREMONY_PRESS_FORECAST');
