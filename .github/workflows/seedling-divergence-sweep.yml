@@ -40,7 +40,7 @@ name: Seedling divergence sweep (manual)
 run-name: >-
   Divergence sweep ${{ inputs.mode }}/${{ inputs.producer }}/${{ inputs.page }}
   legs=${{ inputs.page_legs }} stage=${{ inputs.stage_events }} capture=${{ inputs.capture_requests }}
-  ids=${{ inputs.ids }} keys=${{ inputs.keys }} flags=${{ inputs.stage_flags }}
+  ids=${{ inputs.ids }} keys=${{ inputs.keys }} flags=${{ inputs.stage_flags }} carry=${{ inputs.carry_route_flags }}
   contact=${{ inputs.contact_fidelity }} axe=${{ inputs.axe_dodge }} window=${{ inputs.upgrade_window_work }}
   dashonly=${{ inputs.dash_only_window }} dash=${{ inputs.dash_shape }} env=${{ inputs.solver_env }} budget=${{ inputs.leg_budget_ms }}
   census=${{ inputs.seam_census }} mem=${{ inputs.memory_probe_ms }} trace=${{ inputs.arrival_trace_ms }} fault=${{ inputs.test_fault }}
@@ -93,6 +93,14 @@ on:
           by name. Pair it with `keys` to run only the staged leg(s).
         type: string
         default: ''
+      carry_route_flags:
+        description: >-
+          MEASUREMENT ONLY, false for every real sweep and baseline (false = today's leg list, byte-identical).
+          true = the leg list is built with --carry-route-flags (hammer DOOR-CARRY): every leg ALSO stages the
+          game_state flags the AP route cleared before it (its level's persistence, in the route's collection
+          order, never its own goal) through the event staging's channel; those rows carry `carriedFlags`.
+        type: boolean
+        default: false
       contact_fidelity:
         description: >-
           Empty = the model's contact switches at their defaults (today's run). Otherwise the ON keys of
@@ -228,6 +236,7 @@ jobs:
           KEYS: ${{ inputs.keys }}
           PAGE_LEGS: ${{ inputs.page_legs }}
           STAGE_FLAGS: ${{ inputs.stage_flags }}
+          CARRY: ${{ inputs.carry_route_flags && 'on' || '' }}
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
           UPGRADE_WINDOW: ${{ inputs.upgrade_window_work }}
           DASH_ONLY: ${{ inputs.dash_only_window }}
@@ -240,7 +249,7 @@ jobs:
           if [ -n "$CENSUS" ] && [ -z "$CAPTURE" ]; then echo "::error::seam_census needs capture_requests on"; exit 1; fi
           mkdir -p test-results/divergence-sweep
           L=test-results/divergence-sweep/legs.jsonl
-          node scripts/procgen/seedling-divergence-legs.mjs --out="$L" --presets=seedling_playthrough --blocks | tee plan.txt
+          node scripts/procgen/seedling-divergence-legs.mjs --out="$L" --presets=seedling_playthrough --blocks ${CARRY:+--carry-route-flags} | tee plan.txt
           P=scripts/procgen/probe-seedling-divergence-sweep.mjs
           if [ -n "$IDS$KEYS" ]; then
             # ⛓ an id / key list is partitioned too (the subset, by the same price); `pickLegs` throws on an unknown key
