@@ -1,0 +1,12 @@
+== SEEDLING_CHEST_LEG_DELTA=0: 100 lab rooms (empty,winding,bushy,loopy,branchy x seeds 1-20; pre-sword 10x10, goalClass chest, chestloot)
+   78  dropped: the-skeleton-does-not-solve-with-the-element [chest leg]
+   19  kept
+    2  dropped: the-chest-walls-off-its-stance
+    1  dropped: the-stance-is-not-floor
+== SEEDLING_CHEST_LEG_DELTA=1: 100 lab rooms (empty,winding,bushy,loopy,branchy x seeds 1-20; pre-sword 10x10, goalClass chest, chestloot)
+   97  kept
+    2  dropped: the-chest-walls-off-its-stance
+    1  dropped: the-stance-is-not-floor
+== the 19 OFF-kept rooms are all ONE-chest rooms (the goal chest refused, the torch is the goal):
+  DELTA=0 {('torchpickup', 'chest+torchpickup'): 19}
+  DELTA=1 {('chest', 'chest+chest'): 78, ('torchpickup', 'chest+torchpickup'): 19}

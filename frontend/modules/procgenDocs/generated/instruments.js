@@ -11928,6 +11928,55 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "out"
+            ],
+            "file": "probe-seedling-chest-incidental.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tape-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING HAMMER CHEST-INCIDENTAL — two chests opened on ONE visit, witnessed on the game (W0's game witness).",
+            "path": "scripts/procgen/probe-seedling-chest-incidental.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "passedThroughChest"
             ],

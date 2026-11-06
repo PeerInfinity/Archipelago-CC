@@ -1,0 +1,32 @@
+== node scripts/procgen/census-seedling-solver-surface.mjs --check
+RED family: closure arrivalSolid.js arrowLaneCrossing.js axePricedCrossing.js bossTotemPolicy.js botDriverV1.js botDriverV2.js bulbPlacement.js campaignChain.js chestLegDelta.js crusherBait.js dangerMap.js decisionTrace.js director.js encounters.js forcedHit.js ghostRopeCut.js hazards.js lavaBossPolicy.js lightsVerb.js mover.js pressEscapeExact.js pressKillGuards.js pressNoFacing.js solveProgress.js solverBot.js spaceTimeReach.js strategySwitch.js strikePolicy.js strikeSlot.js tentacleBeastPolicy.js ≠ table arrivalSolid.js arrowLaneCrossing.js axePricedCrossing.js bossTotemPolicy.js botDriverV1.js botDriverV2.js bulbPlacement.js campaignChain.js crusherBait.js dangerMap.js decisionTrace.js director.js encounters.js forcedHit.js ghostRopeCut.js hazards.js lavaBossPolicy.js lightsVerb.js mover.js pressEscapeExact.js pressKillGuards.js pressNoFacing.js solveProgress.js solverBot.js spaceTimeReach.js strategySwitch.js strikePolicy.js strikeSlot.js tentacleBeastPolicy.js
+DIFFERS seedling-solver-surface: 220799 bytes committed vs 220823 derived — re-run with --write
+RED: 2 finding(s) — run --write, then classify
+exit 1
+== node scripts/procgen/census-seedling-constants.mjs --check
+census-seedling-constants --check — 7056 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+exit 0
+== node scripts/procgen/derive-seedling-tick0.mjs --check
+PASS: r9-solve-30's tick-0 clock is declared + bootCost — declared 16184 + 21 = 16205, measured 16205 (delta 21)
+PASS: r9-solve-32 carries a tick-0 latch — rng.seed 958590141, seam.time 16435
+PASS: r9-solve-32 is stamped v11 — tape_version 11; requiredTapeVersion says 11
+PASS: r9-solve-32's tick-0 clock is declared + bootCost — declared 16414 + 21 = 16435, measured 16435 (delta 21)
+
+ALL CHECKS PASSED
+exit 0
+same seedling-solver-surface: 220823 bytes
+GREEN: 371 rows match a fresh census
+== generate-procgen-reference
+instruments: 522 files over 42 categories, 205 browser rows, 442 with flags, 265 cited by a doc, 0 FINDING(S)
+capabilities: 29 statements × 9 substrates, 39 fields read, 51 not yet read
+docsIndex:  28 documents (497,611 words) + 4 pages
+== check-procgen-reference
+PASS: …and its header links the REFERENCE page — #docLinks → [../procgenDocs/glossary.html, ../procgenDocs/demos.html, ../procgenDocs/reference.html]
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:35237/frontend/modules/procgenDocs/reference.html → 200
+
+ALL CHECKS PASSED
+exit 0
+== generate-docs-index --check
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (193 docs, 9 sections, 12 categories).
+exit 0
