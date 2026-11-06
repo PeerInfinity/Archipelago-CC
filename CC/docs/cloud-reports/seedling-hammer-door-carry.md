@@ -179,18 +179,15 @@ budget loss in L40. Movers outside L40 are the carry's own business, not the doo
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `generate-procgen-reference` → `check-procgen-reference` | regenerated (my flag in the instruments index, docs words); ALL CHECKS PASSED |
 | `generate-docs-index --check` | current |
-| `ci-producer-checks --jobs=4` | see §6a |
-| identity block | see §6a |
+| `ci-producer-checks --jobs=4` | **97 run, 0 red, 1 skipped** (`plan-seedling-r7-ends-meet`, a browser arm by design). ⚠ An earlier pass, run beside the identity block on the same 4 cores, printed `1 red` with its log cut off, so I cannot name it. The rerun at the same code was 0 red |
+| identity block (`identity-block.sh`, head vs a pristine `05bf82cc9f` worktree on its own :8124 server) | **identical**, every md5 row (maze, acceptance, kind pairs c3/c6/c4, enemy/element/area censuses, killgate s2/s5/s9, levels s1, the six `solve-seedling-r8/r9 --check` producers, exit 0). Two rows first differed, both from the worktree environment: `generated set` (the worktree has no venv; OK once the primary venv is activated) and `reference` (the worktree has only the symlinked submodules, so the substrate registry lacks the other substrates' columns) |
 | hammer `.slow` / `.train` files | **none reachable**: no hammer `.slow` or `.train` file imports the leg list, the sweep or the workflow, and no solver file changed. None run |
 | `check-seedling-wasm-ship` headless | not run: nothing under its paths changed |
-| JSUT at the pushed head | see §6a |
+| JSUT | run **42146301199** at `c886b43c` (every code change; later commits are docs/evidence only): **25714 passed, 0 failed**; the **slow battery 414/414** green |
 
 ⚠ Two commits (docs and evidence only) were made with `BOX_LOCK_COMMIT_ANYWAY=1` under my own running sweep's lock. The
 sweep never loads those files, so no measured run changed tree mid-flight in a way that matters.
 
-### 6a. The late rows
-
-(filled in at the end; see the final commit)
 
 ## 7. What the harvest A/B should expect, and the ON dispatch
 
