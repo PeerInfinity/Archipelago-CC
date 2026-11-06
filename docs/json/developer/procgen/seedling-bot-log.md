@@ -27462,3 +27462,37 @@ block + six producer `--check`s = OFF, `ci-producer-checks` 97 run / 0 red.
 **Trap candidate.** `seedlingSolverSurface.returnedObjectOf` reads `createLevelRun`'s literal `return { … }`: naming the
 run object (`return (api = { … })`) throws "expected ONE top-level object return, found 0". Give a closure the run's own
 method by moving its body to a const, not by naming the object.
+
+### Seedling fidelity KNOCKBACK376 — a broken BreakableRock's cell opens on the game's tick (`rockGoneFencepost`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37c (⚖ the user 2026-11-05: *"Launch it now"*). The report is
+`CC/docs/cloud-reports/seedling-fidelity-knockback376.md`.
+
+**W0.** Sweep leg 376 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`) at a failing seam
+ships the full pass's 1565 t plan with ONE planned hit — a `bombpusher@112,128` Bomb's Explosion at t1247/1248
+(`Explosion.as:60`, force 4), not the spinner the census row names. The plan dashes on t1248 and, in i-frames, rides the
+knockback up the east face of `breakablerock@176,128`; the dash's first test breaks the three rocks. The leg's own play,
+captured on p4g (1259 ticks): game = model on x, y, vx, vy, hits, hits_timer through t1255 — **the knockback is exact**
+(`Mobile.friction`/`moveX` never zero a blocked `v`, and the model keeps it too). At t1256 the model's player passes
+through `@176,128`'s cell on the stored `vx`; the game's is still pinned until t1258. The rock's cell opened two ticks
+early.
+
+**D1** (`rockGoneFencepost`): the game first lets the move into a broken rock's cell on observation `goneAt + 2`.
+`goneAt` (`fired + HIT_TO_GONE_TICKS`) is right as `endAnim`'s update — CLEARTAG's cut witnesses pin the persistence write
+there on the game — but the solid outlives it by two fenceposts on the query side: `brokenRockIds(…, ticksCompleted + 1)`
+(the bridges' convention) frees the cell one update BEFORE `endAnim` (SLOTS D4a fixed the same off-by-one for the tree),
+and `endAnim`'s `FP.world.remove` only lands at its update's end (`World.as:118-124`, `Engine.as:69-78`). ON,
+`brokenRockIds` lags the solid by `ROCK_GONE_FENCEPOST_TICKS` (2); `goneAt`, the write and `rocksBroken` are unchanged.
+Game witnesses (p4g, 0 px, `fixtures/rockgone-witness/`, `probe-seedling-rock-gone.mjs`): a plain swing pinned on the
+rock (the game's `Bot.slashTests` shows the first test landing on observation 12 = the model's `hitTick` + 1; `goneAt` 18;
+the cell opens on 20; OFF 18), a dash (18; OFF 16), and the leg's play (ON = the game on all 1259 ticks; OFF first
+differs t1256, player.x). ⚠ A first cut shifted `goneAt` itself by 2 and reddened every CLEARTAG cut witness: the write and
+the solid are two clocks. **D2** (key ON): leg 376's failing seams solve a 1622 t plan (the same planned bomb hit), and on
+the page (seams 5312/5314/5315) the game tracks it and the leg is DONE. `fidelityArrival`'s two L0 rows that pinned the
+model "frees it 2 ticks early (residue)" on game witnesses are the same fact, measured in R-arrival and left as residue.
+
+**Trap candidates.** (1) A divergence right after a planned hit is not automatically a knockback defect: read the player
+rows first — here they agreed to the bit, and the wall that moved was a rock's despawn. (2) A census row's "hit from X" can
+be the re-plan's refusal source, not the planned hit's: read `playerHits[].source`. (3) Every rock leg waited
+`WAIT_AFTER_PRESS_TICKS` (20) after its press, so no witness ever walked into the cell on the fencepost; a knocked-back
+player is the first thing that did (the burnable tree's SLOTS D4a lesson, one class over).

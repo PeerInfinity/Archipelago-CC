@@ -40,7 +40,9 @@ describe('FROZENPRESS — the switch', () => {
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const after = keys.slice(keys.indexOf('frozenPressForecast') + 1);
             const W37B = ['previewBeamTowerDrift', 'ceremonyPressForecast', 'ceremonyWalkHandoff'];
-            expect(after.filter((k) => !W37B.includes(k))).toEqual([]);
+            // ⛓ wave 37c: KNOCKBACK376 `rockGoneFencepost`, after them.
+            const W37C = ['rockGoneFencepost'];
+            expect(after.filter((k) => !W37B.includes(k) && !W37C.includes(k))).toEqual([]);
         });
     it('`SEEDLING_FROZEN_PRESS_FORECAST` is a known worker env name; `freezeForecast` is a progress field', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FROZEN_PRESS_FORECAST');
