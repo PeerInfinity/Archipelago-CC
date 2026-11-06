@@ -81,6 +81,7 @@ import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
 import {
     TAGS_PER_LEVEL, brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
+    ROCK_GONE_FENCEPOST_TICKS,
 } from './breakableRocks.js';
 import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
@@ -5058,8 +5059,14 @@ export function createLevelRun({
     // arm both queries take.
     const openBridgeIdsNow = () => (bridgeStateFor(level).size === 0
         ? null : openBridgeIds(level, ticksCompleted + 1));
+    // ⛓ fidelity KNOCKBACK376 D1 (`CONTACT_FIDELITY.rockGoneFencepost`): ON, the SOLID outlives `goneAt` (`endAnim`'s
+    // update, where the write lands — CLEARTAG's witnesses) by `ROCK_GONE_FENCEPOST_TICKS`: this query's `+ 1` frees
+    // it one update before `endAnim` runs, and `endAnim`'s `remove` only lands at its update's end. MEASURED on p4g
+    // (`fidelityRockGone.js`). OFF: the argument is absent, byte-identical.
     const brokenRockIdsNow = () => (rockStateFor(level).size === 0
-        ? null : brokenRockIds(rockStateFor(level), ticksCompleted + 1));
+        ? null : CONTACT_FIDELITY.rockGoneFencepost
+            ? brokenRockIds(rockStateFor(level), ticksCompleted + 1, { lag: ROCK_GONE_FENCEPOST_TICKS })
+            : brokenRockIds(rockStateFor(level), ticksCompleted + 1));
     // ⛓⛓⛓ SEEDLING FIDELITY SLOTS (D4a) — `ticksCompleted`, NOT `+ 1`, and
     // it is MEASURED. This read `ticksCompleted + 1` "exactly like the rocks'"
     // on the argument that a burn completing on the tick about to run has
