@@ -1,0 +1,13 @@
+# box lock: TAKEN by probe-seedling-rock-gone.mjs (browser, pid 18054) — head c2a3df1dd, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: rockgone-l40-plain: the model replays the tape to its end (ON and OFF)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      rockgone-l40-plain: 40 t; press(es) 10; the game's first swing test after the last press on obs 12; the model's hitTick 11 goneAt(ON) 18; the cell opens: game obs 20, model ON 20, OFF 18
+PASS: rockgone-l40-plain: the game = the model (key ON) at 0 px on every sampled tick before the tape's end (40)
+PASS: rockgone-l40-plain: OFF the model frees the cell two observations before the game — game 20, OFF 18
+PASS: rockgone-l40-dash: the model replays the tape to its end (ON and OFF)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      rockgone-l40-dash: 40 t; press(es) 1,8; the game's first swing test after the last press on obs 10; the model's hitTick 9 goneAt(ON) 16; the cell opens: game obs 18, model ON 18, OFF 16
+PASS: rockgone-l40-dash: the game = the model (key ON) at 0 px on every sampled tick before the tape's end (40)
+PASS: rockgone-l40-dash: OFF the model frees the cell two observations before the game — game 18, OFF 16
+
+ALL CHECKS PASSED
