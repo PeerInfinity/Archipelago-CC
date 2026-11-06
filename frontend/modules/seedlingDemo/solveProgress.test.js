@@ -1029,7 +1029,8 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
     it('⛓⛓ only an install reaches a frame: every solverBot site is one guarded line, and the setter reads no deadline', () => {
         const bot = readFileSync(join(HERE, 'solverBot.js'), 'utf8');
         const lines = bot.split('\n').filter((l) => /\bprogressFrame\(/.test(l));
-        expect(lines.length).toBe(6);
+        // ⛓ hammer-phase CLEARTAG-CHAIN: the 7th is `clearTagPrerequisite`'s (the clear-tag verb's prerequisite order)
+        expect(lines.length).toBe(7);
         expect(lines.every((l) => /^\s*if \(activeProgress !== null\) progressFrame\(\{[^}]*\}\); \/\/ ⛓ TC2/.test(l))).toBe(true);
         expect(bot).not.toMatch(/\bframeEntered\b|\bdangerKindOf\b/);
         const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');

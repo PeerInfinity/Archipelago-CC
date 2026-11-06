@@ -559,9 +559,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 222
+        "solverBot.js": 226
       },
-      "sites": 363,
+      "sites": 367,
       "seen": "both",
       "via": [
         "direct",
@@ -582,12 +582,12 @@
           "arrowLaneCrossing.js": 1,
           "botDriverV2.js": 4,
           "dangerMap.js": 4,
-          "solverBot.js": 8
+          "solverBot.js": 9
         },
         "armedPulsers": {
           "botDriverV2.js": 4,
           "dangerMap.js": 1,
-          "solverBot.js": 6
+          "solverBot.js": 7
         },
         "arrowFlights": {
           "dangerMap.js": 1
@@ -661,7 +661,7 @@
         "openActivators": {
           "botDriverV2.js": 23,
           "crusherBait.js": 1,
-          "solverBot.js": 21
+          "solverBot.js": 22
         },
         "openBridges": {
           "botDriverV2.js": 4,
@@ -669,7 +669,7 @@
         },
         "openChests": {
           "botDriverV2.js": 7,
-          "solverBot.js": 5
+          "solverBot.js": 6
         },
         "pulledRopes": {
           "botDriverV2.js": 5,

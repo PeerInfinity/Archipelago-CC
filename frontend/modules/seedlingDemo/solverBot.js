@@ -10908,6 +10908,24 @@ export function withStanceBurn(enabled, fn) {
 }
 
 /**
+ * `CLEARTAG_CHAIN` (OFF): the clear-tag arm's verb, when its stance is reachable only once a prerequisite is discharged,
+ * runs that prerequisite first (`clearTagPrerequisite`: the order `prerequisiteOrder` builds, applied as the frontier
+ * applies one) and re-derives the verb against the world it changed — instead of refusing *"a clear-tag order does not
+ * chain openers"*. ⚖ The user queued CLEARTAG-CHAIN on 2026-11-05 (L40-CENSUS wall B): L40's flag 12
+ * (`hold(wandlock@480,560)`) has its stance `buttonroom@880,768` shut by `burnabletree@872,784`, which `STANCE_BURN`
+ * names. A separate switch from `STANCE_BURN`: this one consumes ANY prerequisite the derivation names (arms (a) and
+ * (b) are on at the defaults), that one only adds the tree to what may be named. `SEEDLING_CLEARTAG_CHAIN=1` /
+ * `withClearTagChain(enabled, fn)`.
+ */
+export const CLEARTAG_CHAIN = { enabled: globalThis.process?.env?.SEEDLING_CLEARTAG_CHAIN === '1' };
+export const CLEARTAG_CHAIN_DEFAULT = false;
+
+/** Run `fn` with `CLEARTAG_CHAIN` set to `enabled`, restoring the previous value. */
+export function withClearTagChain(enabled, fn) {
+    return withSwitch(CLEARTAG_CHAIN, enabled, fn);
+}
+
+/**
  * ⛓ READ-ONLY PROBE for `hammerPocketBurn.test.js`: the hold stance `resolveHoldStrategy` derives for the presser at
  * `at` (`{x, y}`), with the prerequisite search on, from `run` as it stands: `{stance, prerequisite, refusal}` (the
  * refusal's message, or null). No contacts are passed (the walk's own are the caller's). It steps nothing.
@@ -31561,6 +31579,71 @@ function solveSegmentUnder({
      * (the goal's `presser` is not a presser of this level, or does not write this
      * clear).
      */
+    /**
+     * ⛓⛓⛓ hammer-phase CLEARTAG-CHAIN (`CLEARTAG_CHAIN`, OFF) — **THE CLEAR-TAG VERB'S STANCE PREREQUISITE, RUN FIRST.**
+     *
+     * `execClearTag`'s solid arm resolves its verb (a `hold` for a wandlock) once, and a resolution that says *"my stance
+     * is reachable once `<id>` is discharged"* was refused there: only the frontier (`walkToUnder`) consumed a
+     * prerequisite. L40's flag 12 is the measured case (L40-CENSUS wall B): `hold(wandlock@480,560)`'s stance
+     * `buttonroom@880,768` is behind `burnabletree@872,784`, which `STANCE_BURN`'s arm (c) names.
+     *
+     * The order is `prerequisiteOrder`'s, unchanged — the same depth bound (`NESTED_OPENER_DEPTH`, the goal's
+     * `openerChain`), the same strategy row and registration check, its aim the stance it unlocks and its exemptions
+     * the derivation's — and it is APPLIED as the frontier applies one: the goal's strategy bound (`applied`), a trace
+     * row, the shut-before snapshot, the stance walk (registered in `stanceWalks`), the executor through the strategy
+     * switch (`callableExecutor`), and the exemptions carried. The caller then re-derives its verb from where this
+     * left the player, against the world the order changed, never against a promise about it.
+     */
+    const clearTagPrerequisite = (goal, identified, contacts, what) => {
+        const order = prerequisiteOrder(goal, { x: goal.at.x, y: goal.at.y }, identified, contacts, null, what);
+        const label = `${order.strategy}(${order.obstacle.id})`;
+        if (strategyBoundReached(applied, label)) {
+            refuse(`${what}: applied ${applied.length} strategies for one goal [${applied.join(', ')}] and `
+                + `${identified.obstacle.id}'s stance still needs ${label} first (⛓ CLEARTAG-CHAIN).`,
+            { goal, obstacle: order.obstacle });
+        }
+        applied.push(label);
+        seeRow({
+            tick: perTick.length,
+            saw: saw(),
+            goal: { kind: goal.kind, tag: { ...goal.tag }, at: { x: goal.at.x, y: goal.at.y } },
+            obstacle: { kind: order.obstacle.kind, id: order.obstacle.id },
+            strategy: { verb: order.strategy, prerequisiteOf: identified.obstacle.id },
+            rejected: order.resolved.rejected ?? [],
+            keys: [],
+        });
+        const before = {
+            open: run.entities('openActivators'),
+            armed: run.entities('armedPulsers') ?? new Set(),
+            trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+            chests: run.entities('openChests'),
+        };
+        const verbFrame = activeProgress === null ? null : progressEnter(`verb:${order.strategy}`, 'verb', order.strategy);
+        if (activeProgress !== null) progressFrame({ target: order.obstacle.id, stance: order.resolved.stance }); // ⛓ TC2: the order
+        if (order.resolved.stance) {
+            const walking = `${label}#${perTick.length}`;
+            stanceWalks.add(walking);
+            try {
+                walkTo(goal, order.resolved.stance, {
+                    what: `${what} -> ${order.strategy} stance (${order.obstacle.id})`,
+                    contactsOverride: order.resolved.exempt,
+                    axisAligned: order.resolved.approach === 'axis-aligned',
+                });
+            } finally {
+                stanceWalks.delete(walking);
+            }
+        }
+        const record = callableExecutor(frontierExecutor(order.strategy), order.strategy, 'clear-tag-prerequisite')(
+            run, perTick, order.resolved, {
+                maxTicksPerTarget, economies, dashMode, what: `${what} -> ${order.strategy}`, before,
+                walkTo, goal, equip, fork, rewind,
+            });
+        records.push({ goal: goal.kind, strategy: order.strategy, prerequisiteOf: identified.obstacle.id, ...record });
+        if (verbFrame !== null) progressLeave(verbFrame);
+        for (const c of order.resolved.exempt ?? []) exemptions.add(c);
+        return order;
+    };
+
     const execClearTag = (goal) => {
         const flag = { level: goal.tag.level, tag: goal.tag.tag };
         const parsed = goal.obstacle ? /^([a-z0-9_]+)@(-?\d+),(-?\d+)$/i.exec(goal.obstacle) : null;
@@ -31918,23 +32001,53 @@ function solveSegmentUnder({
                     + 'yet (a later slice\'s row, computed rather than guessed)'
                 : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
         }
-        const contacts = new Set([...senseContacts(run), ...exemptions]);
-        let resolved;
-        try {
-            resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
-                { x: goal.at.x, y: goal.at.y }, null, [...refusedOrders]);
-        } catch (e) {
-            if (!(e instanceof SolverRefusal)) throw e;
-            refuseCT('unresolved', `'${strategy}' could not be resolved from (${run.state.x},`
-                + `${run.state.y}): ${e.message}`);
+        const resolveCT = () => {
+            const contacts = new Set([...senseContacts(run), ...exemptions]);
+            let resolved;
+            try {
+                resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
+                    { x: goal.at.x, y: goal.at.y }, null, [...refusedOrders]);
+            } catch (e) {
+                if (!(e instanceof SolverRefusal)) throw e;
+                refuseCT('unresolved', `'${strategy}' could not be resolved from (${run.state.x},`
+                    + `${run.state.y}): ${e.message}`);
+            }
+            if (!resolved) {
+                refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the `
+                    + 'resolver could not bind this obstacle against live state');
+            }
+            if (resolved.held === false) {
+                refuseCT('cannot-act', `'${strategy}' cannot act on ${id} with this run's bag — `
+                    + `${resolved.rejected?.[0]?.why ?? 'the resolver said held: false'}`);
+            }
+            return { resolved, contacts };
+        };
+        let { resolved, contacts } = resolveCT();
+        /**
+         * ⛓ hammer-phase CLEARTAG-CHAIN (`CLEARTAG_CHAIN`, OFF): the stance's prerequisite runs first, and the verb is
+         * re-derived from where it left the player (`clearTagPrerequisite`). Bounded by `prerequisiteOrder`'s own
+         * `NESTED_OPENER_DEPTH` and the goal's strategy bound; a prerequisite named again after its order ran is refused
+         * by name. OFF: the loop never runs and the refusal below is the one it always was.
+         */
+        const chained = [];
+        while (CLEARTAG_CHAIN.enabled && resolved.prerequisite) {
+            const p = resolved.prerequisite;
+            if (chained.includes(p.id)) {
+                refuseCT('prerequisite', `'${strategy}''s stance is still reachable only once ${p.id} is discharged `
+                    + `(${p.via}: ${p.why}), after the order for it ran — the prerequisite did not take, and running it `
+                    + 'again would be the same order again (⛓ CLEARTAG-CHAIN)');
+            }
+            chained.push(p.id);
+            clearTagPrerequisite(goal, { obstacle, resolved }, contacts, whatCT);
+            if (written()) break;
+            ({ resolved, contacts } = resolveCT());
         }
-        if (!resolved) {
-            refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the `
-                + 'resolver could not bind this obstacle against live state');
-        }
-        if (resolved.held === false) {
-            refuseCT('cannot-act', `'${strategy}' cannot act on ${id} with this run's bag — `
-                + `${resolved.rejected?.[0]?.why ?? 'the resolver said held: false'}`);
+        if (CLEARTAG_CHAIN.enabled && chained.length && written()) {
+            const waited = waitForWrite(`the prerequisite order for ${id}'s '${strategy}' cleared it`);
+            done('cleared-in-passing', { waited, during: 'prerequisite', strategy, prerequisites: chained,
+                why: `the order for ${chained.join(', ')} (${id}'s '${strategy}' stance prerequisite) cleared ${id} on `
+                    + 'its way — the verb is not run' });
+            return;
         }
         if (resolved.prerequisite) {
             refuseCT('prerequisite', `'${strategy}''s stance is reachable only once `

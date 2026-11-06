@@ -27463,3 +27463,28 @@ helped by this switch.
 **Flip proposal (not a flip):** `OPPORTUNISTIC_STRIKE` + `CHASER_STAGED_HUNT` + `STAGED_HUNT_SCAN_MEMO` together (+
 `CLEARTAG_STAND` for L12's 14). They carry CSH's pins (BK2COMBAT §7), and the memo adds none of its own.
 
+### Seedling hammer-phase CLEARTAG-CHAIN — the clear-tag hold runs its stance prerequisite (`CLEARTAG_CHAIN`, OFF)
+
+⚖ User, queued 2026-11-05 (the L40 census's step 3; planner `seedling-hammer-phase-planning-3`). Switch
+`solverBot.CLEARTAG_CHAIN`, **OFF**. The report is `CC/docs/cloud-reports/seedling-hammer-cleartag-chain.md`.
+
+- **Wall B, reproduced.** L40's flag 12 legs 871/872 (`hold(wandlock@480,560)`, its stance `buttonroom@880,768`
+  behind `burnabletree@872,784`): with `STANCE_BURN` the hold's derivation names the burn, and `execClearTag`'s solid arm
+  refused *"a clear-tag order does not chain openers"*. Only the frontier consumed a prerequisite.
+- **The arm.** ON, `clearTagPrerequisite` runs the order `prerequisiteOrder` builds (unchanged: its depth bound, its
+  strategy row and registration check, its aim and exemptions) and applies it as the frontier applies one: the goal's
+  strategy bound, a trace row, the shut-before snapshot, the stance walk, `callableExecutor(frontierExecutor(…))`, the
+  exemptions carried. Then it re-derives the hold. A separate switch from `STANCE_BURN` (it consumes any named
+  prerequisite); L40 needs both.
+- **Measured** (the page's captured requests at `97739720dd`, node, uncapped; ⚖ 30(c) fresh replays). OFF is
+  byte-identical to main on every arm. CC + SB moves both legs past B to the burn walk's SE fight (A1/A2). CC + SB + OPP +
+  CSH + PEE + FSB (= CC + ALL, plan for plan) SOLVES both hitless from a tree-unburnt save: 871 1122 t / 2774 units, 872
+  2389 t / 3469. Without PEE or FSB, 872 takes one hit. The census's wall C does not stand at this head.
+- **Budget.** Both are over the page's 2560 retry. The staged hunt is ≈ 85% of each bill (2360 / 2912 units), and the
+  rest is ~414 / ~557, inside 640. That cut is STAGED-HUNT-CHEAP's.
+- **Rows.** `hammerClearTagChain.test.js` (default tier: one dashless pass each, OFF wall B, ON → A1, ON without SB = OFF,
+  `burn` disabled = OFF) and `hammerClearTagChain.train.test.js` (the two solves). Fixtures `fixtures/hammer-cleartag-chain/`
+  (records cut to L40, 10 KB).
+- **Found on the way.** With L40 tag 12 staged, the flag-12 clear-tag goal does not finish `already-clear`: the door is
+  latched open, the hold runs, and the arm refuses `not-written` because it reads `earnedClears`, not the staged
+  persistence. This bears on the planner's door-carry staging question.
