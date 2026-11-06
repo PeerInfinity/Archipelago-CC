@@ -110,7 +110,7 @@ async function main() {
         const rock = on.samples.at(-1)?.rocks.find((r) => r.id === 'breakablerock@176,128') ?? null;
         console.log(`      ${name}: ${tape.tick_count} t; press(es) ${spec.presses.join(',')}; the game's first swing `
             + `test after the last press on obs ${firstTestAfter(samples, lastPress)}; the model's hitTick `
-            + `${rock?.hitTick ?? '-'} goneAt(ON) ${rock?.goneAt ?? '-'}; the cell opens: game obs ${gameOpen}, `
+            + `${rock?.hitTick ?? '-'} goneAt ${rock?.goneAt ?? '-'}; the cell opens: game obs ${gameOpen}, `
             + `model ON ${onOpen}, OFF ${offOpen}`);
         const bad = compareRockGoneWitness(samples, on.samples, tape.tick_count);
         check(`${name}: the game = the model (key ON) at 0 px on every sampled tick before the tape's end (${samples.filter((g) => g.t < tape.tick_count).length})`, bad.length === 0,
