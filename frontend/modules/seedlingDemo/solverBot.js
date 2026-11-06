@@ -31548,7 +31548,7 @@ function solveSegmentUnder({
             chests: run.entities('openChests'),
         };
         const verbFrame = activeProgress === null ? null : progressEnter(`verb:${order.strategy}`, 'verb', order.strategy);
-        if (activeProgress !== null) progressFrame({ target: order.obstacle.id, stance: order.resolved.stance });
+        if (activeProgress !== null) progressFrame({ target: order.obstacle.id, stance: order.resolved.stance }); // ⛓ TC2: the order
         if (order.resolved.stance) {
             const walking = `${label}#${perTick.length}`;
             stanceWalks.add(walking);
