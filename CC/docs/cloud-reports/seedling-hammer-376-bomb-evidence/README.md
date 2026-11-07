@@ -37,6 +37,21 @@ git show origin/claude/seedling-fidelity-wave-37c-0ppd4u:frontend/modules/seedli
 | `w0/chain-5333-units.txt` | where the 8450 go: sites, frames, and the rung rows by unit |
 | `w0/keys-5333-t1385-1430.txt` | the walk to (200,136), the break's press at t1411 and its 20-tick stand, bomb #13 in flight (launched t1400, lands t1432) |
 
-## m / i (the switch)
+## m — the designs (45-phase censuses)
 
-See the report's §4–§5; the files are named there.
+| file | what |
+|---|---|
+| `m/phase-census-final-on-640.tsv`, `m/phase-census-final-off-640-at-head.tsv` | the shipped design (D) ON, and OFF at the head (= `w0/phase-census-main-640.tsv`) |
+| `m/plan-digests-final-off-vs-on.txt` | per phase: OFF / ON verdict, plan digest, hits, work, the arm's asked / kept / refused |
+| `m/phase-census-design-b-on-2560.tsv` | design B (the arrival tail as every walk's stand): 6 phases lost |
+| `m/phase-census-design-c-on-640.tsv`, `-on-2560.tsv`, `m/plan-digests-design-c-off-vs-on.tsv` | design C (the 45-phase superset that the ON producer battery refuted) |
+| `m/design-*.row` | single solves along the way (phase 23 / phase 36, designs A′–C) |
+
+## i — mutants
+
+`i/mutants-final.txt` (M1′–M6′ on the shipped code, `tools/mutants.sh`); `i/mutants.txt` (the first cut's M1–M5).
+
+## d — gates
+
+`d/identity-head.txt`, `d/wasm-ship-tail.txt`, `d/producers-off.txt`, `d/producers-on.txt`, `d/slow-local.txt`,
+`d/train-local.txt`.
