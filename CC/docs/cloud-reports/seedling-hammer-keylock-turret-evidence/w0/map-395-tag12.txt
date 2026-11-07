@@ -1,0 +1,22 @@
+player 488 904 tick 0 turrets [{"id":"iceturret@472,400","x":488,"y":416,"dead":false,"rect":{"x":472,"y":400,"w":32,"h":32,"right":504,"bottom":432}}]
+lock {"x":480,"y":352,"w":16,"h":16,"right":496,"bottom":368} keyLine {"x0":482,"x1":491,"y":369} open false
+     628406284062
+ 312 ...hhh#h####
+ 328 ..hhhh#h####
+ 344 .hhhh##h##hh
+ 360 hhhhh##L####
+ 376 hhhhh#hhh###
+ 392 ####h#h#h#hh
+ 408 ######TTh#hh
+ 424 hhh###TTh##h
+ 440 ##hhhLhhh##h
+ 456 ##h###hhh##h
+ 472 hhh###hhh##h
+ 488 ####h#hLhLhh
+ 504 ####h#hhh#hh
+ 520 ####h#hhh###
+ 536 ####.#hhh###
+ 552 .....#...#.#
+ 568 #....##L##.#
+ 584 #....##.##.#
+ 600 #....##.##.#

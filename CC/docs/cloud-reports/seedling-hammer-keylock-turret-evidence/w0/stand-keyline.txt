@@ -1,0 +1,11 @@
+t4 key line touched at (88,178.5)
+t54 HIT blast:iceturret@64,192#2.0 player (88.0,178.1) on-line true
+t83 lock OPEN
+t99 HIT blast:iceturret@64,192#3.0 player (88.0,178.1) on-line true
+t144 HIT blast:iceturret@64,192#4.0 player (88.0,184.0) on-line false
+t198 HIT blast:iceturret@64,192#2.0 player (88.0,184.0) on-line false
+{"turret":true,"touched":4,"opened":83,"hits":4,"deaths":1,"end":{"x":88,"y":184}}
+--- control: --turret=none
+t4 key line touched at (88,178.5)
+t83 lock OPEN
+{"turret":false,"touched":4,"opened":83,"hits":0,"deaths":0,"end":{"x":88,"y":178.1}}

@@ -21,6 +21,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 Yes
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 
 Player 2: Player2
 Game:                            Procgen Maze WorldGen
@@ -38,6 +39,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 Yes
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 
 Player 3: Player3
 Game:                            Bounce Demo WorldGen
@@ -55,6 +57,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 Yes
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 
 Player 4: Player4
 Game:                            Bounce Demo WorldGen
@@ -72,6 +75,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 Yes
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 
 
 Locations:

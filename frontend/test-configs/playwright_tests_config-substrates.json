@@ -157,6 +157,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-bot-plays-on",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",
