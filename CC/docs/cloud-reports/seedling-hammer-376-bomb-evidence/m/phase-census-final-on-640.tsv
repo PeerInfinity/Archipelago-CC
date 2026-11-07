@@ -1,0 +1,45 @@
+5243	23	SOLVED	382	1747	0		kept 2 ref 0
+5244	24	REFUSED	265	-	0	hold: MOVING_WAIT no clean pacing	kept 1 ref 0
+5245	25	REFUSED	250	-	0	hold: MOVING_WAIT no clean pacing	kept 1 ref 0
+5246	26	REFUSED	250	-	0	hold: MOVING_WAIT no clean pacing	kept 1 ref 0
+5247	27	REFUSED	250	-	0	hold: MOVING_WAIT no clean pacing	kept 1 ref 0
+5248	28	REFUSED	250	-	0	hold: MOVING_WAIT no clean pacing	kept 1 ref 0
+5249	29	SOLVED	459	1667	0		kept 2 ref 0
+5250	30	SOLVED	411	1752	0		kept 0 ref 0
+5251	31	REFUSED	187	-	0	press kill: no step out	kept 0 ref 0
+5252	32	SOLVED	642	1849	1		kept 1 ref 0
+5253	33	SOLVED	470	1849	1		kept 0 ref 0
+5254	34	SOLVED	526	1736	2		kept 0 ref 2
+5255	35	REFUSED	221	-	0	press kill: player died died at t1524 (bomb bombpusher@112,128#15)	kept 0 ref 2
+5256	36	SOLVED	431	1665	0		kept 1 ref 0
+5257	37	SOLVED	418	1752	2		kept 2 ref 0
+5258	38	SOLVED	418	1752	2		kept 2 ref 0
+5259	39	SOLVED	558	1864	0		kept 2 ref 1
+5260	40	SOLVED	356	1742	0		kept 1 ref 0
+5261	41	SOLVED	356	1742	0		kept 1 ref 0
+5262	42	SOLVED	356	1742	0		kept 1 ref 0
+5263	43	SOLVED	356	1742	0		kept 1 ref 0
+5264	44	REFUSED	185	-	0	press kill: no step out	kept 0 ref 0
+5265	0	SOLVED	425	1686	1		kept 2 ref 0
+5266	1	SOLVED	410	1625	1		kept 0 ref 0
+5267	2	SOLVED	451	1558	1		kept 0 ref 2
+5268	3	SOLVED	451	1558	1		kept 0 ref 2
+5269	4	SOLVED	451	1558	1		kept 0 ref 2
+5270	5	SOLVED	451	1558	1		kept 0 ref 2
+5271	6	SOLVED	451	1558	1		kept 0 ref 2
+5272	7	SOLVED	384	1715	0		kept 0 ref 2
+5273	8	SOLVED	384	1715	0		kept 0 ref 2
+5274	9	SOLVED	384	1715	0		kept 0 ref 2
+5275	10	SOLVED	384	1715	0		kept 0 ref 2
+5276	11	SOLVED	384	1715	0		kept 0 ref 2
+5277	12	SOLVED	384	1715	0		kept 0 ref 2
+5278	13	SOLVED	384	1715	0		kept 0 ref 2
+5279	14	SOLVED	384	1715	0		kept 0 ref 2
+5280	15	SOLVED	384	1715	0		kept 0 ref 2
+5281	16	SOLVED	384	1715	0		kept 0 ref 2
+5282	17	SOLVED	382	1722	0		kept 1 ref 2
+5283	18	SOLVED	382	1722	0		kept 1 ref 2
+5284	19	SOLVED	382	1722	0		kept 1 ref 2
+5285	20	SOLVED	382	1722	0		kept 1 ref 2
+5286	21	SOLVED	382	1722	0		kept 1 ref 2
+5287	22	SOLVED	382	1722	0		kept 1 ref 2

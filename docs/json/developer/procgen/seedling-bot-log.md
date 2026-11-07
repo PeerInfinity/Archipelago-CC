@@ -27534,16 +27534,21 @@ report is `CC/docs/cloud-reports/seedling-hammer-376-bomb.md`.
   stance. No input escapes it (the forced-hit proof: every held set is hit at depth 1). The walk's probe ended at its
   stop, so nobody priced a bomb that lands after it. Not a model gap: `bombPusher.js` is game-witnessed to the bit
   (BW's 1665-tick witness; KNOCKBACK376's knockback rows).
-- **Three designs, measured over all 45 phases.** (A) the arm low in the ladder, from the climb: never fires on phase 23
-  (the blast is 2 ticks out when the next walk climbs). (B) the arrival tail as the walk's own `stand`: phase 23 solves,
-  but 6 phases that OFF solves (2–6, 34) refuse, because a tail the arm cannot clear makes the walk climb where OFF walked.
-  (C, shipped) the walk probes as OFF; only a clean probe asks the arrival tail, and only a bomb-only hit there asks the
-  arm; a refusal rewinds and the walk is OFF's. The ladder asks the same arm right after TIME (no BAIT/KILL removes a bomb).
-- **Measured (C).** At the page's 640: SOLVED 33 → 38 (phases 23, 25, 28, 29, 0), hitless 22 → 24 (23, 29), no solve
-  lost, 640 = 2560 on every row. Every phase where the arm keeps nothing plans OFF's keys (digests equal); the asks cost
-  ~20–30 work units there. Phase 23 ON: a 4-tick still wait at (216.1,152.1) on t1390, then 1747 t hitless in 371 units,
-  replayed on a fresh run row for row (0 hits, 0 deaths). OFF at the head = main on all 45 rows (full refusal text).
+- **Four designs, measured over all 45 phases.** (A) the arm low in the ladder, from the climb: never fires on phase 23
+  (the blast is 2 ticks out when the next walk climbs). (B) a 31-tick arrival tail as every walk's own `stand`: phase 23
+  solves, but 6 phases that OFF solves (2–6, 34) refuse — a tail the arm cannot clear makes the walk climb where OFF
+  walked. (C) the walk probes as OFF and only a clean probe asks the tail: a superset over the 45 phases, but the ON
+  producer battery found `plan-seedling-l40button-witness` (L41's arrival) refusing — the tail fired where the next verb
+  walks on, and it probed the undashed preview while the drive walks a certified dash. (D, shipped) only the frontier's
+  break stance names its still ticks; the tail is those + 12 escape ticks with an exact escape test (`escapeReach`); the
+  check previews the walk as it will be driven; a kept wait re-plans with the tail as its stand and is undone (rows,
+  attempt index) if the re-planned stop still meets a bomb. The ladder asks the same arm right after TIME.
+- **Measured (D).** At the page's 640: SOLVED 33 → 37 (phases 23, 29, 39, 0), hitless 22 → 25 (23, 29, 39), no solve
+  lost, no hit added; every phase where the arm keeps nothing plans OFF's keys. Phase 23 ON: a 4-tick still wait at
+  (216.1,152.1) on t1390, then 1747 t hitless in 382 units, replayed on a fresh run row for row (0 hits, 0 deaths).
+  OFF at the head = main on all 45 rows (full refusal text). The ON producer battery is green.
 - **Trap candidates.** (1) A walk's probe certifies the walk, not the stop: a bomb aimed at the walk lands up to 31 ticks
   after it, on whoever stands there next. (2) A stricter probe is not a superset: a tail that only feeds an arm must not
-  become the walk's own (design B lost 6 phases). (3) A census over `seam mod 45` is the unit of a phase-dependent leg:
-  two seams 90 apart are one measurement.
+  become the walk's own (design B lost 6 phases). (3) The probe is not the drive when a dash is planned: a check on the
+  undashed preview refused a walk the driven dash made clean (design C, 30(c)). (4) A census over `seam mod 45` is the
+  unit of a phase-dependent leg: two seams 90 apart are one measurement.

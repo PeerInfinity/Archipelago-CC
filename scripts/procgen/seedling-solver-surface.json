@@ -1397,9 +1397,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 706
+        "solverBot.js": 710
       },
-      "sites": 847,
+      "sites": 851,
       "seen": "both",
       "via": [
         "direct",
@@ -2890,9 +2890,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 265
+        "solverBot.js": 267
       },
-      "sites": 335,
+      "sites": 337,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2926,9 +2926,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 269
+        "solverBot.js": 271
       },
-      "sites": 342,
+      "sites": 344,
       "seen": "both",
       "via": [
         "const-alias",

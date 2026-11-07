@@ -14,12 +14,13 @@ PY
   timeout 900 npx vitest run --config vitest.train.config.js frontend/modules/seedlingDemo/hammerBombPhase.train.test.js 2>&1 | grep -a "✓\|×\|Tests " | sed 's/\x1b\[[0-9;]*m//g'
   git checkout -- "$F"
 }
-run M1-arrival21 "    arrivalTicks: 31," "    arrivalTicks: 21,"
-run M2-bombsonly-identity "    if (!d.danger) return d;
-    const sources = d.sources.filter((s) => s.kind === 'bomb');" "    return d;
-    const sources = d.sources.filter((s) => s.kind === 'bomb');"
-run M3-no-arrival-ask "            if (hit === null && stand === null && BOMB_PHASE_WAIT.enabled && rewind !== null) {" "            if (false && hit === null && stand === null && BOMB_PHASE_WAIT.enabled && rewind !== null) {"
-run M4-no-rewind "        stillWhy ??= \`\${BOMB_PHASE_WAIT.maxStill} still tick(s), none re-probes clean\`;
+run M1p-no-break-stand "                                ...(plan.strategy === 'break' && BOMB_PHASE_WAIT.enabled" "                                ...(false && plan.strategy === 'break' && BOMB_PHASE_WAIT.enabled"
+run M2p-bombsonly-identity "    if (!d.danger) return d;
+    const k = sample?.escape ?? 0;" "    return d;
+    const k = sample?.escape ?? 0;"
+run M3p-no-stop-hook "            if (BOMB_PHASE_WAIT.enabled && rewind !== null && cleanFirst && standAsked === null" "            if (false && BOMB_PHASE_WAIT.enabled && rewind !== null && cleanFirst && standAsked === null"
+run M4p-no-rewind "        stillWhy ??= \`\${BOMB_PHASE_WAIT.maxStill} still tick(s), none re-probes clean\`;
         back();" "        stillWhy ??= \`\${BOMB_PHASE_WAIT.maxStill} still tick(s), none re-probes clean\`;"
-run M5-no-marker "phase: 'dwell', wp: wpIndex, ...(standBombsOnly ? { bombsOnly: true } : {}) };" "phase: 'dwell', wp: wpIndex };"
+run M5p-no-marker "                ...(standBombsOnly === false ? {} : { bombsOnly: true, escape: Math.max(0, i + 1 - standBombsOnly) }) };" "                ...{} };"
+run M6p-no-escape-test "        if (k === 0) return true;" "        if (k >= 0) return true;"
 git diff --stat

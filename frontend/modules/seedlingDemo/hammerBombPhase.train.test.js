@@ -12,9 +12,11 @@
  *     EXHAUSTED by name at 8450 units on `bombpusher@112,128#17` at the goal (W0). The first blast is #13: launched at
  *     t1400 at the player walking to the rock (200,136), it lands at (207,141) on t1432, 2 ticks after the break's
  *     20-tick stand, 9.4 px from the stance — a hit no input escapes (the forced-hit rung proves it at depth 1).
- *   - ON: the walk to (200,136) is priced with its 31-tick arrival tail (bombs only), so its probe meets #13; TIME's
- *     bomb arm waits 4 still ticks at (216.1,152.1) and the same corridor re-probes clean. The leg SOLVES hitless,
- *     inside the page's first 640, and the plan replays on a FRESH run row for row with no hit and no death (30(c)).
+ *   - ON: the walk to the break stance (200,136) is previewed as it will be driven with its stance tail (the break's
+ *     2 + 20 still ticks + 12 escape ticks, bombs only), so it meets #13; TIME's bomb arm waits 4 still ticks at
+ *     (216.1,152.1), the same corridor re-probes clean, and the re-planned walk's stop is clean too. The leg SOLVES
+ *     hitless, inside the page's first 640, and the plan replays on a FRESH run row for row with no hit and no death
+ *     (30(c)).
  *   - Phase 15 (seam 5280) is the control: its walks' arrival tails meet bombs, the arm finds no clean wait and rewinds,
  *     and the plan is OFF's key for key.
  */
