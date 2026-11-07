@@ -247,7 +247,10 @@ describe('the playthrough\'s obstacle events', () => {
         // ⛓ RULES l63-pole-crossings: in = the event OR the Ghost Sword swing from the landing (`POLE_GHOST_ARM`).
         const GHOST = { rule: 'And', children: ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'].map((n) => ({ rule: 'Has', args: { item_name: n } })) };
         const swing = (id) => ({ rule: 'Or', children: [has(id), GHOST] });
-        expect(exit('level_65__r0c2', 'level_63__r10c2')).toEqual([swing('flag:L63:6')]);
+        // ⛓ rules-sharedbinding-witnesses (⚖ Robert 2026-11-06 "Accept reorder"): this exit is a derived-rule TABLE row
+        // (L63 flag 6 is game-witnessed), so AP_1 carries the derivation's And order — truth-table equal to GHOST.
+        const GHOST_DERIVED = { rule: 'And', children: ['Ghost Spear', 'Ghost Sword Fusion', 'Progressive Sword'].map((n) => ({ rule: 'Has', args: { item_name: n } })) };
+        expect(exit('level_65__r0c2', 'level_63__r10c2')).toEqual([{ rule: 'Or', children: [has('flag:L63:6'), GHOST_DERIVED] }]);
         expect(exit('level_63__r10c2', 'level_65__r0c2')).toEqual([or('flag:L63:6')]);
         // L65's column is lit from both sides: Or both ways (ANDed with L63's on the shared door)
         expect(exit('level_65__r0c8', 'level_63__r6c9')).toEqual([{ rule: 'And', children: [swing('flag:L63:7'), or('flag:L65:0')] }]);

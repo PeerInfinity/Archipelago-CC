@@ -36,7 +36,7 @@ describe('the binding witnesses', () => {
         expect(splitWrites([{ level: 61, tag: 1 }, { level: 63, tag: 1 }], layer)).toEqual({ bound: ['E'], unbound: ['61:1'] });
         expect(splitWrites(null, layer)).toEqual({ bound: [], unbound: [] });
     });
-    it('the recording is the default build, eight runs per arm', () => {
+    it(`the recording is the default build, ${ORACLE.repeat} runs per arm`, () => {
         expect(ORACLE.build).toBe('seedling_bot_ap_p4g');
         expect(ORACLE.repeat).toBe(8);
         expect(ORACLE.arms.length).toBe(BINDING_WITNESSES.length * 3 * 8);
