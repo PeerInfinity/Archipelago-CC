@@ -42,6 +42,7 @@ import { growMazeAsync, buildRulesJson, discoveryModeConfig } from './procgenPip
 import { newEnvelope as newSphereEnvelope, runToStep as runSphereToStep } from './sphereSteps.js';
 import { newSpiralEnvelope, runSpiralToStep } from './spiralSteps.js';
 import { buildTopDownEnvelope, runTopDownToStep } from './topDownSteps.js';
+import { newEntranceEnvelope, runEntranceToStep, entranceShuffleHooksFor } from './entranceShuffleSteps.js';
 
 export const DEFAULT_PARAMS = {
     seed: 1,
@@ -698,6 +699,8 @@ export function heavySubstrateIds(bundle) {
  *                    sized to `topDownSource` on every axis the bundle's
  *                    params do not pin (`sourceSizedParams`, `pinnedGridKeys`)
  *   gridGrowth     → buildGridRun     ({ grow, compile })
+ *   entranceShuffle → buildEntranceRun ({ atlasId, seed, maxAttempts?, sweep? }) — no substrate mix or library: the
+ *                    content source is the atlas the bundle names (`params.atlasId`), its hooks the registry's
  *
  * `ctx.defaults` defaults to panelDefaultParams() (the registry must be
  * populated first). A bundle naming no valid mode is REFUSED — a headless run
@@ -723,6 +726,7 @@ export function buildRunFromState(bundle, {
         },
     });
     const { mode } = state;
+    if (mode === 'entranceShuffle') return { mode, run: buildEntranceRun(bundle) };
     if (mode === 'sphereGrowth') return { mode, run: buildSphereRun(state, { resolvedLibraries }) };
     if (mode === 'shuffledSpiral') return { mode, run: buildSpiralRun(state, { resolvedLibraries }) };
     if (mode === 'topDown') {
@@ -733,6 +737,22 @@ export function buildRunFromState(bundle, {
         return { mode, run: buildTopDownRun({ ...state, params }, { topDownSource, sphereLog }) };
     }
     return { mode, run: buildGridRun(state) };
+}
+
+/**
+ * ⛓ ER E4b — an `entranceShuffle` bundle → its run: `{atlasId, seed, maxAttempts?, sweep?}` read off `bundle.params`
+ * (`seed` defaults to 1). A bundle naming no atlas is refused: the mode has no default content source.
+ */
+export function buildEntranceRun(bundle) {
+    const p = bundle?.params ?? {};
+    if (typeof p.atlasId !== 'string' || !p.atlasId) {
+        throw new Error('buildRunFromState: an entranceShuffle bundle names its content source as params.atlasId');
+    }
+    return {
+        atlasId: p.atlasId, seed: Number.isInteger(p.seed) ? p.seed : 1,
+        ...(Number.isInteger(p.maxAttempts) ? { maxAttempts: p.maxAttempts } : {}),
+        ...(typeof p.sweep === 'string' ? { sweep: p.sweep } : {}),
+    };
 }
 
 /**
@@ -760,6 +780,12 @@ export async function runPresetHeadless({ mode, run }, { onProgress = null } = {
         const env = await runTopDownToStep(buildTopDownEnvelope(run), 'compile', opts);
         ({ rulesJson } = env.compile);
         ({ stats } = env.finalize);
+    } else if (mode === 'entranceShuffle') {
+        // ⛓ ER E4b: the hooks are the registry's (the entry whose `entranceShuffle.atlasIds` holds the atlas) — node-side.
+        const hooks = await entranceShuffleHooksFor(run.atlasId).load();
+        const env = await runEntranceToStep(newEntranceEnvelope(run), 'compile', { ...opts, hooks });
+        ({ rulesJson } = env.compile);
+        stats = { attempts: env.compile.attempts, moved: env.compile.moved.length, spheres: env.compile.spheres };
     } else if (mode === 'gridGrowth') {
         const grown = await growMazeAsync(run.grow, onProgress);
         rulesJson = compileGridRun(run, grown);
