@@ -51,16 +51,6 @@ export const EXPLAINED_PROBLEMS = Object.freeze([
  * longer an exact element) is refused by `derivedRuleTable`. The `sharedBinding` rows are excluded by their fact, not here (and re-admitted by the binding witness ledger, never here).
  */
 export const TABLE_EXCLUSIONS = Object.freeze([
-    {
-        // ⛓ slice rules-sharedbinding-witnesses: its binding (L63 flag 6 = lightpole@48,272) is game-witnessed 8/8 and the
-        // row is EXACT, but admitting it moves AP_1's BYTES — the table writes its derived And in the derivation's child
-        // order (Ghost Spear, Ghost Sword Fusion), the composition's is (Ghost Sword Fusion, Ghost Spear): truth-table
-        // equal, 2 lines of AP_1_rules.json and the same HasAll reordered in worlds/seedling_playthrough/Rules.py; seed 1
-        // measured byte-identical (sphere log, spoiler, rules, .archipelago). The brief's rule: any AP_1 byte move STOPS the
-        // row. Drop this entry on the planner's ruling to accept the reorder.
-        key: 'level_65__r0c2|level_65__r0c2 -> level_63__r10c2',
-        why: 'AP_1 byte move: the derived rule is the composed one with its And children reordered (truth-table equal); held for a ruling (slice rules-sharedbinding-witnesses)',
-    },
     // (empty) L20 r3c1 -> r1c4 was named here in phase 1 (a hidden hand input: GROUPED_LOCK_EXCEPTIONS['20:lock@32,80']'s
     // hasShield through the grid). The echo plant's carrier mapping (this slice) shows it is an ECHO: the bidirectional atlas
     // row r1c4 <-> r3c1 is copied into r3c1's own world, a direction the forward-only mapping never counted. The `echoed`
