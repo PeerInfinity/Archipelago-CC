@@ -89,7 +89,6 @@ import {
     ELEMENT_LIST_SEP, REQUIRE_DIRECTIVE_REFUSALS, STRATEGY_REQUIRE_PREFIX, parseElementSpec, parseItemRequireList,
 } from '../procgenCore/elementSpec.js';
 import { KEY_GATE } from '../procgenCore/elements/keyGate.js';
-import { CHEST_LOOT } from '../procgenCore/elements/chestLoot.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
 import { markAuthoredRule } from '../procgenCore/authoredRule.js';
 import { GEN_ROOM_LOCATION_CEILING, genRoomFloorCells } from './seedlingGenCapacity.js';
@@ -305,15 +304,6 @@ function knobsOf(params) {
          *  `require`: absent (or `''`), the room keeps the torch and `generation` is byte-identical. */
         ...(String(bag.goal ?? '').trim() !== '' ? { goal: String(bag.goal).trim() } : {}),
     };
-}
-
-/** The element names a knob's `elements` spec draws from (`[]` for none, or a spec the draw refuses by name). */
-function elementNames(elements) {
-    if (!elements) return [];
-    try {
-        const spec = parseElementSpec(elements);
-        return (spec.any ?? [spec]).map((m) => m.name);
-    } catch { return []; }
 }
 
 /** The key gate's element head (`ELEMENT_TABLE` key = the element's family). */
@@ -874,12 +864,8 @@ export function generateGenRoom(input = {}) {
     const colourFromRun = !introduce && introduced != null;
     const knobs = introduce ? requestedKnobs(regionId, knobsOf(params), introduce)
         : colourFromRun ? allocatedKnobs(regionId, knobsOf(params), held, introduced) : knobsOf(params);
-    // ⛓ goal-chest-pipeline (⚖ the user 2026-11-04, rule 4) — NO LOOT CHEST IN A GOAL-CHEST ROOM until hammer's
-    //   CHEST-INCIDENTAL lands (the walk to one chest crosses the other's trigger line: B1+B3's named gap). Refused
-    //   BY NAME before any draw, never re-rolled. ⛓ LIFTS when CHEST-INCIDENTAL is on main.
-    if (knobs.goal === GOAL_CHEST_CLASS && elementNames(knobs.elements).includes(CHEST_LOOT.family)) {
-        throw new Error(GEN_ROOM_REFUSALS.chestLootInGoalChestRoom(regionId, knobs.elements));
-    }
+    // ⛓ goal-loot-lift — a goal-chest room MAY also hold a loot chest (`chestloot`): rule 4's temporary refusal
+    //   lifted once hammer's CHEST_LEG_DELTA shipped ON (a chest leg's exact set is the chests opened DURING it).
     const askedKey = requestedKey(introduce);
     let draw; let rerolls = 0;
     // ⛓ G2 (⚖ planner): a room that cannot seat its doors UNSEALED is re-rolled —

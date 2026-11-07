@@ -126,13 +126,6 @@ export const KEYGATE_REQUEST_REFUSAL = 'keygate-request-not-met';
 /** ⛓ The set assembler's backstop: two rooms holding ONE key colour. */
 export const KEYGATE_SHARED_REFUSAL = 'keygate-colour-shared';
 
-/**
- * ⛓ goal-chest-pipeline (⚖ the user 2026-11-04, rule 4: *"no loot chest in a goal-chest room, until hammer's
- * CHEST-INCIDENTAL lands"*) — the NAME of the refusal of a room asked for a goal chest AND a loot chest. The walk to
- * one chest crosses the other's trigger line and the solver's chest leg refuses a chest it did not name (seedling gen
- * B1+B3's named gap), so the knob pair is refused on every draw, never re-rolled. ⛓ LIFTS when CHEST-INCIDENTAL
- * (hammer: the solver models an incidental chest open) is on main.
- */
 /** ⛓ goal-chest-pipeline — the `goal` knob's one value (`procgenSeedling.GOAL_CHEST_CLASS`, pinned equal in
  *  `seedlingGenRoom`), spelled here because this module imports no generator. */
 export const GEN_ROOM_GOAL_CHEST = 'chest';
@@ -153,13 +146,7 @@ export function goalContainerNoteOf(payload) {
     return { placed: false, reason: GOAL_CONTAINER_NOT_PLACED_REASONS.noLocation };
 }
 
-export const CHESTLOOT_IN_GOAL_CHEST_ROOM_REFUSAL = 'chestloot-in-goal-chest-room';
-
 export const GEN_ROOM_REFUSALS = Object.freeze({
-    chestLootInGoalChestRoom: (regionId, elements) => `${CHESTLOOT_IN_GOAL_CHEST_ROOM_REFUSAL}: generated Seedling room `
-        + `'${regionId}' is asked for a GOAL CHEST (\`goal\` = "chest") and its elements ${JSON.stringify(elements)} `
-        + 'draw a LOOT CHEST. A room holds one chest until the solver models opening a chest on the way to another '
-        + '(hammer\'s CHEST-INCIDENTAL), so the pair is refused: drop `chestloot` from the elements, or the goal knob.',
     noRegionId: () => 'generated Seedling room: a region_id is required',
     keygateRule: (regionId, location, item) => `${KEYGATE_RULE_REFUSAL}: generated Seedling room '${regionId}' `
         + `holds a KEY GATE, and its location '${location}' stands behind the lock, but the world's final rule for it `
