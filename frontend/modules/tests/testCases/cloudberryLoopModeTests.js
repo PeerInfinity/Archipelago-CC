@@ -420,7 +420,12 @@ async function botBlocksResetVictory(tc) {
             before = app()?.configures ?? 0;
             bots = pageEvents('bot').length;
             const resetSeen = tc.waitForEvent('loopState:loopReset', 20000);
-            g.deductMana(currentMana() - 0.5);   // the next game second empties the pool
+            // The pool runs out NOW, mid-walk: emptied, then the depletion check the time drain runs after each charge
+            // (_maybeResetForOOM). Waiting for the next game second's charge instead raced the bot to region_3_2's coin
+            // (goal tick 127, ~2.1 s): measured 1-in-4 on the live page, and 2/2 once the page reports its clock at once
+            // on configure (Cloudberry P7b), the coin collected before the reset.
+            g.deductMana(currentMana());
+            loopStateSingleton._maybeResetForOOM();
             tc.reportCondition('mana out mid-Bot → a loop reset', !!(await resetSeen));
             loopStateSingleton.setAutoRestartQueue(false);   // this reset resumes (already decided); the queue then ends at Victory
             const stoppedWalk = await tc.pollForValue(() => pageEvents('bot').slice(bots)[0] ?? null, 'the page\'s bot walk ended', 10000, 100);
