@@ -11,7 +11,7 @@ killgate s5            [*]                     471164051f1a7d267e8cb6bedfc1b240
 killgate s9            [*]                     4d3bbf17fec9039367f49df031d38b54
 level pre-sword s1     [*]                     e28c1e5d6522dcca4682c44e7333a32f
 level post-sword s1    [*]                     fb1a59e5433e71fea436db1ea4b2ae57
-generated set                                     ⛓ if that pid is gone, the next taker reclaims the lock automatically — nothing has to be deleted by hand.
+generated set                                  OK
 --- every producer's own --check (⚖ ruling 8's 2026-08-21 extension) ---
 solve-seedling-r8-battery --check              7486f32e1d18f28f18cdfeb72181fdb3 [exit 0]
 solve-seedling-r8-d2-chain --check             93f75467fd6cb82329c97427e735cb33 [exit 0]
