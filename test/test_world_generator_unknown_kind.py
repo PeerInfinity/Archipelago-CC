@@ -193,7 +193,9 @@ class TestUnknownHelperName(unittest.TestCase):
         self.addCleanup(__import__('shutil').rmtree, tmp, True)
         path = tmp / 'rules.json'
         path.write_text(json.dumps(rules), encoding='utf-8')
-        out = tmp / ('lossy' if lossy else 'strict')
+        # One package name for both modes: the package's directory name is part of its bytes
+        # (_worldgen_rules.json's game_directory), so each mode gets its own parent instead.
+        out = tmp / ('lossy' if lossy else 'strict') / 'f1_fixture'
         generator = WorldGenerator(str(path), output_dir=str(out), force=True, lossy=lossy)
         generator.generate()
         files = {p.relative_to(out).as_posix(): p.read_bytes()
