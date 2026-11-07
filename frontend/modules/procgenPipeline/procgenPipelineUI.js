@@ -5259,6 +5259,10 @@ export class ProcgenPipelineUI {
                 + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
         }
         grid.replaceRegion(cell, editedRegion);
+        // ⛓ P5d — a hand-edited room may lean on any item the editor assumed held
+        //   (`expectedItems`), so what the realise used is no longer known: the
+        //   compile then grants every candidate (`grantsUsedBy` with null).
+        if (layout.stats) layout.stats.freeItemsUsed = null;
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(1);
         const status = this._editStatusOf(editedRegion);

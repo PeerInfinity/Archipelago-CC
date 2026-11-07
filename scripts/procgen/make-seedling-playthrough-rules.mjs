@@ -1651,6 +1651,12 @@ function inRoomLatchAnalysis(doc) {
             for (const c of analysis.crossings) {
                 if (c.free || c.conditionSets.length === 0) continue;
                 if (!c.conditionSets.every((w) => w.tiles.some(([x, y]) => tiles.has(`${x},${y}`)))) continue;
+                // ⛓ R-A4 — a crossing whose EVERY way the grid already charges with this press's own event (the overlay
+                // prices L20's lock@32,80 as exactly its press, `GROUPED_LOCK_EXCEPTIONS`) already requires it: ANDing the
+                // event again would only spell `And(e, e)`. A way without it keeps the gate (the producer's "not gated: the
+                // departure already requires" idiom, `ruleImplies`).
+                const press = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });
+                if (crossingPaysPress(c.conditionSets, press, (k) => analyzerOptions.resolveCondition(k))) continue;
                 const row = rows.find((r) => (r.from === c.from && r.to === c.to) || (r.bidirectional === true && r.from === c.to && r.to === c.from));
                 if (row) out.push({ region_id: regionId, from: c.from, to: c.to });
             }
@@ -2244,6 +2250,17 @@ function arrivalSpawnFor(region, exit, { entranceSpawn, landing }) {
     return seedlingArrivalSpawn(level, exit, entranceSpawn, {
         landing, landedOn, returnSpawn: back, inComponent, tileSize: TILE,
     });
+}
+
+/**
+ * ⛓ R-A4 — does EVERY way of a crossing (`conditionSets`, the analyzer's) already pay the press event `press` (a name)?
+ * Then the in-room latch's gate on it is redundant (`And(e, e)`). One way without it, or a way charged with ANOTHER
+ * event, answers false and keeps the gate. `resolve` maps a condition node to its AP rule. Exported for its unit rows.
+ */
+export function crossingPaysPress(conditionSets, press, resolve) {
+    const gate = { rule: 'Has', args: { item_name: press } };
+    return conditionSets.length > 0
+        && conditionSets.every((w) => (w.conditions ?? []).some((k) => ruleImplies(resolve(k) ?? { rule: 'False_' }, gate)));
 }
 
 /** Does `own` already require `gate` (equal, a conjunct of it, or the same item at a count at least as high)? */

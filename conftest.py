@@ -107,6 +107,9 @@ KNOWN_FLAKY_WORLDS: frozenset[str] = frozenset({
     # generate chain for sphere N" in generate_early. Removed 2026-10-31
     # (sdc-apcalc-rename) after a 500-seed + 300-config sweep found no
     # recurrence; apcalc_worldgen was deleted (user ruling 2026-10-31).
+    # It did recur (unittests 41539495088; about 1 seed in 2,500 at the
+    # defaults); fixed 2026-11-04 (sdc-apcalc-parity) by a whole-generation
+    # retry, pinned in worlds/apcalc/test/test_generator_retry.py.
 })
 
 # Everything dropped from AutoWorldRegister for the pytest session:

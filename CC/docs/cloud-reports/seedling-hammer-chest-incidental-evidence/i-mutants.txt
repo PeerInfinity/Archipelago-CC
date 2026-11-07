@@ -1,0 +1,16 @@
+== mutant a-drop-record
+     × ⛓ the source: `runChest` asks it with the pre-approach snapshot and the target, and fails on `!exact` 12ms
+     × ON keeps both chests: two chest records, two sealpiece collects, the second records `openBefore: [A]` 31ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 10 passed (12)
+== mutant b-accept-unseen-open
+     × OFF: the whole visit's set, nothing excluded (the pre-slice check) 11ms
+     × ⛔ ON: a chest the leg itself opened beyond its target is NEVER excused (nor a target that did not open) 1ms
+     × OFF refuses the SECOND leg by the leg's text — the first leg's chest read as unnamed 107ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 9 passed (12)
+== mutant c-delta-off-too
+     × OFF: the whole visit's set, nothing excluded (the pre-slice check) 10ms
+     × OFF refuses the SECOND leg by the leg's text — the first leg's chest read as unnamed 109ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 10 passed (12)

@@ -316,20 +316,26 @@ describe('the corpus census — printed, then pinned', () => {
          *              its own § Generating it (`same-doc` 32 → 33).
          *   385 → 387  keygate colours (2026-11-03, item introduction): substrate-registry.md § Build-time — item
          *              introduction → sphere-growth.md and → flash.md § Declarations (G9) (`doc` 290 → 292).
+         *   387 → 388  cloudberry P5c (2026-11-04, editor one press): cloudberry.md § Generating it → the
+         *              module doc's § Region generation (modules/apworldEditor.md, `repo` 40 → 41).
+         *   388 → 389  goal-chest pipeline (2026-11-04): substrate-registry.md § Build-time — goal containers →
+         *              flash.md § Declarations (G9) (`doc` 292 → 293).
+         *   389 → 390  cloudberry P5d (2026-11-05, the recovered entry gate): cloudberry.md § the back exit →
+         *              the module doc's § Region generation (modules/apworldEditor.md, `repo` 41 → 42).
          */
         expect(by).toEqual({
             'same-doc': 33,
-            doc: 292,
+            doc: 293,
             external: 22,
-            repo: 40,
+            repo: 42,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(387);
+        expect(CORPUS.length).toBe(390);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(292);
+        expect(docs).toHaveLength(293);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
@@ -338,7 +344,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(40);
+        expect(repo).toHaveLength(42);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

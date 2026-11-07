@@ -37,6 +37,10 @@ A flood fill (`componentsOf` in `scripts/procgen/seedlingRouteGraph.mjs`) treats
 - Check with a directed flood (the same BFS with the edge predicate) against the undirected one.
 - Two one-way branches can be mutually exclusive; sweep each opener alone and all together before reporting a route.
 
+### A minimal-set search over an item lattice assumes monotonicity, and the learning walk cannot check it
+
+The maze certifier's lattice walks (`deriveLevelWorldLogic.js`) take for granted that holding more items never loses a target: the rank walk's superset skip, the top-point skip, the latch sandwich, and above 4,096 points the learning walk (`learnLattice.js`), which decides a whole down-set from one negative point. The learner gives NO signal when the premise breaks: over all 236 non-monotone predicates on 3 items it refused none and answered all (session tile-l12-level-world). So the guard is static: `assertMonotoneWorld` refuses any rule node other than Has / And / Or and any trap armed by an axis item before the first search. A new rule kind or an item that ARMS something is refused there by name; do not route around the refusal, price the mechanic first. An event target's own event is the one admitted exception, learned on the axis without it.
+
 ### Generating a procgen world in-page can time out every iframe
 
 `arrangeShuffledSpiral` and `buildRulesJson` (`procgenPipelineEngine.js`) run synchronously on the main thread, and expensive substrates' level generators can block it for minutes. The iframe adapter then declares every substrate bridge dead on heartbeat timeout, and an unrelated test fails. Cheap substrates are fine (`taswBlockModeTests.js` builds a spiral in-page); for an expensive one load a committed preset and generate only the piece you need, as `cloudberryLoopModeTests.js` does with `cloudberry_sphere_worldgen` and `generateLoopCosts`.

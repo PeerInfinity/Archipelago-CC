@@ -68,7 +68,9 @@
  * Headless-safe: no `node:` imports and no DOM.
  */
 
-import { chestDoorLocationName, generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
+import {
+    GOAL_CHEST_CLASS, chestDoorLocationName, generateSeedlingLevel, placementTagId, seedlingOracle,
+} from './procgenSeedling.js';
 import { VERDICT, collectGoal } from './procgenOracle.js';
 import {
     CALDERA_PALETTE, ENDGAME_PALETTE, FLOODED_RUINS_PALETTE, FROZEN_FORGE_PALETTE,
@@ -91,12 +93,12 @@ import { parseAreaSpec } from '../procgenCore/areaSpec.js';
 import { markAuthoredRule } from '../procgenCore/authoredRule.js';
 import { GEN_ROOM_LOCATION_CEILING, genRoomFloorCells } from './seedlingGenCapacity.js';
 import {
-    BOSS_KEY_ITEM_NAMES, GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
+    BOSS_KEY_ITEM_NAMES, CHEST_GOAL_KIND, GEN_ROOM_BIOME_NAMES, GEN_ROOM_GOAL_CHEST, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
 } from './seedlingGenRoomPayload.js';
 
 export {
     GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
-    deserializeGenRoom, genRoomRefusal, genRoomApLocationNames,
+    deserializeGenRoom, genRoomRefusal, genRoomApLocationNames, goalContainerNoteOf,
 } from './seedlingGenRoomPayload.js';
 
 /** The rule every ungated exit / location compiles to. */
@@ -169,6 +171,21 @@ export const BOSS_KEY_KIND = 'boss-key';
 export const BOSS_KEY_ITEMS = BOSS_KEY_ITEM_NAMES;
 /** `<room> - Boss Key <t>`, vanilla's `Level 019 - Boss Key 0` shape. */
 export const bossKeyLocationName = (regionId, keyType) => `${regionId} - Boss Key ${keyType}`;
+/**
+ * ⛓⛓ goal-chest-pipeline — **THE GOAL CHEST IS THE ROOM'S LOCATION 0** (⚖ the user 2026-11-04, *"I agree with your
+ * recommendations"*: rule 1). A room whose `generation.goal` is `'chest'` and whose draw placed one (B3,
+ * `defaults.goalClass: 'chest'`) seats location 0 on the goal cell exactly as before — same id, item, name and rule,
+ * so the location COUNT and the pool are unchanged — and only the CONTAINER changes: the row is `kind:
+ * 'chest-goal'` at the CHEST's own tag, and the set assembler keeps the chest (`rewrite: false`), so opening it is
+ * the check. Unlike a door / loot chest it is SEATED, not fixed: it is the pipeline's own location, re-seated (and
+ * its kind re-derived from the new draw) on a re-roll. A draw that REFUSED the goal chest keeps the torch, and
+ * location 0 is an ordinary row (the report says why, `goalContainerNoteOf`).
+ */
+export { CHEST_GOAL_KIND };
+const isChestGoal = (l) => l?.kind === CHEST_GOAL_KIND;
+if (GEN_ROOM_GOAL_CHEST !== GOAL_CHEST_CLASS) {
+    throw new Error('seedlingGenRoom: GEN_ROOM_GOAL_CHEST and procgenSeedling.GOAL_CHEST_CLASS disagree — one name, two spellings');
+}
 const isChestDoor = (l) => l?.kind === CHEST_DOOR_KIND;
 const isLootChest = (l) => l?.kind === CHEST_LOOT_KIND;
 const isBossKey = (l) => l?.kind === BOSS_KEY_KIND;
@@ -257,7 +274,10 @@ function withKeyRule(world, loc, rule) {
 const summaryOf = (out) => ({ stop: out.summary.stop ?? null, keptCount: out.summary.keptCount ?? null,
     ...(out.summary.chestDoors ? { chestDoors: out.summary.chestDoors } : {}),
     ...(out.summary.lootChests ? { lootChests: out.summary.lootChests } : {}),
-    ...(out.summary.bossKeys ? { bossKeys: out.summary.bossKeys } : {}) });
+    ...(out.summary.bossKeys ? { bossKeys: out.summary.bossKeys } : {}),
+    // ⛓ goal-chest-pipeline — ONLY in a room asked for a goal chest: the class it got, and a refusal's name.
+    ...(out.summary.goalClass === GOAL_CHEST_CLASS ? { goalClass: GOAL_CHEST_CLASS } : {}),
+    ...(out.summary.goalChestRefused ? { goalChestRefused: out.summary.goalChestRefused } : {}) });
 const around = (c) => [[0, -1], [-1, 0], [1, 0], [0, 1]].map(([dx, dy]) => ({ tx: c.tx + dx, ty: c.ty + dy }));
 
 /** Read one knob of the bag, falling back to the default; strings are trimmed. */
@@ -280,6 +300,9 @@ function knobsOf(params) {
         /** ⛓ seedling-gen-terrains (C3) — the opted-in terrains (`'ice'`, `'stairs,ghoststep'`), ONLY WHEN
          *  GIVEN, as `require`: absent, `generation` is byte-identical. Normalized sorted, comma-joined. */
         ...(parseTerrainList(bag.terrains).length > 0 ? { terrains: parseTerrainList(bag.terrains).join(',') } : {}),
+        /** ⛓ goal-chest-pipeline — the GOAL's container (`'chest'`, B3's `goalClass`), ONLY WHEN GIVEN, as
+         *  `require`: absent (or `''`), the room keeps the torch and `generation` is byte-identical. */
+        ...(String(bag.goal ?? '').trim() !== '' ? { goal: String(bag.goal).trim() } : {}),
     };
 }
 
@@ -401,6 +424,11 @@ function generatorInput(regionId, seed, size, knobs) {
             throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, key, knobs[key], 'it must be a non-negative integer'));
         }
     }
+    // ⛓ goal-chest-pipeline — the goal knob names B3's ONE opt-in container; anything else is the knob's fault.
+    if (knobs.goal !== undefined && knobs.goal !== GOAL_CHEST_CLASS) {
+        throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'goal', knobs.goal,
+            `the goal containers are [${GOAL_CHEST_CLASS}] (absent = the torch)`));
+    }
     const parsed = (key, parse) => {
         if (knobs[key] === '') return undefined;
         try { return parse(knobs[key]); } catch (e) {
@@ -411,7 +439,9 @@ function generatorInput(regionId, seed, size, knobs) {
         seed,
         palette,
         bounds: { obstacleTarget: knobs.obstacleTarget, triesPerStep: knobs.triesPerStep, saturationK: knobs.saturationK },
-        defaults: { width: size.width, height: size.height },
+        defaults: { width: size.width, height: size.height,
+            /** ⛓ goal-chest-pipeline — B3's `defaults.goalClass`, ONLY when asked (absent = the generator's torch). */
+            ...(knobs.goal === GOAL_CHEST_CLASS ? { goalClass: GOAL_CHEST_CLASS } : {}) },
         skeleton: parsed('skeleton', (v) => parseSkeleton(v, { substrate: 'seedling' })),
         elements: parsed('elements', parseElementSpec),
         areas: parsed('areas', parseAreaSpec),
@@ -804,10 +834,14 @@ function drawRoom(regionId, drawn, k, size, knobs, doorCount) {
  * `generation` after attempt `k` — `rerollCause` only when the room was re-rolled,
  * `grownFrom` (the size the pipeline asked for) only when it GREW (G8).
  */
-const generationAfter = (knobs, k, cause, origin = null, size = null) => ({
+const generationAfter = (knobs, k, cause, origin = null, size = null, out = null) => ({
     ...knobs, rerolls: k, ...(k > 0 ? { rerollCause: cause } : {}),
     ...(origin && size && (size.width !== origin.width || size.height !== origin.height)
         ? { grownFrom: { width: origin.width, height: origin.height } } : {}),
+    // ⛓ goal-chest-pipeline — a goal chest the kept draw REFUSED, by the generator's name (only then): a record,
+    //   not a knob, so the shipped payload says why its goal is the torch (`goalContainerNoteOf`).
+    ...(knobs.goal === GOAL_CHEST_CLASS && out?.summary?.goalChestRefused
+        ? { goalChestRefused: out.summary.goalChestRefused } : {}),
 });
 
 /** The size a room was ASKED for: its `grownFrom` when it grew, else its own. */
@@ -830,6 +864,8 @@ export function generateGenRoom(input = {}) {
     const colourFromRun = !introduce && introduced != null;
     const knobs = introduce ? requestedKnobs(regionId, knobsOf(params), introduce)
         : colourFromRun ? allocatedKnobs(regionId, knobsOf(params), held, introduced) : knobsOf(params);
+    // ⛓ goal-loot-lift — a goal-chest room MAY also hold a loot chest (`chestloot`): rule 4's temporary refusal
+    //   lifted once hammer's CHEST_LEG_DELTA shipped ON (a chest leg's exact set is the chests opened DURING it).
     const askedKey = requestedKey(introduce);
     let draw; let rerolls = 0;
     // ⛓ G2 (⚖ planner): a room that cannot seat its doors UNSEALED is re-rolled —
@@ -892,7 +928,7 @@ export function generateGenRoom(input = {}) {
             start,
             goalCell,
             // ⛓ `rerolls`: how many re-rolls it took (0 = the first draw) — `seed` is the one used.
-            generation: generationAfter(knobs, rerolls, cause, size, record),
+            generation: generationAfter(knobs, rerolls, cause, size, record, out),
             // ⛓ G5: the drawn seed, so a later re-roll (a location the room cannot
             //   seat, an engine-added door) continues THIS room's sequence. Never serialized.
             drawnSeed: drawn,
@@ -973,8 +1009,21 @@ function locationsRefusal(world, rows, seats, grown = null) {
         [...world.locations.map((l) => l.cell), ...seats.free].map((c) => `(${c.tx},${c.ty})`), grown);
 }
 
-/** A placed location as the row it was placed from: its cell and tag are the room's, re-derived on a re-roll. */
-const rowOf = ({ cell: _cell, tag: _tag, ...row }) => row;
+/** A placed location as the row it was placed from: its cell and tag are the room's, re-derived on a re-roll —
+ *  and so is a goal chest's `kind` (the new draw may refuse the chest). */
+const rowOf = ({ cell: _cell, tag: _tag, ...row }) => {
+    if (isChestGoal(row)) delete row.kind;
+    return row;
+};
+
+/** The goal chest's tag when the room's goal IS a chest standing on its goal cell, else `null`. */
+function goalChestTag(world) {
+    if (world.summary?.goalClass !== GOAL_CHEST_CLASS || !world.goalCell) return null;
+    const gx = world.goalCell.tx * TILE_SIZE;
+    const gy = world.goalCell.ty * TILE_SIZE;
+    const chest = (world.record.entities ?? []).find((e) => e.type === 'chest' && e.x === gx && e.y === gy);
+    return chest ? tagOf(chest.type, chest.attrs) : null;
+}
 
 /**
  * ⛓⛓ G5 — **THE ROOM RE-ROLLED, THE AP LOGIC KEPT** (⚖ planner 2026-09-26: one
@@ -1037,7 +1086,7 @@ export function rerollGenRoom(world, entries, rows, cause) {
             record: draw.record,
             start: draw.start,
             goalCell: draw.goalCell,
-            generation: generationAfter(knobs, k, cause, origin, size),
+            generation: generationAfter(knobs, k, cause, origin, size, draw.out),
             exits: new Map(bound),
             locations: introducedFixedRows(world, world.region_id, draw.out.summary),
             summary: summaryOf(draw.out),
@@ -1090,7 +1139,14 @@ function seatRows(world, rows, free) {
     const bare = recordWithoutGoal(world);
     const reserved = world.locations.map((l) => l.tag);
     const seated = seatedOf(world);
+    // ⛓ goal-chest-pipeline — the row seated ON the goal cell of a goal-chest room is the chest: its tag, its kind.
+    const chestTag = goalChestTag(world);
     rows.forEach((row, k) => {
+        if (chestTag !== null && cellKey(free[k]) === cellKey(world.goalCell)) {
+            reserved.push(chestTag);
+            seated.push({ ...row, kind: CHEST_GOAL_KIND, cell: { ...free[k] }, tag: chestTag });
+            return;
+        }
         const tag = placementTagId(bare, reserved);
         reserved.push(tag);
         seated.push({ ...row, cell: { ...free[k] }, tag });
@@ -1233,6 +1289,8 @@ function bindAllDoors(world, entries) {
         //   ⛓ B1 — a loot chest's is solid too, and its STANCE (the cell below) is what must stay reachable.
         cells: [world.goalCell, ...seatedOf(world).map((l) => l.cell),
             ...world.locations.filter(isLootChest).map((l) => ({ tx: l.cell.tx, ty: l.cell.ty + 1 })),
+            // ⛓ goal-chest-pipeline — and a goal chest's stance (`[]` for a torch goal).
+            ...(goalChestTag(world) !== null ? [{ tx: world.goalCell.tx, ty: world.goalCell.ty + 1 }] : []),
             // ⛓ strategy elements r2 — a key gate's stance and key (`[]` without one).
             ...keyGateCells(world.record),
             ...bound.map(([, e]) => ({ tx: e.entrance_spawn.x / TILE_SIZE, ty: e.entrance_spawn.y / TILE_SIZE }))],
@@ -1336,7 +1394,7 @@ export function serializeGenRoom(world, extractedRules, _obstacleLib, _itemLib, 
             name,
             ...(l.item != null ? { item: l.item } : {}),
             // ⛓ seedling-gen-chestdoor-ap — ONLY on a door chest's row, so no other payload moves.
-            ...(isFixedRow(l) ? { kind: l.kind } : {}),
+            ...(isFixedRow(l) || isChestGoal(l) ? { kind: l.kind } : {}),
             cell: { ...l.cell },
             tag: l.tag,
             ...(() => {

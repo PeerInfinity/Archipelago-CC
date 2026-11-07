@@ -70,6 +70,22 @@ export function choiceValueOf(worldInfo, option, key) {
 }
 
 /**
+ * Another game's item placed in one of our locations, as the exporter's
+ * per-player slice lists it: no groups, and the classification keeps only the
+ * highest of the scout's flags. Shared with client/core/localRulesOverlay.js.
+ */
+export function foreignItemFromScout(scout) {
+  return {
+    name: scout.itemName,
+    id: scout.itemId ?? null,
+    groups: [],
+    classification: scout.progression ? 'progression' : scout.useful ? 'useful' : scout.trap ? 'trap' : 'filler',
+    type: null,
+    max_count: 1,
+  };
+}
+
+/**
  * @param {Object} spec - The game's spec (see the file header)
  * @param {Object} slotData - Connected.slot_data for the slot
  * @param {Array<Object>} scoutedLocations - The slot's scouted locations
@@ -236,14 +252,7 @@ export function buildProofGraphRules(spec, slotData, scoutedLocations, playerCon
   // exporter does (its classification keeps the highest flag only).
   for (const scout of scoutsById.values()) {
     if (scout.player === slot || !scout.itemName || scout.itemName in items) continue;
-    items[scout.itemName] = {
-      name: scout.itemName,
-      id: scout.itemId ?? null,
-      groups: [],
-      classification: scout.progression ? 'progression' : scout.useful ? 'useful' : scout.trap ? 'trap' : 'filler',
-      type: null,
-      max_count: 1,
-    };
+    items[scout.itemName] = foreignItemFromScout(scout);
   }
   // generate_basic precollects each starting node's event
   for (const i of startingList) {

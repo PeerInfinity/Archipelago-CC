@@ -61,9 +61,11 @@ import {
     seedlingFlashPanelBlock,
 } from './flashSeedlingLibrary.js';
 import {
-    BOSS_KEY_ITEM_NAMES, GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_SUBSTRATE_ID,
+    BOSS_KEY_ITEM_NAMES, GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_GOAL_CHEST, GEN_ROOM_REFUSALS,
+    GEN_ROOM_SUBSTRATE_ID,
     deserializeGenRoom,
     genRoomApLocationNames,
+    goalContainerNoteOf,
 } from '../seedlingDemo/seedlingGenRoomPayload.js';
 
 /** ⛓ Spelled ONCE, in the light payload module — the play-time assembler reads it there (G2). */
@@ -184,7 +186,9 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
             + 'its locations (0 = the first draw; `seed` is the one used) — and `rerollCause` (only when '
             + '`rerolls` > 0) which case caused the last one (`doors`, `engine-added door`, `locations`); and '
             + '`grownFrom` (G8, only when the room GREW: `{width, height}`, the size the pipeline asked for — '
-            + '`size` is the final one; `rerolls` counts across the sizes): a record, not a knob.',
+            + '`size` is the final one; `rerolls` counts across the sizes): a record, not a knob. `goal` (only when '
+            + 'asked: `chest`) is the goal\'s container, and `goalChestRefused` (only when the kept draw refused the goal '
+            + 'chest, the generator\'s name) why the room kept the torch.',
     }),
     locations: Object.freeze({
         type: 'array', required: true, derived: true,
@@ -197,7 +201,10 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
             + 'loot-chest row, `seedlingGenRoom.chestRows`, LAST after any door chest): the same, for a chest standing '
             + 'off the main path. `kind: \'boss-key\'` (strategy elements r2, only on a key gate\'s key-spot row, '
             + '`seedlingGenRoom.bossKeyRows`, LAST): the key\'s vanilla location at its fixed cell and tag, holding the '
-            + 'key item; the assembler REPLACES its `bosskey` with an `apitem` like any location.',
+            + 'key item; the assembler REPLACES its `bosskey` with an `apitem` like any location. `kind: \'chest-goal\'` '
+            + '(goal-chest-pipeline, only on LOCATION 0 of a room whose `generation.goal` is `chest` and whose draw placed '
+            + 'one): the location is the room\'s GOAL CHEST on `goal_cell`, at the chest\'s own tag, and the assembler '
+            + 'keeps the chest (no `apitem`).',
         schema: Object.freeze({
             items: Object.freeze({
                 type: 'object',
@@ -209,7 +216,7 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
                     cell: CELL,
                     tag: Object.freeze({ type: 'integer' }),
                     access_rule: Object.freeze({ type: 'object' }),
-                    kind: Object.freeze({ type: 'string', enum: Object.freeze(['chest-door', 'chest-loot', 'boss-key']) }),
+                    kind: Object.freeze({ type: 'string', enum: Object.freeze(['chest-door', 'chest-loot', 'boss-key', 'chest-goal']) }),
                 }),
             }),
         }),
@@ -279,6 +286,13 @@ export const SEEDLING_GEN_REQUIRE_KEY = 'seedlingGenRequire';
  * byte-identical.
  */
 export const SEEDLING_GEN_LOOK_KEY = 'seedlingGenLook';
+/**
+ * ⛓ goal-chest-pipeline (⚖ the user 2026-11-04, rule 2: OPT-IN) — the bag key of the room's GOAL CONTAINER: `chest`
+ * asks B3's goal chest (location 0 becomes the chest). Like `look` it is NOT in `KNOB_OF` or the defaults: absent (or
+ * `''`, the row's "torch") builds no `goal`, so every old region is byte-identical.
+ */
+export const SEEDLING_GEN_GOAL_KEY = 'seedlingGenGoal';
+
 /** The look row's absent choice: value `''`, shown as this. */
 export const SEEDLING_GEN_LOOK_NONE_LABEL = '(none)';
 
@@ -331,6 +345,10 @@ export function buildSeedlingGenRegionParams({ params = {} } = {}) {
     if (String(params[SEEDLING_GEN_LOOK_KEY] ?? '').trim() !== '') {
         seedlingGen.look = String(params[SEEDLING_GEN_LOOK_KEY]).trim();
     }
+    /** ⛓ goal-chest-pipeline — the goal container, ONLY WHEN GIVEN, as `look`. */
+    if (String(params[SEEDLING_GEN_GOAL_KEY] ?? '').trim() !== '') {
+        seedlingGen.goal = String(params[SEEDLING_GEN_GOAL_KEY]).trim();
+    }
     return { seedlingGen };
 }
 
@@ -342,6 +360,7 @@ export function seedlingGenProcgenParamsFromPayload(payload) {
     for (const [bagKey, knob] of Object.entries(KNOB_OF)) if (knob in g) out[bagKey] = g[knob];
     if ('require' in g) out[SEEDLING_GEN_REQUIRE_KEY] = g.require;
     if ('look' in g) out[SEEDLING_GEN_LOOK_KEY] = g.look;
+    if ('goal' in g) out[SEEDLING_GEN_GOAL_KEY] = g.goal;
     return out;
 }
 
@@ -393,6 +412,21 @@ function lookRow(params, onChange) {
         + '(none) = today\'s Ground / Stone', select);
 }
 
+/** ⛓ goal-chest-pipeline — the goal row: "torch" (`''`, absent) or `chest`. */
+function goalRow(params, onChange) {
+    const select = document.createElement('select');
+    for (const [value, label] of [['', 'torch'], [GEN_ROOM_GOAL_CHEST, GEN_ROOM_GOAL_CHEST]]) {
+        const o = document.createElement('option');
+        o.value = value;
+        o.textContent = label;
+        select.appendChild(o);
+    }
+    select.value = String(params[SEEDLING_GEN_GOAL_KEY] ?? '').trim();
+    select.addEventListener('change', () => { params[SEEDLING_GEN_GOAL_KEY] = select.value; onChange(); });
+    return fieldRow('Goal', 'The goal\'s container: torch (the default), or a chest that is the room\'s first AP '
+        + 'location (a room that cannot fit one keeps the torch, reported in procgen_metadata.goalContainers)', select);
+}
+
 /** The per-substrate controls (drawn by the shared per-region form). Call-time DOM only. */
 export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } = {}) {
     const wrap = document.createElement('div');
@@ -418,6 +452,7 @@ export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } =
     wrap.appendChild(selectRow(params, 'seedlingGenFill', 'Fill',
         'dense keeps every wall; shell strips walls no floor touches', ['dense', 'shell'], onChange));
     wrap.appendChild(lookRow(params, onChange));
+    wrap.appendChild(goalRow(params, onChange));
     return wrap;
 }
 
@@ -560,6 +595,12 @@ export const substrateRegistryEntry = Object.freeze({
      * gate, so a world without one is untouched. A sixth key-gate room is refused by the substrate's own name.
      * `replayableItems`: all five, so a regenerate whose spec carries a key request rebuilds that key gate.
      */
+    /**
+     * ⛓ goal-chest-pipeline — the GOAL-CONTAINERS report's note (`procgenCore/goalContainer.js`), read off the
+     * shipped payload by the light payload module: `null` unless the room asked for a goal chest.
+     */
+    goalContainer: Object.freeze({ noteOf: (payload) => goalContainerNoteOf(payload) }),
+
     itemIntroduction: Object.freeze({
         introducibleItems: (params) => roomFor('itemIntroduction').introducibleGenItems(params),
         replayableItems: () => [...BOSS_KEY_ITEM_NAMES],

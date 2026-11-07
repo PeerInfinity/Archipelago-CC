@@ -42,7 +42,7 @@
 
 import { allOf, anyOf, entityClaims, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
 import { PUSHABLE_KINDS } from './seedlingBlockPaths.js';
-import { ropeEventCondition } from './seedlingObstacleEvents.js';
+import { obstacleEventName, ropeEventCondition } from './seedlingObstacleEvents.js';
 
 /**
  * ⛔ THE WEAPON DISJUNCTION, and it is the ONE conservative approximation in
@@ -175,9 +175,12 @@ export function buildGroupOpeners(mapDoc, tileSize = 16) {
             const t = Number(e.attrs?.tset);
             if (!Number.isInteger(t) || t < 0) continue;
             const k = `${level.level}:${t}`;
-            if (!out.has(k)) out.set(k, { latching: false, holders: [] });
+            if (!out.has(k)) out.set(k, { latching: false, holders: [], latchers: [] });
             const row = out.get(k);
             if (latching) row.latching = true;
+            // ⛓ R-A4: the group's in-level latching openers, with the tag the press clears (`GROUPED_LOCK_EXCEPTIONS`'s
+            // press cost reads it; a rope is a latching opener with no press).
+            if (latching) row.latchers.push({ type: e.type, x: e.x, y: e.y, tag: Number(e.attrs?.tag) });
             else row.holders.push([Math.floor(e.x / tileSize), Math.floor(e.y / tileSize)]);
         }
     }
@@ -283,11 +286,21 @@ export const RECLOSING_LOCK = Object.freeze({
  * the alcove into the room, `level_13 -> level_20` is `True_`, and AP takes
  * **Level 020 - Shield at sphere 0.4 for free** — through a wall.
  *
- * ⇒ GATED on `hasShield`, which is [[feedback_worst_case_rule_gates_its_own_item]]
- * read in the other direction: the far side of this door holds the key to it,
- * so the near side reaches nothing. Strictly STRONGER than the computed row,
- * which is the only shape a hand ruling may take, and the strictness costs
- * nothing — L20's room is reached from L19's `stairsup@16,96` regardless.
+ * ⇒ GATED, not OPEN. Until R-A4 the gate was `hasShield` (the presser's reach,
+ * [[feedback_worst_case_rule_gates_its_own_item]] read in the other direction).
+ *
+ * ⛓ R-A4 (session tile-rules-automation-r-a4, ⚖ Robert 2026-11-04 "Yes, in R-A4
+ * (Recommended)"; rules-4's rewrite) — the lock costs ITS OWN PRESS, and nothing
+ * else: the AP event of the group's one latching ButtonRoom (`pressOf`, read off
+ * `ctx.groupOpeners`, so the row names WHICH lock and the map says what it costs).
+ * The Shield term was REDUNDANT, not stricter: the press is only in r1c12, whose
+ * one entrance is the ShieldLock, so holding the event means having held the
+ * Shield (design-3's re-check, measured: 0 sphere moves). The ruling is now EXACT.
+ * The row is still LOAD-BEARING: it keeps the cell GATED, so the alcove stays its
+ * own sub-region (deleting it puts the Shield at sphere 0.3 again, measured).
+ * ⛔ Why a keyed row and not the general rule "a lock whose group's only opener is
+ * one in-room latching press costs that press": that rule also closes L40's six
+ * wand locks (L40 splits, 58 AP_1 elements move, measured) — its own slice.
  *
  * Keyed by `<level>:<type>@<x>,<y>` so it names ONE placement and cannot
  * quietly widen to a family.
@@ -302,16 +315,35 @@ export const RECLOSING_LOCK = Object.freeze({
  */
 export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
     '20:lock@32,80': Object.freeze({
-        condition: flag('hasShield'),
+        costs: 'its press',
         cite: 'Dungeon2/7.oel (`lock@32,80 {tset 0, tag 1}` is the ONLY tSet-0 responder '
             + 'and `buttonroom@192,16` the ONLY presser) + Puzzlements/ShieldLock.as:33 '
             + '(`shieldlocknorm@176,16` stands between them) + R6 kickoff §13.8',
         why: 'a GROUPED lock whose group\'s only presser is behind a ShieldLock. The '
             + 'general rule calls the press choreography; here the choreography is '
             + 'behind the shield, and the lock seals the L13 arrival into a four-cell '
-            + 'alcove. Without this row AP takes the Shield at sphere 0.4 through it.',
+            + 'alcove. Without this row AP takes the Shield at sphere 0.4 through it. '
+            + 'It costs exactly its press (R-A4): the press already implies the Shield.',
     }),
 });
+
+/**
+ * ⛓ R-A4 — the cost of a `GROUPED_LOCK_EXCEPTIONS` lock: the AP event of its group's ONE in-level latching press, named
+ * as `deriveButtonEvents` mints it (`obstacleEventName` on the lock with the button's tag), as an `{event}` condition
+ * (`resolveOverlayCondition` → `Has(<event>)`). Read off the caller's `groupOpeners` census, never listed. Refused by
+ * name: no census, a group with a holding Button, or not exactly one latching opener that is a tagged room −1 ButtonRoom.
+ */
+function pressCondition(entity, tSet, ctx, site) {
+    if (!ctx?.groupOpeners) throw new Error(`GROUPED_LOCK_EXCEPTIONS ${site}: its cost is its group's press, which needs ctx.groupOpeners (buildGroupOpeners)`);
+    const group = ctx.groupOpeners.get(`${ctx.level}:${tSet}`);
+    const presses = (group?.latchers ?? []).filter((l) => l.type === 'buttonroom' && Number.isInteger(l.tag) && l.tag >= 0);
+    if (!group || group.holders.length > 0 || group.latchers.length !== 1 || presses.length !== 1) {
+        throw new Error(`GROUPED_LOCK_EXCEPTIONS ${site}: its group t${tSet} must have exactly one opener, a tagged latching `
+            + `ButtonRoom — it has ${group ? `${group.latchers.length} latching (${group.latchers.map((l) => `${l.type}@${l.x},${l.y}`).join(', ')}) `
+            + `and ${group.holders.length} holding` : 'no opener'}; read the map before ruling it`);
+    }
+    return { event: obstacleEventName({ level: ctx.level, tag: presses[0].tag, cls: entity.type, x: entity.x, y: entity.y }) };
+}
 
 /**
  * ⛓⛓ RULES l112-owl-rocklock — THE GROUP OPENERS THAT ARE NOT BUTTONS.
@@ -664,7 +696,7 @@ function lockRuling(entity, ctx) {
         // presser is behind the item the lock's far side holds.
         const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
         const ruled = GROUPED_LOCK_EXCEPTIONS[site];
-        if (ruled) return GATED(ruled.condition, ruled.cite, ruled.why);
+        if (ruled) return GATED(pressCondition(entity, tSet, ctx, site), ruled.cite, ruled.why);
         // ⛓ RULES l112-owl-rocklock — and the premise's OTHER half: the group
         // has an in-level opener at all. Checkable only where the caller
         // supplies the census (`buildGroupOpeners`); where the level holds
@@ -1567,6 +1599,8 @@ export const REFUTATION_LOG = Object.freeze([
             + 'WALL. Gated on hasShield the alcove becomes its own region, the Shield moves '
             + 'to sphere 2.1 behind `Level 019 - Boss Key 0` at 1.2, and the walkthrough '
             + 'cross-check over the intended vocabulary is unchanged.',
+        // ⛓ R-A4: the row is gated on its own PRESS since (the Shield term was redundant); the alcove stays its own
+        // region. Kept out of `observed`, which AP_1 serializes: the history text is not re-recorded for a comment.
         cite: 'Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as '
             + '+ R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS',
     }),

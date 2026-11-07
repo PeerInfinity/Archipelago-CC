@@ -2520,7 +2520,8 @@ Three probe shapes, in order of what each one settles:
 ⚠ And the diagnostic arms are WITHDRAWN, not committed: a fixture whose
 model is wrong is either a permanent red or a silenced one. Their numbers
 are banked in `r5Shaft.SPINNER_WEDGE`; `probe-seedling-r5-press-axes
---write-probes` regenerates them.
+--write-probes` regenerated them. (⛓ That probe is RETIRED — see *Seedling fidelity
+R5RETIRE* below; `probe-seedling-r5-spinner` re-derives what survives.)
 
 ### `runFire` refuses a glide it cannot certify
 
@@ -27359,3 +27360,160 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling fidelity L105 — a preview steps the drifting BeamTower Solid (`previewBeamTowerDrift`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37b (⚖ the user's GO 2026-11-04: make L105 hitless so `fineStanceWalk` can
+flip). The report is `CC/docs/cloud-reports/seedling-fidelity-l105.md`.
+
+**W0.** The hit is not `fineStanceWalk`'s. At base `26ed405d3f` both captured requests of sweep leg `level_105 <-
+in_L104_0_16 -> exit:out_teleporter_80_144` answer the same, trace for trace, with the switch ON and OFF, over seam −8..+8.
+The hit window (seams 5684–5690 of the captured clocks: 1 beam hit, or 2 flyer hits) belongs to the default solver; p17's
+attribution runs were single sweep rows at other seams. The plan is BEAMLANE's (`beamLaneWalk`): the lane walk previewed
+clean for 413 ticks, the arm drove its keys open-loop, and the run was stopped by `beamtower@48,40`'s Solid at x 58.41 from
+t211 (the tower's drift, `beamTowerDrift` ON, raised it into the lane; the preview's stepper held the Solid where it stood at
+the preview's start). The beam hit at t243 knocked the player into `pit@48,0`; two more pit deaths followed, then the arrival
+door to L104, which `{forced: {transition}}` returned as the goal. The sweep scored it `done`; the game agrees (divs []).
+
+**D1.** (a) `levelRun.previewStepper`'s step takes an optional `previewTick`; under the key the towers' Solids are swapped for
+`beamTowerSolidForecast(k)` (`beamTower.beamTowerDriftedY`: `stepBeamTowerFrame`'s drift summed in its order from the live
+`y` and `Game.time`; a ceremony, an unknown `y` or no clock keeps the snapshot). `previewWalk` passes its own tick at all three
+step sites. (b) The PHASE arm drives a preview's keys only while the run is on the preview (else `{escalations}`: the walk
+re-plans; a row in the new optional result field `phaseDriveLeft`), and a lane crossing is returned only through the walk's
+own exit (`drive`'s identity), else refused by name. ON: every seam of both requests solves hitless into L106 (2 refusals
+also solve). Game witness (p4g, 0 px, 308 ticks, no hit, L106 at t307); the OFF control reproduces on the game (hit t243, L104).
+Mutant M1 (forecast removed, guard kept): every hit seam refuses by name at the tower instead of a fake solve.
+
+**Trap candidates.** (1) A switch named by a 3-of-4 sweep A/B is a hypothesis: replay the captured request with the switch
+both ways before working on it. (2) A preview built from a snapshot of a moving Solid is right only while the Solid does not
+move; open-loop drive of such a preview turns a forecast miss into deaths. (3) A transition returned as the goal must be the
+goal's own exit — check identity at every place that returns one.
+
+### Seedling fidelity CEREMONY126 — the Ghostspear's ceremony: a swallowed strike and the walk it unmasked (`ceremonyPressForecast`, `ceremonyWalkHandoff`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37b (⚖ the user's GO 2026-11-04). The report is
+`CC/docs/cloud-reports/seedling-fidelity-ceremony126.md`.
+
+**W0.** At base `26ed405d3f` the L64 Ghostspear row is route-survey step **125** (not 126): `FROZEN_TICK_PRESS` at t43 —
+the walk's opportunistic strike presses on the tick before the pickup's touch, and the touch tick is the ceremony's
+first `Game.freezeObjects` frame, where `slash()` still runs and `genericHit` returns (`Player.as:560-563`, `:1075-1078`;
+`Mobile.as:35-41`; `Pickup.as:78-95`): the thrust is lost. FROZENPRESS's prototype guard unmasked a "stall" at
+(72.958, 34.784) that is the ceremony itself (started t44 at that point): the collect stance (72,24) lies beyond the
+pickup's rect, and `drive` held movement keys at a frozen player for 400 ticks — the dialogue pages only on X releases.
+
+**D1** (`ceremonyPressForecast`): `freezeForecast.pickupGap` (ON only; a pure read through `pickupUnderfoot`'s own skips)
+and `strikePolicy.ceremonyGuard` — an aim (2 ticks of travel) or a press (1) whose thrust could land on a ceremony's first
+frame stands down. **D2** (`ceremonyWalkHandoff`): the collect goal's stance walk lets its own pickup's avoid volume
+through and ends once `inCeremony` is up (`drive`'s `endOnCeremony`, `walkTo`'s `ceremonyEnds`); `runCollect` pages it.
+Both ON: step 125 SOLVED 150 t, 0 hits, 0 re-plans; step 183 (L79 Darksuit, the same stall class) SOLVED 102 t. Game
+witnesses (p4g, 0 px, `probe-seedling-ceremony126.mjs`): the solved tape, and a plain press into the first frozen frame
+= the press-free model. Local survey: OFF = base on all 236 rows; ON 204/32 (D1's conservative bound moves 141 −8,
+221 +27, 236 +1 ticks, 0 hits) and hammer's `solveProgress` L40 kill-rung pins (679 → 675 t, listed for hammer-3).
+
+**Trap candidates.** (1) A "walk stall" whose velocity is non-zero and whose box overlaps a pickup is a ceremony freeze,
+not geometry — check `inCeremony` first. (2) A live `botStatus` poll can read a tick while that tick's dead frames are
+still running (the first live tick after a ceremony read the frozen position); compare against the bot's own per-tick
+observations (`botDrain`).
+
+### Seedling fidelity R5RETIRE — `probe-seedling-r5-press-axes` retired; its pair folded into `probe-seedling-r5-spinner`
+
+Planner `seedling-fidelity-planning-18`, wave 37 (⚖ the user 2026-11-02: *"Retire it in W37"*; GO 2026-11-04). The report is
+`CC/docs/cloud-reports/seedling-fidelity-r5retire.md`.
+
+**Why.** The probe's model drive has failed since the spinner wedge was modelled: `synthesizeLegs` refuses press 5's declared
+move (*"the declared blocks ended at [pushableblockfire@208,80->12,5] rather than [...->12,6]"*), which is what the GAME's
+undelayed arms did. It could re-emit none of its tapes, and it had no `--check`, so nothing noticed.
+
+**Where its checks went.** `probe-seedling-r5-spinner --check` now covers THREE committed tapes byte for byte: `r5-press-glide`
+and `r5-press-repeat` (as before) and `r5-press-delay-control` (new: the root minus both `primary` spans, emitted in the v5
+re-pin's one-line `pins` spelling, which is the only difference from `serializeTape`'s — 8 bytes). `r5-press-delay` is a ROOT
+(a byte-exact game recording whose author is gone): held canonical, and every reconstruction inverts back to it. Also folded:
+the two-sided walk-proof on the model, re-aimed at the committed pair (the press arm enters (13,5) and (12,5); the control
+neither), and the `PRESS_AXES` blocker deduction (the stuck box puts the blocker in (12,5)). Not folded, because they are
+dead: the drive itself, "exactly two presses" OF THE DRIVE, and "the glide arm's model rests at y≈93" (the model now wedges
+the block at y 83.83, the game's number). No tape byte moved.
+
+**Trap candidate.** A `probe-*` producer is not in `ci-producer-checks`' roster (its globs are `plan-seedling-*.mjs` and
+`regenerate-*-tapes.mjs`): the retired probe's drive was dead and no gate saw it, and `probe-seedling-r5-spinner --check` —
+where its pair now lives — runs on no CI job either. Run it by hand; enrolling it is a planner call (it is a CI change).
+
+### Seedling fidelity CEREMONYEXACT — `ceremonyPressForecast` made exact: one tick, stepped (still OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37c (⚖ the user's GO 2026-11-05: *"Flip 3, hold ceremonyPressForecast"*,
+then this follow-up). The report is `CC/docs/cloud-reports/seedling-fidelity-ceremonyexact.md`.
+
+**W0.** At base `028da05be1`, a census arm that followed CEREMONY126's bound while asking a stepped forecast at every
+refusal: L40 legs 368 / 371 and the L40 kill rung stood down 19 / 18 / 84 times, and **none** of them was a press the game
+would lose — the next tick's box (an aim: both ticks, every facing) never touched a pickup. The first stand-down that
+changed keys was a planned DASH press 4.13 / 4.20 px from the part (t1586 / t1654), which the committed p4g witnesses
+`wandhold-l4{1,2}-*-paced` played at 0 px; on the rung, the t491 aim. The survey's −8 / +5 / +27 / +1 movers (141, 183,
+221, 236) were bound-only too.
+
+**D1.** `levelRun.ceremonyStepNow(heldSeq)` (a pure read; carried non-enumerable on `freezeForecast` as `ceremonyStep`)
+steps the held sets the policy is about to send with the run's own stepper (`previewStepperNow`, `previewStepper`'s body
+as a const), a press's dash impulse priced by `slashPressForecast`, and names the tick a ceremony would start on.
+`ceremonyGuard(state, freeze, aheadTicks, { held })` refuses only when it is the thrust's tick; 3-argument callers keep the
+bound. Key ON: legs 368/371, the L100FIX row and the kill rung = the OFF plans key for key; full survey moves only step
+125 (REFUSED → SOLVED 150 t). Game witness `ceremonyexact-kept` (p4g, 0 px): the press one input before the lost one.
+
+**D2.** Flip-ready with no pin moves: bounded fast set ON 109/111 (the two default-value rows a flip re-pins), identity
+block + six producer `--check`s = OFF, `ci-producer-checks` 97 run / 0 red.
+
+**Trap candidate.** `seedlingSolverSurface.returnedObjectOf` reads `createLevelRun`'s literal `return { … }`: naming the
+run object (`return (api = { … })`) throws "expected ONE top-level object return, found 0". Give a closure the run's own
+method by moving its body to a const, not by naming the object.
+
+### Seedling fidelity R5PROTO — `probe-seedling-r5-spinner` speaks `seedling-probe.yml`'s protocol
+
+Wave 37c, planner `seedling-fidelity-planning-18`. Report: `CC/docs/cloud-reports/seedling-fidelity-r5proto.md`.
+
+**The red.** Run `42081119356` (js-land/train-2026-11-05-37, at 2342e25604) ran the probe to `16/16 claims PASS`, rc 0, wall
+0 s — and the job went red on BOTH of the wrapper's rules: *"printed no 'CHANNEL: headless logic-only' line"* and *"printed no
+PASS: row (0 SKIP)"*; the summary read `RED rc=1 (no verdict line) — NO PASS ROWS`. The probe printed `✓ name` rows and, on a
+fail, THREW (a stack trace, no verdict line).
+
+**The change (output only).** First line `CHANNEL: headless logic-only (no wasm: a node measurement of the L39 spinner model
+and the r5 press tapes)` — true by construction (the probe boots no page, GPU or wasm), and the spelling of the two node-only
+precedents (`probe-seedling-derived-rules`, `-whole-game-certify`); `PASS: <claim>` / `FAIL: <claim>` per claim (16); then
+`ALL CHECKS PASSED` / `N CHECK(S) FAILED` and `process.exitCode = 1` on a fail; a run that made NO claim prints
+`FAIL: no claim was made …` and `1 CHECK(S) FAILED`. The job's `--host` is ignored (it always was). No measurement, tape or
+emitted byte moved: `--check` `same` ×3 (`r5-press-delay-control` 2553 B, md5 `768269d90d4beab64049eb10e732986e`, before =
+after; `--write` rewrote the three tapes with no `git` diff). Mutants: a forced fail → `1 CHECK(S) FAILED` rc 1; zero claims
+→ rc 1 and the wrapper's PASS floor; the pre-R5PROTO file → the same two wrapper errors as `42081119356`.
+
+**Trap candidate.** The probe wrapper's contract is in the WORKFLOW, not in a shared helper: a node-only probe that ran green
+for months by hand reds on its first dispatch. `grep -a '^CHANNEL:\|^PASS:\|CHECK(S) FAILED' <probe>` before naming one in a
+dispatch.
+
+### Seedling hammer-phase CHEST-INCIDENTAL — `CHEST_LEG_DELTA` (OFF): the chest leg's exact set is the leg's delta
+
+⚖ User, queued 2026-11-03 (a lone slice; the lab routed its named gap from `seedling-gen-chest-loot-goal` to hammer).
+Module `chestLegDelta.js`, switch `CHEST_LEG_DELTA`, **OFF** (`SEEDLING_CHEST_LEG_DELTA=1` / `withChestLegDelta`; asked
+only at `botDriverV2.runChest`'s effect check). The report is `CC/docs/cloud-reports/seedling-hammer-chest-incidental.md`.
+
+- **The gap, measured** (start `491f3286d9`, the lab's `54abcfcaee` merged in a throwaway worktree). B1 + B3 drop the loot
+  chest in 11/12 rooms with *"A chest the leg did not name …"*. The brief and the lab read this as an INCIDENTAL open (the
+  walk crossing the other chest's trigger line). It is not: in all 11 the "unnamed" chest is the one the PREVIOUS chest
+  leg opened by name. `runChest` compared the VISIT's open set (`run.entities('openChests')`, which keeps an opened chest
+  for the rest of the visit) with `{target}`, so every second chest leg of a visit refused. No walk opened an unnamed chest
+  in 100 lab rooms or in 64 hand-built two-chest rooms (adjacent and diagonal chests, four starts).
+- **The design.** ON, the exact set is the chests open now minus those open before the leg's approach (the call site's
+  `before.chests`). It must still be exactly `{target}`, so an open the leg itself caused beyond its target still refuses.
+  The record carries `openBefore` (only when non-empty). Tolerating an incidental open (the brief's (1)) and walking
+  around trigger lines ((2)) had no case to act on; naming both chests ((3)) is what the lab already does, and it is what
+  refused.
+- **Measured.** The 12 rooms: 0/11 → 11/11 loot chests kept (the 12th refuses `the-stance-is-not-floor`, unrelated). 100
+  lab rooms: 19 → 97 kept (the 19 OFF keeps were all one-chest rooms). Hand-built: 32/64 → 64/64. ON = OFF wherever OFF
+  passes (the whole set was `{target}`), so ON moves only solves that met this refusal. Game witness: p4g headless, two
+  chests opened on one visit, both tags cleared, 0 px over the solver's 244-tick ON tape
+  (`probe-seedling-chest-incidental.mjs`, `fixtures/chest-incidental-game-p4g.json`). Rows: `hammerChestIncidental.test.js`
+  (12), mutants (a) drop the record, (b) accept an unseen open, (c) delta OFF too: each reds 2–3 rows.
+
+### Seedling hammer-phase CHEST-INCIDENTAL flip — `CHEST_LEG_DELTA` ships ON
+
+⚖ The user, 2026-11-06: *"Flip it ON (Recommended)"* (asked in the hammer planner's session after the switch landed OFF in
+train 42, because the lab's lift of its `chestloot-in-goal-chest-room` refusal is honest only once the switch is ON).
+`chestLegDelta.js`: `CHEST_LEG_DELTA_DEFAULT = true`, the env opts out with `SEEDLING_CHEST_LEG_DELTA=0`. ON = OFF wherever
+OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs by key. Re-pinned: `hammerChestIncidental`'s
+"ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
+the ON default (both chests collected, SOLVED).

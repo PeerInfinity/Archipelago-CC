@@ -126,6 +126,11 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // the whole world's axis: 16 rows go (L52 ×8, L48 r7c0 → r4c3, L93 r5c7 → r10c7, L102 ×2, L112 r0c7 → r2c2, and the
         // [own event] rows of L31, L68 and L112), and 3 are RE-COUNTED over the larger axis (L48 r7c0 → L53 1/2 → 6/16, L93 → L98
         // 1/2 → 4/12, L112 → L113 4/8 → 8/16). 118 → 102.
+        // ⛓ tile-l12-one-world (⚖ Robert 2026-11-04 "A: Build after R-A3 (Recommended)"; designer design-3 GO): L12 is ONE level
+        // world, its rows priced over the whole world's 17-item axis (131,072 points). 16 per-sub-region L12 rows go (r0c19's three
+        // [own event] lock rows over 4,096, r13c6's flag 11, r40c4's four, r42c28's eight over 128) and 11 one-world rows come:
+        // r0c37 → L37 r12c6 / L21 from its landing (27,35) 2,700 (F1: newly partial), r40c4's flag 3 ×2 and → L24 from (2,44),
+        // r42c28's chest, flags 7/12 ×2 and → L83 from (2,54). r42c28 → r0c19 / r0c37 are pairs inside the world now. 104 → 99.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -134,22 +139,17 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_3__r0c4 → level_2 (landing 1,4) | 8/16',
             'level_3__r0c4 → level_4 (landing 1,4) | 8/16',
             'level_5__r1c1 → level_12__r13c6 (landing 1,2) | 1/2',
-            'level_12__r0c19 @ L12 flag 4: bosslock@416,240 cleared (landing 1,22) | 216/4096 [own event]',
-            'level_12__r0c19 @ L12 flag 5: bosslock@432,240 cleared (landing 1,22) | 216/4096 [own event]',
-            'level_12__r0c19 @ L12 flag 10: shieldlocknorm@288,704 cleared (landing 1,22) | 180/4096 [own event]',
-            'level_12__r13c6 @ L12 flag 11: bosslock@112,192 cleared (landing 6,14) | 2/8 [own event]',
-            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 3/16',
-            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 2/16 [own event]',
-            'level_12__r40c4 → level_12__r0c19 (landing 2,44) | 3/16',
-            'level_12__r40c4 → level_24 (landing 2,44) | 3/16',
-            'level_12__r42c28 @ Level 012 - Chest (landing 2,54) | 64/128',
-            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 64/128',
-            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 8/128 [own event]',
-            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 64/128',
-            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 8/128 [own event]',
-            'level_12__r42c28 → level_12__r0c19 (landing 2,54) | 64/128',
-            'level_12__r42c28 → level_12__r0c37 (landing 2,54) | 64/128',
-            'level_12__r42c28 → level_83 (landing 2,54) | 64/128',
+            'level_12__r0c37 → level_37__r12c6 (landing 27,35) | 2700/131072',
+            'level_12__r0c37 → level_21 (landing 27,35) | 2700/131072',
+            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 2700/131072',
+            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 1800/131072 [own event]',
+            'level_12__r40c4 → level_24 (landing 2,44) | 2700/131072',
+            'level_12__r42c28 @ Level 012 - Chest (landing 2,54) | 7020/131072',
+            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 7020/131072',
+            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
+            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 7020/131072',
+            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
+            'level_12__r42c28 → level_83 (landing 2,54) | 7020/131072',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
             'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 2/8 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',

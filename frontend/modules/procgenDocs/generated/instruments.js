@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 139,
-            "count": 190,
+            "browser": 141,
+            "count": 191,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 506,
-        "browser": 205,
-        "cited": 266,
-        "files": 524,
+        "blockStyle": 507,
+        "browser": 207,
+        "cited": 268,
+        "files": 525,
         "lineStyle": 18,
-        "withDocblock": 524,
-        "withFlags": 444
+        "withDocblock": 525,
+        "withFlags": 445
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11741,6 +11741,52 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-ceremony126.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-ceremony126 — ⛓⛓⛓ seedling-fidelity-ceremony126: L64's GHOSTSPEAR CEREMONY ON THE GAME — the solver's route-survey step-125 tape (the stance walk enters the pickup, the verb pages the ceremony) and a `primary` press whose thrust lands on the ceremony's first frozen frame (LOST) — PLAYED ON THE GAME AN…",
+            "path": "scripts/procgen/probe-seedling-ceremony126.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg"
             ],
             "browser": true,
@@ -11879,6 +11925,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-chaser-mobiles — ⛓ seedling-fidelity-staticladder D3: ONE BRIDGED CHASER CLASS, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-bobsoldier-mobiles.mjs` with the class and the tape as arguments).",
             "path": "scripts/procgen/probe-seedling-chaser-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "out"
+            ],
+            "file": "probe-seedling-chest-incidental.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tape-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING HAMMER CHEST-INCIDENTAL — two chests opened on ONE visit, witnessed on the game (W0's game witness).",
+            "path": "scripts/procgen/probe-seedling-chest-incidental.mjs"
         },
         {
             "argvHelpers": [
@@ -16405,39 +16500,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-r5-mobiles — ⛓⛓ THE SLICE-23 BATCH'S TWO NEW SURFACES, ASKED OF THE REAL GAME.",
             "path": "scripts/procgen/probe-seedling-r5-mobiles.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "write"
-            ],
-            "file": "probe-seedling-r5-press-axes.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write-probes"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "probe-seedling-r5-press-axes — WHICH PRESS DID THE GAME REFUSE, AND WHY?",
-            "path": "scripts/procgen/probe-seedling-r5-press-axes.mjs"
         },
         {
             "argvHelpers": [],

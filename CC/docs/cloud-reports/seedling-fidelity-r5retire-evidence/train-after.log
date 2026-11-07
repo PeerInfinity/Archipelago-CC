@@ -1,0 +1,11 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.train.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 387999[2mms[22m[39m
+     [33m[2m✓[22m[39m the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape [33m 387997[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 03:16:12
+[2m   Duration [22m 388.21s[2m (transform 2.14s, setup 0ms, import 72ms, tests 388.00s, environment 0ms)[22m
+

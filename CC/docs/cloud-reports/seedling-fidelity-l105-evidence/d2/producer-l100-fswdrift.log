@@ -1,0 +1,8 @@
+PASS: l100-sliver-rock: the staging boots at L100 (116,52) — {"level":100,"x":116,"y":52}
+PASS: l100-sliver-rock: the model replays it into L101 — 163 observations, ends {"level":101,"x":296,"y":248}
+PASS: l100-sliver-rock: breakablerock@128,144 breaks while the player stands in the sliver — broken t29 at {"x":124,"y":135.2999999999999}, 74 tick(s) in the sliver
+PASS: l100-sliver-rock: no hit — 0 hit(s)
+FAIL: the committed l100-sliver-rock is what this script produces today — ⛔ DRIFT — re-run with --from-view
+
+1 CHECK(S) FAILED
+exit 1

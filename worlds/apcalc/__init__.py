@@ -299,6 +299,13 @@ class APCalcWorld(RuleWorldMixin, World):
                     item_name = f"Button: {node.item}"
                 location.place_locked_item(self.create_item(item_name))
 
+    @classmethod
+    def stage_fill_hook(cls, multiworld, progitempool, usefulitempool, filleritempool, fill_locations):
+        """Re-order the progression pool only when the main fill would strand an APCalc
+        button (about 1 seed in 300 at the default options); see fill_rescue.py."""
+        from .fill_rescue import rescue_progression_fill
+        rescue_progression_fill(multiworld, progitempool, fill_locations, cls.game)
+
     def create_item(self, name: str) -> APCalcItem:
         """Create a single item by name."""
         data = item_table.get(name)

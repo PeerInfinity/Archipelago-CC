@@ -45,7 +45,7 @@
  *
  * Name → cell maps come from the generated arm's assembly REPORT
  * (`assembleGeneratedSeedlingSet(...).report`: `apitems` and `doors`, and
- * ⛓ `chestDoors` and `lootChests` — a door or loot chest is a location too), which the panel keeps
+ * ⛓ `chestDoors`, `lootChests` and `goalChests` — a door, loot or goal chest is a location too), which the panel keeps
  * from its load. Exit names arrive in either spelling the
  * graph uses — bare `exit_0` or `{regionId}__{exitName}` — as
  * `flashSubstrate/bridge.js` `_translateWalkTo` accepts them; a bare name is
@@ -123,7 +123,7 @@ export const PENDING_GIVE_UP_MS = 60000;
  * Map an AP-vocabulary target to a goal in the generated set's own terms.
  *
  * @param {{kind:string, name?:string, x?:number, y?:number}} target
- * @param {{apitems:Array, doors:Array, chestDoors?:Array, lootChests?:Array}} report  the assembly report
+ * @param {{apitems:Array, doors:Array, chestDoors?:Array, lootChests?:Array, goalChests?:Array}} report  the assembly report
  * @param {{liveLevel?:number|null, region?:string|null}} [where]
  * @returns {{goal:object}|{refused:string}}
  */
@@ -136,8 +136,11 @@ export function resolveSeedlingGoal(target, report, { liveLevel = null, region =
         // is the chest's own clear at its FIXED tag, so the goal names the entity, and the page and the wasm engine
         // walk it as a real room's chest (`locationEntityOf` → the solver's `collect-placement` → strategy `chest`).
         // ⛓ LOOT CHESTS (seedling gen B1) — the same: no apitem, its own fixed tag, kept in `report.lootChests`.
+        // ⛓ GOAL CHESTS (goal-chest-pipeline) — the same: a room's location 0 when its goal is a chest, kept in
+        // `report.goalChests`.
         const c = (report?.chestDoors ?? []).find((x) => x.location === name)
-            ?? (report?.lootChests ?? []).find((x) => x.location === name);
+            ?? (report?.lootChests ?? []).find((x) => x.location === name)
+            ?? (report?.goalChests ?? []).find((x) => x.location === name);
         if (c) return { goal: { kind: 'location', level: c.room, tag: c.tag, entityType: 'chest', name } };
         return { refused: `"${name}" is not an AP location of the generated Seedling rooms` };
     }

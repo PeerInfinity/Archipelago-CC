@@ -40,9 +40,10 @@ import { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } from './procgenPalette.js';
 import { oelAtTile } from './procgenLevel.js';
 import { tagOf } from './levelWorld.js';
 import { ELEMENT_NAMES, ELEMENT_TABLE, headsNeeding, parseElementSpec } from '../procgenCore/elementSpec.js';
-import { CHEST_LOOT, CHEST_LOOT_CHEST_ID } from '../procgenCore/elements/chestLoot.js';
+import { CHEST_LOOT, CHEST_LOOT_CHEST_ID, CHEST_LOOT_REFUSALS } from '../procgenCore/elements/chestLoot.js';
 import { LAW_NONE } from '../procgenCore/elements.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
+import { withChestLegDelta } from './chestLegDelta.js';
 
 const gen = (palette, { seed = 1, kind = 'empty', size = 10, elements = 'chestloot', goalClass } = {}) =>
     generateSeedlingLevel({
@@ -219,20 +220,44 @@ describe('⛓⛓⛓ B3 — `goalClass: \'chest\'`: the room\'s certified target 
     }, 60_000);
 
     /**
-     * ⚠ NAMED GAP (solver, not this slice's to fix): a loot chest in a goal-chest room is DROPPED. The walk to
-     * one chest crosses the other's trigger line (a chest opens on the player's box crossing the line below
-     * it) and `solverBot`'s chest leg refuses a leg that opened a chest it did not name ("A chest the leg did
-     * not name is a wall somewhere else that the plan still believes is standing"). Measured 11/12 (empty and
-     * winding, seeds 1–6). The level still certifies with its goal chest; the drop is graded, by name.
+     * ⛓ B1 + B3 in ONE room — the named gap this file once pinned (the loot chest DROPPED, 11/12 of the empty and
+     * winding seeds 1–6) CLOSED by hammer's CHEST-INCIDENTAL (`CHEST_LEG_DELTA`, ON since f1e70ce021): the solver's
+     * second chest leg of a visit judged the VISIT's open set, so the first leg's chest read as one it "did not name".
+     * The OFF row is the BEFORE witness (the dependency); the ON rows are the default.
      */
-    it('B1 + B3 together: the loot chest is DROPPED (graded), the goal chest certifies', () => {
-        const out = gen(PRE_SWORD_PALETTE, { seed: 2, goalClass: 'chest' });
+    it('B1 + B3 together, CHEST_LEG_DELTA OFF (the BEFORE witness): the loot chest is DROPPED (graded), the goal chest certifies', () => {
+        const out = withChestLegDelta(false, () => gen(PRE_SWORD_PALETTE, { seed: 2, goalClass: 'chest' }));
         expect(out.model.elements.ran).toBe(false);
         expect(out.model.elements.refused.reason).toBe('the-skeleton-does-not-solve-with-the-element');
         expect(out.certification.reasonText).toMatch(/A chest the leg did not name/);
         expect(out.summary.goalClass).toBe('chest');
         expect(out.summary.finalCertification.collected.map((c) => c.tag)).toEqual(['chest']);
     }, 60_000);
+
+    it('B1 + B3 together, CHEST_LEG_DELTA ON (the default): the loot chest is KEPT and both chests are collected', () => {
+        const out = withChestLegDelta(true, () => gen(PRE_SWORD_PALETTE, { seed: 2, goalClass: 'chest' }));
+        expect(out.model.elements.ran).toBe(true);
+        expect(out.certification.verdict).toBe('SOLVED');
+        expect(out.summary.goalClass).toBe('chest');
+        expect(out.summary.finalCertification.collected.map((c) => c.tag)).toEqual(['chest', 'chest']);
+    }, 60_000);
+
+    /** ⛓ goal-loot-lift — the graded gap row, re-pinned over the SAME 12 rooms (empty + winding, seeds 1–6, pre-sword
+     *  10x10): every room that places its loot chest KEEPS both chests, and NO room is refused by the oracle
+     *  (`the-skeleton-does-not-solve-with-the-element` — the gap's grade): that list is []. The rest are the element's
+     *  own placement refusals (`CHEST_LOOT_REFUSALS`). Measured 11/12 kept (winding 6: `the-stance-is-not-floor`). */
+    it('B1 + B3 together over the 12 measured rooms (default ON): ≥ 11/12 KEEP both chests; oracle refusals []', () => {
+        const rows = ['empty', 'winding'].flatMap((kind) => [1, 2, 3, 4, 5, 6].map((seed) => {
+            const out = gen(PRE_SWORD_PALETTE, { seed, kind, goalClass: 'chest' });
+            return { kind, seed, ran: out.model.elements.ran, refused: out.model.elements.refused?.reason ?? null,
+                goalClass: out.summary.goalClass, collected: out.summary.finalCertification.collected.map((c) => c.tag) };
+        }));
+        const kept = rows.filter((r) => r.ran);
+        for (const r of kept) expect(r).toMatchObject({ goalClass: 'chest', collected: ['chest', 'chest'] });
+        expect(rows.filter((r) => r.refused === 'the-skeleton-does-not-solve-with-the-element')).toEqual([]);
+        for (const r of rows.filter((x) => !x.ran)) expect(CHEST_LOOT_REFUSALS).toContain(r.refused);
+        expect(kept.length).toBeGreaterThanOrEqual(11);
+    }, 240_000);
 
     it('⛔ identity: the default class builds no `goalChest`, no `goalChestRefused`, and a torch goal', () => {
         const out = gen(PRE_SWORD_PALETTE, { elements: 'none' });
