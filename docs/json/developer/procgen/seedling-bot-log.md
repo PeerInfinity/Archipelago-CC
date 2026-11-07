@@ -27616,3 +27616,21 @@ train 42, because the lab's lift of its `chestloot-in-goal-chest-room` refusal i
 OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs by key. Re-pinned: `hammerChestIncidental`'s
 "ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
 the ON default (both chests collected, SOLVED).
+
+### Seedling hammer-phase DRILL-EXIT-PASS — the L91 drill's timed pass on a door leg while a weapon is held (`DRILL_EXIT_PASS`, OFF)
+
+⚖ The user queued it on 2026-11-07 (ROUTE-WALLS-CENSUS W3, its § 6 step 2). L91's `drill@64,80` stands in the one-tile
+west passage; at sphere 5.6 legs 718 (L89 arrival → L92 door) and 719 (the other way, the whole-game walk's leg) refused
+*"the combat ladder is EXHAUSTED"* on it. Residue D-A's timed pass to the crossing (`execDrillTimedPassExit`, ON) never
+ran: it returns when a drill-killing weapon is held, and its wake test planned the walk to a door centre with no door
+allowed (no plan → a straight line 80 px from the drill, wake range 48).
+
+`solverBot.DRILL_EXIT_PASS` (`SEEDLING_DRILL_EXIT_PASS=1`, OFF) is a rung AFTER the door's walk: when `walkTo` refuses
+with a live drill as its obstacle, before a tick is spent and with no deadline tripped (`drillExitPassAfterRefusal`),
+the pass is asked armed (the weapon gate skipped, the wake walk planned with the door allowed — `plannedWalkSamples`'
+new `allowTeleporter` argument, null for every other caller). The census's shape (the armed pass before the walk) was
+measured and rejected: on the 21 legs whose room holds a drill (L28, L88, L91) it moved 6, and turned L88's 707 from
+SOLVED to refused. The rung shape moves exactly two: 718 SOLVED 190 t hitless (fresh run; the census's plan, digest
+`1b3b8019a88e`), 719 a by-name refusal on the drill's hop into water (fidelity DRILL D2 — fidelity's DRILL-WATER),
+raised on the certificate's fork. Rows: `hammerDrillExitPass.test.js` (mutants m1–m4 red). Report:
+`CC/docs/cloud-reports/seedling-hammer-drill-exit-pass.md`.
