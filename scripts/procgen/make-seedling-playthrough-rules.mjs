@@ -696,6 +696,7 @@ export function buildPlaythroughAtlas() {
     necessaryDoorsCharged.length = 0;
     pocketDoorsCharged.length = 0;
     sealedLocationsCharged.length = 0;
+    locationsRebound.length = 0;
     arrivalsUncharged.length = 0;
     exitComponents.clear();
     regionAnalyses.clear();
@@ -815,7 +816,7 @@ function applyCrossingCostToBindings(atlas, regionId, analysis) {
     for (const b of analysis.bindings) {
         if (b.kind === 'location') {
             if (b.sealedIn) chargeSealedLocation(region, regionId, b);
-            else if (b.conditionSets?.length > 0) countUnchargedLocation(region, regionId, b);
+            else if (b.conditionSets?.length > 0 && !rebindLocationByCost(region, regionId, b, analysis)) countUnchargedLocation(region, regionId, b);
             continue;
         }
         if (b.kind !== 'exit' || !b.component || !b.reachable) continue;
@@ -997,6 +998,73 @@ function chargeSealedLocation(region, regionId, b) {
     sealedLocationsCharged.push(`${regionId}/${b.id}`);
     note(`${regionId}: location "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has `
         + `no place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`);
+}
+
+/**
+ * ⛓ RULES l89-feather — **A LOCATION REACHED ONLY THROUGH GATED MATERIAL BINDS TO ITS CHEAPEST WAY, NOT ITS NEAREST.**
+ *
+ * The analyzer binds a tile no component holds to the NEAREST component that reaches it, and a location has no
+ * direction, so the nearest way's cost was dropped (`countUnchargedLocation`, permissive). L89's Feather lies on
+ * water between two waterfalls: its nearest component, the west ledge r9c6, reaches it only by CLIMBING the south
+ * fall (Swim + Feather, `Player.as:1557`), while the top pool r1c10 comes DOWN the north one on Swim alone. Bound to
+ * r9c6 and charged nothing, it was collected from below on one Swim; the game needs the Feather it holds
+ * (ROUTE-WALLS-CENSUS W2, solver legs 923/924).
+ *
+ * So when some reaching component has a way that pays EXACTLY the binding's `necessary` (what every way onto the tile
+ * pays, the cheapest any way can be), the location is rebound to the first such component in the analyzer's order and
+ * charged that way. That rule is never looser than the game (it is a real way). It is never stricter either, which is
+ * CHECKED, not assumed: every other reaching component's way must imply reaching the chosen one, through the
+ * analyzer's own crossings, each hop paying no more than that way pays. If any is not implied, nothing is rebound and
+ * the binding stays permissive (`countUnchargedLocation`), as before. Returns whether it rebound.
+ */
+export const locationsRebound = [];
+function rebindLocationByCost(region, regionId, b, analysis) {
+    const loc = (region.locations ?? []).find((l) => l.name === b.id);
+    if (!loc || loc.access_rule !== undefined || b.manual || !(b.necessary ?? []).length) return false;
+    const key = (c) => analyzerOptions.conditionKey(c);
+    const keys = (conds) => new Set(conds.map(key));
+    const subset = (a, bb) => [...a].every((k) => bb.has(k));
+    const need = keys(b.necessary);
+    const candidates = [b, ...(b.alternatives ?? [])].filter((c) => c.component && !c.manual && !c.free);
+    const chosen = candidates.find((c) => c.conditionSets.some((set) => subset(keys(set.conditions), need)));
+    if (!chosen) return false;
+    const way = chosen.conditionSets.find((set) => subset(keys(set.conditions), need)).conditions;
+    // Every other component's way must imply reaching `chosen` through crossings paying no more than that way.
+    const reachesChosen = (from, budget) => {
+        const seen = new Set([from]);
+        const queue = [from];
+        while (queue.length) {
+            const at = queue.shift();
+            if (at === chosen.component.id) return true;
+            for (const x of analysis.crossings) {
+                if (x.from !== at || seen.has(x.to) || x.manual) continue;
+                if (!x.free && !x.conditionSets.some((set) => subset(keys(set.conditions), budget))) continue;
+                seen.add(x.to);
+                queue.push(x.to);
+            }
+        }
+        return false;
+    };
+    const unimplied = candidates.filter((c) => c !== chosen)
+        .flatMap((c) => c.conditionSets.filter((set) => !reachesChosen(c.component.id, keys(set.conditions)))
+            .map((set) => `${c.component.id} [${set.conditions.map((x) => SEM.conditionKey(x)).join(' + ')}]`));
+    if (unimplied.length) {
+        note(`${regionId}: location "${b.id}" — its cheapest way (from ${chosen.component.id}) does not cover `
+            + `${unimplied.join(', ')}: NOT rebound`);
+        return false;
+    }
+    const parts = way.map((c) => analyzerOptions.resolveCondition(c));
+    if (parts.some((p) => !p)) return false;
+    const from = b.component.id;
+    loc.sub_region = chosen.component.id;
+    loc.access_rule = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+    b.component = chosen.component;
+    b.conditionSets = chosen.conditionSets;
+    locationsRebound.push(`${regionId}/${b.id}: ${from} → ${chosen.component.id}`);
+    note(`${regionId}: location "${b.id}" at [${b.tile}] — REBOUND from ${from} (nearest) to ${chosen.component.id}, `
+        + `whose way pays only what every way pays (${way.map((c) => SEM.conditionKey(c)).join(' + ')}): CHARGED; `
+        + 'every other component\'s way reaches it first');
+    return true;
 }
 
 /**

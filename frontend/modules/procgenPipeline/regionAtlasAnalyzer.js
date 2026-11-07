@@ -961,6 +961,11 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
             necessary,
             manualReasons: chosen.manualReasons,
             ...(chosen.manual && chosen.manualNecessary.length > 0 ? { manualNecessary: chosen.manualNecessary } : {}),
+            // The OTHER components that reach the tile, in the same order, each with its own ways (additive): a
+            // caller that binds by cost rather than by distance (RULES l89-feather) reads them; nothing else does.
+            alternatives: reaching.slice(1).map((r) => ({
+                component: r.component, free: r.free, manual: r.manual, depth: r.depth, conditionSets: r.conditionSets,
+            })),
             reason: `tile is not walkable; assigned to the component that reaches it ${how}`
                 + ` (${reaching.length} candidate${reaching.length === 1 ? '' : 's'} at distance ${chosen.depth})`,
         };

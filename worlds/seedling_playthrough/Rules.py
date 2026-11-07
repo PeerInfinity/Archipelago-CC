@@ -2983,6 +2983,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 089 - Feather", player),
+        Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("L101 flag 0: lightpole@144,64 cleared", player),
         Has('Ghost Spear', 1)
     )
