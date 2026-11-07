@@ -1,5 +1,5 @@
 // MEASUREMENT ONLY (L53-KILLLOCK): a contact capture replayed on the model; prints when the tile (128..144,160..176)
-// stops reading solid to  and the run's own  rows (hit tick, goneAt).
+// stops reading solid to `collidesSolid` (default opts) and the run's own `rocksBroken` rows (hit tick, goneAt).
 // Usage: node rocks-broken.mjs <capture.json> [ticks=300]
 import { readFileSync } from 'node:fs';
 const ROOT = '/home/user/Archipelago-CC'; const M = ROOT + '/frontend/modules/seedlingDemo/';
