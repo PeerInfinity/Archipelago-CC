@@ -1018,25 +1018,47 @@ function chargeSealedLocation(region, regionId, b) {
  * the binding stays permissive (`countUnchargedLocation`), as before. Returns whether it rebound.
  */
 export const locationsRebound = [];
-function rebindLocationByCost(region, regionId, b, analysis) {
-    const loc = (region.locations ?? []).find((l) => l.name === b.id);
-    if (!loc || loc.access_rule !== undefined || b.manual || !(b.necessary ?? []).length) return false;
-    const key = (c) => analyzerOptions.conditionKey(c);
+
+/**
+ * The decision, pure (gadget-pinned in seedlingLocationRebind.test.js). `binding` = the analyzer's (`componentForTile` +
+ * `alternatives`, `landingWays`, `necessary`, `reachOverflowed`); `crossings` = `analysis.crossings`; `landingSubRegion(tile)`
+ * = the sub-region the atlas binds an arrival landing on that tile to (null = none); `key(condition)` = condition identity.
+ * Returns `{component, way}` to rebind, or `{refused: [why…]}`.
+ *
+ * WHAT IS CHECKED. The location's true cost is the OR, over every way onto its tile, of "stand where that way starts"
+ * AND "hold what it pays". The ways start at a component (`binding` + `alternatives`) or at a landing that meets no
+ * component first (`landingWays`). The rule written is ONE term: reach(C) AND W, with W a way of C that pays exactly
+ * `necessary`. It equals the OR when every other term implies it:
+ *   - a component c with way w: some path of the analyzer's crossings c → … → C, each hop having a way whose
+ *     conditions ⊆ w. Holding w at c you walk to C, and W = necessary ⊆ w, so you hold W at C;
+ *   - a landing with way w: the sub-region the AP arrival puts the player in is C, or reaches C the same way.
+ * Never looser: W is a real way from C. Refused, so left as before (permissive), when: the vocabulary overflowed, a
+ * reaching component has only MANUAL ways (no derivable cost to check), a landing has no AP sub-region, no component
+ * pays exactly `necessary`, or any term is not implied. Among several components that pay exactly `necessary` the
+ * first in the analyzer's order wins (free → non-manual → depth → id), so the choice is deterministic.
+ */
+export function cheapestLocationBinding(binding, crossings, landingSubRegion, key) {
+    const refused = [];
+    if (binding.reachOverflowed) return { refused: ['a way overflowed the condition vocabulary'] };
+    if (!(binding.necessary ?? []).length) return { refused: ['no condition is necessary'] };
     const keys = (conds) => new Set(conds.map(key));
-    const subset = (a, bb) => [...a].every((k) => bb.has(k));
-    const need = keys(b.necessary);
-    const candidates = [b, ...(b.alternatives ?? [])].filter((c) => c.component && !c.manual && !c.free);
+    const subset = (a, b) => [...a].every((k) => b.has(k));
+    const need = keys(binding.necessary);
+    const all = [binding, ...(binding.alternatives ?? [])].filter((c) => c.component);
+    for (const c of all) if (c.manual) refused.push(`${c.component.id} reaches it only through manual material`);
+    const candidates = all.filter((c) => !c.manual && !c.free);
     const chosen = candidates.find((c) => c.conditionSets.some((set) => subset(keys(set.conditions), need)));
-    if (!chosen) return false;
+    if (!chosen) refused.push('no component has a way paying exactly what every way pays');
+    if (refused.length) return { refused };
     const way = chosen.conditionSets.find((set) => subset(keys(set.conditions), need)).conditions;
-    // Every other component's way must imply reaching `chosen` through crossings paying no more than that way.
-    const reachesChosen = (from, budget) => {
+    const target = chosen.component.id;
+    const reaches = (from, budget) => {
         const seen = new Set([from]);
         const queue = [from];
         while (queue.length) {
             const at = queue.shift();
-            if (at === chosen.component.id) return true;
-            for (const x of analysis.crossings) {
+            if (at === target) return true;
+            for (const x of crossings) {
                 if (x.from !== at || seen.has(x.to) || x.manual) continue;
                 if (!x.free && !x.conditionSets.some((set) => subset(keys(set.conditions), budget))) continue;
                 seen.add(x.to);
@@ -1045,25 +1067,43 @@ function rebindLocationByCost(region, regionId, b, analysis) {
         }
         return false;
     };
-    const unimplied = candidates.filter((c) => c !== chosen)
-        .flatMap((c) => c.conditionSets.filter((set) => !reachesChosen(c.component.id, keys(set.conditions)))
-            .map((set) => `${c.component.id} [${set.conditions.map((x) => SEM.conditionKey(x)).join(' + ')}]`));
-    if (unimplied.length) {
-        note(`${regionId}: location "${b.id}" — its cheapest way (from ${chosen.component.id}) does not cover `
-            + `${unimplied.join(', ')}: NOT rebound`);
+    for (const c of candidates) {
+        if (c === chosen) continue;
+        for (const set of c.conditionSets) {
+            if (!reaches(c.component.id, keys(set.conditions))) refused.push(`${c.component.id} [${set.conditions.map(key).join(' + ')}] does not reach ${target} first`);
+        }
+    }
+    for (const l of binding.landingWays ?? []) {
+        const at = landingSubRegion(l.tile);
+        if (!at) { refused.push(`the landing at [${l.tile}] has no AP sub-region`); continue; }
+        for (const set of l.conditionSets) {
+            if (!reaches(at, keys(set.conditions))) refused.push(`the landing at [${l.tile}] (${at}) [${set.conditions.map(key).join(' + ')}] does not reach ${target} first`);
+        }
+    }
+    return refused.length ? { refused } : { component: chosen.component, way, conditionSets: chosen.conditionSets };
+}
+
+function rebindLocationByCost(region, regionId, b, analysis) {
+    const loc = (region.locations ?? []).find((l) => l.name === b.id);
+    if (!loc || loc.access_rule !== undefined) return false;
+    const landingSubRegion = ([x, y]) => (region.exits ?? [])
+        .find((e) => !e.exit_id.startsWith('out_') && e.entrance_tile?.[0] === x && e.entrance_tile?.[1] === y)?.sub_region ?? null;
+    const out = cheapestLocationBinding(b, analysis.crossings, landingSubRegion, (c) => analyzerOptions.conditionKey(c));
+    if (out.refused) {
+        if (b.necessary?.length) note(`${regionId}: location "${b.id}" — NOT rebound to its cheapest way: ${out.refused.join('; ')}`);
         return false;
     }
-    const parts = way.map((c) => analyzerOptions.resolveCondition(c));
+    const parts = out.way.map((c) => analyzerOptions.resolveCondition(c));
     if (parts.some((p) => !p)) return false;
     const from = b.component.id;
-    loc.sub_region = chosen.component.id;
+    loc.sub_region = out.component.id;
     loc.access_rule = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
-    b.component = chosen.component;
-    b.conditionSets = chosen.conditionSets;
-    locationsRebound.push(`${regionId}/${b.id}: ${from} → ${chosen.component.id}`);
-    note(`${regionId}: location "${b.id}" at [${b.tile}] — REBOUND from ${from} (nearest) to ${chosen.component.id}, `
-        + `whose way pays only what every way pays (${way.map((c) => SEM.conditionKey(c)).join(' + ')}): CHARGED; `
-        + 'every other component\'s way reaches it first');
+    b.component = out.component;
+    b.conditionSets = out.conditionSets;
+    locationsRebound.push(`${regionId}/${b.id}: ${from} → ${out.component.id}`);
+    note(`${regionId}: location "${b.id}" at [${b.tile}] — REBOUND from ${from} (nearest) to ${out.component.id}, `
+        + `whose way pays only what every way pays (${out.way.map((c) => SEM.conditionKey(c)).join(' + ')}): CHARGED; `
+        + 'every other way onto the tile reaches it first');
     return true;
 }
 

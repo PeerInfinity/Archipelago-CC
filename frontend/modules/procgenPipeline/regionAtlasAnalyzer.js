@@ -786,6 +786,7 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
     let necessaryMask = ~0;
     let waysIn = 0;
     let overflowedAny = false;
+    const landingHits = []; // ways onto the target that START on a landing, reached before any component
     push({ cellIndex: sy * width + sx, mask: 0, manual: false, reasons: [], depth: 0 });
     while (queue.length > 0) {
         const state = queue.shift();
@@ -796,7 +797,11 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
             // lands there is charged the same cell by the landing gates, so this is never stricter than the game.
             const own = standMask(state.cellIndex);
             if (own === null) overflowedAny = true;
-            else { necessaryMask &= state.mask | own; waysIn += 1; }
+            else {
+                necessaryMask &= state.mask | own;
+                waysIn += 1;
+                landingHits.push({ cellIndex: state.cellIndex, mask: state.mask | own });
+            }
         }
         const cx = state.cellIndex % width;
         const cy = (state.cellIndex - cx) / width;
@@ -865,7 +870,17 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
             || a.depth - b.depth
             || a.component.id.localeCompare(b.component.id)
         ));
-    return { reaching, necessary };
+    // Per landing tile, its Pareto-minimal ways (additive; RULES l89-feather reads them with `alternatives`).
+    const byLanding = new Map();
+    for (const h of landingHits) {
+        if (!byLanding.has(h.cellIndex)) byLanding.set(h.cellIndex, []);
+        byLanding.get(h.cellIndex).push(h);
+    }
+    const landingWays = [...byLanding.entries()].sort(([a], [b]) => a - b).map(([ci, ways]) => ({
+        tile: [ci % width + ox, (ci - (ci % width)) / width + oy],
+        conditionSets: paretoMinimal(ways).map((w) => ({ conditions: conditionOf.filter((_, bit) => (w.mask >> bit) & 1) })),
+    }));
+    return { reaching, necessary, landingWays, overflowed: overflowedAny };
 }
 
 /** Nearest component by proximity, ignoring whether you could ever walk there. */
@@ -943,7 +958,7 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
     const direct = indexOf[y * width + x];
     if (direct >= 0) return { component: components[direct], exact: true, reachable: true };
 
-    const { reaching, necessary } = componentsReaching(grid, componentsResult, x, y, options);
+    const { reaching, necessary, landingWays, overflowed } = componentsReaching(grid, componentsResult, x, y, options);
     if (reaching.length > 0) {
         const [chosen] = reaching;
         const how = chosen.free
@@ -966,6 +981,10 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
             alternatives: reaching.slice(1).map((r) => ({
                 component: r.component, free: r.free, manual: r.manual, depth: r.depth, conditionSets: r.conditionSets,
             })),
+            // The ways that start on a LANDING and meet no component first (`options.arrivalTiles`), and whether any
+            // way overflowed the condition vocabulary (then `necessary` is empty and none of this is complete).
+            landingWays,
+            reachOverflowed: overflowed,
             reason: `tile is not walkable; assigned to the component that reaches it ${how}`
                 + ` (${reaching.length} candidate${reaching.length === 1 ? '' : 's'} at distance ${chosen.depth})`,
         };
