@@ -1,0 +1,10 @@
+387	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	done	5206	{"atArrival":0,"max":0,"samples":1353,"hits":[]}	0	[[true,1034,["kill","walk"],[{"pass":"dashless","ok":true,"kind":null},{"pass":"full","ok":true,"kind":null}]]]	
+388	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	done	5216	{"atArrival":0,"max":0,"samples":1584,"hits":[]}	0	[[true,1156,["kill","walk"],[{"pass":"dashless","ok":true,"kind":null},{"pass":"full","ok":false,"kind":"refusal","deadline":"sword-dash"}]]]	
+371	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144	done	5304	{"atArrival":0,"max":0,"samples":2046,"hits":[]}	0	[[true,1583,["break","kill","walk"],[{"pass":"dashless","ok":false,"kind":"refusal"},{"pass":"full","ok":true,"kind":null}]]]	
+377	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared	timeout	5314	{"atArrival":0,"max":1,"samples":2293,"hits":[{"t":1248,"hits":1,"d":1,"hits_timer":20,"x":199.7537837179187,"y":152.27500009439828,"gt":6582,"clock":"tape","tick":1247,"exact":true,"tape":1}]}	1	[[true,1337,["hold","kill","walk"],[{"pass":"dashless","ok":true,"kind":null},{"pass":"full","ok":true,"kind":null}]],[true,1150,["hold","walk"],[{"pass":"dashless","ok":true,"kind":null},{"pass":"full","ok":true,"kind":null}]]]	
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 22040) — head c5952db7c, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+SOLVER_ENV: page 1: SEEDLING_CHOOSER_CUT=1 (--solver-env)
+SOLVER_ENV: page 2: SEEDLING_CHOOSER_CUT=1 (--solver-env)
+387	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	done	seam 5204	roomHits 0	divs 0	[[true,1034,["kill","walk"]]]	
+388	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	done	seam 5200	roomHits 0	divs 0	[[true,1156,["kill","walk"]]]	
+403	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21	done	seam 5210	roomHits 0	divs 0	[[true,527,["narrow"]]]	
