@@ -39,6 +39,7 @@ const stateManagerMock = vi.hoisted(() => ({
 }));
 vi.mock('../../stateManager/index.js', () => ({
   stateManagerProxySingleton: stateManagerMock,
+  getLastRawJsonData: () => stateManagerMock.rawPayload ?? null,
 }));
 
 // storage is read for a remembered slot name; keep it empty here.

@@ -1148,7 +1148,14 @@ export function exportRulesJson(gameData) {
             '1': {
                 game: identity.gameName,
                 world_class_name: identity.worldClassName,
-                options: {}, option_definitions: {},
+                // The options world_generator gives every world it builds, at their
+                // defaults. `use_canonical_options` also marks this document as a
+                // generated world's, so a room of it takes its logic from here and
+                // only its placements from the server (client/core/localRulesOverlay.js).
+                // The browser build has no canonical seed, so its _worldgen_options.json
+                // is never read: the built world is the same as with `options: {}`.
+                options: { randomize_items: true, use_canonical_options: true },
+                option_definitions: {},
                 world_description: 'APCalc is a calculator-themed puzzle game. '
                     + 'Collect number and operation buttons, then budget your presses '
                     + 'to navigate a graph of target numbers.',

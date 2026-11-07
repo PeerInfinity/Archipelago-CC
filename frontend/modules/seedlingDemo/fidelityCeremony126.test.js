@@ -1,7 +1,7 @@
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CEREMONY126 (wave 37b) — route-survey step 125 (L64 Ghostspear; the brief's "126").
- * Key `ceremonyPressForecast` (D1, OFF): the walk's strike stands down where a pickup's ceremony would swallow its
- * thrust (`levelRun.freezeForecast.pickupGap`, `strikePolicy.ceremonyGuard`). Key `ceremonyWalkHandoff` (D2, OFF): the
+ * Key `ceremonyPressForecast` (D1; exact since CEREMONYEXACT, ON since its flip): the walk's strike stands down where a pickup's ceremony would swallow its
+ * thrust (`levelRun.freezeForecast.pickupGap`, `strikePolicy.ceremonyGuard`). Key `ceremonyWalkHandoff` (D2, ON since W37b): the
  * collect goal's stance walk ends when its pickup's ceremony starts on it, and the verb pages it. The witnesses are
  * recorded on the game (`fixtures/ceremony126-witness/`, p4g headless, 0 px).
  */
@@ -23,10 +23,10 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 describe('CEREMONY126 — the switches', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_CEREMONY_PRESS_FORECAST
         || process.env.SEEDLING_CEREMONY_WALK_HANDOFF)(
-        'D1 ships OFF (⚖ user 2026-11-05: held for an exact forecast — its conservative bound moves the L40 WANDHOLD/L100FIX witness plans), D2 ships ON (the W37b flip); last in the defaults (D1 then D2)', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(false);
+        'D1 ships ON (CEREMONYEXACT\'s exact forecast; ⚖ user 2026-11-05 "Flip now"), D2 ships ON (the W37b flip); last in the defaults (D1 then D2)', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(true);
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
-            expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(false);
+            expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(true);
             // ⛓ wave 37d (L25APITEM) appended `apChestItem` after them: D1 then D2, adjacent, followed only by later-wave keys.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const at = keys.indexOf('ceremonyPressForecast');
