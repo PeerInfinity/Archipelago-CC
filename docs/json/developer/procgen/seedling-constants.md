@@ -295,7 +295,7 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**84 files, 7072 literals.** Class × position:
+**84 files, 7082 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
@@ -303,8 +303,8 @@ The region below is rendered by `--write`; do not edit it by hand.
 | rule | 14 | 1197 | 588 | 1799 |
 | cosmetic | 0 | 62 | 14 | 76 |
 | structural | 15 | 404 | 2443 | 2862 |
-| unclassified | 0 | 0 | 0 | 0 |
-| total | 36 | 3381 | 3655 | 7072 |
+| unclassified | 0 | 5 | 5 | 10 |
+| total | 36 | 3386 | 3660 | 7082 |
 
 Class × kind (physics and rule rows only):
 

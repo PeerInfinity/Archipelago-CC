@@ -383,7 +383,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // tick whose one-tick stepped forecast starts a pickup ceremony — ON since the CEREMONYEXACT flip (⚖ user 2026-11-05).
             ceremonyPressForecast: true,
             // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ON since the W37b flip.
-            ceremonyWalkHandoff: true });
+            ceremonyWalkHandoff: true,
+            // ⛓ fidelity DRILLWATER D1 (wave 37e): a drill's `Enemy.update` terrain switch (water/lava/pit) — ships OFF.
+            drillTerrainSwitch: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

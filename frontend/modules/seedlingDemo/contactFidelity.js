@@ -1874,6 +1874,20 @@ export const CONTACT_FIDELITY = {
      * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
      */
     ceremonyWalkHandoff: true,
+    /**
+     * fidelity DRILLWATER D1 (wave 37e) — A DRILL THAT HOPS ONTO WATER DROWNS. `Drill.as` overrides none of
+     * `dieInWater` / `dieInLava` / `canFallInPit` (`Enemy.as:33,39-40`), and `Drill.update` calls `super.update()` first,
+     * so `Enemy.update`'s terrain switch (`Enemy.as:62-112`) reads the cell the hop landed on at the drill's NEXT on-screen
+     * update: water (1) and lava (17) set `destroy` (the 0.1 `Mobile.death` fade, removed at alpha <= 0); a pit (6)
+     * latches `fallInPit` (the centring pull `/10`, `alpha -= 0.05`, `destroy` + `fell` at <= 0; `fallSpinSpeed` is
+     * cosmetic RNG, never modelled). A destroyed or falling drill bills no contact (`destroy` gates `hitPlayer`; the
+     * descent replaces `super.update()`) and the danger map stops pricing it, but it stays an "Enemy" to another drill's
+     * hop until removed. ON: `drill.stepDrill` runs the switch (ctx `tileTypeAt`), `levelRun.stepDrillsNow`'s DRILL D2
+     * refusal ("terrain switch … not modelled for a drill") is retired, `drillBodies` carries `fallInPit`/`fell`.
+     * Measured: L91's `drill@64,80` is the one shipped drill with a fatal tile in its hop reach (water (40,120), 4 hops).
+     * OFF: byte-identical. `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`.
+     */
+    drillTerrainSwitch: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2247,6 +2261,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '1') CONTACT_F
 if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '0') CONTACT_FIDELITY.ceremonyPressForecast = false;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '1') CONTACT_FIDELITY.ceremonyWalkHandoff = true;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FIDELITY.ceremonyWalkHandoff = false;
+// ⛓ fidelity DRILLWATER D1: `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TERRAIN_SWITCH === '1') CONTACT_FIDELITY.drillTerrainSwitch = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TERRAIN_SWITCH === '0') CONTACT_FIDELITY.drillTerrainSwitch = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
