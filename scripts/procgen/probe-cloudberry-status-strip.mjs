@@ -80,6 +80,14 @@ async function main() {
         await waitFor('region_2_2 configured', () => frame()?.evaluate(() => {
             const a = window.__cloudberryEmbed?.app; return a?.config?.regionId === 'region_2_2' && a.playResult?.ok;
         }));
+        // Every bot report the strip hears (a page with features.botContinuous sends them; P7b).
+        await page.evaluate(async () => {
+            const { default: bus } = await import('./app/core/eventBus.js');
+            window.__probeBotStatus = [];
+            bus.subscribe('substrate:botStatus', (d) => window.__probeBotStatus.push(d), 'probe');
+        });
+        const features = await frame().evaluate(() => window.__cloudberryEmbed?.features ?? null);
+        console.log('page features:', JSON.stringify(features));
         const s1 = await waitFor('the strip shows region_2_2', async () => { const s = await strip(); return s?.region === 'region_2_2' ? s : null; }, 30000);
         console.log('start:', JSON.stringify(s1));
         await page.waitForTimeout(1500);
@@ -112,6 +120,21 @@ async function main() {
         await page.click('.flashsub-strip-toggle');
         await page.waitForTimeout(300);
         console.log('collapsed again:', JSON.stringify(await strip()));
+        // The end door from here: on a play-on page (P7b) the bob plays on and crosses the ladder: a note.
+        await page.evaluate(async () => {
+            const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+            substrateRegistry.get('cloudberry').getPlaybackController().walkTo({ kind: 'exit', name: 'region_2_2__exit_E' });
+        });
+        const ladder = await waitFor('a bot note or the next region', async () => {
+            const s = await strip();
+            if (s?.bot?.includes('ladder')) return s;
+            return s?.region && s.region !== 'region_2_2' ? s : null;
+        }, 90000).catch(() => null);
+        console.log('door walk:', JSON.stringify(ladder));
+        if (ladder?.bot?.includes('ladder')) await shot('6-ladder-note');
+        await page.waitForTimeout(3000);
+        console.log('bot reports heard:', JSON.stringify(await page.evaluate(() => window.__probeBotStatus.map((d) => [d.region, d.event?.kind, d.event?.note ?? d.event?.result, d.event?.text]))));
+        console.log('strip after:', JSON.stringify(await strip()));
     } catch (e) {
         failed++;
         console.log(`FAILED: ${e.message}`);

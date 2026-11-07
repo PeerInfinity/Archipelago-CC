@@ -961,11 +961,14 @@ async function statusStripLocalCheckLogs(tc) {
             found?.model.activity.length === 1);
         // A page's bot report (P7b's `__swfBridge.botStatus`) rides the REAL bridge relay (substrate:botStatus) to the
         // strip. Sent here by hand, so the leg runs on a page that does not send them yet.
+        // A checkpoint no level here has (7), sent after the walk's own first note (a play-on page sends one as it
+        // starts), so the strip's text can only be this report's.
         c.walkTo({ kind: 'exit', name: 'region_2_2__exit_E' });
-        gameWin().__swfBridge.botStatus({ kind: 'botNote', note: 'ladder', fromPiece: 0, toPiece: 1, text: 'ladder: skipping to checkpoint 1' });
-        const note = await stripFor(tc, 'region_2_2', 'the ladder note on the bot line', (v) => v.bot.includes('ladder'));
+        await sleep(500);
+        gameWin().__swfBridge.botStatus({ kind: 'botNote', note: 'ladder', fromPiece: 6, toPiece: 7, text: 'ladder: skipping to checkpoint 7' });
+        const note = await stripFor(tc, 'region_2_2', 'the ladder note on the bot line', (v) => v.bot.includes('checkpoint 7'));
         tc.reportCondition(`a page's ladder note reaches the strip through the bridge (${note?.bot})`,
-            note?.bot === 'Bot → to region_3_2 · ladder: skipped to checkpoint 1');
+            note?.bot === 'Bot → to region_3_2 · ladder: skipped to checkpoint 7');
         c.stop();
     } catch (e) {
         tc.reportCondition(`Test error: ${e.message}`, false);
