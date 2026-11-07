@@ -258,20 +258,22 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ tile-lay-l40-latches: the SAME legs by key, every id from 374 on shifted by +2 and from 379 by +4 — L40 r0c53's
         //   two arrivals (in_L41_0_160, in_L42_240_336) each gain a leg to its two in-room presses (L40 flag 1, flag 7; legs
         //   372-373, 377-378). L40 flag 12's press stands in r48c54, which no AP exit lands in: no door leg.
+        // ⛓ tile-l89-feather-swim: the SAME legs by key, every id from 710 on shifted by +1 — L89's Feather is bound to its
+        //   cheapest way, level_89__r1c10, so r1c10's L91 arrival gains a door leg to it (leg 710).
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
             'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [358],
             'flag:L62:0': [530, 535, 540, 545, 550, 581], 'flag:L63:1': [532, 537, 542, 547, 552, 556, 561, 566, 571],
             'flag:L63:6': [584, 586], 'flag:L63:7': [587],
-            'flag:L71:2': [636, 638], 'flag:L12:7+flag:L12:12': [656], 'flag:L101:0': [762],
-            'flag:L112:1': [806, 807, 813, 814, 820, 821, 827, 828, 834, 835],
-            'flag:L114:0': [808, 809, 810, 815, 816, 817, 822, 823, 824, 829, 830, 836, 837],
-            'flag:L113:0': [845, 846, 847, 848],
+            'flag:L71:2': [636, 638], 'flag:L12:7+flag:L12:12': [656], 'flag:L101:0': [763],
+            'flag:L112:1': [807, 808, 814, 815, 821, 822, 828, 829, 835, 836],
+            'flag:L114:0': [809, 810, 811, 816, 817, 818, 823, 824, 825, 830, 831, 837, 838],
+            'flag:L113:0': [846, 847, 848, 849],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[809].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[810].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
         expect(legs[530].sphere.inventory).not.toContain('Ghost Spear');
         expect(legs[532].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);

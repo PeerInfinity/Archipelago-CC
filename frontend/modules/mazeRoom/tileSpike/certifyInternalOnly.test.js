@@ -8,9 +8,11 @@
  *   - a world whose fresh arrival is STRICTER and whose inbound arrival is LOOSER than AP still reports LOOSER;
  *   - the inbound framing exposed a one-sided lock priced from its far side: BossLock tests the key only on a player
  *     BELOW it (`BossLock.update`'s `collideLine`), so its gate event opens from its `probe` side only;
- *   - and L89's Feather, entered only from ABOVE (`r5Swim.FEATHER_BLOCKER`), which the rules leave at Swim from below: the
- *     rules producer lists it in its own `permissiveBindings`, so a STRICTER row there is accepted by that name (⚖ 2026-10-26);
- *     a LOOSER one is not.
+ *   - and L89's Feather, entered only from ABOVE (`r5Swim.FEATHER_BLOCKER`). The rules once left it at Swim from below,
+ *     listed in the producer's `permissiveBindings`, so its STRICTER row was accepted by that name (⚖ 2026-10-26). Since
+ *     RULES l89-feather the producer binds it to its cheapest way (level_89__r1c10, Swim, `cheapestLocationBinding`): the
+ *     row AGREES, no location is permissive, and the old binding (r9c6, True_) is the mutant that brings the row back.
+ *     The `permissive` mechanism itself stays pinned on a synthetic list: STRICTER accepted by name, LOOSER never.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -78,21 +80,41 @@ describe('a LOOSER row is never hidden', () => {
 describe('the rules producer\'s permissive bound', () => {
     const L89 = ['level_0', 'level_87', 'level_89'];
     const FEATHER = 'Level 089 - Feather';
-    const row = `level_89__r9c6 @ ${FEATHER} (from level_89__r11c12)`;
+    const KEY_89 = `level_89/${FEATHER}`;
+    /** A STRICTER world: the bottom room r11c12 → r1c10 lowered to one Swim (the world still climbs the fall on the Feather). */
+    const stricter = () => {
+        const rules = compile(L89);
+        rules.regions['1'].level_89__r11c12.exits.find((e) => e.connected_region === 'level_89__r1c10').access_rule = SWIM;
+        return rules;
+    };
+    const SWIM = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
 
-    it('L89\'s Feather from below: STRICTER than the rules — a problem without the list, accepted by name with it', () => {
-        expect(certify(compile(L89)).problems).toContain(`${row} holding [Progressive Swim]: derived false, atlas true`);
-        const out = certify(compile(L89), { permissive: playthroughPermissiveLocations() });
+    it('L89\'s Feather (bound to its cheapest way, r1c10 by Swim) AGREES: no problem, nothing accepted, no permissive location', () => {
+        expect(playthroughPermissiveLocations()).toEqual(['level_66/out_teleporter_72_64']); // an exit: never a location row
+        const out = certify(compile(L89));
         expect(out.problems).toEqual([]);
-        const why = 'the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)';
+        expect(out.accepted.filter((a) => a.label.startsWith('level_89'))).toEqual([]);
+    }, 120000);
+
+    it('a STRICTER Feather row is a problem, accepted only by a permissive name', () => {
+        const row = `level_89__r1c10 @ ${FEATHER} (from level_89__r11c12)`;
+        const exits = [
+            'level_89__r11c12 → level_89__r1c10 holding [Progressive Swim]: derived false, atlas true',
+            'level_89__r11c12 → level_89__r1c15 holding [Progressive Swim]: derived false, atlas true',
+        ];
+        expect(certify(stricter()).problems).toEqual([...exits, `${row} holding [Progressive Swim]: derived false, atlas true`]);
+        // The list names LOCATIONS only: the lowered exits stay problems, the Feather's row is accepted by name.
+        const out = certify(stricter(), { permissive: [KEY_89] });
+        expect(out.problems).toEqual(exits);
+        const why = `the rules producer leaves ${KEY_89} uncharged (permissiveBindings)`;
         expect(out.accepted).toContainEqual({ label: row, source: 'level_89__r11c12', by: why });
         expect(out.lines).toContain(`accepted: ${row} — ${why}`);
-    }, 120000);
+    });
 
     it('a LOOSER row on a permissive location is still a problem', () => {
         const rules = compile(L89);
-        rules.regions['1'].level_89__r9c6.locations.find((l) => l.name === FEATHER).access_rule = { rule: 'Has', args: { item_name: 'Fire' } };
-        const out = certify(rules, { permissive: playthroughPermissiveLocations() });
-        expect(out.problems.some((p) => p.startsWith(row) && p.endsWith('derived true, atlas false'))).toBe(true);
+        rules.regions['1'].level_89__r1c10.locations.find((l) => l.name === FEATHER).access_rule = { rule: 'Has', args: { item_name: 'Fire' } };
+        const out = certify(rules, { permissive: [KEY_89] });
+        expect(out.problems.some((p) => p.startsWith(`level_89__r1c10 @ ${FEATHER}`) && p.endsWith('derived true, atlas false'))).toBe(true);
     });
 });

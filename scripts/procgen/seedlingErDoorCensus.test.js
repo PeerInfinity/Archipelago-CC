@@ -136,8 +136,9 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
             pit: 'L110:out_pit_3_2', landsIn: 0, stairsDoorway: 'L0:out_stairsdown_256_272', stairsReverse: 'L2:out_stairsup_48_16',
         })]);
         // rules-certifier-tail's chargeNecessaryApproaches charges 16 of the 18 bindings, so 2 remain and none is at risk
-        // (level_51/out_teleporter_144_0, the one at risk before, is now charged).
-        expect(c.permissive.map((p) => p.binding)).toEqual(['level_66/out_teleporter_72_64', 'level_89/Level 089 - Feather']);
+        // (level_51/out_teleporter_144_0, the one at risk before, is now charged). ⛓ RULES l89-feather: 2 → 1, L89's Feather is
+        // rebound to its cheapest way and charged it.
+        expect(c.permissive.map((p) => p.binding)).toEqual(['level_66/out_teleporter_72_64']);
         expect(c.permissive.filter((p) => p.atRisk)).toEqual([]);
         expect(c.start).toEqual({ level: 0, subRegion: 'r7c6',
             stairsInStartSubRegion: ['L0:out_stairsdown_256_272', 'L0:out_stairsdown_32_192'],
