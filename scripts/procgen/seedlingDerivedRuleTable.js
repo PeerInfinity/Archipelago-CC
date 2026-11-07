@@ -139,15 +139,39 @@ export function applyDerivedRuleTableToAtlas(atlas, table) {
 
 /**
  * The table onto a COMPILED rules document (in place, player '1'). Every row must name one compiled element (else a
- * refusal by name; with `partial`, a row whose element the document does not hold is skipped). Returns `{applied, composedDisagrees}`: the elements whose compiled rule was not truth-table equal
- * to the table's before the override.
+ * refusal by name; with `partial`, a row whose element the document does not hold is skipped). Returns `{applied, composedDisagrees, skipped}`: the elements whose compiled rule was not truth-table equal
+ * to the table's before the override, and (ER `rekey` only) the exit rows skipped by name because the shuffle moved them.
  */
-export function applyDerivedRuleTable(rules, table, { partial = false } = {}) {
+export function applyDerivedRuleTable(rules, table, { partial = false, rekey = null } = {}) {
     const REGIONS = rules.regions['1'];
     const composedDisagrees = [];
+    const skipped = [];
     let applied = 0;
     for (const row of table.rows) {
         const region = REGIONS[row.region];
+        // ⛓⛓ ER E4b — **ON A SHUFFLED DOC THE TABLE IS KEYED BY ITS ATLAS ENDPOINT, NEVER BY THE VANILLA AP NAME.** A row's
+        // `name` is the AP exit the VANILLA compile minted for `row.atlas`; a shuffle renames the exits it moves (`A -> B`
+        // becomes `A -> C`) and can shift a `#k` suffix onto another exit, so a name lookup would hit a different edge or
+        // none. `rekey.apExitOf(region_id, exit_id)` is the compiled doc's own record of what each endpoint became; an
+        // exit the shuffle MOVED (`rekey.moved`, `region_id/exit_id`) is SKIPPED BY NAME: its row was derived over the
+        // vanilla landing, and the composed rule (re-derived over the shuffled doc) stands.
+        if (rekey && row.kind === 'exit') {
+            const at = `${row.atlas.region_id}/${row.atlas.exit_id}`;
+            if (rekey.moved.has(at)) {
+                skipped.push({ key: row.key, at, why: 'the shuffle moved this exit: a vanilla-landing row, the composed rule stands' });
+                continue;
+            }
+            const name = rekey.apExitOf(row.atlas.region_id, row.atlas.exit_id);
+            if (!name) throw new Error(`derived-rule table (ER): ${row.key}'s endpoint ${at} compiled to no AP exit`);
+            const target = region?.exits?.find((e) => e.name === name);
+            if (!target) throw new Error(`derived-rule table (ER): ${row.key}'s endpoint ${at} compiled to ${name}, which ${row.region} does not hold`);
+            const composed = target.access_rule ?? { rule: 'True_' };
+            const compare = compareRules(row.rule, composed);
+            if (compare !== 'equal') composedDisagrees.push({ key: row.key, compare, composed, table: row.rule });
+            target.access_rule = structuredClone(row.rule);
+            applied += 1;
+            continue;
+        }
         const target = row.kind === 'exit' ? region?.exits?.find((e) => e.name === row.name)
             : region?.locations?.find((l) => l.name === row.name);
         // `partial`: a compile restricted to some levels (a measurement) carries only those levels' elements, and only the
@@ -160,7 +184,7 @@ export function applyDerivedRuleTable(rules, table, { partial = false } = {}) {
         target.access_rule = structuredClone(row.rule);
         applied += 1;
     }
-    return { applied, composedDisagrees };
+    return { applied, composedDisagrees, skipped };
 }
 
 /** The `--check` message for a composed ≠ table element (rules-4's requirement (a)). */
