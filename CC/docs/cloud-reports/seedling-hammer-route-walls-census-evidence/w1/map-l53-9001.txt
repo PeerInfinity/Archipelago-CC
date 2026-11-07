@@ -1,0 +1,38 @@
+level 53 player (56,152) tick 0 aim (152,200)
+  chaser jellyfish@144,192 at (152.0,200.0)
+  chaser puncher@136,96 at (144.0,104.0)
+  chaser jellyfish@184,160 at (192.0,168.0)
+  chaser jellyfish@152,168 at (160.0,176.0)
+volumes: 5
+  jellyfish@144,192 {"x":146,"y":194,"w":12,"h":12,"right":158,"bottom":206} a stepped jellyfish at its LIVE position
+  puncher@136,96 {"x":130,"y":92,"w":28,"h":28,"right":158,"bottom":120} a stepped puncher at its LIVE position
+  jellyfish@184,160 {"x":186,"y":162,"w":12,"h":12,"right":198,"bottom":174} a stepped jellyfish at its LIVE position
+  jellyfish@152,168 {"x":154,"y":170,"w":12,"h":12,"right":166,"bottom":182} a stepped jellyfish at its LIVE position
+  icetrap@160,192 {"x":160,"y":192,"right":176,"bottom":208,"w":16,"h":16} a static "Enemy" body
+admits, nothing removed: no (A* goal tile (9,12) in level 53 — for (152,200) — is not walkable: danger:jellyfish@144,192 (a stepped jellyfish at its LIVE position) at (1)
+admits, every volume removed: no (no walkable tile path in level 53 from tile (3,9) to (9,12). The two are in different connected components of the tiles the player box fits )
+size 1: none admits
+size 2: none admits
+size 3: none admits
+legend: # not walkable; letter = walkable but inside that volume; . walkable; @ player; * aim
+  A = jellyfish@144,192
+  B = puncher@136,96
+  C = jellyfish@184,160
+  D = jellyfish@152,168
+  E = icetrap@160,192
+   0  ..##########..######
+  16  .############.######
+  32  ##..........#.######
+  48  ##..######..########
+  64  ###.#######..#######
+  80  .##.......##########
+  96  ..#.##..bb##########
+ 112  .##.##....##########
+ 128  ##...###############
+ 144  ###@.##.##...#######
+ 160  #....##.#....#######
+ 176  #.....##.....#######
+ 192  ##....###*e..#######
+ 208  ####################
+ 224  .########.##########
+ 240  .......#####..######

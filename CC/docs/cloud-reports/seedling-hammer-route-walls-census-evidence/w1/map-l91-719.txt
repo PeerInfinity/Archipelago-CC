@@ -1,0 +1,27 @@
+level 91 player (248,72) tick 0 aim (24,120)
+  chaser bob@128,64 at (136.0,72.0)
+  chaser bob@160,96 at (168.0,104.0)
+  chaser bob@192,80 at (200.0,88.0)
+volumes: 4
+  bob@128,64 {"x":132,"y":68,"w":8,"h":8,"right":140,"bottom":76} a stepped bob at its LIVE position
+  bob@160,96 {"x":164,"y":100,"w":8,"h":8,"right":172,"bottom":108} a stepped bob at its LIVE position
+  bob@192,80 {"x":196,"y":84,"w":8,"h":8,"right":204,"bottom":92} a stepped bob at its LIVE position
+  drill@64,80 {"x":67,"y":83,"right":77,"bottom":93,"w":10,"h":10} a static "Enemy" body
+admits, nothing removed: no (no walkable tile path in level 91 from tile (15,4) to (1,7). The two are in different connected components of the tiles the player box fits )
+admits, every volume removed: true
+size 1: drill@64,80
+legend: # not walkable; letter = walkable but inside that volume; . walkable; @ player; * aim
+  A = bob@128,64
+  B = bob@160,96
+  C = bob@192,80
+  D = drill@64,80
+   0  ####################
+  16  ##.######..#....####
+  32  ##.##.###..#########
+  48  #####.#....#########
+  64  #.#####.a....#.@.###
+  80  #.#.d.......c....###
+  96  #...####..b.........
+ 112  #*..#..#..#####.####
+ 128  #..######.##########
+ 144  ###########...######
