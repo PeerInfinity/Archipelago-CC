@@ -37,6 +37,8 @@
  *
  *   ⛓ seedling-gen-keygate: a generated KEY GATE room (`?elements=keygate`, pre-sword; and `keygate;type=3`)
  *     certifies, holds ONE `bosslock` and ONE `bosskey` of one key type, and draws in sprites; art off: the rectangles.
+ *   ⛓ seedling-gen-baitgate: a generated BAIT GATE room (`?elements=baitgate`, pre-sword) certifies, holds ONE bob and
+ *   its water lure, and draws in sprites; art on and off.
  *   ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room (`?elements=holdgate`) and WEIGH GATE room
  *   (`?elements=weighgate`), pre-sword, each certify, hold a lock and its presser in ONE group (a latching
  *   `buttonroom` / a momentary `button` plus one `pushableblock`), and draw them in sprites.
@@ -947,6 +949,48 @@ async function main() {
             check(errors.length === 0, `${name} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
             await page.close();
         }
+    }
+
+    // ── ⛓ seedling-gen-baitgate: a generated BAIT GATE room, art on and off ──
+    //
+    // `?elements=baitgate` (pre-sword): ONE `bob` on the door cell of a main-path cut and ONE `water` lure on its start
+    // side. The certificate baits the bob into the lure (its verb is the unit rows' to pin, `procgenBaitGate.test.js`).
+    // The bob draws with its enemy sheet (`seedling:enemy/bob`, a body op), the lure with the room's own water tile.
+    console.log('\n## baitgate — a generated bait gate room');
+    for (const mode of ['on', 'off']) {
+        const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+        await page.goto(`${PAGE}?source=generate&seed=1&biome=pre-sword&elements=baitgate${mode === 'off' ? '&art=off' : ''}`,
+            { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction((m) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (m === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        await page.waitForTimeout(1200);
+        const { art, payload } = await page.evaluate(() => {
+            const level = window.__watch?.payload?.level ?? null;
+            const tiles = (level?.layers ?? []).flatMap((l) => (Array.isArray(l?.tiles) ? l.tiles : []));
+            return { art: window.__labArt ?? null,
+                payload: level ? { certified: window.__watch.payload.certified, entities: level.entities,
+                    water: tiles.filter((t) => t[2] === 32).map((t) => [t[0], t[1]]) } : null };
+        });
+        if (mode === 'on') {
+            const bobs = (payload?.entities ?? []).filter((e) => e.type === 'bob');
+            /** ⛓ seed 1's lure is (2,3) (`procgenBaitGate.test.js` pins the room) */
+            check(payload?.certified === true && bobs.length === 1
+                && (payload?.water ?? []).some(([x, y]) => x === 2 && y === 3),
+            'baitgate: the generated room CERTIFIES and holds ONE bob, and its lure (2,3) is water',
+            JSON.stringify({ certified: payload?.certified, bobs, water: payload?.water }));
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0,
+                'baitgate: drawn in sprites (the bob with its enemy sheet)', JSON.stringify(art?.drawn));
+        } else {
+            check(art?.drawn === null, 'baitgate ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+        }
+        if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-baitgate${mode === 'off' ? '-off' : ''}.png`) });
+        check(errors.length === 0, `baitgate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+        await page.close();
     }
 
     await browser.close();

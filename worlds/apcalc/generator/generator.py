@@ -21,6 +21,22 @@ OPERATIONS = ['+', '-', '*', '/']
 OPERATION_ORDER = ['+', '-', '*', '/']  # introduction order across spheres 0-3
 TRASH_ITEM = 'Junk'
 
+# Whole-generation retry (see `generate`). A config that hits a dead end is generated again from
+# `retry_seed(seed, attempt)`; attempt 0 is the seed itself, so a seed that succeeds first time
+# gives exactly the puzzle it always gave. Mirrored in the JS engine (GENERATION_ATTEMPTS,
+# RETRY_SEED_STEP in apcalcGeneratorEngine.js); the parity test holds the two together.
+GENERATION_ATTEMPTS = 8
+RETRY_SEED_STEP = 0x9E3779B9  # 2654435769, the 32-bit golden-ratio constant
+
+
+def retry_seed(seed: int, attempt: int) -> int:
+    """The seed of generation attempt `attempt` (0 = the config's own seed)."""
+    return seed + attempt * RETRY_SEED_STEP
+
+
+class ChainGenerationError(RuntimeError):
+    """A sphere could not place a chain: this attempt is a dead end (generate() retries it)."""
+
 
 @dataclass
 class Node:
@@ -178,10 +194,20 @@ def operand_digit_cost(digits: list[int]) -> Counter:
 # Main generation
 # ---------------------------------------------------------------------------
 
-def generate(config: APCalcConfig, log=None) -> dict:
+def generate(config: APCalcConfig, log=None, rng_factory=random.Random) -> dict:
     """Generate APCalc v2 game data.
 
-    Returns dict with keys: nodes, edges, starting_buttons, sphere_items, config.
+    Returns dict with keys: nodes, edges, starting_buttons, sphere_items, config,
+    generation_attempt (0 unless a retry was needed).
+
+    `rng_factory(seed)` builds the RNG; the AP world uses the default, `random.Random`.
+    The parity test passes `mulberry32.Mulberry32`, the frontend engine's RNG.
+
+    About 1 seed in 2,500 at the default options dead-ends: when spheres 4 and 5 both
+    award '/', every path holds a single '+', '-' and '*', and sphere 6 finds no chain
+    whose values are new (division keeps landing on taken values such as 0). Such a seed
+    is generated again from `retry_seed(seed, 1)`, then 2, ..., up to GENERATION_ATTEMPTS.
+    The retry runs only after a failure, so every seed that succeeded before is unchanged.
     """
     if log is None:
         log_entries = []
@@ -189,7 +215,25 @@ def generate(config: APCalcConfig, log=None) -> dict:
     else:
         log_entries = None
 
-    rng = random.Random(config.seed)
+    for attempt in range(GENERATION_ATTEMPTS):
+        seed = retry_seed(config.seed, attempt)
+        if attempt:
+            log(f'\n=== Retry {attempt}/{GENERATION_ATTEMPTS - 1}: seed {seed} ===')
+        try:
+            result = _generate_attempt(config, rng_factory(seed), log)
+        except ChainGenerationError as error:
+            log(f'  Dead end: {error}')
+            if attempt == GENERATION_ATTEMPTS - 1:
+                raise
+            continue
+        result['generation_attempt'] = attempt
+        if log_entries is not None:
+            result['log_entries'] = log_entries
+        return result
+
+
+def _generate_attempt(config: APCalcConfig, rng, log) -> dict:
+    """One generation attempt from one RNG; raises ChainGenerationError on a dead end."""
 
     nodes: list[Node] = []
     edges: list[Edge] = []
@@ -384,8 +428,6 @@ def generate(config: APCalcConfig, log=None) -> dict:
         'sphere_items': sphere_items,
         'config': config,
     }
-    if log_entries is not None:
-        result['log_entries'] = log_entries
 
     log(f'\n=== Generation complete: {len(nodes)} nodes, {len(edges)} edges ===')
     return result
@@ -675,7 +717,7 @@ def _generate_chain(
 
             return chain_nodes
 
-    raise RuntimeError(
+    raise ChainGenerationError(
         f"Failed to generate chain for sphere {sphere} after {max_attempts} attempts. "
         f"inventory={dict(inventory)}"
     )

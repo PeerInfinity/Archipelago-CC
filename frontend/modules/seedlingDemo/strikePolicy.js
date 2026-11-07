@@ -167,6 +167,10 @@ const fail = (m) => { throw new StrikePolicyError(m); };
  * asked on a refused tick; `dropped` the ones that withheld an owed press or a scheduled one. Reset by the reader.
  */
 export const FROZEN_PRESS_COUNTS = { stoodDown: 0, dropped: 0 };
+/** ⛓ fidelity CEREMONY126 D1 — the aims, presses and scheduled presses `ceremonyGuard` withheld. Reset by the reader. */
+export const CEREMONY_PRESS_COUNTS = { aim: 0, press: 0, planned: 0 };
+/** ⛓ fidelity CEREMONYEXACT D1 — the exact guard's asks: `stepped` (a pickup within reach), `cleared` (no ceremony). */
+export const CEREMONY_EXACT_COUNTS = { stepped: 0, cleared: 0 };
 
 /**
  * ⛓ fidelity FROZENPRESS D1 — **THE OPTIONS A RUN-SIDE `decide` IS ASKED WITH**: the run's slash state, and with
@@ -818,6 +822,69 @@ function talkWhy(g, pressTick) {
         + '53). The press is refused, not priced — re-time it or route around the circle.';
 }
 
+/**
+ * ⛓ fidelity CEREMONY126 D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **WOULD A PICKUP'S CEREMONY START ON THE TICK
+ * THIS PRESS'S THRUST FIRES?** The thrust a press schedules fires on the next tick; a placed pickup is touched at a
+ * tick's top from where the previous tick left the player, and that tick is the ceremony's first `Game.freezeObjects`
+ * frame — `genericHit` returns (`Player.as:1075-1078`), the thrust is lost (`levelRun.runFrozenTick`'s
+ * `FROZEN_TICK_PRESS`). `aheadTicks` of travel (1 for a press decided now, 2 for an aim whose press lands next tick)
+ * against `freeze.pickupGap` (`levelRun.freezeForecastNow`; absent with the key OFF → null, byte-identical). `null`
+ * when clear.
+ */
+export function ceremonyGuard(state, freeze, aheadTicks, { held = null } = {}) {
+    if (freeze === null || freeze.pickupGap === null || freeze.pickupGap === undefined) return null;
+    if (held === null || !ceremonyExact(freeze)) {
+        const bound = aheadTicks * oneTickTravelBound(state.vx ?? 0, state.vy ?? 0);
+        return freeze.pickupGap <= bound ? { pickupGap: freeze.pickupGap, bound, aheadTicks } : null;
+    }
+    /**
+     * ⛓ fidelity CEREMONYEXACT D1 — **THE EXACT ANSWER, WHEN THE CALLER SAYS WHAT IT WILL HOLD.** `held` is one held
+     * set per tick (`aheadTicks` of them); `freeze.ceremonyStep` (`levelRun.ceremonyStepNow`) steps them with the run's
+     * own stepper and names the tick a ceremony would start on. The press is refused only when its thrust's tick (or the
+     * press's own, or an aim's press tick) is that ceremony's — the presses the game would actually lose. A pickup
+     * farther than `aheadTicks` ticks of the greatest possible travel (`ceremonyReach`, SOUND for n ticks — the 1-tick
+     * reach is `oneTickTravelBound`) is not stepped. Without `held` (a 3-argument caller) or without `ceremonyStep`:
+     * CEREMONY126's bound, unchanged.
+     */
+    const reach = ceremonyReach(state.vx ?? 0, state.vy ?? 0, aheadTicks);
+    if (freeze.pickupGap > reach) return null;
+    CEREMONY_EXACT_COUNTS.stepped += 1;
+    const starts = freeze.ceremonyStep(held);
+    if (starts === null) {
+        CEREMONY_EXACT_COUNTS.cleared += 1;
+        return null;
+    }
+    return { pickupGap: freeze.pickupGap, bound: reach, aheadTicks, exact: true, startsAt: starts.at,
+        pickup: `${starts.tag}@${starts.x},${starts.y}` };
+}
+
+/** ⛓ fidelity CEREMONYEXACT D1 — does this forecast carry the exact one-tick question (`levelRun.ceremonyStepNow`)? */
+export function ceremonyExact(freeze) {
+    return freeze !== null && freeze !== undefined && typeof freeze.ceremonyStep === 'function';
+}
+
+/**
+ * ⛓ fidelity CEREMONYEXACT D1 — the greatest displacement `n` ticks can make from velocity (vx, vy), by the talk
+ * guard's own derivation applied tick by tick: each tick adds at most `MAX_MOVE_SPEED * sqrt(2) + SLASH_DASH_FORCE` to
+ * the speed (friction only shrinks it), so tick k moves at most `|v| + k * (that)`. n = 1 is `oneTickTravelBound`.
+ */
+export function ceremonyReach(vx, vy, n) {
+    const add = MAX_MOVE_SPEED * Math.SQRT2 + SLASH_DASH_FORCE;
+    return n * Math.hypot(vx, vy) + (n * (n + 1) / 2) * add;
+}
+
+function ceremonyWhy(c, what) {
+    // ⛓ fidelity CEREMONYEXACT D1: an exact refusal names the pickup and the tick its ceremony starts on.
+    if (c.exact) {
+        return `${c.pickup}'s ceremony starts ${c.startsAt === 0 ? 'on the next tick' : `${c.startsAt} tick(s) after the next`} `
+            + `with the keys ${what} sends (stepped: CEREMONYEXACT), and \`genericHit\` returns under `
+            + '`Game.freezeObjects` — the thrust would be lost, so the policy stands down';
+    }
+    return `a pickup is ${c.pickupGap} px away (bound ${c.bound.toFixed(2)} over ${c.aheadTicks} tick(s)): its ceremony `
+        + `could start on the tick ${what}'s thrust fires, and \`genericHit\` returns under \`Game.freezeObjects\` — `
+        + 'the thrust would be lost, so the policy stands down (CEREMONY126)';
+}
+
 export function createStrikePolicy({
     facingToward, facingKeys, allowDash = false, hasSword = true, dashPlan = null,
     talkCircles = [],
@@ -978,6 +1045,16 @@ export function createStrikePolicy({
                  * The aim is dropped, not deferred: `owed` is untouched, so
                  * the same body is aimable again once the walk is clear.
                  */
+                // ⛓ fidelity CEREMONY126 D1: a ceremony starting on the thrust's tick — dropped like the talk refusal.
+                // ⛓ fidelity CEREMONYEXACT D1: asked with the one key this arm sends.
+                const lateCeremony = ceremonyGuard(state, freeze, 1, { held: [new Set(['primary'])] });
+                if (lateCeremony !== null) {
+                    aimed = null;
+                    CEREMONY_PRESS_COUNTS.press += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, target, ceremonyRefused: lateCeremony,
+                        why: ceremonyWhy(lateCeremony, 'this press') });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 const late = talkGuard(state, talkCircles, 1);
                 if (late !== null) {
                     aimed = null;
@@ -1041,6 +1118,15 @@ export function createStrikePolicy({
                 // release opens the same dialogue. The plan yields rather
                 // than triggers; `planSwordDash` is free to schedule the
                 // displacement elsewhere on the route.
+                // ⛓ fidelity CEREMONY126 D1: a scheduled press yields to a ceremony starting on its thrust's tick.
+                // ⛓ fidelity CEREMONYEXACT D1: asked with the walk's keys and the press, as this arm sends them.
+                const nearCeremony = ceremonyGuard(state, freeze, 1, { held: [new Set([...walkHeld, 'primary'])] });
+                if (nearCeremony !== null) {
+                    CEREMONY_PRESS_COUNTS.planned += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, planned: true, ceremonyRefused: nearCeremony,
+                        why: ceremonyWhy(nearCeremony, 'the scheduled press') });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 const near = talkGuard(state, talkCircles, 1);
                 if (near !== null) {
                     trace.push({
@@ -1152,6 +1238,17 @@ export function createStrikePolicy({
              * travel — and the press arm re-checks with one tick's when the
              * real position is known.
              */
+            // ⛓ fidelity CEREMONY126 D1: the press this aim earns would fire its thrust two ticks of travel from here.
+            // ⛓ fidelity CEREMONYEXACT D1: with the exact forecast the aim is asked BELOW, once its key is known.
+            const aimCeremony = ceremonyExact(freeze) ? null : ceremonyGuard(state, freeze, 2);
+            if (aimCeremony !== null) {
+                if (bodies.length > 0) {
+                    CEREMONY_PRESS_COUNTS.aim += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, ceremonyRefused: aimCeremony,
+                        why: ceremonyWhy(aimCeremony, 'the press this aim earns') });
+                }
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
             const aimTalk = talkGuard(state, talkCircles, 2);
             if (aimTalk !== null) {
                 trace.push({
@@ -1268,6 +1365,20 @@ export function createStrikePolicy({
                 return { held: walkHeld, decision: STRIKE_NONE };
             }
             const pick = chosen[0];
+            /**
+             * ⛓ fidelity CEREMONYEXACT D1 — the aim's ceremony question, EXACT: its two ticks stepped with the keys
+             * they send (the aim key, then the press alone). Only with the exact forecast (above: the bound otherwise).
+             */
+            if (ceremonyExact(freeze)) {
+                const aimExact = ceremonyGuard(state, freeze, 2,
+                    { held: [new Set([facingKeys[pick.direction]]), new Set(['primary'])] });
+                if (aimExact !== null) {
+                    CEREMONY_PRESS_COUNTS.aim += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, target: pick.id,
+                        ceremonyRefused: aimExact, why: ceremonyWhy(aimExact, 'the aim and its press') });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
+            }
             aimed = {
                 id: pick.id, direction: pick.direction, tick,
                 dash: forecast?.outcome === 'dash',

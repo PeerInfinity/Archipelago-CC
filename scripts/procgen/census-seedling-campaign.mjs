@@ -68,9 +68,11 @@
  *   node scripts/procgen/census-seedling-campaign.mjs --no-write
  *   node scripts/procgen/census-seedling-campaign.mjs --write-frontier
  *   node scripts/procgen/census-seedling-campaign.mjs --check-frontier
+ *   node scripts/procgen/census-seedling-campaign.mjs --write-recording-route --from=<survey dir> --at=<commit>
  */
 
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -78,6 +80,7 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp } from './argvHelp.js';
 import { seedlingCensusDir, throughSurveyDir } from './seedlingSurveyDir.js';
+import { RECORDING_ROUTE_REL, projectStep, routeDifference } from './recordingRoute.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -481,6 +484,54 @@ function surveyRows(mode = 'route-only') {
 }
 
 // ─────────────────────────────────────────────────────────────────────
+// 5a. ⛓ THE ROUTE THE CHAIN WAS RECORDED ON — committed, because today's moves
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛓⛓ TILE-FRONTIER-ROUTE (⚖ user 2026-11-04: *"A: Small follow-up
+ * (Recommended)"*) — **THE CHAIN IS ALIGNED AGAINST THE ROUTE IT WAS RECORDED
+ * ON, NOT AGAINST TODAY'S BY INDEX.**
+ *
+ * The r9 tail was recorded along the route-only route the survey derived then.
+ * When a rule change moves today's route (main 9aae95e8bd's L20 press event
+ * made step 21 take the Shield and RESTART to L0, where the recording left by
+ * `stairsup@16,48 → L13`), the tapes are still valid play — they are play on a
+ * route the survey no longer picks. Aligning them against today's route by
+ * index said "the chain stops at L20", which is false about the game.
+ *
+ * `campaign-recording-route.json` is a PROJECTION of a `route.json` the survey
+ * wrote (`--derive-only`) at the commit named in `derivedAt` — never a hand
+ * list. `--write-recording-route --from=<survey dir> --at=<commit>` writes it,
+ * and REFUSES a route the current chain does not walk in full: it cannot record
+ * a route the tapes were not made on. The frontier carries the fixture's md5,
+ * so an edit to it reds `--check-frontier` by name.
+ *
+ * Today's route is still reported (`coverage['route-only']`), and where it
+ * leaves the recording route is a FIELD (`differsFromRecorded`): the first step
+ * whose physical walk — `(level, visit, crossesTo, restart)` — differs. Goal
+ * prose is not compared: sphere labels inside it move without the route moving.
+ */
+const RECORDING_ROUTE_PATH = join(REPO, RECORDING_ROUTE_REL);
+const WRITE_RECORDING_ROUTE = process.argv.includes('--write-recording-route');
+const argValue = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? null;
+
+function recordingRouteRows() {
+    if (!existsSync(RECORDING_ROUTE_PATH)) {
+        return { available: false, why: `${RECORDING_ROUTE_REL} is not on disk — the route the `
+            + 'chain was recorded on is unstated, so the chain has nothing to be aligned against. '
+            + 'Write it with `--write-recording-route --from=<survey dir> --at=<commit>`.' };
+    }
+    const bytes = readFileSync(RECORDING_ROUTE_PATH);
+    const fixture = JSON.parse(bytes.toString('utf8'));
+    return {
+        available: true,
+        fixture,
+        md5: md5(bytes),
+        steps: fixture.steps.map((s) => ({ ...s, solved: null })),
+    };
+}
+
+// ─────────────────────────────────────────────────────────────────────
 // 5b. ⛓⛓⛓ R9 SLICE 10 — THE FRONTIER, DERIVED, AND COMMITTED AS AN ARTIFACT
 // ─────────────────────────────────────────────────────────────────────
 
@@ -560,7 +611,7 @@ function terminalEndLevel(step) {
     return step.level;
 }
 
-function deriveFrontier(surveyRes) {
+function deriveFrontier(surveyRes, { routeName = null } = {}) {
     const arrivals = CHAIN.map((n) => walkOf(n)).map((w) => (w.error ? null : w.endLevel));
     const base = {
         artifact_version: 1,
@@ -631,9 +682,12 @@ function deriveFrontier(surveyRes) {
             lastArrival: { step: last.step, level: last.crossesTo ?? terminalEndLevel(last),
                 segment: CHAIN.at(-1) },
             nextStep: null, refusal: null, covered, complete: true,
-            why: `the chain walks all ${steps.length} route steps, from the `
+            why: (routeName
+                ? `the chain walks all ${steps.length} steps of ${routeName}, from the `
+                : `the chain walks all ${steps.length} route steps, from the `)
                 + `true start to route step ${last.step} in L${last.level} (${last.goals
-                    .map((g) => g.why).join('; ')}); there is no next room on this route` };
+                    .map((g) => g.why).join('; ')}); there is no next room on `
+                + `${routeName ? 'that' : 'this'} route` };
     }
     const refused = steps.slice(covered).find((x) => x.solved && x.solved.refusal);
     if (!refused) {
@@ -662,6 +716,15 @@ function deriveFrontier(surveyRes) {
 
 const SURVEYS = Object.fromEntries(FRONTIER_MODES.map((m) => [m, surveyRows(m)]));
 const survey = SURVEYS['route-only'];
+const RECORDED = recordingRouteRows();
+const recordedName = (fx) => `the route it was recorded on (${fx.routeMode.mode} through `
+    + `${fx.routeMode.through}, as the survey derived it at ${String(fx.derivedAt).slice(0, 8)})`;
+const stripShared = (answer) => {
+    for (const k of ['artifact_version', 'generatedBy', 'chain', 'segments', 'arrivals', 'sources']) {
+        delete answer[k];
+    }
+    return answer;
+};
 /**
  * ⛓⛓ FRONTIER2 — **BOTH ROUTES, REPORTED SEPARATELY** (⚖ user 2026-10-05).
  * Each mode's block is `deriveFrontier`'s answer over that mode's survey,
@@ -669,27 +732,60 @@ const survey = SURVEYS['route-only'];
  * `arrivals`, `sources`), plus what the block IS: its mode, the bound, the
  * route's step count and the survey directory it was read from.
  *
- * ⛔ THE TOP-LEVEL FIELDS ARE THE ROUTE-ONLY BLOCK'S, unchanged in shape: it is
- * the route the chain was recorded on, so `nextStep`/`lastArrival`/`complete`
- * keep meaning what `campaignChain.test`, the page, the reference and
- * `--grow` already read them as.
+ * ⛓ TILE-FRONTIER-ROUTE — **THE TOP-LEVEL FIELDS ARE THE `recorded` BLOCK'S**
+ * (the chain against the route it was recorded on, from the committed
+ * fixture), unchanged in shape, so `nextStep`/`lastArrival`/`complete` keep
+ * meaning what `campaignChain.test`, the page, the reference and `--grow`
+ * already read them as. `route-only` and `full` are TODAY's survey routes, and
+ * `route-only` names where it leaves the recording (`differsFromRecorded`).
  */
-const COVERAGE = Object.fromEntries(FRONTIER_MODES.map((m) => {
-    const answer = { ...deriveFrontier(SURVEYS[m]) };
-    for (const k of ['artifact_version', 'generatedBy', 'chain', 'segments', 'arrivals', 'sources']) {
-        delete answer[k];
-    }
-    return [m, {
-        mode: m,
-        through: FRONTIER_BOUND,
-        // the directory's NAME under the survey cache (`SEEDLING_SURVEY_DIR` may move the cache)
-        survey: basename(SURVEY_DIRS[m]),
-        routeSteps: SURVEYS[m].available ? SURVEYS[m].steps.length : null,
+const RECORDED_ANSWER = RECORDED.available
+    ? deriveFrontier(RECORDED, { routeName: recordedName(RECORDED.fixture) })
+    : deriveFrontier(RECORDED);
+const COVERAGE = {
+    recorded: {
+        mode: 'recorded',
+        through: RECORDED.available ? RECORDED.fixture.routeMode.through : null,
+        survey: null,
+        source: RECORDING_ROUTE_REL,
+        routeSteps: RECORDED.available ? RECORDED.steps.length : null,
         complete: false,
-        ...answer,
-    }];
-}));
-const FRONTIER = { ...deriveFrontier(survey), coverage: COVERAGE };
+        ...stripShared({ ...RECORDED_ANSWER }),
+    },
+    ...Object.fromEntries(FRONTIER_MODES.map((m) => {
+        const answer = stripShared({ ...deriveFrontier(SURVEYS[m]) });
+        const block = {
+            mode: m,
+            through: FRONTIER_BOUND,
+            // the directory's NAME under the survey cache (`SEEDLING_SURVEY_DIR` may move the cache)
+            survey: basename(SURVEY_DIRS[m]),
+            routeSteps: SURVEYS[m].available ? SURVEYS[m].steps.length : null,
+            complete: false,
+            ...answer,
+        };
+        // ⛓ where TODAY's route leaves the recording — only the recording's own mode
+        if (m === RECORDED.fixture?.routeMode?.mode && SURVEYS[m].available && RECORDED.available) {
+            block.differsFromRecorded = routeDifference(RECORDED.steps, SURVEYS[m].steps, CHAIN);
+        }
+        return [m, block];
+    })),
+};
+const TOP = RECORDED_ANSWER;
+const FRONTIER = {
+    ...Object.fromEntries(Object.entries(TOP).filter(([k]) => ['artifact_version', 'generatedBy',
+        'chain', 'segments', 'arrivals', 'sources'].includes(k))),
+    recordingRoute: RECORDED.available ? {
+        path: RECORDING_ROUTE_REL,
+        md5: RECORDED.md5,
+        mode: RECORDED.fixture.routeMode.mode,
+        through: RECORDED.fixture.routeMode.through,
+        routeSteps: RECORDED.steps.length,
+        derivedAt: RECORDED.fixture.derivedAt,
+    } : null,
+    ...Object.fromEntries(Object.entries(TOP).filter(([k]) => !['artifact_version', 'generatedBy',
+        'chain', 'segments', 'arrivals', 'sources'].includes(k))),
+    coverage: COVERAGE,
+};
 
 /**
  * ⛔ THE CHECK IS FIELD BY FIELD, AND IT SAYS WHICH FIELDS IT COULD NOT RUN.
@@ -713,10 +809,24 @@ function checkFrontier() {
     cmp('arrivals', FRONTIER.arrivals, on.arrivals);
     cmp('sources', FRONTIER.sources, on.sources);
     /**
-     * ⛓ FRONTIER2 — each mode's block. Its identity (mode, bound, survey
+     * ⛓ TILE-FRONTIER-ROUTE — the recording route is COMMITTED, so its rows
+     * need no survey and always run: the fixture's identity and md5 (an edit to
+     * it reds here by name), the `recorded` block, and the top-level answer
+     * that IS that block. ⛔ They were gated on a survey cache AND a `nextStep`
+     * before, which left a complete chain's answer unchecked everywhere.
+     */
+    rows.push({ name: 'recordingRoute (the fixture is on disk)', ok: RECORDED.available,
+        mine: RECORDED.available ? RECORDING_ROUTE_REL : RECORDED.why, theirs: RECORDING_ROUTE_REL });
+    cmp('recordingRoute', FRONTIER.recordingRoute, on.recordingRoute ?? null);
+    cmp('coverage.recorded', FRONTIER.coverage.recorded, on.coverage?.recorded ?? null);
+    for (const k of ['lastArrival', 'nextStep', 'refusal', 'covered', 'complete', 'why']) {
+        cmp(k, FRONTIER[k] ?? null, on[k] ?? null);
+    }
+    /**
+     * ⛓ FRONTIER2 — each survey mode's block. Its identity (mode, bound, survey
      * directory) needs no survey and always runs; its ANSWER is that mode's
-     * survey's, compared whole where the survey is on disk and SKIPPED BY NAME
-     * where it is not.
+     * survey's (with `differsFromRecorded` for the recording's mode), compared
+     * whole where the survey is on disk and SKIPPED BY NAME where it is not.
      */
     for (const m of FRONTIER_MODES) {
         const mine = FRONTIER.coverage[m];
@@ -727,17 +837,9 @@ function checkFrontier() {
         if (SURVEYS[m].available) {
             cmp(`coverage.${m} (answer)`, mine, theirs);
         } else {
-            console.log(`SKIP  coverage.${m} (answer) — ${SURVEYS[m].why}`);
+            console.log(`SKIP  coverage.${m} (answer${m === 'route-only' ? ', differsFromRecorded' : ''}) — `
+                + `${SURVEYS[m].why}\n      A check that cannot run is not a check that passed.`);
         }
-    }
-    if (survey.available && FRONTIER.nextStep) {
-        cmp('lastArrival', FRONTIER.lastArrival, on.lastArrival);
-        cmp('nextStep', FRONTIER.nextStep, on.nextStep);
-        cmp('refusal', FRONTIER.refusal, on.refusal);
-    } else {
-        console.log('SKIP  lastArrival / nextStep / refusal — '
-            + `${FRONTIER.why ?? survey.why}\n      A check that cannot run is not a `
-            + 'check that passed; the four structural rows below still do.');
     }
     let bad = 0;
     for (const r of rows) {
@@ -757,6 +859,61 @@ function checkFrontier() {
     return bad ? 1 : 0;
 }
 
+/**
+ * ⛓ TILE-FRONTIER-ROUTE — `--write-recording-route --from=<survey dir> --at=<commit>`.
+ * Projects the `route.json` the survey wrote in `<survey dir>` (run at
+ * `<commit>`: `survey-seedling-route.mjs --through=<bound> --route=route-only
+ * --derive-only`) into the committed fixture. ⛔ It REFUSES a route the current
+ * chain does not walk in full — the fixture names the route the tapes were made
+ * on, and a route they were not made on is not that. The sources' md5s are read
+ * at `<commit>` by `git show`, never typed.
+ */
+function writeRecordingRoute() {
+    const from = argValue('from');
+    const at = argValue('at');
+    if (!from || !at) {
+        console.log('REFUSED  --write-recording-route needs --from=<survey dir holding route.json> '
+            + 'and --at=<the commit that survey ran at>');
+        return 2;
+    }
+    const route = JSON.parse(readFileSync(join(from, 'route.json'), 'utf8'));
+    if (route.routeMode?.mode !== 'route-only' || route.routeMode?.through !== FRONTIER_BOUND) {
+        console.log(`REFUSED  ${from}/route.json is route mode ${JSON.stringify(route.routeMode?.mode)} `
+            + `through ${JSON.stringify(route.routeMode?.through)}; the chain is recorded on `
+            + `route-only through '${FRONTIER_BOUND}'`);
+        return 1;
+    }
+    const steps = route.steps.map(projectStep);
+    const answer = deriveFrontier({ available: true, steps: steps.map((s) => ({ ...s, solved: null })) });
+    if (answer.complete !== true) {
+        console.log('REFUSED  the chain does not walk this route in full, so it is not the route '
+            + `the chain was recorded on: ${answer.why ?? `it covers ${answer.covered} of `
+                + `${steps.length} step(s) and stops before the route ends`}`);
+        return 1;
+    }
+    const git = (...a) => execFileSync('git', a, { cwd: REPO, maxBuffer: 1 << 28 });
+    const sha = git('rev-parse', `${at}^{commit}`).toString().trim();
+    const sources = Object.fromEntries(SOURCE_FILES.map((rel) => {
+        try { return [rel, md5(git('show', `${sha}:${rel}`))]; } catch { return [rel, null]; }
+    }));
+    const fixture = {
+        artifact_version: 1,
+        generatedBy: `node scripts/procgen/census-seedling-campaign.mjs --write-recording-route `
+            + `--from=<survey dir> --at=${sha.slice(0, 10)}`,
+        derivedBy: `node scripts/procgen/survey-seedling-route.mjs --through=${FRONTIER_BOUND} `
+            + '--route=route-only --derive-only',
+        derivedAt: sha,
+        routeMode: { mode: 'route-only', through: FRONTIER_BOUND },
+        sources,
+        steps,
+    };
+    writeFileSync(RECORDING_ROUTE_PATH, `${JSON.stringify(fixture, null, 2)}\n`);
+    console.log(`wrote ${RECORDING_ROUTE_PATH} (${steps.length} steps, derived at ${sha.slice(0, 10)}); `
+        + 're-derive the frontier with --write-frontier');
+    return 0;
+}
+
+if (WRITE_RECORDING_ROUTE) process.exit(writeRecordingRoute());
 if (CHECK_FRONTIER) process.exit(checkFrontier());
 if (WRITE_FRONTIER) {
     writeFileSync(FRONTIER_PATH, `${JSON.stringify(FRONTIER, null, 2)}\n`);
@@ -784,8 +941,16 @@ say(`THEN: ${GAP_STEPS.length} route steps with NO tape, then the STOP at `
  * ⛓ FRONTIER2 — the two route modes' coverage, one line each (⚖ user
  * 2026-10-05: "Both, report separately").
  */
-for (const m of FRONTIER_MODES) {
+for (const m of ['recorded', ...FRONTIER_MODES]) {
     const c = FRONTIER.coverage[m];
+    const d = c.differsFromRecorded;
+    if (d) {
+        say(`ROUTE MOVED: today's ${m} route leaves the recording route at step ${d.fromStep} `
+            + `(recorded L${d.recorded.level} → ${d.recorded.restart ? 'restart to ' : ''}`
+            + `L${d.recorded.crossesTo}; today ${d.current ? `L${d.current.level} → `
+                + `${d.current.restart ? 'restart to ' : ''}L${d.current.crossesTo}` : 'no step'}; `
+            + `${d.recordedSteps} vs ${d.currentSteps} steps)`);
+    }
     say(`COVERAGE (${m}, through ${c.through}): `
         + (c.covered === null ? `UNASSERTED — ${c.why}`
             : `${c.covered}/${c.routeSteps ?? '?'} route steps`

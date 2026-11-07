@@ -121,8 +121,9 @@ export const centre = (tx, ty) => ({ x: tx * TILE + TILE / 2, y: ty * TILE + TIL
  * the two presses is not in the press: same block, same weapon, same
  * 32x32 rect, and the angles are 0.00° and 89.98° against a `bothRange`
  * of 0.1 — neither anywhere near the diagonal band. See
- * `probe-seedling-r5-press-axes`, which asks whether press 5 fails ALONE
- * or only inside the shaft's 2,375 ticks.
+ * the slice-12 press-axes probe, which asked whether press 5 fails ALONE
+ * or only inside the shaft's 2,375 ticks. (⛓ That probe is RETIRED (R5RETIRE,
+ * W37); this deduction is now a claim in `probe-seedling-r5-spinner`.)
  */
 export const PRESS_AXES = Object.freeze({
     /** `SHAFT_WALK.divergence.gameStuckAtY`, and the x it was stuck at. */
@@ -160,7 +161,8 @@ export const PRESS_AXES = Object.freeze({
  * ⛔⛔⛔ R5 SLICE 12 — WHAT ACTUALLY STOPPED PRESS 5: AN ENEMY, AND A
  * CENSUS VERDICT THAT WAS TRUE ABOUT THE WRONG MOVER.
  *
- * Four short tapes (`probe-seedling-r5-press-axes`), all booting straight
+ * Four short tapes (authored by the slice-12 press-axes probe, RETIRED in
+ * R5RETIRE — `probe-seedling-r5-spinner` re-derives the survivors), all booting straight
  * into the block room so the rope, the corridor and the 197-frame freeze
  * are out of the picture:
  *

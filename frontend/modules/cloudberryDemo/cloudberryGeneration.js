@@ -40,6 +40,10 @@ let _generator = null;
 let _store = null;
 const _memory = new Map();
 const _inflight = new Map();
+// A FAILED generation the sphere hook yielded (not remembered, so the next run tries
+// again), handed ONCE to the next ask for its key — the synchronous caller that started it
+// and asks again after awaiting it (the APWorld Editor's Generate ▸) names the failure.
+const _settledFailures = new Map();
 const _stats = { generated: 0, memoryHits: 0, storeHits: 0, refusals: 0, generateMs: [] };
 
 /**
@@ -62,6 +66,27 @@ export function cloudberryGenerationStats() {
 export function clearCloudberryLevelCache() {
     _memory.clear();
     _inflight.clear();
+    _settledFailures.clear();
+}
+
+/**
+ * Record a FAILED generation the hook yielded (its own promise, settled): handed ONCE to
+ * the next ask for the plan. A direct `ensureCloudberryLevel` call records nothing.
+ */
+export function settleCloudberryFailure(plan, result) {
+    if (result?.transient && result.refused) _settledFailures.set(plan.key, result);
+}
+
+/**
+ * The failed generation of a plan the hook yielded and nobody has received yet, ONCE
+ * (then forgotten), or null. A synchronous caller that awaited the yielded promise asks
+ * again and reads the failure here by name; an asynchronous one received it from the
+ * promise (the hook then takes it, so it is never handed on).
+ */
+export function takeSettledCloudberryFailure(plan) {
+    const hit = _settledFailures.get(plan.key) ?? null;
+    _settledFailures.delete(plan.key);
+    return hit;
 }
 
 const storeKey = (key) => `${CLOUDBERRY_CACHE_VERSION}|${key}`;
@@ -106,7 +131,7 @@ async function resolveLevel(plan, onAttempt) {
     }
     const reasons = [];
     for (let attempt = 0; attempt <= plan.retries; attempt++) {
-        const args = cloudberryAttemptArgs(plan.args, attempt);
+        const args = cloudberryAttemptArgs(plan.args, attempt, plan);
         onAttempt?.({ attempt, attempts: plan.retries + 1 });
         const t0 = Date.now();
         // eslint-disable-next-line no-await-in-loop
@@ -115,7 +140,7 @@ async function resolveLevel(plan, onAttempt) {
         _stats.generateMs.push(Date.now() - t0);
         let doc;
         try { doc = JSON.parse(text); } catch (err) { doc = { error: `the document is not JSON: ${err.message}` }; }
-        const read = readCloudberryDocument(doc, plan);
+        const read = readCloudberryDocument(doc, plan, args);
         if (read.ok) {
             const generate = doc.args?.request;
             if (!generate || generate.reroll !== undefined) {

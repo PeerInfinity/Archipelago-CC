@@ -42,7 +42,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 35,
+            "fields": 36,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -177,6 +177,13 @@ export const REGISTRY = frz({
                 "itemIntroduction.replayableItems"
             ],
             "title": "Build-time — item introduction"
+        },
+        {
+            "rows": [
+                "goalContainer",
+                "goalContainer.noteOf"
+            ],
+            "title": "Build-time — goal containers"
         },
         {
             "rows": [
@@ -1505,7 +1512,7 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "12 keys",
+                    "short": "26 keys",
                     "type": "object",
                     "value": [
                         "cloudberryChecksPerPiece",
@@ -1514,6 +1521,20 @@ export const REGISTRY = frz({
                         "cloudberryHazardKinds",
                         "cloudberryHazardLevel",
                         "cloudberryHazards",
+                        "cloudberryHeroAccel",
+                        "cloudberryHeroFriction",
+                        "cloudberryHeroGravity",
+                        "cloudberryHeroJetpackAccel",
+                        "cloudberryHeroJetpackFuel",
+                        "cloudberryHeroJumpAccel",
+                        "cloudberryHeroJumpAccel2",
+                        "cloudberryHeroJumpLength",
+                        "cloudberryHeroJumpLength2",
+                        "cloudberryHeroMaxFall",
+                        "cloudberryHeroMaxSpeed",
+                        "cloudberryHeroNumJumps",
+                        "cloudberryHeroSize",
+                        "cloudberryHeroVariation",
                         "cloudberryJetpackChance",
                         "cloudberryJumpLevel",
                         "cloudberryMinPieces",
@@ -2923,6 +2944,154 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "getSpiralContent"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "{noteOf}",
+                    "type": "object",
+                    "value": [
+                        "noteOf"
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "prose",
+            "group": "Build-time — goal containers",
+            "name": "goalContainer"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "bullet",
+            "group": "Build-time — goal containers",
+            "name": "goalContainer.noteOf"
         },
         {
             "carriedBy": [

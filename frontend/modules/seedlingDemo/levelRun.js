@@ -190,7 +190,7 @@ import {
 import { BOMB, createBombPusher, stepBomb, stepBombPusher } from './bombPusher.js';
 // ⛓ fidelity BEAMTOWER: `BeamTower` — its drifting Solid (`CONTACT_FIDELITY.beamTowerDrift`).
 import {
-    BEAM_TOWER, beamTowerReachRects, beamTowerSolidRect, createBeamTower, stepBeamTowerFrame,
+    BEAM_TOWER, beamTowerDriftedY, beamTowerReachRects, beamTowerSolidRect, createBeamTower, stepBeamTowerFrame,
 } from './beamTower.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
@@ -2665,6 +2665,35 @@ export function createLevelRun({
         const out = new Map();
         for (const [id, t] of st) out.set(id, { id, rect: beamTowerSolidRect(t), y: t.y });
         return out;
+    };
+    /**
+     * ⛓ fidelity L105 D1 (`CONTACT_FIDELITY.previewBeamTowerDrift`, OFF → null) — THE TOWERS' SOLIDS AT A PREVIEWED
+     * TICK: `(k) => Map` in `beamTowerRectsNow`'s shape, the Solid each tower holds when the player sweeps on the k-th
+     * frame from now (k ≥ 1: the towers update above the player, the k-th at `Game.time` `now + k − 1`). Pure: the live
+     * states are read, never stepped. Null — the snapshot stays — with the switch or `beamTowerDrift` OFF, under noclip,
+     * in a room with no tower, with no clock, during a ceremony (the next frames are frozen), or with a `y` unknown.
+     */
+    const beamTowerSolidForecast = () => {
+        if (!CONTACT_FIDELITY.previewBeamTowerDrift || !CONTACT_FIDELITY.beamTowerDrift || noclip) return null;
+        if (ceremony !== null) return null;
+        const st = beamTowerStateFor(level);
+        if (st.size === 0) return null;
+        const now = clock.now();
+        if (now === null) return null;
+        const towers = [...st.values()].map((t) => ({ id: t.id, cx: t.cx, y: t.y, yKnown: t.yKnown }));
+        if (towers.some((t) => !t.yKnown)) return null;
+        const memo = new Map();
+        return (k) => {
+            if (!memo.has(k)) {
+                const out = new Map();
+                for (const t of towers) {
+                    const y = beamTowerDriftedY(t.y, now, k);
+                    out.set(t.id, { id: t.id, rect: beamTowerSolidRect({ cx: t.cx, y }), y });
+                }
+                memo.set(k, out);
+            }
+            return memo.get(k);
+        };
     };
     /** The bombs' `Explosion.added()` calls waiting for this tick's `updateLists()` (see `drainBombBlastsNow`). */
     const pendingBombBlasts = [];
@@ -15234,9 +15263,13 @@ export function createLevelRun({
      * covers 23..57, i.e. the pickup saw observation 23 and the advance that
      * would have produced 24 became phase B's first frame instead.
      */
-    function pickupUnderfoot() {
+    // ⛓ fidelity CEREMONY126 D1: `onTouch(p, box)` replaces the overlap test (default null: today's, byte-identical)
+    // — `freezeForecastNow` asks the same eligible pickups (the same skips) for their gap.
+    // ⛓ fidelity CEREMONYEXACT D1: `at` (`{x, y}`, default null = the run's own position, byte-identical) tests a
+    // position a forecast stepped to (`ceremonyStepNow`).
+    function pickupUnderfoot(onTouch = null, at = null) {
         if (!world.pickups) return null;
-        const box = playerBoxAt(state.x, state.y);
+        const box = at === null ? playerBoxAt(state.x, state.y) : playerBoxAt(at.x, at.y);
         for (const p of world.pickups) {
             if (collectedPickups.has(pickupKey(level, p))) continue;
             // ⛔⛔⛓ R5 SLICE 23: THE WAND'S GATE WRAPS THE CONTACT TEST, NOT
@@ -15279,6 +15312,7 @@ export function createLevelRun({
             // never collected from, and it would stop skipping the moment
             // anything reset the set.
             if (p.tag === 'seed' && cutscene[2]) continue;
+            if (onTouch !== null) { onTouch(p, box); continue; }
             if (rectsOverlap(box, p.rect)) return p;
         }
         return null;
@@ -18172,7 +18206,195 @@ export function createLevelRun({
             }
         }
         const timerNext = contact !== null ? BLAST_FREEZE_TICKS - 1 : Math.max(frozenTimer - 1, 0);
-        return { refusedNext: timerNext > 0, timerNext, contact };
+        if (!CONTACT_FIDELITY.ceremonyPressForecast) return { refusedNext: timerNext > 0, timerNext, contact };
+        /**
+         * ⛓ fidelity CEREMONY126 D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **HOW FAR IS THE NEAREST PICKUP
+         * THAT COULD START A CEREMONY?** A placed pickup is touched at a tick's TOP from where the previous tick left
+         * the player (`pickupUnderfoot`), and that tick is the ceremony's first `Game.freezeObjects` frame — a thrust
+         * scheduled onto it is lost (`runFrozenTick`). `pickupGap`: the least Chebyshev gap (px) from the player's box
+         * to an uncollected pickup `pickupUnderfoot` would test (its own skips), or null (none, a ceremony already up,
+         * noclip). The policy prices it against its own travel bound (`strikePolicy.ceremonyGuard`). A pure read.
+         */
+        let pickupGap = null;
+        if (!noclip && ceremony === null) {
+            pickupUnderfoot((p, box) => {
+                const g = Math.max(p.rect.x - box.right, box.x - p.rect.right, p.rect.y - box.bottom,
+                    box.y - p.rect.bottom, 0);
+                if (pickupGap === null || g < pickupGap) pickupGap = g;
+            });
+        }
+        const out = { refusedNext: timerNext > 0, timerNext, contact, pickupGap };
+        // ⛓ fidelity CEREMONYEXACT D1: and the exact one-tick question, NON-ENUMERABLE (so the forecast's data shape,
+        // its JSON, a structured clone and every `toEqual` are FROZENPRESS/CEREMONY126's). Asked lazily by
+        // `strikePolicy.ceremonyGuard` with the held sets it is about to send; absent with no pickup in reach.
+        if (pickupGap !== null) Object.defineProperty(out, 'ceremonyStep', { value: ceremonyStepNow, enumerable: false });
+        return out;
+    };
+    /**
+     * ⛓ fidelity CEREMONYEXACT D1: `previewStepper`'s body, verbatim, as a const — so `ceremonyStepNow` asks the run's
+     * own stepper without a name for the run object (the solver-surface census reads a literal `return { … }`).
+     */
+    const previewStepperNow = () => {
+        if (noclip) {
+            throw new Error('levelRun.previewStepper: this run is noclip — the '
+                + 'mechanics are not stepped, so a preview would walk a world no '
+                + 'tick of the run consults.');
+        }
+        const opts = stepOptsFor({
+            beforeTypeFlip: false,
+            openActivators: openActivatorIds(activatorStateFor(level)),
+            inputBlocked: frozenTimer > 0,
+            steerBlocked: !canSteer(damage),
+        });
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c — **AND IT SPENDS A DASH IMPULSE, BECAUSE THE
+         * DRIVE DOES** (⚖ ruling 35).
+         *
+         * `advance` builds its options with `dashImpulse: slashPress
+         * ?.outcome === 'dash' ? slashPress.impulse : null` (`:13177`) and
+         * `stepV2` spends it as `useItemImpulse` — `useItem` is reached
+         * from inside `input()`, so the +2 knockback lands ABOVE this
+         * tick's sweep. A preview whose stepper could not carry it would
+         * price a corridor the drive walks 9 px further along (§23.11),
+         * which is exactly why `allowDash` was enforced OFF in 12b′ rather
+         * than acted on.
+         *
+         * ⛔ `stepOptsFor` STAYS THE ONE BUILDER AND STAYS ONE CALL. The
+         * spread overrides the single key that builder already declares
+         * and already defaults to `null`, so `{...opts, dashImpulse}` is
+         * field for field what `stepOptsFor({…, dashImpulse})` returns —
+         * asserted as a row rather than claimed here. It is a spread and
+         * not a second call because `stepOptsFor` re-runs `liveSolidOpts`
+         * on every invocation and the stance scan previews up to 289
+         * corridors of hundreds of ticks each.
+         *
+         * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID, so a
+         * tick that spends no impulse is field for field the tick 12b
+         * stepped.
+         *
+         * ⚠⚠ R9 SLICE 12i — **THIS PARAGRAPH USED TO SAY "the roster-wide
+         * default is `allowDash: false`, ⚖ ruling 42", AND THAT WENT FALSE
+         * AT ⚖ 41's FLIP** (12e′'s fourth run) without anything here
+         * moving. ⇒ it does not quote a state any more: the roster's dash
+         * permission is `solverBot.DEFAULT_DASH_MODE`, today `all`, and
+         * §42.7 counts 205 dashes on 16 committed tapes under it — so the
+         * dash arm below is LIVE on the roster and predicting "zero
+         * movers" from here would be exactly backwards. A comment that
+         * names a value instead of the name that holds it is a landmine
+         * under the next flip (kickoff §40.6).
+         */
+        /**
+         * ⛓⛓⛓ R4-swim D3 — **AND A PREVIEW STARTED INSIDE AN I-FRAME
+         * CARRIES IT**, the facing and the recovery both.
+         *
+         * The drive's own step passes `directionFace: damage.directionFace`
+         * (U11-swim D2) and `steerBlocked: !canSteer(damage)`, then runs
+         * `stepPlayerDamage` in the player's slot, which hands the parked
+         * facing back (`direction = directionFace`) on the recovery tick.
+         * A preview that froze both at the snapshot faced the way the
+         * knockback CARRIES the player for the whole window (measured on
+         * `u11-facing-knockback`'s staging: 18 of 18 ticks) and never
+         * steered again after it. The damage state rides the preview's own
+         * states on a SYMBOL key — `{...st}` copies it and `JSON.stringify`
+         * does not see it — and a caller's hand-built state falls back to
+         * the snapshot, which is exactly the old reading.
+         *
+         * ⛔ OUTSIDE AN I-FRAME NOTHING CHANGES: no hit has parked a facing
+         * and steering is open, so the closure is the one 12c built, field
+         * for field. No committed solve previews inside an i-frame.
+         */
+        const iFrame = damage.hitsTimer > 0 || damage.directionFace >= 0;
+        const damageAtStart = { ...damage };
+        /**
+         * ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF → null): a step told its PREVIEWED tick (`previewTick`,
+         * 1-based from the preview's start — `previewWalk` says it) sweeps against the towers' Solids as that
+         * frame's updates leave them (`beamTowerSolidForecast`). A step not told, or the forecast null: `opts`.
+         */
+        const towersAt = beamTowerSolidForecast();
+        const optsAt = (previewTick) => (towersAt && previewTick !== null
+            ? { ...opts, beamTowers: towersAt(previewTick) } : opts);
+        const step = (st, held, { dashImpulse = null, previewTick = null } = {}) => {
+            const opts = optsAt(previewTick);
+            if (!iFrame) {
+                const r = dashImpulse
+                    ? stepV2(st, held, { ...opts, dashImpulse })
+                    : stepV2(st, held, opts);
+                // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
+                // to reboot into, so it refuses with the words `step` used to
+                // throw — every planner caller already reads that refusal as a
+                // walk it cannot take.
+                if (r.death) throw deathRefusal(opts.level, st, r.death);
+                return r;
+            }
+            const d = st[PREVIEW_DAMAGE] ?? damageAtStart;
+            const r = stepV2(st, held, {
+                ...opts, dashImpulse, steerBlocked: !canSteer(d),
+                directionFace: d.directionFace,
+            });
+            if (r.death) throw deathRefusal(opts.level, st, r.death);
+            const nd = stepPlayerDamage(d);
+            return {
+                ...r,
+                ...(nd.recovered && nd.direction !== null ? { direction: nd.direction } : {}),
+                [PREVIEW_DAMAGE]: nd.state,
+            };
+        };
+        /**
+         * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`
+         * runs them — a preview across a current rides it. A room with no
+         * pull gets the same closure it always did.
+         */
+        const pulls = pullsFor(level);
+        if (pulls.length === 0) return step;
+        return (st, held, o = {}) => {
+            const r = pushBody(pulls, st, playerBoxAt);
+            return step(r.by.length > 0 ? { ...st, x: r.x, y: r.y } : st, held, o);
+        };
+    };
+    /**
+     * ⛓ fidelity CEREMONYEXACT D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **ON WHICH TICK, IF ANY, WOULD A PICKUP'S
+     * CEREMONY START, GIVEN THE KEYS ABOUT TO BE SENT?** `heldSeq` is one held set per tick from this boundary
+     * (`[held]` for a press decided now; `[aimKeys, {primary}]` for an aim). A placed pickup is touched at a tick's TOP
+     * from where the PREVIOUS tick left the player (`pickupUnderfoot`), so: the box overlapping one NOW ⇒ the ceremony
+     * starts on the first tick (`at: 0`); the box after stepping `heldSeq[k]` overlapping one ⇒ it starts on tick
+     * `k + 1`. A thrust scheduled onto that tick is lost (`runFrozenTick`'s `FROZEN_TICK_PRESS`; `Pickup.as:95`,
+     * `Player.as:1075-1078`). Stepped with the run's OWN stepper (`previewStepper`, the drive's movement model), a
+     * press's dash impulse priced as `advance` prices it (`slashPressForecast` on `slashInfo`, the facing the tick
+     * starts with). `{ at, tag, x, y }` or null. ⚠ A PURE READ (DIGESTREAD): copies only, nothing written. A step the
+     * stepper refuses (a death) answers null — the walk's own guards own that tick. Outside it, as `pickupGap`'s:
+     * runtime pickups (the Bob Boss's Fire, the dark sword) and a hit's knockback on the stepped tick.
+     */
+    const ceremonyStepNow = (heldSeq) => {
+        if (noclip || ceremony !== null) return null;
+        const touchedAt = (at) => {
+            let hit = null;
+            pickupUnderfoot((p, box) => { if (hit === null && rectsOverlap(box, p.rect)) hit = p; }, at);
+            return hit;
+        };
+        const named = (p, at) => ({ at, tag: p.tag ?? 'pickup', x: p.x, y: p.y });
+        const now = touchedAt(null);
+        if (now) return named(now, 0);
+        const weapon = weaponForPress();
+        const swings = weapon === 'sword' || weapon === 'ghostsword';
+        let step;
+        let slash = null;
+        try { step = previewStepperNow(); } catch { return null; }
+        let st = state;
+        let was = prevHeld;
+        for (let k = 0; k < heldSeq.length; k += 1) {
+            const held = heldSeq[k] instanceof Set ? heldSeq[k] : new Set(heldSeq[k]);
+            let dashImpulse = null;
+            if (swings && held.has(TALK_KEY) && !was.has(TALK_KEY)) {
+                slash ??= slashInfoNow();
+                const r = slashPressForecast(slash, { tick: ticksCompleted, ticksAhead: k, direction: st.direction });
+                if (r.outcome === 'dash') dashImpulse = r.impulse;
+            }
+            try { st = step(st, held, { dashImpulse, previewTick: k + 1 }); } catch { return null; }
+            const hit = touchedAt(st);
+            if (hit) return named(hit, k + 1);
+            was = held;
+        }
+        return null;
     };
     const collectedNow = () => collected.map((c) => ({ ...c }));
     const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));
@@ -20568,112 +20790,7 @@ export function createLevelRun({
          * ⛔ REFUSED under `noclip`, for `liveGeometryOpts`' own reason.
          */
         previewStepper() {
-            if (noclip) {
-                throw new Error('levelRun.previewStepper: this run is noclip — the '
-                    + 'mechanics are not stepped, so a preview would walk a world no '
-                    + 'tick of the run consults.');
-            }
-            const opts = stepOptsFor({
-                beforeTypeFlip: false,
-                openActivators: openActivatorIds(activatorStateFor(level)),
-                inputBlocked: frozenTimer > 0,
-                steerBlocked: !canSteer(damage),
-            });
-            /**
-             * ⛓⛓⛓ R9 SLICE 12c — **AND IT SPENDS A DASH IMPULSE, BECAUSE THE
-             * DRIVE DOES** (⚖ ruling 35).
-             *
-             * `advance` builds its options with `dashImpulse: slashPress
-             * ?.outcome === 'dash' ? slashPress.impulse : null` (`:13177`) and
-             * `stepV2` spends it as `useItemImpulse` — `useItem` is reached
-             * from inside `input()`, so the +2 knockback lands ABOVE this
-             * tick's sweep. A preview whose stepper could not carry it would
-             * price a corridor the drive walks 9 px further along (§23.11),
-             * which is exactly why `allowDash` was enforced OFF in 12b′ rather
-             * than acted on.
-             *
-             * ⛔ `stepOptsFor` STAYS THE ONE BUILDER AND STAYS ONE CALL. The
-             * spread overrides the single key that builder already declares
-             * and already defaults to `null`, so `{...opts, dashImpulse}` is
-             * field for field what `stepOptsFor({…, dashImpulse})` returns —
-             * asserted as a row rather than claimed here. It is a spread and
-             * not a second call because `stepOptsFor` re-runs `liveSolidOpts`
-             * on every invocation and the stance scan previews up to 289
-             * corridors of hundreds of ticks each.
-             *
-             * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID, so a
-             * tick that spends no impulse is field for field the tick 12b
-             * stepped.
-             *
-             * ⚠⚠ R9 SLICE 12i — **THIS PARAGRAPH USED TO SAY "the roster-wide
-             * default is `allowDash: false`, ⚖ ruling 42", AND THAT WENT FALSE
-             * AT ⚖ 41's FLIP** (12e′'s fourth run) without anything here
-             * moving. ⇒ it does not quote a state any more: the roster's dash
-             * permission is `solverBot.DEFAULT_DASH_MODE`, today `all`, and
-             * §42.7 counts 205 dashes on 16 committed tapes under it — so the
-             * dash arm below is LIVE on the roster and predicting "zero
-             * movers" from here would be exactly backwards. A comment that
-             * names a value instead of the name that holds it is a landmine
-             * under the next flip (kickoff §40.6).
-             */
-            /**
-             * ⛓⛓⛓ R4-swim D3 — **AND A PREVIEW STARTED INSIDE AN I-FRAME
-             * CARRIES IT**, the facing and the recovery both.
-             *
-             * The drive's own step passes `directionFace: damage.directionFace`
-             * (U11-swim D2) and `steerBlocked: !canSteer(damage)`, then runs
-             * `stepPlayerDamage` in the player's slot, which hands the parked
-             * facing back (`direction = directionFace`) on the recovery tick.
-             * A preview that froze both at the snapshot faced the way the
-             * knockback CARRIES the player for the whole window (measured on
-             * `u11-facing-knockback`'s staging: 18 of 18 ticks) and never
-             * steered again after it. The damage state rides the preview's own
-             * states on a SYMBOL key — `{...st}` copies it and `JSON.stringify`
-             * does not see it — and a caller's hand-built state falls back to
-             * the snapshot, which is exactly the old reading.
-             *
-             * ⛔ OUTSIDE AN I-FRAME NOTHING CHANGES: no hit has parked a facing
-             * and steering is open, so the closure is the one 12c built, field
-             * for field. No committed solve previews inside an i-frame.
-             */
-            const iFrame = damage.hitsTimer > 0 || damage.directionFace >= 0;
-            const damageAtStart = { ...damage };
-            const step = (st, held, { dashImpulse = null } = {}) => {
-                if (!iFrame) {
-                    const r = dashImpulse
-                        ? stepV2(st, held, { ...opts, dashImpulse })
-                        : stepV2(st, held, opts);
-                    // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
-                    // to reboot into, so it refuses with the words `step` used to
-                    // throw — every planner caller already reads that refusal as a
-                    // walk it cannot take.
-                    if (r.death) throw deathRefusal(opts.level, st, r.death);
-                    return r;
-                }
-                const d = st[PREVIEW_DAMAGE] ?? damageAtStart;
-                const r = stepV2(st, held, {
-                    ...opts, dashImpulse, steerBlocked: !canSteer(d),
-                    directionFace: d.directionFace,
-                });
-                if (r.death) throw deathRefusal(opts.level, st, r.death);
-                const nd = stepPlayerDamage(d);
-                return {
-                    ...r,
-                    ...(nd.recovered && nd.direction !== null ? { direction: nd.direction } : {}),
-                    [PREVIEW_DAMAGE]: nd.state,
-                };
-            };
-            /**
-             * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`
-             * runs them — a preview across a current rides it. A room with no
-             * pull gets the same closure it always did.
-             */
-            const pulls = pullsFor(level);
-            if (pulls.length === 0) return step;
-            return (st, held, o = {}) => {
-                const r = pushBody(pulls, st, playerBoxAt);
-                return step(r.by.length > 0 ? { ...st, x: r.x, y: r.y } : st, held, o);
-            };
+            return previewStepperNow();
         },
         /**
          * ⛓ THE ARROW SUBSYSTEM, FORECAST — see `arrowForecastNow`. `null`

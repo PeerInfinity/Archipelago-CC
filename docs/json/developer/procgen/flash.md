@@ -246,6 +246,10 @@ The entry's `zoneConfigFromSlot` and `zoneOfPayload` let the APWorld hub's `repl
   - A room asked for nothing drops `keygate` from its elements.
   - With all five colours in the world, a room is refused as `keygate-colours-exhausted`.
   - The set assembler refuses two rooms holding one colour (`keygate-colour-shared`). An UNREQUESTED key gate past generated room #0 (the spiral) is still refused at serialize (`keygate-colour-not-allocated`).
+- **`goalContainer`: the goal chest** (`seedlingGenRoomPayload.goalContainerNoteOf`). It is opt-in through the bag key `seedlingGenGoal` = `chest` (the room's `goal` knob, B3's `defaults.goalClass`). Absent, the room keeps the torch and its `generation` is byte-identical.
+  - Location 0 stays the goal cell's row, with the same id, item, name and rule, so the location count and the pool do not move. Only its container changes: `kind: 'chest-goal'` at the chest's own tag. The set assembler keeps the chest (`rewrite: false`, `report.goalChests`), so opening it is the check.
+  - A draw that refuses the goal chest keeps the torch. The refusal's name is recorded as `generation.goalChestRefused`, and it is reported under `procgen_metadata["<p>"].goalContainers`.
+  - A goal-chest room may also hold a loot chest (`chestloot`). Location 0 is the goal chest and the loot chest is the room's `- Chest` location; the set keeps both, and `goalContainers` counts the goal chest only. This needs the solver's `CHEST_LEG_DELTA` (ON by default): a chest leg's exact set is the chests opened during the leg, so the second chest of a visit is not refused for the first.
 - **`procgenParamsFromPayload({})` answers `{}`**: a payload without `generation` is not a generated room, so no default is invented. A built payload reads every knob back. The APWorld S2 read-back row names its knob from the empty-payload answer, so it skips this entry. Making the entry eligible was measured and not done: with the biome moved to `post-sword` by the row's control, an Initialise of the row's Adventure document is refused by the generator (`Overworld` at 8×6).
 
 ### The element defaults by biome (swim U8, ⚖ Q13)

@@ -570,3 +570,303 @@ registerTest({
     category: CATEGORY,
     enabled: false,
 });
+
+// ── 8. a world with the hero's physics as settings (P5b) ───────────────────────────────
+
+const HERO_PHYSICS_RULES = `./presets/cloudberry_hero_physics_worldgen/${PRESET_SEED}/${PRESET_SEED}_rules.json`;
+
+/** A level's hero as its payload asks for it. */
+const heroOf = (a) => a?.payload?.generate?.heroCustom ?? null;
+
+async function heroPhysicsWorldPlays(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        // The committed hero physics world itself (its own start: region_2_2 holds Double Jump + the gem).
+        const before = app()?.configures ?? 0;
+        await tc.loadRulesFromFile(HERO_PHYSICS_RULES);
+        await tc.stateManager.pingWorker('after-rules-load', 3000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: PANEL });
+        const a = await configured(tc, 'region_2_2', { after: gameIframe() ? before : null });
+        if (!a) return tc.getOverallResult();
+        tc.assertEqual('the start level\'s document hash is the one the page generated (the same hero)', a.payload.docSha256, a.doc.sha);
+        const h1 = heroOf(a);
+        tc.reportCondition(`⛓ premise: the start level is a custom-physics plain hero (${JSON.stringify(h1)})`,
+            !!h1?.phsx && h1.move === undefined && typeof h1.phsx.gravity === 'number');
+
+        const got = await botWalk(tc, { kind: 'location', name: 'region_2_2__loc_0' }, 'the bot reaches the check coin');
+        tc.reportCondition(`the bot reaches the check coin with this hero (${JSON.stringify(got)})`, got?.result === 'reached');
+        const snap = await tc.pollForValue(async () => {
+            const s = await snapshot(tc);
+            return checkedList(s).includes('region_2_2__loc_0') && held(s, 'Double Jump') ? s : null;
+        }, 'region_2_2__loc_0 checked → Double Jump received', 20000, 250);
+        tc.reportCondition(`region_2_2__loc_0 checked → Double Jump received${snap ? '' : ` — ${await checkDiag(tc)}`}`, !!snap);
+        if (!snap) return tc.getOverallResult();
+
+        const n = app()?.configures ?? 0;
+        const left = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
+        tc.reportCondition(`the bot reaches the end door (${JSON.stringify(left)})`, left?.result === 'reached');
+        const b = await configured(tc, 'region_3_2', { after: n });
+        if (!b) return tc.getOverallResult();
+        tc.assertEqual('the Double level\'s document hash is the one the page generated (its own hero)', b.payload.docSha256, b.doc.sha);
+        const h2 = heroOf(b);
+        tc.reportCondition(`its hero is the Double hero with its own physics, not the start level's (${JSON.stringify(h2)})`,
+            h2?.move === 'Double' && typeof h2.phsx?.gravity === 'number' && JSON.stringify(h2.phsx) !== JSON.stringify(h1.phsx));
+        const two = await tc.pollForValue(() => (app()?.itemsState?.jumpsOn === 2 ? app().itemsState : null),
+            'Double Jump held: two jumps', 20000, 200);
+        tc.reportCondition(`Double Jump held: two jumps (${JSON.stringify(two)})`, !!two);
+        const coin = await botWalk(tc, { kind: 'location', name: 'region_3_2__loc_0' }, 'the bot reaches the Double level\'s coin');
+        tc.reportCondition(`the bot reaches the Double level's check coin (${JSON.stringify(coin)})`, coin?.result === 'reached');
+        const checked = await tc.pollForValue(async () => (checkedList(await snapshot(tc)).includes('region_3_2__loc_0') ? true : null),
+            'region_3_2__loc_0 checked', 20000, 250);
+        tc.reportCondition('region_3_2__loc_0 checked', !!checked);
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-hero-physics-world-plays',
+    name: 'Cloudberry: a world with hero physics settings — each level plays its own hero; the bot collects and leaves',
+    description: 'P5b. Loads the committed cloudberry_hero_physics_worldgen (world physics + per-region variation). The start '
+               + 'level configures with its custom-physics hero (hash matched: the page regenerated the same hero); the bot '
+               + 'reaches its check coin (Double Jump received) and the end door; the next level is a Double hero with its '
+               + 'OWN physics (two jumps held), and the bot reaches its check coin, which is checked.',
+    testFunction: heroPhysicsWorldPlays,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 9. the APWorld Editor regenerates a Cloudberry region in ONE press (P5c) ─────────────
+
+const EDITOR_PANEL = 'apworldEditorPanel';
+const EDITOR_SELECTOR = '.apworld-editor-panel';
+
+/** Forget every generated level (this session's memory and the browser store), so the press generates. */
+async function forgetCloudberryLevels() {
+    const { clearCloudberryLevelCache } = await import('../../cloudberryDemo/cloudberryGeneration.js');
+    clearCloudberryLevelCache();
+    try {
+        for (const k of Object.keys(localStorage)) if (k.startsWith('cloudberryLevel:')) localStorage.removeItem(k);
+    } catch { /* no storage: nothing stored */ }
+}
+
+async function editorRegeneratesInOnePress(tc) {
+    let restoreGenerator = () => {};
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        const { cloudberryGenerationStats, cloudberryGenerator } = await import('../../cloudberryDemo/cloudberryGeneration.js');
+        const { applyRulesDocOp } = await import('../../apworldEditor/rulesDocOps.js');
+        await tc.loadRulesFromFile(PRESET_RULES);
+        await tc.stateManager.pingWorker('after-rules-load', 3000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: EDITOR_PANEL });
+        const disk = await (await fetch(PRESET_RULES)).json();
+        const region = 'region_2_2';   // the start region: its way back needs nothing
+        const want = JSON.stringify(disk.preset_sidecars['1'][region]);
+        const panel = await tc.pollForValue(() => {
+            const p = document.querySelector(EDITOR_SELECTOR)?.__panel;
+            return p?.session?.ops().length === 0
+                && JSON.stringify(p.rulesDoc?.preset_sidecars?.['1']?.[region] ?? null) === want ? p : null;
+        }, 'the APWorld Editor holds the preset (its region as on disk, no ops)', 15000, 50);
+        tc.reportCondition('the APWorld Editor holds the preset (its region as on disk, no ops)', !!panel);
+        if (!panel) return tc.getOverallResult();
+        await forgetCloudberryLevels();
+        // the region's own substrate, through the product's Re-roll ▸ (it opens the form at the next seed)
+        const reroll = await tc.pollForValue(
+            () => document.querySelector(`${EDITOR_SELECTOR} .apworld-sidecar-reroll[data-region-name="${region}"]`),
+            'the region\'s Re-roll ▸', 15000, 50);
+        if (reroll) reroll.click();
+        else panel._openRegionGeneration('1', region, 'cloudberry');
+        panel._render();
+        const go = await tc.pollForValue(() => document.querySelector(
+            `${EDITOR_SELECTOR} .apworld-region-generation[data-region-name="${region}"] .apworld-region-generate`),
+        'Generate ▸ under the block', 8000, 50);
+        tc.reportCondition('the form targets `cloudberry` and draws Generate ▸', panel._regionGen?.target === 'cloudberry' && !!go);
+        if (!go) return tc.getOverallResult();
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const seed = panel._regionGen.bag.seed;
+        const opsBefore = panel.session.ops().length;
+        const generatedBefore = cloudberryGenerationStats().generated;
+
+        // ⛓ The row HOLDS the page's generator until it has looked at the form mid-generation (a warm
+        //   hidden page generates in a few hundred ms, between two paints), then lets it go on.
+        const real = cloudberryGenerator();
+        tc.reportCondition('⛓ premise: the page installed a Cloudberry generator', !!real);
+        if (!real) return tc.getOverallResult();
+        let release = null;
+        const held = new Promise((r) => { release = r; });
+        let asked = 0;
+        const generate = real.generate;
+        real.generate = async (a) => { asked += 1; await held; return generate.call(real, a); };
+        restoreGenerator = () => { real.generate = generate; };
+        const t0 = performance.now();
+        const press = panel._generateRegion();          // ONE press
+        // while it generates: the form says so (on this page), and a second press is a no-op
+        const working = await tc.pollForValue(() => {
+            const t = document.querySelector(`${EDITOR_SELECTOR} .apworld-region-generation-elapsed`)?.textContent ?? '';
+            return /\(on this page\)/.test(t) ? t : null;
+        }, 'the form shows the region generating on this page', CONFIGURE_TIMEOUT_MS, 50);
+        tc.reportCondition(`the form shows it is working (${working})`, !!working);
+        tc.reportCondition(`…and the page generator was asked (${asked})`, asked >= 1);
+        const runBefore = panel._regionGen?.run;
+        const second = await panel._generateRegion();
+        tc.reportCondition('⛓ a second press while it generates starts nothing (no run, no error)',
+            second === null && panel._regionGen?.run === runBefore && panel.session.ops().length === opsBefore);
+        release();
+        const res = await press;
+        restoreGenerator();
+        const ms = Math.round(performance.now() - t0);
+        tc.log(`one press → ok ${res?.ok} on the page ${panel._regionGenLastRun?.onPage} in ${ms} ms; answer: ${panel._opMessage}`);
+        tc.reportCondition(`⛓⛓ ONE press built the region (${res?.ok ? 'ok' : res?.threw})`, res?.ok === true);
+        tc.reportCondition('…finished on the page (the worker has no game page)', panel._regionGenLastRun?.onPage === true);
+        tc.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        tc.assertEqual('…a set-region-sidecar whose provenance is the cloudberry regenerate',
+            'set-region-sidecar/regenerate-region-sidecar/cloudberry', `${op?.op}/${op?.provenance?.op}/${op?.provenance?.substrate}`);
+        tc.reportCondition(`⛓ the level was generated ONCE (${cloudberryGenerationStats().generated - generatedBefore})`,
+            cloudberryGenerationStats().generated - generatedBefore === 1);
+        // the rebuilt region is the pure op's on the same arguments (now cached), byte for byte
+        const pure = applyRulesDocOp(docObj, {
+            op: 'regenerate-region-sidecar', player: '1', region, substrate: 'cloudberry', seed,
+            regionParams: op?.provenance?.regionParams, hazardOpts: op?.provenance?.hazardOpts,
+            size: op?.provenance?.size, freeItems: op?.provenance?.freeItems,
+        });
+        tc.reportCondition(`the pure op on the same arguments builds (${pure.error ?? 'ok'})`, pure.ok);
+        tc.assertEqual('⛓⛓ the rebuilt region is the pure op\'s, byte for byte',
+            JSON.stringify(pure.doc?.preset_sidecars?.['1']?.[region]), JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]));
+        tc.reportCondition('…a new level (not the one on disk)', JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]) !== want);
+        tc.reportCondition('⛓ the answer is the op\'s own description, not a refusal',
+            String(panel._opMessage).startsWith(String(pure.description)) && !/^Refused/.test(String(panel._opMessage)));
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    } finally {
+        restoreGenerator();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-editor-regenerate-one-press',
+    name: 'Cloudberry: the APWorld Editor regenerates a Cloudberry region in ONE press',
+    description: 'P5c. Loads cloudberry_sphere_worldgen into the APWorld Editor, forgets every generated level, presses '
+               + 'Re-roll ▸ on region_2_2 and Generate ▸ ONCE: the worker (no game page) flags the pending generation, the '
+               + 'page finishes it (the form shows it generating on this page; a second press meanwhile starts nothing), '
+               + 'and ONE set-region-sidecar lands — the level generated once, byte-equal to the pure op on the same arguments. '
+               + 'The row holds the page generator until it has seen the form mid-generation, then releases it.',
+    testFunction: editorRegeneratesInOnePress,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 10. *Initialise procgen data* builds a whole Cloudberry slot in ONE press (P5d) ──────
+
+const INIT_DOC = `./presets/adventure/${PRESET_SEED}/${PRESET_SEED}_rules.json`;
+const initSection = () => document.querySelector(`${EDITOR_SELECTOR} .apworld-initialise`);
+
+async function editorInitialisesACloudberrySlotInOnePress(tc) {
+    let restoreGenerator = () => {};
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        const { cloudberryGenerationStats, cloudberryGenerator } = await import('../../cloudberryDemo/cloudberryGeneration.js');
+        const { INITIALISE_OP, initialiseSlot } = await import('../../apworldEditor/slotInitialise.js');
+        const { initialisePageRetryBound } = await import('../../apworldEditor/regionGenerationRun.js');
+        await tc.loadRulesFromFile(INIT_DOC);
+        await tc.stateManager.pingWorker('after-rules-load', 3000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: EDITOR_PANEL });
+        const panel = await tc.pollForValue(() => {
+            const p = document.querySelector(EDITOR_SELECTOR)?.__panel;
+            return p?.rulesDoc?.game_name && p.session?.ops().length === 0 ? p : null;
+        }, 'the APWorld Editor holds the bare adventure slot (no ops)', 15000, 50);
+        tc.reportCondition('the APWorld Editor holds the bare adventure slot (no ops)', !!panel);
+        if (!panel) return tc.getOverallResult();
+        panel._selectTab('map');
+        const door = await tc.pollForValue(() => document.querySelector(`${EDITOR_SELECTOR} .apworld-initialise-door`),
+            'the Map tab\'s Initialise door', 8000, 50);
+        tc.reportCondition('the empty Map offers the Initialise door', !!door);
+        if (!door) return tc.getOverallResult();
+        door.click();
+        const sub = await tc.pollForValue(() => initSection()?.querySelector('.apworld-initialise-substrate'),
+            'the Initialise form', 8000, 50);
+        if (!sub) return tc.getOverallResult();
+        sub.value = 'cloudberry';
+        sub.dispatchEvent(new Event('change', { bubbles: true }));
+        const go = await tc.pollForValue(() => (panel._initialise?.state?.substrate === 'cloudberry'
+            ? initSection()?.querySelector('.apworld-initialise-generate') : null), 'Generate ▸ for `cloudberry`', 8000, 50);
+        tc.reportCondition('the form targets `cloudberry` and draws Generate ▸', !!go);
+        if (!go) return tc.getOverallResult();
+        await forgetCloudberryLevels();
+        const p = String(panel.playerId);
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const opsBefore = panel.session.ops().length;
+        const generatedBefore = cloudberryGenerationStats().generated;
+
+        // ⛓ As in row 9: hold the page generator until the form has been seen finishing on the page.
+        const real = cloudberryGenerator();
+        tc.reportCondition('⛓ premise: the page installed a Cloudberry generator', !!real);
+        if (!real) return tc.getOverallResult();
+        let release = null;
+        const held = new Promise((r) => { release = r; });
+        let asked = 0;
+        const generate = real.generate;
+        real.generate = async (a) => { asked += 1; await held; return generate.call(real, a); };
+        restoreGenerator = () => { real.generate = generate; };
+        const t0 = performance.now();
+        go.click();                                      // ONE press
+        const working = await tc.pollForValue(() => {
+            const t = document.querySelector(`${EDITOR_SELECTOR} .apworld-initialise-elapsed`)?.textContent ?? '';
+            return /\(on this page\)/.test(t) ? t : null;
+        }, 'the form shows the slot initialising on this page', CONFIGURE_TIMEOUT_MS, 50);
+        tc.reportCondition(`the form shows it is working on this page (${working})`, !!working);
+        tc.reportCondition(`…and the page generator was asked (${asked})`, asked >= 1);
+        tc.reportCondition('⛓ the form draws no Generate ▸ while it runs (a second press cannot start)',
+            !initSection()?.querySelector('.apworld-initialise-generate'));
+        release();
+        const run = await tc.pollForValue(() => (panel._initialiseLastRun?.outcome ? panel._initialiseLastRun : null),
+            'the initialise run\'s outcome', CONFIGURE_TIMEOUT_MS, 100);
+        restoreGenerator();
+        const res = run?.outcome;
+        const ms = Math.round(performance.now() - t0);
+        const placed = res?.stats?.placed ?? 0;
+        tc.log(`one press → ok ${res?.ok} on the page ${run?.onPage} retries ${res?.retries} placed ${placed} in ${ms} ms; `
+            + `answer: ${panel._opMessage}`);
+        tc.reportCondition(`⛓⛓ ONE press built the slot (${res?.ok ? 'ok' : (res?.why ?? res?.threw)})`, res?.ok === true);
+        tc.reportCondition('…finished on the page (the worker has no game page)', run?.onPage === true);
+        tc.reportCondition(`…every placed region is a Cloudberry level (${placed})`, placed > 1
+            && Object.values(res?.entries ?? {}).every((e) => e.substrate === 'cloudberry'));
+        tc.reportCondition(`…within its bound (${res?.retries} retries ≤ ${initialisePageRetryBound(docObj, p)})`,
+            res?.retries >= 1 && res.retries <= initialisePageRetryBound(docObj, p));
+        tc.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        tc.assertEqual('…an initialise-procgen-layout as `cloudberry`', `${INITIALISE_OP}/cloudberry`,
+            `${op?.op}/${op?.provenance?.substrate}`);
+        tc.reportCondition(`⛓ each level generated ONCE (${cloudberryGenerationStats().generated - generatedBefore} for ${placed})`,
+            cloudberryGenerationStats().generated - generatedBefore === placed);
+        // the landed slot is a synchronous initialise on the same arguments, now every level is cached
+        const pure = initialiseSlot({ doc: docObj, player: p, substrate: 'cloudberry', gridDims: op?.provenance?.gridDims,
+            seed: op?.provenance?.seed, backExits: op?.provenance?.backExits, bag: op?.provenance?.bag });
+        tc.reportCondition(`the pure initialise on the same arguments builds (${pure.why ?? 'ok'})`, pure.ok === true);
+        tc.assertEqual('⛓⛓ the landed sidecars are the pure initialise\'s, byte for byte',
+            JSON.stringify(pure.entries), JSON.stringify(panel.rulesDoc.preset_sidecars?.[p]));
+        tc.reportCondition('⛓ the answer is the op\'s description, not a refusal', !/^Refused/.test(String(panel._opMessage)));
+        tc.reportCondition('the form closed', !initSection());
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    } finally {
+        restoreGenerator();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-editor-initialise-one-press',
+    name: 'Cloudberry: the APWorld Editor initialises a whole Cloudberry slot in ONE press',
+    description: 'P5d. Loads the bare adventure slot into the APWorld Editor, opens Initialise procgen data, picks `cloudberry`, '
+               + 'forgets every generated level and presses Generate ▸ ONCE: the worker (no game page) flags the pending '
+               + 'generation, the page finishes the slot (each ask builds one more region, within the slot\'s region-count '
+               + 'bound), and ONE initialise-procgen-layout lands — every level generated once, its sidecars byte-equal to the '
+               + 'pure initialise on the same arguments. The row holds the page generator until it has seen the form working on '
+               + 'this page, then releases it.',
+    testFunction: editorInitialisesACloudberrySlotInOnePress,
+    category: CATEGORY,
+    enabled: false,
+});

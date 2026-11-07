@@ -174,6 +174,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'bait-gate',
+        title: 'The BAIT GATE — a chaser on a cut and a water lure on its start side',
+        kind: 'constant',
+        constant: 'BAIT_GATE_REFUSALS',
+        names: M.baitGate.BAIT_GATE_REFUSALS,
+        file: SOURCES.baitGate,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

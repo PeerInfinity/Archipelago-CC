@@ -1,0 +1,4 @@
+player: 308 sampled tick(s), worst |Δ| 0 px
+game: hits 0 (max over frames), last frame t307 level 106; model: hits 0, deaths 0, level 106 at t307
+player: 331 sampled tick(s), worst |Δ| 0 px
+game: hits 1 (max over frames), last frame t330 level 104; model: hits 1, deaths 3, level 104 at t330

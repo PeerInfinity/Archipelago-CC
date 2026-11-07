@@ -1,0 +1,5 @@
+ROW {"tick":0,"goal":"reach-exit","strategy":{"verb":"dodge","rung":"dodge","climb":1,"stall":null,"phase":"beamtower@48,40","previews":1,"lane":{"ticks":413,"walked":413,"towers":["beamtower@48,40"]}},"obstacle":{"kind":"danger","id":"beamtower@48,40","sources":["hazard:beamtower@48,40"]}}
+ticks 330 level 104 records [{"goal":"reach-exit","to":106,"t":330}]
+hits [{"t":243,"level":105,"source":"beamtower","id":"beamtower@48,40","hits":1,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":-4.976761198554863,"landed":{"x":false,"y":true}}}]
+deaths [{"t":269,"level":105,"source":"pit","id":"pit@48,0","hits":1,"respawn":{"x":216,"y":72}},{"t":296,"level":105,"source":"pit","id":"pit@208,80","hits":0,"respawn":{"x":216,"y":72}},{"t":323,"level":105,"source":"pit","id":"pit@208,80","hits":0,"respawn":{"x":216,"y":72}}]
+fineLatticeWalks null

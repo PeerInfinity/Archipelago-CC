@@ -32,6 +32,11 @@
  * Double level BY NAME on a page without `__cloudberryEmbed.features.doubleJump` (`CloudberryFeatureMissing`), and the
  * Double level's rules name Double Jump everywhere. It needs a Cloudberry page that has the feature.
  *
+ * --physics (P5b) runs the --double-jump gate on `CLOUDBERRY_HERO_PHYSICS_STATE` (below): the same world with the hero's
+ * physics as world settings (non-default values) and `cloudberryHeroVariation` on, so every level's request carries its
+ * own `heroCustom.phsx` (the Double level's with its Double Jump sliders), every value inside its ruled range, the three
+ * heroes differ, and the world plays to Victory — with its committed world `cloudberry_hero_physics_worldgen`.
+ *
  * Modes:
  *   (default)  the world is generated under a THROWAWAY name and removed afterwards;
  *   --write    the world is generated as the COMMITTED `cloudberry_sphere_worldgen` world + preset
@@ -44,7 +49,7 @@
  * Needs the same-origin Cloudberry site (`node scripts/setup/fetch-cloudberry-site.mjs`) and, to play,
  * a dev server serving this tree (`--port`). Screenshots: `--shots <dir>`.
  *
- *   node scripts/procgen/check-cloudberry-sphere.mjs [--double-jump] [--port <n>] [--shots <dir>] [--keep] [--write|--check|--no-play]
+ *   node scripts/procgen/check-cloudberry-sphere.mjs [--double-jump|--physics] [--port <n>] [--shots <dir>] [--keep] [--write|--check|--no-play]
  *
  * @ci-box it shells out to this tree's Python venv, `world_generator` and `Generate.py`, and needs the fetched Cloudberry site, a headless WebGL page and a dev server.
  * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers the export there; the gate restores the file's bytes in its `finally` (except with --write, which keeps the committed presets' entries) — a SIGKILL skips that.
@@ -101,6 +106,29 @@ export const CLOUDBERRY_DOUBLE_JUMP_STATE = Object.freeze({
     substrateQuotas: Object.freeze({ cloudberry: 99 }),
     substrateMix: Object.freeze({}),
     substrateMode: 'quotas',
+});
+
+/**
+ * ⛓ CLOUDBERRY P5b — **THE HERO PHYSICS WORLD, SPELLED ONCE** (`--physics`; the committed
+ * `cloudberry_hero_physics_worldgen` and the in-app row `cloudberry-hero-physics-world-plays` read it).
+ * CLOUDBERRY_DOUBLE_JUMP_STATE with a non-default world hero and variation 0.25: each region draws its own hero
+ * near the world's (draw (5)), inside the ruled ranges (gravity ≤ 1.5 and jump length ≥ 0.85 among them: the ladder
+ * ruling, option A).
+ */
+export const CLOUDBERRY_HERO_PHYSICS_STATE = Object.freeze({
+    ...CLOUDBERRY_DOUBLE_JUMP_STATE,
+    params: Object.freeze({
+        ...CLOUDBERRY_DOUBLE_JUMP_STATE.params,
+        cloudberryHeroGravity: 1.3,
+        cloudberryHeroAccel: 1.2,
+        cloudberryHeroMaxSpeed: 1.3,
+        cloudberryHeroMaxFall: 1.2,
+        cloudberryHeroJumpLength: 1.1,
+        cloudberryHeroJumpAccel: 1.1,
+        cloudberryHeroFriction: 0.8,
+        cloudberryHeroSize: 0.85,
+        cloudberryHeroVariation: 0.25,
+    }),
 });
 
 /** The paths (up to depth 4) where two JSON values differ, for a failure message. */
@@ -160,13 +188,15 @@ async function main() {
     const WRITE = argv.includes('--write');
     const CHECK = argv.includes('--check');
     const PLAY = !CHECK && !argv.includes('--no-play');
-    const DOUBLE_JUMP = argv.includes('--double-jump');
+    const PHYSICS = argv.includes('--physics');
+    // --physics is the Double Jump world with hero physics: every --double-jump leg runs on it too.
+    const DOUBLE_JUMP = argv.includes('--double-jump') || PHYSICS;
 
     const here = path.dirname(fileURLToPath(import.meta.url));
     const repoRoot = path.resolve(here, '../..');
-    const COMMITTED = DOUBLE_JUMP ? 'cloudberry_double_jump_worldgen' : 'cloudberry_sphere_worldgen';
+    const COMMITTED = PHYSICS ? 'cloudberry_hero_physics_worldgen' : DOUBLE_JUMP ? 'cloudberry_double_jump_worldgen' : 'cloudberry_sphere_worldgen';
     const NAME = WRITE ? COMMITTED : COMMITTED.replace(/_worldgen$/, '_check_worldgen');
-    const GAME_NAME = `Cloudberry ${DOUBLE_JUMP ? 'Double Jump' : 'Sphere'}${WRITE ? '' : ' Check'} WorldGen`;
+    const GAME_NAME = `Cloudberry ${PHYSICS ? 'Hero Physics' : DOUBLE_JUMP ? 'Double Jump' : 'Sphere'}${WRITE ? '' : ' Check'} WorldGen`;
     const WORLD_DIR = path.join(repoRoot, 'worlds', NAME);
     const PRESET_DIR = path.join(repoRoot, 'frontend/presets', NAME);
     const PRESET_FILES_JSON = path.join(repoRoot, 'frontend/presets/preset_files.json');
@@ -236,7 +266,7 @@ async function main() {
         await loadPipelineSubstrates();
         const { buildRunFromState, runPresetHeadless, heavySubstrateIds } = await imp('frontend/modules/procgenPipeline/presetRun.js');
         const { CLOUDBERRY_SPHERE_DEMO_STATE, PRESETS_SKIPPED_AS_HEAVY } = await imp('frontend/modules/procgenPipeline/presetDefs.js');
-        const STATE = DOUBLE_JUMP ? CLOUDBERRY_DOUBLE_JUMP_STATE : CLOUDBERRY_SPHERE_DEMO_STATE;
+        const STATE = PHYSICS ? CLOUDBERRY_HERO_PHYSICS_STATE : DOUBLE_JUMP ? CLOUDBERRY_DOUBLE_JUMP_STATE : CLOUDBERRY_SPHERE_DEMO_STATE;
         const gen = await imp('frontend/modules/cloudberryDemo/cloudberryGeneration.js');
         const { installHeadlessCloudberryGenerator } = await import('./cloudberrySite.mjs');
 
@@ -334,6 +364,28 @@ async function main() {
             const djLoc = Object.values(compiled).flatMap((r) => r.locations ?? []).find((l) => (l.item?.name ?? l.item) === 'Double Jump');
             ok(!!djLoc && JSON.stringify(djLoc.access_rule) === '{"rule":"True_"}',
                 `--double-jump: Double Jump sits on a free location (${djLoc?.name})`);
+        }
+
+        if (PHYSICS) {
+            // P5b: every level carries its own hero (world values varied per region), inside the ruled ranges; the
+            // Double level's hero also carries its Double Jump sliders; the plain levels carry none of the ability ones.
+            const { CLOUDBERRY_HERO_PHYSICS } = await imp('frontend/modules/cloudberryDemo/cloudberryProcgenParams.js');
+            const heroes = regionIds.map((id) => [id, sidecars[id].playable_payload.params.generate.heroCustom ?? null]);
+            for (const [id, hc] of heroes) console.log(`  ${id}: hero ${JSON.stringify(hc)}`);
+            const general = CLOUDBERRY_HERO_PHYSICS.filter((h) => h.levels === 'all');
+            ok(heroes.every(([, hc]) => general.every((h) => typeof hc?.phsx?.[h.phsx] === 'number')),
+                '--physics: every level\'s request carries every general physics slider (the world hero is not the default)');
+            ok(heroes.every(([, hc]) => CLOUDBERRY_HERO_PHYSICS.every((h) => {
+                const v = hc?.phsx?.[h.phsx];
+                return v === undefined || (v >= h.min && v <= h.max && (!h.integer || Number.isInteger(v)));
+            })), '--physics: every value is inside its ruled range');
+            ok(new Set(heroes.map(([, hc]) => JSON.stringify(hc?.phsx))).size === heroes.length,
+                `--physics: the variation gives each level its own hero (${heroes.length} distinct)`);
+            const abilityOnly = CLOUDBERRY_HERO_PHYSICS.filter((h) => h.levels !== 'all').map((h) => h.phsx);
+            ok(heroes.every(([, hc]) => hc?.move === 'Double'
+                ? typeof hc.phsx.numjumps === 'number' && !('jetpackfuel' in hc.phsx)
+                : abilityOnly.every((k) => !(k in (hc?.phsx ?? {})))),
+            '--physics: the Double level carries its Double Jump sliders; the plain levels carry no ability slider');
         }
 
         // ── The mixed world (maze + cloudberry): generated twice, oracle, Python round trip ──

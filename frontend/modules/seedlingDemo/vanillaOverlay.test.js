@@ -431,8 +431,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   landing gate or their sub-region's entry). No name, exit or location moves.
         // ⛓ tile-rules-automation-r-a3 (4a96e1ec… -> 45f28a9f): the derived-rule table overrides 4 boundary exit rows, 2
         //   re-spelled and truth-table equal (L34 out_teleporter_128_0, L98 out_stairsup_112_112). No name, exit or location moves.
+        // ⛓ tile-rules-automation-r-a4 (45f28a9f… -> 2b2661b7): L20's lock@32,80 costs exactly its own press, so the
+        //   level_20__r1c4 <-> level_20__r3c1 internal rows drop the redundant Shield term (atlas id a05c56ce -> f60d4a58).
+        //   No name, exit or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('45f28a9ffc9aa1f0a59aa304d3fe9a1a');
+            .toBe('2b2661b7ccc15a34bf2f2bc6ac201285');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

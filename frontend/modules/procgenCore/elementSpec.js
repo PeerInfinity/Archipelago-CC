@@ -52,6 +52,7 @@ import { CHEST_LOOT } from './elements/chestLoot.js';
 import { KEY_GATE } from './elements/keyGate.js';
 import { BURN_GATE } from './elements/burnGate.js';
 import { HOLD_GATE, WEIGH_GATE } from './elements/strategyGate.js';
+import { BAIT_GATE } from './elements/baitGate.js';
 import {
     CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
     WATERFALL_GATE,
@@ -631,6 +632,29 @@ export const ELEMENT_TABLE = Object.freeze({
         extra: Object.freeze([]),
         needs: Object.freeze([]),
         needsStrategy: Object.freeze(['keylock']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE BAIT GATE — the solver's `bait` rung, as a gadget** (seedling gen
+     * baitgate; ⚖ the user 2026-11-04, "(1) Bait gadget", the last of "(b) More
+     * strategy elements"). The L6 pattern: a live chaser (a `bob`) on a main-path
+     * CUT, its wall grown, and ONE water cell (the lure) on the start side beside
+     * the door's approach. Pre-sword the body cannot be passed; the solver's ladder
+     * baits it (a stance whose chase line crosses the lure, then a dwell) and it
+     * drowns. Graded by the strategy arm: `--require=strategy:bait`.
+     *
+     * ⛓ `needs: []` — a lure takes no item. Placed LAST so no head moves in
+     * `ELEMENT_NAMES`; OPT-IN (in no biome default). ⛔ `meetsRequire` is left at its
+     * default: with `needs: []` it is never an ITEM directive's head, and no other
+     * row declares `bait`, so being the `strategy:bait` head moves no room.
+     */
+    baitgate: Object.freeze({
+        element: BAIT_GATE,
+        why: 'The BAIT GATE (the L6 pattern): a live `bob` on a main-path cut and one `water` cell (the lure) '
+            + 'on the start side beside the door\'s approach. Certified by the solver\'s `bait` rung (stand where '
+            + 'the chase line crosses the water, and wait for the body to drown).',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        needsStrategy: Object.freeze(['bait']),
     }),
 });
 

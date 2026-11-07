@@ -128,23 +128,61 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
 
     /**
      * ⛓⛓ FRONTIER2 (⚖ user 2026-10-05: "Both, report separately") — the
-     * frontier carries one coverage block per route mode. The tail follows the
-     * ROUTE-ONLY block (the progression pickups, walked: the route the chain was
-     * recorded on), and the top level IS that block's answer.
+     * frontier carries one coverage block per route mode.
+     * ⛓ TILE-FRONTIER-ROUTE (⚖ user 2026-11-04: "A: Small follow-up") — the tail
+     * follows the RECORDED block: the chain aligned against the route it was
+     * recorded on (`campaign-recording-route.json`, the survey's own route.json
+     * as derived at its `derivedAt`), and the top level IS that block's answer.
+     * Today's route-only route is reported beside it and may have moved.
      */
-    it('⛓ the tail follows the ROUTE-ONLY frontier — the chain\'s own route, covered whole', () => {
+    it('⛓ the tail follows the RECORDED route — the chain\'s own route, covered whole', () => {
         const frontier = JSON.parse(readFileSync(
             join(HERE, 'fixtures', 'campaign-frontier.json'), 'utf8'));
+        const rec = frontier.coverage.recorded;
+        expect(rec.mode).toBe('recorded');
+        expect(rec.source).toBe(frontier.recordingRoute.path);
+        for (const k of ['covered', 'lastArrival', 'nextStep', 'refusal', 'why']) {
+            expect(rec[k]).toEqual(frontier[k]);
+        }
+        expect(rec.complete).toBe(frontier.complete === true);
+        expect(campaignNextLevel()).toBe(rec.complete ? null : rec.nextStep
+            ? rec.nextStep.level : rec.lastArrival.level);
+        expect(rec.covered).toBe(CAMPAIGN_SEGMENT_NAMES.length);
+        expect(rec.routeSteps).toBe(rec.covered);
+        expect(frontier.recordingRoute.routeSteps).toBe(rec.routeSteps);
+    });
+
+    /**
+     * ⛓ TILE-FRONTIER-ROUTE — where TODAY's route-only route leaves the
+     * recording is a field, pinned as a relation over the artifact and the
+     * fixture: the chain followed the recording at that step (its measured
+     * arrival is the recorded crossing), today's step differs on the physical
+     * walk, and the chain's alignment against today's route breaks no later.
+     */
+    it('⛓ today\'s route-only route: where it leaves the recording, named against both', () => {
+        const frontier = JSON.parse(readFileSync(
+            join(HERE, 'fixtures', 'campaign-frontier.json'), 'utf8'));
+        const recording = JSON.parse(readFileSync(
+            join(HERE, 'fixtures', 'campaign-recording-route.json'), 'utf8'));
         const only = frontier.coverage['route-only'];
         expect(only.mode).toBe('route-only');
-        for (const k of ['covered', 'lastArrival', 'nextStep', 'refusal', 'why']) {
-            expect(only[k]).toEqual(frontier[k]);
+        expect(only.through).toBe(recording.routeMode.through);
+        const d = only.differsFromRecorded;
+        if (d === null) {
+            expect(only.covered).toBe(CAMPAIGN_SEGMENT_NAMES.length);
+            return;
         }
-        expect(only.complete).toBe(frontier.complete === true);
-        expect(campaignNextLevel()).toBe(only.complete ? null : only.nextStep
-            ? only.nextStep.level : only.lastArrival.level);
-        expect(only.covered).toBe(CAMPAIGN_SEGMENT_NAMES.length);
-        expect(only.routeSteps).toBe(only.covered);
+        const k = d.fromStep - 1;
+        const recStep = recording.steps[k];
+        expect(d.recorded).toMatchObject({ level: recStep.level, visit: recStep.visit,
+            crossesTo: recStep.crossesTo, restart: recStep.restart });
+        expect(d.segment).toBe(CAMPAIGN_SEGMENT_NAMES[k]);
+        if (recStep.crossesTo !== null) expect(frontier.arrivals[k]).toBe(recStep.crossesTo);
+        const walk = (s) => (s ? [s.level, s.visit, s.crossesTo, s.restart] : null);
+        expect(walk(d.current)).not.toEqual(walk(d.recorded));
+        expect(d.recordedSteps).toBe(recording.steps.length);
+        expect(d.currentSteps).toBe(only.routeSteps);
+        expect(only.covered).toBeLessThanOrEqual(k);
     });
 
     /**
@@ -161,10 +199,10 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
             join(HERE, 'fixtures', 'campaign-frontier.json'), 'utf8'));
         const full = frontier.coverage.full;
         expect(full.mode).toBe('full');
-        expect(full.through).toBe(frontier.coverage['route-only'].through);
+        expect(full.through).toBe(frontier.coverage.recorded.through);
         expect(full.complete).toBe(false);
         expect(full.covered).toBeGreaterThan(0);                                 // non-vacuity
-        expect(full.covered).toBeLessThan(frontier.coverage['route-only'].covered);
+        expect(full.covered).toBeLessThan(frontier.coverage.recorded.covered);
         expect(full.routeSteps).toBeGreaterThan(frontier.coverage['route-only'].routeSteps);
         expect(full.divergence.segment).toBe(CAMPAIGN_SEGMENT_NAMES[full.covered]);
         expect(full.divergence.arrives).toBe(frontier.arrivals[full.covered]);

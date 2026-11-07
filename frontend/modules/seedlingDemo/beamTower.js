@@ -157,6 +157,20 @@ export function stepBeamTowerFrame(t, { time, frozen }) {
 }
 
 /**
+ * ⛓ fidelity L105 D1 (`CONTACT_FIDELITY.previewBeamTowerDrift`) — the `y` a tower at `y` holds after `k` more
+ * unfrozen updates, the first at `Game.time` `time`: `stepBeamTowerFrame`'s drift, summed in its own order (one
+ * `+=` per update), so a forecast row equals the run's row exactly when no update in between is frozen.
+ */
+export function beamTowerDriftedY(y, time, k) {
+    let out = y;
+    for (let j = 0; j < k; j += 1) {
+        out += BEAM_TOWER.bobRadius * Math.sin(
+            worldFrame(time + j, BEAM_TOWER.bobPhases, BEAM_TOWER.bobLoops) / BEAM_TOWER.bobPhases * 2 * Math.PI);
+    }
+    return out;
+}
+
+/**
  * Every rect the tower's beam can test, over every side its `rate` visits, each widened by the drift's whole span
  * both ways — the union a refusal asks when the tower's anim (or its `y`) is unknown. `span` is `hazards.BEAM_BOB_SPAN`.
  */

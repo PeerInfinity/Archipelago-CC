@@ -134,12 +134,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 96,
+            "count": 95,
             "id": "plan"
         },
         {
-            "browser": 139,
-            "count": 190,
+            "browser": 141,
+            "count": 191,
             "id": "probe"
         },
         {
@@ -235,8 +235,8 @@ export const INSTRUMENTS = frz({
     ],
     "counts": {
         "blockStyle": 507,
-        "browser": 205,
-        "cited": 266,
+        "browser": 207,
+        "cited": 268,
         "files": 525,
         "lineStyle": 18,
         "withDocblock": 525,
@@ -966,7 +966,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-bosslocks.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "argValue"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
@@ -975,18 +977,33 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "at",
                 "check-frontier",
+                "from",
                 "json",
                 "no-write",
-                "write-frontier"
+                "write-frontier",
+                "write-recording-route"
             ],
             "file": "census-seedling-campaign.mjs",
             "flags": [
                 {
                     "how": [
+                        "argValue"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "check-frontier"
+                },
+                {
+                    "how": [
+                        "argValue"
+                    ],
+                    "name": "from"
                 },
                 {
                     "how": [
@@ -1005,6 +1022,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write-frontier"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-recording-route"
                 }
             ],
             "inheritedFlags": [
@@ -2094,6 +2117,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "no-play"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "physics"
                 },
                 {
                     "how": [
@@ -3899,7 +3928,8 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -8019,33 +8049,6 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
-            "file": "plan-seedling-binding-witness.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "check"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "plan-seedling-binding-witness — ⛓⛓ THE EVENT-LAYER BINDING LEDGER (slice rules-sharedbinding-witnesses): ONE GAME WITNESS PER RE-ADMITTED `sharedBinding` EVENT.",
-            "path": "scripts/procgen/plan-seedling-binding-witness.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "plan",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "check"
-            ],
             "file": "plan-seedling-bobsoldier.mjs",
             "flags": [
                 {
@@ -11738,6 +11741,52 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-ceremony126.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-ceremony126 — ⛓⛓⛓ seedling-fidelity-ceremony126: L64's GHOSTSPEAR CEREMONY ON THE GAME — the solver's route-survey step-125 tape (the stance walk enters the pickup, the verb pages the ceremony) and a `primary` press whose thrust lands on the ceremony's first frozen frame (LOST) — PLAYED ON THE GAME AN…",
+            "path": "scripts/procgen/probe-seedling-ceremony126.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg"
             ],
             "browser": true,
@@ -11879,6 +11928,55 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "out"
+            ],
+            "file": "probe-seedling-chest-incidental.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tape-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING HAMMER CHEST-INCIDENTAL — two chests opened on ONE visit, witnessed on the game (W0's game witness).",
+            "path": "scripts/procgen/probe-seedling-chest-incidental.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "passedThroughChest"
             ],
@@ -11939,7 +12037,6 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "only",
                 "record",
-                "repeat",
                 "set"
             ],
             "file": "probe-seedling-cleartag.mjs",
@@ -11955,12 +12052,6 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "record"
-                },
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "repeat"
                 },
                 {
                     "how": [
@@ -16417,39 +16508,6 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
-                "write"
-            ],
-            "file": "probe-seedling-r5-press-axes.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write-probes"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "probe-seedling-r5-press-axes — WHICH PRESS DID THE GAME REFUSE, AND WHY?",
-            "path": "scripts/procgen/probe-seedling-r5-press-axes.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
                 "plan-only"
             ],
             "file": "probe-seedling-r5-shaft-solver.mjs",
@@ -20614,7 +20672,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "rerecord",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [

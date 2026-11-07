@@ -1,0 +1,37 @@
+lane t0 0 samples 413 truncated {"kind":"crossed","at":{"x":88.5006559711718,"y":143.01354771123036},"why":"the preview crossed to level 106; the danger map is scoped to one room"} corridor [{"x":136,"y":72},{"x":136,"y":56},{"x":72,"y":56},{"x":72,"y":24},{"x":40,"y":24},{"x":40,"y":88},{"x":88,"y":88},{"x":88,"y":152}]
+sample keys [ 'x', 'y', 'tick', 'arrows', 'chasers', 'wp', 'held' ]
+0 tick 1 prev 215.20 72.00 ["left"] live 215.20 72.00 hits 0
+40 tick 41 prev 168.20 72.00 ["left"] live 168.20 72.00 hits 0
+80 tick 81 prev 136.56 68.69 ["up"] live 136.56 68.69 hits 0
+120 tick 121 prev 108.76 55.39 ["left"] live 108.76 55.39 hits 0
+160 tick 161 prev 72.31 54.59 ["up"] live 72.31 54.59 hits 0
+200 tick 201 prev 70.26 24.05 ["left"] live 70.26 24.05 hits 0
+ADV 205 {"hitX":null,"hitY":null,"s":{"x":64.4145194284227,"y":24.045266559087015,"vx":-1.1500000000000001,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+ADV 206 {"hitX":null,"hitY":null,"s":{"x":63.514519428422695,"y":24.045266559087015,"vx":-0.9000000000000001,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+ADV 207 {"hitX":null,"hitY":null,"s":{"x":62.06451942842269,"y":24.045266559087015,"vx":-1.4500000000000002,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+ADV 208 {"hitX":null,"hitY":null,"s":{"x":60.86451942842269,"y":24.045266559087015,"vx":-1.2000000000000002,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+ADV 209 {"hitX":null,"hitY":null,"s":{"x":59.914519428422686,"y":24.045266559087015,"vx":-0.9500000000000002,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+ADV 210 {"hitX":null,"hitY":null,"s":{"x":58.414519428422686,"y":24.045266559087015,"vx":-1.5000000000000002,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+ADV 211 {"hitX":{"rect":{"x":48,"y":26.996438781764994,"w":16,"h":32,"right":64,"bottom":58.996438781764994},"cls":{"as3":"BeamTower","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":8,"dy":16,"w":16,"h":32,"originX":8,"originY":24,"src":"Game.as:2087 + Puzzlements/BeamTower.as:28-44"},"tag":"beamtower","x":48,"y":40,"beamTowerId":"beamtower@48,40","live":true},"hitY":null,"s":{"x":58.414519428422686,"y":24.045266559087015,"vx":-1.2500000000000002,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+211 tick 212 prev 57.16 24.05 ["left"] live 58.41 24.05 hits 0
+ADV 212 {"hitX":{"rect":{"x":48,"y":26.71112182687645,"w":16,"h":32,"right":64,"bottom":58.71112182687645},"cls":{"as3":"BeamTower","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":8,"dy":16,"w":16,"h":32,"originX":8,"originY":24,"src":"Game.as:2087 + Puzzlements/BeamTower.as:28-44"},"tag":"beamtower","x":48,"y":40,"beamTowerId":"beamtower@48,40","live":true},"hitY":null,"s":{"x":58.414519428422686,"y":24.045266559087015,"vx":-1.0000000000000002,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+212 tick 213 prev 56.16 24.05 ["left"] live 58.41 24.05 hits 0
+ADV 213 {"hitX":{"rect":{"x":48,"y":26.432188881109973,"w":16,"h":32,"right":64,"bottom":58.43218888110997},"cls":{"as3":"BeamTower","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":8,"dy":16,"w":16,"h":32,"originX":8,"originY":24,"src":"Game.as:2087 + Puzzlements/BeamTower.as:28-44"},"tag":"beamtower","x":48,"y":40,"beamTowerId":"beamtower@48,40","live":true},"hitY":null,"s":{"x":58.414519428422686,"y":24.045266559087015,"vx":-1.5500000000000003,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+213 tick 214 prev 54.61 24.05 ["left"] live 58.41 24.05 hits 0
+ADV 214 {"hitX":{"rect":{"x":48,"y":26.160740765370164,"w":16,"h":32,"right":64,"bottom":58.160740765370164},"cls":{"as3":"BeamTower","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Solid","dx":8,"dy":16,"w":16,"h":32,"originX":8,"originY":24,"src":"Game.as:2087 + Puzzlements/BeamTower.as:28-44"},"tag":"beamtower","x":48,"y":40,"beamTowerId":"beamtower@48,40","live":true},"hitY":null,"s":{"x":58.414519428422686,"y":24.045266559087015,"vx":-1.3000000000000003,"terrain":32},"held":["left"],"chasers":["flyer@192,16"]}
+214 tick 215 prev 53.31 24.05 ["left"] live 58.41 24.05 hits 0
+215 tick 216 prev 52.26 24.05 ["left"] live 58.41 24.05 hits 0
+216 tick 217 prev 51.46 24.05 ["left"] live 58.41 24.05 hits 0
+217 tick 218 prev 50.11 24.05 ["left"] live 58.41 24.05 hits 0
+218 tick 219 prev 49.01 24.05 ["left"] live 58.41 24.05 hits 0
+219 tick 220 prev 48.16 24.05 ["left"] live 58.41 24.05 hits 0
+220 tick 221 prev 46.76 24.05 ["left"] live 58.41 24.05 hits 0
+221 tick 222 prev 45.61 24.05 ["left"] live 58.41 24.05 hits 0
+222 tick 223 prev 44.71 24.05 ["left"] live 58.41 24.05 hits 0
+223 tick 224 prev 43.26 24.05 ["left"] live 58.41 24.05 hits 0
+240 tick 241 prev 39.91 24.05 [] live 58.41 24.05 hits 0
+280 tick 281 prev 39.20 50.55 ["down"] live 216.00 86.32 hits 1
+320 tick 321 prev 40.00 87.66 ["right"] live 216.00 87.62 hits 1
+360 tick 361 prev 86.20 87.66 ["left"] live 59.75 24.00 hits 1
+400 tick 401 prev 88.50 128.51 ["down"] live 24.00 33.70 hits 1
+first divergence at sample 211

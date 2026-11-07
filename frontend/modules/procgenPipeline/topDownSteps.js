@@ -28,6 +28,7 @@
 
 import { createRng } from '../shared/rng.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { startingInventoryNeeds } from '../procgenCore/startingInventory.js';
 import {
     layoutTopDown,
     realiseTopDownGen,
@@ -114,11 +115,20 @@ function stepFinalize(env, { onProgress = null } = {}) {
 // _runTopDown compile tail exactly.
 function stepCompile(env, { onProgress = null } = {}) {
     onProgress?.({ type: 'phase', name: 'compile rules.json' });
-    const c = env.compileIn;
     const {
         grid, startCell, stats, sphereTree, spherePlan, attributionWarnings,
         menuRegion, menuWarnings,
     } = env.finalize;
+    // ⛓ P5d — grant only the free items the realise drifted onto (`grantsUsedBy`).
+    const granted = grantsUsedBy({
+        sourceStarting: (env.compileIn.startingItems ?? [])
+            .filter((n) => !(env.compileIn.grantedItems ?? []).includes(n)),
+        grantedItems: env.compileIn.grantedItems ?? [],
+        startingItems: env.compileIn.startingItems ?? [],
+    }, env.layout?.stats?.freeItemsUsed ?? null, {
+        substrateIds: [...new Set(grid.allRegions().map((r) => r.substrate))],
+    });
+    const c = { ...env.compileIn, startingItems: granted.startingItems, grantedItems: granted.grantedItems };
     const enriched = !!(c.sphereLog && sphereTree && spherePlan);
     const rulesJson = buildRulesJson(grid, {
         startCell,
@@ -254,6 +264,43 @@ export function grantedLibraryItems(source, playerId, substrateIds, { avoidIds =
         sourceItemDefs,
         grantedItems,
         startingItems: [...sourceStarting, ...grantedItems],
+        defs: grantedItemDefs(grantedItems, { avoidIds }),
+    };
+}
+
+/**
+ * ⛓⛓ P5d (⚖ Robert 2026-11-05: *"Only what was used"*, scope *"Both"*) — **THE
+ * GRANT NARROWED TO WHAT THE BUILT ROOMS LEAN ON.** `grantedLibraryItems` is the
+ * CANDIDATE list: what the realiser is handed free (unchanged, so the geometry is
+ * unchanged). Two things lean on a candidate, and only those candidates are granted:
+ *   - the engine's surplus-exit drift (`used`, from `collectUsedFreeItems`): a
+ *     drifted exit's geometry needs the item, its logic does not;
+ *   - a substrate's declared `startingInventory` need (bounce: an arrow to move at
+ *     all — its braid puts every portal on a free arrow), for each realised
+ *     substrate in `substrateIds` whose need the source's own starting items do not
+ *     already meet: every candidate the need names.
+ * `used` null = unknown (a hand-edited room may lean on any candidate): the full
+ * candidate grant, the pre-P5d answer. A source starting item is never dropped.
+ *
+ * @param {{sourceStarting: string[], grantedItems: string[]}} grant `grantedLibraryItems`' answer
+ * @param {string[]|null} used the realise's `freeItemsUsed`
+ * @param {{substrateIds?: string[], avoidIds?: Set<number>|null}} [opts]
+ * @returns {object} the same shape, `grantedItems` / `startingItems` / `defs` narrowed
+ */
+export function grantsUsedBy(grant, used, { substrateIds = [], avoidIds = null } = {}) {
+    if (!Array.isArray(used)) return grant;
+    const lean = new Set(used);
+    for (const id of substrateIds ?? []) {
+        const entry = substrateRegistry.get(id);
+        for (const need of startingInventoryNeeds(entry, grant.sourceStarting)) {
+            if (!need.met) for (const item of need.anyOf) lean.add(item);
+        }
+    }
+    const grantedItems = grant.grantedItems.filter((n) => lean.has(n));
+    return {
+        ...grant,
+        grantedItems,
+        startingItems: [...grant.sourceStarting, ...grantedItems],
         defs: grantedItemDefs(grantedItems, { avoidIds }),
     };
 }

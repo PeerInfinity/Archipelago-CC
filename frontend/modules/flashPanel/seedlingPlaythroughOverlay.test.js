@@ -49,6 +49,8 @@ import {
     overlayEntitySemantics,
     overlayTileSemantics,
     resolveOverlayCondition,
+    buildGroupOpeners,
+    GROUPED_LOCK_EXCEPTIONS,
 } from './seedlingPlaythroughOverlay.js';
 
 const lock = (tag, tset, persistTag = '3') => ({
@@ -267,11 +269,14 @@ describe('the refutation log — the mechanism, built before it is needed', () =
         // ruling function rather than by reading the exception table — a test
         // that read the table would pass even if `lockRuling` never consulted
         // it, which is exactly how the first cut of this fix would have looked.
-        const ruled = overlayEntitySemantics(
-            { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } },
-            {}, { level: 20 });
+        // ⛓ tile-rules-automation-r-a4: still GATED (the refuted OPEN is gone), now on exactly its group's press, which
+        // the ruling reads off the group census (a gadget level 20 holding the one latching ButtonRoom, tag 4).
+        const L20 = { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } };
+        const groupOpeners = buildGroupOpeners({ levels: [{ level: 20, entities: [L20,
+            { type: 'buttonroom', x: 192, y: 16, attrs: { tset: '0', tag: '4', room: '-1' } }] }] });
+        const ruled = overlayEntitySemantics(L20, {}, { level: 20, groupOpeners });
         expect(ruled.kind).toBe('gated');
-        expect(conditionKey(ruled.condition)).toBe(conditionKey({ flag: 'hasShield' }));
+        expect(conditionKey(ruled.condition)).toBe(conditionKey({ event: 'L20 flag 4: lock@32,80 cleared' }));
         // …and the general rule is UNCHANGED for every other grouped lock.
         const other = overlayEntitySemantics(
             { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } },
@@ -519,5 +524,39 @@ describe('the charged doors and the completion condition', () => {
         expect(CROSS_ROOM_PREREQUISITES.map((p) => `${p.gated}${p.gatedReads ? `(${p.gatedReads})` : ''} <- ${p.writer} ${p.verb} `
             + `{${p.flag.namedRoom ?? p.flag.room},${p.flag.tag}}`))
             .toEqual(['finaldoor <- watcher talk {watcher_text,0}', 'teleporter(ownTag) <- yeti talk {writer,1}']);
+    });
+});
+
+// ⛓ tile-rules-automation-r-a4 (⚖ Robert 2026-11-04 "Yes, in R-A4 (Recommended)") — L20's lock@32,80 costs exactly its
+// group's ONE latching press, read off the map's group census, never listed; the row only names WHICH lock.
+describe('R-A4: a GROUPED_LOCK_EXCEPTIONS lock costs its own press, derived', () => {
+    const L20 = { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } };
+    const press = (x, y, tag) => ({ type: 'buttonroom', x, y, attrs: { tset: '0', tag: String(tag), room: '-1' } });
+    const ctxFor = (entities) => ({ level: 20, groupOpeners: buildGroupOpeners({ levels: [{ level: 20, entities: [L20, ...entities] }] }) });
+
+    it('the row is item-free: it names its lock and carries no condition of its own', () => {
+        expect(Object.keys(GROUPED_LOCK_EXCEPTIONS)).toEqual(['20:lock@32,80']);
+        expect(GROUPED_LOCK_EXCEPTIONS['20:lock@32,80'].condition).toBeUndefined();
+    });
+    it('on the delivered map: GATED on L20 flag 4 (the ButtonRoom\'s tag, 4), which resolves to Has(that event)', () => {
+        const map = JSON.parse(readFileSync(fileURLToPath(new URL('./atlases/seedling-map.json', import.meta.url)), 'utf8'));
+        const entity = map.levels.find((l) => l.level === 20).entities.find((e) => e.type === 'lock' && e.x === 32 && e.y === 80);
+        const ruled = overlayEntitySemantics(entity, base('lock'), { level: 20, groupOpeners: buildGroupOpeners(map) });
+        expect(ruled.kind).toBe('gated');
+        expect(ruled.condition).toEqual({ event: 'L20 flag 4: lock@32,80 cleared' });
+        expect(resolveOverlayCondition(ruled.condition)).toEqual({ rule: 'Has', args: { item_name: 'L20 flag 4: lock@32,80 cleared' } });
+    });
+    it('the tag is the PRESS\'s, not the lock\'s: a gadget press with tag 9 names flag 9', () => {
+        expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 9)])).condition)
+            .toEqual({ event: 'L20 flag 9: lock@32,80 cleared' });
+    });
+    it('refused by name: no census, no press, two presses, a holding Button, a rope opener', () => {
+        expect(() => overlayEntitySemantics(L20, base('lock'), { level: 20 })).toThrow(/needs ctx.groupOpeners/);
+        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([]))).toThrow(/no opener/);
+        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), press(208, 16, 5)]))).toThrow(/exactly one opener/);
+        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), { type: 'button', x: 64, y: 64, attrs: { tset: '0' } }])))
+            .toThrow(/1 holding/);
+        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([{ type: 'rope', x: 64, y: 64, attrs: { tset: '0', tag: '2' } }])))
+            .toThrow(/exactly one opener/);
     });
 });

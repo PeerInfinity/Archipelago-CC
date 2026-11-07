@@ -176,6 +176,16 @@ A substrate may put an item of its own into a region. For example, a lock and th
 
 `flash_seedling_gen` declares it: its key gate's five key items ([Flash Substrate](./flash.md#declarations-g9)). In the plan-less modes a generated room's key gate takes the least colour in neither `held` nor `introduced`. An explicit `keygate;type=N` whose key already stands elsewhere is refused (`keygate-colour-shared`), and so is a sixth key-gate room (`keygate-colours-exhausted`). `keygate-colour-not-allocated` stays only for a room handed neither a request nor `introduced`.
 
+### Build-time — goal containers
+
+A substrate may let a region's GOAL take a container other than its default. For example, a generated Seedling room asked for a goal chest makes its location 0 the chest instead of the torch pickup. It reports what happened by declaring `goalContainer`, read only through `procgenCore/goalContainer.js`:
+
+- `goalContainer.noteOf(payload)`: one region's note, read off its SERIALISED sidecar payload (the bytes the world ships, after every re-roll). `null` means the region was not configured for a goal container. `{placed: true}` means it got one. `{placed: false, reason}` means it kept its default goal, and `reason` is a name the substrate declares once, or one from `GOAL_CONTAINER_NOT_PLACED_REASONS`.
+
+**The goal-containers report.** `procgen_metadata["<p>"].goalContainers = { requested, placed, notPlaced: {<reason>: <count>} }`, the shape of the introductions report above. `buildRulesJson` folds the notes of the slot's own sidecars (`goalContainerReportOfSidecars`). It is the SLOT's, like the rest of that block. The field is ABSENT, never empty, when no region was configured, so every other world's metadata is unchanged. The one reason `procgenCore/goalContainer.js` names is `no-ap-location`: the container stands as the region's goal, but the region holds no AP location to be it (a spiral room dealt no item).
+
+`flash_seedling_gen` declares it ([Flash Substrate](./flash.md#declarations-g9)). Its other reasons are the generator's own goal-chest refusals: `the-goal-chest-has-no-stance-pocket` and `the-goal-chest-pocket-is-not-legal`.
+
 ### Build-time — content sources (zone-based substrates)
 
 A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
@@ -280,7 +290,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 97 fields · 16 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 99 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -386,6 +396,13 @@ Groups are this document's own § headings, matched to a field by the section th
 | `itemIntroduction.introducibleItems` | — | — | — | fn | — | — | — | — | — |
 | `itemIntroduction.replayableItems` | — | — | — | fn | — | — | — | — | — |
 
+**Build-time — goal containers**
+
+| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|
+| `goalContainer` | — | — | — | {noteOf} | — | — | — | — | — |
+| `goalContainer.noteOf` | — | — | — | fn | — | — | — | — | — |
+
 **Build-time — content sources (zone-based substrates)**
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
@@ -450,7 +467,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | — |
 | `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | 12 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
+| `defaultProcgenParams` | 10 keys | 26 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — |
 | `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | — |
 | `gateHostingHint` | fn | fn | — | — | — | — | — | — | — |
