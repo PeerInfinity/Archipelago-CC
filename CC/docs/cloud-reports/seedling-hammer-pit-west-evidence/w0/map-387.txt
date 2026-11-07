@@ -1,0 +1,103 @@
+level 40 player (488,904) tick 0 aim (376,456)
+  chaser bob@320,112 at (328.0,120.0) speed 0.5 leash ? pad 0
+  chaser bob@288,112 at (296.0,120.0) speed 0.5 leash ? pad 0
+  chaser bob@288,80 at (296.0,88.0) speed 0.5 leash ? pad 0
+  chaser bob@304,144 at (312.0,152.0) speed 0.5 leash ? pad 0
+  chaser bob@272,112 at (280.0,120.0) speed 0.5 leash ? pad 0
+  chaser bobsoldier@880,832 at (888.0,840.0) speed 0.8 leash ? pad 16
+  chaser bob@736,752 at (744.0,760.0) speed 0.5 leash ? pad 0
+  chaser bob@736,800 at (744.0,808.0) speed 0.5 leash ? pad 0
+  chaser bob@192,480 at (200.0,488.0) speed 0.5 leash ? pad 0
+  chaser bob@352,448 at (360.0,456.0) speed 0.5 leash ? pad 0
+  chaser bob@352,416 at (360.0,424.0) speed 0.5 leash ? pad 0
+  chaser bob@208,448 at (216.0,456.0) speed 0.5 leash ? pad 0
+  chaser bob@224,496 at (232.0,504.0) speed 0.5 leash ? pad 0
+  chaser puncher@128,624 at (136.0,632.0) speed 1 leash ? pad 8
+  chaser puncher@816,128 at (824.0,136.0) speed 1 leash ? pad 8
+  spinner spinner@192,144 at (200,152)
+  spinner spinner@192,128 at (200,136)
+  spinner spinner@192,160 at (200,168)
+  spinner spinner@816,848 at (824,856)
+  spinner spinner@880,848 at (888,856)
+volumes: 17
+  bob@320,112 {"x":324,"y":116,"w":8,"h":8,"right":332,"bottom":124} a stepped bob at its LIVE position
+  bob@288,112 {"x":292,"y":116,"w":8,"h":8,"right":300,"bottom":124} a stepped bob at its LIVE position
+  bob@288,80 {"x":292,"y":84,"w":8,"h":8,"right":300,"bottom":92} a stepped bob at its LIVE position
+  bob@304,144 {"x":308,"y":148,"w":8,"h":8,"right":316,"bottom":156} a stepped bob at its LIVE position
+  bob@272,112 {"x":276,"y":116,"w":8,"h":8,"right":284,"bottom":124} a stepped bob at its LIVE position
+  bobsoldier@880,832 {"x":868,"y":822,"w":40,"h":40,"right":908,"bottom":862} a stepped bobsoldier at its LIVE position
+  bob@736,752 {"x":740,"y":756,"w":8,"h":8,"right":748,"bottom":764} a stepped bob at its LIVE position
+  bob@736,800 {"x":740,"y":804,"w":8,"h":8,"right":748,"bottom":812} a stepped bob at its LIVE position
+  bob@192,480 {"x":196,"y":484,"w":8,"h":8,"right":204,"bottom":492} a stepped bob at its LIVE position
+  bob@352,448 {"x":356,"y":452,"w":8,"h":8,"right":364,"bottom":460} a stepped bob at its LIVE position
+  bob@352,416 {"x":356,"y":420,"w":8,"h":8,"right":364,"bottom":428} a stepped bob at its LIVE position
+  bob@208,448 {"x":212,"y":452,"w":8,"h":8,"right":220,"bottom":460} a stepped bob at its LIVE position
+  bob@224,496 {"x":228,"y":500,"w":8,"h":8,"right":236,"bottom":508} a stepped bob at its LIVE position
+  puncher@128,624 {"x":122,"y":620,"w":28,"h":28,"right":150,"bottom":648} a stepped puncher at its LIVE position
+  puncher@816,128 {"x":810,"y":124,"w":28,"h":28,"right":838,"bottom":152} a stepped puncher at its LIVE position
+  iceturret@472,400 {"x":471.5,"y":407.5,"w":32.5,"h":32.5,"right":504,"bottom":440} a live ice turret, priced at the hull of its rest two-cycle 
+  bombpusher@112,128 {"x":112,"y":128,"right":160,"bottom":176,"w":48,"h":48} a static "Enemy" body
+admits with nothing removed: false; with every chaser removed: true
+legend: # not walkable (no volumes); letter = walkable but inside that volume; . walkable; @ player; * aim
+  A = bob@320,112
+  B = bob@288,112
+  C = bob@288,80
+  D = bob@304,144
+  E = bob@272,112
+  F = bobsoldier@880,832
+  G = bob@736,752
+  H = bob@736,800
+  I = bob@192,480
+  J = bob@352,448
+  K = bob@352,416
+  L = bob@208,448
+  M = bob@224,496
+  N = puncher@128,624
+  O = puncher@816,128
+  P = iceturret@472,400
+  Q = bombpusher@112,128
+      4567890123456789012345678901234
+ 368  ....#####################...###
+ 384  #########################.#.#..
+ 400  #########################pp,#..
+ 416  #########....#####k...###pp,##.
+ 432  #########.##.......##...#,,,##.
+ 448  #########l##.#####j*#.###...##.
+ 464  #########.##.#####....###...##.
+ 480  ####....i.##.############.#.#..
+ 496  ####.####.m..############...#..
+ 512  ####.####################...###
+ 528  ####.####################...###
+ 544  ####.####################...###
+ 560  ####.###########.##############
+ 576  ####.#####################.####
+ 592  ####.##########...########.####
+ 608  ####.###########.#########.####
+ 624  ####n...########.#########.####
+ 640  ####,...########.#########.####
+ 656  ####....########.#########.####
+ 672  ####...........................
+ 688  ##########################.####
+ 704  ##########################.####
+ 720  ##########################.####
+ 736  ##########################.####
+ 752  ##########################.####
+ 768  ##########################.####
+ 784  .....................#####.####
+ 800  .....................#####.####
+ 816  .....................#####.####
+ 832  .....................#####.####
+ 848  .....................#####.####
+ 864  .....................#####.####
+ 880  .....................#####.####
+ 896  .....................#####@####
+ 912  .....................##########
+near set: bob@192,480 bob@352,448 bob@352,416 bob@208,448 bob@224,496 puncher@128,624
+size 1: none admits
+size 2: none admits
+size 3: none admits
+smallest admitting sets (size 4):
+  bob@192,480 + bob@352,448 + bob@208,448 + puncher@128,624
+  bob@192,480 + bob@352,448 + bob@224,496 + puncher@128,624
+  bob@192,480 + bob@352,416 + bob@208,448 + puncher@128,624
+  bob@192,480 + bob@352,416 + bob@224,496 + puncher@128,624

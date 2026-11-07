@@ -1,0 +1,4 @@
+[train] M2 no re-derivation (the stale resolution kept): RED       × leg 872 (from L43, (328,600)): OFF the set refuses at wall B; ON it SOLVES hitless — the tree burnt, {40,12} written 78511ms |      × leg 871 (from L39, (488,904)): ON it SOLVES hitless — the census's wall C does not stand on this head 35361ms
+[train] M4 the exemptions not carried: GREEN (SURVIVED)  
+[train] M5 the order not counted in the strategy bound: GREEN (SURVIVED)  
+[train] M6 the repeat guard dropped: GREEN (SURVIVED)  

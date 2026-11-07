@@ -1,0 +1,14 @@
+d0	388	0	D0	-	REFUSED	7054	-	dfcdadd4fbe7	null	{"walk":94,"detour":6960}
+d0	387	0	D0	-	REFUSED	7054	-	c333ca88509e	null	{"walk":94,"detour":6960}
+cut	388	0	CUT	-	SOLVED	202	1156	6b7d8619ac44	{"gm":true,"hits":[],"deaths":0}	{"walk":97,"kill-chaser":105}
+cut	387	0	CUT	-	SOLVED	199	1111	4a938a65a90e	{"gm":true,"hits":[],"deaths":0}	{"walk":94,"kill-chaser":105}
+arms	388	0	DVB	-	REFUSED	96	-	fe38b2ae6d53	null	{"walk":94,"detour":2}
+arms	871	0	D0	-	REFUSED	364	-	7c2fd7098f6e	null	{"stance-hypothesis":2,"block-route":362}
+arms	871	0	DVB	-	REFUSED	364	-	7c2fd7098f6e	null	{"stance-hypothesis":2,"block-route":362}
+arms	388	0	CUT+DVB	-	SOLVED	202	1156	6b7d8619ac44	{"gm":true,"hits":[],"deaths":0}	{"walk":97,"kill-chaser":105}
+arms	871	0	DVB+tree	40:0	REFUSED	278	-	f795b1136012	null	{"walk":68,"kill-chaser":208,"detour":2}
+arms	388	0	OFF-after	-	REFUSED	7054	-	dfcdadd4fbe7	null	{"walk":94,"detour":6960}
+arms	871	0	D0+tree	40:0	REFUSED	7236	-	a95a383e87ab	null	{"walk":68,"kill-chaser":208,"detour":6960}
+cutfx	387	0	CUT-cutfx	-	SOLVED	199	1111	4a938a65a90e	{"gm":true,"hits":[],"deaths":0}	{"walk":94,"kill-chaser":105}
+cutfx	388	0	CUT-cutfx	-	SOLVED	202	1156	6b7d8619ac44	{"gm":true,"hits":[],"deaths":0}	{"walk":97,"kill-chaser":105}
+cutfx	388	0	OFF-cutfx	-	REFUSED	7054	-	dfcdadd4fbe7	null	{"walk":94,"detour":6960}

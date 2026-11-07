@@ -1,0 +1,10 @@
+ ✓ frontend/modules/seedlingDemo/strategySwitchGrade.slow.test.js (11 tests) 42146ms
+ ✓ frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js (4 tests) 907873ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeExact.slow.test.js (2 tests) 1042696ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorpseBump2.slow.test.js (3 tests) 689202ms
+ ✓ frontend/modules/seedlingDemo/strategySwitchApproach.slow.test.js (1 test) 38117ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 68609ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 80918ms
+ Test Files  7 passed (7)
+      Tests  23 passed (23)
+EXIT 0

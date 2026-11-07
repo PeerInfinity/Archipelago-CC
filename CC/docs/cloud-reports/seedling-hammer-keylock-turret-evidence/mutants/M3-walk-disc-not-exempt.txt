@@ -1,0 +1,7 @@
+M3-walk-disc-not-exempt: '            contactsOverride: exempt,\n            ...(KEYLOCK_WAIT_PRICED.enabled && lockRow?.keyLine' -> '            contactsOverride: undefined,\n            ...(KEYLOCK_WAIT_PRICED.enabled && lockRow?.keyLine'
+✓ frontend/modules/seedlingDemo/hammerKeylockTurret.test.js (6 tests) 19078ms
+✓ a generated key line inside a live turret's range: OFF "0 cell(s)"; ON the stance, then the kill refuses by name  5102ms
+✓ the same room with no turret, and with the turret out of range: ON = OFF, nothing asked  369ms
+✓ L40 leg 412 with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 748, hitless on a fresh run  10350ms
+✓ L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH's staging point  3241ms
+Tests  6 passed (6)

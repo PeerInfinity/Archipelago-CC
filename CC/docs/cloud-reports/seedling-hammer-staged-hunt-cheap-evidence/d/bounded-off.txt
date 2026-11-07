@@ -1,0 +1,94 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/strategySwitch.test.js [2m([22m[2m22 tests[22m[2m)[22m[33m 1628[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) absent: the worker's answer gains no field; present: it names the list, even on a refusal [33m 1517[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/entityBlocks.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 5078[2mms[22m[39m
+     [33m[2m✓[22m[39m is in neither the simulation closure nor the solver-family closure [33m 1877[2mms[22m[39m
+     [33m[2m✓[22m[39m is imported by nothing but its own test [33m 2529[2mms[22m[39m
+     [33m[2m✓[22m[39m …and a grep of `entities('<family>')` over the family files finds the same files [33m 530[2mms[22m[39m
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-KTjJKa/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ [32m✓[39m scripts/procgen/boxLock.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 20070[2mms[22m[39m
+     [33m[2m✓[22m[39m takes the box, naming who took it and the head it froze [33m 318[2mms[22m[39m
+     [33m[2m✓[22m[39m releases on exit, so the next taker takes it cleanly [33m 831[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses a second taker BY NAME, printing holder / pid / since / head [33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m reclaims a stale lock by `kill -0`, naming whom it reclaimed from [33m 377[2mms[22m[39m
+     [33m[2m✓[22m[39m lets exactly ONE of eight simultaneous takers hold the box; the rest refuse [33m 3435[2mms[22m[39m
+     [33m[2m✓[22m[39m serialises four QUEUED simultaneous takers — every one takes, no two hold at once [33m 7918[2mms[22m[39m
+     [33m[2m✓[22m[39m lets the holder's own child pass through, and says that is what happened [33m 476[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a QUEUED taker die on SIGTERM — it never takes the box later [33m 2611[2mms[22m[39m
+     [33m[2m✓[22m[39m passes when nothing moved, and refuses BY ROW when the head does [33m 1185[2mms[22m[39m
+     [33m[2m✓[22m[39m makes a REAL browser gate refuse before it spends anything [33m 1025[2mms[22m[39m
+     [33m[2m✓[22m[39m is DECLARED by the gate, not detected from its text [33m 406[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/contentIdentity.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 322[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStagedHuntScanMemo.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 5809[2mms[22m[39m
+     [33m[2m✓[22m[39m on BK2COMBAT's corridor run: the memo's answer is the no-memo answer, ask after ask and after a still tick; the second ask computes no cell [33m 5790[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 16923[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice [33m 3315[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens [33m 1158[2mms[22m[39m
+     [33m[2m✓[22m[39m RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait [33m 2048[2mms[22m[39m
+     [33m[2m✓[22m[39m WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick [33m 7859[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (224,80): the solver's own plan IS the witness `l30keylock-pit224` (kill, lock, crossing) [33m 1017[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (240,80): the solver's own plan IS the witness `l30keylock-pit240` (kill, lock, crossing) [33m 578[2mms[22m[39m
+     [33m[2m✓[22m[39m the chaser arm at the pit landing: the player's box prices nothing; the body's box finds (88,120) [33m 624[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 3257[2mms[22m[39m
+     [33m[2m✓[22m[39m sets CHOOSER_PAIR (on, size 3) in the worker before solverBot loads; nothing else [33m 490[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env [33m 814[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 692[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 1065[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 8462[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF the solver's orbit arm finds no hitless candidate [33m 3266[2mms[22m[39m
+     [33m[2m✓[22m[39m ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key [33m 4019[2mms[22m[39m
+     [33m[2m✓[22m[39m the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px [33m 471[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBk2Combat.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 4054[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: deriveKillByChaser carries no `waits`; ON: the same answer plus the cells the body never came to, nearest last [33m 4036[2mms[22m[39m
+ [32m✓[39m scripts/git-hooks/boxLockCommit.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 1906[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses a foreign LIVE holder on this tree: exit 1 and the sentence [33m 472[2mms[22m[39m
+     [33m[2m✓[22m[39m allows a dead holder [33m 385[2mms[22m[39m
+     [33m[2m✓[22m[39m stops a real `git commit` in the locked tree, and not in another [33m 482[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerClearTagStand.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 24660[2mms[22m[39m
+     [33m[2m✓[22m[39m L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits [33m 15000[2mms[22m[39m
+     [33m[2m✓[22m[39m L0 leg 105: ON answers OFF's plan byte for byte (its transit is punched, so the kill already ran first) [33m 9571[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingSolverSurface.test.js [2m([22m[2m36 tests[22m[2m)[22m[33m 58843[2mms[22m[39m
+     [33m[2m✓[22m[39m (iv) the family file list equals the import closure [33m 1349[2mms[22m[39m
+     [33m[2m✓[22m[39m the import door's closure is the simulation's: solverView.js pulls in no family file [33m 709[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED [33m 1747[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files` [33m 2031[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door [33m 1766[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED" [33m 2366[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments) [33m 2158[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule [33m 3223[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED" [33m 2360[2mms[22m[39m
+     [33m[2m✓[22m[39m (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice [33m 3411[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table" [33m 1832[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT naming a simulation module in a family file ⇒ GREEN [33m 2840[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once [33m 3695[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family" [33m 3462[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.entities(name) with a variable ⇒ RED, a named blind spot [33m 2546[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table [33m 3002[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) a COMMENT naming run.pushables in a family file ⇒ GREEN [33m 2287[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once [33m 2034[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once [33m 1987[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS [33m 1730[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name) [33m 1638[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table [33m 1556[2mms[22m[39m
+     [33m[2m✓[22m[39m (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values [33m 1487[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN [33m 1532[2mms[22m[39m
+     [33m[2m✓[22m[39m (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both" [33m 1499[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m202 passed[39m[22m[90m (202)[39m
+[2m   Start at [22m 22:10:46
+[2m   Duration [22m 64.56s[2m (transform 9.64s, setup 0ms, import 22.05s, tests 151.01s, environment 1ms)[22m
+
