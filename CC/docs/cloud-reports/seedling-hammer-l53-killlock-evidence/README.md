@@ -16,3 +16,16 @@
     i-frame, keys), each derivation's refusal classes, the camera, and the puncher's blocked sweep steps.
 - The captured requests (~2 MB) are not committed; re-capture with the `page-sweep-d0` command. The committed fixture is
   `frontend/modules/seedlingDemo/fixtures/hammer-l53-killlock/`.
+- `m/` — the design measurements and the game witness:
+  - `ablations.jsonl` — node (`chain.mjs`, cap 40960) over the captured requests: the prototype (`L53_X`, scratch) and its
+    ablations (NOTOL: the rewind at tolerance 0; NOGRACE: no dying grace), and this branch's switch OFF/ON.
+  - `arms-l95-switches.jsonl` — L95-PUNCHER's answer (`CHASER_STAGED_HUNT` + `CLEARTAG_STAND`, both on main) with and
+    without this switch.
+  - `page-sweep-on.tsv` — the page sweep with `--solver-env=SEEDLING_KILLLOCK_CHASER_REWIND=1`.
+  - `contact-capture-900{1,2}-on.json.gz` — `probe-seedling-contact-divergence.mjs --capture` (a scratch copy that adds
+    `?seedlingSolverEnv=` to the page URL: `scratch-rock-lag-and-probe-env.patch`), ON, 9001 and 9002 each on its own
+    page: the request, the plan, every sampled game tick with the player and every body. THE FIDELITY WITNESS.
+  - `body-diff-*.txt` (`tools/body-diff.mjs`), `rocks-broken-model.txt` (`tools/rocks-broken.mjs`) — the first body
+    divergence and the model's rock rows.
+  - `rock-lag-whatif.txt` — the scratch what-if (`L53_ROCK_LAG=n`: `brokenRockIdsNow` read n updates later, in a
+    scratch worktree only): at n = 2 both captures reproduce, every body and the player, worst |Δ| 0.000 px.
