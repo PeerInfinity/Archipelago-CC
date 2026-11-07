@@ -98,8 +98,9 @@ export function rowVerdict(row) {
  *
  * @param {object[]} rows `arrivalSolidCensus` rows
  * @param {object} ctx
- * @param {(landing:object) => {region_id:string, exit_id:string}} ctx.departure the atlas endpoint the
- *   landing's door departs from
+ * @param {(landing:object) => {region_id:string, exit_id:string}|Array<{region_id:string, exit_id:string}>} ctx.departure
+ *   the atlas endpoint(s) whose connection lands on the landing (⛓ ER E4a: under a shuffled layout, the doc's
+ *   connections that end at its arrival exit — each gets the gate)
  * @param {(row:object, solid:{cls,x,y}) => {region_id:string, sub_region?:string, side:string, across?:string[]}} ctx.place
  *   where the event sits (the obstacle's open side); throws by name when it cannot say
  * @param {(row:object, solid:{cls,x,y}) => object|null} ctx.rule the obstacle's own crossing cost as a
@@ -155,9 +156,10 @@ export function deriveObstacleEvents(rows, ctx) {
 
     const exitGates = [];
     for (const { landing, ids } of [...byLanding.values()]) {
-        const dep = ctx.departure(landing);
         const has = ids.map((id) => ({ rule: 'Has', args: { item_name: nameOf.get(id) } }));
-        exitGates.push({ ...dep, rule: has.length === 1 ? has[0] : { rule: 'And', children: has } });
+        for (const dep of [].concat(ctx.departure(landing))) {
+            exitGates.push({ ...dep, rule: has.length === 1 ? has[0] : { rule: 'And', children: has } });
+        }
     }
     exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
         || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
