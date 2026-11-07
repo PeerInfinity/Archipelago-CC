@@ -1,0 +1,9 @@
+Run:
+rc=0
+PASS: CAMPAIGN: no uncaught page errors during the ship — none
+PASS: CAMPAIGN: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+ALL PASS
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (193 docs, 9 sections, 12 categories).
+
+[exited with code 0]

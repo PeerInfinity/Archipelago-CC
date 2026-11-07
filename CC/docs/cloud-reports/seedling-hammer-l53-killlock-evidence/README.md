@@ -29,3 +29,9 @@
     divergence and the model's rock rows.
   - `rock-lag-whatif.txt` — the scratch what-if (`L53_ROCK_LAG=n`: `brokenRockIdsNow` read n updates later, in a
     scratch worktree only): at n = 2 both captures reproduce, every body and the player, worst |Δ| 0.000 px.
+- `i/` — the switch's rows: `mutants.txt` (`tools/mutants.py`, a scratch worktree), `fixture-cut.txt` (cut = uncut).
+- `radius/` — the ON radius: `ids.txt` (the 234 legs in a jellyfish / puncher / kill-lock level), `page-sweep-off.tsv`
+  (the page sweep OFF at this head with request capture), `radius-off-on.jsonl.gz` (`tools/radius.mjs`: each captured
+  request solved as the worker solves it, OFF and ON, each plan re-driven on a fresh run; `moved` = digest differs).
+- `d/` — the gate outputs (`bounded-*`, `slow-hammer`, `train`, `producer-*`, `identity`, `surface`, `constants`,
+  `check-ref`, `docs-index`, `tick0`, `wasm-ship`, `env-strategy`).
