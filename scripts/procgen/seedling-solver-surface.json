@@ -1005,9 +1005,9 @@
         "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 129
+        "solverBot.js": 130
       },
-      "sites": 180,
+      "sites": 181,
       "seen": "both",
       "via": [
         "direct",
