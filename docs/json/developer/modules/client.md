@@ -25,6 +25,19 @@
 -   Provides the main UI panel for server connection, console output, and command input.
 -   Acts as a primary "host" for the `Timer` module's UI, providing a placeholder for the progress bar and control buttons.
 
+#### Which rules a room uses
+
+For a game whose rules can be built from server data (Metamath, DepGraph, APCalc), the client builds them after login. For any other game the order is (`client/core/messageHandler.js`):
+
+1. **The exact-seed preset**: a committed preset made from this room's seed, loaded as it is.
+2. **The rules the server sends.** A world built by world_generator sends its own rules document in slot_data (`worldgen_rules`, an envelope `{format, player, doc}`; `world_generator/README.md`). The client checks it against the room (game, location and item IDs) and lays the server's placements and slot_data over it (`client/core/localRulesOverlay.js`).
+3. **A local document** of a generated world: the loaded rules or a committed preset of the game at another seed, overlaid the same way.
+4. **Wait.** With none of these, the client stays logged in but holds the Connected and runtime-state packets (no checks are sent), prints what it needs, publishes `client:rulesNeeded`, and continues once a document of that game loads.
+
+Because slot_data only arrives with `Connected`, a game with no exact-seed preset and no builder always connects first and decides after login. A server document is refused by name and the client falls back to a local document when its `format` is not the client's `WORLDGEN_RULES_FORMAT` (an older or newer generator), when it carries a retired rules.json shape, when it fails the ID check, or when it fails to load. A world whose document was over its `rules_in_slot_data_max_kb` sends `worldgen_rules_omitted` instead, and the console says so.
+
+The overlay also writes the room's item into each procgen pickup's sidecar entry (`playable_payload.items[].id`, and `locations[].item` for the Seedling generated rooms). A maze draws and collects a pickup only when its id is set, and a server-sent document carries none.
+
 #### Events Published
 
 While most of its actions result in calls to the `StateManager` (which then publishes state changes), the `Client` module's core components publish key network status events on the `eventBus`:
