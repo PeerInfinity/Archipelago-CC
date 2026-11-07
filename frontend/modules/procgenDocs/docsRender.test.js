@@ -298,7 +298,8 @@ describe('⛓ the links the render emits', () => {
         //   388 → 389: goal-chest pipeline — substrate-registry.md § Build-time — goal containers → flash.md
         //              § Declarations (G9) (1 doc).
         //   389 → 390: cloudberry P5d — cloudberry.md § the back exit → modules/apworldEditor.md (1 repo).
-        expect(checked).toBe(390);
+        //   390 → 396: cloudberry P7a — the status strip: cloudberry.md ↔ flash.md (3 doc), and 3 same-doc.
+        expect(checked).toBe(396);
     });
 
     it('tags each link with the kind that produced it', () => {

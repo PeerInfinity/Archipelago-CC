@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 141,
-            "count": 191,
+            "browser": 142,
+            "count": 192,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 507,
-        "browser": 207,
-        "cited": 268,
-        "files": 525,
+        "blockStyle": 508,
+        "browser": 208,
+        "cited": 269,
+        "files": 526,
         "lineStyle": 18,
-        "withDocblock": 525,
-        "withFlags": 445
+        "withDocblock": 526,
+        "withFlags": 446
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11041,6 +11041,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-watchertalk-witness — ⛓⛓⛓ fidelity WATCHERTALK D3: THE WATCHER'S EVENT `{114,0}`, EARNED BY THE SOLVER'S CLEAR-TAG FROM THE DIVERGENCE SWEEP'S TWO L114 ARRIVALS (`CONTACT_FIDELITY.watcherTalkVerb` ON).",
             "path": "scripts/procgen/plan-seedling-watchertalk-witness.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-cloudberry-status-strip.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "viewport"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-cloudberry-status-strip — **THE CLOUDBERRY PANEL'S STATUS STRIP, PLAYED AND PHOTOGRAPHED** (cloudberry P7a).",
+            "path": "scripts/procgen/probe-cloudberry-status-strip.mjs"
         },
         {
             "argvHelpers": [
