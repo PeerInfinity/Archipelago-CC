@@ -150,20 +150,25 @@ had named 5 reds, all records this slice owed (§9).
 | bounded fast set (the brief's list + every `grep -a` hit, 112 files) | **110/112, 2731/2733.** Reds: `contactFidelity.test.js` "the shipped defaults" and `fidelityDrillWater.test.js` "ships OFF". These are the two rows a flip re-pins. Green: `fidelityDrill`, `fidelityDrillKill`, `dangerMap`, `entityBlocks`, `seedlingRoomBodySkin` (the `roombody-drill-L88` golden), `dashShape`, `dashOnlyWindow`, `jsRuntimeSolverShouldStop`, `levelRunStateDigest`, `levelRunDigestRead`, `solverEnvChannel`, `r8Acceptance`, the roster pins |
 | every other test that reads a `fixtures/*-witness/` dir, plus the key-order pins and the constants census (86 files) | **85/86.** The red is `procgenDocs/generated.test.js`: `registerBackend: duplicate id 'empty'`, the known worktree artifact from the symlinked `shared` submodule. In the main checkout with the key ON it is 55/55, and `generate-procgen-reference --check` MATCHES |
 | slow (5 files: `fidelityL32ArenaPrefix` + every `.slow.` that reads a witness or a drill) | **16/16** |
-| train (`fidelityL40Bk2` + every `.train.` that reads a witness or a drill: 6 hammer pins) | see §5a |
+| train (`fidelityL40Bk2` + every `.train.` that reads a witness or a drill: 6 hammer pins) | **7/7 files, 21/21 tests** (§5a) |
 | identity block + six producer `--check`s | **identical to OFF on every row** (acceptance `abb206c8`). The first flip run's `generated set` row needed the venv in the worktree; it was re-run with the primary's venv (§5a) |
-| `ci-producer-checks.mjs --jobs=3` | see §5a |
+| `ci-producer-checks.mjs --jobs=3` | **97 run / 0 red / 1 skipped** |
 | page mini-sweep, every leg in the drill rooms (21: 292–299, 700–708, 717–720), pristine base vs flip | **21/21 identical** (end, ticks, room hits, divergences; `d3-page-drill-rooms-{base,flip}.tsv`) |
 | local route survey, the drill-room and L89 steps 84, 86, 88, 99, 117 (the survey never enters L91), OFF vs ON | **identical** (rows md5 `1a2cad6b…` both arms; 84 SOLVED 476 t, 86 REFUSED, 88 SOLVED 291 t, 99 SOLVED 135 t, 117 REFUSED) |
 | `seedlingDerivedRuleTable.js --print-engine-closure` ∩ diff | not measured: the brief's path `frontend/modules/seedlingDemo/seedlingDerivedRuleTable.js` does not exist at the base (§10). The diff's model files are `drill.js`, `levelRun.js`, `dangerMap.js`, `contactFidelity.js` |
 
 **What a flip owes:** the default, plus two re-pins (`contactFidelity.test.js` defaults, `fidelityDrillWater.test.js`
-"ships OFF"). No committed tape, game witness, producer digest or skin golden moves. No hammer pin moves (on the rows
-measured).
+"ships OFF"). No committed tape, game witness, producer digest or skin golden moves. No hammer pin moves (the train tier is green ON).
 
 ### 5a. Late rows
 
-(filled below at the last head)
+All three were measured in the flip tree at `7e806288` with the default set `true`:
+
+| gate | result |
+|---|---|
+| train (`fidelityL40Bk2` + `hammerGhostKillRung`, `hammerIceTurretStatic`, `hammerLatchWeigh`, `hammerSouthDoor`, `hammerSpinnerPress`, `hammerTurretApproach`) | **7/7 files, 21/21 tests**: no hammer pin moves |
+| identity block (re-run with the primary's venv) | rc 0. `generated set` OK, and every hash row equals OFF (`identity-flip-on.txt`) |
+| `ci-producer-checks.mjs --jobs=3` | **97 run / 0 red / 1 skipped** (`plan-seedling-r7-ends-meet`, a CI browser arm; `producers-flip-on.txt`) |
 
 ## 6. The rows this moves (before → after)
 
