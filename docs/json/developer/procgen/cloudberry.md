@@ -98,13 +98,34 @@ A payload's `items` map names Double Jump only for a Double-hero level. The `dou
 
 The bot is the page's own: the computer's recording of the level, replayed. The host drives it through the substrate's playback proxy (the surface the Playback Bot and loop mode use), which the bridge turns into `botWalkTo` calls on the page:
 
-- **A location** (`{kind: 'pickup', id: <check>}`): the player respawns at the start of the coin's piece and plays that piece's recording to the coin. Without the piece's items it falls through the dashed platforms (`died`), or the recording runs out short of the coin (`timeout`).
+- **A location** (`{kind: 'pickup', id: <check>}`): the player plays on to the coin (see *Playing on* below). Without the piece's items it falls through the dashed platforms (`died`), or the recording runs out short of the coin (`timeout`).
 - **An exit** (`{kind: 'portal', id: <side>}`): the player walks to the door and leaves by that side, without the menu.
   - A side the **start door** offers (`startDoorSides`: the way back, and the side the player arrived by) is left by the start door. The player respawns at the level's start, where the start door is, so it needs no item.
-  - Every other side is left by the end door. The player respawns at the start of the last piece and plays its recording to the door, so it needs the last piece's items.
+  - Every other side is left by the end door. The player plays on to the end of the last piece's recording and then walks to the door, so it needs the last piece's items.
   - `options.door` (`'start'` or `'end'`) forces one door.
 
 The start door's walk is a Cloudberry page feature: the page says it has it with `__cloudberryEmbed.features.botStartDoor`. A page without it leaves every side by the end door.
+
+**Playing on** (Cloudberry branch `p7b-continuous-bot`, `features.botContinuous`; ⚖ Robert 2026-11-06: the bot "should not instantly teleport when it collects an Archipelago item. It should continue its playback to the end"). The player plays the piece recordings from where it is. Coins on the way are collected in passing, and after a goal the player keeps playing to the end of its recording. In the last piece that means walking on to the end door and standing there, without leaving. The page respawns the player only where no recording carries it, and reports each respawn as a `botNote` event:
+
+| Note | When | Where the player respawns |
+|---|---|---|
+| `ladder` | The end of piece k's recording, while the goal is in a later piece. No recording crosses the elevator ladder between pieces. | Checkpoint k+1. The page shows "ladder: skipping to checkpoint k+1". |
+| `restart` (`reason: 'died'`) | A death: a just-received item made a platform solid or changed the hero, so the recording no longer fits. | The game's own death and respawn, at the last checkpoint passed. Then that piece's recording plays again. |
+| `restart` (`reason: 'missed'`) | The goal's tick has passed, or its piece's recording ran out, without the goal. | The same checkpoint, without a death. |
+| `rewind` | The goal is behind the player: an earlier piece, or a tick of this piece already played. | The goal's piece checkpoint. |
+| `idle` | The player is not on a recording: the first walk, a keyboard player's bob, a parked bob that died. | The current piece's checkpoint (the last one passed). |
+| `start` | A walk to a start-door side (the way back). | The level's start (no item needed; unchanged). |
+
+A walk restarts at most 3 times (`options.retries`). It also stops at the same failure twice: the same piece, tick and items, which a replay would only repeat. Then it ends `died` or `timeout` with `exhausted: true` and the `reason`, and the page shows it in red. Each event has a `text` for display. The page calls the host's OPTIONAL `__swfBridge.botStatus(event)` for every `bot` and `botNote` event; the status strip shows them. `options.respawn: true` asks for the pre-P7b walk (respawn at the goal's piece). The rows use it for a walk to a gate whose item is unheld: playing on from the start would collect the free coins on the way, and those can hold that very item. A page without the feature respawns at the goal's piece on every walk. The ladder crossing itself (a walk-through instead of the note) is P7c.
+
+Measured on the native oracle (`--embed-test`; every check in piece order, then the end door, the host answering 30 steps after each result), before and after:
+
+| Battery | Walks | Reached | Deaths per 100 walks | Respawns |
+|---|---|---|---|---|
+| Committed worlds + demo pack (19 levels) | 49 | 49 / 49 both | 0 / 0 | before: 49 (every walk); after: 19 idle (the first walk) + 21 ladders, 0 within a piece |
+| Demo-pack shapes, 42 seeds, every witnessed coin a check | 723 | 723 / 723 both | 0 / 0 | before: 723; after: 42 idle + 54 ladders, 0 within a piece |
+| The same, items withheld for each gated walk, then granted | 60 (committed) | 51 / 51 both | 15.0 / 31.7 | after: each gated walk fails by name after one restart (the same death twice). One restart followed items changed mid-play, as ruled. |
 
 **A walk sent before the game page is up.** Until the first Cloudberry region the panel shows its waiting page, which runs the flash bridge too; then it swaps in the game page. A `walkTo` sent in that window reaches the waiting page and would be lost with it, leaving the Playback Bot waiting on its first target. The panel's proxy therefore remembers the latest `walkTo` sent while the game page is not up (a `stop` or `reset` forgets it), and sends it again when the game page's bridge announces `iframe:appReady`. This is the bot channel's twin of procgenPlayer's re-publish of the active region on the same event. The rule is `cloudberryDemo/heldWalkTo.js` (unit-tested). Measured: the tutorial walk run on a cold page failed 2/2 before (Play pressed 0.1 s after the load) and passed 3/3 after, on the local copy and on the Pages path.
 
@@ -124,9 +145,9 @@ Every mode is priced by **game time**. The page calls `setPlayClock(running, {ga
 - Live play and the Bot cost the same per second of play.
 - Playback costs `durationSeconds` × the current rate.
 
-The page settles the clock at the door: just before `sendExit` it reports the clock stopped, with the game seconds up to the door. A visit then costs exactly `floor(its game seconds)`. This is Cloudberry branch `p3b-exit-clock`; the test surface is `app.exitClockSettles`. A page without it bills each visit up to its last periodic report, which can be up to one second before the door.
+The page settles the clock at the door: just before `sendExit` it reports the clock stopped, with the game seconds up to the door. A visit then costs exactly `floor(its game seconds)`. This is Cloudberry branch `p3b-exit-clock`; the test surface is `app.exitClockSettles`. The clock then stays stopped at that value until the next configure, for 5 s at most (Cloudberry `p7b-continuous-bot`). The page keeps stepping while the host moves, and a running report from that gap would bill a second the visit did not play. It was measured as an 11th second charged for a 10.77 s visit in 2 of 3 runs, and 0 of 5 with the hold. A page without it bills each visit up to its last periodic report, which can be up to one second before the door.
 
-The Bot respawns at the goal's piece rather than walking there, so a Bot visit costs the pieces it plays, not the whole level from the start.
+A Bot visit costs the pieces it plays. A page that plays on (§ The bot, above) plays each visit from the level's start, skipping the ladders. An older page respawns at each goal's piece, so its visits cost less. The table below was measured on the older page.
 
 **Measured** on the committed `cloudberry_sphere_worldgen` preset, with a `loop_costs` generated from its sphere log (rate 1 everywhere):
 
@@ -314,6 +335,7 @@ The entry declares `regionGeometry: SIDES` and its own `exitSides` declaration, 
 | `cloudberry-hero-physics-world-plays` | The hero physics world: the start level configures with its custom-physics hero (the hash matches: the page regenerated the same hero). The bot reaches its check coin (Double Jump received) and the end door. The next level is a Double hero with its own physics (two jumps held), and the bot reaches its check coin, which is checked. |
 | `cloudberry-editor-regenerate-one-press` | The APWorld Editor regenerates a Cloudberry region in ONE press (P5c). The row forgets every generated level, presses Re-roll ▸ on `region_2_2` and Generate ▸ once. The worker flags the pending generation and the page finishes it; the form shows *(on this page)* while the row holds the generator, and a second press meanwhile starts nothing. ONE `set-region-sidecar` lands: the level was generated once, byte-equal to the pure op on the same arguments. |
 | `cloudberry-editor-initialise-one-press` | *Initialise procgen data* builds a whole Cloudberry slot in ONE press (P5d). The row loads the bare `adventure` slot, picks `cloudberry` in the Initialise form, forgets every generated level and presses Generate ▸ once. The worker flags the pending generation and the page finishes the slot, one more region per ask, within the slot's region-count bound; the form shows *(on this page)* while the row holds the generator. ONE `initialise-procgen-layout` lands: each level was generated once, and the sidecars are byte-equal to the pure initialise on the same arguments. |
+| `cloudberry-bot-plays-on` | On a page that plays on (`features.botContinuous`; else logged as not run). The walk to the end door without Clouds fails by name (`exhausted`, with its reason) after bounded restarts. The bot reaches both check coins with no respawn between them. With Clouds it plays on to the end door with exactly one respawn, the ladder 0 → 1, whose note the page shows. Then the door sends the exit. |
 | `cloudberry-mixed-loop-bot-victory` | Loop mode over the committed mixed world: the Playback Bot plays the maze rooms (delegation) and the Cloudberry levels (the page's bot) on one mana pool, until every sphere-log location is checked and Victory is received. |
 
 With no site copy every row **refuses by name**: it fails, naming `scripts/setup/fetch-cloudberry-site.mjs`. The loop-mode rows load their preset with a `loop_costs` sidecar generated from its sphere log, so loop mode turns on by itself. The rows and two tutorial walks form the manual batch `cloudberry`:
