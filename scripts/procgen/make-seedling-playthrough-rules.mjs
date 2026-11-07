@@ -2449,9 +2449,12 @@ function applyBossLocationOptions(rules) {
  * @param {{moved: Set<string>}|null} [o.rekey] ER: apply the table by ATLAS ENDPOINT (`TBL.applyDerivedRuleTable`'s `rekey`,
  *   names read off this compile's sidecars, `apExitNamesByEndpoint`), skipping the exits the shuffle moved
  *   (`"<region_id>/<exit_id>"`) by name
+ * @param {object|null} [o.roomsAtlas] ER: the AUTHORED atlas `doc` re-wires — the play-time references (`atlas_ref`,
+ *   `region_atlas`) name its rooms (`compileRegionAtlas` `roomsAtlasId`, which refuses a doc whose rooms differ)
+ * @param {string} [o.gameName] the compiled game's name (default `Seedling Playthrough`; an ER world is its own game)
  * @returns {{rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText}}
  */
-export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = null } = {}) {
+export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = null, roomsAtlas = null, gameName = GAME_NAME } = {}) {
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
     const layer = playthroughEventLayer(doc);
@@ -2460,7 +2463,7 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
     const ropes = playthroughRopeEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
-        gameName: GAME_NAME,
+        gameName,
         seed: 1,
         completionItem: VICTORY_ITEM,
         provenance: provenanceOf(doc),
@@ -2484,6 +2487,7 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
         internalExitGates: layer.internalExitGates,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
         exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
+        ...(roomsAtlas ? { roomsAtlasId: roomsAtlas.atlas_id, roomsAtlasOf: roomsAtlas } : {}),
     });
     applyBossLocationOptions(rules);
     // ⛓⛓ THE DERIVED-RULE TABLE onto AP_1 (session tile-rules-automation-r-a3). Guard 2: the composed rule must equal the

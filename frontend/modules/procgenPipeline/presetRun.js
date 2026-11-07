@@ -740,7 +740,7 @@ export function buildRunFromState(bundle, {
 }
 
 /**
- * ⛓ ER E4b — an `entranceShuffle` bundle → its run: `{atlasId, seed, maxAttempts?, sweep?}` read off `bundle.params`
+ * ⛓ ER E4b — an `entranceShuffle` bundle → its run: `{atlasId, seed, maxAttempts?, sweep?, gameName?}` read off `bundle.params`
  * (`seed` defaults to 1). A bundle naming no atlas is refused: the mode has no default content source.
  */
 export function buildEntranceRun(bundle) {
@@ -752,6 +752,7 @@ export function buildEntranceRun(bundle) {
         atlasId: p.atlasId, seed: Number.isInteger(p.seed) ? p.seed : 1,
         ...(Number.isInteger(p.maxAttempts) ? { maxAttempts: p.maxAttempts } : {}),
         ...(typeof p.sweep === 'string' ? { sweep: p.sweep } : {}),
+        ...(typeof p.gameName === 'string' && p.gameName ? { gameName: p.gameName } : {}),
     };
 }
 

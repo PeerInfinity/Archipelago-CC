@@ -7289,7 +7289,7 @@
     }
   },
   "seedling_er": {
-    "name": "Seedling Playthrough",
+    "name": "Seedling Playthrough ER",
     "folders": {
       "AP_1": {
         "seed": 1,
@@ -7297,7 +7297,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "Seedling Playthrough"
+            "game": "Seedling Playthrough ER"
           }
         ],
         "files": [

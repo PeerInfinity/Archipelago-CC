@@ -28,11 +28,14 @@ argvHelp(import.meta.url);
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '../..');
 export const SEEDLING_ER_PRESET = path.join(REPO, 'frontend/presets/seedling_er/AP_1/AP_1_rules.json');
+/** The preset's game name: not the vanilla playthrough's (no world package of that game generates this document). */
+export const SEEDLING_ER_GAME = 'Seedling Playthrough ER';
 
 /** The preset's definition: the mode and its run. `atlasId` is read off the committed atlas (the producer's --check holds it). */
 export function seedlingErState() {
     const atlasId = JSON.parse(fs.readFileSync(path.join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8')).atlas_id;
-    return Object.freeze({ mode: 'entranceShuffle', params: Object.freeze({ atlasId, seed: 1 }) });
+    // ⛓ its own game: the vanilla playthrough's world package does not generate it (an ER world package is its own).
+    return Object.freeze({ mode: 'entranceShuffle', params: Object.freeze({ atlasId, seed: 1, gameName: SEEDLING_ER_GAME }) });
 }
 
 /** A fresh build: `{rulesText, rulesJson, stats}`. */

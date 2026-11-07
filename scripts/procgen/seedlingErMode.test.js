@@ -31,6 +31,7 @@ const { stringifyRulesJson } = await imp('frontend/modules/shared/rulesJsonBuild
 const K = await import('./seedlingErDoorCensus.js');
 const TBL = await import('./seedlingDerivedRuleTable.js');
 const { seedlingEntranceShuffleHooks, sphereZeroAccessible } = await import('./seedlingEntranceShuffleHooks.mjs');
+const { SEEDLING_ER_GAME } = await import('./make-seedling-er-preset.mjs');
 
 const ER = readJson('frontend/presets/seedling_er/AP_1/AP_1_rules.json');
 const AP1_TEXT = readFileSync(path.join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8');
@@ -164,8 +165,16 @@ describe('R-A3: the derived-rule table on a shuffled doc', () => {
     beforeAll(async () => {
         ({ moved } = M.applyPlacements(env.pool.atlas, env.classify, BLOCK_BY_ID()));
         const { atlas } = M.applyPlacements(env.pool.atlas, env.classify, BLOCK_BY_ID());
-        out = await hooks.compile(atlas, { moved });
+        out = await hooks.compile(atlas, { moved, authored: env.pool.atlas, gameName: SEEDLING_ER_GAME });
     }, 120_000);
+    it('the play-time references name the AUTHORED atlas\'s rooms; the provenance names the shuffled graph', () => {
+        const authored = env.pool.atlas.atlas_id;
+        expect(ER.region_atlas['1'].atlas_id).toBe(authored);
+        expect([...new Set(Object.values(ER.preset_sidecars['1']).map((sc) => sc.playable_payload.atlas_ref))]).toEqual([authored]);
+        expect(ER.provenance['1'].atlas_id).not.toBe(authored);
+        expect(ER.provenance['1'].atlas_id).toMatch(/^seedling-[0-9a-f]{8}$/);
+        expect(ER.game_name).toBe(SEEDLING_ER_GAME);
+    });
     it('the mode\'s compile is the committed preset (before its er annotation)', () => {
         const strip = (doc) => {
             const d = structuredClone(doc);
@@ -198,4 +207,54 @@ describe('R-A3: the derived-rule table on a shuffled doc', () => {
         const hijacked = wrong.filter((r) => (doc.regions['1'][r.region]?.exits ?? []).some((e) => e.name === r.name));
         expect(threw !== null || hijacked.length > 0).toBe(true);
     });
+});
+
+/**
+ * E3's DEAD-END MUTANT ON THE REAL STAIRS GRAPH (E3 found `deadEndPreference: false` invisible on synthetic graphs: the
+ * speculative sweep covers for it). MEASURED here over the Seedling binding (AP_1 = the vanilla compile), 40 seeds:
+ *   - the mutant is LIVE: it places differently on nearly every seed;
+ *   - it is INVISIBLE ON CORRECTNESS: no accepted layout, mutant or not, loses a region or location the identity reaches;
+ *   - it is VISIBLE ONLY AS A REFUSAL RATE under the mode's 'placed' sweep (more draws refused — the speculative sweep
+ *     catches the capped graph and GER refuses), and not at all under GER's all-state ('events').
+ * The refusal counts are a MEASUREMENT of the committed rules: a rules move re-records them (re-run this row).
+ */
+describe('E3\'s dead-end mutant over the real Seedling stairs graph (40 seeds)', () => {
+    const E = { mod: null };
+    const SEEDS = Array.from({ length: 40 }, (_, i) => i + 1);
+    const measure = (sweep, deadEndPreference) => {
+        const b = M.shuffleBinding(AP1, env.classify, { sweep });
+        const byName = new Map(b.exits.map((x) => [x.name, x]));
+        const idToName = new Map([...b.byName.values()].map((r) => [r.doorway.id, r.name]));
+        const identity = b.reach(b.exits.map((x) => ({ exit: x.name, from: x.region, to: byName.get(idToName.get(b.byName.get(x.name).doorway.reverse)).region })));
+        const out = { refused: 0, incomplete: 0, placements: [] };
+        for (const s of SEEDS) {
+            try {
+                const r = E.mod.randomizeEntrances({
+                    exits: b.exits, targets: b.targets, fixedEdges: b.fixedEdges, progressionRegions: b.progressionRegions, reach: b.reach,
+                    rng: E.rng(s), coupled: true, targetGroupLookup: b.lookup, guards: { deadEndPreference },
+                });
+                const after = b.reach(r.placements.map((p) => ({ exit: p.exit, from: byName.get(p.exit).region, to: byName.get(p.target).region })));
+                if ([...identity.regions].some((x) => !after.regions.has(x)) || [...identity.locations].some((x) => !after.locations.has(x))) out.incomplete += 1;
+                out.placements.push(JSON.stringify(r.placements));
+            } catch (err) {
+                if (!(err instanceof E.mod.EntranceRandomizationError)) throw err;
+                out.refused += 1;
+                out.placements.push('refused');
+            }
+        }
+        return out;
+    };
+    beforeAll(async () => {
+        E.mod = await imp('frontend/modules/procgenCore/entranceRandomizer.js');
+        E.rng = (await imp('frontend/modules/mazeRoom/procgenRng.js')).rngFor;
+    });
+    for (const [sweep, refused] of [['placed', { on: 7, off: 9 }], ['events', { on: 0, off: 0 }]]) {
+        it(`sweep '${sweep}': live, never incomplete, refusals ${refused.on} → ${refused.off}`, () => {
+            const on = measure(sweep, true);
+            const off = measure(sweep, false);
+            expect(on.placements.filter((p, i) => p !== off.placements[i]).length).toBeGreaterThanOrEqual(35);
+            expect([on.incomplete, off.incomplete]).toEqual([0, 0]);
+            expect([on.refused, off.refused]).toEqual([refused.on, refused.off]);
+        }, 120_000);
+    }
 });

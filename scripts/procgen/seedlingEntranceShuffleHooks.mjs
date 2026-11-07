@@ -8,8 +8,9 @@
  *                          Its id must equal the committed atlas's (the producer's `--check` holds that).
  *   classify(atlas)        `flashPanel/seedlingEntranceClassifier.classifySeedlingEntrances` over E1's census of this
  *                          atlas (`census-seedling-er-doorways.loadCensusInputs` + `seedlingErDoorCensus.censusErDoorways`).
- *   compile(atlas, {moved}) the producer's own compile (`compilePlaythroughRules`); with a non-empty `moved`, the derived-
- *                          rule table is applied by ATLAS ENDPOINT and the moved exits are skipped by name (R-A3). Every
+ *   compile(atlas, {moved, authored}) the producer's own compile (`compilePlaythroughRules`); with a non-empty `moved`, the
+ *                          derived-rule table is applied by ATLAS ENDPOINT and the moved exits are skipped by name (R-A3),
+ *                          and the play-time references (`atlas_ref`, `region_atlas`) name `authored`'s rooms. Every
  *                          producer guard `main` holds at exit is a THROW here (composed ≠ table, an uncharged floored
  *                          way in, a stray rope event): on a shuffled doc they are defects, not rejected draws.
  *   checks(rules, ctx)     Seedling's own refusals of a compiled layout (a reason per refusal; the mode takes the next draw):
@@ -78,8 +79,11 @@ export async function seedlingEntranceShuffleHooks() {
             census = K.censusErDoorways({ ...inputs, atlas });
             return classifySeedlingEntrances(atlas, { census, inScopeClasses: K.IN_SCOPE_CLASSES, opposite: K.OPPOSITE });
         },
-        compile: async (atlas, { moved = new Set() } = {}) => {
-            const out = P.compilePlaythroughRules(structuredClone(atlas), moved.size ? { rekey: { moved } } : {});
+        compile: async (atlas, { moved = new Set(), authored = null, gameName = null } = {}) => {
+            // ⛓ a shuffled doc's play-time references name the AUTHORED atlas's rooms (the partition, the bindings).
+            const out = P.compilePlaythroughRules(structuredClone(atlas), {
+                ...(moved.size ? { rekey: { moved }, roomsAtlas: authored } : {}), ...(gameName ? { gameName } : {}),
+            });
             const defects = [
                 ...out.disagrees.map((d) => `COMPOSED ≠ TABLE at ${d.key} (${d.compare})`),
                 ...out.uncharged.map((u) => `a way into a floored level is not charged its entry gate: ${u.exit}`),

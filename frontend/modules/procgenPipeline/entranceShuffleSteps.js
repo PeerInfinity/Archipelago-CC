@@ -14,7 +14,7 @@
 //                 its own rng (`drawSeed(seed, k)`); an `EntranceRandomizationError` is counted and the next draw taken.
 //   ④ compile   — the placements onto the atlas's connections (E1's design note: D placed at E lands on E's `arrival`,
 //                 the existing arrival exit beside E, so every room keeps its landing tiles), the substrate's producer
-//                 over that doc (`hooks.compile(atlas, {moved})`), then `er` on every classified exit and the
+//                 over that doc (`hooks.compile(atlas, {moved, authored})`), then `er` on every classified exit and the
 //                 `entrance_randomization[p]` block. The compiled doc must pass E2's validator (a refusal there is a
 //                 defect, thrown). A layout NOT BEATABLE under its own compiled rules (the sphere walk collects every
 //                 location and the goal) or refused by the substrate's `hooks.checks` is REJECTED and the next draw
@@ -172,8 +172,10 @@ function drawPlacements(env, binding, from, max) {
  * The placements onto a COPY of the atlas: D placed at E → D's connection lands on E's `arrival` (E1's design note).
  * Returns `{atlas, moved}` (`moved`: `"<region>/<exit>"` of every doorway placed elsewhere than its vanilla reverse).
  * A layout that moves anything is a DIFFERENT document, so it is RESTAMPED (`stampAtlasIdentity`: a new content hash and
- * `atlas_id`, the same base) — the compiled doc's `region_atlas`/`atlas_ref` name the shuffled graph, and the block's
- * `source.atlas_id` names the authored one it was shuffled from. An identity layout keeps the authored id.
+ * `atlas_id`, the same base) — the compile's provenance names the shuffled graph, while its PLAY-TIME references
+ * (`atlas_ref`, `region_atlas`) name the authored atlas's rooms (`hooks.compile(atlas, {moved, authored})`: every room
+ * is the authored one, only the connections differ), and the block's `source.atlas_id` names the authored atlas too.
+ * An identity layout keeps the authored id.
  */
 export function applyPlacements(atlas, classification, placements) {
     const byId = new Map(classification.doorways.map((d) => [d.id, d]));
@@ -296,7 +298,7 @@ const RUNNERS = {
             const { atlas, moved } = applyPlacements(env.pool.atlas, env.classify, placements);
             const landing = landingSetProblems(env.pool.atlas, atlas);
             if (landing.length) throw new Error(`entranceShuffle: LANDING-SET broken by draw ${attempt}: ${landing.join('; ')}`);
-            const out = await hooks.compile(atlas, { moved });
+            const out = await hooks.compile(atlas, { moved, authored: env.pool.atlas, ...(env.gameName ? { gameName: env.gameName } : {}) });
             const { rules } = out;
             const block = annotateEntranceRandomization(rules, env.classify, placements, { seed: env.seed, atlasId: env.source.atlasId });
             const problems = entranceRandomizationProblems(rules, ER_PLAYER);
@@ -336,6 +338,7 @@ export const ENTRANCE_ENVELOPE_FIELDS = Object.freeze({
     seed: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The shuffle seed; draw k takes drawSeed(seed, k).' },
     maxAttempts: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The draws a run may take (refusals and rejections together).' },
     sweep: { type: 'string', visibility: FIELD_VISIBILITY.PUBLIC, step: null, about: 'The reach\'s inventory: \'placed\' (default, vanilla items) or \'events\' (GER\'s all-state).' },
+    gameName: { type: 'string', visibility: FIELD_VISIBILITY.PUBLIC, step: null, about: 'The compiled world\'s game name (default: the substrate producer\'s own) — an entrance-randomized world is its own game.' },
     completed: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'Index into ENTRANCE_STEPS of the last step run; -1 = none.' },
     attempts: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: null, about: 'Every draw: {attempt, verdict, why?} (accepted / shuffle-refused / rejected-unbeatable / rejected-check).' },
     pool: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'pool', about: 'The authored atlas.' },
@@ -360,10 +363,10 @@ const DESCRIPTOR = {
 export const entranceEnvelopeSchema = () => envelopeSchema(DESCRIPTOR);
 
 /** A fresh envelope for `{atlasId, seed, maxAttempts?}`. */
-export function newEntranceEnvelope({ atlasId, seed, maxAttempts = DEFAULT_MAX_ATTEMPTS, sweep = ER_SWEEP }) {
+export function newEntranceEnvelope({ atlasId, seed, maxAttempts = DEFAULT_MAX_ATTEMPTS, sweep = ER_SWEEP, gameName = null }) {
     if (typeof atlasId !== 'string' || !atlasId) throw new Error('entranceShuffle: the run names no atlasId');
     if (!Number.isInteger(seed)) throw new Error(`entranceShuffle: seed ${JSON.stringify(seed)} is not an integer`);
-    return newEnvelopeGeneric({ source: { atlasId }, seed, maxAttempts, sweep, attempts: [] });
+    return newEnvelopeGeneric({ source: { atlasId }, seed, maxAttempts, sweep, ...(gameName ? { gameName } : {}), attempts: [] });
 }
 
 /** Run a single named step (`opts.hooks` required). */

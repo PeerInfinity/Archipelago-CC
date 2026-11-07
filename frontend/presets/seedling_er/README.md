@@ -15,8 +15,12 @@ the committed playthrough atlas (`frontend/modules/flashPanel/atlases/seedling-p
   table applies by atlas endpoint and skips, by name, the rows of the exits the shuffle moved.
 - **What the doc carries**: `er` on the 52 classified exits (`shuffle: false` on the pinned pair) and
   `entrance_randomization["1"]` = `{algorithm: 'ger', coupled: true, target_group_lookup, seed, source: {atlas_id},
-  placements}` (each placement names the AP exit and the AP exit it lands beside). `source.atlas_id` is the
-  authored atlas; the compiled `region_atlas` / `atlas_ref` name the restamped shuffled graph.
+  placements}` (each placement names the AP exit and the AP exit it lands beside). Its game is
+  `Seedling Playthrough ER` (no world package of the vanilla game generates it).
+- **Which atlas it names**: the shuffled graph is a different document, so it is restamped and the compile's
+  `provenance` names THAT id; every play-time reference (`region_atlas`, each sidecar's `atlas_ref`) names the
+  AUTHORED atlas, `source.atlas_id` too — every room, sub-region and tile is the authored atlas's
+  (`compileRegionAtlas` `roomsAtlasId` refuses otherwise), so the runtime's partition and bindings apply.
 - **Checked when it is made**: E2's validator (coupled mirror included); the layout is beatable under its own
   rules (the sphere walk collects every location and The Seed); Seedling's checks (sphere 0 no smaller than
   vanilla's; no moved stair lands on an at-risk permissive binding).
