@@ -27517,3 +27517,33 @@ train 42, because the lab's lift of its `chestloot-in-goal-chest-room` refusal i
 OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs by key. Re-pinned: `hammerChestIncidental`'s
 "ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
 the ON default (both chests collected, SOLVED).
+
+### Seedling hammer-phase 376-BOMB — `BOMB_PHASE_WAIT` (OFF): TIME's bomb arm waits out a lobber's bomb phase
+
+⚖ The user queued it 2026-11-07 (*"Yes, hammer slice (Recommended)"*, from L40-CENSUS's wall H and fidelity
+KNOCKBACK376's hand-over: seams 5243/5333 of leg 376 refuse with the rock key OFF and ON alike). Switch
+`solverBot.BOMB_PHASE_WAIT`, **OFF** (`SEEDLING_BOMB_PHASE_WAIT=1` / `withBombPhaseWait`; in `SOLVER_ENV_NAMES`). The
+report is `CC/docs/cloud-reports/seedling-hammer-376-bomb.md`.
+
+- **The phase, measured** (main `6473024aa8`; the leg's captured request from KNOCKBACK376's witness, replayed at each
+  seam). Leg 376's answer is a function of `seam mod 45`; 5243 and 5333 are both phase 23. There the 640 and the 2560
+  both trip at `crusher-fork`; uncapped the ladder is EXHAUSTED at 8450 units, of which **7442 are the forced-hit rung's
+  forks** (779 the kill rung's chaser arm on `bob@272,112`, which cannot remove a bomb). The first blast is the one that
+  matters: the walk to the rock (200,136) rests at t1410, the break presses at t1411 and stands its 20 ticks, and
+  `bombpusher@112,128#13` — launched at t1400 at the walking player — lands at (207,141) on t1432, 9.4 px from the
+  stance. No input escapes it (the forced-hit proof: every held set is hit at depth 1). The walk's probe ended at its
+  stop, so nobody priced a bomb that lands after it. Not a model gap: `bombPusher.js` is game-witnessed to the bit
+  (BW's 1665-tick witness; KNOCKBACK376's knockback rows).
+- **Three designs, measured over all 45 phases.** (A) the arm low in the ladder, from the climb: never fires on phase 23
+  (the blast is 2 ticks out when the next walk climbs). (B) the arrival tail as the walk's own `stand`: phase 23 solves,
+  but 6 phases that OFF solves (2–6, 34) refuse, because a tail the arm cannot clear makes the walk climb where OFF walked.
+  (C, shipped) the walk probes as OFF; only a clean probe asks the arrival tail, and only a bomb-only hit there asks the
+  arm; a refusal rewinds and the walk is OFF's. The ladder asks the same arm right after TIME (no BAIT/KILL removes a bomb).
+- **Measured (C).** At the page's 640: SOLVED 33 → 38 (phases 23, 25, 28, 29, 0), hitless 22 → 24 (23, 29), no solve
+  lost, 640 = 2560 on every row. Every phase where the arm keeps nothing plans OFF's keys (digests equal); the asks cost
+  ~20–30 work units there. Phase 23 ON: a 4-tick still wait at (216.1,152.1) on t1390, then 1747 t hitless in 371 units,
+  replayed on a fresh run row for row (0 hits, 0 deaths). OFF at the head = main on all 45 rows (full refusal text).
+- **Trap candidates.** (1) A walk's probe certifies the walk, not the stop: a bomb aimed at the walk lands up to 31 ticks
+  after it, on whoever stands there next. (2) A stricter probe is not a superset: a tail that only feeds an arm must not
+  become the walk's own (design B lost 6 phases). (3) A census over `seam mod 45` is the unit of a phase-dependent leg:
+  two seams 90 apart are one measurement.

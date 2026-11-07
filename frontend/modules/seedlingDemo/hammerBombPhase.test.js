@@ -15,7 +15,7 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { BOMB } from './bombPusher.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
-    BOMB_PHASE_WAIT, BOMB_PHASE_WAIT_DEFAULT, PACE, bombArrivalTail, previewWalk, withBombPhaseWait,
+    BOMB_PHASE_WAIT, BOMB_PHASE_WAIT_DEFAULT, PACE, bombArrivalTail, bombsOnlyDanger, previewWalk, withBombPhaseWait,
 } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { createRunForStaging } from './tapeRunner.js';
@@ -69,6 +69,16 @@ describe('hammer-phase 376-BOMB — the arrival tail', () => {
         expect(tail.bombsOnly).toBe(true);
         expect([...tail.keys()({})]).toEqual([]);
         expect(withBombPhaseWait(true, () => bombArrivalTail(run, { crossTo: { level: 42 } }))).toBe(null);
+    });
+
+    it('a `bombsOnly` sample answers for its bombs alone (`bombsOnlyDanger`, what the probe asks of it)', () => {
+        const bomb = { kind: 'bomb', id: 'bombpusher@112,128#13' };
+        const chaser = { kind: 'chaser', id: 'bob@272,112' };
+        expect(bombsOnlyDanger({ danger: true, sources: [chaser, bomb] })).toEqual({ danger: true, sources: [bomb] });
+        // a tail sample a chaser reaches but no bomb does is clean for this question (the next verb prices the chaser)
+        expect(bombsOnlyDanger({ danger: true, sources: [chaser] })).toEqual({ danger: false, sources: [] });
+        const clean = { danger: false, sources: [] };
+        expect(bombsOnlyDanger(clean)).toBe(clean);
     });
 
     it('the tail\'s samples are stamped `bombsOnly` (`standBombsOnly`), and only then', () => {

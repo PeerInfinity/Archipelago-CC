@@ -8571,7 +8571,7 @@ function withoutSources(d, except) {
 }
 
 /** ⛓ 376-BOMB — a danger reading cut to its bomb sources (an arrival tail's question). */
-function bombsOnlyDanger(d) {
+export function bombsOnlyDanger(d) {
     if (!d.danger) return d;
     const sources = d.sources.filter((s) => s.kind === 'bomb');
     return { ...d, sources, danger: sources.length > 0 };
