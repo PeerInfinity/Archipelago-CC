@@ -6778,6 +6778,12 @@ export function previewWalk(run, wps, tolerance = 0,
          */
         standBombs = true,
         /**
+         * ⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — an OPT-IN marker: `true` stamps every tail sample
+         * `bombsOnly`, so the probe prices the tail for the lobbers' bombs alone (`bombArrivalTail`). `false` (every
+         * other caller) changes nothing.
+         */
+        standBombsOnly = false,
+        /**
          * ⛓ fidelity BEAMLANE D1 — an OPT-IN steered aim: `(state, wp, tick, intermediate) => true | {x, y}`, asked
          * once per transit tick (`tick` = the tick whose sample is about to be taken). `true` = this waypoint is
          * reached; a point = what `chooseHeld` aims at this tick instead of `wp`. The PHASE arm's lane walk
@@ -7407,7 +7413,7 @@ export function previewWalk(run, wps, tolerance = 0,
             const chaserBodies = chasers
                 ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
-                phase: 'dwell', wp: wpIndex };
+                phase: 'dwell', wp: wpIndex, ...(standBombsOnly ? { bombsOnly: true } : {}) };
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
                 if (!standBombs && sample.spits) sample.spits = [...sample.spits].filter((b) => b.kind !== 'bomb');
@@ -8562,6 +8568,32 @@ function withoutSources(d, except) {
     if (!except || except.size === 0) return d;
     const sources = d.sources.filter((s) => !except.has(s.id));
     return { ...d, sources, danger: sources.length > 0 };
+}
+
+/** ⛓ 376-BOMB — a danger reading cut to its bomb sources (an arrival tail's question). */
+function bombsOnlyDanger(d) {
+    if (!d.danger) return d;
+    const sources = d.sources.filter((s) => s.kind === 'bomb');
+    return { ...d, sources, danger: sources.length > 0 };
+}
+
+/**
+ * ⛓⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — **A WALK'S ARRIVAL IS PRICED FOR THE BOMBS ALREADY AIMED AT IT.**
+ * A walk's probe ends where the walk arrives, and the next verb starts from rest there; a bomb aimed at the walk on
+ * its way lands one step past the aim up to 31 ticks later (`arrivalTicks`); the verb that follows may stand there
+ * (a break's 20-tick wait) and then cannot leave a blast that lands before it is 15 px away (12+ ticks from rest).
+ * Measured on leg 376 at hammer phase 23: the walk to (200,136) rests at t1410, the break stands to t1430, and
+ * `bombpusher@112,128#13`'s blast lands at (207,141) on t1432, 9.4 px away; the next walk's forced-hit rung proves the
+ * hit at depth 1. So ON, a walk with no tail of its own, in a room with a live lobber and that does not cross, stands
+ * `arrivalTicks` still ticks after arriving, priced for the bombs alone (`bombsOnly`) — asked only as the second
+ * probe of a walk whose own probe is clean, and by the ladder's bomb arm; once a wait is kept, the attempt's dash
+ * candidates are certified with the same tail. `null` otherwise.
+ */
+export function bombArrivalTail(run, { crossTo = null } = {}) {
+    if (!BOMB_PHASE_WAIT.enabled || !CONTACT_FIDELITY.bombPusherLive || crossTo) return null;
+    if ((run.entities('bombPushers') ?? []).length === 0) return null;
+    const NO_KEYS = new Set();
+    return { ticks: BOMB_PHASE_WAIT.arrivalTicks, keys: () => () => NO_KEYS, bombsOnly: true };
 }
 
 /**
@@ -11196,6 +11228,56 @@ export const PACE = Object.freeze({
     // a coast that has not come to rest in this many ticks is not a cycle
     coast: 60,
 });
+
+/**
+ * ⛓⛓⛓ hammer-phase 376-BOMB — **A WALK THAT MEETS A LOBBER'S BOMB WAITS OUT THE BOMB'S PHASE** (`BOMB_PHASE_WAIT`,
+ * OFF — `SEEDLING_BOMB_PHASE_WAIT=1` or `withBombPhaseWait(true, …)`; a behaviour switch).
+ *
+ * The game's `BombPusher` lobs one `Bomb` every 46 ticks while the player is within 256 px, aimed at the player's
+ * point; it lands 31 updates later, one step past the aim, and its `Explosion` hits inside the 15 px disc
+ * (`bombPusher.js`). So the blast is a function of WHEN the walk is where: the same corridor entered some ticks later
+ * meets the next bomb at another point of it. OFF, the ladder has no rung that moves the walk's phase: TIME is the
+ * mover's last-mile search (`MOVER_RANGE`), BAIT/KILL hand a chaser, and FORCED-HIT proves on forks (L40 leg 376 at
+ * hammer phase 23: 7442 of the solve's 8450 work units, not proven).
+ *
+ * ON, the arm (`bombPhaseWait`) is asked at two places, both only where EVERY source of the danger is a bomb:
+ *   - a WALK whose own probe (OFF's, unchanged) is clean, probed once more with its ARRIVAL tail (`bombArrivalTail`:
+ *     `arrivalTicks` still ticks after it stops, priced for the bombs alone) — the blast that lands on the stop;
+ *   - the combat ladder, right after TIME refuses (no BAIT or KILL removes a bomb), the corridor re-probed with the
+ *     walk's own tail or else its arrival tail.
+ * It waits on the LIVE run and asks the walk's own probe (`probeCorridor`) of the SAME corridor after each wait:
+ *   1. still ticks, one at a time, up to `maxStill` (stopped at the first hit, death or crossing: the run's own ledger
+ *      bills it, so the wait is the model's, not a forecast's);
+ *   2. from rest, the paced cycles `planPacedWait` certifies for `paceTicks` (MOVING_WAIT's alphabet and preview,
+ *      each cycle back on the stance bit-for-bit), the probe asked at each cycle's end.
+ * The first clean probe is kept (a `time` row with `arm: 'bomb-phase'`) and its corridor walked, the rest of that
+ * attempt certified with the same tail (its dash candidates too). Anything else is rewound (`rewind.to`): at the walk
+ * the walk is then OFF's walk (no row), on the ladder the ladder goes on as OFF does, TIME's why carrying the arm's.
+ * ⚖ 30(c): the waited keys are the tape's; the corridor is certified from the state the walk starts in.
+ */
+export const BOMB_PHASE_WAIT = {
+    enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT === '1',
+    /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
+    maxStill: 46,
+    /** the paced arm's bound: whole cycles covering it (`planPacedWait`'s `ticks`). */
+    paceTicks: 92,
+    /**
+     * A walk's ARRIVAL tail (`bombArrivalTail`): a bomb's whole flight, `BOMB.tMax` + 1 updates (`bombPusher.js`), so
+     * every bomb already in the air when the walk stops — and the one launched on its last tick — is priced where it
+     * lands. Measured on leg 376 at hammer phase 23: the walk to the rock (200,136) rests at t1410, the break presses
+     * at t1411 and stands its 20 ticks, and #13 (launched t1400 at the walking player) lands at (207,141) on t1432,
+     * 9.4 px from the stance: 22 ticks after the arrival, so a shorter tail never sees it.
+     */
+    arrivalTicks: 31,
+};
+export const BOMB_PHASE_WAIT_DEFAULT = false;
+/** The instrument: climbs that asked the arm, the waits kept, the refusals (reset by the caller). */
+export const BOMB_PHASE_WAIT_COUNTS = { asked: 0, kept: [], refused: [] };
+
+/** Run `fn` with `BOMB_PHASE_WAIT` set to `enabled`, restoring the previous value. */
+export function withBombPhaseWait(enabled, fn) {
+    return withSwitch(BOMB_PHASE_WAIT, enabled, fn);
+}
 
 /** The still wait's bomb, as `lobberHoldRefusal` asks it — `null` when the still wait is clean. */
 function stillWaitBomb(run, ticks) {
@@ -21044,7 +21126,9 @@ function holdStandWalk(run, resolved) {
  */
 function standTailOpts(stand) {
     if (!stand) return {};
-    return { standFor: stand.ticks, standKeys: stand.keys, ...(stand.bombs === false ? { standBombs: false } : {}) };
+    return { standFor: stand.ticks, standKeys: stand.keys,
+        ...(stand.bombs === false ? { standBombs: false } : {}),
+        ...(stand.bombsOnly === true ? { standBombsOnly: true } : {}) };
 }
 
 /**
@@ -27167,10 +27251,12 @@ function solveSegmentUnder({
             if (walkCheck && i > 0 && i % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${i} sample(s) of the corridor's danger probe`);
             }
-            const d = withoutSources(
+            const d0 = withoutSources(
                 dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers,
                     s.spits ?? null, s.grenades ?? null, s.corridorBodies ?? null, s.spinners ?? null),
                 except);
+            // ⛓ 376-BOMB (`BOMB_PHASE_WAIT`): an ARRIVAL tail's sample (`bombsOnly`) answers for its bombs alone
+            const d = s.bombsOnly === true ? bombsOnlyDanger(d0) : d0;
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
             corpses?.see(s);
             if (s.ceremony) {
@@ -27607,6 +27693,81 @@ function solveSegmentUnder({
             return { ...h, staged: { cell: row.cell, wait: found, from: t0 } };
         }
         return { ...first, why: `${first.why} STAGED HUNT (CHASER_STAGED_HUNT): ${whys.join('; ') || 'no staging cell'}.` };
+    };
+    /**
+     * ⛓⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — the TIME rung's bomb arm (`bombPhaseWait`'s doc, at the
+     * switch). Driven on the LIVE run: still ticks one at a time, then (from rest) the paced cycles `planPacedWait`
+     * certifies, the same corridor re-probed by the walk's own probe after each; the first clean probe is kept, and
+     * anything else is rewound to `t0`. Returns `{wait}` (the run is at the kept state) or `{why}` (the run is at t0).
+     */
+    const bombPhaseWait = (corridor, except, { axisAligned, stand }) => {
+        const t0 = perTick.length;
+        const hits0 = run.ledger('playerHits').length;
+        const deaths0 = run.ledger('playerDeaths').length;
+        const probeOpts = { axisAligned, ...(stand ? { stand } : {}) };
+        const counts = { still: 0, paced: 0, probes: 0 };
+        let firstWhy = null;
+        const harmed = () => run.ledger('playerHits').length > hits0 || run.ledger('playerDeaths').length > deaths0;
+        const probe = () => {
+            counts.probes += 1;
+            const again = probeCorridor(corridor, except, probeOpts);
+            if (again && firstWhy === null) {
+                firstWhy = `${reasonsOf(again)} at (${again.x.toFixed(1)},${again.y.toFixed(1)})`;
+            }
+            return again === null;
+        };
+        const drive = (held) => {
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            return !transition;
+        };
+        const back = () => { if (perTick.length > t0) rewind.to(t0); };
+        const kept = (kind, extra) => ({ wait: { kind, ticks: perTick.length - t0, ...extra, ...counts } });
+        // 1. STILL — one idle tick at a time; the first harm ends the arm (every longer still wait holds it too)
+        let stillWhy = null;
+        for (let d = 1; d <= BOMB_PHASE_WAIT.maxStill; d += 1) {
+            if (fineDeadlineReached('time')) { back(); return { why: 'deadline — the caller\'s anytime deadline was '
+                + `reached inside the bomb arm after ${d - 1} still tick(s)`, ...counts }; }
+            counts.still = d;
+            if (!drive(new Set()) || harmed()) { stillWhy = `the still wait is hit or leaves the level at tick ${d}`; break; }
+            if (probe()) return kept('still', {});
+        }
+        stillWhy ??= `${BOMB_PHASE_WAIT.maxStill} still tick(s), none re-probes clean`;
+        back();
+        // 2. PACED — from rest only (the cycle's own contract), whole cycles the paced-wait preview certified
+        let pacedWhy;
+        if (run.state.vx !== 0 || run.state.vy !== 0 || run.state.fall) {
+            pacedWhy = 'the player is not at rest, so no pacing applies';
+        } else {
+            const { plan, tried } = planPacedWait(run, { ticks: BOMB_PHASE_WAIT.paceTicks, keep: null });
+            if (!plan) {
+                pacedWhy = `no pacing is clean (${tried.length} tried: ${tried.slice(0, 2).join('; ')})`;
+            } else {
+                const label = `${plan.out.join('+')}/${plan.back.join('+')} x${plan.span} gap ${plan.gap}`;
+                let from = 0;
+                for (let c = 0; c < plan.ends.length; c += 1) {
+                    if (fineDeadlineReached('time')) { back(); return { why: `${stillWhy}; deadline inside the paced `
+                        + `arm after ${c} cycle(s)`, ...counts }; }
+                    for (let k = from; k < plan.ends[c]; k += 1) {
+                        if (!drive(plan.keys[k]) || harmed()) {
+                            back();
+                            return { why: `${stillWhy}; the paced cycle ${label} did not drive as previewed (tick ${k})`,
+                                ...counts };
+                        }
+                    }
+                    from = plan.ends[c];
+                    counts.paced = c + 1;
+                    if (run.state.x !== plan.path[from - 1].x || run.state.y !== plan.path[from - 1].y) {
+                        back();
+                        return { why: `${stillWhy}; the paced cycle ${label} ended off its preview`, ...counts };
+                    }
+                    if (probe()) return kept('paced', { pace: label, cycles: c + 1 });
+                }
+                pacedWhy = `${plan.ends.length} cycle(s) of ${label}, none re-probes clean`;
+                back();
+            }
+        }
+        return { why: `${stillWhy}; ${pacedWhy}${firstWhy ? ` (first re-probe: ${firstWhy})` : ''}`, ...counts };
     };
     const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
@@ -28926,6 +29087,30 @@ function solveSegmentUnder({
         }
         rowFor('time', refused);
         refused = { rung: 'time', why: timeWhy };
+        /**
+         * ⛓⛓ hammer-phase 376-BOMB — TIME's BOMB ARM (`BOMB_PHASE_WAIT`, OFF: absent, no row, the refusal word for word
+         * the BEFORE one): asked only where every source of the hit is a lobber's bomb (no BAIT or KILL removes a bomb),
+         * on a corridor, with the rewind: wait (still, then paced) and re-probe THIS corridor; the first clean probe is
+         * walked. Refused, TIME's why carries the arm's and the ladder goes on as before.
+         */
+        if (BOMB_PHASE_WAIT.enabled && rewind !== null && Array.isArray(corridor) && corridor.length > 0
+            && hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'bomb')
+            && !rungGate('time', 'time:bomb-phase')) {
+            if (activeProgress !== null) progressRung('time');
+            const at = { x: run.state.x, y: run.state.y, tick: perTick.length };
+            // the walk's own tail, else its arrival tail (the corridor certified to the bombs that land after it)
+            const tail = stand ?? bombArrivalTail(run, { crossTo });
+            const out = bombPhaseWait(corridor, dangerExcept, { axisAligned, stand: tail });
+            BOMB_PHASE_WAIT_COUNTS.asked += 1;
+            if (out.wait) {
+                BOMB_PHASE_WAIT_COUNTS.kept.push({ what, ...at, ...out.wait });
+                rowFor('time', refused, { arm: 'bomb-phase', from: at.tick, ...out.wait });
+                return { wps: corridor, escalations, ...(tail && tail !== stand ? { stand: tail } : {}) };
+            }
+            BOMB_PHASE_WAIT_COUNTS.refused.push({ what, ...at, why: out.why });
+            rowFor('time', refused, { arm: 'bomb-phase', still: out.still, paced: out.paced, probes: out.probes });
+            refused = { rung: 'time', why: `${timeWhy} The bomb arm (BOMB_PHASE_WAIT): ${out.why}.` };
+        }
 
         /**
          * ⛓⛓⛓ WHICH BODY, AND IT IS DERIVED THE WAY `k` IS — by hypothesis.
@@ -30423,7 +30608,10 @@ function solveSegmentUnder({
         let axisAligned = axisAlignedAsked;
         // ⛓ seedling-fidelity-residue D-B: a whirlpool's drown is a death, not a corridor to re-plan from the respawn.
         const deaths0 = deathsNow();
+        // ⛓ 376-BOMB: the walk's own tail; the bomb arm's arrival tail is one attempt's (re-set per attempt)
+        const standAsked = stand;
         attempts: for (let attempt = 0; ; attempt += 1) {
+            if (BOMB_PHASE_WAIT.enabled) stand = standAsked;
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
             // Re-asked per attempt: a skirt applied by THIS walk's own ladder
@@ -30805,6 +30993,39 @@ function solveSegmentUnder({
             // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
             let narrow = false;
             /**
+             * ⛓⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — A CLEAN WALK WHOSE ARRIVAL A BOMB LANDS ON. The probe
+             * above is OFF's, unchanged. Only when it is clean, in a room with a live lobber, is the walk probed once
+             * more with its arrival tail (`bombArrivalTail`: a bomb's whole flight, still, bombs only); a hit there is
+             * TIME's bomb arm's (`bombPhaseWait`): kept → the run stands at the waited state and the rest of this
+             * attempt certifies with the tail (dash candidates too); refused → rewound to where it was, no row, and
+             * the walk is OFF's walk.
+             */
+            if (hit === null && stand === null && BOMB_PHASE_WAIT.enabled && rewind !== null) {
+                const tail = bombArrivalTail(run, { crossTo });
+                const late = tail ? probeCorridor(wps, except, { axisAligned, stand: tail }) : null;
+                if (late && late.sources.length > 0 && late.sources.every((sx) => sx.kind === 'bomb')) {
+                    const at = { x: run.state.x, y: run.state.y, tick: perTick.length };
+                    const out = bombPhaseWait(wps, except, { axisAligned, stand: tail });
+                    BOMB_PHASE_WAIT_COUNTS.asked += 1;
+                    if (out.wait) {
+                        BOMB_PHASE_WAIT_COUNTS.kept.push({ what, arrival: true, ...at, ...out.wait });
+                        seeRow({
+                            tick: at.tick,
+                            saw: saw(),
+                            goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
+                            obstacle: dangerObstacleOf(late),
+                            strategy: { verb: 'time', arm: 'bomb-phase', arrival: true, from: at.tick, ...out.wait },
+                            rejected: [{ option: 'walk now', why: `the arrival tail meets ${reasonsOf(late)} at `
+                                + `(${late.x.toFixed(1)},${late.y.toFixed(1)})` }],
+                            keys: [],
+                        });
+                        stand = tail;
+                    } else {
+                        BOMB_PHASE_WAIT_COUNTS.refused.push({ what, arrival: true, ...at, why: out.why });
+                    }
+                }
+            }
+            /**
              * ⛓ fidelity SPINNINGAXE D2 (`CONTACT_FIDELITY.partialDodgeReprobe`) — A PARTIAL STALL IS RE-PROBED.
              * The phase arm keeps a stall whose walk's first danger is not a phase source as `partial` ("the next
              * probe meets the other danger alone"), drives it, and hands back the rest of the corridor — which this
@@ -30891,6 +31112,8 @@ function solveSegmentUnder({
                 // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
                 if (climbed.forced) return climbed.forced.transition;
                 if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue attempts; }
+                // ⛓ 376-BOMB: the bomb arm certified the corridor with its arrival tail; the attempt keeps it
+                if (climbed.stand) stand = climbed.stand;
                 if (!(CONTACT_FIDELITY.partialDodgeReprobe && climbed.partial)) break climbs;
                 hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             }
