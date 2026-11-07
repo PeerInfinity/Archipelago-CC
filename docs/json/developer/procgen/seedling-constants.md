@@ -299,19 +299,19 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 7 | 1718 | 610 | 2335 |
-| rule | 14 | 1197 | 588 | 1799 |
+| physics | 7 | 1720 | 610 | 2337 |
+| rule | 14 | 1200 | 591 | 1805 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 404 | 2443 | 2862 |
-| unclassified | 0 | 5 | 5 | 10 |
+| structural | 15 | 404 | 2445 | 2864 |
+| unclassified | 0 | 0 | 0 | 0 |
 | total | 36 | 3386 | 3660 | 7082 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1811 | 0 | 97 | 123 | 4 | 300 | 2335 |
-| rule | 663 | 142 | 244 | 22 | 619 | 109 | 1799 |
+| physics | 1813 | 0 | 97 | 123 | 4 | 300 | 2337 |
+| rule | 663 | 142 | 246 | 22 | 623 | 109 | 1805 |
 
 Rows whose note starts `REVIEW:`: **116**.
 
@@ -515,7 +515,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**21 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **184 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
+**21 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **185 small tables** (at most 16 literals) hold at least one (107 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -665,6 +665,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `STATIC_SWORD_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Enemies/Turret.as:sprTurret |
 | `DARKTRAP_LIGHT_DEATH` | seedlingDemo/enemyDamage.js | 8 | 8 | rule | bound/count/derivation/magnitude | Enemies/DarkTrap.as:deathCounter Enemies/DarkTrap.as:die1 Scenery/Light.as:radiusMin Scenery/LightPole.as:originY Scenery/LightPole.as:render Game.as:timePerFrame |
 | `IGNEOUS` | seedlingDemo/igneousLava.js | 9 | 9 | physics/rule | count/derivation/magnitude/sentinel | Scenery/Tile.as:render Scenery/Tile.as:igneousCounterMax Game.as:sprIgneousLava Scenery/Tile.as:w Scenery/Tile.as:h |
+| `DRILL_TERRAIN` | seedlingDemo/drill.js | 5 | 5 | physics/rule | magnitude/sentinel | Drill.as Enemy.as:33 Enemy.as:62-112 |
 | `SLASH_SPRITES` | seedlingDemo/combatVerbs.js | 6 | 6 | physics | magnitude | Player.as:41-45 |
 | `SLASH_SCALE_NORMAL` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude | Player.as:1258-1265 |
 | `SLASH_SCALE_DASH` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude |  |

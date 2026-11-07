@@ -1730,6 +1730,16 @@ frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|1,structural,,,initi
 frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|1|0,structural,,,initial alpha 1
 frontend/modules/seedlingDemo/drill.js|newDrill|h6e0aab05|0|2,structural,,,initial state zero
 frontend/modules/seedlingDemo/drill.js|stepDrill|h5b4e3662|0|0,structural,,,alpha <= 0 removal (Mobile.as:66)
+frontend/modules/seedlingDemo/drill.js|(module)|h3f2d5163|1|0,rule,sentinel,,DRILL_TERRAIN.water: tile type 1 Water (Enemy.as:68 case 1)
+frontend/modules/seedlingDemo/drill.js|(module)|h341cef68|6|0,rule,sentinel,,DRILL_TERRAIN.pit: tile type 6 Pit (Enemy.as:74 case 6)
+frontend/modules/seedlingDemo/drill.js|(module)|h323a67e1|17|0,rule,sentinel,,DRILL_TERRAIN.lava: tile type 17 Lava (Enemy.as:81 case 17)
+frontend/modules/seedlingDemo/drill.js|(module)|h5e686931|0.05|0,physics,magnitude,,pit fall alpha step a tick; gates destroy/fell
+frontend/modules/seedlingDemo/drill.js|(module)|hcd4bfdea|10|0,physics,magnitude,,pit centring pull divisor (x += (centre - x) / 10)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hdc02b159|0|0,rule,sentinel,,getState() default 0 (no Tile)
+frontend/modules/seedlingDemo/drill.js|stepDrill|h8f152c4e|2|0,structural,,,TILE / 2 cell centre (Enemy.as:96 x)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hf585ffd4|2|0,structural,,,TILE / 2 cell centre (Enemy.as:97 y)
+frontend/modules/seedlingDemo/drill.js|stepDrill|h4b02baf0|0|0,rule,bound,,Image.alpha clamp floor 0
+frontend/modules/seedlingDemo/drill.js|stepDrill|h5b4e3662|0|1,rule,bound,,alpha <= 0 ends the pit fall (destroy + fell)
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h379c4c3e|1|0,rule,magnitude,Enemies/Enemy.as:damage,ICE_TURRET_CONTACT: Enemy.damage = 1; the live turret body's contact damage (Enemy.hitPlayer)
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|he88721a0|0|0,rule,bound,Enemies/Enemy.as:hitPlayer,hitsTimer <= 0 gate on the live body's contact (Enemy.hitPlayer)
 frontend/modules/seedlingDemo/levelRun.js|terrainAt|hb402bd13|0|0,rule,sentinel,,tile type default when no walkable tile

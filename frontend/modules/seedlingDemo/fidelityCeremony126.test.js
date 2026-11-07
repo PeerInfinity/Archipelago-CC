@@ -27,7 +27,13 @@ describe('CEREMONY126 — the switches', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(true);
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
             expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
+            // ⛓ fidelity DRILLWATER (wave 37e) appended `drillTerrainSwitch` after them: D1 then D2 stay adjacent and in
+            // order, and only a later wave's named keys follow.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            const i = keys.indexOf('ceremonyPressForecast');
+            expect(keys.slice(i, i + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
+            const LATER = ['drillTerrainSwitch'];
+            expect(keys.slice(i + 2).filter((k) => !LATER.includes(k))).toEqual([]);
         });
     it('the env names are known worker env names', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CEREMONY_PRESS_FORECAST');
