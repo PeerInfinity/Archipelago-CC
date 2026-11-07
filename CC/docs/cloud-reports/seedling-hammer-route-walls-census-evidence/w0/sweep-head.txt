@@ -1,0 +1,7 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 1287) — head 6473024aa, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+INFO: mode inv: 40 legs in 40 page(s) (of 930 legs)
+INFO: sweep done
+--- cross-room legs
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 12173) — head 94ef4a795, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+INFO: mode inv: 3 legs in 3 page(s) (of 3 legs)
+INFO: sweep done

@@ -1,0 +1,6 @@
+--carry-route-flags (branch claude/seedling-hammer-door-carry-56b5hz @ 1a912657c1, not on main at 6473024aa8):
+the leg list built with and without it, compared byte for byte on the 40 census legs (ids.txt).
+  legs compared 40, diff 1:
+  DIFF 0 level_0__r2c13 <- in_L89_160_304 -> exit:out_teleporter_240_0 carries [flag:L0:1, flag:L0:4]
+No wall leg (482, 717-721, 921-924, nor the cross-room 9001-9003) carries a flag: the carry does not apply to these walls.
+Leg 0 is done at the defaults without it (sweep.tsv), so it was not re-run carried.
