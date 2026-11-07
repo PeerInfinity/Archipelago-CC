@@ -1,0 +1,190 @@
+diff --git a/frontend/modules/bulletml-dodge b/frontend/modules/bulletml-dodge
+deleted file mode 160000
+index 7423ee86..00000000
+--- a/frontend/modules/bulletml-dodge
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 7423ee86fa14e57b02e86c7f6b868a8b69f25c94
+diff --git a/frontend/modules/bulletml-dodge b/frontend/modules/bulletml-dodge
+new file mode 120000
+index 00000000..2b3cb885
+--- /dev/null
++++ b/frontend/modules/bulletml-dodge
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/bulletml-dodge
+\ No newline at end of file
+diff --git a/frontend/modules/flashPanel/wasm b/frontend/modules/flashPanel/wasm
+deleted file mode 160000
+index 9968c7dd..00000000
+--- a/frontend/modules/flashPanel/wasm
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 9968c7dda4c08397e93b0900d73a9e8126cda8b6
+diff --git a/frontend/modules/flashPanel/wasm b/frontend/modules/flashPanel/wasm
+new file mode 120000
+index 00000000..b6ccbebc
+--- /dev/null
++++ b/frontend/modules/flashPanel/wasm
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/flashPanel/wasm
+\ No newline at end of file
+diff --git a/frontend/modules/seedlingDemo/levelRun.js b/frontend/modules/seedlingDemo/levelRun.js
+index 500a7611..e3c69251 100644
+--- a/frontend/modules/seedlingDemo/levelRun.js
++++ b/frontend/modules/seedlingDemo/levelRun.js
+@@ -13359,11 +13359,12 @@ export function createLevelRun({
+                     // jump (`collidable` stays false) moves through everything.
+                     if (c.collidable === false) return false;
+                     const r = chaserBoxAt(c.tag, px, py);
+-                    if (world.collidesSolid(r, solidOpts)) return true;
+-                    if (playerWall && rectsOverlap(r, playerWall)) return true;
++                    const DB = process.env.L53_MOVE === '1' && c.tag === 'puncher' && ticksCompleted >= 394 && ticksCompleted < 398;
++                    { const hs = world.collidesSolid(r, solidOpts); if (hs) { if (DB) console.error('[MOVE] t', ticksCompleted, px.toFixed(2), py.toFixed(2), 'solid', JSON.stringify(hs).slice(0, 200)); return true; } }
++                    if (playerWall && rectsOverlap(r, playerWall)) { if (DB) console.error('[MOVE] playerwall'); return true; }
+                     for (const b of staticEnemyBoxes) {
+                         if (!enemyBoxStopsChaser(c.tag, b)) continue;
+-                        if (rectsOverlap(r, b.rect)) return true;
++                        if (rectsOverlap(r, b.rect)) { if (DB) console.error('[MOVE] t', ticksCompleted, px.toFixed(2), py.toFixed(2), 'static', JSON.stringify(b).slice(0, 200)); return true; }
+                     }
+                     // ⛓ fidelity-bobsoldier: a sibling is an "Enemy" — no wall to a mover whose list lacks it.
+                     if (!chaserSolids(c.tag).includes('Enemy')) return false;
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 16c16136..04434309 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -18019,7 +18019,7 @@ function execKill(run, perTick, resolved, ctx) {
+ const CHASER_LAPSE_GUARD = 8;
+ const CHASER_GUARD_RADIUS = 18;
+ 
+-function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId }) {
++function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId, dyingGrace = 0 }) {
+     const opts = solverPlanOpts(run, contacts);
+     const hitsBefore = run.ledger('playerHits').length;
+     const deathsBefore = run.ledger('playerDeaths').length;
+@@ -18061,7 +18061,8 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
+         }
+         return null;
+     };
+-    for (let i = 1; i <= bound; i += 1) {
++    const dyingNow = () => (run.entities('chasers') ?? []).some((c) => c.id === id && c.dying);
++    for (let i = 1; i <= bound || (dyingGrace > 0 && i <= bound + dyingGrace && dyingNow()); i += 1) {
+         let held = strike && !run.state.fall
+             ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, new Set(),
+                 strikeDecideOpts(run)).held
+@@ -18082,6 +18083,7 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
+                     : (b.hitsTimer > 0 && b.hitsTimer <= CHASER_LAPSE_GUARD ? away(b) : null));
+             if (k) { held = k; guardSteps += 1; }
+         }
++        if (i === 1 && process.env.L53_CAM === '1') { const tb = (run.entities('chasers') ?? []).find((c) => c.id === id); console.error('[CAM]', id, 't', run.ticksCompleted, 'p', run.state.x.toFixed(1), run.state.y.toFixed(1), 'b', tb?.x?.toFixed(1), tb?.y?.toFixed(1), 'cam', JSON.stringify(run.cameraNow)); }
+         perTick.push(held);
+         const { transition } = run.advance(held);
+         if (transition) {
+@@ -18867,6 +18869,12 @@ function execKillByChaser(run, perTick, resolved, ctx) {
+         // Nearest first (to the player's live point), then id, so the order is total.
+         live.sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
+             - Math.hypot(b.x - run.state.x, b.y - run.state.y) || (a.id < b.id ? -1 : 1));
++        if (process.env.L53_X === '1' && ctx.rewind) {
++            const out = killLockChaserTurn(run, perTick, resolved, ctx, live);
++            run = out.run;
++            phases.push(out.phase);
++            continue;
++        }
+         const tried = [];
+         let hunted = null;
+         let hunt = null;
+@@ -19038,6 +19046,48 @@ function execKillByChaser(run, perTick, resolved, ctx) {
+         } });
+ }
+ 
++function killLockChaserTurn(run, perTick, resolved, ctx, live) {
++    const contacts = resolved.contacts ?? new Set();
++    const dashMode = ctx.dashMode ?? DEFAULT_DASH_MODE;
++    const t0 = perTick.length;
++    const whys = [];
++    let tries = 0;
++    for (const b of live) {
++        if (deadlineReached('kill-chaser')) { whys.push('deadline'); break; }
++        const h = deriveKillByChaser(run, b, contacts, { dashMode, tolerance: process.env.L53_NOTOL === '1' ? 0 : DEFAULT_TOLERANCE, allScored: true });
++        if (!h.stance) { whys.push(`${b.id}: ${String(h.why).slice(0, 200)}`); continue; }
++        for (const s of h.scored) {
++            if (deadlineReached('kill-chaser')) { whys.push('deadline'); break; }
++            tries += 1;
++            const hits0 = run.ledger('playerHits').length;
++            const at = `(${s.x},${s.y})`;
++            try {
++                ctx.walkTo(ctx.goal, { x: s.x, y: s.y }, { what: `${ctx.what} -> chaser kill (${b.id}) stance ${at}` });
++                if (run.ledger('playerHits').length > hits0) throw new SolverRefusal(`${ctx.what}: the stance walk to ${at} was hit`, { goal: ctx.goal });
++                let rec = { ticks: 0, strikes: 0, guardSteps: 0 };
++                if ((run.entities('strikeBodies') ?? []).some((c) => c.id === b.id)) {
++                    rec = guardedChaserDwell(run, perTick, {
++                        id: b.id, bound: Math.max(s.ticks, chaserKillCeiling(run, b)),
++                        strike: strikePolicyFor(run, { dashMode }), contacts,
++                        what: `${ctx.what} -> chaser kill (${b.id}) by press at ${at}`, ctx,
++                        lockId: resolved.lock?.id ?? null, dyingGrace: process.env.L53_NOGRACE === '1' ? 0 : killWindowTicks(b.tag) + HOLD_SLACK,
++                    });
++                }
++                if (process.env.L53_DBG === '1') console.error('[L53X] killed', b.id, at, 'try', tries, 't', perTick.length);
++                return { run, phase: { phase: 'chaser-kill', target: b.id, stance: { x: s.x, y: s.y }, ticks: rec.ticks,
++                    strikes: rec.strikes, guardSteps: rec.guardSteps, clears: s.clears, tries } };
++            } catch (e) {
++                if (!(e instanceof SolverRefusal) || e instanceof PendingDeclaration || e?.undeclaredKillLock) throw e;
++                if (process.env.L53_DBG === '1') console.error('[L53X] refused', b.id, at, String(e.message).slice(-220));
++                whys.push(`${b.id} ${at}: ${String(e.message).split('\n')[0].slice(-200)}`);
++                run = ctx.rewind.to(t0).run;
++            }
++        }
++    }
++    throw new SolverRefusal(`${ctx.what}: L53X no stance kills any of [${live.map((b) => b.id).join(', ')}] after ${tries} tr(y|ies) — ${whys.join(' | ')}`,
++        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
++}
++
+ /**
+  * ⛓⛓⛓ R8 SLICE 7 — THE `kill` VERB'S **PRESS** ARM: THE PLAYER IS THE WEAPON,
+  * AND THE STANCE MOVES.
+@@ -24669,7 +24719,7 @@ export function deriveKillByChaser(run, body, contacts,
+     { aim = null, allowTeleporter = null, tolerance = 0,
+         dashMode = DEFAULT_DASH_MODE,
+         // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): the staged hunt's memo of the scan's floods (`null`: none)
+-        scanMemo = null } = {}) {
++        scanMemo = null, allScored = false } = {}) {
+     if (!(run.entities('strikeBodies') ?? []).some((b) => b.id === body.id)) {
+         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
+             + 'arm needs a live position, and a static census body has none' };
+@@ -25084,6 +25134,7 @@ export function deriveKillByChaser(run, body, contacts,
+         // ⛓ The runners-up, so the trace can answer "why THERE" and not only
+         // "where" — `deriveStrike`'s lesson, kickoff §22.9.
+         runnersUp: scored.slice(1, 4).map((r) => ({ x: r.x, y: r.y, deathAt: r.deathAt })),
++        ...(allScored ? { scored: scored.map((r) => ({ x: r.x, y: r.y, ticks: r.ticks, deathAt: r.deathAt, clears: r.clears })) } : {}),
+         why: `${body.id} is a \`modelled\` press target (KILL_ARM_POLICY.`
+             + `${target.enemyClass}) ${gap.toFixed(1)} px from the walk; the stance `
+             + `(${best.x},${best.y}) puts it ${Math.hypot(best.x - targetCentre.x,
+diff --git a/frontend/modules/shared b/frontend/modules/shared
+deleted file mode 160000
+index 733945b1..00000000
+--- a/frontend/modules/shared
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 733945b1f25db216529d896f7a26197db79cab15
+diff --git a/frontend/modules/shared b/frontend/modules/shared
+new file mode 120000
+index 00000000..5f63ff5b
+--- /dev/null
++++ b/frontend/modules/shared
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/shared
+\ No newline at end of file
+diff --git a/vendor/seedling b/vendor/seedling
+deleted file mode 160000
+index ccdf1897..00000000
+--- a/vendor/seedling
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit ccdf189776471fa57be8c0568c6e881a2d5acc18
+diff --git a/vendor/seedling b/vendor/seedling
+new file mode 120000
+index 00000000..7ace5a79
+--- /dev/null
++++ b/vendor/seedling
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/vendor/seedling
+\ No newline at end of file
