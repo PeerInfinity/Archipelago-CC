@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 11,
+            "count": 12,
             "id": "make"
         },
         {
@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 7,
+            "count": 8,
             "id": "no prefix"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 507,
+        "blockStyle": 509,
         "browser": 207,
-        "cited": 268,
-        "files": 525,
+        "cited": 270,
+        "files": 527,
         "lineStyle": 18,
-        "withDocblock": 525,
-        "withFlags": 445
+        "withDocblock": 527,
+        "withFlags": 446
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7337,6 +7337,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling entity colliders — the MODEL's hitbox of every entity tag, as a leaf module the traversal transcription can import (`frontend/modules/flashPanel/seedlingEntityColliders.js`).",
             "path": "scripts/procgen/make-seedling-entity-colliders.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "make-seedling-er-preset.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "make-seedling-er-preset — **THE `seedling_er` PRESET** (ENTRANCE RANDOMIZATION E4b): the Seedling playthrough with its STAIRS entrance-randomized — the `entranceShuffle` mode (`procgenPipeline/entranceShuffleSteps.js`) run headless over the committed playthrough atlas at `SEEDLING_ER_STATE`'s seed, through the same …",
+            "path": "scripts/procgen/make-seedling-er-preset.mjs"
         },
         {
             "argvHelpers": [],
@@ -21163,6 +21192,26 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-wasm-readme — **WRITE (AND GATE) THE seedling-wasm README'S BUILD TABLE FROM `builds.json`** (SEEDLING ORIGINAL WASM slice W2, ⚖ user 2026-09-07: the build table *\"GENERATED from `builds.json` with a check gate\"*, and *\"I want to fix the false and stale things in the readme\"*).",
             "path": "scripts/procgen/seedling-wasm-readme.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [
+                "docs/json/developer/procgen/substrate-registry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "seedlingEntranceShuffleHooks.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedlingEntranceShuffleHooks — **SEEDLING'S HOOKS FOR THE ENTRANCE-SHUFFLE MODE** (ENTRANCE RANDOMIZATION E4b), the object `procgenPipeline/entranceShuffleSteps.js` drives.",
+            "path": "scripts/procgen/seedlingEntranceShuffleHooks.mjs"
         },
         {
             "argvHelpers": [],
