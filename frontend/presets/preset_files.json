@@ -7287,5 +7287,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "seedling_er": {
+    "name": "Seedling Playthrough",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Seedling Playthrough"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }
