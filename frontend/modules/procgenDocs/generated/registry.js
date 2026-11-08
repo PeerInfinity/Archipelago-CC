@@ -36,7 +36,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/cloudberryDemo/cloudberryLibrary.js"
         },
         {
-            "fields": 33,
+            "fields": 34,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -189,6 +189,7 @@ export const REGISTRY = frz({
             "rows": [
                 "applyPipelineConfig",
                 "emitsSpiralContent",
+                "entranceShuffle",
                 "extractZoneRules",
                 "fillerItem",
                 "getSpiralContent",
@@ -1925,6 +1926,82 @@ export const REGISTRY = frz({
             "documentedHow": "prose",
             "group": "Build-time — content sources (zone-based substrates)",
             "name": "emitsSpiralContent"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "{atlasIds, loadHooks}",
+                    "type": "object",
+                    "value": [
+                        "atlasIds",
+                        "loadHooks"
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "entranceShuffle"
         },
         {
             "carriedBy": [
