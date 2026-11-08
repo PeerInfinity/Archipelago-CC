@@ -1,0 +1,24 @@
+FAIL: both switches OFF, (224,80): the staging REFUSES at the gate after the keylock (the survey's step-52 text) — it solved
+FAIL: l30keylock-pit224-before: the model replays it — TWO hits on the key line (a sword, then the body), still in L30, bobsoldier@48,80 alive — hits [], level 30, body (60.02,88.39) h0
+PASS: l30keylock-pit224-before: the tape round-trips through the tape format
+FAIL: the committed l30keylock-pit224-before is what this script produces today — ⛔ DRIFT — re-run without --check
+FAIL: both switches OFF, (224,80): REFUSED, and the walk it drove was hit on the key line — it solved — hits 0
+PASS: KEYLOCK_WAIT_PRICED alone, (224,80): no walk is hit (a solve or a refusal before the wait) — SOLVED 262 t
+PASS: both switches ON, (224,80): the staging SOLVES
+PASS: l30keylock-pit224: the plan kills the BobSoldier by the chaser arm inside the forecast's bound, then opens the lock — stance (88,88), dwell 25/56 t; keylock from t220
+PASS: l30keylock-pit224: the model replays it — zero hits, the crossing into L22 — hits 0, ends {"level":22,"x":104,"y":184}
+PASS: l30keylock-pit224: the tape round-trips through the tape format
+PASS: the committed l30keylock-pit224 is what this script produces today — byte-identical
+PASS: both switches OFF, (240,80): REFUSED, and the walk it drove was hit on the key line — solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock: bosslock@64,32 did not open inside its own derived bound of — hits 3
+PASS: KEYLOCK_WAIT_PRICED alone, (240,80): no walk is hit (a solve or a refusal before the wait) — SOLVED 259 t
+PASS: both switches ON, (240,80): the staging SOLVES
+PASS: l30keylock-pit240: the plan kills the BobSoldier by the chaser arm inside the forecast's bound, then opens the lock — stance (88,88), dwell 23/54 t; keylock from t241
+PASS: l30keylock-pit240: the model replays it — zero hits, the crossing into L22 — hits 0, ends {"level":22,"x":104,"y":184}
+PASS: l30keylock-pit240: the tape round-trips through the tape format
+PASS: the committed l30keylock-pit240 is what this script produces today — byte-identical
+
+4 CHECK(S) FAILED
+
+real	0m5.152s
+user	0m5.934s
+sys	0m0.294s

@@ -18,6 +18,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 No
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 Allow Collection of checks for other players:Yes
 Beemizer Total Chance:           0
 Beemizer Trap Chance:            60

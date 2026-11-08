@@ -1,0 +1,7 @@
+M5-dead-counts-as-live: '        return t !== null && !t.dead && !t.removed;' -> '        return t !== null;'
+✓ frontend/modules/seedlingDemo/hammerKeylockTurret.test.js (6 tests) 19478ms
+✓ a generated key line inside a live turret's range: OFF "0 cell(s)"; ON the stance, then the kill refuses by name  4978ms
+✓ the same room with no turret, and with the turret out of range: ON = OFF, nothing asked  422ms
+✓ L40 leg 412 with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 748, hitless on a fresh run  10536ms
+✓ L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH's staging point  3518ms
+Tests  6 passed (6)

@@ -18,6 +18,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 No
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 Vanilla Item Placement:          Yes
 
 

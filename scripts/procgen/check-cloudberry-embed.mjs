@@ -325,6 +325,20 @@ async function main() {
             return true;
         }, target);
         const botResults = async () => (await app()).events.filter((e) => e.kind === 'bot');
+        // A walk to a GATE with its item unheld. A page that plays on (Cloudberry P7b, features.botContinuous) collects the
+        // coins before the gate on its way, and the free coin holds the gate's item: such a walk asks for the pre-P7b walk
+        // (options.respawn: respawn at the goal's piece), so it tests the gate. The PlaybackController's walkTo passes
+        // the options to the page's botWalkTo.
+        const walkToGate = async (target) => {
+            if (!(await game(() => window.__cloudberryEmbed.features?.botContinuous === true))) return walkTo(target);
+            return page.evaluate(async (t) => {
+                const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+                const c = substrateRegistry.get('cloudberry')?.getPlaybackController?.();
+                if (!c) return false;
+                c.walkTo(t, { respawn: true });
+                return true;
+            }, target);
+        };
 
         // 1. the start region in the panel
         const a1 = await waitFor(`${start} configured in the cloudberry panel`, async () => {
@@ -351,7 +365,7 @@ async function main() {
 
         // 2. unheld platforms are not landable
         let before = (await botResults()).length;
-        ok(await walkTo({ kind: 'location', name: gatedName }), `2. walkTo ${gatedName} (needs ${needed}, unheld)`);
+        ok(await walkToGate({ kind: 'location', name: gatedName }), `2. walkTo ${gatedName} (needs ${needed}, unheld)`);
         const died = await waitFor('the bot\'s walk to the gated coin ends', async () => {
             const r = await botResults();
             return r.length > before ? r[r.length - 1] : null;

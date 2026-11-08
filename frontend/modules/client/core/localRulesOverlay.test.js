@@ -23,7 +23,12 @@ import {
   isGeneratedWorldDoc,
   overlayServerData,
   perPlayerKeysOf,
+  readWorldgenRules,
+  RETIRED_KEYS_AT_FORMAT,
+  slotDataWithoutRules,
+  WORLDGEN_RULES_FORMAT,
 } from './localRulesOverlay.js';
+import { RETIRED_TOP_LEVEL_KEYS } from '../../stateManager/core/initialization.js';
 import { exportRulesJson, generate } from '../../apcalcGenerator/apcalcGeneratorEngine.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -243,5 +248,81 @@ describe('overlayServerData = the exporter file at the room seed', () => {
     );
     const scouts = room.scouts.map((s, i) => (i === 0 ? { ...s, itemName: 'Mystery' } : s));
     expect(() => overlayServerData(LOCAL, '1', { ...room, scouts })).toThrow(/placed Mystery/);
+  });
+});
+
+
+describe('the rules a world_generator world sends (worldgen_rules)', () => {
+  const envelopeOf = (pkg) => readJson(ROOT, 'worlds', pkg, '_worldgen_rules.json');
+
+  it("WORLDGEN_RULES_FORMAT is world_generator's", () => {
+    const py = readFileSync(join(ROOT, 'world_generator', '_embedded_rules.py'), 'utf8');
+    const m = py.match(/^WORLDGEN_RULES_FORMAT = (\d+)$/m);
+    expect(m, 'world_generator/_embedded_rules.py defines WORLDGEN_RULES_FORMAT').not.toBe(null);
+    expect(Number(m[1])).toBe(WORLDGEN_RULES_FORMAT);
+  });
+
+  it('⛔ RETIRED_TOP_LEVEL_KEYS grew? Bump WORLDGEN_RULES_FORMAT (here AND in _embedded_rules.py) and record the new set', () => {
+    expect([...Object.keys(RETIRED_TOP_LEVEL_KEYS)].sort()).toEqual([...RETIRED_KEYS_AT_FORMAT].sort());
+  });
+
+  it("reads a package's own envelope", () => {
+    const env = envelopeOf('cloudberry_sphere_worldgen');
+    const read = readWorldgenRules(env);
+    expect(read.refusal).toBeUndefined();
+    expect(read.player).toBe('1');
+    expect(read.doc.game_name).toBe('Cloudberry Sphere WorldGen');
+  });
+
+  it.each([
+    ['not an object', 'x', /malformed/],
+    ['no doc', { format: WORLDGEN_RULES_FORMAT, player: '1' }, /malformed/],
+    ['format 0', { format: 0, player: '1', doc: { world: { 1: {} } } }, /older world generator \(rules format 0; this client reads format 1\)/],
+    ['format 99', { format: 99, player: '1', doc: { world: { 1: {} } } }, /newer world generator/],
+    ['no world for its player', { format: WORLDGEN_RULES_FORMAT, player: '3', doc: { world: { 1: {} } } }, /no world for its player 3/],
+    ['a retired key', { format: WORLDGEN_RULES_FORMAT, player: '1', doc: { world: { 1: {} }, provenance: { tool: 'x' } } }, /older world generator .*provenance/],
+  ])('refuses %s, by name', (_label, envelope, why) => {
+    expect(readWorldgenRules(envelope).refusal).toMatch(why);
+  });
+
+  it('slot_data loses the document and its note, and nothing else', () => {
+    const sd = { a: 1, worldgen_rules: {}, worldgen_rules_omitted: {} };
+    expect(slotDataWithoutRules(sd)).toEqual({ a: 1 });
+    expect(sd).toHaveProperty('worldgen_rules');
+    const plain = { a: 1 };
+    expect(slotDataWithoutRules(plain)).toBe(plain);
+  });
+
+  describe("a procgen pickup's sidecar id is the ROOM's item (both paths)", () => {
+    // cloudberry_maze_mix: a maze region whose pickups name their item in playable_payload.items[].id.
+    const local = preset('cloudberry_maze_mix_worldgen');
+    const env = envelopeOf('cloudberry_maze_mix_worldgen');
+    const own = Object.values(local.regions['1']).flatMap((r) => r.locations).filter((l) => l.id !== null);
+    // A room of another seed: every location holds the NEXT location's canonical item.
+    const scouts = own.map((l, i) => ({
+      locationId: l.id,
+      itemName: own[(i + 1) % own.length].item.name,
+      player: 1,
+      progression: true,
+    }));
+    const roomItem = new Map(own.map((l, i) => [l.name, own[(i + 1) % own.length].item.name]));
+    const pickups = (doc) =>
+      Object.values(doc.preset_sidecars['1']).flatMap((sc) => sc.playable_payload?.items || []).filter((it) => it.locationName);
+
+    it('the fixture has maze pickups, and the shipped doc carries no item on them', () => {
+      expect(pickups(local).length).toBeGreaterThan(0);
+      expect(pickups(env.doc).every((it) => !('id' in it))).toBe(true);
+      // The test means something: some pickup's room item differs from the canonical one.
+      expect(pickups(local).some((it) => roomItem.get(it.locationName) !== it.id)).toBe(true);
+    });
+
+    it.each([
+      ['the local doc (canonical ids)', () => [local, '1']],
+      ['the server doc (no ids)', () => [env.doc, env.player]],
+    ])('%s', (_label, which) => {
+      const [doc, player] = which();
+      const out = overlayServerData(doc, player, { slot: 1, seedName: 'S', scouts });
+      for (const it of pickups(out)) expect(it.id).toBe(roomItem.get(it.locationName));
+    });
   });
 });
