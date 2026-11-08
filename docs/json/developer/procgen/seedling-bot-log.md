@@ -27727,3 +27727,29 @@ requests solve hitless:
 
 These are the census's hand-staged numbers. The Chest legs (394/411) carry the door too but stay on the SE fight. No
 solver file is touched. The report is `CC/docs/cloud-reports/seedling-hammer-door-carry.md`.
+
+### Seedling hammer-phase L40-FLIP-BUILD — the L40 flip branch: twelve switches ON, and `OPP_PRESS_FALLBACK`
+
+⚖ The user, 2026-11-08: *"Yes, build the flip next (Recommended)"*. The whole-game walk stops at L40 Boss Key 2 because
+every L40 fix is on main but OFF. This branch turns twelve of them ON by default (each opts out by its own `=0`):
+`STAGED_HUNT_SCAN_MEMO`, `CHASER_STAGED_HUNT`, `OPPORTUNISTIC_STRIKE`, `CLEARTAG_CHAIN`, `STANCE_BURN`, `CHOOSER_CUT`,
+`DETOUR_VIA_BOUND`, `KEYLOCK_TURRET`, `LATCH_WEIGH_FIRST`, `TURRET_APPROACH`, `APPROACH_DOOR`, `BOMB_PHASE_WAIT`
+(`l40FlipSet.js` names them; `withL40Flip(false, …)` is the BEFORE pins' wrapper). `HAMMER_FIGHT_FALLBACK` stays OFF.
+
+What the page-vs-node gap of wave 6 ON was (measured on the p4g page here and on its captured requests in node):
+- 394 / 871 (from L39): a MODEL gap. The page solves, and the game diverges at t936: the staged hunt's sword-dash plan
+  lands `bob@736,752`'s third hit at t930 in the model, on the tick its i-frames lapse; the game's bob lives and hits the
+  player at t936 (745.9,786.6). The plan is a function of the arrival clock (CI's 871 at 5217 played clean). Fidelity's.
+- 411 / 870 / 871 / 872: the HARNESS's 90 s leg clock. Each solves (33–39 s) and is cut while the game plays it.
+- 376 / 377: the arrival clock. 377's ON regression is `OPPORTUNISTIC_STRIKE` (bisected over 21 clocks); 376 loses the
+  bomb phase without `BOMB_PHASE_WAIT`.
+
+The new switch `OPP_PRESS_FALLBACK` (`oppPressFallback.js`, ON here): OPP's press kill that refuses with a
+`FIGHT_FALLBACK_CODES` code is rewound to its first tick and redone once with OPP off (B3's rewind). 377 at 5320–5324:
+refused → the defaults' plan, digest for digest; 5319 still refuses (no rewind inside the stance derivation's trial).
+
+With the south door carried (DOOR-CARRY), the set solves on the page: Chests 394/411, flag 8 395/412, 376, 377. Boss
+Key 2 from L39 (869) still needs 3,236 work units against the 2,560 retry: 2,484 of them are the turret approach's
+276 certified forks (the hitless one is side `right`, the corridor, wait 29). Nine pins moved (each re-recorded as a
+BEFORE pin with the set OFF; the AFTER values are in the report). The report is
+`CC/docs/cloud-reports/seedling-hammer-l40-flip-build.md`.

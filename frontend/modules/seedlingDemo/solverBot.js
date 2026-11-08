@@ -10951,8 +10951,9 @@ export function withStanceRocks(enabled, fn) {
  * SOUTHDOOR's hand-over: on L40's Boss Key 2 arrivals `burnabletree@872,784` shuts the latch pocket and the hold's
  * prerequisite search named only activators and a pushable. `SEEDLING_STANCE_BURN=1` / `withStanceBurn(enabled, fn)`.
  */
-export const STANCE_BURN = { enabled: globalThis.process?.env?.SEEDLING_STANCE_BURN === '1' };
-export const STANCE_BURN_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_STANCE_BURN=0` opts out.
+export const STANCE_BURN = { enabled: globalThis.process?.env?.SEEDLING_STANCE_BURN !== '0' };
+export const STANCE_BURN_DEFAULT = true;
 
 /** Run `fn` with `STANCE_BURN` set to `enabled`, restoring the previous value. */
 export function withStanceBurn(enabled, fn) {
@@ -10969,8 +10970,9 @@ export function withStanceBurn(enabled, fn) {
  * (b) are on at the defaults), that one only adds the tree to what may be named. `SEEDLING_CLEARTAG_CHAIN=1` /
  * `withClearTagChain(enabled, fn)`.
  */
-export const CLEARTAG_CHAIN = { enabled: globalThis.process?.env?.SEEDLING_CLEARTAG_CHAIN === '1' };
-export const CLEARTAG_CHAIN_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_CLEARTAG_CHAIN=0` opts out.
+export const CLEARTAG_CHAIN = { enabled: globalThis.process?.env?.SEEDLING_CLEARTAG_CHAIN !== '0' };
+export const CLEARTAG_CHAIN_DEFAULT = true;
 
 /** Run `fn` with `CLEARTAG_CHAIN` set to `enabled`, restoring the previous value. */
 export function withClearTagChain(enabled, fn) {
@@ -11295,8 +11297,9 @@ export const PACE = Object.freeze({
  * the walk is then OFF's walk (no row), on the ladder the ladder goes on as OFF does, TIME's why carrying the arm's.
  * ⚖ 30(c): the waited keys are the tape's; the corridor is certified from the state the walk starts in.
  */
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_BOMB_PHASE_WAIT=0` opts out.
 export const BOMB_PHASE_WAIT = {
-    enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT === '1',
+    enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT !== '0',
     /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
     maxStill: 46,
     /** the paced arm's bound: whole cycles covering it (`planPacedWait`'s `ticks`). */
@@ -11310,7 +11313,7 @@ export const BOMB_PHASE_WAIT = {
      */
     escapeReach: Object.freeze([0, 1.1, 3.1, 4.9, 6.4, 7.7, 8.8, 9.9, 10.9, 11.8, 12.5, 13.8, 15.0]),
 };
-export const BOMB_PHASE_WAIT_DEFAULT = false;
+export const BOMB_PHASE_WAIT_DEFAULT = true;
 /** The instrument: climbs that asked the arm, the waits kept, the refusals (reset by the caller). */
 export const BOMB_PHASE_WAIT_COUNTS = { asked: 0, kept: [], refused: [] };
 
@@ -16634,8 +16637,9 @@ export function resetChooserPairCounts() {
  * env channel), `withChooserCut(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk and trace
  * is byte-identical. ON where the chooser, C1 or CPAIR already answers, nothing is asked either.
  */
-export const CHOOSER_CUT = { enabled: globalThis.process?.env?.SEEDLING_CHOOSER_CUT === '1' };
-export const CHOOSER_CUT_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_CHOOSER_CUT=0` opts out.
+export const CHOOSER_CUT = { enabled: globalThis.process?.env?.SEEDLING_CHOOSER_CUT !== '0' };
+export const CHOOSER_CUT_DEFAULT = true;
 
 /** Run `fn` with `CHOOSER_CUT` set to `enabled`, restoring the previous value. */
 export function withChooserCut(enabled, fn) {
@@ -16717,8 +16721,9 @@ export function withIceTurretStaticKill(enabled, fn, mode = null) {
  * `SEEDLING_LATCH_WEIGH_FIRST=1` turns it on in a node process (the page's worker has no `process`), and
  * `withLatchWeighFirst(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk is byte-identical.
  */
-export const LATCH_WEIGH_FIRST = { enabled: globalThis.process?.env?.SEEDLING_LATCH_WEIGH_FIRST === '1' };
-export const LATCH_WEIGH_FIRST_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_LATCH_WEIGH_FIRST=0` opts out.
+export const LATCH_WEIGH_FIRST = { enabled: globalThis.process?.env?.SEEDLING_LATCH_WEIGH_FIRST !== '0' };
+export const LATCH_WEIGH_FIRST_DEFAULT = true;
 
 /** Run `fn` with `LATCH_WEIGH_FIRST` set to `enabled`, restoring the previous value. */
 export function withLatchWeighFirst(enabled, fn) {
@@ -16750,8 +16755,9 @@ export function resetLatchWeighFirstCounts() {
  * `SEEDLING_TURRET_APPROACH=1` turns it on in a node process (the page's worker has no `process`), and
  * `withTurretApproach(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk is byte-identical.
  */
-export const TURRET_APPROACH = { enabled: globalThis.process?.env?.SEEDLING_TURRET_APPROACH === '1' };
-export const TURRET_APPROACH_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_TURRET_APPROACH=0` opts out.
+export const TURRET_APPROACH = { enabled: globalThis.process?.env?.SEEDLING_TURRET_APPROACH !== '0' };
+export const TURRET_APPROACH_DEFAULT = true;
 
 /** Run `fn` with `TURRET_APPROACH` set to `enabled`, restoring the previous value. */
 export function withTurretApproach(enabled, fn) {
@@ -16783,8 +16789,9 @@ export function resetTurretApproachCounts() {
  * staging point (the near side, the latch staging), nothing is asked and the approach is APPROACH's, byte for byte.
  * `SEEDLING_APPROACH_DOOR=1` / `withApproachDoor(enabled, fn)`. OFF, nothing is read.
  */
-export const APPROACH_DOOR = { enabled: globalThis.process?.env?.SEEDLING_APPROACH_DOOR === '1' };
-export const APPROACH_DOOR_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_APPROACH_DOOR=0` opts out.
+export const APPROACH_DOOR = { enabled: globalThis.process?.env?.SEEDLING_APPROACH_DOOR !== '0' };
+export const APPROACH_DOOR_DEFAULT = true;
 
 /** Run `fn` with `APPROACH_DOOR` set to `enabled`, restoring the previous value. */
 export function withApproachDoor(enabled, fn) {
@@ -16827,8 +16834,9 @@ export function resetApproachDoorCounts() {
  * solver env channel), and `withKeylockTurret(enabled, fn)` is for a test or a witness. OFF, nothing below is asked:
  * the refusal is the one it was, byte for byte.
  */
-export const KEYLOCK_TURRET = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET === '1' };
-export const KEYLOCK_TURRET_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_KEYLOCK_TURRET=0` opts out.
+export const KEYLOCK_TURRET = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET !== '0' };
+export const KEYLOCK_TURRET_DEFAULT = true;
 
 /** Run `fn` with `KEYLOCK_TURRET` set to `enabled`, restoring the previous value. */
 export function withKeylockTurret(enabled, fn) {
@@ -25043,8 +25051,9 @@ function orbitKillChaser(run, perTick, id, { fork, dashMode, what }) {
  * answer carries no `waits`, every walk is byte-identical. `SEEDLING_CHASER_STAGED_HUNT=1` /
  * `withChaserStagedHunt(enabled, fn)`.
  */
-export const CHASER_STAGED_HUNT = { enabled: globalThis.process?.env?.SEEDLING_CHASER_STAGED_HUNT === '1' };
-export const CHASER_STAGED_HUNT_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_CHASER_STAGED_HUNT=0` opts out.
+export const CHASER_STAGED_HUNT = { enabled: globalThis.process?.env?.SEEDLING_CHASER_STAGED_HUNT !== '0' };
+export const CHASER_STAGED_HUNT_DEFAULT = true;
 
 /** Run `fn` with `CHASER_STAGED_HUNT` set to `enabled`, restoring the previous value. */
 export function withChaserStagedHunt(enabled, fn) {
@@ -25729,8 +25738,9 @@ export const DETOUR_RUNG = Object.freeze({ maxVias: 2, maxPreviews: 300, maxPlan
  * deadline cuts, so it is its own switch. `SEEDLING_DETOUR_VIA_BOUND=1` / `withDetourViaBound(enabled, fn)`.
  * `counts.bounded`: rungs refused up front (an instrument, read by nothing that decides).
  */
-export const DETOUR_VIA_BOUND = { enabled: globalThis.process?.env?.SEEDLING_DETOUR_VIA_BOUND === '1', counts: { bounded: 0 } };
-export const DETOUR_VIA_BOUND_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_DETOUR_VIA_BOUND=0` opts out.
+export const DETOUR_VIA_BOUND = { enabled: globalThis.process?.env?.SEEDLING_DETOUR_VIA_BOUND !== '0', counts: { bounded: 0 } };
+export const DETOUR_VIA_BOUND_DEFAULT = true;
 
 /** Run `fn` with `DETOUR_VIA_BOUND` set to `enabled`, restoring the previous value. */
 export function withDetourViaBound(enabled, fn) {

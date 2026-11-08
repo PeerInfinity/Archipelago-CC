@@ -43,6 +43,7 @@ import {
     HAMMER_SAFETY, REWIND_PROBE, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal,
     planSwordDash, replayOntoFork, withHammerEscape, withHammerFight, withHammerFightFallback, withSolveDeadline,
 } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const SOURCE = atlasLevelSource();
 const R9 = stagingFromTape(loadTape('r9-solve-18'));
@@ -231,7 +232,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         });
     }, 300_000);
 
-    it('⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence', async () => {
+    it('⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence', async () => withL40Flip(false, async () => {
         await withHammerEscape(false, async () => {
             const off = await refusalOf(solveR9At(4));
             HAMMER_FIGHT.bounds = { ...HAMMER_FIGHT_BOUNDS, maxExpansions: 1 };
@@ -249,7 +250,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
             expect(on.fightFallback).toMatchObject({ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 266,
                 verdict: 'refused', retryRefused: HAMMER_SAFETY });
         });
-    }, 300_000);
+    }), 300_000);
 
     it('⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing', async () => {
         expect(HAMMER_ESCAPE.enabled).toBe(true);
