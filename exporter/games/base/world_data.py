@@ -15,6 +15,13 @@ from typing import Any, Callable, Dict, Optional
 logger = logging.getLogger(__name__)
 
 
+# Options that only decide what the server SENDS, with no effect on the world's logic, pool or placements,
+# are not exported: no rules document reader needs them, and exporting one would move every export of
+# every package that defines it. `rules_in_slot_data_max_kb`: a world_generator package's cap on its
+# slot_data rules document (world_generator/_embedded_rules.py).
+TRANSPORT_ONLY_OPTIONS = frozenset({'rules_in_slot_data_max_kb'})
+
+
 class WorldDataMixin:
     """Mixin providing world data extraction methods."""
 
@@ -144,6 +151,8 @@ class WorldDataMixin:
             option_names = [name for name in dir(world.options) if not name.startswith('_')]
 
             for option_name in option_names:
+                if option_name in TRANSPORT_ONLY_OPTIONS:
+                    continue
                 try:
                     option = getattr(world.options, option_name)
                     # Check if it's an Option object with a value attribute
@@ -264,8 +273,15 @@ class WorldDataMixin:
 
         # Export slot_data if available (cached by the slot_data_cache monkey patch
         # hook which wraps fill_slot_data() on both the base class and all subclasses)
+        # A world_generator package's `worldgen_rules` (its whole rules document, for the web client) is
+        # NOT re-exported: the export IS a rules document, and carrying it would double every export.
+        # Its `worldgen_rules_omitted` note is kept.
         if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
-            world_data['slot_data'] = world._cached_slot_data
+            slot_data = world._cached_slot_data
+            if isinstance(slot_data, dict) and 'worldgen_rules' in slot_data:
+                slot_data = {k: v for k, v in slot_data.items() if k != 'worldgen_rules'}
+            if slot_data:
+                world_data['slot_data'] = slot_data
 
         # Export WebWorld metadata if available
         # This mirrors Archipelago's world.web structure

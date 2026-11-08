@@ -1,0 +1,26 @@
+871/0 CC                 REFUSED        work=364 digest=7c2fd7098f6e [dashless:refusal/182u/6s full:refusal/182u/6s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (488,904): solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (488,904). A hold that cannot be stoo
+871/0 CC+ALL             SOLVED 1122 t  work=2774 digest=13eef59de064 [dashless:ok/2772u/34s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+871/0 CC+SB              REFUSED        work=1810 digest=254de9d2c014 [dashless:refusal/905u/26s full:refusal/905u/24s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (888.5,851.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body c
+871/0 CC+SB+OPP+CSH      SOLVED 1392 t  work=2599 digest=cc10c4c0e6ca [dashless:ok/2597u/33s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+871/0 CC+SB+OPP+CSH+PEE+FSB SOLVED 1122 t  work=2774 digest=13eef59de064 [dashless:ok/2772u/29s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC                 REFUSED        work=364 digest=0c0409958d2d [dashless:refusal/182u/7s full:refusal/182u/6s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (328,600): solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (328,600). A hold that cannot be stoo
+872/0 CC+ALL             SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/69s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+ALL-CSH         REFUSED        work=3424 digest=7bc60e96ff6f [dashless:refusal/1712u/64s full:refusal/1712u/67s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body c
+872/0 CC+ALL-FO          SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/54s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+ALL-FSB         SOLVED 1809 t  work=3523 digest=9d5e6c24dbc2 [dashless:ok/3521u/55s full:refusal/2u/0s] fresh-run: modelled=true hits=1 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+ALL-LWF         SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/68s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+ALL-OPP         REFUSED        work=600 digest=a802b482feed [dashless:refusal/300u/31s full:refusal/300u/30s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t834 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848'
+872/0 CC+ALL-PEE         SOLVED 1809 t  work=3523 digest=9d5e6c24dbc2 [dashless:ok/3521u/56s full:refusal/2u/0s] fresh-run: modelled=true hits=1 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+ALL-SD          SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/65s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+ALL-TA          SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/65s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+SB              REFUSED        work=464 digest=159109b8184e [dashless:refusal/232u/27s full:refusal/232u/25s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t799 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848'
+872/0 CC+SB+OPP+CSH      SOLVED 1809 t  work=3523 digest=9d5e6c24dbc2 [dashless:ok/3521u/47s full:refusal/2u/0s] fresh-run: modelled=true hits=1 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+SB+OPP+CSH+FSB  SOLVED 1809 t  work=3523 digest=9d5e6c24dbc2 [dashless:ok/3521u/56s full:refusal/2u/0s] fresh-run: modelled=true hits=1 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+SB+OPP+CSH+PEE  SOLVED 1809 t  work=3523 digest=9d5e6c24dbc2 [dashless:ok/3521u/54s full:refusal/2u/0s] fresh-run: modelled=true hits=1 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+SB+OPP+CSH+PEE+FSB SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/58s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]

@@ -293,7 +293,10 @@ describe('strategy switch — the gates', () => {
         expect(raw).toEqual(['STRATEGY_EXECUTORS[strategy](']);
         expect(code).toMatch(/strategy && executorFor\(strategy, 'placement-blocker'\)/);
         const wrapped = [...code.matchAll(/callableExecutor\((\w+)\(/g)].map((m) => m[1]);
-        expect(wrapped.sort()).toEqual(['clearTagExecutor', 'clearTagExecutor', 'executorFor', 'frontierExecutor']);
+        // ⛓ hammer-phase CLEARTAG-CHAIN: the second `frontierExecutor` is `clearTagPrerequisite`'s (the frontier's order,
+        // applied for the clear-tag verb's stance; `CLEARTAG_CHAIN`, OFF)
+        expect(wrapped.sort()).toEqual(['clearTagExecutor', 'clearTagExecutor', 'executorFor', 'frontierExecutor',
+            'frontierExecutor']);
     });
 
     it('the nested sites hammer-2 named are gated (kill: corpse-weigh kill; hold: the ladder\'s hold arm, the weigh fallback)', () => {

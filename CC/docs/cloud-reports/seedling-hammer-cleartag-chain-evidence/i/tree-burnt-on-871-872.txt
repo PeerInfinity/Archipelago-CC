@@ -1,0 +1,10 @@
+871/0 CC+ALL+p0          SOLVED 1438 t  work=3496 digest=e1c4e7e35ca0 [dashless:ok/3495u/48s full:refusal/1u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","kill"]
+871/0 CC+D0              REFUSED        work=364 digest=7c2fd7098f6e [dashless:refusal/182u/7s full:refusal/182u/7s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (488,904): solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the p
+871/0 CC+p0              REFUSED        work=9066 digest=e72efacb3bb4 [dashless:refusal/4537u/74s full:refusal/4529u/51s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> hold stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.8) — chaser:bobsoldier@880,832 (the swor
+872/0 CC+ALL+p0          SOLVED 1320 t  work=2041 digest=e3bb8c5d8083 [dashless:refusal/49u/20s full:ok/1992u/37s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","kill"]
+872/0 CC+D0              REFUSED        work=364 digest=0c0409958d2d [dashless:refusal/182u/7s full:refusal/182u/8s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (328,600): solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the p
+872/0 CC+p0              REFUSED        work=106 digest=bbd613e57272 [dashless:refusal/53u/137s full:refusal/53u/87s]
+    solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> hold stance -> kill (spinner@880,848) by press: the player died at t1139 (chaser bob@736,752) while pressing spinner@880,848, after 2 

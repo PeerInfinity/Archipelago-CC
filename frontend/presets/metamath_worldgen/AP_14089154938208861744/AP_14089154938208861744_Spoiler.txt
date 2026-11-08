@@ -18,6 +18,7 @@ Item Links:
 Plando Items:                    
 Randomize Items:                 Yes
 Use Canonical Options:           Yes
+Rules In Slot Data Max KB:       1024
 Auto-Download Database:          Yes
 Entrance Rule Mode:              Relaxed Items
 Randomize Starting Statements:   Yes

@@ -1,0 +1,100 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 63,
+        "x": 32,
+        "y": 256
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [
+        {
+            "t": 17,
+            "slot": 1
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 987286273
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": true,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "time": 4800
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 19,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "left",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "right",
+            "from": 4,
+            "to": 9
+        },
+        {
+            "key": "left",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "primary",
+            "from": 17,
+            "to": 18
+        }
+    ],
+    "name": "cleartag-L63-6-north"
+}
