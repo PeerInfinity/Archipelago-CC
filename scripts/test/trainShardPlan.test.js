@@ -43,9 +43,11 @@ describe('the committed train tier', () => {
         expect(shards.flatMap((s) => s.files).sort()).toEqual([...files].sort());
     });
 
-    it('every cost row names a real file and every real file has one', () => {
-        expect(staleTrainCosts(files, costs)).toEqual([]);
-        expect(shards.flatMap((s) => s.unpriced)).toEqual([]);
+    // ⚖ Robert 2026-11-08: warn, never fail. Cost rows only balance the shards; the
+    // partition check above is what keeps every file running.
+    it('reports a cost row with no file and a file with no cost row, without failing', () => {
+        for (const f of staleTrainCosts(files, costs)) console.log(`::warning title=train shard plan::cost row for a file that no longer exists: ${f}`);
+        for (const f of shards.flatMap((s) => s.unpriced)) console.log(`::warning title=train shard plan::no cost row in scripts/test/train-shard-costs.json: ${f}`);
     });
 
     it('the workflow runs the planner with the matrix-derived k/N, and stays out of the suite family', () => {
