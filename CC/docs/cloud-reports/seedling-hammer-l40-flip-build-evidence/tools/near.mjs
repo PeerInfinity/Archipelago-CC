@@ -13,7 +13,7 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
   req = restoreRequest(args.seam ? { ...c0, staging: { ...c0.staging, seam: { ...c0.staging.seam, time: Number(args.seam) } } } : c0);
 }
 const { passes: P0 = JR.ANYTIME_PASSES, source, ...tape } = req; const passes = args.pass ? P0.filter((p) => p.pass === args.pass) : P0;
-const levelSource = levelSourceFromAtlas(source.records);
+const levelSource = levelSourceFromAtlas(source.records); if (args.budget) tape.budgetWork = Number(args.budget);
 const t0 = Date.now();
 const ans = JR.solveAnytime({ ...tape, levelSource }, { passes });
 console.log('answer', ans.ok, ans.ok ? ans.plan.verbs : (ans.message??'').slice(0,400), 'ms', Date.now()-t0, 'work', ans.work, JSON.stringify(ans.passes));
