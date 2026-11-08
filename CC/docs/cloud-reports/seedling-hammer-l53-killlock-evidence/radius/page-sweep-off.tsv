@@ -1,0 +1,235 @@
+id	level	end	roomHitsMax	key	failed
+98	95	crossed	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352	
+99	95	crossed	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368	
+100	35	done	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_112_96	
+101	36	done	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368	
+102	88	done	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0	
+103	33	done	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352	
+109	95	crossed	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352	
+110	95	done	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368	
+111	35	done	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96	
+112	36	crossed	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368	
+113	88	done	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0	
+114	33	done	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_432_352	
+120	95	crossed	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352	
+121	95	done	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368	
+122	35	done	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96	
+123	36	done	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368	
+124	88	done	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0	
+125	33	crossed	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352	
+131	95	crossed	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352	
+132	95	done	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368	
+133	35	done	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96	
+134	36	done	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368	
+135	88	crossed	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0	
+136	33	done	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352	
+142	95	crossed	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352	
+143	95	done	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368	
+144	35	done	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96	
+145	36	done	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368	
+146	88	done	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0	
+147	33	done	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352	
+153	95	done	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352	
+154	95	crossed	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368	
+155	35	done	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96	
+156	36	done	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368	
+157	88	crossed	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0	
+158	33	done	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352	
+164	95	crossed	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352	
+165	95	done	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368	
+166	35	done	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96	
+167	36	done	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368	
+168	88	done	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0	
+169	33	done	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352	
+510	59	done	0	level_60__r5c0 <- in_L59_304_128 -> exit:out_teleporter_0_80	
+722	87	done	0	level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144	
+174	37	crossed	0	level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0	
+175	21	done	0	level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5	
+176	37	done	0	level_12__r0c37 <- in_L37_32_304 -> exit:out_teleporter_592_0	
+177	21	done	0	level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5	
+283	27	done	0	level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304	
+284	25	done	0	level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_144_32	
+285	27	done	0	level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_64_304	
+286	25	done	0	level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32	
+287	28	done	0	level_26__r13c8 <- in_L28_0_96 -> exit:out_teleporter_144_208	
+186	34	done	0	level_12__r43c21 <- in_L34_32_144 -> exit:out_teleporter_336_688	
+445	46	done	0	level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_0	
+446	44	done	0	level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_304	
+447	46	done	0	level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_0	
+448	44	done	0	level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_304	
+379	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576	
+380	39	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912	
+381	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20	
+382	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20	
+383	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20	
+384	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20	
+385	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21	
+386	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21	
+387	40	failed	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	the solver ran out of 640, then 2560 work units on its held retry on exit in level 40: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solve
+388	40	failed	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	the solver ran out of 640, then 2560 work units on its held retry on exit in level 40: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solve
+389	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22	
+390	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22	
+391	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23	
+392	43	done	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23	
+396	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576	
+397	39	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912	
+398	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20	
+399	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20	
+400	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20	
+401	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20	
+402	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21	
+403	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21	
+404	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21	
+405	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21	
+406	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22	
+407	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22	
+408	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23	
+409	43	done	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23	
+178	5	done	0	level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240	
+478	51	done	0	level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144	
+479	48	done	0	level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64	
+480	51	done	0	level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144	
+481	48	done	0	level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64	
+482	54	done	0	level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240	
+483	53	done	0	level_54__r1c8 <- in_L53_144_240 -> exit:out_teleporter_144_0	
+484	52	done	0	level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464	
+511	61	done	0	level_60__r5c9 <- in_L61_0_160 -> exit:out_teleporter_160_80	
+553	61	done	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48	
+554	61	done	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96	
+555	63	failed	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0	the solver declined level_63__r0c1 -> level_62 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (16,0)->L62 -> hold: held buttonroom@32,64 for 12 tick(s) and it made NO cross-room write. It p
+558	61	done	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48	
+559	63	failed	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96	the solver declined level_63__r0c1 -> level_61__r0c7 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,96)->L61 -> hold: held buttonroom@32,64 for 12 tick(s) and it made NO cross-room write
+560	62	done	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0	
+563	61	done	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48	
+564	63	failed	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96	the solver declined level_63__r0c1 -> level_61__r0c7 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,96)->L61 -> hold: held buttonroom@32,64 for 12 tick(s) and it made NO cross-room write
+565	62	done	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0	
+568	63	failed	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48	the solver declined level_63__r0c1 -> level_61__r0c10 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,48)->L61 -> hold stance (buttonroom@32,64): the combat ladder is EXHAUSTED. The corri
+569	63	failed	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96	the solver declined level_63__r0c1 -> level_61__r0c7 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (0,96)->L61: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,
+570	63	failed	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0	the solver declined level_63__r0c1 -> level_62 in level 63 (refusal): solverBot(wasm-exit-63) reach-exit (16,0)->L62 -> hold stance (buttonroom@32,64): the combat ladder is EXHAUSTED. The corridor pas
+721	91	done	0	level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144	
+369	42	done	0	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0	
+370	41	done	0	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96	
+374	42	done	0	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0	
+375	41	done	0	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96	
+573	65	done	0	level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304	
+575	61	done	0	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208	
+576	65	done	0	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304	
+578	61	done	0	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208	
+579	65	done	0	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304	
+599	71	failed	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	the solver declined level_71__r0c6 -> level_75 in level 71 (pass dashless): solverBot(wasm-exit-71) reach-exit (96,0)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (280.2
+600	80	done	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304	
+601	72	done	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96	
+604	75	done	0	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0	
+605	80	done	0	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304	
+606	72	done	0	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96	
+614	75	done	0	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0	
+615	80	done	0	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304	
+616	72	done	0	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96	
+619	85	done	0	level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304	
+916	76	done	0	level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256	
+917	76	done	0	level_71__r16c19 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_teleporter_304_256	
+919	76	done	0	level_71__r16c19 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_teleporter_304_256	
+749	99	done	0	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112	
+750	93	done	0	level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192	
+752	99	done	0	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112	
+753	93	done	0	level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192	
+755	100	done	0	level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96	
+756	98	done	0	level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112	
+757	99	done	0	level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96	
+775	105	done	0	level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16	
+776	103	done	0	level_104 <- in_L103_0_64 -> exit:out_teleporter_144_128	
+777	105	done	0	level_104 <- in_L105_224_64 -> exit:out_teleporter_0_16	
+778	103	done	0	level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128	
+779	106	done	0	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144	
+780	104	done	0	level_105 <- in_L104_0_16 -> exit:out_teleporter_224_64	
+781	106	done	0	level_105 <- in_L106_256_0 -> exit:out_teleporter_80_144	
+782	104	done	0	level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64	
+912	71	failed	0	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17	the solver declined level_71__r14c12 -> level_82 in level 71 (pass dashless): solverBot(wasm-exit-71) reach-pit (12,13)->L82: the combat ladder is EXHAUSTED. The corridor passes through danger at (280
+913	82	done	0	level_71__r14c12 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_pit_10_17	
+915	82	done	0	level_71__r14c12 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_pit_10_17	
+925	101	done	0	level_100__r4c10 <- in_L99_48_96 ~> level_100__r2c3 -> exit:out_teleporter_288_96	
+105	12	done	0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared	
+106	12	done	0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared	
+107	12	done	0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+181	12	done	0	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared	
+393	40	done	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640	
+394	40	failed	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.7) —
+869	40	failed	0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	the solver declined Level 040 - Boss Key 2 in level 40 (pass dashless): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,43
+871	40	failed	0	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (488,904): solverBot:
+557	63	done	0	level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared	
+371	40	done	0	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144	
+372	40	failed	0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared	the solver declined L40 flag 1: wandlock@176,80 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,1} wandlock@176,80: 'hold' ran ({"presser":null,"latched":true,"ticks":131,"hel
+373	40	failed	0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared	the solver declined L40 flag 7: wandlock@208,128 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,7} wandlock@208,128: 'hold' ran ({"presser":null,"latched":true,"ticks":131,"h
+395	40	failed	0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared	the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot
+574	63	failed	0	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared	the model refused to build level 63 from the arrival: level 63: the tape clears tag(s) 12, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a d
+577	63	failed	0	level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared	the model refused to build level 63 from the arrival: level 63: the tape clears tag(s) 12, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a d
+104	12	done	0	level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch	
+184	12	skipped	None	level_12__r42c28 <- in_L83_32_64 -> location:L12 flag 7: magicallock@32,864 cleared	
+179	12	done	0	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared	
+185	12	skipped	None	level_12__r42c28 <- in_L83_32_64 -> location:L12 flag 12: bosslock@32,864 cleared	
+602	71	done	0	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest	
+603	71	done	0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared	
+751	98	done	0	level_98 <- in_L93_112_80 -> location:Level 098 - Chest	
+909	63	failed	0	level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest	the model refused to build level 63 from the arrival: level 63: the tape clears tag(s) 12, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a d
+116	12	done	0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared	
+117	12	done	0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared	
+118	12	done	0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+410	40	done	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640	
+411	40	failed	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s
+870	40	failed	0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	the solver declined Level 040 - Boss Key 2 in level 40 (refusal): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> 
+872	40	failed	0	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (328,600): solverBot:
+562	63	done	0	level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared	
+376	40	failed	0	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144	the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,
+377	40	timeout	1	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared	
+378	40	failed	0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared	the solver declined L40 flag 7: wandlock@208,128 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,7} wandlock@208,128: 'hold' ran ({"presser":null,"latched":true,"ticks":131,"h
+412	40	failed	0	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared	the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot
+580	63	failed	0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared	the model refused to build level 63 from the arrival: level 63: the tape clears tag(s) 12, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a d
+115	12	done	0	level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch	
+607	71	done	0	level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest	
+608	71	done	0	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared	
+754	98	done	0	level_98 <- in_L99_112_112 -> location:Level 098 - Chest	
+127	12	done	2	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared	
+128	12	done	2	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared	
+129	12	done	0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+567	63	done	0	level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared	
+126	12	failed	0	level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch	the model refused to build level 12 from the arrival: level 12: the tape clears tag 0, which is also carried by "witch" at (416,384) — a class with NO declared persistence response. Every class that r
+617	71	done	0	level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest	
+613	71	skipped	None	level_71__r0c6 <- in_L76_0_80 -> location:L71 flag 2: shieldlock@288,256 cleared	
+138	12	done	0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared	
+139	12	done	0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared	
+140	12	done	0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+572	63	failed	0	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared	the solver declined L62 flag 0: lightpole@120,200 cleared in level 63 (refusal): solverBot(wasm-location-63) clear-tag {62,0} lightpole@120,200 -> hold the presser buttonroom@32,64 (L63): the combat l
+137	12	done	0	level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch	
+618	71	done	0	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared	
+149	12	done	0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared	
+150	12	done	0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared	
+151	12	done	0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+148	12	done	0	level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch	
+160	12	done	2	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared	
+161	12	done	2	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared	
+162	12	done	0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+159	12	done	0	level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch	
+171	12	done	2	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared	
+172	12	done	2	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared	
+173	12	done	0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	
+170	12	done	0	level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch	
+97	0	done	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80	
+108	0	done	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80	
+119	0	done	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80	
+130	0	crossed	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80	
+141	0	crossed	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80	
+152	0	done	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80	
+163	0	done	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80	
+183	12	done	0	level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest	
+180	24	crossed	0	level_12__r40c4 <- in_L24_32_144 -> exit:out_teleporter_40_688	
+556	62	done	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0	
+561	62	done	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0	
+566	62	done	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0	
+571	62	done	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0	
+182	83	done	0	level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848	
+609	75	done	0	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0	
+610	80	done	0	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304	
+611	72	done	0	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96	
+612	71	done	0	level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest	
+918	76	done	0	level_71__r16c19 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_teleporter_304_256	
+914	82	done	0	level_71__r14c12 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_pit_10_17	

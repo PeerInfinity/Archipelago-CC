@@ -18121,7 +18121,9 @@ function execKill(run, perTick, resolved, ctx) {
 const CHASER_LAPSE_GUARD = 8;
 const CHASER_GUARD_RADIUS = 18;
 
-function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId }) {
+function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId,
+    // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): ticks past `bound` a DYING target is stood out (0: none)
+    dyingGrace = 0 }) {
     const opts = solverPlanOpts(run, contacts);
     const hitsBefore = run.ledger('playerHits').length;
     const deathsBefore = run.ledger('playerDeaths').length;
@@ -18163,7 +18165,8 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
         }
         return null;
     };
-    for (let i = 1; i <= bound; i += 1) {
+    const dying = () => (run.entities('chasers') ?? []).some((c) => c.id === id && c.dying);
+    for (let i = 1; i <= bound || (dyingGrace > 0 && i <= bound + dyingGrace && dying()); i += 1) {
         let held = strike && !run.state.fall
             ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, new Set(),
                 strikeDecideOpts(run)).held
@@ -18941,6 +18944,163 @@ function chaserKillCeiling(run, body) {
     return Math.ceil(travel) + killWindowTicks(body.tag) * 3 + HOLD_SLACK;
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L53-KILLLOCK — THE KILL-LOCK'S CHASER ARM PREVIEWS AT THE WALK'S TOLERANCE, AND A
+ * REFUSED STANCE IS REWOUND AND THE NEXT ONE TRIED (`KILLLOCK_CHASER_REWIND`, OFF).
+ *
+ * ⚖ The user queued L53-KILLLOCK on 2026-11-07 (ROUTE-WALLS-CENSUS W1: BK3, the walk's L53 `r2c2 → r14c9` crossing).
+ * `lock@144,208` opens on `totalEnemies() == 0`, and the arena holds three jellyfish and a puncher. MEASURED (the
+ * census's hand-built legs 9001/9002, `CC/docs/cloud-reports/seedling-hammer-l53-killlock.md`):
+ *   1. every stance `deriveKillByChaser` previews for this arm is refused *"the preview did not settle — 400 tick(s)
+ *      without arriving"*. This arm asks at `tolerance` 0 (exact float position AND a full stop), while the walk it
+ *      then drives (`ctx.walkTo`) and its own arrival test use `DEFAULT_TOLERANCE`. Once the water and the shield bumps
+ *      have left the player off the lattice (120.6,151.35), no cell centre is reachable to the bit, so the forecast
+ *      prices NOTHING and the arm falls back to "stand here". The combat ladder's chaser arm already asks at the
+ *      segment's tolerance (`DEFAULT_TOLERANCE`); this arm was the only one at 0;
+ *   2. "stand here" then waits in the arena (122,158) for `puncher@136,96` in the corridor above. It is on screen and
+ *      chasing (v = (0.39, 0.92) every tick), but its 12-px box clips the Ice Wall tile (96..112, 128..144) on every
+ *      y step and its x impulse only flips ±0.3 px (`Mobile.moveX/moveY`'s sweep; a chaser does not path-find), so it
+ *      is PINNED on the corner for all 166 ticks. The point line to the player is clear, so the refusal names no
+ *      blocker;
+ *   3. on the dashless pass the stand-here dwell DID land the jellyfish's third hit (dwell tick 161 of 174), and the
+ *      bound ran out during its eight-frame "die" (`killWindowTicks`): the body was dying, not escaping.
+ * ⇒ ON: (1) both derivations of this arm ask at `DEFAULT_TOLERANCE` and return every scored stance; (2) when the
+ * chosen stance's walk or dwell is refused (a hit, the bound, a level crossing), the run is REWOUND to the turn's
+ * first tick (`ctx.rewind`, the segment's own) and the next scored stance of that body is tried, then the next body's
+ * (nearest first, derived lazily), up to `KILLLOCK_CHASER_REWIND_TRIES`; (3) a dwell whose body is DYING when its
+ * bound runs out stands out its death window (`killWindowTicks + HOLD_SLACK`). The first attempt is the arm's own
+ * choice, so a turn the arm already wins is driven the same way. ⚖ 30(c): every attempt is driven on the run and the
+ * one kept is the one the run did — a refused attempt leaves no tick in the tape. Without a rewind (no `forkRun`)
+ * only (1) and (3) apply. OFF: nothing here is read; every derivation, walk and dwell is byte-identical.
+ * `SEEDLING_KILLLOCK_CHASER_REWIND=1` / `withKillLockChaserRewind(enabled, fn)`.
+ */
+export const KILLLOCK_CHASER_REWIND = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CHASER_REWIND === '1' };
+export const KILLLOCK_CHASER_REWIND_DEFAULT = false;
+/** The attempts one turn of the arm may drive (the first included); measured: L53 needs at most two per body. */
+export const KILLLOCK_CHASER_REWIND_TRIES = 6;
+
+/** Run `fn` with `KILLLOCK_CHASER_REWIND` set to `enabled`, restoring the previous value. */
+export function withKillLockChaserRewind(enabled, fn) {
+    return withSwitch(KILLLOCK_CHASER_REWIND, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: one row per attempt
+ * (`{id, t, stance, verdict, why?}`; verdict `killed` | `refused` | `deadline`).
+ */
+export const KILLLOCK_CHASER_REWIND_COUNTS = { tries: [] };
+export function resetKillLockChaserRewindCounts() {
+    KILLLOCK_CHASER_REWIND_COUNTS.tries = [];
+}
+
+/**
+ * ⛓ L53-KILLLOCK: ONE attempt of the kill-lock chaser arm on `hunted` from `hunt` (the walk to the stance, the
+ * re-derivation from where it arrived, the guarded dwell) — the OFF turn's own steps, in its order, with the switch's
+ * tolerance and dying grace. Returns the phase; throws the refusal the step met.
+ */
+function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
+    const contacts = resolved.contacts ?? new Set();
+    const dashMode = ctx.dashMode ?? DEFAULT_DASH_MODE;
+    let hunt = first;
+    const hits0 = run.ledger('playerHits').length;
+    for (let a = 0; a < CHASER_KILL_REDERIVE && hunt.stance
+        && !hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE); a += 1) {
+        ctx.walkTo(ctx.goal, hunt.stance, { what: `${ctx.what} -> chaser kill (${hunted.id}) stance` });
+        if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) break;
+        if (hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE)) break;
+        hunt = deriveKillByChaser(run, hunted, contacts, { dashMode, tolerance: DEFAULT_TOLERANCE });
+    }
+    if (run.ledger('playerHits').length !== hits0) {
+        throw new SolverRefusal(`${ctx.what}: the stance walk for ${hunted.id} was HIT`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    if (!hunt.stance) {
+        throw new SolverRefusal(`${ctx.what}: arrived for ${hunted.id} and no stance derives from here — ${hunt.why}`,
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) {
+        return { phase: 'chaser-kill', target: hunted.id, stance: hunt.stance, ticks: 0,
+            clears: hunt.clears, killedOnApproach: true };
+    }
+    const rec = guardedChaserDwell(run, perTick, {
+        id: hunted.id,
+        bound: Math.max(hunt.ticks, chaserKillCeiling(run, hunted)),
+        strike: strikePolicyFor(run, { dashMode }),
+        contacts,
+        what: `${ctx.what} -> chaser kill (${hunted.id}) by press`,
+        ctx,
+        lockId: resolved.lock?.id ?? null,
+        dyingGrace: killWindowTicks(hunted.tag) + HOLD_SLACK,
+    });
+    return { phase: 'chaser-kill', target: hunted.id, stance: hunt.stance,
+        ticks: rec.ticks, strikes: rec.strikes, guardSteps: rec.guardSteps, clears: hunt.clears };
+}
+
+/**
+ * ⛓ L53-KILLLOCK: one turn of the kill-lock chaser arm with the rewind (`KILLLOCK_CHASER_REWIND` ON and a
+ * `ctx.rewind`): the arm's own choice first (`hunted`, `hunt`), then that body's other scored stances, then each other
+ * live body's (nearest first). A refused attempt is rewound to the turn's first tick. Returns `{run, phase}` (`run`
+ * is the segment's run after any rewind); throws a refusal naming every attempt when none kills.
+ */
+function killLockChaserRewindTurn(run, perTick, resolved, ctx, { live, hunted, hunt }) {
+    const contacts = resolved.contacts ?? new Set();
+    const dashMode = ctx.dashMode ?? DEFAULT_DASH_MODE;
+    const t0 = perTick.length;
+    const key = (b, s) => `${b.id}@${s.x},${s.y}`;
+    const queue = [{ body: hunted, hunt }];
+    const queued = new Set([key(hunted, hunt.stance)]);
+    const push = (b, h) => {
+        for (const s of h.scored ?? []) {
+            const k = key(b, s);
+            if (queued.has(k)) continue;
+            queued.add(k);
+            queue.push({ body: b, hunt: { ...h, stance: { x: s.x, y: s.y }, ticks: s.ticks, clears: s.clears } });
+        }
+    };
+    if (hunt.scored) push(hunted, hunt);
+    const others = live.filter((b) => b.id !== hunted.id);
+    const whys = [];
+    let tries = 0;
+    for (let q = 0; tries < KILLLOCK_CHASER_REWIND_TRIES; q += 1) {
+        while (q >= queue.length && others.length > 0) {
+            const b = others.shift();
+            const h = deriveKillByChaser(run, b, contacts, { dashMode, tolerance: DEFAULT_TOLERANCE, allScored: true });
+            if (h.stance) push(b, h);
+            else whys.push(`${b.id}: ${String(h.why).slice(0, 160)}`);
+        }
+        if (q >= queue.length) break;
+        const { body, hunt: h } = queue[q];
+        const row = { id: body.id, t: t0, stance: { x: h.stance.x, y: h.stance.y }, verdict: null };
+        KILLLOCK_CHASER_REWIND_COUNTS.tries.push(row);
+        if (tries > 0 && deadlineReached('kill-chaser')) {
+            row.verdict = 'deadline';
+            whys.push('the caller\'s anytime deadline was reached');
+            break;
+        }
+        tries += 1;
+        try {
+            const phase = killLockChaserAttempt(run, perTick, resolved, ctx, body, h);
+            row.verdict = 'killed';
+            return { run, phase: { ...phase, tries } };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || e instanceof PendingDeclaration || e?.undeclaredKillLock) throw e;
+            // ⛔ a refusal raised after the anytime deadline tripped is the deadline's: raised as OFF raises it, unrewound
+            if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
+                row.verdict = 'deadline';
+                throw e;
+            }
+            row.verdict = 'refused';
+            row.why = String(e.message).split('\n')[0].slice(-240);
+            whys.push(`${body.id} at (${h.stance.x},${h.stance.y}): ${row.why}`);
+            run = ctx.rewind.to(t0).run;
+        }
+    }
+    throw new SolverRefusal(`${ctx.what}: the count is still waiting on [${live.map((b) => b.id).join(', ')}] and `
+        + `no stance kills one of them in ${tries} attempt(s), each rewound (KILLLOCK_CHASER_REWIND) — `
+        + `${whys.join(' | ') || 'no stance derives'}`,
+    { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+}
+
 function execKillByChaser(run, perTick, resolved, ctx) {
     const from = perTick.length;
     const phases = [];
@@ -18992,7 +19152,9 @@ function execKillByChaser(run, perTick, resolved, ctx) {
         }
         for (const b of hunt ? [] : live) {
             const h = deriveKillByChaser(run, b, resolved.contacts ?? new Set(),
-                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE,
+                    // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): the walk's own tolerance, every scored stance
+                    ...(KILLLOCK_CHASER_REWIND.enabled ? { tolerance: DEFAULT_TOLERANCE, allScored: true } : {}) });
             if (h.stance) { hunted = b; hunt = h; break; }
             tried.push({ option: `kill ${b.id} by press`, why: h.why });
         }
@@ -19019,6 +19181,16 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
                 considered: tried, perTick: [...perTick] });
         }
+        // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): the arm's choice first, each refused attempt rewound
+        if (KILLLOCK_CHASER_REWIND.enabled && ctx.rewind) {
+            // the bodies this turn already asked (and that refused) are not asked again from the same tick
+            const asked = new Set(tried.map((t) => /^kill (\S+) by press$/.exec(t.option)?.[1]).filter(Boolean));
+            const out = killLockChaserRewindTurn(run, perTick, resolved, ctx,
+                { live: live.filter((b) => b.id === hunted.id || !asked.has(b.id)), hunted, hunt });
+            run = out.run;
+            phases.push(out.phase);
+            continue;
+        }
         /**
          * ⛔ THE FORECAST IS RE-ASKED FROM WHERE THE WALK ARRIVED. `walkTo` re-enters the ladder and may reach the
          * stance by another corridor, at another tick and velocity, with the bodies elsewhere; a dwell certified
@@ -19031,7 +19203,8 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) break;
             if (hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE)) break;
             hunt = deriveKillByChaser(run, hunted, resolved.contacts ?? new Set(),
-                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE,
+                    ...(KILLLOCK_CHASER_REWIND.enabled ? { tolerance: DEFAULT_TOLERANCE } : {}) });
         }
         if (!hunt.stance) {
             throw new SolverRefusal(`${ctx.what}: arrived for ${hunted.id} and no stance derives from here — ${hunt.why}`,
@@ -19056,6 +19229,7 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             what: `${ctx.what} -> chaser kill (${hunted.id}) by press`,
             ctx,
             lockId: resolved.lock?.id ?? null,
+            ...(KILLLOCK_CHASER_REWIND.enabled ? { dyingGrace: killWindowTicks(hunted.tag) + HOLD_SLACK } : {}),
         });
         phases.push({ phase: 'chaser-kill', target: hunted.id, stance: hunt.stance,
             ticks: rec.ticks, strikes: rec.strikes, guardSteps: rec.guardSteps, clears: hunt.clears });
@@ -24836,7 +25010,9 @@ export function deriveKillByChaser(run, body, contacts,
     { aim = null, allowTeleporter = null, tolerance = 0,
         dashMode = DEFAULT_DASH_MODE,
         // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): the staged hunt's memo of the scan's floods (`null`: none)
-        scanMemo = null } = {}) {
+        scanMemo = null,
+        // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): `true` adds `scored`, every qualifying stance in score order
+        allScored = false } = {}) {
     if (!(run.entities('strikeBodies') ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
@@ -25251,6 +25427,8 @@ export function deriveKillByChaser(run, body, contacts,
         // ⛓ The runners-up, so the trace can answer "why THERE" and not only
         // "where" — `deriveStrike`'s lesson, kickoff §22.9.
         runnersUp: scored.slice(1, 4).map((r) => ({ x: r.x, y: r.y, deathAt: r.deathAt })),
+        ...(allScored ? { scored: scored.map((r) => ({ x: r.x, y: r.y, ticks: r.ticks, deathAt: r.deathAt,
+            clears: r.clears })) } : {}),
         why: `${body.id} is a \`modelled\` press target (KILL_ARM_POLICY.`
             + `${target.enemyClass}) ${gap.toFixed(1)} px from the walk; the stance `
             + `(${best.x},${best.y}) puts it ${Math.hypot(best.x - targetCentre.x,

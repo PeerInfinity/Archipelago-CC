@@ -27670,6 +27670,39 @@ SOLVED to refused. The rung shape moves exactly two: 718 SOLVED 190 t hitless (f
 raised on the certificate's fork. Rows: `hammerDrillExitPass.test.js` (mutants m1–m4 red). Report:
 `CC/docs/cloud-reports/seedling-hammer-drill-exit-pass.md`.
 
+### Seedling hammer-phase L53-KILLLOCK — the L53 water-arena kill-lock (BK3): `KILLLOCK_CHASER_REWIND` (OFF)
+
+⚖ The user queued it on 2026-11-07 (in the hammer planner's session: "DRILL-EXIT-PASS,L53-KILLLOCK,DRILL-WATER to
+fidelity"; ROUTE-WALLS-CENSUS's wall W1). Switch `solverBot.KILLLOCK_CHASER_REWIND`, **OFF**
+(`SEEDLING_KILLLOCK_CHASER_REWIND=1` / `withKillLockChaserRewind`). The report is
+`CC/docs/cloud-reports/seedling-hammer-l53-killlock.md`.
+
+- **The wall, measured** (start `0d575b78ea`; the census's hand-built legs 9001 from the L51 door and 9002 from the L48
+  door, which the leg list lacks; 482 from the L54 door as the control). `lock@144,208` opens on `totalEnemies() == 0`,
+  so the kill-lock's chaser arm (`execKillByChaser`, KILLLOCK K3) must kill three jellyfish and a puncher. Three causes,
+  none of them a budget: (1) the arm asks `deriveKillByChaser` at tolerance 0 while the walk it drives arrives at
+  `DEFAULT_TOLERANCE`, so with the player off the lattice (water, shield bumps) every one of ~80 previews is refused *"did
+  not settle"* and the arm stands where the walk stands; (2) on the dashless pass that stand-here dwell lands the
+  jellyfish's third hit on dwell tick 161 of 174 and the bound runs out during its "die" (the census's *"22.5 px"*);
+  (3) on the full pass the puncher is pinned on an Ice Wall corner (its 12-px box clips the tile on every y step; the
+  game pins it at the same coordinates) for the whole 166-tick bound.
+- **The design.** ON: the arm's derivations ask at `DEFAULT_TOLERANCE` and return every scored stance; a refused attempt
+  (hit, bound, crossing) is rewound (`ctx.rewind`) and the next stance tried, then the next body's
+  (`KILLLOCK_CHASER_REWIND_TRIES` 6); a dying body's death window is stood out; a refusal after the deadline tripped is
+  raised unrewound. Ablations: the tolerance alone still refuses (the first stance is hit, then the bound), the rewind at
+  tolerance 0 still refuses (nothing prices); the dying grace takes 9001 from 2345 to 844 units. L95-PUNCHER's answer
+  (`CHASER_STAGED_HUNT` + `CLEARTAG_STAND`) leaves both legs = D0.
+- **Measured.** Node, the worker's passes at the page's held retry (2560): 9001 594 t (the full pass), 9002 906 t (the
+  dashless pass), 0 hits on a fresh run, into L54; 482 ON = OFF. The 640 first ask stays deadline-bound both ways. The p4g
+  page with `?seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND=1` (the divergence sweep fed the hand-built legs with
+  `--legs=`): both reach L54, **1 room hit each** (t289 / t482). A model gap, handed to fidelity: the game holds the
+  chasers at `breakablerock@128,160`'s face two updates past the model's `goneAt` (`brokenRockIdsNow`'s `+ 1`, which its
+  own comment calls unmeasured); with that lag (scratch only) both game captures reproduce, every body and the player, to
+  0.000 px, and the switch then still solves both hitless (768 t / 959 t).
+- Rows: `hammerL53Killlock.test.js` (5), `hammerL53Killlock.train.test.js` (2); fixtures `fixtures/hammer-l53-killlock/`
+  (the page's requests cut to L53/L54, 3.7 KB each). Mutants: no rewind, tolerance 0, no grace, worst-first, one try,
+  no deadline rethrow each red; dropping the asked-bodies filter is equivalent (a cost saver).
+
 ### Seedling hammer-phase DOOR-CARRY — a leg carries the game flags its route already cleared (opt-in)
 
 ⚖ The user, 2026-11-05: *"Carry the door for now, solve in visit after that works."* L40-CENSUS found that the AP route
