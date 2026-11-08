@@ -9,7 +9,8 @@ const JR = await import(ROOT + '/frontend/modules/seedlingDemo/jsRuntimeSolver.j
 let req;
 for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
   const row = JSON.parse(line); if (String(row.id) !== args.id) continue;
-  req = restoreRequest(row.requests.find((c) => String(c.i) === args.i).request);
+  const c0 = row.requests.find((c) => String(c.i) === args.i).request;
+  req = restoreRequest(args.seam ? { ...c0, staging: { ...c0.staging, seam: { ...c0.staging.seam, time: Number(args.seam) } } } : c0);
 }
 const { passes: P0 = JR.ANYTIME_PASSES, source, ...tape } = req; const passes = args.pass ? P0.filter((p) => p.pass === args.pass) : P0;
 const levelSource = levelSourceFromAtlas(source.records);

@@ -200,6 +200,7 @@ import {
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
+import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -19427,6 +19428,67 @@ function execKillByPress(run, perTick, resolved, ctx) {
         const t = perTick.length;
         REWIND_PROBE.sink({ t, kind: 'kill-start', live: run, rewound: () => ctx.rewind.replay(t) });
     }
+    // ⛓ hammer-phase L40-FLIP-BUILD (`OPP_PRESS_FALLBACK`): OPP's refused kill redone once with OPP off (`oppPressFallback.js`)
+    if (OPP_PRESS_FALLBACK.enabled && OPPORTUNISTIC_STRIKE.enabled && ctx.rewind) {
+        return execKillByPressOppFallback(run, perTick, resolved, ctx);
+    }
+    return execKillByPressFightFallback(run, perTick, resolved, ctx);
+}
+
+/**
+ * ⛓ hammer-phase L40-FLIP-BUILD — `OPP_PRESS_FALLBACK` (see `oppPressFallback.js`). The kill runs as it does under
+ * `OPPORTUNISTIC_STRIKE`; only a refusal with a `FIGHT_FALLBACK_CODES` code is rewound to the kill's first tick and the
+ * kill redone once with the strike off, from the order's own admission asked again on the rewound run (as the fight
+ * fallback asks it). Adopted if it kills; otherwise undone, and the original refusal stands plus one sentence.
+ */
+function execKillByPressOppFallback(run, perTick, resolved, ctx) {
+    const t0 = perTick.length;
+    try {
+        return execKillByPressFightFallback(run, perTick, resolved, ctx);
+    } catch (e) {
+        if (!(e instanceof SolverBotError) || !FIGHT_FALLBACK_CODES.includes(e.code) || e.oppPressFallback) throw e;
+        OPP_PRESS_FALLBACK_COUNTS.asked += 1;
+        const row = { t: t0, refused: e.code, refusedAt: perTick.length, bodies: resolved.plans.map((p) => p.id) };
+        const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
+        const { run: fresh, undo } = ctx.rewind.to(t0);
+        const was = OPPORTUNISTIC_STRIKE.enabled;
+        OPPORTUNISTIC_STRIKE.enabled = false;
+        try {
+            const press = admission === null ? null : derivePressKill(fresh, admission.bodies, admission.contacts);
+            const again = press?.first ? { ...resolved, first: press.first, plans: press.plans } : resolved;
+            const record = execKillByPressFightFallback(fresh, perTick, again, ctx);
+            row.verdict = 'solved';
+            row.ticks = perTick.length - t0;
+            OPP_PRESS_FALLBACK_COUNTS.solved += 1;
+            ctx.rewind.note({ ...row, how: 'opp-plain' });
+            return { ...record, oppPressFallback: row };
+        } catch (e2) {
+            if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
+                row.verdict = 'solved';
+                row.ticks = perTick.length - t0;
+                row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
+                OPP_PRESS_FALLBACK_COUNTS.solved += 1;
+                ctx.rewind.note({ ...row, how: 'opp-plain' });
+                throw e2;
+            }
+            undo();
+            row.verdict = 'refused';
+            row.retryRefused = e2?.code ?? e2?.name ?? 'Error';
+            row.why = String(e2?.message ?? e2).split('\n')[0].slice(0, 240);
+            OPP_PRESS_FALLBACK_COUNTS.refused += 1;
+            const out = new SolverBotError(`${e.message} ${oppPressFallbackSentence(row)}`,
+                { code: e.code, boundTicks: e.boundTicks });
+            if (e.fightFallback) out.fightFallback = e.fightFallback;
+            out.oppPressFallback = row;
+            throw out;
+        } finally {
+            OPPORTUNISTIC_STRIKE.enabled = was;
+        }
+    }
+}
+
+/** The press kill with `HAMMER_FIGHT_FALLBACK`'s retry (B3), unchanged — the body `execKillByPress` always had. */
+function execKillByPressFightFallback(run, perTick, resolved, ctx) {
     if (!HAMMER_FIGHT_FALLBACK.enabled || HAMMER_FIGHT.enabled || HAMMER_FIGHT_FALLBACK.mode !== 'rewind'
         || !ctx.rewind) {
         return execKillByPressOnce(run, perTick, resolved, ctx);
