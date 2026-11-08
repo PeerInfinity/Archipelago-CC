@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1262,
         "indexHeadings": 2,
-        "lines": 35137,
+        "lines": 35156,
         "pages": 4,
-        "words": 516687
+        "words": 517341
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -155,7 +155,7 @@ export const DOCS_INDEX = frz({
             "file": "cloudberry.md",
             "h1": "Cloudberry Substrate",
             "headings": 23,
-            "lines": 411,
+            "lines": 430,
             "links": [
                 "bounce.md",
                 "flash.md",
@@ -164,7 +164,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/cloudberry.md",
-            "words": 9237
+            "words": 9891
         },
         {
             "description": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.",
