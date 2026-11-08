@@ -25,6 +25,7 @@
 import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
+import { SubstrateStatusStrip } from './statusStrip.js';
 
 /**
  * Build a panel UI class for a `__swfBridge`-contract game iframe.
@@ -57,6 +58,10 @@ import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js'
  *   bounceDemo to swap between its JS and real-DJ renderer pages within one
  *   panel when the renderer setting changes. Substrates with a fixed page
  *   (flash / tasw / jta) omit it.
+ * @param {object} [config.statusStrip]  Optional: mount the Archipelago status strip above the
+ *   iframe (statusStrip.js): `{ loadRegionEvent, playbackControlEvent?, describeLevel? }`.
+ *   `describeLevel(world)` is the substrate's own part (which items its level uses). Omitted = no
+ *   strip (the panel is exactly as before).
  */
 export function createSubstrateIframePanelClass({
     componentType,
@@ -65,6 +70,7 @@ export function createSubstrateIframePanelClass({
     bridgeSrc,
     moduleName,
     reloadEvent = null,
+    statusStrip = null,
 }) {
     const resolveSrc = () => (typeof iframeSrc === 'function' ? iframeSrc() : iframeSrc);
     const resolveTitle = () => (typeof title === 'function' ? title() : title);
@@ -126,6 +132,10 @@ export function createSubstrateIframePanelClass({
             // drives the game from its loadRegion event via __swfBridge.
             this.iframe.addEventListener('load', () => this._injectBridge());
 
+            if (statusStrip) {
+                this.statusStrip = new SubstrateStatusStrip({ moduleName, ...statusStrip });
+                this.rootElement.appendChild(this.statusStrip.element);
+            }
             this.rootElement.appendChild(this.iframe);
 
             this._inactiveOverlay = new SubstrateInactiveOverlay({
@@ -242,6 +252,7 @@ export function createSubstrateIframePanelClass({
             if (this._unsubActiveSubstrate) { this._unsubActiveSubstrate(); this._unsubActiveSubstrate = null; }
             if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
             if (this._unsubReload) { this._unsubReload(); this._unsubReload = null; }
+            if (this.statusStrip) { this.statusStrip.destroy(); this.statusStrip = null; }
             if (this.iframe) {
                 this.iframe.src = 'about:blank';
                 this.iframe = null;

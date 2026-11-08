@@ -58,6 +58,12 @@
  *     bridge relays the eventBus event `substrate:hostRequest`
  *     {region, request} for the active region, and the substrate's own host
  *     module answers it (Noiz2sa: the player chose the exit to leave by).
+ *   - Bot reports (optional, P7a): a game may call __swfBridge.botStatus(event)
+ *     for what its bot did (Cloudberry: a ladder skipped, a restart after a
+ *     death, a walk's result). The bridge relays the eventBus event
+ *     `substrate:botStatus` {region, event} for the active region, the event
+ *     copied untouched; the host's status strip shows it. A game that never
+ *     calls it is unchanged.
  *   - Checked locations (optional): a game with
  *     __swfBridge.setCheckedLocations(flashNames) is handed the region's
  *     checked objective ids (the host's checked snapshot, through
@@ -298,6 +304,13 @@ function _onRequestHost(request) {
     if (!_isActive || !_currentRegionId || !request || typeof request !== 'object') return;
     if (!_client) return;
     _client.publishEventBus('substrate:hostRequest', { region: _currentRegionId, request: { ...request } });
+}
+
+/** The game's bot report (optional, P7a): relayed as `substrate:botStatus` {region, event}. */
+function _onBotStatus(event) {
+    if (!_isActive || !_currentRegionId || !event || typeof event !== 'object') return;
+    if (!_client) return;
+    _client.publishEventBus('substrate:botStatus', { region: _currentRegionId, event: { ...event } });
 }
 
 /**
@@ -649,6 +662,7 @@ async function main() {
     _w.__swfBridge.sendExit = _onSendExit;
     _w.__swfBridge.setPlayClock = _onSetPlayClock;
     _w.__swfBridge.requestHost = _onRequestHost;
+    _w.__swfBridge.botStatus = _onBotStatus;
 
     // Step 3: subscribe to host events.
     _client.subscribeEventBus(LOAD_REGION_EVENT, (payload) => _handleLoadRegion(payload));

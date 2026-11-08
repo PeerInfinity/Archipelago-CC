@@ -38,6 +38,7 @@ import { createRunForStaging, runTape } from './tapeRunner.js';
 import { solveSegment } from './solverBot.js';
 import { atlasLevelSource } from './levelSource.js';
 import { arrivalStaging } from './fidelityArrival.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 export const CLEARTAG_WITNESSES = Object.freeze([
     Object.freeze({ key: 'L0-1-from-L2', boot: { level: 0, x: 256, y: 256 }, items: ['hasSword'],
@@ -59,7 +60,10 @@ export function clearTagSolve(w, levelSource = atlasLevelSource()) {
     const staging = arrivalStaging(w.boot, { items: w.items });
     const run = createRunForStaging(staging, levelSource);
     const name = `cleartag-${w.key}`;
-    const out = solveSegment({ run, goals: [{ ...w.goal }], name, boot: { ...w.boot } });
+    // ⛓ BINDINGS (slice rules-sharedbinding-witnesses): a witness may name the planning switches its verb needs
+    // (`w.fidelity`, e.g. `inRoomPoleThrust` for an in-room pole) — the PLAN's, never the replay's.
+    const solve = () => solveSegment({ run, goals: [{ ...w.goal }], name, boot: { ...w.boot } });
+    const out = w.fidelity ? withContactFidelity(w.fidelity, solve) : solve();
     // ⛓ CROSSROOM D4: the clear-tag's OWN record (`done` stamps `arm`) — a frontier order run inside it (L38's
     // chain on the way to a cross-room presser) records under the same goal kind first.
     const record = out.records.find((r) => r.goal === 'clear-tag' && r.arm !== undefined);
