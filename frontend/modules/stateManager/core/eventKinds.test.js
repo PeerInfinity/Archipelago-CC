@@ -103,6 +103,8 @@ describe('the committed events — measured and pinned', () => {
             // ⛓ The maze projection of the playthrough carries its rope event (session tile-primitives-arrow-rope):
             // NOT auto-collected, because the player cuts the rope in the maze and the cut checks it.
             'seedling_playthrough_maze/AP_1/AP_1_rules.json',
+            // ⛓ ER E4b: the stairs-shuffled playthrough is the same producer's compile, so it carries the same events.
+            'seedling_er/AP_1/AP_1_rules.json',
         ].sort());
         for (const f of carrying) {
             const d = JSON.parse(readFileSync(join(PRESETS, f), 'utf8'));

@@ -15,3 +15,103 @@
     border: none;
     background-color: #1e1e1e;
 }
+
+/* The Archipelago status strip above the game (statusStrip.js). Slim, wraps at phone width, never
+   taller than a few lines unless expanded. The app's theme is dark; the tokens below are the only
+   colours, so a light theme would override them here. */
+
+.flashsub-strip {
+    --strip-bg: #252526;
+    --strip-fg: #d4d4d4;
+    --strip-dim: #8c8c8c;
+    --strip-border: #3a3a3a;
+    --strip-held: #6fcf7f;
+    --strip-locked: #e0a458;
+    --strip-unknown: #8c8c8c;
+    --strip-new: rgba(111, 207, 127, 0.22);
+    flex: 0 0 auto;
+    background: var(--strip-bg);
+    color: var(--strip-fg);
+    border-bottom: 1px solid var(--strip-border);
+    font: 12px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 3px 6px;
+    box-sizing: border-box;
+    max-height: 45%;
+    overflow-y: auto;
+    user-select: none;
+}
+.flashsub-strip[hidden] { display: none; }
+.flashsub-strip-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 8px;
+}
+.flashsub-strip-items, .flashsub-strip-exits {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    min-width: 0;
+}
+.flashsub-strip-item, .flashsub-strip-exit, .flashsub-strip-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 0 6px;
+    border-radius: 9px;
+    border: 1px solid var(--strip-border);
+    white-space: nowrap;
+}
+.flashsub-strip-item.is-held {
+    border-color: var(--item-color, var(--strip-held));
+    box-shadow: inset 3px 0 0 var(--item-color, var(--strip-held));
+}
+.flashsub-strip-item.is-held .flashsub-strip-mark { color: var(--strip-held); }
+.flashsub-strip-item.is-locked {
+    border-style: dashed;
+    color: var(--strip-dim);
+}
+.flashsub-strip-mark { font-size: 10px; }
+.flashsub-strip-pill.is-done { border-color: var(--strip-held); color: var(--strip-held); }
+.flashsub-strip-exit.is-open { color: var(--strip-held); }
+.flashsub-strip-exit.is-locked { color: var(--strip-locked); border-style: dashed; }
+.flashsub-strip-exit.is-unknown { color: var(--strip-unknown); border-style: dotted; }
+.flashsub-strip-toggle {
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--strip-border);
+    border-radius: 4px;
+    color: var(--strip-fg);
+    font-size: 11px;
+    line-height: 1;
+    padding: 2px 6px;
+    cursor: pointer;
+}
+.flashsub-strip-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    margin-top: 2px;
+    min-height: 0;
+}
+.flashsub-strip-line[hidden], .flashsub-strip-bot[hidden], .flashsub-strip-details[hidden] { display: none; }
+.flashsub-strip-activity { border-radius: 3px; padding: 0 2px; overflow: hidden; text-overflow: ellipsis; }
+.flashsub-strip-activity.is-new { animation: flashsub-strip-new 2.5s ease-out; }
+@keyframes flashsub-strip-new { from { background: var(--strip-new); } to { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .flashsub-strip-activity.is-new { animation: none; } }
+.flashsub-strip-bot { color: var(--strip-dim); }
+.flashsub-strip-dim { color: var(--strip-dim); }
+.flashsub-strip-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 4px 12px;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--strip-border);
+}
+.flashsub-strip-h { font-weight: 600; margin-bottom: 1px; }
+.flashsub-strip-sec ul { list-style: none; margin: 0; padding: 0; }
+.flashsub-strip-sec li { overflow-wrap: anywhere; }
+.flashsub-strip-sec li.is-held, .flashsub-strip-sec li.is-checked, .flashsub-strip-sec li.is-open { color: var(--strip-held); }
+.flashsub-strip-sec li.is-locked { color: var(--strip-locked); }
+.flashsub-strip-sec li.is-unknown { color: var(--strip-unknown); }

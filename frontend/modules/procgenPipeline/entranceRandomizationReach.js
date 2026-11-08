@@ -25,6 +25,12 @@
  * `id` is null) — events are then swept: the fixed point alternates the region sweep and collecting each
  * reachable event location's item until neither grows. Pass `inventory` to evaluate from another state.
  *
+ * ⛓ ER E4b — `sweep: 'placed'` (VANILLA ITEMS, ⚖ Q4): the state starts from `starting_items[p]` ALONE and the sweep
+ * collects the item of EVERY reached location of the player (not only the events), because with the item placement held
+ * vanilla the items a layout can use are exactly the ones its own reach collects. GER's all-state assumes a fill will
+ * place the pool afterwards; under Q4 no fill runs, so the all-state reach accepts layouts whose opening is empty (E4b
+ * measured 11 of 13 draws rejected as unbeatable on seed 1 under `'events'`). `'events'` stays the default (E4a's binding).
+ *
  * ── UNDECIDED ──────────────────────────────────────────────────────────
  * A rule the evaluator cannot decide (`undefined`: a game helper, CanReachLocation, a setting) is NOT open — the
  * forward simulator's reading (`computeTraversableExits` says why that is the conservative side for a shuffle).
@@ -51,6 +57,24 @@ export function eventItemsOf(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
     return events;
 }
 
+/** The item of every location of the player that holds one of the player's own items (vanilla placement): location → item. */
+export function placedItemsOf(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
+    const out = new Map();
+    for (const region of Object.values(rulesDoc.regions?.[String(playerId)] ?? {})) {
+        for (const loc of region.locations ?? []) {
+            if (loc.item?.name && (loc.item.player === undefined || String(loc.item.player) === String(playerId))) out.set(loc.name, loc.item.name);
+        }
+    }
+    return out;
+}
+
+/** `starting_items[p]` as a `Map<item, count>`. */
+export function startingInventory(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
+    const inv = new Map();
+    for (const name of rulesDoc.starting_items?.[String(playerId)] ?? []) inv.set(name, (inv.get(name) ?? 0) + 1);
+    return inv;
+}
+
 /** GER's single-player all-state, before the event sweep: `Map<item, count>` (see the file docblock). */
 export function allStateInventory(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
     const p = String(playerId);
@@ -75,7 +99,8 @@ export function allStateInventory(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
  * @returns {(connections: Array<{exit:string, from:string, to:string}>) => {regions:Set<string>, exits:Set<string>, locations:Set<string>, items:Map<string, number>}}
  *   (`locations` and `items` are extra: the core reads `regions` and `exits` only)
  */
-export function makeRulesDocReach(rulesDoc, { shuffled, playerId = DEFAULT_PLAYER_ID, inventory = null, undecided = null } = {}) {
+export function makeRulesDocReach(rulesDoc, { shuffled, playerId = DEFAULT_PLAYER_ID, inventory = null, undecided = null, sweep = 'events' } = {}) {
+    if (sweep !== 'events' && sweep !== 'placed') throw new Error(`makeRulesDocReach: sweep ${JSON.stringify(sweep)} is 'events' or 'placed'`);
     const base = buildAccessibilityModel(rulesDoc, String(playerId));
     const byName = new Map();
     for (const s of shuffled ?? []) {
@@ -99,8 +124,8 @@ export function makeRulesDocReach(rulesDoc, { shuffled, playerId = DEFAULT_PLAYE
         const r = base.regions.get(regionName);
         disconnected.set(regionName, { ...r, exits: r.exits.filter((e) => !names.has(e.name)) });
     }
-    const start = inventory ?? allStateInventory(rulesDoc, playerId);
-    const events = eventItemsOf(rulesDoc, playerId);
+    const start = inventory ?? (sweep === 'placed' ? startingInventory(rulesDoc, playerId) : allStateInventory(rulesDoc, playerId));
+    const events = sweep === 'placed' ? placedItemsOf(rulesDoc, playerId) : eventItemsOf(rulesDoc, playerId);
 
     return function reach(connections = []) {
         const placedTo = new Map();
@@ -139,4 +164,28 @@ export function makeRulesDocReach(rulesDoc, { shuffled, playerId = DEFAULT_PLAYE
         }
         return { regions: reached, exits: computeTraversableExits(model, items, reached, undecided), locations, items };
     };
+}
+
+/**
+ * ⛓ ER E4b — **WHAT EACH ATLAS ENDPOINT COMPILED TO**, read off the compiled document's own record: the region-atlas
+ * compiler's sidecars (`preset_sidecars[p][<AP region>].playable_payload.exits[]`, `{exit_id, exitName}` under
+ * `atlas_region`), the graph projection's names, `#k` suffixes and all (`regionAtlasCompiler` `wiredInfo`). Never
+ * re-derived from `<from> -> <to>`: a shuffle can move a `#k` suffix onto another exit. Arrival-only endpoints map to null.
+ *
+ * @returns {Map<string, string|null>} `"<atlas region>/<exit_id>"` → AP exit name
+ */
+export function apExitNamesByEndpoint(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
+    const out = new Map();
+    for (const sc of Object.values(rulesDoc.preset_sidecars?.[String(playerId)] ?? {})) {
+        const pp = sc?.playable_payload;
+        if (!pp?.atlas_region) continue;
+        for (const e of pp.exits ?? []) {
+            const k = `${pp.atlas_region}/${e.exit_id}`;
+            if (out.has(k) && out.get(k) !== (e.exitName ?? null)) {
+                throw new Error(`apExitNamesByEndpoint: ${k} compiled to two names (${out.get(k)}, ${e.exitName})`);
+            }
+            out.set(k, e.exitName ?? null);
+        }
+    }
+    return out;
 }
