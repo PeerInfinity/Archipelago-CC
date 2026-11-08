@@ -1,0 +1,28 @@
+2026-11-08T21:00:07.4045804Z [stateManagerProxy] [StateManagerProxy] Rules load FAILED: game Procgen Maze, player 1, phase processStartingItems: region.exits is not iterable
+2026-11-08T21:00:07.4135464Z [stateManagerProxy] [StateManagerProxy] Rules load FAILED: game Procgen Maze, player 1, phase processStartingItems: region.exits is not iterable
+2026-11-08T21:00:07.4197965Z [stateManagerProxy] [StateManagerProxy] Rules load FAILED: game Procgen Maze, player 1, phase processStartingItems: region.exits is not iterable
+2026-11-08T21:00:07.4290408Z [stateManagerProxy] [StateManagerProxy] Rules load FAILED: game Procgen Maze, player 1, phase processStartingItems: region.exits is not iterable
+2026-11-08T21:01:17.2313525Z  FAIL  frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings > both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice
+2026-11-08T21:01:17.2315310Z AssertionError: expected 318 to be null
+2026-11-08T21:01:17.2315704Z - Expected: 
+2026-11-08T21:01:17.2316119Z + Received: 
+2026-11-08T21:01:17.2357951Z  FAIL  frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings > WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick
+2026-11-08T21:01:17.2359388Z AssertionError: expected { Object (solved, hits, ...) } to match object { solved: 309, hits: +0 }
+2026-11-08T21:01:17.2360702Z - Expected
+2026-11-08T21:01:17.2361072Z + Received
+2026-11-08T21:01:17.2362708Z -   "solved": 309,
+2026-11-08T21:01:17.2363121Z +   "solved": 318,
+2026-11-08T21:01:17.2446140Z  Test Files  3 failed | 386 passed (389)
+2026-11-08T21:01:17.2475424Z       Tests  6 failed | 7956 passed (7962)
+2026-11-08T21:01:17.2500267Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js > L40BK2B W0 — the shipped orbit in the notch, on the game (`l40bk2b-orbit-plain`) > OFF the solver's orbit arm finds no hitless candidate
+2026-11-08T21:01:17.2501685Z AssertionError: expected 'solverBot(l40bk2b) chest (880,816) st…' to contain 'orbit arm: no orbit kill of bobsoldie…'
+2026-11-08T21:01:17.2513315Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js > L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`) > ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key
+2026-11-08T21:01:17.2514925Z AssertionError: expected 112 to be 125 // Object.is equality
+2026-11-08T21:01:17.2515575Z - Expected
+2026-11-08T21:01:17.2515939Z + Received
+2026-11-08T21:01:17.2516375Z - 125
+2026-11-08T21:01:17.2516695Z + 112
+2026-11-08T21:01:17.2524012Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Res.test.js > L40RES D2 — a stance walk that re-enters its own order walks on along its frontier > OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey's text
+2026-11-08T21:01:17.2525684Z AssertionError: expected 'solverBot: no REACHABLE stance inside…' to contain '-> hold stance (wandlock@448,432): ST…'
+2026-11-08T21:01:17.2536738Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Res.test.js > L40RES D2 — a stance walk that re-enters its own order walks on along its frontier > ON: the re-entry passes to the chest (the south door's chain); the end is the chest walk's press kill
+2026-11-08T21:01:17.2537564Z AssertionError: expected 'solverBot: no REACHABLE stance inside…' to contain '-> hold stance (wandlock@448,432) -> …'

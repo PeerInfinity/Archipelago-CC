@@ -168,7 +168,33 @@ is re-recorded as a BEFORE pin, its solve under `withL40Flip(false, …)` (the A
 | `hammerRefugeBandText` › 371 at 5265 (defaults) | `[false, 92]` | `[false, 96]` | the same | work only |
 | `hammerStrikeEtaFloor` › ON: the executed prefix IS the witness | 1629 ticks (the witness's keys) | 1732 ticks | the flip's strikes change the executed prefix | witness stays the BEFORE |
 
-Fidelity rows: none moved (no `fidelity*.test.js` was red in the bounded set; `fidelityCorpseBump2.slow` in §6).
+**Fidelity rows that move — for FIDELITY to sign (not edited here: `fidelity*.test.js` and fidelity's L30KEYLOCK
+producer are fidelity's files).** CI's default tier on the flip head (JSUT 42522164775, shards complete, `1b965b61`):
+**13 failed of 25,966**, all of them below; every `hammer*` file green. The producer battery: 4 checks red, all
+`plan-seedling-l30keylock`. Each is a row recorded at the pre-flip defaults:
+
+| file › row | BEFORE (the pin) | AFTER (flip ON, measured) | class |
+|---|---|---|---|
+| `fidelityL30KeyLock` › both OFF, (224,80): the survey's refusal, the BEFORE witness hit twice | refused (null) | **solved, 318 t** | gain (L95-PUNCHER's "a BEFORE witness that now solves") |
+| `fidelityL30KeyLock` › WAIT alone: nothing is hit | solved 309 t | solved **318 t**, 0 hits | plan moves |
+| `plan-seedling-l30keylock --check` (4 checks: the staging REFUSES; the committed `l30keylock-pit224-before` replays 2 hits; the fixture DRIFT; REFUSED and hit) | refusal + a 2-hit witness | it solves, 0 hits; the fixture would drift | gain; the producer's BEFORE arm needs the set OFF |
+| `fidelityL40Bk2` › D1 ON: the chain ends in the hammer arc's press kill (death t780) | `… -> chest stance -> kill (spinner@880,848) by press: died t780` | `no REACHABLE stance inside buttonroom@880,768 … from (488,578)` | the door-shut solve stops earlier (the flip's door order) |
+| `fidelityL40Bk2` › D2 leg 368 OFF, seam 5290: the 1600 t plan | `[true, 1600, 1da60bcb4c0d]` | `[true, 1713, ba143e9b21a0]` | plan moves (solved) |
+| `fidelityL40Bk2` › D2 leg 368 ON, seam 5290: not certified | refused | **solved** | gain |
+| `fidelityL40Bk2` › D2 leg 368 ON, seam 5280: OFF's 1558 t plan | `[true, 1558, 32f29414cd8e, []]` | `[true, 1713, ba143e9b21a0, []]` | plan moves (hitless) |
+| `fidelityL40Bk2b` › W0 OFF: the orbit arm finds no hitless candidate | `orbit arm: no orbit kill … (20 fork(s) of 20)` | `the re-planned corridor failed too … proximity-hazard — chest` | refusal text moves |
+| `fidelityL40Bk2b` › D1 ON: the orbit kill's ticks are the tape's | 125 | 112 | plan moves |
+| `fidelityL40Latch` › W0 OFF: moved at hold tick 93 | `hold tick 93 of 131 MOVED` | the collect stance's ladder EXHAUSTED (`bobsoldier@880,832`) | refusal moves |
+| `fidelityL40Res` › D2 OFF: STANCE_REENTRY at the west door | `… STANCE_REENTRY … tick 0` | `no REACHABLE stance inside buttonroom@880,768 …` | door-shut solve stops earlier |
+| `fidelityL40Res` › D2 ON: re-entry passes to the chest | `… -> chest stance -> kill … died t780` | the same `buttonroom@880,768` refusal | door-shut solve stops earlier |
+| `fidelityForcedHitXc` › D3 L40 leg 403 (LAPSECOST) | dashless refused at `detour` (`budget`) | refused, another deadline site | work moves (`DETOUR_VIA_BOUND`) |
+| `fidelityLapseCost` › D1 MUTANT: refused at the DETOUR rung's budget | `detour` / `budget` | another deadline site | work moves (`DETOUR_VIA_BOUND`) |
+
+The fix in every case is fidelity's call: wrap the BEFORE solve in `withL40Flip(false, …)` (`l40FlipSet.js`, as the
+hammer rows here do), or re-record the AFTER. ⚠ Until fidelity signs, the branch's default tier and producer job are
+red on exactly these rows. ⚠ The five `buttonroom@880,768` refusals are L40 solves with the south door SHUT: with the
+flip, `APPROACH_DOOR`/`LATCH_WEIGH_FIRST`/`TURRET_APPROACH` try the door first and meet the latch's button room behind
+`burnabletree@872,784`; the route carries the door (DOOR-CARRY), so the walk does not meet this state.
 
 ### 5.3 The ON radius
 

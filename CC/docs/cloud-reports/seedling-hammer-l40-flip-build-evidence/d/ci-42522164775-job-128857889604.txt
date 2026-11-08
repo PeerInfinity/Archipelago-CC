@@ -1,0 +1,31 @@
+2026-11-08T20:51:40.7419148Z stderr | frontend/modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — append-and-execute on a keypress (Q-b) > a REFUSED press marks the entry FAILED and names the reason, where the old queue marked it done and forgot
+2026-11-08T20:54:50.7222851Z      ✓ the 3rd refutation of one goal FAILS it by name  1470ms
+2026-11-08T21:01:24.2171535Z      ✓ ⛔ an UNDECLARED key FAILs, and the line names file, slot, region, field and cause  651ms
+2026-11-08T21:01:24.2178432Z      ✓ ⛓⛓ an issue ONLY the second layer can see FAILs: a document that lost a location the payload still carries (the first layer passes it — the payload is untouched)  687ms
+2026-11-08T21:01:24.2184657Z      ✓ ⛓⛓⛓ a document rule the AUTHORED payload never saw FAILs, naming the endpoint and BOTH rules  523ms
+2026-11-08T21:06:05.2860306Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2.test.js > L40BK2 D1 — a weigh's holder derived under the rest of the stance hypothesis > ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)
+2026-11-08T21:06:05.2867719Z AssertionError: expected 'solverBot: no REACHABLE stance inside…' to contain '-> shove stance (pushableblockfire@57…'
+2026-11-08T21:06:05.2939048Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2.test.js > L40BK2 D2 — leg 368: a struck spinner priced where the walk's own strike left it > OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144's hammer at t1222 (L40RES's hit)
+2026-11-08T21:06:05.2941158Z AssertionError: expected [ true, 1713, 'ba143e9b21a0' ] to deeply equal [ true, 1600, '1da60bcb4c0d' ]
+2026-11-08T21:06:05.2941939Z - Expected
+2026-11-08T21:06:05.2942317Z + Received
+2026-11-08T21:06:05.2943406Z -   1600,
+2026-11-08T21:06:05.2943840Z -   "1da60bcb4c0d",
+2026-11-08T21:06:05.2944309Z +   1713,
+2026-11-08T21:06:05.2944745Z +   "ba143e9b21a0",
+2026-11-08T21:06:05.2960957Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2.test.js > L40BK2 D2 — leg 368: a struck spinner priced where the walk's own strike left it > ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold's refusal, no hit plan
+2026-11-08T21:06:05.2963425Z AssertionError: expected true to be false // Object.is equality
+2026-11-08T21:06:05.2964091Z - Expected
+2026-11-08T21:06:05.2964454Z + Received
+2026-11-08T21:06:05.2965036Z - false
+2026-11-08T21:06:05.2965386Z + true
+2026-11-08T21:06:05.2974683Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2.test.js > L40BK2 D2 — leg 368: a struck spinner priced where the walk's own strike left it > ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte
+2026-11-08T21:06:05.2977174Z AssertionError: expected [ true, 1713, 'ba143e9b21a0', [] ] to deeply equal [ true, 1558, '32f29414cd8e', [] ]
+2026-11-08T21:06:05.2978028Z - Expected
+2026-11-08T21:06:05.2978408Z + Received
+2026-11-08T21:06:05.2979431Z -   1558,
+2026-11-08T21:06:05.2979820Z -   "32f29414cd8e",
+2026-11-08T21:06:05.2980209Z +   1713,
+2026-11-08T21:06:05.2980583Z +   "ba143e9b21a0",
+2026-11-08T21:06:05.3002130Z  Test Files  1 failed | 389 passed (390)
+2026-11-08T21:06:05.3065391Z       Tests  4 failed | 8949 passed (8953)
