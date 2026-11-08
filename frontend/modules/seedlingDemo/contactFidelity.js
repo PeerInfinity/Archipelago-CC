@@ -1875,6 +1875,21 @@ export const CONTACT_FIDELITY = {
      */
     ceremonyWalkHandoff: true,
     /**
+     * fidelity L25APITEM D1 (wave 37d) — A PLAYTHROUGH AP CHEST IS STAGED AS THE `apitem` THE DELIVERY SHIPS. The host
+     * rewrites every randomized location of the playthrough into an `<apitem>` (`apPlacementRewriter.rewriteRecordSet`,
+     * `seedlingRandomizerWiring`: `vanillaRecordSet` → `buildPlacementTable` → `rewriteRecordSet`), the 16 ledger chests
+     * included, so on the game (p4g, the delivered rooms) `Level 025 - Chest` is a NON-SOLID `Pickups/APItem`
+     * (`APItem.as:114-115`: `super(_x + Tile.w/2, _y + Tile.h/2, …, false)`, `setHitbox(8, 8, 4, 4)`) taken on OVERLAP
+     * from any side (`Pickup.as:78`, `collide("Player", x, y)`), not a `Chest` Solid opened from its bottom line
+     * (`Chest.as:63`). The model already builds and takes an apitem exactly (F2: `levelWorld`'s `apitem` row,
+     * `solverBot.apItemTakenOnTick`, the `apitem` verb); what it lacked was the ROOM: the route survey staged the
+     * UNREWRITTEN map document. ON: the survey's MODEL rooms are `apChestDelivery.deliveredChestDocument(atlas)` — each
+     * ledger chest replaced by the rewriter's own `apitem` element (same cell, its vanilla tag) — so a `collect-placement`
+     * at the chest resolves strategy `apitem`. A chest that is NOT an AP location (a generated set's door / loot chest,
+     * a vanilla-room tape) is untouched: no other reader consults this key. OFF: byte-identical. `SEEDLING_AP_CHEST_ITEM=0|1`.
+     */
+    apChestItem: true,
+    /**
      * fidelity KNOCKBACK376 D1 (wave 37c) — A BROKEN `BreakableRock`'S CELL STAYS SOLID TWO OBSERVATIONS PAST
      * `goneAt`, MEASURED ON THE GAME. `goneAt` is `endAnim`'s update (CLEARTAG witnesses the write there), but the rocks'
      * query reads `ticksCompleted + 1` (the bridges' convention: it frees the cell one update BEFORE `endAnim`; SLOTS
@@ -2259,6 +2274,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '1') CONTACT_F
 if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '0') CONTACT_FIDELITY.ceremonyPressForecast = false;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '1') CONTACT_FIDELITY.ceremonyWalkHandoff = true;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FIDELITY.ceremonyWalkHandoff = false;
+// ⛓ fidelity L25APITEM D1: `SEEDLING_AP_CHEST_ITEM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '1') CONTACT_FIDELITY.apChestItem = true;
+if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '0') CONTACT_FIDELITY.apChestItem = false;
 // ⛓ fidelity KNOCKBACK376 D1: `SEEDLING_ROCK_GONE_FENCEPOST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '1') CONTACT_FIDELITY.rockGoneFencepost = true;
 if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '0') CONTACT_FIDELITY.rockGoneFencepost = false;

@@ -24,6 +24,15 @@
  *              places the reverse the other way, and GER's implicit name-match pairing is what the explicit
  *              `reverse` replaces (`assume_bidirectional_exits: false` was exactly the missing pairing).
  *   PLACED     every `placements[].exit` is an exit of the player with `er.shuffle: true`, at most once.
+ *   PLACED-TARGET  every `placements[].target` is an exit of the player with `er.shuffle: true` and the placed
+ *              exit's `er.type`, whose group the placed exit's `target_group_lookup` row allows, at most once —
+ *              ⚖ E4a: a target is NAMED BY THE AP EXIT IT ARRIVES BESIDE (GER's naming: disconnecting a two-way exit
+ *              leaves a target named like it, in its region), so `{exit: D, target: E}` = D lands where E's
+ *              reverse lands, the existing arrival exit beside E. For a coupled stair that is the paired exit's
+ *              name, and vanilla is every exit placed at its own reverse.
+ *   COUPLED-MIRROR  under a `coupled: true` block, a placement `{exit: D, target: E}` of a `two_way` exit is
+ *              mirrored by `{exit: E, target: D}` (⚖ E4b: GER's coupled `connect` places the reverse the other way, so
+ *              the spoiler holds both rows — a one-sided row is a layout coupling did not make).
  *   GROUPS     every group `target_group_lookup` names (a key or a value) is a group some exit declares.
  *
  * ⛔ PURE: no I/O, no logging. `entranceRandomizationProblems` answers sentences; the loader's door is
@@ -216,6 +225,49 @@ export function entranceRandomizationProblems(doc, playerId) {
             }
             if (seen.has(row.exit)) out.push(`${who}: \`placements[${i}].exit\` places ${q(row.exit)} a second time`);
             seen.add(row.exit);
+        });
+    }
+    // PLACED-TARGET
+    if (Array.isArray(block.placements)) {
+        const seen = new Set();
+        block.placements.forEach((row, i) => {
+            if (!isPlain(row) || !isName(row.target)) return;
+            const named = byName.get(row.target) ?? [];
+            const at = `${who}: \`placements[${i}].target\` names ${q(row.target)}`;
+            if (named.length !== 1) {
+                out.push(`${at}, which is ${named.length === 0 ? 'no exit' : `${named.length} exits`} of ${who} — a target `
+                    + 'is named by the exit it arrives beside');
+            } else {
+                const ter = named[0].exit.er;
+                const placed = (byName.get(row.exit) ?? []).length === 1 ? byName.get(row.exit)[0].exit.er : undefined;
+                if (ter?.shuffle !== true) {
+                    out.push(`${at}, which is not an exit with \`er.shuffle: true\` — only a shuffled exit's arrival is a target`);
+                } else if (isPlain(placed) && ER_ENTRANCE_TYPES.includes(placed.type) && placed.type !== ter.type) {
+                    out.push(`${at}, a \`${ter.type}\` exit, for the \`${placed.type}\` exit ${q(row.exit)} — types match (GER)`);
+                } else if (isPlain(placed) && isPlain(block.target_group_lookup)) {
+                    const allowed = block.target_group_lookup[placed.group];
+                    if (Array.isArray(allowed) && !allowed.includes(ter.group)) {
+                        out.push(`${at}, of group ${q(ter.group)}, which \`target_group_lookup[${q(placed.group)}]\` `
+                            + `(${q(allowed)}) does not allow for ${q(row.exit)}`);
+                    }
+                }
+            }
+            if (seen.has(row.target)) out.push(`${at} a second time — each arrival takes one exit`);
+            seen.add(row.target);
+        });
+    }
+    // COUPLED-MIRROR
+    if (block.coupled === true && Array.isArray(block.placements)) {
+        const rows = new Set(block.placements.filter((r) => isPlain(r) && isName(r.exit) && isName(r.target))
+            .map((r) => `${r.exit}\u0001${r.target}`));
+        block.placements.forEach((row, i) => {
+            if (!isPlain(row) || !isName(row.exit) || !isName(row.target)) return;
+            const named = byName.get(row.exit) ?? [];
+            if (named.length !== 1 || named[0].exit.er?.type !== 'two_way') return;
+            if (!rows.has(`${row.target}\u0001${row.exit}`)) {
+                out.push(`${who}: \`placements[${i}]\` places ${q(row.exit)} at ${q(row.target)} under a coupled shuffle, but no `
+                    + `row places ${q(row.target)} at ${q(row.exit)} — coupling places the reverse the other way`);
+            }
         });
     }
     // GROUPS

@@ -80,6 +80,7 @@ worlds/{game_directory}/
 ├── Options.py            # Game-specific options
 ├── archipelago.json      # APWorld manifest
 ├── _worldgen_options.json # Options for canonical seed
+├── _worldgen_rules.json  # The rules document sent in slot_data (see below)
 ├── _ext/                 # Vendored rule_builder compatibility package
 │                         # (fork rule_builder when present, else vanilla
 │                         # rule_builder.rules + vendored extras/mixin)
@@ -94,6 +95,30 @@ plus vendored copies of the fork-only rule types and `RuleWorldMixin`
 `CustomRuleRegister`). A generated world therefore runs unchanged on this
 fork, on unmodified vanilla Archipelago source (0.6.7+), and on compiled
 (frozen) installs when packed as an `.apworld`.
+
+### The rules document in slot_data (`worldgen_rules`)
+
+Every package ships `_worldgen_rules.json`: the source rules.json after name
+substitution and the `--game-name` rename (so it carries the BUILT world's
+game, location and item IDs and region names), with every placement stripped
+(`world_generator/_embedded_rules.py` lists the fields). `fill_slot_data`
+sends it as `slot_data["worldgen_rules"]`, so the web client can play the room
+without a local copy of the rules.
+
+- The per-player option `rules_in_slot_data_max_kb` caps it (default 1024,
+  range 0–8192, 0 = never). A larger document is not sent: the generation logs
+  a warning and slot_data gets `worldgen_rules_omitted: {size_kb, cap_kb,
+  reason}` instead. Generation never fails over it.
+- The value is an envelope `{format, player, doc}`. `format` is
+  `WORLDGEN_RULES_FORMAT`, bumped whenever the frontend retires a rules.json
+  shape, so a newer client can name the cause and fall back to a local file.
+- The document's options are the slot's rolled values, and a world with
+  `option_effects` (Seedling Playthrough) gets them resolved in the document,
+  as the exporter resolves them.
+- The exporter does not copy `worldgen_rules` into an export's
+  `world[p].slot_data` (the export is itself a rules document).
+- Package files are read with `pkgutil.get_data`, never `open()` on a path
+  under `__file__`, so a packed `.apworld` (a zip) reads them too.
 
 ## Python API
 

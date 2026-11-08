@@ -384,6 +384,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             ceremonyPressForecast: true,
             // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ON since the W37b flip.
             ceremonyWalkHandoff: true,
+            // ⛓ fidelity L25APITEM D1 (wave 37d): the survey stages a playthrough AP chest as its delivered apitem — ON since its flip (⚖ user 2026-11-06).
+            apChestItem: true,
             // ⛓ fidelity KNOCKBACK376 D1 (wave 37c): a broken rock's cell opens on the game's tick — ON since its flip (⚖ user 2026-11-05).
             rockGoneFencepost: true });
     });

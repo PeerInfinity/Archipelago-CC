@@ -1,0 +1,17 @@
+# CHOOSER_CUT at the head (the deferral), the 15 requests the no-deferral arm moved; the other 55 never ask the cut
+id	i	key	arm	budget	end	work	ticks	verbs	digest	cut.asked	cut.admitted	cut.sets	bounded
+382	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20	CUT	640	SOLVED	157	913	narrow	ef65c44f9910	0	0		0
+383	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20	CUT	640	SOLVED	175	1025	narrow	742b7cab7bf9	0	0		0
+384	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20	CUT	640	SOLVED	181	1088	narrow	64d950626e1f	0	0		0
+387	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	CUT	640	SOLVED	482	1034	kill,walk	06847fe6111a	2	2	bob@192,480+bob@224,496+puncher@128,624+bob@352,448 ; bob@192,480+bob@224,496+puncher@128,624+bob@352,448	0
+387	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	CUT	2560	SOLVED	482	1034	kill,walk	06847fe6111a	2	2	bob@192,480+bob@224,496+puncher@128,624+bob@352,448 ; bob@192,480+bob@224,496+puncher@128,624+bob@352,448	0
+388	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	CUT	640	SOLVED	525	1156	kill,walk	6b7d8619ac44	2	2	bob@192,480+bob@224,496+puncher@128,624+bob@352,448 ; bob@192,480+bob@224,496+puncher@128,624+bob@352,448	0
+388	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	CUT	2560	SOLVED	525	1156	kill,walk	6b7d8619ac44	2	2	bob@192,480+bob@224,496+puncher@128,624+bob@352,448 ; bob@192,480+bob@224,496+puncher@128,624+bob@352,448	0
+399	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20	CUT	640	SOLVED	188	480	narrow	45bb551d24a8	0	0		0
+400	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20	CUT	640	SOLVED	208	642	narrow	3cc78d324fe4	0	0		0
+401	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20	CUT	640	SOLVED	216	718	narrow	9e96d381be9f	0	0		0
+403	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21	CUT	640	SOLVED	191	527	narrow	f8b1bc540538	0	0		0
+404	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21	CUT	640	SOLVED	206	598	narrow	54c50e3386cd	0	0		0
+405	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21	CUT	640	SOLVED	211	637	narrow	b7605a0c799d	0	0		0
+407	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22	CUT	640	SOLVED	186	476	narrow	883724adf39e	0	0		0
+409	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23	CUT	640	SOLVED	184	499	narrow	6b8de0e2e2b7	0	0		0

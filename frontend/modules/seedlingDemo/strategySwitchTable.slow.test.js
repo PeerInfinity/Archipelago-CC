@@ -63,12 +63,12 @@ beforeAll(async () => {
 }, 300000);
 
 /** The survey over `only`, `disable` (or none), the flag as given: its rows by step. */
-function survey(name, only, disable, flag = '1') {
+function survey(name, only, disable, flag = '1', env = {}) {
     const out = join(OUT, `${name}.json`);
     return new Promise((done, fail) => {
         execFile(process.execPath, [SURVEY, '--through=end', `--only=${only}`, '--timeout=400', `--out=${out}`,
             ...(disable ? [`--disable=${disable}`] : [])],
-        { cwd: REPO, env: { ...process.env, SEEDLING_STRATEGY_SWITCH: flag }, maxBuffer: 64 * 1024 * 1024 },
+        { cwd: REPO, env: { ...process.env, SEEDLING_STRATEGY_SWITCH: flag, ...env }, maxBuffer: 64 * 1024 * 1024 },
         (err) => {
             try {
                 const rows = JSON.parse(readFileSync(out, 'utf8')).rows;
@@ -114,11 +114,17 @@ describe('strategy switch — the bounded needs-it table (L4 shove, L24 burn, L5
 
     it('hammer-2\'s rows: the FALLBACK (L8 hold off SOLVES via the other strategies, hits > 0) is also the BOUND pin; a pulse is not a hold', async () => {
         const { L8, L38 } = STEP;
+        // ⛓ L25APITEM (⚖ user 2026-11-06, `apChestItem` ON; re-pin SIGNED by hammer-3): L38 is an AP-chest room. WHY the
+        // AP=0 pin: the DELIVERED apitem routes the chest at (152,120) through buttonroom@144,128, which needs a `hold`,
+        // while the vanilla Chest's bottom-line stance did not. Measured (survey step 47, --timeout=400): AP=0 control
+        // SOLVED 371, hold off SOLVED 371 (hold hits {}); AP=1 control SOLVED 310, hold off REFUSED (hold hits 15). So the
+        // pulse-vs-hold ruling is pinned on the room it was ruled on (`apChestItem` OFF), and the next row pins the ON room.
+        const VANILLA_CHEST = { SEEDLING_AP_CHEST_ITEM: '0' };
         const [control, hold8, hold38, pulse38] = await Promise.all([
-            survey('control-8-38', `${L8},${L38}`, null),
+            survey('control-8-38', `${L8},${L38}`, null, '1', VANILLA_CHEST),
             survey('hold8', L8, 'hold'),
-            survey('hold38', L38, 'hold'),
-            survey('pulse38', L38, 'pulse'),
+            survey('hold38', L38, 'hold', '1', VANILLA_CHEST),
+            survey('pulse38', L38, 'pulse', '1', VANILLA_CHEST),
         ]);
         // ⛓ condition 2 + ASK 1/2: L8 is the room `MAX_STRATEGIES_PER_GOAL`'s docblock names (two shoves and two holds,
         // the bound exactly). With `hold` off its lookups answer "off" (hits > 0) and the room still solves, at the
@@ -133,6 +139,18 @@ describe('strategy switch — the bounded needs-it table (L4 shove, L24 burn, L5
         expect(hold38[L38].disabled.hits.hold ?? 0).toBe(0);
         expect(pulse38[L38].verdict).toBe('REFUSED');
         expect(pulse38[L38].disabled.hits.pulse).toBeGreaterThan(0);
+    }, 900000);
+
+    it('L38 with the DELIVERED apitem (`apChestItem` ON, L25APITEM): the chest is reached through buttonroom@144,128 — `hold` off REFUSES at the gate (hold hits > 0); the control solves', async () => {
+        const { L38 } = STEP;
+        const [control, hold38] = await Promise.all([
+            survey('control-38-ap', L38, null, '1', { SEEDLING_AP_CHEST_ITEM: '1' }),
+            survey('hold38-ap', L38, 'hold', '1', { SEEDLING_AP_CHEST_ITEM: '1' }),
+        ]);
+        expect(control[L38].verdict).toBe('SOLVED');
+        expect(hold38[L38].verdict).toBe('REFUSED');
+        expect(hold38[L38].disabled.hits.hold).toBeGreaterThan(0);
+        expect(hold38[L38].refusal).toMatch(/buttonroom@144,128/);
     }, 900000);
 
     it('the flag OFF refuses the same request by name, with 0 hits ("rule not established", never STRONG)', async () => {

@@ -1,0 +1,125 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 61,
+        "x": 160,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 987286273
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "time": 4800
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 29,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 18
+        },
+        {
+            "key": "left",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "right",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "left",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "up",
+            "from": 18,
+            "to": 19
+        },
+        {
+            "key": "left",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "down",
+            "from": 19,
+            "to": 20
+        },
+        {
+            "key": "up",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "down",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "right",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "up",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 27
+        }
+    ],
+    "name": "cleartag-L63-1-from-L62"
+}

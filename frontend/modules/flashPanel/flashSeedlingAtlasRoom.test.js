@@ -91,7 +91,8 @@ const ITEM_REFUSED = [];
 // ⛓ `seedling_playthrough` TWICE since rules-playthrough-blocks (2026-10-14): AP_1
 // and its seed-1 Generate.py export, which now carries AP_1's sidecars through
 // the Python round trip — the same projection, refused by the same sentence.
-const PROJECTION = ['seedling_atlas', 'seedling_playthrough', 'seedling_playthrough'];
+// ⛓ ER E4b: `seedling_er` (AP_1 only) — the playthrough producer's compile of the stairs-shuffled graph, the same projection.
+const PROJECTION = ['seedling_atlas', 'seedling_playthrough', 'seedling_playthrough', 'seedling_er'];
 const RECORDS = [...REPRODUCES, ...ITEM_REFUSED];
 
 /** ⛓ The sphere room with a MAZE leaf relabelled to `flash_seedling` (D1's picker: the label only). */

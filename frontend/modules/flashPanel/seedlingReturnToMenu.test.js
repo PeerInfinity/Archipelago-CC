@@ -109,7 +109,7 @@ describe('the Restart lands where GameStart leads', () => {
     });
 
     it('the covered presets are the ones seedlingRestartWarp.test.js lists', () => {
-        expect(covered).toEqual(['seedling_atlas', 'seedling_atlas_location', 'seedling_generated_chestdoor', 'seedling_generated_host',
+        expect(covered).toEqual(['seedling_atlas', 'seedling_atlas_location', 'seedling_er', 'seedling_generated_chestdoor', 'seedling_generated_host',
             'seedling_generated_room', 'seedling_playthrough', 'seedling_spiral_room']);
     });
 

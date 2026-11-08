@@ -39,8 +39,8 @@ describe('FROZENPRESS — the switch', () => {
             // `ceremonyWalkHandoff`. Any order of those (the slices merge in either order); nothing else.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const after = keys.slice(keys.indexOf('frozenPressForecast') + 1);
-            const W37B = ['previewBeamTowerDrift', 'ceremonyPressForecast', 'ceremonyWalkHandoff'];
-            // ⛓ wave 37c: KNOCKBACK376 `rockGoneFencepost`, after them.
+            // ⛓ wave 37d: L25APITEM `apChestItem`; wave 37c: KNOCKBACK376 `rockGoneFencepost` (landed after it).
+            const W37B = ['previewBeamTowerDrift', 'ceremonyPressForecast', 'ceremonyWalkHandoff', 'apChestItem'];
             const W37C = ['rockGoneFencepost'];
             expect(after.filter((k) => !W37B.includes(k) && !W37C.includes(k))).toEqual([]);
         });

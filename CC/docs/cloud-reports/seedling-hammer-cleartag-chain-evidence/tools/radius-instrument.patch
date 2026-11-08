@@ -1,0 +1,20 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 4f3d94bc..7ad17a90 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -31739,6 +31739,7 @@ function solveSegmentUnder({
+                     + `found no reachable stance on the presser ${pid}`);
+             }
+             if (resolved.prerequisite) {
++                globalThis.__ctCrossHits = (globalThis.__ctCrossHits ?? 0) + 1;
+                 refuseCT('prerequisite', `the presser ${pid}'s stance is reachable only once `
+                     + `${resolved.prerequisite.id} is discharged (${resolved.prerequisite.via}: `
+                     + `${resolved.prerequisite.why}); a clear-tag order does not chain openers`);
+@@ -31959,6 +31960,7 @@ function solveSegmentUnder({
+          * by name. OFF: the loop never runs and the refusal below is the one it always was.
+          */
+         const chained = [];
++        if (resolved.prerequisite) globalThis.__ctChainHits = (globalThis.__ctChainHits ?? 0) + 1;
+         while (CLEARTAG_CHAIN.enabled && resolved.prerequisite) {
+             const p = resolved.prerequisite;
+             if (chained.includes(p.id)) {

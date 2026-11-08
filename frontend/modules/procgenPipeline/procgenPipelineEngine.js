@@ -1721,6 +1721,26 @@ export const TOPDOWN_START_REFUSALS = Object.freeze({
 });
 
 /**
+ * ⛓ ER E4b — **A RELAYOUT OF AN ENTRANCE-RANDOMIZED SOURCE IS REFUSED BY NAME.** The layout rebuilds every exit (the
+ * BFS's payload exits, the back exits, the kept Menu exits), and an exit's `er` and the slot's
+ * `entrance_randomization[p]` block name exits BY NAME (E2): a relayout would drop the `er`s and leave the block naming
+ * exits that no longer exist, a document the loader refuses. Re-deriving `er` over a relayout is not built; until it
+ * is, the source is refused rather than silently un-randomized. `entranceRandomizedFacts` is the one reader.
+ */
+export function entranceRandomizedFacts(rulesJson, playerId = '1') {
+    const p = String(playerId);
+    const block = rulesJson?.entrance_randomization?.[p] !== undefined;
+    const er = Object.values(rulesJson?.regions?.[p] ?? {})
+        .reduce((n, r) => n + (r?.exits ?? []).filter((e) => e && Object.hasOwn(e, 'er')).length, 0);
+    return { block, er, randomized: block || er > 0 };
+}
+export const TOPDOWN_SOURCE_REFUSALS = Object.freeze({
+    entranceRandomized: (p, { block, er }) => `topDownFromRulesJson: player ${p}'s source is entrance-randomized `
+        + `(${block ? 'an entrance_randomization block' : 'no block'}, ${er} exit(s) carrying \`er\`) — the layout rebuilds `
+        + 'every exit, and `er` / the placements name exits by name, so a relayout would drop the shuffle; re-deriving it is not built',
+});
+
+/**
  * Resolve which source region is the "actual" start — the one the BFS places
  * first. The declared start IS the menu, whatever it is called: when it is a
  * pure hub (`isVirtualStart`: exits, no locations) the layout strips it
@@ -1892,6 +1912,9 @@ export function layoutTopDown(rulesJson, opts, rng) {
     if (Object.keys(sourceRegions).length === 0) {
         throw new Error(`topDownFromRulesJson: no regions for player '${playerId}'`);
     }
+    // ⛓ ER E4b: an entrance-randomized source is refused by name (`entranceRandomizedFacts`).
+    const erFacts = entranceRandomizedFacts(rulesJson, playerId);
+    if (erFacts.randomized) throw new Error(TOPDOWN_SOURCE_REFUSALS.entranceRandomized(String(playerId), erFacts));
 
     // Locate the declared start.
     // ⛓ Both start_regions shapes, through the ONE reader. These two sites were

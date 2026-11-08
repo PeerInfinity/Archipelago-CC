@@ -126,6 +126,24 @@ async function botWalk(tc, target, label) {
     }, label, BOT_TIMEOUT_MS, 200);
 }
 
+/**
+ * A walk to a GATE with its item unheld. A page that plays on (P7b, features.botContinuous) collects the coins before
+ * the gate on its way, and the region's free coins can hold that very item; such a leg asks for the pre-P7b walk
+ * (options.respawn: respawn at the goal's piece), so it tests the gate and nothing else. The PlaybackController's
+ * walkTo passes its options to the page's botWalkTo untouched.
+ */
+async function botWalkToGate(tc, target, label) {
+    if (!embed()?.features?.botContinuous) return botWalk(tc, target, label);
+    const c = controller();
+    if (!c) { tc.reportCondition('the cloudberry PlaybackController exists', false); return null; }
+    const n = botEvents().length;
+    c.walkTo(target, { respawn: true });
+    return tc.pollForValue(() => {
+        const r = botEvents();
+        return r.length > n ? r[r.length - 1] : null;
+    }, label, BOT_TIMEOUT_MS, 200);
+}
+
 /** A key as the page's on-screen controls send it (keydown, a hold, keyup, on the game window). */
 async function pressKey(code, holdMs = KEY_HOLD_MS) {
     const win = gameWin();
@@ -294,7 +312,7 @@ async function botEndDoorRegionMove(tc) {
         if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
         if (!(await loadPreset(tc))) return tc.getOverallResult();
         const n0 = exitEvents().length;
-        const died = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot\'s walk to the end door ends');
+        const died = await botWalkToGate(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot\'s walk to the end door ends');
         // Its walk ends short of the door: 'died', or 'timeout' (the recording ran out, the door not reached;
         // measured on region_2_2), never 'reached'.
         tc.reportCondition(`Clouds unheld: the bot's walk ends short of the end door (${JSON.stringify(died)})`,
@@ -529,14 +547,16 @@ async function doubleJumpLevelNeedsTheItem(tc) {
         await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('MovingBlock') ? true : null),
             'MovingBlock held in the page', 20000, 200);
         // Park at the end door by a side with no exit (the world here has none), as cloudberry-end-door-menu-by-key does.
-        const toDoor = async (label) => {
+        // The unheld leg asks for the pre-P7b walk (respawn at the door's piece; see botWalkToGate): playing on from the
+        // level's start would collect the check coin on its way, and the coin may hold the very item.
+        const toDoor = async (label, gate = false) => {
             const n = botEvents().length;
-            gameWin().__swfBridge.botWalkTo({ kind: 'portal', id: 'north' }, { door: 'end' });
+            gameWin().__swfBridge.botWalkTo({ kind: 'portal', id: 'north' }, gate ? { door: 'end', respawn: true } : { door: 'end' });
             return tc.pollForValue(() => (botEvents().length > n ? botEvents().at(-1) : null), label, BOT_TIMEOUT_MS, 200);
         };
         // Unheld: one jump cannot follow the recording to the end door. (Early coins can be reachable with one jump —
         // the rules are SUFFICIENT, not minimal — so the enforced goal measured here is the door, which needs S_last.)
-        const failed = await toDoor('the bot\'s walk to the end door ends');
+        const failed = await toDoor('the bot\'s walk to the end door ends', true);
         tc.reportCondition(`Double Jump unheld: the bot does not reach the end door (${JSON.stringify(failed)})`,
             failed?.result === 'died' || failed?.result === 'timeout');
 
@@ -867,6 +887,205 @@ registerTest({
                + 'pure initialise on the same arguments. The row holds the page generator until it has seen the form working on '
                + 'this page, then releases it.',
     testFunction: editorInitialisesACloudberrySlotInOnePress,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 11. the bot plays ON between goals; respawns only at the ladder (P7b) ─────────────
+
+const botNotes = () => app()?.botNotes ?? [];
+
+async function botPlaysOn(tc) {
+    try {
+        const site = await siteOrRefuse(tc);
+        if (!site) return tc.getOverallResult();
+        const a = await loadPreset(tc);
+        if (!a) return tc.getOverallResult();
+        if (!embed().features?.botContinuous) {
+            tc.log(`NOT RUN BY NAME: this page (build ${String(site.build).slice(0, 12)}) respawns the bot at each goal's piece `
+                + '(no __cloudberryEmbed.features.botContinuous) — the Cloudberry branch p7b-continuous-bot adds it.', 'warn');
+            return tc.getOverallResult();
+        }
+        // ⛓ premise: region_2_2 = 2 pieces [∅ | Cloud], its two check coins in piece 0 (the end door needs Clouds).
+        const checks = (embed().status()?.checks ?? []).slice().sort((x, y) => x.piece - y.piece || x.tick - y.tick);
+        tc.reportCondition(`⛓ premise: region_2_2 has 2 pieces and its 2 check coins in piece 0 (${JSON.stringify(checks)})`,
+            a.playResult.pieces === 2 && checks.length === 2 && checks.every((c) => c.piece === 0));
+        if (checks.length !== 2) return tc.getOverallResult();
+        const locOf = (name) => `region_2_2__${name}`;
+
+        // Clouds unheld: the walk to the end door fails BY NAME after a bounded number of restarts.
+        const n0 = botNotes().length;
+        const failed = await botWalkToGate(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the walk to the end door without Clouds ends');
+        tc.reportCondition(`Clouds unheld: the walk to the end door fails by name — exhausted, with its reason (${JSON.stringify(failed)})`,
+            (failed?.result === 'died' || failed?.result === 'timeout') && failed?.exhausted === true && typeof failed?.reason === 'string');
+        const restarts = botNotes().slice(n0).filter((e) => e.note === 'restart');
+        tc.reportCondition(`…after at least one restart from a checkpoint, each within its bound (${JSON.stringify(restarts.map((e) => e.text))})`,
+            restarts.length >= 1 && restarts.every((e) => e.attempt <= e.maxAttempts));
+
+        // The first check coin, then the second: the second walk plays ON (no respawn between them).
+        const first = await botWalk(tc, { kind: 'location', name: locOf(checks[0].name) }, `the bot reaches ${checks[0].name}`);
+        tc.reportCondition(`the bot reaches ${checks[0].name} (${JSON.stringify(first)})`, first?.result === 'reached');
+        const n1 = botNotes().length;
+        const second = await botWalk(tc, { kind: 'location', name: locOf(checks[1].name) }, `the bot reaches ${checks[1].name}`);
+        tc.reportCondition(`the bot reaches ${checks[1].name} (${JSON.stringify(second)})`, second?.result === 'reached');
+        const between = botNotes().slice(n1);
+        tc.reportCondition(`…playing on: no respawn between the two coins (notes: ${JSON.stringify(between.map((e) => e.note))})`, between.length === 0);
+        const got = await tc.pollForValue(async () => {
+            const s = await snapshot(tc);
+            return checks.every((c) => checkedList(s).includes(locOf(c.name))) && held(s, 'Clouds') ? s : null;
+        }, 'both checks checked, Clouds received', 20000, 250);
+        tc.reportCondition(`both check coins checked and Clouds received${got ? '' : ` — ${await checkDiag(tc)}`}`, !!got);
+        if (!got) return tc.getOverallResult();
+        await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
+
+        // The end door: on through piece 0's end, the LADDER (the one respawn, with its on-screen note), piece 1, the door.
+        const n2 = botNotes().length;
+        const before = app()?.configures ?? 0;
+        const left = botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
+        const shown = await tc.pollForValue(() => {
+            const el = embed()?.botNoteElement;
+            return el && !el.hidden && /ladder/.test(el.textContent) ? el.textContent : null;
+        }, 'the ladder note on screen', BOT_TIMEOUT_MS, 50);
+        tc.reportCondition(`the page shows the ladder note (${JSON.stringify(shown)})`, shown === 'ladder: skipping to checkpoint 1');
+        const door = await left;
+        tc.reportCondition(`Clouds held: the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
+        const notes = botNotes().slice(n2);
+        tc.reportCondition(`…with exactly one respawn on the way, the ladder 0 → 1 (${JSON.stringify(notes)})`,
+            notes.length === 1 && notes[0].note === 'ladder' && notes[0].fromPiece === 0 && notes[0].toPiece === 1);
+        await configured(tc, 'region_3_2', { after: before });
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-bot-plays-on',
+    name: 'Cloudberry: the bot plays on between goals (no teleport); respawns only at the ladder (on-screen note) or after a death (bounded)',
+    description: 'P7b, on a page with __cloudberryEmbed.features.botContinuous (else NOT RUN BY NAME). Preset region_2_2: the walk to '
+               + 'the end door without Clouds fails by name (exhausted, with its reason) after bounded restarts; the bot reaches '
+               + 'both check coins with no respawn between them; with Clouds it plays on to the end door with exactly one '
+               + 'respawn, the ladder 0 → 1, whose note the page shows; the door sends the exit → region_3_2.',
+    testFunction: botPlaysOn,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 12. the panel's Archipelago status strip (P7a) ───────────────────────────────
+
+/** The strip's model (flashSubstrate/statusStrip.js), and the text a player reads on it. */
+function stripView() {
+    const root = document.querySelector('[data-testid="substrate-status-strip"]');
+    const strip = root?.__statusStrip ?? null;
+    if (!strip || root.hidden) return null;
+    return {
+        model: strip.model(),
+        items: [...root.querySelectorAll('[data-item]')].map((e) => `${e.dataset.item}:${e.dataset.state}`),
+        exits: [...root.querySelectorAll('[data-exit]')].map((e) => `${e.dataset.exit}:${e.dataset.state}`),
+        checks: root.querySelector('[data-section="checks"]')?.textContent ?? null,
+        activity: root.querySelector('[data-section="activity"]')?.textContent ?? '',
+        bot: root.querySelector('[data-section="bot"]')?.textContent ?? '',
+    };
+}
+const stripText = (v) => JSON.stringify(v && { items: v.items, exits: v.exits, checks: v.checks, activity: v.activity, bot: v.bot });
+
+async function stripFor(tc, region, label, test, timeoutMs = 20000) {
+    return tc.pollForValue(() => {
+        const v = stripView();
+        return v?.model.region === region && test(v) ? v : null;
+    }, label, timeoutMs, 200);
+}
+
+async function statusStripItemsAndExits(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        if (!(await loadPreset(tc))) return tc.getOverallResult();
+        // region_2_2 = [∅ | Cloud]: its end door (region_2_2__exit_E) needs Clouds; nothing is held after the load.
+        const start = await stripFor(tc, 'region_2_2', 'the strip shows region_2_2', () => true);
+        tc.reportCondition(`the strip shows the start level (${stripText(start)})`, !!start);
+        if (!start) return tc.getOverallResult();
+        tc.reportCondition(`this level's items: Clouds LOCKED (${start.items})`, JSON.stringify(start.items) === '["Clouds:locked"]');
+        tc.reportCondition(`checks 0 of 2 (${start.checks})`, start.checks === 'Checks 0/2');
+        const east = start.model.exits.find((x) => x.name === 'exit_E');
+        tc.reportCondition(`the east exit is locked and needs Clouds (${JSON.stringify(east)})`,
+            east?.state === 'locked' && JSON.stringify(east.missing) === '["Clouds"]');
+
+        await tc.stateManager.addItemToInventory('Clouds', 1);
+        const after = await stripFor(tc, 'region_2_2', 'Clouds received: HELD, the east exit open',
+            (v) => v.items.includes('Clouds:held') && v.exits.includes('exit_E:open'));
+        tc.reportCondition(`an item received: LOCKED becomes HELD, and the exit it gates opens (${stripText(after ?? stripView())})`, !!after);
+        // Offline, an item no find explains is logged without a sender (none is claimed).
+        tc.reportCondition(`the activity log says it arrived (${after?.activity})`, after?.activity === 'Received Clouds');
+        tc.reportCondition(`checks still 0 of 2 (${after?.checks})`, after?.checks === 'Checks 0/2');
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-status-strip-items-and-exits',
+    name: 'Cloudberry: the status strip — an item received turns LOCKED into HELD and opens the exit it gates',
+    description: 'P7a. Loads cloudberry_sphere_worldgen; the panel\'s status strip shows region_2_2: Clouds LOCKED, checks 0/2, '
+               + 'the east exit locked needing Clouds. Clouds added to the inventory: the strip shows Clouds HELD, the east exit '
+               + 'open, and "Received Clouds" in the activity log (offline: no sender is claimed).',
+    testFunction: statusStripItemsAndExits,
+    category: CATEGORY,
+    enabled: false,
+});
+
+async function statusStripLocalCheckLogs(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        if (!(await loadPreset(tc))) return tc.getOverallResult();
+        // region_2_2__loc_0 is item-free (piece 0) and holds this player's own Clouds.
+        const target = 'region_2_2__loc_0';
+        const c = controller();
+        if (!c) { tc.reportCondition('the cloudberry PlaybackController exists', false); return tc.getOverallResult(); }
+        const n = botEvents().length;
+        c.walkTo({ kind: 'location', name: target });
+        const walking = await stripFor(tc, 'region_2_2', 'the bot line names the walk', (v) => v.bot.startsWith('Bot → loc_0'));
+        tc.reportCondition(`the strip's bot line names the walk (${walking?.bot})`, !!walking);
+        const res = await tc.pollForValue(() => (botEvents().length > n ? botEvents().at(-1) : null), 'the bot reaches the coin', BOT_TIMEOUT_MS, 200);
+        tc.reportCondition(`the bot reaches the coin (${JSON.stringify(res)})`, res?.result === 'reached');
+        const found = await stripFor(tc, 'region_2_2', 'a "You found" entry and checks 1/2',
+            (v) => v.checks === 'Checks 1/2' && v.activity.startsWith('You found'));
+        tc.reportCondition(`a local check of my own item logs "You found" (${stripText(found ?? stripView())})`,
+            found?.activity === 'You found Clouds (loc_0)');
+        const row = found?.model.checks.rows.find((r) => r.location === target);
+        tc.reportCondition(`its coin reads collected (${JSON.stringify(row)})`, row?.state === 'checked');
+        // The page reports no walk results to the host yet: the walk ends when its location is checked.
+        tc.reportCondition(`the bot line ends with the walk (${found?.bot})`, /reached$/.test(found?.bot ?? ''));
+        // The item the coin held (Clouds) is not logged a second time as received.
+        tc.reportCondition(`one entry, not a find and a receipt (${JSON.stringify(found?.model.activity.map((e) => e.text))})`,
+            found?.model.activity.length === 1);
+        // A page's bot report (P7b's `__swfBridge.botStatus`) rides the REAL bridge relay (substrate:botStatus) to the
+        // strip. Sent here by hand, so the leg runs on a page that does not send them yet.
+        // A checkpoint no level here has (7), sent after the walk's own first note (a play-on page sends one as it
+        // starts), so the strip's text can only be this report's.
+        c.walkTo({ kind: 'exit', name: 'region_2_2__exit_E' });
+        await sleep(500);
+        gameWin().__swfBridge.botStatus({ kind: 'botNote', note: 'ladder', fromPiece: 6, toPiece: 7, text: 'ladder: skipping to checkpoint 7' });
+        const note = await stripFor(tc, 'region_2_2', 'the ladder note on the bot line', (v) => v.bot.includes('checkpoint 7'));
+        tc.reportCondition(`a page's ladder note reaches the strip through the bridge (${note?.bot})`,
+            note?.bot === 'Bot → to region_3_2 · ladder: skipped to checkpoint 7');
+        c.stop();
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-status-strip-local-check-logs',
+    name: 'Cloudberry: the status strip — a local check logs "You found", counts k/n and ends the bot line',
+    description: 'P7a. Loads cloudberry_sphere_worldgen; the host-side bot walks to region_2_2__loc_0 (item-free, holds this '
+               + 'player\'s Clouds). The strip\'s bot line names the walk; when the coin is checked the activity log reads '
+               + '"You found Clouds (loc_0)" (once: the item is not logged again as received), checks read 1/2, the coin reads '
+               + 'collected and the bot line ends "reached". A bot note the page sends through __swfBridge.botStatus (a ladder) '
+               + 'reaches the strip through the bridge\'s substrate:botStatus relay. ("Sent X to <player>" needs another player\'s item in a local '
+               + 'location: unit-tested in statusStripModel.test.js.)',
+    testFunction: statusStripLocalCheckLogs,
     category: CATEGORY,
     enabled: false,
 });
