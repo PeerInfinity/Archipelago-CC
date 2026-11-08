@@ -640,6 +640,8 @@ describe('who takes the box', () => {
             'check-cloudberry-sphere.mjs',
             // cloudberry P3a: the touch-↑ probe (real pointer taps at the doors), same door
             'probe-cloudberry-touch-up.mjs',
+            // cloudberry P7a: the status-strip probe (shots at desktop and phone width), same door
+            'probe-cloudberry-status-strip.mjs',
             // rules-certifier-tail: L3's water door and L25's apitem on the game (import door: `isEntryPoint` → main())
             'probe-seedling-certifier-tail.mjs',
             // hammer CHEST-INCIDENTAL: two chests opened on one visit, on the game (import door: `isEntryPoint` → main())

@@ -169,6 +169,14 @@ describe('seedling-divergence-sweep.yml', () => {
         expect(text).toMatch(/nostagewrite\\;\*\) export SWEEP_STAGE_MUTANT=skip-write/);
     });
 
+    it('⛓ carry_route_flags (hammer DOOR-CARRY): a boolean defaulting OFF, stamped, reaching ONLY the plan\'s leg list', () => {
+        expect(text).toMatch(/ {6}carry_route_flags:\n(?: {8}.*\n)+? {8}type: boolean\n {8}default: false\n/);
+        expect(text).toMatch(/carry=\$\{\{ inputs\.carry_route_flags \}\}/);
+        expect(text.match(/CARRY: \$\{\{ inputs\.carry_route_flags && 'on' \|\| '' \}\}/g)).toHaveLength(1);
+        expect(text.match(/\$\{CARRY:\+--carry-route-flags\}/g)).toHaveLength(1);
+        expect(text).toMatch(/seedling-divergence-legs\.mjs --out="\$L" --presets=seedling_playthrough --blocks \$\{CARRY:\+--carry-route-flags\} \| tee plan\.txt/);
+    });
+
     it('the shard timeout and the leg count are DERIVED by the plan job, never typed', () => {
         expect(text).toMatch(/timeout-minutes: \$\{\{ fromJSON\(needs\.plan\.outputs\.timeout\) \}\}/);
         expect(text).toMatch(/LEGS: \$\{\{ needs\.plan\.outputs\.legs \}\}/);

@@ -1154,7 +1154,7 @@ export class MessageHandler {
             );
           }
 
-          processedItemDetails.push({ itemName, locationNameToMark });
+          processedItemDetails.push({ itemName, locationNameToMark, senderSlot: item.player ?? null });
           this._logDebug(
             `[MessageHandler _handleReceivedItems] Collected for batch: Item ${itemName}, Location to mark: ${
               locationNameToMark || 'None'
@@ -1214,6 +1214,13 @@ export class MessageHandler {
       index: data.index, // Original index from server packet
       count: data.items.length, // Original count from server packet
       processedCount: processedItemDetails.length, // Actual count of items prepared for StateManager
+      // Additive (P7a): what arrived and who sent it — the slot that found it and that slot's name in
+      // this room (null when the room did not say). The substrate status strip logs "Received X from <player>".
+      items: processedItemDetails.map((d) => ({
+        itemName: d.itemName,
+        senderSlot: d.senderSlot,
+        senderName: d.senderSlot !== null ? (this.slotInfo?.[String(d.senderSlot)]?.name ?? null) : null,
+      })),
     });
   }
 
