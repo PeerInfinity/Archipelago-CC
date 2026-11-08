@@ -1,0 +1,71 @@
+id	i	key	arm	budget	end	work	ticks	verbs	digest	cut.asked	cut.admitted	cut.sets	bounded
+366	0	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0	OFF	640	SOLVED	9	5	walk	0535c35ae8db	0	0		0
+369	0	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0	OFF	640	SOLVED	35	70	walk	13f0b0244a50	0	0		0
+370	0	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96	OFF	640	SOLVED	9	5	walk	0776f2b6baad	0	0		0
+371	0	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144	OFF	640	SOLVED	596	1558	break,kill,walk	14efd912c9f2	0	0		0
+372	0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared	OFF	640	SOLVED	641	1293	break,kill,walk	f51f58d819e5	0	0		0
+373	0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared	OFF	640	SOLVED	641	1083	kill,walk	d381a121824b	0	0		0
+374	0	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0	OFF	640	SOLVED	9	5	walk	0535c35ae8db	0	0		0
+375	0	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96	OFF	640	SOLVED	35	70	walk	4f15e87d2d99	0	0		0
+376	0	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144	OFF	640	SOLVED	366	1608	hold,kill,walk	cc0bc02adaf1	0	0		0
+377	0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared	OFF	640	REFUSED	642	-		67d284286683	0	0		0
+377	1	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared	OFF	2560	REFUSED	593	-		67d284286683	0	0		0
+378	0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared	OFF	640	SOLVED	493	1012	hold	e58f4a91d323	0	0		0
+379	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576	OFF	640	SOLVED	85	172	walk	23bc1aba8850	0	0		0
+380	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912	OFF	640	SOLVED	9	4	walk	b973be6dc3cf	0	0		0
+381	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20	OFF	640	SOLVED	105	861	walk	11dc8924a4a7	0	0		0
+382	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20	OFF	640	SOLVED	157	913	narrow	ef65c44f9910	0	0		0
+383	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20	OFF	640	SOLVED	175	1025	narrow	742b7cab7bf9	0	0		0
+384	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20	OFF	640	SOLVED	181	1088	narrow	64d950626e1f	0	0		0
+385	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21	OFF	640	SOLVED	103	844	walk	d776e0fe8a8c	0	0		0
+386	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21	OFF	640	SOLVED	425	955	kill,walk	22c379a1ea87	0	0		0
+387	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	OFF	640	DEADLINE	642	-		918e176c5ea1	0	0		0
+387	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	OFF	2560	DEADLINE	2562	-		918e176c5ea1	0	0		0
+388	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	OFF	640	DEADLINE	642	-		1bbc0e5044ed	0	0		0
+388	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	OFF	2560	DEADLINE	2562	-		1bbc0e5044ed	0	0		0
+389	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22	OFF	640	SOLVED	101	828	walk	a222d1db1226	0	0		0
+390	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22	OFF	640	SOLVED	420	938	kill,walk	1fde79b855da	0	0		0
+391	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23	OFF	640	SOLVED	99	809	walk	4c6ce52ad40f	0	0		0
+392	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23	OFF	640	SOLVED	388	909	kill,walk	91767a3c5f35	0	0		0
+393	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640	OFF	640	SOLVED	65	494	apitem	8bc59cfa3fb0	0	0		0
+394	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	OFF	640	DEADLINE	643	-		f8918df357a1	0	0		0
+394	1	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	OFF	2560	REFUSED	1660	-		c10e80292cce	0	0		0
+395	0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared	OFF	640	REFUSED	20	-		5ef26e7cad6c	0	0		0
+396	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576	OFF	640	SOLVED	9	5	walk	0535c35ae8db	0	0		0
+397	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912	OFF	640	SOLVED	142	417	walk	cfe39855ce60	0	0		0
+398	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20	OFF	640	SOLVED	153	416	walk	eeadb3e660b6	0	0		0
+399	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20	OFF	640	SOLVED	188	480	narrow	45bb551d24a8	0	0		0
+400	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20	OFF	640	SOLVED	208	642	narrow	3cc78d324fe4	0	0		0
+401	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20	OFF	640	SOLVED	216	718	narrow	9e96d381be9f	0	0		0
+402	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21	OFF	640	SOLVED	153	482	walk	ba8335120b53	0	0		0
+403	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21	OFF	640	SOLVED	191	527	narrow	f8b1bc540538	0	0		0
+404	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21	OFF	640	SOLVED	206	598	narrow	54c50e3386cd	0	0		0
+405	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21	OFF	640	SOLVED	211	637	narrow	b7605a0c799d	0	0		0
+406	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22	OFF	640	SOLVED	147	340	walk	f700bb6b81c9	0	0		0
+407	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22	OFF	640	SOLVED	186	476	narrow	883724adf39e	0	0		0
+408	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23	OFF	640	SOLVED	148	433	walk	865c94fde976	0	0		0
+409	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23	OFF	640	SOLVED	184	499	narrow	6b8de0e2e2b7	0	0		0
+410	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640	OFF	640	SOLVED	73	118	apitem	e24e6c9138e8	0	0		0
+411	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	OFF	640	REFUSED	72	-		9b55825e3d2b	0	0		0
+412	0	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared	OFF	640	REFUSED	20	-		9150f6612a5b	0	0		0
+413	0	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160	OFF	640	SOLVED	9	5	walk	ff449e3386a6	0	0		0
+414	0	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336	OFF	640	SOLVED	9	4	walk	b973be6dc3cf	0	0		0
+416	0	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464	OFF	640	SOLVED	9	4	walk	b973be6dc3cf	0	0		0
+418	0	level_43__r13c7 <- in_pit_L40_4_20 -> exit:out_stairsup_176_464	OFF	640	SOLVED	94	97	walk	4b2a7b3f397b	0	0		0
+420	0	level_43__r13c7 <- in_pit_L40_5_20 -> exit:out_stairsup_176_464	OFF	640	SOLVED	54	102	walk	dbdb39782c2b	0	0		0
+422	0	level_43__r13c7 <- in_pit_L40_13_20 -> exit:out_stairsup_176_464	OFF	640	SOLVED	38	79	walk	05ac6500b3c3	0	0		0
+424	0	level_43__r13c7 <- in_pit_L40_14_20 -> exit:out_stairsup_176_464	OFF	640	SOLVED	51	68	walk	6e83db7bea15	0	0		0
+426	0	level_43__r13c7 <- in_pit_L40_4_21 -> exit:out_stairsup_176_464	OFF	640	SOLVED	89	92	walk	c1dfe619ed29	0	0		0
+428	0	level_43__r13c7 <- in_pit_L40_5_21 -> exit:out_stairsup_176_464	OFF	640	SOLVED	38	78	walk	34dd5e6c28f1	0	0		0
+430	0	level_43__r13c7 <- in_pit_L40_13_21 -> exit:out_stairsup_176_464	OFF	640	SOLVED	51	65	walk	0b1ffc23b0cd	0	0		0
+432	0	level_43__r13c7 <- in_pit_L40_14_21 -> exit:out_stairsup_176_464	OFF	640	SOLVED	67	69	walk	b61b7a3d56de	0	0		0
+434	0	level_43__r13c7 <- in_pit_L40_4_22 -> exit:out_stairsup_176_464	OFF	640	SOLVED	94	99	walk	83744bff49d0	0	0		0
+436	0	level_43__r13c7 <- in_pit_L40_5_22 -> exit:out_stairsup_176_464	OFF	640	SOLVED	50	101	walk	5673a0966de5	0	0		0
+438	0	level_43__r13c7 <- in_pit_L40_4_23 -> exit:out_stairsup_176_464	OFF	640	SOLVED	90	115	walk	661d07009607	0	0		0
+440	0	level_43__r13c7 <- in_pit_L40_5_23 -> exit:out_stairsup_176_464	OFF	640	SOLVED	89	110	walk	e874f0db95ea	0	0		0
+869	0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	OFF	640	DEADLINE	642	-		27cd3718c4e8	0	0		0
+869	1	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	OFF	2560	REFUSED	2562	-		296da224c805	0	0		0
+870	0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	OFF	640	DEADLINE	642	-		27cd3718c4e8	0	0		0
+870	1	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	OFF	2560	REFUSED	2562	-		474880567541	0	0		0
+871	0	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	OFF	640	REFUSED	364	-		7c2fd7098f6e	0	0		0
+872	0	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	OFF	640	REFUSED	364	-		0c0409958d2d	0	0		0

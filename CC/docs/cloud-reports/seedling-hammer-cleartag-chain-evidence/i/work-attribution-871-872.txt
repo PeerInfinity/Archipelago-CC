@@ -1,0 +1,18 @@
+871 SOLVED 1122 work 2774 | staged hunt (anywhere on the stack) 2360 | other inside the prerequisite order (burn + its stance walk) 226 | rest (the hold walk/verb + the pass overhead) 188 | total 2774
+    2212 execClearTag>deriveKillByChaser [stagedChaserHunt+clearTagPrerequisite]
+    181 execClearTag>deriveBlockRoute
+    117 execClearTag>deriveKillByChaser [clearTagPrerequisite]
+    96 execClearTag>deriveGuardApproach [stagedChaserHunt+clearTagPrerequisite]
+    41 execClearTag>stagedChaserHunt [stagedChaserHunt+clearTagPrerequisite]
+    35 execClearTag>walkToUnder [clearTagPrerequisite]
+    31 execClearTag>orbitKillChaser [clearTagPrerequisite]
+    22 execClearTag>execKillByPressOnce [clearTagPrerequisite]
+872 SOLVED 2389 work 3469 | staged hunt (anywhere on the stack) 2912 | other inside the prerequisite order (burn + its stance walk) 370 | rest (the hold walk/verb + the pass overhead) 187 | total 3469
+    2695 execClearTag>deriveKillByChaser [stagedChaserHunt+clearTagPrerequisite]
+    181 execClearTag>deriveBlockRoute
+    120 execClearTag>deriveGuardApproach [stagedChaserHunt+clearTagPrerequisite]
+    116 execClearTag>deriveKillByChaser [clearTagPrerequisite]
+    84 execClearTag>stagedChaserHunt [stagedChaserHunt+clearTagPrerequisite]
+    71 execClearTag>orbitKillChaser [clearTagPrerequisite]
+    66 execClearTag>pressEscapeOnce [clearTagPrerequisite]
+    61 execClearTag>execKillByPressOnce [clearTagPrerequisite]

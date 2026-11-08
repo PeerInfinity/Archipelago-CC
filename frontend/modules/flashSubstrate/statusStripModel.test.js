@@ -224,6 +224,21 @@ describe('the status strip model: the bot', () => {
         expect(botNoteText({ note: 'rewind', text: 'back to the coin' })).toBe('back to the coin');
         expect(checkpointName(0)).toBe('the start');
     });
+
+    it('a walked ladder (P7c) says how it ended, never "skipped"', () => {
+        expect(botNoteText({ note: 'ladderWalk', fromPiece: 0, toPiece: 1 })).toBe('ladder: climbing to checkpoint 1');
+        expect(botNoteText({ note: 'ladderWalk' })).toBe('ladder: climbing');
+        expect(botNoteText({ note: 'ladder', crossing: 'crossed', fromPiece: 1, toPiece: 2, steps: 14 })).toBe('ladder: climbed to checkpoint 2 (14 steps)');
+        expect(botNoteText({ note: 'ladder', crossing: 'crossed', toPiece: 1, steps: 1, resync: true })).toBe('ladder: climbed to checkpoint 1 (1 step, resynced)');
+        expect(botNoteText({ note: 'ladder', crossing: 'crossed', toPiece: 1 })).toBe('ladder: climbed to checkpoint 1');
+        expect(botNoteText({ note: 'ladder', crossing: 'fellBack', toPiece: 1, why: 'missed the jump', steps: 9 })).toBe('ladder: fell back (missed the jump, 9 steps)');
+        expect(botNoteText({ note: 'ladder', crossing: 'fellBack' })).toBe('ladder: fell back');
+        // an unknown crossing is not claimed to be a skip
+        expect(botNoteText({ note: 'ladder', crossing: 'sideways', toPiece: 1, text: 'page text' })).toBe('page text');
+        const bot = createBotStatus();
+        bot.noteCommand('walkTo', [{ kind: 'exit', name: 'r__exit_E' }]);
+        expect(bot.noteEvent({ kind: 'botNote', note: 'ladder', crossing: 'fellBack', why: 'fell' }).note).toBe('ladder: fell back (fell)');
+    });
 });
 
 describe('the status strip model: a walk on a page that reports no results', () => {

@@ -157,6 +157,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-bot-plays-on",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "cloudberry-status-strip-items-and-exits",
             "enabled": true,
             "category": "cloudberrySubstrate"

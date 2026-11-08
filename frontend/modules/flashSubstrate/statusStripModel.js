@@ -339,9 +339,22 @@ export function checkpointName(piece) {
 export function botNoteText(ev) {
     const ok = (k) => Number.isInteger(k) && k >= 0;
     switch (ev?.note) {
-        case 'ladder':
-            if (ok(ev.toPiece)) return `ladder: skipped to ${checkpointName(ev.toPiece)}`;
+        case 'ladderWalk':
+            // P7c: the bot walks the ladder instead of respawning across it.
+            return ok(ev.toPiece) ? `ladder: climbing to ${checkpointName(ev.toPiece)}` : 'ladder: climbing';
+        case 'ladder': {
+            // P7c: a walked ladder reports how it ended (`crossing`); a ladder with none was a respawn (P7b).
+            const to = ok(ev.toPiece) ? ` to ${checkpointName(ev.toPiece)}` : '';
+            const steps = Number.isInteger(ev.steps) && ev.steps >= 0 ? `${ev.steps} step${ev.steps === 1 ? '' : 's'}` : null;
+            const extra = (parts) => (parts.filter(Boolean).length ? ` (${parts.filter(Boolean).join(', ')})` : '');
+            if (ev.crossing === 'crossed') return `ladder: climbed${to}${extra([steps, ev.resync ? 'resynced' : null])}`;
+            if (ev.crossing === 'fellBack') {
+                const why = typeof ev.why === 'string' && ev.why ? ev.why : null;
+                return `ladder: fell back${extra([why, steps])}`;
+            }
+            if (ev.crossing == null && to) return `ladder: skipped${to}`;
             break;
+        }
         case 'restart':
             if (ok(ev.piece)) {
                 const tries = Number.isInteger(ev.attempt) && Number.isInteger(ev.maxAttempts) ? ` (try ${ev.attempt}/${ev.maxAttempts})` : '';
