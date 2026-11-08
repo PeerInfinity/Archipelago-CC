@@ -27617,6 +27617,31 @@ OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs b
 "ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
 the ON default (both chests collected, SOLVED).
 
+### Seedling hammer-phase DOOR-CARRY — a leg carries the game flags its route already cleared (opt-in)
+
+⚖ The user, 2026-11-05: *"Carry the door for now, solve in visit after that works."* L40-CENSUS found that the AP route
+places L40 flag 12 (`wandlock@480,560`, the south door) before Boss Key 2, but the sweep's legs never carried a game flag
+from an earlier leg. So BK2 and flag 8 were measured from a save no route reaches. `seedling-divergence-legs.mjs
+--carry-route-flags` (OPT-IN; the sweep workflow's `carry_route_flags`, default false; OFF byte-identical) makes a leg
+also stage every `game_state` flag the route collected before it. The order is the sphere log's `sphere_locations` row,
+not the sphere where the goal becomes accessible: BK2 is accessible at 5.3 alongside the door, but the route collects
+the door at 6.1 and BK2 at 6.6. Only the persistence the room reads counts: its level's own flags, plus L113's read of
+L114's Watcher flag. A leg never carries its own goal. Carried rows are stamped `carriedFlags`.
+
+Measured at `05bf82cc9f`: 87 of 930 legs carry. Every carried flag is read back in the game (87/87, no
+`stage-failed`). At main's defaults the radius over those 87 legs on the page is 77 unchanged, 6 gained and 2 lost:
+- gained: L40 r0c53's wandlock legs 372/373/377/378 (372 with 1 hit), L62 exit 552, L63 Chest 909;
+- lost: 371 (work deadline) and 578 (L63's bridge spear stance).
+
+The six L40 brief legs all still refuse at the defaults. With the door carried, the node replays of their captured
+requests solve hitless:
+- 869/870 (BK2) under `LATCH_WEIGH_FIRST` + `TURRET_APPROACH` + `APPROACH_DOOR`: 4491 t / 3236 u and 4519 t / 1021 u;
+- 395/412 (flag 8) under `KEYLOCK_TURRET` (from its unharvested branch, merged in a scratch tree): 718 t / 2534 u and
+  748 t / 323 u.
+
+These are the census's hand-staged numbers. The Chest legs (394/411) carry the door too but stay on the SE fight. No
+solver file is touched. The report is `CC/docs/cloud-reports/seedling-hammer-door-carry.md`.
+
 ### Seedling fidelity L25APITEM — a playthrough AP chest is the `apitem` the delivery ships (`apChestItem`, OFF)
 
 Planner `seedling-fidelity-planning-18`, wave 37d (⚖ the user's GO 2026-11-06). Base `ac62c3d17e`. The report is
