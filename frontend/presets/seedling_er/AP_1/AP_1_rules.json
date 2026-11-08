@@ -9426,13 +9426,13 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Sword Fusion"
+                        "item_name": "Ghost Spear"
                       }
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Spear"
+                        "item_name": "Ghost Sword Fusion"
                       }
                     },
                     {
