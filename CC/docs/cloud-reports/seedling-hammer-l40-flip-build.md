@@ -176,7 +176,12 @@ Measured here: the L40 brief legs on the page (§3) and the 376/377 clocks in no
 (44 hammer fast files): 9 movers, all above. The full 930-leg sweep ON vs OFF and the survey are the planner's (§7);
 this box cannot dispatch.
 
-### 5.4 L12 (L95-PUNCHER's claim) — FILLED-AT-END
+### 5.4 L12 (L95-PUNCHER's claim)
+
+L95-PUNCHER: *"the flip needs `CHASER_STAGED_HUNT` AND `CLEARTAG_STAND` together (L12 14/14)"*. Measured on the p4g page,
+CLEARTAG-STAND's 14 L12 bosslock keys (`w0/l12-{flip,off}-rows.jsonl`): **the set ON (no `CLEARTAG_STAND`) 14/14 done,
+the set OFF 14/14 done**, the same verbs leg for leg (`kill, walk` ×8, `keylock` ×6), 0 divergences, 0 room hits in
+either arm. No mover, so `CLEARTAG_STAND` is not in the flip. (Its L30KEYLOCK `--check` claim was not re-measured here.)
 
 ## 6. D — gates
 
