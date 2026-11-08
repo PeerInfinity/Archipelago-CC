@@ -592,6 +592,7 @@ describe('who takes the box', () => {
             'probe-seedling-turret-circle.mjs',
             'probe-seedling-frozen-press.mjs',
             'probe-seedling-ceremony126.mjs',
+            'probe-seedling-l25-apitem.mjs',
             'probe-seedling-l55-waterfall.mjs',
             'probe-seedling-l0-tighter.mjs',
             'probe-seedling-shake-exact.mjs',

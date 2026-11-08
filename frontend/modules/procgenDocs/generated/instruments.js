@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 142,
-            "count": 192,
+            "browser": 143,
+            "count": 193,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 511,
-        "browser": 208,
-        "cited": 271,
-        "files": 529,
+        "blockStyle": 512,
+        "browser": 209,
+        "cited": 272,
+        "files": 530,
         "lineStyle": 18,
-        "withDocblock": 529,
-        "withFlags": 448
+        "withDocblock": 530,
+        "withFlags": 449
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14571,6 +14571,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L19 BOSS KEY, ON THE GAME (slice tile-l19-bosskey, W0): can the player take `bosskey@96,64` (keyType 0) WITHOUT A SWORD?",
             "path": "scripts/procgen/probe-seedling-l19-bosskey.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "probe-seedling-l25-apitem.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L25 AP CHEST, ON THE GAME (fidelity L25APITEM D1, `CONTACT_FIDELITY.apChestItem`).",
+            "path": "scripts/procgen/probe-seedling-l25-apitem.mjs"
         },
         {
             "argvHelpers": [

@@ -303,6 +303,16 @@ function atlasEdges(from) {
 /** ⛓ fidelity LIGHTS D4: the switch set this process runs under, and the L69 controller's death exit. */
 const LIGHTS_FIDELITY = await import(join(MODULE, 'contactFidelity.js'));
 const LIGHTS_WORLD = await import(join(MODULE, 'lightBossWorld.js'));
+/**
+ * ⛓ fidelity L25APITEM D1 (`CONTACT_FIDELITY.apChestItem`, ON since its flip; OFF = the pre-flip bytes): the MODEL's rooms. ON, each
+ * playthrough AP chest is the `apitem` the delivery writes in its place (`apChestDelivery.deliveredChestDocument`:
+ * the rewriter's element, same cell, its vanilla tag), so the model and the solver take it on overlap from any side
+ * as the game does. The ROUTE derivation (edges, goals, `levelsByNo`) still reads `atlas`: the apitem stands at the
+ * chest's own (x, y), so a `collect-placement` there names the same cell either way.
+ */
+const MODEL_ATLAS = LIGHTS_FIDELITY.CONTACT_FIDELITY.apChestItem
+    ? (await import(join(MODULE, 'apChestDelivery.js'))).deliveredChestDocument(atlas)
+    : atlas;
 function lightsDeathEdge(from, to, x, y) {
     const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'lightbosscontroller' && n.x === x && n.y === y);
     if (!e) return null;
@@ -326,7 +336,7 @@ async function tentacleMouthEdgeOf(from, x, y) {
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const run = createRunForStaging({ boot: { level: from, x, y }, noclip: false, noDamage: false, noHazards: [],
         grants: [], persistence: [{ level: from, tag }], despawn: [], equips: [], pins: [], save: null, rng: null,
-        seam: null }, levelSourceFromAtlas(atlas));
+        seam: null }, levelSourceFromAtlas(MODEL_ATLAS));
     const mouth = run.world.teleporters.filter((t) => t.runtime === 'tentacle_beast_mouth');
     return mouth.length === 1 ? mouth[0] : null;
 }
@@ -399,7 +409,7 @@ const MODEL = THROUGH ? {
  */
 const WORLDS = new Map();
 function worldOf(level) {
-    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(levelSourceFromAtlas(atlas)(level)));
+    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(levelSourceFromAtlas(MODEL_ATLAS)(level)));
     return WORLDS.get(level);
 }
 /**
@@ -1505,7 +1515,7 @@ async function solveOneStep(step) {
      * back as its own verdict (`NEEDS-GAME-ORACLE`), which is the honest
      * answer: the solver is not what stands in its way.
      */
-    const levelSource = levelSourceFromAtlas(atlas);
+    const levelSource = levelSourceFromAtlas(MODEL_ATLAS);
     const makeRun = (persistence) =>
         createRunForStaging({ ...staging, persistence }, levelSource);
 
