@@ -37,6 +37,10 @@
  *                        carry `stagedFlags` (the requested set), so a staged row is never read as the natural leg.
  *                        An unknown key or a malformed flag fails the run (the CI plan) by name. ⛔ Production never
  *                        stages: this is the harness's instrument, as the event staging is.
+ *   (route carry)        a leg list built with `seedling-divergence-legs.mjs --carry-route-flags` (OPT-IN; the workflow's
+ *                        `carry_route_flags`, default false) holds legs whose `stagedEvents` ALSO carry the flags the AP
+ *                        route cleared before them; they stage through this same channel (a page of their own), and every
+ *                        row of such a leg is stamped `carriedFlags` (`stamp`), the run naming the count in a ROUTE-CARRY line.
  *   SWEEP_STAGE_MUTANT=skip-write  TEST-ONLY (env; INERT when unset): the staging is requested but never written —
  *                        the read-back must end the leg `stage-failed` by name. ⛔ Never in a real sweep.
  * A leg the list marks `skip` (a gate that maps to no flag, or a goal that IS its gating event) is emitted as
@@ -408,9 +412,13 @@ export function withStageFlags(legs, plan) {
     });
 }
 
-/** A `--stage-flags` leg's row stamp (`{}` for a natural leg): every row of it, whatever its end, says so. */
+/**
+ * A staged-beyond-nature leg's row stamp (`{}` for a natural leg): every row of it, whatever its end, says so —
+ * `stagedFlags` (a `--stage-flags` witness) and `carriedFlags` (the leg list's opt-in `--carry-route-flags`: the
+ * flags the AP route cleared before the leg, hammer DOOR-CARRY).
+ */
 export function stamp(leg) {
-    return leg.stagedFlags ? { stagedFlags: leg.stagedFlags } : {};
+    return { ...(leg.stagedFlags ? { stagedFlags: leg.stagedFlags } : {}), ...(leg.carriedFlags ? { carriedFlags: leg.carriedFlags } : {}) };
 }
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
@@ -532,6 +540,9 @@ async function main() {
     let n = 0;
     const windowed = pages.map((p) => p.filter(() => { const keep = n >= FROM && n < FROM + LIMIT; n += 1; return keep; })).filter((p) => p.length);
     if (STAGE_FLAGS.size) console.log(`STAGE-FLAGS: ${[...STAGE_FLAGS].map(([k, f]) => `${k} => ${f.map((x) => x.eventId).join(',')}`).join(' | ')} (measurement only)`);
+    // ⛓ ROUTE CARRY (the leg list's opt-in `--carry-route-flags`): named once, so a carried run never reads as a natural one
+    const carried = all.filter((l) => l.carriedFlags?.length);
+    if (carried.length) console.log(`ROUTE-CARRY: ${carried.length} leg(s) carry the flag(s) the route cleared before them (rows stamped carriedFlags; measurement only)`);
     if (STAGE_MUTANT) console.log(`TEST-ONLY: SWEEP_STAGE_MUTANT=${STAGE_MUTANT} (the staging is requested, never written)`);
     if (INJECT.length || !BOUND_ON) console.log(`TEST-ONLY: SWEEP_INJECT_HANG=${JSON.stringify(INJECT)} SWEEP_HANG_BOUND=${BOUND_ON ? 'on' : 'off'}`);
     if (LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT) {

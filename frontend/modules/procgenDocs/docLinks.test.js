@@ -322,20 +322,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              flash.md § Declarations (G9) (`doc` 292 → 293).
          *   389 → 390  cloudberry P5d (2026-11-05, the recovered entry gate): cloudberry.md § the back exit →
          *              the module doc's § Region generation (modules/apworldEditor.md, `repo` 41 → 42).
+         *   390 → 396  cloudberry P7a (2026-11-07, the status strip): cloudberry.md § The status strip →
+         *              flash.md § The status strip and § The activity log, flash.md → cloudberry.md § The status
+         *              strip (`doc` 293 → 296); cloudberry.md's Files row and § The status strip → its own
+         *              § The status strip and § The bot, flash.md's Bot reports row → its § The status strip
+         *              (`same-doc` 33 → 36).
          */
         expect(by).toEqual({
-            'same-doc': 33,
-            doc: 293,
+            'same-doc': 36,
+            doc: 296,
             external: 22,
             repo: 42,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(390);
+        expect(CORPUS.length).toBe(396);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(293);
+        expect(docs).toHaveLength(296);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

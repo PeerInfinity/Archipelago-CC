@@ -1,0 +1,12 @@
+game_state flags: 36 (0 never collected by the route)
+legs: 930; skipped: 8; legs whose carry ADDS a flag beyond their staging: 87 (exit 27, location 60); carry fully covered by existing staging: 41
+by level: {"0":7,"12":28,"16":1,"20":1,"28":1,"30":8,"39":2,"40":18,"62":5,"63":9,"68":1,"71":3,"101":2,"112":1}
+flags added per touched leg: {"1":53,"2":16,"3":4,"4":7,"7":7}
+  869 level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2  step 38  carry ["flag:L40:12"]  adds ["flag:L40:12"]
+  870 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2  step 38  carry ["flag:L40:12"]  adds ["flag:L40:12"]
+  871 level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared  step 33  carry []  adds []
+  872 level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared  step 33  carry []  adds []
+  394 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest  step 39  carry ["flag:L40:12"]  adds ["flag:L40:12"]
+  411 level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest  step 39  carry ["flag:L40:12"]  adds ["flag:L40:12"]
+  395 level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared  step 48  carry ["flag:L40:1","flag:L40:7","flag:L40:12"]  adds ["flag:L40:1","flag:L40:7","flag:L40:12"]
+  412 level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared  step 48  carry ["flag:L40:1","flag:L40:7","flag:L40:12"]  adds ["flag:L40:1","flag:L40:7","flag:L40:12"]

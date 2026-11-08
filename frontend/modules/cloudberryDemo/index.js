@@ -37,6 +37,7 @@ import {
 import { installCloudberryGenerator, localStorageCloudberryStore } from './cloudberryGeneration.js';
 import { createFrameGenerator } from './cloudberryGenFrame.js';
 import { createHeldWalkTo } from './heldWalkTo.js';
+import { describeCloudberryLevel } from './cloudberryStatus.js';
 
 const SITE_SETTING_KEY = 'moduleSettings.cloudberryDemo.siteUrl';
 /** The same-origin local copy (relative to the frontend page). */
@@ -127,6 +128,12 @@ export const CloudberryDemoPanel = createSubstrateIframePanelClass({
     bridgeSrc: abs('./modules/flashSubstrate/bridge.js'),
     moduleName: 'cloudberryDemo',
     reloadEvent: SITE_CHANGED_EVENT,
+    // P7a: the Archipelago status strip above the game (flashSubstrate/statusStrip.js); the level's items are Cloudberry's.
+    statusStrip: {
+        loadRegionEvent: CLOUDBERRY_LOAD_REGION_EVENT,
+        playbackControlEvent: CLOUDBERRY_PLAYBACK_CONTROL_EVENT,
+        describeLevel: describeCloudberryLevel,
+    },
 });
 
 export const moduleInfo = {
@@ -156,6 +163,10 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher(SITE_CHANGED_EVENT);
     registrationApi.registerEventBusPublisher('ui:activatePanel');
     registrationApi.registerEventBusSubscriberIntent(CLOUDBERRY_LOAD_REGION_EVENT);
+    // The panel's status strip (flashSubstrate/statusStrip.js) listens to these as well.
+    for (const ev of ['stateManager:snapshotUpdated', 'game:itemsReceived', 'substrate:botStatus', CLOUDBERRY_PLAYBACK_CONTROL_EVENT]) {
+        registrationApi.registerEventBusSubscriberIntent(ev);
+    }
     registrationApi.registerSettingsSchema({
         type: 'object',
         properties: {
