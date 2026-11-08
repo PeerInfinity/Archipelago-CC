@@ -23061,9 +23061,13 @@ function drillWakes(run, d, q, slack = DRILL_KILL.wakeSlack) {
     return !run.collideLineSolid(d.x, d.y, q.x, q.y, { masks: true });
 }
 
-/** The planned walk from `from` to `to`, sampled every 2 px (both ends included), or null when no corridor plans. */
-function plannedWalkSamples(run, from, to, opts) {
-    const wps = planWaypointsOrNull(run.world, from, to, null, opts);
+/**
+ * The planned walk from `from` to `to`, sampled every 2 px (both ends included), or null when no corridor plans.
+ * `allowTeleporter` (null for every caller but DRILL-EXIT-PASS's) is the planner's own argument: a walk ending on a
+ * door's trigger plans only with that door allowed.
+ */
+function plannedWalkSamples(run, from, to, opts, allowTeleporter = null) {
+    const wps = planWaypointsOrNull(run.world, from, to, allowTeleporter, opts);
     if (wps === null) return null;
     const pts = [{ x: from.x, y: from.y }, ...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
     const out = [];
@@ -23700,26 +23704,85 @@ function certifyExitPass(f, keys, cross) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE DRILL-EXIT-PASS — RESIDUE D-A's PASS TO THE CROSSING, WITH A WEAPON HELD (⚖ the user queued
+ * the slice on 2026-11-07; ROUTE-WALLS-CENSUS W3, its report § 4 "The drill what-if").
+ *
+ * L91's `drill@64,80` stands in the one-tile west passage. At sphere 5.6 the bot holds a sword, and both legs across the
+ * room (718 L89 arrival → L92 door, 719 the other way) refused "the combat ladder is EXHAUSTED" on the drill: the ladder
+ * has no rung for a static drill, and the timed pass that answers one (`execDrillTimedPassExit`) never ran, for two
+ * reasons:
+ *   · it returned at once when the run holds a drill-killing weapon (residue D-A was built for the Fire-alone L28 run);
+ *   · its wake test ("does the walk to the door wake a drill?") planned the walk with no door allowed, so a walk to a
+ *     door centre never planned and the straight-line fallback passed 80 px from the drill (wake range 48).
+ * `DRILL_EXIT_PASS` (OFF) is a RUNG AFTER THE WALK: when the door's walk (`walkTo`) refuses with a live drill as its
+ * obstacle, before a tick is spent and with no deadline tripped (`drillExitPassAfterRefusal`), the timed pass is asked
+ * ARMED — a held weapon does not skip it, and its wake test's walk is the planner's walk to the door
+ * (`plannedWalkSamples`' `allowTeleporter` = the door). A walk that solves is never pre-empted (the census's shape, the
+ * armed pass FIRST, moved 6 of the 21 drill-room legs and turned L88's 707 from SOLVED to refused); a walk that spends
+ * ticks and then refuses keeps its refusal (L88's 704). The pass itself is residue D-A's, unchanged: searched tick by
+ * tick on the run's own forecast, certified on a fork, played on the run (30(c)). It is a pass, not a kill (a kill-first
+ * arm finds no stance: "north/south/west not plannable floor, east wakes it").
+ * Measured: 718 SOLVED 190 t hitless (node and the p4g page); 719 refuses by name on the drill's hop into water
+ * (fidelity DRILL D2, `Enemy.update`'s terrain switch — fidelity's DRILL-WATER), raised on the certificate's fork; the
+ * other 19 legs in a drill's room (L28, L88, L91) answer OFF's plan byte for byte. `SEEDLING_DRILL_EXIT_PASS=1` /
+ * `withDrillExitPass(enabled, fn)`. OFF, nothing is read and the executor is byte-identical.
+ */
+export const DRILL_EXIT_PASS = { enabled: globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS === '1' };
+export const DRILL_EXIT_PASS_DEFAULT = false;
+
+/** Run `fn` with `DRILL_EXIT_PASS` set to `enabled`, restoring the previous value. */
+export function withDrillExitPass(enabled, fn) {
+    return withSwitch(DRILL_EXIT_PASS, enabled, fn);
+}
+
+/** The switch's instrument, written only ON, read by nothing that decides: `armed`, each pass a held weapon reached. */
+export const DRILL_EXIT_PASS_COUNTS = { armed: [] };
+
+/**
+ * DRILL-EXIT-PASS's rung: `refusal` is what the door's walk (`walkTo`) threw. When it names a live drill as its
+ * obstacle, spent no tick (`ticks0`, the run's count before the walk) and no deadline has tripped, the timed pass to the
+ * crossing is asked ARMED (a held weapon does not skip it, the wake test walks to the door): its `{record, transition}`,
+ * or its own refusal by name. Null otherwise (the caller rethrows the walk's refusal). OFF it is never called.
+ */
+function drillExitPassAfterRefusal(run, perTick, door, ctx, refusal, ticks0) {
+    if (!(refusal instanceof SolverRefusal) || run.ticksCompleted !== ticks0) return null;
+    if (activeDeadline !== null && activeDeadline.tripped.size > 0) return null;
+    const id = refusal.obstacle?.id ?? null;
+    if (id === null || !liveDrills(run).some((d) => d.id === id)) return null;
+    return execDrillTimedPassExit(run, perTick, door, ctx, { armed: true });
+}
+
+/**
  * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`) — Executor: a `reach-exit` whose planned walk to the door
  * wakes a live stepped drill, in a run that holds no weapon that kills one, is a TIMED PASS to the crossing: the
  * pass's own search (`searchDrillTimedPass`, goal `cross`), certified on a fork (`ctx.fork`) and played on the run.
  * Returns null where it does not apply (the walk then runs as before), the `{record, transition}` it played, or throws
  * a `SolverRefusal` naming the drill (`obstacle: {kind: 'drill', id}`).
  */
-function execDrillTimedPassExit(run, perTick, door, ctx) {
+function execDrillTimedPassExit(run, perTick, door, ctx, { armed = false } = {}) {
     if (!(CONTACT_FIDELITY.drillTimedPassExit && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive
         && CONTACT_FIDELITY.drillMixedRooms)) return null;
-    if (liveDrills(run).length === 0 || drillKillWeapon(run) !== null) return null;
+    if (liveDrills(run).length === 0) return null;
+    // ⛓ hammer-phase DRILL-EXIT-PASS (`armed`, asked only by `drillExitPassAfterRefusal` under `DRILL_EXIT_PASS`): a
+    // held weapon does not skip the pass. Not armed (every call OFF, and the first call ON), it does, as ever.
+    const kw = drillKillWeapon(run);
+    if (kw !== null && !armed) return null;
     const opts = solverPlanOpts(run, senseContacts(run));
-    const walk = plannedWalkSamples(run, run.state, door.centre, opts) ?? [{ x: run.state.x, y: run.state.y },
-        door.centre];
+    // ⛓ DRILL-EXIT-PASS: armed, the wake test's walk is the planner's walk TO THE DOOR (the door allowed); otherwise it
+    // plans none (a door centre is no plannable floor without it) and the straight-line fallback decides.
+    const walk = plannedWalkSamples(run, run.state, door.centre, opts, armed ? door.index : null)
+        ?? [{ x: run.state.x, y: run.state.y }, door.centre];
     const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
     if (woken.length === 0) return null;
+    if (armed) DRILL_EXIT_PASS_COUNTS.armed.push({ level: run.level, door: door.index, weapon: kw?.weapon ?? null,
+        drills: woken.map((d) => d.id) });
     const from = perTick.length;
     const cross = { level: door.teleporter.to, index: door.index };
     const refuseExit = (why, extra = {}) => {
         throw new SolverRefusal(`${ctx.what}: the walk to the door wakes [${woken.map((d) => d.id).join(', ')}], this run `
-            + `holds no weapon that kills a drill (FIRE CANNOT), and ${why}`,
+            + (kw === null ? 'holds no weapon that kills a drill (FIRE CANNOT)'
+                : `holds a ${kw.weapon} and the door's walk wakes the drill (DRILL-EXIT-PASS: a timed pass, not a kill)`)
+            + `, and ${why}`,
         { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id }, ...extra });
     };
     const r = searchDrillTimedPass(run, [door.centre], opts, DRILL_TIMED_PASS, { cross });
@@ -32719,16 +32782,31 @@ function solveSegmentUnder({
             // blocks (`exitAimFor`); the step-off's straight walk back keeps
             // the centre it was witnessed with.
             // ⛓ seedling-fidelity-residue D-A: a door past a drill this run cannot kill is a timed pass (null OFF).
-            const exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
+            let exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
                 { what: whatExit, goal, fork });
+            const walkExit = () => walkTo(goal, exitAimFor(run.world, index,
+                solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
+                allowTeleporter: index,
+                crossTo,
+                what: whatExit,
+            });
+            // ⛓ hammer-phase DRILL-EXIT-PASS (`DRILL_EXIT_PASS`, OFF): the walk's refusal on a live drill, before a tick
+            // is spent, is answered by the timed pass, armed (`drillExitPassAfterRefusal`).
+            const walkExitOrPass = () => {
+                if (!DRILL_EXIT_PASS.enabled || stepOff?.dir || exitPass !== null) return walkExit();
+                const ticks0 = run.ticksCompleted;
+                try {
+                    return walkExit();
+                } catch (e) {
+                    exitPass = drillExitPassAfterRefusal(run, perTick, { index, teleporter, centre },
+                        { what: whatExit, goal, fork }, e, ticks0);
+                    if (exitPass === null) throw e;
+                    return exitPass.transition;
+                }
+            };
             const t = exitPass?.transition
                 ?? (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
-                ?? walkTo(goal, exitAimFor(run.world, index,
-                    solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
-                    allowTeleporter: index,
-                    crossTo,
-                    what: whatExit,
-                });
+                ?? walkExitOrPass();
             records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}),
                 ...(exitPass ? { drillPass: exitPass.record } : {}) });
             continue;

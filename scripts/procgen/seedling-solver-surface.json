@@ -1005,9 +1005,9 @@
         "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 129
+        "solverBot.js": 130
       },
-      "sites": 180,
+      "sites": 181,
       "seen": "both",
       "via": [
         "direct",
@@ -1463,9 +1463,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 135
+        "solverBot.js": 137
       },
-      "sites": 158,
+      "sites": 160,
       "seen": "both",
       "via": [
         "direct",
