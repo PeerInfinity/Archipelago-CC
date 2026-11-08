@@ -1,0 +1,18 @@
+== CSHM
+answer true [ 'bait', 'kill' ] ms 18006 work 1389 [{"pass":"dashless","ok":true,"kind":null,"ticks":1279,"ms":7197,"work":581},{"pass":"full","ok":true,"kind":null,"ticks":1226,"ms":10809,"work":808,"deadline":"sword-dash","limit":"window"}]
+hits []
+== OCM
+answer true [ 'bait', 'kill' ] ms 24547 work 1525 [{"pass":"dashless","ok":true,"kind":null,"ticks":1373,"ms":11560,"work":717},{"pass":"full","ok":true,"kind":null,"ticks":1226,"ms":12987,"work":808,"deadline":"sword-dash","limit":"window"}]
+hits []
+== OCM_CUT
+answer true [ 'bait', 'kill' ] ms 22468 work 1525 [{"pass":"dashless","ok":true,"kind":null,"ticks":1373,"ms":9457,"work":717},{"pass":"full","ok":true,"kind":null,"ticks":1226,"ms":13011,"work":808,"deadline":"sword-dash","limit":"window"}]
+hits []
+== OCM_DVB
+answer true [ 'bait', 'kill' ] ms 26665 work 1525 [{"pass":"dashless","ok":true,"kind":null,"ticks":1373,"ms":10387,"work":717},{"pass":"full","ok":true,"kind":null,"ticks":1226,"ms":16277,"work":808,"deadline":"sword-dash","limit":"window"}]
+hits []
+== OCM_CC_SB
+answer true [ 'bait', 'kill' ] ms 28069 work 1525 [{"pass":"dashless","ok":true,"kind":null,"ticks":1373,"ms":13307,"work":717},{"pass":"full","ok":true,"kind":null,"ticks":1226,"ms":14760,"work":808,"deadline":"sword-dash","limit":"window"}]
+hits []
+== OCM_KT
+answer true [ 'bait', 'kill' ] ms 26109 work 1525 [{"pass":"dashless","ok":true,"kind":null,"ticks":1373,"ms":11543,"work":717},{"pass":"full","ok":true,"kind":null,"ticks":1226,"ms":14566,"work":808,"deadline":"sword-dash","limit":"window"}]
+hits []
