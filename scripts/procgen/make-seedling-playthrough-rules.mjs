@@ -273,6 +273,34 @@ const ropeChargesFor = (level, baseGrid) => ROPES.filter((r) => r.level === leve
     return lanes.length ? ropeLaneCharges(baseGrid, lanes, ropeEventCondition(r), doorTilesOf(level), TILE) : [];
 });
 /**
+ * ⛓⛓ ER E4a (entrance randomization) — **A LANDING'S DEPARTURES ARE THE DOC'S CONNECTIONS THAT LAND ON IT, NOT ITS
+ * VANILLA DOOR.** A game landing (`gameLandings` row `{from, door, level, x, y}`) is a TILE of `level`; the atlas names
+ * it by its ARRIVAL exit `in_L<from>_<door x>_<door y>` of `level` (`seedlingAtlasDerivation.inExitId`, the `to` end of
+ * the connection the derivation wires from that door). A coupled stairs shuffle (⚖ Q2) RETARGETS connections onto
+ * existing arrival exits, so every room keeps its landing tiles while WHO lands on each changes: a gate a landing
+ * charges (an obstacle it lands inside, a barrier that cuts it off, a rope lane it stands in) belongs on every
+ * departure whose connection now ends there. On the vanilla layout that is exactly the landing's own door.
+ *
+ * Returns `[{region_id, exit_id}]` in connection order. NONE is a refusal by name: the census and the doc disagree, or
+ * a layout orphaned an arrival (a coupled shuffle permutes the arrival exits, so it never does).
+ */
+export function departuresLandingAt(doc, landing, why = 'landing') {
+    const door = parseSolidId(landing.door);
+    const to = [regionIdFor(landing.level), inExitId(landing.from, { x: door.x, y: door.y })];
+    const deps = (doc.vanilla_layout?.connections ?? []).filter((c) => c.to[0] === to[0] && c.to[1] === to[1])
+        .map((c) => ({ region_id: c.from[0], exit_id: c.from[1] }));
+    if (deps.length === 0) throw new Error(`${why}: the atlas has no connection landing on ${to[0]}/${to[1]} (L${landing.from} ${landing.door})`);
+    return deps;
+}
+/**
+ * The VANILLA reading E4a retired — the landing's own door, whatever the doc connects it to. Kept ONLY as the MUTANT the
+ * ER swap pins (`seedlingErProducerDecoupling.test.js`) hand a reader to prove its pin goes red; no producer path uses it.
+ */
+export function vanillaDepartureOf(_doc, landing) {
+    const door = parseSolidId(landing.door);
+    return [{ region_id: regionIdFor(landing.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) }];
+}
+/**
  * ⛓ RULES l55-waterfall — **AN ALL-WATER LEVEL IS FLOORED BY ITS ENTRY GATE.**
  *
  * The analyzer's components are DRY cells, so a level whose every exit and location stands on water binds
@@ -1464,10 +1492,8 @@ const regionAnalyses = new Map();
  *     the event costs what crossing the obstacle costs; none (a rock-placement puzzle) = True_.
  * Run after `buildPlaythroughAtlas(…)` on the document it returned.
  */
-export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)) } = {}) {
+export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)), departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
-    const conns = new Set((doc.vanilla_layout?.connections ?? [])
-        .map((c) => `${c.from[0]}/${c.from[1]}>${c.to[0]}/${c.to[1]}`));
     const entityOf = (level, { cls, x, y }) => {
         const e = (level.entities ?? []).find((en) => en.type === cls && en.x === x && en.y === y);
         if (!e) throw new Error(`obstacle events: L${level.level} has no ${cls}@${x},${y}`);
@@ -1478,15 +1504,8 @@ export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, 
         return entityOverride(entity, base, level) ?? base;
     };
     return deriveObstacleEvents(rows, {
-        departure: (L) => {
-            const door = parseSolidId(L.door);
-            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-            const arr = `${regionIdFor(L.level)}/${inExitId(L.from, { x: door.x, y: door.y })}`;
-            if (!conns.has(`${dep.region_id}/${dep.exit_id}>${arr}`)) {
-                throw new Error(`obstacle events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${arr}`);
-            }
-            return dep;
-        },
+        // ⛓ ER E4a: every departure the doc lands on this landing (`departuresLandingAt`), not its vanilla door.
+        departure: (L) => departures(doc, L, 'obstacle events'),
         place: (row, solid) => {
             const regionId = regionIdFor(row.flag.level);
             const region = regionOf(regionId);
@@ -1635,8 +1654,8 @@ export function playthroughLockEvents(doc, { existing = [] } = {}) {
  *     split, not a gate), or a barrier that cuts off no landing.
  * The atlas carries NO event or gate (a rules-layer projection, as for the obstacle and lock events).
  */
-export function playthroughButtonEvents(doc, { existing = [] } = {}) {
-    const B = barrierAnalysis(doc);
+export function playthroughButtonEvents(doc, { existing = [], departures = departuresLandingAt } = {}) {
+    const B = barrierAnalysis(doc, { departures });
     const { entityOf, killsOf } = B;
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
         level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
@@ -1771,8 +1790,8 @@ function inRoomLatchAnalysis(doc) {
  *     rank spanning sub-regions.
  * The atlas carries NO event or gate.
  */
-export function playthroughInRoomPoleEvents(doc, { existing = [] } = {}) {
-    const B = barrierAnalysis(doc);
+export function playthroughInRoomPoleEvents(doc, { existing = [], departures = departuresLandingAt } = {}) {
+    const B = barrierAnalysis(doc, { departures });
     return deriveInRoomPoleEvents(inRoomPolesOf(MAP), {
         existing,
         kills: (p) => {
@@ -1960,7 +1979,7 @@ export function playthroughBlockCrossingCases(doc) {
  * for a pole, its STANCES (`poleThrustStances`): those in the pocket, those beyond the barrier (the tiles the
  * pocket's landings reach once it is cleared and not before), and the sub-regions they stand in.
  */
-function barrierAnalysis(doc) {
+function barrierAnalysis(doc, { departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
     const conns = (doc.vanilla_layout?.connections ?? []);
     const entityOf = (t) => {
@@ -2025,13 +2044,11 @@ function barrierAnalysis(doc) {
             const held = standing([tileOf(L)]);
             const cleared = modelFloodTiles(without, [tileOf(L)], all);
             if (held.length >= cleared.length) continue;
-            const door = parseSolidId(L.door);
-            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-            if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id && c.to[0] === regionId)) {
-                throw new Error(`button events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${regionId} for ${eventName}`);
-            }
+            // ⛓ ER E4a: the departures the doc lands HERE (`departuresLandingAt`), not the landing's vanilla door.
             const tiles = new Set(held.map(key));
-            cut.push({ dep, tiles, beyond: new Set(cleared.map(key).filter((k) => !tiles.has(k))) });
+            for (const dep of departures(doc, L, `button events (${eventName})`)) {
+                cut.push({ dep, tiles, beyond: new Set(cleared.map(key).filter((k) => !tiles.has(k))) });
+            }
         }
         if (cut.length === 0) {
             throw new Error(`button events: ${eventName} cuts off no landing of L${t.level} on the model — its crossing would be `
@@ -2195,9 +2212,8 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
  * the maze preset (`make-seedling-playthrough-maze.mjs`, session tile-primitives-arrow-rope) places the rope by the
  * atlas's PERSISTED partition instead — the same rule, the one sub-region the rope's tile borders.
  */
-export function playthroughRopeEvents(doc, { place = null } = {}) {
+export function playthroughRopeEvents(doc, { place = null, departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
-    const conns = doc.vanilla_layout?.connections ?? [];
     const derived = deriveRopeEvents(ROPES, {
         level: (n) => levelOf(n),
         place: place ?? ((row) => {
@@ -2236,12 +2252,11 @@ export function playthroughRopeEvents(doc, { place = null } = {}) {
             .map((c) => `${c.tile[0]},${c.tile[1]}`));
         for (const L of gameLandings(MAP).filter((g) => g.level === row.level)) {
             if (!lane.has(`${Math.floor(L.x / TILE)},${Math.floor(L.y / TILE)}`)) continue;
-            const door = parseSolidId(L.door);
-            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-            if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id)) {
-                throw new Error(`rope events: the atlas has no connection ${dep.region_id}/${dep.exit_id} for L${L.from} ${L.door}`);
+            // ⛓ ER E4a: gate every departure whose doc CONNECTION lands in the lane (`departuresLandingAt`), not the
+            // landing's vanilla door — a retargeted arrival would otherwise go ungated (the permissive direction).
+            for (const dep of departures(doc, L, 'rope events')) {
+                exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
             }
-            exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
         }
     }
     return { ...derived, exitGates };
