@@ -1,0 +1,9 @@
+{
+  "slots": 178,
+  "refused": 2,
+  "rooms": 10986,
+  "grownRooms": 16,
+  "exact": 10969,
+  "exitGrown": 2,
+  "histogram": { "0": 10969, "1": 14, "2": 1, "-1": 2 }
+}
