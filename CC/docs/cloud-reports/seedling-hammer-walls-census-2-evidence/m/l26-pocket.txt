@@ -1,0 +1,24 @@
+# idle 600
+{"start":{"level":26,"x":136,"y":216},"chaserVerdict":{"stepped":true,"why":null}}
+{"t":1,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":88,"y":176,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":100,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":202.3,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":200,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":206.5,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":300,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":206.5,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":400,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":206.5,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":500,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":206.5,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":600,"player":{"x":136,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":206.5,"removed":false,"destroy":false}],"open":[],"hits":0}
+# hold left 300
+{"start":{"level":26,"x":136,"y":216},"chaserVerdict":{"stepped":true,"why":null}}
+{"t":1,"player":{"x":135.2,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":88,"y":176,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":150,"player":{"x":130.5,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.7,"y":208.7,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":300,"player":{"x":130.5,"y":216},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.7,"y":208.7,"removed":false,"destroy":false}],"open":[],"hits":0}
+# hold left+up 300
+{"start":{"level":26,"x":136,"y":216},"chaserVerdict":{"stepped":true,"why":null}}
+{"t":1,"player":{"x":135.2,"y":215.2},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":88,"y":176,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":150,"player":{"x":130.6,"y":210.6},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":203.1,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":300,"player":{"x":130.6,"y":210.6},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":203.1,"removed":false,"destroy":false}],"open":[],"hits":0}
+# hold left+down 300
+{"start":{"level":26,"x":136,"y":216},"chaserVerdict":{"stepped":true,"why":null}}
+{"t":1,"player":{"x":135.2,"y":216.8},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":88,"y":176,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":150,"player":{"x":130.6,"y":220.5},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":212.7,"removed":false,"destroy":false}],"open":[],"hits":0}
+{"t":300,"player":{"x":130.6,"y":220.5},"chasers":[{"id":"puncher@32,208","x":40,"y":216,"removed":false,"destroy":false},{"id":"puncher@80,168","x":105.5,"y":212.7,"removed":false,"destroy":false}],"open":[],"hits":0}

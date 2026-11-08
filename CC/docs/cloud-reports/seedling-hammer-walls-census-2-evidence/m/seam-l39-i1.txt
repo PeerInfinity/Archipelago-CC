@@ -1,0 +1,92 @@
+SEAM-SWEEP: leg 0: 45 distinct answer(s) over 91 seam time(s) — VARIES WITH seam.time
+  t=5179 error work=1821 [dashless:678,full:1143] PLAN
+  t=5180 error work=1895 [dashless:670,full:1225] PLAN
+  t=5181 refusal work=1944 [dashless:670,full:1274] solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.9,100.2) — en
+  t=5182 error work=1852 [dashless:677,full:1175] PLAN
+  t=5183 error work=1785 [dashless:677,full:1108] PLAN
+  t=5184 error work=1854 [dashless:671,full:1183] PLAN
+  t=5185 refusal work=1405 [dashless:478,full:927] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) (park pushableblockfire@48,176 on button@128,144) (route step 3/7
+  t=5186 refusal work=1610 [dashless:683,full:927] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) (park pushableblockfire@48,176 on button@128,144) (route step 3/7
+  t=5187 refusal work=1603 [dashless:676,full:927] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) (park pushableblockfire@48,176 on button@128,144) (route step 3/7
+  t=5188 refusal work=2562 [dashless:681,full:1881/sword-dash] solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.5,100.3) — en
+  t=5189 error work=1832 [dashless:677,full:1155] PLAN
+  t=5190 error work=1743 [dashless:672,full:1071] PLAN
+  t=5191 error work=1828 [dashless:679,full:1149] PLAN
+  t=5192 error work=1790 [dashless:672,full:1118] PLAN
+  t=5193 error work=1834 [dashless:675,full:1159] PLAN
+  t=5194 error work=1197 [dashless:548,full:649/sword-dash] PLAN
+  t=5195 error work=1198 [dashless:548,full:650/sword-dash] PLAN
+  t=5196 error work=1201 [dashless:551,full:650/sword-dash] PLAN
+  t=5197 error work=1327 [dashless:551,full:776/sword-dash] PLAN
+  t=5198 error work=1327 [dashless:551,full:776/sword-dash] PLAN
+  t=5199 error work=1324 [dashless:549,full:775/sword-dash] PLAN
+  t=5200 error work=1325 [dashless:550,full:775/sword-dash] PLAN
+  t=5201 error work=1085 [dashless:550,full:535] PLAN
+  t=5202 error work=1327 [dashless:551,full:776/sword-dash] PLAN
+  t=5203 error work=1212 [dashless:551,full:661/sword-dash] PLAN
+  t=5204 error work=1797 [dashless:682,full:1115] PLAN
+  t=5205 error work=1322 [dashless:551,full:771/sword-dash] PLAN
+  t=5206 error work=1806 [dashless:681,full:1125] PLAN
+  t=5207 error work=1864 [dashless:673,full:1191] PLAN
+  t=5208 error work=1864 [dashless:673,full:1191] PLAN
+  t=5209 error work=1870 [dashless:679,full:1191] PLAN
+  t=5210 error work=1783 [dashless:672,full:1111] PLAN
+  t=5211 error work=1267 [dashless:549,full:718/sword-dash] PLAN
+  t=5212 error work=1866 [dashless:669,full:1197] PLAN
+  t=5213 error work=1197 [dashless:533,full:664/sword-dash] PLAN
+  t=5214 error work=1268 [dashless:547,full:721/sword-dash] PLAN
+  t=5215 error work=1153 [dashless:547,full:606] PLAN
+  t=5216 error work=1304 [dashless:529,full:775/sword-dash] PLAN
+  t=5217 error work=1309 [dashless:534,full:775/sword-dash] PLAN
+  t=5218 error work=1374 [dashless:534,full:840/sword-dash] PLAN
+  t=5219 error work=1314 [dashless:534,full:780/sword-dash] PLAN
+  t=5220 error work=1304 [dashless:534,full:770/sword-dash] PLAN
+  t=5221 error work=1616 [dashless:535,full:1081] PLAN
+  t=5222 refusal work=1030 [dashless:535,full:495] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) -> button@160,144 route stance: the combat ladder is EXHAUSTED. T
+  t=5223 error work=1678 [dashless:535,full:1143] PLAN
+  t=5224 error work=1821 [dashless:678,full:1143] PLAN
+  t=5225 error work=1895 [dashless:670,full:1225] PLAN
+  t=5226 refusal work=1944 [dashless:670,full:1274] solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.9,100.2) — en
+  t=5227 error work=1852 [dashless:677,full:1175] PLAN
+  t=5228 error work=1785 [dashless:677,full:1108] PLAN
+  t=5229 error work=1854 [dashless:671,full:1183] PLAN
+  t=5230 refusal work=1405 [dashless:478,full:927] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) (park pushableblockfire@48,176 on button@128,144) (route step 3/7
+  t=5231 refusal work=1610 [dashless:683,full:927] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) (park pushableblockfire@48,176 on button@128,144) (route step 3/7
+  t=5232 refusal work=1603 [dashless:676,full:927] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) (park pushableblockfire@48,176 on button@128,144) (route step 3/7
+  t=5233 refusal work=2562 [dashless:681,full:1881/sword-dash] solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.5,100.3) — en
+  t=5234 error work=1832 [dashless:677,full:1155] PLAN
+  t=5235 error work=1743 [dashless:672,full:1071] PLAN
+  t=5236 error work=1828 [dashless:679,full:1149] PLAN
+  t=5237 error work=1790 [dashless:672,full:1118] PLAN
+  t=5238 error work=1834 [dashless:675,full:1159] PLAN
+  t=5239 error work=1197 [dashless:548,full:649/sword-dash] PLAN
+  t=5240 error work=1198 [dashless:548,full:650/sword-dash] PLAN
+  t=5241 error work=1201 [dashless:551,full:650/sword-dash] PLAN
+  t=5242 error work=1327 [dashless:551,full:776/sword-dash] PLAN
+  t=5243 error work=1327 [dashless:551,full:776/sword-dash] PLAN
+  t=5244 error work=1324 [dashless:549,full:775/sword-dash] PLAN
+  t=5245 error work=1325 [dashless:550,full:775/sword-dash] PLAN
+  t=5246 error work=1085 [dashless:550,full:535] PLAN
+  t=5247 error work=1327 [dashless:551,full:776/sword-dash] PLAN
+  t=5248 error work=1212 [dashless:551,full:661/sword-dash] PLAN
+  t=5249 error work=1797 [dashless:682,full:1115] PLAN
+  t=5250 error work=1322 [dashless:551,full:771/sword-dash] PLAN
+  t=5251 error work=1806 [dashless:681,full:1125] PLAN
+  t=5252 error work=1864 [dashless:673,full:1191] PLAN
+  t=5253 error work=1864 [dashless:673,full:1191] PLAN
+  t=5254 error work=1870 [dashless:679,full:1191] PLAN
+  t=5255 error work=1783 [dashless:672,full:1111] PLAN
+  t=5256 error work=1267 [dashless:549,full:718/sword-dash] PLAN
+  t=5257 error work=1866 [dashless:669,full:1197] PLAN
+  t=5258 error work=1197 [dashless:533,full:664/sword-dash] PLAN
+  t=5259 error work=1268 [dashless:547,full:721/sword-dash] PLAN
+  t=5260 error work=1153 [dashless:547,full:606] PLAN
+  t=5261 error work=1304 [dashless:529,full:775/sword-dash] PLAN
+  t=5262 error work=1309 [dashless:534,full:775/sword-dash] PLAN
+  t=5263 error work=1374 [dashless:534,full:840/sword-dash] PLAN
+  t=5264 error work=1314 [dashless:534,full:780/sword-dash] PLAN
+  t=5265 error work=1304 [dashless:534,full:770/sword-dash] PLAN
+  t=5266 error work=1616 [dashless:535,full:1081] PLAN
+  t=5267 refusal work=1030 [dashless:535,full:495] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) -> button@160,144 route stance: the combat ladder is EXHAUSTED. T
+  t=5268 error work=1678 [dashless:535,full:1143] PLAN
+  t=5269 error work=1821 [dashless:678,full:1143] PLAN

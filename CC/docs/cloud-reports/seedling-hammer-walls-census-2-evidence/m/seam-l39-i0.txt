@@ -1,0 +1,46 @@
+SEAM-SWEEP: leg 0: 17 distinct answer(s) over 45 seam time(s) — VARIES WITH seam.time
+  t=5179 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5180 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5181 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5182 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5183 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5184 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5185 refusal work=642 [dashless:478,full:164/block-route] solverBot(wasm-location-39) apitem (72,40) contact -> l39shaft (L39 shaft) -> button@128,144 route stance -> kill (spinner@224,112) by press
+  t=5186 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5187 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5188 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5189 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5190 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5191 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5192 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5193 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5194 error work=642 [dashless:548,full:94/block-route] PLAN
+  t=5195 error work=642 [dashless:548,full:94/block-route] PLAN
+  t=5196 error work=642 [dashless:551,full:91/block-route] PLAN
+  t=5197 error work=642 [dashless:551,full:91/block-route] PLAN
+  t=5198 error work=642 [dashless:551,full:91/block-route] PLAN
+  t=5199 error work=642 [dashless:549,full:93/block-route] PLAN
+  t=5200 error work=642 [dashless:550,full:92/block-route] PLAN
+  t=5201 error work=642 [dashless:550,full:92/block-route] PLAN
+  t=5202 error work=642 [dashless:551,full:91/block-route] PLAN
+  t=5203 error work=642 [dashless:551,full:91/block-route] PLAN
+  t=5204 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5205 error work=642 [dashless:551,full:91/block-route] PLAN
+  t=5206 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5207 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5208 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5209 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5210 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5211 error work=642 [dashless:549,full:93/block-route] PLAN
+  t=5212 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) 
+  t=5213 error work=642 [dashless:533,full:109/block-route] PLAN
+  t=5214 error work=642 [dashless:547,full:95/block-route] PLAN
+  t=5215 error work=642 [dashless:547,full:95/block-route] PLAN
+  t=5216 error work=642 [dashless:529,full:113/block-route] PLAN
+  t=5217 error work=642 [dashless:534,full:108/block-route] PLAN
+  t=5218 error work=642 [dashless:534,full:108/block-route] PLAN
+  t=5219 error work=642 [dashless:534,full:108/block-route] PLAN
+  t=5220 error work=642 [dashless:534,full:108/block-route] PLAN
+  t=5221 refusal work=642 [dashless:535,full:107/block-route] solverBot(wasm-location-39) apitem (72,40) contact -> kill (spinner@224,112) by press: every key set — the plan's own and 5 alternative(s) —
+  t=5222 refusal work=642 [dashless:535,full:107/block-route] solverBot(wasm-location-39) apitem (72,40) contact -> kill (spinner@224,112) by press: every key set — the plan's own and 5 alternative(s) —
+  t=5223 refusal work=642 [dashless:535,full:107/block-route] solverBot(wasm-location-39) apitem (72,40) contact -> kill (spinner@224,112) by press: every key set — the plan's own and 5 alternative(s) —
