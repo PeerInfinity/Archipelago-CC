@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 141,
-            "count": 191,
+            "browser": 142,
+            "count": 192,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 508,
-        "browser": 207,
-        "cited": 268,
-        "files": 526,
+        "blockStyle": 509,
+        "browser": 208,
+        "cited": 269,
+        "files": 527,
         "lineStyle": 18,
-        "withDocblock": 526,
-        "withFlags": 446
+        "withDocblock": 527,
+        "withFlags": 447
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11080,6 +11080,51 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
+            "file": "probe-cloudberry-status-strip.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "viewport"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-cloudberry-status-strip — **THE CLOUDBERRY PANEL'S STATUS STRIP, PLAYED AND PHOTOGRAPHED** (cloudberry P7a).",
+            "path": "scripts/procgen/probe-cloudberry-status-strip.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
             "file": "probe-cloudberry-touch-up.mjs",
             "flags": [
                 {
@@ -12906,6 +12951,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "seedling-divergence-legs.mjs",
                     "name": "blocks"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-route-flags"
                 },
                 {
                     "from": "argvHelp.js",
@@ -21062,6 +21111,10 @@ export const INSTRUMENTS = frz({
                     "name": "blocks"
                 },
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-route-flags"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
                 },
@@ -21089,7 +21142,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "seedling",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -21103,6 +21157,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "blocks"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "carry-route-flags"
                 },
                 {
                     "how": [

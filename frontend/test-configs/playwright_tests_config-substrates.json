@@ -162,6 +162,16 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-status-strip-items-and-exits",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-status-strip-local-check-logs",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",

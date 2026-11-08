@@ -1,0 +1,88 @@
+id	level	kind	step	adds	key
+0	0	exit	32	flag:L0:1+flag:L0:4	level_0__r2c13 <- in_L89_160_304 -> exit:out_teleporter_240_0
+8	0	location	5	flag:L0:1	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared
+15	0	location	5	flag:L0:1	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared
+22	0	location	5	flag:L0:1	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared
+29	0	location	5	flag:L0:1	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared
+36	0	location	5	flag:L0:1	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared
+43	0	location	5	flag:L0:1	level_0__r7c6 <- start -> location:L0 flag 4: breakablerock@80,112 cleared
+104	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch
+106	12	location	12	flag:L12:4	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+107	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+115	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch
+117	12	location	12	flag:L12:4	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+118	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+126	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch
+128	12	location	12	flag:L12:4	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+129	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+137	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch
+139	12	location	12	flag:L12:4	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+140	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+148	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch
+150	12	location	12	flag:L12:4	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+151	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+159	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch
+161	12	location	12	flag:L12:4	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+162	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+170	12	location	65	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:11+flag:L12:3+flag:L12:7+flag:L12:12	level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch
+172	12	location	12	flag:L12:4	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+173	12	location	18	flag:L12:4+flag:L12:5	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+178	12	exit	32	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:3	level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240
+179	12	location	61	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:3	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+180	12	exit	28	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:3	level_12__r40c4 <- in_L24_32_144 -> exit:out_teleporter_40_688
+181	12	location	27	flag:L12:4+flag:L12:5+flag:L12:10	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+182	12	exit	60	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:3	level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848
+183	12	location	30	flag:L12:4+flag:L12:5+flag:L12:10+flag:L12:3	level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest
+186	12	exit	15	flag:L12:4+flag:L12:5	level_12__r43c21 <- in_L34_32_144 -> exit:out_teleporter_336_688
+205	16	exit	6	flag:L16:0	level_16__r4c21 <- in_L18_16_16 -> exit:out_stairsup_352_80
+298	28	exit	14	flag:L28:0	level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
+311	30	location	24	flag:L30:0+flag:L30:2	level_30__r2c10 <- in_L28_304_16 -> location:Level 030 - Torchpickup
+313	30	location	22	flag:L30:0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+317	30	location	24	flag:L30:0+flag:L30:2	level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - Torchpickup
+319	30	location	22	flag:L30:0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+323	30	location	24	flag:L30:0+flag:L30:2	level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+325	30	location	22	flag:L30:0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+329	30	location	24	flag:L30:0+flag:L30:2	level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+331	30	location	22	flag:L30:0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+366	39	exit	29	flag:L39:8	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+367	39	location	37	flag:L39:8	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+369	40	exit	38	flag:L40:12	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+370	40	exit	38	flag:L40:12	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+371	40	location	51	flag:L40:1+flag:L40:7+flag:L40:8+flag:L40:12	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+372	40	location	46	flag:L40:12	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared
+373	40	location	47	flag:L40:1+flag:L40:12	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+374	40	exit	38	flag:L40:12	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+375	40	exit	38	flag:L40:12	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+376	40	location	51	flag:L40:1+flag:L40:7+flag:L40:8+flag:L40:12	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+377	40	location	46	flag:L40:12	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared
+378	40	location	47	flag:L40:1+flag:L40:12	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+393	40	location	40	flag:L40:12	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+394	40	location	39	flag:L40:12	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+395	40	location	48	flag:L40:1+flag:L40:7+flag:L40:12	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+410	40	location	40	flag:L40:12	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+411	40	location	39	flag:L40:12	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+412	40	location	48	flag:L40:1+flag:L40:7+flag:L40:12	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+532	62	exit	35	flag:L62:0	level_62 <- in_L61_112_0 -> exit:out_teleporter_240_304
+537	62	exit	35	flag:L62:0	level_62 <- in_L61_160_0 -> exit:out_teleporter_240_304
+542	62	exit	35	flag:L62:0	level_62 <- in_L63_16_0 -> exit:out_teleporter_240_304
+547	62	exit	35	flag:L62:0	level_62 <- in_L63_64_0 -> exit:out_teleporter_240_304
+552	62	exit	35	flag:L62:0	level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304
+573	63	exit	55	flag:L63:1	level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304
+574	63	location	57	flag:L63:1+flag:L63:6	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared
+575	63	exit	55	flag:L63:1	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208
+576	63	exit	55	flag:L63:1	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+577	63	location	56	flag:L63:1	level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared
+578	63	exit	55	flag:L63:1	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208
+579	63	exit	55	flag:L63:1	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304
+580	63	location	56	flag:L63:1	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+802	112	location	82	flag:L112:1	level_112__r2c2 <- in_L111_128_48 -> location:Level 112 - Owl
+868	20	location	20	flag:L20:0	level_20__r1c12 <- in_L19_16_96 ~> level_20__r1c4 -> location:L20 flag 4: lock@32,80 cleared
+869	40	location	38	flag:L40:12	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870	40	location	38	flag:L40:12	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+909	63	location	74	flag:L63:1+flag:L63:7+flag:L63:6	level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest
+911	68	location	67	flag:L68:0	level_68__r1c1 <- in_L65_184_64 ~> level_68__r3c1 -> location:Level 068 - Health
+912	71	exit	72	flag:L71:2	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17
+913	71	exit	72	flag:L71:2	level_71__r14c12 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_pit_10_17
+915	71	exit	72	flag:L71:2	level_71__r14c12 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_pit_10_17
+926	101	exit	81	flag:L101:0	level_101__r0c6 <- in_L100_288_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24
+927	101	exit	81	flag:L101:0	level_101__r0c6 <- in_L102_64_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24
