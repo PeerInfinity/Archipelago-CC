@@ -561,9 +561,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 231
+        "solverBot.js": 234
       },
-      "sites": 372,
+      "sites": 375,
       "seen": "both",
       "via": [
         "direct",
@@ -624,7 +624,7 @@
         },
         "chasers": {
           "dangerMap.js": 2,
-          "solverBot.js": 20
+          "solverBot.js": 21
         },
         "crushers": {
           "botDriverV2.js": 8,
@@ -701,7 +701,7 @@
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 20
+          "solverBot.js": 22
         },
         "talkCircles": {
           "solverBot.js": 4
@@ -860,9 +860,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 134
+        "solverBot.js": 136
       },
-      "sites": 197,
+      "sites": 199,
       "seen": "both",
       "via": [
         "direct",
@@ -933,7 +933,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 75
+          "solverBot.js": 77
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -1005,9 +1005,9 @@
         "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 129
+        "solverBot.js": 130
       },
-      "sites": 180,
+      "sites": 181,
       "seen": "both",
       "via": [
         "direct",
@@ -1398,9 +1398,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 716
+        "solverBot.js": 718
       },
-      "sites": 857,
+      "sites": 859,
       "seen": "both",
       "via": [
         "direct",
@@ -1463,9 +1463,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 135
+        "solverBot.js": 137
       },
-      "sites": 158,
+      "sites": 160,
       "seen": "both",
       "via": [
         "direct",
@@ -3927,9 +3927,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 3
+        "solverBot.js": 5
       },
-      "sites": 3,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
