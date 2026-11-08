@@ -126,6 +126,24 @@ async function botWalk(tc, target, label) {
     }, label, BOT_TIMEOUT_MS, 200);
 }
 
+/**
+ * A walk to a GATE with its item unheld. A page that plays on (P7b, features.botContinuous) collects the coins before
+ * the gate on its way, and the region's free coins can hold that very item; such a leg asks for the pre-P7b walk
+ * (options.respawn: respawn at the goal's piece), so it tests the gate and nothing else. The PlaybackController's
+ * walkTo passes its options to the page's botWalkTo untouched.
+ */
+async function botWalkToGate(tc, target, label) {
+    if (!embed()?.features?.botContinuous) return botWalk(tc, target, label);
+    const c = controller();
+    if (!c) { tc.reportCondition('the cloudberry PlaybackController exists', false); return null; }
+    const n = botEvents().length;
+    c.walkTo(target, { respawn: true });
+    return tc.pollForValue(() => {
+        const r = botEvents();
+        return r.length > n ? r[r.length - 1] : null;
+    }, label, BOT_TIMEOUT_MS, 200);
+}
+
 /** A key as the page's on-screen controls send it (keydown, a hold, keyup, on the game window). */
 async function pressKey(code, holdMs = KEY_HOLD_MS) {
     const win = gameWin();
@@ -294,7 +312,7 @@ async function botEndDoorRegionMove(tc) {
         if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
         if (!(await loadPreset(tc))) return tc.getOverallResult();
         const n0 = exitEvents().length;
-        const died = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot\'s walk to the end door ends');
+        const died = await botWalkToGate(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot\'s walk to the end door ends');
         // Its walk ends short of the door: 'died', or 'timeout' (the recording ran out, the door not reached;
         // measured on region_2_2), never 'reached'.
         tc.reportCondition(`Clouds unheld: the bot's walk ends short of the end door (${JSON.stringify(died)})`,
@@ -529,14 +547,16 @@ async function doubleJumpLevelNeedsTheItem(tc) {
         await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('MovingBlock') ? true : null),
             'MovingBlock held in the page', 20000, 200);
         // Park at the end door by a side with no exit (the world here has none), as cloudberry-end-door-menu-by-key does.
-        const toDoor = async (label) => {
+        // The unheld leg asks for the pre-P7b walk (respawn at the door's piece; see botWalkToGate): playing on from the
+        // level's start would collect the check coin on its way, and the coin may hold the very item.
+        const toDoor = async (label, gate = false) => {
             const n = botEvents().length;
-            gameWin().__swfBridge.botWalkTo({ kind: 'portal', id: 'north' }, { door: 'end' });
+            gameWin().__swfBridge.botWalkTo({ kind: 'portal', id: 'north' }, gate ? { door: 'end', respawn: true } : { door: 'end' });
             return tc.pollForValue(() => (botEvents().length > n ? botEvents().at(-1) : null), label, BOT_TIMEOUT_MS, 200);
         };
         // Unheld: one jump cannot follow the recording to the end door. (Early coins can be reachable with one jump —
         // the rules are SUFFICIENT, not minimal — so the enforced goal measured here is the door, which needs S_last.)
-        const failed = await toDoor('the bot\'s walk to the end door ends');
+        const failed = await toDoor('the bot\'s walk to the end door ends', true);
         tc.reportCondition(`Double Jump unheld: the bot does not reach the end door (${JSON.stringify(failed)})`,
             failed?.result === 'died' || failed?.result === 'timeout');
 
@@ -633,6 +653,519 @@ registerTest({
                + 'reaches its check coin (Double Jump received) and the end door; the next level is a Double hero with its '
                + 'OWN physics (two jumps held), and the bot reaches its check coin, which is checked.',
     testFunction: heroPhysicsWorldPlays,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 9. the APWorld Editor regenerates a Cloudberry region in ONE press (P5c) ─────────────
+
+const EDITOR_PANEL = 'apworldEditorPanel';
+const EDITOR_SELECTOR = '.apworld-editor-panel';
+
+/** Forget every generated level (this session's memory and the browser store), so the press generates. */
+async function forgetCloudberryLevels() {
+    const { clearCloudberryLevelCache } = await import('../../cloudberryDemo/cloudberryGeneration.js');
+    clearCloudberryLevelCache();
+    try {
+        for (const k of Object.keys(localStorage)) if (k.startsWith('cloudberryLevel:')) localStorage.removeItem(k);
+    } catch { /* no storage: nothing stored */ }
+}
+
+async function editorRegeneratesInOnePress(tc) {
+    let restoreGenerator = () => {};
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        const { cloudberryGenerationStats, cloudberryGenerator } = await import('../../cloudberryDemo/cloudberryGeneration.js');
+        const { applyRulesDocOp } = await import('../../apworldEditor/rulesDocOps.js');
+        await tc.loadRulesFromFile(PRESET_RULES);
+        await tc.stateManager.pingWorker('after-rules-load', 3000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: EDITOR_PANEL });
+        const disk = await (await fetch(PRESET_RULES)).json();
+        const region = 'region_2_2';   // the start region: its way back needs nothing
+        const want = JSON.stringify(disk.preset_sidecars['1'][region]);
+        const panel = await tc.pollForValue(() => {
+            const p = document.querySelector(EDITOR_SELECTOR)?.__panel;
+            return p?.session?.ops().length === 0
+                && JSON.stringify(p.rulesDoc?.preset_sidecars?.['1']?.[region] ?? null) === want ? p : null;
+        }, 'the APWorld Editor holds the preset (its region as on disk, no ops)', 15000, 50);
+        tc.reportCondition('the APWorld Editor holds the preset (its region as on disk, no ops)', !!panel);
+        if (!panel) return tc.getOverallResult();
+        await forgetCloudberryLevels();
+        // the region's own substrate, through the product's Re-roll ▸ (it opens the form at the next seed)
+        const reroll = await tc.pollForValue(
+            () => document.querySelector(`${EDITOR_SELECTOR} .apworld-sidecar-reroll[data-region-name="${region}"]`),
+            'the region\'s Re-roll ▸', 15000, 50);
+        if (reroll) reroll.click();
+        else panel._openRegionGeneration('1', region, 'cloudberry');
+        panel._render();
+        const go = await tc.pollForValue(() => document.querySelector(
+            `${EDITOR_SELECTOR} .apworld-region-generation[data-region-name="${region}"] .apworld-region-generate`),
+        'Generate ▸ under the block', 8000, 50);
+        tc.reportCondition('the form targets `cloudberry` and draws Generate ▸', panel._regionGen?.target === 'cloudberry' && !!go);
+        if (!go) return tc.getOverallResult();
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const seed = panel._regionGen.bag.seed;
+        const opsBefore = panel.session.ops().length;
+        const generatedBefore = cloudberryGenerationStats().generated;
+
+        // ⛓ The row HOLDS the page's generator until it has looked at the form mid-generation (a warm
+        //   hidden page generates in a few hundred ms, between two paints), then lets it go on.
+        const real = cloudberryGenerator();
+        tc.reportCondition('⛓ premise: the page installed a Cloudberry generator', !!real);
+        if (!real) return tc.getOverallResult();
+        let release = null;
+        const held = new Promise((r) => { release = r; });
+        let asked = 0;
+        const generate = real.generate;
+        real.generate = async (a) => { asked += 1; await held; return generate.call(real, a); };
+        restoreGenerator = () => { real.generate = generate; };
+        const t0 = performance.now();
+        const press = panel._generateRegion();          // ONE press
+        // while it generates: the form says so (on this page), and a second press is a no-op
+        const working = await tc.pollForValue(() => {
+            const t = document.querySelector(`${EDITOR_SELECTOR} .apworld-region-generation-elapsed`)?.textContent ?? '';
+            return /\(on this page\)/.test(t) ? t : null;
+        }, 'the form shows the region generating on this page', CONFIGURE_TIMEOUT_MS, 50);
+        tc.reportCondition(`the form shows it is working (${working})`, !!working);
+        tc.reportCondition(`…and the page generator was asked (${asked})`, asked >= 1);
+        const runBefore = panel._regionGen?.run;
+        const second = await panel._generateRegion();
+        tc.reportCondition('⛓ a second press while it generates starts nothing (no run, no error)',
+            second === null && panel._regionGen?.run === runBefore && panel.session.ops().length === opsBefore);
+        release();
+        const res = await press;
+        restoreGenerator();
+        const ms = Math.round(performance.now() - t0);
+        tc.log(`one press → ok ${res?.ok} on the page ${panel._regionGenLastRun?.onPage} in ${ms} ms; answer: ${panel._opMessage}`);
+        tc.reportCondition(`⛓⛓ ONE press built the region (${res?.ok ? 'ok' : res?.threw})`, res?.ok === true);
+        tc.reportCondition('…finished on the page (the worker has no game page)', panel._regionGenLastRun?.onPage === true);
+        tc.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        tc.assertEqual('…a set-region-sidecar whose provenance is the cloudberry regenerate',
+            'set-region-sidecar/regenerate-region-sidecar/cloudberry', `${op?.op}/${op?.provenance?.op}/${op?.provenance?.substrate}`);
+        tc.reportCondition(`⛓ the level was generated ONCE (${cloudberryGenerationStats().generated - generatedBefore})`,
+            cloudberryGenerationStats().generated - generatedBefore === 1);
+        // the rebuilt region is the pure op's on the same arguments (now cached), byte for byte
+        const pure = applyRulesDocOp(docObj, {
+            op: 'regenerate-region-sidecar', player: '1', region, substrate: 'cloudberry', seed,
+            regionParams: op?.provenance?.regionParams, hazardOpts: op?.provenance?.hazardOpts,
+            size: op?.provenance?.size, freeItems: op?.provenance?.freeItems,
+        });
+        tc.reportCondition(`the pure op on the same arguments builds (${pure.error ?? 'ok'})`, pure.ok);
+        tc.assertEqual('⛓⛓ the rebuilt region is the pure op\'s, byte for byte',
+            JSON.stringify(pure.doc?.preset_sidecars?.['1']?.[region]), JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]));
+        tc.reportCondition('…a new level (not the one on disk)', JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]) !== want);
+        tc.reportCondition('⛓ the answer is the op\'s own description, not a refusal',
+            String(panel._opMessage).startsWith(String(pure.description)) && !/^Refused/.test(String(panel._opMessage)));
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    } finally {
+        restoreGenerator();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-editor-regenerate-one-press',
+    name: 'Cloudberry: the APWorld Editor regenerates a Cloudberry region in ONE press',
+    description: 'P5c. Loads cloudberry_sphere_worldgen into the APWorld Editor, forgets every generated level, presses '
+               + 'Re-roll ▸ on region_2_2 and Generate ▸ ONCE: the worker (no game page) flags the pending generation, the '
+               + 'page finishes it (the form shows it generating on this page; a second press meanwhile starts nothing), '
+               + 'and ONE set-region-sidecar lands — the level generated once, byte-equal to the pure op on the same arguments. '
+               + 'The row holds the page generator until it has seen the form mid-generation, then releases it.',
+    testFunction: editorRegeneratesInOnePress,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 10. *Initialise procgen data* builds a whole Cloudberry slot in ONE press (P5d) ──────
+
+const INIT_DOC = `./presets/adventure/${PRESET_SEED}/${PRESET_SEED}_rules.json`;
+const initSection = () => document.querySelector(`${EDITOR_SELECTOR} .apworld-initialise`);
+
+async function editorInitialisesACloudberrySlotInOnePress(tc) {
+    let restoreGenerator = () => {};
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        const { cloudberryGenerationStats, cloudberryGenerator } = await import('../../cloudberryDemo/cloudberryGeneration.js');
+        const { INITIALISE_OP, initialiseSlot } = await import('../../apworldEditor/slotInitialise.js');
+        const { initialisePageRetryBound } = await import('../../apworldEditor/regionGenerationRun.js');
+        await tc.loadRulesFromFile(INIT_DOC);
+        await tc.stateManager.pingWorker('after-rules-load', 3000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: EDITOR_PANEL });
+        const panel = await tc.pollForValue(() => {
+            const p = document.querySelector(EDITOR_SELECTOR)?.__panel;
+            return p?.rulesDoc?.game_name && p.session?.ops().length === 0 ? p : null;
+        }, 'the APWorld Editor holds the bare adventure slot (no ops)', 15000, 50);
+        tc.reportCondition('the APWorld Editor holds the bare adventure slot (no ops)', !!panel);
+        if (!panel) return tc.getOverallResult();
+        panel._selectTab('map');
+        const door = await tc.pollForValue(() => document.querySelector(`${EDITOR_SELECTOR} .apworld-initialise-door`),
+            'the Map tab\'s Initialise door', 8000, 50);
+        tc.reportCondition('the empty Map offers the Initialise door', !!door);
+        if (!door) return tc.getOverallResult();
+        door.click();
+        const sub = await tc.pollForValue(() => initSection()?.querySelector('.apworld-initialise-substrate'),
+            'the Initialise form', 8000, 50);
+        if (!sub) return tc.getOverallResult();
+        sub.value = 'cloudberry';
+        sub.dispatchEvent(new Event('change', { bubbles: true }));
+        const go = await tc.pollForValue(() => (panel._initialise?.state?.substrate === 'cloudberry'
+            ? initSection()?.querySelector('.apworld-initialise-generate') : null), 'Generate ▸ for `cloudberry`', 8000, 50);
+        tc.reportCondition('the form targets `cloudberry` and draws Generate ▸', !!go);
+        if (!go) return tc.getOverallResult();
+        await forgetCloudberryLevels();
+        const p = String(panel.playerId);
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const opsBefore = panel.session.ops().length;
+        const generatedBefore = cloudberryGenerationStats().generated;
+
+        // ⛓ As in row 9: hold the page generator until the form has been seen finishing on the page.
+        const real = cloudberryGenerator();
+        tc.reportCondition('⛓ premise: the page installed a Cloudberry generator', !!real);
+        if (!real) return tc.getOverallResult();
+        let release = null;
+        const held = new Promise((r) => { release = r; });
+        let asked = 0;
+        const generate = real.generate;
+        real.generate = async (a) => { asked += 1; await held; return generate.call(real, a); };
+        restoreGenerator = () => { real.generate = generate; };
+        const t0 = performance.now();
+        go.click();                                      // ONE press
+        const working = await tc.pollForValue(() => {
+            const t = document.querySelector(`${EDITOR_SELECTOR} .apworld-initialise-elapsed`)?.textContent ?? '';
+            return /\(on this page\)/.test(t) ? t : null;
+        }, 'the form shows the slot initialising on this page', CONFIGURE_TIMEOUT_MS, 50);
+        tc.reportCondition(`the form shows it is working on this page (${working})`, !!working);
+        tc.reportCondition(`…and the page generator was asked (${asked})`, asked >= 1);
+        tc.reportCondition('⛓ the form draws no Generate ▸ while it runs (a second press cannot start)',
+            !initSection()?.querySelector('.apworld-initialise-generate'));
+        release();
+        const run = await tc.pollForValue(() => (panel._initialiseLastRun?.outcome ? panel._initialiseLastRun : null),
+            'the initialise run\'s outcome', CONFIGURE_TIMEOUT_MS, 100);
+        restoreGenerator();
+        const res = run?.outcome;
+        const ms = Math.round(performance.now() - t0);
+        const placed = res?.stats?.placed ?? 0;
+        tc.log(`one press → ok ${res?.ok} on the page ${run?.onPage} retries ${res?.retries} placed ${placed} in ${ms} ms; `
+            + `answer: ${panel._opMessage}`);
+        tc.reportCondition(`⛓⛓ ONE press built the slot (${res?.ok ? 'ok' : (res?.why ?? res?.threw)})`, res?.ok === true);
+        tc.reportCondition('…finished on the page (the worker has no game page)', run?.onPage === true);
+        tc.reportCondition(`…every placed region is a Cloudberry level (${placed})`, placed > 1
+            && Object.values(res?.entries ?? {}).every((e) => e.substrate === 'cloudberry'));
+        tc.reportCondition(`…within its bound (${res?.retries} retries ≤ ${initialisePageRetryBound(docObj, p)})`,
+            res?.retries >= 1 && res.retries <= initialisePageRetryBound(docObj, p));
+        tc.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        tc.assertEqual('…an initialise-procgen-layout as `cloudberry`', `${INITIALISE_OP}/cloudberry`,
+            `${op?.op}/${op?.provenance?.substrate}`);
+        tc.reportCondition(`⛓ each level generated ONCE (${cloudberryGenerationStats().generated - generatedBefore} for ${placed})`,
+            cloudberryGenerationStats().generated - generatedBefore === placed);
+        // the landed slot is a synchronous initialise on the same arguments, now every level is cached
+        const pure = initialiseSlot({ doc: docObj, player: p, substrate: 'cloudberry', gridDims: op?.provenance?.gridDims,
+            seed: op?.provenance?.seed, backExits: op?.provenance?.backExits, bag: op?.provenance?.bag });
+        tc.reportCondition(`the pure initialise on the same arguments builds (${pure.why ?? 'ok'})`, pure.ok === true);
+        tc.assertEqual('⛓⛓ the landed sidecars are the pure initialise\'s, byte for byte',
+            JSON.stringify(pure.entries), JSON.stringify(panel.rulesDoc.preset_sidecars?.[p]));
+        tc.reportCondition('⛓ the answer is the op\'s description, not a refusal', !/^Refused/.test(String(panel._opMessage)));
+        tc.reportCondition('the form closed', !initSection());
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    } finally {
+        restoreGenerator();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-editor-initialise-one-press',
+    name: 'Cloudberry: the APWorld Editor initialises a whole Cloudberry slot in ONE press',
+    description: 'P5d. Loads the bare adventure slot into the APWorld Editor, opens Initialise procgen data, picks `cloudberry`, '
+               + 'forgets every generated level and presses Generate ▸ ONCE: the worker (no game page) flags the pending '
+               + 'generation, the page finishes the slot (each ask builds one more region, within the slot\'s region-count '
+               + 'bound), and ONE initialise-procgen-layout lands — every level generated once, its sidecars byte-equal to the '
+               + 'pure initialise on the same arguments. The row holds the page generator until it has seen the form working on '
+               + 'this page, then releases it.',
+    testFunction: editorInitialisesACloudberrySlotInOnePress,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 11. the bot plays ON between goals; respawns only at the ladder (P7b) ─────────────
+
+const botNotes = () => app()?.botNotes ?? [];
+
+async function botPlaysOn(tc) {
+    try {
+        const site = await siteOrRefuse(tc);
+        if (!site) return tc.getOverallResult();
+        const a = await loadPreset(tc);
+        if (!a) return tc.getOverallResult();
+        if (!embed().features?.botContinuous) {
+            tc.log(`NOT RUN BY NAME: this page (build ${String(site.build).slice(0, 12)}) respawns the bot at each goal's piece `
+                + '(no __cloudberryEmbed.features.botContinuous) — the Cloudberry branch p7b-continuous-bot adds it.', 'warn');
+            return tc.getOverallResult();
+        }
+        // ⛓ premise: region_2_2 = 2 pieces [∅ | Cloud], its two check coins in piece 0 (the end door needs Clouds).
+        const checks = (embed().status()?.checks ?? []).slice().sort((x, y) => x.piece - y.piece || x.tick - y.tick);
+        tc.reportCondition(`⛓ premise: region_2_2 has 2 pieces and its 2 check coins in piece 0 (${JSON.stringify(checks)})`,
+            a.playResult.pieces === 2 && checks.length === 2 && checks.every((c) => c.piece === 0));
+        if (checks.length !== 2) return tc.getOverallResult();
+        const locOf = (name) => `region_2_2__${name}`;
+
+        // Clouds unheld: the walk to the end door fails BY NAME after a bounded number of restarts.
+        const n0 = botNotes().length;
+        const failed = await botWalkToGate(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the walk to the end door without Clouds ends');
+        tc.reportCondition(`Clouds unheld: the walk to the end door fails by name — exhausted, with its reason (${JSON.stringify(failed)})`,
+            (failed?.result === 'died' || failed?.result === 'timeout') && failed?.exhausted === true && typeof failed?.reason === 'string');
+        const restarts = botNotes().slice(n0).filter((e) => e.note === 'restart');
+        tc.reportCondition(`…after at least one restart from a checkpoint, each within its bound (${JSON.stringify(restarts.map((e) => e.text))})`,
+            restarts.length >= 1 && restarts.every((e) => e.attempt <= e.maxAttempts));
+
+        // The first check coin, then the second: the second walk plays ON (no respawn between them).
+        const first = await botWalk(tc, { kind: 'location', name: locOf(checks[0].name) }, `the bot reaches ${checks[0].name}`);
+        tc.reportCondition(`the bot reaches ${checks[0].name} (${JSON.stringify(first)})`, first?.result === 'reached');
+        const n1 = botNotes().length;
+        const second = await botWalk(tc, { kind: 'location', name: locOf(checks[1].name) }, `the bot reaches ${checks[1].name}`);
+        tc.reportCondition(`the bot reaches ${checks[1].name} (${JSON.stringify(second)})`, second?.result === 'reached');
+        const between = botNotes().slice(n1);
+        tc.reportCondition(`…playing on: no respawn between the two coins (notes: ${JSON.stringify(between.map((e) => e.note))})`, between.length === 0);
+        const got = await tc.pollForValue(async () => {
+            const s = await snapshot(tc);
+            return checks.every((c) => checkedList(s).includes(locOf(c.name))) && held(s, 'Clouds') ? s : null;
+        }, 'both checks checked, Clouds received', 20000, 250);
+        tc.reportCondition(`both check coins checked and Clouds received${got ? '' : ` — ${await checkDiag(tc)}`}`, !!got);
+        if (!got) return tc.getOverallResult();
+        await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
+
+        // The end door: on through piece 0's end, the LADDER (with its on-screen note), piece 1, the door. A page that walks
+        // the ladder (P7c, features.ladderWalk) notes the walk ('ladderWalk') and then its outcome ('ladder', crossing:
+        // 'crossed' or 'fellBack'); an older page respawns ('ladder' alone). Row 12 holds the walk itself.
+        const walks = !!embed()?.features?.ladderWalk;
+        const n2 = botNotes().length;
+        const before = app()?.configures ?? 0;
+        const left = botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
+        const shown = await tc.pollForValue(() => {
+            const el = embed()?.botNoteElement;
+            return el && !el.hidden && /ladder/.test(el.textContent) ? el.textContent : null;
+        }, 'the ladder note on screen', BOT_TIMEOUT_MS, 50);
+        const shownOk = walks ? /^ladder: (walking across|walked across|skipping) to checkpoint 1$/.test(shown ?? '')
+            : shown === 'ladder: skipping to checkpoint 1';
+        tc.reportCondition(`the page shows the ladder note (${JSON.stringify(shown)})`, shownOk);
+        const door = await left;
+        tc.reportCondition(`Clouds held: the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
+        const notes = botNotes().slice(n2);
+        const ladder = notes.filter((e) => e.note === 'ladder');
+        tc.reportCondition(`…with the ladder 0 → 1 the one note on the way${walks ? ' (and its walk)' : ''} (${JSON.stringify(notes)})`,
+            ladder.length === 1 && ladder[0].fromPiece === 0 && ladder[0].toPiece === 1
+            && notes.every((e) => e.note === 'ladder' || (walks && e.note === 'ladderWalk'))
+            && (!walks || ladder[0].crossing === 'crossed' || ladder[0].crossing === 'fellBack'));
+        await configured(tc, 'region_3_2', { after: before });
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-bot-plays-on',
+    name: 'Cloudberry: the bot plays on between goals (no teleport); respawns only at the ladder (on-screen note) or after a death (bounded)',
+    description: 'P7b, on a page with __cloudberryEmbed.features.botContinuous (else NOT RUN BY NAME). Preset region_2_2: the walk to '
+               + 'the end door without Clouds fails by name (exhausted, with its reason) after bounded restarts; the bot reaches '
+               + 'both check coins with no respawn between them; with Clouds it plays on to the end door with exactly one '
+               + 'respawn, the ladder 0 → 1, whose note the page shows; the door sends the exit → region_3_2. On a page with '
+               + 'features.ladderWalk (P7c) the ladder is walked: its notes are the walk and its outcome (crossed or fellBack).',
+    testFunction: botPlaysOn,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 12. the panel's Archipelago status strip (P7a) ───────────────────────────────
+
+/** The strip's model (flashSubstrate/statusStrip.js), and the text a player reads on it. */
+function stripView() {
+    const root = document.querySelector('[data-testid="substrate-status-strip"]');
+    const strip = root?.__statusStrip ?? null;
+    if (!strip || root.hidden) return null;
+    return {
+        model: strip.model(),
+        items: [...root.querySelectorAll('[data-item]')].map((e) => `${e.dataset.item}:${e.dataset.state}`),
+        exits: [...root.querySelectorAll('[data-exit]')].map((e) => `${e.dataset.exit}:${e.dataset.state}`),
+        checks: root.querySelector('[data-section="checks"]')?.textContent ?? null,
+        activity: root.querySelector('[data-section="activity"]')?.textContent ?? '',
+        bot: root.querySelector('[data-section="bot"]')?.textContent ?? '',
+    };
+}
+const stripText = (v) => JSON.stringify(v && { items: v.items, exits: v.exits, checks: v.checks, activity: v.activity, bot: v.bot });
+
+async function stripFor(tc, region, label, test, timeoutMs = 20000) {
+    return tc.pollForValue(() => {
+        const v = stripView();
+        return v?.model.region === region && test(v) ? v : null;
+    }, label, timeoutMs, 200);
+}
+
+async function statusStripItemsAndExits(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        if (!(await loadPreset(tc))) return tc.getOverallResult();
+        // region_2_2 = [∅ | Cloud]: its end door (region_2_2__exit_E) needs Clouds; nothing is held after the load.
+        const start = await stripFor(tc, 'region_2_2', 'the strip shows region_2_2', () => true);
+        tc.reportCondition(`the strip shows the start level (${stripText(start)})`, !!start);
+        if (!start) return tc.getOverallResult();
+        tc.reportCondition(`this level's items: Clouds LOCKED (${start.items})`, JSON.stringify(start.items) === '["Clouds:locked"]');
+        tc.reportCondition(`checks 0 of 2 (${start.checks})`, start.checks === 'Checks 0/2');
+        const east = start.model.exits.find((x) => x.name === 'exit_E');
+        tc.reportCondition(`the east exit is locked and needs Clouds (${JSON.stringify(east)})`,
+            east?.state === 'locked' && JSON.stringify(east.missing) === '["Clouds"]');
+
+        await tc.stateManager.addItemToInventory('Clouds', 1);
+        const after = await stripFor(tc, 'region_2_2', 'Clouds received: HELD, the east exit open',
+            (v) => v.items.includes('Clouds:held') && v.exits.includes('exit_E:open'));
+        tc.reportCondition(`an item received: LOCKED becomes HELD, and the exit it gates opens (${stripText(after ?? stripView())})`, !!after);
+        // Offline, an item no find explains is logged without a sender (none is claimed).
+        tc.reportCondition(`the activity log says it arrived (${after?.activity})`, after?.activity === 'Received Clouds');
+        tc.reportCondition(`checks still 0 of 2 (${after?.checks})`, after?.checks === 'Checks 0/2');
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-status-strip-items-and-exits',
+    name: 'Cloudberry: the status strip — an item received turns LOCKED into HELD and opens the exit it gates',
+    description: 'P7a. Loads cloudberry_sphere_worldgen; the panel\'s status strip shows region_2_2: Clouds LOCKED, checks 0/2, '
+               + 'the east exit locked needing Clouds. Clouds added to the inventory: the strip shows Clouds HELD, the east exit '
+               + 'open, and "Received Clouds" in the activity log (offline: no sender is claimed).',
+    testFunction: statusStripItemsAndExits,
+    category: CATEGORY,
+    enabled: false,
+});
+
+async function statusStripLocalCheckLogs(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        if (!(await loadPreset(tc))) return tc.getOverallResult();
+        // region_2_2__loc_0 is item-free (piece 0) and holds this player's own Clouds.
+        const target = 'region_2_2__loc_0';
+        const c = controller();
+        if (!c) { tc.reportCondition('the cloudberry PlaybackController exists', false); return tc.getOverallResult(); }
+        const n = botEvents().length;
+        c.walkTo({ kind: 'location', name: target });
+        const walking = await stripFor(tc, 'region_2_2', 'the bot line names the walk', (v) => v.bot.startsWith('Bot → loc_0'));
+        tc.reportCondition(`the strip's bot line names the walk (${walking?.bot})`, !!walking);
+        const res = await tc.pollForValue(() => (botEvents().length > n ? botEvents().at(-1) : null), 'the bot reaches the coin', BOT_TIMEOUT_MS, 200);
+        tc.reportCondition(`the bot reaches the coin (${JSON.stringify(res)})`, res?.result === 'reached');
+        const found = await stripFor(tc, 'region_2_2', 'a "You found" entry and checks 1/2',
+            (v) => v.checks === 'Checks 1/2' && v.activity.startsWith('You found'));
+        tc.reportCondition(`a local check of my own item logs "You found" (${stripText(found ?? stripView())})`,
+            found?.activity === 'You found Clouds (loc_0)');
+        const row = found?.model.checks.rows.find((r) => r.location === target);
+        tc.reportCondition(`its coin reads collected (${JSON.stringify(row)})`, row?.state === 'checked');
+        // The page reports no walk results to the host yet: the walk ends when its location is checked.
+        tc.reportCondition(`the bot line ends with the walk (${found?.bot})`, /reached$/.test(found?.bot ?? ''));
+        // The item the coin held (Clouds) is not logged a second time as received.
+        tc.reportCondition(`one entry, not a find and a receipt (${JSON.stringify(found?.model.activity.map((e) => e.text))})`,
+            found?.model.activity.length === 1);
+        // A page's bot report (P7b's `__swfBridge.botStatus`) rides the REAL bridge relay (substrate:botStatus) to the
+        // strip. Sent here by hand, so the leg runs on a page that does not send them yet.
+        // A checkpoint no level here has (7), sent after the walk's own first note (a play-on page sends one as it
+        // starts), so the strip's text can only be this report's.
+        c.walkTo({ kind: 'exit', name: 'region_2_2__exit_E' });
+        await sleep(500);
+        gameWin().__swfBridge.botStatus({ kind: 'botNote', note: 'ladder', fromPiece: 6, toPiece: 7, text: 'ladder: skipping to checkpoint 7' });
+        const note = await stripFor(tc, 'region_2_2', 'the ladder note on the bot line', (v) => v.bot.includes('checkpoint 7'));
+        tc.reportCondition(`a page's ladder note reaches the strip through the bridge (${note?.bot})`,
+            note?.bot === 'Bot → to region_3_2 · ladder: skipped to checkpoint 7');
+        c.stop();
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-status-strip-local-check-logs',
+    name: 'Cloudberry: the status strip — a local check logs "You found", counts k/n and ends the bot line',
+    description: 'P7a. Loads cloudberry_sphere_worldgen; the host-side bot walks to region_2_2__loc_0 (item-free, holds this '
+               + 'player\'s Clouds). The strip\'s bot line names the walk; when the coin is checked the activity log reads '
+               + '"You found Clouds (loc_0)" (once: the item is not logged again as received), checks read 1/2, the coin reads '
+               + 'collected and the bot line ends "reached". A bot note the page sends through __swfBridge.botStatus (a ladder) '
+               + 'reaches the strip through the bridge\'s substrate:botStatus relay. ("Sent X to <player>" needs another player\'s item in a local '
+               + 'location: unit-tested in statusStripModel.test.js.)',
+    testFunction: statusStripLocalCheckLogs,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 13. the bot WALKS ACROSS the ladder (P7c) ─────────────────────────────────
+
+async function botWalksTheLadder(tc) {
+    try {
+        const site = await siteOrRefuse(tc);
+        if (!site) return tc.getOverallResult();
+        const a = await loadPreset(tc);
+        if (!a) return tc.getOverallResult();
+        if (!embed().features?.ladderWalk) {
+            tc.log(`NOT RUN BY NAME: this page (build ${String(site.build).slice(0, 12)}) respawns the bot at a ladder `
+                + '(no __cloudberryEmbed.features.ladderWalk) — the Cloudberry branch p7c-ladder-crosser adds it.', 'warn');
+            return tc.getOverallResult();
+        }
+        // The plan is made at configure (⚖ Robert 2026-11-07: no mid-play planning): region_2_2's one ladder is walkable.
+        const plan = app()?.ladderPlan;
+        tc.log(`ladder planning at configure: ${JSON.stringify(plan)}`);
+        tc.reportCondition(`the page planned region_2_2's ladder at configure: 1 ladder, walkable (${JSON.stringify(plan)})`,
+            plan?.ok === true && plan.ladders === 1 && plan.crossable >= 1);
+        const checks = (embed().status()?.checks ?? []).slice().sort((x, y) => x.piece - y.piece || x.tick - y.tick);
+        const locOf = (name) => `region_2_2__${name}`;
+        // ⛓ premise: the check coins (piece 0) give Clouds, which the end door needs (see row 11).
+        for (const c of checks) {
+            const r = await botWalk(tc, { kind: 'location', name: locOf(c.name) }, `the bot reaches ${c.name}`);
+            tc.reportCondition(`the bot reaches ${c.name} (${JSON.stringify(r)})`, r?.result === 'reached');
+        }
+        const got = await tc.pollForValue(async () => (held(await snapshot(tc), 'Clouds') ? true : null), 'Clouds received', 20000, 250);
+        tc.reportCondition('Clouds received', !!got);
+        if (!got) return tc.getOverallResult();
+        await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
+
+        const n = botNotes().length;
+        const before = app()?.configures ?? 0;
+        const sawWalk = [];
+        const left = botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
+        // While it walks, the bob is under code control across the ladder, not respawned: watch its x pass the ladder.
+        const across = await tc.pollForValue(() => {
+            const st = embed()?.status?.();
+            if (st?.botStats?.ladder?.stage) sawWalk.push(st.bob?.pos?.[0]);
+            return botNotes().slice(n).some((e) => e.note === 'ladder') ? true : null;
+        }, 'the ladder outcome note', BOT_TIMEOUT_MS, 50);
+        const notes = botNotes().slice(n);
+        const walk = notes.find((e) => e.note === 'ladderWalk');
+        const out = notes.find((e) => e.note === 'ladder');
+        tc.reportCondition(`the walk across starts with its note (${JSON.stringify(walk)})`, walk?.fromPiece === 0 && walk?.toPiece === 1);
+        tc.reportCondition(`…and ends CROSSED, not a respawn: ${JSON.stringify(out)}`,
+            !!across && out?.crossing === 'crossed' && out.fromPiece === 0 && out.toPiece === 1);
+        tc.reportCondition(`…the re-sync moved the bob at most 150 px (${out?.resync} px)`, Number.isFinite(out?.resync) && out.resync <= 150);
+        const xs = sawWalk.filter(Number.isFinite);
+        tc.reportCondition(`…the bob was seen ON the ladder, moving right (x ${xs.length ? `${Math.round(Math.min(...xs))} → ${Math.round(Math.max(...xs))}` : 'never seen'})`,
+            xs.length >= 2 && Math.max(...xs) - Math.min(...xs) > 100);
+        const door = await left;
+        tc.reportCondition(`the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
+        await configured(tc, 'region_3_2', { after: before });
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-bot-walks-the-ladder',
+    name: 'Cloudberry: the bot walks across the ladder between pieces (planned at load; the respawn is only the fallback)',
+    description: 'P7c, on a page with __cloudberryEmbed.features.ladderWalk (else NOT RUN BY NAME). Preset region_2_2: the page '
+               + 'planned the one ladder at configure (walkable); with Clouds the walk to the end door crosses the ladder with the '
+               + 'bob under control (seen on the ladder, moving right): a ladderWalk note, then ladder crossing:crossed with a '
+               + 're-sync of at most 150 px; the door sends the exit → region_3_2.',
+    testFunction: botWalksTheLadder,
     category: CATEGORY,
     enabled: false,
 });

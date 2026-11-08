@@ -227,6 +227,42 @@ def _always_placed(data: ExtractedData, canonical_seed: Optional[int]) -> Dict[s
     return out
 
 
+# fill_slot_data's tail: the package's rules document (_embedded_rules.py), within the per-player cap.
+# Plain text (no f-string); apply_option_effects anchors on the `_embedded_rules_options(` line.
+EMBEDDED_RULES_SECTION = '''
+    def _with_embedded_rules(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Add the package's rules document (`worldgen_rules`) when it fits rules_in_slot_data_max_kb.
+
+        The document is _worldgen_rules.json, written by world_generator: this world's rules with no
+        placement, which the web client loads in place of a local rules file. Over the cap it is not
+        sent: a warning, and `worldgen_rules_omitted` names the size and the cap. 0 never sends it.
+        """
+        cap_kb = self.options.rules_in_slot_data_max_kb.value
+        if not cap_kb:
+            return data
+        raw = pkgutil.get_data(__name__, "_worldgen_rules.json")
+        size_kb = -(-len(raw) // 1024)
+        if size_kb > cap_kb:
+            logging.warning(f"{self.player_name} ({self.game}): the rules document is {size_kb} KB, over "
+                            f"rules_in_slot_data_max_kb = {cap_kb}; not sent in slot_data")
+            data["worldgen_rules_omitted"] = {"size_kb": size_kb, "cap_kb": cap_kb, "reason": "over_cap"}
+            return data
+        envelope = json.loads(raw)
+        self._embedded_rules_options(envelope["doc"]["world"][envelope["player"]])
+        data["worldgen_rules"] = envelope
+        return data
+
+    def _embedded_rules_options(self, world_doc: Dict[str, Any]) -> None:
+        """The document's options become this slot's rolled values (scalars only; the server's
+        slot_data stays the source of truth for the rest)."""
+        options = world_doc.get("options", {})
+        for name in options:
+            value = getattr(getattr(self.options, name, None), "value", None)
+            if isinstance(value, (bool, int, float, str)):
+                options[name] = value
+'''
+
+
 def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
     """Generate __init__.py (main world file) content.
 
@@ -353,18 +389,10 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         This ensures that when generating the canonical seed, the same options are used
         as in the original export, producing identical output.
         """
-        # Find the options file in the same directory as this module
-        world_dir = os.path.dirname(os.path.abspath(__file__))
-        options_path = os.path.join(world_dir, '_worldgen_options.json')
-
-        if not os.path.exists(options_path):
-            return  # No options file, use defaults
-
-        try:
-            with open(options_path, 'r', encoding='utf-8') as f:
-                options_data = json.load(f)
-        except (json.JSONDecodeError, IOError):
-            return  # Can't read options, use defaults
+        # pkgutil.get_data, not open(): a packed .apworld is a zip, where a path under __file__ cannot be
+        # opened (it used to fail silently here, so a packed package's seed 1 ran on DEFAULT options).
+        # The generator always ships the file with this method; a read or parse failure is an error.
+        options_data = json.loads(pkgutil.get_data(__name__, '_worldgen_options.json'))
 
         if not options_data:
             return
@@ -1082,21 +1110,22 @@ class _ShopWrapper:
         fill_slot_data_section = f'''
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {{
+        return self._with_embedded_rules({{
 {slot_data_content}
-        }}
-'''
+        }})
+''' + EMBEDDED_RULES_SECTION
     else:
         fill_slot_data_section = '''
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
-'''
+        return self._with_embedded_rules({})
+''' + EMBEDDED_RULES_SECTION
 
     # Build optional imports
     types_import = 'import types\n' if needs_types_import else ''
     # Add json and os imports for canonical options loading
-    canonical_imports = 'import json\nimport os\n' if canonical_seed is not None else ''
+    # json + logging + pkgutil: the package's own JSON files (_with_embedded_rules, _load_canonical_options)
+    canonical_imports = 'import json\nimport logging\nimport pkgutil\n'
 
     # Check if any items have hint_text for create_item method
     has_hint_text = any(item.hint_text for item in data.items.values())

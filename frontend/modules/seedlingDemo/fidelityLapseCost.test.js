@@ -253,7 +253,8 @@ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
     // `beamtower@48,40`, whose Solid drifts in y — `BeamTower.update`'s `y += 0.3 sin(…)`, not modelled; the report's D2).
     // ⛓ fidelity BEAMTOWER D2: with the defaults flipped the drift is ON too, and the 381-t plan is the one the risen
     // tower blocks at t205 on the game — the solve now takes 426 t (the model row; the game check is the keyed sweep).
-    it('ON: leg 773\'s request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit', () => {
+    // ⛓ fidelity L105 (W37b flip): with `previewBeamTowerDrift` ON the preview steps that drift — 426 → 423 t (L105's D2).
+    it('ON: leg 773\'s request (its live digest re-derived ON, as a page with the switch sends it) solves in 423 t with no hit', () => {
         const req = leg773();
         const out = withContactFidelity({ flyerLive: true, strikeIframeLapse: true }, () => {
             const { passes = ANYTIME_PASSES, source, ...tape } = req;
@@ -262,6 +263,6 @@ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
             return solveAnytime({ ...tape, live, source, levelSource }, { passes });
         });
         expect(out.ok).toBe(true);
-        expect(out.plan.solution.length).toBe(426);
+        expect(out.plan.solution.length).toBe(423);
     }, 60000);
 });

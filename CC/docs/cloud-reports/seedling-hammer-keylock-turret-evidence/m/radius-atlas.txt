@@ -1,0 +1,2 @@
+{"level":40,"turrets":["472,400"],"locks":[{"lock":"bosslock@480,352","d":[47]}]}
+{"level":98,"turrets":["104,24"],"locks":[]}

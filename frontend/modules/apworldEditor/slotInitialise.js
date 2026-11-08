@@ -52,8 +52,8 @@
  */
 
 import {
-    DEFAULT_SUBSTRATE_ID, buildPresetSidecars, computeSourceCounts, finalizeTopDown, getRegionExits, layoutTopDown,
-    realiseTopDownGen, resolveTopDownStart, topDownRoomSizes,
+    DEFAULT_SUBSTRATE_ID, buildPresetSidecars, computeSourceCounts, entranceRandomizedFacts, finalizeTopDown, getRegionExits,
+    layoutTopDown, realiseTopDownGen, resolveTopDownStart, topDownRoomSizes,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { assembleRegionParams, mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts, topDownGridSide } from '../procgenPipeline/presetRun.js';
@@ -63,7 +63,7 @@ import { makeTrueRule } from '../shared/rulesJsonBuilder.js';
 import { createRng } from '../shared/rng.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
-import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
+import { grantedLibraryItems, grantsUsedBy } from '../procgenPipeline/topDownSteps.js';
 import {
     DEFAULT_REGION_XP_EFFECT, VALID_REGION_XP_EFFECTS, generateLoopCosts,
 } from '../shared/procgen/loopCostGenerator.js';
@@ -121,6 +121,9 @@ export const INITIALISE_BLOCKERS = Object.freeze({
     // ⛓ M3 — more than one declared start: the layout takes one (it throws
     // `TOPDOWN_START_REFUSALS.multiStart`); the op refuses first, by name.
     MULTI_START: 'multi-start',
+    // ⛓ ER E4b — an entrance-randomized slot: the layout rebuilds every exit, which would drop its `er` and orphan
+    // the block's placements (`procgenPipelineEngine.entranceRandomizedFacts`); refused by name, not re-derived.
+    ENTRANCE_RANDOMIZED: 'entrance-randomized',
 });
 
 /** ⛓ The slot's sidecar entries (an object; `{}` when the slot has none). */
@@ -164,8 +167,10 @@ export function initialiseFacts(doc, player) {
     else if (declaredStarts.length > 1) blocker = INITIALISE_BLOCKERS.MULTI_START;
     else if (!start) blocker = INITIALISE_BLOCKERS.NO_START;
     else if (doc?.procgen_metadata?.[p] !== undefined) blocker = INITIALISE_BLOCKERS.HAS_METADATA;
+    else if (entranceRandomizedFacts(doc, p).randomized) blocker = INITIALISE_BLOCKERS.ENTRANCE_RANDOMIZED;
     return {
         player: p, regions: n, entries, declaredStart: declared, declaredStarts, start, menu, bare: entries === 0, blocker,
+        entranceRandomized: entranceRandomizedFacts(doc, p),
     };
 }
 
@@ -570,8 +575,8 @@ export function initialiseSlot(args) {
     // ⛓ S1 — the pipeline's grant rule (`grantedLibraryItems`): the realiser is
     //   handed `startingItems` FREE, so the op must DECLARE the grants it built
     //   with (defs in `items[p]`, names in `starting_items[p]`).
-    const grant = grantedLibraryItems(doc, a.player, [a.substrate], { avoidIds: itemIdsOf(doc, a.player) });
-    const freeItems = grant.startingItems;
+    const candidates = grantedLibraryItems(doc, a.player, [a.substrate], { avoidIds: itemIdsOf(doc, a.player) });
+    const freeItems = candidates.startingItems;
     const { regionParams, hazardOpts } = initialiseKnobs(a.substrate, a.bag);
     let layout;
     let building = null;
@@ -594,6 +599,10 @@ export function initialiseSlot(args) {
     } catch (e) {
         return { ok: false, why: String(e?.message ?? e), ...(building ? { region: building } : {}) };
     }
+    // ⛓ P5d — the grant is narrowed to the free items the realise drifted onto.
+    const grant = grantsUsedBy(candidates, layout.stats.freeItemsUsed ?? null, {
+        substrateIds: [a.substrate], avoidIds: itemIdsOf(doc, a.player),
+    });
     const sidecars = buildPresetSidecars(layout.grid, {
         playerId: a.player,
         baseObstacleLib: DEFAULT_OBSTACLES,

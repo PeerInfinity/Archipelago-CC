@@ -233,9 +233,9 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|earnedClearsNow,rule,se
 frontend/modules/seedlingDemo/levelRun.js|earnedClearsNow|h79b2fd5f|0|0,rule,sentinel,Puzzlements/MagicalLock.as:setPersistence,MagicalLock tag sign test: <0 means no tag (the wand fold)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crushersParkedNow,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crusherScans,physics,bound,,crusher at rest
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepper,rule,bound,,i-frame timer gate
-frontend/modules/seedlingDemo/levelRun.js|previewStepper|h87e0089d|0|0,rule,bound,,i-frame timer gate (R4-swim D3: a preview started inside one carries it)
-frontend/modules/seedlingDemo/levelRun.js|previewStepper|h87e0089d|0|1,rule,sentinel,,directionFace >= 0 is a parked facing; -1 is unset
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepperNow,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|previewStepperNow|h87e0089d|0|0,rule,bound,,i-frame timer gate (R4-swim D3: a preview started inside one carries it)
+frontend/modules/seedlingDemo/levelRun.js|previewStepperNow|h87e0089d|0|1,rule,sentinel,,directionFace >= 0 is a parked facing; -1 is unset
 frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate
@@ -1543,8 +1543,8 @@ frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
 frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|h7d55bf85|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (R1-swim D3: BobBoss.hit there; inside the i-frame it is the plain shove)
-frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)
-frontend/modules/seedlingDemo/levelRun.js|previewStepper|h00e3c357|0|0,structural,,,U12-swim D1: no pull pushed this preview tick (empty test)
+frontend/modules/seedlingDemo/levelRun.js|previewStepperNow|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)
+frontend/modules/seedlingDemo/levelRun.js|previewStepperNow|h00e3c357|0|0,structural,,,U12-swim D1: no pull pushed this preview tick (empty test)
 frontend/modules/seedlingDemo/pull.js|createPulls|hea6d6684|2|0,structural,,Puzzlements/Pull.as:direction,turn-to-radian conversion (_d * Math.PI * 2)
 frontend/modules/seedlingDemo/pull.js|*|*,structural,,,empty tests / the unit-axis test / the hop bound
 frontend/modules/seedlingDemo/turret.js|(module)|hd6a24b4a|8|0,physics,magnitude,Enemies/Turret.as:super,ctor centre: _x + Tile.w/2
@@ -1890,6 +1890,7 @@ frontend/modules/seedlingDemo/beamTower.js|*|line,physics,magnitude,Puzzlements/
 frontend/modules/seedlingDemo/beamTower.js|createBeamTower|createBeamTower,structural,,,the ctor's state: index/timer/frame zeroes and the attrs' defaults (direction 0 / rate 1 / speed 1)
 frontend/modules/seedlingDemo/beamTower.js|stepBeamTower|stepBeamTower,rule,sentinel,Puzzlements/BeamTower.as:animEnd,animEnd: direction = (direction + rate + 4) % 4 after each sit
 frontend/modules/seedlingDemo/beamTower.js|stepBeamTowerFrame|stepBeamTowerFrame,rule,sentinel,Puzzlements/BeamTower.as:animEnd,animEnd: direction = (direction + rate + 4) % 4 after each sit (fidelity BEAMTOWER's simulation step)
+frontend/modules/seedlingDemo/beamTower.js|beamTowerDriftedY|beamTowerDriftedY,physics,derivation,Puzzlements/BeamTower.as:update,"y += 0.3*sin(worldFrame(100,2)/100*2*pi) once per unfrozen update, summed from the k=0 update (fidelity L105: the preview forecast of the drift)"
 frontend/modules/seedlingDemo/beamTower.js|beamTowerReachRects|beamTowerReachRects,rule,sentinel,Puzzlements/BeamTower.as:animEnd,the sides rate visits: (d + rate + 4) % 4 over four sits; the span doubles for both ways
 frontend/modules/seedlingDemo/beamTower.js|beamTowerSolidRect|beamTowerSolidRect,physics,magnitude,Puzzlements/BeamTower.as:setHitbox,setHitbox(16 32 8 24) about the entity point — the drifting Solid
 frontend/modules/seedlingDemo/spinningAxe.js|SPINNING_AXE|(module),rule,magnitude,,SpinningAxe: blade length 32 / hub rect side 12 / force 5 / damage 1 (SpinningAxe.as:19-24; SPINNINGAXE: simulation since levelRun bills the axe on the player)

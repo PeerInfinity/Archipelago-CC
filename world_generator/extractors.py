@@ -276,6 +276,12 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
 
     # Extract slot_data fields (now in world[player], fallback to game_info for legacy)
     slot_data_fields = world_data.get('slot_data', {}) or game_info.get('slot_data', {})
+    # A world_generator package's own slot_data keys (_embedded_rules.py) are fill_slot_data's, never the
+    # source's: a source exported from such a package must not freeze them into the next package.
+    if isinstance(slot_data_fields, dict) and ('worldgen_rules' in slot_data_fields
+                                               or 'worldgen_rules_omitted' in slot_data_fields):
+        slot_data_fields = {k: v for k, v in slot_data_fields.items()
+                            if k not in ('worldgen_rules', 'worldgen_rules_omitted')}
 
     # Extract game options (for generating dynamic fill_slot_data)
     game_options = world_data.get('options', {})

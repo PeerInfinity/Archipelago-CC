@@ -14,7 +14,8 @@ and every `worlds/**` file (the packed-apworld freshness test). Everything
 else under `frontend/`, plus `scripts/procgen/` (non-Python) and
 `test_json/`, is read only by the JavaScript suites. One file under
 `frontend/modules/` is the exception: the flashPanel wiring JSON, which the
-Seedling export handler reads (2026-10-15).
+Seedling export handler reads (2026-10-15). Two more since 2026-11-04: the APCalc
+engine and the shared submodule, which the APCalc parity test runs under node.
 
 ⛔ The list is an ALLOW-TO-SKIP list: anything not matched runs the matrix, an
 empty list runs it, and the caller runs it whenever it cannot get the list.
@@ -37,6 +38,11 @@ KEEP_PREFIXES = (
     # the shared flashPanel wiring, and test_seedling_flash_panel_export.py
     # compares it with the committed seed-1 preset (rules-produced-blocks).
     'frontend/modules/procgenPipeline/flashPanelWiring.json',
+    # The APCalc JS<->Python parity test (worlds/apcalc/test/test_generator_parity.py)
+    # runs the frontend engine under node; it imports shared/rng.js and
+    # shared/rulesJsonBuilder.js (a submodule: a bump is listed as the bare path).
+    'frontend/modules/apcalcGenerator/',
+    'frontend/modules/shared',
 )
 
 

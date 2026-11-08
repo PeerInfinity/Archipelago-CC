@@ -14,6 +14,7 @@ The game page owns `window.__swfBridge.configure` and `pollItems`. The host inje
 | Configure and items | On the load event, calls `__swfBridge.configure` with the payload; pushes received items through `pollItems` then and on every state change. |
 | Locations | When the game calls `__swfBridge.sendLocation(flashName)`, maps it through the payload's `ap_locations` and dispatches `user:locationCheck`. A check the host accepted is never dispatched twice; one it refused can be sent again on the same visit (below). |
 | Play clock | When the game calls the optional `__swfBridge.setPlayClock(running[, stats])`, relays `substrate:playClock` {region, running[, stats]}; loops' time drain honours it for a substrate that declares `loopSupport.playClock`, and a `stats.gameSeconds` makes it charge per game second ([loop-recording.md](./loop-recording.md#the-play-clock)). |
+| Bot reports | When the game calls the optional `__swfBridge.botStatus(event)` (Cloudberry P7b: a ladder skipped, a restart, a walk's result), relays `substrate:botStatus` {region, event} for the active region, with the event copied untouched. The panel's [status strip](#the-status-strip) shows it. |
 | Exits | When the game calls `__swfBridge.sendExit(portalId, side)`, resolves the exit from the payload and dispatches `user:regionMove`. |
 | Active region | The bridge acts (items, gates, checks, bot targets) only while the host's region is the one it configured: a `gameState:regionChanged` naming another region makes it inactive until the next load event. A `regionChanged` marked `resync: true` is not a move and is ignored: gameState and the iframe adapter publish one to every iframe whenever any iframe connects or announces `appReady`, to tell the new page where the player is. Before cloudberry P4a the bridge read a resync as a move, so a page playing a region the host was not in (a test's injected region) went silent when another iframe panel finished booting. |
 | Gates | Evaluates the payload's `gate_rules` against the inventory and pushes booleans through `__swfBridge.setGateStates`. |
@@ -23,6 +24,23 @@ The game page owns `window.__swfBridge.configure` and `pollItems`. The host inje
 **Which checks are sent** (`locationReportLedger.js`, the bridge's testable seam). A name the host's checked-locations snapshot has is ACCEPTED: it is seeded at the load event, refreshed on every snapshot, and never dispatched again. A dispatched name is IN FLIGHT, and a repeat report is dropped while it is. It is re-armed when the host REFUSED it: at once on the loop-mode action gate's `loops:clickIgnored` (kind `location`) for that name, for example a clear made while the queue is not parked on the region; otherwise when the game reports it again after `LOCATION_REPORT_SETTLE_MS` (3 s) and the snapshot still lacks it, which covers a refusal that publishes nothing. Before N3b the bridge marked a name reported before dispatching it, so a refused check stayed unsendable until the next load event.
 
 The load event name comes from the iframe URL's `loadRegionEvent` parameter (default `flash:loadRegion`), so a substrate that reuses the bridge with its own panel ignores other substrates' loads.
+
+## The status strip
+
+The panel factory (`createSubstrateIframePanelClass`) can mount an Archipelago **status strip** above the iframe (P7a). A substrate opts in with `statusStrip: { loadRegionEvent, playbackControlEvent?, describeLevel? }`. A panel without it is unchanged. Today only [Cloudberry](./cloudberry.md#the-status-strip) uses it. The view and its wiring are `flashSubstrate/statusStrip.js`; the model is `statusStripModel.js`, which is pure and unit-tested with a mutant per pin.
+
+Everything on the strip is host state. Nothing asks the game page, except that a page may send bot reports:
+
+- **Level items.** The substrate's `describeLevel(world)` → `{items: [{name, kind?, note?, color?}], notes?}` names the items its level uses. The strip marks each one HELD or LOCKED from the inventory.
+- **Checks.** The payload's `ap_locations`: k of n collected, and each one's state judged by that location's own `access_rule` from static data, so the strip never disagrees with the tracker. A rule the inventory alone cannot decide shows as unknown, never as open.
+- **Exits.** The payload's exits, each matched to its static exit (by name, bare or region-prefixed, else the region's one exit to its target) and judged by its `access_rule`. "needs …" lists the unheld items of a Has / HasAll / HasAny / And / Or rule. Any other rule says only "locked".
+- **The bot.** The playback-control event's `walkTo`/`stop`/`reset`, and `substrate:botStatus` events (above). A note kind the strip does not know shows its `text`.
+
+### The activity log
+
+`createActivityLog` diffs the snapshots. A location newly checked is a **find**. Its item is "You found X" when it is the player's own, and "Sent X to <player>" otherwise. While not connected, an inventory gain that no find of the same snapshot explains is "Received X", and no sender is claimed. Connected, received items come from the server instead. `game:itemsReceived` carries `items: [{itemName, senderSlot, senderName}]` (P7a, additive: `senderName` is the room's slot name or null). The player's own sends are skipped (their find is already logged), and a full resync (index 0) is one line. The first snapshot after a world load or a (re)connect is a baseline, not news. The baseline after a load is the `stateManager:rulesLoaded` snapshot itself: the next snapshot may already be a grant.
+
+Who owns an item, and a player's name: offline from the rules file (`locations[].item`, `player_names`), connected from the client (`getScoutedLocations`, the room's slot info). A missing name is shown as "player <slot>", never made up.
 
 ## Per-game entries (one panel, many ids)
 
@@ -246,6 +264,10 @@ The entry's `zoneConfigFromSlot` and `zoneOfPayload` let the APWorld hub's `repl
   - A room asked for nothing drops `keygate` from its elements.
   - With all five colours in the world, a room is refused as `keygate-colours-exhausted`.
   - The set assembler refuses two rooms holding one colour (`keygate-colour-shared`). An UNREQUESTED key gate past generated room #0 (the spiral) is still refused at serialize (`keygate-colour-not-allocated`).
+- **`goalContainer`: the goal chest** (`seedlingGenRoomPayload.goalContainerNoteOf`). It is opt-in through the bag key `seedlingGenGoal` = `chest` (the room's `goal` knob, B3's `defaults.goalClass`). Absent, the room keeps the torch and its `generation` is byte-identical.
+  - Location 0 stays the goal cell's row, with the same id, item, name and rule, so the location count and the pool do not move. Only its container changes: `kind: 'chest-goal'` at the chest's own tag. The set assembler keeps the chest (`rewrite: false`, `report.goalChests`), so opening it is the check.
+  - A draw that refuses the goal chest keeps the torch. The refusal's name is recorded as `generation.goalChestRefused`, and it is reported under `procgen_metadata["<p>"].goalContainers`.
+  - A goal-chest room may also hold a loot chest (`chestloot`). Location 0 is the goal chest and the loot chest is the room's `- Chest` location; the set keeps both, and `goalContainers` counts the goal chest only. This needs the solver's `CHEST_LEG_DELTA` (ON by default): a chest leg's exact set is the chests opened during the leg, so the second chest of a visit is not refused for the first.
 - **`procgenParamsFromPayload({})` answers `{}`**: a payload without `generation` is not a generated room, so no default is invented. A built payload reads every knob back. The APWorld S2 read-back row names its knob from the empty-payload answer, so it skips this entry. Making the entry eligible was measured and not done: with the biome moved to `post-sword` by the row's control, an Initialise of the row's Adventure document is refused by the generator (`Overworld` at 8×6).
 
 ### The element defaults by biome (swim U8, ⚖ Q13)

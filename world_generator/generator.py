@@ -8,8 +8,9 @@ process of converting a JSON rules file into an Archipelago world package.
 import json
 import logging
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import Any, List, Optional, Dict
 
+from ._embedded_rules import WORLDGEN_RULES_FILE, build_embedded_rules_doc, embedded_rules_file_bytes
 from ._unknown_kind import lossy_codegen, unobtainable_record
 from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
 from .templates import (
@@ -101,6 +102,11 @@ class WorldGenerator:
         if self.apply_name_substitutions:
             apply_name_substitutions(json_data, player_id=self.player_id)
 
+        # The source after name substitution: the base of the package's embedded rules document
+        # (_embedded_rules.py; written by _generate once the rename below has fixed the identity).
+        import copy
+        self._substituted_json = copy.deepcopy(json_data)
+
         self.data = extract_all(json_data, player_id=self.player_id)
 
         # Apply game name override if specified
@@ -191,6 +197,35 @@ class WorldGenerator:
         self.data.metadata.game_directory = clean_name.lower().replace(' ', '_').replace('-', '_')
 
         logger.info(f"Renamed game from '{old_name}' to '{new_name}'")
+
+    def _exit_er_by_name(self, source_json: Dict[str, Any]) -> Dict[str, Any]:
+        """This slot's exits' `er` blocks, keyed by exit name, in document order.
+
+        The package's exits keep their source names unless two regions share
+        one (extractors.extract_regions prefixes `<region>__`); an `er` names
+        its reverse and the block's placements BY NAME, so an `er` on a
+        shared name is refused here, by name, rather than baked under a name
+        nothing refers to (the runtime loader refuses the same document).
+        """
+        regions = source_json.get('regions', {}).get(self.player_id, {}) or {}
+        counts: Dict[str, int] = {}
+        for region in regions.values():
+            for ex in region.get('exits', []) or []:
+                counts[ex.get('name', '')] = counts.get(ex.get('name', ''), 0) + 1
+        out: Dict[str, Any] = {}
+        for region_name, region in regions.items():
+            for ex in region.get('exits', []) or []:
+                if 'er' not in ex:
+                    continue
+                name = ex.get('name', '')
+                if counts.get(name, 0) > 1:
+                    raise ValueError(
+                        f"exit {name!r} (region {region_name!r}) carries `er`, but "
+                        f"{counts[name]} exits of player {self.player_id} share that name — "
+                        "an `er` reverse or placement names an exit by name, so it must be one exit"
+                    )
+                out[name] = ex['er']
+        return out
 
     def generate(self, dry_run: bool = False) -> None:
         """
@@ -292,7 +327,9 @@ class WorldGenerator:
         source_world = source_json.get('world', {}).get(self.player_id, {})
         options_data = source_world.get('options', {})
 
-        if options_data:
+        # A canonical-seed package always ships the file (`{}` when the source has no options): its
+        # _load_canonical_options reads it with pkgutil.get_data and treats any failure as an error.
+        if options_data or self.canonical_seed is not None:
             options_path = output_dir / '_worldgen_options.json'
             if not dry_run:
                 options_path.write_text(json.dumps(options_data, indent=2), encoding='utf-8')
@@ -371,11 +408,14 @@ class WorldGenerator:
         # `provenance` is NOT carried: it describes how the SOURCE document
         # was made (no page reads it), so it would mislabel an export.
         # `discovery_mode` (the world's Discovery-mode choice) rides the same
-        # way; a slot without one writes no file (the default).
+        # way; a slot without one writes no file (the default). So does
+        # `entrance_randomization` (ENTRANCE RANDOMIZATION E2: the slot's
+        # shuffle block — how it was made and what moved).
         for key, filename in (
             ('flash_panel', '_worldgen_flash_panel.json'),
             ('region_atlas', '_worldgen_region_atlas.json'),
             ('discovery_mode', '_worldgen_discovery_mode.json'),
+            ('entrance_randomization', '_worldgen_entrance_randomization.json'),
         ):
             block = source_json.get(key, {}).get(self.player_id)
             if not block:
@@ -386,6 +426,32 @@ class WorldGenerator:
                 logger.info(f"Wrote {key} to {block_path}")
             else:
                 logger.info(f"Would write: {block_path}")
+
+        # ENTRANCE RANDOMIZATION E2: each exit's `er` (group, type, reverse,
+        # shuffle) is a property of the exit, which Regions.py does not carry,
+        # so this slot's are kept by exit name in `_worldgen_exit_er.json`;
+        # exporter/exporter.py re-attaches them to the exported exits by name
+        # (the handler's `get_worldgen_exit_er`). A slot with none writes no file.
+        exit_er = self._exit_er_by_name(source_json)
+        if exit_er:
+            exit_er_path = output_dir / '_worldgen_exit_er.json'
+            if not dry_run:
+                exit_er_path.write_text(json.dumps(exit_er, indent=2), encoding='utf-8')
+                logger.info(f"Wrote exit er to {exit_er_path}")
+            else:
+                logger.info(f"Would write: {exit_er_path}")
+
+        # The rules document the world sends in slot_data (`worldgen_rules`, _embedded_rules.py): the
+        # source after name substitution, with the built world's identity and no placement. Compact: the
+        # per-player cap (rules_in_slot_data_max_kb) measures these bytes.
+        rules_doc = build_embedded_rules_doc(self._substituted_json, self.player_id,
+                                             self.data.metadata.game_name, Path(output_dir).name)
+        rules_path = output_dir / WORLDGEN_RULES_FILE
+        if not dry_run:
+            rules_path.write_bytes(embedded_rules_file_bytes(rules_doc, self.player_id))
+            logger.info(f"Wrote embedded rules to {rules_path}")
+        else:
+            logger.info(f"Would write: {rules_path}")
 
         for filename, content in files.items():
             file_path = output_dir / filename

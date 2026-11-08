@@ -105,7 +105,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ tile-rules-automation-r-a3 — restamped (ecbd44ee -> a05c56ce): the derived-rule table overrides 4 boundary exit
         //   rows; 2 re-spelled, truth-table equal (L34 out_teleporter_128_0 -> Wand, L98 out_stairsup_112_112 child order). No
         //   door, sub-region or internal-exit count moves.
-        expect(c.atlasId).toBe('seedling-a05c56ce');
+        // ⛓ tile-rules-automation-r-a4 — restamped (a05c56ce -> f60d4a58): ONE internal row re-spells, L20 r1c4 <-> r3c1
+        //   Has(Shield) -> Has(L20 flag 4) (lock@32,80 costs its own press). No door, sub-region or internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-f60d4a58');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

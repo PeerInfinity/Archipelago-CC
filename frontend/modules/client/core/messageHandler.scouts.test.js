@@ -24,6 +24,7 @@ const stateManagerMock = vi.hoisted(() => ({
 }));
 vi.mock('../../stateManager/index.js', () => ({
   stateManagerProxySingleton: stateManagerMock,
+  getLastRawJsonData: () => stateManagerMock.rawPayload ?? null,
 }));
 
 vi.mock('./storage.js', () => ({

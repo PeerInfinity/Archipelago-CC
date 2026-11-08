@@ -147,6 +147,36 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-editor-regenerate-one-press",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-editor-initialise-one-press",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-bot-plays-on",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-status-strip-items-and-exits",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-status-strip-local-check-logs",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-bot-walks-the-ladder",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",

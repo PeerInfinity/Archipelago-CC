@@ -118,15 +118,30 @@ describe('planCloudberryLevel', () => {
             { Jump: 2 }, { MovingBlock: 5, Jump: 2 }, { MovingBlock: 3, Cloud: 5, Jump: 2 }]);
     });
 
-    it('refuses by name: unequal exits, incomparable requirements, a gated way back', () => {
+    it('refuses by name: unequal exits, incomparable requirements', () => {
         expect(() => planCloudberryLevel(specs({
             exitSpecs: [{ side: 'E', requirement: ['Clouds'] }, { side: 'S', requirement: ['Moving Blocks'] }],
         }), {})).toThrow(/forward exits need different platform items/);
         expect(() => planCloudberryLevel(specs({
             exitSpecs: [], locationSpecs: [{ id: 'a', requirement: ['Clouds'] }, { id: 'b', requirement: ['Pendulums'] }],
         }), {})).toThrow(/incomparable/);
-        expect(() => planCloudberryLevel(specs({ exitSpecs: [{ side: 'W', requirement: ['Clouds'] }] }), ctx))
-            .toThrow(/way back/);
+    });
+
+    it('⛓ P5d — a way back that still needs platform items is an AUTHORED lock on the start door (⚖ "lock as fallback")', () => {
+        // the start door has no pieces: the platform items move to the authored part, nothing is planned for them
+        const plan = planCloudberryLevel(specs({ exitSpecs: [{ side: 'W', requirement: ['Clouds'] }] }), ctx);
+        const back = plan.exits.find((e) => e.side === 'W');
+        // mutant: keep the old throw → planCloudberryLevel refuses; mutant: keep physics → a piece for Clouds
+        expect(back).toMatchObject({ back: true, physics: [], lockedBack: true, authored: [{ item: 'Clouds', count: 1 }] });
+        expect(plan.pieceSets.every((set) => !set.includes('Cloud'))).toBe(true);
+        const read = readCloudberryDocument(fakeDoc(plan), plan);
+        const zone = emitCloudberryZone(plan, { ...read, generate: {}, docSha256: SHA });
+        // the page greys the start door's west entry until the player holds Clouds; the logic gate says the same
+        expect(zone.gateRules.portals).toEqual({ west: { rule: 'Has', args: { item_name: 'Clouds' } } });
+        expect(zone.exitPaths.W[0].obstacles).toEqual(['cloudberry_logic_Clouds']);
+        // a FREE way back (sphere growth's, a recovered entry gate's) stays free: no lock
+        const free = planCloudberryLevel(specs({ exitSpecs: [{ side: 'W', requirement: [] }] }), ctx);
+        expect(free.exits.find((e) => e.side === 'W').lockedBack).toBeUndefined();
     });
 
     it('a Jetpack entry gate makes a Jetpack-hero level by the chance (rng draw 3, after tileset and hazards)', () => {

@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 11,
+            "count": 12,
             "id": "make"
         },
         {
@@ -129,17 +129,17 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 7,
+            "count": 8,
             "id": "no prefix"
         },
         {
             "browser": 1,
-            "count": 95,
+            "count": 96,
             "id": "plan"
         },
         {
-            "browser": 139,
-            "count": 190,
+            "browser": 143,
+            "count": 193,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 506,
-        "browser": 205,
-        "cited": 266,
-        "files": 524,
+        "blockStyle": 512,
+        "browser": 209,
+        "cited": 272,
+        "files": 530,
         "lineStyle": 18,
-        "withDocblock": 524,
-        "withFlags": 444
+        "withDocblock": 530,
+        "withFlags": 449
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7342,6 +7342,35 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "make-seedling-er-preset.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "make-seedling-er-preset — **THE `seedling_er` PRESET** (ENTRANCE RANDOMIZATION E4b): the Seedling playthrough with its STAIRS entrance-randomized — the `entranceShuffle` mode (`procgenPipeline/entranceShuffleSteps.js`) run headless over the committed playthrough atlas at `SEEDLING_ER_STATE`'s seed, through the same …",
+            "path": "scripts/procgen/make-seedling-er-preset.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
             "citedBy": [],
             "docblockStyle": "line",
             "documentedFlags": [
@@ -8039,6 +8068,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-axe-witness — ⛓⛓⛓ SEEDLING FIDELITY AXE: THE SOLVER CROSSES A SPINNING AXE BY ITS PHASE, AND THE GAME LETS IT THROUGH.",
             "path": "scripts/procgen/plan-seedling-axe-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-binding-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-binding-witness — ⛓⛓ THE EVENT-LAYER BINDING LEDGER (slice rules-sharedbinding-witnesses): ONE GAME WITNESS PER RE-ADMITTED `sharedBinding` EVENT.",
+            "path": "scripts/procgen/plan-seedling-binding-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -11053,6 +11109,51 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
+            "file": "probe-cloudberry-status-strip.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "viewport"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-cloudberry-status-strip — **THE CLOUDBERRY PANEL'S STATUS STRIP, PLAYED AND PHOTOGRAPHED** (cloudberry P7a).",
+            "path": "scripts/procgen/probe-cloudberry-status-strip.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
             "file": "probe-cloudberry-touch-up.mjs",
             "flags": [
                 {
@@ -11741,6 +11842,52 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-ceremony126.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-ceremony126 — ⛓⛓⛓ seedling-fidelity-ceremony126: L64's GHOSTSPEAR CEREMONY ON THE GAME — the solver's route-survey step-125 tape (the stance walk enters the pickup, the verb pages the ceremony) and a `primary` press whose thrust lands on the ceremony's first frozen frame (LOST) — PLAYED ON THE GAME AN…",
+            "path": "scripts/procgen/probe-seedling-ceremony126.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg"
             ],
             "browser": true,
@@ -11882,6 +12029,55 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "out"
+            ],
+            "file": "probe-seedling-chest-incidental.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "tape-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING HAMMER CHEST-INCIDENTAL — two chests opened on ONE visit, witnessed on the game (W0's game witness).",
+            "path": "scripts/procgen/probe-seedling-chest-incidental.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "passedThroughChest"
             ],
@@ -11942,6 +12138,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "only",
                 "record",
+                "repeat",
                 "set"
             ],
             "file": "probe-seedling-cleartag.mjs",
@@ -11957,6 +12154,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "record"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "repeat"
                 },
                 {
                     "how": [
@@ -12777,6 +12980,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "seedling-divergence-legs.mjs",
                     "name": "blocks"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-route-flags"
                 },
                 {
                     "from": "argvHelp.js",
@@ -14364,6 +14571,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L19 BOSS KEY, ON THE GAME (slice tile-l19-bosskey, W0): can the player take `bosskey@96,64` (keyType 0) WITHOUT A SWORD?",
             "path": "scripts/procgen/probe-seedling-l19-bosskey.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "probe-seedling-l25-apitem.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L25 AP CHEST, ON THE GAME (fidelity L25APITEM D1, `CONTACT_FIDELITY.apChestItem`).",
+            "path": "scripts/procgen/probe-seedling-l25-apitem.mjs"
         },
         {
             "argvHelpers": [
@@ -16405,39 +16654,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-r5-mobiles — ⛓⛓ THE SLICE-23 BATCH'S TWO NEW SURFACES, ASKED OF THE REAL GAME.",
             "path": "scripts/procgen/probe-seedling-r5-mobiles.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "write"
-            ],
-            "file": "probe-seedling-r5-press-axes.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write-probes"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "probe-seedling-r5-press-axes — WHICH PRESS DID THE GAME REFUSE, AND WHY?",
-            "path": "scripts/procgen/probe-seedling-r5-press-axes.mjs"
         },
         {
             "argvHelpers": [],
@@ -20966,6 +21182,10 @@ export const INSTRUMENTS = frz({
                     "name": "blocks"
                 },
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-route-flags"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
                 },
@@ -20993,7 +21213,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "seedling",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -21007,6 +21228,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "blocks"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "carry-route-flags"
                 },
                 {
                     "how": [
@@ -21101,6 +21328,26 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-wasm-readme — **WRITE (AND GATE) THE seedling-wasm README'S BUILD TABLE FROM `builds.json`** (SEEDLING ORIGINAL WASM slice W2, ⚖ user 2026-09-07: the build table *\"GENERATED from `builds.json` with a check gate\"*, and *\"I want to fix the false and stale things in the readme\"*).",
             "path": "scripts/procgen/seedling-wasm-readme.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [
+                "docs/json/developer/procgen/substrate-registry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "seedlingEntranceShuffleHooks.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedlingEntranceShuffleHooks — **SEEDLING'S HOOKS FOR THE ENTRANCE-SHUFFLE MODE** (ENTRANCE RANDOMIZATION E4b), the object `procgenPipeline/entranceShuffleSteps.js` drives.",
+            "path": "scripts/procgen/seedlingEntranceShuffleHooks.mjs"
         },
         {
             "argvHelpers": [],

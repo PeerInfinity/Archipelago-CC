@@ -47,7 +47,7 @@ def test_the_seedling_playthrough_package_carries_both_effects():
     from worlds.seedling_playthrough import OPTION_ITEM_COUNTS, OPTION_LOCATION_ITEMS
     from worlds.seedling_playthrough.Options import BossLocationItems, SealsRequired
 
-    assert OPTION_ITEM_COUNTS == [("seals_required", "Seal")]
+    assert OPTION_ITEM_COUNTS == [("seals_required", "Seal", 16)]
     [(option, value, item, locations)] = OPTION_LOCATION_ITEMS
     assert (option, value, item, len(locations)) == ("boss_location_items", BossLocationItems.option_filler, "Nothing", 7)
     assert (SealsRequired.range_start, SealsRequired.range_end, SealsRequired.default) == (1, 23, 16)

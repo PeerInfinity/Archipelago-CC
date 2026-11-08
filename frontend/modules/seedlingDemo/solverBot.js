@@ -199,6 +199,7 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
+import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -6792,6 +6793,10 @@ export function previewWalk(run, wps, tolerance = 0,
         strikeOffer = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
+    // ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF: the options as before): each step is told its previewed tick,
+    // so the stepper sweeps against the drifting BeamTower Solids as that frame leaves them.
+    const previewTickOpts = CONTACT_FIDELITY.previewBeamTowerDrift
+        ? (o, at) => ({ ...o, previewTick: at - startTick }) : (o) => o;
     /**
      * ⛓⛓⛓ THE ARROWS ADVANCE ON THE SAME CLOCK AS THE WALK, AND THE WALK IS
      * WHAT DECIDES WHETHER THE TRAPS FIRE.
@@ -7217,7 +7222,7 @@ export function previewWalk(run, wps, tolerance = 0,
             sample.held = held;
             spinRow(sample, st);
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
-            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            st = step(st, held, previewTickOpts({ dashImpulse: combat.dashImpulse }, tick));
             combatAfter(tick - 1);
             truncated = lethalFloorOf(st);
             if (truncated) return;
@@ -7347,7 +7352,7 @@ export function previewWalk(run, wps, tolerance = 0,
              * sides' `hitsTimer` exactly one apart for a whole i-frame.
              */
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
-            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            st = step(st, held, previewTickOpts({ dashImpulse: combat.dashImpulse }, tick));
             combatAfter(tick - 1);
             truncated = lethalFloorOf(st);
             if (truncated) break;
@@ -7435,7 +7440,7 @@ export function previewWalk(run, wps, tolerance = 0,
             sample.held = held;
             spinRow(sample, st);
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
-            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            st = step(st, held, previewTickOpts({ dashImpulse: combat.dashImpulse }, tick));
             combatAfter(tick - 1);
             truncated = lethalFloorOf(st);
             if (truncated) break;
@@ -10900,6 +10905,24 @@ export const STANCE_BURN_DEFAULT = false;
 /** Run `fn` with `STANCE_BURN` set to `enabled`, restoring the previous value. */
 export function withStanceBurn(enabled, fn) {
     return withSwitch(STANCE_BURN, enabled, fn);
+}
+
+/**
+ * `CLEARTAG_CHAIN` (OFF): the clear-tag arm's verb, when its stance is reachable only once a prerequisite is discharged,
+ * runs that prerequisite first (`clearTagPrerequisite`: the order `prerequisiteOrder` builds, applied as the frontier
+ * applies one) and re-derives the verb against the world it changed — instead of refusing *"a clear-tag order does not
+ * chain openers"*. ⚖ The user queued CLEARTAG-CHAIN on 2026-11-05 (L40-CENSUS wall B): L40's flag 12
+ * (`hold(wandlock@480,560)`) has its stance `buttonroom@880,768` shut by `burnabletree@872,784`, which `STANCE_BURN`
+ * names. A separate switch from `STANCE_BURN`: this one consumes ANY prerequisite the derivation names (arms (a) and
+ * (b) are on at the defaults), that one only adds the tree to what may be named. `SEEDLING_CLEARTAG_CHAIN=1` /
+ * `withClearTagChain(enabled, fn)`.
+ */
+export const CLEARTAG_CHAIN = { enabled: globalThis.process?.env?.SEEDLING_CLEARTAG_CHAIN === '1' };
+export const CLEARTAG_CHAIN_DEFAULT = false;
+
+/** Run `fn` with `CLEARTAG_CHAIN` set to `enabled`, restoring the previous value. */
+export function withClearTagChain(enabled, fn) {
+    return withSwitch(CLEARTAG_CHAIN, enabled, fn);
 }
 
 /**
@@ -16483,6 +16506,53 @@ export function resetChooserPairCounts() {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE PIT-WEST — THE REMOVAL CHOOSER ANSWERS A CUT OF ANY SIZE (⚖ the user queued the slice on
+ * 2026-11-05, the L40 census's step 6: *"the chooser or kill rung for the bob cluster at the L39 arrival"*).
+ *
+ * L40's west pit corridor (legs 387/388, the L39 arrival → `out_pit_13_21`/`_14_21`) is a one-tile maze with FOUR live
+ * chasers standing in it at spawn: `puncher@128,624` in the only shaft north, `bob@192,480` in the row west of the
+ * loop, one of `bob@208,448`/`bob@224,496` on the loop's two arms, and one of `bob@352,448`/`bob@352,416` beside the
+ * pit. The smallest set whose joint removal admits a corridor has size 4, so the single chooser, C1 and CPAIR (size 3,
+ * its 4 nearest partners all west of the pit) each answer EMPTY, and the kill rung gets no target although every body
+ * in the way is one the chaser arm kills.
+ *
+ * With this switch, where the list is still empty after CPAIR, the climb asks a CUT (`chooseCutToRemove`): the joint
+ * removal of EVERY live chaser must admit a corridor (else nothing chasers can do opens one: `[]`), then each chaser that
+ * is not the hit's own is put back, the furthest from the hit point first, and stays back when the corridor survives
+ * it. What is left is an irreducible set (no member can be put back alone). It is offered only when the hit's body is
+ * in it — the hit's body first, then the rest by distance from the hit — so BAIT and the kill rung take the body the
+ * walk actually met, and the next climb (a world edit re-plans) asks again of the room the kill left: CPAIR's shape,
+ * one size up. A cut the hit's body is not part of is never offered (that body's removal changes no corridor).
+ * Cost: one `plansReach` per live chaser, plus two. ⛔ THE CUT DEFERS TO NARROW: where the NARROW rung (below KILL) is
+ * asked and its own probe walks clean, no cut is asked and NARROW answers as OFF (its probe made once, reused). Measured:
+ * without the deferral 13 already-solving L40 pit legs were re-planned through a kill, mostly longer.
+ *
+ * OFF by default. `SEEDLING_CHOOSER_CUT=1` turns it on in a node process (the page's worker reads it off the solver
+ * env channel), `withChooserCut(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk and trace
+ * is byte-identical. ON where the chooser, C1 or CPAIR already answers, nothing is asked either.
+ */
+export const CHOOSER_CUT = { enabled: globalThis.process?.env?.SEEDLING_CHOOSER_CUT === '1' };
+export const CHOOSER_CUT_DEFAULT = false;
+
+/** Run `fn` with `CHOOSER_CUT` set to `enabled`, restoring the previous value. */
+export function withChooserCut(enabled, fn) {
+    return withSwitch(CHOOSER_CUT, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `asked` climbs that asked a cut,
+ * `plans` reach asks made, `admitted` climbs a cut answered, `deferred` climbs NARROW would answer (no cut asked),
+ * `cuts` each cut offered (`{t, hit, set}`, the hit's body
+ * first), `refused` each climb that asked and offered nothing (`{t, hit, why}`).
+ */
+export const CHOOSER_CUT_COUNTS = { asked: 0, plans: 0, admitted: 0, deferred: 0, cuts: [], refused: [] };
+
+/** Zero `CHOOSER_CUT_COUNTS`. */
+export function resetChooserCutCounts() {
+    Object.assign(CHOOSER_CUT_COUNTS, { asked: 0, plans: 0, admitted: 0, deferred: 0, cuts: [], refused: [] });
+}
+
+/**
  * ⛓⛓ SEEDLING HAMMER-PHASE ICEST — THE WALK'S KILL RUNG KILLS A STATIC ICE TURRET (⚖ the user queued the slice on
  * 2026-10-26: *"Ice turret static kill"*; CPAIR's hand-over, fidelity L40LATCH's D2.2).
  *
@@ -16624,6 +16694,54 @@ export const APPROACH_DOOR_COUNTS = { doors: [] };
 /** Zero `APPROACH_DOOR_COUNTS`. */
 export function resetApproachDoorCounts() {
     APPROACH_DOOR_COUNTS.doors = [];
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE KEYLOCK-TURRET — A KEY LINE INSIDE A LIVE ICE TURRET'S RANGE: THE TURRET DIES FIRST (⚖ the
+ * user queued the slice on 2026-11-05, the L40 census's step 5, wall F; ⚖ "Carry the door for now, solve in visit after
+ * that works").
+ *
+ * L40's `bosslock@480,352` (flag 8) has its key line `{x 482–491, y 369}` in a three-cell pocket whose only way in is
+ * the column `iceturret@472,400` stands in: every lattice cell whose pinned box meets the line is inside the turret's
+ * 129 px `attackRange` disc, so `keylockCandidates` (planned with the disc as a volume) finds 0 cells and the arm
+ * refuses *"no REACHABLE stance … 0 cell(s)"* (legs 395/412). The disc is the game's: a live turret fires a three-blast
+ * volley at a player inside 128 px every `shootTimerMax` + its shot animation, and the keylock stands ~80 ticks for
+ * `BossLock`'s `keyTimer` and fade (measured on the model: braved, the stand is hit). The turret has no persistence
+ * tag, so it must die in the same visit.
+ *
+ * ON (`keylockTurretStance`), where the 16 px cells are empty and a cell around the lock is removed by an IceTurret's
+ * disc, the stance is derived again with those discs exempt. A LIVE turret among them becomes the resolution's
+ * `turretFirst` prerequisite, and the stance walk is then the executor's, not the arm's: `execKeylock` first kills it
+ * by APPROACH's fork-certified search (`approachKillForCorpse`: the loop's own walk to a staging point past the range,
+ * then per side, route and in-range wait an approach and the standing kill tried on forks, the first hitless try played
+ * on the live run; under `requireVerb('kill', …)`), reads the death back off the live run, walks to the stance with the
+ * disc exempt (a corpse does not shoot) and stands the hold as before. A dead turret's disc is exempt with no kill.
+ * Measured (W0, the model): on the key line with the turret alive a blast lands at t54 of the stand, before the lock
+ * opens at t83; with no turret the same stand is hitless. Braved instead (the disc exempt, no kill), L40's walk meets
+ * the live body: the column to the key line is the turret's own (`AVOID`: different components).
+ *
+ * OFF by default. `SEEDLING_KEYLOCK_TURRET=1` turns it on in a node process (the page's worker reads it through the
+ * solver env channel), and `withKeylockTurret(enabled, fn)` is for a test or a witness. OFF, nothing below is asked:
+ * the refusal is the one it was, byte for byte.
+ */
+export const KEYLOCK_TURRET = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET === '1' };
+export const KEYLOCK_TURRET_DEFAULT = false;
+
+/** Run `fn` with `KEYLOCK_TURRET` set to `enabled`, restoring the previous value. */
+export function withKeylockTurret(enabled, fn) {
+    return withSwitch(KEYLOCK_TURRET, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `stances` each re-derivation
+ * (`{lock, t, turrets, live, stance}`; `stance: null` when the exempt discs still leave no reachable cell) and `kills`
+ * each prerequisite kill's end (`{lock, turret, t, dead, ticks, why}`).
+ */
+export const KEYLOCK_TURRET_COUNTS = { stances: [], kills: [] };
+
+/** Zero `KEYLOCK_TURRET_COUNTS`. */
+export function resetKeylockTurretCounts() {
+    Object.assign(KEYLOCK_TURRET_COUNTS, { stances: [], kills: [] });
 }
 
 /**
@@ -20694,7 +20812,7 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
             }],
         };
     }
-    const { stance, discharged } = deriveKeylockStance(run, row, contacts, blocked);
+    const { stance, discharged, turretFirst = null } = deriveKeylockStance(run, row, contacts, blocked);
     const responder = KEY_RESPONDERS[row.tag];
     return {
         strategy: 'keylock',
@@ -20702,7 +20820,9 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
         target: { x: row.x, y: row.y },
         lock: obstacle.id,
         keyType: row.keyType,
-        stance,
+        // ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON): the stance walk is `execKeylock`'s, after the kill
+        stance: turretFirst ? null : stance,
+        ...(turretFirst ? { turretFirst } : {}),
         discharged,
         /**
          * ⛔ THE FADE IS NOT A `Lock`'S, and `opensOnKeyTick` is why this is
@@ -20791,6 +20911,11 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
             }
         }
     }
+    // ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET`, OFF): every key-line cell removed by an ice turret's disc
+    if (KEYLOCK_TURRET.enabled && candidates.length === 0) {
+        const viaTurret = keylockTurretStance(run, row, contacts, hypothesis);
+        if (viaTurret) return viaTurret;
+    }
     const siblings = base().filter((h) => keylockOutOfReach(run, h, contacts));
     const sealed = keyLineBehindLock(run, row, candidates, contacts, siblings);
     const refusal = new SolverRefusal(
@@ -20828,6 +20953,55 @@ function keylockCandidates(run, row, contacts, pitch = DEFAULT_LATTICE) {
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
     return candidates;
+}
+
+/**
+ * ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON) — `deriveKeylockStance`'s answer where its 16 px cells are empty:
+ * the IceTurret discs that remove the cells around the lock are exempted (up to every turret the cells name), the
+ * candidates are asked again, and the first one a corridor reaches (the same `stanceReaches` and hypothesis) is the
+ * stance. `null` (the arm's refusal stands, unchanged) when no cell around the lock is removed by a turret's disc, or
+ * when the discs exempt still leave no candidate or no reachable one. A LIVE turret is carried as
+ * `turretFirst` for `execKeylock`; a dead or removed one (a corpse does not shoot) only exempts its disc.
+ */
+function keylockTurretStance(run, row, contacts, hypothesis) {
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const cell = nodeAt((row.rect.x + row.rect.right) / 2, (row.rect.y + row.rect.bottom) / 2, DEFAULT_LATTICE);
+    const turrets = new Set(run.world.iceTurrets?.map((t) => t.id) ?? []);
+    const ids = new Set();
+    let exempt = new Set(contacts);
+    // Each pass exempts the turret discs the cells still name (a cell inside two discs names one per ask).
+    for (let pass = 0; pass < Math.max(1, turrets.size); pass += 1) {
+        const before = ids.size;
+        const passOpts = pass === 0 ? opts : solverPlanOpts(run, exempt, { nodeMargin: 0, triggerMargin: 0 });
+        for (let dy = -2; dy <= 2; dy += 1) {
+            for (let dx = -2; dx <= 2; dx += 1) {
+                if (dx === 0 && dy === 0) continue;
+                const c = nodeCentre(cell.tx + dx, cell.ty + dy, DEFAULT_LATTICE);
+                const ob = plannerObstacleAt(run.world, c.x, c.y, null, passOpts);
+                const h = ob?.kind === 'proximity-hazard' ? ob.blocker : null;
+                const id = h ? `${h.tag}@${h.x},${h.y}` : null;
+                if (id && turrets.has(id)) ids.add(id);
+            }
+        }
+        exempt = new Set([...contacts, ...[...ids].map((id) => `proximity-hazard:${id}`)]);
+        if (ids.size === before) break;
+    }
+    if (ids.size === 0) return null;
+    const live = [...ids].filter((id) => {
+        const t = run.entities('turrets')?.get?.(id) ?? null;
+        return t !== null && !t.dead && !t.removed;
+    });
+    const note = (stance) => KEYLOCK_TURRET_COUNTS.stances.push({ lock: row.id, t: run.ticksCompleted,
+        turrets: [...ids], live, stance });
+    for (const c of keylockCandidates(run, row, exempt)) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, hypothesis);
+        if (!reached) continue;
+        const stance = { x: c.x, y: c.y };
+        note(stance);
+        return { stance, discharged: reached.discharged, turretFirst: { kill: live, stance, exempt } };
+    }
+    note(null);
+    return null;
 }
 
 /**
@@ -20958,6 +21132,8 @@ function execKeylock(run, perTick, resolved, ctx) {
             + '— and inventing a stance for an unkeyed lock would be a wait with no '
             + 'mechanism behind it.');
     }
+    // ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON): the turret dies, then the stance walk (absent OFF)
+    if (resolved.turretFirst) keylockTurretFirst(run, perTick, resolved, ctx);
     const NO_KEYS = new Set();
     const into = leanKeys(run.state, resolved.target);
     const from = perTick.length;
@@ -20985,6 +21161,49 @@ function execKeylock(run, perTick, resolved, ctx) {
     return fail(`${ctx.what}: ${resolved.lock} did not open inside its own derived bound `
         + `of ${resolved.hold.ticks} ticks (\`opensOnKeyTick\` + slack), and the key line `
         + `was ${touched ? '' : 'NEVER '}touched. ${resolved.hold.until.why}.`);
+}
+
+/**
+ * ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON) — the keylock's prerequisite: each LIVE turret of
+ * `resolved.turretFirst.kill` killed by APPROACH's search (`approachKillForCorpse`, its "push" side the one facing the
+ * turret from the player: for a kill alone the side is free, the corpse stays where the turret dies) and its death read
+ * back off the live run; then the stance walk the arm skipped, the loop's own `walkTo` with the discs exempt (a corpse
+ * does not shoot) and the hold priced as its tail as the frontier prices it (`KEYLOCK_WAIT_PRICED`). No hitless try
+ * refuses by name (APPROACH's words); a refusal is propagated as it is, its ticks spent or not.
+ */
+function keylockTurretFirst(run, perTick, resolved, ctx) {
+    const { kill, stance, exempt } = resolved.turretFirst;
+    const lockRow = (run.world.activators ?? []).find((a) => a.id === resolved.lock);
+    for (const id of kill) {
+        requireVerb('kill', 'keylock:turretFirst', id); // ⛓ strategy switch: a nested kill, before any fork
+        const from = perTick.length;
+        const t = run.entities('turrets').get(id);
+        // The side is free (the corpse stays where the turret dies): the push direction faces it from the player.
+        const dx = t.x - run.state.x;
+        const dy = t.y - run.state.y;
+        const dir = Math.abs(dy) >= Math.abs(dx) ? { dx: 0, dy: Math.sign(dy) || -1 } : { dx: Math.sign(dx), dy: 0 };
+        let record;
+        try {
+            record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt }, { walkTo: ctx.walkTo,
+                goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
+        } catch (e) {
+            KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,
+                ticks: perTick.length - from, why: String(e?.message ?? e).split('\n')[0].slice(0, 240) });
+            throw e;
+        }
+        const dead = run.entities('turrets')?.get?.(id)?.dead === true;
+        KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead, ticks: perTick.length - from,
+            ...(record ? { side: record.side, wait: record.wait, forks: record.forks } : {}) });
+        if (!dead) fail(`${ctx.what} -> kill (${id}): the ice-turret arm returned and the run's turret is not dead`);
+    }
+    if (!hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
+        const why = kill.length ? `${kill.join(', ')} dead` : 'its turret a corpse';
+        ctx.walkTo(ctx.goal, stance, {
+            what: `${ctx.what} stance (${resolved.lock}, ${why})`,
+            contactsOverride: exempt,
+            ...(KEYLOCK_WAIT_PRICED.enabled && lockRow?.keyLine ? keylockStandWalk(run, resolved) : {}),
+        });
+    }
 }
 
 /**
@@ -24448,7 +24667,9 @@ export function deriveKillByChaser(run, body, contacts,
      * different one is two builds pretending to be one.
      */
     { aim = null, allowTeleporter = null, tolerance = 0,
-        dashMode = DEFAULT_DASH_MODE } = {}) {
+        dashMode = DEFAULT_DASH_MODE,
+        // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): the staged hunt's memo of the scan's floods (`null`: none)
+        scanMemo = null } = {}) {
     if (!(run.entities('strikeBodies') ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
@@ -24577,8 +24798,16 @@ export function deriveKillByChaser(run, body, contacts,
             + '(`shouldStop`) was reached before this rung\'s stance scan, so the scan '
             + 'was not run' };
     }
-    const aimIsPlannable = aim !== null
-        && corridorPlans(run.world, run.state, aim, allowTeleporter, planOpts);
+    // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): with a memo, the floods and the aim's answer below are the
+    // memo's when everything they read is the memo's (`stagedScanEntry`); `cells` holds each cell's answer. OFF: none.
+    const scanEntry = stagedScanEntry(scanMemo,
+        { world: run.world, state: run.state, planOpts, allowTeleporter, aim }, () => {
+            const plannable = aim !== null
+                && corridorPlans(run.world, run.state, aim, allowTeleporter, planOpts);
+            return { aimIsPlannable: plannable, reach: plansReach(run.world, allowTeleporter, planOpts) };
+        });
+    const aimIsPlannable = scanEntry.aimIsPlannable;
+    const cellMemo = scanEntry.cells;
     // ── condition 1, and the cheap half of 3 and 4 ────────────────────
     const inLeash = [];
     const candidates = [];
@@ -24602,7 +24831,7 @@ export function deriveKillByChaser(run, body, contacts,
      * `fidelityCrusher.test.js`). Measured on L40 from the L41 door: the scan was
      * 210 s of a 262 s solve. `null` (a snapped start) keeps the A* asks.
      */
-    const reach = plansReach(run.world, allowTeleporter, planOpts);
+    const reach = scanEntry.reach;
     const fromHere = reach ? reach.from(run.state) : null;
     const toAim = reach && aim !== null ? reach.to(aim) : null;
     const scanAround = (here) => {
@@ -24613,12 +24842,24 @@ export function deriveKillByChaser(run, body, contacts,
                 const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
                 if (d > leash) continue;
                 inLeash.push(c);
-                if (fineDeadlineReached('kill-chaser')) { scanTripped = true; return; }
-                scanned += 1;
-                if (!(fromHere ? fromHere(c)
-                    : corridorPlans(run.world, run.state, c, allowTeleporter, planOpts))) continue;
-                if (aimIsPlannable && !(toAim ? toAim(c)
-                    : corridorPlans(run.world, c, aim, allowTeleporter, planOpts))) continue;
+                // ⛓ STAGED-HUNT-CHEAP: a cell the memo answered is a lookup — no flood, no planner, no work unit
+                const ck = cellMemo !== null ? `${c.x},${c.y}` : null;
+                let open = cellMemo !== null ? cellMemo.get(ck) : undefined;
+                if (open === undefined) {
+                    if (fineDeadlineReached('kill-chaser')) { scanTripped = true; return; }
+                    scanned += 1;
+                    open = Boolean(fromHere ? fromHere(c)
+                        : corridorPlans(run.world, run.state, c, allowTeleporter, planOpts))
+                        && (!aimIsPlannable || Boolean(toAim ? toAim(c)
+                            : corridorPlans(run.world, c, aim, allowTeleporter, planOpts)));
+                    if (cellMemo !== null) {
+                        cellMemo.set(ck, open);
+                        STAGED_HUNT_SCAN_MEMO_COUNTS.cellsAsked += 1;
+                    }
+                } else {
+                    STAGED_HUNT_SCAN_MEMO_COUNTS.cellsReused += 1;
+                }
+                if (!open) continue;
                 candidates.push({ ...c, d,
                     approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
             }
@@ -25070,6 +25311,25 @@ function planWaypointsOrNull(world, from, aim, allowTeleporter, opts) {
  */
 export const DETOUR_RUNG = Object.freeze({ maxVias: 2, maxPreviews: 300, maxPlanned: 500 });
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE PIT-WEST — `DETOUR_VIA_BOUND` (OFF): the DETOUR search's proven no-answer, refused before it
+ * is paid for. `deriveChaserDetour` builds its via set by planning a leg to every lattice cell of the room and then
+ * previews candidates only while `planned < maxPlanned`; in a room of at least `maxPlanned` cells the loop never runs,
+ * so the rung answers `wps: null` after planning the whole set. MEASURED (L40 census, wall G): 3,479 legs of the 500
+ * planned, 0 candidates, ~3,480 work units a pass on legs 387/388/871 — the spend the page's deadline then cuts at.
+ * ON, that case is returned before any leg (the same verdict, `previews: 0`, the bound named and `viaSet` its size); a
+ * room under the bound is searched as ever. It changes no answer, only the work spent and therefore what the anytime
+ * deadline cuts, so it is its own switch. `SEEDLING_DETOUR_VIA_BOUND=1` / `withDetourViaBound(enabled, fn)`.
+ * `counts.bounded`: rungs refused up front (an instrument, read by nothing that decides).
+ */
+export const DETOUR_VIA_BOUND = { enabled: globalThis.process?.env?.SEEDLING_DETOUR_VIA_BOUND === '1', counts: { bounded: 0 } };
+export const DETOUR_VIA_BOUND_DEFAULT = false;
+
+/** Run `fn` with `DETOUR_VIA_BOUND` set to `enabled`, restoring the previous value. */
+export function withDetourViaBound(enabled, fn) {
+    return withSwitch(DETOUR_VIA_BOUND, enabled, fn);
+}
+
 /** A polyline's length, from `from` through every waypoint. */
 function corridorLength(from, wps) {
     let n = 0;
@@ -25162,6 +25422,31 @@ export function deriveChaserDetour(run, {
     const pitch = planOpts.lattice ?? DEFAULT_LATTICE;
     const from = { x: run.state.x, y: run.state.y };
     const home = nodeAt(from.x, from.y, pitch);
+    /**
+     * ⛓⛓ PIT-WEST (`DETOUR_VIA_BOUND`, OFF) — the via set below plans one leg per lattice cell of the room (home
+     * excepted), and the search loop runs only while `planned < maxPlanned`. A room with at least `maxPlanned` cells
+     * therefore spends the whole via set and previews NOTHING: the answer is `wps: null` before a leg is planned (L40,
+     * 60 x 58 cells: 3,479 legs against the bound of 500, ~3,480 work units a pass, 0 candidates). ON, that proven
+     * no-answer is returned up front with the same verdict and the bound named; OFF, the set is built as ever.
+     */
+    if (DETOUR_VIA_BOUND.enabled) {
+        const cols = Math.ceil(((run.world.width ?? 0) * TILE_SIZE) / pitch);
+        const rows = Math.ceil(((run.world.height ?? 0) * TILE_SIZE) / pitch);
+        const homeIn = home.tx >= 0 && home.tx < cols && home.ty >= 0 && home.ty < rows;
+        const cells = cols * rows - (homeIn ? 1 : 0);
+        if (cells >= maxPlanned) {
+            DETOUR_VIA_BOUND.counts.bounded += 1;
+            return {
+                wps: null, previews: 0, planned: 0,
+                bound: { name: 'DETOUR_RUNG', hit: ['maxPlanned'], previews: 0, maxPreviews, planned: 0, maxPlanned,
+                    maxVias, unasked: 0, viaSet: cells },
+                why: `no corridor can be previewed: the via set is every lattice cell of the room (${cells} at `
+                    + `${pitch} px), one planned leg each, and the search previews only while fewer than ${maxPlanned} `
+                    + 'legs are planned, so it would spend the whole set and preview 0 candidates — refused before '
+                    + 'planning a leg (DETOUR_VIA_BOUND).',
+            };
+        }
+    }
     const legs = new Map();
     let planned = 0;
     const leg = (a, b, tele) => {
@@ -26178,6 +26463,8 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
+    // ⛓ fidelity L105 D1b (`previewBeamTowerDrift`, OFF: stays empty) — one row per PHASE-arm drive the run left.
+    const phaseDriveLeft = [];
     /** ⛓ LAPSECOST D1 — the walks the narrow strike policy certified (`LAPSE_NARROW_RETRY`; empty with the lapse OFF). */
     const lapseNarrowWalks = [];
     /** ⛓ FORCEDHIT D2 — one row per crossing the forced-hit rung billed (`FORCED_HITS`; empty with it OFF). */
@@ -27486,6 +27773,59 @@ function solveSegmentUnder({
         return [];
     };
 
+    /**
+     * ⛓⛓ PIT-WEST (`CHOOSER_CUT`, OFF) — the chooser's own question asked of a CUT of live chasers: every live chaser
+     * removed must admit a corridor; then each one that is not the hit's own is put back, the furthest from the hit
+     * point first, and stays back while the corridor survives. The irreducible set left is returned (the hit's chasers
+     * first, then by distance from the hit point, ties by id) only if a hit's body cannot be put back either; else `[]`.
+     */
+    const chooseCutToRemove = (aim, contacts, allowTeleporter, hit) => {
+        const live = [...(run.entities('chasers') ?? [])];
+        const byId = new Map(live.map((c) => [c.id, c]));
+        const heads = [...new Set((hit.sources ?? []).filter((sx) => sx.kind === 'chaser' && byId.has(sx.id))
+            .map((sx) => sx.id))];
+        const t = perTick.length;
+        const refuse = (why) => {
+            CHOOSER_CUT_COUNTS.refused.push({ t, hit: heads[0] ?? null, why });
+            return [];
+        };
+        if (heads.length === 0) return refuse('no live chaser in the hit');
+        CHOOSER_CUT_COUNTS.asked += 1;
+        const dist = (c) => Math.hypot(c.x - hit.x, c.y - hit.y);
+        const volumes = dangerVolumes(run, 0);
+        const admitsWithout = (ids) => {
+            CHOOSER_CUT_COUNTS.plans += 1;
+            const gone = new Set(ids);
+            const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra,
+                extraVolumes: volumes.filter((v) => !gone.has(v.id)) });
+            const reach = plansReach(run.world, allowTeleporter, opts);
+            if (reach) return reach.from(run.state)(aim);
+            try {
+                planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
+                return true;
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+                return false;
+            }
+        };
+        let cut = live.map((c) => c.id);
+        if (!admitsWithout(cut)) return refuse('every live chaser removed admits no corridor');
+        const order = (a, b) => dist(b) - dist(a) || (a.id < b.id ? -1 : 1);
+        for (const c of live.filter((x) => !heads.includes(x.id)).sort(order)) {
+            const without = cut.filter((id) => id !== c.id);
+            if (admitsWithout(without)) cut = without;
+        }
+        // a hit body that can be put back with the rest of the cut standing is not what is in the way
+        if (!heads.some((h) => !admitsWithout(cut.filter((id) => id !== h)))) {
+            return refuse('the hit\'s body is not in the cut');
+        }
+        const set = [...heads.filter((h) => cut.includes(h)),
+            ...cut.filter((id) => !heads.includes(id)).sort((a, b) => order(byId.get(b), byId.get(a)))];
+        CHOOSER_CUT_COUNTS.admitted += 1;
+        CHOOSER_CUT_COUNTS.cuts.push({ t, hit: heads[0], set });
+        return set.map((id) => ({ ...byId.get(id), stepped: true, viaCut: set }));
+    };
+
     const reasonsOf = (d) => d.sources
         .map((x) => `${x.kind}:${x.id ?? '?'} (${x.why})`).join('; ');
 
@@ -27529,7 +27869,10 @@ function solveSegmentUnder({
     const stagedChaserHunt = (hunted, first, { goal, aim, contacts, allowTeleporter, what }) => {
         if (!fork || !rewind) return first;
         const alive = (r) => (r.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id);
-        const ask = (r) => deriveKillByChaser(r, hunted, contacts, { aim, allowTeleporter, tolerance, dashMode });
+        // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): one memo of the scan's floods for every ask below
+        const scanMemo = newStagedHuntScanMemo();
+        const ask = (r) => deriveKillByChaser(r, hunted, contacts,
+            { aim, allowTeleporter, tolerance, dashMode, scanMemo });
         const whys = [];
         const cells = [...first.waits].sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
         for (const cell of cells) {
@@ -28629,13 +28972,45 @@ function solveSegmentUnder({
                     ...(dodge.partial ? { partial: dodge.partial } : {}) });
                 if (dodge.at === null) return { wps: dodge.wps, escalations };
                 const upto = dodge.at + dodge.ticks;
-                for (const sm of dodge.walk.samples.slice(0, upto)) {
+                /**
+                 * ⛓ fidelity L105 D1b (`previewBeamTowerDrift`, OFF: not asked) — THE PREVIEW IS DRIVEN ONLY WHILE THE
+                 * RUN IS ON IT. The arm plays the preview's keys open-loop, so a run the game moved off the previewed
+                 * path (measured, leg `level_105 <- in_L104_0_16 -> …` at seam 5689 with the snapshot preview: stopped
+                 * by `beamtower@48,40`'s Solid at x 58.41 from t211, beamed at t243, three pit deaths, then out by
+                 * L105's arrival door) kept walking the keys of a walk it was no longer taking. ON: the first tick whose
+                 * live position is not the preview's next sample hands back `{escalations}` (the spit arm's shape: the
+                 * walk re-plans from where it stands), and a lane crossing is the walk's own only through ITS exit
+                 * (`drive`'s identity: the level and the arrival point, or the pit) — any other crossing is refused by
+                 * name, never returned as the goal.
+                 */
+                const driveGuard = CONTACT_FIDELITY.previewBeamTowerDrift;
+                for (let i = 0; i < upto; i += 1) {
+                    const sm = dodge.walk.samples[i];
                     const held = new Set(sm.held);
                     perTick.push(held);
+                    const before = { x: run.state.x, y: run.state.y };
                     const { transition } = run.advance(held);
+                    if (transition && driveGuard && dodge.lane && crossTo
+                        && !(transition.to_level === crossTo.level && (crossTo.pit
+                            ? rectsOverlap(terrainProbeRect(before.x, before.y), crossTo.pit.rect)
+                            : (crossTo.arrival && run.state.x === crossTo.arrival.x
+                                && run.state.y === crossTo.arrival.y)))) {
+                        refuse(`${what}: the PHASE arm's lane walk left level ${transition.from_level} for `
+                            + `${transition.to_level} at run tick ${transition.t}, landing at (${run.state.x},`
+                            + `${run.state.y}) — not the walk's own exit (level ${crossTo.level}`
+                            + `${crossTo.arrival ? `, arrival (${crossTo.arrival.x},${crossTo.arrival.y})` : ''}); a `
+                            + 'crossing by another door is not the goal', { goal, obstacle: hit.sources[0]
+                            ? { kind: 'danger', id: hit.sources[0].id } : null });
+                    }
                     // ⛓ BEAMLANE: the lane walk crosses only on the corridor's last leg — the walk ARRIVED (FORCEDHIT's
                     // shape: `walkTo` returns the transition). Measured: leg 776 re-planned L105's exit inside L106.
                     if (transition) return dodge.lane ? { forced: { transition }, escalations } : { escalations };
+                    const next = dodge.walk.samples[i + 1];
+                    if (driveGuard && next && (run.state.x !== next.x || run.state.y !== next.y)) {
+                        phaseDriveLeft.push({ tick: run.ticksCompleted, what, lane: Boolean(dodge.lane), at: i + 1,
+                            preview: { x: next.x, y: next.y }, run: { x: run.state.x, y: run.state.y } });
+                        return { escalations };
+                    }
                 }
                 const wpAt = dodge.walk.samples[upto - 1]?.wp ?? 0;
                 // ⛓ fidelity SPINNINGAXE D2: a PARTIAL stall says so, so the walk re-probes (`partialDodgeReprobe`).
@@ -28911,6 +29286,8 @@ function solveSegmentUnder({
          */
         if (activeProgress !== null) progressRung('bait');
         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
+        /** ⛓ PIT-WEST — NARROW's probe as the cut's deferral asked it (`null` OFF: never set). */
+        let cutNarrowProbe = null;
         /**
          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
          * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its
@@ -28934,6 +29311,28 @@ function solveSegmentUnder({
                 }
             }
             if (removable.length === 0) removable = choosePairToRemove(aim, contacts, allowTeleporter, hit);
+        }
+        // ⛓⛓ PIT-WEST (`CHOOSER_CUT`, OFF) — where the list is STILL empty, an irreducible cut of live chasers that
+        // holds the hit's body (`chooseCutToRemove`), the hit's body first: the kill rung takes it and re-climbs.
+        if (CHOOSER_CUT.enabled && removable.length === 0) {
+            /**
+             * ⛔ THE CUT DEFERS TO NARROW. OFF an empty list falls past KILL to NARROW (the same corridor walked with the
+             * pre-lapse strike admissions), which answers many L40 pit climbs; a cut handed to KILL (above NARROW) would
+             * replace that answer with a kill plan (measured: 13 solved pit legs re-planned, mostly longer). So the cut is
+             * asked only where NARROW is absent or its own probe (the call it makes, word for word) is dangerous.
+             */
+            const narrowAsked = Array.isArray(corridor) && corridor.length > 0 && !axisAligned
+                && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled
+                && strikePolicyFor(run, { dashMode }) !== null
+                && !(ACTIVE_DISABLE !== null && ACTIVE_DISABLE.rungs.has('narrow'));
+            if (narrowAsked) {
+                // the probe NARROW makes, kept so NARROW reuses it (no tick between: the work is OFF's)
+                cutNarrowProbe = { corridor, t: perTick.length, again: probeCorridor(corridor, dangerExcept, { axisAligned,
+                    walkCheck: true, ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true }) };
+            }
+            const narrowAnswers = narrowAsked && !cutNarrowProbe.again;
+            if (narrowAnswers) CHOOSER_CUT_COUNTS.deferred += 1;
+            else removable = chooseCutToRemove(aim, contacts, allowTeleporter, hit);
         }
         // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
         // is the body the single-return chooser used to hand them.
@@ -29676,8 +30075,11 @@ function solveSegmentUnder({
             && strikePolicyFor(run, { dashMode }) !== null && !rungGate('narrow')) {
             if (activeProgress !== null) progressRung('narrow');
             const killRefused = { rung: 'kill', why: killWhy };
-            const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
-                ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true });
+            // ⛓ PIT-WEST (`CHOOSER_CUT` ON only): the probe the cut's deferral made at this tick, reused
+            const again = cutNarrowProbe !== null && cutNarrowProbe.corridor === corridor && cutNarrowProbe.t === perTick.length
+                ? cutNarrowProbe.again
+                : probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
+                    ...(stand ? { stand } : {}), iframeLapse: false, requireArrival: true });
             if (!again) {
                 rowFor('narrow', killRefused, { waypoints: corridor.length });
                 lapseNarrowWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
@@ -30362,6 +30764,12 @@ function solveSegmentUnder({
          * with that wait as its tail.
          */
         stand = null,
+        /**
+         * ⛓ fidelity CEREMONY126 D2 (`CONTACT_FIDELITY.ceremonyWalkHandoff`) — the walk ends when a pickup ceremony
+         * starts on it (`drive`'s `endOnCeremony`), and the pickup's own volume `{x, y}` is entered, not refused; asked
+         * only by the collect goal's stance walk, whose verb pages the ceremony. null: today's walk.
+         */
+        ceremonyEnds = null,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -30994,6 +31402,7 @@ function solveSegmentUnder({
                         axisAligned,
                         intermediate: !last,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
+                        ...(ceremonyEnds !== null ? { endOnCeremony: ceremonyEnds } : {}),
                     });
                     if (t && crossTo) {
                         if (laneCert) settleLaneWalk(laneCert, t);
@@ -31490,6 +31899,71 @@ function solveSegmentUnder({
      * (the goal's `presser` is not a presser of this level, or does not write this
      * clear).
      */
+    /**
+     * ⛓⛓⛓ hammer-phase CLEARTAG-CHAIN (`CLEARTAG_CHAIN`, OFF) — **THE CLEAR-TAG VERB'S STANCE PREREQUISITE, RUN FIRST.**
+     *
+     * `execClearTag`'s solid arm resolves its verb (a `hold` for a wandlock) once, and a resolution that says *"my stance
+     * is reachable once `<id>` is discharged"* was refused there: only the frontier (`walkToUnder`) consumed a
+     * prerequisite. L40's flag 12 is the measured case (L40-CENSUS wall B): `hold(wandlock@480,560)`'s stance
+     * `buttonroom@880,768` is behind `burnabletree@872,784`, which `STANCE_BURN`'s arm (c) names.
+     *
+     * The order is `prerequisiteOrder`'s, unchanged — the same depth bound (`NESTED_OPENER_DEPTH`, the goal's
+     * `openerChain`), the same strategy row and registration check, its aim the stance it unlocks and its exemptions
+     * the derivation's — and it is APPLIED as the frontier applies one: the goal's strategy bound (`applied`), a trace
+     * row, the shut-before snapshot, the stance walk (registered in `stanceWalks`), the executor through the strategy
+     * switch (`callableExecutor`), and the exemptions carried. The caller then re-derives its verb from where this
+     * left the player, against the world the order changed, never against a promise about it.
+     */
+    const clearTagPrerequisite = (goal, identified, contacts, what) => {
+        const order = prerequisiteOrder(goal, { x: goal.at.x, y: goal.at.y }, identified, contacts, null, what);
+        const label = `${order.strategy}(${order.obstacle.id})`;
+        if (strategyBoundReached(applied, label)) {
+            refuse(`${what}: applied ${applied.length} strategies for one goal [${applied.join(', ')}] and `
+                + `${identified.obstacle.id}'s stance still needs ${label} first (⛓ CLEARTAG-CHAIN).`,
+            { goal, obstacle: order.obstacle });
+        }
+        applied.push(label);
+        seeRow({
+            tick: perTick.length,
+            saw: saw(),
+            goal: { kind: goal.kind, tag: { ...goal.tag }, at: { x: goal.at.x, y: goal.at.y } },
+            obstacle: { kind: order.obstacle.kind, id: order.obstacle.id },
+            strategy: { verb: order.strategy, prerequisiteOf: identified.obstacle.id },
+            rejected: order.resolved.rejected ?? [],
+            keys: [],
+        });
+        const before = {
+            open: run.entities('openActivators'),
+            armed: run.entities('armedPulsers') ?? new Set(),
+            trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+            chests: run.entities('openChests'),
+        };
+        const verbFrame = activeProgress === null ? null : progressEnter(`verb:${order.strategy}`, 'verb', order.strategy);
+        if (activeProgress !== null) progressFrame({ target: order.obstacle.id, stance: order.resolved.stance }); // ⛓ TC2: the order
+        if (order.resolved.stance) {
+            const walking = `${label}#${perTick.length}`;
+            stanceWalks.add(walking);
+            try {
+                walkTo(goal, order.resolved.stance, {
+                    what: `${what} -> ${order.strategy} stance (${order.obstacle.id})`,
+                    contactsOverride: order.resolved.exempt,
+                    axisAligned: order.resolved.approach === 'axis-aligned',
+                });
+            } finally {
+                stanceWalks.delete(walking);
+            }
+        }
+        const record = callableExecutor(frontierExecutor(order.strategy), order.strategy, 'clear-tag-prerequisite')(
+            run, perTick, order.resolved, {
+                maxTicksPerTarget, economies, dashMode, what: `${what} -> ${order.strategy}`, before,
+                walkTo, goal, equip, fork, rewind,
+            });
+        records.push({ goal: goal.kind, strategy: order.strategy, prerequisiteOf: identified.obstacle.id, ...record });
+        if (verbFrame !== null) progressLeave(verbFrame);
+        for (const c of order.resolved.exempt ?? []) exemptions.add(c);
+        return order;
+    };
+
     const execClearTag = (goal) => {
         const flag = { level: goal.tag.level, tag: goal.tag.tag };
         const parsed = goal.obstacle ? /^([a-z0-9_]+)@(-?\d+),(-?\d+)$/i.exec(goal.obstacle) : null;
@@ -31847,23 +32321,53 @@ function solveSegmentUnder({
                     + 'yet (a later slice\'s row, computed rather than guessed)'
                 : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
         }
-        const contacts = new Set([...senseContacts(run), ...exemptions]);
-        let resolved;
-        try {
-            resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
-                { x: goal.at.x, y: goal.at.y }, null, [...refusedOrders]);
-        } catch (e) {
-            if (!(e instanceof SolverRefusal)) throw e;
-            refuseCT('unresolved', `'${strategy}' could not be resolved from (${run.state.x},`
-                + `${run.state.y}): ${e.message}`);
+        const resolveCT = () => {
+            const contacts = new Set([...senseContacts(run), ...exemptions]);
+            let resolved;
+            try {
+                resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
+                    { x: goal.at.x, y: goal.at.y }, null, [...refusedOrders]);
+            } catch (e) {
+                if (!(e instanceof SolverRefusal)) throw e;
+                refuseCT('unresolved', `'${strategy}' could not be resolved from (${run.state.x},`
+                    + `${run.state.y}): ${e.message}`);
+            }
+            if (!resolved) {
+                refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the `
+                    + 'resolver could not bind this obstacle against live state');
+            }
+            if (resolved.held === false) {
+                refuseCT('cannot-act', `'${strategy}' cannot act on ${id} with this run's bag — `
+                    + `${resolved.rejected?.[0]?.why ?? 'the resolver said held: false'}`);
+            }
+            return { resolved, contacts };
+        };
+        let { resolved, contacts } = resolveCT();
+        /**
+         * ⛓ hammer-phase CLEARTAG-CHAIN (`CLEARTAG_CHAIN`, OFF): the stance's prerequisite runs first, and the verb is
+         * re-derived from where it left the player (`clearTagPrerequisite`). Bounded by `prerequisiteOrder`'s own
+         * `NESTED_OPENER_DEPTH` and the goal's strategy bound; a prerequisite named again after its order ran is refused
+         * by name. OFF: the loop never runs and the refusal below is the one it always was.
+         */
+        const chained = [];
+        while (CLEARTAG_CHAIN.enabled && resolved.prerequisite) {
+            const p = resolved.prerequisite;
+            if (chained.includes(p.id)) {
+                refuseCT('prerequisite', `'${strategy}''s stance is still reachable only once ${p.id} is discharged `
+                    + `(${p.via}: ${p.why}), after the order for it ran — the prerequisite did not take, and running it `
+                    + 'again would be the same order again (⛓ CLEARTAG-CHAIN)');
+            }
+            chained.push(p.id);
+            clearTagPrerequisite(goal, { obstacle, resolved }, contacts, whatCT);
+            if (written()) break;
+            ({ resolved, contacts } = resolveCT());
         }
-        if (!resolved) {
-            refuseCT('unresolved', `'${strategy}' is SELECTED and REGISTERED for ${key}, and the `
-                + 'resolver could not bind this obstacle against live state');
-        }
-        if (resolved.held === false) {
-            refuseCT('cannot-act', `'${strategy}' cannot act on ${id} with this run's bag — `
-                + `${resolved.rejected?.[0]?.why ?? 'the resolver said held: false'}`);
+        if (CLEARTAG_CHAIN.enabled && chained.length && written()) {
+            const waited = waitForWrite(`the prerequisite order for ${id}'s '${strategy}' cleared it`);
+            done('cleared-in-passing', { waited, during: 'prerequisite', strategy, prerequisites: chained,
+                why: `the order for ${chained.join(', ')} (${id}'s '${strategy}' stance prerequisite) cleared ${id} on `
+                    + 'its way — the verb is not run' });
+            return;
         }
         if (resolved.prerequisite) {
             refuseCT('prerequisite', `'${strategy}''s stance is reachable only once `
@@ -32436,6 +32940,9 @@ function solveSegmentUnder({
             // ⛓ STRIKELAPSE D1: the collect's approach is the walk's priced tail (`collectStandWalk`; lapse ON only).
             ...(CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect'
                 ? collectStandWalk(run, resolved, stance) : {}),
+            // ⛓ fidelity CEREMONY126 D2: a ceremony this walk starts ends it; `execCollect` pages it.
+            ...(CONTACT_FIDELITY.ceremonyWalkHandoff && resolved.strategy === 'collect'
+                ? { ceremonyEnds: { x: resolved.target.x, y: resolved.target.y } } : {}),
         });
         if (collectedInPassing('on the walk to its stance')) continue;
         // ⛓ STRIKELAPSE D1: the approach that follows was PROBED as the walk's tail (`collectStandWalk`), so the gate
@@ -32612,6 +33119,7 @@ function solveSegmentUnder({
          * replaced, cut to 200 characters).
          */
         ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
+        ...(phaseDriveLeft.length ? { phaseDriveLeft } : {}),
         ...(lapseNarrowWalks.length ? { lapseNarrowWalks } : {}),
         /**
          * ⛓ hammer-phase B3 — an optional result field, present only when a press kill's fight fallback ran

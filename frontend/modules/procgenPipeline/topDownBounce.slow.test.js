@@ -30,7 +30,7 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-    REGION_GEOMETRY, topDownFromRulesJson, buildRulesJson, geometryOf, getRegionEntrance,
+    REGION_GEOMETRY, collectUsedFreeItems, topDownFromRulesJson, buildRulesJson, geometryOf, getRegionEntrance,
 } from './procgenPipelineEngine.js';
 import { computeItemSpheres } from './spherePlanner.js';
 
@@ -162,6 +162,21 @@ describe('top-down — bounce region with surplus arrowless exits (free-arrow dr
         // Logic unchanged end-to-end: the realised world reproduces the
         // source's item spheres (no arrow gate leaked into reachability).
         expect(computeItemSpheres(out)).toEqual(computeItemSpheres(source));
+    });
+
+    it('⛓ P5d — the drift RECORDS the free items it leaned on (only those are granted), nothing else', () => {
+        const free = ['Left arrow', 'Right arrow', 'Springs'];
+        const { used } = collectUsedFreeItems(() => topDownFromRulesJson(fourExitBounceSource(), { ...OPTS, freeItems: free }));
+        // mutant: no noteFreeItemUsed at the drift → [] (the grant would drop the arrows the Hub's geometry needs)
+        expect(used.length).toBeGreaterThan(0);
+        expect(used.every((n) => ['Left arrow', 'Right arrow'].includes(n))).toBe(true);
+        // a candidate no drift used is not recorded (Springs is free, never drifted onto)
+        expect(used).not.toContain('Springs');
+        // no surplus exits → no drift → nothing recorded
+        const plain = collectUsedFreeItems(() => topDownFromRulesJson(mixedSource(), {
+            gridDims: { width: 6, height: 6 }, seed: 1, substrateByRegion: { BounceZone: 'bounce', Hub: 'maze', End: 'maze' }, freeItems: free,
+        }));
+        expect(plain.used).toEqual([]);
     });
 
     it('drifts surplus exits whose gate is a non-substrate authored lock', () => {

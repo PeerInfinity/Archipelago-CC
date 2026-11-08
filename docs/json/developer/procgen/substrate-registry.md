@@ -176,6 +176,16 @@ A substrate may put an item of its own into a region. For example, a lock and th
 
 `flash_seedling_gen` declares it: its key gate's five key items ([Flash Substrate](./flash.md#declarations-g9)). In the plan-less modes a generated room's key gate takes the least colour in neither `held` nor `introduced`. An explicit `keygate;type=N` whose key already stands elsewhere is refused (`keygate-colour-shared`), and so is a sixth key-gate room (`keygate-colours-exhausted`). `keygate-colour-not-allocated` stays only for a room handed neither a request nor `introduced`.
 
+### Build-time — goal containers
+
+A substrate may let a region's GOAL take a container other than its default. For example, a generated Seedling room asked for a goal chest makes its location 0 the chest instead of the torch pickup. It reports what happened by declaring `goalContainer`, read only through `procgenCore/goalContainer.js`:
+
+- `goalContainer.noteOf(payload)`: one region's note, read off its SERIALISED sidecar payload (the bytes the world ships, after every re-roll). `null` means the region was not configured for a goal container. `{placed: true}` means it got one. `{placed: false, reason}` means it kept its default goal, and `reason` is a name the substrate declares once, or one from `GOAL_CONTAINER_NOT_PLACED_REASONS`.
+
+**The goal-containers report.** `procgen_metadata["<p>"].goalContainers = { requested, placed, notPlaced: {<reason>: <count>} }`, the shape of the introductions report above. `buildRulesJson` folds the notes of the slot's own sidecars (`goalContainerReportOfSidecars`). It is the SLOT's, like the rest of that block. The field is ABSENT, never empty, when no region was configured, so every other world's metadata is unchanged. The one reason `procgenCore/goalContainer.js` names is `no-ap-location`: the container stands as the region's goal, but the region holds no AP location to be it (a spiral room dealt no item).
+
+`flash_seedling_gen` declares it ([Flash Substrate](./flash.md#declarations-g9)). Its other reasons are the generator's own goal-chest refusals: `the-goal-chest-has-no-stance-pocket` and `the-goal-chest-pocket-is-not-legal`.
+
 ### Build-time — content sources (zone-based substrates)
 
 A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
@@ -197,6 +207,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `regionSourceDefault` | `'zone'`: the editor's Region generation form opens on the zone source even though the entry also realises a spec (jta: its own zone keeps its perks, while Generate builds a sphere-style zone). Absent: the form opens on Generate unless the target has no realiser. |
 | `onContentEdit(doc)` | Restamp a hand-edited content document (hash, id suffix, validation); idempotent. A changed id clears downstream steps. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `rulesJsonBlocks()` | `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` (and the APWorld Editor's initialise op) for substrates that realised a region, each under the slot (`{"<p>": block}`, rules F2). A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
+| `entranceShuffle` | `{atlasIds, loadHooks()}`: the atlases this substrate's ENTRANCE SHUFFLE runs over (ER E4b), and a loader for its hooks — `pool({atlasId})` → `{atlas}`, `classify(atlas)` → `{doorways, target_group_lookup, pinned, outOfScope}` (every doorway the shuffle may move, by a stated rule; a doorway no rule classifies is a refusal), `compile(atlas, {moved})` → `{rules}` (the substrate's own producer over the shuffled doc) and optional `checks(rules, ctx)` → reasons to reject a layout. `procgenPipeline/entranceShuffleSteps.js` (the `entranceShuffle` mode) resolves them with `entranceShuffleHooksFor(atlasId)` and never names a substrate. Seedling's `flash_seedling` declares the playthrough atlas; its hooks (`scripts/procgen/seedlingEntranceShuffleHooks.mjs`) are NODE-ONLY, so the mode runs headless (`runPresetHeadless`, `scripts/procgen/entrance-step.js`). |
 | `restartWarp` | Declared when this substrate's runtime answers the Menu panel's Restart by warping the player to the start region (`procgenCore/restartWarp.js`'s `RESTART_WARP`). If any substrate that realised a region declares it, `buildRulesJson` writes `exporter[p].return_to_menu: true`: returning to the menu is always possible. It is a flag, never an edge (no region gets an exit into `Menu`). `region-atlas-compile.mjs` and the playthrough generator ask the same declaration. Position-aware readers honour it: `scripts/procgen/census-soft-locks.mjs` lists Restart-only regions as a diagnostic, the route survey may Restart, and the client's route planners (the Playback Bot, the region graph's one-step move) begin a route with a RESTART step when no walk exists (`procgenCore/restartRoute.js`). Seedling's two entries declare it; a world of maze rooms only does not. |
 | `victoryItem` | Declares that a world with this substrate in its quota has a goal even when the scenario pool has no `is_victory` item. In the shuffled spiral and sphere growth the goal is always the one item `Victory` (`procgenCore/goalItem.js`); grid growth still completes on this item. |
 
@@ -280,7 +291,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 97 fields · 16 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 100 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -386,12 +397,20 @@ Groups are this document's own § headings, matched to a field by the section th
 | `itemIntroduction.introducibleItems` | — | — | — | fn | — | — | — | — | — |
 | `itemIntroduction.replayableItems` | — | — | — | fn | — | — | — | — | — |
 
+**Build-time — goal containers**
+
+| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|
+| `goalContainer` | — | — | — | {noteOf} | — | — | — | — | — |
+| `goalContainer.noteOf` | — | — | — | fn | — | — | — | — | — |
+
 **Build-time — content sources (zone-based substrates)**
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
 | `applyPipelineConfig` | — | — | fn | — | fn | — | — | fn | — |
 | `emitsSpiralContent` | — | — | — | — | yes | — | — | — | — |
+| `entranceShuffle` | — | — | {atlasIds, loadHooks} | — | — | — | — | — | — |
 | `extractZoneRules` | fn | — | fn | — | fn | — | fn | fn | — |
 | `fillerItem` | — | — | — | — | — | — | Noiz2sa Star | — | — |
 | `getSpiralContent` | — | — | — | — | fn | — | — | — | — |

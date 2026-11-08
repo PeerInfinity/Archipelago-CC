@@ -34,14 +34,15 @@ import {
 import {
     GRANTED_AS_STARTING, describeRegeneration, grantsClause, regenerateOpRefusal, regenerateRealiserRefusal,
 } from './rulesDocOps.js';
-import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
+import { grantedLibraryItems, grantsUsedBy } from '../procgenPipeline/topDownSteps.js';
 import { itemIdsOf } from './slotInitialise.js';
 import {
     REPLACE_REGION_CONTENT_OP, zoneOptions, zoneSourceFacts, zoneSourceLabelOf, zoneSourceRefusal,
 } from './regionContent.js';
 import { payloadBuiltBy } from './sidecarIssues.js';
 import {
-    REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
+    REGION_GENERATION_CANCELLED, REGION_GENERATION_CANCELLED_ON_PAGE, regionGenerationLoadTimeoutSentence,
+    regionGenerationPageTimeoutSentence, regionGenerationTimeoutSentence,
 } from './regionGenerationRun.js';
 
 /** ⛓ The bag key the form's seed row binds. */
@@ -239,18 +240,22 @@ export function regenerateArgsRefusal(args, { fetched = {} } = {}) {
  * is nothing to grant, and for a LIBRARY or ZONE source (nothing drifts, no
  * free items are handed).
  */
-export function regenerationGrants(doc, player, target, { source } = {}) {
+export function regenerationGrants(doc, player, target, { source, used } = {}) {
     if (source?.kind === REGION_SOURCE_KINDS.LIBRARY || source?.kind === REGION_SOURCE_KINDS.ZONE) return null;
-    const g = grantedLibraryItems(doc, player, [target], { avoidIds: itemIdsOf(doc, player) });
+    const avoidIds = itemIdsOf(doc, player);
+    // ⛓ P5d — `used` (the realise's `freeItemsUsed`): only the candidates it drifted onto.
+    //   Absent (before the run: the form's sentence) = every candidate.
+    const g = grantsUsedBy(grantedLibraryItems(doc, player, [target], { avoidIds }), used ?? null,
+        { substrateIds: [target], avoidIds });
     return g.grantedItems.length ? { items: g.defs, starting: g.grantedItems } : null;
 }
 
-/** ⛓ The form's grant sentence — `null` when nothing is granted. */
+/** ⛓ The form's grant sentence (before the run: the CANDIDATES) — `null` when there are none. */
 export function grantsSentence(grants) {
     if (!grants) return null;
     const n = grants.starting.length;
-    return `${n} library item${n === 1 ? '' : 's'} [${grants.starting.join(', ')}] will be ${GRANTED_AS_STARTING} — `
-        + 'the slot does not define them and the realiser is handed them free, so the same edit declares them.';
+    return `${n} library item${n === 1 ? '' : 's'} [${grants.starting.join(', ')}] may be ${GRANTED_AS_STARTING} — `
+        + 'the realiser is handed them free, and the same edit declares only those a surplus exit drifts onto.';
 }
 
 /** ⛓ The landed Generate's answer, with the grants named. */
@@ -332,6 +337,9 @@ export function regenerationAnswer(args, res, budgetS) {
     if (res.timedOut && res.phase === 'loading') {
         return { landed: false, text: regionGenerationLoadTimeoutSentence(res.budgetMs) };
     }
+    // ⛓ P5c — a run finished on the page stopped no worker: its own sentences.
+    if (res.timedOut && res.onPage) return { landed: false, text: regionGenerationPageTimeoutSentence(budgetS, substrate, region) };
+    if (res.cancelled && res.onPage) return { landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED_ON_PAGE}.` };
     if (res.timedOut) return { landed: false, text: regionGenerationTimeoutSentence(budgetS, substrate, region) };
     if (res.cancelled) return { landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED}.` };
     if (res.unavailable || res.workerFailed) return { landed: false, text: `apworld: ${res.threw}` };

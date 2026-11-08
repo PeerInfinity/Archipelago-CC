@@ -1,0 +1,193 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-EG2Y9P/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ [32m✓[39m scripts/procgen/boxLock.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 19949[2mms[22m[39m
+     [33m[2m✓[22m[39m takes the box, naming who took it and the head it froze [33m 310[2mms[22m[39m
+     [33m[2m✓[22m[39m releases on exit, so the next taker takes it cleanly [33m 398[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses a second taker BY NAME, printing holder / pid / since / head [33m 406[2mms[22m[39m
+     [33m[2m✓[22m[39m reclaims a stale lock by `kill -0`, naming whom it reclaimed from [33m 438[2mms[22m[39m
+     [33m[2m✓[22m[39m lets exactly ONE of eight simultaneous takers hold the box; the rest refuse [33m 3267[2mms[22m[39m
+     [33m[2m✓[22m[39m serialises four QUEUED simultaneous takers — every one takes, no two hold at once [33m 7126[2mms[22m[39m
+     [33m[2m✓[22m[39m lets the holder's own child pass through, and says that is what happened [33m 529[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a QUEUED taker die on SIGTERM — it never takes the box later [33m 2617[2mms[22m[39m
+     [33m[2m✓[22m[39m passes when nothing moved, and refuses BY ROW when the head does [33m 819[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses on a tracked-porcelain move at an UNCHANGED head [33m 722[2mms[22m[39m
+     [33m[2m✓[22m[39m makes a REAL browser gate refuse before it spends anything [33m 1653[2mms[22m[39m
+     [33m[2m✓[22m[39m never derives a --structure command into a standing row [33m 321[2mms[22m[39m
+     [33m[2m✓[22m[39m is DECLARED by the gate, not detected from its text [33m 387[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerClearTagStand.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 24652[2mms[22m[39m
+     [33m[2m✓[22m[39m L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits [33m 11572[2mms[22m[39m
+     [33m[2m✓[22m[39m L0 leg 105: ON answers OFF's plan byte for byte (its transit is punched, so the kill already ran first) [33m 13040[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js [2m([22m[2m12 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 11737[2mms[22m[39m
+     [32m✓[39m both are ON by default, and `with…` restores them, on a throw too[32m 2[2mms[22m[39m
+     [33m[2m✓[22m[39m `l30keylock-pit224-before`: on the key line at t133, hit at t173 (sword) and t193 (body), open only at t212 [33m 301[2mms[22m[39m
+     [32m✓[39m `l30keylock-pit224`: the body dies first, then the key line, then the crossing into L22 — zero hits[32m 82[2mms[22m[39m
+     [32m✓[39m `l30keylock-pit240`: the body dies first, then the key line, then the crossing into L22 — zero hits[32m 68[2mms[22m[39m
+[31m     [31m×[31m both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice[39m[33m 3160[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens [33m 1049[2mms[22m[39m
+     [33m[2m✓[22m[39m RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait [33m 2470[2mms[22m[39m
+[31m     [31m×[31m WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick[39m[33m 1643[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (224,80): the solver's own plan IS the witness `l30keylock-pit224` (kill, lock, crossing) [33m 1221[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (240,80): the solver's own plan IS the witness `l30keylock-pit240` (kill, lock, crossing) [33m 1094[2mms[22m[39m
+     [33m[2m✓[22m[39m the chaser arm at the pit landing: the player's box prices nothing; the body's box finds (88,120) [33m 620[2mms[22m[39m
+     [32m✓[39m `previewWalk`'s `standKeys` tail presses the stand's keys and no strike; without it the tail is unchanged[32m 18[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStagedHuntScanMemo.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 7277[2mms[22m[39m
+     [33m[2m✓[22m[39m on BK2COMBAT's corridor run: the memo's answer is the no-memo answer, ask after ask and after a still tick; the second ask computes no cell [33m 7263[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/entityBlocks.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 3721[2mms[22m[39m
+     [33m[2m✓[22m[39m is in neither the simulation closure nor the solver-family closure [33m 2409[2mms[22m[39m
+     [33m[2m✓[22m[39m is imported by nothing but its own test [33m 485[2mms[22m[39m
+     [33m[2m✓[22m[39m …and a grep of `entities('<family>')` over the family files finds the same files [33m 703[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBk2Combat.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 4257[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: deriveKillByChaser carries no `waits`; ON: the same answer plus the cells the body never came to, nearest last [33m 4226[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 3238[2mms[22m[39m
+     [33m[2m✓[22m[39m sets CHOOSER_PAIR (on, size 3) in the worker before solverBot loads; nothing else [33m 384[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env [33m 741[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 1056[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 915[2mms[22m[39m
+ [32m✓[39m scripts/git-hooks/boxLockCommit.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 2292[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses a foreign LIVE holder on this tree: exit 1 and the sentence [33m 1342[2mms[22m[39m
+     [33m[2m✓[22m[39m stops a real `git commit` in the locked tree, and not in another [33m 342[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/strategySwitch.test.js [2m([22m[2m22 tests[22m[2m)[22m[33m 1350[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) absent: the worker's answer gains no field; present: it names the list, even on a refusal [33m 1287[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js [2m([22m[2m16 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 28730[2mms[22m[39m
+     [32m✓[39m orbitFreeAim ships OFF[32m 1[2mms[22m[39m
+     [32m✓[39m the projection searches 10° steps out to 180° each side, at four radius offsets[32m 1[2mms[22m[39m
+     [32m✓[39m the staging boots in the corridor and banks spinner@816,848 {40,15} and spinner@880,848 {40,16}; the chest, the tree and the BobSoldier stand[32m 118[2mms[22m[39m
+     [32m✓[39m the recording: the blade lands on the player at t55[32m 0[2mms[22m[39m
+     [32m✓[39m the model reproduces it at 0 px, both hits included (t55, t75)[32m 282[2mms[22m[39m
+     [32m✓[39m the recorded tape is the shipped orbit's own keys (candidate 2, orbitFreeAim OFF)[32m 118[2mms[22m[39m
+[31m     [31m×[31m OFF the solver's orbit arm finds no hitless candidate[39m[33m 15652[2mms[22m[39m
+     [32m✓[39m the recording: never hit, and the BobSoldier is gone from t125[32m 1[2mms[22m[39m
+     [33m[2m✓[22m[39m the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px [33m 384[2mms[22m[39m
+[31m     [31m×[31m ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key[39m[33m 11570[2mms[22m[39m
+     [32m✓[39m the recording: never hit, and the BobSoldier is gone (the open pocket's projected orbit)[32m 4[2mms[22m[39m
+     [33m[2m✓[22m[39m the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px [33m 584[2mms[22m[39m
+     [32m✓[39m strategyBoundDistinct ships OFF[32m 0[2mms[22m[39m
+     [32m✓[39m OFF every application counts: leg 853's four refuse the fifth[32m 0[2mms[22m[39m
+     [32m✓[39m ON the distinct ones count (leg 853 has three), and four distinct still refuse[32m 0[2mms[22m[39m
+     [32m✓[39m ON a goal that repeats one application is stopped at 8 in all (the loop's backstop)[32m 0[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/contentIdentity.test.js [2m([22m[2m30 tests[22m[2m)[22m[32m 230[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingSolverSurface.test.js [2m([22m[2m36 tests[22m[2m)[22m[33m 64857[2mms[22m[39m
+     [33m[2m✓[22m[39m (iv) the family file list equals the import closure [33m 1226[2mms[22m[39m
+     [33m[2m✓[22m[39m the import door's closure is the simulation's: solverView.js pulls in no family file [33m 627[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED [33m 2560[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files` [33m 2518[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door [33m 2275[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED" [33m 2952[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments) [33m 3690[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule [33m 2537[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED" [33m 2654[2mms[22m[39m
+     [33m[2m✓[22m[39m (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice [33m 2731[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table" [33m 3536[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT naming a simulation module in a family file ⇒ GREEN [33m 2739[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once [33m 2268[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family" [33m 2824[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.entities(name) with a variable ⇒ RED, a named blind spot [33m 2368[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table [33m 2881[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) a COMMENT naming run.pushables in a family file ⇒ GREEN [33m 2563[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once [33m 2762[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once [33m 1869[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS [33m 2250[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name) [33m 2529[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table [33m 2431[2mms[22m[39m
+     [33m[2m✓[22m[39m (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values [33m 1581[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN [33m 1685[2mms[22m[39m
+     [33m[2m✓[22m[39m (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both" [33m 1743[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js[2m > [22mL30KEYLOCK D2 — the solver, switch by switch, from both pit landings[2m > [22mboth OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice
+[31m[1mAssertionError[22m: expected 318 to be null[39m
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+318
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js:[2m117:26[22m[39m
+    [90m115| [39m        const p = await l30keylockPlan(224, { rescan: false, waitPrice…
+    [90m116| [39m        [35mconst[39m v [33m=[39m [34mverdict[39m(p)[33m;[39m
+    [90m117| [39m        [34mexpect[39m(v[33m.[39msolved)[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                         [31m^[39m
+    [90m118| [39m        expect(v.refusal).toMatch(/the danger map forbids \(71\.77\d*,…
+    [90m119| [39m        [34mexpect[39m(v[33m.[39mhits)[33m.[39m[34mtoBe[39m([34m2[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js[2m > [22mL30KEYLOCK D2 — the solver, switch by switch, from both pit landings[2m > [22mWAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick
+[31m[1mAssertionError[22m: expected { Object (solved, hits, ...) } to match object { solved: 309, hits: +0 }
+(1 matching property omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[2m    "hits": 0,[22m
+[32m-   "solved": 309,[39m
+[31m+   "solved": 318,[39m
+[2m  }[22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js:[2m141:14[22m[39m
+    [90m139| [39m    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80)…
+    [90m140| [39m        expect(verdict(await l30keylockPlan(224, { rescan: false, wait…
+    [90m141| [39m            [33m.[39m[34mtoMatchObject[39m({ solved[33m:[39m [34m309[39m[33m,[39m hits[33m:[39m [34m0[39m })[33m;[39m
+    [90m   | [39m             [31m^[39m
+    [90m142| [39m        const v = verdict(await l30keylockPlan(240, { rescan: false, w…
+    [90m143| [39m        [34mexpect[39m(v)[33m.[39m[34mtoMatchObject[39m({ solved[33m:[39m [35mnull[39m[33m,[39m hits[33m:[39m [34m0[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js[2m > [22mL40BK2B W0 — the shipped orbit in the notch, on the game (`l40bk2b-orbit-plain`)[2m > [22mOFF the solver's orbit arm finds no hitless candidate
+[31m[1mAssertionError[22m: expected 'solverBot(l40bk2b) chest (880,816) st…' to contain 'orbit arm: no orbit kill of bobsoldie…'[39m
+
+Expected: [32m"orbit arm: no orbit kill of bobsoldier@880,832 is hitless (20 fork(s) of 20)"[39m
+Received: [31m"solverBot(l40bk2b) chest (880,816) stance: the re-planned corridor failed too — solverBot(l40bk2b) chest (880,816) stance waypoint 1 (888,834): the route entered a proximity-hazard — chest at (880,816) in level 40 — at (887.8625996833347,834.7981671803376). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught."[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js:[2m86:33[22m[39m
+    [90m 84| [39m        const { out, refusal } = await l40Bk2bSolve({ orbitFreeAim: fa…
+    [90m 85| [39m        [34mexpect[39m(out)[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m 86| [39m        expect(refusal.message).toContain('orbit arm: no orbit kill of…
+    [90m   | [39m                                [31m^[39m
+    [90m 87| [39m    }[33m,[39m [34m180_000[39m)[33m;[39m
+    [90m 88| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js[2m > [22mL40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)[2m > [22mON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key
+[31m[1mAssertionError[22m: expected 112 to be 125 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 125[39m
+[31m+ 112[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js:[2m112:51[22m[39m
+    [90m110| [39m        [35mconst[39m { refusal } [33m=[39m [35mawait[39m [34ml40Bk2bSolve[39m([33mL40BK2B_D1_SWITCHES[39m)[33m;[39m
+    [90m111| [39m        [35mconst[39m perTick [33m=[39m refusal[33m.[39mperTick[33m.[39m[34mmap[39m((k) [33m=>[39m [[33m...[39mk][33m.[39m[34msort[39m())[33m;[39m
+    [90m112| [39m        [34mexpect[39m([35mawait[39m [34ml40Bk2bRemovalTick[39m(perTick))[33m.[39m[34mtoBe[39m([34m125[39m)[33m;[39m
+    [90m   | [39m                                                  [31m^[39m
+    [90m113| [39m        [35mconst[39m { createTapeStepper } [33m=[39m [35mawait[39m [35mimport[39m([32m'./tapeRunner.js'[39m)[33m;[39m
+    [90m114| [39m        [35mconst[39m recorded [33m=[39m [][33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m10 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m198 passed[39m[22m[90m (202)[39m
+[2m   Start at [22m 22:11:51
+[2m   Duration [22m 69.79s[2m (transform 9.73s, setup 0ms, import 21.99s, tests 172.29s, environment 5ms)[22m
+

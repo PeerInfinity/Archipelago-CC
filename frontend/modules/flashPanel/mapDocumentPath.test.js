@@ -188,7 +188,9 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         // ⛓ 9 since tile-primitives Stage 2 (2026-10-21): `seedling_playthrough_maze`,
         //   the playthrough atlas cut to its growing level list and played in the
         //   maze, carries the compiled atlas's block the same way.
-        expect(named).toHaveLength(9);
+        // ⛓ 10 since ER E4b (2026-11-07): `seedling_er`, the stairs-shuffled playthrough (the producer's compile of the
+        //   restamped graph), carries the block the same way.
+        expect(named).toHaveLength(10);
         for (const doc of named) expect(doc).toBe(DEFAULT_MAP_DOCUMENT);
     });
 

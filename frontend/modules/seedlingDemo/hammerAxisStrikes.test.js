@@ -28,6 +28,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
+import { withContactFidelity } from './contactFidelity.js';
 
 import { atlasLevelSource } from './levelSource.js';
 import { createLevelRun } from './levelRun.js';
@@ -286,14 +287,30 @@ describe('hammer-phase AXIS — strikes on axis-aligned walks, aimed along the w
         expect(strikesAlone.policies).toBe(0);
         expect(strikesAlone.plan).toBe(off.plan);
         // L105 (leg 775) at the arrival seam where the page's ON run took 2 hits: OFF takes the same two drops.
+        // ⛓ fidelity L105 (wave 37b; re-pin SIGNED by seedling-hammer-phase-planning-3, 2026-11-05): that 310-t plan is
+        // the preview's frozen-BeamTower gap (it ends in L104, the second drop kills). Pinned under
+        // `previewBeamTowerDrift: false` as the control; the sibling arm below is the shipped default.
         const l105 = 'leg775-l105-seam6224-request.json.gz';
         const FLYER = 'flyer@192,16';
-        const off105 = solveFixture(l105, false);
-        expect(off105.ticks).toBe(310);
-        expect(off105.hits).toEqual([[283, 'drop', FLYER], [303, 'drop', FLYER]]);
-        const on105 = solveFixture(l105, true);
-        expect(on105.policies).toBe(0);
-        expect(on105.plan).toBe(off105.plan);
-        expect(on105.hits).toEqual(off105.hits);
-    }, 120_000);
+        withContactFidelity({ previewBeamTowerDrift: false }, () => {
+            const off105 = solveFixture(l105, false);
+            expect(off105.ticks).toBe(310);
+            expect(off105.hits).toEqual([[283, 'drop', FLYER], [303, 'drop', FLYER]]);
+            const on105 = solveFixture(l105, true);
+            expect(on105.policies).toBe(0);
+            expect(on105.plan).toBe(off105.plan);
+            expect(on105.hits).toEqual(off105.hits);
+        });
+        // ON (the shipped default since the W37b flip): the preview steps the tower's drift; hitless, and the axis
+        // strikes alone still build no policy and answer OFF's plan.
+        withContactFidelity({ previewBeamTowerDrift: true }, () => {
+            const off105 = solveFixture(l105, false);
+            expect(off105.ticks).toBe(423);
+            expect(off105.hits).toEqual([]);
+            const on105 = solveFixture(l105, true);
+            expect(on105.policies).toBe(0);
+            expect(on105.plan).toBe(off105.plan);
+            expect(on105.hits).toEqual([]);
+        });
+    }, 240_000);
 });

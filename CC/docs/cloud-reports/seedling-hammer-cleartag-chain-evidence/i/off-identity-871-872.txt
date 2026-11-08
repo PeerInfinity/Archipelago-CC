@@ -1,0 +1,10 @@
+871 ALL        main 3094148ebdff 364 REF  | mine 3094148ebdff 364 REF EQUAL
+871 ALL+p0     main e1c4e7e35ca0 3496 1438  | mine e1c4e7e35ca0 3496 1438 EQUAL
+871 D0         main 7c2fd7098f6e 364 REF  | mine 7c2fd7098f6e 364 REF EQUAL
+871 SB         main 3094148ebdff 364 REF  | mine 3094148ebdff 364 REF EQUAL
+871 SB+p0      main e72efacb3bb4 9066 REF  | mine e72efacb3bb4 9066 REF EQUAL
+872 ALL        main 3094148ebdff 364 REF  | mine 3094148ebdff 364 REF EQUAL
+872 ALL+p0     main e3bb8c5d8083 2041 1320  | mine e3bb8c5d8083 2041 1320 EQUAL
+872 D0         main 0c0409958d2d 364 REF  | mine 0c0409958d2d 364 REF EQUAL
+872 SB         main 3094148ebdff 364 REF  | mine 3094148ebdff 364 REF EQUAL
+872 SB+p0      main bbd613e57272 106 REF  | mine bbd613e57272 106 REF EQUAL

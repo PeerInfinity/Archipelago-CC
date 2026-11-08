@@ -1,0 +1,6 @@
+M1 the switch ignored (the chain OFF too): RED       × OFF (`STANCE_BURN` ON): wall B — the burn is named and the clear-tag arm refuses to chain it 38159ms
+M2 no re-derivation (the stale resolution kept): GREEN (SURVIVED)  
+M3 no stance walk (the burn run from where the player stands): RED       × ON (`STANCE_BURN` ON): the burn runs first, and the refusal moves to the burn walk's SE fight (wall A1) 10933ms
+M4 the exemptions not carried: GREEN (SURVIVED)  
+M5 the order not counted in the strategy bound: GREEN (SURVIVED)  
+M6 the repeat guard dropped: GREEN (SURVIVED)  

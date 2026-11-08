@@ -121,7 +121,7 @@ import { COLORS, TILE_PX } from '../../procgenCore/compositeMapRenderer.js';
  * tile geometry. The zone row asserts the drawn canvas is that size; typing 8
  * and 6 here would make it agree with a copy of the constant.
  */
-import { DEFAULT_REGION_SIZE } from '../../procgenPipeline/procgenPipelineEngine.js';
+import { DEFAULT_REGION_SIZE, collectUsedFreeItems } from '../../procgenPipeline/procgenPipelineEngine.js';
 /**
  * ⛓ S0 — the indent the hub's JSON widget pretty-prints with, so the row that
  * asserts a sidecar block's text is byte-equal to its entry uses the widget's
@@ -10686,15 +10686,15 @@ export async function apworldAGenerateAfterAStartingGrantLandsWithTheSatisfiedCl
         testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
         testController.assertEqual(`…whose entry is \`${own}\``, own, String(panel.rulesDoc.preset_sidecars['1'][region]?.substrate));
         const prov = op?.provenance ?? {};
-        const pure = applyRulesDocOp(docObj, {
+        const { value: pure, used } = collectUsedFreeItems(() => applyRulesDocOp(docObj, {
             op: 'regenerate-region-sidecar', player: '1', region, substrate: own, seed: prov.seed,
             regionParams: prov.regionParams, hazardOpts: prov.hazardOpts, size: prov.size, freeItems: prov.freeItems,
-        });
+        }));
         testController.reportCondition('the pure op on the same arguments builds', pure.ok);
-        // ⛓ S1 (⚖ Q1b) — plus the grants the same op declares, derived (bounce_worldgen
-        //   defines five of bounce's six library items, so the sixth is granted).
+        // ⛓ S1 (⚖ Q1b) — plus the grants the same op declares, derived; P5d (⚖ "Only what was
+        //   used") — only the candidates the realise leaned on (what the pure op drifted onto).
         testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description (+ the grants it declared)',
-            String(withGrantsAnswer(pure.description, regenerationGrants(docObj, '1', own))), String(answer));
+            String(withGrantsAnswer(pure.description, regenerationGrants(docObj, '1', own, { used }))), String(answer));
         testController.reportCondition(`⛓⛓ …which names the rules ${REGENERATE_SATISFIED_BY_START} [${item}]`,
             String(answer).includes(`${REGENERATE_SATISFIED_BY_START} [${item}]`));
         testController.assertEqual('⛓ the document\'s rules are untouched', JSON.stringify(docObj.regions),
@@ -12694,8 +12694,9 @@ export async function apworldInitialiseAsANonGrantingTargetMovesNoItem(testContr
  * ⛓⛓⛓ **(iii) A PER-REGION GENERATE ON A HUB-INITIALISED SLOT DECLARES ITS
  * GRANTS IN ITS ONE OP** (⚖ Q1b; task 0's (a)): Adventure initialised as the
  * non-granting target → Regions tab → the first placed region → pick the
- * need-declaring target: the form says the items "will be granted"; Generate
- * lands ONE `set-region-sidecar` whose `grants` define and start every one,
+ * need-declaring target: the form says the items "may be granted"; Generate
+ * lands ONE `set-region-sidecar` whose `grants` define and start the ones the room
+ * leans on (P5d: the target's declared need names them),
  * the answer names them, the Items tab's need reads met.
  */
 export async function apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants(testController) {
@@ -12708,8 +12709,9 @@ export async function apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants
         testController.reportCondition(`slot ${p} selected`, await onRegionsTabFor(testController, panel, p));
         if (!await pickSubstrateAndOpenForm(testController, panel, region, needer)) return testController.getOverallResult();
         const free = regionGenSection(region)?.querySelector('.apworld-region-generation-free')?.textContent ?? '';
-        testController.reportCondition(`⛓ the form says the items "will be ${GRANTED_AS_STARTING}"`,
-            free.includes(`will be ${GRANTED_AS_STARTING}`));
+        // ⛓ P5d — before the run the form names the CANDIDATES ("may be"); the op grants what was leaned on.
+        testController.reportCondition(`⛓ the form says the items "may be ${GRANTED_AS_STARTING}"`,
+            free.includes(`may be ${GRANTED_AS_STARTING}`));
         const before = JSON.parse(JSON.stringify(panel.rulesDoc));
         const opsBefore = panel.session.ops().length;
         const said = sidecarMessageFor(region)?.textContent ?? null;

@@ -64,7 +64,7 @@ def apply_option_effects(init_py: str, effects: List[Dict[str, Any]], class_name
     counts = _effects(effects, 'item_count')
     swaps = _effects(effects, 'location_items')
 
-    count_rows = '\n'.join(f'    ({e["option"]!r}, {e["item"]!r}),' for e in counts)
+    count_rows = '\n'.join(f'    ({e["option"]!r}, {e["item"]!r}, {int(e["count"])}),' for e in counts)
     swap_rows = []
     for e in swaps:
         locs = ''.join(f'        {loc!r},\n' for loc in e['locations'])
@@ -72,6 +72,7 @@ def apply_option_effects(init_py: str, effects: List[Dict[str, Any]], class_name
     swap_rows = '\n'.join(swap_rows)
     constants = f'''
 # Option effects (world[p].option_effects): an option whose value bounds a Has() count, by the item it counts
+# and the count the rules document holds (its default)
 OPTION_ITEM_COUNTS: List[tuple] = [
 {count_rows}
 ]
@@ -106,7 +107,7 @@ OPTION_LOCATION_ITEMS: List[tuple] = [
     def _check_option_effects(self) -> None:
         """Refuse, by name, a count option the pool cannot meet under the chosen options."""
         counts = self._option_item_pool_counts()
-        for option, item in OPTION_ITEM_COUNTS:
+        for option, item, _default in OPTION_ITEM_COUNTS:
             needed = getattr(self.options, option).value
             held = counts.get(item, 0)
             if needed > held:
@@ -114,6 +115,36 @@ OPTION_LOCATION_ITEMS: List[tuple] = [
                                     for o, _v, _i, _l in OPTION_LOCATION_ITEMS)
                 raise OptionError(f"{self.player_name}: {option} = {needed} needs {needed} {item!r}, but the "
                                   f"pool holds only {held}" + (f" with {swapped}" if swapped else ""))
+
+    def _embedded_rules_option_effects(self, doc: Dict[str, Any], player: str) -> None:
+        """The effects, applied to the embedded rules document as the export resolves them: each bound
+        Has(item, default) reads the rolled count, and the pool counts trade each swapped location's item."""
+        counts = {(item, default): getattr(self.options, option).value
+                  for option, item, default in OPTION_ITEM_COUNTS}
+
+        def rebind(node):
+            if isinstance(node, dict):
+                args = node.get("args")
+                if node.get("rule") == "Has" and isinstance(args, dict):
+                    key = (args.get("item_name"), args.get("count", 1))
+                    if key in counts:
+                        args["count"] = counts[key]
+                for value in node.values():
+                    rebind(value)
+            elif isinstance(node, list):
+                for value in node:
+                    rebind(value)
+
+        rebind(doc.get("regions"))
+        rebind(doc.get("helpers"))
+        rebind(doc.get("game_info"))
+        pool = doc.get("itempool_counts", {}).get(player)
+        if isinstance(pool, dict):
+            for location, item in self._option_location_items().items():
+                canonical = self.canonical_placements.get(location)
+                if canonical in pool:
+                    pool[canonical] -= 1
+                pool[item] = pool.get(item, 0) + 1
 '''
 
     text = init_py
@@ -131,6 +162,10 @@ OPTION_LOCATION_ITEMS: List[tuple] = [
     text = _replace_once(text, '        for item_name, count in ITEMPOOL_COUNTS.items():',
                          '        for item_name, count in self._option_item_pool_counts().items():',
                          'item pool loop')
+    text = _replace_once(text, '        self._embedded_rules_options(envelope["doc"]["world"][envelope["player"]])\n',
+                         '        self._embedded_rules_options(envelope["doc"]["world"][envelope["player"]])\n'
+                         '        self._embedded_rules_option_effects(envelope["doc"], envelope["player"])\n',
+                         'embedded rules options')
     anchor = '        for location_name, item_name in sorted_placements:\n'
     if anchor in text:
         text = _replace_once(text, anchor,

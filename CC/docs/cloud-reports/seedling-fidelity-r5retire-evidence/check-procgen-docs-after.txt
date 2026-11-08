@@ -1,0 +1,236 @@
+# box lock: TAKEN by check-procgen-docs.mjs (browser, pid 3750) — head 40a0ba3a0, 8 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+the corpus: 29 documents in docs/json/developer/procgen/ (28 indexed + the README the index lives in), 1245 headings, 92 fragments the corpus targets
+PASS: ⛓ the index's allow list IS what is on disk — no document is unreachable — 29 listed / 29 on disk
+
+the 29 DOCUMENTS
+  http://127.0.0.1:41095/frontend/modules/procgenDocs/docs.html?doc=<file>
+PASS: ⛓ README.md LOADS and renders — status 200, refusal none
+PASS: …and its 2 headings are IN THE DOM — DOM 2 / source 2
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 0 fragments the corpus points at it — every one
+PASS: …and every one of its 35 link targets is the RESOLVER's answer — set matches, plus 2 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[README.md]
+PASS: ⛓ architecture.md LOADS and renders — status 200, refusal none
+PASS: …and its 18 headings are IN THE DOM — DOM 18 / source 18
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 2 fragments the corpus points at it — every one
+PASS: …and every one of its 25 link targets is the RESOLVER's answer — set matches, plus 18 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[architecture.md]
+PASS: ⛓ substrate-registry.md LOADS and renders — status 200, refusal none
+PASS: …and its 25 headings are IN THE DOM — DOM 25 / source 25
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 8 fragments the corpus points at it — every one
+PASS: …and every one of its 27 link targets is the RESOLVER's answer — set matches, plus 25 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[substrate-registry.md]
+PASS: ⛓ demos.md LOADS and renders — status 200, refusal none
+PASS: …and its 3 headings are IN THE DOM — DOM 3 / source 3
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 0 fragments the corpus points at it — every one
+PASS: …and every one of its 5 link targets is the RESOLVER's answer — set matches, plus 3 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[demos.md]
+PASS: ⛓ gotchas.md LOADS and renders — status 200, refusal none
+PASS: …and its 42 headings are IN THE DOM — DOM 42 / source 42
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 13 link targets is the RESOLVER's answer — set matches, plus 42 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[gotchas.md]
+PASS: ⛓ editing-core.md LOADS and renders — status 200, refusal none
+PASS: …and its 22 headings are IN THE DOM — DOM 22 / source 22
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 8 link targets is the RESOLVER's answer — set matches, plus 22 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[editing-core.md]
+PASS: ⛓ seedling-editor.md LOADS and renders — status 200, refusal none
+PASS: …and its 15 headings are IN THE DOM — DOM 15 / source 15
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 2 fragments the corpus points at it — every one
+PASS: …and every one of its 5 link targets is the RESOLVER's answer — set matches, plus 15 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[seedling-editor.md]
+PASS: ⛓ bounce.md LOADS and renders — status 200, refusal none
+PASS: …and its 13 headings are IN THE DOM — DOM 13 / source 13
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 6 link targets is the RESOLVER's answer — set matches, plus 13 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[bounce.md]
+PASS: ⛓ cloudberry.md LOADS and renders — status 200, refusal none
+PASS: …and its 22 headings are IN THE DOM — DOM 22 / source 22
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 9 fragments the corpus points at it — every one
+PASS: …and every one of its 14 link targets is the RESOLVER's answer — set matches, plus 22 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[cloudberry.md]
+PASS: ⛓ playback-and-debugging.md LOADS and renders — status 200, refusal none
+PASS: …and its 9 headings are IN THE DOM — DOM 9 / source 9
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 3 fragments the corpus points at it — every one
+PASS: …and every one of its 9 link targets is the RESOLVER's answer — set matches, plus 9 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[playback-and-debugging.md]
+PASS: ⛓ loop-recording.md LOADS and renders — status 200, refusal none
+PASS: …and its 25 headings are IN THE DOM — DOM 25 / source 25
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 11 fragments the corpus points at it — every one
+PASS: …and every one of its 19 link targets is the RESOLVER's answer — set matches, plus 25 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[loop-recording.md]
+PASS: ⛓ maze.md LOADS and renders — status 200, refusal none
+PASS: …and its 28 headings are IN THE DOM — DOM 28 / source 28
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 7 fragments the corpus points at it — every one
+PASS: …and every one of its 16 link targets is the RESOLVER's answer — set matches, plus 28 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[maze.md]
+PASS: ⛓ maze-lab.md LOADS and renders — status 200, refusal none
+PASS: …and its 16 headings are IN THE DOM — DOM 16 / source 16
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 5 fragments the corpus points at it — every one
+PASS: …and every one of its 14 link targets is the RESOLVER's answer — set matches, plus 16 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[maze-lab.md]
+PASS: ⛓ sphere-growth.md LOADS and renders — status 200, refusal none
+PASS: …and its 13 headings are IN THE DOM — DOM 13 / source 13
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 3 fragments the corpus points at it — every one
+PASS: …and every one of its 11 link targets is the RESOLVER's answer — set matches, plus 13 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[sphere-growth.md]
+PASS: ⛓ paths-and-obstacles.md LOADS and renders — status 200, refusal none
+PASS: …and its 6 headings are IN THE DOM — DOM 6 / source 6
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 8 link targets is the RESOLVER's answer — set matches, plus 6 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[paths-and-obstacles.md]
+PASS: ⛓ concepts.md LOADS and renders — status 200, refusal none
+PASS: …and its 18 headings are IN THE DOM — DOM 18 / source 18
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 4 fragments the corpus points at it — every one
+PASS: …and every one of its 9 link targets is the RESOLVER's answer — set matches, plus 18 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[concepts.md]
+PASS: ⛓ stepped-pipeline.md LOADS and renders — status 200, refusal none
+PASS: …and its 16 headings are IN THE DOM — DOM 16 / source 16
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 4 fragments the corpus points at it — every one
+PASS: …and every one of its 10 link targets is the RESOLVER's answer — set matches, plus 16 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[stepped-pipeline.md]
+PASS: ⛓ pipeline-presets.md LOADS and renders — status 200, refusal none
+PASS: …and its 12 headings are IN THE DOM — DOM 12 / source 12
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 0 fragments the corpus points at it — every one
+PASS: …and every one of its 2 link targets is the RESOLVER's answer — set matches, plus 12 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[pipeline-presets.md]
+PASS: ⛓ text-adventure.md LOADS and renders — status 200, refusal none
+PASS: …and its 10 headings are IN THE DOM — DOM 10 / source 10
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 2 fragments the corpus points at it — every one
+PASS: …and every one of its 8 link targets is the RESOLVER's answer — set matches, plus 10 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[text-adventure.md]
+PASS: ⛓ seedling-bot.md LOADS and renders — status 200, refusal none
+PASS: …and its 37 headings are IN THE DOM — DOM 37 / source 37
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 9 link targets is the RESOLVER's answer — set matches, plus 37 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[seedling-bot.md]
+PASS: ⛓ seedling-solver-surface.md LOADS and renders — status 200, refusal none
+PASS: …and its 15 headings are IN THE DOM — DOM 15 / source 15
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 1 link targets is the RESOLVER's answer — set matches, plus 15 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[seedling-solver-surface.md]
+PASS: ⛓ seedling-solve-progress.md LOADS and renders — status 200, refusal none
+PASS: …and its 21 headings are IN THE DOM — DOM 21 / source 21
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 0 link targets is the RESOLVER's answer — set matches, plus 21 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[seedling-solve-progress.md]
+PASS: ⛓ seedling-bot-log.md LOADS and renders — status 200, refusal none
+PASS: …and its 749 headings are IN THE DOM — DOM 749 / source 749
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 1 fragments the corpus points at it — every one
+PASS: …and every one of its 13 link targets is the RESOLVER's answer — set matches, plus 749 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[seedling-bot-log.md]
+PASS: ⛓ seedling-constants.md LOADS and renders — status 200, refusal none
+PASS: …and its 16 headings are IN THE DOM — DOM 16 / source 16
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 0 fragments the corpus points at it — every one
+PASS: …and every one of its 0 link targets is the RESOLVER's answer — set matches, plus 16 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[seedling-constants.md]
+PASS: ⛓ tape-envelope.md LOADS and renders — status 200, refusal none
+PASS: …and its 8 headings are IN THE DOM — DOM 8 / source 8
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 0 fragments the corpus points at it — every one
+PASS: …and every one of its 0 link targets is the RESOLVER's answer — set matches, plus 8 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[tape-envelope.md]
+PASS: ⛓ flash.md LOADS and renders — status 200, refusal none
+PASS: …and its 31 headings are IN THE DOM — DOM 31 / source 31
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 11 fragments the corpus points at it — every one
+PASS: …and every one of its 17 link targets is the RESOLVER's answer — set matches, plus 31 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[flash.md]
+PASS: ⛓ jta.md LOADS and renders — status 200, refusal none
+PASS: …and its 14 headings are IN THE DOM — DOM 14 / source 14
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 5 fragments the corpus points at it — every one
+PASS: …and every one of its 11 link targets is the RESOLVER's answer — set matches, plus 14 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[jta.md]
+PASS: ⛓ omsi.md LOADS and renders — status 200, refusal none
+PASS: …and its 26 headings are IN THE DOM — DOM 26 / source 26
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 4 fragments the corpus points at it — every one
+PASS: …and every one of its 12 link targets is the RESOLVER's answer — set matches, plus 26 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[omsi.md]
+PASS: ⛓ noiz2sa.md LOADS and renders — status 200, refusal none
+PASS: …and its 13 headings are IN THE DOM — DOM 13 / source 13
+PASS: …each with the id GitHub would give it, in order — identical
+PASS: …and answers all 4 fragments the corpus points at it — every one
+PASS: …and every one of its 11 link targets is the RESOLVER's answer — set matches, plus 13 heading anchors
+PASS: …and the nav lists 29 documents with THIS one marked — 29 entries, here=[noiz2sa.md]
+
+render time per document, off the page's own clock:
+    340ms  seedling-bot-log.md
+     91ms  seedling-bot.md
+     41ms  maze.md
+     39ms  flash.md
+     26ms  substrate-registry.md
+     23ms  seedling-solve-progress.md
+     23ms  seedling-constants.md
+     15ms  noiz2sa.md
+     14ms  cloudberry.md
+     14ms  seedling-solver-surface.md
+     10ms  README.md
+     10ms  architecture.md
+     10ms  editing-core.md
+      7ms  seedling-editor.md
+      7ms  loop-recording.md
+      7ms  text-adventure.md
+      7ms  omsi.md
+      6ms  bounce.md
+      6ms  concepts.md
+      5ms  maze-lab.md
+      5ms  jta.md
+      4ms  gotchas.md
+      4ms  playback-and-debugging.md
+      4ms  sphere-growth.md
+      3ms  stepped-pipeline.md
+      3ms  pipeline-presets.md
+      3ms  tape-envelope.md
+      2ms  demos.md
+      2ms  paths-and-obstacles.md
+
+the REFUSAL — a document the index does not list
+PASS: ⛓ ?doc=../../x.md is REFUSED BY NAME — refusal doc-not-in-index
+PASS: …and the PAGE says so — empty article, the refusal name in words — article 0 chars, status "REFUSED: doc-not-in-index?doc="../../x.md" is not one of the"
+PASS: ⛓ ?doc=no-such.md is REFUSED BY NAME — refusal doc-not-in-index
+PASS: …and the PAGE says so — empty article, the refusal name in words — article 0 chars, status "REFUSED: doc-not-in-index?doc="no-such.md" is not one of the"
+PASS: ⛓ ?doc=/etc/passwd is REFUSED BY NAME — refusal doc-not-in-index
+PASS: …and the PAGE says so — empty article, the refusal name in words — article 0 chars, status "REFUSED: doc-not-in-index?doc="/etc/passwd" is not one of th"
+
+the HEADER links
+PASS: ⛓ docs.html links the three sibling pages — http://127.0.0.1:41095/frontend/modules/procgenDocs/glossary.html http://127.0.0.1:41095/frontend/modules/procgenDocs/reference.html http://127.0.0.1:41095/frontend/modules/procgenDocs/demos.html
+PASS: …and glossary.html LOADS from this host — 200
+PASS: …and reference.html LOADS from this host — 200
+PASS: …and demos.html LOADS from this host — 200
+PASS: ⛓ glossary.html RESOLVES — status 200
+PASS: …and it links BACK to the documents page — http://127.0.0.1:41095/frontend/modules/procgenDocs/docs.html
+PASS: …and that link LANDS on a document, not on a refusal — 200 / pending
+PASS: ⛓ demos.html RESOLVES — status 200
+PASS: …and it links BACK to the documents page — http://127.0.0.1:41095/frontend/modules/procgenDocs/docs.html
+PASS: …and that link LANDS on a document, not on a refusal — 200 / pending
+PASS: ⛓ reference.html RESOLVES — status 200
+PASS: …and it links BACK to the documents page — http://127.0.0.1:41095/frontend/modules/procgenDocs/docs.html
+PASS: …and that link LANDS on a document, not on a refusal — 200 / pending
+
+ALL CHECKS PASSED

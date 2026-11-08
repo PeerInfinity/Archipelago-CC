@@ -1,0 +1,40 @@
+== D0-394-0
+solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,854.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+== D0-395-0
+solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (488,904).
+== D0-411-0
+solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t822 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).
+== D0-412-0
+solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (328,600).
+== D0-869-0
+solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (471.6,441.1) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+== D0-870-0
+solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (472.3,441.5) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+== KT-394-0
+solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,854.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+== KT-395-0
+== KT-411-0
+solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t822 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).
+== KT-412-0
+== KT-869-0
+solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (471.6,441.1) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+== KT-870-0
+solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (472.3,441.5) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+== KTLTS-394-0
+solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,854.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+== KTLTS-395-0
+== KTLTS-411-0
+solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t822 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).
+== KTLTS-412-0
+== KTLTS-869-0
+== KTLTS-870-0
+== LTS-394-0
+solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,854.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+== LTS-395-0
+solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (488,904).
+== LTS-411-0
+solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t822 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).
+== LTS-412-0
+solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (328,600).
+== LTS-869-0
+== LTS-870-0

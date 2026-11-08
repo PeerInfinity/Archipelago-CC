@@ -39,6 +39,15 @@
  * avoid. Its finding is subsumed — `glide` is the same tape held longer and
  * diverges on the same tick at the same y.
  *
+ * ── ⛓ R5RETIRE (W37): THE RETIRED PROBE'S PAIR LIVES HERE NOW ─────────
+ *
+ * `probe-seedling-r5-press-axes` (which authored `r5-press-delay` and its
+ * control) is retired. This probe now re-emits `r5-press-delay-control` (a
+ * pure transform of the root), holds `r5-press-delay` canonical as a ROOT that
+ * nothing derives, and carries the retired probe's surviving claims: the
+ * pair's two-sided walk-proof on the model and the `PRESS_AXES` blocker
+ * deduction. See §1b.
+ *
  * ── THE FREE HALF OF THE ACCEPTANCE, BEFORE ANY RECORDING ─────────────
  *
  * `--record` prints the FIRST diverging tick with BOTH streams' values on
@@ -56,9 +65,22 @@
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs --write
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs --check
- *       (exit 1 unless both committed tapes are, byte for byte, what this probe derives)
+ *       (exit 1 unless the three committed tapes it derives — glide, repeat and
+ *        delay-control — are, byte for byte, what this probe derives)
  *   node scripts/procgen/check-seedling-bot-differential.mjs --record --win \
  *       --only=r5-press-glide,r5-press-repeat
+ *
+ * ── OUTPUT PROTOCOL (R5PROTO, W37c): seedling-probe.yml's contract ────
+ *
+ * One `CHANNEL: headless logic-only (no wasm: …)` line first — this probe
+ * boots no page and no wasm, it steps the node model only (the precedent is
+ * `probe-seedling-derived-rules` / `-whole-game-certify`); one `PASS:` /
+ * `FAIL:` row per claim; then `ALL CHECKS PASSED` or `N CHECK(S) FAILED`, and
+ * exit 1 on any fail. A run that made no claim at all is a FAIL by name. The
+ * job's `--host` is accepted and ignored. CI (manual dispatch; not in a
+ * battery):
+ *   gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> \
+ *       -f probes=probe-seedling-r5-spinner.mjs
  */
 
 import { readFileSync } from 'node:fs';
@@ -78,7 +100,8 @@ const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { buildLevelWorld, ROLES, TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { serializeTape, parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 const { runTape } = await import(join(MODULE, 'tapeRunner.js'));
-const { SPINNER_WEDGE } = await import(join(MODULE, 'r5Shaft.js'));
+const { SPINNER_WEDGE, PRESS_AXES } = await import(join(MODULE, 'r5Shaft.js'));
+const { playerBoxAt } = await import(join(MODULE, 'playerPhysicsV2.js'));
 const {
     SPINNER, createSpinnerState, spinnerRect, stepSpinners,
 } = await import(join(MODULE, 'spinner.js'));
@@ -88,10 +111,15 @@ const CHECK = process.argv.includes('--check');
 const levelSource = atlasLevelSource();
 const tapePath = (n) => join(MODULE, 'fixtures', 'tapes', `${n}.json`);
 
+// ⛓ R5PROTO: the channel line seedling-probe.yml requires, true by construction —
+// nothing below boots a page, a GPU or the wasm.
+console.log('CHANNEL: headless logic-only (no wasm: a node measurement of the L39 spinner model '
+    + 'and the r5 press tapes)');
+
 const checks = [];
 const check = (ok, name, detail) => {
     checks.push({ ok, name, detail });
-    console.log(`   ${ok ? '✓' : '✗'} ${name}`);
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}`);
     if (detail) console.log(`      ${detail}`);
 };
 const probe = (name) => {
@@ -233,6 +261,80 @@ check(repeat.inputs.filter((s) => s.key === 'primary').length === R.repeatPresse
         + 'the same spans"');
 }
 
+// ── 1b. the committed pair: `r5-press-delay` (ROOT) and its control ───
+//
+// ⛓⛓ R5RETIRE (W37): FOLDED FROM `probe-seedling-r5-press-axes`, which is
+// retired. That probe authored `r5-press-delay` and `r5-press-delay-control`
+// with `synthesizeLegs`, and its drive has refused press 5's declared move
+// since the spinner wedge was modelled (the block ends at (12,5), as the GAME's
+// undelayed arms did) — so it could re-emit neither.
+//
+//   · `r5-press-delay` is a ROOT: a byte-exact game recording whose author is
+//     gone. Nothing derives it. This probe holds it CANONICAL (it re-serialises
+//     to its own bytes) and every reconstruction above inverts back to it.
+//   · `r5-press-delay-control` is a PURE TRANSFORM of the root — the same tape
+//     with both `primary` spans deleted, every walk span identical — so it is
+//     re-emitted here, byte for byte, and `--check` covers it.
+//
+// ⚠ BOTH ARE IN THE RE-PIN'S SPELLING, not `serializeTape`'s: the version-5
+// `dead_frames` re-pin wrote `pins` on ONE line (41 committed tapes carry it;
+// `plan-seedling-pushblock-witness.mjs` emits the same way). `pinsOneLine` is
+// that spelling, and it is the only difference — measured: 8 bytes per tape.
+console.log('\n## the committed pair — the root and its shut-before control');
+const pinsOneLine = (text) => text.replace(/"pins": \[\s*"dead_frames"\s*\]/, '"pins": ["dead_frames"]');
+const delayText = readFileSync(tapePath('r5-press-delay'), 'utf8');
+check(pinsOneLine(serializeTape(parseTape(delayText))) === delayText,
+    '⛓ `r5-press-delay` is a canonical ROOT — it re-serialises to its own bytes',
+    'no producer derives it (its author refuses press 5 now); it is the recording every '
+    + 'arm in this probe is a transform of');
+const delayControl = parseTape(serializeTape({
+    ...delay,
+    name: 'r5-press-delay-control',
+    inputs: delay.inputs.filter((s) => s.key !== 'primary'),
+    description: '⛓ THE SHUT-BEFORE CONTROL for `r5-press-delay`: identical tape, both '
+        + '`primary` spans deleted, every walk span the same. The block stands where it '
+        + 'spawned, so the player is stopped in row 4 by the cell press 4 would have '
+        + 'emptied and never reaches row 5 at all.',
+}));
+check(delay.inputs.filter((s) => s.key === 'primary').length === 2
+        && delayControl.inputs.filter((s) => s.key === 'primary').length === 0
+        && delayControl.inputs.length === delay.inputs.length - 2,
+    '⛓ the pair is ONE FIELD APART: two presses in the root, none in the control, every '
+    + 'other span the same',
+    `${delay.inputs.length} spans against ${delayControl.inputs.length}`);
+{
+    // ⛓⛓ The two-sided walk-proof on the MODEL (r5-press-axes §3, re-aimed at
+    // the committed pair): the press arm enters BOTH cells the presses vacate,
+    // and the control enters NEITHER. `r5Acceptance.pressPairFindings` asks the
+    // same of the GAME's streams.
+    const enters = (run, tx, ty) => run.ticks.some((t) => Math.floor(t.x / TILE_SIZE) === tx
+        && Math.floor(t.y / TILE_SIZE) === ty);
+    const pressRun = runTape(delay, { levelSource });
+    const controlRun = runTape(delayControl, { levelSource });
+    check(enters(pressRun, 13, 5) && enters(pressRun, 12, 5),
+        '⛓ the model\'s press arm enters BOTH vacated cells, (13,5) and (12,5)',
+        'press 4 lands, and 120 ticks later press 5 does too — the spinner is elsewhere');
+    check(!enters(controlRun, 13, 5) && !enters(controlRun, 12, 5),
+        '⛓⛓ the model\'s control enters NEITHER — the cells are sealed without the presses',
+        'a walk-proof is only evidence if the shut arm fails it');
+}
+{
+    // ⛓ The deduction §24.8's banked number supports (r5-press-axes §0): the
+    // shaft's stuck position puts the blocker's top edge at y = 80, in column
+    // 12 — cell (12,5), where press 4 PUT the block. Pure arithmetic on
+    // `r5Shaft.PRESS_AXES`; nothing else asserts it.
+    const box = playerBoxAt(PRESS_AXES.stuck.x, PRESS_AXES.stuck.y);
+    const edge = Math.ceil(box.bottom);
+    check(edge === PRESS_AXES.blockerTopEdge
+            && edge / TILE_SIZE === PRESS_AXES.blockerCell.ty
+            && Math.floor(box.x / TILE_SIZE) === PRESS_AXES.blockerCell.tx
+            && Math.floor((box.right - 1e-9) / TILE_SIZE) === PRESS_AXES.blockerCell.tx,
+        `⛓ the shaft's stuck box puts the blocker in (${PRESS_AXES.blockerCell.tx},`
+        + `${PRESS_AXES.blockerCell.ty}) — press 4 landed, press 5 did not`,
+        `box [${box.x}, ${box.right}) x [${box.y}, ${box.bottom}); the next 1 px step crosses `
+        + `y = ${edge}`);
+}
+
 // ── 2. the model, against the game's own numbers ──────────────────────
 console.log('\n## the model against the two game-side observations the refutation left behind');
 for (const tape of [glide, repeat]) {
@@ -271,9 +373,16 @@ console.log('     node scripts/procgen/check-seedling-bot-differential.mjs --rec
     + '--only=r5-press-glide,r5-press-repeat');
 
 const bad = checks.filter((c) => !c.ok).length;
-const outputs = [glide, repeat].map((t) => ({ path: tapePath(t.name), text: serializeTape(t) }));
+const outputs = [
+    ...[glide, repeat].map((t) => ({ path: tapePath(t.name), text: serializeTape(t) })),
+    { path: tapePath(delayControl.name), text: pinsOneLine(serializeTape(delayControl)) },
+];
 if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the two tapes, --check to compare them)');
 }
-if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
-console.log(`\n${checks.length}/${checks.length} claims PASS`);
+// ⛓ R5PROTO: the verdict line, and a run that claimed nothing is not green.
+if (checks.length === 0) console.log('FAIL: no claim was made — a run that checked nothing is not green');
+const failed = bad + (checks.length === 0 ? 1 : 0);
+console.log(`\n${checks.length - bad}/${checks.length} claims PASS`);
+console.log(failed ? `${failed} CHECK(S) FAILED` : 'ALL CHECKS PASSED');
+process.exitCode = failed ? 1 : 0;

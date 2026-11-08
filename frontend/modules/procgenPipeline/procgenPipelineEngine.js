@@ -53,6 +53,7 @@ import {
     introductionRequestOf, markRegionIntroduction, regionIntroductionNote, regionIntroductionOf,
     unrequestedIntroductions,
 } from '../procgenCore/itemIntroduction.js';
+import { goalContainerReportOfSidecars } from '../procgenCore/goalContainer.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
 
 /** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
@@ -1720,6 +1721,26 @@ export const TOPDOWN_START_REFUSALS = Object.freeze({
 });
 
 /**
+ * ⛓ ER E4b — **A RELAYOUT OF AN ENTRANCE-RANDOMIZED SOURCE IS REFUSED BY NAME.** The layout rebuilds every exit (the
+ * BFS's payload exits, the back exits, the kept Menu exits), and an exit's `er` and the slot's
+ * `entrance_randomization[p]` block name exits BY NAME (E2): a relayout would drop the `er`s and leave the block naming
+ * exits that no longer exist, a document the loader refuses. Re-deriving `er` over a relayout is not built; until it
+ * is, the source is refused rather than silently un-randomized. `entranceRandomizedFacts` is the one reader.
+ */
+export function entranceRandomizedFacts(rulesJson, playerId = '1') {
+    const p = String(playerId);
+    const block = rulesJson?.entrance_randomization?.[p] !== undefined;
+    const er = Object.values(rulesJson?.regions?.[p] ?? {})
+        .reduce((n, r) => n + (r?.exits ?? []).filter((e) => e && Object.hasOwn(e, 'er')).length, 0);
+    return { block, er, randomized: block || er > 0 };
+}
+export const TOPDOWN_SOURCE_REFUSALS = Object.freeze({
+    entranceRandomized: (p, { block, er }) => `topDownFromRulesJson: player ${p}'s source is entrance-randomized `
+        + `(${block ? 'an entrance_randomization block' : 'no block'}, ${er} exit(s) carrying \`er\`) — the layout rebuilds `
+        + 'every exit, and `er` / the placements name exits by name, so a relayout would drop the shuffle; re-deriving it is not built',
+});
+
+/**
  * Resolve which source region is the "actual" start — the one the BFS places
  * first. The declared start IS the menu, whatever it is called: when it is a
  * pure hub (`isVirtualStart`: exits, no locations) the layout strips it
@@ -1891,6 +1912,9 @@ export function layoutTopDown(rulesJson, opts, rng) {
     if (Object.keys(sourceRegions).length === 0) {
         throw new Error(`topDownFromRulesJson: no regions for player '${playerId}'`);
     }
+    // ⛓ ER E4b: an entrance-randomized source is refused by name (`entranceRandomizedFacts`).
+    const erFacts = entranceRandomizedFacts(rulesJson, playerId);
+    if (erFacts.randomized) throw new Error(TOPDOWN_SOURCE_REFUSALS.entranceRandomized(String(playerId), erFacts));
 
     // Locate the declared start.
     // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
@@ -2250,6 +2274,9 @@ export function* realiseTopDownGen(layout, opts) {
     // re-realise) re-runs ② over the same layout, so reset the per-run counter
     // rather than accumulate across runs. No-op (0→0) on the first run.
     stats.regionsBuilt = 0;
+    // ⛓ P5d — the free items this realise drifted onto (the grant is narrowed to
+    //   them). A hand-edited room clears it to null: "unknown", grant them all.
+    stats.freeItemsUsed = [];
 
     // ⛓ F2: refuse UP FRONT, by name, a region a zone substrate cannot hold —
     // before any region builds (see zoneExitCeilingRefusal).
@@ -2316,7 +2343,7 @@ export function* realiseTopDownGen(layout, opts) {
         // substrate edit replays the recording from a fresh ① (`topDownSteps.js`), so this pass sees exactly the
         // regions before this one in placement order — determined by config + seed + edits, never a hidden record.
         const introduced = introducedFromGrid(grid, name);
-        const region = generateRegion({
+        const { value: region, used: freeUsed } = collectUsedFreeItems(() => generateRegion({
             substrate: substrateId,
             region_id: name,
             size,
@@ -2335,7 +2362,8 @@ export function* realiseTopDownGen(layout, opts) {
             stampEntrance: true,
             freeItems,
             zoneOrdinal: (zoneOrdinals[substrateId] = (zoneOrdinals[substrateId] ?? -1) + 1),
-        });
+        }));
+        for (const item of freeUsed) if (!stats.freeItemsUsed.includes(item)) stats.freeItemsUsed.push(item);
 
         for (const placed of region.exits_placed) {
             exitSidesByExit.set(`${name}:${placed.exit_id}`, {
@@ -3700,7 +3728,10 @@ function* generateRegionZoneGen(spec) {
             const hasNonDriftableTop = arrowless.length > driftable.length;
             const toDrift = hasNonDriftableTop ? driftable : driftable.slice(1);
             toDrift.forEach(({ s }, k) => {
-                s.requirement = [...s.requirement, freeDrifts[k % freeDrifts.length]];
+                const item = freeDrifts[k % freeDrifts.length];
+                s.requirement = [...s.requirement, item];
+                // ⛓ P5d — the free item this region LEANS ON (only these are granted).
+                noteFreeItemUsed(item);
             });
         }
     }
@@ -3722,7 +3753,12 @@ function* generateRegionZoneGen(spec) {
     // keeps the gated back portal (it has the width for a back-portal branch
     // tip), so column output stays byte-identical.
     const ent = spec.entrances?.[0];
-    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
+    // ⛓ P5d — a caller that supplies the back exit itself (the APWorld Editor's
+    //   regenerate: the document's exit to the parent, pinned on the entrance side,
+    //   realised as below) gets no second one. Sphere growth never puts an exit on
+    //   the entrance side, so its regions are unchanged.
+    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)
+        && !exitSpecs.some((s) => s.side === ent.side)) {
         // Gated back portal (column) vs ungated (braid) — the substrate
         // decides from its regionParams; default gated.
         const backGated = adapter.backPortalGated?.(spec.params) ?? true;
@@ -3914,8 +3950,74 @@ export function* generateRegionGen(spec) {
 export function generateRegion(spec) {
     const gen = generateRegionGen(spec);
     let r = gen.next();
-    while (!r.done) r = gen.next();
+    while (!r.done) {
+        notePendingGeneration(r.value);
+        r = gen.next();
+    }
     return r.value;
+}
+
+// --- Free items a realise LEANED ON (P5d, ⚖ Robert 2026-11-05) ---
+//
+// A top-down caller hands the realiser `freeItems` (the slot's starting items +
+// the target's library items the source does not define, `grantedLibraryItems`).
+// The ONE reader is the surplus-exit drift above: a drifted exit's geometry needs
+// the item, its logic does not, so the item must be held from the start. Every
+// other free item is never leaned on. `collectUsedFreeItems(fn)` runs `fn` and
+// answers the free items the realises inside it drifted onto an exit (unique, in
+// first-use order), so the grant can be narrowed to exactly those. Nests: an
+// inner call's items are also reported to the outer one.
+
+let _freeItemCollector = null;
+
+function noteFreeItemUsed(item) {
+    if (_freeItemCollector && !_freeItemCollector.includes(item)) _freeItemCollector.push(item);
+}
+
+/** Run `fn` synchronously; answer `{ value, used }` — `fn`'s value and the free items it drifted onto. */
+export function collectUsedFreeItems(fn) {
+    const outer = _freeItemCollector;
+    const used = [];
+    _freeItemCollector = used;
+    try {
+        return { value: fn(), used };
+    } finally {
+        _freeItemCollector = outer;
+        if (outer) for (const item of used) if (!outer.includes(item)) outer.push(item);
+    }
+}
+
+// --- Pending generations (a synchronous drain that could not wait) ---
+//
+// A substrate whose generation runs outside JS (cloudberry's game page) yields an
+// event carrying `await` and, drained synchronously, refuses by name: it could not
+// wait. `collectPendingGenerations(fn)` runs `fn` and hands back every such promise
+// the synchronous drains inside it skipped, so a caller that CAN wait (the APWorld
+// Editor's Generate ▸) awaits exactly that work and asks once more. A substrate
+// that never yields `await` leaves the list empty: its callers are unchanged.
+
+let _pendingCollector = null;
+
+function notePendingGeneration(event) {
+    const pending = event?.await;
+    if (_pendingCollector && pending && typeof pending.then === 'function') _pendingCollector.push(pending);
+}
+
+/**
+ * Run `fn` synchronously; answer `{ value, pending }` — `fn`'s return value and the
+ * promises the synchronous region drains inside it yielded but could not wait on
+ * (`[]` for a substrate that generates synchronously). Nests: an inner call
+ * collects its own, and they are not reported to the outer one.
+ */
+export function collectPendingGenerations(fn) {
+    const outer = _pendingCollector;
+    const pending = [];
+    _pendingCollector = pending;
+    try {
+        return { value: fn(), pending };
+    } finally {
+        _pendingCollector = outer;
+    }
 }
 
 // Phase ① of shuffled-spiral (the "arrange" step): validate the config, build
@@ -8012,6 +8114,12 @@ export function buildRulesJson(grid, opts = {}) {
         // what it was. The SLOT's, like the rest of this block.
         const introductions = introductionReport(allRegions.map(regionIntroductionOf));
         if (introductions) slotMetadata.introductions = introductions;
+        // ⛓⛓ THE GOAL-CONTAINERS REPORT (goal-chest-pipeline; `procgenCore/goalContainer.js`) — how many regions
+        // configured for a goal container got one, and why the rest kept their default goal, read off the slot's
+        // OWN serialised sidecars through each substrate's declared `goalContainer.noteOf`. ABSENT when none was.
+        const goalContainers = goalContainerReportOfSidecars(scaffold.preset_sidecars?.[String(playerId)],
+            (id) => substrateRegistry.get(id));
+        if (goalContainers) slotMetadata.goalContainers = goalContainers;
         scaffold.procgen_metadata = { [String(playerId)]: slotMetadata };
         // ⛓⛓ APWORLD SUBSTRATE CHANGE R6b — the config each content source was
         // installed with, for every source that declares

@@ -134,9 +134,26 @@ describe('withBootRetry — one re-boot for a known boot fault, never for anythi
 
 describe('every standard-battery probe boots through the shared READY + retry', () => {
     const DIR = import.meta.dirname;
+    // A node-only probe boots no page: it declares so in its own CHANNEL line ("(no wasm: …)"), the
+    // same qualifier probe-seedling-derived-rules / -whole-game-certify print. It owes the protocol, not the boot.
+    const NODE_ONLY_RE = /CHANNEL: headless logic-only \(no wasm:/;
+    const readProbe = (probe) => readFileSync(join(DIR, probe), 'utf8');
+    const nodeOnly = batteryMatrix('standard').filter(({ probe }) => NODE_ONLY_RE.test(readProbe(probe))).map((e) => e.probe);
+    it('the node-only probes in standard (no page, no boot) are exactly these', () => {
+        expect(nodeOnly).toEqual(['probe-seedling-r5-spinner.mjs']);
+    });
     for (const { probe } of batteryMatrix('standard')) {
+        if (nodeOnly.includes(probe)) {
+            it(`${probe} (node-only): prints the protocol, imports no page boot`, () => {
+                const src = readProbe(probe);
+                expect(src).not.toMatch(/startWasmGame|\.click\('#btn-start'\)/);
+                expect(src).toMatch(/ALL CHECKS PASSED/);
+                expect(src).toMatch(/CHECK\(S\) FAILED/);
+            });
+            continue;
+        }
         it(probe, () => {
-            const src = readFileSync(join(DIR, probe), 'utf8');
+            const src = readProbe(probe);
             expect(src).toMatch(/await startWasmGame\(\(\) => rp\.gameFrame\(\), \{ logs \}\);/);
             expect(src).not.toMatch(/\.click\('#btn-start'\)/);
             expect(src).toMatch(/if \(isBootFault\(e\)\) \{ await page\.close\(\); throw e; \}/);

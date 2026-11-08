@@ -1,0 +1,6 @@
+# box lock: TAKEN by probe-seedling-chaser-mobiles.mjs (browser, pid 1899) — head 26ed405d3, 5 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 331 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+PASS: every Flyer's position, velocity, hits and hits_timer are the model's at every sampled tick, and they exist exactly when the model's do — 585 comparison(s), worst |Δ| 0
+wrote /tmp/claude-0/-home-user-Archipelago-CC/069604ff-22a7-5811-905c-40a2f7bf1af3/scratchpad/w-off-out.json
+wrote /tmp/claude-0/-home-user-Archipelago-CC/069604ff-22a7-5811-905c-40a2f7bf1af3/scratchpad/w-off-frames.json

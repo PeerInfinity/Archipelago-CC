@@ -71,7 +71,15 @@ function boundKeys(form, bag) {
             c.value = c.children.map((o) => o.value).find((v) => v !== c.value) ?? c.value;
         } else c.value = '7';
         c.fire('change');
-        out.push(Object.keys(bag).filter((k) => bag[k] !== before[k] || !(k in before)));
+        let moved = Object.keys(bag).filter((k) => bag[k] !== before[k] || !(k in before));
+        // ⛓ P5d — a control already AT its clamp (a recorded Double Jump chance of 1, max 1)
+        //   writes the same value back for '7': probe once more from the other end.
+        if (!moved.length && c.type !== 'checkbox' && c.tagName !== 'SELECT') {
+            c.value = '0';
+            c.fire('change');
+            moved = Object.keys(bag).filter((k) => bag[k] !== before[k] || !(k in before));
+        }
+        out.push(moved);
     }
     return out;
 }

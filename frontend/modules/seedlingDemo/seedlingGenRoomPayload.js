@@ -20,6 +20,8 @@ const cloneRule = (rule) => structuredClone(rule);
  * (`seedlingGeneratedSet.js`) — reads it without importing the registry entry
  * (which would register a second copy of it behind a computed specifier).
  */
+import { GOAL_CONTAINER_NOT_PLACED_REASONS } from '../procgenCore/goalContainer.js';
+
 export const GEN_ROOM_SUBSTRATE_ID = 'flash_seedling_gen';
 
 /**
@@ -123,6 +125,26 @@ export const BOSS_KEY_ITEM_NAMES = Object.freeze(['Red Key', 'Green Key', 'Purpl
 export const KEYGATE_REQUEST_REFUSAL = 'keygate-request-not-met';
 /** ⛓ The set assembler's backstop: two rooms holding ONE key colour. */
 export const KEYGATE_SHARED_REFUSAL = 'keygate-colour-shared';
+
+/** ⛓ goal-chest-pipeline — the `goal` knob's one value (`procgenSeedling.GOAL_CHEST_CLASS`, pinned equal in
+ *  `seedlingGenRoom`), spelled here because this module imports no generator. */
+export const GEN_ROOM_GOAL_CHEST = 'chest';
+/** ⛓ goal-chest-pipeline — location 0's `kind` in a room whose goal IS a chest (`seedlingGenRoom.CHEST_GOAL_KIND`). */
+export const CHEST_GOAL_KIND = 'chest-goal';
+
+/**
+ * ⛓ goal-chest-pipeline — **THE GOAL-CONTAINER NOTE OF A SHIPPED PAYLOAD** (the entry's `goalContainer.noteOf`;
+ * vocabulary `procgenCore/goalContainer.js`): `null` unless its `generation.goal` asked for a chest; `{placed: true}`
+ * when location 0 is the goal chest; else `{placed: false, reason}` — the generator's refusal name
+ * (`procgenSeedling.GOAL_CHEST_REFUSALS`, recorded as `generation.goalChestRefused`), or `no-ap-location` when the
+ * chest stands and the room holds no location to be it.
+ */
+export function goalContainerNoteOf(payload) {
+    if (payload?.generation?.goal !== GEN_ROOM_GOAL_CHEST) return null;
+    if ((payload.locations ?? []).some((l) => l?.kind === CHEST_GOAL_KIND)) return { placed: true };
+    if (payload.generation.goalChestRefused) return { placed: false, reason: payload.generation.goalChestRefused };
+    return { placed: false, reason: GOAL_CONTAINER_NOT_PLACED_REASONS.noLocation };
+}
 
 export const GEN_ROOM_REFUSALS = Object.freeze({
     noRegionId: () => 'generated Seedling room: a region_id is required',
