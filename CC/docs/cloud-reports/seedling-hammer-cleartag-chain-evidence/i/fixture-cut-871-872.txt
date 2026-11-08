@@ -1,0 +1,8 @@
+871/0 CC+ALL             SOLVED 1122 t  work=2774 digest=13eef59de064 [dashless:ok/2772u/39s full:refusal/2u/1s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+871/0 CC+SB              REFUSED        work=1810 digest=254de9d2c014 [dashless:refusal/905u/26s full:refusal/905u/23s]
+871/0 D0                 REFUSED        work=364 digest=7c2fd7098f6e [dashless:refusal/182u/5s full:refusal/182u/5s]
+871/0 SB                 REFUSED        work=364 digest=3094148ebdff [dashless:refusal/182u/7s full:refusal/182u/6s]
+872/0 CC+ALL             SOLVED 2389 t  work=3469 digest=111a34376e28 [dashless:ok/3467u/64s full:refusal/2u/0s] fresh-run: modelled=true hits=0 deaths=0 verbs=["bait","hold","kill"]
+872/0 CC+SB              REFUSED        work=464 digest=159109b8184e [dashless:refusal/232u/28s full:refusal/232u/27s]
+872/0 D0                 REFUSED        work=364 digest=0c0409958d2d [dashless:refusal/182u/5s full:refusal/182u/5s]
+872/0 SB                 REFUSED        work=364 digest=3094148ebdff [dashless:refusal/182u/7s full:refusal/182u/6s]

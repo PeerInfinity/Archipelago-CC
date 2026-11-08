@@ -1,0 +1,9 @@
+key ignores the world: RED — 1 row(s):      × the entry: no memo builds every time; one key and one world reuse; another world, key or
+key ignores the player state: RED — 1 row(s):      × the entry: no memo builds every time; one key and one world reuse; another world, key or
+key ignores the plan options: RED — 1 row(s):      × the entry: no memo builds every time; one key and one world reuse; another world, key or
+a function is keyed: RED — 1 row(s):      × the entry: no memo builds every time; one key and one world reuse; another world, key or
+the memo is made OFF too: RED — 1 row(s):      × ships OFF 12ms
+no cell is stored: RED — 1 row(s):      × on BK2COMBAT's corridor run: the memo's answer is the no-memo answer, ask after ask and 
+a reused cell still spends a unit: RED — 1 row(s):      × on BK2COMBAT's corridor run: the memo's answer is the no-memo answer, ask after ask and 
+a reused cell is open: RED — 1 row(s):      × on BK2COMBAT's corridor run: the memo's answer is the no-memo answer, ask after ask and 
+the hunt passes no memo: RED — 1 row(s):      × is made only inside the staged hunt (so it is asked only under CHASER_STAGED_HUNT), and 

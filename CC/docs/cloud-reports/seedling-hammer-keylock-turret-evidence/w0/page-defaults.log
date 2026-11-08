@@ -1,0 +1,12 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 1311) — head 97739720d, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+INFO: mode inv: 2 legs in 2 page(s) (of 930 legs)
+SOLVER_ENV: page 1: default
+INFO: page 1 booted in 54 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 395 start (page 1, pageLeg 0)
+INFO: page 1: 2 page error(s), ~2 swaps
+SOLVER_ENV: page 2: default
+INFO: page 2 booted in 36 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 412 start (page 2, pageLeg 0)
+INFO: page 2: 2 page error(s), ~2 swaps
+INFO: sweep done
+EXIT 0

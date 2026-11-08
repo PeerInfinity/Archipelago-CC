@@ -6,6 +6,7 @@ Contains the options generator and option class generation.
 from typing import Any, Dict
 
 from .extractors import ExtractedData
+from ._embedded_rules import CAP_DEFAULT_KB, CAP_MAX_KB, CAP_OPTION
 from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
@@ -246,7 +247,7 @@ def generate_options_py(data: ExtractedData) -> str:
     class_name = sanitize_for_class_name(game_name)
     option_definitions = data.metadata.option_definitions
 
-    imports_needed = {'Toggle'}  # Always need Toggle for RandomizeItems
+    imports_needed = {'Toggle', 'Range'}  # Toggle: RandomizeItems; Range: RulesInSlotDataMaxKb
     option_classes = []
     option_fields = []
 
@@ -258,6 +259,7 @@ def generate_options_py(data: ExtractedData) -> str:
         'priority_locations', 'item_links', 'plando_items',
         'randomize_items',  # Defined in hardcoded template with default=True
         'use_canonical_options',  # Defined in hardcoded template with default=True
+        CAP_OPTION,  # rules_in_slot_data_max_kb: defined in the hardcoded template (_embedded_rules)
     }
 
     # Standard defaults for common options - if the game uses different defaults,
@@ -357,11 +359,24 @@ class UseCanonicalOptions(Toggle):
     """
     display_name = "Use Canonical Options"
     default = True
+
+
+class RulesInSlotDataMaxKb(Range):
+    """Send this world's rules document to the client in slot_data when it is at most this many KB.
+
+    With it the web client needs no local copy of the rules for this world. A larger document is not
+    sent (the client falls back to a local rules file). 0 never sends it.
+    """
+    display_name = "Rules In Slot Data Max KB"
+    range_start = 0
+    range_end = {CAP_MAX_KB}
+    default = {CAP_DEFAULT_KB}
 {option_classes_str}{name_lookup_overrides_str}
 
 @dataclass
 class {class_name}Options(PerGameCommonOptions):
     """Options for {game_name}."""
     randomize_items: RandomizeItems
-    use_canonical_options: UseCanonicalOptions{option_fields_str}
+    use_canonical_options: UseCanonicalOptions
+    rules_in_slot_data_max_kb: RulesInSlotDataMaxKb{option_fields_str}
 '''

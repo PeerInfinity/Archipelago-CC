@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1253,
+        "headings": 1258,
         "indexHeadings": 2,
-        "lines": 34897,
+        "lines": 35054,
         "pages": 4,
-        "words": 510851
+        "words": 514758
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -37,7 +37,7 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 18,
-            "lines": 267,
+            "lines": 269,
             "links": [
                 "cloudberry.md",
                 "demos.md",
@@ -53,7 +53,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4622
+            "words": 4685
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -155,7 +155,7 @@ export const DOCS_INDEX = frz({
             "file": "cloudberry.md",
             "h1": "Cloudberry Substrate",
             "headings": 22,
-            "lines": 357,
+            "lines": 379,
             "links": [
                 "bounce.md",
                 "flash.md",
@@ -164,7 +164,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/cloudberry.md",
-            "words": 7588
+            "words": 8410
         },
         {
             "description": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.",
@@ -336,7 +336,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 37,
-            "lines": 819,
+            "lines": 827,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -346,7 +346,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 48928
+            "words": 50272
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -374,8 +374,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 755,
-            "lines": 27473,
+            "headings": 760,
+            "lines": 27598,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -383,7 +383,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 305091
+            "words": 306743
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
@@ -422,7 +422,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 32015
+            "words": 32041
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",

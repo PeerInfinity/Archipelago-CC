@@ -12,9 +12,11 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
 import importlib
+import importlib.resources
 import json
 import logging
 import os
+import pkgutil
 
 from exporter.foreign_rule_builder import is_foreign_resolved_rule, serialize_foreign_resolved_rule
 from exporter.games.base.rule_expansion import RuleExpansionMixin
@@ -2141,22 +2143,8 @@ class BaseGameExportHandler(
         See docs/json/developer/procgen/architecture.md §"The Python
         round-trip".
         """
-        try:
-            world_module = type(world).__module__
-            module = importlib.import_module(world_module)
-        except ImportError:
-            return
-        module_file = getattr(module, '__file__', None)
-        if not module_file:
-            return
-        sidecars_path = os.path.join(os.path.dirname(module_file), '_worldgen_sidecars.json')
-        if not os.path.exists(sidecars_path):
-            return
-        try:
-            with open(sidecars_path, encoding='utf-8') as f:
-                sidecars = json.load(f)
-        except (json.JSONDecodeError, OSError) as exc:
-            logger.warning(f"Failed to read worldgen sidecars at {sidecars_path}: {exc}")
+        sidecars = self._read_worldgen_package_json(world, '_worldgen_sidecars.json', 'worldgen sidecars')
+        if sidecars is None:
             return
         export_data.setdefault('preset_sidecars', {})[str(player)] = sidecars
 
@@ -2193,25 +2181,29 @@ class BaseGameExportHandler(
             export_data.setdefault('loop_costs', {})[str(player)] = loop_costs
 
     def _read_worldgen_package_json(self, world, filename: str, label: str):
-        """The parsed `filename` beside the worldgen world's package, or None
-        when the package ships none (or it cannot be read — logged)."""
+        """The parsed `filename` in the worldgen world's package, or None when the package ships none.
+
+        Read through the package's loader (importlib.resources / pkgutil.get_data), never open() on a
+        path under __file__: a packed .apworld is a zip, where that path cannot be opened. Before this the
+        miss was silent, so a packed package exported without its sidecars, procgen metadata, loop costs
+        and page blocks. A file that is present but unreadable or malformed is an error.
+        """
+        package = type(world).__module__
         try:
-            world_module = type(world).__module__
-            module = importlib.import_module(world_module)
+            importlib.import_module(package)
         except ImportError:
             return None
-        module_file = getattr(module, '__file__', None)
-        if not module_file:
-            return None
-        path = os.path.join(os.path.dirname(module_file), filename)
-        if not os.path.exists(path):
-            return None
         try:
-            with open(path, encoding='utf-8') as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError) as exc:
-            logger.warning(f"Failed to read {label} at {path}: {exc}")
+            present = importlib.resources.files(package).joinpath(filename).is_file()
+        except (TypeError, ModuleNotFoundError):
+            return None  # not a package (a bare module has no resources)
+        if not present:
             return None
+        raw = pkgutil.get_data(package, filename)
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{label}: {package}/{filename} is not valid JSON: {exc}") from exc
 
     def _discover_worldgen_helpers_for_preservation(self, world) -> None:
         """Discover helper function names from a worldgen Rules.py and auto-preserve them.

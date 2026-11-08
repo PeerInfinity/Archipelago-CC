@@ -1,0 +1,9 @@
+M2-no-kill: "    for (const id of kill) {\n        requireVerb('kill', 'keylock:turretFirst', id);" -> "    for (const id of []) {\n        requireVerb('kill', 'keylock:turretFirst', id);"
+✓ ships OFF, and the env alone turns it on 2ms
+× the prerequisite kill sits under the strategy switch's kill gate, before any fork (a nested kill) 43ms
+× a generated key line inside a live turret's range: OFF "0 cell(s)"; ON the stance, then the kill refuses by name 934ms
+✓ the same room with no turret, and with the turret out of range: ON = OFF, nothing asked  352ms
+× L40 leg 412 with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 748, hitless on a fresh run 10097ms
+× L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH's staging point 130905ms
+Tests  4 failed | 2 passed (6)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯

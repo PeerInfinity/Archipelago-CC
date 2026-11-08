@@ -1,0 +1,119 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js [2m([22m[2m12 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 9194[2mms[22m[39m
+     [32m✓[39m both are ON by default, and `with…` restores them, on a throw too[32m 2[2mms[22m[39m
+     [32m✓[39m `l30keylock-pit224-before`: on the key line at t133, hit at t173 (sword) and t193 (body), open only at t212[32m 151[2mms[22m[39m
+     [32m✓[39m `l30keylock-pit224`: the body dies first, then the key line, then the crossing into L22 — zero hits[32m 73[2mms[22m[39m
+     [32m✓[39m `l30keylock-pit240`: the body dies first, then the key line, then the crossing into L22 — zero hits[32m 57[2mms[22m[39m
+[31m     [31m×[31m both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice[39m[33m 2242[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens [33m 916[2mms[22m[39m
+     [33m[2m✓[22m[39m RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait [33m 1694[2mms[22m[39m
+[31m     [31m×[31m WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick[39m[33m 1421[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (224,80): the solver's own plan IS the witness `l30keylock-pit224` (kill, lock, crossing) [33m 1016[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (240,80): the solver's own plan IS the witness `l30keylock-pit240` (kill, lock, crossing) [33m 833[2mms[22m[39m
+     [33m[2m✓[22m[39m the chaser arm at the pit landing: the player's box prices nothing; the body's box finds (88,120) [33m 770[2mms[22m[39m
+     [32m✓[39m `previewWalk`'s `standKeys` tail presses the stand's keys and no strike; without it the tail is unchanged[32m 12[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js [2m([22m[2m16 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 19482[2mms[22m[39m
+     [32m✓[39m orbitFreeAim ships OFF[32m 1[2mms[22m[39m
+     [32m✓[39m the projection searches 10° steps out to 180° each side, at four radius offsets[32m 1[2mms[22m[39m
+     [32m✓[39m the staging boots in the corridor and banks spinner@816,848 {40,15} and spinner@880,848 {40,16}; the chest, the tree and the BobSoldier stand[32m 63[2mms[22m[39m
+     [32m✓[39m the recording: the blade lands on the player at t55[32m 1[2mms[22m[39m
+     [32m✓[39m the model reproduces it at 0 px, both hits included (t55, t75)[32m 205[2mms[22m[39m
+     [32m✓[39m the recorded tape is the shipped orbit's own keys (candidate 2, orbitFreeAim OFF)[32m 127[2mms[22m[39m
+[31m     [31m×[31m OFF the solver's orbit arm finds no hitless candidate[39m[33m 11780[2mms[22m[39m
+     [32m✓[39m the recording: never hit, and the BobSoldier is gone from t125[32m 1[2mms[22m[39m
+     [32m✓[39m the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px[32m 123[2mms[22m[39m
+[31m     [31m×[31m ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key[39m[33m 6805[2mms[22m[39m
+     [32m✓[39m the recording: never hit, and the BobSoldier is gone (the open pocket's projected orbit)[32m 2[2mms[22m[39m
+     [33m[2m✓[22m[39m the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px [33m 367[2mms[22m[39m
+     [32m✓[39m strategyBoundDistinct ships OFF[32m 0[2mms[22m[39m
+     [32m✓[39m OFF every application counts: leg 853's four refuse the fifth[32m 0[2mms[22m[39m
+     [32m✓[39m ON the distinct ones count (leg 853 has three), and four distinct still refuse[32m 0[2mms[22m[39m
+     [32m✓[39m ON a goal that repeats one application is stopped at 8 in all (the loop's backstop)[32m 0[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js[2m > [22mL30KEYLOCK D2 — the solver, switch by switch, from both pit landings[2m > [22mboth OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice
+[31m[1mAssertionError[22m: expected 318 to be null[39m
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+318
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js:[2m117:26[22m[39m
+    [90m115| [39m        const p = await l30keylockPlan(224, { rescan: false, waitPrice…
+    [90m116| [39m        [35mconst[39m v [33m=[39m [34mverdict[39m(p)[33m;[39m
+    [90m117| [39m        [34mexpect[39m(v[33m.[39msolved)[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                         [31m^[39m
+    [90m118| [39m        expect(v.refusal).toMatch(/the danger map forbids \(71\.77\d*,…
+    [90m119| [39m        [34mexpect[39m(v[33m.[39mhits)[33m.[39m[34mtoBe[39m([34m2[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js[2m > [22mL30KEYLOCK D2 — the solver, switch by switch, from both pit landings[2m > [22mWAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick
+[31m[1mAssertionError[22m: expected { Object (solved, hits, ...) } to match object { solved: 309, hits: +0 }
+(1 matching property omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[2m    "hits": 0,[22m
+[32m-   "solved": 309,[39m
+[31m+   "solved": 318,[39m
+[2m  }[22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js:[2m141:14[22m[39m
+    [90m139| [39m    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80)…
+    [90m140| [39m        expect(verdict(await l30keylockPlan(224, { rescan: false, wait…
+    [90m141| [39m            [33m.[39m[34mtoMatchObject[39m({ solved[33m:[39m [34m309[39m[33m,[39m hits[33m:[39m [34m0[39m })[33m;[39m
+    [90m   | [39m             [31m^[39m
+    [90m142| [39m        const v = verdict(await l30keylockPlan(240, { rescan: false, w…
+    [90m143| [39m        [34mexpect[39m(v)[33m.[39m[34mtoMatchObject[39m({ solved[33m:[39m [35mnull[39m[33m,[39m hits[33m:[39m [34m0[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js[2m > [22mL40BK2B W0 — the shipped orbit in the notch, on the game (`l40bk2b-orbit-plain`)[2m > [22mOFF the solver's orbit arm finds no hitless candidate
+[31m[1mAssertionError[22m: expected 'solverBot(l40bk2b) chest (880,816) st…' to contain 'orbit arm: no orbit kill of bobsoldie…'[39m
+
+Expected: [32m"orbit arm: no orbit kill of bobsoldier@880,832 is hitless (20 fork(s) of 20)"[39m
+Received: [31m"solverBot(l40bk2b) chest (880,816) stance: the re-planned corridor failed too — solverBot(l40bk2b) chest (880,816) stance waypoint 1 (888,834): the route entered a proximity-hazard — chest at (880,816) in level 40 — at (887.8625996833347,834.7981671803376). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught."[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js:[2m86:33[22m[39m
+    [90m 84| [39m        const { out, refusal } = await l40Bk2bSolve({ orbitFreeAim: fa…
+    [90m 85| [39m        [34mexpect[39m(out)[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m 86| [39m        expect(refusal.message).toContain('orbit arm: no orbit kill of…
+    [90m   | [39m                                [31m^[39m
+    [90m 87| [39m    }[33m,[39m [34m180_000[39m)[33m;[39m
+    [90m 88| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js[2m > [22mL40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)[2m > [22mON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key
+[31m[1mAssertionError[22m: expected 112 to be 125 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 125[39m
+[31m+ 112[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js:[2m112:51[22m[39m
+    [90m110| [39m        [35mconst[39m { refusal } [33m=[39m [35mawait[39m [34ml40Bk2bSolve[39m([33mL40BK2B_D1_SWITCHES[39m)[33m;[39m
+    [90m111| [39m        [35mconst[39m perTick [33m=[39m refusal[33m.[39mperTick[33m.[39m[34mmap[39m((k) [33m=>[39m [[33m...[39mk][33m.[39m[34msort[39m())[33m;[39m
+    [90m112| [39m        [34mexpect[39m([35mawait[39m [34ml40Bk2bRemovalTick[39m(perTick))[33m.[39m[34mtoBe[39m([34m125[39m)[33m;[39m
+    [90m   | [39m                                                  [31m^[39m
+    [90m113| [39m        [35mconst[39m { createTapeStepper } [33m=[39m [35mawait[39m [35mimport[39m([32m'./tapeRunner.js'[39m)[33m;[39m
+    [90m114| [39m        [35mconst[39m recorded [33m=[39m [][33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m24 passed[39m[22m[90m (28)[39m
+[2m   Start at [22m 22:13:14
+[2m   Duration [22m 23.61s[2m (transform 5.30s, setup 0ms, import 7.68s, tests 28.68s, environment 0ms)[22m
+

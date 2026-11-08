@@ -6,6 +6,7 @@
     "__init__.py",
     "__main__.py",
     "_codegen_utils.py",
+    "_embedded_rules.py",
     "_helper_codegen.py",
     "_helper_expressions.py",
     "_helper_statements.py",

@@ -1,0 +1,6 @@
+left L40 at k 1075 to 43
+leg 388 ticks 1156 pass dashless hits 0 removed (id, tick): [["bob@192,480",755],["bob@224,496",769],["bob@208,448",773],["bob@352,448",1059],["bob@352,416",1067]]
+closest approach of the cluster bodies [d px, tick, body pos]: {"bob@192,480":[5.8,753,[212,493]],"bob@352,448":[3,1037,[389,475]],"bob@352,416":[14.9,982,[365,425]],"bob@208,448":[10,748,[212,475]],"bob@224,496":[14.2,761,[231,490]],"puncher@128,624":[0.6,484,[154,650]]}
+left L40 at k 953 to 43
+leg 387 ticks 1034 pass full hits 0 removed (id, tick): [["bob@192,480",755],["bob@224,496",822],["bob@208,448",858]]
+closest approach of the cluster bodies [d px, tick, body pos]: {"bob@192,480":[4.1,749,[212,493]],"bob@352,448":[9.6,913,[361,459]],"bob@352,416":[15.2,887,[356,427]],"bob@208,448":[13.9,748,[212,475]],"bob@224,496":[5.6,791,[235,498]],"puncher@128,624":[0.6,484,[154,650]]}

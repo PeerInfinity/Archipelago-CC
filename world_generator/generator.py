@@ -10,6 +10,7 @@ import logging
 from pathlib import Path
 from typing import Any, List, Optional, Dict
 
+from ._embedded_rules import WORLDGEN_RULES_FILE, build_embedded_rules_doc, embedded_rules_file_bytes
 from ._unknown_kind import lossy_codegen, unobtainable_record
 from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
 from .templates import (
@@ -100,6 +101,11 @@ class WorldGenerator:
         # Apply name substitutions if present (e.g. Metamath generic → meaningful names)
         if self.apply_name_substitutions:
             apply_name_substitutions(json_data, player_id=self.player_id)
+
+        # The source after name substitution: the base of the package's embedded rules document
+        # (_embedded_rules.py; written by _generate once the rename below has fixed the identity).
+        import copy
+        self._substituted_json = copy.deepcopy(json_data)
 
         self.data = extract_all(json_data, player_id=self.player_id)
 
@@ -321,7 +327,9 @@ class WorldGenerator:
         source_world = source_json.get('world', {}).get(self.player_id, {})
         options_data = source_world.get('options', {})
 
-        if options_data:
+        # A canonical-seed package always ships the file (`{}` when the source has no options): its
+        # _load_canonical_options reads it with pkgutil.get_data and treats any failure as an error.
+        if options_data or self.canonical_seed is not None:
             options_path = output_dir / '_worldgen_options.json'
             if not dry_run:
                 options_path.write_text(json.dumps(options_data, indent=2), encoding='utf-8')
@@ -432,6 +440,18 @@ class WorldGenerator:
                 logger.info(f"Wrote exit er to {exit_er_path}")
             else:
                 logger.info(f"Would write: {exit_er_path}")
+
+        # The rules document the world sends in slot_data (`worldgen_rules`, _embedded_rules.py): the
+        # source after name substitution, with the built world's identity and no placement. Compact: the
+        # per-player cap (rules_in_slot_data_max_kb) measures these bytes.
+        rules_doc = build_embedded_rules_doc(self._substituted_json, self.player_id,
+                                             self.data.metadata.game_name, Path(output_dir).name)
+        rules_path = output_dir / WORLDGEN_RULES_FILE
+        if not dry_run:
+            rules_path.write_bytes(embedded_rules_file_bytes(rules_doc, self.player_id))
+            logger.info(f"Wrote embedded rules to {rules_path}")
+        else:
+            logger.info(f"Would write: {rules_path}")
 
         for filename, content in files.items():
             file_path = output_dir / filename

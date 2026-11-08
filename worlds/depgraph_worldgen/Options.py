@@ -27,6 +27,18 @@ class UseCanonicalOptions(Toggle):
     display_name = "Use Canonical Options"
     default = True
 
+
+class RulesInSlotDataMaxKb(Range):
+    """Send this world's rules document to the client in slot_data when it is at most this many KB.
+
+    With it the web client needs no local copy of the rules for this world. A larger document is not
+    sent (the client falls back to a local rules file). 0 never sends it.
+    """
+    display_name = "Rules In Slot Data Max KB"
+    range_start = 0
+    range_end = 8192
+    default = 1024
+
 class EntranceRuleMode(Choice):
     """Option for Entrance Rule Mode."""
     display_name = "Entrance Rule Mode"
@@ -71,6 +83,7 @@ class DepGraphWorldGenOptions(PerGameCommonOptions):
     """Options for DepGraph WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
+    rules_in_slot_data_max_kb: RulesInSlotDataMaxKb
     entrance_rule_mode: EntranceRuleMode
     graph_file: GraphFile
     randomize_starting_nodes: RandomizeStartingNodes

@@ -1,0 +1,291 @@
+# CLEARTAG-CHAIN radius: every captured request of the 91 other flag legs + 394/411/869/870/395/412, replayed in the INSTRUMENTED scratch tree (one counter at each clear-tag prerequisite site; tools/chain.mjs ctHits/ctCrossHits), cap 40960
+# summary by arm: {"D0":{"n":96,"hits":0,"ok":81},"SB":{"n":96,"hits":0,"ok":81},"SB+OPP+CSH+PEE+FSB":{"n":96,"hits":0,"ok":85}}
+# legs by level: {"0":12,"12":23,"16":1,"19":1,"20":2,"24":1,"28":2,"30":8,"31":2,"38":1,"40":10,"48":1,"61":2,"63":7,"65":1,"68":1,"71":3,"101":2,"113":3,"114":2}
+7/0	D0	SOLVED 54	27	2d6c80d13697	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared
+7/0	SB	SOLVED 54	27	2d6c80d13697	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared
+7/0	SB+OPP+CSH+PEE+FSB	SOLVED 54	27	2d6c80d13697	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared
+8/0	D0	SOLVED 121	83	0c58721f2aa1	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared
+8/0	SB	SOLVED 121	83	0c58721f2aa1	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared
+8/0	SB+OPP+CSH+PEE+FSB	SOLVED 121	83	0c58721f2aa1	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared
+14/0	D0	SOLVED 320	87	9b5f181cc374	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared
+14/0	SB	SOLVED 320	87	9b5f181cc374	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared
+14/0	SB+OPP+CSH+PEE+FSB	SOLVED 320	87	9b5f181cc374	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared
+15/0	D0	SOLVED 75	80	6fc43574c409	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared
+15/0	SB	SOLVED 75	80	6fc43574c409	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared
+15/0	SB+OPP+CSH+PEE+FSB	SOLVED 75	80	6fc43574c409	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared
+21/0	D0	SOLVED 242	87	6a14904351d6	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared
+21/0	SB	SOLVED 242	87	6a14904351d6	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared
+21/0	SB+OPP+CSH+PEE+FSB	SOLVED 242	87	6a14904351d6	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared
+22/0	D0	SOLVED 305	87	dc127f5dd8fb	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared
+22/0	SB	SOLVED 305	87	dc127f5dd8fb	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared
+22/0	SB+OPP+CSH+PEE+FSB	SOLVED 305	87	dc127f5dd8fb	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared
+28/0	D0	SOLVED 380	87	450fc4086315	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared
+28/0	SB	SOLVED 380	87	450fc4086315	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared
+28/0	SB+OPP+CSH+PEE+FSB	SOLVED 380	87	450fc4086315	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared
+29/0	D0	SOLVED 54	27	48dc09386034	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared
+29/0	SB	SOLVED 54	27	48dc09386034	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared
+29/0	SB+OPP+CSH+PEE+FSB	SOLVED 54	27	48dc09386034	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared
+35/0	D0	SOLVED 377	87	21694bf4aa2b	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared
+35/0	SB	SOLVED 377	87	21694bf4aa2b	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared
+35/0	SB+OPP+CSH+PEE+FSB	SOLVED 377	87	21694bf4aa2b	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared
+36/0	D0	SOLVED 59	39	6a63ab919193	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared
+36/0	SB	SOLVED 59	39	6a63ab919193	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared
+36/0	SB+OPP+CSH+PEE+FSB	SOLVED 59	39	6a63ab919193	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared
+42/0	D0	SOLVED 307	87	4e1fa0e60b13	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- start -> location:L0 flag 1: breakablerock@288,176 cleared
+42/0	SB	SOLVED 307	87	4e1fa0e60b13	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- start -> location:L0 flag 1: breakablerock@288,176 cleared
+42/0	SB+OPP+CSH+PEE+FSB	SOLVED 307	87	4e1fa0e60b13	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- start -> location:L0 flag 1: breakablerock@288,176 cleared
+43/0	D0	SOLVED 21	0	f0288380f044	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- start -> location:L0 flag 4: breakablerock@80,112 cleared
+43/0	SB	SOLVED 21	0	f0288380f044	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- start -> location:L0 flag 4: breakablerock@80,112 cleared
+43/0	SB+OPP+CSH+PEE+FSB	SOLVED 21	0	f0288380f044	solidArmPrereq=0	crossRoomPrereq=0	level_0__r7c6 <- start -> location:L0 flag 4: breakablerock@80,112 cleared
+105/0	D0	SOLVED 787	180	7fbd6d9597e4	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+105/0	SB	SOLVED 787	180	7fbd6d9597e4	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+105/0	SB+OPP+CSH+PEE+FSB	SOLVED 787	180	7fbd6d9597e4	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+106/0	D0	SOLVED 802	182	e6f26f327218	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+106/0	SB	SOLVED 802	182	e6f26f327218	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+106/0	SB+OPP+CSH+PEE+FSB	SOLVED 802	182	e6f26f327218	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+107/0	D0	SOLVED 817	87	d920eea922c1	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+107/0	SB	SOLVED 817	87	d920eea922c1	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+107/0	SB+OPP+CSH+PEE+FSB	SOLVED 817	87	d920eea922c1	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+116/0	D0	SOLVED 852	171	3b74e7b72434	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+116/0	SB	SOLVED 852	171	3b74e7b72434	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+116/0	SB+OPP+CSH+PEE+FSB	SOLVED 852	171	3b74e7b72434	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+117/0	D0	SOLVED 867	173	d46ba3d9cf00	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+117/0	SB	SOLVED 867	173	d46ba3d9cf00	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+117/0	SB+OPP+CSH+PEE+FSB	SOLVED 867	173	d46ba3d9cf00	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+118/0	D0	SOLVED 578	87	b7c6bd4ca7e9	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+118/0	SB	SOLVED 578	87	b7c6bd4ca7e9	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+118/0	SB+OPP+CSH+PEE+FSB	SOLVED 578	87	b7c6bd4ca7e9	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+127/0	D0	SOLVED 565	87	bf934959ddb0	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+127/0	SB	SOLVED 565	87	bf934959ddb0	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+127/0	SB+OPP+CSH+PEE+FSB	SOLVED 565	87	bf934959ddb0	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+128/0	D0	SOLVED 571	87	9dcf7a2c119d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+128/0	SB	SOLVED 571	87	9dcf7a2c119d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+128/0	SB+OPP+CSH+PEE+FSB	SOLVED 571	87	9dcf7a2c119d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+129/0	D0	SOLVED 697	87	7f4ba9056a36	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+129/0	SB	SOLVED 697	87	7f4ba9056a36	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+129/0	SB+OPP+CSH+PEE+FSB	SOLVED 697	87	7f4ba9056a36	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+138/0	D0	SOLVED 886	195	490915486cde	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+138/0	SB	SOLVED 886	195	490915486cde	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+138/0	SB+OPP+CSH+PEE+FSB	SOLVED 886	195	490915486cde	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+139/0	D0	SOLVED 897	197	5e1e762933cb	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+139/0	SB	SOLVED 897	197	5e1e762933cb	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+139/0	SB+OPP+CSH+PEE+FSB	SOLVED 897	197	5e1e762933cb	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+140/0	D0	SOLVED 421	87	7b93fec6c53d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+140/0	SB	SOLVED 421	87	7b93fec6c53d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+140/0	SB+OPP+CSH+PEE+FSB	SOLVED 421	87	7b93fec6c53d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+149/0	D0	SOLVED 464	139	aa3f707a484e	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+149/0	SB	SOLVED 464	139	aa3f707a484e	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+149/0	SB+OPP+CSH+PEE+FSB	SOLVED 464	139	aa3f707a484e	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+150/0	D0	SOLVED 472	139	8be7d8aa3d44	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+150/0	SB	SOLVED 472	139	8be7d8aa3d44	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+150/0	SB+OPP+CSH+PEE+FSB	SOLVED 472	139	8be7d8aa3d44	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+151/0	D0	SOLVED 734	87	49bb4a17f586	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+151/0	SB	SOLVED 734	87	49bb4a17f586	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+151/0	SB+OPP+CSH+PEE+FSB	SOLVED 734	87	49bb4a17f586	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+160/0	D0	SOLVED 680	87	285faf6d4d1d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+160/0	SB	SOLVED 680	87	285faf6d4d1d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+160/0	SB+OPP+CSH+PEE+FSB	SOLVED 680	87	285faf6d4d1d	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+161/0	D0	SOLVED 696	87	082941b4cb75	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+161/0	SB	SOLVED 696	87	082941b4cb75	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+161/0	SB+OPP+CSH+PEE+FSB	SOLVED 696	87	082941b4cb75	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+162/0	D0	SOLVED 602	71	f9dfb38ee223	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+162/0	SB	SOLVED 602	71	f9dfb38ee223	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+162/0	SB+OPP+CSH+PEE+FSB	SOLVED 602	71	f9dfb38ee223	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+171/0	D0	SOLVED 713	87	d75dda6d77ba	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+171/0	SB	SOLVED 713	87	d75dda6d77ba	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+171/0	SB+OPP+CSH+PEE+FSB	SOLVED 713	87	d75dda6d77ba	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+172/0	D0	SOLVED 716	87	6839889da1e1	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+172/0	SB	SOLVED 716	87	6839889da1e1	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+172/0	SB+OPP+CSH+PEE+FSB	SOLVED 716	87	6839889da1e1	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+173/0	D0	SOLVED 603	71	7423f67ddba7	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+173/0	SB	SOLVED 603	71	7423f67ddba7	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+173/0	SB+OPP+CSH+PEE+FSB	SOLVED 603	71	7423f67ddba7	solidArmPrereq=0	crossRoomPrereq=0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared
+179/0	D0	SOLVED 102	15	980428c2a6d0	solidArmPrereq=0	crossRoomPrereq=0	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+179/0	SB	SOLVED 102	15	980428c2a6d0	solidArmPrereq=0	crossRoomPrereq=0	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+179/0	SB+OPP+CSH+PEE+FSB	SOLVED 102	15	980428c2a6d0	solidArmPrereq=0	crossRoomPrereq=0	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+181/0	D0	SOLVED 128	36	b555dd021f97	solidArmPrereq=0	crossRoomPrereq=0	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+181/0	SB	SOLVED 128	36	b555dd021f97	solidArmPrereq=0	crossRoomPrereq=0	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+181/0	SB+OPP+CSH+PEE+FSB	SOLVED 128	36	b555dd021f97	solidArmPrereq=0	crossRoomPrereq=0	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+203/0	D0	SOLVED 112	63	6e08e6d42631	solidArmPrereq=0	crossRoomPrereq=0	level_16__r1c1 <- in_L15_144_16 -> location:L16 flag 0: rope@32,16 cleared
+203/0	SB	SOLVED 112	63	6e08e6d42631	solidArmPrereq=0	crossRoomPrereq=0	level_16__r1c1 <- in_L15_144_16 -> location:L16 flag 0: rope@32,16 cleared
+203/0	SB+OPP+CSH+PEE+FSB	SOLVED 112	63	6e08e6d42631	solidArmPrereq=0	crossRoomPrereq=0	level_16__r1c1 <- in_L15_144_16 -> location:L16 flag 0: rope@32,16 cleared
+229/0	D0	SOLVED 200	46	2adb44d52980	solidArmPrereq=0	crossRoomPrereq=0	level_20__r1c4 <- in_L19_16_96 -> location:L20 flag 0: shieldlocknorm@176,16 cleared
+229/0	SB	SOLVED 200	46	2adb44d52980	solidArmPrereq=0	crossRoomPrereq=0	level_20__r1c4 <- in_L19_16_96 -> location:L20 flag 0: shieldlocknorm@176,16 cleared
+229/0	SB+OPP+CSH+PEE+FSB	SOLVED 200	46	2adb44d52980	solidArmPrereq=0	crossRoomPrereq=0	level_20__r1c4 <- in_L19_16_96 -> location:L20 flag 0: shieldlocknorm@176,16 cleared
+270/0	D0	SOLVED 115	60	439ae3a82d94	solidArmPrereq=0	crossRoomPrereq=0	level_24 <- in_L23_32_32 -> location:L24 flag 0: burnabletree@32,128 cleared
+270/0	SB	SOLVED 115	60	439ae3a82d94	solidArmPrereq=0	crossRoomPrereq=0	level_24 <- in_L23_32_32 -> location:L24 flag 0: burnabletree@32,128 cleared
+270/0	SB+OPP+CSH+PEE+FSB	SOLVED 115	60	439ae3a82d94	solidArmPrereq=0	crossRoomPrereq=0	level_24 <- in_L23_32_32 -> location:L24 flag 0: burnabletree@32,128 cleared
+294/0	D0	SOLVED 170	57	0c5d520665f6	solidArmPrereq=0	crossRoomPrereq=0	level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
+294/0	SB	SOLVED 170	57	0c5d520665f6	solidArmPrereq=0	crossRoomPrereq=0	level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
+294/0	SB+OPP+CSH+PEE+FSB	SOLVED 170	57	0c5d520665f6	solidArmPrereq=0	crossRoomPrereq=0	level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
+297/0	D0	SOLVED 341	86	df0fa6594e94	solidArmPrereq=0	crossRoomPrereq=0	level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
+297/0	SB	SOLVED 341	86	df0fa6594e94	solidArmPrereq=0	crossRoomPrereq=0	level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
+297/0	SB+OPP+CSH+PEE+FSB	SOLVED 341	86	df0fa6594e94	solidArmPrereq=0	crossRoomPrereq=0	level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
+312/0	D0	SOLVED 156	72	69b4874c623b	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+312/0	SB	SOLVED 156	72	69b4874c623b	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+312/0	SB+OPP+CSH+PEE+FSB	SOLVED 156	72	69b4874c623b	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+312/1	D0	SOLVED 101	19	b005378e81e4	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+312/1	SB	SOLVED 101	19	b005378e81e4	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+312/1	SB+OPP+CSH+PEE+FSB	SOLVED 101	19	b005378e81e4	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+313/0	D0	SOLVED 162	44	f9d51668c23a	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+313/0	SB	SOLVED 162	44	f9d51668c23a	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+313/0	SB+OPP+CSH+PEE+FSB	SOLVED 162	44	f9d51668c23a	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+318/0	D0	SOLVED 191	67	d88a55a82c3a	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+318/0	SB	SOLVED 191	67	d88a55a82c3a	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+318/0	SB+OPP+CSH+PEE+FSB	SOLVED 191	67	d88a55a82c3a	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+319/0	D0	SOLVED 190	75	cd9e1a718154	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+319/0	SB	SOLVED 190	75	cd9e1a718154	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+319/0	SB+OPP+CSH+PEE+FSB	SOLVED 190	75	cd9e1a718154	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+324/0	D0	SOLVED 301	153	70f21801476c	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+324/0	SB	SOLVED 301	153	70f21801476c	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+324/0	SB+OPP+CSH+PEE+FSB	SOLVED 301	153	70f21801476c	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+324/1	D0	SOLVED 104	43	d621e309556c	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+324/1	SB	SOLVED 104	43	d621e309556c	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+324/1	SB+OPP+CSH+PEE+FSB	SOLVED 104	43	d621e309556c	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+325/0	D0	SOLVED 209	83	126bc4b6c014	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+325/0	SB	SOLVED 209	83	126bc4b6c014	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+325/0	SB+OPP+CSH+PEE+FSB	SOLVED 209	83	126bc4b6c014	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+330/0	D0	REFUSED	126	57269a2be34d	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+330/0	SB	REFUSED	126	57269a2be34d	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+330/0	SB+OPP+CSH+PEE+FSB	REFUSED	126	57269a2be34d	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+331/0	D0	SOLVED 334	87	c83b28f325da	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+331/0	SB	SOLVED 334	87	c83b28f325da	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+331/0	SB+OPP+CSH+PEE+FSB	SOLVED 334	87	c83b28f325da	solidArmPrereq=0	crossRoomPrereq=0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+334/0	D0	SOLVED 448	86	71110d1c418b	solidArmPrereq=0	crossRoomPrereq=0	level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,432 cleared
+334/0	SB	SOLVED 448	86	71110d1c418b	solidArmPrereq=0	crossRoomPrereq=0	level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,432 cleared
+334/0	SB+OPP+CSH+PEE+FSB	SOLVED 448	86	71110d1c418b	solidArmPrereq=0	crossRoomPrereq=0	level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,432 cleared
+336/0	D0	SOLVED 331	87	4f52482a6e97	solidArmPrereq=0	crossRoomPrereq=0	level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@192,432 cleared
+336/0	SB	SOLVED 331	87	4f52482a6e97	solidArmPrereq=0	crossRoomPrereq=0	level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@192,432 cleared
+336/0	SB+OPP+CSH+PEE+FSB	SOLVED 331	87	4f52482a6e97	solidArmPrereq=0	crossRoomPrereq=0	level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@192,432 cleared
+361/0	D0	SOLVED 619	87	4cc8e378144f	solidArmPrereq=0	crossRoomPrereq=0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+361/0	SB	SOLVED 619	87	4cc8e378144f	solidArmPrereq=0	crossRoomPrereq=0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+361/0	SB+OPP+CSH+PEE+FSB	SOLVED 619	87	4cc8e378144f	solidArmPrereq=0	crossRoomPrereq=0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+361/1	D0	SOLVED 152	87	cab0c182f181	solidArmPrereq=0	crossRoomPrereq=0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+361/1	SB	SOLVED 152	87	cab0c182f181	solidArmPrereq=0	crossRoomPrereq=0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+361/1	SB+OPP+CSH+PEE+FSB	SOLVED 152	87	cab0c182f181	solidArmPrereq=0	crossRoomPrereq=0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+372/0	D0	SOLVED 1293	363	f51f58d819e5	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared
+372/0	SB	SOLVED 1293	363	f51f58d819e5	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared
+372/0	SB+OPP+CSH+PEE+FSB	SOLVED 1293	363	f51f58d819e5	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared
+373/0	D0	SOLVED 1083	344	d381a121824b	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+373/0	SB	SOLVED 1083	344	d381a121824b	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+373/0	SB+OPP+CSH+PEE+FSB	SOLVED 1083	344	d381a121824b	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+377/0	D0	SOLVED 1492	281	d7e6d5b09164	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared
+377/0	SB	SOLVED 1492	281	d7e6d5b09164	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared
+377/0	SB+OPP+CSH+PEE+FSB	SOLVED 1295	982	39f31fdb39c9	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared
+378/0	D0	SOLVED 1012	247	e58f4a91d323	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+378/0	SB	SOLVED 1012	247	e58f4a91d323	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+378/0	SB+OPP+CSH+PEE+FSB	SOLVED 1012	247	e58f4a91d323	solidArmPrereq=0	crossRoomPrereq=0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+394/0	D0	REFUSED	1398	49356e343f36	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+394/0	SB	REFUSED	1398	49356e343f36	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+394/0	SB+OPP+CSH+PEE+FSB	SOLVED 1340	2576	6b5a719eb12c	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+394/1	D0	REFUSED	1398	49356e343f36	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+394/1	SB	REFUSED	1398	49356e343f36	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+394/1	SB+OPP+CSH+PEE+FSB	SOLVED 1340	2576	6b5a719eb12c	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+395/0	D0	REFUSED	20	5ef26e7cad6c	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+395/0	SB	REFUSED	20	5ef26e7cad6c	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+395/0	SB+OPP+CSH+PEE+FSB	REFUSED	20	5ef26e7cad6c	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+411/0	D0	REFUSED	1308	fd8dacb8580e	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+411/0	SB	REFUSED	1308	fd8dacb8580e	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+411/0	SB+OPP+CSH+PEE+FSB	SOLVED 1087	3118	53a5e33faa01	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+411/1	D0	REFUSED	1308	fd8dacb8580e	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+411/1	SB	REFUSED	1308	fd8dacb8580e	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+411/1	SB+OPP+CSH+PEE+FSB	SOLVED 1087	3118	53a5e33faa01	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+412/0	D0	REFUSED	20	9150f6612a5b	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+412/0	SB	REFUSED	20	9150f6612a5b	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+412/0	SB+OPP+CSH+PEE+FSB	REFUSED	20	9150f6612a5b	solidArmPrereq=0	crossRoomPrereq=0	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+523/0	D0	SOLVED 21	15	b1aa5e6a565f	solidArmPrereq=0	crossRoomPrereq=0	level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared
+523/0	SB	SOLVED 21	15	b1aa5e6a565f	solidArmPrereq=0	crossRoomPrereq=0	level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared
+523/0	SB+OPP+CSH+PEE+FSB	SOLVED 21	15	b1aa5e6a565f	solidArmPrereq=0	crossRoomPrereq=0	level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared
+526/0	D0	SOLVED 24	27	7ef2548b8a37	solidArmPrereq=0	crossRoomPrereq=0	level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared
+526/0	SB	SOLVED 24	27	7ef2548b8a37	solidArmPrereq=0	crossRoomPrereq=0	level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared
+526/0	SB+OPP+CSH+PEE+FSB	SOLVED 24	27	7ef2548b8a37	solidArmPrereq=0	crossRoomPrereq=0	level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared
+557/0	D0	SOLVED 37	17	4138f7a7a5f3	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared
+557/0	SB	SOLVED 37	17	4138f7a7a5f3	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared
+557/0	SB+OPP+CSH+PEE+FSB	SOLVED 37	17	4138f7a7a5f3	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared
+562/0	D0	SOLVED 35	17	d41a27de4117	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared
+562/0	SB	SOLVED 35	17	d41a27de4117	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared
+562/0	SB+OPP+CSH+PEE+FSB	SOLVED 35	17	d41a27de4117	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared
+567/0	D0	SOLVED 41	24	df62893755bc	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared
+567/0	SB	SOLVED 41	24	df62893755bc	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared
+567/0	SB+OPP+CSH+PEE+FSB	SOLVED 41	24	df62893755bc	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared
+572/0	D0	REFUSED	8	9e1806642239	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared
+572/0	SB	REFUSED	8	9e1806642239	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared
+572/0	SB+OPP+CSH+PEE+FSB	REFUSED	8	9e1806642239	solidArmPrereq=0	crossRoomPrereq=0	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared
+574/0	D0	REFUSED	910	e4d197c5ea9c	solidArmPrereq=0	crossRoomPrereq=0	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared
+574/0	SB	REFUSED	910	e4d197c5ea9c	solidArmPrereq=0	crossRoomPrereq=0	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared
+574/0	SB+OPP+CSH+PEE+FSB	REFUSED	910	e4d197c5ea9c	solidArmPrereq=0	crossRoomPrereq=0	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared
+577/0	D0	SOLVED 65	24	e2e6ab2e904e	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared
+577/0	SB	SOLVED 65	24	e2e6ab2e904e	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared
+577/0	SB+OPP+CSH+PEE+FSB	SOLVED 65	24	e2e6ab2e904e	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared
+580/0	D0	REFUSED	668	6bd1a98670b9	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+580/0	SB	REFUSED	668	6bd1a98670b9	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+580/0	SB+OPP+CSH+PEE+FSB	REFUSED	668	6bd1a98670b9	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+580/1	D0	REFUSED	334	6bd1a98670b9	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+580/1	SB	REFUSED	334	6bd1a98670b9	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+580/1	SB+OPP+CSH+PEE+FSB	REFUSED	334	6bd1a98670b9	solidArmPrereq=0	crossRoomPrereq=0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+588/0	D0	SOLVED 58	63	615cedf32cad	solidArmPrereq=0	crossRoomPrereq=0	level_65__r0c8 <- in_L63_128_304 -> location:L65 flag 0: lightpole@128,168 cleared
+588/0	SB	SOLVED 58	63	615cedf32cad	solidArmPrereq=0	crossRoomPrereq=0	level_65__r0c8 <- in_L63_128_304 -> location:L65 flag 0: lightpole@128,168 cleared
+588/0	SB+OPP+CSH+PEE+FSB	SOLVED 58	63	615cedf32cad	solidArmPrereq=0	crossRoomPrereq=0	level_65__r0c8 <- in_L63_128_304 -> location:L65 flag 0: lightpole@128,168 cleared
+594/0	D0	SOLVED 98	15	780dc39b3b6b	solidArmPrereq=0	crossRoomPrereq=0	level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared
+594/0	SB	SOLVED 98	15	780dc39b3b6b	solidArmPrereq=0	crossRoomPrereq=0	level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared
+594/0	SB+OPP+CSH+PEE+FSB	SOLVED 98	15	780dc39b3b6b	solidArmPrereq=0	crossRoomPrereq=0	level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared
+603/0	D0	SOLVED 176	2260	a67053ff4b76	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+603/0	SB	SOLVED 176	2260	a67053ff4b76	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+603/0	SB+OPP+CSH+PEE+FSB	SOLVED 176	2260	a67053ff4b76	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+603/1	D0	SOLVED 176	2260	a67053ff4b76	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+603/1	SB	SOLVED 176	2260	a67053ff4b76	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+603/1	SB+OPP+CSH+PEE+FSB	SOLVED 176	2260	a67053ff4b76	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+608/0	D0	SOLVED 457	87	3626b2798450	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared
+608/0	SB	SOLVED 457	87	3626b2798450	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared
+608/0	SB+OPP+CSH+PEE+FSB	SOLVED 457	87	3626b2798450	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared
+618/0	D0	SOLVED 149	32	3fbadba0d934	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared
+618/0	SB	SOLVED 149	32	3fbadba0d934	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared
+618/0	SB+OPP+CSH+PEE+FSB	SOLVED 149	32	3fbadba0d934	solidArmPrereq=0	crossRoomPrereq=0	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared
+759/0	D0	SOLVED 709	2454	8a0fbffc8836	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+759/0	SB	SOLVED 709	2454	8a0fbffc8836	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+759/0	SB+OPP+CSH+PEE+FSB	SOLVED 709	2454	8a0fbffc8836	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+759/1	D0	SOLVED 709	2454	8a0fbffc8836	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+759/1	SB	SOLVED 709	2454	8a0fbffc8836	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+759/1	SB+OPP+CSH+PEE+FSB	SOLVED 709	2454	8a0fbffc8836	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+761/0	D0	SOLVED 321	87	ef0e8fae1f7e	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L102_64_96 -> location:L101 flag 0: lightpole@144,64 cleared
+761/0	SB	SOLVED 321	87	ef0e8fae1f7e	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L102_64_96 -> location:L101 flag 0: lightpole@144,64 cleared
+761/0	SB+OPP+CSH+PEE+FSB	SOLVED 321	87	ef0e8fae1f7e	solidArmPrereq=0	crossRoomPrereq=0	level_101__r4c2 <- in_L102_64_96 -> location:L101 flag 0: lightpole@144,64 cleared
+810/0	D0	SOLVED 123	84	9f34f1633507	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L112_112_0 -> location:L113 flag 0: finaldoor@112,0 cleared
+810/0	SB	SOLVED 123	84	9f34f1633507	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L112_112_0 -> location:L113 flag 0: finaldoor@112,0 cleared
+810/0	SB+OPP+CSH+PEE+FSB	SOLVED 123	84	9f34f1633507	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L112_112_0 -> location:L113 flag 0: finaldoor@112,0 cleared
+817/0	D0	SOLVED 153	52	bc93cd13975c	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L114_64_144 -> location:L113 flag 0: finaldoor@112,0 cleared
+817/0	SB	SOLVED 153	52	bc93cd13975c	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L114_64_144 -> location:L113 flag 0: finaldoor@112,0 cleared
+817/0	SB+OPP+CSH+PEE+FSB	SOLVED 153	52	bc93cd13975c	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L114_64_144 -> location:L113 flag 0: finaldoor@112,0 cleared
+824/0	D0	SOLVED 198	87	7bfddec279c1	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L114_80_144 -> location:L113 flag 0: finaldoor@112,0 cleared
+824/0	SB	SOLVED 198	87	7bfddec279c1	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L114_80_144 -> location:L113 flag 0: finaldoor@112,0 cleared
+824/0	SB+OPP+CSH+PEE+FSB	SOLVED 198	87	7bfddec279c1	solidArmPrereq=0	crossRoomPrereq=0	level_113 <- in_L114_80_144 -> location:L113 flag 0: finaldoor@112,0 cleared
+841/0	D0	SOLVED 384	32	f9de46b9298d	solidArmPrereq=0	crossRoomPrereq=0	level_114 <- in_L113_16_0 -> location:L114 flag 0: watcher@72,72 cleared
+841/0	SB	SOLVED 384	32	f9de46b9298d	solidArmPrereq=0	crossRoomPrereq=0	level_114 <- in_L113_16_0 -> location:L114 flag 0: watcher@72,72 cleared
+841/0	SB+OPP+CSH+PEE+FSB	SOLVED 384	32	f9de46b9298d	solidArmPrereq=0	crossRoomPrereq=0	level_114 <- in_L113_16_0 -> location:L114 flag 0: watcher@72,72 cleared
+844/0	D0	SOLVED 384	32	3e85bc9ca3d0	solidArmPrereq=0	crossRoomPrereq=0	level_114 <- in_L113_32_0 -> location:L114 flag 0: watcher@72,72 cleared
+844/0	SB	SOLVED 384	32	3e85bc9ca3d0	solidArmPrereq=0	crossRoomPrereq=0	level_114 <- in_L113_32_0 -> location:L114 flag 0: watcher@72,72 cleared
+844/0	SB+OPP+CSH+PEE+FSB	SOLVED 384	32	3e85bc9ca3d0	solidArmPrereq=0	crossRoomPrereq=0	level_114 <- in_L113_32_0 -> location:L114 flag 0: watcher@72,72 cleared
+867/0	D0	SOLVED 667	87	b698b8145ae2	solidArmPrereq=0	crossRoomPrereq=0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+867/0	SB	SOLVED 667	87	b698b8145ae2	solidArmPrereq=0	crossRoomPrereq=0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+867/0	SB+OPP+CSH+PEE+FSB	SOLVED 667	87	b698b8145ae2	solidArmPrereq=0	crossRoomPrereq=0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+867/1	D0	SOLVED 203	78	c971f38787cc	solidArmPrereq=0	crossRoomPrereq=0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+867/1	SB	SOLVED 203	78	c971f38787cc	solidArmPrereq=0	crossRoomPrereq=0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+867/1	SB+OPP+CSH+PEE+FSB	SOLVED 203	78	c971f38787cc	solidArmPrereq=0	crossRoomPrereq=0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared
+868/0	D0	SOLVED 218	60	d4039179b5b7	solidArmPrereq=0	crossRoomPrereq=0	level_20__r1c12 <- in_L19_16_96 ~> level_20__r1c4 -> location:L20 flag 4: lock@32,80 cleared
+868/0	SB	SOLVED 218	60	d4039179b5b7	solidArmPrereq=0	crossRoomPrereq=0	level_20__r1c12 <- in_L19_16_96 ~> level_20__r1c4 -> location:L20 flag 4: lock@32,80 cleared
+868/0	SB+OPP+CSH+PEE+FSB	SOLVED 218	60	d4039179b5b7	solidArmPrereq=0	crossRoomPrereq=0	level_20__r1c12 <- in_L19_16_96 ~> level_20__r1c4 -> location:L20 flag 4: lock@32,80 cleared
+869/0	D0	REFUSED	2646	2c67f7757e75	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+869/0	SB	REFUSED	2644	2c67f7757e75	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+869/0	SB+OPP+CSH+PEE+FSB	REFUSED	6697	d2403d54cb83	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+869/1	D0	REFUSED	2646	2c67f7757e75	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+869/1	SB	REFUSED	2644	2c67f7757e75	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+869/1	SB+OPP+CSH+PEE+FSB	REFUSED	6697	d2403d54cb83	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870/0	D0	REFUSED	1330	6dcc7e85f11a	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870/0	SB	REFUSED	1328	6dcc7e85f11a	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870/0	SB+OPP+CSH+PEE+FSB	REFUSED	7054	d2403d54cb83	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870/1	D0	REFUSED	1330	6dcc7e85f11a	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870/1	SB	REFUSED	1328	6dcc7e85f11a	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+870/1	SB+OPP+CSH+PEE+FSB	REFUSED	7054	d2403d54cb83	solidArmPrereq=0	crossRoomPrereq=0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+904/0	D0	SOLVED 298	87	8a916a1a07b9	solidArmPrereq=0	crossRoomPrereq=0	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> location:L48 flag 1: bosslock@48,144 cleared
+904/0	SB	SOLVED 298	87	8a916a1a07b9	solidArmPrereq=0	crossRoomPrereq=0	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> location:L48 flag 1: bosslock@48,144 cleared
+904/0	SB+OPP+CSH+PEE+FSB	SOLVED 298	87	8a916a1a07b9	solidArmPrereq=0	crossRoomPrereq=0	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> location:L48 flag 1: bosslock@48,144 cleared

@@ -1,0 +1,31 @@
+[centralRegistry] CentralRegistry initialized
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async loadRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:99:17)
+    at async buildRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:214:36)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/generate-procgen-reference.mjs:104:18
+[discoveryState] [DiscoveryState] Constructed
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/urlGrammar.js (2053 lines)
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/catalogue.js (6763 lines)
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/refusals.js (3265 lines)
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/registry.js (8383 lines)
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/instruments.js (22637 lines)
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/docsIndex.js (519 lines)
+wrote /home/user/Archipelago-CC/frontend/modules/procgenDocs/generated/capabilities.js (5009 lines)
+unchanged docs/json/developer/procgen/substrate-registry.md § GENERATED:substrate-capability-matrix (205 lines)
+unchanged docs/json/developer/procgen/architecture.md § GENERATED:procgen-instruments (7 lines)
+wrote docs/json/developer/procgen/README.md § GENERATED:procgen-docs-index (45 lines)
+unchanged docs/json/developer/procgen/seedling-bot-log.md § GENERATED:campaign-chain (43 lines)
+unchanged docs/json/features/procgen-substrates.md § GENERATED:substrate-capability-chart (303 lines)
+
+urlGrammar: 2 pages, watch 38 · lab 22 parameters, 3 retired, 4 codecs
+catalogue:  13 biomes, pre-sword 3t/8x/9k · post-sword 3t/12x/9k · post-shield 3t/12x/9k · post-swim 3t/12x/9k · post-feather 3t/12x/9k · post-fire 3t/12x/9k · post-spear 5t/12x/9k · post-dark-suit 5t/12x/9k · endgame 5t/12x/9k · caldera 5t/12x/9k · frozen-forge 5t/12x/9k · flooded-ruins 2t/12x/9k · maze-v1 2t/0x/9k, 21 element heads
+refusals:   169 rows over 21 sources (167 from a constant, 2 literal-scanned; 0 unnamed), 5 enums, 0 FINDING(S)
+registry:   9 entries (bounce, cloudberry, flash_seedling, flash_seedling_gen, jta, maze, noiz2sa, omsi, text_adventure), 99 fields over 17 groups, 0 library/libraries NOT loadable headless, 0 FINDING(S)
+instruments: 523 files over 42 categories, 205 browser rows, 443 with flags, 266 cited by a doc, 0 FINDING(S)
+capabilities: 29 statements × 9 substrates, 39 fields read, 57 not yet read
+docsIndex:  28 documents (508,062 words) + 4 pages
