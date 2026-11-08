@@ -113,12 +113,12 @@ function BLOCK_BY_ID() {
 }
 
 describe('the committed seedling_er preset', () => {
-    it('is the mode\'s: seed 1, 50 placements over the 25 pairs, coupled, the source the committed atlas', () => {
+    it('is the mode\'s: seed 1, one placement per shuffled exit, coupled, the source the committed atlas', () => {
         expect(BLOCK.algorithm).toBe('ger');
         expect(BLOCK.coupled).toBe(true);
         expect(BLOCK.seed).toBe(1);
         expect(BLOCK.source.atlas_id).toBe(readJson('frontend/modules/flashPanel/atlases/seedling-playthrough.json').atlas_id);
-        expect(BLOCK.placements).toHaveLength(50);
+        expect(BLOCK.placements.length).toBe(exitsOf(ER).filter((e) => e.er?.shuffle).length);
         expect(BLOCK_BY_ID().every((p) => p.exit && p.target)).toBe(true);
     });
     it('passes E2\'s validator, COUPLED-MIRROR included; a dropped mirror row is refused', () => {
