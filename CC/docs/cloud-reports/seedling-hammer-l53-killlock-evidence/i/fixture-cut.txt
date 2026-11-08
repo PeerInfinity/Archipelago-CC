@@ -1,0 +1,10 @@
+# cut (levels 53,54) vs uncut (the page's capture) — chain.mjs, cap 40960, the first request of each leg
+# arm id ok ticks work digest
+OFF 9001 REFUSED - 7368 53abd1eb4e23   (uncut: 7368 53abd1eb4e23)
+ON  9001 SOLVED 933 844 daf562277814   (uncut: 933 844 daf562277814)
+OFF 9002 REFUSED - 5555 eace98d8225a   (uncut: 5555 eace98d8225a)
+ON  9002 SOLVED 906 1207 e8adfc6c9a17  (uncut: 906 1207 e8adfc6c9a17)
+OFF 482 SOLVED 5 25 2addf0c522d8       (uncut: 5 25 2addf0c522d8)
+ON  482 SOLVED 5 25 2addf0c522d8       (uncut: 5 25 2addf0c522d8)
+# the committed fixtures are the HELD-RETRY requests (i = 1, budget 2560) of 9001/9002 and 482's only request,
+# cut by tools/cut-fixture.mjs <capture> <id> 53,54 <out> <i>; 3.6–3.7 KB each
