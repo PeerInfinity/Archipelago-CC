@@ -1,0 +1,34 @@
+{
+  "_about": "Per-file cost of the train Vitest tier, in seconds: the median of the three runs below, read from each job's vitest per-file line (the train job for the train files, the slow job for the three files moved from the slow tier on 2026-11-08). scripts/test/trainShardPlan.js packs these longest-first into the train shards; a file with no row is still run (see that module). Only balance depends on these numbers.",
+  "measuredFrom": {
+    "runs": [
+      42453494775,
+      42444795124,
+      42436818716
+    ],
+    "event": "push to js-land/**, 2026-11-08"
+  },
+  "seconds": {
+    "frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js": 619,
+    "frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js": 539,
+    "frontend/modules/seedlingDemo/seedlingGenCapacity.train.test.js": 510,
+    "frontend/modules/seedlingDemo/hammerStagedHuntScanMemo.train.test.js": 486,
+    "frontend/modules/seedlingDemo/hammerEscapeExact.train.test.js": 443,
+    "frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.train.test.js": 423,
+    "frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js": 380,
+    "frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js": 372,
+    "frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js": 345,
+    "frontend/modules/seedlingDemo/fidelityL40Bk2.train.test.js": 322,
+    "frontend/modules/seedlingDemo/fidelityL40Latch.train.test.js": 300,
+    "frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js": 277,
+    "frontend/modules/seedlingDemo/fidelityCorpseBump2.train.test.js": 275,
+    "frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js": 264,
+    "frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js": 238,
+    "frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.latchSandwich.train.test.js": 235,
+    "frontend/modules/seedlingDemo/hammerChooserPair.train.test.js": 234,
+    "frontend/modules/seedlingDemo/hammerPitWest.train.test.js": 158,
+    "frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js": 102,
+    "frontend/modules/mazeRoom/tileSpike/learnLattice.train.test.js": 55,
+    "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35
+  }
+}
