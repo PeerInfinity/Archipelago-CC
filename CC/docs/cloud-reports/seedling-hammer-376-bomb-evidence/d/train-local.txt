@@ -1,0 +1,43 @@
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js (7 tests) 288835ms
+     ✓ OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE)  698ms
+     ✓ ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)  202101ms
+     ✓ ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF)  86022ms
+ ✓ frontend/modules/seedlingDemo/hammerChooserPair.train.test.js (6 tests) 235988ms
+     ✓ 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill  85742ms
+     ✓ 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF  84959ms
+     ✓ 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF  34309ms
+     ✓ the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit  28983ms
+     ✓ the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed)  1991ms
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js (4 tests) 357008ms
+     ✓ OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579)  15057ms
+     ✓ ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run  182119ms
+     ✓ the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked  131262ms
+     ✓ ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked  28567ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js (2 tests) 578434ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  448896ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  129536ms
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 123078ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  21688ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  56157ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  45230ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js (3 tests) 275885ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  123938ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  122260ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  29684ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js (2 tests) 396237ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  170753ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  225482ms
+ ✓ frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js (4 tests) 249297ms
+     ✓ pocket shut, OFF: the latch hold's stance refuses on the tree, and its prerequisite list names no burn  31493ms
+     ✓ pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832)  29079ms
+     ✓ pocket open, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810 on a fresh run  188721ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js (2 tests) 684212ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  482278ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  201932ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Latch.train.test.js (2 tests) 310838ms
+     ✓ holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier  118049ms
+     ✓ both ON: the solve's refused prefix is the recorded tape  192786ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2.train.test.js (1 test) 281047ms
+     ✓ the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape  281044ms
+ Test Files  11 passed (11)
+      Tests  36 passed (36)

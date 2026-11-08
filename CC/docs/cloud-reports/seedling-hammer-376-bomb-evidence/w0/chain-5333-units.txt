@@ -1,0 +1,56 @@
+work 8450 passes [{"pass":"dashless","ok":false,"kind":"refusal","work":2975,"ms":32155,"ticks":null,"capped":false},{"pass":"full","ok":false,"kind":"refusal","work":5475,"ms":40739,"ticks":null,"capped":false}]
+bySite {"walk":201,"stance-hypothesis":2,"block-route":18,"time":2,"kill-chaser":779,"crusher-fork":7442,"sword-dash":6}
+7446	->climbLadderUnder
+629	->deriveKillByChaser
+176	->walkToUnder
+150	->deriveGuardApproach
+18	resolveObstacleStrategy>deriveBlockRoute
+18	execute>execKillByPressOnce
+11	execHold>execHold
+2	resolveObstacleStrategy>deriveHoldStance
+u1	t0	brave iceturret@472,400
+u12	t0	hold wandlock@176,80
+u13	t0	hold wandlock@208,128
+u50	t0	walk null
+u85	t1112	break breakablerock@176,128
+u88	t1112	walk spinner@192,128
+u88	t1112	time spinner@192,128
+u88	t1112	bait spinner@192,128
+u88	t1112	kill spinner@192,128
+u98	t1310	walk spinner@192,160
+u98	t1310	time spinner@192,160
+u98	t1310	bait spinner@192,160
+u98	t1310	kill spinner@192,160
+u103	t1390	walk null
+u106	t1430	walk bombpusher@112,128#13
+u107	t1430	time bombpusher@112,128#13
+u107	t1430	bait bombpusher@112,128#13
+u378	t1430	kill bombpusher@112,128#13
+u378	t1430	narrow bombpusher@112,128#13
+u2974	t1430	forced-hit bombpusher@112,128#13
+u2976	t0	brave iceturret@472,400
+u2987	t0	hold wandlock@176,80
+u2988	t0	hold wandlock@208,128
+u3026	t0	walk null
+u3061	t1112	break breakablerock@176,128
+u3064	t1112	walk spinner@192,128
+u3064	t1112	time spinner@192,128
+u3064	t1112	bait spinner@192,128
+u3064	t1112	kill spinner@192,128
+u3074	t1310	walk spinner@192,160
+u3074	t1310	time spinner@192,160
+u3074	t1310	bait spinner@192,160
+u3074	t1310	kill spinner@192,160
+u3084	t1390	walk null
+u3087	t1430	walk bombpusher@112,128#13
+u3088	t1430	time bombpusher@112,128#13
+u3088	t1430	bait bombpusher@112,128#13
+u3359	t1430	kill bombpusher@112,128#13
+u3359	t1430	narrow bombpusher@112,128#13
+u5955	t1430	forced-hit bombpusher@112,128#13
+u5963	t1612	walk bombpusher@112,128#17
+u5963	t1612	time bombpusher@112,128#17
+u5963	t1612	bait bombpusher@112,128#17
+u6200	t1612	kill bombpusher@112,128#17
+u6200	t1612	narrow bombpusher@112,128#17
+u8450	t1612	forced-hit bombpusher@112,128#17
