@@ -1,0 +1,67 @@
+== M1p-no-break-stand
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.test.js (7 tests) 88ms
+      Tests  7 passed (7)
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  24252ms
+     × ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock 23759ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  56982ms
+      Tests  1 failed | 2 passed (3)
+== M2p-bombsonly-identity
+     ✓ ships OFF, read from SEEDLING_BOMB_PHASE_WAIT, and is a name the solver-env channel carries 2ms
+     ✓ its bounds are the game's: one bomb period of still ticks; the escape reaches the blast disc at tick 12 1ms
+     ✓ OFF: no tail (the walk is priced as before) 28ms
+     ✓ ON in L40 (the lobber live): the verb's still ticks + 12, bombs only; none without a stand or across a door 5ms
+     × a `bombsOnly` sample answers for its bombs alone (`bombsOnlyDanger`, what the probe asks of it) 9ms
+     × past the stand, a blast counts only where no move off the stance clears its disc 1ms
+     ✓ the tail's samples are stamped `bombsOnly` (`standBombsOnly`), and only then 29ms
+      Tests  2 failed | 5 passed (7)
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 153219ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  24485ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  68775ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  59956ms
+      Tests  3 passed (3)
+== M3p-no-stop-hook
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.test.js (7 tests) 65ms
+      Tests  7 passed (7)
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  24353ms
+     × ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock 22826ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  59030ms
+      Tests  1 failed | 2 passed (3)
+== M4p-no-rewind
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.test.js (7 tests) 89ms
+      Tests  7 passed (7)
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  25337ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  66950ms
+     × phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row) 56179ms
+      Tests  1 failed | 2 passed (3)
+== M5p-no-marker
+     ✓ ships OFF, read from SEEDLING_BOMB_PHASE_WAIT, and is a name the solver-env channel carries 3ms
+     ✓ its bounds are the game's: one bomb period of still ticks; the escape reaches the blast disc at tick 12 1ms
+     ✓ OFF: no tail (the walk is priced as before) 37ms
+     ✓ ON in L40 (the lobber live): the verb's still ticks + 12, bombs only; none without a stand or across a door 7ms
+     ✓ a `bombsOnly` sample answers for its bombs alone (`bombsOnlyDanger`, what the probe asks of it) 1ms
+     ✓ past the stand, a blast counts only where no move off the stance clears its disc 0ms
+     × the tail's samples are stamped `bombsOnly` (`standBombsOnly`), and only then 47ms
+      Tests  1 failed | 6 passed (7)
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 160890ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  26354ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  70482ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  64050ms
+      Tests  3 passed (3)
+== M6p-no-escape-test
+     ✓ ships OFF, read from SEEDLING_BOMB_PHASE_WAIT, and is a name the solver-env channel carries 2ms
+     ✓ its bounds are the game's: one bomb period of still ticks; the escape reaches the blast disc at tick 12 1ms
+     ✓ OFF: no tail (the walk is priced as before) 27ms
+     ✓ ON in L40 (the lobber live): the verb's still ticks + 12, bombs only; none without a stand or across a door 5ms
+     ✓ a `bombsOnly` sample answers for its bombs alone (`bombsOnlyDanger`, what the probe asks of it) 0ms
+     × past the stand, a blast counts only where no move off the stance clears its disc 8ms
+     ✓ the tail's samples are stamped `bombsOnly` (`standBombsOnly`), and only then 29ms
+      Tests  1 failed | 6 passed (7)
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 152300ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  24908ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  68050ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  59339ms
+      Tests  3 passed (3)
+ docs/json/developer/procgen/seedling-bot-log.md    | 27 +++++++++++++---------
+ docs/json/developer/procgen/seedling-bot.md        |  2 +-
+ .../seedlingDemo/hammerBombPhase.train.test.js     |  8 ++++---
+ 3 files changed, 22 insertions(+), 15 deletions(-)

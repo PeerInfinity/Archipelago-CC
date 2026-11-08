@@ -1,0 +1,3 @@
+#!/bin/bash
+# show.sh <ROW-file-or-stdin>: the row's head, the message's first line, and the bomb-arm counts (kept/refused)
+grep -a '^ROW' "${1:-/dev/stdin}" | node -e 'const r=JSON.parse(require("fs").readFileSync(0,"utf8").slice(4));const {msg,bpw,verbs,...o}=r;console.log(JSON.stringify(o));if(msg){const i=msg.indexOf("):");console.log("MSG", msg.slice(Math.max(0,i-120), i+500).replace(/\n/g," | "))};if(bpw){console.log("asked",bpw.asked);for(const k of bpw.kept)console.log("KEPT",k.tick,k.x.toFixed(1),k.y.toFixed(1),JSON.stringify({...k,what:undefined,x:undefined,y:undefined}));for(const k of bpw.refused)console.log("REF",k.tick,k.x.toFixed(1),k.y.toFixed(1),k.why.slice(0,300))}'
