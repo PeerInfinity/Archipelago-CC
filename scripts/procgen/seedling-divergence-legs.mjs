@@ -56,7 +56,18 @@
  *              (`fixtures/divergence-door-leg-keys.json` pins the keys). A door-less room with a goal and no such arrival
  *              prints `UNREACHABLE-AS-LEG: <preset>:<region> — <why>`; the goal-less ones are named in one INFO line.
  *
- * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks]
+ *   carry      ⛓ (`--carry-route-flags`, OPT-IN, hammer DOOR-CARRY; ⚖ user 2026-11-05 "carry the door for now") a leg ALSO
+ *              stages every game_state flag the AP route has already CLEARED before it, in the route's own collection
+ *              order (`collectionRows`: the sphere log's `sphere_locations` row; a location goal = before the row it is
+ *              collected at, an exit goal = through its sphere: `routeBefore`), restricted to the persistence its room
+ *              reads (`levelReads`: its level's own flags + another level's flag a rule of its level names), never its own
+ *              location goal (`routeCarry`). The flags its staging does not already hold join `stagedEvents` and the leg
+ *              is STAMPED `carriedFlags` (`withRouteCarry`): the sweep stamps every row of it, so a carried row is never
+ *              read as a natural one. OFF (the default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the
+ *              events: the runtime's "flags flow game → AP only" is unchanged. L40: Boss Key 2 (collected 6.6) and flag
+ *              8 (7.3) carry flag 12 (the south door, collected 6.1); the AP sphere they become accessible at is 5.3/6.6.
+ *
+ * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks] [--carry-route-flags]
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -285,6 +296,92 @@ export function linkUnreachableWhy(region, { rooms, rulesRegions }) {
     return `its only entrants have no walkable arrival: ${why.join('; ')}`;
 }
 
+/**
+ * ⛓ ROUTE CARRY (`--carry-route-flags`, OPT-IN; hammer DOOR-CARRY) — the row of the sphere log at which the AP route
+ * COLLECTS each location (`sphere_locations`: the route's own collection order; the first row naming it). A location
+ * that only becomes accessible (`new_accessible_locations`) is not collected there.
+ */
+export function collectionRows(log) {
+    const at = new Map();
+    log.forEach((e, i) => { for (const l of e.player_data?.['1']?.sphere_locations ?? []) if (!at.has(l)) at.set(l, i); });
+    return at;
+}
+
+/**
+ * The leg's place in the route's order, as a test on a flag's collection row: a LOCATION goal is collected at its own
+ * row `c` (a flag collected at a row `< c` was cleared before it); an EXIT goal is crossed with the inventory of its
+ * sphere `s` (a flag collected at a row `<= s` is in the AP inventory the leg holds). `null` = the route never reaches
+ * the goal (no collection row / no sphere): it carries nothing.
+ */
+export function routeBefore(goal, sphere, collected) {
+    if (goal?.kind === 'location') {
+        const c = collected.get(goal.name);
+        return c === undefined ? null : (row) => row < c;
+    }
+    const s = sphere?.index;
+    return Number.isInteger(s) ? (row) => row <= s : null;
+}
+
+/**
+ * The game_state flags a leg CARRIES: every flag (`flags`: `{name, eventId, level, tag, row}`, `row` = its collection
+ * row) the route collected before the leg (`routeBefore`), restricted to the persistence the leg's room READS —
+ * `reads` (a Set of eventIds: the leg's level's own flags, plus another level's flag a rule of that level names, e.g.
+ * L113's FinalDoor rule naming L114's Watcher flag, `FinalDoor.as:50`'s cross-level read) — and never the leg's own
+ * location goal. Collection order, then level, then tag; `{eventId, level, tag}` each.
+ */
+export function routeCarry({ goal, sphere, flags, collected, reads }) {
+    const before = routeBefore(goal, sphere, collected);
+    if (!before) return [];
+    return flags.filter((f) => Number.isInteger(f.row) && before(f.row) && reads.has(f.eventId)
+        && !(goal.kind === 'location' && goal.name === f.name))
+        .sort((a, b) => a.row - b.row || a.level - b.level || a.tag - b.tag)
+        .map((f) => ({ eventId: f.eventId, level: f.level, tag: f.tag }));
+}
+
+/**
+ * The flags a level's rooms READ: its own level's game_state flags, plus another level's flag named by an access rule
+ * of one of its atlas rooms (`roomsOfLevel`: region names) — EXCEPT a door edge's far-side obstacle (an exit rule naming
+ * a flag of the exit's own TARGET level, `levelOf(connected_region)`: the room it leads to reads that, not this one).
+ * On the playthrough that leaves exactly L113's FinalDoor naming L114's Watcher flag — the AS3's one cross-level read
+ * (`Scenery/FinalDoor.as:50`, `checkPersistence(0, watcher_text)`). `flags` as `routeCarry`; `rulesRegions` = the
+ * rules' regions; `byItem` = event item → event; `levelOf` = region → level (undefined when unknown).
+ */
+export function levelReads(level, { flags, roomsOfLevel, rulesRegions, byItem, levelOf = () => undefined }) {
+    const out = new Set(flags.filter((f) => f.level === level).map((f) => f.eventId));
+    const named = (node, farLevel) => {
+        if (Array.isArray(node)) { node.forEach((n) => named(n, farLevel)); return; }
+        if (!node || typeof node !== 'object') return;
+        for (const [k, v] of Object.entries(node)) {
+            const names = (k === 'item_name' || k === 'item') ? [v] : (k === 'item_names' || k === 'items') && Array.isArray(v) ? v : [];
+            for (const n of names) {
+                const e = typeof n === 'string' ? byItem.get(n) : null;
+                if (e?.kind === 'game_state' && e.eventId && e.level !== farLevel) out.add(e.eventId);
+            }
+            if (v && typeof v === 'object') named(v, farLevel);
+        }
+    };
+    for (const r of roomsOfLevel) {
+        for (const x of rulesRegions[r]?.exits ?? []) named(x.access_rule, levelOf(x.connected_region));
+        for (const x of rulesRegions[r]?.locations ?? []) named(x.access_rule, undefined);
+    }
+    return out;
+}
+
+/**
+ * A leg with its route carry applied (`carry` = `routeCarry`'s list): the flags its staging (`stagedEvents`) does not
+ * already hold are ADDED through the same channel (`otherLevel` as the leg list writes it) and the leg is STAMPED
+ * `carriedFlags` (exactly the added flags) — a carried row is never read as a natural one. A leg the carry adds nothing
+ * to, and a `skip`ped leg, are returned UNCHANGED (the same object).
+ */
+export function withRouteCarry(leg, carry) {
+    if (leg.skip) return leg;
+    const have = leg.stagedEvents ?? [];
+    const add = carry.filter((f) => !have.some((h) => h.level === f.level && h.tag === f.tag));
+    if (!add.length) return leg;
+    const staged = add.map((f) => ({ ...f, otherLevel: f.level !== leg.level }));
+    return { ...leg, stagedEvents: [...have, ...staged], carriedFlags: add.map((f) => ({ ...f })) };
+}
+
 /** The leg's identity across SHAs: (region, the arrival's door — `start` for the no-"came from" one, goal). */
 export function legKey({ region, arrive, goal }) {
     const goalId = goal.kind === 'exit' ? `exit:${goal.exit_id}` : `location:${goal.name}`;
@@ -324,6 +421,9 @@ async function main() {
     if (!OUT) { console.log('FAIL: --out=<legs.jsonl> is required'); process.exit(2); }
     const presets = arg('presets', PRESETS.join(',')).split(',');
     const BLOCKS = process.argv.includes('--blocks');
+    // ⛓ ROUTE CARRY — OPT-IN (off = today's list, byte-identical): see the head's `carry`
+    const CARRY = process.argv.includes('--carry-route-flags');
+    const carryOf = new Map();
     const { resolveArrivalSpawn, seedlingStartSpawn } = await M('flashPanel/seedlingRegionBinding.js');
     const { returnSpawnTable } = await M('flashPanel/seedlingReturnSpawns.js');
     const { atlasRoomRegions } = await M('seedlingDemo/seedlingAtlasCheckTable.js');
@@ -370,6 +470,19 @@ async function main() {
             const row = spheres.rows[i];
             const holds = (r) => evaluateRuleWithInventory(r, row.counts, '1', (x) => row.reached.has(x), pm) === true;
             return (goalEventsHeld(rule, byItem, holds) ?? []).map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind }));
+        };
+        // ⛓ ROUTE CARRY (opt-in): the route's collection rows, its mappable game_state flags, each level's reads
+        const collected = CARRY ? collectionRows(log) : null;
+        const carryFlags = CARRY ? gameStateEventsOf(rules, '1').map((e) => ({ ...stagedFlagOf({ ...e, kind: 'game_state' }), name: e.name }))
+            .filter((f) => !f.why).map((f) => ({ ...f, row: collected.get(f.name) ?? null })) : [];
+        const levelByRegion = new Map(regions.map(([r, p]) => [r, p.level]));
+        const readsCache = new Map();
+        const readsOf = (level) => {
+            if (!readsCache.has(level)) {
+                readsCache.set(level, levelReads(level, { flags: carryFlags, rulesRegions, byItem, levelOf: (r) => levelByRegion.get(r),
+                    roomsOfLevel: regions.filter(([, p]) => p.level === level).map(([r]) => r) }));
+            }
+            return readsCache.get(level);
         };
         const starts = new Set(startTargets(rules));
         const totalLocs = spheres.allLocations.size;
@@ -467,8 +580,11 @@ async function main() {
             delete leg.goalEvents;
             // ⚖ TEST-HARNESS STAGING ONLY (see `events` / `goal events` above): production never stages a flag
             Object.assign(leg, eventGate({ arrive: a, level: pl.level, goal: g.goal, goalEvents: g.goalEvents }));
-            seen.set(k, leg);
-            legs.push(leg);
+            // ⛓ ROUTE CARRY (opt-in; ⚖ test-harness staging only, as the events): the flags the route cleared before it
+            const out = CARRY ? withRouteCarry(leg, routeCarry({ goal: g.goal, sphere: g.sphere, flags: carryFlags,
+                collected, reads: readsOf(pl.level) })) : leg;
+            seen.set(k, out);
+            legs.push(out);
         }
         console.log(`INFO: ${preset}: ${regions.length} regions, ${log.length} spheres, ${legs.length} legs so far`);
     }
@@ -489,6 +605,11 @@ async function main() {
     const goalStaged = legs.filter((l) => l.goalEvents);
     console.log(`INFO: ${goalStaged.length} leg(s) STAGE their GOAL rule's event flag(s) (the cheapest branch the AP route holds): `
         + JSON.stringify(by((l) => (l.goalEvents ? l.goalEvents.join('+') : 'none'))));
+    if (CARRY) {
+        const carried = legs.filter((l) => l.carriedFlags);
+        console.log(`INFO: ROUTE CARRY (--carry-route-flags, test-harness staging): ${carried.length} leg(s) carry the flag(s) the route `
+            + `cleared before them (stamped carriedFlags): ${JSON.stringify(by((l) => (l.carriedFlags ? `L${l.level} +${l.carriedFlags.length}` : 'none')))}`);
+    }
     const skipped = legs.filter((l) => l.skip);
     console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an event gate that maps to no flag, or the goal IS the gating event)`
         + (skipped.length ? `: ${JSON.stringify(by((l) => (l.skip ? `${l.skip.split(':')[0]} ${(l.arrive.events ?? []).map((e) => e.eventId ?? e.name).join('+')}` : 'run')))}` : ''));
