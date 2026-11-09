@@ -325,6 +325,11 @@ async function main() {
             return true;
         }, target);
         const botResults = async () => (await app()).events.filter((e) => e.kind === 'bot');
+        // A walk's OWN result: the first bot event after `before` whose goal is this walk's goal. Matching by goal, not
+        // by "any new bot event", keeps one walk's late result from being read as the next walk's (CI 42436823323:
+        // step 4's 'reached' landed after step 5 sampled its baseline, and step 5 passed on it).
+        const walkResult = (desc, before, goal, timeoutMs) => waitFor(desc, async () => (await botResults()).slice(before)
+            .find((e) => e.goal?.kind === goal.kind && e.goal?.id === goal.id) ?? null, timeoutMs);
         // A walk to a GATE with its item unheld. A page that plays on (Cloudberry P7b, features.botContinuous) collects the
         // coins before the gate on its way, and the free coin holds the gate's item: such a walk asks for the pre-P7b walk
         // (options.respawn: respawn at the goal's piece), so it tests the gate. The PlaybackController's walkTo passes
@@ -366,10 +371,7 @@ async function main() {
         // 2. unheld platforms are not landable
         let before = (await botResults()).length;
         ok(await walkToGate({ kind: 'location', name: gatedName }), `2. walkTo ${gatedName} (needs ${needed}, unheld)`);
-        const died = await waitFor('the bot\'s walk to the gated coin ends', async () => {
-            const r = await botResults();
-            return r.length > before ? r[r.length - 1] : null;
-        });
+        const died = await walkResult('the bot\'s walk to the gated coin ends', before, { kind: 'pickup', id: gatedCheck });
         ok(died.result === 'died' || died.status === 'died' || JSON.stringify(died).includes('died'), `2. the bot died — ${needed} platforms are not landable (${JSON.stringify(died)})`);
         ok(!(await snapshot()).checked.includes(gatedName), `2. ${gatedName} not checked`);
         await shot('2-unheld-dashed');
@@ -397,8 +399,11 @@ async function main() {
         before = (await botResults()).length;
         ok(await walkTo({ kind: 'location', name: gatedName }), `4. walkTo ${gatedName} again, ${needed} held`);
         await waitFor(`${gatedName} checked in the tracker`, async () => ((await snapshot()).checked.includes(gatedName) ? true : null));
-        const r4 = (await botResults()).slice(before);
-        ok(r4.some((r) => JSON.stringify(r).includes('reached')), `4. the bot reached it (${JSON.stringify(r4.at(-1))})`);
+        // The walk's own result, not the tracker: the coin is collected inside a level step and the page emits the
+        // walk's 'reached' on the NEXT game frame (EmbedMode's StepBot runs before the level step), so the tracker's
+        // check can land before the bot event exists. Wait for the walk's result event itself.
+        const r4 = await walkResult(`the bot's walk to ${gatedName} ends`, before, { kind: 'pickup', id: gatedCheck }, 20000);
+        ok(r4.result === 'reached', `4. the bot reached it (${JSON.stringify(r4)})`);
 
         // 5. the end door's menu, chosen by keyboard → user:regionMove
         const exits = startRegion.exits.map((e) => e.name.split('__').pop());
@@ -407,10 +412,7 @@ async function main() {
         const target = startRegion.exits.find((e) => e.name.endsWith(`exit_${choose[0].toUpperCase()}`)).connected_region;
         before = (await botResults()).length;
         await game((side) => window.__swfBridge.botWalkTo({ kind: 'portal', id: side }), away);
-        const parked = await waitFor('the bot parks at the end door', async () => {
-            const r = await botResults();
-            return r.length > before ? r[r.length - 1] : null;
-        });
+        const parked = await walkResult('the bot parks at the end door', before, { kind: 'portal', id: away });
         ok(parked.result === 'reached' && (await app()).region === start,
             `5. the bot parked the player at the end door; no ${away} exit, so nothing left (${JSON.stringify(parked)})`);
         await frame().locator('canvas').first().click({ position: { x: 5, y: 5 } }).catch(() => {});

@@ -323,7 +323,7 @@ function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate, options) 
             substrate,
             playable_payload: {
                 gameId: atlas.game,
-                atlas_ref: atlas.atlas_id,
+                atlas_ref: options.roomsAtlasId ?? atlas.atlas_id,
                 atlas_region: region.region_id,
                 ...(sub === undefined ? {} : { atlas_sub_region: sub }),
                 level: region.map_ref,
@@ -436,6 +436,14 @@ function deriveIdentifiers(atlas, options) {
  * @param {Array<object>} [options.internalExitGates] RULES l63-pole-crossings — `{region_id, from, to, rule}`: the
  *   DIRECTED internal crossing `from -> to` of that region (either direction of a bidirectional row) carries
  *   `And(<its rule>, rule)`. A gate naming no such crossing throws; the atlas is not edited.
+ * @param {string} [options.roomsAtlasId] ⛓ ER E4b — the atlas whose ROOMS the play-time references name (every
+ *   sidecar's `atlas_ref` and the `region_atlas[p]` block), when the compiled atlas is a RE-WIRING of it: an
+ *   entrance shuffle's restamped graph keeps every region, sub-region, exit and tile of the authored atlas and changes
+ *   only `vanilla_layout.connections`, so the runtime binds (and partitions) the authored atlas's rooms while the
+ *   compiled graph is the shuffled one. The compile REFUSES when the atlas's regions are not that atlas's — it checks
+ *   nothing it cannot see, so the caller states it (`options.roomsAtlasOf`, the authored document, is compared region
+ *   by region). Default: the compiled atlas's own id (every compile before E4b, byte-identical).
+ * @param {object} [options.roomsAtlasOf] the authored atlas document `roomsAtlasId` names (required with it)
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's
  *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
  *   false — opt-in, so every existing compile stays byte-identical). The same
@@ -529,6 +537,20 @@ export function compileRegionAtlas(atlas, options = {}) {
         throw new Error(
             `region atlas does not validate — refusing to compile:\n  ${validation.errors.join('\n  ')}`,
         );
+    }
+    // ⛓ ER E4b — `roomsAtlasId`: the play-time references name another atlas's rooms only when they ARE its rooms.
+    if (options.roomsAtlasId !== undefined) {
+        const of = options.roomsAtlasOf;
+        if (!of || of.atlas_id !== options.roomsAtlasId) {
+            throw new Error(`compileRegionAtlas: roomsAtlasId ${options.roomsAtlasId} needs roomsAtlasOf, that atlas's document`);
+        }
+        const same = JSON.stringify(of.regions) === JSON.stringify(atlas.regions)
+            && JSON.stringify({ ...of.vanilla_layout, connections: undefined }) === JSON.stringify({ ...atlas.vanilla_layout, connections: undefined })
+            && JSON.stringify(of.tile_space) === JSON.stringify(atlas.tile_space) && of.game === atlas.game;
+        if (!same) {
+            throw new Error(`compileRegionAtlas: ${atlas.atlas_id} is not a re-wiring of ${options.roomsAtlasId} — its regions, `
+                + 'tile space or start differ, so the play-time references cannot name that atlas\'s rooms');
+        }
     }
 
     const { gameName, gameDirectory, worldClassName } = deriveIdentifiers(atlas, options);
@@ -814,7 +836,7 @@ export function compileRegionAtlas(atlas, options = {}) {
     if (options.provenance) rules.provenance = { [player]: options.provenance };
     // Provenance: which atlas this graph came from. atlas_id ends in the
     // content hash, so a restamped atlas visibly invalidates a stale preset.
-    rules.region_atlas = { [player]: regionAtlasReference(atlas) };
+    rules.region_atlas = { [player]: regionAtlasReference(options.roomsAtlasId ? { ...atlas, atlas_id: options.roomsAtlasId } : atlas) };
 
     // --- projection 3: play-time binding -----------------------------------
     //

@@ -66,7 +66,8 @@ export function erFixtureRules() {
                 target_group_lookup: { stairs_down: ['stairs_up'], stairs_up: ['stairs_down'] },
                 seed: 12345,
                 source: { atlas_id: 'er-fixture' },
-                placements: [{ exit: N.stairsDown, target: N.stairsUp }],
+                // ⚖ E4b COUPLED-MIRROR: a coupled placement carries its mirror row.
+                placements: [{ exit: N.stairsDown, target: N.stairsUp }, { exit: N.stairsUp, target: N.stairsDown }],
             },
         },
     };

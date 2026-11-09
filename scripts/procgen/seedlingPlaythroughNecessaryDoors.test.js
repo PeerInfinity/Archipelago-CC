@@ -35,7 +35,7 @@ describe('doors charged what every way onto them pays', () => {
 
     // L12's door to L83 and L82's arena door are reached the same way, but their rules already ask for all of it (a
     // condition the rule implies is never written twice).
-    it('the census: 13 departures, and the producer\'s permissive bound shrinks to the 2 it cannot cover', () => {
+    it('the census: 13 departures, and the producer\'s permissive bound shrinks to the 1 it cannot cover', () => {
         expect(necessaryDoorsCharged).toEqual([
             'level_0/out_teleporter_240_0', 'level_3/out_teleporter_0_64', 'level_49/out_teleporter_32_128',
             'level_51/out_teleporter_144_0', 'level_51/out_teleporter_256_256', 'level_54/out_teleporter_128_464',
@@ -43,7 +43,8 @@ describe('doors charged what every way onto them pays', () => {
             'level_58/out_teleporter_48_112', 'level_58/out_teleporter_64_112', 'level_89/out_teleporter_160_304',
             'level_91/out_teleporter_16_144',
         ]);
-        expect(permissiveBindings).toEqual(['level_66/out_teleporter_72_64', 'level_89/Level 089 - Feather']);
+        // ⛓ RULES l89-feather: L89's Feather leaves the bound (rebound to its cheapest way, `cheapestLocationBinding`).
+        expect(permissiveBindings).toEqual(['level_66/out_teleporter_72_64']);
     });
 
     it('the committed rules carry it: level_3__r0c4 -> level_111 needs the Swim', () => {

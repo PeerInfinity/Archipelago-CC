@@ -102,7 +102,9 @@ const NOT_RECORDED = [...new Set(DOCS
  * file's jta-shaped oracle skips them.
  */
 const ATLAS_ROOM_DOCS = ['seedling_spiral_room', 'seedling_sphere_room', 'seedling_atlas_host',
-    'seedling_atlas_location', 'seedling_atlas', 'seedling_playthrough'];
+    'seedling_atlas_location', 'seedling_atlas', 'seedling_playthrough',
+    // ⛓ ER E4b: the stairs-shuffled playthrough — the atlas compiler's projection of a RESTAMPED graph, like seedling_playthrough.
+    'seedling_er'];
 const R5B_BINS = [...REPRODUCES, ...ENVELOPE_ONLY, ...NOT_RECORDED];
 
 /** ⛓ A document with `substrate`'s zone `z` FREED: the region holding it loses its sidecar entry. */

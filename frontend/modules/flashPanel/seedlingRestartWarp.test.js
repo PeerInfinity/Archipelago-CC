@@ -57,6 +57,8 @@ describe('the covered presets — DERIVED from the committed presets', () => {
         expect(covered).toEqual([
             'seedling_atlas',
             'seedling_atlas_location',
+            // ⛓ ER E4b: the stairs-shuffled playthrough starts in the same Seedling room (its start is not shuffled).
+            'seedling_er',
             'seedling_generated_chestdoor',
             'seedling_generated_host',
             'seedling_generated_room',

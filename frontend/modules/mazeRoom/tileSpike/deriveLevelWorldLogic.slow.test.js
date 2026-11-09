@@ -41,8 +41,7 @@
  * L16's cut doubles its state space; with the facing-free search: native every region 43.5 s, native sample 21.5 s,
  * scripted sample 146 s. No exemption: every region agrees, the rope gate derived from the lane and the cut — except the rows the
  * certifier ACCEPTS by name: those implied by every AP way into their source (L0 r2c13 → r1c6, by the Swim; L39 r25c9 → r0c9 and
- * → r2c11, by the press, priced from the pocket the L38 teleporter lands in), and one on the rules
- * producer's own permissive bound (L89's Feather, entered only from above; `permissive`, read from the producer), and (session
+ * → r2c11, by the press, priced from the pocket the L38 teleporter lands in), and (session
  * tile-primitives-sphere-order-8, ⚖ "Excuse on mismatch") L63 r6c9's rows at points no crossing into it from outside admits — its
  * entrance is the L65 pocket landing. One row stays OPEN by name (`OPEN_L63`, ⚖ "Land, name it; route to rules"),
  * and from sphere 11.6 a second (`OPEN_L3_L111`), since closed by the rules (below).
@@ -93,7 +92,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_63__r6c9 → level_63__r6c15 | Progressive Swim',
             'level_63__r6c9 → level_63__r6c15 | no AP crossing into level_63__r6c9 from outside its world admits this arrival',
             'level_82 @ Level 082 - King of Fire | Dark Suit',
-            'level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)',
+            // ⛓ RULES l89-feather: `level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | … (permissiveBindings)` is gone —
+            // the Feather is bound to its cheapest way (level_89__r1c10, by Swim), so its row AGREES instead of being excused.
             // ⛓ rules-certifier-tail: `level_91 → level_89__r1c10 (landing 15,4) | Progressive Swim` is gone — L91's door now
             // charges the Swim every way onto it pays (`chargeNecessaryApproaches`), so the row AGREES instead of being excused.
         ]);
@@ -131,6 +131,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // [own event] lock rows over 4,096, r13c6's flag 11, r40c4's four, r42c28's eight over 128) and 11 one-world rows come:
         // r0c37 → L37 r12c6 / L21 from its landing (27,35) 2,700 (F1: newly partial), r40c4's flag 3 ×2 and → L24 from (2,44),
         // r42c28's chest, flags 7/12 ×2 and → L83 from (2,54). r42c28 → r0c19 / r0c37 are pairs inside the world now. 104 → 99.
+        // ⛓ tile-l89-feather-swim (⚖ Robert 2026-11-07 "Re-record (Recommended)"): L89's Feather is bound to its cheapest way,
+        // level_89__r1c10, so it is priced from r1c10's landing from L91 (13,1) like r1c10's door to L91 beside it (1/3). 99 → 100.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -211,6 +213,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_82 → level_96 (landing 9,1) | 5/8',
             'level_83 → level_12__r42c28 (landing 2,3) | 20/64',
             'level_83 → level_84__r2c4 (landing 2,3) | 20/64',
+            'level_89__r1c10 @ Level 089 - Feather (landing 13,1) | 1/3',
             'level_89__r1c10 → level_91 (landing 13,1) | 1/3',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
             'level_89__r11c12 → level_87__r1c3 (landing 10,18) | 1/3',

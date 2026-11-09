@@ -105,20 +105,40 @@ export function keyItemsOf(rulesDoc, playerId = '1') {
 
 /**
  * The route-only subset of `rows`: the rows whose item is a key
- * (`keyItemsOf`), in order. `bound` (a sphere label) is kept whatever it
- * grants — the route ends there because it was asked to.
+ * (`keyItemsOf`), in order. `bound` (a sphere label, or `end`: the last row)
+ * is kept whatever it grants — the route ends there because it was asked to.
  *
  * @returns {{rows: Array, skipped: Array<{sphere, location, item}>}}
  */
 export function routeOnlyRows(rows, keyItems, bound = null) {
     const kept = [];
     const skipped = [];
+    // ⛓ tile-survey-gap: `end` is a bound too — its row is the order's LAST (the victory), kept like any other bound's
+    const boundRow = bound === null ? null : bound === 'end' ? rows[rows.length - 1] : null;
     for (const r of rows) {
-        if (keyItems.has(r.item) || (bound !== null && r.sphere === String(bound))) kept.push(r);
+        if (keyItems.has(r.item) || r === boundRow || (bound !== null && r.sphere === String(bound))) kept.push(r);
         else skipped.push({ sphere: r.sphere, location: r.location, item: r.item });
     }
     return { rows: kept, skipped };
 }
+
+/**
+ * ⛓ tile-survey-gap — **THE COUNTED POOLS**: the rows of `order` that are neither `kept` nor `spare` and whose item
+ * SOME rule of `regions` names (`namedItemsOf`) — at seed 1 the `Seal` (×16, the final door) and `Totem Shard` (×5,
+ * the Wand) rows; `Light` and `Health`, which no rule names, are never in it. Sorted by sphere label (AP's order, the
+ * data's own), so the caller's list order never reaches `deriveLegs`' `counted`.
+ */
+export function countedPoolOf(order, kept, spare, regions) {
+    const taken = new Set([...kept, ...(spare ?? [])]);
+    const named = namedItemsOf(regions);
+    return sortBySphere(order.filter((o) => !taken.has(o) && named.has(o.item)));
+}
+
+/** Rows by sphere label, numerically per half (`0.10` after `0.9`); a copy. */
+const sortBySphere = (rows) => rows.slice().sort((a, b) => {
+    const [x, y] = [labelOf(a.sphere), labelOf(b.sphere)];
+    return (x[0] - y[0]) || ((x[1] ?? 0) - (y[1] ?? 0));
+});
 
 /**
  * ⛓⛓ FRONTIER2 — **THE FRONTIER'S BOUND, READ OFF THE CHAIN.** The census
@@ -325,6 +345,12 @@ export function blockedFrontier(regions, ruleHolds, src, items) {
  *
  * ⛓ RETURN TO MENU — **`restart`** (the slot's `exporter[p].return_to_menu`): a leg with no walk may Restart
  * (Menu → GameStart's region → walk on), marked `restart`. Never a shortcut: a walk always wins.
+ *
+ * ⛓ COUNTED POOLS — **`counted`** (session tile-survey-gap; `countedPoolOf`): rows the route-only mode skipped whose
+ * item some rule names by a COUNT. A leg that is STUCK (no row of the pool above is takeable, which used to throw) asks
+ * which pools, held whole, would unstick it — each alone in AP order, else all together — and takes the earliest
+ * takeable row of those, as a leg marked `pooledFor: <the stuck row's sphere>`; then it asks again. Goal-first like the
+ * events: an unstuck walk never takes one, and a pool that unsticks nothing is never walked. Absent, nothing changes.
  *
  * @returns {{legs: Array<{sphere, goal, item, from, to, itemsHeld, regions}>,
  *            held: Array<Object<string, number>>, hops: Array<string[]>,
@@ -558,12 +584,13 @@ export function stagedPersistence({ legs, credits, levelOfRegion }) {
 
 export function deriveLegs({
     regions, ruleHolds: apHolds, start, pickups, spare = null, walk = false, restart = false, events = [],
+    counted = null,
 }) {
     // ⛓ RETURN TO MENU: a Restart lands where `Menu -> GameStart` leads — not at `start`, which is only where this
     //   walk begins — and walks on from there under the LEG's own rule decider (FRONTIER2's `walk` mode included).
     const menuStart = regions[RESTART_TARGET]?.exits?.find((e) => e.name === 'GameStart')?.connected_region ?? null;
-    const restartPath = (to, holds) => {
-        const onward = menuStart ? regionPathHops(regions, holds, menuStart, to, items) : null;
+    const restartPath = (to, holds, its = items) => {
+        const onward = menuStart ? regionPathHops(regions, holds, menuStart, to, its) : null;
         return onward
             ? { path: [here, RESTART_TARGET, ...onward.path], exits: [RESTART_WARP.label, 'GameStart', ...onward.exits] }
             : null;
@@ -584,6 +611,35 @@ export function deriveLegs({
             if (loc) return loc.access_rule ?? null;
         }
         return null;
+    };
+    const remainingPool = sortBySphere(counted ?? []);
+    /** can `cand` be taken from `here` under `its` (a walk, a Restart, or goal-first events)? */
+    const opensUnder = (cand, holds, its) => {
+        const to = regionOfLocation(regions, cand.location);
+        const rule = spare === null ? null : locationRule(cand.location);
+        const p = regionPathHops(regions, holds, here, to, its) ?? (restart ? restartPath(to, holds, its) : null);
+        if (p && (rule === null || holds(rule, its))) return true;
+        return events.length > 0 && eventPrerequisites({
+            regions, ruleHolds: holds, here, items: its, events, target: to, targetRule: rule,
+        }) !== null;
+    };
+    /**
+     * ⛓ COUNTED POOLS, GOAL-FIRST (session tile-survey-gap): the walk is stuck. Which counted pools, held whole,
+     * would let one of `cands` be taken? The fewest: each pool alone first (in AP order), else every pool together.
+     * Then the EARLIEST remaining row of those pools that is takeable from here — one row per call, so the stall is
+     * re-asked after every row and a pool is only ever walked as far as a row needs it.
+     */
+    const poolRowFor = (cands, holds) => {
+        const names = [...new Set(remainingPool.map((r) => r.item))];
+        const withPools = (ns) => {
+            const its = { ...items };
+            for (const r of remainingPool) if (ns.includes(r.item)) its[r.item] = (its[r.item] ?? 0) + 1;
+            return its;
+        };
+        const unsticks = (ns) => cands.some((c) => opensUnder(c, holds, withPools(ns)));
+        let chosen = names.filter((n) => unsticks([n]));
+        if (chosen.length === 0) chosen = unsticks(names) ? names : [];
+        return remainingPool.find((r) => chosen.includes(r.item) && opensUnder(r, holds, items)) ?? null;
     };
     while (wanted.length) {
         const legStood = stood;
@@ -615,8 +671,37 @@ export function deriveLegs({
                 break;
             }
         }
+        let pooledFor = null;
+        if (!pick && remainingPool.length > 0) {
+            pick = poolRowFor(pool, ruleHolds);
+            if (pick) {
+                pooledFor = wanted[0].sphere;
+                const to = regionOfLocation(regions, pick.location);
+                path = regionPathHops(regions, ruleHolds, here, to, items)
+                    ?? (restart ? restartPath(to, ruleHolds) : null);
+                if (!path || !(spare === null || ruleHolds(locationRule(pick.location), items))) {
+                    path = null;
+                    prereqs = eventPrerequisites({
+                        regions, ruleHolds, here, items, events, target: to,
+                        targetRule: spare === null ? null : locationRule(pick.location),
+                    });
+                }
+            }
+        }
         if (!pick) {
             const to = regionOfLocation(regions, wanted[0].location);
+            // ⛓ tile-survey-gap: when the row's region IS reachable and only its LOCATION rule fails, say that —
+            //   the old text read "NO path" for both, and hid the Wand's Totem Shard ×5 behind a door that was open.
+            const reached = spare !== null && (regionPath(regions, ruleHolds, here, to, items)
+                ?? (restart ? restartPath(to, ruleHolds) : null)) !== null;
+            if (reached) {
+                throw new Error(`AP's own rules reach ${to} from ${here}, but row ${wanted[0].sphere} `
+                    + `'${wanted[0].location}' has a location rule that does not hold with items `
+                    + `{${Object.keys(items).join(', ') || 'none'}}: ${JSON.stringify(locationRule(wanted[0].location))} — `
+                    + 'the route is not derivable and nothing below it means anything. (and no remaining sphere-order '
+                    + `row is takeable from ${here}: blocked ${blockedFrontier(regions, ruleHolds, here, items)
+                        .map((b) => `${b.from} -> ${b.to} ${JSON.stringify(b.rule)}`).join('; ')})`);
+            }
             throw new Error(`AP's own rules give NO path from ${here} to `
                 + `${to} with items {${Object.keys(items).join(', ') || 'none'}} — `
                 + 'the route is not derivable and nothing below it means anything.'
@@ -652,7 +737,7 @@ export function deriveLegs({
         if (prereqs.length > 0) path = regionPathHops(regions, ruleHolds, here, regionOfLocation(regions, pick.location), items);
         const to = regionOfLocation(regions, pick.location);
         const fromWanted = wanted.indexOf(pick);
-        const deferred = fromWanted < 0 ? wanted.slice() : wanted.slice(0, fromWanted);
+        const deferred = pooledFor !== null ? [] : fromWanted < 0 ? wanted.slice() : wanted.slice(0, fromWanted);
         legs.push({
             sphere: pick.sphere,
             goal: pick.location,
@@ -671,7 +756,7 @@ export function deriveLegs({
                     blocked: blockedFrontier(regions, ruleHolds, here, items),
                 },
             } : {}),
-            ...(fromWanted < 0 ? { pulledForward: true } : {}),
+            ...(pooledFor !== null ? { pooledFor } : fromWanted < 0 ? { pulledForward: true } : {}),
             ...(path.path.includes(RESTART_TARGET) ? { restart: true } : {}),
         });
         held.push({ ...items });
@@ -686,7 +771,8 @@ export function deriveLegs({
         }
         items[pick.item] = (items[pick.item] ?? 0) + 1;
         here = to;
-        if (fromWanted >= 0) wanted.splice(fromWanted, 1);
+        if (pooledFor !== null) remainingPool.splice(remainingPool.indexOf(pick), 1);
+        else if (fromWanted >= 0) wanted.splice(fromWanted, 1);
         else extra.splice(extra.indexOf(pick), 1);
     }
     return { legs, held, hops, legHolds, credits };

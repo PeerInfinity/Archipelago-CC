@@ -74,6 +74,7 @@
 
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { makeExit, makeTrueRule } from '../shared/rulesJsonBuilder.js';
+import { entranceRandomizationProblems } from '../procgenCore/entranceRandomizationCheck.js';
 import {
     renameItemInRules,
     renameLocationInRules,
@@ -331,6 +332,62 @@ const refuseCascade = (message, opName, builder) => refuse(`${message} ⛔ The c
     + `\`${opName}\`, so every intermediate document is one the validator accepts and one `
     + 'undo restores what the delete took with it.');
 
+
+/* ── ⛓⛓ ER E4b — THE ENTRANCE-RANDOMIZATION REFERENCES FOLLOW AN EXIT'S NAME ──────────────────────
+ * `er.reverse` and the block's `placements[].exit/target` name an exit BY NAME (E2: UNIQUE). An exit
+ * rename rewrites every reference to the old name, and a delete drops them — the placement rows naming
+ * the gone exit and the `reverse` that named it. A delete whose result the E2 validator refuses (a coupled
+ * shuffled exit left without its reverse, a placement's mirror gone) is REFUSED by name instead: the shuffle
+ * is a layout, and half a pair is not one. Only a name exactly ONE exit of the player carries is cascaded —
+ * a shared name is two exits, and a reference to it was already ambiguous (the validator names it).
+ */
+const erBlockOf = (doc, p) => doc?.entrance_randomization?.[p] ?? null;
+const exitNameCount = (doc, p, name) => Object.values(regionsOf(doc, p))
+    .reduce((n, r) => n + (r?.exits ?? []).filter((e) => e?.name === name).length, 0);
+/** Does anything in the player's ER data name `name`? */
+function erNames(doc, p, name) {
+    const block = erBlockOf(doc, p);
+    if (block && (block.placements ?? []).some((r) => r?.exit === name || r?.target === name)) return true;
+    return Object.values(regionsOf(doc, p)).some((r) => (r?.exits ?? []).some((e) => e?.er?.reverse === name));
+}
+/** In place on a deep clone: every ER reference to `from` → `to` (`to` null: dropped). */
+function rewriteErReferences(next, p, from, to) {
+    for (const r of Object.values(next.regions[p])) {
+        for (const e of r.exits ?? []) {
+            if (e?.er?.reverse !== from) continue;
+            if (to === null) delete e.er.reverse; else e.er.reverse = to;
+        }
+    }
+    const block = erBlockOf(next, p);
+    if (!block || !Array.isArray(block.placements)) return;
+    block.placements = to === null
+        ? block.placements.filter((r) => r?.exit !== from && r?.target !== from)
+        : block.placements.map((r) => ({ ...r, ...(r?.exit === from ? { exit: to } : {}), ...(r?.target === from ? { target: to } : {}) }));
+}
+/** The ER problems `next` has that `doc` did not (empty: the edit kept the shuffle whole). */
+function newErProblems(doc, next, p) {
+    const before = new Set(entranceRandomizationProblems(doc, p));
+    return entranceRandomizationProblems(next, p).filter((m) => !before.has(m));
+}
+/**
+ * A delete of the exits named `names` (each of `p`'s): `next` with their ER references dropped, or a refusal
+ * naming what the shuffle loses. `next` is the op's own result; it is deep-cloned only when a reference exists.
+ */
+function cascadeErDelete(doc, next, p, names, what) {
+    const referenced = names.filter((n) => exitNameCount(doc, p, n) === 1 && erNames(doc, p, n));
+    if (referenced.length === 0) return { next };
+    const out = JSON.parse(JSON.stringify(next));
+    for (const n of referenced) rewriteErReferences(out, p, n, null);
+    const broken = newErProblems(doc, out, p);
+    if (broken.length) {
+        return {
+            error: `apworld: deleting ${what} breaks the slot's entrance randomization — ${broken.join('; ')}. `
+                + `⛔ Un-shuffle its pair first (\`er.shuffle: false\` on both exits, their placement rows removed), or clear the block.`,
+        };
+    }
+    return { next: out };
+}
+
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓ ONE ATOMIC OP → `{ok, doc, description, value?}` / `{ok:false, error}`
  * ══════════════════════════════════════════════════════════════════════ */
@@ -465,11 +522,15 @@ function opDeleteRegion(doc, op) {
         return refuse(`apworld: no region "${op.name}" to delete — the document holds `
             + `[${Object.keys(regions).join(', ')}].`);
     }
-    const next = withRegions(doc, p, withoutKey(regions, op.name));
+    let next = withRegions(doc, p, withoutKey(regions, op.name));
     if (exitsPointingAt(doc, p, op.name).length) {
         const message = newValidationError(doc, next, p);
         if (message) return refuseCascade(message, 'delete-region', 'deleteRegionOps(doc, name)');
     }
+    // ⛓ ER E4b: its exits' ER references go with them (or the delete is refused by name).
+    const er = cascadeErDelete(doc, next, p, (regions[op.name]?.exits ?? []).map((e) => e?.name), `region "${op.name}"`);
+    if (er.error) return refuse(er.error);
+    next = er.next;
     return ok(next, `− region ${op.name}`);
 }
 
@@ -561,11 +622,11 @@ function opDeleteExit(doc, op) {
     const bad = indexedOr(exits, op.index, 'exit', op.region);
     if (bad) return refuse(bad);
     const gone = exits[op.index];
-    return ok(
-        withRegion(doc, p, op.region,
-            withKey(region, 'exits', exits.filter((_, i) => i !== op.index))),
-        `− exit ${gone?.name ?? op.index} in ${op.region}`,
-    );
+    // ⛓ ER E4b: the exit's ER references go with it (or the delete is refused by name).
+    const er = cascadeErDelete(doc, withRegion(doc, p, op.region,
+        withKey(region, 'exits', exits.filter((_, i) => i !== op.index))), p, [gone?.name], `exit "${gone?.name}"`);
+    if (er.error) return refuse(er.error);
+    return ok(er.next, `− exit ${gone?.name ?? op.index} in ${op.region}`);
 }
 
 /** ⛓ `{region, index, field, value}` — `EXIT_FIELDS` only. */
@@ -584,8 +645,16 @@ function opSetExitField(doc, op) {
     const next = exits.map((e, i) => (i === op.index
         ? (op.value === undefined ? withoutKey(e, op.field) : withKey(e, op.field, op.value))
         : e));
+    let out = withRegion(doc, p, op.region, withKey(region, 'exits', next));
+    // ⛓ ER E4b: a RENAME rewrites every ER reference to the old name (`er.reverse`, `placements[].exit/target`).
+    const old = exits[op.index]?.name;
+    if (op.field === 'name' && typeof op.value === 'string' && op.value !== old
+        && exitNameCount(doc, p, old) === 1 && erNames(doc, p, old)) {
+        out = JSON.parse(JSON.stringify(out));
+        rewriteErReferences(out, p, old, op.value);
+    }
     return ok(
-        withRegion(doc, p, op.region, withKey(region, 'exits', next)),
+        out,
         `exit #${op.index} in ${op.region}: ${op.field} = ${JSON.stringify(op.value)}`,
     );
 }
@@ -3039,6 +3108,12 @@ export function initialiseOpRefusal(doc, args) {
             + `(driver ${describeValue(doc.procgen_metadata?.[p]?.driver ?? null)}), and an initialise of the slot `
             + 'writes one; two writers of one block would overwrite each other silently, so the op refuses '
             + 'rather than pick one.';
+    }
+    if (facts.blocker === INITIALISE_BLOCKERS.ENTRANCE_RANDOMIZED) {
+        const { block, er } = facts.entranceRandomized;
+        return `apworld: player ${p} is entrance-randomized (${block ? `an \`entrance_randomization.${p}\` block` : 'no block'}, `
+            + `${er} exit(s) carrying \`er\`) — the layout rebuilds every exit, and \`er\` and the placements name exits by `
+            + 'name, so laying the slot out would drop the shuffle; re-deriving it over a new layout is not built, so the op refuses.';
     }
     const substrate = args?.substrate;
     if (typeof substrate !== 'string' || !substrate) {

@@ -102,6 +102,7 @@ const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
 // ⛓⛓ THE DERIVED-RULE OVERRIDE (session tile-rules-automation-r-a3): the committed table the maze derivation emits (on CI)
 // overrides the composed rule on every element it holds, in the atlas and in AP_1 (`seedlingDerivedRuleTable.js`).
 const TBL = await import('./seedlingDerivedRuleTable.js');
+const { apExitNamesByEndpoint } = await imp('frontend/modules/procgenPipeline/entranceRandomizationReach.js');
 const DERIVED_TABLE = TBL.readDerivedRuleTable();
 const { PUSHABLE_KINDS, blockCrossingCost } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
 const { deriveWeaponFootprint } = await imp('frontend/modules/flashPanel/seedlingWeaponFootprints.js');
@@ -724,6 +725,7 @@ export function buildPlaythroughAtlas() {
     necessaryDoorsCharged.length = 0;
     pocketDoorsCharged.length = 0;
     sealedLocationsCharged.length = 0;
+    locationsRebound.length = 0;
     arrivalsUncharged.length = 0;
     exitComponents.clear();
     regionAnalyses.clear();
@@ -843,7 +845,7 @@ function applyCrossingCostToBindings(atlas, regionId, analysis) {
     for (const b of analysis.bindings) {
         if (b.kind === 'location') {
             if (b.sealedIn) chargeSealedLocation(region, regionId, b);
-            else if (b.conditionSets?.length > 0) countUnchargedLocation(region, regionId, b);
+            else if (b.conditionSets?.length > 0 && !rebindLocationByCost(region, regionId, b, analysis)) countUnchargedLocation(region, regionId, b);
             continue;
         }
         if (b.kind !== 'exit' || !b.component || !b.reachable) continue;
@@ -1025,6 +1027,113 @@ function chargeSealedLocation(region, regionId, b) {
     sealedLocationsCharged.push(`${regionId}/${b.id}`);
     note(`${regionId}: location "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has `
         + `no place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`);
+}
+
+/**
+ * ⛓ RULES l89-feather — **A LOCATION REACHED ONLY THROUGH GATED MATERIAL BINDS TO ITS CHEAPEST WAY, NOT ITS NEAREST.**
+ *
+ * The analyzer binds a tile no component holds to the NEAREST component that reaches it, and a location has no
+ * direction, so the nearest way's cost was dropped (`countUnchargedLocation`, permissive). L89's Feather lies on
+ * water between two waterfalls: its nearest component, the west ledge r9c6, reaches it only by CLIMBING the south
+ * fall (Swim + Feather, `Player.as:1557`), while the top pool r1c10 comes DOWN the north one on Swim alone. Bound to
+ * r9c6 and charged nothing, it was collected from below on one Swim; the game needs the Feather it holds
+ * (ROUTE-WALLS-CENSUS W2, solver legs 923/924).
+ *
+ * So when some reaching component has a way that pays EXACTLY the binding's `necessary` (what every way onto the tile
+ * pays, the cheapest any way can be), the location is rebound to the first such component in the analyzer's order and
+ * charged that way. That rule is never looser than the game (it is a real way). It is never stricter either, which is
+ * CHECKED, not assumed: every other reaching component's way must imply reaching the chosen one, through the
+ * analyzer's own crossings, each hop paying no more than that way pays. If any is not implied, nothing is rebound and
+ * the binding stays permissive (`countUnchargedLocation`), as before. Returns whether it rebound.
+ */
+export const locationsRebound = [];
+
+/**
+ * The decision, pure (gadget-pinned in seedlingLocationRebind.test.js). `binding` = the analyzer's (`componentForTile` +
+ * `alternatives`, `landingWays`, `necessary`, `reachOverflowed`); `crossings` = `analysis.crossings`; `landingSubRegion(tile)`
+ * = the sub-region the atlas binds an arrival landing on that tile to (null = none); `key(condition)` = condition identity.
+ * Returns `{component, way}` to rebind, or `{refused: [why…]}`.
+ *
+ * WHAT IS CHECKED. The location's true cost is the OR, over every way onto its tile, of "stand where that way starts"
+ * AND "hold what it pays". The ways start at a component (`binding` + `alternatives`) or at a landing that meets no
+ * component first (`landingWays`). The rule written is ONE term: reach(C) AND W, with W a way of C that pays exactly
+ * `necessary`. It equals the OR when every other term implies it:
+ *   - a component c with way w: some path of the analyzer's crossings c → … → C, each hop having a way whose
+ *     conditions ⊆ w. Holding w at c you walk to C, and W = necessary ⊆ w, so you hold W at C;
+ *   - a landing with way w: the sub-region the AP arrival puts the player in is C, or reaches C the same way.
+ * Never looser: W is a real way from C. Refused, so left as before (permissive), when: the vocabulary overflowed, a
+ * reaching component has only MANUAL ways (no derivable cost to check), a landing has no AP sub-region, no component
+ * pays exactly `necessary`, or any term is not implied. Among several components that pay exactly `necessary` the
+ * first in the analyzer's order wins (free → non-manual → depth → id), so the choice is deterministic.
+ */
+export function cheapestLocationBinding(binding, crossings, landingSubRegion, key) {
+    const refused = [];
+    if (binding.reachOverflowed) return { refused: ['a way overflowed the condition vocabulary'] };
+    if (!(binding.necessary ?? []).length) return { refused: ['no condition is necessary'] };
+    const keys = (conds) => new Set(conds.map(key));
+    const subset = (a, b) => [...a].every((k) => b.has(k));
+    const need = keys(binding.necessary);
+    const all = [binding, ...(binding.alternatives ?? [])].filter((c) => c.component);
+    for (const c of all) if (c.manual) refused.push(`${c.component.id} reaches it only through manual material`);
+    const candidates = all.filter((c) => !c.manual && !c.free);
+    const chosen = candidates.find((c) => c.conditionSets.some((set) => subset(keys(set.conditions), need)));
+    if (!chosen) refused.push('no component has a way paying exactly what every way pays');
+    if (refused.length) return { refused };
+    const way = chosen.conditionSets.find((set) => subset(keys(set.conditions), need)).conditions;
+    const target = chosen.component.id;
+    const reaches = (from, budget) => {
+        const seen = new Set([from]);
+        const queue = [from];
+        while (queue.length) {
+            const at = queue.shift();
+            if (at === target) return true;
+            for (const x of crossings) {
+                if (x.from !== at || seen.has(x.to) || x.manual) continue;
+                if (!x.free && !x.conditionSets.some((set) => subset(keys(set.conditions), budget))) continue;
+                seen.add(x.to);
+                queue.push(x.to);
+            }
+        }
+        return false;
+    };
+    for (const c of candidates) {
+        if (c === chosen) continue;
+        for (const set of c.conditionSets) {
+            if (!reaches(c.component.id, keys(set.conditions))) refused.push(`${c.component.id} [${set.conditions.map(key).join(' + ')}] does not reach ${target} first`);
+        }
+    }
+    for (const l of binding.landingWays ?? []) {
+        const at = landingSubRegion(l.tile);
+        if (!at) { refused.push(`the landing at [${l.tile}] has no AP sub-region`); continue; }
+        for (const set of l.conditionSets) {
+            if (!reaches(at, keys(set.conditions))) refused.push(`the landing at [${l.tile}] (${at}) [${set.conditions.map(key).join(' + ')}] does not reach ${target} first`);
+        }
+    }
+    return refused.length ? { refused } : { component: chosen.component, way, conditionSets: chosen.conditionSets };
+}
+
+function rebindLocationByCost(region, regionId, b, analysis) {
+    const loc = (region.locations ?? []).find((l) => l.name === b.id);
+    if (!loc || loc.access_rule !== undefined) return false;
+    const landingSubRegion = ([x, y]) => (region.exits ?? [])
+        .find((e) => !e.exit_id.startsWith('out_') && e.entrance_tile?.[0] === x && e.entrance_tile?.[1] === y)?.sub_region ?? null;
+    const out = cheapestLocationBinding(b, analysis.crossings, landingSubRegion, (c) => analyzerOptions.conditionKey(c));
+    if (out.refused) {
+        if (b.necessary?.length) note(`${regionId}: location "${b.id}" — NOT rebound to its cheapest way: ${out.refused.join('; ')}`);
+        return false;
+    }
+    const parts = out.way.map((c) => analyzerOptions.resolveCondition(c));
+    if (parts.some((p) => !p)) return false;
+    const from = b.component.id;
+    loc.sub_region = out.component.id;
+    loc.access_rule = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+    b.component = out.component;
+    b.conditionSets = out.conditionSets;
+    locationsRebound.push(`${regionId}/${b.id}: ${from} → ${out.component.id}`);
+    note(`${regionId}: location "${b.id}" at [${b.tile}] — REBOUND from ${from} (nearest) to ${out.component.id}, `
+        + `whose way pays only what every way pays (${out.way.map((c) => SEM.conditionKey(c)).join(' + ')}): CHARGED; `
+        + 'every other way onto the tile reaches it first');
+    return true;
 }
 
 /**
@@ -2431,19 +2540,29 @@ function applyBossLocationOptions(rules) {
     ];
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
-
-function main() {
-    const check = process.argv.includes('--check');
-    const quiet = process.argv.includes('--quiet');
-    const doc = buildPlaythroughAtlas();
-    const atlasText = compactJsonFile(doc);
-
-    const result = validateRegionAtlas(doc, { mapDoc: MAP });
-    if (!quiet) for (const n of notes) console.log(`ANALYSIS: ${n}`);
-    for (const e of result.errors) console.error(`ERROR: ${e}`);
-    if (!result.ok) process.exit(1);
-
+/**
+ * ⛓⛓ ER E4b — **THE PRODUCER'S COMPILE, ON ANY DOC `buildPlaythroughAtlas` RETURNED (OR A COUPLED RETARGET OF IT).**
+ * Everything `main` did after the atlas: the event layer, the landing and rope gates, `compileRegionAtlas`, the boss
+ * options, the derived-rule table and the producer's own guards — returned rather than printed, so the entrance-shuffle
+ * mode (`procgenPipeline/entranceShuffleSteps.js`, through `seedlingEntranceShuffleHooks.mjs`) compiles a shuffled doc
+ * through the SAME code that compiles AP_1. `main` is its vanilla caller; `--check` holds AP_1 byte-identical.
+ *
+ * Run after `buildPlaythroughAtlas()` in this process (the analysis pass's per-region state is read here). The doc's
+ * room-local rows are the analysis's; the connections may be any permutation of the vanilla arrivals (E4a: every reader
+ * of WHERE a door leads reads the doc's connections).
+ *
+ * @param {object} doc the atlas
+ * @param {object} [o]
+ * @param {object} [o.table] the derived-rule table (default: the committed one)
+ * @param {{moved: Set<string>}|null} [o.rekey] ER: apply the table by ATLAS ENDPOINT (`TBL.applyDerivedRuleTable`'s `rekey`,
+ *   names read off this compile's sidecars, `apExitNamesByEndpoint`), skipping the exits the shuffle moved
+ *   (`"<region_id>/<exit_id>"`) by name
+ * @param {object|null} [o.roomsAtlas] ER: the AUTHORED atlas `doc` re-wires — the play-time references (`atlas_ref`,
+ *   `region_atlas`) name its rooms (`compileRegionAtlas` `roomsAtlasId`, which refuses a doc whose rooms differ)
+ * @param {string} [o.gameName] the compiled game's name (default `Seedling Playthrough`; an ER world is its own game)
+ * @returns {{rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText}}
+ */
+export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = null, roomsAtlas = null, gameName = GAME_NAME } = {}) {
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
     const layer = playthroughEventLayer(doc);
@@ -2452,7 +2571,7 @@ function main() {
     const ropes = playthroughRopeEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
-        gameName: GAME_NAME,
+        gameName,
         seed: 1,
         completionItem: VICTORY_ITEM,
         provenance: provenanceOf(doc),
@@ -2476,13 +2595,45 @@ function main() {
         internalExitGates: layer.internalExitGates,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
         exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
+        ...(roomsAtlas ? { roomsAtlasId: roomsAtlas.atlas_id, roomsAtlasOf: roomsAtlas } : {}),
     });
     applyBossLocationOptions(rules);
     // ⛓⛓ THE DERIVED-RULE TABLE onto AP_1 (session tile-rules-automation-r-a3). Guard 2: the composed rule must equal the
     // table's, truth table for truth table (in the atlas rows before the override, and in the compiled rules, where an event
     // or landing gate ANDs onto the atlas row); the count is held at zero, each disagreement named with what to do.
-    const override = TBL.applyDerivedRuleTable(rules, DERIVED_TABLE);
+    // ⛓ ER E4b: on a shuffled doc, by ATLAS ENDPOINT with the moved exits skipped by name (`rekey`); vanilla: by name.
+    const names = rekey ? apExitNamesByEndpoint(rules) : null;
+    const override = TBL.applyDerivedRuleTable(rules, table, rekey
+        ? { rekey: { moved: rekey.moved, apExitOf: (rid, eid) => names.get(`${rid}/${eid}`) ?? null } } : {});
     const disagrees = [...derivedTableAtlasRows.filter((r) => r.compare !== 'equal'), ...override.composedDisagrees];
+    // ⛓ RULES l55-waterfall: a floored level is sound only if its entry gate is charged on every way in.
+    const uncharged = playthroughEntryGateUncharged(rules);
+    const rulesText = stringifyRulesJson(rules);
+    // ⛓ RULES rope-events: a rope event the rules NAME must be one this run minted (a refused rope's name in a
+    // block-path or lane condition would be an item nothing places).
+    const mintedRopes = new Set(ropes.events.map((e) => e.name));
+    const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
+    const stray = named.filter((n) => !mintedRopes.has(n));
+
+    return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText };
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
+
+function main() {
+    const check = process.argv.includes('--check');
+    const quiet = process.argv.includes('--quiet');
+    const doc = buildPlaythroughAtlas();
+    const atlasText = compactJsonFile(doc);
+
+    const result = validateRegionAtlas(doc, { mapDoc: MAP });
+    if (!quiet) for (const n of notes) console.log(`ANALYSIS: ${n}`);
+    for (const e of result.errors) console.error(`ERROR: ${e}`);
+    if (!result.ok) process.exit(1);
+
+    const compiled = compilePlaythroughRules(doc);
+    const { layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText, report } = compiled;
+    const { obstacle, locks, buttons, poles, talks } = layer;
     if (disagrees.length) {
         for (const d of disagrees) console.error(`ERROR: ${TBL.composedDisagreeMessage(d)}`);
         process.exit(1);
@@ -2491,18 +2642,10 @@ function main() {
     const stale = fs.existsSync(TBL.MAZE_PRESET) ? TBL.tableStaleness(DERIVED_TABLE, JSON.parse(fs.readFileSync(TBL.MAZE_PRESET, 'utf8'))) : [];
     for (const s of stale) console.error(`${check ? 'ERROR' : 'WARN'}: ${s}`);
     if (check && stale.length) process.exit(1);
-    // ⛓ RULES l55-waterfall: a floored level is sound only if its entry gate is charged on every way in.
-    const uncharged = playthroughEntryGateUncharged(rules);
     if (uncharged.length) {
         console.error(`ERROR: a way into a floored level is not charged its entry gate: ${uncharged.map((u) => u.exit).join(', ')}`);
         process.exit(1);
     }
-    const rulesText = stringifyRulesJson(rules);
-    // ⛓ RULES rope-events: a rope event the rules NAME must be one this run minted (a refused rope's name in a
-    // block-path or lane condition would be an item nothing places).
-    const mintedRopes = new Set(ropes.events.map((e) => e.name));
-    const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
-    const stray = named.filter((n) => !mintedRopes.has(n));
     if (stray.length) {
         console.error(`ERROR: the rules name rope event(s) never minted: ${stray.join(', ')}`);
         process.exit(1);
