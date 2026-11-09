@@ -27,6 +27,7 @@ import { solveSegment, withChooserPair, withStrikeEtaFloor } from './solverBot.j
 import { SPINNER } from './spinner.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 describe('GHOST_KILL_RUNG — the switch (hammer-phase G1, D1)', () => {
     it('is ON by default and opted out by `SEEDLING_GHOST_KILL_RUNG=0`; the wrapper restores it', () => {
@@ -162,12 +163,12 @@ describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phas
     }, 120_000);
 
     it('⛓⛓⛓ ON: the rung asks the press kill, and the solve\'s executed prefix IS the witness, key for key (the '
-        + 'press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)', () => {
+        + 'press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)', () => withL40Flip(false, () => {
         const on = solveA(true, false);
         expect(on.message).not.toContain(GATE);
         expect(on.perTick.length).toBe(2195);
         expect(on.perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 2195).map((k) => [...k].sort()));
-    }, 900_000);
+    }), 900_000);
 
     it('⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the '
         + 'executed prefix is the witness\'s first 1216 ticks (the strike floor OFF)', () => {

@@ -26,6 +26,7 @@ import {
     CHOOSER_PAIR, LATCH_WEIGH_FIRST_COUNTS, resetLatchWeighFirstCounts, withChooserPair, withLatchWeighFirst,
     withTurretApproach,
 } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const TURRET = 'iceturret@472,400';
 
@@ -71,7 +72,7 @@ async function replayLatch(perTick, equips) {
 }
 
 describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
-    it('OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271', async () => {
+    it('OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271', async () => withL40Flip(false, async () => {
         const boot = await l40LatchBoot();
         // ⛓ CPAIR flip: `CHOOSER_PAIR` pinned OFF (ON at size 3 since its flip); this row is the pre-pair walk west
         const off = await withChooserPair(false, () => withTurretApproach(false, () => withLatchWeighFirst(false,
@@ -88,7 +89,7 @@ describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
         expect(LATCH_WEIGH_FIRST_COUNTS.asked.length).toBeGreaterThan(0);
         expect(LATCH_WEIGH_FIRST_COUNTS.asked.every((a) => a.taken && a.turret === TURRET
             && a.inRange.includes(TURRET))).toBe(true);
-    }, 900000);
+    }), 900000);
 
     it('ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name', async () => {
         const boot = await l40LatchBoot();

@@ -23,6 +23,7 @@ import {
     APPROACH_DOOR_COUNTS, CHOOSER_PAIR, TURRET_APPROACH_COUNTS, resetApproachDoorCounts, resetTurretApproachCounts,
     withApproachDoor, withChooserPair, withFifthOrder, withLatchWeighFirst, withTurretApproach,
 } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const TURRET = 'iceturret@472,400';
 const DOOR = 'wandlock@480,560';
@@ -85,7 +86,7 @@ describe('hammer-phase SOUTHDOOR on the latch boot (slow)', () => {
         expect(APPROACH_DOOR_COUNTS.doors).toEqual([]);
     }, 900000);
 
-    it('ON, south of the latched door: the door\'s hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run', async () => {
+    it('ON, south of the latched door: the door\'s hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run', async () => withL40Flip(false, async () => {
         resetApproachDoorCounts();
         resetTurretApproachCounts();
         const boot = await bootAt(SOUTH);
@@ -108,7 +109,7 @@ describe('hammer-phase SOUTHDOOR on the latch boot (slow)', () => {
         expect(seen.collected).toEqual([{ t: 4810, keyType: 2 }]);
         expect(seen.doorAt).toBeLessThan(1368);
         expect(seen.deadAt).toBeGreaterThan(1368);
-    }, 1200000);
+    }), 1200000);
 
     it('the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked', async () => {
         resetApproachDoorCounts();
