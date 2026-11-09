@@ -9,8 +9,8 @@
  * every run re-pools and re-classifies (deterministic, ~10 s). `--attempt K` resumes the draw sequence at draw K.
  *
  * Run:
- *   node scripts/procgen/entrance-step.js run --atlas seedling-9c051b83 --seed 1 -o er-env.json --rules-out er-rules.json
- *   node scripts/procgen/entrance-step.js run --atlas seedling-9c051b83 --seed 1 --to classify -o er-classify.json
+ *   node scripts/procgen/entrance-step.js run --atlas seedling-eff9e209 --seed 1 -o er-env.json --rules-out er-rules.json
+ *   node scripts/procgen/entrance-step.js run --atlas seedling-eff9e209 --seed 1 --to classify -o er-classify.json
  *   node scripts/procgen/entrance-step.js run --atlas <id> --seed 7 --max-attempts 20 --sweep events -o -
  *
  * Flags:
