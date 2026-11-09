@@ -129,9 +129,6 @@ All three non-deprecated drivers — sphere growth, top-down and shuffled spiral
 | Sphere growth | `plan → allocate → topology → items → regions → compile` | `procgenPipeline/sphereSteps.js` |
 | Top-down | `layout → realise → finalize → compile` | `procgenPipeline/topDownSteps.js` |
 | Shuffled spiral | `arrange → content → regions → compile` | `procgenPipeline/spiralSteps.js` |
-| Entrance shuffle (headless) | `pool → classify → shuffle → compile` | `procgenPipeline/entranceShuffleSteps.js` |
-
-The entrance shuffle (ER E4b) is a fifth mode with no one-call driver: it shuffles an AUTHORED atlas's doorways (the substrate's `entranceShuffle` hooks classify and compile them; GER, `procgenCore/entranceRandomizer.js`, places them), rejects a layout its own compiled rules cannot beat, and writes the `entrance_randomization[p]` block. It runs headless only (`scripts/procgen/entrance-step.js`; the committed `seedling_er` preset is `scripts/procgen/make-seedling-er-preset.mjs`).
 
 At default settings the stepped run is byte-identical to the one-call driver. That contract, the per-step detail, hand-edit replay and the per-region editors are in [The Stepped Pipeline](./stepped-pipeline.md).
 

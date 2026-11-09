@@ -7342,9 +7342,7 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [
-                "docs/json/developer/procgen/architecture.md"
-            ],
+            "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
                 "check"
@@ -17341,6 +17339,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rock-gone.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rock-gone — ⛓⛓⛓ seedling-fidelity-knockback376 D1: THE TICK A BROKEN `BreakableRock` STOPS BEING SOLID, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK (`CONTACT_FIDELITY.rockGoneFencepost`).",
+            "path": "scripts/procgen/probe-seedling-rock-gone.mjs"
         },
         {
             "argvHelpers": [

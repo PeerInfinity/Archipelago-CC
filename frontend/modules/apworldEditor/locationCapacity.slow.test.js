@@ -28,6 +28,12 @@
  * under that share. ≈25 s, hence the slow tier. Mutants (restored from a copy,
  * C2): `sizeForLocations` one step too large → +3 on one room (red on SLACK);
  * one step too small → −2 on two rooms (red on SLACK).
+ *
+ * ⛓ THE WHOLE RESULT IS ALSO PINNED, EXACTLY, to `locationCapacity.slow.expected.json`.
+ * The population is derived, so a new classic preset or a deliberate change to
+ * the realiser moves those numbers: on such a change, re-record the file from
+ * the failure's diff. On any change that should NOT move a result (a logging
+ * change, say), a red here is the finding.
  */
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -41,6 +47,7 @@ import { initialiseSlot, planInitialise, INITIALISE_SIZE_KEYS } from './slotInit
 const SLACK = Object.freeze({ below: -1, above: 2 });
 const EXACT_SHARE = 0.99;
 const SUBSTRATE = 'maze';
+const EXPECTED = JSON.parse(readFileSync(new URL('./locationCapacity.slow.expected.json', import.meta.url), 'utf-8'));
 const BAG = Object.freeze({ [INITIALISE_SIZE_KEYS.width]: 8, [INITIALISE_SIZE_KEYS.height]: 6 });
 
 function population() {
@@ -127,5 +134,6 @@ describe('the maze location capacity agrees with the realiser over the committed
         console.info(`locationCapacity agreement: ${summary}`);
         expect(exact / rooms, summary)
             .toBeGreaterThanOrEqual(EXACT_SHARE);
+        expect({ slots: slots.length, refused: refused.length, rooms, grownRooms, exact, exitGrown, histogram }).toEqual(EXPECTED);
     }, 600_000);
 });
