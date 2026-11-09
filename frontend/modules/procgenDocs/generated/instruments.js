@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 143,
-            "count": 193,
+            "browser": 144,
+            "count": 194,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 512,
-        "browser": 209,
+        "blockStyle": 513,
+        "browser": 210,
         "cited": 272,
-        "files": 530,
+        "files": 531,
         "lineStyle": 18,
-        "withDocblock": 530,
-        "withFlags": 449
+        "withDocblock": 531,
+        "withFlags": 450
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13104,6 +13104,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-drill-mixed — ⛓⛓⛓ seedling-fidelity-drill: EVERY DRILL OF A MIXED ROOM (`CONTACT_FIDELITY. drillMixedRooms`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-drill-mixed.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "clear-ticks",
+                "host",
+                "only",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-encounter-latch.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-ticks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling ENCOUNTER-LOCK LATCH, THE GAME'S WAY (rules `rules-l26-rocklock-pocket`).",
+            "path": "scripts/procgen/probe-seedling-encounter-latch.mjs"
         },
         {
             "argvHelpers": [
