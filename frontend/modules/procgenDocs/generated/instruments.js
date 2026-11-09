@@ -7347,10 +7347,17 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "atlas-out",
                 "check"
             ],
             "file": "make-seedling-er-preset.mjs",
             "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "atlas-out"
+                },
                 {
                     "how": [
                         "includes"
@@ -7395,14 +7402,19 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/make-seedling-font.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": false,
             "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/maze.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "out",
+                "source"
+            ],
             "file": "make-seedling-playthrough-maze.mjs",
             "flags": [
                 {
@@ -7413,9 +7425,21 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "quiet"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "source"
                 }
             ],
             "inheritedFlags": [
@@ -19458,7 +19482,8 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "arms",
                 "out",
-                "shards"
+                "shards",
+                "source"
             ],
             "file": "probe-seedling-whole-game-certify.mjs",
             "flags": [
@@ -19479,6 +19504,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "shards"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "source"
                 }
             ],
             "inheritedFlags": [
