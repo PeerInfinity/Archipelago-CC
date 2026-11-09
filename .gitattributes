@@ -25,6 +25,7 @@ worlds/jta/** text=auto eol=lf
 worlds/bakingadventure/** text=auto eol=lf
 worlds/codingadventure/** text=auto eol=lf
 worlds/json_tools_installer/** text=auto eol=lf
+worlds/spoiler_export_hook/** text=auto eol=lf
 
 # The packed artifacts themselves are zips — never touch them.
 apworlds/*.apworld binary
