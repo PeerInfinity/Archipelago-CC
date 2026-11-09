@@ -234,7 +234,8 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
 
     // Mana display + deduction wiring. Publishes a header-info event
     // the bridge subscribes to; deducts mana on observed user actions
-    // when the current region has manaEnabled and loop mode is off.
+    // when the current region has manaEnabled, loop mode is off, and no
+    // other substrate bills that region itself (see mana.js).
     // Performs its own late-mount backfill from gameState +
     // stateManager so events that fired before this module subscribed
     // don't leave us with a null current region.
