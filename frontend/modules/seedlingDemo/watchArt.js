@@ -34,7 +34,8 @@
  */
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
-import { createTileLayer, paintOps, roomOps, shownTeleporters, teleporterArtFilter } from './seedlingSkinRenderer.js';
+import { TILE_ART, createTileLayer, paintOps, roomOps, shownTeleporters, teleporterArtFilter } from './seedlingSkinRenderer.js';
+import { TILE_COLUMN_TO_TYPE } from '../flashPanel/seedlingSemantics.js';
 import { playerOps, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { enemyOps, freshSprite } from './seedlingEnemySkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView } from './seedlingPickupSkin.js';
@@ -404,6 +405,35 @@ export function createLabArtPainter(newCanvas) {
             });
         },
     };
+}
+
+// ── the editor's tile palette (Seedling editor E1) ───────────────────────
+
+/** The art key a `cliffsides` column draws with — the renderer's own (`roomOps`' CliffSide arm). */
+export const CLIFFSIDE_ART_KEY = 'seedling:scenery/cliffside';
+
+/**
+ * ⛓ ONE PALETTE CHIP's frame: the sheet rectangle a tile of `column` on `layer` is drawn with, read at
+ * `LAB_ART_TICK` with the cosmetic draw at 0 — the same `TILE_ART` key and frame rule `roomOps` uses, for a
+ * tile with NO same-type neighbour (autotile mask 0). ⛔ A chip is a still of one isolated tile, so a rotation
+ * or flip the rule would draw in a room is not applied. `null` when the art lacks the key (the caller's swatch).
+ * Cliffsides: frame = column (`levelWorld.cliffSideClassFor`'s `frame`).
+ */
+export function paletteTileFrame(art, layer, column) {
+    if (!art) return null;
+    if (layer === 'cliffsides') {
+        return art.has(CLIFFSIDE_ART_KEY) ? art.frameRect(CLIFFSIDE_ART_KEY, column) : null;
+    }
+    const spec = TILE_ART[TILE_COLUMN_TO_TYPE[column]];
+    if (!spec || !art.has(spec.key)) return null;
+    const animFrame = (anim) => art.resolve(spec.key)?.sprite?.anims?.[anim]?.frames?.[0] ?? 0;
+    let frame = 0;
+    if (spec.rule === 'anim') frame = animFrame(spec.anim);
+    else if (typeof spec.rule === 'function') {
+        const choice = spec.rule([0, 0, 0], { img: 0, column });
+        frame = choice.anim ? animFrame(choice.anim) : (choice.frame ?? 0);
+    }
+    return art.frameRect(spec.key, frame);
 }
 
 // ── the page state: load once, a toggle, one redraw slot ─────────────────

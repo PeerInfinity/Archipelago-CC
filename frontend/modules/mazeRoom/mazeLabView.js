@@ -101,7 +101,7 @@ import {
  * page's is the GEOMETRY (`cellAt`), the PALETTE (an op template), the
  * substrate's own BOUNDS sentences, and the renderer.
  */
-import { UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import { REDO_COMMAND_ID, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { describeOps } from '../procgenCore/editCore.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -634,6 +634,28 @@ export function main() {
     };
 
     /**
+     * ⛓⛓ **REDO** (Seedling editor E1, shared with this page) — the session's
+     * `redo`, which re-applies the last undone op; a new edit clears the list.
+     * `Ctrl/Cmd+Shift+Z` and `Ctrl/Cmd+Y` resolve to this row (`REDO_COMMAND_ID`).
+     */
+    const redoCommand = {
+        id: REDO_COMMAND_ID,
+        label: 'REDO one edit',
+        run: () => {
+            if (!session.redo()) {
+                say('nothing to redo — no edit has been undone since the last one');
+                render();
+                return;
+            }
+            sync();
+            lastSolve = null;
+            clearPlay();
+            say(`redid one edit — ${session.redoCount()} more can be redone. Still UNCERTIFIED`);
+            render();
+        },
+    };
+
+    /**
      * ⛓⛓ THE REPLAY DIES WITH THE WORLD IT IS A REPLAY OF. ⛔ Called from every
      * place that already sets `lastSolve = null` — a new rung, a directed
      * attempt, an edit, an undo, a load — because a plan animated over a level
@@ -1092,7 +1114,7 @@ export function main() {
         const tools = $('labTools');
         tools.textContent = '';
         for (const row of tool?.commands ?? []) {
-            if (row.id === undoCommand.id) continue;
+            if (row.id === undoCommand.id || row.id === redoCommand.id) continue;
             const b = el('button', 'toolBtn', `${row.label}${row.key ? ` (${row.key})` : ''}`);
             b.dataset.tool = row.id;
             if (tool && row.id === tool.tool) b.classList.add('armed');
@@ -4072,6 +4094,7 @@ export function main() {
             render();
         });
         lt.on($('labUndo'), 'click', undoCommand.run);
+        if ($('labRedo')) lt.on($('labRedo'), 'click', redoCommand.run);
         lt.on($('labDownload'), 'click', download);
         lt.on($('labLoad'), 'click', loadFromBox);
         lt.on($('labUpload'), 'change', (e) => {
@@ -4142,7 +4165,7 @@ export function main() {
                 floodTarget,
                 pasteOptions,
                 clipWarnings,
-                commands: [undoCommand],
+                commands: [undoCommand, redoCommand],
                 lifetime: lt,
                 say,
                 offRoom: () => 'that point is outside the room — the cell you name is the cell '

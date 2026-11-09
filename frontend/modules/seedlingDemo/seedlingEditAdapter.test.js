@@ -134,6 +134,7 @@ describe('⛓⛓⛓ THE TWO FOLDS AGREE — a session apply ≡ a direct applyEd
         remove: { op: 'remove', tx: 3, ty: 3 },
         nodes: { op: 'nodes', tx: 5, ty: 5, nodes: [{ x: 96, y: 80 }] },
         resize: { op: 'resize', width: 16, height: 16 },
+        erase: { op: 'erase', tx: 2, ty: 2 },
     };
 
     it('⛓ the sample roster IS `EDIT_OPS` — trap 574: a hand list would go quiet the day '
