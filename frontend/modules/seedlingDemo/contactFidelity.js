@@ -1890,6 +1890,18 @@ export const CONTACT_FIDELITY = {
      */
     apChestItem: true,
     /**
+     * fidelity KNOCKBACK376 D1 (wave 37c) — A BROKEN `BreakableRock`'S CELL STAYS SOLID TWO OBSERVATIONS PAST
+     * `goneAt`, MEASURED ON THE GAME. `goneAt` is `endAnim`'s update (CLEARTAG witnesses the write there), but the rocks'
+     * query reads `ticksCompleted + 1` (the bridges' convention: it frees the cell one update BEFORE `endAnim`; SLOTS
+     * D4a fixed the same for the tree) and `endAnim`'s `FP.world.remove` only lands at its update's end
+     * (`World.as:118-124`, `Engine.as:69-78`): the game first lets the move into the cell on observation `goneAt + 2`.
+     * Leg 376's knocked-back player went through `breakablerock@176,128`'s cell at t1256; the game held it until t1258
+     * (`fidelityRockGone.js`: p4g witnesses at 0 px). ON: `brokenRockIds` lags the solid by `ROCK_GONE_FENCEPOST_TICKS`
+     * (2); `goneAt`, the write and `rocksBroken` are unchanged. OFF: byte-identical.
+     * `SEEDLING_ROCK_GONE_FENCEPOST=0|1`.
+     */
+    rockGoneFencepost: true,
+    /**
      * fidelity DRILLWATER D1 (wave 37e) — A DRILL THAT HOPS ONTO WATER DROWNS. `Drill.as` overrides none of
      * `dieInWater` / `dieInLava` / `canFallInPit` (`Enemy.as:33,39-40`), and `Drill.update` calls `super.update()` first,
      * so `Enemy.update`'s terrain switch (`Enemy.as:62-112`) reads the cell the hop landed on at the drill's NEXT on-screen
@@ -2279,6 +2291,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FID
 // ⛓ fidelity L25APITEM D1: `SEEDLING_AP_CHEST_ITEM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '1') CONTACT_FIDELITY.apChestItem = true;
 if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '0') CONTACT_FIDELITY.apChestItem = false;
+// ⛓ fidelity KNOCKBACK376 D1: `SEEDLING_ROCK_GONE_FENCEPOST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '1') CONTACT_FIDELITY.rockGoneFencepost = true;
+if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '0') CONTACT_FIDELITY.rockGoneFencepost = false;
 // ⛓ fidelity DRILLWATER D1: `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_TERRAIN_SWITCH === '1') CONTACT_FIDELITY.drillTerrainSwitch = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_TERRAIN_SWITCH === '0') CONTACT_FIDELITY.drillTerrainSwitch = false;

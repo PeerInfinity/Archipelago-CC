@@ -1,0 +1,8 @@
+== sw-on-1 (first sweep loop, default 2560? leg budget; CPU contended)
+timeout 5260 [(True, 1866)]
+== sw-on-2 (first sweep loop, default 2560? leg budget; CPU contended)
+failed 5243 [(False, None), (False, None)]
+== sw-off-1 (first sweep loop, default 2560? leg budget; CPU contended)
+timeout 5280 [(True, 1736)]
+== sw-off-2 (first sweep loop, default 2560? leg budget; CPU contended)
+timeout 5283 [(True, 1888)]

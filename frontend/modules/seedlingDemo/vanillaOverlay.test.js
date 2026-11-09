@@ -311,11 +311,13 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-certifier-tail: 15,835 -> 16,334 B — the four expressible doors charged their Swim (L49, L55, L56, L91).
         // ⛓ tile-rules-automation-r-a3: 16,334 -> 15,909 B — the derived-rule table re-spells L34's door rule
         //   Or(Wand, And(Fire Wand Fusion, Wand, Fire)) -> Wand (truth-table equal) and reorders L98's stairs rule.
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(15909);
+        // ⛓ tile-l89-feather-swim: 15,909 -> 16,007 B — L89's Feather lifts its rule, Has(Progressive Swim) (bound to its cheapest way).
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(16007);
         // ⛓ rules-r4b-followup: the bytes hold (out_pit_3_7 -> out_pit_3_8, the same length); the id moves.
         // ⛓ rules-certifier-tail: f9c6d0ec -> 2ef0551f (the four Swim rules above).
         // ⛓ tile-rules-automation-r-a3: 2ef0551f -> 8eefdf47 (L34's door re-spelled to Wand, L98's stairs reordered).
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-8eefdf47');
+        // ⛓ tile-l89-feather-swim: 8eefdf47 -> 5897516c (L89's Feather carries its new rule, Has(Progressive Swim)).
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-5897516c');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -326,7 +328,7 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         expect(Object.values(committed.rooms)
             .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(29); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills; location-crossing: +1 (L19 Boss Key 0); certifier-tail: +4 (the Swim of L49's, L55's, L56's and L91's doors)
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(30); // ⛓ tile-l89-feather-swim: +1 (L89 Feather, Swim); RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills; location-crossing: +1 (L19 Boss Key 0); certifier-tail: +4 (the Swim of L49's, L55's, L56's and L91's doors)
         // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
         //    own law since E6a, asserted on the artifact rather than only on the
         //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
@@ -434,8 +436,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ tile-rules-automation-r-a4 (45f28a9f… -> 2b2661b7): L20's lock@32,80 costs exactly its own press, so the
         //   level_20__r1c4 <-> level_20__r3c1 internal rows drop the redundant Shield term (atlas id a05c56ce -> f60d4a58).
         //   No name, exit or location moves.
+        // ⛓ tile-l89-feather-swim (2b2661b7… -> b0bc6b9c): L89's Feather is bound to its cheapest way, so its sub_region moves
+        //   r9c6 -> r1c10 and it is charged Has(Progressive Swim) (atlas id f60d4a58 -> 9c051b83). No name or exit moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('2b2661b7ccc15a34bf2f2bc6ac201285');
+            .toBe('b0bc6b9c6d047ac7f8aab7cf894b38f9');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -483,14 +487,15 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
     //   seven more (the bosses), each guarded by its kill, so none of them is free.
     // ⛓ rules-location-crossing: the locations 38 -> 37 — L19's Boss Key 0 lifts its Sword rule.
     // ⛓ rules-certifier-tail: 320 -> 316 — L49's, L55's, L56's and L91's doors lift their Swim.
-    it('moves 334 free exits + 0 locations to 316 + 37, and the export stays ALLOWED', () => {
+    // ⛓ tile-l89-feather-swim: the locations 37 -> 36 — L89's Feather lifts its Swim rule (bound to its cheapest way).
+    it('moves 334 free exits + 0 locations to 316 + 36, and the export stays ALLOWED', () => {
         const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
         const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
 
         expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
         expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
         expect(after.filter((e) => e.kind === 'exit')).toHaveLength(316);
-        expect(after.filter((e) => e.kind === 'location')).toHaveLength(37);
+        expect(after.filter((e) => e.kind === 'location')).toHaveLength(36);
 
         /**
          * ⛓ THE DOORS THAT STOPPED BEING FREE ARE THE LIFTED EXIT
@@ -524,10 +529,11 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
                 'level_91 out_teleporter_16_144', 'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
                 'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_8',
                 'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112'].sort());
-        // …and the eleven locations that are NOT free are the eleven the
-        //   playthrough guards (⛓ R4b: the three, + the seven boss kills; ⛓ location-crossing: + L19's Boss Key 0).
+        // …and the twelve locations that are NOT free are the twelve the
+        //   playthrough guards (⛓ R4b: the three, + the seven boss kills; ⛓ location-crossing: + L19's Boss Key 0;
+        //   ⛓ tile-l89-feather-swim: + L89's Feather, Swim).
         const guarded = LIFT.rows.filter((r) => r.atlasLoc.access_rule);
-        expect(guarded).toHaveLength(11);
+        expect(guarded).toHaveLength(12);
         expect(after.filter((e) => e.kind === 'location')).toHaveLength(48 - guarded.length);
     });
 

@@ -27,13 +27,12 @@ describe('CEREMONY126 — the switches', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(true);
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
             expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(true);
-            // ⛓ wave 37d (L25APITEM) appended `apChestItem` after them, then fidelity DRILLWATER (wave 37e) `drillTerrainSwitch`:
-            // D1 then D2 stay adjacent and in order, and only later waves' named keys follow.
+            // ⛓ wave 37d (L25APITEM) appended `apChestItem` after them, then wave 37c (KNOCKBACK376) `rockGoneFencepost`
+            // (it landed after L25), then wave 37e (DRILLWATER) `drillTerrainSwitch`: D1 then D2, adjacent, followed only by later-landing keys.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const at = keys.indexOf('ceremonyPressForecast');
             expect(keys.slice(at, at + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
-            const LATER = ['apChestItem', 'drillTerrainSwitch'];
-            expect(keys.slice(at + 2).filter((k) => !LATER.includes(k))).toEqual([]);
+            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'drillTerrainSwitch'].includes(k))).toEqual([]);
         });
     it('the env names are known worker env names', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CEREMONY_PRESS_FORECAST');
