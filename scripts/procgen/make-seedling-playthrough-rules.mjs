@@ -93,7 +93,7 @@ const {
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
 const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
 const { contactRect, ENEMY_CLASSES } = await imp('frontend/modules/seedlingDemo/combat.js');
-const { spearHitRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
+const { spearHitRect, spearRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
 const { swingHits, SLASH_SPRITES, SLASH_SCALE_NORMAL, SLASH_SCALE_DASH } = await imp('frontend/modules/seedlingDemo/combatVerbs.js');
 const { DARKTRAP_LIGHT_DEATH } = await imp('frontend/modules/seedlingDemo/enemyDamage.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
@@ -422,8 +422,10 @@ const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
  *   - passability: the grid's own cells, any kind but `wall`/`sink` (permissive);
  *   - the bodies: the ruling's counted bodies that do not die on their own, each at its CENTRE (`ENEMY_CLASSES[tag].ctor`,
  *     the constructor's offset) with its `runRange` when it runs at the player (`aggro.kind` a chase), and an across-the-cut
- *     reach = the Ghost Sword's slash rect (`SLASH_SPRITES.ghostsword`, the larger of its two scales: `Player.as:917` skips
- *     the `Solid` line test for it) plus the body's own half hitbox.
+ *     reach = the farther of the two arms that pass a `Solid`: the Ghost Sword's slash rect (`SLASH_SPRITES.ghostsword`, the
+ *     larger of its two scales: `Player.as:917` skips the line test for it) and the Spear's thrust rect (`presses.spearRect`,
+ *     `SPEAR_LENGTH` x `SPEAR_THICK` off `spearOrigin`: `Player.as:966-985` never line-tests it), plus the body's own half
+ *     hitbox.
  * A lock FIRES when one side `clears` and another `cannot`: each step into it from a `cannot` side is walled, and the
  * cell is a latch when its tag records the opening (`tset == -1`, `tag >= 0`). Not fired, by name: a lock whose tag a
  * cross-level ButtonRoom also clears (`CROSS_LEVEL_OPENERS`: that button opens it from either side, its own event), a
@@ -433,7 +435,14 @@ const ENCOUNTER_CHASE_KINDS = new Set(['chase', 'chase-through-walls', 'teleport
 const ghostReach = (() => {
     const g = SLASH_SPRITES.ghostsword;
     // `combatVerbs.slashRect`: the ghost rect is w along the swing and 2w across it.
-    return Math.max(...[SLASH_SCALE_NORMAL, SLASH_SCALE_DASH].map((sc) => Math.hypot(g.w * sc.x, (g.w * 2 * sc.y) / 2)));
+    const slash = Math.max(...[SLASH_SCALE_NORMAL, SLASH_SCALE_DASH].map((sc) => Math.hypot(g.w * sc.x, (g.w * 2 * sc.y) / 2)));
+    // `presses.spearRect` off the player's centre, every facing: the farthest corner of the thrust rect.
+    const spear = Math.max(...[0, 1, 2, 3].map((d) => {
+        const r = spearRect(0, 0, d);
+        return Math.max(...[[r.x, r.y], [r.right, r.y], [r.x, r.bottom], [r.right, r.bottom]]
+            .map(([x, y]) => Math.hypot(x, y)));
+    }));
+    return Math.max(slash, spear);
 })();
 const encounterMemo = new Map();
 export function encounterLocksOf(level, grid = null) {

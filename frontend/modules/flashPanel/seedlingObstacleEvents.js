@@ -259,10 +259,11 @@ export function deriveLockEvents(projection, ctx) {
  * CUTS the room. A body is reached from a side when:
  *   - it stands in that side's own component, every kill-lock of the room shut (the player walks up to it); or
  *   - it can be hit ACROSS the cut. The slash is `collideLine("Solid", …)`-tested EXCEPT with the Ghost Sword or on a
- *     Flyer (`Player.as:917`); a `WandShot` stops at `Solid` (`WandShot.as:69`, its `solids`). So a body the Ghost
- *     Sword's rect could reach from the side's tiles (`ctx.reach`, the model's `SLASH_SPRITES` at the dash scale), or
- *     a chaser that comes within its own `runRange` of them (`combat.ENEMY_CLASSES[tag].aggro`, e.g. `Puncher.as:22`)
- *     and would park against the lock's face, MAY be reached — that side is UNDECIDED, and today's rule is kept.
+ *     Flyer (`Player.as:917`); the Spear's thrust is NOT line-tested at all (`Player.as:966-985`: a 32x5
+ *     `collideRectInto`); a `WandShot` stops at `Solid` (`WandShot.as:69`, its `solids`). So a body the farther of
+ *     those two rects could reach from the side's tiles (`a.reach` / the body's `reach`), or a chaser that comes within
+ *     its own `runRange` of them (`combat.ENEMY_CLASSES[tag].aggro`, e.g. `Puncher.as:22`) and would park against the
+ *     lock's face, MAY be reached — that side is UNDECIDED, and today's rule is kept.
  * A side with a body reached by NEITHER cannot clear the room with any inventory: it `cannot`.
  *
  * Such a side then crosses only once the lock is OPEN, which the game records when its tag is >= 0
