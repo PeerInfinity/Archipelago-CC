@@ -415,8 +415,14 @@ export function eventLayerFor(atlas, levels, { minted = [], rooms = atlas } = {}
  * pass leaves uncharged on purpose, e.g. L89's Feather), read from its run — never copied — for the certifier's
  * `permissive` option (session tile-primitives-sphere-order-2, ⚖ 2026-10-26: a STRICTER maze row there is accepted by name).
  */
-export function playthroughPermissiveLocations() {
-    wholeEventLayer(readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json')));
+export function playthroughPermissiveLocations({ source = null } = {}) {
+    // ⛓ `source` (`buildPlaythroughMaze`'s): read off the SAME layer the compile took, so an ER process never takes a cache
+    // miss on the vanilla atlas (which re-ran the analysis and re-pointed the producer's landing atlas at vanilla). The
+    // bindings themselves are the rooms build's (`buildPlaythroughAtlas` takes no connections), pinned equal across sources.
+    const rooms = source?.roomsAtlas ?? readJson(PLAYTHROUGH_ATLAS_FILE);
+    const atlas = source?.atlas ?? rooms;
+    if (atlas !== rooms) assertSourceCarriesRooms(atlas, rooms);
+    wholeEventLayer(atlas, rooms);
     return [...permissiveBindings];
 }
 

@@ -8,7 +8,7 @@
  *   - the MAZE PRODUCER'S SOURCE (`make-seedling-playthrough-maze.mjs` `buildPlaythroughMaze({source})`): the ER maze compile
  *     skips BY NAME exactly the derived-rule rows of the moved exits (the rules producer's own set on the same doc); its AP
  *     exit names per atlas endpoint are the ER rules preset's (both compile the same graph); a `--source` run never names the
- *     vanilla preset's file;
+ *     vanilla preset's file; the permissive bound read off the compile's own layer equals vanilla's;
  *   - ONLY THE CONNECTIONS MAY DIFFER (design review of E4c): the exempt fields are exactly what `applyPlacements` and its
  *     restamp change, and each other difference (an edited, added, removed or reordered room, a connection removed or doubled
  *     or changed beyond its landing, any other field) is a named `SourceRoomsError` mutant;
@@ -123,6 +123,7 @@ describe('a source carries its rooms: ONLY the connections may differ (SourceRoo
             try { MAZE.movedDepartures(bad, rooms); } catch (e) { err = e; }
             expect(err).toBeInstanceOf(MAZE.SourceRoomsError);
             expect(err.problems).toContain(want);
+            expect(() => MAZE.playthroughPermissiveLocations({ source: { atlas: bad, roomsAtlas: rooms } })).toThrow(MAZE.SourceRoomsError);
         });
     }
     it('MUTANT: buildPlaythroughMaze refuses an edited source before it compiles', () => {
@@ -158,6 +159,12 @@ describe('the maze producer over the shuffled atlas (buildPlaythroughMaze({sourc
         // without `endpoints`, the maze's internal crossings' synthetic ids are keys too, and collide
         expect(() => apExitNamesByEndpoint(doc)).toThrow(/compiled to two names/);
     });
+    it('the permissive bound is read off the compile\'s own layer and equals vanilla\'s (the bindings are the rooms build\'s)', () => {
+        const er = MAZE.playthroughPermissiveLocations({ source: { atlas, roomsAtlas: env.pool.atlas } });
+        const vanilla = MAZE.playthroughPermissiveLocations();
+        expect(er.length).toBeGreaterThan(0);
+        expect(er).toEqual(vanilla);
+    }, 300_000);
     it('the CLI never writes the vanilla preset from a --source run', () => {
         expect(() => MAZE.parseMazeArgs(['node', 'x', '--source=a.json'])).toThrow(/--source needs --out/);
         expect(() => MAZE.parseMazeArgs(['node', 'x', '--out=b.json'])).toThrow(/--out needs --source/);

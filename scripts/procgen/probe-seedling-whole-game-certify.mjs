@@ -163,7 +163,8 @@ async function main() {
     writeFileSync(rulesFile, built.text);
     const rules = JSON.parse(built.text);
     console.log(`BUILT: ${levels.length} levels, ${Object.keys(rules.regions['1']).length} regions, ${built.text.length} B in ${Date.now() - t0} ms`);
-    const permissive = M.playthroughPermissiveLocations();
+    // the same layer the compile took (an ER process never re-reads the vanilla one); the list is pinned equal across sources
+    const permissive = M.playthroughPermissiveLocations(er ? { source: { atlas: er.atlas, roomsAtlas: er.roomsAtlas } } : {});
     console.log(`PERMISSIVE: ${permissive.length} — ${permissive.join(' | ')}`);
     // The old arm: the certifier with internal-only members priced from their fresh arrival (the framing before sphere-order-2).
     // Written only when the old arm runs; a killed run (an OOM'd worker) can strand it, so .gitignore covers `*.oldframing.tmp.js`.
