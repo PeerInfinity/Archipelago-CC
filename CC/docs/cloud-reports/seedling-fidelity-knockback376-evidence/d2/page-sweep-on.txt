@@ -1,0 +1,5 @@
+on 1 done seam 5315 [(True, 1622, 'dashless:False,full:True')] roomHits [(1248, 1)] divs []
+on 2 done seam 5299 [(True, 1757, 'dashless:False,full:True')] roomHits [(1340, 1), (1386, 2)] divs []
+on 3 done seam 5306 [(True, 1866, 'dashless:True,full:False')] roomHits [] divs []
+on 4 done seam 5312 [(True, 1622, 'dashless:False,full:True')] roomHits [(1248, 1)] divs []
+on 5 done seam 5314 [(True, 1622, 'dashless:False,full:True')] roomHits [(1248, 1)] divs []

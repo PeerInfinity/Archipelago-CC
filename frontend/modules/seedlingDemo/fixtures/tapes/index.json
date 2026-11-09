@@ -312,14 +312,14 @@
     },
     {
       "file": "ghostsword-l3-rock.json",
-      "tickCount": 43,
+      "tickCount": 45,
       "bootLevel": 3,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "ghostsword-l3-rockghost.json",
-      "tickCount": 43,
+      "tickCount": 45,
       "bootLevel": 3,
       "tapeVersion": 8,
       "noHazards": []
