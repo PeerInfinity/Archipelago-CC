@@ -139,6 +139,23 @@ export function animCallbackTick(anim = BREAK_ANIM, elapsed = FP_MAX_ELAPSED) {
 export const HIT_TO_GONE_TICKS = animCallbackTick();
 
 /**
+ * ⛓⛓⛓ fidelity KNOCKBACK376 D1 (`CONTACT_FIDELITY.rockGoneFencepost`) — `goneAt` IS `endAnim`'s FRAME, AND THE SOLID
+ * OUTLIVES IT BY TWO OBSERVATIONS, MEASURED. `goneAt` = `fired + HIT_TO_GONE_TICKS` is the update that runs `endAnim`
+ * (the update ENTERING at `ticksCompleted = goneAt`): CLEARTAG's cut witnesses pin the persistence write there on the
+ * game (cut after `goneAt` ticks: unwritten; after `goneAt + 1`: written). The CELL is another matter, two fenceposts:
+ *   +1 — the query. `brokenRockIds(…, ticksCompleted + 1)` (the bridges' observation convention) calls the rock gone on
+ *        the update entering at `goneAt − 1`, the frame BEFORE `endAnim` runs. SLOTS D4a measured the same off-by-one
+ *        for the burnable tree and moved its query to `ticksCompleted`; the rocks' kept the `+ 1` ("nothing here
+ *        measured it").
+ *   +1 — the removal. `endAnim`'s `FP.world.remove(this)` only queues (`World.as:118-124`); `Engine.update` runs
+ *        `updateLists` after `World.update` (`Engine.as:69-78`), so `endAnim`'s own frame still collides with the rock
+ *        and the cell is free from the update entering at `goneAt + 1`.
+ * ⇒ ON, `brokenRockIds` lags the solid by these two (`lag`): the move enters the cell on observation `goneAt + 2` =
+ * `fired + 9`. Witnessed on p4g (`fidelityRockGone.js`): a plain swing, a dash, and sweep leg 376's own play.
+ */
+export const ROCK_GONE_FENCEPOST_TICKS = 2;
+
+/**
  * The leg obligation: how long after the press a leg must wait before it
  * may plan through the cell.
  *
@@ -234,10 +251,15 @@ export function hitRock(state, rock, firedTick) {
     return { id, started: true, goneAt: entry.goneAt };
 }
 
-/** The ids that are GONE as of `observation`. The `openBridgeIds` shape. */
-export function brokenRockIds(state, observation) {
+/**
+ * The ids that are GONE as of `observation`. The `openBridgeIds` shape.
+ *
+ * `lag` (⛓ KNOCKBACK376, `ROCK_GONE_FENCEPOST_TICKS` under `CONTACT_FIDELITY.rockGoneFencepost`; the caller decides):
+ * the observations the SOLID outlives `goneAt` by. 0, the default, is the OFF arithmetic.
+ */
+export function brokenRockIds(state, observation, { lag = 0 } = {}) {
     const gone = new Set();
-    for (const [id, r] of state) if (observation >= r.goneAt) gone.add(id);
+    for (const [id, r] of state) if (observation >= r.goneAt + lag) gone.add(id);
     return gone;
 }
 

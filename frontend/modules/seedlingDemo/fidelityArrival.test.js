@@ -84,10 +84,13 @@ describe('fidelity ARRIVAL — D1: the game, a landing inside a solid', () => {
      * ⚠ THE PRESS FROM INSIDE (game evidence, NOT a strategy — ⚖ 2026-10-05):
      * the game breaks the rock on one Sword press from inside (its own
      * `persistence_cleared` names the flag) and the player then walks. The
-     * model breaks it too but frees the box two ticks early (it moves on
-     * observation 8, the game on 10): pinned here as RESIDUE so a fix reads.
+     * model breaks it too (goneAt 8). The recorded oracle's `vsModel.first`
+     * (8) was measured when the model freed the box two ticks early; since
+     * KNOCKBACK376's `rockGoneFencepost` (ON) the rock's CELL opens two
+     * observations after goneAt, so the model = the game (observation 10 on
+     * both sides). The oracle stays as recorded: it is the independent agreement.
      */
-    it.each(ARRIVAL_SOLID_LANDINGS.filter((l) => l.press !== false).map((l) => [l.key, l]))('%s: one Sword press from inside breaks the rock in the game; the model frees it 2 ticks early (residue)', (_, l) => {
+    it.each(ARRIVAL_SOLID_LANDINGS.filter((l) => l.press !== false).map((l) => [l.key, l]))('%s: one Sword press from inside breaks the rock in the game (it moves on observation 10); the model breaks it at goneAt 8 and, with rockGoneFencepost, frees the cell two observations later, as the game', (_, l) => {
         const game = oracleArm(`${l.key}-HELD-press-sword`);
         expect(game.persistenceCleared).toEqual([{ tag: l.tag, level: l.boot.level }]);
         expect(travel(game.ticks)).toBeGreaterThan(0);
