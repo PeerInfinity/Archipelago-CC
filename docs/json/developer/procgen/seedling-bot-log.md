@@ -27741,8 +27741,8 @@ What the page-vs-node gap of wave 6 ON was (measured on the p4g page here and on
   lands `bob@736,752`'s third hit at t930 in the model, on the tick its i-frames lapse; the game's bob lives and hits the
   player at t936 (745.9,786.6). The plan is a function of the arrival clock (CI's 871 at 5217 played clean). Fidelity's.
 - 411 / 870 / 871 / 872: the HARNESS's 90 s leg clock. Each solves (33–39 s) and is cut while the game plays it.
-- 376 / 377: the arrival clock. 377's ON regression is `OPPORTUNISTIC_STRIKE` (bisected over 21 clocks); 376 loses the
-  bomb phase without `BOMB_PHASE_WAIT`.
+- 376 / 377: the arrival clock. Both ON regressions are `OPPORTUNISTIC_STRIKE` (bisected: 377 over 21 clocks, 376 over
+  25). With the whole flip: 376 20/25 clocks (defaults 17), 377 19/21 (defaults 20).
 
 The new switch `OPP_PRESS_FALLBACK` (`oppPressFallback.js`, ON here): OPP's press kill that refuses with a
 `FIGHT_FALLBACK_CODES` code is rewound to its first tick and redone once with OPP off (B3's rewind). 377 at 5320–5324:
@@ -27750,6 +27750,7 @@ refused → the defaults' plan, digest for digest; 5319 still refuses (no rewind
 
 With the south door carried (DOOR-CARRY), the set solves on the page: Chests 394/411, flag 8 395/412, 376, 377. Boss
 Key 2 from L39 (869) still needs 3,236 work units against the 2,560 retry: 2,484 of them are the turret approach's
-276 certified forks (the hitless one is side `right`, the corridor, wait 29). Nine pins moved (each re-recorded as a
-BEFORE pin with the set OFF; the AFTER values are in the report). The report is
+276 certified forks (the hitless one is side `right`, the corridor, wait 29). 27 hammer pins moved (9 fast, 2 slow, 16 train; each re-recorded
+as a BEFORE pin with the set OFF, the AFTER values in the report). 13 fidelity rows and fidelity's L30KEYLOCK producer
+move too: listed for fidelity to sign, not edited. The report is
 `CC/docs/cloud-reports/seedling-hammer-l40-flip-build.md`.
