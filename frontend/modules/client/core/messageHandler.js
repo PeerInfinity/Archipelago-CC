@@ -327,8 +327,11 @@ export class MessageHandler {
     // The loaded rules decide the game, as long as they are for a game this
     // room has. Rules for another game can't describe this slot (the app
     // always boots with SOME preset loaded, so "no rules" alone never
-    // happens); those are treated as no usable rules.
+    // happens); those are treated as no usable rules. So are rules for a game
+    // the room has but for another player: RoomInfo has no slot -> game map,
+    // and their game would get this slot refused with InvalidGame.
     const loadedGame = this.getClientGameName();
+    const otherPlayersName = this._loadedPlayerNameIfNotThisSlot();
     // Rules this client can build from server data are rebuilt for a room of
     // another seed (unless a preset matches it), not used as they are.
     const loadedSeed = stateManagerProxySingleton?.getStaticData?.()?.seed_name;
@@ -341,7 +344,9 @@ export class MessageHandler {
         `The loaded ${loadedGame} rules are for seed ${loadedSeed}; this room is seed ${data.seed_name}.`,
         'info'
       );
-      return this._connectWithoutRules(data, roomGames, roomInfoSeq, loadedGame);
+      return this._connectWithoutRules(
+        data, roomGames, roomInfoSeq, otherPlayersName ? null : loadedGame
+      );
     }
     // Rules a generated world was built from are the room's logic at any
     // seed: the server's placements and slot_data are laid over them.
@@ -353,18 +358,40 @@ export class MessageHandler {
       }
     }
     if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
-      log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
-      this._warnOnSeedMismatch(data.seed_name);
-      this._sendConnect(loadedGame);
-      return;
-    }
-    if (loadedGame) {
+      if (!otherPlayersName) {
+        log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
+        this._warnOnSeedMismatch(data.seed_name);
+        this._sendConnect(loadedGame);
+        return;
+      }
+      this._printToConsole(
+        `The loaded rules are for ${otherPlayersName}, not ${this.clientSlotName}; looking for this slot's rules…`,
+        'info'
+      );
+    } else if (loadedGame) {
       this._printToConsole(
         `The loaded rules are for ${loadedGame}, which this room does not have (${roomGames.join(', ')}).`,
         'warning'
       );
     }
     return this._connectWithoutRules(data, roomGames, roomInfoSeq);
+  }
+
+  /**
+   * The loaded player's name, when the slot being connected with is someone
+   * else. Only the loaded player counts, even if the document holds several:
+   * that player's game is the one the Connect packet would carry. Null when
+   * there is nothing to compare: a seedless document (it describes no
+   * particular room) or one with no name for the loaded player.
+   *
+   * @returns {string|null}
+   */
+  _loadedPlayerNameIfNotThisSlot() {
+    const staticData = stateManagerProxySingleton?.getStaticData?.();
+    const playerId = staticData?.playerId;
+    if (!staticData?.seed_name || playerId === undefined || playerId === null) return null;
+    const name = staticData.player_names?.[String(playerId)];
+    return name && this.clientSlotName && name !== this.clientSlotName ? name : null;
   }
 
   /**
