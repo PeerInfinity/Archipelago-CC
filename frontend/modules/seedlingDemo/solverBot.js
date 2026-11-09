@@ -6779,6 +6779,13 @@ export function previewWalk(run, wps, tolerance = 0,
          */
         standBombs = true,
         /**
+         * ⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — an OPT-IN marker: a NUMBER `n` (the verb's still ticks)
+         * stamps every tail sample `bombsOnly` and, past the first `n`, `escape` = the ticks since the stand ended, so
+         * the probe prices the tail for the lobbers' bombs alone and only those no move off the stance escapes
+         * (`bombArrivalTail`, `bombsOnlyDanger`). `false` (every other caller) changes nothing.
+         */
+        standBombsOnly = false,
+        /**
          * ⛓ fidelity BEAMLANE D1 — an OPT-IN steered aim: `(state, wp, tick, intermediate) => true | {x, y}`, asked
          * once per transit tick (`tick` = the tick whose sample is about to be taken). `true` = this waypoint is
          * reached; a point = what `chooseHeld` aims at this tick instead of `wp`. The PHASE arm's lane walk
@@ -7408,7 +7415,8 @@ export function previewWalk(run, wps, tolerance = 0,
             const chaserBodies = chasers
                 ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
-                phase: 'dwell', wp: wpIndex };
+                phase: 'dwell', wp: wpIndex,
+                ...(standBombsOnly === false ? {} : { bombsOnly: true, escape: Math.max(0, i + 1 - standBombsOnly) }) };
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
                 if (!standBombs && sample.spits) sample.spits = [...sample.spits].filter((b) => b.kind !== 'bomb');
@@ -8563,6 +8571,49 @@ function withoutSources(d, except) {
     if (!except || except.size === 0) return d;
     const sources = d.sources.filter((s) => !except.has(s.id));
     return { ...d, sources, danger: sources.length > 0 };
+}
+
+/**
+ * ⛓ 376-BOMB — a stance tail's sample, read for its bombs alone (`bombArrivalTail`): while the verb stands (`escape`
+ * 0) every bomb source is a hit; `escape` = k ticks after the stand ended, a blast is a hit only if no straight move
+ * off the stance clears its disc, `|blast − player| + escapeReach[k] <= r` (the reach measured from rest; a wall can
+ * only make the true escape shorter, so a blast this calls escapable is one OFF would have met the same way).
+ */
+export function bombsOnlyDanger(d, sample = null) {
+    if (!d.danger) return d;
+    const k = sample?.escape ?? 0;
+    const reach = BOMB_PHASE_WAIT.escapeReach[Math.min(k, BOMB_PHASE_WAIT.escapeReach.length - 1)];
+    const sources = d.sources.filter((src) => {
+        if (src.kind !== 'bomb') return false;
+        if (k === 0) return true;
+        const b = (sample.spits ?? []).find((x) => x.kind === 'bomb' && x.id === src.id);
+        return b !== undefined && Math.hypot(b.x - sample.x, b.y - sample.y) + reach <= b.radius;
+    });
+    return { ...d, sources, danger: sources.length > 0 };
+}
+
+/**
+ * ⛓⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — **A STANCE WALK'S STOP IS PRICED FOR THE BOMBS ALREADY AIMED AT
+ * IT.** A walk's probe ends where the walk stops; a verb that then STANDS there (a break: its aim, press and
+ * `WAIT_AFTER_PRESS_TICKS`) is still while a bomb aimed at the walk on its way lands one step past the aim, up to 31
+ * ticks later, and from rest the player needs 12 more ticks to be 15 px away (`escapeReach`). Measured on leg 376 at hammer phase
+ * 23: the walk to the rock (200,136) rests at t1410, the break presses at t1411 and stands to t1430, and
+ * `bombpusher@112,128#13`'s blast lands at (207,141) on t1432, 9.4 px away; the next walk's forced-hit rung proves the
+ * hit at depth 1. So ON, a stance walk whose caller names the verb's still ticks (`bombStand`, the frontier's break
+ * stance), in a room with a live lobber and that does not cross, stands `standTicks` + 12 still ticks after arriving,
+ * priced for the bombs alone and, past the stand, only for a blast no move escapes (`bombsOnlyDanger`) — asked only
+ * as the second probe of a walk whose own probe is
+ * clean, and by the ladder's bomb arm. `null` otherwise. ⛔ NOT every walk: a walk whose next verb walks on leaves in
+ * time, and a tail there moved the phase of 1 producer's L40 hold (`plan-seedling-l40button-witness`) into an
+ * unpaceable bomb (measured, the first cut).
+ */
+export function bombArrivalTail(run, { crossTo = null, standTicks = null } = {}) {
+    if (!BOMB_PHASE_WAIT.enabled || !CONTACT_FIDELITY.bombPusherLive || crossTo) return null;
+    if (!(Number.isFinite(standTicks) && standTicks > 0)) return null;
+    if ((run.entities('bombPushers') ?? []).length === 0) return null;
+    const NO_KEYS = new Set();
+    return { ticks: standTicks + BOMB_PHASE_WAIT.escapeReach.length - 1, keys: () => () => NO_KEYS,
+        bombsOnly: standTicks };
 }
 
 /**
@@ -11215,6 +11266,57 @@ export const PACE = Object.freeze({
     // a coast that has not come to rest in this many ticks is not a cycle
     coast: 60,
 });
+
+/**
+ * ⛓⛓⛓ hammer-phase 376-BOMB — **A WALK THAT MEETS A LOBBER'S BOMB WAITS OUT THE BOMB'S PHASE** (`BOMB_PHASE_WAIT`,
+ * OFF — `SEEDLING_BOMB_PHASE_WAIT=1` or `withBombPhaseWait(true, …)`; a behaviour switch).
+ *
+ * The game's `BombPusher` lobs one `Bomb` every 46 ticks while the player is within 256 px, aimed at the player's
+ * point; it lands 31 updates later, one step past the aim, and its `Explosion` hits inside the 15 px disc
+ * (`bombPusher.js`). So the blast is a function of WHEN the walk is where: the same corridor entered some ticks later
+ * meets the next bomb at another point of it. OFF, the ladder has no rung that moves the walk's phase: TIME is the
+ * mover's last-mile search (`MOVER_RANGE`), BAIT/KILL hand a chaser, and FORCED-HIT proves on forks (L40 leg 376 at
+ * hammer phase 23: 7442 of the solve's 8450 work units, not proven).
+ *
+ * ON, the arm (`bombPhaseWait`) is asked at two places, both only where EVERY source of the danger is a bomb:
+ *   - a break's STANCE WALK whose own probe (OFF's, unchanged) is clean, probed once more with its stop's tail
+ *     (`bombArrivalTail`: the break's still ticks + `escapeReach`, priced for the bombs alone) — the blast that lands
+ *     on the stance;
+ *   - the combat ladder, right after TIME refuses (no BAIT or KILL removes a bomb), the corridor re-probed with the
+ *     walk's own tail or else its arrival tail.
+ * It waits on the LIVE run and asks the walk's own probe (`probeCorridor`) of the SAME corridor after each wait:
+ *   1. still ticks, one at a time, up to `maxStill` (stopped at the first hit, death or crossing: the run's own ledger
+ *      bills it, so the wait is the model's, not a forecast's);
+ *   2. from rest, the paced cycles `planPacedWait` certifies for `paceTicks` (MOVING_WAIT's alphabet and preview,
+ *      each cycle back on the stance bit-for-bit), the probe asked at each cycle's end.
+ * The first clean probe is kept (a `time` row with `arm: 'bomb-phase'`) and its corridor walked, the rest of that
+ * attempt certified with the same tail (its dash candidates too). Anything else is rewound (`rewind.to`): at the walk
+ * the walk is then OFF's walk (no row), on the ladder the ladder goes on as OFF does, TIME's why carrying the arm's.
+ * ⚖ 30(c): the waited keys are the tape's; the corridor is certified from the state the walk starts in.
+ */
+export const BOMB_PHASE_WAIT = {
+    enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT === '1',
+    /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
+    maxStill: 46,
+    /** the paced arm's bound: whole cycles covering it (`planPacedWait`'s `ticks`). */
+    paceTicks: 92,
+    /**
+     * The farthest a player gets from rest in k ticks (px, index k), measured on L40 with the run's own preview stepper
+     * holding `up+left` (the diagonal outruns `up` at every k; `left` there is pinned at 5.5): 15.0 px — the blast
+     * disc — at k = 12. A stance walk's tail (`bombArrivalTail`) is the verb's still ticks plus these 12; a blast in
+     * them is a hit only where this reach cannot clear its disc (`bombsOnlyDanger`). Leg 376's break stands 2 + 20
+     * ticks and #13 lands 22 ticks after the stop, 9.4 px from the stance.
+     */
+    escapeReach: Object.freeze([0, 1.1, 3.1, 4.9, 6.4, 7.7, 8.8, 9.9, 10.9, 11.8, 12.5, 13.8, 15.0]),
+};
+export const BOMB_PHASE_WAIT_DEFAULT = false;
+/** The instrument: climbs that asked the arm, the waits kept, the refusals (reset by the caller). */
+export const BOMB_PHASE_WAIT_COUNTS = { asked: 0, kept: [], refused: [] };
+
+/** Run `fn` with `BOMB_PHASE_WAIT` set to `enabled`, restoring the previous value. */
+export function withBombPhaseWait(enabled, fn) {
+    return withSwitch(BOMB_PHASE_WAIT, enabled, fn);
+}
 
 /** The still wait's bomb, as `lobberHoldRefusal` asks it — `null` when the still wait is clean. */
 function stillWaitBomb(run, ticks) {
@@ -18019,7 +18121,9 @@ function execKill(run, perTick, resolved, ctx) {
 const CHASER_LAPSE_GUARD = 8;
 const CHASER_GUARD_RADIUS = 18;
 
-function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId }) {
+function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, ctx, lockId,
+    // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): ticks past `bound` a DYING target is stood out (0: none)
+    dyingGrace = 0 }) {
     const opts = solverPlanOpts(run, contacts);
     const hitsBefore = run.ledger('playerHits').length;
     const deathsBefore = run.ledger('playerDeaths').length;
@@ -18061,7 +18165,8 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
         }
         return null;
     };
-    for (let i = 1; i <= bound; i += 1) {
+    const dying = () => (run.entities('chasers') ?? []).some((c) => c.id === id && c.dying);
+    for (let i = 1; i <= bound || (dyingGrace > 0 && i <= bound + dyingGrace && dying()); i += 1) {
         let held = strike && !run.state.fall
             ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, new Set(),
                 strikeDecideOpts(run)).held
@@ -18839,6 +18944,163 @@ function chaserKillCeiling(run, body) {
     return Math.ceil(travel) + killWindowTicks(body.tag) * 3 + HOLD_SLACK;
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L53-KILLLOCK — THE KILL-LOCK'S CHASER ARM PREVIEWS AT THE WALK'S TOLERANCE, AND A
+ * REFUSED STANCE IS REWOUND AND THE NEXT ONE TRIED (`KILLLOCK_CHASER_REWIND`, OFF).
+ *
+ * ⚖ The user queued L53-KILLLOCK on 2026-11-07 (ROUTE-WALLS-CENSUS W1: BK3, the walk's L53 `r2c2 → r14c9` crossing).
+ * `lock@144,208` opens on `totalEnemies() == 0`, and the arena holds three jellyfish and a puncher. MEASURED (the
+ * census's hand-built legs 9001/9002, `CC/docs/cloud-reports/seedling-hammer-l53-killlock.md`):
+ *   1. every stance `deriveKillByChaser` previews for this arm is refused *"the preview did not settle — 400 tick(s)
+ *      without arriving"*. This arm asks at `tolerance` 0 (exact float position AND a full stop), while the walk it
+ *      then drives (`ctx.walkTo`) and its own arrival test use `DEFAULT_TOLERANCE`. Once the water and the shield bumps
+ *      have left the player off the lattice (120.6,151.35), no cell centre is reachable to the bit, so the forecast
+ *      prices NOTHING and the arm falls back to "stand here". The combat ladder's chaser arm already asks at the
+ *      segment's tolerance (`DEFAULT_TOLERANCE`); this arm was the only one at 0;
+ *   2. "stand here" then waits in the arena (122,158) for `puncher@136,96` in the corridor above. It is on screen and
+ *      chasing (v = (0.39, 0.92) every tick), but its 12-px box clips the Ice Wall tile (96..112, 128..144) on every
+ *      y step and its x impulse only flips ±0.3 px (`Mobile.moveX/moveY`'s sweep; a chaser does not path-find), so it
+ *      is PINNED on the corner for all 166 ticks. The point line to the player is clear, so the refusal names no
+ *      blocker;
+ *   3. on the dashless pass the stand-here dwell DID land the jellyfish's third hit (dwell tick 161 of 174), and the
+ *      bound ran out during its eight-frame "die" (`killWindowTicks`): the body was dying, not escaping.
+ * ⇒ ON: (1) both derivations of this arm ask at `DEFAULT_TOLERANCE` and return every scored stance; (2) when the
+ * chosen stance's walk or dwell is refused (a hit, the bound, a level crossing), the run is REWOUND to the turn's
+ * first tick (`ctx.rewind`, the segment's own) and the next scored stance of that body is tried, then the next body's
+ * (nearest first, derived lazily), up to `KILLLOCK_CHASER_REWIND_TRIES`; (3) a dwell whose body is DYING when its
+ * bound runs out stands out its death window (`killWindowTicks + HOLD_SLACK`). The first attempt is the arm's own
+ * choice, so a turn the arm already wins is driven the same way. ⚖ 30(c): every attempt is driven on the run and the
+ * one kept is the one the run did — a refused attempt leaves no tick in the tape. Without a rewind (no `forkRun`)
+ * only (1) and (3) apply. OFF: nothing here is read; every derivation, walk and dwell is byte-identical.
+ * `SEEDLING_KILLLOCK_CHASER_REWIND=1` / `withKillLockChaserRewind(enabled, fn)`.
+ */
+export const KILLLOCK_CHASER_REWIND = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CHASER_REWIND === '1' };
+export const KILLLOCK_CHASER_REWIND_DEFAULT = false;
+/** The attempts one turn of the arm may drive (the first included); measured: L53 needs at most two per body. */
+export const KILLLOCK_CHASER_REWIND_TRIES = 6;
+
+/** Run `fn` with `KILLLOCK_CHASER_REWIND` set to `enabled`, restoring the previous value. */
+export function withKillLockChaserRewind(enabled, fn) {
+    return withSwitch(KILLLOCK_CHASER_REWIND, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: one row per attempt
+ * (`{id, t, stance, verdict, why?}`; verdict `killed` | `refused` | `deadline`).
+ */
+export const KILLLOCK_CHASER_REWIND_COUNTS = { tries: [] };
+export function resetKillLockChaserRewindCounts() {
+    KILLLOCK_CHASER_REWIND_COUNTS.tries = [];
+}
+
+/**
+ * ⛓ L53-KILLLOCK: ONE attempt of the kill-lock chaser arm on `hunted` from `hunt` (the walk to the stance, the
+ * re-derivation from where it arrived, the guarded dwell) — the OFF turn's own steps, in its order, with the switch's
+ * tolerance and dying grace. Returns the phase; throws the refusal the step met.
+ */
+function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
+    const contacts = resolved.contacts ?? new Set();
+    const dashMode = ctx.dashMode ?? DEFAULT_DASH_MODE;
+    let hunt = first;
+    const hits0 = run.ledger('playerHits').length;
+    for (let a = 0; a < CHASER_KILL_REDERIVE && hunt.stance
+        && !hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE); a += 1) {
+        ctx.walkTo(ctx.goal, hunt.stance, { what: `${ctx.what} -> chaser kill (${hunted.id}) stance` });
+        if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) break;
+        if (hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE)) break;
+        hunt = deriveKillByChaser(run, hunted, contacts, { dashMode, tolerance: DEFAULT_TOLERANCE });
+    }
+    if (run.ledger('playerHits').length !== hits0) {
+        throw new SolverRefusal(`${ctx.what}: the stance walk for ${hunted.id} was HIT`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    if (!hunt.stance) {
+        throw new SolverRefusal(`${ctx.what}: arrived for ${hunted.id} and no stance derives from here — ${hunt.why}`,
+        { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) {
+        return { phase: 'chaser-kill', target: hunted.id, stance: hunt.stance, ticks: 0,
+            clears: hunt.clears, killedOnApproach: true };
+    }
+    const rec = guardedChaserDwell(run, perTick, {
+        id: hunted.id,
+        bound: Math.max(hunt.ticks, chaserKillCeiling(run, hunted)),
+        strike: strikePolicyFor(run, { dashMode }),
+        contacts,
+        what: `${ctx.what} -> chaser kill (${hunted.id}) by press`,
+        ctx,
+        lockId: resolved.lock?.id ?? null,
+        dyingGrace: killWindowTicks(hunted.tag) + HOLD_SLACK,
+    });
+    return { phase: 'chaser-kill', target: hunted.id, stance: hunt.stance,
+        ticks: rec.ticks, strikes: rec.strikes, guardSteps: rec.guardSteps, clears: hunt.clears };
+}
+
+/**
+ * ⛓ L53-KILLLOCK: one turn of the kill-lock chaser arm with the rewind (`KILLLOCK_CHASER_REWIND` ON and a
+ * `ctx.rewind`): the arm's own choice first (`hunted`, `hunt`), then that body's other scored stances, then each other
+ * live body's (nearest first). A refused attempt is rewound to the turn's first tick. Returns `{run, phase}` (`run`
+ * is the segment's run after any rewind); throws a refusal naming every attempt when none kills.
+ */
+function killLockChaserRewindTurn(run, perTick, resolved, ctx, { live, hunted, hunt }) {
+    const contacts = resolved.contacts ?? new Set();
+    const dashMode = ctx.dashMode ?? DEFAULT_DASH_MODE;
+    const t0 = perTick.length;
+    const key = (b, s) => `${b.id}@${s.x},${s.y}`;
+    const queue = [{ body: hunted, hunt }];
+    const queued = new Set([key(hunted, hunt.stance)]);
+    const push = (b, h) => {
+        for (const s of h.scored ?? []) {
+            const k = key(b, s);
+            if (queued.has(k)) continue;
+            queued.add(k);
+            queue.push({ body: b, hunt: { ...h, stance: { x: s.x, y: s.y }, ticks: s.ticks, clears: s.clears } });
+        }
+    };
+    if (hunt.scored) push(hunted, hunt);
+    const others = live.filter((b) => b.id !== hunted.id);
+    const whys = [];
+    let tries = 0;
+    for (let q = 0; tries < KILLLOCK_CHASER_REWIND_TRIES; q += 1) {
+        while (q >= queue.length && others.length > 0) {
+            const b = others.shift();
+            const h = deriveKillByChaser(run, b, contacts, { dashMode, tolerance: DEFAULT_TOLERANCE, allScored: true });
+            if (h.stance) push(b, h);
+            else whys.push(`${b.id}: ${String(h.why).slice(0, 160)}`);
+        }
+        if (q >= queue.length) break;
+        const { body, hunt: h } = queue[q];
+        const row = { id: body.id, t: t0, stance: { x: h.stance.x, y: h.stance.y }, verdict: null };
+        KILLLOCK_CHASER_REWIND_COUNTS.tries.push(row);
+        if (tries > 0 && deadlineReached('kill-chaser')) {
+            row.verdict = 'deadline';
+            whys.push('the caller\'s anytime deadline was reached');
+            break;
+        }
+        tries += 1;
+        try {
+            const phase = killLockChaserAttempt(run, perTick, resolved, ctx, body, h);
+            row.verdict = 'killed';
+            return { run, phase: { ...phase, tries } };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || e instanceof PendingDeclaration || e?.undeclaredKillLock) throw e;
+            // ⛔ a refusal raised after the anytime deadline tripped is the deadline's: raised as OFF raises it, unrewound
+            if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
+                row.verdict = 'deadline';
+                throw e;
+            }
+            row.verdict = 'refused';
+            row.why = String(e.message).split('\n')[0].slice(-240);
+            whys.push(`${body.id} at (${h.stance.x},${h.stance.y}): ${row.why}`);
+            run = ctx.rewind.to(t0).run;
+        }
+    }
+    throw new SolverRefusal(`${ctx.what}: the count is still waiting on [${live.map((b) => b.id).join(', ')}] and `
+        + `no stance kills one of them in ${tries} attempt(s), each rewound (KILLLOCK_CHASER_REWIND) — `
+        + `${whys.join(' | ') || 'no stance derives'}`,
+    { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+}
+
 function execKillByChaser(run, perTick, resolved, ctx) {
     const from = perTick.length;
     const phases = [];
@@ -18890,7 +19152,9 @@ function execKillByChaser(run, perTick, resolved, ctx) {
         }
         for (const b of hunt ? [] : live) {
             const h = deriveKillByChaser(run, b, resolved.contacts ?? new Set(),
-                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE,
+                    // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): the walk's own tolerance, every scored stance
+                    ...(KILLLOCK_CHASER_REWIND.enabled ? { tolerance: DEFAULT_TOLERANCE, allScored: true } : {}) });
             if (h.stance) { hunted = b; hunt = h; break; }
             tried.push({ option: `kill ${b.id} by press`, why: h.why });
         }
@@ -18917,6 +19181,16 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null },
                 considered: tried, perTick: [...perTick] });
         }
+        // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): the arm's choice first, each refused attempt rewound
+        if (KILLLOCK_CHASER_REWIND.enabled && ctx.rewind) {
+            // the bodies this turn already asked (and that refused) are not asked again from the same tick
+            const asked = new Set(tried.map((t) => /^kill (\S+) by press$/.exec(t.option)?.[1]).filter(Boolean));
+            const out = killLockChaserRewindTurn(run, perTick, resolved, ctx,
+                { live: live.filter((b) => b.id === hunted.id || !asked.has(b.id)), hunted, hunt });
+            run = out.run;
+            phases.push(out.phase);
+            continue;
+        }
         /**
          * ⛔ THE FORECAST IS RE-ASKED FROM WHERE THE WALK ARRIVED. `walkTo` re-enters the ladder and may reach the
          * stance by another corridor, at another tick and velocity, with the bodies elsewhere; a dwell certified
@@ -18929,7 +19203,8 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             if (!(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)) break;
             if (hasArrived(run.state, hunt.stance, DEFAULT_TOLERANCE)) break;
             hunt = deriveKillByChaser(run, hunted, resolved.contacts ?? new Set(),
-                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+                { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE,
+                    ...(KILLLOCK_CHASER_REWIND.enabled ? { tolerance: DEFAULT_TOLERANCE } : {}) });
         }
         if (!hunt.stance) {
             throw new SolverRefusal(`${ctx.what}: arrived for ${hunted.id} and no stance derives from here — ${hunt.why}`,
@@ -18954,6 +19229,7 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             what: `${ctx.what} -> chaser kill (${hunted.id}) by press`,
             ctx,
             lockId: resolved.lock?.id ?? null,
+            ...(KILLLOCK_CHASER_REWIND.enabled ? { dyingGrace: killWindowTicks(hunted.tag) + HOLD_SLACK } : {}),
         });
         phases.push({ phase: 'chaser-kill', target: hunted.id, stance: hunt.stance,
             ticks: rec.ticks, strikes: rec.strikes, guardSteps: rec.guardSteps, clears: hunt.clears });
@@ -21259,7 +21535,9 @@ function holdStandWalk(run, resolved) {
  */
 function standTailOpts(stand) {
     if (!stand) return {};
-    return { standFor: stand.ticks, standKeys: stand.keys, ...(stand.bombs === false ? { standBombs: false } : {}) };
+    return { standFor: stand.ticks, standKeys: stand.keys,
+        ...(stand.bombs === false ? { standBombs: false } : {}),
+        ...(Number.isFinite(stand.bombsOnly) ? { standBombsOnly: stand.bombsOnly } : {}) };
 }
 
 /**
@@ -23061,9 +23339,13 @@ function drillWakes(run, d, q, slack = DRILL_KILL.wakeSlack) {
     return !run.collideLineSolid(d.x, d.y, q.x, q.y, { masks: true });
 }
 
-/** The planned walk from `from` to `to`, sampled every 2 px (both ends included), or null when no corridor plans. */
-function plannedWalkSamples(run, from, to, opts) {
-    const wps = planWaypointsOrNull(run.world, from, to, null, opts);
+/**
+ * The planned walk from `from` to `to`, sampled every 2 px (both ends included), or null when no corridor plans.
+ * `allowTeleporter` (null for every caller but DRILL-EXIT-PASS's) is the planner's own argument: a walk ending on a
+ * door's trigger plans only with that door allowed.
+ */
+function plannedWalkSamples(run, from, to, opts, allowTeleporter = null) {
+    const wps = planWaypointsOrNull(run.world, from, to, allowTeleporter, opts);
     if (wps === null) return null;
     const pts = [{ x: from.x, y: from.y }, ...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
     const out = [];
@@ -23700,26 +23982,85 @@ function certifyExitPass(f, keys, cross) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE DRILL-EXIT-PASS — RESIDUE D-A's PASS TO THE CROSSING, WITH A WEAPON HELD (⚖ the user queued
+ * the slice on 2026-11-07; ROUTE-WALLS-CENSUS W3, its report § 4 "The drill what-if").
+ *
+ * L91's `drill@64,80` stands in the one-tile west passage. At sphere 5.6 the bot holds a sword, and both legs across the
+ * room (718 L89 arrival → L92 door, 719 the other way) refused "the combat ladder is EXHAUSTED" on the drill: the ladder
+ * has no rung for a static drill, and the timed pass that answers one (`execDrillTimedPassExit`) never ran, for two
+ * reasons:
+ *   · it returned at once when the run holds a drill-killing weapon (residue D-A was built for the Fire-alone L28 run);
+ *   · its wake test ("does the walk to the door wake a drill?") planned the walk with no door allowed, so a walk to a
+ *     door centre never planned and the straight-line fallback passed 80 px from the drill (wake range 48).
+ * `DRILL_EXIT_PASS` (OFF) is a RUNG AFTER THE WALK: when the door's walk (`walkTo`) refuses with a live drill as its
+ * obstacle, before a tick is spent and with no deadline tripped (`drillExitPassAfterRefusal`), the timed pass is asked
+ * ARMED — a held weapon does not skip it, and its wake test's walk is the planner's walk to the door
+ * (`plannedWalkSamples`' `allowTeleporter` = the door). A walk that solves is never pre-empted (the census's shape, the
+ * armed pass FIRST, moved 6 of the 21 drill-room legs and turned L88's 707 from SOLVED to refused); a walk that spends
+ * ticks and then refuses keeps its refusal (L88's 704). The pass itself is residue D-A's, unchanged: searched tick by
+ * tick on the run's own forecast, certified on a fork, played on the run (30(c)). It is a pass, not a kill (a kill-first
+ * arm finds no stance: "north/south/west not plannable floor, east wakes it").
+ * Measured: 718 SOLVED 190 t hitless (node and the p4g page); 719 refuses by name on the drill's hop into water
+ * (fidelity DRILL D2, `Enemy.update`'s terrain switch — fidelity's DRILL-WATER), raised on the certificate's fork; the
+ * other 19 legs in a drill's room (L28, L88, L91) answer OFF's plan byte for byte. `SEEDLING_DRILL_EXIT_PASS=1` /
+ * `withDrillExitPass(enabled, fn)`. OFF, nothing is read and the executor is byte-identical.
+ */
+export const DRILL_EXIT_PASS = { enabled: globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS === '1' };
+export const DRILL_EXIT_PASS_DEFAULT = false;
+
+/** Run `fn` with `DRILL_EXIT_PASS` set to `enabled`, restoring the previous value. */
+export function withDrillExitPass(enabled, fn) {
+    return withSwitch(DRILL_EXIT_PASS, enabled, fn);
+}
+
+/** The switch's instrument, written only ON, read by nothing that decides: `armed`, each pass a held weapon reached. */
+export const DRILL_EXIT_PASS_COUNTS = { armed: [] };
+
+/**
+ * DRILL-EXIT-PASS's rung: `refusal` is what the door's walk (`walkTo`) threw. When it names a live drill as its
+ * obstacle, spent no tick (`ticks0`, the run's count before the walk) and no deadline has tripped, the timed pass to the
+ * crossing is asked ARMED (a held weapon does not skip it, the wake test walks to the door): its `{record, transition}`,
+ * or its own refusal by name. Null otherwise (the caller rethrows the walk's refusal). OFF it is never called.
+ */
+function drillExitPassAfterRefusal(run, perTick, door, ctx, refusal, ticks0) {
+    if (!(refusal instanceof SolverRefusal) || run.ticksCompleted !== ticks0) return null;
+    if (activeDeadline !== null && activeDeadline.tripped.size > 0) return null;
+    const id = refusal.obstacle?.id ?? null;
+    if (id === null || !liveDrills(run).some((d) => d.id === id)) return null;
+    return execDrillTimedPassExit(run, perTick, door, ctx, { armed: true });
+}
+
+/**
  * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`) — Executor: a `reach-exit` whose planned walk to the door
  * wakes a live stepped drill, in a run that holds no weapon that kills one, is a TIMED PASS to the crossing: the
  * pass's own search (`searchDrillTimedPass`, goal `cross`), certified on a fork (`ctx.fork`) and played on the run.
  * Returns null where it does not apply (the walk then runs as before), the `{record, transition}` it played, or throws
  * a `SolverRefusal` naming the drill (`obstacle: {kind: 'drill', id}`).
  */
-function execDrillTimedPassExit(run, perTick, door, ctx) {
+function execDrillTimedPassExit(run, perTick, door, ctx, { armed = false } = {}) {
     if (!(CONTACT_FIDELITY.drillTimedPassExit && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive
         && CONTACT_FIDELITY.drillMixedRooms)) return null;
-    if (liveDrills(run).length === 0 || drillKillWeapon(run) !== null) return null;
+    if (liveDrills(run).length === 0) return null;
+    // ⛓ hammer-phase DRILL-EXIT-PASS (`armed`, asked only by `drillExitPassAfterRefusal` under `DRILL_EXIT_PASS`): a
+    // held weapon does not skip the pass. Not armed (every call OFF, and the first call ON), it does, as ever.
+    const kw = drillKillWeapon(run);
+    if (kw !== null && !armed) return null;
     const opts = solverPlanOpts(run, senseContacts(run));
-    const walk = plannedWalkSamples(run, run.state, door.centre, opts) ?? [{ x: run.state.x, y: run.state.y },
-        door.centre];
+    // ⛓ DRILL-EXIT-PASS: armed, the wake test's walk is the planner's walk TO THE DOOR (the door allowed); otherwise it
+    // plans none (a door centre is no plannable floor without it) and the straight-line fallback decides.
+    const walk = plannedWalkSamples(run, run.state, door.centre, opts, armed ? door.index : null)
+        ?? [{ x: run.state.x, y: run.state.y }, door.centre];
     const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
     if (woken.length === 0) return null;
+    if (armed) DRILL_EXIT_PASS_COUNTS.armed.push({ level: run.level, door: door.index, weapon: kw?.weapon ?? null,
+        drills: woken.map((d) => d.id) });
     const from = perTick.length;
     const cross = { level: door.teleporter.to, index: door.index };
     const refuseExit = (why, extra = {}) => {
         throw new SolverRefusal(`${ctx.what}: the walk to the door wakes [${woken.map((d) => d.id).join(', ')}], this run `
-            + `holds no weapon that kills a drill (FIRE CANNOT), and ${why}`,
+            + (kw === null ? 'holds no weapon that kills a drill (FIRE CANNOT)'
+                : `holds a ${kw.weapon} and the door's walk wakes the drill (DRILL-EXIT-PASS: a timed pass, not a kill)`)
+            + `, and ${why}`,
         { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id }, ...extra });
     };
     const r = searchDrillTimedPass(run, [door.centre], opts, DRILL_TIMED_PASS, { cross });
@@ -24669,7 +25010,9 @@ export function deriveKillByChaser(run, body, contacts,
     { aim = null, allowTeleporter = null, tolerance = 0,
         dashMode = DEFAULT_DASH_MODE,
         // ⛓ STAGED-HUNT-CHEAP (`STAGED_HUNT_SCAN_MEMO`, OFF): the staged hunt's memo of the scan's floods (`null`: none)
-        scanMemo = null } = {}) {
+        scanMemo = null,
+        // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): `true` adds `scored`, every qualifying stance in score order
+        allScored = false } = {}) {
     if (!(run.entities('strikeBodies') ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
@@ -25084,6 +25427,8 @@ export function deriveKillByChaser(run, body, contacts,
         // ⛓ The runners-up, so the trace can answer "why THERE" and not only
         // "where" — `deriveStrike`'s lesson, kickoff §22.9.
         runnersUp: scored.slice(1, 4).map((r) => ({ x: r.x, y: r.y, deathAt: r.deathAt })),
+        ...(allScored ? { scored: scored.map((r) => ({ x: r.x, y: r.y, ticks: r.ticks, deathAt: r.deathAt,
+            clears: r.clears })) } : {}),
         why: `${body.id} is a \`modelled\` press target (KILL_ARM_POLICY.`
             + `${target.enemyClass}) ${gap.toFixed(1)} px from the walk; the stance `
             + `(${best.x},${best.y}) puts it ${Math.hypot(best.x - targetCentre.x,
@@ -27448,10 +27793,12 @@ function solveSegmentUnder({
             if (walkCheck && i > 0 && i % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${i} sample(s) of the corridor's danger probe`);
             }
-            const d = withoutSources(
+            const d0 = withoutSources(
                 dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers,
                     s.spits ?? null, s.grenades ?? null, s.corridorBodies ?? null, s.spinners ?? null),
                 except);
+            // ⛓ 376-BOMB (`BOMB_PHASE_WAIT`): an ARRIVAL tail's sample (`bombsOnly`) answers for its bombs alone
+            const d = s.bombsOnly === true ? bombsOnlyDanger(d0, s) : d0;
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
             corpses?.see(s);
             if (s.ceremony) {
@@ -27945,6 +28292,81 @@ function solveSegmentUnder({
         }
         return { ...first, why: `${first.why} STAGED HUNT (CHASER_STAGED_HUNT): ${whys.join('; ') || 'no staging cell'}.` };
     };
+    /**
+     * ⛓⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — the TIME rung's bomb arm (`bombPhaseWait`'s doc, at the
+     * switch). Driven on the LIVE run: still ticks one at a time, then (from rest) the paced cycles `planPacedWait`
+     * certifies, the same corridor re-probed by the walk's own probe after each; the first clean probe is kept, and
+     * anything else is rewound to `t0`. Returns `{wait}` (the run is at the kept state) or `{why}` (the run is at t0).
+     */
+    const bombPhaseWait = (corridor, except, { axisAligned, stand }) => {
+        const t0 = perTick.length;
+        const hits0 = run.ledger('playerHits').length;
+        const deaths0 = run.ledger('playerDeaths').length;
+        const probeOpts = { axisAligned, ...(stand ? { stand } : {}) };
+        const counts = { still: 0, paced: 0, probes: 0 };
+        let firstWhy = null;
+        const harmed = () => run.ledger('playerHits').length > hits0 || run.ledger('playerDeaths').length > deaths0;
+        const probe = () => {
+            counts.probes += 1;
+            const again = probeCorridor(corridor, except, probeOpts);
+            if (again && firstWhy === null) {
+                firstWhy = `${reasonsOf(again)} at (${again.x.toFixed(1)},${again.y.toFixed(1)})`;
+            }
+            return again === null;
+        };
+        const drive = (held) => {
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            return !transition;
+        };
+        const back = () => { if (perTick.length > t0) rewind.to(t0); };
+        const kept = (kind, extra) => ({ wait: { kind, ticks: perTick.length - t0, ...extra, ...counts } });
+        // 1. STILL — one idle tick at a time; the first harm ends the arm (every longer still wait holds it too)
+        let stillWhy = null;
+        for (let d = 1; d <= BOMB_PHASE_WAIT.maxStill; d += 1) {
+            if (fineDeadlineReached('time')) { back(); return { why: 'deadline — the caller\'s anytime deadline was '
+                + `reached inside the bomb arm after ${d - 1} still tick(s)`, ...counts }; }
+            counts.still = d;
+            if (!drive(new Set()) || harmed()) { stillWhy = `the still wait is hit or leaves the level at tick ${d}`; break; }
+            if (probe()) return kept('still', {});
+        }
+        stillWhy ??= `${BOMB_PHASE_WAIT.maxStill} still tick(s), none re-probes clean`;
+        back();
+        // 2. PACED — from rest only (the cycle's own contract), whole cycles the paced-wait preview certified
+        let pacedWhy;
+        if (run.state.vx !== 0 || run.state.vy !== 0 || run.state.fall) {
+            pacedWhy = 'the player is not at rest, so no pacing applies';
+        } else {
+            const { plan, tried } = planPacedWait(run, { ticks: BOMB_PHASE_WAIT.paceTicks, keep: null });
+            if (!plan) {
+                pacedWhy = `no pacing is clean (${tried.length} tried: ${tried.slice(0, 2).join('; ')})`;
+            } else {
+                const label = `${plan.out.join('+')}/${plan.back.join('+')} x${plan.span} gap ${plan.gap}`;
+                let from = 0;
+                for (let c = 0; c < plan.ends.length; c += 1) {
+                    if (fineDeadlineReached('time')) { back(); return { why: `${stillWhy}; deadline inside the paced `
+                        + `arm after ${c} cycle(s)`, ...counts }; }
+                    for (let k = from; k < plan.ends[c]; k += 1) {
+                        if (!drive(plan.keys[k]) || harmed()) {
+                            back();
+                            return { why: `${stillWhy}; the paced cycle ${label} did not drive as previewed (tick ${k})`,
+                                ...counts };
+                        }
+                    }
+                    from = plan.ends[c];
+                    counts.paced = c + 1;
+                    if (run.state.x !== plan.path[from - 1].x || run.state.y !== plan.path[from - 1].y) {
+                        back();
+                        return { why: `${stillWhy}; the paced cycle ${label} ended off its preview`, ...counts };
+                    }
+                    if (probe()) return kept('paced', { pace: label, cycles: c + 1 });
+                }
+                pacedWhy = `${plan.ends.length} cycle(s) of ${label}, none re-probes clean`;
+                back();
+            }
+        }
+        return { why: `${stillWhy}; ${pacedWhy}${firstWhy ? ` (first re-probe: ${firstWhy})` : ''}`, ...counts };
+    };
     const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
         // ⛓ fidelity CORRIDOR D2 — the walk will not dash (`walkTo`'s `undashed`): no dashed rescue is asked.
@@ -27956,7 +28378,9 @@ function solveSegmentUnder({
         // certify their corridors with the same tail. `null` everywhere else.
         stand = null,
         // ⛓ FORCEDHIT D2 — the walk's crossing (`walkTo`'s `crossTo`), read only by the forced-hit rung.
-        crossTo = null }) => {
+        crossTo = null,
+        // ⛓ 376-BOMB — the walk's caller's still ticks at the aim (`walkTo`'s `bombStandTicks`), read only ON.
+        bombStandTicks = null }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -29263,6 +29687,30 @@ function solveSegmentUnder({
         }
         rowFor('time', refused);
         refused = { rung: 'time', why: timeWhy };
+        /**
+         * ⛓⛓ hammer-phase 376-BOMB — TIME's BOMB ARM (`BOMB_PHASE_WAIT`, OFF: absent, no row, the refusal word for word
+         * the BEFORE one): asked only where every source of the hit is a lobber's bomb (no BAIT or KILL removes a bomb),
+         * on a corridor, with the rewind: wait (still, then paced) and re-probe THIS corridor; the first clean probe is
+         * walked. Refused, TIME's why carries the arm's and the ladder goes on as before.
+         */
+        if (BOMB_PHASE_WAIT.enabled && rewind !== null && Array.isArray(corridor) && corridor.length > 0
+            && hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'bomb')
+            && !rungGate('time', 'time:bomb-phase')) {
+            if (activeProgress !== null) progressRung('time');
+            const at = { x: run.state.x, y: run.state.y, tick: perTick.length };
+            // the walk's own tail, else its arrival tail (the corridor certified to the bombs that land after it)
+            const tail = stand ?? bombArrivalTail(run, { crossTo, standTicks: bombStandTicks });
+            const out = bombPhaseWait(corridor, dangerExcept, { axisAligned, stand: tail });
+            BOMB_PHASE_WAIT_COUNTS.asked += 1;
+            if (out.wait) {
+                BOMB_PHASE_WAIT_COUNTS.kept.push({ what, ...at, ...out.wait });
+                rowFor('time', refused, { arm: 'bomb-phase', from: at.tick, ...out.wait });
+                return { wps: corridor, escalations, ...(tail && tail !== stand ? { stand: tail } : {}) };
+            }
+            BOMB_PHASE_WAIT_COUNTS.refused.push({ what, ...at, why: out.why });
+            rowFor('time', refused, { arm: 'bomb-phase', still: out.still, paced: out.paced, probes: out.probes });
+            refused = { rung: 'time', why: `${timeWhy} The bomb arm (BOMB_PHASE_WAIT): ${out.why}.` };
+        }
 
         /**
          * ⛓⛓⛓ WHICH BODY, AND IT IS DERIVED THE WAY `k` IS — by hypothesis.
@@ -30770,6 +31218,11 @@ function solveSegmentUnder({
          * only by the collect goal's stance walk, whose verb pages the ceremony. null: today's walk.
          */
         ceremonyEnds = null,
+        /**
+         * ⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF; read only ON) — the ticks the caller's verb will stand at
+         * `aim` once there (the frontier's break stance: aim + press + `WAIT_AFTER_PRESS_TICKS`). null: no tail.
+         */
+        bombStandTicks = null,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -30787,7 +31240,17 @@ function solveSegmentUnder({
         let axisAligned = axisAlignedAsked;
         // ⛓ seedling-fidelity-residue D-B: a whirlpool's drown is a death, not a corridor to re-plan from the respawn.
         const deaths0 = deathsNow();
+        // ⛓ 376-BOMB: the walk's own tail; the bomb arm's tail is one attempt's (re-set per attempt)
+        const standAsked = stand;
+        // ⛓ 376-BOMB: the stop's bomb arm, once per walk — `{t0, rowsAt, attempt, wait}` while a kept wait is re-planned
+        let bombArm = null;
+        let rowsAtAttempt = 0;
         attempts: for (let attempt = 0; ; attempt += 1) {
+            if (BOMB_PHASE_WAIT.enabled) {
+                // a kept wait's re-plan certifies with the stop's tail (its probe, the ladder, every dash candidate)
+                stand = bombArm?.wait ? bombArm.tail : standAsked;
+                rowsAtAttempt = rows.length;
+            }
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
             // Re-asked per attempt: a skirt applied by THIS walk's own ladder
@@ -31077,6 +31540,9 @@ function solveSegmentUnder({
                                 axisAligned: plan.resolved.approach === 'axis-aligned',
                                 // ⛓ L30KEYLOCK: the hold is priced as the walk's tail — the undashed probe's and
                                 // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
+                                // ⛓ 376-BOMB (OFF): a break stands its aim, press and wait at the stance
+                                ...(plan.strategy === 'break' && BOMB_PHASE_WAIT.enabled
+                                    ? { bombStandTicks: 2 + plan.resolved.wait } : {}),
                                 ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
                                     ? keylockStandWalk(run, plan.resolved) : {}),
                                 // ⛓ fidelity L40LATCH D1: a hold's still wait, likewise (`holdWaitPriced`, OFF).
@@ -31168,6 +31634,8 @@ function solveSegmentUnder({
                 { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
             let narrow = false;
+            // ⛓ 376-BOMB: was this attempt's own probe clean (no rung spent a tick before the stop's check below)?
+            const cleanFirst = hit === null;
             /**
              * ⛓ fidelity SPINNINGAXE D2 (`CONTACT_FIDELITY.partialDodgeReprobe`) — A PARTIAL STALL IS RE-PROBED.
              * The phase arm keeps a stall whose walk's first danger is not a phase source as `partial` ("the next
@@ -31248,6 +31716,7 @@ function solveSegmentUnder({
                         ...(fine ? { lattice: FINE_LATTICE } : {}),
                         ...(stand ? { stand } : {}),
                         ...(crossTo ? { crossTo } : {}),
+                        ...(bombStandTicks !== null ? { bombStandTicks } : {}),
                     });
                 } finally {
                     if (CONTACT_FIDELITY.corridorBodyPricing) corridorClimbDepth -= 1;
@@ -31255,6 +31724,8 @@ function solveSegmentUnder({
                 // ⛓ FORCEDHIT D2 — the forced-hit rung WALKED the crossing (its hit billed): the walk is done.
                 if (climbed.forced) return climbed.forced.transition;
                 if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue attempts; }
+                // ⛓ 376-BOMB: the bomb arm certified the corridor with its arrival tail; the attempt keeps it
+                if (climbed.stand) stand = climbed.stand;
                 if (!(CONTACT_FIDELITY.partialDodgeReprobe && climbed.partial)) break climbs;
                 hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
             }
@@ -31367,6 +31838,71 @@ function solveSegmentUnder({
                 ? axisStrikeFor(run, dashMode)
                 : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode,
                     ...(narrow ? { iframeLapse: false } : {}) });
+            /**
+             * ⛓⛓ hammer-phase 376-BOMB (`BOMB_PHASE_WAIT`, OFF) — THE STOP OF THE WALK THAT WILL BE DRIVEN. A break's
+             * stance walk (`bombStandTicks`) whose own probe was clean is previewed once more exactly as it is about
+             * to be driven (this policy's construction, the dash plan in it — ⚖ 30(c): the undashed probe reaches the
+             * stance at another tick) with its stop's tail (`bombArrivalTail`). A bomb there is TIME's bomb arm's: a
+             * kept wait re-plans this attempt from the waited state with the tail as its `stand` (so its dash
+             * candidates certify against it), and the re-planned walk is asked the same question; if IT meets a bomb
+             * at its stop, the wait is undone (`rewind.to`, the rows and the attempt index with it) and the attempt is
+             * OFF's again. Refused, or undone, the walk below is OFF's walk.
+             */
+            if (BOMB_PHASE_WAIT.enabled && rewind !== null && cleanFirst && standAsked === null
+                && bombArm?.done !== true && bombStandTicks !== null) {
+                const tail = bombArrivalTail(run, { crossTo, standTicks: bombStandTicks });
+                const drivenStrike = axisAligned ? axisStrikeFor(run, dashMode)
+                    : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode,
+                        ...(narrow ? { iframeLapse: false } : {}) });
+                const driven = tail ? previewWalk(run, wps, tolerance, { strike: drivenStrike,
+                    ...(axisAligned ? { axisAligned } : {}), ...standTailOpts(tail) }) : null;
+                const late = driven && !driven.truncated ? probeSamples(driven.samples, except) : null;
+                const bombed = late !== null && late.sources.length > 0 && late.sources.every((sx) => sx.kind === 'bomb');
+                if (bombArm !== null && bombArm.wait) {
+                    if (bombed) {
+                        // the waited walk meets a bomb at its stop too: undo the wait, and the attempt is OFF's
+                        rewind.to(bombArm.t0);
+                        rows.length = bombArm.rowsAt;
+                        BOMB_PHASE_WAIT_COUNTS.refused.push({ what, arrival: true, x: run.state.x, y: run.state.y,
+                            tick: bombArm.t0, why: `the waited walk's stop meets ${reasonsOf(late)} too (undone)` });
+                        attempt = bombArm.attempt - 1;
+                        bombArm = { done: true };
+                        continue attempts;
+                    }
+                    BOMB_PHASE_WAIT_COUNTS.kept.push({ what, arrival: true, ...bombArm.at, ...bombArm.wait });
+                    bombArm = { done: true };
+                } else if (bombed) {
+                    const at = { x: run.state.x, y: run.state.y, tick: perTick.length };
+                    const rowsAt = rowsAtAttempt;
+                    const out = bombPhaseWait(wps, except, { axisAligned, stand: tail });
+                    BOMB_PHASE_WAIT_COUNTS.asked += 1;
+                    if (out.wait) {
+                        rows.length = rowsAt;
+                        seeRow({
+                            tick: at.tick,
+                            saw: saw(),
+                            goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
+                            obstacle: dangerObstacleOf(late),
+                            strategy: { verb: 'time', arm: 'bomb-phase', arrival: true, from: at.tick, ...out.wait },
+                            rejected: [{ option: 'walk now', why: `the stop's tail meets ${reasonsOf(late)} at `
+                                + `(${late.x.toFixed(1)},${late.y.toFixed(1)})` }],
+                            keys: [],
+                        });
+                        bombArm = { t0: at.tick, rowsAt, attempt, at, wait: out.wait, tail };
+                        attempt -= 1;
+                        continue attempts;
+                    }
+                    BOMB_PHASE_WAIT_COUNTS.refused.push({ what, arrival: true, ...at, why: out.why });
+                    bombArm = { done: true };
+                    // the arm rewound: the run is a fresh replay of this state, so the attempt re-plans on it (OFF's)
+                    if (perTick.length !== at.tick || run.state.x !== at.x || run.state.y !== at.y) {
+                        fail(`${what}: the bomb arm's rewind left the run at t${perTick.length}, not t${at.tick}`);
+                    }
+                    rows.length = rowsAt;
+                    attempt -= 1;
+                    continue attempts;
+                }
+            }
             // ⛓ D3: the walk's dash record — see `dashWalks`. `pressed` is filled
             // as the walk's ticks run, so a refuted attempt keeps what it pressed.
             const dashWalk = dash ? {
@@ -32719,16 +33255,31 @@ function solveSegmentUnder({
             // blocks (`exitAimFor`); the step-off's straight walk back keeps
             // the centre it was witnessed with.
             // ⛓ seedling-fidelity-residue D-A: a door past a drill this run cannot kill is a timed pass (null OFF).
-            const exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
+            let exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
                 { what: whatExit, goal, fork });
+            const walkExit = () => walkTo(goal, exitAimFor(run.world, index,
+                solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
+                allowTeleporter: index,
+                crossTo,
+                what: whatExit,
+            });
+            // ⛓ hammer-phase DRILL-EXIT-PASS (`DRILL_EXIT_PASS`, OFF): the walk's refusal on a live drill, before a tick
+            // is spent, is answered by the timed pass, armed (`drillExitPassAfterRefusal`).
+            const walkExitOrPass = () => {
+                if (!DRILL_EXIT_PASS.enabled || stepOff?.dir || exitPass !== null) return walkExit();
+                const ticks0 = run.ticksCompleted;
+                try {
+                    return walkExit();
+                } catch (e) {
+                    exitPass = drillExitPassAfterRefusal(run, perTick, { index, teleporter, centre },
+                        { what: whatExit, goal, fork }, e, ticks0);
+                    if (exitPass === null) throw e;
+                    return exitPass.transition;
+                }
+            };
             const t = exitPass?.transition
                 ?? (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
-                ?? walkTo(goal, exitAimFor(run.world, index,
-                    solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
-                    allowTeleporter: index,
-                    crossTo,
-                    what: whatExit,
-                });
+                ?? walkExitOrPass();
             records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}),
                 ...(exitPass ? { drillPass: exitPass.record } : {}) });
             continue;

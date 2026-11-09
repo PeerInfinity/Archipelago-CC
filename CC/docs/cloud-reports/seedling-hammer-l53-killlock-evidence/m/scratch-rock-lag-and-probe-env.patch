@@ -1,0 +1,42 @@
+diff --git a/frontend/modules/seedlingDemo/levelRun.js b/frontend/modules/seedlingDemo/levelRun.js
+index 500a7611..908beae0 100644
+--- a/frontend/modules/seedlingDemo/levelRun.js
++++ b/frontend/modules/seedlingDemo/levelRun.js
+@@ -5059,7 +5059,7 @@ export function createLevelRun({
+     const openBridgeIdsNow = () => (bridgeStateFor(level).size === 0
+         ? null : openBridgeIds(level, ticksCompleted + 1));
+     const brokenRockIdsNow = () => (rockStateFor(level).size === 0
+-        ? null : brokenRockIds(rockStateFor(level), ticksCompleted + 1));
++        ? null : brokenRockIds(rockStateFor(level), ticksCompleted + 1 - Number(process.env.L53_ROCK_LAG ?? 0)));
+     // ⛓⛓⛓ SEEDLING FIDELITY SLOTS (D4a) — `ticksCompleted`, NOT `+ 1`, and
+     // it is MEASURED. This read `ticksCompleted + 1` "exactly like the rocks'"
+     // on the argument that a burn completing on the tick about to run has
+@@ -13359,11 +13359,12 @@ export function createLevelRun({
+                     // jump (`collidable` stays false) moves through everything.
+                     if (c.collidable === false) return false;
+                     const r = chaserBoxAt(c.tag, px, py);
+-                    if (world.collidesSolid(r, solidOpts)) return true;
+-                    if (playerWall && rectsOverlap(r, playerWall)) return true;
++                    const DB = process.env.L53_MOVE === '1' && c.tag === 'puncher' && ticksCompleted >= 394 && ticksCompleted < 398;
++                    { const hs = world.collidesSolid(r, solidOpts); if (hs) { if (DB) console.error('[MOVE] t', ticksCompleted, px.toFixed(2), py.toFixed(2), 'solid', JSON.stringify(hs).slice(0, 200)); return true; } }
++                    if (playerWall && rectsOverlap(r, playerWall)) { if (DB) console.error('[MOVE] playerwall'); return true; }
+                     for (const b of staticEnemyBoxes) {
+                         if (!enemyBoxStopsChaser(c.tag, b)) continue;
+-                        if (rectsOverlap(r, b.rect)) return true;
++                        if (rectsOverlap(r, b.rect)) { if (DB) console.error('[MOVE] t', ticksCompleted, px.toFixed(2), py.toFixed(2), 'static', JSON.stringify(b).slice(0, 200)); return true; }
+                     }
+                     // ⛓ fidelity-bobsoldier: a sibling is an "Enemy" — no wall to a mover whose list lacks it.
+                     if (!chaserSolids(c.tag).includes('Enemy')) return false;
+diff --git a/scripts/procgen/probe-seedling-contact-divergence.mjs b/scripts/procgen/probe-seedling-contact-divergence.mjs
+index dcfeba67..dfaa426e 100644
+--- a/scripts/procgen/probe-seedling-contact-divergence.mjs
++++ b/scripts/procgen/probe-seedling-contact-divergence.mjs
+@@ -116,7 +116,7 @@ async function main() {
+                 await route.fulfill({ response: r, json: withSlotBlock(doc, 'flash_panel', { wasm: WASM_PAGE }) });
+             });
+         }
+-        await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json`, { waitUntil: 'domcontentloaded' });
++        await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json${process.env.L53_SOLVER_ENV ? `&seedlingSolverEnv=${encodeURIComponent(process.env.L53_SOLVER_ENV)}` : ''}`, { waitUntil: 'domcontentloaded' });
+         await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
+         if (CONTACT) {
+             await page.evaluate(async (writes) => {

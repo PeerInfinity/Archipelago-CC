@@ -1,0 +1,44 @@
+700	0	OFF	238c94412eab	True	476	186	{"same": true, "hits": 2, "deaths": 0, "level": 87}	
+701	0	OFF	b973be6dc3cf	True	4	9	{"same": true, "hits": 0, "deaths": 0, "level": 12}	
+702	0	OFF	5e6b243ec370	True	379	121	{"same": true, "hits": 2, "deaths": 0, "level": 87}	
+703	0	OFF	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+704	0	OFF	b9a9ab0e2bb4	False	None	641	null	solverBot(wasm-exit-88) reach-exit (96,304)->L12: the re-planned corridor failed too — solverBot(wasm-exit-88) reach-exit (96,304)->L12 waypoint 1 (136,152): not reached within 400 ticks; stalled at (44.53933982822017,28.53933982822018) v=(1.0696699141100892,1
+704	1	OFF	acc72b262fee	False	None	644	null	solverBot(wasm-exit-88) reach-exit (96,304)->L12: the combat ladder is EXHAUSTED. The corridor passes through danger at (136.9,144.4) — enemy:drill@128,160 (a stepped drill, priced as a static box where it stands now (136,152) (`drillMixedRooms`: it hops only 
+705	0	OFF	f292cc33d684	True	86	78	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+706	0	OFF	da87c024ad0c	True	76	35	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+707	0	OFF	e99d506d8611	True	213	151	{"same": true, "hits": 1, "deaths": 0, "level": 12}	
+708	0	OFF	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+292	0	OFF	1ee9ad143d29	True	58	27	{"same": true, "hits": 0, "deaths": 0, "level": 26}	
+293	0	OFF	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 25}	
+295	0	OFF	ff449e3386a6	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 26}	
+296	0	OFF	aad992d5e93b	True	58	37	{"same": true, "hits": 0, "deaths": 0, "level": 25}	
+299	0	OFF	b973be6dc3cf	True	4	9	{"same": true, "hits": 0, "deaths": 0, "level": 27}	
+298	0	OFF	0776f2b6baad	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 30}	
+717	0	OFF	e50013830456	True	7	33	{"same": true, "hits": 0, "deaths": 0, "level": 89}	
+718	0	OFF	c68ae8a9a6bd	False	None	8	null	solverBot(wasm-exit-91) reach-exit (240,48)->L92: the combat ladder is EXHAUSTED. The corridor passes through danger at (66.3,93.7) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when t
+719	0	OFF	a9f503d7fa92	False	None	20	null	solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when t
+720	0	OFF	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+294	0	OFF	0c5d520665f6	True	170	57	{"same": true, "hits": 0, "deaths": 0, "level": 28}	
+297	0	OFF	17b1272d02f1	True	303	102	{"same": true, "hits": 0, "deaths": 0, "level": 28}	
+700	0	ON	35caf1334e3b	True	246	34	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+701	0	ON	b973be6dc3cf	True	4	9	{"same": true, "hits": 0, "deaths": 0, "level": 12}	
+702	0	ON	43604844d1b6	True	258	38	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+703	0	ON	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+704	0	ON	94f38f8136df	False	None	18	null	solverBot(wasm-exit-88) reach-exit (96,304)->L12: the walk to the door wakes [drill@128,160], this run holds a sword and the door's walk wakes the drill (DRILL-EXIT-PASS: a timed pass, not a kill), and no timed pass reaches the crossing — the search's best wal
+704	1	ON	94f38f8136df	False	None	18	null	solverBot(wasm-exit-88) reach-exit (96,304)->L12: the walk to the door wakes [drill@128,160], this run holds a sword and the door's walk wakes the drill (DRILL-EXIT-PASS: a timed pass, not a kill), and no timed pass reaches the crossing — the search's best wal
+705	0	ON	f292cc33d684	True	86	78	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+706	0	ON	da87c024ad0c	True	76	35	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+707	0	ON	722b47b1cb32	False	None	20	null	solverBot(wasm-exit-88) reach-exit (96,304)->L12: the walk to the door wakes [drill@128,160], this run holds a sword and the door's walk wakes the drill (DRILL-EXIT-PASS: a timed pass, not a kill), and no timed pass reaches the crossing — the search's best wal
+708	0	ON	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 87}	
+292	0	ON	1a750b39dabc	True	93	12	{"same": true, "hits": 0, "deaths": 0, "level": 26}	
+293	0	ON	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 25}	
+295	0	ON	ff449e3386a6	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 26}	
+296	0	ON	90d2b48efa85	True	95	12	{"same": true, "hits": 0, "deaths": 0, "level": 25}	
+299	0	ON	b973be6dc3cf	True	4	9	{"same": true, "hits": 0, "deaths": 0, "level": 27}	
+298	0	ON	0776f2b6baad	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 30}	
+717	0	ON	e50013830456	True	7	33	{"same": true, "hits": 0, "deaths": 0, "level": 89}	
+718	0	ON	1b3b8019a88e	True	190	26	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+719	0	ON	649dd480f9f1	False	None	18	null	levelRun: drill@64,80 in level 91 hops onto tile type 1 at (40,120) on tick 211; `Enemy.update`'s terrain switch (water, lava, a pit) is not modelled for a drill. Refused by name (fidelity DRILL D2).
+720	0	ON	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+294	0	ON	0c5d520665f6	True	170	57	{"same": true, "hits": 0, "deaths": 0, "level": 28}	
+297	0	ON	17b1272d02f1	True	303	102	{"same": true, "hits": 0, "deaths": 0, "level": 28}	

@@ -45,7 +45,9 @@ export const LS_PRESETS_KEY = 'procgenPipeline_presets';
 
 // The panel's pipeline modes (procgenPipelineUI.js mode radio +
 // _loadFromLocalStorage validation share this list via applyPresetState).
-export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'topDown'];
+// ⛓ ER E4b: `entranceShuffle` (entranceShuffleSteps.js) — headless only (its substrate hooks are node-side); the panel's
+// mode radio does not offer it, and a persisted bundle naming it is applied like any other mode.
+export const VALID_MODES = ['gridGrowth', 'sphereGrowth', 'shuffledSpiral', 'topDown', 'entranceShuffle'];
 
 /**
  * The drop-down group each pipeline mode's shipped presets sit under (⚖ user
@@ -58,6 +60,7 @@ export const PRESET_GROUPS = Object.freeze({
     sphereGrowth: 'Sphere growth',
     shuffledSpiral: 'Shuffled spiral',
     topDown: 'Top-down',
+    entranceShuffle: 'Entrance shuffle',
 });
 
 /**
@@ -67,7 +70,7 @@ export const PRESET_GROUPS = Object.freeze({
  * grower is not the first thing to offer. A permutation of VALID_MODES —
  * presetDefs.test.js requires it, so a mode added there cannot go ungrouped.
  */
-export const PRESET_GROUP_ORDER = Object.freeze(['sphereGrowth', 'shuffledSpiral', 'gridGrowth', 'topDown']);
+export const PRESET_GROUP_ORDER = Object.freeze(['sphereGrowth', 'shuffledSpiral', 'gridGrowth', 'topDown', 'entranceShuffle']);
 
 /**
  * The most a shipped preset may take to generate headless, per run (⚖ user

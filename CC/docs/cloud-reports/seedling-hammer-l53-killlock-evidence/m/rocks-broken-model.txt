@@ -1,0 +1,2 @@
+[{"level":53,"id":"breakablerock@112,128","hitTick":101,"goneAt":108,"tag":0,"rockType":0,"x":112,"y":128},{"level":53,"id":"breakablerock@128,160","hitTick":171,"goneAt":178,"tag":1,"rockType":0,"x":128,"y":160}]
+[{"level":53,"id":"breakablerock@112,128","hitTick":297,"goneAt":304,"tag":0,"rockType":0,"x":112,"y":128},{"level":53,"id":"breakablerock@128,160","hitTick":367,"goneAt":374,"tag":1,"rockType":0,"x":128,"y":160}]

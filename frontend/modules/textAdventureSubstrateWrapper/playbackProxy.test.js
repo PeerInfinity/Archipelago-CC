@@ -88,6 +88,15 @@ describe('PlaybackProxy — publishes control events for each method', () => {
         );
     });
 
+    it('walkTo(target, options) passes the options as the second argument (the page\'s botWalkTo options)', () => {
+        const target = { kind: 'exit', name: 'region_2_2__exit_E' };
+        proxy.walkTo(target, { respawn: true });
+        expect(bus.publish).toHaveBeenCalledWith(
+            PLAYBACK_CONTROL_EVENT,
+            { method: 'walkTo', args: [target, { respawn: true }] },
+        );
+    });
+
     it('has no replayActions (M3b: coarse-only substrate — loops runs the block interior host-side)', () => {
         expect(proxy.replayActions).toBeUndefined();
     });

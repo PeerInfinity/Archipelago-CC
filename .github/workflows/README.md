@@ -46,9 +46,11 @@ still runs at the train, so `main` never takes a head it has not passed.
 
 | Check | Was | Now | Run it on a slice |
 |---|---|---|---|
-| P1/P2/P3/P5: the train Vitest tier (`*.train.test.js`, `vitest.train.config.js`): the Seedling hammer/fidelity behaviour pins, `seedlingGenCapacity`, the maze certifier's scripted sample, `hammerGhostKillRung`, `hammerChooserPair` | slow tier or default tier, every push | the `Train-tier Vitest` job: js-land/** pushes, a main push whose SHA has no earlier passed train run, and a `train` dispatch. `hammerEscapeGenerated.slow` stays on push as the solver smoke row | `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train=true` |
+| P1/P2/P3/P5: the train Vitest tier (`*.train.test.js`, `vitest.train.config.js`): the Seedling hammer/fidelity behaviour pins, `seedlingGenCapacity`, the maze certifier's scripted sample, `hammerGhostKillRung`, `hammerChooserPair` | slow tier or default tier, every push | the `Train-tier Vitest (shard k/3)` jobs (serial inside; split longest-first by `scripts/test/trainShardPlan.js` off `scripts/test/train-shard-costs.json`): js-land/** pushes, a main push whose SHA has no earlier run that passed every shard, and a `train` or `train_only` dispatch. `hammerEscapeGenerated.slow` stays on push as the solver smoke row; `hammerEscapeExact`, `hammerBk2Combat` and `fidelityCorpseBump2` moved here from the slow tier on 2026-11-08 | Train shards only: `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train_only=true`. With the default tier, slow tier and gates too: `... -f train=true` |
 | P4: `gate: seedling-wasm-ship` | any push that hit its `@ci-paths` or derived import closure | on a slice push, only its declared globs (`flashPanel/**`, the recompiler page, `vendor/seedling`) and its own file (`@ci-paths-slice declared`); always on main, js-land/**, PRs and every dispatch | `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch>` |
 | P6: Python ubuntu 3.12 / 3.13 legs (`unittests.yml`) | every matrix run | main, js-land/**, PRs and every dispatch; a slice push runs 3.11.2 + hosting | `gh workflow run unittests.yml -R PeerInfinity/Archipelago-CC --ref <branch>` |
+
+A `train_only` run concludes `success` with its suite and gate jobs skipped. The main-push guard (`Same SHA already green?`, `ciSummary.decideAlreadyGreen`) counts only a run whose suite jobs ran and passed, so a train-only success never lets a main push skip the suite or the gates; its train shards do count toward `train_green`, once a run with a passed suite exists at that SHA.
 
 ## Running Workflows Manually
 
@@ -233,7 +235,7 @@ generator having changed rather than this repository.
 
 | Workflow | File | Purpose |
 |----------|------|---------|
-| JavaScript Unit Tests | `unittests_frontend.yml` | Parallel jobs: `JavaScript Unit Tests (Vitest shard k/N)` + `JavaScript Unit Tests (slow Vitest)` (`test:unit` + `test:unit:slow` — `ciSummary.js` finds the suite rows by those names), `Train-tier Vitest` (`test:unit:train`; js-land/** train pushes, main and `-f train=true` dispatch only — ⚖ Robert 2026-11-02; its name stays outside the suite's), `Headless procgen gates` (`ci-gates.mjs`), and the browser gate shard matrix |
+| JavaScript Unit Tests | `unittests_frontend.yml` | Parallel jobs: `JavaScript Unit Tests (Vitest shard k/N)` + `JavaScript Unit Tests (slow Vitest)` (`test:unit` + `test:unit:slow` — `ciSummary.js` finds the suite rows by those names), `Train-tier Vitest (shard k/3)` (`scripts/test/run-train-shard.mjs`; js-land/** train pushes, main and `-f train=true` / `-f train_only=true` dispatch only — ⚖ Robert 2026-11-02, 2026-11-08; the name stays outside the suite's), `Headless procgen gates` (`ci-gates.mjs`), and the browser gate shard matrix |
 | CodeQL Analysis | `codeql-analysis.yml` | Security analysis (weekly + dispatch; no push trigger since 2026-10-21) |
 | Strict Type Check | `strict-type-check.yml` | TypeScript type checking |
 | Scan Build | `scan-build.yml` | Static analysis |

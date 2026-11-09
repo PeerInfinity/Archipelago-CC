@@ -822,6 +822,20 @@ export const substrateRegistryEntry = Object.freeze({
     restartWarp: RESTART_WARP,
 
     /**
+     * ⛓⛓ ER E4b — **THE ENTRANCE-SHUFFLE HOOKS** (`procgenPipeline/entranceShuffleSteps.js`, the `entranceShuffle` mode;
+     * ER plan §3.5): the atlas this substrate shuffles, and a loader for its pool / classify / compile / checks hooks
+     * (`scripts/procgen/seedlingEntranceShuffleHooks.mjs`). ⛔ NODE-ONLY: the compile is the playthrough producer, which
+     * reads the map from disk; the specifier is built at call time so no bundle follows it.
+     */
+    entranceShuffle: Object.freeze({
+        atlasIds: Object.freeze([SEEDLING_PLAYTHROUGH_ATLAS.atlas_id]),
+        loadHooks: async () => {
+            const spec = new URL('../../../scripts/procgen/seedlingEntranceShuffleHooks.mjs', import.meta.url).href;
+            return (await import(spec)).seedlingEntranceShuffleHooks();
+        },
+    }),
+
+    /**
      * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **THE CONTENT SOURCE** (see
      * `buildSeedlingContentSource`). A placed room's exits are its SIDES — the
      * door it is bound to stays where the level put it — so the engine mints

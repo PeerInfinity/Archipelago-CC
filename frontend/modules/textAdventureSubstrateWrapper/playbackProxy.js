@@ -50,7 +50,9 @@ export class PlaybackProxy {
     instant(on = true)  { this._send('instant', [on]); }
     reset()         { this._send('reset', []); }
     setRate(rateHz) { this._send('setRate', [rateHz]); }
-    walkTo(target)  { this._send('walkTo', [target]); }
+    // options (optional): passed to the game page's botWalkTo untouched (the flash bridge's walkTo second argument);
+    // without it the message is the one-argument walkTo it always was.
+    walkTo(target, options) { this._send('walkTo', options === undefined ? [target] : [target, options]); }
 
     // M3b: no replayActions. The text adventure is a coarse-only
     // substrate — loops runs a Playback block's own interior through the

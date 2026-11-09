@@ -27643,3 +27643,143 @@ drill-room page legs identical, no survey mover.
 follow mine" (`fidelityCeremony126`, `fidelityFrozenPress` at this base). (2) `generate-procgen-reference --check` stays
 green while a new `scripts/procgen/*.mjs` is untracked; the instruments index reads the tracked listing — re-run after
 `git add`.
+
+### Seedling hammer-phase 376-BOMB — `BOMB_PHASE_WAIT` (OFF): TIME's bomb arm waits out a lobber's bomb phase
+
+⚖ The user queued it 2026-11-07 (*"Yes, hammer slice (Recommended)"*, from L40-CENSUS's wall H and fidelity
+KNOCKBACK376's hand-over: seams 5243/5333 of leg 376 refuse with the rock key OFF and ON alike). Switch
+`solverBot.BOMB_PHASE_WAIT`, **OFF** (`SEEDLING_BOMB_PHASE_WAIT=1` / `withBombPhaseWait`; in `SOLVER_ENV_NAMES`). The
+report is `CC/docs/cloud-reports/seedling-hammer-376-bomb.md`.
+
+- **The phase, measured** (main `6473024aa8`; the leg's captured request from KNOCKBACK376's witness, replayed at each
+  seam). Leg 376's answer is a function of `seam mod 45`; 5243 and 5333 are both phase 23. There the 640 and the 2560
+  both trip at `crusher-fork`; uncapped the ladder is EXHAUSTED at 8450 units, of which **7442 are the forced-hit rung's
+  forks** (779 the kill rung's chaser arm on `bob@272,112`, which cannot remove a bomb). The first blast is the one that
+  matters: the walk to the rock (200,136) rests at t1410, the break presses at t1411 and stands its 20 ticks, and
+  `bombpusher@112,128#13` — launched at t1400 at the walking player — lands at (207,141) on t1432, 9.4 px from the
+  stance. No input escapes it (the forced-hit proof: every held set is hit at depth 1). The walk's probe ended at its
+  stop, so nobody priced a bomb that lands after it. Not a model gap: `bombPusher.js` is game-witnessed to the bit
+  (BW's 1665-tick witness; KNOCKBACK376's knockback rows).
+- **Four designs, measured over all 45 phases.** (A) the arm low in the ladder, from the climb: never fires on phase 23
+  (the blast is 2 ticks out when the next walk climbs). (B) a 31-tick arrival tail as every walk's own `stand`: phase 23
+  solves, but 6 phases that OFF solves (2–6, 34) refuse — a tail the arm cannot clear makes the walk climb where OFF
+  walked. (C) the walk probes as OFF and only a clean probe asks the tail: a superset over the 45 phases, but the ON
+  producer battery found `plan-seedling-l40button-witness` (L41's arrival) refusing — the tail fired where the next verb
+  walks on, and it probed the undashed preview while the drive walks a certified dash. (D, shipped) only the frontier's
+  break stance names its still ticks; the tail is those + 12 escape ticks with an exact escape test (`escapeReach`); the
+  check previews the walk as it will be driven; a kept wait re-plans with the tail as its stand and is undone (rows,
+  attempt index) if the re-planned stop still meets a bomb. The ladder asks the same arm right after TIME.
+- **Measured (D).** At the page's 640: SOLVED 33 → 37 (phases 23, 29, 39, 0), hitless 22 → 25 (23, 29, 39), no solve
+  lost, no hit added; every phase where the arm keeps nothing plans OFF's keys. Phase 23 ON: a 4-tick still wait at
+  (216.1,152.1) on t1390, then 1747 t hitless in 382 units, replayed on a fresh run row for row (0 hits, 0 deaths).
+  OFF at the head = main on all 45 rows (full refusal text). The ON producer battery is green.
+- **Trap candidates.** (1) A walk's probe certifies the walk, not the stop: a bomb aimed at the walk lands up to 31 ticks
+  after it, on whoever stands there next. (2) A stricter probe is not a superset: a tail that only feeds an arm must not
+  become the walk's own (design B lost 6 phases). (3) The probe is not the drive when a dash is planned: a check on the
+  undashed preview refused a walk the driven dash made clean (design C, 30(c)). (4) A census over `seam mod 45` is the
+  unit of a phase-dependent leg: two seams 90 apart are one measurement.
+
+### Seedling hammer-phase DRILL-EXIT-PASS — the L91 drill's timed pass on a door leg while a weapon is held (`DRILL_EXIT_PASS`, OFF)
+
+⚖ The user queued it on 2026-11-07 (ROUTE-WALLS-CENSUS W3, its § 6 step 2). L91's `drill@64,80` stands in the one-tile
+west passage; at sphere 5.6 legs 718 (L89 arrival → L92 door) and 719 (the other way, the whole-game walk's leg) refused
+*"the combat ladder is EXHAUSTED"* on it. Residue D-A's timed pass to the crossing (`execDrillTimedPassExit`, ON) never
+ran: it returns when a drill-killing weapon is held, and its wake test planned the walk to a door centre with no door
+allowed (no plan → a straight line 80 px from the drill, wake range 48).
+
+`solverBot.DRILL_EXIT_PASS` (`SEEDLING_DRILL_EXIT_PASS=1`, OFF) is a rung AFTER the door's walk: when `walkTo` refuses
+with a live drill as its obstacle, before a tick is spent and with no deadline tripped (`drillExitPassAfterRefusal`),
+the pass is asked armed (the weapon gate skipped, the wake walk planned with the door allowed — `plannedWalkSamples`'
+new `allowTeleporter` argument, null for every other caller). The census's shape (the armed pass before the walk) was
+measured and rejected: on the 21 legs whose room holds a drill (L28, L88, L91) it moved 6, and turned L88's 707 from
+SOLVED to refused. The rung shape moves exactly two: 718 SOLVED 190 t hitless (fresh run; the census's plan, digest
+`1b3b8019a88e`), 719 a by-name refusal on the drill's hop into water (fidelity DRILL D2 — fidelity's DRILL-WATER),
+raised on the certificate's fork. Rows: `hammerDrillExitPass.test.js` (mutants m1–m4 red). Report:
+`CC/docs/cloud-reports/seedling-hammer-drill-exit-pass.md`.
+
+### Seedling hammer-phase L53-KILLLOCK — the L53 water-arena kill-lock (BK3): `KILLLOCK_CHASER_REWIND` (OFF)
+
+⚖ The user queued it on 2026-11-07 (in the hammer planner's session: "DRILL-EXIT-PASS,L53-KILLLOCK,DRILL-WATER to
+fidelity"; ROUTE-WALLS-CENSUS's wall W1). Switch `solverBot.KILLLOCK_CHASER_REWIND`, **OFF**
+(`SEEDLING_KILLLOCK_CHASER_REWIND=1` / `withKillLockChaserRewind`). The report is
+`CC/docs/cloud-reports/seedling-hammer-l53-killlock.md`.
+
+- **The wall, measured** (start `0d575b78ea`; the census's hand-built legs 9001 from the L51 door and 9002 from the L48
+  door, which the leg list lacks; 482 from the L54 door as the control). `lock@144,208` opens on `totalEnemies() == 0`,
+  so the kill-lock's chaser arm (`execKillByChaser`, KILLLOCK K3) must kill three jellyfish and a puncher. Three causes,
+  none of them a budget: (1) the arm asks `deriveKillByChaser` at tolerance 0 while the walk it drives arrives at
+  `DEFAULT_TOLERANCE`, so with the player off the lattice (water, shield bumps) every one of ~80 previews is refused *"did
+  not settle"* and the arm stands where the walk stands; (2) on the dashless pass that stand-here dwell lands the
+  jellyfish's third hit on dwell tick 161 of 174 and the bound runs out during its "die" (the census's *"22.5 px"*);
+  (3) on the full pass the puncher is pinned on an Ice Wall corner (its 12-px box clips the tile on every y step; the
+  game pins it at the same coordinates) for the whole 166-tick bound.
+- **The design.** ON: the arm's derivations ask at `DEFAULT_TOLERANCE` and return every scored stance; a refused attempt
+  (hit, bound, crossing) is rewound (`ctx.rewind`) and the next stance tried, then the next body's
+  (`KILLLOCK_CHASER_REWIND_TRIES` 6); a dying body's death window is stood out; a refusal after the deadline tripped is
+  raised unrewound. Ablations: the tolerance alone still refuses (the first stance is hit, then the bound), the rewind at
+  tolerance 0 still refuses (nothing prices); the dying grace takes 9001 from 2345 to 844 units. L95-PUNCHER's answer
+  (`CHASER_STAGED_HUNT` + `CLEARTAG_STAND`) leaves both legs = D0.
+- **Measured.** Node, the worker's passes at the page's held retry (2560): 9001 594 t (the full pass), 9002 906 t (the
+  dashless pass), 0 hits on a fresh run, into L54; 482 ON = OFF. The 640 first ask stays deadline-bound both ways. The p4g
+  page with `?seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND=1` (the divergence sweep fed the hand-built legs with
+  `--legs=`): both reach L54, **1 room hit each** (t289 / t482). A model gap, handed to fidelity: the game holds the
+  chasers at `breakablerock@128,160`'s face two updates past the model's `goneAt` (`brokenRockIdsNow`'s `+ 1`, which its
+  own comment calls unmeasured); with that lag (scratch only) both game captures reproduce, every body and the player, to
+  0.000 px, and the switch then still solves both hitless (768 t / 959 t).
+- Rows: `hammerL53Killlock.test.js` (5), `hammerL53Killlock.train.test.js` (2); fixtures `fixtures/hammer-l53-killlock/`
+  (the page's requests cut to L53/L54, 3.7 KB each). Mutants: no rewind, tolerance 0, no grace, worst-first, one try,
+  no deadline rethrow each red; dropping the asked-bodies filter is equivalent (a cost saver).
+
+### Seedling hammer-phase DOOR-CARRY — a leg carries the game flags its route already cleared (opt-in)
+
+⚖ The user, 2026-11-05: *"Carry the door for now, solve in visit after that works."* L40-CENSUS found that the AP route
+places L40 flag 12 (`wandlock@480,560`, the south door) before Boss Key 2, but the sweep's legs never carried a game flag
+from an earlier leg. So BK2 and flag 8 were measured from a save no route reaches. `seedling-divergence-legs.mjs
+--carry-route-flags` (OPT-IN; the sweep workflow's `carry_route_flags`, default false; OFF byte-identical) makes a leg
+also stage every `game_state` flag the route collected before it. The order is the sphere log's `sphere_locations` row,
+not the sphere where the goal becomes accessible: BK2 is accessible at 5.3 alongside the door, but the route collects
+the door at 6.1 and BK2 at 6.6. Only the persistence the room reads counts: its level's own flags, plus L113's read of
+L114's Watcher flag. A leg never carries its own goal. Carried rows are stamped `carriedFlags`.
+
+Measured at `05bf82cc9f`: 87 of 930 legs carry. Every carried flag is read back in the game (87/87, no
+`stage-failed`). At main's defaults the radius over those 87 legs on the page is 77 unchanged, 6 gained and 2 lost:
+- gained: L40 r0c53's wandlock legs 372/373/377/378 (372 with 1 hit), L62 exit 552, L63 Chest 909;
+- lost: 371 (work deadline) and 578 (L63's bridge spear stance).
+
+The six L40 brief legs all still refuse at the defaults. With the door carried, the node replays of their captured
+requests solve hitless:
+- 869/870 (BK2) under `LATCH_WEIGH_FIRST` + `TURRET_APPROACH` + `APPROACH_DOOR`: 4491 t / 3236 u and 4519 t / 1021 u;
+- 395/412 (flag 8) under `KEYLOCK_TURRET` (from its unharvested branch, merged in a scratch tree): 718 t / 2534 u and
+  748 t / 323 u.
+
+These are the census's hand-staged numbers. The Chest legs (394/411) carry the door too but stay on the SE fight. No
+solver file is touched. The report is `CC/docs/cloud-reports/seedling-hammer-door-carry.md`.
+
+### Seedling fidelity L25APITEM — a playthrough AP chest is the `apitem` the delivery ships (`apChestItem`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37d (⚖ the user's GO 2026-11-06). Base `ac62c3d17e`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-l25apitem.md`.
+
+**W0.** At this base the L25 chest is route-survey step **34** (not 35): REFUSED STANCE-REENTRY (the bottom-line stance
+(104,114) is behind the chest itself). The delivery rewrites all 16 ledger chests into `<apitem>` (`rewriteRecordSet`,
+`seedlingRandomizerWiring`); `APItem.as:114-115` is a non-solid 8×8 box at the cell's centre, taken on overlap
+(`Pickup.as:78`), with no `checkBySeal`. The model already modelled an apitem exactly (F2) and the page plays the
+delivered rooms; only the survey staged the unrewritten map document.
+
+**D1** (`apChestItem`, OFF): `apChestDelivery.deliveredChestDocument` (the rewriter's element per ledger chest, pinned equal
+to the real rewrite) becomes the survey's model rooms under the key. No model or solver code reads it. Game witness
+`probe-seedling-l25-apitem.mjs` (p4g, delivered set, `fixtures/l25apitem-witness/`): the survey's ON tape takes
+`apitem@96,96` from the north-east at tick 48 (TAKE/BEFORE bracket 49/48), 0 px over 109 ticks, 0 hits; on the vanilla set
+the Chest stays Solid, 0 px. Rows `fidelityL25ApItem.test.js` (10); mutant `type: 'chest'` reds the 2 predicted rows.
+
+**D2** (key ON, local survey, 236 rows both arms): OFF = the base's 204/32; ON 206/30. Steps 18 (L36), 34 (L25), 45 (L12)
+REFUSED → SOLVED; 213 (L98) SOLVED → REFUSED (a pinned-jellyfish kill at the L99 exit, once the chest is really taken);
+197/204 (L63/L80) 0/5 → 464/523 t (with all 16 seals staged, OFF's `checkBySeal` deleted the vanilla chest — the
+apitem does not vanish); 10 more chest rows shorter; 66/94/175 still refused, obstacle text moved.
+
+**D3 STOP**: the `FLAG_ACTIONS.shieldlock`/`shieldlocknorm` text is pinned by `fidelityArrival.test.js:140`
+(`fixtures/arrival-solid-edges.json`) and baked into the rules export's obstacle events — not label-only.
+
+**Trap candidates.** (1) A survey row that is SOLVED in 0 ticks at a chest is the seal removal (`Chest.checkBySeal` with
+all seals held), not a take — the delivered game has no such removal. (2) Which world a "model" row stands in: the page's
+solver sees the DELIVERED rooms (`world.apItems`), the survey the vanilla ones — the same goal can be two verbs.

@@ -1,0 +1,48 @@
+== M1-arrival21
+     ✓ ships OFF, read from SEEDLING_BOMB_PHASE_WAIT, and is a name the solver-env channel carries 2ms
+     × its bounds are the game's: one bomb period of still ticks, a bomb's whole flight of arrival tail 7ms
+     ✓ OFF: no tail (the walk is priced as before) 26ms
+     × ON in L40 (the lobber live): a 31-tick still tail, bombs only; none for a walk that crosses 5ms
+     ✓ the tail's samples are stamped `bombsOnly` (`standBombsOnly`), and only then 27ms
+      Tests  2 failed | 3 passed (5)
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  17685ms
+     × ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock 15785ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  40727ms
+      Tests  1 failed | 2 passed (3)
+== M2-bombsonly-identity
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.test.js (5 tests) 53ms
+      Tests  5 passed (5)
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 101705ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  16991ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  44673ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  40038ms
+      Tests  3 passed (3)
+== M3-no-arrival-ask
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.test.js (5 tests) 47ms
+      Tests  5 passed (5)
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  16219ms
+     × ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock 15603ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  39894ms
+      Tests  1 failed | 2 passed (3)
+== M4-no-rewind
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.test.js (5 tests) 40ms
+      Tests  5 passed (5)
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  16075ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  44662ms
+     × phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row) 36020ms
+      Tests  1 failed | 2 passed (3)
+== M5-no-marker
+     ✓ ships OFF, read from SEEDLING_BOMB_PHASE_WAIT, and is a name the solver-env channel carries 1ms
+     ✓ its bounds are the game's: one bomb period of still ticks, a bomb's whole flight of arrival tail 0ms
+     ✓ OFF: no tail (the walk is priced as before) 21ms
+     ✓ ON in L40 (the lobber live): a 31-tick still tail, bombs only; none for a walk that crosses 4ms
+     × the tail's samples are stamped `bombsOnly` (`standBombsOnly`), and only then 26ms
+      Tests  1 failed | 4 passed (5)
+ ✓ frontend/modules/seedlingDemo/hammerBombPhase.train.test.js (3 tests) 98607ms
+     ✓ OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)  16153ms
+     ✓ ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock  44035ms
+     ✓ phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)  38416ms
+      Tests  3 passed (3)
+ docs/json/developer/procgen/seedling-bot-log.md | 30 +++++++++++++++++++++++++
+ docs/json/developer/procgen/seedling-bot.md     |  2 ++
+ 2 files changed, 32 insertions(+)

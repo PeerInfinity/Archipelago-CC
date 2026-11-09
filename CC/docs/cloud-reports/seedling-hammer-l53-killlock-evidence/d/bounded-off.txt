@@ -1,0 +1,40 @@
+ ✓ frontend/modules/seedlingDemo/entityBlocks.test.js (30 tests) 2919ms
+     ✓ is in neither the simulation closure nor the solver-family closure  1671ms
+     ✓ is imported by nothing but its own test  853ms
+ ✓ frontend/modules/procgenCore/contentIdentity.test.js (30 tests) 128ms
+ ✓ frontend/modules/seedlingDemo/hammerStagedHuntScanMemo.test.js (4 tests) 3583ms
+     ✓ on BK2COMBAT's corridor run: the memo's answer is the no-memo answer, ask after ask and after a still tick; the second ask computes no cell  3570ms
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 17122ms
+     ✓ lets exactly ONE of eight simultaneous takers hold the box; the rest refuse  3186ms
+     ✓ serialises four QUEUED simultaneous takers — every one takes, no two hold at once  8772ms
+     ✓ lets a QUEUED taker die on SIGTERM — it never takes the box later  2611ms
+     ✓ passes when nothing moved, and refuses BY ROW when the head does  333ms
+     ✓ makes a REAL browser gate refuse before it spends anything  517ms
+ ✓ frontend/modules/seedlingDemo/solverEnvChannel.test.js (11 tests) 1702ms
+     ✓ nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env  443ms
+     ✓ the result records the switches set (and carries no stamp at the defaults)  387ms
+     ✓ an unknown switch refuses BY NAME in the worker too: every solve, nothing installed  581ms
+ ✓ frontend/modules/seedlingDemo/strategySwitch.test.js (22 tests) 872ms
+     ✓ (a) absent: the worker's answer gains no field; present: it names the list, even on a refusal  811ms
+ ✓ frontend/modules/seedlingDemo/fidelityKillLock.test.js (14 tests) 23ms
+ ✓ frontend/modules/seedlingDemo/killLockBodiesHook.test.js (12 tests) 263ms
+ ✓ frontend/modules/seedlingDemo/hammerBk2Combat.test.js (3 tests) 1916ms
+     ✓ OFF: deriveKillByChaser carries no `waits`; ON: the same answer plus the cells the body never came to, nearest last  1907ms
+ ✓ scripts/git-hooks/boxLockCommit.test.js (8 tests) 558ms
+ ✓ frontend/modules/seedlingDemo/hammerL53Killlock.test.js (5 tests) 24098ms
+     ✓ 9001 (from the L51 door): OFF the stand-here dwell runs out on the jellyfish; ON every body dies, 0 hits  11562ms
+     ✓ 9002 (from the L48 door): OFF the held retry is spent in the chaser scans; ON every body dies, 0 hits  11050ms
+     ✓ 9001 at the page's FIRST budget (640): ON is deadline-bound and says so — the attempt the trip refused is raised as OFF raises it, not rewound  1453ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (15 tests) 59206ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  3730ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  25720ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  2550ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  4122ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  11227ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  696ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  4075ms
+     ✓ ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row  3540ms
+     ✓ ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys  3481ms
+ Test Files  12 passed (12)
+      Tests  180 passed (180)
+   Duration  63.40s (transform 6.34s, setup 0ms, import 13.89s, tests 112.39s, environment 1ms)

@@ -59,7 +59,7 @@ describe('SHIPPED_PRESETS', () => {
         expect([...PRESET_GROUP_ORDER].sort()).toEqual([...VALID_MODES].sort());
         expect(PRESET_GROUP_ORDER).toHaveLength(new Set(PRESET_GROUP_ORDER).size);
         expect(PRESET_GROUP_ORDER.map((mode) => PRESET_GROUPS[mode]))
-            .toEqual(['Sphere growth', 'Shuffled spiral', 'Grid growth', 'Top-down']);
+            .toEqual(['Sphere growth', 'Shuffled spiral', 'Grid growth', 'Top-down', 'Entrance shuffle']);
     });
 
     it('every shipped preset sits in its own mode\'s group', () => {

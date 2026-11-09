@@ -1,0 +1,16 @@
+717	0	OFF	e50013830456	True	7	33	{"same": true, "hits": 0, "deaths": 0, "level": 89}	
+718	0	OFF	c68ae8a9a6bd	False	None	8	null	solverBot(wasm-exit-91) reach-exit (240,48)->L92: the combat ladder is EXHAUSTED. The corridor passes through danger at (66.3,93.7) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when t
+719	0	OFF	a9f503d7fa92	False	None	20	null	solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when t
+720	0	OFF	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+717	0	ON-c0	e50013830456	True	7	33	{"same": true, "hits": 0, "deaths": 0, "level": 89}	
+718	0	ON-c0	c68ae8a9a6bd	False	None	8	null	solverBot(wasm-exit-91) reach-exit (240,48)->L92: the combat ladder is EXHAUSTED. The corridor passes through danger at (66.3,93.7) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when t
+719	0	ON-c0	a9f503d7fa92	False	None	20	null	solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when t
+720	0	ON-c0	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+717	0	ON-c1	e50013830456	True	7	33	{"same": true, "hits": 0, "deaths": 0, "level": 89}	
+718	0	ON-c1	1b3b8019a88e	True	190	26	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+719	0	ON-c1	649dd480f9f1	False	None	18	null	levelRun: drill@64,80 in level 91 hops onto tile type 1 at (40,120) on tick 211; `Enemy.update`'s terrain switch (water, lava, a pit) is not modelled for a drill. Refused by name (fidelity DRILL D2).
+720	0	ON-c1	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+717	0	ON-c2	e50013830456	True	7	33	{"same": true, "hits": 0, "deaths": 0, "level": 89}	
+718	0	ON-c2	1b3b8019a88e	True	190	26	{"same": true, "hits": 0, "deaths": 0, "level": 92}	
+719	0	ON-c2	649dd480f9f1	False	None	18	null	levelRun: drill@64,80 in level 91 hops onto tile type 1 at (40,120) on tick 211; `Enemy.update`'s terrain switch (water, lava, a pit) is not modelled for a drill. Refused by name (fidelity DRILL D2).
+720	0	ON-c2	0535c35ae8db	True	5	9	{"same": true, "hits": 0, "deaths": 0, "level": 92}	

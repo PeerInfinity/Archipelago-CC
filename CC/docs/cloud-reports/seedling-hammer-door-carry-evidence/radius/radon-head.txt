@@ -1,0 +1,3 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 20228) — head c886b43c4, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+ROUTE-CARRY: 87 leg(s) carry the flag(s) the route cleared before them (rows stamped carriedFlags; measurement only)
+INFO: page 1 booted in 21 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded

@@ -102,6 +102,7 @@ const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
 // ⛓⛓ THE DERIVED-RULE OVERRIDE (session tile-rules-automation-r-a3): the committed table the maze derivation emits (on CI)
 // overrides the composed rule on every element it holds, in the atlas and in AP_1 (`seedlingDerivedRuleTable.js`).
 const TBL = await import('./seedlingDerivedRuleTable.js');
+const { apExitNamesByEndpoint } = await imp('frontend/modules/procgenPipeline/entranceRandomizationReach.js');
 const DERIVED_TABLE = TBL.readDerivedRuleTable();
 const { PUSHABLE_KINDS, blockCrossingCost } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
 const { deriveWeaponFootprint } = await imp('frontend/modules/flashPanel/seedlingWeaponFootprints.js');
@@ -272,6 +273,34 @@ const ropeChargesFor = (level, baseGrid) => ROPES.filter((r) => r.level === leve
         .map((e) => arrowLane({ id: `${e.peer.type}@${e.peer.x},${e.peer.y}`, t: r.tset, ...arrowTrapEntityPoint(e.peer.x, e.peer.y) }));
     return lanes.length ? ropeLaneCharges(baseGrid, lanes, ropeEventCondition(r), doorTilesOf(level), TILE) : [];
 });
+/**
+ * ⛓⛓ ER E4a (entrance randomization) — **A LANDING'S DEPARTURES ARE THE DOC'S CONNECTIONS THAT LAND ON IT, NOT ITS
+ * VANILLA DOOR.** A game landing (`gameLandings` row `{from, door, level, x, y}`) is a TILE of `level`; the atlas names
+ * it by its ARRIVAL exit `in_L<from>_<door x>_<door y>` of `level` (`seedlingAtlasDerivation.inExitId`, the `to` end of
+ * the connection the derivation wires from that door). A coupled stairs shuffle (⚖ Q2) RETARGETS connections onto
+ * existing arrival exits, so every room keeps its landing tiles while WHO lands on each changes: a gate a landing
+ * charges (an obstacle it lands inside, a barrier that cuts it off, a rope lane it stands in) belongs on every
+ * departure whose connection now ends there. On the vanilla layout that is exactly the landing's own door.
+ *
+ * Returns `[{region_id, exit_id}]` in connection order. NONE is a refusal by name: the census and the doc disagree, or
+ * a layout orphaned an arrival (a coupled shuffle permutes the arrival exits, so it never does).
+ */
+export function departuresLandingAt(doc, landing, why = 'landing') {
+    const door = parseSolidId(landing.door);
+    const to = [regionIdFor(landing.level), inExitId(landing.from, { x: door.x, y: door.y })];
+    const deps = (doc.vanilla_layout?.connections ?? []).filter((c) => c.to[0] === to[0] && c.to[1] === to[1])
+        .map((c) => ({ region_id: c.from[0], exit_id: c.from[1] }));
+    if (deps.length === 0) throw new Error(`${why}: the atlas has no connection landing on ${to[0]}/${to[1]} (L${landing.from} ${landing.door})`);
+    return deps;
+}
+/**
+ * The VANILLA reading E4a retired — the landing's own door, whatever the doc connects it to. Kept ONLY as the MUTANT the
+ * ER swap pins (`seedlingErProducerDecoupling.test.js`) hand a reader to prove its pin goes red; no producer path uses it.
+ */
+export function vanillaDepartureOf(_doc, landing) {
+    const door = parseSolidId(landing.door);
+    return [{ region_id: regionIdFor(landing.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) }];
+}
 /**
  * ⛓ RULES l55-waterfall — **AN ALL-WATER LEVEL IS FLOORED BY ITS ENTRY GATE.**
  *
@@ -1356,10 +1385,8 @@ const regionAnalyses = new Map();
  *     the event costs what crossing the obstacle costs; none (a rock-placement puzzle) = True_.
  * Run after `buildPlaythroughAtlas(…)` on the document it returned.
  */
-export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)) } = {}) {
+export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)), departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
-    const conns = new Set((doc.vanilla_layout?.connections ?? [])
-        .map((c) => `${c.from[0]}/${c.from[1]}>${c.to[0]}/${c.to[1]}`));
     const entityOf = (level, { cls, x, y }) => {
         const e = (level.entities ?? []).find((en) => en.type === cls && en.x === x && en.y === y);
         if (!e) throw new Error(`obstacle events: L${level.level} has no ${cls}@${x},${y}`);
@@ -1370,15 +1397,8 @@ export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, 
         return entityOverride(entity, base, level) ?? base;
     };
     return deriveObstacleEvents(rows, {
-        departure: (L) => {
-            const door = parseSolidId(L.door);
-            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-            const arr = `${regionIdFor(L.level)}/${inExitId(L.from, { x: door.x, y: door.y })}`;
-            if (!conns.has(`${dep.region_id}/${dep.exit_id}>${arr}`)) {
-                throw new Error(`obstacle events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${arr}`);
-            }
-            return dep;
-        },
+        // ⛓ ER E4a: every departure the doc lands on this landing (`departuresLandingAt`), not its vanilla door.
+        departure: (L) => departures(doc, L, 'obstacle events'),
         place: (row, solid) => {
             const regionId = regionIdFor(row.flag.level);
             const region = regionOf(regionId);
@@ -1527,8 +1547,8 @@ export function playthroughLockEvents(doc, { existing = [] } = {}) {
  *     split, not a gate), or a barrier that cuts off no landing.
  * The atlas carries NO event or gate (a rules-layer projection, as for the obstacle and lock events).
  */
-export function playthroughButtonEvents(doc, { existing = [] } = {}) {
-    const B = barrierAnalysis(doc);
+export function playthroughButtonEvents(doc, { existing = [], departures = departuresLandingAt } = {}) {
+    const B = barrierAnalysis(doc, { departures });
     const { entityOf, killsOf } = B;
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
         level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
@@ -1663,8 +1683,8 @@ function inRoomLatchAnalysis(doc) {
  *     rank spanning sub-regions.
  * The atlas carries NO event or gate.
  */
-export function playthroughInRoomPoleEvents(doc, { existing = [] } = {}) {
-    const B = barrierAnalysis(doc);
+export function playthroughInRoomPoleEvents(doc, { existing = [], departures = departuresLandingAt } = {}) {
+    const B = barrierAnalysis(doc, { departures });
     return deriveInRoomPoleEvents(inRoomPolesOf(MAP), {
         existing,
         kills: (p) => {
@@ -1852,7 +1872,7 @@ export function playthroughBlockCrossingCases(doc) {
  * for a pole, its STANCES (`poleThrustStances`): those in the pocket, those beyond the barrier (the tiles the
  * pocket's landings reach once it is cleared and not before), and the sub-regions they stand in.
  */
-function barrierAnalysis(doc) {
+function barrierAnalysis(doc, { departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
     const conns = (doc.vanilla_layout?.connections ?? []);
     const entityOf = (t) => {
@@ -1917,13 +1937,11 @@ function barrierAnalysis(doc) {
             const held = standing([tileOf(L)]);
             const cleared = modelFloodTiles(without, [tileOf(L)], all);
             if (held.length >= cleared.length) continue;
-            const door = parseSolidId(L.door);
-            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-            if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id && c.to[0] === regionId)) {
-                throw new Error(`button events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${regionId} for ${eventName}`);
-            }
+            // ⛓ ER E4a: the departures the doc lands HERE (`departuresLandingAt`), not the landing's vanilla door.
             const tiles = new Set(held.map(key));
-            cut.push({ dep, tiles, beyond: new Set(cleared.map(key).filter((k) => !tiles.has(k))) });
+            for (const dep of departures(doc, L, `button events (${eventName})`)) {
+                cut.push({ dep, tiles, beyond: new Set(cleared.map(key).filter((k) => !tiles.has(k))) });
+            }
         }
         if (cut.length === 0) {
             throw new Error(`button events: ${eventName} cuts off no landing of L${t.level} on the model — its crossing would be `
@@ -2087,9 +2105,8 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
  * the maze preset (`make-seedling-playthrough-maze.mjs`, session tile-primitives-arrow-rope) places the rope by the
  * atlas's PERSISTED partition instead — the same rule, the one sub-region the rope's tile borders.
  */
-export function playthroughRopeEvents(doc, { place = null } = {}) {
+export function playthroughRopeEvents(doc, { place = null, departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
-    const conns = doc.vanilla_layout?.connections ?? [];
     const derived = deriveRopeEvents(ROPES, {
         level: (n) => levelOf(n),
         place: place ?? ((row) => {
@@ -2128,12 +2145,11 @@ export function playthroughRopeEvents(doc, { place = null } = {}) {
             .map((c) => `${c.tile[0]},${c.tile[1]}`));
         for (const L of gameLandings(MAP).filter((g) => g.level === row.level)) {
             if (!lane.has(`${Math.floor(L.x / TILE)},${Math.floor(L.y / TILE)}`)) continue;
-            const door = parseSolidId(L.door);
-            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-            if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id)) {
-                throw new Error(`rope events: the atlas has no connection ${dep.region_id}/${dep.exit_id} for L${L.from} ${L.door}`);
+            // ⛓ ER E4a: gate every departure whose doc CONNECTION lands in the lane (`departuresLandingAt`), not the
+            // landing's vanilla door — a retargeted arrival would otherwise go ungated (the permissive direction).
+            for (const dep of departures(doc, L, 'rope events')) {
+                exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
             }
-            exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
         }
     }
     return { ...derived, exitGates };
@@ -2416,19 +2432,29 @@ function applyBossLocationOptions(rules) {
     ];
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
-
-function main() {
-    const check = process.argv.includes('--check');
-    const quiet = process.argv.includes('--quiet');
-    const doc = buildPlaythroughAtlas();
-    const atlasText = compactJsonFile(doc);
-
-    const result = validateRegionAtlas(doc, { mapDoc: MAP });
-    if (!quiet) for (const n of notes) console.log(`ANALYSIS: ${n}`);
-    for (const e of result.errors) console.error(`ERROR: ${e}`);
-    if (!result.ok) process.exit(1);
-
+/**
+ * ⛓⛓ ER E4b — **THE PRODUCER'S COMPILE, ON ANY DOC `buildPlaythroughAtlas` RETURNED (OR A COUPLED RETARGET OF IT).**
+ * Everything `main` did after the atlas: the event layer, the landing and rope gates, `compileRegionAtlas`, the boss
+ * options, the derived-rule table and the producer's own guards — returned rather than printed, so the entrance-shuffle
+ * mode (`procgenPipeline/entranceShuffleSteps.js`, through `seedlingEntranceShuffleHooks.mjs`) compiles a shuffled doc
+ * through the SAME code that compiles AP_1. `main` is its vanilla caller; `--check` holds AP_1 byte-identical.
+ *
+ * Run after `buildPlaythroughAtlas()` in this process (the analysis pass's per-region state is read here). The doc's
+ * room-local rows are the analysis's; the connections may be any permutation of the vanilla arrivals (E4a: every reader
+ * of WHERE a door leads reads the doc's connections).
+ *
+ * @param {object} doc the atlas
+ * @param {object} [o]
+ * @param {object} [o.table] the derived-rule table (default: the committed one)
+ * @param {{moved: Set<string>}|null} [o.rekey] ER: apply the table by ATLAS ENDPOINT (`TBL.applyDerivedRuleTable`'s `rekey`,
+ *   names read off this compile's sidecars, `apExitNamesByEndpoint`), skipping the exits the shuffle moved
+ *   (`"<region_id>/<exit_id>"`) by name
+ * @param {object|null} [o.roomsAtlas] ER: the AUTHORED atlas `doc` re-wires — the play-time references (`atlas_ref`,
+ *   `region_atlas`) name its rooms (`compileRegionAtlas` `roomsAtlasId`, which refuses a doc whose rooms differ)
+ * @param {string} [o.gameName] the compiled game's name (default `Seedling Playthrough`; an ER world is its own game)
+ * @returns {{rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText}}
+ */
+export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = null, roomsAtlas = null, gameName = GAME_NAME } = {}) {
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
     const layer = playthroughEventLayer(doc);
@@ -2437,7 +2463,7 @@ function main() {
     const ropes = playthroughRopeEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
-        gameName: GAME_NAME,
+        gameName,
         seed: 1,
         completionItem: VICTORY_ITEM,
         provenance: provenanceOf(doc),
@@ -2461,13 +2487,45 @@ function main() {
         internalExitGates: layer.internalExitGates,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
         exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
+        ...(roomsAtlas ? { roomsAtlasId: roomsAtlas.atlas_id, roomsAtlasOf: roomsAtlas } : {}),
     });
     applyBossLocationOptions(rules);
     // ⛓⛓ THE DERIVED-RULE TABLE onto AP_1 (session tile-rules-automation-r-a3). Guard 2: the composed rule must equal the
     // table's, truth table for truth table (in the atlas rows before the override, and in the compiled rules, where an event
     // or landing gate ANDs onto the atlas row); the count is held at zero, each disagreement named with what to do.
-    const override = TBL.applyDerivedRuleTable(rules, DERIVED_TABLE);
+    // ⛓ ER E4b: on a shuffled doc, by ATLAS ENDPOINT with the moved exits skipped by name (`rekey`); vanilla: by name.
+    const names = rekey ? apExitNamesByEndpoint(rules) : null;
+    const override = TBL.applyDerivedRuleTable(rules, table, rekey
+        ? { rekey: { moved: rekey.moved, apExitOf: (rid, eid) => names.get(`${rid}/${eid}`) ?? null } } : {});
     const disagrees = [...derivedTableAtlasRows.filter((r) => r.compare !== 'equal'), ...override.composedDisagrees];
+    // ⛓ RULES l55-waterfall: a floored level is sound only if its entry gate is charged on every way in.
+    const uncharged = playthroughEntryGateUncharged(rules);
+    const rulesText = stringifyRulesJson(rules);
+    // ⛓ RULES rope-events: a rope event the rules NAME must be one this run minted (a refused rope's name in a
+    // block-path or lane condition would be an item nothing places).
+    const mintedRopes = new Set(ropes.events.map((e) => e.name));
+    const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
+    const stray = named.filter((n) => !mintedRopes.has(n));
+
+    return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText };
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
+
+function main() {
+    const check = process.argv.includes('--check');
+    const quiet = process.argv.includes('--quiet');
+    const doc = buildPlaythroughAtlas();
+    const atlasText = compactJsonFile(doc);
+
+    const result = validateRegionAtlas(doc, { mapDoc: MAP });
+    if (!quiet) for (const n of notes) console.log(`ANALYSIS: ${n}`);
+    for (const e of result.errors) console.error(`ERROR: ${e}`);
+    if (!result.ok) process.exit(1);
+
+    const compiled = compilePlaythroughRules(doc);
+    const { layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText, report } = compiled;
+    const { obstacle, locks, buttons, poles, talks } = layer;
     if (disagrees.length) {
         for (const d of disagrees) console.error(`ERROR: ${TBL.composedDisagreeMessage(d)}`);
         process.exit(1);
@@ -2476,18 +2534,10 @@ function main() {
     const stale = fs.existsSync(TBL.MAZE_PRESET) ? TBL.tableStaleness(DERIVED_TABLE, JSON.parse(fs.readFileSync(TBL.MAZE_PRESET, 'utf8'))) : [];
     for (const s of stale) console.error(`${check ? 'ERROR' : 'WARN'}: ${s}`);
     if (check && stale.length) process.exit(1);
-    // ⛓ RULES l55-waterfall: a floored level is sound only if its entry gate is charged on every way in.
-    const uncharged = playthroughEntryGateUncharged(rules);
     if (uncharged.length) {
         console.error(`ERROR: a way into a floored level is not charged its entry gate: ${uncharged.map((u) => u.exit).join(', ')}`);
         process.exit(1);
     }
-    const rulesText = stringifyRulesJson(rules);
-    // ⛓ RULES rope-events: a rope event the rules NAME must be one this run minted (a refused rope's name in a
-    // block-path or lane condition would be an item nothing places).
-    const mintedRopes = new Set(ropes.events.map((e) => e.name));
-    const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
-    const stray = named.filter((n) => !mintedRopes.has(n));
     if (stray.length) {
         console.error(`ERROR: the rules name rope event(s) never minted: ${stray.join(', ')}`);
         process.exit(1);

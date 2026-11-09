@@ -137,7 +137,9 @@
  * 6's route: only the PROGRESSION pickups, derived (`surveyRoute.routeOnlyRows`
  * over `keyItemsOf`: an item some AP rule asks for by a single-copy `Has`),
  * the Seal chests, Totem Shards and the Light skipped and named in
- * `route.json`'s `routeMode.skipped`. It needs `--through` and writes under
+ * `route.json`'s `routeMode.skipped` — unless a kept row's rule needs the
+ * pool: a stuck walk then takes a counted pool's rows goal-first
+ * (`countedPoolOf`, `deriveLegs`' `counted`), named in `routeMode.pooled`. It needs `--through` and writes under
  * `…/through-<sphere>-route-only/`, so the two modes never share a cache.
  * The chosen mode is named in `route.json` (`routeMode`).
  */
@@ -150,7 +152,7 @@ import { fileURLToPath } from 'node:url';
 import { familyOf } from './surveyFamily.js';
 import { deriveStagedGrant, stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit } from './surveyGrants.js';
 import {
-    RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
+    RESTART_TARGET, countedPoolOf, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
 } from './surveyRoute.js';
 import { seedlingStartSpawn } from '../../frontend/modules/flashPanel/seedlingRegionBinding.js';
@@ -303,6 +305,16 @@ function atlasEdges(from) {
 /** ⛓ fidelity LIGHTS D4: the switch set this process runs under, and the L69 controller's death exit. */
 const LIGHTS_FIDELITY = await import(join(MODULE, 'contactFidelity.js'));
 const LIGHTS_WORLD = await import(join(MODULE, 'lightBossWorld.js'));
+/**
+ * ⛓ fidelity L25APITEM D1 (`CONTACT_FIDELITY.apChestItem`, ON since its flip; OFF = the pre-flip bytes): the MODEL's rooms. ON, each
+ * playthrough AP chest is the `apitem` the delivery writes in its place (`apChestDelivery.deliveredChestDocument`:
+ * the rewriter's element, same cell, its vanilla tag), so the model and the solver take it on overlap from any side
+ * as the game does. The ROUTE derivation (edges, goals, `levelsByNo`) still reads `atlas`: the apitem stands at the
+ * chest's own (x, y), so a `collect-placement` there names the same cell either way.
+ */
+const MODEL_ATLAS = LIGHTS_FIDELITY.CONTACT_FIDELITY.apChestItem
+    ? (await import(join(MODULE, 'apChestDelivery.js'))).deliveredChestDocument(atlas)
+    : atlas;
 function lightsDeathEdge(from, to, x, y) {
     const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'lightbosscontroller' && n.x === x && n.y === y);
     if (!e) return null;
@@ -326,7 +338,7 @@ async function tentacleMouthEdgeOf(from, x, y) {
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const run = createRunForStaging({ boot: { level: from, x, y }, noclip: false, noDamage: false, noHazards: [],
         grants: [], persistence: [{ level: from, tag }], despawn: [], equips: [], pins: [], save: null, rng: null,
-        seam: null }, levelSourceFromAtlas(atlas));
+        seam: null }, levelSourceFromAtlas(MODEL_ATLAS));
     const mouth = run.world.teleporters.filter((t) => t.runtime === 'tentacle_beast_mouth');
     return mouth.length === 1 ? mouth[0] : null;
 }
@@ -399,7 +411,7 @@ const MODEL = THROUGH ? {
  */
 const WORLDS = new Map();
 function worldOf(level) {
-    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(levelSourceFromAtlas(atlas)(level)));
+    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(levelSourceFromAtlas(MODEL_ATLAS)(level)));
     return WORLDS.get(level);
 }
 /**
@@ -682,6 +694,12 @@ const SPARE = THROUGH === null ? null : (() => {
     const past = spheres.order.slice(BOUNDED.length);
     return KEY_ITEMS ? routeOnlyRows(past, KEY_ITEMS).rows : past;
 })();
+/**
+ * ⛓ COUNTED POOLS (session tile-survey-gap): the rows route-only skipped whose item SOME rule asks for (by a count:
+ * `Seal` ×16, `Totem Shard` ×5), bounded and past the bound, in AP's order. `deriveLegs` walks one only when the
+ * route is otherwise stuck and that pool would unstick it (goal-first, `pooledFor`); an unstuck route never does.
+ */
+const COUNTED_POOL = ROUTE_ONLY ? countedPoolOf(spheres.order, ROUTE_ONLY.rows, SPARE, REGIONS) : null;
 const ROUTE_PICKUPS = THROUGH !== null ? (ROUTE_ONLY ? ROUTE_ONLY.rows : BOUNDED) : [
     { match: /Level 010 - Sword/, item: 'Progressive Sword' },
     { match: /Level 019 - Boss Key 0/, item: 'Red Key' },
@@ -902,6 +920,7 @@ function deriveRoute() {
         // ⛓ RULES obstacle-events: a landing gated on a saved obstacle's event is walked only after
         //   the obstacle is broken from its open side (goal-first legs; never eager, never silently)
         events: gameStateEventsOf(REGIONS),
+        counted: COUNTED_POOL,
     });
     const legs = derived.legs.map((leg, i) => ({
         ...leg,
@@ -1505,7 +1524,7 @@ async function solveOneStep(step) {
      * back as its own verdict (`NEEDS-GAME-ORACLE`), which is the honest
      * answer: the solver is not what stands in its way.
      */
-    const levelSource = levelSourceFromAtlas(atlas);
+    const levelSource = levelSourceFromAtlas(MODEL_ATLAS);
     const makeRun = (persistence) =>
         createRunForStaging({ ...staging, persistence }, levelSource);
 
@@ -1702,6 +1721,10 @@ function obstacleOf(refusal) {
 // ─────────────────────────────────────────────────────────────────────
 
 const route = deriveRoute();
+/** ⛓ tile-survey-gap: the counted-pool rows the walk took goal-first (`pooledFor`), and so no longer skipped. */
+const ROUTE_POOLED = route.legs.filter((l) => l.pooledFor)
+    .map((l) => ({ sphere: l.sphere, location: l.goal, item: l.item, pooledFor: l.pooledFor }));
+const ROUTE_SKIPPED = ROUTE_ONLY ? ROUTE_ONLY.skipped.filter((r) => !ROUTE_POOLED.some((p) => p.sphere === r.sphere)) : null;
 const alternative = deriveAlternative(route);
 /** Every step this survey can run — the chosen route, then the alternative leg. */
 const allSteps = [...route.steps, ...(alternative?.steps ?? [])];
@@ -1833,9 +1856,12 @@ const routeDoc = {
                 ? 'every sphere-order row up to and including the bound, one leg each'
                 : 'the sphere-order rows up to the bound whose item an AP access rule asks for by a '
                   + 'single-copy Has (a key), plus the bound row; counted collectibles and items no '
-                  + 'rule asks for are skipped; WALKED: CanReachRegion(X) holds once an earlier leg '
-                  + 'stood in X',
-            ...(ROUTE_ONLY ? { keyItems: [...KEY_ITEMS].sort(), skipped: ROUTE_ONLY.skipped } : {}),
+                  + 'rule asks for are skipped'
+                  + (ROUTE_POOLED.length ? ' unless a kept row\'s rule needs the pool (a stuck walk takes '
+                      + 'the pool\'s rows goal-first: routeMode.pooled)' : '')
+                  + '; WALKED: CanReachRegion(X) holds once an earlier leg stood in X',
+            ...(ROUTE_ONLY ? { keyItems: [...KEY_ITEMS].sort(), skipped: ROUTE_SKIPPED } : {}),
+            ...(ROUTE_POOLED.length ? { pooled: ROUTE_POOLED } : {}),
         },
     } : {}),
     legs: route.legs,
