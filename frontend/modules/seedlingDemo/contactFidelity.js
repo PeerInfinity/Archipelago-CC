@@ -1874,6 +1874,21 @@ export const CONTACT_FIDELITY = {
      * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
      */
     ceremonyWalkHandoff: true,
+    /**
+     * fidelity L25APITEM D1 (wave 37d) — A PLAYTHROUGH AP CHEST IS STAGED AS THE `apitem` THE DELIVERY SHIPS. The host
+     * rewrites every randomized location of the playthrough into an `<apitem>` (`apPlacementRewriter.rewriteRecordSet`,
+     * `seedlingRandomizerWiring`: `vanillaRecordSet` → `buildPlacementTable` → `rewriteRecordSet`), the 16 ledger chests
+     * included, so on the game (p4g, the delivered rooms) `Level 025 - Chest` is a NON-SOLID `Pickups/APItem`
+     * (`APItem.as:114-115`: `super(_x + Tile.w/2, _y + Tile.h/2, …, false)`, `setHitbox(8, 8, 4, 4)`) taken on OVERLAP
+     * from any side (`Pickup.as:78`, `collide("Player", x, y)`), not a `Chest` Solid opened from its bottom line
+     * (`Chest.as:63`). The model already builds and takes an apitem exactly (F2: `levelWorld`'s `apitem` row,
+     * `solverBot.apItemTakenOnTick`, the `apitem` verb); what it lacked was the ROOM: the route survey staged the
+     * UNREWRITTEN map document. ON: the survey's MODEL rooms are `apChestDelivery.deliveredChestDocument(atlas)` — each
+     * ledger chest replaced by the rewriter's own `apitem` element (same cell, its vanilla tag) — so a `collect-placement`
+     * at the chest resolves strategy `apitem`. A chest that is NOT an AP location (a generated set's door / loot chest,
+     * a vanilla-room tape) is untouched: no other reader consults this key. OFF: byte-identical. `SEEDLING_AP_CHEST_ITEM=0|1`.
+     */
+    apChestItem: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2247,6 +2262,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '1') CONTACT_F
 if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '0') CONTACT_FIDELITY.ceremonyPressForecast = false;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '1') CONTACT_FIDELITY.ceremonyWalkHandoff = true;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FIDELITY.ceremonyWalkHandoff = false;
+// ⛓ fidelity L25APITEM D1: `SEEDLING_AP_CHEST_ITEM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '1') CONTACT_FIDELITY.apChestItem = true;
+if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '0') CONTACT_FIDELITY.apChestItem = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

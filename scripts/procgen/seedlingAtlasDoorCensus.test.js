@@ -107,7 +107,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   door, sub-region or internal-exit count moves.
         // ⛓ tile-rules-automation-r-a4 — restamped (a05c56ce -> f60d4a58): ONE internal row re-spells, L20 r1c4 <-> r3c1
         //   Has(Shield) -> Has(L20 flag 4) (lock@32,80 costs its own press). No door, sub-region or internal-exit count moves.
-        expect(c.atlasId).toBe('seedling-f60d4a58');
+        // ⛓ tile-l89-feather-swim — restamped (f60d4a58 -> 9c051b83): ONE location moves sub-region, L89's Feather r9c6 -> r1c10
+        //   and is charged Has(Progressive Swim) (bound to its cheapest way). No door, sub-region or internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-9c051b83');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

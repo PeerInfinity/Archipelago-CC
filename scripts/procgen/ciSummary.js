@@ -124,9 +124,9 @@ export function pickSuiteRun(runs, jobsOf) {
         const guard = jobs.find((j) => GUARD_JOB.test(j.name ?? ''));
         const undecided = guardedPush(run) && (suite.layout === 'none' || suite.pending.length > 0)
             && guard?.status !== 'completed';
-        if (undecided && runs.slice(i + 1).some((r) => r.conclusion === 'success')) {
+        if (undecided && runs.slice(i + 1).some((r) => r.conclusion === 'success' && suitePassed(jobsOf(r)))) {
             passedOver.push({ run, why: 'its guard has not decided, and an older run at this '
-                + 'SHA already succeeded — which is what the guard will find' });
+                + 'SHA already passed its suite — which is what the guard will find' });
             continue;
         }
         return { run, passedOver };
@@ -252,6 +252,65 @@ export function suiteJobs(jobs) {
     }
     if (!out.slow) out.missing.push('JavaScript Unit Tests (slow Vitest)');
     else if (out.slow.conclusion === 'skipped') out.missing.push(`${out.slow.name} (skipped)`);
+    return out;
+}
+
+/**
+ * ⛓ Did this run's suite actually RUN and PASS? A run can conclude `success` with
+ * its suite skipped: a main push the guard skipped, or a `train_only` dispatch.
+ */
+export function suitePassed(jobs) {
+    const s = suiteJobs(jobs);
+    if (s.layout === 'none' || s.skipped || s.missing.length || s.pending.length) return false;
+    if (s.layout === 'single') return s.single.conclusion === 'success';
+    return s.slow?.conclusion === 'success' && s.shards.every((x) => x.job.conclusion === 'success');
+}
+
+/**
+ * ⚖ Robert 2026-11-08 — the train tier is a matrix of `Train-tier Vitest (shard k/N)`.
+ * ⛔ Not VITEST_JOB's family. A skipped matrix is listed once under its UNEXPANDED
+ * name, which this pattern does not match, so a skipped tier reads as not passed.
+ */
+export const TRAIN_SHARD_JOB = /^Train-tier Vitest \(shard (\d+)\/(\d+)\)$/;
+
+/** Every shard k/N present and `success`; N is read off the job names. */
+export function trainTierPassed(jobs) {
+    const shards = (jobs ?? []).flatMap((job) => {
+        const m = TRAIN_SHARD_JOB.exec(job.name ?? '');
+        return m ? [{ k: Number(m[1]), n: Number(m[2]), job }] : [];
+    });
+    if (!shards.length || shards.some((s) => s.n !== shards[0].n)) return false;
+    for (let k = 1; k <= shards[0].n; k++) {
+        if (shards.find((s) => s.k === k)?.job.conclusion !== 'success') return false;
+    }
+    return true;
+}
+
+/**
+ * The `Same SHA already green?` verdict. Pure.
+ *
+ * ⛔ `green` (skip the suite and the gates) needs a run whose conclusion is success
+ * AND whose suite jobs ran and passed: a train-only success never counts. `trainGreen`
+ * (skip the train tier too) is asked only once `green` holds, and any successful run
+ * passing every shard answers it, so a green push beside a train-only dispatch does.
+ *
+ * @param {object[]} runs  every run at the SHA, as `runsAtSha` maps them
+ * @param {(run: object) => object[]} jobsOf
+ * @param {{runId?: number|string}} [opts]  the asking run, never its own evidence
+ * @returns {{green: boolean, trainGreen: boolean, suiteRun: object|null,
+ *   trainRun: object|null, passedOver: {run: object, why: string}[]}}
+ */
+export function decideAlreadyGreen(runs, jobsOf, { runId } = {}) {
+    const out = { green: false, trainGreen: false, suiteRun: null, trainRun: null, passedOver: [] };
+    const successes = runs.filter((r) => r.conclusion === 'success' && String(r.databaseId) !== String(runId));
+    for (const run of successes) {
+        if (suitePassed(jobsOf(run))) { out.suiteRun = run; break; }
+        out.passedOver.push({ run, why: 'it concluded success, but its suite jobs did not all run and pass' });
+    }
+    if (!out.suiteRun) return out;
+    out.green = true;
+    out.trainRun = successes.find((r) => trainTierPassed(jobsOf(r))) ?? null;
+    out.trainGreen = out.trainRun !== null;
     return out;
 }
 

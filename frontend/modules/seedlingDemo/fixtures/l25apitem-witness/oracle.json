@@ -1,0 +1,51 @@
+{
+  "source": "probe-seedling-l25-apitem.mjs --record (seedling fidelity L25APITEM)",
+  "build": "seedling_bot_ap_p4g",
+  "tape": "frontend/modules/seedlingDemo/fixtures/l25apitem-witness/step34-on.tape.json",
+  "delivered_set": "seedling-ap-record-01b432a9",
+  "vanilla_set": "seedling-vanilla-record-5aeefc3c",
+  "slot": "25,0",
+  "takenAt": 48,
+  "delivered": {
+    "mounted": "seedling-ap-record-01b432a9",
+    "observations": 109,
+    "cleared": true,
+    "end": {
+      "level": 22,
+      "x": 24,
+      "y": 136
+    },
+    "hits": 0,
+    "positions": {
+      "compared": 109,
+      "worst": 0
+    }
+  },
+  "take": {
+    "ticks": 49,
+    "cleared": true
+  },
+  "before": {
+    "ticks": 48,
+    "cleared": false
+  },
+  "takenAtGame": {
+    "level": 25,
+    "x": 109.3770292269908,
+    "y": 99.07297077300917
+  },
+  "vanilla": {
+    "mounted": "seedling-vanilla-record-5aeefc3c",
+    "observations": 109,
+    "cleared": false,
+    "end": {
+      "level": 22,
+      "x": 23.2,
+      "y": 136
+    },
+    "positions": {
+      "compared": 109,
+      "worst": 0
+    }
+  }
+}
