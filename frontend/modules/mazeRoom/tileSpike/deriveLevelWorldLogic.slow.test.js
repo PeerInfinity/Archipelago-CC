@@ -57,7 +57,7 @@
 import { describe, it, expect } from 'vitest';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { RULES, ATLAS, SAMPLE, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, ATLAS, SAMPLE, OPEN_L53, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
 
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -73,7 +73,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual([OPEN_L63]);
+        // ⛓ rules-l26-rocklock-pocket: + OPEN_L53 (the fixture says why: the atlas is the game's side).
+        expect(problems).toEqual([OPEN_L53, OPEN_L63]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
@@ -174,7 +175,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_51__r14c6 → level_52__r5c10 (landing 15,16) | 1/2',
             'level_52__r0c7 → level_54__r27c8 (landing 7,1) | 1/3',
             'level_52__r2c2 → level_55 (landing 1,3) | 1/3',
-            'level_53__r14c9 → level_54__r1c8 (landing 9,14) | 24/48',
+            // ⛓ rules-l26-rocklock-pocket: 24/48 -> 46/96, `L53 flag 2` joins the pocket's subset universe (2x the subsets).
+            'level_53__r14c9 → level_54__r1c8 (landing 9,14) | 46/96',
             'level_54__r1c8 → level_53__r14c9 (landing 9,1) | 1/3',
             'level_54__r27c8 → level_52__r0c7 (landing 8,28) | 1/3',
             'level_55 @ Level 055 - Boss Key 3 (landing 4,3) | 1/2',
