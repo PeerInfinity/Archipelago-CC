@@ -16,7 +16,16 @@
  * It writes `whole-game-certify.json` (every problem / accepted / line per arm) and the compiled `whole-game-rules.json`
  * into --out, which that job uploads as its artifact. Nothing on push runs it.
  *
- * Run: node scripts/procgen/probe-seedling-whole-game-certify.mjs [--shards=4] [--out=test-results/seedling-probe] [--arms=new,old]
+ * ⛓ THE ER ARM (ER E4c): `--source=er` certifies the ENTRANCE-RANDOMIZED world instead — the `seedling_er` preset's shuffled
+ * atlas (`make-seedling-er-preset.mjs` `buildSeedlingErSource`, refused unless it compiles to the committed preset) projected
+ * into the maze (`buildPlaythroughMaze({source})`), each crossing judged where the SHUFFLED graph lands it. It has its OWN
+ * baseline, `seedling-er-whole-game-certify-expected.json` (the new arm's counts and every problem row by name): a drift is a
+ * FAIL row by name. It writes `whole-game-certify-er.json` / `whole-game-rules-er.json`, so a vanilla run in the same --out keeps
+ * its own. The vanilla run (`--source=vanilla`, the default) is unchanged and pins nothing here (its triple is held by
+ * probe-seedling-derived-rules.mjs's expected file).
+ *   gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f probes=probe-seedling-whole-game-certify.mjs -f args='--source=er --arms=new'
+ *
+ * Run: node scripts/procgen/probe-seedling-whole-game-certify.mjs [--shards=4] [--out=test-results/seedling-probe] [--arms=new,old] [--source=vanilla|er]
  */
 import { readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -31,6 +40,11 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const T = (p) => resolve(REPO, p);
 const CERT = T('frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.js');
 const OLD_CERT = T('frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.oldframing.tmp.js');
+const VANILLA_ATLAS = T('frontend/modules/flashPanel/atlases/seedling-playthrough.json');
+/** The ER arm's own baseline (`--source=er`). */
+export const ER_EXPECTED_FILE = T('scripts/procgen/seedling-er-whole-game-certify-expected.json');
+/** The sources a run certifies. */
+export const SOURCES = Object.freeze(['vanilla', 'er']);
 /** Where the old arm forces `internalOnly` false. */
 export const OLD_FRAMING_HOOK = 'const internalOnly = (world, name) => {';
 
@@ -42,7 +56,25 @@ export function parseArgs(argv) {
     const arms = arg('arms', 'new,old').split(',');
     const bad = arms.filter((a) => a !== 'new' && a !== 'old');
     if (bad.length) throw new Error(`--arms: unknown arm(s) ${bad.join(', ')} (new, old)`);
-    return { shards, out: arg('out', 'test-results/seedling-probe'), arms };
+    const source = arg('source', 'vanilla');
+    if (!SOURCES.includes(source)) throw new Error(`--source: unknown source ${source} (${SOURCES.join(', ')})`);
+    return { shards, out: arg('out', 'test-results/seedling-probe'), arms, source };
+}
+
+/**
+ * The ER arm's verdict against its baseline: `{drift: [line…]}` — every counted leaf (`problems`, `accepted`, `threw`) and the
+ * problem rows BY NAME (a row only measured, or only pinned, is a drift line naming it). Pure. Exported for the unit rows.
+ */
+export function baselineDrift(arm, expected) {
+    const drift = [];
+    for (const k of ['accepted', 'threw']) {
+        const got = k === 'accepted' ? arm.accepted.length : arm.threw.length;
+        if (got !== expected[k]) drift.push(`${k}: expected ${expected[k]}, measured ${got}`);
+    }
+    const want = new Set(expected.problems.map((p) => p.row));
+    for (const p of arm.problems) if (!want.has(p)) drift.push(`problem only measured: ${p}`);
+    for (const p of want) if (!arm.problems.includes(p)) drift.push(`problem only pinned: ${p}`);
+    return { drift };
 }
 
 /** The old arm's certifier source: `internalOnly` answers false. Throws when the hook moved. Exported for the unit rows. */
@@ -83,10 +115,10 @@ if (!isMainThread) await worker();
 else if (isEntryPoint(import.meta.url)) await main();
 
 async function worker() {
-    const { rulesFile, shard, shards, arm, permissive } = workerData;
+    const { rulesFile, shard, shards, arm, permissive, atlasFile = VANILLA_ATLAS } = workerData;
     const mod = await import(pathToFileURL(arm === 'old' ? OLD_CERT : CERT).href);
     const HELPERS = JSON.parse(readFileSync(T('frontend/modules/mazeRoom/tileSpike/maze_tiles.helpers.json'), 'utf8'));
-    const ATLAS = JSON.parse(readFileSync(T('frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
+    const ATLAS = JSON.parse(readFileSync(atlasFile, 'utf8'));
     const RULES = JSON.parse(readFileSync(rulesFile, 'utf8'));
     const { levels: mine, regions } = shardRegions(Object.keys(RULES.preset_sidecars['1']), shard, shards);
     const t0 = Date.now();
@@ -100,15 +132,33 @@ async function worker() {
 }
 
 async function main() {
-    const { shards, out, arms } = parseArgs(process.argv);
+    const { shards, out, arms, source } = parseArgs(process.argv);
     const outDir = T(out);
     mkdirSync(outDir, { recursive: true });
     console.log('CHANNEL: headless logic-only (no wasm: a node measurement of the maze certifier)');
     const M = await import(pathToFileURL(T('scripts/procgen/make-seedling-playthrough-maze.mjs')).href);
-    const ATLAS = JSON.parse(readFileSync(T('frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
-    const levels = ATLAS.regions.map((r) => r.region_id);
+    let ATLAS = JSON.parse(readFileSync(VANILLA_ATLAS, 'utf8'));
+    let atlasFile = VANILLA_ATLAS;
+    let er = null;
     let t0 = Date.now();
-    const built = M.buildPlaythroughMaze({ levels });
+    if (source === 'er') {
+        const { buildSeedlingErSource, SEEDLING_ER_PRESET } = await import(pathToFileURL(T('scripts/procgen/make-seedling-er-preset.mjs')).href);
+        er = await buildSeedlingErSource();
+        if (er.rulesText !== readFileSync(SEEDLING_ER_PRESET, 'utf8')) {
+            throw new Error('ER arm: the stepped run does not compile to the committed seedling_er preset — regenerate it first');
+        }
+        ATLAS = er.atlas;
+        atlasFile = resolve(tmpdir(), `whole-game-er-atlas-${process.pid}.json`);
+        writeFileSync(atlasFile, JSON.stringify(ATLAS));
+        console.log(`SOURCE: er — shuffled atlas ${ATLAS.atlas_id} over rooms ${er.roomsAtlas.atlas_id}, ${er.moved.length} departure(s) moved, in ${Date.now() - t0} ms`);
+        t0 = Date.now();
+    }
+    const levels = ATLAS.regions.map((r) => r.region_id);
+    const built = M.buildPlaythroughMaze(er ? { levels, source: { atlas: er.atlas, roomsAtlas: er.roomsAtlas } } : { levels });
+    if (er && JSON.stringify(built.moved) !== JSON.stringify(er.moved)) {
+        throw new Error(`ER arm: the maze compile moved ${built.moved.length} departure(s), the shuffle ${er.moved.length}`);
+    }
+    if (er) console.log(`DERIVED-RULE TABLE: ${built.skipped.length} row(s) skipped by name (moved exits)`);
     const rulesFile = resolve(tmpdir(), `whole-game-${process.pid}.json`);
     writeFileSync(rulesFile, built.text);
     const rules = JSON.parse(built.text);
@@ -124,7 +174,7 @@ async function main() {
         for (const arm of arms) {
             t0 = Date.now();
             const parts = await Promise.all([...Array(shards).keys()].map((shard) => new Promise((ok, bad) => {
-                const w = new Worker(fileURLToPath(import.meta.url), { workerData: { rulesFile, shard, shards, arm, permissive }, resourceLimits: { maxOldGenerationSizeMb: 6144 } });
+                const w = new Worker(fileURLToPath(import.meta.url), { workerData: { rulesFile, shard, shards, arm, permissive, atlasFile }, resourceLimits: { maxOldGenerationSizeMb: 6144 } });
                 w.once('message', ok);
                 w.once('error', bad);
             })));
@@ -150,7 +200,19 @@ async function main() {
         for (const p of onlyOld) console.log(`  -OLD ${p}`);
     }
     const sha = process.env.GITHUB_SHA ?? '';
-    writeFileSync(resolve(outDir, 'whole-game-certify.json'), `${JSON.stringify({ sha, built: { levels: levels.length, bytes: built.text.length }, permissive, result }, null, 1)}\n`);
-    writeFileSync(resolve(outDir, 'whole-game-rules.json'), built.text);
-    console.log('ALL CHECKS PASSED');
+    const tag = er ? '-er' : '';
+    writeFileSync(resolve(outDir, `whole-game-certify${tag}.json`), `${JSON.stringify({ sha, source, ...(er ? { atlas_id: ATLAS.atlas_id, rooms_atlas_id: er.roomsAtlas.atlas_id } : {}), built: { levels: levels.length, bytes: built.text.length }, permissive, result }, null, 1)}\n`);
+    writeFileSync(resolve(outDir, `whole-game-rules${tag}.json`), built.text);
+    if (er) unlinkSync(atlasFile);
+    let failed = 0;
+    if (er && result.new) {
+        const expected = JSON.parse(readFileSync(ER_EXPECTED_FILE, 'utf8'));
+        const { drift } = baselineDrift(result.new, expected);
+        for (const d of drift) console.log(`  DRIFT ${d}`);
+        if (drift.length) { failed += 1; console.log(`FAIL: the ER arm drifted from ${ER_EXPECTED_FILE.slice(REPO.length + 1)} (${drift.length} line(s))`); }
+        else console.log(`PASS: the ER arm matches ${ER_EXPECTED_FILE.slice(REPO.length + 1)} (${result.new.problems.length} / ${result.new.accepted.length} / ${result.new.threw.length})`);
+    }
+    if (er && (result.new?.threw.length || result.old?.threw.length)) { failed += 1; console.log('FAIL: a shard threw'); }
+    console.log(failed ? `${failed} CHECK(S) FAILED` : 'ALL CHECKS PASSED');
+    process.exitCode = failed ? 1 : 0;
 }
