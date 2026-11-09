@@ -13,6 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { withContactFidelity } from './contactFidelity.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -111,14 +112,14 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
 
     // ⛓ `chaserOrbitKill` named OFF (planning-14's wave-32 flip): ON, with no stance for the body, the orbit arm kills it
     // hitless (model-only; L40LATCH's evidence `l30-orbit.txt`, a game witness owed) — this row is the switch-by-switch control.
-    it('both OFF, (224,80): the survey\'s refusal, the keys driven are the BEFORE witness, and they were hit twice', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
+    it('both OFF, (224,80): the survey\'s refusal, the keys driven are the BEFORE witness, and they were hit twice', () => withL40Flip(false, () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
         const p = await l30keylockPlan(224, { rescan: false, waitPriced: false });
         const v = verdict(p);
         expect(v.solved).toBeNull();
         expect(v.refusal).toMatch(/the danger map forbids \(71\.77\d*,50\.11\d*\) — chaser:bobsoldier@48,80 \(the BobSoldier's 8x8 body, bare, one forecast tick on/);
         expect(v.hits).toBe(2);
         expect(p.driven).toHaveLength(tape('l30keylock-pit224-before').tick_count);
-    }), 120_000);
+    })), 120_000);
 
     it('both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: false }));
@@ -136,13 +137,13 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
 
     // ⛓ `chaserOrbitKill` named OFF (planning-14's wave-32 flip): ON, with no stance for the body, the orbit arm kills it
     // hitless (model-only; L40LATCH's evidence `l30-orbit.txt`, a game witness owed) — this row is the switch-by-switch control.
-    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
+    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', () => withL40Flip(false, () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
         expect(verdict(await l30keylockPlan(224, { rescan: false, waitPriced: true })))
             .toMatchObject({ solved: 309, hits: 0 });
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: true }));
         expect(v).toMatchObject({ solved: null, hits: 0 });
         expect(v.refusal).toMatch(/keylock stance \(bosslock@64,32\): the combat ladder is EXHAUSTED/);
-    }), 120_000);
+    })), 120_000);
 
     for (const [x, kill] of [[224, { ticks: 25, bound: 56 }], [240, { ticks: 23, bound: 54 }]]) {
         it(`both ON, (${x},80): the solver's own plan IS the witness \`l30keylock-pit${x}\` (kill, lock, crossing)`, async () => {

@@ -15,6 +15,7 @@
  * hold(wandlock@480,560); OFF that fifth application is refused, ON the chain runs to `iceturret@472,400`.
  */
 import { describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -80,11 +81,11 @@ describe('L40BK2B W0 — the shipped orbit in the notch, on the game (`l40bk2b-o
         expect(keys.length).toBe(w.tape.tick_count);
     });
 
-    it('OFF the solver\'s orbit arm finds no hitless candidate', async () => {
+    it('OFF the solver\'s orbit arm finds no hitless candidate', () => withL40Flip(false, async () => {
         const { out, refusal } = await l40Bk2bSolve({ orbitFreeAim: false });
         expect(out).toBeNull();
         expect(refusal.message).toContain('orbit arm: no orbit kill of bobsoldier@880,832 is hitless (20 fork(s) of 20)');
-    }, 180_000);
+    }), 180_000);
 });
 
 describe('L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)', () => {
@@ -106,7 +107,7 @@ describe('L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)
         }
     });
 
-    it('ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape\'s, key for key', async () => {
+    it('ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape\'s, key for key', () => withL40Flip(false, async () => {
         const { refusal } = await l40Bk2bSolve(L40BK2B_D1_SWITCHES);
         const perTick = refusal.perTick.map((k) => [...k].sort());
         expect(await l40Bk2bRemovalTick(perTick)).toBe(125);
@@ -118,7 +119,7 @@ describe('L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)
         expect(perTick.slice(0, w.tape.tick_count)).toEqual(recorded.slice(0, w.tape.tick_count));
         // the next refusal is the plain world's chest proximity (a staging artifact; the AP leg's chest is an apitem)
         expect(refusal.message).toContain('the route entered a proximity-hazard — chest at (880,816)');
-    }, 180_000);
+    }), 180_000);
 });
 
 describe('L40BK2B D1 — L40LATCH\'s latch chain with the projection, on the game (`l40bk2b-latch-free`)', () => {
