@@ -1,0 +1,19 @@
+PASS: ⛓⛓⛓ ONE ghost press is 7 hit tests (the sword's is 5) — 7 tests, fired 2,3,4,5,6,7,8
+PASS: ⛓⛓ the FIRST test breaks the ghost rock (`hit(hasGhostSword ? 1 : 0)`, rockType 1) — [{"as3":"BreakableRock","id":"breakablerockghost@0,64","broke":true,"goneAt":9,"why":null}]
+PASS: ⛓⛓ from beyond the SWORD's reach (16) and within the ghost's (24) — distanceRectPoint 18.650
+PASS: ⛓ the walk west takes the teleporter under the rock to L111 — {"t":35,"from_level":3,"to_level":111}
+wrote frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l3-rockghost.json
+## ghostsword-l3-rockghost: 45 ticks, press t 1, rock gone t 10, transition {"t":35,"from_level":3,"to_level":111}
+PASS: ⛓⛓ a ghost swing breaks the PLAIN rock too (`hit(1)`, rockType 0 <= 1) — [{"as3":"BreakableRock","id":"breakablerock@96,112","broke":true,"goneAt":9,"why":null}]
+PASS: ⛓ the walk north passes where the rock stood — y 95.90 at t 45
+wrote frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l3-rock.json
+## ghostsword-l3-rock: 45 ticks, rock gone t 10, y 95.90
+PASS: ⛓⛓⛓ TWO ghost presses LAND and the second kills: hits 2 -> 4 of `hitsMax` 3 (damage 2, the sword's 1) — [{"t":52,"hits":2,"killed":false,"reach":22.698811302097607},{"t":83,"hits":4,"killed":true,"reach":17.928125184076723}]
+PASS: ⛓ every landed press was a ghostsword press — ["ghostsword","ghostsword"]
+PASS: ⛓ ONE death, billed to the PRESS — [{"t":84,"level":30,"id":"bobsoldier@48,80","by":"press","weapon":"ghostsword","hits":4}]
+PASS: ⛓ the corpse is GONE by the end — removal 11
+PASS: the player is alive at the end
+wrote frontend/modules/seedlingDemo/fixtures/tapes/ghostsword-l30-bobsoldier.json
+## ghostsword-l30-bobsoldier: 103 ticks, landed t 52, 83, kill t 84, sword hits []
+
+all checks green
