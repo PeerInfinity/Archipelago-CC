@@ -386,8 +386,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             ceremonyWalkHandoff: true,
             // ⛓ fidelity L25APITEM D1 (wave 37d): the survey stages a playthrough AP chest as its delivered apitem — ON since its flip (⚖ user 2026-11-06).
             apChestItem: true,
-            // ⛓ fidelity DRILLWATER D1 (wave 37e): a drill's `Enemy.update` terrain switch (water/lava/pit) — ships OFF.
-            drillTerrainSwitch: false });
+            // ⛓ fidelity DRILLWATER D1 (wave 37e): a drill's `Enemy.update` terrain switch (water/lava/pit) — ON since its flip (⚖ user 2026-11-08).
+            drillTerrainSwitch: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

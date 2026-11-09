@@ -1900,9 +1900,9 @@ export const CONTACT_FIDELITY = {
      * hop until removed. ON: `drill.stepDrill` runs the switch (ctx `tileTypeAt`), `levelRun.stepDrillsNow`'s DRILL D2
      * refusal ("terrain switch … not modelled for a drill") is retired, `drillBodies` carries `fallInPit`/`fell`.
      * Measured: L91's `drill@64,80` is the one shipped drill with a fatal tile in its hop reach (water (40,120), 4 hops).
-     * OFF: byte-identical. `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`.
+     * OFF: byte-identical. `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`. ON since the DRILLWATER flip (⚖ user 2026-11-08).
      */
-    drillTerrainSwitch: false,
+    drillTerrainSwitch: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
