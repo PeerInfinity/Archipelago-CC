@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 144,
-            "count": 194,
+            "browser": 145,
+            "count": 195,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 513,
-        "browser": 210,
-        "cited": 271,
-        "files": 531,
+        "blockStyle": 514,
+        "browser": 211,
+        "cited": 272,
+        "files": 532,
         "lineStyle": 18,
-        "withDocblock": 531,
-        "withFlags": 450
+        "withDocblock": 532,
+        "withFlags": 451
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -17331,6 +17331,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rock-gone.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rock-gone — ⛓⛓⛓ seedling-fidelity-knockback376 D1: THE TICK A BROKEN `BreakableRock` STOPS BEING SOLID, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK (`CONTACT_FIDELITY.rockGoneFencepost`).",
+            "path": "scripts/procgen/probe-seedling-rock-gone.mjs"
         },
         {
             "argvHelpers": [

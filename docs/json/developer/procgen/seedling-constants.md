@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**84 files, 7082 literals.** Class × position:
+**84 files, 7085 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1720 | 610 | 2337 |
-| rule | 14 | 1200 | 591 | 1805 |
+| rule | 15 | 1200 | 592 | 1807 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 404 | 2445 | 2864 |
+| structural | 15 | 404 | 2446 | 2865 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 36 | 3386 | 3660 | 7082 |
+| total | 37 | 3386 | 3662 | 7085 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1813 | 0 | 97 | 123 | 4 | 300 | 2337 |
-| rule | 663 | 142 | 246 | 22 | 623 | 109 | 1805 |
+| rule | 663 | 143 | 246 | 22 | 624 | 109 | 1807 |
 
 Rows whose note starts `REVIEW:`: **116**.
 
@@ -515,7 +515,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**21 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **185 small tables** (at most 16 literals) hold at least one (107 with an AS3 reference).
+**22 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **185 small tables** (at most 16 literals) hold at least one (107 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -534,6 +534,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `WEAPON_LENGTH` | seedlingDemo/bobBossFight.js | 24 | physics | magnitude | Enemies/BobBoss.as:weaponLength |
 | `DEATH_LIFT` | seedlingDemo/bobBossFight.js | 1.2 | physics | magnitude | Enemies/BobBoss.as:death |
 | `SHIELD_FORCE` | seedlingDemo/bobBossFight.js | 5 | physics | magnitude | Player.as:shieldForce |
+| `ROCK_GONE_FENCEPOST_TICKS` | seedlingDemo/breakableRocks.js | 2 | rule | count |  |
 | `YETI_PORTAL_TAG` | seedlingDemo/dialogue.js | 1 | rule | sentinel | NPCs/Yeti.as:createdPortal |
 | `STATUE_TALK_RANGE` | seedlingDemo/endingChain.js | 32 | rule | bound | NPCs/Statue.as:talkRange |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
