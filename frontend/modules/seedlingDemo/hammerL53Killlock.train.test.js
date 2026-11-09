@@ -1,8 +1,8 @@
 /**
  * ⛓ SEEDLING HAMMER-PHASE L53-KILLLOCK — the worker's TWO passes (`ANYTIME_PASSES`) on the census's legs 9001/9002, at
- * the page's held-retry budget (2560): OFF both refuse; ON 9001 answers the FULL pass's 594-tick plan and 9002 the
- * dashless pass's 906-tick plan, each 0 hits on a fresh run (⚖ 30(c)) — the plans the page played (the report's
- * `m/page-sweep-on.tsv`). The dashless-only rows are `hammerL53Killlock.test.js` (default tier); this file is the train
+ * the page's held-retry budget (2560): OFF both refuse; ON 9001 answers a 768-tick plan and 9002 a 959-tick plan, each
+ * 0 hits on a fresh run (⚖ 30(c)). ⛓ Re-pinned at fidelity KNOCKBACK376's re-merge (train 55, `rockGoneFencepost` ON):
+ * was 594 (the FULL pass's shorter plan, which no longer wins: both passes now answer the dashless plan) and 906. The dashless-only rows are `hammerL53Killlock.test.js` (default tier); this file is the train
  * tier (`vitest.train.config.js`) for its time.
  */
 
@@ -36,8 +36,8 @@ function solveBothPasses(leg, on) {
 
 describe('hammer-phase L53-KILLLOCK (train) — the worker\'s two passes on 9001 / 9002', () => {
     for (const [name, file, ticks, sha] of [
-        ['9001 (L51 door)', 'leg9001-l51-l53-retry2560-request.json.gz', 594, '54a15ec7f984'],
-        ['9002 (L48 door)', 'leg9002-l48-l53-retry2560-request.json.gz', 906, 'bf6a54ee9d41'],
+        ['9001 (L51 door)', 'leg9001-l51-l53-retry2560-request.json.gz', 768, 'c4360b3cadd1'],
+        ['9002 (L48 door)', 'leg9002-l48-l53-retry2560-request.json.gz', 959, 'eccbf63f23e1'],
     ]) {
         it(`${name}: OFF refuses; ON answers the page's plan, 0 hits in the model, into L54`, () => {
             const leg = FIX(file);
