@@ -22,6 +22,8 @@ SUPPORTED_CLIENT_APIS = frozenset({1})
 #: The slot_data record's shape; the frontend names the versions it reads.
 FORMAT = 1
 OPTION = "spoiler_data_in_slot_data"
+#: The option's value that adds each step's sender. Any other non-zero value is own slot only.
+OWN_SLOT_WITH_SENDERS = 2
 SLOT_DATA_KEY = "spoiler_data"
 #: Above this a slot sends a reason instead (measured maximum is far lower; see the design note).
 MAX_SLOT_BYTES = 1024 * 1024
@@ -33,6 +35,10 @@ logger = logging.getLogger("SpoilerExportHook")
 def _wanted(world: World) -> bool:
     option = getattr(world.options, OPTION, None)
     return bool(option is not None and option.value)
+
+
+def _with_senders(world: World) -> bool:
+    return getattr(world.options, OPTION).value == OWN_SLOT_WITH_SENDERS
 
 
 def _code(address: Any, name: str, known: Any):
@@ -63,8 +69,12 @@ def walk(multiworld) -> dict:
     return {"steps": steps, "unreachable": len(candidates), "spheres": sphere}
 
 
-def compact_for(multiworld, walked: dict, player: int) -> dict:
-    """Own slot: its own locations, and each item it receives, with the walk step of each."""
+def compact_for(multiworld, walked: dict, player: int, with_senders: bool = False) -> dict:
+    """Own slot: its own locations, and each item it receives, with the walk step of each.
+
+    With senders, a row whose item comes from another player's location gains a fourth element, [player, location],
+    the location checked against that player's own DataPackage. Every other row, and the format, stay the same.
+    """
     world = multiworld.worlds[player]
     start = [_code(item.code, item.name, world.item_id_to_name) for item in multiworld.precollected_items.get(player, [])]
     rows = []
@@ -72,9 +82,13 @@ def compact_for(multiworld, walked: dict, player: int) -> dict:
         own = location.player == player
         received = location.item.player == player
         if own or received:
-            rows.append([label,
-                         _code(location.address, location.name, world.location_id_to_name) if own else None,
-                         _code(location.item.code, location.item.name, world.item_id_to_name) if received else None])
+            row = [label,
+                   _code(location.address, location.name, world.location_id_to_name) if own else None,
+                   _code(location.item.code, location.item.name, world.item_id_to_name) if received else None]
+            if with_senders and not own:
+                sender_table = multiworld.worlds[location.player].location_id_to_name
+                row.append([location.player, _code(location.address, location.name, sender_table)])
+            rows.append(row)
     return {"format": FORMAT, "seed_name": str(multiworld.seed_name), "player": player, "start": sorted(start, key=str),
             "steps": rows, "unreachable": walked["unreachable"]}
 
@@ -93,7 +107,7 @@ def prepare(multiworld) -> dict:
         walked = walk(multiworld) if players else {"steps": [], "unreachable": 0}
         data, omitted = {}, {}
         for player in players:
-            record = compact_for(multiworld, walked, player)
+            record = compact_for(multiworld, walked, player, _with_senders(multiworld.worlds[player]))
             size = len(json.dumps(record, separators=(",", ":")))
             if size > MAX_SLOT_BYTES:
                 omitted[player] = {"reason": "over_cap", "size_bytes": size, "cap_bytes": MAX_SLOT_BYTES}

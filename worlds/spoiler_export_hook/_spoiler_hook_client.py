@@ -6,6 +6,8 @@ spec is registered only just before that apworld loads, so a module-level import
 import importlib
 import logging
 
+from Options import Choice, Visibility
+
 HOOK_MODULE = "worlds.spoiler_export_hook"
 OPTION = "spoiler_data_in_slot_data"
 OMITTED_KEY = "spoiler_data_omitted"
@@ -17,6 +19,21 @@ _NOTES = {
     "hook_failed": "the Spoiler Export Hook failed while computing",
     "api_mismatch": "this apworld and the installed Spoiler Export Hook are incompatible versions",
 }
+
+
+class SpoilerDataInSlotData(Choice):
+    """Send this slot's sphere order in slot_data, for a web client that has no spoiler file.
+    Needs the Spoiler Export Hook apworld (skipped without it), and is always off in a race seed.
+
+    own_slot: this slot's own locations, and when each of its items arrives.
+    own_slot_with_senders: also which player and location sends each item. Every client in the room can read
+    slot_data, so this shows everyone where this slot's items sit in other players' worlds."""
+    display_name = "Spoiler data in slot_data"
+    visibility = Visibility.all & ~Visibility.spoiler
+    option_off = 0
+    option_own_slot = 1
+    option_own_slot_with_senders = 2
+    default = 0
 
 
 def wanted(world) -> bool:

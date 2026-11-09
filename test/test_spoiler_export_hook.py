@@ -22,7 +22,7 @@ import pytest
 
 from BaseClasses import CollectionState  # noqa: F401  (loads BaseClasses before worlds, as AP does)
 from Fill import distribute_items_restrictive
-from Options import Toggle
+from Options import Visibility
 from test.general import setup_multiworld
 from worlds.AutoWorld import AutoWorldRegister
 
@@ -57,16 +57,19 @@ def built():
     return multiworld
 
 
-def _set_option(world, on):
-    if on is None:
+OFF, OWN_SLOT, WITH_SENDERS = 0, 1, 2
+
+
+def _set_option(world, value):
+    if value is None:
         world.options.__dict__.pop(hook.OPTION, None)
     else:
-        setattr(world.options, hook.OPTION, Toggle(int(on)))
+        setattr(world.options, hook.OPTION, client.SpoilerDataInSlotData(int(value)))
 
 
 @pytest.fixture
 def mw(built):
-    """Slot 2 has the option off and slots 1 and 3 on, as scenario 3 does. Each test starts with empty caches."""
+    """Slot 2 has the option off and slots 1 and 3 on (own_slot), as scenario 3 does. Each test starts with empty caches."""
     def configure(a1=True, a2=False, b1=True):
         _set_option(built.worlds[A1], a1)
         _set_option(built.worlds[A2], a2)
@@ -328,6 +331,104 @@ def test_an_id_is_sent_only_when_the_package_gives_that_name_back(address, name,
     assert hook._code(address, name, package) == expected
 
 
+# ---------------------------------------------------- own_slot_with_senders
+
+def _sender_rows(record):
+    return [row for row in record['steps'] if len(row) == 4]
+
+
+def _names(multiworld, player, row):
+    """A row's (item received, sending player, sending location), each ID read back through its own game's table."""
+    item = multiworld.worlds[player].item_id_to_name.get(row[2], row[2])
+    sender, location = row[3]
+    return item, sender, multiworld.worlds[sender].location_id_to_name.get(location, location)
+
+
+def test_own_slot_carries_no_sender_data_at_all(mw):
+    mw.configure(a1=OWN_SLOT, a2=OFF, b1=OWN_SLOT)
+    for player, record in hook.prepare(mw)['data'].items():
+        assert {len(row) for row in record['steps']} == {3}, player
+        assert sorted(record) == ['format', 'player', 'seed_name', 'start', 'steps', 'unreachable']
+
+
+def test_a_sender_row_names_the_player_and_location_the_spoiler_names(mw):
+    """Every row against the placements, both ways: nothing wrong, and no sending location left out."""
+    mw.configure(a1=WITH_SENDERS, a2=OFF, b1=WITH_SENDERS)
+    for player, record in hook.prepare(mw)['data'].items():
+        expected = sorted((loc.player, loc.name, loc.item.name) for loc in mw.get_filled_locations()
+                          if loc.item.player == player and loc.player != player)
+        assert expected, 'a seed where nobody sends this slot anything proves nothing'
+        found = []
+        for row in _sender_rows(record):
+            item, sender, location = _names(mw, player, row)
+            assert sender != player and row[1] is None
+            placed = mw.get_location(location, sender)
+            assert placed.item.player == player and placed.item.name == item
+            found.append((sender, location, item))
+        assert sorted(found) == expected
+
+
+def test_senders_change_nothing_else_in_the_record(mw):
+    """Same format, same rows in the same order, and other players' locations that give this slot nothing stay out."""
+    plain = {player: hook.compact_for(mw, hook.walk(mw), player) for player in (A1, B1)}
+    full = {player: hook.compact_for(mw, hook.walk(mw), player, True) for player in (A1, B1)}
+    for player in (A1, B1):
+        assert full[player]['format'] == plain[player]['format'] == hook.FORMAT
+        assert [row[:3] for row in full[player]['steps']] == plain[player]['steps']
+        assert {key: value for key, value in full[player].items() if key != 'steps'} == \
+               {key: value for key, value in plain[player].items() if key != 'steps'}
+        assert all(row[2] is not None and row[1] is None for row in _sender_rows(full[player]))
+
+
+def test_each_slot_gets_its_own_level_from_one_walk(mw):
+    mw.configure(a1=OWN_SLOT, a2=OFF, b1=WITH_SENDERS)
+    with mock.patch.object(hook, 'walk', wraps=hook.walk) as walked:
+        result = _run_client(mw)
+    assert walked.call_count == 1 and result[A2] == {}
+    assert _sender_rows(result[A1][hook.SLOT_DATA_KEY]) == [] and _sender_rows(result[B1][hook.SLOT_DATA_KEY])
+
+
+def test_a_race_seed_never_carries_senders_either(mw):
+    mw.configure(a1=WITH_SENDERS, a2=OFF, b1=WITH_SENDERS)
+    mw.is_race = True
+    assert _run_client(mw) == {A1: _omitted('race'), A2: {}, B1: _omitted('race')}
+
+
+def _one_step_world(address, name, sender_table, own_table):
+    """A stub: slot 1 receives an item from slot 2's location, with each game's table set by the test."""
+    item = types.SimpleNamespace(player=1, code=None, name='Item')
+    location = types.SimpleNamespace(player=2, address=address, name=name, item=item)
+    worlds = {1: types.SimpleNamespace(location_id_to_name=own_table, item_id_to_name={}),
+              2: types.SimpleNamespace(location_id_to_name=sender_table, item_id_to_name={})}
+    multiworld = types.SimpleNamespace(worlds=worlds, precollected_items={}, seed_name='s')
+    return hook.compact_for(multiworld, {'steps': [('0.1', location)], 'unreachable': 0}, 1, True)['steps'][0][3]
+
+
+@pytest.mark.parametrize('address,sender_table,own_table,expected', [
+    (7, {7: 'Chest'}, {}, 7),                                  # the sender's package gives the name back
+    (7, {7: 'Other'}, {7: 'Chest'}, 'Chest'),                  # only the RECEIVER's game knows this id as this name
+    (7, {}, {7: 'Chest'}, 'Chest'),                            # the sender's package doesn't list the id
+    (None, {}, {}, 'Chest'),                                   # an event location has no id
+], ids=['safe-id', 'sender-table-disagrees', 'not-in-sender-table', 'event'])
+def test_the_sender_location_follows_the_id_rule_for_the_senders_game(address, sender_table, own_table, expected):
+    assert _one_step_world(address, 'Chest', sender_table, own_table) == [2, expected]
+
+
+def test_the_option_is_one_choice_off_by_default():
+    option = client.SpoilerDataInSlotData
+    assert option.default == OFF and option.name_lookup[OFF] == 'off'
+    assert option.options['own_slot'] == OWN_SLOT
+    assert option.options['own_slot_with_senders'] == WITH_SENDERS == hook.OWN_SLOT_WITH_SENDERS
+    assert not option.visibility & Visibility.spoiler, 'in the text spoiler it would move every committed _Spoiler.txt'
+    assert option.from_any(False).value == OFF, 'an unquoted YAML `off` arrives as False'
+
+
+def test_the_option_description_says_what_senders_reveal():
+    description = ' '.join(client.SpoilerDataInSlotData.__doc__.split())
+    assert 'Every client in the room can read' in description and "other players' worlds" in description
+    assert 'Spoiler Export Hook' in description and 'race' in description
+
+
 # ---------------------------------------------------- the package
 
 def test_it_is_a_hidden_world_nobody_can_play():
@@ -372,14 +473,19 @@ def test_the_client_has_no_import_that_depends_on_load_order():
     """Scenario 9's defect, statically: a module-level import of the helper fails the caller when it loads first."""
     tree = ast.parse((HOOK_DIR / CLIENT_NAME).read_text(encoding='utf-8'))
     top_level = [node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))]
-    assert sorted(alias.name for node in top_level for alias in node.names) == ['importlib', 'logging']
-    assert all(isinstance(node, ast.Import) for node in top_level)
+    assert sorted(alias.name for node in top_level for alias in node.names) == \
+           ['Choice', 'Visibility', 'importlib', 'logging']
+    assert [node.module for node in top_level if isinstance(node, ast.ImportFrom)] == ['Options']
 
 
 #: The steps of worlds.WorldSource.load for a zip, over a stubbed `worlds` package (the real one loads every world).
 ZIP_LOAD_PROBE = r'''
-import importlib, importlib.util, json, sys, types, zipimport
+import enum, importlib, importlib.util, json, sys, types, zipimport
 apworld = sys.argv[1]
+options = types.ModuleType("Options")
+options.Choice = type("Choice", (), {})
+options.Visibility = enum.IntFlag("Visibility", {"spoiler": 1, "other": 2, "all": 3})
+sys.modules["Options"] = options
 worlds = types.ModuleType("worlds"); worlds.__path__ = []
 auto = types.ModuleType("worlds.AutoWorld")
 auto.World = type("World", (), {}); auto.WebWorld = type("WebWorld", (), {})
