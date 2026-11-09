@@ -31,8 +31,13 @@
  *
  * Deterministic, so `--check` is an exact byte gate.
  *
+ * ⛓ THE SOURCE (ER E4c): `--source=<atlas.json>` compiles that atlas instead of the committed playthrough atlas — its rooms
+ * must be the committed atlas's (only its connections may differ: an entrance shuffle's graph, `make-seedling-er-preset.mjs
+ * --atlas-out=<file>`), and its output goes to `--out=<rules.json>`, which a `--source` run must name (it never writes the
+ * preset above). See `buildPlaythroughMaze`'s `source`.
+ *
  * Usage:
- *   node scripts/procgen/make-seedling-playthrough-maze.mjs [--check] [--quiet]
+ *   node scripts/procgen/make-seedling-playthrough-maze.mjs [--check] [--quiet] [--source=<atlas.json> --out=<rules.json>]
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -60,11 +65,14 @@ import * as OV from '../../frontend/modules/flashPanel/seedlingPlaythroughOverla
 import { PUSHABLE_KINDS } from '../../frontend/modules/flashPanel/seedlingBlockPaths.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { readDerivedRuleTable, applyDerivedRuleTable, composedDisagreeMessage } from './seedlingDerivedRuleTable.js';
+import { apExitNamesByEndpoint } from '../../frontend/modules/procgenPipeline/entranceRandomizationReach.js';
 
 argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const ATLAS_DIR = resolve(REPO, 'frontend/modules/flashPanel/atlases');
 export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
+/** The committed playthrough atlas: the default SOURCE, and the rooms every source must carry. */
+export const PLAYTHROUGH_ATLAS_FILE = resolve(ATLAS_DIR, 'seedling-playthrough.json');
 
 /**
  * ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above) — since session
@@ -259,18 +267,24 @@ export function neededEvents(layer, produced) {
     return events;
 }
 
-/** The rules producer's event layer over the WHOLE playthrough atlas, built once per process (its analysis pass). */
-let producerLayer = null;
-function wholeEventLayer(atlas) {
-    if (!producerLayer) {
+/**
+ * The rules producer's event layer over the WHOLE source atlas, built once per process and source (its analysis pass).
+ * `rooms` (default: `atlas` itself) is the atlas whose ROOMS the source carries — it must be the producer's own build, byte
+ * for byte. A source whose connections differ from its rooms' (`buildPlaythroughMaze`'s `source`) takes its layer over its
+ * OWN connections (a landing gate or a rope lane follows the crossing that lands there), as the rules producer's compile does.
+ */
+const producerLayers = new Map();
+function wholeEventLayer(atlas, rooms = atlas) {
+    if (!producerLayers.has(atlas.atlas_id)) {
         const doc = buildPlaythroughAtlas();
-        if (JSON.stringify(doc) !== JSON.stringify(atlas)) {
+        if (JSON.stringify(doc) !== JSON.stringify(rooms)) {
             throw new Error('the playthrough atlas is stale against its producer — run make-seedling-playthrough-rules.mjs');
         }
-        setPlaythroughLandingAtlas(doc);
-        producerLayer = playthroughEventLayer(doc);
+        const over = rooms === atlas ? doc : atlas;
+        setPlaythroughLandingAtlas(over);
+        producerLayers.set(atlas.atlas_id, playthroughEventLayer(over));
     }
-    return producerLayer;
+    return producerLayers.get(atlas.atlas_id);
 }
 
 /**
@@ -283,9 +297,9 @@ function wholeEventLayer(atlas) {
  * than the game; the certifier names it. A row whose region (or, for a gate, whose crossing) is not in `levels` is
  * left out, as `ropeEventsFor` does; a kept rule naming an event this compile does not mint throws by name.
  */
-export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
+export function eventLayerFor(atlas, levels, { minted = [], rooms = atlas } = {}) {
     const keep = new Set(levels);
-    const layer = wholeEventLayer(atlas);
+    const layer = wholeEventLayer(atlas, rooms);
     const conns = atlas.vanilla_layout?.connections ?? [];
     const out = {
         events: layer.events.filter((e) => keep.has(e.region_id)),
@@ -401,8 +415,14 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
  * pass leaves uncharged on purpose, e.g. L89's Feather), read from its run — never copied — for the certifier's
  * `permissive` option (session tile-primitives-sphere-order-2, ⚖ 2026-10-26: a STRICTER maze row there is accepted by name).
  */
-export function playthroughPermissiveLocations() {
-    wholeEventLayer(readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json')));
+export function playthroughPermissiveLocations({ source = null } = {}) {
+    // ⛓ `source` (`buildPlaythroughMaze`'s): read off the SAME layer the compile took, so an ER process never takes a cache
+    // miss on the vanilla atlas (which re-ran the analysis and re-pointed the producer's landing atlas at vanilla). The
+    // bindings themselves are the rooms build's (`buildPlaythroughAtlas` takes no connections), pinned equal across sources.
+    const rooms = source?.roomsAtlas ?? readJson(PLAYTHROUGH_ATLAS_FILE);
+    const atlas = source?.atlas ?? rooms;
+    if (atlas !== rooms) assertSourceCarriesRooms(atlas, rooms);
+    wholeEventLayer(atlas, rooms);
     return [...permissiveBindings];
 }
 
@@ -624,7 +644,100 @@ export function plainLevelWorldFits(world, { maxPoints } = {}) {
 }
 
 /**
+ * The departures of `atlas` whose connection lands elsewhere than in `rooms` (`"<region>/<exit_id>"`, sorted): a SOURCE
+ * that rewires the playthrough's crossings over its own rooms (an entrance shuffle's doc) moves exactly these. Empty for
+ * the playthrough atlas itself. A source that differs from its rooms in anything but its connections' landings (and its
+ * identity) is refused first (`assertSourceCarriesRooms`). Pure.
+ */
+export function movedDepartures(atlas, rooms) {
+    if (atlas !== rooms) assertSourceCarriesRooms(atlas, rooms);
+    const at =(end) => `${end[0]}/${end[1]}`;
+    const vanilla = new Map((rooms.vanilla_layout?.connections ?? []).map((c) => [at(c.from), at(c.to)]));
+    return (atlas.vanilla_layout?.connections ?? []).filter((c) => vanilla.get(at(c.from)) !== at(c.to)).map((c) => at(c.from)).sort();
+}
+
+/**
+ * ⛓ ONLY THE CONNECTIONS MAY DIFFER (design review of ER E4c): what a source may change against its rooms is exactly what the
+ * entrance shuffle's `applyPlacements` changes on its copy — each connection's landing (`to`) — and what its restamp
+ * (`stampAtlasIdentity`) rewrites: `atlas_id` and `provenance.content_hash`. These are `SOURCE_EXEMPT`, read off that producer,
+ * not guessed. Everything else must be equal, and the DEPARTURE SET (each connection's `from`, once) must be the rooms'. A
+ * source that edits a room, drops/adds/duplicates a connection, or changes a connection's other fields would otherwise compile
+ * silently against the rooms' partition and table. Refuses by name (`SourceRoomsError`, `.problems`); returns nothing. Pure.
+ */
+export const SOURCE_EXEMPT = Object.freeze({ identity: Object.freeze(['atlas_id', 'provenance.content_hash']), connection: Object.freeze(['to']) });
+export class SourceRoomsError extends Error {
+    constructor(problems) {
+        super(`source: only the connections may differ from the rooms atlas — ${problems.join('; ')}`);
+        this.name = 'SourceRoomsError';
+        this.problems = problems;
+    }
+}
+export function sourceRoomsProblems(atlas, rooms) {
+    const at = (end) => `${end?.[0]}/${end?.[1]}`;
+    const strip = (doc) => {
+        const out = structuredClone(doc);
+        for (const path of SOURCE_EXEMPT.identity) {
+            const keys = path.split('.');
+            const parent = keys.slice(0, -1).reduce((o, k) => o?.[k], out);
+            if (parent && typeof parent === 'object') delete parent[keys.at(-1)];
+        }
+        if (out.vanilla_layout) delete out.vanilla_layout.connections;
+        return out;
+    };
+    const problems = [];
+    const a = strip(atlas);
+    const r = strip(rooms);
+    for (const k of [...new Set([...Object.keys(a), ...Object.keys(r)])].sort()) {
+        const sub = k === 'regions' || k === 'vanilla_layout' || k === 'provenance';
+        if (!sub && JSON.stringify(a[k]) !== JSON.stringify(r[k])) problems.push(`field ${k} differs`);
+    }
+    for (const k of ['provenance', 'vanilla_layout']) {
+        const x = a[k] ?? {};
+        const y = r[k] ?? {};
+        for (const f of [...new Set([...Object.keys(x), ...Object.keys(y)])].sort()) {
+            if (JSON.stringify(x[f]) !== JSON.stringify(y[f])) problems.push(`field ${k}.${f} differs`);
+        }
+    }
+    const roomsById = new Map((r.regions ?? []).map((g) => [g.region_id, g]));
+    const srcIds = new Set((a.regions ?? []).map((g) => g.region_id));
+    for (const g of a.regions ?? []) {
+        if (!roomsById.has(g.region_id)) problems.push(`room ${g.region_id} is not in the rooms atlas`);
+        else if (JSON.stringify(g) !== JSON.stringify(roomsById.get(g.region_id))) problems.push(`room ${g.region_id} differs`);
+    }
+    for (const id of roomsById.keys()) if (!srcIds.has(id)) problems.push(`room ${id} is missing`);
+    if (!problems.some((p) => p.startsWith('room ')) && JSON.stringify(a.regions) !== JSON.stringify(r.regions)) problems.push('the rooms are in another order');
+    const departures = (doc) => {
+        const m = new Map();
+        for (const c of doc.vanilla_layout?.connections ?? []) {
+            const k = at(c.from);
+            if (m.has(k)) problems.push(`departure ${k} has two connections`);
+            const rest = { ...c };
+            for (const f of SOURCE_EXEMPT.connection) delete rest[f];
+            m.set(k, JSON.stringify(rest));
+        }
+        return m;
+    };
+    const src = departures(atlas);
+    const own = departures(rooms);
+    for (const [k, v] of src) {
+        if (!own.has(k)) problems.push(`departure ${k} is in no connection of the rooms atlas`);
+        else if (v !== own.get(k)) problems.push(`connection ${k} differs in more than its landing`);
+    }
+    for (const k of own.keys()) if (!src.has(k)) problems.push(`departure ${k} is missing (its connection was removed)`);
+    return problems;
+}
+export function assertSourceCarriesRooms(atlas, rooms) {
+    const problems = sourceRoomsProblems(atlas, rooms);
+    if (problems.length) throw new SourceRoomsError(problems);
+}
+
+/**
  * Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`.
+ * ⛓ `source` (ER E4c): `{atlas, roomsAtlas}` — compile `atlas` instead of the committed playthrough atlas. `roomsAtlas` (default:
+ * the committed atlas) holds the rooms `atlas` carries: it keys the persisted partition and must equal the rules producer's
+ * build. Only the CONNECTIONS may differ, and that is ENFORCED (`assertSourceCarriesRooms`, by name); a departure that lands elsewhere (`movedDepartures`) takes the derived-rule table
+ * by its atlas endpoint and has its own row skipped by name, as the rules producer does on a shuffled doc. Absent, the
+ * compile is the preset's, byte for byte.
  * ⛓ `plant` (session tile-rules-automation-r-a1, the ECHO test): called once with `{atlas, layer, ropes}` after the event
  * layer and the rope events are derived from the TRUE atlas and before anything is projected or compiled; it may rewrite
  * their access rules in place (it is handed copies of the layer and the ropes, never the producer's cached rows) (the derived-rules probe plants a sentinel item in each, `seedlingEchoSentinels.js`, and
@@ -634,7 +747,7 @@ only rules the worlds copy, to plant in. Absent, the compile is the preset's, by
  */
 export function buildPlaythroughMaze({
     levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null, plainLevelWorlds = true, derivedTable = readDerivedRuleTable(),
-    levelWorlds = null, levelWorldBound = undefined,
+    levelWorlds = null, levelWorldBound = undefined, source = null,
 } = {}) {
     // ⛓⛓ THE PLANTED COMPILE TAKES THE TRUE COMPILE'S LEVEL-WORLD DECISIONS (session tile-l12-one-world; latent since R-A2, found by
     // tile-l12-level-world). A plant REPLACES every rule with its sentinel, so the planted payload's axis is not the true one
@@ -643,18 +756,20 @@ export function buildPlaythroughMaze({
     // planted compile answers `plainLevelWorldFits` from `levelWorlds` (region_id → the true compile's answer; the probe passes
     // its own), and with none given it runs the true compile first. `levelWorldBound`: TEST-ONLY (`plainLevelWorldFits`'s maxPoints).
     if (plant && plainLevelWorlds && !levelWorlds) {
-        levelWorlds = buildPlaythroughMaze({ levels, embedSphereLog: false, derivedTable, levelWorldBound }).levelWorlds;
+        levelWorlds = buildPlaythroughMaze({ levels, embedSphereLog: false, derivedTable, levelWorldBound, source }).levelWorlds;
     }
-    const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
+    const rooms = source?.roomsAtlas ?? readJson(PLAYTHROUGH_ATLAS_FILE);
+    const atlas = source?.atlas ?? rooms;
+    const moved = new Set(movedDepartures(atlas, rooms));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
     const partitionDoc = readJson(resolve(ATLAS_DIR, 'seedling-subregion-partition.json'));
-    const partition = partitionDoc.atlases?.[atlas.atlas_id];
+    const partition = partitionDoc.atlases?.[rooms.atlas_id];
     if (!partition) {
-        throw new Error(`the sub-region partition has no entry for "${atlas.atlas_id}" — run make-seedling-subregion-partition.mjs`);
+        throw new Error(`the sub-region partition has no entry for "${rooms.atlas_id}" — run make-seedling-subregion-partition.mjs`);
     }
     let ropes = ropeEventsFor(atlas, partition, levels);
-    let layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
+    let layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name), rooms });
     // Read from the TRUE atlas, before any plant: the hand inputs are the overlay's, not the atlas's.
     const hand = handInputsFor(atlas);
     if (plant) {
@@ -708,36 +823,66 @@ export function buildPlaythroughMaze({
     // so the certifier compares against what ships. AFTER the worlds are projected: they never read it (the sentinel pin,
     // derivedRuleOverride.test.js). The table rule is truth-table EQUAL to the composed one (guard 2, refused otherwise), so the
     // sphere log embedded above from the composed rules is the same log.
-    const override = applyDerivedRuleTable(rules, derivedTable, { partial: levels.length !== LEVELS.length || levels.some((l, i) => l !== LEVELS[i]) });
+    const partial = levels.length !== LEVELS.length || levels.some((l, i) => l !== LEVELS[i]);
+    let rekey = null;
+    if (moved.size) {
+        const endpoints = new Set(atlas.regions.flatMap((r) => (r.exits ?? []).map((e) => `${r.region_id}/${e.exit_id}`)));
+        const names = apExitNamesByEndpoint(rules, '1', { endpoints });
+        rekey = { moved, apExitOf: (rid, eid) => names.get(`${rid}/${eid}`) ?? null };
+    }
+    const override = applyDerivedRuleTable(rules, derivedTable, rekey ? { partial, rekey } : { partial });
     if (override.composedDisagrees.length) throw new Error(override.composedDisagrees.map(composedDisagreeMessage).join('\n'));
-    return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [], levelWorlds: plant ? levelWorlds : decided };
+    return {
+        text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [], levelWorlds: plant ? levelWorlds : decided,
+        moved: [...moved], skipped: override.skipped,
+    };
+}
+
+/** The CLI's flags: `{check, quiet, source, out}` (`source`/`out` absolute paths or null). Refuses a `--source` without `--out`. */
+export function parseMazeArgs(argv) {
+    const arg = (k) => {
+        const hit = argv.find((a) => a.startsWith(`--${k}=`));
+        if (hit === undefined) return null;
+        const v = hit.slice(k.length + 3);
+        if (!v) throw new Error(`--${k}= names no file`);
+        return resolve(v);
+    };
+    const source = arg('source');
+    const out = arg('out');
+    if (source && !out) throw new Error('--source needs --out: a source run never writes the seedling_playthrough_maze preset');
+    if (out && !source) throw new Error('--out needs --source: the preset itself is written to its own path');
+    if (out === OUT_FILE) throw new Error(`--out: ${OUT_FILE.slice(REPO.length + 1)} is the preset's own file`);
+    return { check: argv.includes('--check'), quiet: argv.includes('--quiet'), source, out };
 }
 
 if (isEntryPoint(import.meta.url)) {
-    const check = process.argv.includes('--check');
-    const quiet = process.argv.includes('--quiet');
     let built;
+    let flags;
     try {
-        built = buildPlaythroughMaze();
+        flags = parseMazeArgs(process.argv);
+        built = buildPlaythroughMaze(flags.source ? { source: { atlas: readJson(flags.source), roomsAtlas: readJson(PLAYTHROUGH_ATLAS_FILE) } } : {});
     } catch (e) {
         console.error(`ERROR: ${e.message}`);
         process.exit(1);
     }
+    const { check, quiet } = flags;
+    const target = flags.out ?? OUT_FILE;
     if (!quiet) for (const line of formatCompileReport(built.report)) console.log(line);
-    const rel = OUT_FILE.slice(REPO.length + 1);
+    if (!quiet && flags.source) console.log(`source ${flags.source}: ${built.moved.length} departure(s) moved, ${built.skipped.length} derived-rule row(s) skipped by name`);
+    const rel = target.startsWith(`${REPO}/`) ? target.slice(REPO.length + 1) : target;
     if (check) {
-        if (!existsSync(OUT_FILE)) {
+        if (!existsSync(target)) {
             console.error(`FAIL: ${rel} does not exist — run without --check to write it`);
             process.exit(1);
         }
-        if (readFileSync(OUT_FILE, 'utf8') !== built.text) {
+        if (readFileSync(target, 'utf8') !== built.text) {
             console.error(`FAIL: ${rel} is not what the playthrough atlas compiles to — regenerate it`);
             process.exit(1);
         }
         console.log(`OK: ${rel} is byte-identical to the compiled atlas`);
         process.exit(0);
     }
-    mkdirSync(dirname(OUT_FILE), { recursive: true });
-    writeFileSync(OUT_FILE, built.text);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, built.text);
     if (!quiet) console.log(`wrote ${rel} (${built.text.length} bytes)`);
 }

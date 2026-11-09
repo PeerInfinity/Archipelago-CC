@@ -16,6 +16,13 @@
  * Run:
  *   node scripts/procgen/make-seedling-er-preset.mjs           # write frontend/presets/seedling_er/AP_1/AP_1_rules.json
  *   node scripts/procgen/make-seedling-er-preset.mjs --check   # the gate: a fresh run equals the committed file
+ *   node scripts/procgen/make-seedling-er-preset.mjs --check --atlas-out=<file>   # also write the SHUFFLED atlas (ER E4c)
+ *
+ * ⛓ ER E4c — the SHUFFLED ATLAS (`buildSeedlingErSource`): the same run, stepped, with its accepted placements applied to the
+ * authored atlas (`applyPlacements`, the mode's own) — the graph `seedling_er` was compiled from. Nothing commits it: the
+ * ER maze projection (`make-seedling-playthrough-maze.mjs --source=<file>`) and the whole-game certifier's ER arm
+ * (`probe-seedling-whole-game-certify.mjs --source=er`) build it in the run. It must compile to the committed preset, byte
+ * for byte, or it is refused (it would not be the graph the preset names).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -48,10 +55,42 @@ export async function buildSeedlingErPreset() {
     return { rulesJson, rulesText: stringifyRulesJson(rulesJson), stats };
 }
 
+/**
+ * The SHUFFLED ATLAS the preset compiles (see the docblock): `{atlas, roomsAtlas, moved, rulesJson, rulesText}` — `roomsAtlas`
+ * the authored atlas the run pooled (the producer's own build), `moved` the departures placed elsewhere than their reverse.
+ */
+export async function buildSeedlingErSource() {
+    const { loadPipelineSubstrates } = await import('./registerPipelineSubstrates.js');
+    await loadPipelineSubstrates();
+    const S = await import('../../frontend/modules/procgenPipeline/entranceShuffleSteps.js');
+    const { buildEntranceRun } = await import('../../frontend/modules/procgenPipeline/presetRun.js');
+    const { stringifyRulesJson } = await import('../../frontend/modules/shared/rulesJsonBuilder.js');
+    const run = buildEntranceRun(seedlingErState());
+    const hooks = await S.entranceShuffleHooksFor(run.atlasId).load();
+    const env = await S.runEntranceToStep(S.newEntranceEnvelope(run), 'compile', { hooks });
+    const { atlas, moved } = S.applyPlacements(env.pool.atlas, env.classify, env.shuffle.placements);
+    const rulesJson = env.compile.rulesJson;
+    return { atlas, roomsAtlas: env.pool.atlas, moved: [...moved].sort(), rulesJson, rulesText: stringifyRulesJson(rulesJson) };
+}
+
 if (isEntryPoint(import.meta.url)) await main();
 
 async function main() {
     const check = process.argv.includes('--check');
+    const atlasOut = process.argv.find((a) => a.startsWith('--atlas-out='))?.slice('--atlas-out='.length) ?? null;
+    if (atlasOut !== null && !atlasOut) throw new Error('--atlas-out= names no file');
+    if (atlasOut) {
+        const src = await buildSeedlingErSource();
+        const committed = fs.existsSync(SEEDLING_ER_PRESET) ? fs.readFileSync(SEEDLING_ER_PRESET, 'utf8') : null;
+        if (committed !== src.rulesText) {
+            console.error(`ERROR: the stepped run does not compile to ${path.relative(REPO, SEEDLING_ER_PRESET)} — regenerate the preset first`);
+            process.exit(1);
+        }
+        fs.mkdirSync(path.dirname(path.resolve(atlasOut)), { recursive: true });
+        fs.writeFileSync(path.resolve(atlasOut), `${JSON.stringify(src.atlas)}\n`);
+        console.log(`wrote the shuffled atlas ${src.atlas.atlas_id} (${src.moved.length} departure(s) moved; rooms ${src.roomsAtlas.atlas_id}) to ${atlasOut}`);
+        if (!check) return;
+    }
     const { rulesText, rulesJson, stats } = await buildSeedlingErPreset();
     const block = rulesJson.entrance_randomization['1'];
     console.log(`seedling_er: seed ${block.seed}, ${block.placements.length} placements, ${stats.moved} exit(s) moved, `

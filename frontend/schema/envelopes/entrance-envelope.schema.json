@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "entrance-envelope (envelope_version 1)",
+  "description": "A serialized entrance-envelope. Fields marked \"x-visibility\": \"internal\" are resume state whose shape may change without a version bump; read the public ones.",
+  "type": "object",
+  "required": [
+    "kind",
+    "envelope_version",
+    "completed",
+    "source",
+    "seed",
+    "maxAttempts"
+  ],
+  "properties": {
+    "kind": {
+      "const": "entrance-envelope",
+      "description": "Which mode wrote this envelope.",
+      "x-visibility": "public"
+    },
+    "envelope_version": {
+      "const": 1,
+      "description": "The envelope format version (bumped when an envelope written now could not be read by the code that wrote it).",
+      "x-visibility": "public"
+    },
+    "source": {
+      "type": [
+        "object"
+      ],
+      "description": "The content source: {atlasId}, the authored graph the shuffle runs over.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "seed": {
+      "type": [
+        "integer"
+      ],
+      "description": "The shuffle seed; draw k takes drawSeed(seed, k).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "maxAttempts": {
+      "type": [
+        "integer"
+      ],
+      "description": "The draws a run may take (refusals and rejections together).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "sweep": {
+      "type": [
+        "string"
+      ],
+      "description": "The reach's inventory: 'placed' (default, vanilla items) or 'events' (GER's all-state).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "gameName": {
+      "type": [
+        "string"
+      ],
+      "description": "The compiled world's game name (default: the substrate producer's own) — an entrance-randomized world is its own game.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "completed": {
+      "type": [
+        "integer"
+      ],
+      "description": "Index into ENTRANCE_STEPS of the last step run; -1 = none.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "attempts": {
+      "type": [
+        "array"
+      ],
+      "description": "Every draw: {attempt, verdict, why?} (accepted / shuffle-refused / rejected-unbeatable / rejected-check).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "pool": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The authored atlas.",
+      "x-visibility": "internal",
+      "x-step": "pool"
+    },
+    "classify": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The substrate classifier's answer: doorways, target_group_lookup, pinned (each with its rule), outOfScope.",
+      "x-visibility": "public",
+      "x-step": "classify"
+    },
+    "vanilla": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The vanilla compile the shuffle binds its reach over.",
+      "x-visibility": "internal",
+      "x-step": "shuffle"
+    },
+    "_binding": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The live E3 binding (session only).",
+      "x-visibility": "internal",
+      "x-step": "shuffle"
+    },
+    "shuffle": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The current draw: {attempt, placements: [{exit, target}] by doorway id}.",
+      "x-visibility": "public",
+      "x-step": "shuffle"
+    },
+    "compile": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The accepted layout: rulesJson, its entrance_randomization block, moved exits, sphere count, attempts summary.",
+      "x-visibility": "public",
+      "x-step": "compile"
+    }
+  },
+  "additionalProperties": false
+}

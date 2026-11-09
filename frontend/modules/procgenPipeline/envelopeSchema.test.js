@@ -15,10 +15,11 @@ import { spiralEnvelopeSchema } from './spiralSteps.js';
 import {
     TOPDOWN_STEPS, newTopDownEnvelope, runTopDownStep, serializeTDEnvelope, topDownEnvelopeSchema,
 } from './topDownSteps.js';
+import { entranceEnvelopeSchema } from './entranceShuffleSteps.js';
 import { envelopeSchemaFiles } from '../../../scripts/procgen/generate-envelope-schemas.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '../../..');
-const SCHEMAS = { sphere: sphereEnvelopeSchema(), spiral: spiralEnvelopeSchema(), topdown: topDownEnvelopeSchema() };
+const SCHEMAS = { sphere: sphereEnvelopeSchema(), spiral: spiralEnvelopeSchema(), topdown: topDownEnvelopeSchema(), entrance: entranceEnvelopeSchema() };
 const visibility = (schema, field) => schema.properties[field]?.['x-visibility'];
 
 describe('envelope schemas', () => {
@@ -46,6 +47,8 @@ describe('envelope schemas', () => {
         expect(sphere.properties.grow.properties.grid['x-visibility']).toBe(FIELD_VISIBILITY.INTERNAL);
         expect(spiral.properties.regions.properties.grid['x-visibility']).toBe(FIELD_VISIBILITY.INTERNAL);
         expect(visibility(topdown, 'layout')).toBe(FIELD_VISIBILITY.INTERNAL);
+        // ER E4c: the entrance mode's resume state (the pooled atlas, the vanilla compile, the live binding)
+        for (const f of ['pool', 'vanilla', '_binding']) expect(visibility(SCHEMAS.entrance, f), f).toBe(FIELD_VISIBILITY.INTERNAL);
         for (const s of Object.values(SCHEMAS)) {
             for (const f of ['config', 'compile', 'completed'].filter((x) => s.properties[x])) {
                 expect(visibility(s, f), f).toBe(FIELD_VISIBILITY.PUBLIC);
