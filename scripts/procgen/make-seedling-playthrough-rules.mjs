@@ -89,12 +89,12 @@ const {
     deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
-    ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges,
+    ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, encounterLockSides,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
 const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
-const { contactRect } = await imp('frontend/modules/seedlingDemo/combat.js');
+const { contactRect, ENEMY_CLASSES } = await imp('frontend/modules/seedlingDemo/combat.js');
 const { spearHitRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
-const { swingHits } = await imp('frontend/modules/seedlingDemo/combatVerbs.js');
+const { swingHits, SLASH_SPRITES, SLASH_SCALE_NORMAL, SLASH_SCALE_DASH } = await imp('frontend/modules/seedlingDemo/combatVerbs.js');
 const { DARKTRAP_LIGHT_DEATH } = await imp('frontend/modules/seedlingDemo/enemyDamage.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
@@ -393,7 +393,11 @@ const gridFor = (level, options = {}) => {
     if (gate === null) return base;
     return { ...base, cells: base.cells.map((c) => (c.kind === 'gated' && gateKeyOf(c) === gate ? { ...c, kind: 'open', conditions: [] } : c)) };
 };
-const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => {
+const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true } = {}) => {
+    const grid = rawBaseGridFor(level, { directionalLocks, arrivals });
+    return encounter ? stampEncounterLocks(level, grid) : grid;
+};
+const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
     const build = (extra) => SEM.buildSeedlingRegionGrid(
         { x: 0, y: 0, w: level.width, h: level.height }, level,
         {
@@ -409,6 +413,100 @@ const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = t
     const cellCharges = ropeChargesFor(level, base);
     return stampOffGridGatedSolids(level, cellCharges.length ? build({ cellCharges }) : base);
 };
+
+/**
+ * ⛓⛓ RULES rocklock-pocket — **AN ENCOUNTER LOCK ONE SIDE CANNOT CLEAR, AS A LATCH FROM THAT SIDE.** The geometry and
+ * the why are `seedlingObstacleEvents.encounterLockSides`; this answers its atlas-side questions for one kill-lock
+ * room (`KILL_LOCKS`, `OV.killLockRoomRuling`):
+ *   - the room's shut kill-locks and their tiles (`SEM.entityClaims`, as the grid lays them);
+ *   - passability: the grid's own cells, any kind but `wall`/`sink` (permissive);
+ *   - the bodies: the ruling's counted bodies that do not die on their own, each at its CENTRE (`ENEMY_CLASSES[tag].ctor`,
+ *     the constructor's offset) with its `runRange` when it runs at the player (`aggro.kind` a chase), and an across-the-cut
+ *     reach = the Ghost Sword's slash rect (`SLASH_SPRITES.ghostsword`, the larger of its two scales: `Player.as:917` skips
+ *     the `Solid` line test for it) plus the body's own half hitbox.
+ * A lock FIRES when one side `clears` and another `cannot`: each step into it from a `cannot` side is walled, and the
+ * cell is a latch when its tag records the opening (`tset == -1`, `tag >= 0`). Not fired, by name: a lock whose tag a
+ * cross-level ButtonRoom also clears (`CROSS_LEVEL_OPENERS`: that button opens it from either side, its own event), a
+ * room no side clears (today's rule kept: the analyzer would drop every way through), and an `undecided` side.
+ */
+const ENCOUNTER_CHASE_KINDS = new Set(['chase', 'chase-through-walls', 'teleport-hop']);
+const ghostReach = (() => {
+    const g = SLASH_SPRITES.ghostsword;
+    // `combatVerbs.slashRect`: the ghost rect is w along the swing and 2w across it.
+    return Math.max(...[SLASH_SCALE_NORMAL, SLASH_SCALE_DASH].map((sc) => Math.hypot(g.w * sc.x, (g.w * 2 * sc.y) / 2)));
+})();
+const encounterMemo = new Map();
+export function encounterLocksOf(level, grid = null) {
+    if (encounterMemo.has(level.level)) return encounterMemo.get(level.level);
+    const room = KILL_LOCKS.get(level.level);
+    if (!room) {
+        encounterMemo.set(level.level, []);
+        return [];
+    }
+    const g = grid ?? rawBaseGridFor(level, { directionalLocks: DIRECTIONAL_LOCKS, arrivals: true });
+    const ox = g.origin?.x ?? 0;
+    const oy = g.origin?.y ?? 0;
+    const lockEntities = (level.entities ?? []).filter((e) => room.locks.includes(`${e.type}@${e.x},${e.y}`));
+    const tilesOf = (e) => SEM.entityClaims(e, playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e), { pixelMaskFootprints: true })
+        .map((c) => c.tile);
+    const closed = new Set(lockEntities.flatMap((e) => tilesOf(e).map(([x, y]) => `${x},${y}`)));
+    const bodies = room.bodies.filter((b) => !b.free).map((b) => {
+        const [tag, xy] = b.at.split('@');
+        const [x, y] = xy.split(',').map(Number);
+        const row = ENEMY_CLASSES[tag];
+        if (!row?.ctor || !row.hitbox) throw new Error(`encounter locks: L${level.level} ${b.at} has no ENEMY_CLASSES ctor/hitbox row`);
+        const { kind, range } = row.aggro ?? {};
+        return {
+            at: b.at,
+            centre: [x + row.ctor.dx, y + row.ctor.dy],
+            runRange: ENCOUNTER_CHASE_KINDS.has(kind) && typeof range === 'number' ? range : null,
+            reach: ghostReach + Math.hypot(row.hitbox.w, row.hitbox.h) / 2,
+        };
+    });
+    const out = lockEntities.map((e) => {
+        const tag = Number(e.attrs?.tag);
+        const lock = { level: level.level, tag, cls: e.type, x: e.x, y: e.y };
+        lock.name = obstacleEventName(lock);
+        const sides = encounterLockSides({
+            width: g.width, height: g.height, tile: TILE,
+            passable: (x, y) => !['wall', 'sink'].includes(g.cells[(y - oy) * g.width + (x - ox)]?.kind ?? 'wall'),
+            lockTiles: tilesOf(e), closed, bodies,
+        });
+        const crossLevel = CROSS_LEVEL_OPENERS.has(`${level.level}:${e.attrs?.tag}`);
+        const clears = sides.some((s) => s.verdict === 'clears');
+        const cannot = sides.filter((s) => s.verdict === 'cannot');
+        const fires = !crossLevel && clears && cannot.length > 0;
+        const why = crossLevel ? 'a cross-level ButtonRoom also clears its tag'
+            : !clears ? 'no side clears the room (today\'s rule kept)'
+                : cannot.length === 0 ? 'every side clears the room (or is undecided)' : null;
+        return {
+            ...lock, at: `${e.type}@${e.x},${e.y}`, sides, fires, why,
+            latch: fires && Number(e.attrs?.tset) === -1 && Number.isInteger(tag) && tag >= 0,
+            tiles: tilesOf(e),
+        };
+    });
+    encounterMemo.set(level.level, out);
+    return out;
+}
+function stampEncounterLocks(level, grid) {
+    const rows = encounterLocksOf(level).filter((r) => r.fires);
+    if (rows.length === 0) return grid;
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const cells = grid.cells.slice();
+    for (const row of rows) {
+        for (const side of row.sides.filter((s) => s.verdict === 'cannot')) {
+            for (const { tile: [tx, ty], dir } of side.steps) {
+                const i = (ty - oy) * grid.width + (tx - ox);
+                const cell = cells[i];
+                cells[i] = { ...cell, enter: { ...(cell.enter ?? {}), [dir]: null }, ...(row.latch ? { latch: true } : {}) };
+            }
+        }
+    }
+    return { ...grid, cells };
+}
+/** ⛓ RULES rocklock-pocket — the census over every kill-lock room, for a reader that reports it. */
+export const playthroughEncounterLocks = () => LEVELS.flatMap((level) => encounterLocksOf(level));
 
 /**
  * ⛓ RULES l66-door — **AN ITEM-GATED SOLID THAT CLAIMS NO WHOLE TILE STILL COSTS THE DOOR UNDER IT.**
@@ -558,6 +656,11 @@ function latchLocksOf(level) {
         const lock = { level: level.level, tag: Number(e.attrs[sem.persistAttr]), cls: e.type, x: e.x, y: e.y };
         lock.name = obstacleEventName(lock);
         for (const [tx, ty] of SEM.entityClaims(e, sem, { pixelMaskFootprints: true }).map((c) => c.tile)) out.set(`${tx},${ty}`, lock);
+    }
+    // ⛓ RULES rocklock-pocket — and every encounter lock latched from a side that cannot clear its room.
+    for (const row of encounterLocksOf(level).filter((r) => r.latch)) {
+        const lock = { level: row.level, tag: row.tag, cls: row.cls, x: row.x, y: row.y, name: row.name };
+        for (const [tx, ty] of row.tiles) out.set(`${tx},${ty}`, lock);
     }
     latchLocksMemo.set(level.level, out);
     return out;
