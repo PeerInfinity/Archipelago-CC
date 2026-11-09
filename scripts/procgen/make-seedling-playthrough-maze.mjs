@@ -640,21 +640,96 @@ export function plainLevelWorldFits(world, { maxPoints } = {}) {
 /**
  * The departures of `atlas` whose connection lands elsewhere than in `rooms` (`"<region>/<exit_id>"`, sorted): a SOURCE
  * that rewires the playthrough's crossings over its own rooms (an entrance shuffle's doc) moves exactly these. Empty for
- * the playthrough atlas itself. Pure.
+ * the playthrough atlas itself. A source that differs from its rooms in anything but its connections' landings (and its
+ * identity) is refused first (`assertSourceCarriesRooms`). Pure.
  */
 export function movedDepartures(atlas, rooms) {
-    const at = (end) => `${end[0]}/${end[1]}`;
+    if (atlas !== rooms) assertSourceCarriesRooms(atlas, rooms);
+    const at =(end) => `${end[0]}/${end[1]}`;
     const vanilla = new Map((rooms.vanilla_layout?.connections ?? []).map((c) => [at(c.from), at(c.to)]));
-    const unknown = (atlas.vanilla_layout?.connections ?? []).filter((c) => !vanilla.has(at(c.from)));
-    if (unknown.length) throw new Error(`source: ${unknown.map((c) => at(c.from)).join(', ')} depart(s) in no connection of the rooms atlas`);
     return (atlas.vanilla_layout?.connections ?? []).filter((c) => vanilla.get(at(c.from)) !== at(c.to)).map((c) => at(c.from)).sort();
+}
+
+/**
+ * ⛓ ONLY THE CONNECTIONS MAY DIFFER (design review of ER E4c): what a source may change against its rooms is exactly what the
+ * entrance shuffle's `applyPlacements` changes on its copy — each connection's landing (`to`) — and what its restamp
+ * (`stampAtlasIdentity`) rewrites: `atlas_id` and `provenance.content_hash`. These are `SOURCE_EXEMPT`, read off that producer,
+ * not guessed. Everything else must be equal, and the DEPARTURE SET (each connection's `from`, once) must be the rooms'. A
+ * source that edits a room, drops/adds/duplicates a connection, or changes a connection's other fields would otherwise compile
+ * silently against the rooms' partition and table. Refuses by name (`SourceRoomsError`, `.problems`); returns nothing. Pure.
+ */
+export const SOURCE_EXEMPT = Object.freeze({ identity: Object.freeze(['atlas_id', 'provenance.content_hash']), connection: Object.freeze(['to']) });
+export class SourceRoomsError extends Error {
+    constructor(problems) {
+        super(`source: only the connections may differ from the rooms atlas — ${problems.join('; ')}`);
+        this.name = 'SourceRoomsError';
+        this.problems = problems;
+    }
+}
+export function sourceRoomsProblems(atlas, rooms) {
+    const at = (end) => `${end?.[0]}/${end?.[1]}`;
+    const strip = (doc) => {
+        const out = structuredClone(doc);
+        for (const path of SOURCE_EXEMPT.identity) {
+            const keys = path.split('.');
+            const parent = keys.slice(0, -1).reduce((o, k) => o?.[k], out);
+            if (parent && typeof parent === 'object') delete parent[keys.at(-1)];
+        }
+        if (out.vanilla_layout) delete out.vanilla_layout.connections;
+        return out;
+    };
+    const problems = [];
+    const a = strip(atlas);
+    const r = strip(rooms);
+    for (const k of [...new Set([...Object.keys(a), ...Object.keys(r)])].sort()) {
+        const sub = k === 'regions' || k === 'vanilla_layout' || k === 'provenance';
+        if (!sub && JSON.stringify(a[k]) !== JSON.stringify(r[k])) problems.push(`field ${k} differs`);
+    }
+    for (const k of ['provenance', 'vanilla_layout']) {
+        const x = a[k] ?? {};
+        const y = r[k] ?? {};
+        for (const f of [...new Set([...Object.keys(x), ...Object.keys(y)])].sort()) {
+            if (JSON.stringify(x[f]) !== JSON.stringify(y[f])) problems.push(`field ${k}.${f} differs`);
+        }
+    }
+    const roomsById = new Map((r.regions ?? []).map((g) => [g.region_id, g]));
+    const srcIds = new Set((a.regions ?? []).map((g) => g.region_id));
+    for (const g of a.regions ?? []) {
+        if (!roomsById.has(g.region_id)) problems.push(`room ${g.region_id} is not in the rooms atlas`);
+        else if (JSON.stringify(g) !== JSON.stringify(roomsById.get(g.region_id))) problems.push(`room ${g.region_id} differs`);
+    }
+    for (const id of roomsById.keys()) if (!srcIds.has(id)) problems.push(`room ${id} is missing`);
+    if (!problems.some((p) => p.startsWith('room ')) && JSON.stringify(a.regions) !== JSON.stringify(r.regions)) problems.push('the rooms are in another order');
+    const departures = (doc) => {
+        const m = new Map();
+        for (const c of doc.vanilla_layout?.connections ?? []) {
+            const k = at(c.from);
+            if (m.has(k)) problems.push(`departure ${k} has two connections`);
+            const rest = { ...c };
+            for (const f of SOURCE_EXEMPT.connection) delete rest[f];
+            m.set(k, JSON.stringify(rest));
+        }
+        return m;
+    };
+    const src = departures(atlas);
+    const own = departures(rooms);
+    for (const [k, v] of src) {
+        if (!own.has(k)) problems.push(`departure ${k} is in no connection of the rooms atlas`);
+        else if (v !== own.get(k)) problems.push(`connection ${k} differs in more than its landing`);
+    }
+    for (const k of own.keys()) if (!src.has(k)) problems.push(`departure ${k} is missing (its connection was removed)`);
+    return problems;
+}
+export function assertSourceCarriesRooms(atlas, rooms) {
+    const problems = sourceRoomsProblems(atlas, rooms);
+    if (problems.length) throw new SourceRoomsError(problems);
 }
 
 /**
  * Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`.
  * ⛓ `source` (ER E4c): `{atlas, roomsAtlas}` — compile `atlas` instead of the committed playthrough atlas. `roomsAtlas` (default:
  * the committed atlas) holds the rooms `atlas` carries: it keys the persisted partition and must equal the rules producer's
- * build. Only the CONNECTIONS may differ; a departure that lands elsewhere (`movedDepartures`) takes the derived-rule table
+ * build. Only the CONNECTIONS may differ, and that is ENFORCED (`assertSourceCarriesRooms`, by name); a departure that lands elsewhere (`movedDepartures`) takes the derived-rule table
  * by its atlas endpoint and has its own row skipped by name, as the rules producer does on a shuffled doc. Absent, the
  * compile is the preset's, byte for byte.
  * ⛓ `plant` (session tile-rules-automation-r-a1, the ECHO test): called once with `{atlas, layer, ropes}` after the event

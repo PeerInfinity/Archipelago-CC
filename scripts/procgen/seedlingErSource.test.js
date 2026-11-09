@@ -9,6 +9,9 @@
  *     skips BY NAME exactly the derived-rule rows of the moved exits (the rules producer's own set on the same doc); its AP
  *     exit names per atlas endpoint are the ER rules preset's (both compile the same graph); a `--source` run never names the
  *     vanilla preset's file;
+ *   - ONLY THE CONNECTIONS MAY DIFFER (design review of E4c): the exempt fields are exactly what `applyPlacements` and its
+ *     restamp change, and each other difference (an edited, added, removed or reordered room, a connection removed or doubled
+ *     or changed beyond its landing, any other field) is a named `SourceRoomsError` mutant;
  *   - `apExitNamesByEndpoint` over a MAZE doc: keyed by `atlas_exit_id`, the internal crossings' synthetic ids left out by
  *     `endpoints` (without it the maze doc's `cross_*` ids collide and it throws);
  *   - the ENVELOPE: serialized at every step it validates against the committed schema (`_binding` never written); a run
@@ -67,8 +70,65 @@ describe('the shuffled atlas the preset compiles', () => {
         expect(MAZE.movedDepartures(env.pool.atlas, env.pool.atlas)).toEqual([]);
         expect(env.compile.moved).toEqual([...moved].sort());
         const bad = structuredClone(atlas);
-        bad.vanilla_layout.connections.push({ from: ['level_0', 'out_mutant'], to: ['level_2', 'in_mutant'] });
-        expect(() => MAZE.movedDepartures(bad, env.pool.atlas)).toThrow(/level_0\/out_mutant depart\(s\) in no connection/);
+        const [first] = bad.vanilla_layout.connections;
+        bad.vanilla_layout.connections.push({ ...first, from: [first.from[0], 'out_mutant'] });
+        expect(() => MAZE.movedDepartures(bad, env.pool.atlas)).toThrow(new RegExp(`departure ${first.from[0]}/out_mutant is in no connection`));
+    });
+});
+
+describe('a source carries its rooms: ONLY the connections may differ (SourceRoomsError)', () => {
+    let atlas;
+    let rooms;
+    const conn = (doc) => doc.vanilla_layout.connections;
+    const end = (c) => `${c.from[0]}/${c.from[1]}`;
+    // each mutant: one edit of a copy of the shuffled atlas, and the named problem it must raise
+    const MUTANTS = [
+        ['an edited room', (d) => { d.regions[0].exits = d.regions[0].exits.slice(1); }, (d) => `room ${d.regions[0].region_id} differs`],
+        ['a room removed', (d) => { d.regions.pop(); }, (_d, r) => `room ${r.regions.at(-1).region_id} is missing`],
+        ['a room added', (d) => { d.regions.push({ ...structuredClone(d.regions[0]), region_id: 'mutant_room' }); }, () => 'room mutant_room is not in the rooms atlas'],
+        ['the rooms reordered', (d) => { d.regions.reverse(); }, () => 'the rooms are in another order'],
+        ['a connection removed', (d) => { conn(d).pop(); }, (_d, r) => `departure ${end(conn(r).at(-1))} is missing (its connection was removed)`],
+        ['a departure doubled', (d) => { conn(d).push(structuredClone(conn(d)[0])); }, (d) => `departure ${end(conn(d)[0])} has two connections`],
+        ['a connection changed beyond its landing', (d) => { conn(d)[0].one_way = !conn(d)[0].one_way; }, (d) => `connection ${end(conn(d)[0])} differs in more than its landing`],
+        ['the start moved', (d) => { d.vanilla_layout.start_region = d.regions.at(-1).region_id; }, () => 'field vanilla_layout.start_region differs'],
+        ['a provenance field other than the content hash', (d) => { d.provenance.generator = 'mutant'; }, () => 'field provenance.generator differs'],
+        ['a top-level field', (d) => { d.tile_space = { ...d.tile_space, mutant: 1 }; }, () => 'field tile_space differs'],
+    ];
+    beforeAll(() => {
+        ({ atlas } = M.applyPlacements(env.pool.atlas, env.classify, env.shuffle.placements));
+        rooms = env.pool.atlas;
+    });
+    it('the exempt fields are exactly what applyPlacements and its restamp change: the shuffled atlas passes', () => {
+        expect(MAZE.sourceRoomsProblems(atlas, rooms)).toEqual([]);
+        // derived, not typed: every field the producer's output differs in is exempt
+        expect(atlas.atlas_id).not.toBe(rooms.atlas_id);
+        expect(atlas.provenance.content_hash).not.toBe(rooms.provenance.content_hash);
+        const relanded = conn(atlas).filter((c, i) => JSON.stringify(c.to) !== JSON.stringify(conn(rooms)[i].to));
+        expect(relanded.length).toBeGreaterThan(0);
+        const back = structuredClone(atlas);
+        for (const p of MAZE.SOURCE_EXEMPT.identity) {
+            const ks = p.split('.');
+            ks.slice(0, -1).reduce((o, k) => o[k], back)[ks.at(-1)] = ks.reduce((o, k) => o[k], rooms);
+        }
+        conn(back).forEach((c, i) => { for (const f of MAZE.SOURCE_EXEMPT.connection) c[f] = conn(rooms)[i][f]; });
+        expect(JSON.stringify(back)).toBe(JSON.stringify(rooms));
+    });
+    for (const [label, mutate, problem] of MUTANTS) {
+        it(`MUTANT: ${label} is refused by name`, () => {
+            const bad = structuredClone(atlas);
+            mutate(bad);
+            const want = problem(bad, rooms);
+            expect(MAZE.sourceRoomsProblems(bad, rooms)).toContain(want);
+            let err;
+            try { MAZE.movedDepartures(bad, rooms); } catch (e) { err = e; }
+            expect(err).toBeInstanceOf(MAZE.SourceRoomsError);
+            expect(err.problems).toContain(want);
+        });
+    }
+    it('MUTANT: buildPlaythroughMaze refuses an edited source before it compiles', () => {
+        const bad = structuredClone(atlas);
+        conn(bad).pop();
+        expect(() => MAZE.buildPlaythroughMaze({ source: { atlas: bad, roomsAtlas: rooms } })).toThrow(MAZE.SourceRoomsError);
     });
 });
 
