@@ -33,7 +33,9 @@ describe('KNOCKBACK376 — the switch', () => {
         'D1 ships ON (⚖ user 2026-11-05 "Flip + re-record"), last in the defaults', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.rockGoneFencepost).toBe(true);
             expect(CONTACT_FIDELITY.rockGoneFencepost).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('rockGoneFencepost');
+            // ⛓ wave 38: L39PHANTOM appended `spinnerRosterGone` (OFF) after it — the newest-key row moved there.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf('rockGoneFencepost') + 1)).toEqual(['spinnerRosterGone']);
         });
     it('the env name is a known worker env name', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_ROCK_GONE_FENCEPOST');

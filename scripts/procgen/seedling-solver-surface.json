@@ -4394,14 +4394,14 @@
         "axePricedCrossing.js": 4,
         "botDriverV2.js": 6,
         "crusherBait.js": 4,
-        "dangerMap.js": 7,
+        "dangerMap.js": 8,
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
         "solverBot.js": 150,
         "strikePolicy.js": 3
       },
-      "sites": 189,
+      "sites": 190,
       "seen": "static",
       "via": [
         "import"

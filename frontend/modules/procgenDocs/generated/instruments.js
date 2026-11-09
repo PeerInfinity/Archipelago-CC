@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 144,
-            "count": 194,
+            "browser": 145,
+            "count": 195,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 513,
-        "browser": 210,
-        "cited": 272,
-        "files": 531,
+        "blockStyle": 514,
+        "browser": 211,
+        "cited": 273,
+        "files": 532,
         "lineStyle": 18,
-        "withDocblock": 531,
-        "withFlags": 450
+        "withDocblock": 532,
+        "withFlags": 451
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14741,6 +14741,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l39-pulser-kill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l39-pulser-kill — ⛓⛓ seedling-fidelity-l39phantom D0: A PULSER KILLS `spinner@112,88` IN L39, ON THE GAME, and what is left of it afterwards (its fade, its removal), compared with the model tick by tick at 0 px.",
+            "path": "scripts/procgen/probe-seedling-l39-pulser-kill.mjs"
         },
         {
             "argvHelpers": [

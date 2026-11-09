@@ -1901,6 +1901,21 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_ROCK_GONE_FENCEPOST=0|1`.
      */
     rockGoneFencepost: true,
+    /**
+     * fidelity L39PHANTOM D1 (wave 38) — A SPINNER THE RUN'S ROSTER LOST IS GONE, WHATEVER KILLED IT. The danger map's
+     * static ingredient (`dangerMap.staticEnemyDanger` / `dangerVolumes`, through `spinnersTheRunSteps`) skipped a
+     * census spinner only while it was in the live roster or had a LANDED press hit (`spinnerPressHits`), so a spinner
+     * killed by anything else — a Pulser's ring (`Pulser.as:108-111`, `t: "Pulse"`), a bomb, a dark hit, a ghost swing,
+     * water, lava, a pit — was priced as "a static Enemy body at its placement" for the rest of the visit. Measured: L39's
+     * `pulser@64,96` kills `spinner@112,88` (game-witnessed at 0 px, `fidelityL39Phantom` /
+     * `probe-seedling-l39-pulser-kill.mjs`: destroy t1267, gone from the game's world t1278), and the census leg
+     * `level_39__r25c9 <- in_L38_144_0 -> Level 039 - Totem Part 72,40` refuses on that placement. ON: a spinner in
+     * `world.spinners` (the roster the visit was built with) and absent from `run.entities('spinnerBodies')` is not priced
+     * at its placement; one in its death fade is still in the roster (and still harmful: the live arm prices it); a run
+     * with no roster read or a world with no spinner list is priced as OFF. OFF: byte-identical.
+     * `SEEDLING_SPINNER_ROSTER_GONE=0|1`.
+     */
+    spinnerRosterGone: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2280,6 +2295,9 @@ if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '0') CONTACT_FIDELITY.ap
 // ⛓ fidelity KNOCKBACK376 D1: `SEEDLING_ROCK_GONE_FENCEPOST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '1') CONTACT_FIDELITY.rockGoneFencepost = true;
 if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '0') CONTACT_FIDELITY.rockGoneFencepost = false;
+// ⛓ fidelity L39PHANTOM D1: `SEEDLING_SPINNER_ROSTER_GONE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '1') CONTACT_FIDELITY.spinnerRosterGone = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '0') CONTACT_FIDELITY.spinnerRosterGone = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

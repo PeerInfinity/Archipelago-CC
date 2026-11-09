@@ -105,7 +105,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
         || !!process.env.SEEDLING_BAIT_PARKED_TAIL
-        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -387,7 +387,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L25APITEM D1 (wave 37d): the survey stages a playthrough AP chest as its delivered apitem — ON since its flip (⚖ user 2026-11-06).
             apChestItem: true,
             // ⛓ fidelity KNOCKBACK376 D1 (wave 37c): a broken rock's cell opens on the game's tick — ON since its flip (⚖ user 2026-11-05).
-            rockGoneFencepost: true });
+            rockGoneFencepost: true,
+            // ⛓ fidelity L39PHANTOM D1 (wave 38): a spinner the run's roster lost is not priced at its placement — OFF until licensed.
+            spinnerRosterGone: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
