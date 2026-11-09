@@ -1,0 +1,23 @@
+// scratch: the dashless pass at a seam, every solver trace row (seeRow-shaped) captured with its fields
+import { readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
+const R = '/home/user/Archipelago-CC';
+const { restoreRequest } = await import(R + '/scripts/procgen/seedlingSolveRequestCodec.js');
+const { atSeamTime } = await import(R + '/scripts/procgen/replay-seedling-solve-request.mjs');
+const { atlasLevelSource } = await import(R + '/frontend/modules/seedlingDemo/levelSource.js');
+const JR = await import(R + '/frontend/modules/seedlingDemo/jsRuntimeSolver.js');
+const args = Object.fromEntries(process.argv.slice(2).map((a) => a.replace(/^--/, '').split('=')));
+const w = JSON.parse(gunzipSync(readFileSync(process.env.SCRATCH + '/leg376-play.json.gz')).toString());
+const req = restoreRequest(atSeamTime(w.request, Number(args.seam)));
+const { passes = JR.ANYTIME_PASSES, budgetWork, upgradeWindowWork, ...tape } = req;
+const p = passes.find((x) => x.pass === (args.pass ?? 'dashless'));
+const rows = []; const orig = Array.prototype.push; const seen = new WeakSet();
+Array.prototype.push = function (...xs) { const o = xs[0]; if (xs.length === 1 && o && typeof o === 'object' && 'saw' in o && 'strategy' in o && 'tick' in o && !seen.has(o)) { seen.add(o); orig.call(rows, o); } return orig.apply(this, xs); };
+const a = JR.settleSolve(() => JR.solveFromTape({ ...tape, levelSource: atlasLevelSource(), dashMode: p.dashMode, adds: p.adds ?? null }));
+Array.prototype.push = orig;
+console.log('ok', a.ok, (a.message ?? '').slice(0, 200));
+for (const r of rows) {
+  if (r.tick < Number(args.from ?? 0)) continue;
+  const s = r.saw ?? {};
+  console.log(r.tick, r.strategy?.verb, r.obstacle?.id ?? '', JSON.stringify({x:s.x,y:s.y,vx:s.vx,vy:s.vy,d:s.danger}), r.path ? 'path ' + JSON.stringify(r.path.map((q) => [q.x, q.y])).slice(0, 300) : '', JSON.stringify(r.strategy).slice(0, 300));
+}

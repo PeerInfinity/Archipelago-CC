@@ -938,7 +938,10 @@ async function botPlaysOn(tc) {
         if (!got) return tc.getOverallResult();
         await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
 
-        // The end door: on through piece 0's end, the LADDER (the one respawn, with its on-screen note), piece 1, the door.
+        // The end door: on through piece 0's end, the LADDER (with its on-screen note), piece 1, the door. A page that walks
+        // the ladder (P7c, features.ladderWalk) notes the walk ('ladderWalk') and then its outcome ('ladder', crossing:
+        // 'crossed' or 'fellBack'); an older page respawns ('ladder' alone). Row 12 holds the walk itself.
+        const walks = !!embed()?.features?.ladderWalk;
         const n2 = botNotes().length;
         const before = app()?.configures ?? 0;
         const left = botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
@@ -946,12 +949,17 @@ async function botPlaysOn(tc) {
             const el = embed()?.botNoteElement;
             return el && !el.hidden && /ladder/.test(el.textContent) ? el.textContent : null;
         }, 'the ladder note on screen', BOT_TIMEOUT_MS, 50);
-        tc.reportCondition(`the page shows the ladder note (${JSON.stringify(shown)})`, shown === 'ladder: skipping to checkpoint 1');
+        const shownOk = walks ? /^ladder: (walking across|walked across|skipping) to checkpoint 1$/.test(shown ?? '')
+            : shown === 'ladder: skipping to checkpoint 1';
+        tc.reportCondition(`the page shows the ladder note (${JSON.stringify(shown)})`, shownOk);
         const door = await left;
         tc.reportCondition(`Clouds held: the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
         const notes = botNotes().slice(n2);
-        tc.reportCondition(`…with exactly one respawn on the way, the ladder 0 → 1 (${JSON.stringify(notes)})`,
-            notes.length === 1 && notes[0].note === 'ladder' && notes[0].fromPiece === 0 && notes[0].toPiece === 1);
+        const ladder = notes.filter((e) => e.note === 'ladder');
+        tc.reportCondition(`…with the ladder 0 → 1 the one note on the way${walks ? ' (and its walk)' : ''} (${JSON.stringify(notes)})`,
+            ladder.length === 1 && ladder[0].fromPiece === 0 && ladder[0].toPiece === 1
+            && notes.every((e) => e.note === 'ladder' || (walks && e.note === 'ladderWalk'))
+            && (!walks || ladder[0].crossing === 'crossed' || ladder[0].crossing === 'fellBack'));
         await configured(tc, 'region_3_2', { after: before });
     } catch (e) {
         tc.reportCondition(`Test error: ${e.message}`, false);
@@ -965,7 +973,8 @@ registerTest({
     description: 'P7b, on a page with __cloudberryEmbed.features.botContinuous (else NOT RUN BY NAME). Preset region_2_2: the walk to '
                + 'the end door without Clouds fails by name (exhausted, with its reason) after bounded restarts; the bot reaches '
                + 'both check coins with no respawn between them; with Clouds it plays on to the end door with exactly one '
-               + 'respawn, the ladder 0 → 1, whose note the page shows; the door sends the exit → region_3_2.',
+               + 'respawn, the ladder 0 → 1, whose note the page shows; the door sends the exit → region_3_2. On a page with '
+               + 'features.ladderWalk (P7c) the ladder is walked: its notes are the walk and its outcome (crossed or fellBack).',
     testFunction: botPlaysOn,
     category: CATEGORY,
     enabled: false,
@@ -1086,6 +1095,77 @@ registerTest({
                + 'reaches the strip through the bridge\'s substrate:botStatus relay. ("Sent X to <player>" needs another player\'s item in a local '
                + 'location: unit-tested in statusStripModel.test.js.)',
     testFunction: statusStripLocalCheckLogs,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 13. the bot WALKS ACROSS the ladder (P7c) ─────────────────────────────────
+
+async function botWalksTheLadder(tc) {
+    try {
+        const site = await siteOrRefuse(tc);
+        if (!site) return tc.getOverallResult();
+        const a = await loadPreset(tc);
+        if (!a) return tc.getOverallResult();
+        if (!embed().features?.ladderWalk) {
+            tc.log(`NOT RUN BY NAME: this page (build ${String(site.build).slice(0, 12)}) respawns the bot at a ladder `
+                + '(no __cloudberryEmbed.features.ladderWalk) — the Cloudberry branch p7c-ladder-crosser adds it.', 'warn');
+            return tc.getOverallResult();
+        }
+        // The plan is made at configure (⚖ Robert 2026-11-07: no mid-play planning): region_2_2's one ladder is walkable.
+        const plan = app()?.ladderPlan;
+        tc.log(`ladder planning at configure: ${JSON.stringify(plan)}`);
+        tc.reportCondition(`the page planned region_2_2's ladder at configure: 1 ladder, walkable (${JSON.stringify(plan)})`,
+            plan?.ok === true && plan.ladders === 1 && plan.crossable >= 1);
+        const checks = (embed().status()?.checks ?? []).slice().sort((x, y) => x.piece - y.piece || x.tick - y.tick);
+        const locOf = (name) => `region_2_2__${name}`;
+        // ⛓ premise: the check coins (piece 0) give Clouds, which the end door needs (see row 11).
+        for (const c of checks) {
+            const r = await botWalk(tc, { kind: 'location', name: locOf(c.name) }, `the bot reaches ${c.name}`);
+            tc.reportCondition(`the bot reaches ${c.name} (${JSON.stringify(r)})`, r?.result === 'reached');
+        }
+        const got = await tc.pollForValue(async () => (held(await snapshot(tc), 'Clouds') ? true : null), 'Clouds received', 20000, 250);
+        tc.reportCondition('Clouds received', !!got);
+        if (!got) return tc.getOverallResult();
+        await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
+
+        const n = botNotes().length;
+        const before = app()?.configures ?? 0;
+        const sawWalk = [];
+        const left = botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
+        // While it walks, the bob is under code control across the ladder, not respawned: watch its x pass the ladder.
+        const across = await tc.pollForValue(() => {
+            const st = embed()?.status?.();
+            if (st?.botStats?.ladder?.stage) sawWalk.push(st.bob?.pos?.[0]);
+            return botNotes().slice(n).some((e) => e.note === 'ladder') ? true : null;
+        }, 'the ladder outcome note', BOT_TIMEOUT_MS, 50);
+        const notes = botNotes().slice(n);
+        const walk = notes.find((e) => e.note === 'ladderWalk');
+        const out = notes.find((e) => e.note === 'ladder');
+        tc.reportCondition(`the walk across starts with its note (${JSON.stringify(walk)})`, walk?.fromPiece === 0 && walk?.toPiece === 1);
+        tc.reportCondition(`…and ends CROSSED, not a respawn: ${JSON.stringify(out)}`,
+            !!across && out?.crossing === 'crossed' && out.fromPiece === 0 && out.toPiece === 1);
+        tc.reportCondition(`…the re-sync moved the bob at most 150 px (${out?.resync} px)`, Number.isFinite(out?.resync) && out.resync <= 150);
+        const xs = sawWalk.filter(Number.isFinite);
+        tc.reportCondition(`…the bob was seen ON the ladder, moving right (x ${xs.length ? `${Math.round(Math.min(...xs))} → ${Math.round(Math.max(...xs))}` : 'never seen'})`,
+            xs.length >= 2 && Math.max(...xs) - Math.min(...xs) > 100);
+        const door = await left;
+        tc.reportCondition(`the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
+        await configured(tc, 'region_3_2', { after: before });
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-bot-walks-the-ladder',
+    name: 'Cloudberry: the bot walks across the ladder between pieces (planned at load; the respawn is only the fallback)',
+    description: 'P7c, on a page with __cloudberryEmbed.features.ladderWalk (else NOT RUN BY NAME). Preset region_2_2: the page '
+               + 'planned the one ladder at configure (walkable); with Clouds the walk to the end door crosses the ladder with the '
+               + 'bob under control (seen on the ladder, moving right): a ladderWalk note, then ladder crossing:crossed with a '
+               + 're-sync of at most 150 px; the door sends the exit → region_3_2.',
+    testFunction: botWalksTheLadder,
     category: CATEGORY,
     enabled: false,
 });

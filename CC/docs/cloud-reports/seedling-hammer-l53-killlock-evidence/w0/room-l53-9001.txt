@@ -1,0 +1,23 @@
+level 53 14x16 player (56,152) tick 0
+  chaser jellyfish@144,192 (152.0,200.0)
+  chaser puncher@136,96 (144.0,104.0)
+  chaser jellyfish@184,160 (192.0,168.0)
+  chaser jellyfish@152,168 (160.0,176.0)
+  activator lock@144,208 lock
+      01234567890123
+   0  ??##########??
+  16  ?############?
+  32  ##vvvvvvvvvv#?
+  48  ##vv######vv##
+  64  ###v#######vvv
+  80  ?##vvvvvvv####
+  96  ??#v##vvvv####
+ 112  ?##v##vvvv####
+ 128  ##vvv##v######
+ 144  ##wvv##W##vvv#
+ 160  #Wwww##Wvvvvv#
+ 176  #WWWWW##vvvvv#
+ 192  ##WWWW###vvwv#
+ 208  #########w####
+ 224  ?########w####
+ 240  ???????##v##??

@@ -12,7 +12,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, sealedDoorsCharged, sealedLocationsCharged, permissiveBindings,
+    buildPlaythroughAtlas, sealedDoorsCharged, sealedLocationsCharged, permissiveBindings, locationsRebound,
 } from './make-seedling-playthrough-rules.mjs';
 import { PLAYTHROUGH_ENTITY_OVERLAY } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 
@@ -49,9 +49,12 @@ describe('a location INSIDE an item-gated solid is charged that solid', () => {
         expect(locationOf('level_20', 'Level 020 - Shield').access_rule).toBeUndefined();
     });
 
-    it('a location bound through ONE approach\'s gated way is not charged that way, and is counted (L89 Feather)', () => {
-        expect(locationOf('level_89', 'Level 089 - Feather').access_rule).toBeUndefined();
-        expect(permissiveBindings).toContain('level_89/Level 089 - Feather');
+    it('a location bound through gated ways is REBOUND to its cheapest one and charged it (RULES l89-feather: L89 Feather)', () => {
+        const loc = locationOf('level_89', 'Level 089 - Feather');
+        expect(loc.sub_region).toBe('r1c10');
+        expect(loc.access_rule).toEqual(has('Progressive Swim'));
+        expect(locationsRebound).toEqual(['level_89/Level 089 - Feather: r9c6 → r1c10']);
+        expect(permissiveBindings).not.toContain('level_89/Level 089 - Feather');
     });
 });
 

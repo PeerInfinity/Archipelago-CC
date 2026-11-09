@@ -7,13 +7,14 @@ import { defineConfig, configDefaults } from 'vitest/config';
 // generator-capacity census, the maze certifier's SCRIPTED sample, and two heavy
 // default-tier hammer pins. They were the slow tier's critical path.
 //
-// WHERE IT RUNS — the `JavaScript Unit Tests (train Vitest)` job in
-// unittests_frontend.yml:
+// WHERE IT RUNS — the `Train-tier Vitest (shard k/N)` jobs in unittests_frontend.yml
+// (⚖ Robert 2026-11-08: planned shards, scripts/test/trainShardPlan.js; each serial):
 //   - on every push to js-land/** (the landing train), so main never takes a
 //     head this tier has not passed;
-//   - on `workflow_dispatch` with `-f train=true`, which is how a slice that
-//     touches the solver bot, hammer, fidelity, the generator or tileStep owes
-//     its packet a run at its tip (js-16's landing rule);
+//   - on `workflow_dispatch` with `-f train_only=true` (the train shards alone,
+//     which is how a slice that touches the solver bot, hammer, fidelity, the
+//     generator or tileStep owes its packet a run at its tip: js-16's landing
+//     rule) or `-f train=true` (the train shards plus everything else);
 //   - NOT on a slice-branch push (the job SKIPS there), and NOT in
 //     `npm run test:unit` (vitest.config.js excludes *.train.test.js).
 //   Locally: `npm run test:unit:train [-- <paths>]` — bounded paths only (⚖ 52).

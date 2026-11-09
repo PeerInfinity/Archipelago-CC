@@ -1,0 +1,17 @@
+ ✓ frontend/modules/seedlingDemo/hammerChooserPair.train.test.js (6 tests) 209115ms
+     ✓ 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill  71222ms
+     ✓ 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF  72431ms
+     ✓ 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF  34567ms
+     ✓ the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit  28919ms
+     ✓ the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed)  1973ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js (2 tests) 606396ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  415196ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  191197ms
+ ✓ frontend/modules/seedlingDemo/hammerStagedHuntScanMemo.train.test.js (1 test) 453152ms
+     ✓ memo ON answers CHASER_STAGED_HUNT's refusal byte for byte, staged at (856,856) after 15 still ticks, reusing the scan on every still tick after the first  453150ms
+ ✓ frontend/modules/seedlingDemo/hammerL53Killlock.train.test.js (2 tests) 19982ms
+     ✓ 9001 (L51 door): OFF refuses; ON answers the page's plan, 0 hits in the model, into L54  10579ms
+     ✓ 9002 (L48 door): OFF refuses; ON answers the page's plan, 0 hits in the model, into L54  9401ms
+ Test Files  4 passed (4)
+      Tests  11 passed (11)
+   Duration  1293.65s (transform 2.00s, setup 0ms, import 4.55s, tests 1288.64s, environment 0ms)
