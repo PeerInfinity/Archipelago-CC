@@ -6,7 +6,7 @@
 |---|---|
 | Session | `seedling-hammer-l40-flip-build` (planner `seedling-hammer-phase-planning-3`), cloud, Opus. ⚖ the user ruled the flip on 2026-11-08 (*"Yes, build the flip next (Recommended)"*) |
 | Start SHA | `32d9c6468bd8922090a8e57f2cee9b3cae8a48c0` (`origin/hammer-harvest-drill-killlock`: main `4c3b425f90` + 376-BOMB + DRILL-EXIT-PASS + L53-KILLLOCK, all OFF), as the brief's **Base** names. `origin/fidelity-flip/knockback376` was NOT merged (no measurement here needed `rockGoneFencepost`) |
-| Head | this report is the last commit on the branch. Steps: W0 `e8e4cc3f` + `7265d464`, M `d14b8437`, I `810a035a`, D `4336720f` + `1b965b61` (and this report) |
+| Head | this report is the last commit on the branch. Steps: W0 `e8e4cc3f` + `7265d464`, M `d14b8437`, I `810a035a` (+ the slow/train re-records `e8322366` and the two after it), D `4336720f` + `1b965b61` |
 | Branch | `claude/seedling-l40-flip-build-s1yk22` (the harness's designated branch) |
 | Evidence | `CC/docs/cloud-reports/seedling-hammer-l40-flip-build-evidence/` (`w0/`, `m/`, `tools/`; the captured requests, ~1.6 MB a page arm, are not committed: the commands are in `tools/queue.sh`) |
 | Scope messages | none arrived mid-run |
@@ -30,6 +30,7 @@ and keeps the full pass's shorter sword-dash plan, which is the plan that diverg
 |---|---|
 | 394 / 871 ON: page vs node? | **A model difference → fidelity.** The page solves (`bait, kill` 1226 t), plays it, and the game diverges at **t936**: in the model the full pass's swing at t925 lands `bob@736,752`'s third hit at **t930**, on the tick its i-frames lapse (hitsTimer 1 → 30, dying), and the player walks through the dying bob; in the game the bob lives and hits the player at t936 (745.86,786.57). Byte-identical on 394 and 871 (same arrival). It is the staged hunt's plan (CSH+memo alone, and every wave-6 subset, return the same 1226-t plan). Which plan is picked is a function of the arrival clock (CI's 871 at 5217 played clean; CI's 394 at 5216 diverged at t1028 instead) |
 | 411 ON: page vs node? | **The harness's 90 s leg clock.** Solved in 38.8 s (`bait, kill`, 1684 t), the game playing it clean at t754 when the leg budget ended. Same on 872 (solved 32.9 s, cut at t973/1098), 870 and 871 with the door carried. Not the solver's budget, not the model |
+| 376 / 377 with the whole flip | 376 **20/25** clocks (defaults 17, wave 6 10); 377 **19/21** (defaults 20, wave 6 14) |
 | 376/377 ON regression: which switch? | **`OPPORTUNISTIC_STRIKE`.** 377 over 21 arrival clocks: defaults 20/21, wave 6 14/21 (loses 5319–5324), wave 6 − OPP 8/8 on the lost range, OPP alone loses the same six. 376 over 25: defaults 17/25, wave 6 10/25, wave 6 − OPP **19/25** |
 | The fix | **`OPP_PRESS_FALLBACK`** (new, ON in this branch): OPP's press kill that refuses with a `FIGHT_FALLBACK_CODES` code is rewound to its first tick and redone once with OPP off. 377: **14/21 → 19/21** (5320–5324 back, each the defaults' plan digest `63901cbdc728`; 5319 stays: OPP is asked there inside the stance derivation's prerequisite trial, which has no rewind). 376 under the full set: §4.2 |
 | 376's bomb phase vs the ON regression | Separate. The defaults' own refusals (5321–22, 5333–38) are 376-BOMB's phases; the ON regression is OPP's (5319, 5325–32), a bomb-pusher blast met on the hold-stance walk OPP's strikes re-timed |
@@ -119,7 +120,7 @@ sentence. Lines touched in `solverBot.js`: one import (L203) and `execKillByPres
 | defaults | 17/25 | 5321–5322, 5333–5338 |
 | wave 6 ON | 10/25 | 5319, 5325–5338 |
 | wave 6 − OPP | 19/25 | 5333–5338 |
-| the full set (12 + OPF) | FILLED-AT-END | |
+| **the full set (12 + `OPP_PRESS_FALLBACK`)** | **20/25** | 5334–5338 (the hold's bomb-pusher phase) |
 
 ### 4.3 BK2 869 (door carried) — 3,236 units against 2,560
 
@@ -168,6 +169,26 @@ is re-recorded as a BEFORE pin, its solve under `withL40Flip(false, …)` (the A
 | `hammerRefugeBandText` › 371 at 5265 (defaults) | `[false, 92]` | `[false, 96]` | the same | work only |
 | `hammerStrikeEtaFloor` › ON: the executed prefix IS the witness | 1629 ticks (the witness's keys) | 1732 ticks | the flip's strikes change the executed prefix | witness stays the BEFORE |
 
+**Slow and train hammer pins** (each passes with the set OFF; re-recorded the same way, `withL40Flip(false, …)`):
+
+| file › row | BEFORE (kept) | AFTER (flip ON) | class |
+|---|---|---|---|
+| `hammerEscapeExact.slow` › leg 860 key ON: the t541 claims, then the frozen-tick press at t2119 | `levelRun: a primary press at tick 2119 lands on a FROZEN tick` | the one-visit strategy bound: `applied 4 strategies … [shove, weigh, burn, hold(wandlock@480,560)]` | refusal moves earlier (the flip's door/burn orders) |
+| `hammerEscapeExact.slow` › the same with the freeze forecast ON | `the reordered corpse weigh took a hit at t2118` | the same strategy-bound refusal | the same |
+| `hammerSpinnerPress.train` › leg 860 OFF: the press corners at (770.96,860.99) | the press kill's "no step out" | the strategy-bound refusal | the same |
+| `hammerSpinnerPress.train` › leg 860 ON: the kill completes | the spinner killed (3 landings) | the solve never reaches the spinner | the same |
+| `hammerClearTagChain.train` › 872 ON SOLVES hitless | solved, 3,467 units | **solved, 1,086 units** | gain (work) |
+| `hammerClearTagChain.train` › 871 ON SOLVES hitless | solved, 2,772 units | **solved, 847 units** | gain (work) |
+| `hammerSouthDoor.train` › ON: Boss Key 2 hitless at t4810 | 4,810 ticks | solved, 5,258 ticks | plan moves |
+| `hammerPocketBurn.train` › pocket open, ON: SOUTHDOOR's solve unchanged | 4,810 ticks | solved, 5,258 ticks | plan moves |
+| `hammerPocketBurn.train` › pocket shut, ON: the refusal moves to the burn walk's combat | `-> burn stance (burnabletree@872,784): … EXHAUSTED` | the collect stance's ladder-routed refusal from (488,579) | refusal moves |
+| `hammerLatchWeigh.train` › OFF hold stance / ON corpse weigh, both meet bob@736,800 at t271 | executed prefix 271 | 577 | prefix moves |
+| `hammerIceTurretStatic.train` › ON alone: the walk back refuses at t271 | OFF's refusal byte for byte | another refusal | refusal moves |
+| `hammerIceTurretStatic.train` › ON with CPAIR 3: the turret handed at t577, refused by name | `null` (no hit record) | a record | refusal moves |
+| `hammerChooserPair.train` › 853 at 5196 / 853 at 5172 / 367's triples arm (3 rows) | the burn walk's EXHAUSTED; 0; refused | the approach's `crusher-fork` deadline; 1; solved | moves (one gain: 367 solves) |
+| `hammerGhostKillRung.train` › ON: the executed prefix IS the witness | 2,195 ticks | 2,317 ticks | prefix moves |
+| `hammerBombPhase.train` › OFF at phase 23 / phase 15 control | `BOMB_PHASE_WAIT` off at the defaults | on (the flip) | by construction |
+
 **Fidelity rows that move — for FIDELITY to sign (not edited here: `fidelity*.test.js` and fidelity's L30KEYLOCK
 producer are fidelity's files).** CI's default tier on the flip head (JSUT 42522164775, shards complete, `1b965b61`):
 **13 failed of 25,966**, all of them below; every `hammer*` file green. The producer battery: 4 checks red, all
@@ -211,7 +232,24 @@ either arm. No mover, so `CLEARTAG_STAND` is not in the flip. (Its L30KEYLOCK `-
 
 ## 6. D — gates
 
-FILLED-AT-END
+| gate | result |
+|---|---|
+| bounded vitest (the 44 hammer fast files + `strategySwitch`, `solverEnvChannel`, the new rows) | green after the nine re-records (57/57 on the re-recorded files; 326 rows across the set) |
+| `contentIdentity`, `entityBlocks`, `boxLockCommit`, `boxLock` (a fixture and two modules added) | 131/131 |
+| the hammer `.slow` files + `strategySwitch*.slow` + `fidelityCorpseBump2.slow`, local | 9/9 files after the `hammerEscapeExact` re-record (28 rows) |
+| the hammer `.train` files, local, all 15 (`npx vitest run --config vitest.train.config.js <file>`) | **15/15 files green** after the re-records: `hammerPitWest`, `hammerTurretApproach`, `hammerKeylockTurret`, `hammerL53Killlock`, `hammerOppPressFallback`, `hammerStagedHuntScanMemo` unchanged; `hammerBombPhase` 3, `hammerChooserPair` 6, `hammerClearTagChain` 2, `hammerGhostKillRung` 7, `hammerIceTurretStatic` 2, `hammerLatchWeigh` 2, `hammerPocketBurn` 4, `hammerSouthDoor` 4, `hammerSpinnerPress` 2 |
+| `census-seedling-solver-surface --check` | RED 3 → `--write` → GREEN 371 rows (`oppPressFallback.js` in the closure; `OPPORTUNISTIC_STRIKE` 1 → 5 sites; line moves; no new row to class) |
+| `census-seedling-constants --check` | PASS (0 new, 20 moved) |
+| `generate-procgen-reference` → `check-procgen-reference` | regenerated (word counts) → rc 0 |
+| `generate-docs-index --check`, `derive-seedling-tick0 --check` | OK / ALL CHECKS PASSED |
+| `check-seedling-wasm-ship` (headless) | rc 0 |
+| `identity-block.sh` | rc 0; every producer `--check` exit 0; 7 generated modules + 5 regions match |
+| `ci-producer-checks --jobs=4` at the defaults (flip ON) | **1 red / 98**: `plan-seedling-l30keylock` (4 checks) — fidelity's, §5.2 |
+| `ci-producer-checks --jobs=4` with the twelve `=0` and `OPP_PRESS_FALLBACK=0` | **0 red** |
+| CI JSUT `42524161581` at `e8322366` (`ci-summary.mjs`) | **slow battery 439/439 passed**; suite 25,953 passed, **13 failed** — exactly the fidelity rows of §5.2; headless and browser gates green; train tier not run on a slice push (the planner dispatches it) |
+
+⚠ The default tier and the producer job are red on this branch until fidelity signs §5.2's rows: that is the brief's
+"fidelity rows: list for fidelity to sign", and nothing here edits fidelity's files.
 
 ## 7. The harvest A/B, and the exact ON dispatch
 
