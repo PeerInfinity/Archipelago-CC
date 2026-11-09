@@ -271,7 +271,9 @@ export function layableLatches(level, events, grid) {
             if (!entity) throw new Error(`latch "${ev.name}": L${level.level} has no ${t.class}@${t.x},${t.y}`);
             for (const [x, y] of entityTilesOf(entity)) {
                 const c = cellAt(x, y);
-                if (c?.conditions?.length) charged.push(`${t.class}@${t.x},${t.y} (${x},${y}) is charged ${JSON.stringify(c.conditions)}`);
+                // ⛓ R-A4b: a charge of the latch's OWN event is what the laid door costs, so it is not a charge the latch drops.
+                const others = (c?.conditions ?? []).filter((k) => k?.event !== ev.name);
+                if (others.length) charged.push(`${t.class}@${t.x},${t.y} (${x},${y}) is charged ${JSON.stringify(c.conditions)}`);
             }
         }
         if (charged.length === 0) laid.push(ev);

@@ -28,6 +28,9 @@
  *            `pressed` condition holds on at the end of a step (or a pulse round) is recorded in the per-visit
  *            `latched`; it holds its token while pressed OR while its `latched` condition holds
  *                                                       condition: tileLib.button.latched
+ *   open   — SIDED OPENERS (`sidedOpeners`, session tile-rules-automation-r-a4b): a one-sided lock whose `opens` condition holds for the
+ *            player on its probe cell at the end of a step is recorded in the per-visit `latched`, and holds its event for the rest of the visit
+ *                                                       condition: tileLib.lock.opens
  *   pulse  — PULSERS: at the end of every step each block on a pulser's reach is pushed away from it (the native
  *            `awayDelta`), simultaneously; then the player may not stand on a live reach
  *                                                       conditions: tileLib.pulser.shoves (asked of each block on a
@@ -41,7 +44,7 @@ import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
     sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching,
-    blockEntryAt, blockKindAt, moveBlockIn, strikeDelta, awayDelta,
+    blockEntryAt, blockKindAt, moveBlockIn, strikeDelta, awayDelta, sidedOpeners, openerEvents,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -51,6 +54,7 @@ export const MAZE_TILE_LIB = {
     cell: { primitive: 'enter', enter: 'player_may_enter' },
     block: { primitive: 'push', may_enter: 'block_may_enter', struck: 'block_struck', woken: 'woken' },
     button: { primitive: 'hold', pressed: 'presses', latched: 'latched' },
+    lock: { primitive: 'open', opens: 'opens' },
     trap: { primitive: 'lane', armed: 'lane_armed' },
     rope: { primitive: 'cut', cut: 'rope_cut' },
     pull: { primitive: 'pull', fires: 'pulled' },
@@ -106,6 +110,7 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
     // ⛓ PULLS: the trap whose disc this STEP (from `playerPos`, moving `dir`) enters from outside — the native geometry
     // (`pullCatching`) — and its gate's combos, which the `pulled` helper asks; null when no trap catches the step.
     const catching = dir === null ? null : pullCatching(world, playerPos, { x, y });
+    const openerOf = sidedOpeners(world).find((o) => o.key === key && o.stand === posKey(playerPos.x, playerPos.y));
     return {
         floor: isFloor(world, x, y),
         block: onBlock,
@@ -140,6 +145,8 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         // BLOCK SINKS: a block pushed here sinks (water, lava, a pit).
         sink: sinksBlock(world, x, y),
         pull: catching === null ? null : clearSetOf(world, catching.gate),
+        // ⛓ SIDED OPENERS: the combos this cell's opener needs when the player stands on its probe cell; null otherwise.
+        opener: openerOf === undefined ? null : (openerOf.rule ? ruleToClearSet(openerOf.rule, key) : clearSetOf(world, openerOf.id)),
     };
 }
 
@@ -196,8 +203,10 @@ function ropeCells(world) {
 
 export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined, latched = undefined) {
     const ropes = ropeCells(world);
-    if ((!world.buttons || world.buttons.size === 0) && ropes.length === 0) return carried;
+    const opened = openerEvents(world, latched); // SIDED OPENERS: open for the rest of this visit
+    if ((!world.buttons || world.buttons.size === 0) && ropes.length === 0 && opened === null) return carried;
     const out = copyInventory(carried);
+    for (const token of opened ?? []) holdInInventory(out, token);
     const ctx = makeContext(helpers, carried);
     for (const [key, buttonId] of world.buttons ?? []) {
         const entry = world.buttonLib?.[buttonId];
@@ -239,7 +248,7 @@ export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_
 export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_LIB, opts = {}) {
     let out = scriptedStepCore(world, state, input, helpers, tileLib, opts);
     if (out.next !== null && world.pulsers) out = scriptedPulse(world, out.next, helpers, tileLib);
-    if (out.next !== null) scriptedLatch(world, out.next, helpers, tileLib);
+    if (out.next !== null) scriptedLatch(world, out.next, helpers, tileLib, state.player_pos);
     return out;
 }
 
@@ -248,7 +257,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
  * `pressed` condition holds on this stance joins `next.latched` (sorted, once) — the native `noteLatches`, which skips
  * one whose event is carried (data: it is down already, and the record would only split the state).
  */
-function scriptedLatch(world, next, helpers, tileLib) {
+function scriptedLatch(world, next, helpers, tileLib, from = null) {
     if (next.latched === undefined) return;
     const ctx = makeContext(helpers, next.inventory);
     let added = false;
@@ -258,6 +267,19 @@ function scriptedLatch(world, next, helpers, tileLib) {
         const [x, y] = key.split(',').map(Number);
         if (!callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, next.blocks, next.player_pos))) continue;
         next.latched.push(key);
+        added = true;
+    }
+    // ⛓ SIDED OPENERS: the OPEN primitive (`tileLib.lock.opens`), the native `noteLatches`' other half. `tile.opener` is null off the probe cell.
+    for (const o of sidedOpeners(world)) {
+        if (next.latched.includes(o.key) || next.inventory.has(o.event)) continue;
+        const [x, y] = o.key.split(',').map(Number);
+        // The stance after the step, else the cell it left (the native `noteLatches`' `from`: an arrival on the probe cell).
+        let tile = tileAt(world, x, y, next.blocks, next.player_pos);
+        if (tile.opener === null && from !== null) tile = tileAt(world, x, y, next.blocks, from);
+        if (tile.opener === null) continue;
+        const inv = scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken, next.latched);
+        if (!callHelper(makeContext(helpers, inv), tileLib.lock.opens, { x, y }, tile)) continue;
+        next.latched.push(o.key);
         added = true;
     }
     if (added) next.latched.sort();
