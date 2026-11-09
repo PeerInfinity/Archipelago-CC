@@ -103,7 +103,7 @@ location_table: Dict[str, LocationData] = {
     "Level 080 - Chest": LocationData("level_80__r8c1", "Level 080 - Chest", 30000038, False),
     "Level 082 - King of Fire": LocationData("level_82", "Level 082 - King of Fire", 30000039, False),
     "Level 086 - Chest": LocationData("level_86", "Level 086 - Chest", 30000040, False),
-    "Level 089 - Feather": LocationData("level_89__r9c6", "Level 089 - Feather", 30000041, False),
+    "Level 089 - Feather": LocationData("level_89__r1c10", "Level 089 - Feather", 30000041, False),
     "Level 090 - Chest": LocationData("level_90", "Level 090 - Chest", 30000042, False),
     "Level 098 - Chest": LocationData("level_98", "Level 098 - Chest", 30000043, False),
     "L101 flag 0: lightpole@144,64 cleared": LocationData("level_101__r4c2", "L101 flag 0: lightpole@144,64 cleared", None, True, extra_attributes={"event_id": "flag:L101:0", "event_kind": "game_state", "obstacle": {"level": 101, "tag": 0, "class": "lightpole", "x": 144, "y": 64}, "action": {"verb": "lit by a Spear thrust", "item": "hasSpear"}, "side": "level_101__r4c2", "across": []}),

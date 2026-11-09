@@ -383,7 +383,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // tick whose one-tick stepped forecast starts a pickup ceremony — ON since the CEREMONYEXACT flip (⚖ user 2026-11-05).
             ceremonyPressForecast: true,
             // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ON since the W37b flip.
-            ceremonyWalkHandoff: true });
+            ceremonyWalkHandoff: true,
+            // ⛓ fidelity L25APITEM D1 (wave 37d): the survey stages a playthrough AP chest as its delivered apitem — ON since its flip (⚖ user 2026-11-06).
+            apChestItem: true,
+            // ⛓ fidelity KNOCKBACK376 D1 (wave 37c): a broken rock's cell opens on the game's tick — ON since its flip (⚖ user 2026-11-05).
+            rockGoneFencepost: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

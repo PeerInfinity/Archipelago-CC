@@ -19,9 +19,9 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    batteryCompleteness, CI_DONE_MARK, CI_PLANNED_MARK, GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
+    batteryCompleteness, CI_DONE_MARK, CI_PLANNED_MARK, decideAlreadyGreen, GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
     pickSuiteRun, pickVitestJob, shardNoteIn, SUITE_SHARD_JOB, SUITE_SLOW_JOB, suiteJobs,
-    sumSummaries, VITEST_JOB,
+    sumSummaries, suitePassed, TRAIN_SHARD_JOB, trainTierPassed, VITEST_JOB,
 } from './ciSummary.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -491,8 +491,9 @@ describe('suiteJobs — the suite family, and every way it can be partial', () =
     it('the Train-tier Vitest job, skipped or run, is NOT in the suite family', () => {
         const WORKFLOW = readFileSync(new URL('../../.github/workflows/unittests_frontend.yml', import.meta.url), 'utf8');
         const name = WORKFLOW.match(/^  train-tier:\n    name: (.+)$/m)?.[1];
-        expect(name).toBe('Train-tier Vitest');
+        expect(name).toBe('Train-tier Vitest (shard ${{ matrix.shard }}/${{ strategy.job-total }})');
         expect(VITEST_JOB.test(name)).toBe(false);
+        expect(TRAIN_SHARD_JOB.test(name.replace('${{ matrix.shard }}', '2').replace('${{ strategy.job-total }}', '3'))).toBe(true);
         for (const c of ['skipped', 'success', 'failure']) {
             const s = suiteJobs([...OTHERS, shard(1), shard(2), shard(3), SLOW, job(name, c)]);
             expect(s.layout).toBe('split');
@@ -539,8 +540,129 @@ describe('pickSuiteRun — the split family', () => {
         const jobs = { 2: [job(GUARD, 'in_progress', null),
             job('JavaScript Unit Tests (Vitest shard 1/3)', 'completed', 'success'),
             job('JavaScript Unit Tests (Vitest shard 2/3)', 'in_progress', null)],
-        1: [] };
+        1: [job('JavaScript Unit Tests (Vitest)', 'completed', 'success')] };
         expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(1);
+    });
+});
+
+/**
+ * ⚖ Robert 2026-11-08 — THE GUARD COUNTS ONLY RUNS WHOSE SUITE RAN AND PASSED. The job
+ * lists are the workflow's real shapes: a skipped matrix is ONE job under its UNEXPANDED
+ * name (run 39083220867), and a `train_only` dispatch concludes `success` with every
+ * suite and gate job skipped.
+ */
+describe('the already-green guard', () => {
+    const job = (name, conclusion = 'success', status = 'completed') => ({ name, status, conclusion });
+    const run = (databaseId, o = {}) => ({ databaseId, event: 'push', headBranch: 'b',
+        status: 'completed', conclusion: 'success', ...o });
+    const SUITE_SKIPPED = [job('JavaScript Unit Tests (Vitest shard ${{ matrix.shard }}/${{ strategy.job-total }})', 'skipped'),
+        job('JavaScript Unit Tests (slow Vitest)', 'skipped')];
+    const SUITE_PASSED = [1, 2, 3].map((k) => job(`JavaScript Unit Tests (Vitest shard ${k}/3)`))
+        .concat(job('JavaScript Unit Tests (slow Vitest)'));
+    const TRAIN_SKIPPED = [job('Train-tier Vitest (shard ${{ matrix.shard }}/${{ strategy.job-total }})', 'skipped')];
+    const train = (...conclusions) => conclusions.map((c, i) => job(`Train-tier Vitest (shard ${i + 1}/${conclusions.length})`, c));
+    const GUARD_SKIPPED = [job('Same SHA already green?', 'skipped')];
+    const TRAIN_ONLY = [...GUARD_SKIPPED, ...SUITE_SKIPPED, job('Producer --checks', 'skipped'), ...train('success', 'success', 'success')];
+    const SLICE_PUSH = [...GUARD_SKIPPED, ...SUITE_PASSED, ...TRAIN_SKIPPED];
+    const FULL = [...GUARD_SKIPPED, ...SUITE_PASSED, ...train('success', 'success', 'success')];
+    const SKIPPED_MAIN = [job('Same SHA already green?'), ...SUITE_SKIPPED, ...TRAIN_SKIPPED];
+    const decide = (rows, opts) => {
+        const jobs = Object.fromEntries(rows.map(([r, j]) => [r.databaseId, j]));
+        return decideAlreadyGreen(rows.map(([r]) => r), (r) => jobs[r.databaseId], opts);
+    };
+
+    it('a train-only success is NOT green, whatever its train shards did', () => {
+        const d = decide([[run(1, { event: 'workflow_dispatch' }), TRAIN_ONLY]]);
+        expect(d).toMatchObject({ green: false, trainGreen: false, suiteRun: null });
+        expect(d.passedOver.map((p) => p.run.databaseId)).toEqual([1]);
+    });
+
+    it('a skipped main run is NOT green evidence on its own', () => {
+        expect(decide([[run(2, { headBranch: 'main' }), SKIPPED_MAIN]]).green).toBe(false);
+    });
+
+    it('a slice push whose suite passed is green, and leaves the train tier to run', () => {
+        expect(decide([[run(1), SLICE_PUSH]])).toMatchObject({ green: true, trainGreen: false, trainRun: null });
+    });
+
+    it('a slice push + a train-only dispatch at the SHA skips both', () => {
+        const d = decide([[run(2, { event: 'workflow_dispatch' }), TRAIN_ONLY], [run(1), SLICE_PUSH]]);
+        expect(d).toMatchObject({ green: true, trainGreen: true });
+        expect(d.suiteRun.databaseId).toBe(1);
+        expect(d.trainRun.databaseId).toBe(2);
+    });
+
+    it('a red push beside a train-only success stays not green: no suite evidence', () => {
+        expect(decide([[run(2, { event: 'workflow_dispatch' }), TRAIN_ONLY], [run(1, { conclusion: 'failure' }), SLICE_PUSH]]))
+            .toMatchObject({ green: false, trainGreen: false });
+    });
+
+    it('a cancelled or failed run never counts, even with its jobs green', () => {
+        expect(decide([[run(1, { conclusion: 'cancelled' }), FULL]]).green).toBe(false);
+    });
+
+    it('never counts the asking run', () => {
+        expect(decide([[run(7), FULL]], { runId: 7 }).green).toBe(false);
+        expect(decide([[run(7), FULL]], { runId: '7' }).green).toBe(false);
+        expect(decide([[run(7), FULL]], { runId: 8 }).green).toBe(true);
+    });
+
+    it('a full train=true dispatch alone answers both', () => {
+        expect(decide([[run(1, { event: 'workflow_dispatch' }), FULL]])).toMatchObject({ green: true, trainGreen: true });
+    });
+
+    it('a suite missing a shard or its slow job did not pass', () => {
+        expect(suitePassed(SUITE_PASSED)).toBe(true);
+        expect(suitePassed(SUITE_PASSED.slice(1))).toBe(false);
+        expect(suitePassed(SUITE_PASSED.slice(0, 3))).toBe(false);
+        expect(suitePassed([...SUITE_PASSED.slice(0, 3), job('JavaScript Unit Tests (slow Vitest)', 'skipped')])).toBe(false);
+        expect(suitePassed([...SUITE_PASSED.slice(1), job('JavaScript Unit Tests (Vitest shard 1/3)', 'failure')])).toBe(false);
+        expect(suitePassed([])).toBe(false);
+        expect(suitePassed(SUITE_SKIPPED)).toBe(false);
+    });
+
+    it('train_green requires EVERY shard: a red, absent or disagreeing one fails it', () => {
+        expect(trainTierPassed(train('success', 'success', 'success'))).toBe(true);
+        expect(trainTierPassed(train('success', 'failure', 'success'))).toBe(false);
+        expect(trainTierPassed(train('success', 'success', 'success').slice(0, 2))).toBe(false);
+        expect(trainTierPassed(train('success', 'skipped', 'success'))).toBe(false);
+        expect(trainTierPassed([job('Train-tier Vitest (shard 1/2)'), job('Train-tier Vitest (shard 2/3)')])).toBe(false);
+        expect(trainTierPassed(TRAIN_SKIPPED)).toBe(false);
+        expect(trainTierPassed([])).toBe(false);
+    });
+
+    it('pickSuiteRun passes over a train-only run, and answers with the push beneath it', () => {
+        const runs = [run(2, { event: 'workflow_dispatch' }), run(1)];
+        const jobs = { 2: TRAIN_ONLY, 1: SLICE_PUSH };
+        const picked = pickSuiteRun(runs, (r) => jobs[r.databaseId]);
+        expect(picked.run.databaseId).toBe(1);
+        expect(picked.passedOver.map((p) => p.run.databaseId)).toEqual([2]);
+    });
+
+    it('a train-only success does not stand in for the guard on an undecided main push', () => {
+        const runs = [run(3, { headBranch: 'main', status: 'in_progress', conclusion: null }), run(2, { event: 'workflow_dispatch' })];
+        const jobs = { 3: [job('Same SHA already green?', null, 'in_progress'), job('JavaScript Unit Tests (Vitest shard 1/3)', null, 'queued')],
+            2: TRAIN_ONLY };
+        expect(pickSuiteRun(runs, (r) => jobs[r.databaseId]).run.databaseId).toBe(3);
+    });
+
+    /** Read off the workflow: a new suite or gate job that forgets the input would run on train_only. */
+    it('every suite and gate job of the workflow skips on train_only, and the train tier runs on it', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const blocks = wf.slice(wf.indexOf('\njobs:\n')).split(/\n(?= {2}[a-z][\w-]*:\n)/).slice(1);
+        const iff = (id) => /^ {4}if: (.*)$/m.exec(blocks.find((b) => b.startsWith(`  ${id}:`)))[1];
+        for (const id of ['javascript-tests', 'javascript-tests-slow', 'headless-gates', 'producer-checks', 'browser-gate-plan']) {
+            expect(iff(id), id).toContain('!inputs.train_only');
+        }
+        expect(iff('browser-gates')).toContain("needs.browser-gate-plan.result == 'success'");
+        expect(iff('train-tier')).toContain('(inputs.train || inputs.train_only)');
+    });
+
+    it('the guard job runs the tested rule, with both steps fail-open', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const guard = wf.slice(wf.indexOf('\n  already-green:\n'), wf.indexOf('\n  javascript-tests:\n'));
+        expect(guard).toContain('run: node scripts/test/ci-already-green.mjs');
+        expect(guard.match(/continue-on-error: true/g)).toHaveLength(2);
     });
 });
 

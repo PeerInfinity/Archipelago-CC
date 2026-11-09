@@ -7,7 +7,8 @@
  * same hold → scout → load → apply sequence as a build from server data).
  * Only documents with world_generator's marker option get this; any other
  * document connects as before. With no rules for the game anywhere, the client
- * waits for the player to load them. The any-seed preset fallback is only for
+ * connects and waits, logged in with the packets held, for the server's own
+ * document or the player's (⚖ b1, 2026-11-06). The any-seed preset fallback is only for
  * games without a server-data builder.
  */
 
@@ -45,7 +46,12 @@ vi.mock('./storage.js', () => ({
 }));
 
 import { MessageHandler } from './messageHandler.js';
-import { overlayServerData } from './localRulesOverlay.js';
+import {
+  overlayServerData,
+  WORLDGEN_RULES_FORMAT,
+  WORLDGEN_RULES_KEY,
+  WORLDGEN_RULES_OMITTED_KEY,
+} from './localRulesOverlay.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..', '..');
@@ -299,32 +305,57 @@ describe('MessageHandler: local generated-world rules + server placements', () =
     expect(handler._serverBuild).toBe(null);
   });
 
-  it('no rules for the game anywhere: waits for them, then connects with the overlay', async () => {
-    const PUZZLE = 'APCalc Puzzle 7-000000';
-    stubFetch({ './presets/preset_files.json': PRESET_FILES });
+  it('no rules for the game anywhere: connects, then waits LOGGED IN (packets held) until they load (⚖ b1)', async () => {
+    // A puzzle-like world of the room's slot: the seed-5 room's Cloudberry slot, renamed.
+    const PUZZLE = GAME;
+    stubFetch({ './presets/preset_files.json': { apquest: PRESET_FILES.apquest } });
     handler.chosenGame = PUZZLE;
-    handler.processMessage({ cmd: 'RoomInfo', games: [PUZZLE, 'APQuest'], seed_name: SEED });
+    await roomInfoThenLogIn();
+
+    // ⚖ b1: Connect is sent at once (the server may send the rules).
+    expect(sent('Connect')[0]).toMatchObject({ game: PUZZLE });
+    expect(handler._serverBuild?.mode).toBe('overlay');
+    expect(handler._serverBuild?.local).toBe(null);
+    handler.processMessage(LOCATION_INFO);
     await flush(10);
 
-    expect(sent('Connect')).toHaveLength(0);
+    // No document anywhere: the wait, logged in, with every packet held.
     expect(handler.getAwaitedRulesGame()).toBe(PUZZLE);
     expect(bus.published.some((p) => p.event === 'client:rulesNeeded' && p.data.game === PUZZLE)).toBe(true);
+    expect(consoleLines(bus).some((m) => /did not send them.*logged in/.test(m))).toBe(true);
+    expect(calls).toEqual([]);
+    expect(handler.clientSlot).toBe(2);
 
     // Rules of another game load first: still waiting.
     bus.publish('stateManager:rulesLoaded', { source: 'presets' });
-    expect(sent('Connect')).toHaveLength(0);
-
-    // The player loads the puzzle (a marked, seeded-by-its-generator doc).
-    const puzzle = structuredClone(LOCAL);
-    puzzle.game_name = PUZZLE;
-    puzzle.world['1'].game = PUZZLE;
-    puzzle.seed_name = '7';
-    loadInApp(puzzle, '1', 'apcalcGenerator');
-    bus.publish('stateManager:rulesLoaded', { source: 'apcalcGenerator' });
     await flush();
-    expect(sent('Connect')[0]).toMatchObject({ game: PUZZLE });
-    expect(handler._serverBuild?.mode).toBe('overlay');
+    expect(calls).toEqual([]);
+
+    // The player loads the world's rules (a marked document): ONE overlay load, then the held packets.
+    loadInApp(LOCAL, '1', 'userLoadedFile');
+    bus.publish('stateManager:rulesLoaded', { source: 'userLoadedFile' });
+    await flush(10);
+    expect(calls.map(([kind]) => kind)).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'applyRuntimeStateData']);
+    expect(calls[0][1].jsonData.regions).toEqual(ROOM.regions);
     expect(handler.getAwaitedRulesGame()).toBe(null);
+    expect(handler._serverBuild).toBe(null);
+  });
+
+  it('a wait for rules: an UNMARKED document of the game is used as it loaded (no overlay)', async () => {
+    stubFetch({ './presets/preset_files.json': { apquest: PRESET_FILES.apquest } });
+    handler.chosenGame = GAME;
+    await roomInfoThenLogIn();
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+    expect(handler.getAwaitedRulesGame()).toBe(GAME);
+    const unmarked = structuredClone(LOCAL);
+    delete unmarked.world['1'].options.use_canonical_options;
+    loadInApp(unmarked, '1', 'userLoadedFile');
+    bus.publish('stateManager:rulesLoaded', { source: 'userLoadedFile' });
+    await flush(10);
+    expect(loads(bus)).toHaveLength(0);
+    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'applyRuntimeStateData']);
+    expect(handler._serverBuild).toBe(null);
   });
 
   it('a game with a server-data builder never takes the any-seed preset path', async () => {
@@ -338,13 +369,19 @@ describe('MessageHandler: local generated-world rules + server placements', () =
   });
 
   it('a new RoomInfo or a disconnect ends a wait for rules', async () => {
-    stubFetch({ './presets/preset_files.json': PRESET_FILES });
-    handler.chosenGame = 'Nowhere Game';
-    handler.processMessage({ cmd: 'RoomInfo', games: ['Nowhere Game', 'APQuest'], seed_name: SEED });
+    stubFetch({ './presets/preset_files.json': { apquest: PRESET_FILES.apquest } });
+    handler.chosenGame = GAME;
+    await roomInfoThenLogIn();
+    handler.processMessage(LOCATION_INFO);
     await flush(10);
-    expect(handler.getAwaitedRulesGame()).toBe('Nowhere Game');
+    expect(handler.getAwaitedRulesGame()).toBe(GAME);
     bus.publish('connection:close');
     expect(handler.getAwaitedRulesGame()).toBe(null);
+    expect(handler._serverBuild).toBe(null);
+    loadInApp(LOCAL, '1', 'userLoadedFile');
+    bus.publish('stateManager:rulesLoaded', { source: 'userLoadedFile' });
+    await flush(10);
+    expect(loads(bus)).toHaveLength(0);
   });
 
   it('the loaded document equals overlayServerData of the local file', async () => {
@@ -360,5 +397,120 @@ describe('MessageHandler: local generated-world rules + server placements', () =
       scouts: handler.getScoutedLocations(),
     });
     expect(loads(bus)[0].data.jsonData).toEqual(expected);
+  });
+});
+
+/**
+ * The rules a world_generator world SENDS (slot_data.worldgen_rules, sdc-embedded-rules E3).
+ * ⚖ (Robert, 2026-11-06): exact-seed preset → server doc → local doc → wait; a refused server doc
+ * (format stamp, a retired shape, the ID check) falls back to the local doc with a console line.
+ */
+describe('MessageHandler: the rules the server sends (worldgen_rules)', () => {
+  let handler;
+  let bus;
+  // The package's own shipped envelope: what its fill_slot_data sends.
+  const ENVELOPE = readJson(ROOT, 'worlds', 'cloudberry_sphere_worldgen', '_worldgen_rules.json');
+  const withRules = (slotData) => ({ ...connected(), slot_data: slotData });
+
+  beforeEach(() => {
+    connectionMock.send.mockClear();
+    calls.length = 0;
+    stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
+    stateManagerMock.rawPayload = null;
+    stubFetch({ './presets/preset_files.json': { apquest: PRESET_FILES.apquest } });
+    for (const m of ['warn', 'error', 'log', 'debug']) vi.spyOn(console, m).mockImplementation(() => {});
+    handler = new MessageHandler();
+    bus = makeBus();
+    handler.setEventBus(bus);
+    handler._requestDataPackage = vi.fn();
+    handler.clientSlotName = 'Berry';
+    handler.chosenGame = GAME;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  async function logInWith(packet) {
+    handler.processMessage({ cmd: 'RoomInfo', games: ['Archipelago', 'APQuest', GAME], seed_name: SEED });
+    handler.processMessage({ cmd: 'DataPackage', data: DATA_PACKAGE });
+    await flush();
+    handler.processMessage(packet);
+    handler.processMessage({ cmd: 'ReceivedItems', index: 0, items: [] });
+    await flush();
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+  }
+
+  it('no local rules anywhere: the server doc is laid over and loaded ONCE; the room plays', async () => {
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(ENVELOPE) }));
+    expect(sent('Connect')[0]).toMatchObject({ game: GAME, name: 'Berry' });
+    expect(calls.map(([kind]) => kind)).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'applyRuntimeStateData']);
+    const doc = calls[0][1].jsonData;
+    // The room's placements (= the exporter's file at this seed), from a document that carried none.
+    for (const [name, region] of Object.entries(ROOM.regions['2'])) {
+      expect(doc.regions['2'][name].locations.map((l) => [l.name, l.id, l.item?.name, l.item?.player]))
+        .toEqual(region.locations.map((l) => [l.name, l.id, l.item?.name, l.item?.player]));
+    }
+    expect(Object.keys(doc.items['2']).sort()).toEqual(Object.keys(ROOM.items['2']).sort());
+    expect(doc.world['2'].game).toBe(GAME);
+    expect(doc.world['2'].slot_data?.[WORLDGEN_RULES_KEY]).toBeUndefined();
+    expect(consoleLines(bus).some((m) => /Loaded the server-sent Cloudberry Sphere WorldGen rules with the server's placements/.test(m))).toBe(true);
+    expect(handler.getAwaitedRulesGame()).toBe(null);
+  });
+
+  it('the server doc wins over a loaded local doc (and equals overlayServerData of it)', async () => {
+    loadInApp(LOCAL);
+    handler.chosenGame = null;
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(ENVELOPE) }));
+    expect(loads(bus)).toHaveLength(1);
+    const expected = overlayServerData(ENVELOPE.doc, ENVELOPE.player, {
+      slot: 2,
+      names: { 1: 'Questy', 2: 'Berry' },
+      seedName: SEED,
+      slotData: { [WORLDGEN_RULES_KEY]: ENVELOPE },
+      scouts: handler.getScoutedLocations(),
+    });
+    expect(loads(bus)[0].data.jsonData).toEqual(expected);
+  });
+
+  it('an exact-seed preset still wins: the server doc is not used', async () => {
+    loadInApp({ ...LOCAL, seed_name: SEED });
+    handler.chosenGame = null;
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(ENVELOPE) }));
+    expect(loads(bus)).toHaveLength(0);
+    expect(handler._serverBuild).toBe(null);
+  });
+
+  it.each([
+    ['an older format', { ...ENVELOPE, format: WORLDGEN_RULES_FORMAT - 1 }, /built by an older world generator \(rules format 0/],
+    ['a newer format', { ...ENVELOPE, format: WORLDGEN_RULES_FORMAT + 1 }, /built by a newer world generator/],
+    ['a retired shape', { ...ENVELOPE, doc: { ...ENVELOPE.doc, is_canonical: true } }, /built by an older world generator \(rules\.json carries a document-level `is_canonical`/],
+    ['a doc that is not this world', { ...ENVELOPE, doc: { ...ENVELOPE.doc, world: { 1: { ...ENVELOPE.doc.world['1'], game: 'Other' } } } }, /don't match this room/],
+  ])('%s: refused by name, the local doc is used instead', async (_label, envelope, why) => {
+    loadInApp(LOCAL);
+    handler.chosenGame = null;
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(envelope) }));
+    expect(consoleLines(bus).some((m) => /^Not using the rules the server sent/.test(m) && why.test(m))).toBe(true);
+    expect(loads(bus)).toHaveLength(1);
+    expect(consoleLines(bus).some((m) => /Loaded the local Cloudberry Sphere WorldGen rules/.test(m))).toBe(true);
+    expect(loads(bus)[0].data.jsonData.regions).toEqual(ROOM.regions);
+  });
+
+  it('over the cap (worldgen_rules_omitted): says so, and uses the local doc', async () => {
+    loadInApp(LOCAL);
+    handler.chosenGame = null;
+    await logInWith(withRules({ [WORLDGEN_RULES_OMITTED_KEY]: { size_kb: 9, cap_kb: 4, reason: 'over_cap' } }));
+    expect(consoleLines(bus).some((m) => /did not send this world's rules \(9 KB, over the slot's rules_in_slot_data_max_kb of 4 KB\)/.test(m))).toBe(true);
+    expect(loads(bus)).toHaveLength(1);
+    expect(loads(bus)[0].data.jsonData.world['2'].slot_data).toBeUndefined();
+  });
+
+  it('a refused server doc with no local doc: the connected wait', async () => {
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: { ...ENVELOPE, format: 0 } }));
+    expect(loads(bus)).toHaveLength(0);
+    expect(calls).toEqual([]);
+    expect(handler.getAwaitedRulesGame()).toBe(GAME);
   });
 });

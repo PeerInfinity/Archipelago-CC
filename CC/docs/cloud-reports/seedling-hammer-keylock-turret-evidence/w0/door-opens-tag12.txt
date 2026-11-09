@@ -1,0 +1,13 @@
+0 
+20 
+40 
+60 
+80 
+100 wandlock@480,560
+120 wandlock@480,560
+140 wandlock@480,560
+160 wandlock@480,560
+180 wandlock@480,560
+200 wandlock@480,560
+--- no tag 12
+200 

@@ -12,7 +12,9 @@ import { entranceRandomizationProblems } from '../procgenCore/entranceRandomizat
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { buildDocumentKeys } from './documentKeys.js';
 import { rulesDownloadText } from './downloadJson.js';
-import { applyRulesDocOp } from './rulesDocOps.js';
+import { applyRulesDocOp, initialiseOpRefusal } from './rulesDocOps.js';
+import { layoutTopDown, entranceRandomizedFacts } from '../procgenPipeline/procgenPipelineEngine.js';
+import { createRng } from '../shared/rng.js';
 import { cloneFullRulesDoc } from './rulesUtils.js';
 
 const erOf = (doc) => Object.fromEntries(Object.values(doc.regions[1])
@@ -50,15 +52,53 @@ describe('APWorld Editor round trip keeps `er` and the block', () => {
         expect(entranceRandomizationProblems(doc, '1')).toEqual([]);
     });
 
-    it('⚠ an exit RENAME does not cascade into `er.reverse` / `placements` — the validator names the dangling reference', () => {
-        // A named E4 prerequisite (the report's sweep): no op rewrites the references yet, so the loader
-        // would refuse the result. Pinned so the day a cascade lands this row flips deliberately.
-        const doc = apply(cloneFullRulesDoc(erFixtureRules()),
+    it('⛓ E4b: an exit RENAME cascades into `er.reverse` and `placements[].exit/target` (the ⚠ row flipped)', () => {
+        const before = erFixtureRules();
+        const doc = apply(cloneFullRulesDoc(before),
             { op: 'set-exit-field', region: N.down, index: 0, field: 'name', value: 'Renamed' });
         expect(doc.regions[1][N.down].exits[0].er).toBeDefined();
-        const problems = entranceRandomizationProblems(doc, '1');
-        expect(problems.some((s) => /names "Downstairs -> Upstairs \(stairs\)", which is no exit of player 1/.test(s)))
-            .toBe(true);
+        expect(entranceRandomizationProblems(doc, '1')).toEqual([]);
+        // the reverse that named it, and both placement rows (exit of one, target of the other), now say 'Renamed'
+        expect(erOf(doc)[N.stairsDown].reverse).toBe('Renamed');
+        expect(doc.entrance_randomization[1].placements).toEqual([
+            { exit: N.stairsDown, target: 'Renamed' }, { exit: 'Renamed', target: N.stairsDown },
+        ]);
+        // MUTANT: the old behaviour (rename the exit alone) leaves the dangling reference the validator names
+        const raw = cloneFullRulesDoc(before);
+        raw.regions[1][N.down].exits[0].name = 'Renamed';
+        expect(entranceRandomizationProblems(raw, '1').some((m) => /names "Downstairs -> Upstairs \(stairs\)", which is no exit of player 1/.test(m))).toBe(true);
+    });
+
+    it('⛓ E4b: deleting half of a coupled shuffled pair is REFUSED by name; an un-shuffled pair\'s exit deletes with its references', () => {
+        const res = applyRulesDocOp(cloneFullRulesDoc(erFixtureRules()), { op: 'delete-exit', region: N.down, index: 0 });
+        expect(res.ok).toBe(false);
+        expect(res.error).toMatch(/deleting exit "Downstairs -> Upstairs \(stairs\)" breaks the slot's entrance randomization/);
+        const resRegion = applyRulesDocOp(cloneFullRulesDoc(erFixtureRules()), { op: 'delete-region', name: N.down });
+        expect(resRegion.ok).toBe(false);
+        // un-shuffled (no block, both exits shuffle: false): the delete drops the reverse that named it
+        const calm = erFixtureRules();
+        delete calm.entrance_randomization;
+        for (const e of Object.values(calm.regions[1]).flatMap((r) => r.exits)) if (e.er) e.er.shuffle = false;
+        const doc = apply(cloneFullRulesDoc(calm), { op: 'delete-exit', region: N.down, index: 0 });
+        expect(erOf(doc)[N.stairsDown].reverse).toBeUndefined();
+        expect(entranceRandomizationProblems(doc, '1')).toEqual([]);
+    });
+
+    it('⛓ E4b: a RELAYOUT of an entrance-randomized source is refused by name, at both doors', () => {
+        const doc = erFixtureRules();
+        expect(entranceRandomizedFacts(doc, '1')).toEqual({ block: true, er: 3, randomized: true });
+        // the engine's top-down layout (topDownSteps, the APWorld Editor's initialise)
+        expect(() => layoutTopDown(doc, { playerId: '1' }, createRng(1)))
+            .toThrow(/player 1's source is entrance-randomized \(an entrance_randomization block, 3 exit\(s\) carrying `er`\)/);
+        // the editor's initialise op refuses first, in its own words
+        expect(initialiseOpRefusal(doc, { player: '1', substrate: 'maze' })).toMatch(/player 1 is entrance-randomized/);
+        // MUTANT: the same source with its ER stripped is not refused for ER
+        const plain = erFixtureRules();
+        delete plain.entrance_randomization;
+        for (const e of Object.values(plain.regions[1]).flatMap((r) => r.exits)) delete e.er;
+        expect(entranceRandomizedFacts(plain, '1').randomized).toBe(false);
+        expect(String(initialiseOpRefusal(plain, { player: '1', substrate: 'maze' }) ?? '')).not.toMatch(/entrance-randomized/);
+        expect(() => layoutTopDown(plain, { playerId: '1' }, createRng(1))).not.toThrow(/entrance-randomized/);
     });
 
     it('the Document tab lists `entrance_randomization` as a per-player row (derived from the schema)', () => {

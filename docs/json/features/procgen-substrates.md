@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 9 substrates · 39 registry fields read (42 of the developer matrix's 99, counting the parents of the fields read) · 57 not yet read.**
+**29 statements · 9 substrates · 39 registry fields read (42 of the developer matrix's 100, counting the parents of the fields read) · 58 not yet read.**
 
 ## Play
 
@@ -310,8 +310,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-57 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+58 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `entranceShuffle`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `goalContainer`, `goalContainer.noteOf`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `itemIntroduction`, `itemIntroduction.exhaustedRefusal`, `itemIntroduction.introducibleItems`, `itemIntroduction.replayableItems`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

@@ -318,15 +318,24 @@ npm run test:unit:calib    # demoted calibration sweeps, manual only, never in C
 **The train tier** (`*.train.test.js`, `vitest.train.config.js`; ⚖ Robert 2026-11-02,
 CI manual-only P1–P5) holds the solverBot hammer/fidelity pins, the generator
 capacity pin and the scripted `deriveLevelWorldLogic` sample — heavy rows moved off
-the slice push. CI's job is `Train-tier Vitest` in `unittests_frontend.yml` (its name
-deliberately does NOT match `/JavaScript Unit Tests/`, so `ci-vitest-summary.mjs`'s
-suite row is the same with it present or skipped). It runs on a `js-land/**` push, on
-a main push not already train-green, and on
-`gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train=true`.
+the slice push. CI runs it as three serial jobs, `Train-tier Vitest (shard k/3)` in
+`unittests_frontend.yml` (⚖ Robert 2026-11-08; the name deliberately does NOT match
+`/JavaScript Unit Tests/`, so `ci-vitest-summary.mjs`'s suite row is the same with them
+present or skipped). The files are split longest-first off
+`scripts/test/train-shard-costs.json` (`scripts/test/trainShardPlan.js`); a new
+`*.train.test.js` needs no row to run: with none it takes the lightest shard, and the
+job warns. It runs on a `js-land/**` push, on a main push whose SHA has no run that
+passed every shard, and on a dispatch:
+`gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train_only=true`
+runs the train shards alone (default tier, slow tier and every gate skip), and `-f train=true`
+runs them with everything else.
+⛔ A `train_only` run concludes `success` with its suite skipped, and is never "already
+green": the main-push guard (`ciSummary.decideAlreadyGreen`) counts only a run whose suite
+jobs ran and passed, so such a slice still needs its push run at the SHA.
 ⚖ A packet whose slice touches solverBot, the hammer, fidelity, a generator or
-`tileStep` quotes a DISPATCHED train-tier run at its tip; a slice push alone never
-runs it. `hammerEscapeGenerated.slow.test.js` stays in the slow tier as the on-push
-smoke row. Two more checks left the slice push in the same ruling (P4, P6): the
+`tileStep` quotes a DISPATCHED train-tier run at its tip (`train_only`, or `train`); a slice
+push alone never runs it. `hammerEscapeGenerated.slow.test.js` stays in the slow tier as
+the on-push smoke row. Two more checks left the slice push in the same ruling (P4, P6): the
 `seedling-wasm-ship` browser gate's import closure (`@ci-paths-slice declared` — a
 slice push runs it only for its declared paths) and `unittests.yml`'s ubuntu
 3.12/3.13 legs; both still run on `js-land/**`, main, PRs and dispatch. Detail:

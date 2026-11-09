@@ -981,9 +981,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 99,
+        "fields": 100,
         "fieldsRead": 39,
-        "fieldsUnread": 57,
+        "fieldsUnread": 58,
         "statements": 29,
         "substrates": 9
     },
@@ -4956,6 +4956,7 @@ export const CAPABILITIES = frz({
         "defaultProcgenParams",
         "driftItems",
         "emitsSpiralContent",
+        "entranceShuffle",
         "exitGateVeto",
         "extractPathsAndObstacles",
         "extractZoneRules",

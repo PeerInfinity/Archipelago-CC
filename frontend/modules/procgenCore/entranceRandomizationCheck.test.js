@@ -71,11 +71,27 @@ const MUTANTS = [
         d.regions[1][N.down].exits.push({ name: N.stairsDown, connected_region: N.up });
     }, /carries `er` but 2 exits of player 1 are named "Upstairs -> Downstairs \(stairs\)"/],
     ['PLACED: a placement names a non-shuffled exit', (d) => { block(d).placements.push({ exit: N.pit, target: N.stairsUp }); },
-        /`placements\[1\]\.exit` names "Upstairs -> Downstairs \(pit\)", which is not an exit with `er\.shuffle: true`/],
+        /`placements\[2\]\.exit` names "Upstairs -> Downstairs \(pit\)", which is not an exit with `er\.shuffle: true`/],
     ['PLACED: a placement names no exit', (d) => { block(d).placements[0].exit = 'Ghost'; },
         /`placements\[0\]\.exit` names "Ghost", which is no exit of player 1/],
     ['PLACED: an exit placed twice', (d) => { block(d).placements.push({ exit: N.stairsDown, target: N.stairsUp }); },
-        /`placements\[1\]\.exit` places "Upstairs -> Downstairs \(stairs\)" a second time/],
+        /`placements\[2\]\.exit` places "Upstairs -> Downstairs \(stairs\)" a second time/],
+    // ⚖ E4a: `placements[].target` names the exit the placed one arrives beside (its reverse's arrival).
+    ['PLACED-TARGET: a target names no exit', (d) => { block(d).placements[0].target = 'Ghost'; },
+        /`placements\[0\]\.target` names "Ghost", which is no exit of player 1 — a target is named by the exit it arrives beside/],
+    ['PLACED-TARGET: a target names a non-shuffled exit', (d) => { block(d).placements[0].target = N.pit; },
+        /`placements\[0\]\.target` names "Upstairs -> Downstairs \(pit\)", which is not an exit with `er\.shuffle: true`/],
+    ['PLACED-TARGET: a target of the other type', (d) => {
+        exitOf(d, N.pit).er = { group: 'stairs_up', type: 'one_way', shuffle: true };
+        block(d).placements[0].target = N.pit;
+    }, /a `one_way` exit, for the `two_way` exit "Upstairs -> Downstairs \(stairs\)" — types match/],
+    ['PLACED-TARGET: a target of a group the lookup does not allow', (d) => { block(d).placements[0].target = N.stairsDown; },
+        /`placements\[0\]\.target` names "Upstairs -> Downstairs \(stairs\)", of group "stairs_down", which `target_group_lookup\["stairs_down"\]`/],
+    ['PLACED-TARGET: a target used twice', (d) => { block(d).placements.push({ exit: N.stairsUp, target: N.stairsUp }); },
+        /`placements\[2\]\.target` names "Downstairs -> Upstairs \(stairs\)" a second time/],
+    // ⚖ E4b: a coupled placement is mirrored ({D, E} ⇒ {E, D}).
+    ['COUPLED-MIRROR: a coupled placement without its mirror row', (d) => { block(d).placements.pop(); },
+        /`placements\[0\]` places "Upstairs -> Downstairs \(stairs\)" at "Downstairs -> Upstairs \(stairs\)" under a coupled shuffle, but no row places/],
     ['GROUPS: a lookup KEY no exit declares', (d) => { block(d).target_group_lookup.edge_west = ['stairs_up']; },
         /`target_group_lookup` names group "edge_west", which no exit of player 1 declares/],
     ['GROUPS: a lookup VALUE no exit declares', (d) => { block(d).target_group_lookup.stairs_down.push('edge_east'); },

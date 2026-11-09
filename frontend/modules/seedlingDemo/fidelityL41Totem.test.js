@@ -112,8 +112,9 @@ describe('fidelity L41TOTEM D1 + D1b — the solver at L41 through the bait and 
         const keys = (out) => out.perTick.map((k) => [...k].sort().join('+'));
         const off = counted(false, solve);
         const on = counted(true, solve);
-        // the part is collected through the bait and the fire block's presses (FIREMOVE: 2,189 ticks at the base)
-        expect(off.out.perTick.length).toBe(2189);
+        // the part is collected through the bait and the fire block's presses (FIREMOVE: 2,189 ticks at the base;
+        // 2,191 since KNOCKBACK376's flip: a broken rock's cell opens two observations after goneAt, as on the game)
+        expect(off.out.perTick.length).toBe(2191);
         expect(keys(on.out)).toEqual(keys(off.out));
         expect(on.out.equips).toEqual(off.out.equips);
         expect([on.out.waypointsPlanned, on.out.replans]).toEqual([off.out.waypointsPlanned, off.out.replans]);
@@ -162,10 +163,11 @@ describe('fidelity L41TOTEM D3 — a bait\'s idle ends when the crusher has park
         const off = solve(false);
         const on = solve(true);
         const chains = (out) => out.records.find((r) => r.verb === 'bait').chains.map((c) => [c.charges, c.ticks]);
-        expect(chains(off)).toEqual([['W', 229], ['S', 422], ['E', 312]]);
-        expect(chains(on)).toEqual([['W', 229 - 28], ['S', 422 - 123], ['E', 312 - 85]]);
-        expect(off.perTick.length).toBe(2189);
-        expect(on.perTick.length).toBe(2189 - 236);
+        // W 229 → 231 since KNOCKBACK376's flip (rockGoneFencepost: the rock cell opens two observations later)
+        expect(chains(off)).toEqual([['W', 231], ['S', 422], ['E', 312]]);
+        expect(chains(on)).toEqual([['W', 231 - 28], ['S', 422 - 123], ['E', 312 - 85]]);
+        expect(off.perTick.length).toBe(2191); // 2189 before KNOCKBACK376's flip
+        expect(on.perTick.length).toBe(2191 - 236);
         // the walk before the bait is the same
         const bait = off.records.find((r) => r.verb === 'bait').from;
         expect(on.perTick.slice(0, bait).map((k) => [...k].join('+'))).toEqual(off.perTick.slice(0, bait).map((k) => [...k].join('+')));

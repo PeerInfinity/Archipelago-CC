@@ -9169,13 +9169,13 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Sword Fusion"
+                        "item_name": "Ghost Spear"
                       }
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Spear"
+                        "item_name": "Ghost Sword Fusion"
                       }
                     },
                     {
@@ -10977,7 +10977,24 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Level 089 - Feather",
+            "id": 30000041,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            },
+            "item": {
+              "name": "Progressive Swim",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_89__r1c15": {
         "name": "level_89__r1c15",
@@ -11214,21 +11231,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Level 089 - Feather",
-            "id": 30000041,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Swim",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          }
-        ]
+        "locations": []
       },
       "level_89__r11c12": {
         "name": "level_89__r11c12",
@@ -13984,7 +13987,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-0007682f",
+      "atlas_id": "seedling-f4be1312",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -69434,7 +69437,7 @@
               "...................",
               "....CCC............",
               "....CC.............",
-              "....CC....E.....D..",
+              "....CC....A.....D..",
               "....CC..........D..",
               "...................",
               "......E............",
@@ -69467,8 +69470,8 @@
                 "y": 6
               },
               "level_89__r9c6": {
-                "x": 10,
-                "y": 6
+                "x": 6,
+                "y": 9
               },
               "level_89__r11c12": {
                 "x": 17,

@@ -136,12 +136,12 @@ function queueBlock(tc, { region, check = null, exit = null, target = null, mode
     return block;
 }
 
-/** The page's bot, as the player's hands: resolves with the page's bot result. */
-async function botWalk(tc, target, label) {
+/** The page's bot, as the player's hands: resolves with the page's bot result. `options` go to the page's botWalkTo. */
+async function botWalk(tc, target, label, options = undefined) {
     const c = controller();
     if (!c) { tc.reportCondition('the cloudberry PlaybackController exists', false); return null; }
     const n = pageEvents('bot').length;
-    c.walkTo(target);
+    c.walkTo(target, options);
     return tc.pollForValue(() => {
         const r = pageEvents('bot');
         return r.length > n ? r[r.length - 1] : null;
@@ -183,12 +183,18 @@ async function guarded(tc, body) {
 /** Every `loops:manaSpent` and play-clock report while `fn` runs (the cost model's evidence). */
 function ledger(tc) {
     const spent = [], clocks = [];
-    const onSpent = (d) => spent.push({ region: d?.region, mana: d?.mana });
-    const onClock = (d) => clocks.push({ region: d?.region, running: d?.running, gameSeconds: d?.stats?.gameSeconds });
+    const t0 = performance.now();
+    const at = () => Math.round(performance.now() - t0);
+    const onSpent = (d) => spent.push({ region: d?.region, mana: d?.mana, t: at() });
+    const onClock = (d) => clocks.push({ region: d?.region, running: d?.running, gameSeconds: d?.stats?.gameSeconds, t: at() });
     tc.eventBus.subscribe('loops:manaSpent', onSpent);
     tc.eventBus.subscribe('substrate:playClock', onClock);
     return {
         spentIn: (region) => spent.filter((s) => s.region === region).reduce((t, s) => t + (s.mana ?? 0), 0),
+        /** The region's spends and clock reports, in time order (a cost condition's evidence). */
+        trace: (region) => [...spent.filter((s) => s.region === region).map((s) => `${s.t}ms spent ${s.mana}`),
+            ...clocks.filter((c) => c.region === region).map((c) => `${c.t}ms clock ${c.running ? 'run' : 'stop'} ${c.gameSeconds?.toFixed?.(2)}`)]
+            .sort((x, y) => parseInt(x, 10) - parseInt(y, 10)),
         lastSeconds: (region) => clocks.filter((c) => c.region === region && Number.isFinite(c.gameSeconds)).at(-1)?.gameSeconds ?? null,
         clear: () => { spent.length = 0; clocks.length = 0; },
         stop: () => {
@@ -255,7 +261,10 @@ async function recordThenPlayback(tc) {
 
             // ── a reset BEFORE the Record completes (mana out, on the region itself) ──
             // The player runs deep into the level (the end door's walk without Clouds ends short of it: nothing sent).
-            const deep = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'a run toward the end door (no Clouds)');
+            // A page that plays on (Cloudberry P7b, features.botContinuous) would collect region_2_2's free coins on the
+            // way, and loc_0 holds Clouds: the run asks for the pre-P7b walk (respawn at the door's piece), as before.
+            const deep = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'a run toward the end door (no Clouds)',
+                embed()?.features?.botContinuous ? { respawn: true } : undefined);
             tc.reportCondition(`the player ran toward the end door and stopped short (${deep?.result})`,
                 deep?.result === 'timeout' || deep?.result === 'died');
             const statusBefore = pageStatus();
@@ -300,8 +309,11 @@ async function recordThenPlayback(tc) {
             if (!saved) return;
             tc.log(`COST Record visit: summary ${JSON.stringify(saved.summary)} departure=${saved.departureExitId}; drained ${manaAtPark - currentMana()}; `
                 + `wall clock parked ${((performance.now() - wall0) / 1000).toFixed(2)} s`);
-            tc.assertEqual('the summary keeps the checked coin', JSON.stringify(['region_2_2__loc_0']),
-                JSON.stringify((saved.summary.checks ?? []).map((c) => c?.locationName ?? c)));
+            // The visit walked to loc_0, then the end door. A page that plays on (Cloudberry P7b) collects loc_1 (the
+            // Gem) on its way to the door too; an older page respawns at the door's piece and leaves it.
+            tc.assertEqual('the summary keeps the checked coin(s)',
+                JSON.stringify(embed()?.features?.botContinuous ? ['region_2_2__loc_0', 'region_2_2__loc_1'] : ['region_2_2__loc_0']),
+                JSON.stringify((saved.summary.checks ?? []).map((c) => c?.locationName ?? c).sort()));
             // The summary keeps the PAGE's exit id (the payload's `exit_id`), not the AP exit name: two regions both have
             // an `exit_E`, so the world generator prefixes the AP name (`region_2_2__exit_E`); the payload keeps `exit_E`.
             tc.assertEqual('…and the exit taken', 'exit_E', saved.departureExitId);
@@ -390,7 +402,8 @@ async function botBlocksResetVictory(tc) {
             const s1 = await snapshot(tc);
             tc.reportCondition('region_2_2__loc_0 checked → Clouds', checkedList(s1).includes('region_2_2__loc_0') && Number(s1.inventory?.Clouds ?? 0) > 0);
             const gs1 = book.lastSeconds('region_2_2'), cost1 = book.spentIn('region_2_2');
-            tc.log(`COST Bot block 1: ${cost1} mana for ${gs1} game seconds (bot steps ${b1.map((e) => e.steps).join('+')})`);
+            tc.log(`COST Bot block 1: ${cost1} mana for ${gs1} game seconds (bot steps ${b1.map((e) => e.steps).join('+')}); `
+                + `region_2_2 ledger ${JSON.stringify(book.trace('region_2_2'))}`);
             // A page that settles its clock at the door (Cloudberry p3b-exit-clock: a stopped report just before
             // sendExit) is charged floor(the visit's game seconds) exactly; an older page's last report can be up to
             // one report period (1 s) before the door, and that tail goes unbilled.
@@ -407,7 +420,12 @@ async function botBlocksResetVictory(tc) {
             before = app()?.configures ?? 0;
             bots = pageEvents('bot').length;
             const resetSeen = tc.waitForEvent('loopState:loopReset', 20000);
-            g.deductMana(currentMana() - 0.5);   // the next game second empties the pool
+            // The pool runs out NOW, mid-walk: emptied, then the depletion check the time drain runs after each charge
+            // (_maybeResetForOOM). Waiting for the next game second's charge instead raced the bot to region_3_2's coin
+            // (goal tick 127, ~2.1 s): measured 1-in-4 on the live page, and 2/2 once the page reports its clock at once
+            // on configure (Cloudberry P7b), the coin collected before the reset.
+            g.deductMana(currentMana());
+            loopStateSingleton._maybeResetForOOM();
             tc.reportCondition('mana out mid-Bot → a loop reset', !!(await resetSeen));
             loopStateSingleton.setAutoRestartQueue(false);   // this reset resumes (already decided); the queue then ends at Victory
             const stoppedWalk = await tc.pollForValue(() => pageEvents('bot').slice(bots)[0] ?? null, 'the page\'s bot walk ended', 10000, 100);
@@ -417,8 +435,12 @@ async function botBlocksResetVictory(tc) {
             // The queue re-drives from its first move: the player back in region_2_2, the page configured again.
             const re = await arriveIn(tc, 'region_2_2', before, 'after the reset');
             if (!re) return;
-            tc.reportCondition(`the reset put region_2_2 back with its coin checked (${JSON.stringify(re.config?.checkedLocations)})`,
-                JSON.stringify(re.config?.checkedLocations) === '["loc_0"]');
+            // Block 1 walked to loc_0 and the end door. A page that plays on (P7b) collects loc_1 (the Gem) on the way
+            // too; an older page respawns at the door's piece and leaves it.
+            const reChecked = re.config?.checkedLocations ?? [];
+            const want = embed()?.features?.botContinuous ? '["loc_0","loc_1"]' : '["loc_0"]';
+            tc.reportCondition(`the reset put region_2_2 back with its coin(s) checked (${JSON.stringify(reChecked)}; expected ${want})`,
+                JSON.stringify([...reChecked].sort()) === want);
             const drawn = await tc.pollForValue(() => (app()?.checked?.has?.('loc_0') ? true : null), 'the coin drawn checked', 10000, 200);
             tc.reportCondition('…and the page draws it checked', !!drawn);
 

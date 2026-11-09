@@ -1,0 +1,9 @@
+# mutants of solverBot.js's L53-KILLLOCK code (scratch worktree, removed by name), each against hammerL53Killlock.test.js
+M1 no rewind (the first refusal is raised): RED (9001, 9002 rows)
+M2 the arm keeps tolerance 0 under the switch: RED (9001, 9002 rows)
+M3 no dying grace: RED (9001 row)
+M4 the queue tried worst-scored first: RED (9001, 9002 rows)
+M5 one attempt per turn (KILLLOCK_CHASER_REWIND_TRIES 1): RED (switch row, 9001, 9002 rows)
+M6 the asked-bodies filter dropped: survived — EQUIVALENT here: the bodies it would ask again were asked from the same
+   tick and refused, so the queue is the same (the filter saves their derivations; a cost-only change)
+M7 the deadline rethrow dropped: RED (the 640-budget row; before that row was added it survived)

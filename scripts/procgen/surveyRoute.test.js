@@ -7,7 +7,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    chainBound, deriveLegs, eventCrossingsOnPath, eventPrerequisites, eventsBrokenOnPath, gameStateEventsOf, keyItemsOf, makeRuleHolds,
+    chainBound, countedPoolOf, deriveLegs, eventCrossingsOnPath, eventPrerequisites, eventsBrokenOnPath, gameStateEventsOf, keyItemsOf, makeRuleHolds,
     pickupsThrough, regionPath, ROUTE_MODES, routeOnlyRows, stagedPersistence,
 } from './surveyRoute.js';
 
@@ -209,6 +209,101 @@ describe('route-only — the progression pickups, derived, and walked', () => {
             start: 'S', pickups: order, spare: [], walk: true });
         const lock = LOCK.regions[1].T.exits[0].access_rule;
         expect(legs.legHolds[2](lock, { Key: 1 })).toBe(true);
+    });
+});
+
+/**
+ * ⛓ tile-survey-gap — the route-only walk at seed 1 stood at L67 r3c2 with the L43 Wand next, whose LOCATION rule is
+ * `Totem Shard ×5`; route-only had skipped every shard row (a counted pool is not a key), so the route threw "NO path"
+ * beside an open door. The toy: S ─► A (the Wand needs Shard ×2) ; S ─► Z (Seal ×2 ∧ Wand; no rule names the Victory's
+ * own item). Shards at P and Q, two Seals at R, a Lamp nobody asks for at S: two counted pools, two keys.
+ */
+describe('counted pools — taken goal-first when a kept row needs them', () => {
+    const hasN = (item, count) => ({ rule: 'Has', args: { item_name: item, count } });
+    const RULES = doc({
+        Menu: { exits: [{ name: 'go', connected_region: 'S', access_rule: TRUE }] },
+        S: {
+            exits: ['A', 'P', 'Q', 'R'].map((r) => ({ name: `s-${r}`, connected_region: r, access_rule: TRUE }))
+                .concat([{ name: 's-z', connected_region: 'Z', access_rule: { rule: 'And', children: [hasN('Seal', 2), has('Wand')] } }]),
+            locations: [{ name: 'Sword spot' }, { name: 'Lamp spot' }],
+        },
+        A: { exits: [{ name: 'a-s', connected_region: 'S', access_rule: TRUE }],
+            locations: [{ name: 'Wand spot', access_rule: { rule: 'And', children: [hasN('Shard', 2), has('Sword')] } }] },
+        P: { exits: [{ name: 'p-s', connected_region: 'S', access_rule: TRUE }], locations: [{ name: 'Shard 1' }] },
+        Q: { exits: [{ name: 'q-s', connected_region: 'S', access_rule: TRUE }], locations: [{ name: 'Shard 2' }] },
+        R: { exits: [{ name: 'r-s', connected_region: 'S', access_rule: TRUE }], locations: [{ name: 'Seal spot' }, { name: 'Seal spot 2' }] },
+        Z: { exits: [], locations: [{ name: 'Victory spot' }] },
+    });
+    const regions = RULES.regions[1];
+    const ORDER = [
+        { sphere: '0.1', location: 'Sword spot', item: 'Sword' },
+        { sphere: '0.2', location: 'Seal spot', item: 'Seal' },
+        { sphere: '0.3', location: 'Lamp spot', item: 'Lamp' },
+        { sphere: '0.4', location: 'Shard 1', item: 'Shard' },
+        { sphere: '0.5', location: 'Seal spot 2', item: 'Seal' },
+        { sphere: '0.10', location: 'Shard 2', item: 'Shard' },
+        { sphere: '1.1', location: 'Wand spot', item: 'Wand' },
+        { sphere: '2.1', location: 'Victory spot', item: 'Victory' },
+    ];
+    const keys = keyItemsOf(RULES);
+    const derive = ({ through = 'end', counted = true, permute = (x) => x } = {}) => {
+        const kept = routeOnlyRows(pickupsThrough(ORDER, through), keys, through).rows;
+        return deriveLegs({ regions, ruleHolds: makeRuleHolds(RULES), start: 'S', pickups: kept, spare: [],
+            walk: true, counted: counted ? permute(countedPoolOf(ORDER, kept, [], regions)) : null });
+    };
+
+    it('the pool is the skipped rows some rule names, in AP order; the Lamp (no rule names it) is never in it', () => {
+        expect([...keys].sort()).toEqual(['Sword', 'Wand']);
+        const kept = routeOnlyRows(ORDER, keys, 'end').rows;
+        expect(countedPoolOf([...ORDER].reverse(), kept, [], regions).map((r) => r.sphere)).toEqual(['0.2', '0.4', '0.5', '0.10']);
+    });
+
+    it('`end` keeps the LAST row (the victory) like any other bound keeps its own', () => {
+        expect(routeOnlyRows(ORDER, keys, 'end').rows.map((r) => r.sphere)).toEqual(['0.1', '1.1', '2.1']);
+        expect(routeOnlyRows(ORDER, keys, '1.1').rows.map((r) => r.sphere)).toEqual(['0.1', '1.1']);
+    });
+
+    it('RED on main: without the pool the walk throws — and says the LOCATION rule failed, not "NO path"', () => {
+        const run = () => derive({ through: '1.1', counted: false });
+        expect(run).toThrow(/AP's own rules reach A from S, but row 1\.1 'Wand spot' has a location rule that does not hold/);
+        expect(run).not.toThrow(/NO path/);
+    });
+
+    it('a real no-path still says NO path (neither reason hides the other)', () => {
+        const shut = doc({ ...RULES.regions[1],
+            S: { ...regions.S, exits: regions.S.exits.filter((e) => e.connected_region !== 'A') } });
+        const kept = routeOnlyRows(pickupsThrough(ORDER, '1.1'), keyItemsOf(shut), '1.1').rows;
+        expect(() => deriveLegs({ regions: shut.regions[1], ruleHolds: makeRuleHolds(shut), start: 'S', pickups: kept,
+            spare: [], walk: true, counted: countedPoolOf(ORDER, kept, [], shut.regions[1]) }))
+            .toThrow(/AP's own rules give NO path from S to A/);
+    });
+
+    it('a stuck walk takes the pool that unsticks it, row by row in AP order, marked pooledFor; the Seal pool is never walked for the Wand', () => {
+        const { legs } = derive({ through: '1.1' });
+        expect(legs.map((l) => [l.sphere, l.pooledFor ?? null])).toEqual([
+            ['0.1', null], ['0.4', '1.1'], ['0.10', '1.1'], ['1.1', null]]);
+        expect(legs.every((l) => !l.outOfOrder && !l.pulledForward)).toBe(true);
+    });
+
+    it('at `end` the Seal pool is walked for the victory — only once the Wand is taken, and only as far as it needs', () => {
+        const { legs } = derive();
+        expect(legs.map((l) => [l.sphere, l.pooledFor ?? null])).toEqual([
+            ['0.1', null], ['0.4', '1.1'], ['0.10', '1.1'], ['1.1', null], ['0.2', '2.1'], ['0.5', '2.1'], ['2.1', null]]);
+    });
+
+    it('the same pool permuted gives the same legs (AP order is the tiebreak, never list position)', () => {
+        const base = JSON.stringify(derive().legs);
+        const rotate = (k) => (x) => [...x.slice(k), ...x.slice(0, k)];
+        for (const permute of [(x) => x.slice().reverse(), rotate(1), rotate(2), rotate(3), (x) => [x[1], x[3], x[0], x[2]]]) {
+            expect(permute(countedPoolOf(ORDER, routeOnlyRows(ORDER, keys, 'end').rows, [], regions))).toHaveLength(4);
+            expect(JSON.stringify(derive({ permute }).legs)).toBe(base);
+        }
+    });
+
+    it('an unstuck walk takes no pooled row', () => {
+        const { legs } = derive({ through: '0.1' });
+        expect(legs.map((l) => l.sphere)).toEqual(['0.1']);
+        expect(legs.some((l) => l.pooledFor)).toBe(false);
     });
 });
 

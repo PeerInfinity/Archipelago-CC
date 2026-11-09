@@ -3,5 +3,5 @@ t=3..4 L3 [r:whole,r:breaking,r:ghost] | seedling:puzzlement/breakablerock#0 dra
 t=5..6 L3 [r:whole,r:breaking,r:ghost] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 96, 112) ; seedling:puzzlement/breakablerockghost#1 drawImage(seedling/BreakableRockGhost, 16, 0, 0, 64)
 t=7 L3 [r:whole,r:breaking,r:ghost] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 96, 112) ; seedling:puzzlement/breakablerockghost#2 drawImage(seedling/BreakableRockGhost, 32, 0, 0, 64)
 t=8..9 L3 [r:whole,r:breaking,r:ghost] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 96, 112) ; seedling:puzzlement/breakablerockghost#3 drawImage(seedling/BreakableRockGhost, 48, 0, 0, 64)
-t=10..32 L3 [r:whole] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 96, 112)
-t=33..43 L111 [] |
+t=10..34 L3 [r:whole] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 96, 112)
+t=35..45 L111 [] |

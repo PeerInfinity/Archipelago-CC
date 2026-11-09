@@ -56,6 +56,8 @@ on:
       # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
       # commit must run this workflow (H1 had to dispatch one by hand).
       - 'scripts/procgen/ci-arm-costs.json'
+      # The train-tier shard plan's prices: a costs-only commit moves the partition.
+      - 'scripts/test/train-shard-costs.json'
       # ⛓ 2026-09-13 (the sixth time, for the BANK): `standingValues.test.js`
       # and the bank-reading gate rows READ standing-values.json, so a
       # bank-only commit owes this suite a run — a bank push at d4f7a31e43
@@ -117,6 +119,8 @@ on:
       # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
       # commit must run this workflow (H1 had to dispatch one by hand).
       - 'scripts/procgen/ci-arm-costs.json'
+      # The train-tier shard plan's prices: a costs-only commit moves the partition.
+      - 'scripts/test/train-shard-costs.json'
       # ⛓ 2026-09-13 (the sixth time, for the BANK): `standingValues.test.js`
       # and the bank-reading gate rows READ standing-values.json, so a
       # bank-only commit owes this suite a run — a bank push at d4f7a31e43
@@ -131,6 +135,14 @@ on:
       # --ref <branch> -f train=true`.
       train:
         description: 'Also run the train Vitest tier (npm run test:unit:train)'
+        type: boolean
+        default: false
+      # ⚖ Robert 2026-11-08 — ONLY the train shards: the default tier, the slow tier and every gate
+      # job skip, because a slice's dispatch usually sits beside a push run doing that work at the same
+      # SHA. ⛔ Such a run concludes `success` with its suite SKIPPED; the already-green guard must not
+      # read it as "suite passed" (`ciSummary.decideAlreadyGreen`).
+      train_only:
+        description: 'Run ONLY the train Vitest shards (skips the default tier, the slow tier and all gates)'
         type: boolean
         default: false
 
@@ -163,6 +175,9 @@ jobs:
   # for a required check, and a path-filtered workflow never reports at all.
   # ⛓ FAIL-OPEN: an API error, a dispatch, a branch push and a run with no
   # earlier green run all run the suite.
+  # ⛔ "Green" is decided per JOB, not from the run's conclusion
+  # (`ciSummary.decideAlreadyGreen`, ⚖ Robert 2026-11-08): a `train_only` dispatch,
+  # or an earlier skipped main run, concludes `success` with the suite SKIPPED.
   # ══════════════════════════════════════════════════════════════════════
   already-green:
     name: Same SHA already green?
@@ -171,44 +186,27 @@ jobs:
     timeout-minutes: 5
     permissions:
       actions: read
+      contents: read
     outputs:
       green: ${{ steps.q.outputs.green }}
-      # ⚖ Robert 2026-11-02 CI manual-only — did an earlier green run at this SHA also PASS the train
-      # tier? A slice-branch run skips it, so "already green" alone does not say the train tier ran.
+      # ⚖ Robert 2026-11-02 CI manual-only — did an earlier run at this SHA also PASS the train tier,
+      # in ALL of its shards? A slice-branch run skips it, so "already green" alone does not say so.
       train_green: ${{ steps.q.outputs.train_green }}
     steps:
-      - name: Look for an earlier successful run at this SHA
+      # ⛓ FAIL-OPEN, both steps: with no output every job's `!= 'true'` holds and the suite runs,
+      # and a guard that broke must not turn the run red. No npm ci: the reader is dependency-free.
+      - name: Checkout repository
+        continue-on-error: true
+        uses: actions/checkout@v6.0.2
+
+      - name: Look for an earlier run at this SHA whose suite passed
         id: q
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}
-        run: |
-          if ! R=$(gh api "repos/$REPO/actions/workflows/unittests_frontend.yml/runs?head_sha=$SHA&status=success&per_page=20" \
-              --jq "[.workflow_runs[] | select(.id != $RUN_ID)] | map(\"\\(.id) \\(.event) \\(.head_branch)\") | .[]"); then
-            echo "MEASURED: could not list the runs at $SHA — the suite runs (fail-open)"
-            echo "green=false" >> "$GITHUB_OUTPUT"; exit 0
-          fi
-          if [ -n "$R" ]; then
-            echo "MEASURED: $SHA already has a successful run — the suite and gates are SKIPPED here:"
-            printf '%s\n' "$R" | sed 's/^/  run /'
-            echo "green=true" >> "$GITHUB_OUTPUT"
-            # ⛓ the train tier: only a run whose `Train-tier Vitest` job SUCCEEDED counts (fail-open: an
-            # unreadable listing runs the train tier here).
-            T=false
-            for id in $(printf '%s\n' "$R" | cut -d' ' -f1); do
-              if gh api "repos/$REPO/actions/runs/$id/jobs?per_page=100" \
-                  --jq '.jobs[] | select(.name == "Train-tier Vitest" and .conclusion == "success") | .id' | grep -q .; then
-                T=true; echo "MEASURED: run $id passed the train tier at $SHA — it is SKIPPED here"; break
-              fi
-            done
-            [ "$T" = true ] || echo "MEASURED: no earlier run passed the train tier at $SHA — it RUNS here"
-            echo "train_green=$T" >> "$GITHUB_OUTPUT"
-          else
-            echo "MEASURED: no earlier successful run at $SHA — the suite runs"
-            echo "green=false" >> "$GITHUB_OUTPUT"
-          fi
+        run: node scripts/test/ci-already-green.mjs
 
   # ══════════════════════════════════════════════════════════════════════
   # ⛓⛓ ci-jsut-split (⚖ user, 2026-10-17: "Vitest + headless") — THE SUITE IS
@@ -230,7 +228,7 @@ jobs:
     # ⛓ RULE 1. `!cancelled()`, not `always()`: the guard is SKIPPED off main,
     # and a cancelled run (F3's supersede) must not start the suite.
     needs: already-green
-    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' && !inputs.train_only }}
     strategy:
       fail-fast: false
       matrix:
@@ -282,7 +280,7 @@ jobs:
     runs-on: ubuntu-latest
     # ⛓ RULE 1 — the same guard as the suite's.
     needs: already-green
-    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' && !inputs.train_only }}
 
     steps:
       - name: Checkout repository
@@ -323,21 +321,29 @@ jobs:
   #   - a push to js-land/** (the landing train);
   #   - a push to main whose SHA has no earlier run that PASSED this job (a
   #     harvest's `git push <sha>:main` of a slice-branch SHA lands here);
-  #   - `workflow_dispatch -f train=true` (a slice's packet run at its tip).
+  #   - `workflow_dispatch -f train=true` or `-f train_only=true` (a slice's packet run at its tip).
   # It SKIPS on every other push (slice branches), PRs and plain dispatches.
   # ⛔ What a slice push no longer catches: a behaviour change those pins hold,
   # caught at the train (js-16's packet rule asks the slice to dispatch first).
+  # ⚖ Robert 2026-11-08: THREE SERIAL JOBS. N is the matrix length, typed once; the
+  # partition is `scripts/test/trainShardPlan.js`, longest-first off the committed
+  # cost table, recomputed by each shard. The guard's `train_green` needs every k/N.
   # ⛔ THE NAME MUST NOT MATCH `/JavaScript Unit Tests/` (`VITEST_JOB`,
   # ciSummary.js): the suite reader would count a skipped train job as a member
   # of the suite family and read a slice push's suite as incomplete or skipped.
   # The ⚖ 52 suite row is the default tier's, with or without this job.
   # ══════════════════════════════════════════════════════════════════════
   train-tier:
-    name: Train-tier Vitest
+    name: Train-tier Vitest (shard ${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ubuntu-latest
     needs: already-green
     # ⛓ one line, `!cancelled()` first: the rule-1 pin reads it so (a skipped guard must not skip this job).
-    if: ${{ !cancelled() && ((github.event_name == 'push' && startsWith(github.ref, 'refs/heads/js-land/')) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.already-green.outputs.train_green != 'true') || (github.event_name == 'workflow_dispatch' && inputs.train)) }}
+    if: ${{ !cancelled() && ((github.event_name == 'push' && startsWith(github.ref, 'refs/heads/js-land/')) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.already-green.outputs.train_green != 'true') || (github.event_name == 'workflow_dispatch' && (inputs.train || inputs.train_only))) }}
+    strategy:
+      # ⛔ A red shard must not cancel its siblings: the reader names the red one.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
 
     steps:
       - name: Checkout repository
@@ -365,8 +371,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run train-tier Vitest tests
-        run: npm run test:unit:train
+      - name: Run train-tier Vitest tests (shard ${{ matrix.shard }}/${{ strategy.job-total }})
+        run: node scripts/test/run-train-shard.mjs --shard=${{ matrix.shard }}/${{ strategy.job-total }}
 
   # ══════════════════════════════════════════════════════════════════════
   # ⛓ ci-split C2 (⚖ user, 2026-09-27) — THE HEADLESS GATES ARE THEIR OWN JOB.
@@ -403,7 +409,7 @@ jobs:
     runs-on: ubuntu-latest
     # ⛓ RULE 1 — the same guard as the suite's.
     needs: already-green
-    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' && !inputs.train_only }}
     # The step's own 30-minute deadline below, plus the ~30 s of setup.
     timeout-minutes: 35
     strategy:
@@ -554,7 +560,7 @@ jobs:
     runs-on: ubuntu-latest
     # ⛓ RULE 1 — the same guard as the suite's.
     needs: already-green
-    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' && !inputs.train_only }}
     timeout-minutes: 40
     steps:
       - name: Checkout repository
@@ -612,7 +618,7 @@ jobs:
     runs-on: ubuntu-latest
     # ⛓ RULE 1 — the same guard; the shard matrix `needs` this job, so it skips too.
     needs: already-green
-    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' && !inputs.train_only }}
     timeout-minutes: 10
     outputs:
       shards: ${{ steps.plan.outputs.shards }}

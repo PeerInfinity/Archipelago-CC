@@ -1,0 +1,5 @@
+id	key	end	ticks	roomHits	divs	text
+717	level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144	done	7	0	0	
+718	level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48	failed	None	0	0	solverBot(wasm-exit-91) reach-exit (240,48)->L92: the combat ladder is EXHAUSTED. The corridor passes through danger at (66.3,93.7) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle
+719	level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144	failed	None	0	0	solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle
+720	level_91 <- in_L92_32_144 -> exit:out_teleporter_240_48	done	5	0	0	

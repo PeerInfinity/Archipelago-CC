@@ -1994,7 +1994,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_65__r0c2 -> level_63__r10c2", player),
-        Or(HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'), Has('L63 flag 6: lightpole@48,272 cleared'))
+        Or(HasAll('Ghost Spear', 'Ghost Sword Fusion', 'Progressive Sword'), Has('L63 flag 6: lightpole@48,272 cleared'))
     )
 
     world.set_rule(
@@ -2980,6 +2980,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Level 082 - King of Fire", player),
         HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 089 - Feather", player),
+        Has('Progressive Swim', 1)
     )
 
     world.set_rule(

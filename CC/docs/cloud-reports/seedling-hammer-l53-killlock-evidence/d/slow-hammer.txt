@@ -1,0 +1,14 @@
+ ✓ frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js (4 tests) 444149ms
+     ✓ pocket shut, OPP, OFF: the burn walk's combat ladder is EXHAUSTED on the BobSoldier in its notch  34043ms
+     ✓ pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door  230249ms
+     ✓ pocket open, no OPP, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810, the staged hunt never asked  179853ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeExact.slow.test.js (2 tests) 470989ms
+     ✓ [needs fidelity's forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then the frozen-tick press refusal at t2119 — spinner@816,848 is not reached (measured; not the brief's "hitless")  233799ms
+     ✓ [needs forecastShieldBump + frozenPressForecast] the same arm with the freeze forecast ON: no press lands on a frozen tick, and the solve runs past t2119 to its next wall  237188ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 36239ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  36237ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 38974ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  38972ms
+ Test Files  4 passed (4)
+      Tests  8 passed (8)
+   Duration  995.96s (transform 2.59s, setup 0ms, import 5.16s, tests 990.35s, environment 0ms)
