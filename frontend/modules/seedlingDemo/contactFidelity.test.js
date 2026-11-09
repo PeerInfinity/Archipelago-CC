@@ -387,7 +387,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L25APITEM D1 (wave 37d): the survey stages a playthrough AP chest as its delivered apitem — ON since its flip (⚖ user 2026-11-06).
             apChestItem: true,
             // ⛓ fidelity KNOCKBACK376 D1 (wave 37c): a broken rock's cell opens on the game's tick — ON since its flip (⚖ user 2026-11-05).
-            rockGoneFencepost: true });
+            rockGoneFencepost: true,
+            // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ships OFF.
+            fireSpinnerArm: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
