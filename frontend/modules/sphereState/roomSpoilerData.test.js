@@ -128,6 +128,22 @@ describe('sphereState: a file beats the room', () => {
     expect(state.sphereLogPath).toBe(ROOM.source);
   });
 
+  it('a server:… rules source is an expected case: logged as info, never the "Could not parse" warning', async () => {
+    stubFetch();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const info = vi.spyOn(console, 'log').mockImplementation(() => {});
+    try {
+      bus.publish('stateManager:rulesLoaded', { source: `server:${SEED.seed_name}:P1`, playerId: '1' });
+      await settle();
+      const said = (spy) => spy.mock.calls.map((args) => String(args[0])).filter((m) => m.includes('Could not parse sourceName'));
+      expect(said(warn)).toEqual([]);
+      expect(said(info)).toEqual([expect.stringContaining("(Rules from the room's data; no file log)")]);
+    } finally {
+      warn.mockRestore();
+      info.mockRestore();
+    }
+  });
+
   it('new rules clear the room\'s log too (it belonged to the connection, not the next rules)', async () => {
     stubFetch();
     bus.publish('stateManager:rulesLoaded', { source: `server:${SEED.seed_name}:P1`, playerId: '1' });
