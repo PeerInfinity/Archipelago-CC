@@ -1,0 +1,10 @@
+firespinner-l39-knock ON  err  bad 0  blocksBad 0
+firespinner-l39-knock OFF err  bad 84 t 596: spinners game [180.42187301132367,202.29323003581104,0,0 192.83199846221498,106.606 blocksBad 0
+firespinner-l39-phantom ON  err  bad 0  blocksBad 0
+firespinner-l39-phantom OFF err levelRun: `FIRE_ARM_POLICY` calls Spinner modelled bad 25 t 695: no model tick blocksBad 0
+firespinner-r5-press-delay ON  err  bad 0  blocksBad 0
+firespinner-r5-press-delay OFF err  bad 511 t 19: spinners game [133.4350288425445,86.10050506338825,0,0 245.4350288425445,202.5649711 blocksBad 0
+firespinner-r5-press-glide ON  err  bad 0  blocksBad 0
+firespinner-r5-press-glide OFF err  bad 391 t 19: spinners game [133.4350288425445,86.10050506338825,0,0 245.4350288425445,202.5649711 blocksBad 0
+firespinner-r5-press-repeat ON  err  bad 0  blocksBad 0
+firespinner-r5-press-repeat OFF err  bad 385 t 19: spinners game [133.4350288425445,86.10050506338825,0,0 245.4350288425445,202.5649711 blocksBad 0
