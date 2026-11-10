@@ -92,6 +92,7 @@ export const URL_GRAMMAR = frz({
                 "roster": null,
                 "run": false,
                 "seed": 1,
+                "setView": "map",
                 "shot": false,
                 "side": "js",
                 "size": {
@@ -728,6 +729,27 @@ export const URL_GRAMMAR = frz({
                             "fn": "writeGenerateParams",
                             "how": "writeInt",
                             "role": "write"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "`strip` opens the SET overview on the one-row strip; anything else (or absent) is the 2D MAP derived from the exits",
+                    "defaultField": "setView",
+                    "defaultIsUndefined": false,
+                    "defaultValue": "map",
+                    "name": "setView",
+                    "retired": false,
+                    "terms": [
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchViewer.js",
+                            "fn": "readParams",
+                            "how": "get",
+                            "role": "read"
                         }
                     ]
                 },

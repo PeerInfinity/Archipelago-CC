@@ -17647,7 +17647,9 @@
         "starting_nodes": [],
         "title": "Coding Adventure",
         "randomize_items": true,
-        "vanilla_placement": 0
+        "vanilla_placement": 0,
+        "entrance_rule_mode": 1,
+        "graph_file": "coding_adventure"
       },
       "web": {
         "theme": "grass",

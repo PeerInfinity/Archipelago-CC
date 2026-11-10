@@ -270,7 +270,7 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
 ).set;
 
 const seedlingHarness = ({
-    rooms = ROOMS, onSetChange = null, embeds = [], apworldEditor = null,
+    rooms = ROOMS, onSetChange = null, embeds = [], apworldEditor = null, overviewMapOn = false,
 } = {}) => {
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
@@ -335,6 +335,8 @@ const seedlingHarness = ({
         say: (text, bad) => said.push({ text, bad: Boolean(bad) }),
         roomSession: () => open,
         openRoomAt: (index) => { open = openStub(index); return true; },
+        // ⛓ Seedling editor E3 — `false` unless a row asks, so every older row drives the strip it always did.
+        overviewMapOn,
         discardRoom: () => { open = null; },
         download: (name, text) => downloads.push({ name, bytes: String(text).length }),
         /**
@@ -820,6 +822,7 @@ const PIN = Object.freeze({
             "armedExit",
             "badges",
             "destroy",
+            "map",
             "render",
             "report",
             "rows",
@@ -1080,8 +1083,9 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
         })).toThrow(/`document` is required/);
         expect(runScript(seedlingHarness()).surface).toEqual(PIN.surface);
         /**
-         * ⛔⛔ **AND THE PIN'S SURFACE HAS MOVED TWICE, BOTH ON PURPOSE**
-         * (EDITOR v3 E6b's `badges`; EDITOR INTEGRATION W4's `substrates`).
+         * ⛔⛔ **AND THE PIN'S SURFACE HAS MOVED THREE TIMES, ALL ON PURPOSE**
+         * (EDITOR v3 E6b's `badges`; EDITOR INTEGRATION W4's `substrates`;
+         * Seedling editor E3's `map`, the MAP's readout — `null` on the strip).
          * Both are ADDITIONS — every accessor the pre-lift capture had is still
          * here, in the same spelling — so what the pin still catches is a
          * REMOVAL or a RENAME, which is what it was captured to catch. ⛓ Said
@@ -1089,7 +1093,7 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
          * sentence is a pin that stopped being a control.
          */
         expect(PIN.surface).toEqual([
-            'applySet', 'armedExit', 'badges', 'destroy', 'render', 'report', 'rows',
+            'applySet', 'armedExit', 'badges', 'destroy', 'map', 'render', 'report', 'rows',
             'runReport', 'selectRoom', 'selected', 'substrates', 'view',
         ]);
     });
@@ -2067,5 +2071,57 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         expect(h.session.ops()).toEqual([{
             op: 'mark-location', room: 0, item: 1, name: 'the hub chest', vanilla_item: 'Coin',
         }]);
+    });
+});
+
+describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the shared mount\'s additive `overviewMap`)', () => {
+    const centre = (cell) => ({ clientX: cell[0] + cell[2] / 2, clientY: cell[1] + cell[3] / 2 });
+
+    /** MUTANT: show the map to a caller that did not ask for it (the strip's byte-inert pin would move too). */
+    it('without the opt-in the overview is the STRIP and `map()` is null', () => {
+        expect(seedlingHarness().ui.map()).toBe(null);
+    });
+
+    /**
+     * MUTANT: answer a map click with the STRIP's `x / width × rooms` formula — the CONNECT lands on the wrong rooms.
+     */
+    it('a CONNECT made with two clicks on the MAP is the same ONE `connect` the strip makes, and moves no room', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const m0 = h.ui.map();
+        expect(m0).not.toBe(null);
+        expect(m0.cells.length).toBe(ROOMS);
+        const c = $(h, 'editSetOverview');
+        click(h, 'editSetGesture');
+        setValue(h, 'editSetExitList', '0');
+        setValue(h, 'editSetTargetExit', '0');
+        c.dispatch('mousedown', centre(m0.cells[0]));
+        c.dispatch('click', centre(m0.cells[0]));
+        setValue(h, 'editSetExitList', '0');
+        c.dispatch('mousedown', centre(m0.cells[3]));
+        c.dispatch('click', centre(m0.cells[3]));
+        const ops = h.session.ops();
+        expect(ops.length).toBe(1);
+        expect(ops[0]).toEqual({ op: 'connect', from: [0, 0], to: [3, 0], one_way: false });
+        const m1 = h.ui.map();
+        expect(m1.positions).toEqual(m0.positions);
+        expect(m1.moved).toBe(0);
+    });
+
+    /**
+     * MUTANT: let the idle click fall through without selecting; or answer a map click with the strip's formula
+     * (this set lays out as ONE ROW in index order, so only a click in the GAP between two rooms can tell them apart).
+     */
+    it('an idle click on the MAP selects the room under it, and a click between rooms selects none', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const cells = h.ui.map().cells;
+        const c = $(h, 'editSetOverview');
+        c.dispatch('mousedown', centre(cells[4]));
+        c.dispatch('click', centre(cells[4]));
+        expect(h.ui.selected).toBe(4);
+        const gap = { clientX: (cells[1][0] + cells[1][2] + cells[2][0]) / 2, clientY: centre(cells[1]).clientY };
+        c.dispatch('mousedown', gap);
+        c.dispatch('click', gap);
+        expect(h.ui.selected).toBe(4);
+        expect(h.session.ops().length).toBe(0);
     });
 });

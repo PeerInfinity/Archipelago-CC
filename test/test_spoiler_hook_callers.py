@@ -77,7 +77,11 @@ def _absent():
 @pytest.mark.parametrize('package', WORLDS)
 def test_the_world_carries_a_byte_identical_client(package):
     source = (REPO / 'worlds' / 'spoiler_export_hook' / CLIENT_NAME).read_bytes()
-    assert (REPO / 'worlds' / package / CLIENT_NAME).read_bytes() == source
+    copy = (REPO / 'worlds' / package / CLIENT_NAME).read_bytes()
+    assert copy == source, (
+        f'worlds/{package}/{CLIENT_NAME} differs from the helper\'s copy'
+        + (' — it has CRLF line endings: is the `**/' + CLIENT_NAME + ' text eol=lf` rule in .gitattributes'
+           ' still there?' if b'\r\n' in copy and b'\r\n' not in source else ''))
 
 
 @pytest.mark.parametrize('package', WORLDS)

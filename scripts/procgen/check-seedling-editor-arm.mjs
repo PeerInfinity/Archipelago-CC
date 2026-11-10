@@ -946,7 +946,8 @@ const clickCell = async (cell) => {
 };
 
 const load = async (search) => {
-    await page.goto(`${origin}${PAGE_PATH}?${search}`, { waitUntil: 'domcontentloaded' });
+    // ⛓ Seedling editor E3: the SET overview opens on the MAP; every claim here is about the STRIP's geometry.
+    await page.goto(`${origin}${PAGE_PATH}?${search}&setView=strip`, { waitUntil: 'domcontentloaded' });
     await settled(0);
 };
 

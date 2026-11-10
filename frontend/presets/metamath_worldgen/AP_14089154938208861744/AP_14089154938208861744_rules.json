@@ -2208,7 +2208,8 @@
         ],
         "theorem": "2p2e4",
         "randomize_items": true,
-        "vanilla_placement": 0
+        "vanilla_placement": 0,
+        "entrance_rule_mode": 1
       },
       "web": {
         "theme": "grass",
