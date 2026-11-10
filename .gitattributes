@@ -27,5 +27,14 @@ worlds/codingadventure/** text=auto eol=lf
 worlds/json_tools_installer/** text=auto eol=lf
 worlds/spoiler_export_hook/** text=auto eol=lf
 
+# The spoiler-hook client is vendored byte-for-byte into every world that uses
+# it (hand-written worlds and generated packages alike), and
+# test/test_spoiler_export_hook.py + test/test_spoiler_hook_callers.py pin each
+# copy to worlds/spoiler_export_hook's bytes. One rule for every copy anywhere
+# in the tree, so a new copy is covered without a per-world line: without it a
+# CRLF checkout (Windows) materializes CRLF for any copy outside the dirs above
+# and the byte pin goes red.
+**/_spoiler_hook_client.py text eol=lf
+
 # The packed artifacts themselves are zips — never touch them.
 apworlds/*.apworld binary
