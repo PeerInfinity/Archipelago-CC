@@ -18,6 +18,7 @@
 
 import { foreignItemFromScout } from '../../proofShared/proofGraphRulesBuilder.js';
 import { refuseRetiredTopLevelKeys } from '../../stateManager/core/initialization.js';
+import { SPOILER_DATA_KEY, SPOILER_DATA_OMITTED_KEY } from './spoilerData.js';
 
 /** The option every world_generator world has, and no upstream world. */
 export const GENERATED_WORLD_OPTION = 'use_canonical_options';
@@ -80,13 +81,17 @@ export function readWorldgenRules(envelope) {
   return { doc: envelope.doc, player };
 }
 
-/** slot_data without the rules document and its note (they are not the world's slot_data). */
+/**
+ * slot_data without what the server carries for the client rather than for the
+ * world: the rules document, the room's spoiler data (client/core/spoilerData.js),
+ * and each one's note. They are not the world's slot_data.
+ */
+const TRANSPORT_KEYS = [WORLDGEN_RULES_KEY, WORLDGEN_RULES_OMITTED_KEY, SPOILER_DATA_KEY, SPOILER_DATA_OMITTED_KEY];
 export function slotDataWithoutRules(slotData) {
   if (!isPlainObject(slotData)) return slotData;
-  if (!(WORLDGEN_RULES_KEY in slotData) && !(WORLDGEN_RULES_OMITTED_KEY in slotData)) return slotData;
+  if (!TRANSPORT_KEYS.some((key) => key in slotData)) return slotData;
   const out = { ...slotData };
-  delete out[WORLDGEN_RULES_KEY];
-  delete out[WORLDGEN_RULES_OMITTED_KEY];
+  for (const key of TRANSPORT_KEYS) delete out[key];
   return out;
 }
 

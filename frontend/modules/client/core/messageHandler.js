@@ -35,6 +35,7 @@ import {
   WORLDGEN_RULES_OMITTED_KEY,
 } from './localRulesOverlay.js';
 import { applyReceivedItems, goalMet } from './goalCheck.js';
+import { readRoomSpoilerData } from './spoilerData.js';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -826,6 +827,7 @@ export class MessageHandler {
       slotData: data.slot_data || {},
       slotInfo: data.slot_info || [],
     });
+    this._publishRoomSpoilerData(data);
 
     const serverCheckedLocationNames = [];
     if (data.checked_locations && data.checked_locations.length > 0) {
@@ -867,6 +869,33 @@ export class MessageHandler {
     } else if (this.scoutedLocations.size > 0) {
       this.eventBus?.publish('game:locationsScouted', { locations: this.getScoutedLocations() });
     }
+  }
+
+  /**
+   * The room's spoiler data for our slot (slot_data.spoiler_data, from the
+   * Spoiler Export Hook), expanded into a sphere log for sphereState, which
+   * uses it only while no file's log is loaded. With spoiler_data_omitted, one
+   * console line says why; with neither key, nothing is said.
+   */
+  _publishRoomSpoilerData(connected) {
+    let result;
+    try {
+      result = readRoomSpoilerData(connected.slot_data, {
+        dataPackage: this.dataPackage,
+        slotInfo: connected.slot_info,
+        slot: connected.slot,
+        seedName: this.roomInfo?.seed_name ?? null,
+      });
+    } catch (e) {
+      log('error', '[MessageHandler] Could not read the room\'s spoiler data:', e);
+      result = { message: `Not using this room's spoiler data: it could not be read (${e.message}).`, type: 'warning' };
+    }
+    if (!result) return;
+    if (result.message) {
+      this._printToConsole(result.message, result.type);
+      return;
+    }
+    this.eventBus?.publish('client:roomSpoilerData', result.log);
   }
 
   /**
