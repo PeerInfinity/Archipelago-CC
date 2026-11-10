@@ -131,7 +131,9 @@ describe('L39SHAFT D2 — the solver\'s own plan on the game (`l39shaft-solver-s
     it('the recording replays at 0 px with `spinnerPointExact` ON, and the solved plan ends in L40', async () => {
         const model = await l39ModelSamples(D2.tape, { spinnerPointExact: true }, { set: 'delivered' });
         expect(model.error).toBeNull();
-        expect(D2_GAME.length).toBeGreaterThan(3400);
+        // ⛓ re-recorded at the wave-38 joint flip (⚖ user 2026-11-10): `spinnerRosterGone` ON drops the Pulser-killed
+        // phantom, so the plan is 2740 t (was 3496), 0 px on p4g.
+        expect(D2_GAME.length).toBeGreaterThan(2700);
         expect(compareL39Witness(D2_GAME, model.samples, { lockLag: D2.lockLag })).toEqual([]);
         expect(D2.end.level).toBe(40);
         const h = halfOnReadout(D2_GAME);
