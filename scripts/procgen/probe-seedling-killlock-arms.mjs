@@ -35,7 +35,8 @@
  * `CHANNEL: headless logic-only`), so it runs in CI too (`.github/workflows/seedling-probe.yml`).
  *
  * Run: node scripts/procgen/probe-seedling-killlock-arms.mjs [--host=http://localhost:8000] [--arm-ticks=1200]
- *      [--clear-ticks=4000] [--settle=240] [--engage=48] [--margin=5] [--only=60] [--arms=sword,spear] [--wait-for-box=<sec>]
+ *      [--clear-ticks=4000] [--settle=240] [--engage=48] [--margin=5] [--only=60] [--arms=sword,spear] [--include-fired] [--wait-for-box=<sec>]
+ *      `--include-fired` also asks a lock the census FIRES on (a `cannot` side, each arm alone): the L53 pocket witness
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -70,8 +71,8 @@ export const ARMS = Object.freeze({
 });
 
 /** The subjects: every census row that does not fire, no cross-level button opens, with a side that is not `clears`. */
-export function armSubjects(rows) {
-    return rows.filter((r) => !r.fires && !/cross-level/.test(r.why ?? '') && r.sides.some((s) => s.verdict !== 'clears'));
+export function armSubjects(rows, { includeFired = false } = {}) {
+    return rows.filter((r) => (includeFired || !r.fires) && !/cross-level/.test(r.why ?? '') && r.sides.some((s) => s.verdict !== 'clears'));
 }
 
 /**
@@ -175,7 +176,7 @@ async function main() {
     const P = await import(join(REPO, 'scripts/procgen/make-seedling-playthrough-rules.mjs'));
     const { ENEMY_CLASSES } = await import(join(REPO, 'frontend/modules/seedlingDemo/combat.js'));
     const T = P.PLAYTHROUGH_MAP.tile_size;
-    const subjects = armSubjects(P.playthroughEncounterLocks()).filter((r) => !only || only.has(r.level));
+    const subjects = armSubjects(P.playthroughEncounterLocks(), { includeFired: process.argv.includes('--include-fired') }).filter((r) => !only || only.has(r.level));
     console.log(`PAGE: ${PAGE} · ${subjects.length} subject lock(s): ${subjects.map((r) => `L${r.level} ${r.at}`).join(' · ')}`);
 
     takeBoxLockOrExit({ name: 'probe-seedling-killlock-arms.mjs', kind: 'browser' });
