@@ -1,0 +1,13 @@
+answer true [ 'bait', 'kill' ] ms 41504 work 2562 [{"pass":"dashless","ok":true,"kind":null,"ticks":1393,"ms":11640,"work":790},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"ms":29864,"work":1772,"deadline":"sword-dash","limit":"window"}]
+t881 p=(758.774,680.261)  bob@736,752 hits 1 timer 30 dying False at 743.13 691.46
+t914 p=(757.074,680.261)  bob@736,752 hits 2 timer 30 dying False at 744.78 692.17
+t947 p=(757.024,681.911)  bob@736,752 hits 3 timer 30 dying True at 745.11 695.28
+t972 p=(757.024,681.961)  bob@736,752 hits 3 timer 5 dying True at 745.29 695.11
+t1077 p=(743.563,783.665) down bob@736,800 hits 1 timer 30 dying False at 744.04 799.16
+t1110 p=(743.563,821.665) down bob@736,800 hits 2 timer 30 dying False at 744.67 839.07
+t1171 p=(769.913,855.315) right bob@736,800 hits 3 timer 30 dying True at 785.7 859.81
+t1196 p=(799.963,855.315) right bob@736,800 hits 3 timer 5 dying True at 785.51 859.65
+t1274 p=(868.363,855.315) right bobsoldier@880,832 hits 1 timer 30 dying False at 884.05 846.82
+t1307 p=(887.663,853.665)  bobsoldier@880,832 hits 2 timer 30 dying False at 891.72 840.08
+t1345 p=(887.663,851.965)  bobsoldier@880,832 hits 3 timer 30 dying True at 891.21 833.13
+hits []

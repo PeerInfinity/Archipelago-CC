@@ -45,8 +45,8 @@ async function corridorRun() {
 
 describe('hammer-phase STAGED-HUNT-CHEAP: STAGED_HUNT_SCAN_MEMO', () => {
     it('ships OFF', async () => {
-        expect(STAGED_HUNT_SCAN_MEMO_DEFAULT).toBe(false);
-        expect(STAGED_HUNT_SCAN_MEMO.enabled).toBe(globalThis.process?.env?.SEEDLING_STAGED_HUNT_SCAN_MEMO === '1');
+        expect(STAGED_HUNT_SCAN_MEMO_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(STAGED_HUNT_SCAN_MEMO.enabled).toBe(globalThis.process?.env?.SEEDLING_STAGED_HUNT_SCAN_MEMO !== '0');
         const was = STAGED_HUNT_SCAN_MEMO.enabled;
         expect(withStagedHuntScanMemo(true, () => STAGED_HUNT_SCAN_MEMO.enabled)).toBe(true);
         expect(withStagedHuntScanMemo(false, () => STAGED_HUNT_SCAN_MEMO.enabled)).toBe(false);

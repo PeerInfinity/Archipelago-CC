@@ -31,6 +31,7 @@ import {
     PRESS_KILL_REBOOT_GUARD, PRESS_KILL_REBOOT_GUARD_DEFAULT, PRESS_KILL_SHAKE_GUARD, PRESS_KILL_SHAKE_GUARD_DEFAULT,
     isShakeBandThrow, withPressKillRebootGuard, withPressKillShakeGuard,
 } from './pressKillGuards.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = join(HERE, 'fixtures', 'hammer-lb-hx');
@@ -121,14 +122,14 @@ describe('hammer-phase LB — the press kill guards', () => {
         return { e: null, t: run.ticksCompleted, deaths: [] };
     };
 
-    it('HO2 OFF: the press kill carries on past the death at t788', () => {
+    it('HO2 OFF: the press kill carries on past the death at t788', () => withL40Flip(false, () => {
         const r = capped(false);
         expect(r.e?.sentinel).toBe(true);
         expect(r.t).toBe(1300);
         expect(r.deaths).toEqual([788]); // t1202 with the strike floor OFF (SFF)
-    }, 600_000);
+    }), 600_000);
 
-    it('HO2 ON: the press kill is refused by name on the tick of the first death', () => {
+    it('HO2 ON: the press kill is refused by name on the tick of the first death', () => withL40Flip(false, () => {
         const r = capped(true);
         expect(r.e).toBeInstanceOf(SolverRefusal);
         expect(r.t).toBe(788);
@@ -138,5 +139,5 @@ describe('hammer-phase LB — the press kill guards', () => {
         expect(r.e.perTick.length).toBe(788);
         expect(String(r.e.message)).toMatch(/the player died at t788 \(chaser bob@736,752\) while pressing spinner@880,848, after 1 landing\(s\)/);
         expect(progressKind(r.e)).toBe('danger');
-    }, 600_000);
+    }), 600_000);
 });

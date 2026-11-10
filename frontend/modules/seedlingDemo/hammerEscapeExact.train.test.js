@@ -32,6 +32,7 @@ import { SHIELD_BUMP_FORECAST_KEY, withPressEscapeExact } from './pressEscapeExa
 import { CHOOSER_PAIR, HAMMER_ESCAPE_TRACE, withChooserPair, withIceTurretStaticKill, withLatchWeighFirst }
     from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const NO_KEY = !CONTACT_FIDELITY_KEYS.includes(SHIELD_BUMP_FORECAST_KEY);
@@ -73,9 +74,12 @@ function solve860Exact(frozen = false) {
 }
 
 describe('hammer-phase ESCAPE-EXACT — leg 860, A5, deadline 10240, seam 5950', () => {
+    // ⛓ L40-FLIP-BUILD: both rows are BEFORE pins recorded without the L40 flip set (`withL40Flip(false, …)`). With the
+    // set ON the solve stops earlier, on the one-visit strategy bound ("applied 4 strategies for one goal [shove, weigh,
+    // burn, hold(wandlock@480,560)] and the corridor still does not plan"): the flip's door/burn orders run first.
     it.skipIf(NO_KEY)('[needs fidelity\'s forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then '
         + 'the frozen-tick press refusal at t2119 — spinner@816,848 is not reached (measured; not the brief\'s "hitless")',
-    () => {
+    () => withL40Flip(false, () => {
         const { answer, kills, escapes } = solve860Exact(false);
         expect(answer.ok).toBe(false);
         expect(answer.message).toMatch(/^levelRun: a `primary` press at tick 2119 lands on a FROZEN tick/);
@@ -84,10 +88,10 @@ describe('hammer-phase ESCAPE-EXACT — leg 860, A5, deadline 10240, seam 5950',
         expect(t541.length).toBeGreaterThan(0);
         expect(t541.every((e) => !e.ok && e.claim && e.bound === 'no-landing')).toBe(true);
         expect(escapes.some((e) => !e.ok && !e.claim)).toBe(false);
-    }, 1_800_000);
+    }), 1_800_000);
 
     it.skipIf(NO_KEY || NO_FROZEN_KEY)('[needs forecastShieldBump + frozenPressForecast] the same arm with the freeze '
-        + 'forecast ON: no press lands on a frozen tick, and the solve runs past t2119 to its next wall', () => {
+        + 'forecast ON: no press lands on a frozen tick, and the solve runs past t2119 to its next wall', () => withL40Flip(false, () => {
         // measured on main c660a0b5c4 + fidelity-harvest/frozenpress a2b6b5a226: the next wall is LWEIGH's (fidelity's
         // FROZENPRESS hand-over (2), hammer's VOLLEY-APPROACH candidate)
         const { answer, kills } = solve860Exact(true);
@@ -97,5 +101,5 @@ describe('hammer-phase ESCAPE-EXACT — leg 860, A5, deadline 10240, seam 5950',
             + 'on its way to iceturret@472,400\'s kill stance (488,445)');
         expect(kills.map((k) => k.bodies)).toEqual([['spinner@880,848'], ['spinner@880,848']]);
         expect(kills.some((k) => k.bodies.includes(SPIN_BODY))).toBe(false);
-    }, 1_800_000);
+    }), 1_800_000);
 });

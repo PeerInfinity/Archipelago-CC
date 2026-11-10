@@ -42,8 +42,8 @@ const EXEMPT = new Set([`proximity-hazard:${TURRET}`]);
 
 describe('hammer-phase SOUTHDOOR: APPROACH_DOOR', () => {
     it('ships OFF, and the env alone turns it on', () => {
-        expect(APPROACH_DOOR_DEFAULT).toBe(false);
-        expect(APPROACH_DOOR.enabled).toBe(globalThis.process?.env?.SEEDLING_APPROACH_DOOR === '1');
+        expect(APPROACH_DOOR_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(APPROACH_DOOR.enabled).toBe(globalThis.process?.env?.SEEDLING_APPROACH_DOOR !== '0');
         withApproachDoor(true, () => expect(APPROACH_DOOR.enabled).toBe(true));
         withApproachDoor(false, () => expect(APPROACH_DOOR.enabled).toBe(false));
     });

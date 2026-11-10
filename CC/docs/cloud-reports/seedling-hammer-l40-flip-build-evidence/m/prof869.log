@@ -1,0 +1,1 @@
+869/1 C SOLVED 4491 gm={"gm":true,"hits":[],"deaths":0} work=3236 ms=50574 passes=[{"pass":"dashless","ok":true,"kind":null,"work":3235,"ms":49665,"ticks":4491,"capped":false},{"pass":"full","ok":false,"kind":"refusal","work":1,"ms":8,"ticks":null,"capped":false}]

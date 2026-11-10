@@ -30,8 +30,9 @@
  */
 import { canonicalDigestText } from './solverView.js';
 
-export const STAGED_HUNT_SCAN_MEMO = { enabled: globalThis.process?.env?.SEEDLING_STAGED_HUNT_SCAN_MEMO === '1' };
-export const STAGED_HUNT_SCAN_MEMO_DEFAULT = false;
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_STAGED_HUNT_SCAN_MEMO=0` opts out.
+export const STAGED_HUNT_SCAN_MEMO = { enabled: globalThis.process?.env?.SEEDLING_STAGED_HUNT_SCAN_MEMO !== '0' };
+export const STAGED_HUNT_SCAN_MEMO_DEFAULT = true;
 
 /**
  * Run `fn` (sync or async) with `STAGED_HUNT_SCAN_MEMO` set to `enabled`, restored after (also on a throw) —

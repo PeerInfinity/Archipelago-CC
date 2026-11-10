@@ -45,8 +45,8 @@ async function corridorRun() {
 
 describe('hammer-phase BK2COMBAT: CHASER_STAGED_HUNT', () => {
     it('ships OFF', () => {
-        expect(CHASER_STAGED_HUNT_DEFAULT).toBe(false);
-        expect(CHASER_STAGED_HUNT.enabled).toBe(globalThis.process?.env?.SEEDLING_CHASER_STAGED_HUNT === '1');
+        expect(CHASER_STAGED_HUNT_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(CHASER_STAGED_HUNT.enabled).toBe(globalThis.process?.env?.SEEDLING_CHASER_STAGED_HUNT !== '0');
         const was = CHASER_STAGED_HUNT.enabled;
         expect(withChaserStagedHunt(true, () => CHASER_STAGED_HUNT.enabled)).toBe(true);
         expect(withChaserStagedHunt(false, () => CHASER_STAGED_HUNT.enabled)).toBe(false);

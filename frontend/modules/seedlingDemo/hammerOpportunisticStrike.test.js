@@ -76,9 +76,9 @@ function solveChest(on, cap) {
 }
 
 describe('hammer-phase OPP — opportunistic strikes in the press kill', () => {
-    it.skipIf(ENV.SEEDLING_OPPORTUNISTIC_STRIKE !== undefined)('ships OFF', () => {
-        expect(OPPORTUNISTIC_STRIKE.enabled).toBe(false);
-        expect(OPPORTUNISTIC_STRIKE_DEFAULT).toBe(false);
+    it.skipIf(ENV.SEEDLING_OPPORTUNISTIC_STRIKE !== undefined)('ships ON in the L40 flip (hammer L40-FLIP-BUILD)', () => {
+        expect(OPPORTUNISTIC_STRIKE.enabled).toBe(true);
+        expect(OPPORTUNISTIC_STRIKE_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
     });
 
     it('step 67: OFF the kill passes bob@736,752 in reach without pressing and dies; ON it strikes the bob from '
