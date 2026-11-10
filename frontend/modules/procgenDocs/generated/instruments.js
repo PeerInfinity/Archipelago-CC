@@ -53,8 +53,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 64,
-            "count": 103,
+            "browser": 65,
+            "count": 104,
             "id": "check"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 518,
-        "browser": 215,
+        "blockStyle": 519,
+        "browser": 216,
         "cited": 273,
-        "files": 536,
+        "files": 537,
         "lineStyle": 18,
-        "withDocblock": 536,
-        "withFlags": 455
+        "withDocblock": 537,
+        "withFlags": 456
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2553,6 +2553,43 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "In-app verify for the MAZE mana leg under LOOP MODE after its migration onto the shared resourceChannels helpers (cross-game R1 slice 3).",
             "path": "scripts/procgen/check-maze-loop-mana.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-maze-world-map.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-maze-world-map — **THE MAZE LAB'S SET ARM AS A 2D MAP, IN A REAL BROWSER** (maze world map, step A): `lab.html?source=set`, a region library and its overlay drawn by `mazeRoom/mazeSetMap.js` through the shared set view (`procgenCore/setEditorView.mountSetEditor`'s `overviewMap`).",
+            "path": "scripts/procgen/check-maze-world-map.mjs"
         },
         {
             "argvHelpers": [

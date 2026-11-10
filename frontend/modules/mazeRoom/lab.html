@@ -381,7 +381,7 @@
   /* ⛔ The strip is positioned so `editorView`'s overlay — which it appends to
      the TARGET'S PARENT and sizes FROM the target — lands on top of it and not
      against the viewport (§23.11 #5 cost two runs to learn on the other page). */
-  #editSetOverviewWrap { position: relative; overflow-x: auto; max-width: 100%; }
+  #editSetOverviewWrap { position: relative; overflow: auto; max-width: 100%; max-height: 640px; }
   #labSetPalette, #labSetTools { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
   #labSetRoomBox { flex-direction: column; align-items: flex-start; }
   /* ⛓ EDITOR INTEGRATION W4 — the hosted editor's frame. Sized big enough that
@@ -785,9 +785,27 @@
         <span id="editSetIdentity" class="note"></span>
       </div>
       <div id="editSetRooms"></div>
+      <!--
+        ⛓ MAZE WORLD MAP (step A) — the same canvas shows the STRIP (one cell per room, in index order: the adapter's
+        own grid, and what RECT/PASTE between sets addresses) or the MAP (a 2D layout DERIVED from the overlay's links
+        and each exit's side; nothing about it is stored). The strip is this page's default; `?setView=map` opens on
+        the map. A WORLD session has no map yet and says so in `#labSetMapWhy`. Pan: scroll the panel. Zoom: + / − / 0
+        on the focused map, the buttons, or Ctrl+wheel.
+      -->
+      <div class="line">
+        <label for="editSetMapView">map view</label>
+        <input type="checkbox" id="editSetMapView">
+        <button id="editSetZoomOut">−</button>
+        <button id="editSetZoomIn">+</button>
+        <button id="editSetZoomFit">fit</button>
+        <button id="editSetMapRelayout">RE-LAYOUT</button>
+        <button id="editSetDisconnectTool">DISCONNECT on the map (d)</button>
+        <span id="labSetMapWhy" class="note">on the map: click a room to select it, double-click to open it</span>
+      </div>
       <div class="line" id="editSetOverviewWrap">
         <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
       </div>
+      <div class="line"><span id="editSetMapNote" class="note" style="display:block;min-height:1.4em"></span></div>
       <div class="line">
         <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
         <label for="editSetExitList">the selected room's exits</label>
