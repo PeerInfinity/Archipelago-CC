@@ -2,6 +2,8 @@ from dataclasses import dataclass
 
 from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 
+from . import _spoiler_hook_client
+
 # In this file, we define the options the player can pick.
 # The most common types of options are Toggle, Range and Choice.
 
@@ -12,6 +14,13 @@ from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 
 # For further reading on options, you can also read the Options API Document:
 # https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/options%20api.md
+
+
+class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
+    # The client's option, re-homed. AP's restricted unpickler (WebHost generation; test_pickle_dumps_default) only
+    # loads Option classes from a module whose name ends in "options", and the client's module doesn't. Everything
+    # else, the description included, is the client's (test/test_spoiler_hook_callers.py pins that).
+    __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
 
 
 # The first type of Option we'll discuss is the Toggle.
@@ -115,6 +124,7 @@ class APQuestOptions(PerGameCommonOptions):
     trap_chance: TrapChance
     confetti_explosiveness: ConfettiExplosiveness
     player_sprite: PlayerSprite
+    spoiler_data_in_slot_data: SpoilerDataInSlotData
 
 
 # If we want to group our options by similar type, we can do so as well. This looks nice on the website.

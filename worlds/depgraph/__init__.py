@@ -1,6 +1,7 @@
 from typing import Any, Dict, Set
 from BaseClasses import Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
+from . import _spoiler_hook_client
 from .Items import DepGraphItem, item_table, item_groups, node_item_name, event_item_name
 from .Locations import DepGraphLocation, location_table, node_location_name
 from .Options import DepGraphOptions, depgraph_option_groups
@@ -301,6 +302,11 @@ class DepGraphWorld(World):
             self.player
         )
 
+    @classmethod
+    def stage_pre_output(cls, multiworld) -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)
+
     def fill_slot_data(self) -> Dict[str, Any]:
         """Data to send to the client for this world."""
         return {
@@ -321,4 +327,5 @@ class DepGraphWorld(World):
             # the rule mode (see set_depgraph_rules) and the graph's option key.
             "entrance_rule_mode": self.options.entrance_rule_mode.value,
             "graph_file": self.options.graph_file.current_key,
+            **_spoiler_hook_client.slot_data(self),
         }

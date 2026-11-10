@@ -314,7 +314,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_18__r7c10 -> level_18__r1c1", player),
-        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
+        And(Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand')), Has('L18 flag 0: lock@144,112 cleared'))
     )
 
     world.set_rule(
@@ -394,7 +394,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_26__r13c8 -> level_26__r2c4", player),
-        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
+        And(Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand')), Has('L26 flag 0: rocklock@112,208 cleared'))
     )
 
     world.set_rule(
@@ -1348,18 +1348,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_53__r9c10 -> level_53__r14c9", player),
-        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_53__r9c10 -> level_53__r2c2", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Progressive Swim'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_53__r14c9 -> level_53__r9c10", player),
+        multiworld.get_entrance("level_53__r9c10 -> level_53__r14c9", player),
         Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_53__r14c9 -> level_53__r9c10", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand')), Has('L53 flag 2: lock@144,208 cleared'))
     )
 
     world.set_rule(
@@ -2868,6 +2868,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("L18 flag 0: lock@144,112 cleared", player),
+        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
+    )
+
+    world.set_rule(
         multiworld.get_location("Level 019 - Shieldspire", player),
         Has('Progressive Sword', 1)
     )
@@ -2890,6 +2895,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("L24 flag 0: burnabletree@32,128 cleared", player),
         Has('Fire', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L26 flag 0: rocklock@112,208 cleared", player),
+        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
     )
 
     world.set_rule(
@@ -2940,6 +2950,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("L48 flag 1: bosslock@48,144 cleared", player),
         Has('Blue Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L53 flag 2: lock@144,208 cleared", player),
+        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
     )
 
     world.set_rule(

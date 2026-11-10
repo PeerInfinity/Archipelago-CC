@@ -1,6 +1,7 @@
 from typing import Any, Dict, Set
 from BaseClasses import Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
+from . import _spoiler_hook_client
 from .Items import MetamathItem, item_table, item_groups, statement_item_name, proved_item_name
 from .Locations import MetamathLocation, location_table, statement_location_name
 from .Options import MetamathOptions, metamath_option_groups
@@ -379,6 +380,11 @@ class MetamathWorld(World):
             self.player
         )
 
+    @classmethod
+    def stage_pre_output(cls, multiworld) -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)
+
     def fill_slot_data(self) -> Dict[str, Any]:
         """Data to send to the client for this world."""
         return {
@@ -401,4 +407,5 @@ class MetamathWorld(World):
             # The client rebuilds the entrance rules from proof_structure, so it
             # needs the rule mode too (see set_metamath_rules).
             "entrance_rule_mode": self.options.entrance_rule_mode.value,
+            **_spoiler_hook_client.slot_data(self),
         }
