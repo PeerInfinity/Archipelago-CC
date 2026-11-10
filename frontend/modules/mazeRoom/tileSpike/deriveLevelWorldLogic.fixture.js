@@ -38,6 +38,18 @@ export const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,
  */
 export const OPEN_L53 = 'level_53__r9c10 @ L53 flag 2: lock@144,208 cleared (from level_53__r14c9) holding [Ghost Spear]: derived true, atlas false';
 /**
+ * ⛓ OPEN_L60 (session rules-l60-l71-killlock, routed to the planner): the rules now price L60's `lock@128,80` (tset -1) from its
+ * L61 door pocket `level_60__r5c9` as `Or(<its event, L60 flag 0, collected in r5c0>, Ghost Spear)`: the pocket reaches the room's
+ * jellyfish only ACROSS the shut lock, where the Spear's thrust and the Ghost Sword's slash kill them and no other arm does
+ * (`seedlingObstacleEvents.encounterLockSides` `across`; game witness `probe-seedling-killlock-arms.mjs`: both arms empty the
+ * roster from the pocket, the game writes `{60,0}` and the lock opens). The grid carries that as a LATCH entered from the pocket,
+ * and the latch's own arm lives in the rules' `latchEvent`; the maze's level world lays the latch and knows only its event, so
+ * holding the Spear with no event it does not cross. The atlas is the game's side here; the derivation's latch model is the open
+ * half (not this slice's: a tileSpike / derived-table engine change). The MIRROR of OPEN_L53: there the derivation is looser than
+ * the game, here it is tighter.
+ */
+export const OPEN_L60 = 'level_60__r5c9 → level_60__r5c0 holding [Ghost Spear,Progressive Swim]: derived false, atlas true';
+/**
  * ⛓ The second OPEN row, `OPEN_L3_L111` (⚖ user 2026-10-31, session tile-primitives-sphere-order-12: "Going from L3 to L111 requires
  * swim, and the rules should model that"), is GONE: `level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive
  * Sword]: derived false, atlas true` closed when ⛓ RULES rules-certifier-tail landed (⚖ 2026-11-02 "Yes, land it"). A door now costs
