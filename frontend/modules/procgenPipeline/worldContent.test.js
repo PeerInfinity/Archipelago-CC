@@ -17,7 +17,7 @@ import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { ContentPackError, parseRegistry } from '../contentPacks/contentPacks.js';
 import { nodePackIo } from '../contentPacks/nodePackIo.js';
-import { CONCEPT_TRIAL_STATE } from './presetDefs.js';
+import { CONCEPT_TRIAL_STATE, applyPresetState, capturePresetState } from './presetDefs.js';
 import {
     buildRunFromState, prepareRunFromState, runPresetHeadless, worldContentStackOf, DEFAULT_PARAMS,
 } from './presetRun.js';
@@ -27,7 +27,7 @@ import { appendSphere, serializeEnvelope, deserializeEnvelope } from './sphereSt
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     CONTENT_SET_KEY, DEFAULT_CONTENT_PACK_FIELD, EMPTY_CONTENT_SET, RECORDED_CONTENT_KEY, WorldContentError,
-    assertContentLoaded, attachContentSet, attachEnvelopeContent, contentParamRefusal, contentRegionParams,
+    assertContentLoaded, attachContentSet, attachEnvelopeContent, contentListOf, contentParamRefusal, contentRegionParams,
     effectiveContentStack, isContentSet, loadContentSet, recordedContentOf,
 } from './worldContent.js';
 
@@ -93,6 +93,35 @@ describe('params.content — the param', () => {
         expect(contentParamRefusal(['Trial'])).toMatch(/"Trial", which is not a pack id/);
         expect(contentParamRefusal([3])).toMatch(/3, which is not a pack id/);
         expect(contentParamRefusal(['trial', 'trial'])).toMatch(/names "trial" twice/);
+    });
+});
+
+describe('params.content survives the panel\'s save and reload (params persist whole)', () => {
+    it('capturePresetState → JSON → applyPresetState keeps the list, in order', () => {
+        const panel = { ...structuredClone(CONCEPT_TRIAL_STATE), params: { ...CONCEPT_TRIAL_STATE.params, content: ['trial', 'later'] } };
+        const saved = JSON.parse(JSON.stringify(capturePresetState(panel)));
+        const back = applyPresetState(saved, {
+            defaults: DEFAULT_PARAMS, hasSubstrate: (id) => substrateRegistry.has(id), current: { ...panel, params: DEFAULT_PARAMS },
+        });
+        expect(back.params.content).toEqual(['trial', 'later']);
+    });
+    it('a bundle that predates the param reloads with the default empty list', () => {
+        const { content: _drop, ...older } = { ...CONCEPT_TRIAL_STATE.params };
+        const back = applyPresetState({ ...CONCEPT_TRIAL_STATE, params: older }, {
+            defaults: DEFAULT_PARAMS, hasSubstrate: (id) => substrateRegistry.has(id), current: { params: DEFAULT_PARAMS },
+        });
+        expect(back.params.content).toEqual([]);
+    });
+});
+
+describe('contentListOf — a command line\'s --param content=a,b', () => {
+    it('splits a string on commas, trimmed; passes a list (or anything else) through', () => {
+        expect(contentListOf('trial, later,')).toEqual(['trial', 'later']);
+        expect(contentListOf('')).toEqual([]);
+        const list = ['trial'];
+        expect(contentListOf(list)).toBe(list);
+        expect(contentListOf(undefined)).toBeUndefined();
+        expect(contentListOf(3)).toBe(3);
     });
 });
 

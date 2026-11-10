@@ -79,6 +79,16 @@ export function contentParamRefusal(list) {
     return null;
 }
 
+/**
+ * A command line's `--param content=<ids>` (a string: `--param` gives strings and numbers) → the list
+ * (comma-separated, trimmed, empties dropped). A list, or anything else, comes back as it is, for
+ * `assertContentParam` to judge.
+ */
+export function contentListOf(value) {
+    if (typeof value !== 'string') return value;
+    return value.split(',').map((id) => id.trim()).filter(Boolean);
+}
+
 /** Throws `WorldContentError` on a malformed `params.content`; returns the list (`[]` when absent). */
 export function assertContentParam(list) {
     const refusal = contentParamRefusal(list);
@@ -248,7 +258,8 @@ export function envelopeSubstrateIds(env) {
     const ids = new Set();
     for (const n of env?.nodes ?? []) if (n?.substrate) ids.add(n.substrate);
     const c = env?.config ?? {};
-    for (const dict of [c.substrateQuotas, c.growthParams?.substrateQuotas, c.substrateMix, env?.opts?.substrateQuotas]) {
+    for (const dict of [c.substrateQuotas, c.growthParams?.substrateQuotas, c.growthParams?.substrateMix,
+        c.substrateMix, env?.opts?.substrateQuotas, env?.opts?.substrateMix]) {
         for (const [id, n] of Object.entries(dict ?? {})) if (Number(n) > 0) ids.add(id);
     }
     if (c.startSubstrate) ids.add(c.startSubstrate);
@@ -258,16 +269,25 @@ export function envelopeSubstrateIds(env) {
 /**
  * ⛓ **A RESUMED OR REBUILT ENVELOPE, READY TO GENERATE.** Loads the envelope's
  * effective stack (its `regionParams.content` over `envelopeSubstrateIds`) and
- * sets the set on `env.config.regionParams` and `env.opts.regionParams` (the
- * rebuild aliases the two). An empty stack leaves the envelope untouched. Returns
- * `env`. The append path's entry points (the panel's import, `sphere-step append`)
- * await this between `rebuildEnvelopeFromRulesJson` and `appendSphere`.
+ * sets the set on its `regionParams` IN PLACE (`env.config.regionParams`; the
+ * rebuild aliases it as `env.opts.regionParams`, and the panel's `growConfig`
+ * holds it too, so every alias sees the set). An empty stack, or a set already
+ * holding the stack, leaves the envelope untouched (no read, no new key).
+ * Returns `env`. The append path's entry points (the panel's append,
+ * `sphere-step append`) await this between `rebuildEnvelopeFromRulesJson` and
+ * `appendSphere`.
  */
 export async function attachEnvelopeContent(env, io = {}) {
     const holders = [env?.config, env?.opts].filter((h) => h && typeof h === 'object');
-    const current = holders.find((h) => h.regionParams)?.regionParams ?? {};
-    const next = await attachContentSet(current, { substrateIds: envelopeSubstrateIds(env), ...io });
-    if (next === current) return env;
-    for (const h of holders) if (h.regionParams === current || h === env.config) h.regionParams = next;
+    const regionParams = holders.find((h) => h.regionParams)?.regionParams;
+    const stack = effectiveContentStack({
+        substrateIds: envelopeSubstrateIds(env), content: regionParams?.[RECORDED_CONTENT_KEY] ?? [],
+    });
+    if (!stack.length) return env;
+    const held = regionParams?.[CONTENT_SET_KEY];
+    if (isContentSet(held) && stack.every((id) => held.ids.includes(id))) return env;
+    const contentSet = await loadContentSet(stack, io);
+    if (regionParams) regionParams[CONTENT_SET_KEY] = contentSet;
+    else env.config.regionParams = { [CONTENT_SET_KEY]: contentSet };
     return env;
 }
