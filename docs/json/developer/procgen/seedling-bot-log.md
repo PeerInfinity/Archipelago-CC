@@ -27790,3 +27790,38 @@ apitem does not vanish); 10 more chest rows shorter; 66/94/175 still refused, ob
 **Trap candidates.** (1) A survey row that is SOLVED in 0 ticks at a chest is the seal removal (`Chest.checkBySeal` with
 all seals held), not a take — the delivered game has no such removal. (2) Which world a "model" row stands in: the page's
 solver sees the DELIVERED rooms (`world.apItems`), the survey the vanilla ones — the same goal can be two verbs.
+
+### Seedling fidelity L39PHANTOM — a spinner the run's roster lost is not priced at its placement (`spinnerRosterGone`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 38 (⚖ the user's GO 2026-11-09: *"L39 + Fire arm now"*). Base `2d1283375e`.
+The report is `CC/docs/cloud-reports/seedling-fidelity-l39phantom.md`; it starts from hammer's WALLS-CENSUS-2 §2/§4/§9.
+
+**W0.** The census leg (`level_39__r25c9 <- in_L38_144_0 -> location:Level 039 - Totem Part 72,40`) re-captured on the
+page at this base (p4g, inv, seam 5226): 640 → budget, 2,560 → refused on *"enemy:spinner@112,88 (a static "Enemy" body at
+its placement …)"*, leg FAILED. Node seam census (45 phases, one hammer cycle): 640 lands 20/45, 2,560 39/45 — WALLS-CENSUS-2's
+numbers exactly, shifted one period. AS3: `Pulser.hit` → `Enemy.hit(6, p, 1, "Pulse")` (`Pulser.as:108-111`); 3 hits kill
+(`Enemy.as:153-161`); a destroyed mobile fades `alpha -= 0.1` and is removed at `alpha <= 0` (`Mobile.as:60-71`); a fading
+`Spinner` still swings its hammer (`Spinner.as:66-76`: no `destroy` test after `super.update()`).
+
+**D0** (game witness, `probe-seedling-l39-pulser-kill.mjs`, `fixtures/l39shaft-witness/l39phantom-pulser-kill.json`): the
+committed `l39shaft-solver-step66` tape on p4g (delivered set), every `Spinner` row of `botMobiles` over t1180–1300.
+`pulser@64,96` kills `spinner@112,88` at t1267 on both sides; x, y, hits, hitsTimer, destroy and alpha agree at 0 px on all
+121 ticks but ONE named read: the game's world drops the corpse at t1278, the model's roster lists it at alpha −0.1 one more
+read (`removePending` → `removed` at the next step's top; F5 already stamps the removal ledger at the alpha-zero step).
+Pinned as `isRemovePendingFencepost`, not fixed (spinner.js is not this slice's region).
+
+**D1** (`spinnerRosterGone`, OFF; `SEEDLING_SPINNER_ROSTER_GONE`): `spinnersTheRunSteps(run, world)` also skips every id in
+`world.spinners` — the visit's built roster — once the roster read is an array, so a spinner the roster lost (any killer)
+is not priced at its placement by `staticEnemyDanger` or `dangerVolumes`. Boundaries, each a row
+(`fidelityL39Phantom.test.js`, 9): before the kill ON = OFF byte for byte; in the fade both arms skip it statically and the
+live arm (`spinnerDanger`) prices it; no roster read / no spinner list = OFF. Only L18, L39, L40 and L92 have spinners, so
+every other room is byte-identical by construction. Mutants M1–M3 red (M3 two more than predicted, via a shared helper).
+
+**D2** (key ON): census 640 **44/45**, 2,560 **44/45** (phase 5230 = the live `spinner@224,112`, hammer's L39 (B)); every
+landed plan bills 0 hits in both arms. Page leg ON: DONE on the first request, 0 room hits (one 1-tick divergence at t2212,
+re-solved — residue). Local survey on the 11 spinner-room steps: verdicts unchanged; L39 steps 65/95/136/149 shorter
+(3496→2740, 3376→2624, 3376→2624, 3253→2626 t, 0 hits); L18/L40/L92 equal. Bounded set ON: one red, `fidelityL39Shaft`
+D2 (the step-66 solver tape is the OFF plan: 3496 t recorded, 2740 ON) — a re-record at the flip.
+
+**Trap candidates.** (1) A dead body's receipt is not the run's verdict: the press ledger is ONE killer's; the roster is the
+verdict. (2) A spinner's roster read lists its corpse one read past the game's world (the `removePending` read fencepost).
