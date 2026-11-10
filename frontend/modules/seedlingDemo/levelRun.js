@@ -12766,6 +12766,8 @@ export function createLevelRun({
                 lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1,
                     { masks: mixed || CONTACT_FIDELITY.pixelMaskSightLines }),
                 collides: (rect) => base.collides(rect) || (enemyAt !== null && enemyAt(rect)),
+                // ⛓ fidelity DRILLWATER D1: `Enemy.update`'s `getState()` (read only with `drillTerrainSwitch` ON)
+                tileTypeAt: base.tileTypeAt,
                 hitPlayer: (d) => {
                     let cur = d;
                     applyPlayerHit({
@@ -12787,7 +12789,8 @@ export function createLevelRun({
              * ⛓ fidelity DRILL D2: `Enemy.update`'s terrain switch is not in `drill.js` (L88's drill never leaves
              * ground). A mixed room's drill that hops onto water, lava or a pit is refused by name, not walked on.
              */
-            if (mixed && out.hopped) {
+            // ⛓ fidelity DRILLWATER D1: with `drillTerrainSwitch` ON the switch IS modelled (`drill.stepDrill`): no refusal.
+            if (mixed && out.hopped && !CONTACT_FIDELITY.drillTerrainSwitch) {
                 const tt = base.tileTypeAt(d.x, d.y);
                 if (tt === ENEMY_TERRAIN_DESTROYS.water || tt === ENEMY_TERRAIN_DESTROYS.lava || tt === ENEMY_PIT_TILE) {
                     throw new Error(`levelRun: ${id} in level ${level} hops onto tile type ${tt} at (${d.x},${d.y}) on tick `
@@ -12798,6 +12801,12 @@ export function createLevelRun({
             st.set(id, d);
             if (out.contact) drillEvents.push({ t, level, id, kind: 'contact', x: d.x, y: d.y });
             if (out.hopped) drillEvents.push({ t, level, id, kind: 'hop', x: d.x, y: d.y });
+            // ⛓ fidelity DRILLWATER D1: the switch's verdicts, once each (ON only: the fields exist only then)
+            if (d.terrainDeath && !before.terrainDeath) {
+                drillEvents.push({ t, level, id, kind: d.terrainDeath, x: d.x, y: d.y });
+            } else if (d.fallInPit && !before.fallInPit) {
+                drillEvents.push({ t, level, id, kind: 'fall-start', x: d.x, y: d.y });
+            }
             if (pendingDeath) return;
         }
     }
@@ -12919,6 +12928,7 @@ export function createLevelRun({
                         lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1,
                             { masks: CONTACT_FIDELITY.drillMixedRooms || CONTACT_FIDELITY.pixelMaskSightLines }),
                         collides: (rect) => sctx.collides(rect) || (enemyAt !== null && enemyAt(rect)),
+                        tileTypeAt: sctx.tileTypeAt,
                         hitPlayer: (d) => { contact = true; return d; },
                     });
                     dr.set(id, stepDrillGraphic(out.d));
@@ -17944,7 +17954,9 @@ export function createLevelRun({
     // landing needs `hitsTimer <= 0`) and `destroy` (the "die" anim's end) — for `solverBot.execDrillKill`.
     const drillBodiesNow = () => (noclip ? [] : [...drillStateFor(level).values()]
         .map((d) => ({ id: d.id, x: d.x, y: d.y, rect: drillRect(d), removed: d.removed, anim: d.anim, hits: d.hits,
-            hitsTimer: d.hitsTimer, destroy: d.destroy })));
+            hitsTimer: d.hitsTimer, destroy: d.destroy,
+            // ⛓ fidelity DRILLWATER D1: the pit latch and its end (ON only; OFF the row is unchanged)
+            ...(CONTACT_FIDELITY.drillTerrainSwitch ? { fallInPit: d.fallInPit === true, fell: d.fell === true, terrainDeath: d.terrainDeath ?? null } : {}) })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,

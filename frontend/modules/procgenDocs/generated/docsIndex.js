@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1266,
+        "headings": 1267,
         "indexHeadings": 2,
-        "lines": 35316,
+        "lines": 35346,
         "pages": 4,
-        "words": 521859
+        "words": 522250
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -37,7 +37,7 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 18,
-            "lines": 267,
+            "lines": 269,
             "links": [
                 "cloudberry.md",
                 "demos.md",
@@ -53,7 +53,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4622
+            "words": 4685
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -374,8 +374,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 765,
-            "lines": 27747,
+            "headings": 766,
+            "lines": 27774,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -383,17 +383,17 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 308951
+            "words": 309262
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 16,
-            "lines": 733,
+            "lines": 734,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 10882
+            "words": 10899
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

@@ -39,9 +39,9 @@ describe('FROZENPRESS — the switch', () => {
             // `ceremonyWalkHandoff`. Any order of those (the slices merge in either order); nothing else.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const after = keys.slice(keys.indexOf('frozenPressForecast') + 1);
-            // ⛓ wave 37d: L25APITEM `apChestItem`; wave 37c: KNOCKBACK376 `rockGoneFencepost` (landed after it).
+            // ⛓ wave 37d: L25APITEM `apChestItem`; wave 37c: KNOCKBACK376 `rockGoneFencepost` (landed after it); wave 37e: DRILLWATER `drillTerrainSwitch`.
             const W37B = ['previewBeamTowerDrift', 'ceremonyPressForecast', 'ceremonyWalkHandoff', 'apChestItem'];
-            const W37C = ['rockGoneFencepost'];
+            const W37C = ['rockGoneFencepost', 'drillTerrainSwitch'];
             expect(after.filter((k) => !W37B.includes(k) && !W37C.includes(k))).toEqual([]);
         });
     it('`SEEDLING_FROZEN_PRESS_FORECAST` is a known worker env name; `freezeForecast` is a progress field', () => {
