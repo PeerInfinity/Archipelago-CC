@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 35379,
         "pages": 4,
-        "words": 522895
+        "words": 522920
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -329,7 +329,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/text-adventure.md",
-            "words": 1464
+            "words": 1489
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
