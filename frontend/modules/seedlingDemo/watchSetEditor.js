@@ -80,6 +80,7 @@ import {
 } from '../procgenCore/setEditorCore.js';
 import { mountSetEditor } from '../procgenCore/setEditorView.js';
 import { createSetMap } from './seedlingSetMap.js';
+import { vanillaRecordSet } from './levelSetExporter.js';
 // ⛓ LAB L2: a still drawn with the art and one drawn as rectangles are two pictures of one room.
 import { labStillKey } from './watchArt.js';
 
@@ -91,6 +92,31 @@ export class WatchSetEditorError extends Error {
 }
 
 const fail = (message) => { throw new WatchSetEditorError(message); };
+
+/**
+ * ⛓⛓ **THE SET EDITOR'S VANILLA 116, NAMED ONCE** (slice
+ * `seedling-vanilla-set-arrivals`). `vanillaRecordSet` builds two different
+ * sets from the same two documents: by default the DELIVERED set (the record
+ * patches of `seedlingSetPatches.SEEDLING_SET_PATCHES` applied, which is what
+ * the randomizer hands the game), and with `{patches: []}` the GAME'S OWN rooms
+ * (the faithful map extract, byte-identical to the unpatched vanilla). ⚖
+ * MOONROCK put the editor on the second: an author edits the game, and the
+ * delivery's patches are applied downstream, on whatever set the author makes.
+ *
+ * ⛔ The two differ in exactly the rooms the patch table names (MEASURED: 9
+ * rows over 7 rooms), and one of those rows (L0 losing its `moonrock`) also
+ * removes a `named_rooms` ARRIVAL from the map, because an arrival is a link
+ * only while an entity in the set targets it. E3's unit rows built the delivered
+ * set while the page opened the game's, so the map's link count differed by one
+ * (14 named arrivals vs 15). Every editor reader (the page's `#editLoadVanilla`,
+ * its node twins, the editor gates) calls THIS function, so the choice is one
+ * line, not one argument per caller.
+ *
+ * @param {object} embedSet  the committed vanilla manifest (`fixtures/seedling-vanilla-set.json`)
+ * @param {object} mapDoc    the committed map extract (`flashPanel/atlases/seedling-map.json`)
+ * @returns {{set: object, report: object}} `vanillaRecordSet`'s answer
+ */
+export const editorVanillaSet = (embedSet, mapDoc) => vanillaRecordSet(embedSet, mapDoc, { patches: [] });
 /**
  * ⛓ **THE FOUR REFUSAL CLASSES, AS THE PAGE'S READERS SEE THEM.** The same four
  * `seedlingSetAdapter.apply` catches — the adapter's, the overlay's,

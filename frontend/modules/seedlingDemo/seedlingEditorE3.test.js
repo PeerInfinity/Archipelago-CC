@@ -19,7 +19,8 @@ import {
     canonicalLayout, createSetMap, dirOfExit, edgeOf, frameOf, layoutCensus, layoutGraphOf, mapLinkShapes,
     mapLinksOf,
 } from './seedlingSetMap.js';
-import { disconnectEffectOf, roomRowsOf } from './watchSetEditor.js';
+import { SEEDLING_SET_PATCHES } from './seedlingSetPatches.js';
+import { disconnectEffectOf, editorVanillaSet, roomRowsOf } from './watchSetEditor.js';
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 const MAP = JSON.parse(readFileSync(here('../flashPanel/atlases/seedling-map.json'), 'utf8'));
@@ -32,7 +33,8 @@ const DEPS = Object.freeze({
     atlas: { game: 'seedling-editor-e3-test', mapDocument: 'seedling-editor-e3-test.json' },
 });
 const adapter = createSeedlingSetAdapter(DEPS);
-const VANILLA = setRecord(vanillaRecordSet(EMBED, MAP).set, emptyOverlay());
+// ⚖ MOONROCK: the editor's vanilla 116 is the GAME's rooms — the same call the page's `#editLoadVanilla` makes.
+const VANILLA = setRecord(editorVanillaSet(EMBED, MAP).set, emptyOverlay());
 const vanillaSession = () => createSetSession(adapter, VANILLA, { base: { kind: 'set', set_id: VANILLA.set.set_id } });
 const layoutOf = (record) => canonicalLayout(layoutGraphOf(record, mapLinksOf(record, DEPS).links));
 const apply = (s, op) => {
@@ -289,5 +291,39 @@ describe('the generated set (a pipeline preset) lays out too', () => {
             expect(pos.length).toBe(rec.set.rooms.length);
             expect(new Set(pos.map((p) => `${p.gx},${p.gy}`)).size).toBe(pos.length);
         });
+    });
+});
+
+/**
+ * ⛓⛓ **WHICH VANILLA THE EDITOR OPENS** (slice `seedling-vanilla-set-arrivals`). Until this slice the rows above built
+ * the DELIVERED set (`vanillaRecordSet`'s default, the record patches applied) while the page opened the GAME's rooms,
+ * so the two maps differed by one `named_rooms` arrival. The page side of the same pin is
+ * `check-seedling-editor-e3.mjs`'s digest row; this half says what the difference IS, read off the patch table.
+ */
+describe('the editor\'s vanilla is the game\'s rooms, not the delivery', () => {
+    const delivered = vanillaRecordSet(EMBED, MAP).set;
+    const patchedRooms = [...new Set(SEEDLING_SET_PATCHES.map((p) => p.level))].sort((a, b) => a - b);
+    const named = (set) => mapLinksOf(setRecord(set, emptyOverlay()), DEPS).links
+        .filter((l) => l.kind === 'named').map((l) => JSON.stringify([l.key, l.from, l.to]));
+
+    /** MUTANT: `editorVanillaSet` passes the default patches (the delivered set) — no room differs. */
+    it('it differs from the delivered set in exactly the rooms the patch table names, and nowhere else', () => {
+        const differing = VANILLA.set.rooms.map((r, i) => i)
+            .filter((i) => JSON.stringify(VANILLA.set.rooms[i]) !== JSON.stringify(delivered.rooms[i]));
+        expect(patchedRooms.length).toBeGreaterThan(0);
+        expect(differing).toEqual(patchedRooms);
+        expect(VANILLA.set.named_rooms).toEqual(delivered.named_rooms);
+        expect(VANILLA.set.provenance.patches).toBeUndefined();
+        expect(delivered.provenance.patches).toEqual(SEEDLING_SET_PATCHES.map((p) => p.id));
+    });
+
+    /** MUTANT: as above — the extra arrival vanishes; or read `named_rooms` as links whether or not a trigger exists. */
+    it('the map\'s extra named arrivals all leave a patched room: a patch removed their trigger', () => {
+        const game = named(VANILLA.set);
+        const deliveredNamed = new Set(named(delivered));
+        const extra = game.filter((k) => !deliveredNamed.has(k));
+        expect(extra.length).toBeGreaterThan(0);
+        expect(named(delivered).every((k) => game.includes(k))).toBe(true);
+        for (const k of extra) expect(patchedRooms).toContain(JSON.parse(k)[1]);
     });
 });
