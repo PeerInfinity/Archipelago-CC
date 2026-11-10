@@ -19,12 +19,15 @@
  *
  * ⛓ WHICH REGIONS THE DEDUCTION OWNS. This module is wired whatever the
  * world contains, so `manaEnabled` alone says nothing about who bills a
- * region. This leg is the text adventure's own bill, so it charges only a
- * region whose payload names that substrate: see `isThisLegsRegion`. Maze,
- * jta and omsi charge the pool themselves for their regions. Cloudberry and
- * Noiz2sa price by time in loop mode and cost nothing with it off, so the
- * flat location and move defaults here were never their price. The display
- * half is unaffected.
+ * region. Two kinds of region are never charged here (`notChargedHere`):
+ *   - another substrate that declares `sharing.mana` bills the pool itself
+ *     (maze per tile, jta and omsi by mirroring their native resource);
+ *   - a substrate whose loop-mode price is its game clock alone, a SUMMARY
+ *     recording (`loopSupport.summaryRecording`) charged by its reported play
+ *     clock (`loopSupport.playClock`), costs nothing with loop mode off: the
+ *     flat location and move defaults here were never its price (Cloudberry
+ *     and Noiz2sa; ⚖ Robert 2026-11-09, "Remove the charge").
+ * Any other substrate stays on this leg. The display half is unaffected.
  */
 
 import { centralRegistry } from '../../app/core/centralRegistry.js';
@@ -33,7 +36,10 @@ import {
     xpAdjustedCost,
     chargeMana,
     fireLoopResetTeleport,
+    isManaDeclarer,
 } from '../resourceChannels/resourceChannelsLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { captureShapeOf, CAPTURE_SHAPES } from '../procgenCore/substratePredicates.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 
 // Registry id shared with the in-process textAdventureSubstrate (both
@@ -131,7 +137,7 @@ function handleRegionChanged(data) {
     // old region (the cached _currentRegionHasMana applied to it,
     // since it was the current region at the time the event fired).
     if (!fromReset && oldRegion && _currentRegionHasMana && !_isLoopModeActive
-        && isThisLegsRegion(oldRegion)) {
+        && !notChargedHere(oldRegion)) {
         deductRegionMoveMana(oldRegion);
     }
 
@@ -142,17 +148,25 @@ function handleRegionChanged(data) {
 
 function _shouldDeductMana() {
     return _currentRegionHasMana && !_isLoopModeActive
-        && isThisLegsRegion(_currentRegionId);
+        && !notChargedHere(_currentRegionId);
 }
 
 /**
- * True when this leg bills the region: its payload names the text adventure,
- * or no substrate at all. Any other named substrate is billed by its own
- * code, or (loop mode off) not at all.
+ * True when a charge from here would be wrong: the region's substrate bills
+ * the shared pool itself, or prices its regions by its game clock alone (see
+ * the header). Read from the registry at charge time: this module can
+ * initialize before the region's substrate has registered.
  */
-function isThisLegsRegion(regionName) {
+function notChargedHere(regionName) {
     const substrate = resolveRegionInfo(regionName)?.substrate;
-    return !substrate || substrate === SUBSTRATE_ID;
+    if (!substrate || substrate === SUBSTRATE_ID) return false;
+    return isManaDeclarer(substrate) || pricedByPlayClockAlone(substrate);
+}
+
+function pricedByPlayClockAlone(substrateId) {
+    const entry = substrateRegistry.get(substrateId);
+    return !!entry && entry.loopSupport?.playClock === true
+        && captureShapeOf(entry) === CAPTURE_SHAPES.SUMMARY;
 }
 
 function resolveRegionInfo(regionName) {

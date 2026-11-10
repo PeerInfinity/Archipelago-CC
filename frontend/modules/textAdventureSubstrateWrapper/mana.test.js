@@ -14,6 +14,8 @@ import {
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { chargeMana } from '../resourceChannels/resourceChannelsLibrary.js';
 import { substrateRegistryEntry as mazeEntry } from '../mazeRoom/mazeRoomLibrary.js';
+import { substrateRegistryEntry as cloudberryEntry } from '../cloudberryDemo/cloudberryLibrary.js';
+import { substrateRegistryEntry as noiz2saEntry } from '../noiz2saSubstrate/noiz2saSubstrateLibrary.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
 
 function makeFakeBus() {
@@ -44,7 +46,7 @@ function makeFakeDispatcher() {
 }
 
 const MANA_REGIONS = new Set(['A', 'B', 'SelfBilled', 'SelfBilled2', 'Own', 'Undeclared', 'MazeRoom', 'MazeRoom2',
-    'Cloudberry', 'Cloudberry2', 'Noiz2sa', 'Noiz2sa2']);
+    'Cloudberry', 'Cloudberry2', 'Noiz2sa', 'Noiz2sa2', 'SummaryNoClock', 'ClockNotSummary']);
 const REGION_SUBSTRATES = {
     SelfBilled: 'self_billing',
     SelfBilled2: 'self_billing',
@@ -54,6 +56,8 @@ const REGION_SUBSTRATES = {
     Cloudberry2: 'cloudberry',
     Noiz2sa: 'noiz2sa',
     Noiz2sa2: 'noiz2sa',
+    SummaryNoClock: 'summary_no_clock',
+    ClockNotSummary: 'clock_not_summary',
     MazeRoom: mazeEntry.id,
     MazeRoom2: mazeEntry.id,
 };
@@ -244,18 +248,50 @@ describe('wrapper mana leg — regions another substrate bills', () => {
         expect(gs.getCurrentMana()).toBe(40);
     });
 
-    it('does not charge a substrate with no sharing.mana', () => {
+    it('still charges a substrate with no sharing.mana: nothing else bills it with loop mode off', () => {
         register();
         const { gs, bus } = wire({ currentRegion: 'Undeclared' });
         bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
         bus.publish('gameState:regionChanged', { oldRegion: 'Undeclared', newRegion: 'A' });
-        expect(gs.getCurrentMana()).toBe(100);
+        expect(gs.getCurrentMana()).toBe(40);
+    });
+
+    it('⛓ premise: the real Cloudberry and Noiz2sa entries declare a summary recording priced by their play clock, and no sharing.mana', () => {
+        for (const e of [cloudberryEntry, noiz2saEntry]) {
+            expect(e.loopSupport.summaryRecording).toBe(true);
+            expect(e.loopSupport.playClock).toBe(true);
+            expect(e.sharing?.mana).toBeUndefined();
+        }
+    });
+
+    it.each([
+        ['a summary recording without a play clock', 'SummaryNoClock', { summaryRecording: true }],
+        ['a play clock without a summary recording', 'ClockNotSummary', { playClock: true }],
+    ])('still charges %s (only the two together mean "priced by time alone")', (_label, region, loopSupport) => {
+        substrateRegistry.register({ id: REGION_SUBSTRATES[region], loopSupport });
+        const { gs, bus } = wire({ currentRegion: region });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
+        bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: 'A' });
+        expect(gs.getCurrentMana()).toBe(40);
+    });
+
+    it('still charges a Cloudberry region while its entry has not registered (read at charge time)', () => {
+        const { gs, bus } = wire({ currentRegion: 'Cloudberry' });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
+        substrateRegistry.register(cloudberryEntry);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Cloudberry', newRegion: 'Cloudberry2' });
+        expect(gs.getCurrentMana()).toBe(90);
     });
 
     describe.each([
-        ['Cloudberry', 'Cloudberry2'],
-        ['Noiz2sa', 'Noiz2sa2'],
-    ])('%s with loop mode off', (region, next) => {
+        ['Cloudberry', 'Cloudberry2', cloudberryEntry],
+        ['Noiz2sa', 'Noiz2sa2', noiz2saEntry],
+    ])('%s with loop mode off', (region, next, entry) => {
+        beforeEach(() => { substrateRegistry.register(entry); });
+
         it('a location check costs nothing and earns no region XP', () => {
             const { gs, bus } = wire({ currentRegion: region });
             bus.publish('stateManager:snapshotUpdated', CHECK);
@@ -288,6 +324,7 @@ describe('wrapper mana leg — regions another substrate bills', () => {
     });
 
     it('a text adventure region still pays its check and its move after a Cloudberry room', () => {
+        substrateRegistry.register(cloudberryEntry);
         const { gs, bus } = wire({ currentRegion: 'Cloudberry' });
         bus.publish('gameState:regionChanged', { oldRegion: 'Cloudberry', newRegion: 'Own' });
         bus.publish('stateManager:snapshotUpdated', CHECK);
@@ -305,7 +342,7 @@ describe('wrapper mana leg — regions another substrate bills', () => {
         expect(gs.getCurrentMana()).toBe(50);
     });
 
-    it('needs no registry entry: a named substrate registered after wiring is still not charged', () => {
+    it('reads the declaration at charge time, so a substrate registered after wiring counts', () => {
         const { gs, bus } = wire({ currentRegion: 'SelfBilled' });
         register();
         bus.publish('stateManager:snapshotUpdated', CHECK);
