@@ -142,6 +142,17 @@ async function main() {
     try {
         /* ══ 1. THE OVERLAY ══════════════════════════════════════════ */
         await openLevel(LINK_ROOM.level);
+        // ⛓ A hover must not move the canvas: `genEditCellNote` once grew a line, and a click then landed a row off.
+        const canvasTop = () => page.evaluate(() => document.getElementById('canvas').getBoundingClientRect().top);
+        await page.evaluate(() => document.getElementById('canvas').scrollIntoView({ block: 'center' }));
+        const topBefore = await canvasTop();
+        const rectNow = await page.evaluate(() => {
+            const r = document.getElementById('canvas').getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        });
+        await page.mouse.move(rectNow.x, rectNow.y);
+        const topAfter = await canvasTop();
+        check(topAfter === topBefore, '⛓ hovering a cell does not move the canvas', `${topBefore} → ${topAfter}`);
         const live = (await edit()).links;
         check(json(shape(live.links)) === json(shape(linksOf(LINK_ROOM, O))),
             `⛓ L${LINK_ROOM.level}: the page's links are node's \`linksOf\``, `${live.links.length} link(s)`);

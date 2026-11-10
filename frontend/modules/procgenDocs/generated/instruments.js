@@ -3664,7 +3664,6 @@ export const INSTRUMENTS = frz({
                 "edit",
                 "json",
                 "settled",
-                "shape",
                 "status"
             ],
             "browser": true,

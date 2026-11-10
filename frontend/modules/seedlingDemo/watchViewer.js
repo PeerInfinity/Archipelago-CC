@@ -9275,7 +9275,7 @@ async function runEditor(params, lifetime) {
             why: lastWhy,
             transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
             /** ⛓ E2 — what the room is wired to, and the issues the panel lists. */
-            links: editorUi?.links() ?? null,
+            get links() { return editorUi?.links() ?? null; },
             /**
              * ⛓ EDITOR v3 C2 — WHICH SET IS HELD and how many of its rooms this
              * page could open. ⛔ The set itself is NOT echoed here: it is up to
