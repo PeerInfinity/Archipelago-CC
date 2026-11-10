@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * ENTRANCE RANDOMIZATION E5, IN THE LEVEL DATA — the witness on the wasm runtime.
+ * ENTRANCE RANDOMIZATION E5, IN THE LEVEL DATA — the witness, on the wasm runtime (the default) or on the
+ * Seedling JS runtime (`--runtime=js`, below).
  * `seedling_er` loaded by `?rules=`, the preset's own build (`flash_panel.wasm`), headless logic-only, under the
  * box lock, on ONE fresh page.
  *
@@ -44,13 +45,23 @@
  *              as an entrance-randomized world left on vanilla rooms, on the panel's log, in its refusal and on
  *              a sticky overlay over the game.
  *
+ *   --runtime=js   THE SAME WITNESS PLAYED ON THE SEEDLING JS RUNTIME (`transport: 'js'`): the panel is booted
+ *              with its runtime setting on `js` (`moduleSettings.flashPanel.runtime`, unpersisted), so it mounts
+ *              `seedlingDemo/jsRuntime.html` instead of the wasm build. The world is made in node for that
+ *              transport, the picker, the legs and every per-leg check are the ones above, unchanged; the page
+ *              must have delivered the same `set_id`, the JS runtime must report it mounted (`botLevelSet`),
+ *              and its `botStatus` must name the runtime `js`. Differences in the driving only: no ▶ Start and
+ *              no logic-only channel (the page boots itself under automation), and the page's canvas is
+ *              `#game`. The refusal session is the wasm arm's (it needs a staged build that lacks a
+ *              capability; the JS runtime is no build in the manifest) and does not run here.
+ *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`
  * (exit 1).
  *
- * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build (the
- * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
+ * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); on the wasm arm the wasm
+ * build (the `flashPanel/wasm` submodule), or it SKIPs (exit 0). The JS arm needs no build.
  *
- * Run: node scripts/procgen/probe-seedling-wasm-er-retarget.mjs [--host=http://localhost:8000] [--pairs=0,3] [--no-item] [--no-refusal] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-wasm-er-retarget.mjs [--runtime=wasm|js] [--host=http://localhost:8000] [--pairs=0,3] [--no-item] [--no-refusal] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -67,6 +78,20 @@ argvHelp(import.meta.url);
 
 /** The preset, by its rules file (served path relative to `frontend/`). */
 export const RULES_PATH = './presets/seedling_er/AP_1/AP_1_rules.json';
+
+/** The runtimes this witness plays on: the panel's transport, and the game page it mounts for it. */
+export const RUNTIMES = Object.freeze(['wasm', 'js']);
+/** The JS runtime's page (`flashPanelUI.JS_RUNTIME_PAGE`'s file name) and its canvas. */
+const JS_PAGE = 'jsRuntime.html';
+const JS_CANVAS = '#game';
+/** The panel setting that picks the runtime (`flashPanelUI.RUNTIME_SETTING_KEY`). */
+const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
+
+/** `--runtime=`'s value: one of `RUNTIMES` (default the first), or null for anything else. */
+export function runtimeOf(argv) {
+    const given = argv.find((a) => a.startsWith('--runtime='))?.slice('--runtime='.length) ?? RUNTIMES[0];
+    return RUNTIMES.includes(given) ? given : null;
+}
 
 const ARROWS = [[0, -1, 'ArrowUp'], [-1, 0, 'ArrowLeft'], [1, 0, 'ArrowRight'], [0, 1, 'ArrowDown']];
 
@@ -188,7 +213,13 @@ export function messageTitles(repo) {
 if (isEntryPoint(import.meta.url)) await main();
 
 async function main() {
-    takeBoxLockOrExit({ name: 'probe-seedling-wasm-er-retarget.mjs', kind: 'browser' });
+    const RUNTIME = runtimeOf(process.argv);
+    if (!RUNTIME) {
+        console.log(`unknown --runtime (one of ${RUNTIMES.join(', ')})`);
+        process.exit(2);
+    }
+    const JS = RUNTIME === 'js';
+    takeBoxLockOrExit({ name: `probe-seedling-wasm-er-retarget.mjs${JS ? ' --runtime=js' : ''}`, kind: 'browser' });
     const HERE = dirname(fileURLToPath(import.meta.url));
     const REPO = join(HERE, '..', '..');
     const FRONTEND = join(REPO, 'frontend');
@@ -196,14 +227,17 @@ async function main() {
         ?.slice(name.length + 3) ?? fallback);
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
     const WITH_ITEM = !process.argv.includes('--no-item');
-    const WITH_REFUSAL = !process.argv.includes('--no-refusal');
+    // the refusal needs a staged BUILD that lacks a capability: the wasm arm's
+    const WITH_REFUSAL = !JS && !process.argv.includes('--no-refusal');
     const REFUSAL_RULES_NAME = 'er-retarget-refusal-rules.json';
     const REFUSAL_RULES = join(REPO, 'test-results', REFUSAL_RULES_NAME);
     const readJson = (rel) => JSON.parse(readFileSync(join(FRONTEND, rel), 'utf8'));
     const PRESET = readJson(RULES_PATH);
     const SLOT = Object.keys(PRESET.player_names)[0];
     const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
-    if (!WASM_PAGE || !existsSync(join(FRONTEND, 'modules/flashPanel/wasm', WASM_PAGE))) {
+    /** The game page this arm's iframe is: the preset's build, or the JS runtime's page. */
+    const GAME_PAGE = JS ? JS_PAGE : WASM_PAGE;
+    if (!JS && (!WASM_PAGE || !existsSync(join(FRONTEND, 'modules/flashPanel/wasm', WASM_PAGE)))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);
     }
@@ -218,7 +252,9 @@ async function main() {
     }
     const WORLD = await loadSeedlingRandomizer({
         flashPanel: PRESET.flash_panel[SLOT],
-        manifest: JSON.parse(readFileSync(join(FRONTEND, 'modules/flashPanel/wasm/builds.json'), 'utf8')),
+        // ⛓ the transport the page will run: the JS runtime answers its capabilities itself, no manifest is its question
+        transport: RUNTIME,
+        manifest: JS ? null : JSON.parse(readFileSync(join(FRONTEND, 'modules/flashPanel/wasm/builds.json'), 'utf8')),
         rawRules: PRESET,
         locations,
         playerId: SLOT,
@@ -236,7 +272,7 @@ async function main() {
     const ITEM = WITH_ITEM ? pickItemLeg(PAIRS.flatMap((p) => [p.out, p.back]).filter(walkable), WORLD.entries ?? [], roomOf, walkableCellsFrom) : null;
     // ⛓ the refusal: the same world on a staged build that cannot take this delivery (it lacks a capability the
     // preset's own build declares), picked from the manifest
-    const MANIFEST = readJson('modules/flashPanel/wasm/builds.json');
+    const MANIFEST = WITH_REFUSAL ? readJson('modules/flashPanel/wasm/builds.json') : { builds: [] };
     const capsOf = (page) => MANIFEST.builds.find((b) => page.startsWith(`${b.name}/`))?.capabilities ?? [];
     const OTHER_BUILD = WITH_REFUSAL ? (MANIFEST.builds.find((b) => capsOf(WASM_PAGE).some((c) => !(b.capabilities ?? []).includes(c))
         && existsSync(join(FRONTEND, 'modules/flashPanel/wasm', b.name, 'game.html'))) ?? null) : null;
@@ -254,8 +290,39 @@ async function main() {
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
-        const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: 'er-retarget' });
+        const rp = createRoomPlay({ page, wasmPage: GAME_PAGE, logs, name: `er-retarget-${RUNTIME}` });
         const { check } = rp;
+        /**
+         * The keyboard into the game. The JS page's canvas is `#game` (the wasm page's `#canvas` is what the
+         * shared hands click and focus), so on the JS arm the same two recipes run here against it.
+         */
+        const focusGame = !JS ? () => rp.focusGame() : async () => {
+            await clickPanelTab(page, FLASH_PANEL);
+            await page.waitForTimeout(300);
+            await rp.gameFrame().click(JS_CANVAS);
+            for (const k of ARROWS.map((a) => a[2])) {
+                // eslint-disable-next-line no-await-in-loop
+                await page.keyboard.up(k);
+            }
+            await page.waitForTimeout(200);
+        };
+        const holdUntil = !JS ? (key, until, ceilingMs) => rp.holdUntil(key, until, ceilingMs) : async (key, until, ceilingMs) => {
+            await rp.gameFrame().evaluate((sel) => document.querySelector(sel)?.focus(), JS_CANVAS);
+            const start = Date.now();
+            await page.keyboard.down(key);
+            let value = null;
+            try {
+                while (!value && Date.now() - start < ceilingMs) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await page.waitForTimeout(50);
+                    // eslint-disable-next-line no-await-in-loop
+                    value = await until();
+                }
+            } finally {
+                await page.keyboard.up(key);
+            }
+            return { value, ms: Date.now() - start };
+        };
         const out = (tag, o) => console.log(`ROW ${tag} ${JSON.stringify(o)}`);
         const panelLog = () => page.evaluate(() => (document.querySelector('.flash-panel-log')?.textContent ?? ''));
         const panelLogTail = async () => (await panelLog()).split('\n').slice(-12).join(' | ');
@@ -314,7 +381,7 @@ async function main() {
             const seen = [];
             let dismissed = 0;
             const c0 = Date.now();
-            await rp.focusGame();
+            await focusGame();
             for (let quiet = 0; quiet < 2 && Date.now() - c0 < 180000;) {
                 // eslint-disable-next-line no-await-in-loop
                 const st = JSON.parse(await rp.gameFrame().evaluate(() => window.__swfBridge.game.botStatus()));
@@ -352,7 +419,7 @@ async function main() {
             }, 30000).catch((e) => ({ error: e.message }));
             if (there.error) return { ok: false, why: there.error };
             await page.waitForTimeout(500);
-            await rp.focusGame();
+            await focusGame();
             return { ok: true };
         }
 
@@ -384,7 +451,7 @@ async function main() {
                 const reports0 = (await reports()).length;
                 const warn0 = warnings();
                 // eslint-disable-next-line no-await-in-loop
-                const held = await rp.holdUntil(spot.key, async () => ((await reports()).slice(reports0)
+                const held = await holdUntil(spot.key, async () => ((await reports()).slice(reports0)
                     .some((r) => r.property === 'pendingExit') ? 'fired' : null), 5000);
                 if (held.value === 'fired') { fired = { spot, g0, moves0, reports0, warn0, held }; break; }
                 // eslint-disable-next-line no-await-in-loop
@@ -523,10 +590,19 @@ async function main() {
             await page.goto(`${HOST}/frontend/?rules=${RULES_PATH}`, { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             await rp.installWatchers();
+            if (JS) {
+                // ⛓ the panel's own runtime switch, set before the tab first activates (so its init reads `js`)
+                await page.evaluate(async (key) => {
+                    const sm = (await import('./app/core/settingsManager.js')).default;
+                    await sm.updateSetting(key, 'js', { persist: false });
+                }, RUNTIME_SETTING_KEY);
+            }
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
-            await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
-            await startWasmGame(() => rp.gameFrame(), { logs });
-            await assertLogicOnlyChannel(rp.gameFrame());
+            await rp.waitFor(`${RUNTIME} iframe mounted`, async () => page.frames().some((fr) => fr.url().includes(GAME_PAGE)));
+            if (!JS) {
+                await startWasmGame(() => rp.gameFrame(), { logs });
+                await assertLogicOnlyChannel(rp.gameFrame());
+            }
             await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
                 document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
             await rp.waitForApLoad(120000);
@@ -536,6 +612,16 @@ async function main() {
             check('the page delivered the set this probe built (same set_id), and the game reports it mounted',
                 held?.set_id === WORLD.set.set_id && String(mounted?.active ?? '') === WORLD.set.set_id,
                 JSON.stringify({ node: WORLD.set.set_id, page: held?.set_id, game: mounted?.active }));
+            const ran = await page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                return { transport: p?.transport ?? null, setting: p?._initRuntime ?? null };
+            });
+            const status = JSON.parse(await rp.gameFrame().evaluate(() => window.__swfBridge.game.botStatus()));
+            const frameUrl = new URL(rp.gameFrame().url());
+            out('runtime', { asked: RUNTIME, panel: ran, game: status.runtime ?? null, page: `${frameUrl.pathname.split('/').pop()}${frameUrl.search}`,
+                wire: await rp.gameFrame().evaluate(() => window.__swfBridge.game.wireCheck?.() ?? null) });
+            check(`the game played is the ${RUNTIME} runtime: the panel runs transport "${RUNTIME}" and the game page says so`,
+                ran.transport === RUNTIME && (status.runtime === 'js') === JS, JSON.stringify({ ...ran, game: status.runtime ?? null }));
             await rp.waitFor('the report recorder installed', installReports, 20000);
             out('ceremony', await ceremony());
             for (const i of TAKEN) {
@@ -552,8 +638,8 @@ async function main() {
                 check('a moved stairs lands in a room with a placed walk-in pickup the flood reaches', !!ITEM, ITEM ? ITEM.entry.location : 'none');
                 if (ITEM) await itemLeg(ITEM);
             }
-            console.log(`INFO: the room-name message is not observable on this build; each leg row carries the sign the game was handed (Message.as titles: ${JSON.stringify(TITLES)})`);
-            console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s) (the logic-only channel's device loss)`);
+            console.log(`INFO: the room-name message is not observable ${JS ? 'through the bridge verbs this witness reads' : 'on this build'}; each leg row carries the sign the game was handed (Message.as titles: ${JSON.stringify(TITLES)})`);
+            console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s)${JS ? '' : ' (the logic-only channel\'s device loss)'}`);
             console.log(`INFO: panel log: ${await panelLogTail().catch(() => '?')}`);
         } catch (e) {
             if (isBootFault(e)) { await page.close(); throw e; }

@@ -19240,6 +19240,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "host",
                 "pairs",
+                "runtime",
                 "wait-for-box"
             ],
             "file": "probe-seedling-wasm-er-retarget.mjs",
@@ -19267,6 +19268,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "pairs"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "runtime"
                 }
             ],
             "inheritedFlags": [
@@ -19279,7 +19286,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "ENTRANCE RANDOMIZATION E5, IN THE LEVEL DATA — the witness on the wasm runtime. `seedling_er` loaded by `?rules=`, the preset's own build (`flash_panel.wasm`), headless logic-only, under the box lock, on ONE fresh page.",
+            "oneLiner": "ENTRANCE RANDOMIZATION E5, IN THE LEVEL DATA — the witness, on the wasm runtime (the default) or on the Seedling JS runtime (`--runtime=js`, below). `seedling_er` loaded by `?rules=`, the preset's own build (`flash_panel.wasm`), headless logic-only, under the box lock, on ONE fresh page.",
             "path": "scripts/procgen/probe-seedling-wasm-er-retarget.mjs"
         },
         {
