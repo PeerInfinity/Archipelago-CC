@@ -31,8 +31,10 @@ REPO = Path(__file__).resolve().parents[1]
 CLIENT_NAME = '_spoiler_hook_client.py'
 RECIPES = json.loads((REPO / 'scripts' / 'data' / 'worldgen-package-recipes.json').read_text(encoding='utf-8'))
 PACKAGES = {package: recipe['game_name'] for package, recipe in sorted(RECIPES['packages'].items())}
+# __slotnames__ is pickle's per-class cache (copyreg._slotnames): it appears on the subclass once any earlier test has
+# pickled one of its options (test/general's pickle test does, and the order is the platform's), never on the client.
 BOOKKEEPING = {'__module__', '__qualname__', '__firstlineno__', '__static_attributes__',
-               '_abc_impl', '__parameters__', '__abstractmethods__'}
+               '_abc_impl', '__parameters__', '__abstractmethods__', '__slotnames__'}
 #: Two different generated worlds in one seed: Bounce's items sit in Coding Adventure's locations, so senders show.
 STAGE_WORLDS = ['bounce_worldgen', 'codingadventure_worldgen']
 STAGE_SEED = 7  # not 1: seed 1 loads each package's canonical options and placements
