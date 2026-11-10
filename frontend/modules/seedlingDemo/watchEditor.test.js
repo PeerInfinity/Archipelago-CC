@@ -535,21 +535,17 @@ describe('⛓⛓⛓ EDITOR v3 E6a — the room-flags form passes `which`, so `re
     });
 
     /**
-     * ⛔ **`attrs` STILL REFUSES ON THE SAME ROW**, and that is not an oversight:
-     * addressing the last body in the cell is that op's whole contract
-     * (`requireEntityAt`), so a second address for it would be a second
-     * vocabulary. The two halves are driven on ONE subject, which is what makes
-     * this a statement about the OP rather than about the flag.
+     * ⛓⛓ **Seedling editor E1 — `attrs` REACHES A NOT-LAST FLAG**, by `which`.
+     * It used to refuse here (the op addressed only the last body); E1 gave
+     * `attrs` the same ordinal `remove` has, and the form passes it ONLY for a
+     * not-last flag. MUTANT: drop the `which` from the form's attrs op — the
+     * OTHER body's attributes are rewritten and the flag's are not.
      */
-    it('editing a NOT-LAST flag\'s VALUES still refuses, and applies nothing', () => {
+    it('editing a NOT-LAST flag\'s VALUES addresses THAT flag by `which`, and nothing else', () => {
         const { record, flag } = notLastSubject();
         const rows = flagFormRows(SCHEMA, flag.tag);
-        if (rows.length === 0) {
-            // a presence-only flag has no value inputs; then the refusal is the
-            // function's, and `watchEdit.test.js` drives it directly.
-            expect(roomFlagOpRefusal(record, flag, 'attrs')).toMatch(/REWRITE/);
-            return;
-        }
+        expect(roomFlagOpRefusal(record, flag, 'attrs')).toBe(null);
+        if (rows.length === 0) return;   // a presence-only flag has no value inputs
         const h = flagsHarness(record);
         const input = h.box.children
             .find((line) => line.dataset.flag === flag.tag)
@@ -557,9 +553,12 @@ describe('⛓⛓⛓ EDITOR v3 E6a — the room-flags form passes `which`, so `re
             ?.children.find((g) => g.dataset?.attr === rows[0].name);
         input.value = '0.9';
         input.dispatch('change');
-        expect(h.applied).toHaveLength(0);
-        expect(h.noteEl.textContent).toMatch(/REFUSED/);
-        expect(h.noteEl.textContent).toMatch(/REWRITE/);
+        expect(h.applied).toHaveLength(1);
+        expect(h.applied[0]).toMatchObject({ op: 'attrs', tx: flag.tx, ty: flag.ty, which: flag.which });
+        const others = record.entities.filter((_, i) => i !== flag.index);
+        expect(h.record().entities.filter((_, i) => i !== flag.index)).toEqual(others);
+        expect(String(h.record().entities[flag.index].attrs[rows[0].name])).toBe('0.9');
+        expect(h.noteEl.textContent).not.toMatch(/REFUSED/);
     });
 
     /** ⛓ AND THE ORDINAL IS RIGHT FOR EVERY ROW THE FORM SHOWS, not only the

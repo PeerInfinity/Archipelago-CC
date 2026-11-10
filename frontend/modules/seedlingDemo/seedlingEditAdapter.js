@@ -142,6 +142,31 @@ export function seedlingWriteOps(desc, tx, ty) {
 }
 
 /**
+ * ⛓⛓ **THE OPS THAT EMPTY A CELL** — `editCore`'s optional `clearOps` (Seedling
+ * editor E1): what a REPLACE paste, a CLEAR and a MOVE's cut are made of.
+ *
+ * `fields` is a subset of the descriptor's `['tile', 'cliff', 'entities']`
+ * (`null`: all three). A tile layer is `erase`d; the bodies are `remove`d
+ * LAST-FIRST, with no `which`, so each op takes the body that is last at that
+ * moment — the spelling every recorded `remove` already uses.
+ *
+ * ⛔ IT CLEARS ONLY WHAT IS THERE, and a tile the INCOMING descriptor is about
+ * to overwrite is not erased first (a paint replaces it anyway, and an erase
+ * that a paint immediately undoes is noise in a payload a person reads).
+ */
+export function seedlingClearOps(record, tx, ty, { fields = null, incoming = null } = {}) {
+    const want = (f) => fields === null || fields.includes(f);
+    const cell = readSeedlingCell(record, tx, ty);
+    const out = [];
+    if (want('tile') && cell.tile && !incoming?.tile) out.push({ op: 'erase', tx, ty });
+    if (want('cliff') && cell.cliff && !incoming?.cliff) {
+        out.push({ op: 'erase', tx, ty, layer: 'cliffsides' });
+    }
+    if (want('entities')) for (let i = 0; i < cell.entities.length; i += 1) out.push({ op: 'remove', tx, ty });
+    return out;
+}
+
+/**
  * ⛓ THE SENTENCE ONE OP GETS IN A READOUT — `describeEdit`, plus the warnings
  * that are about the RECORD rather than the op (⚖ ruling 5's boss classes, and
  * a grown room's untiled cells).
@@ -411,6 +436,7 @@ export function createSeedlingEditAdapter({
         bounds: (record) => ({ w: record.width, h: record.height }),
         readCell: readSeedlingCell,
         writeOps: seedlingWriteOps,
+        clearOps: seedlingClearOps,
         /**
          * ⛓⛓⛓ §3.2's FOUR KINDS — two resolved here, two refused BY NAME.
          *

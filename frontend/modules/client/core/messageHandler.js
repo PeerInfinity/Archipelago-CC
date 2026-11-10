@@ -34,6 +34,7 @@ import {
   WORLDGEN_RULES_KEY,
   WORLDGEN_RULES_OMITTED_KEY,
 } from './localRulesOverlay.js';
+import { applyReceivedItems, goalMet } from './goalCheck.js';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -113,6 +114,8 @@ export class MessageHandler {
     // connection. Guards against re-sending CLIENT_GOAL on every subsequent
     // location check or re-render. Reset on (re)connect in _handleConnected.
     this._goalReported = false;
+    // What the server has delivered on this connection: item name -> count.
+    this._serverItems = new Map();
   }
 
   // Add method to inject eventBus
@@ -749,6 +752,7 @@ export class MessageHandler {
     // will re-trigger reportGoal() so the slot still registers as goaled.
     this._goalReported = false;
     this._invalidGameRetried = false;
+    this._serverItems.clear();
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -1279,6 +1283,9 @@ export class MessageHandler {
       );
     }
 
+    applyReceivedItems(this._serverItems, data.index, processedItemDetails.map((d) => d.itemName));
+    this._reportGoalIfMet();
+
     // Publish notification
     this.eventBus?.publish('game:itemsReceived', {
       index: data.index, // Original index from server packet
@@ -1292,6 +1299,12 @@ export class MessageHandler {
         senderName: d.senderSlot !== null ? (this.slotInfo?.[String(d.senderSlot)]?.name ?? null) : null,
       })),
     });
+  }
+
+  /** Reports the goal once the server's items satisfy the slot's completion condition (see goalCheck.js). */
+  _reportGoalIfMet() {
+    const game = this.slotInfo?.[String(this.clientSlot)]?.game ?? this.clientGameName;
+    if (goalMet(getLastRawJsonData?.()?.rawJsonData, this.clientSlot, game, this._serverItems)) this.reportGoal();
   }
 
   _logDebug(message, ...args) {

@@ -17,6 +17,7 @@ The edit core knows nothing about any substrate. The caller supplies an **adapte
 | `readCell(record, x, y)` | A closed, comparable cell descriptor. |
 | `writeOps(descriptor, x, y)` | The atomic ops that make a cell match the descriptor — the inverse of `readCell`, emitting ops only for fields the descriptor has. |
 | `bases` (optional) | `{kind: (tag) => record}` — how a payload's `base` tag becomes a record. Absent means the page resolves it. |
+| `clearOps` (optional) | `(record, tx, ty, {fields, incoming}) => op[]` — the ops that empty the named descriptor fields of one cell (`fields: null` for all), skipping what `incoming` is about to overwrite. Needed by clear, replace paste and move. |
 
 `assertAdapter` checks this shape. `assertAdapterBehaviour(adapter, {record, op, refused, cell, other})` checks the seven behaviours the functions below rely on: positive integer bounds, `apply` follows its contract, `apply` does not mutate its input, `equal` is true of a record against itself and false after a real op, a refusal carries a sentence, `writeOps` returns an array, and `readCell` → `writeOps` → `readCell` reproduces the descriptor **at a different cell** (on the same cell, a `writeOps` that returns nothing would pass). It ships from the core so the next adapter author can run it.
 
@@ -27,10 +28,12 @@ The edit core knows nothing about any substrate. The caller supplies an **adapte
 | Function | What it does |
 |---|---|
 | `foldEdits(adapter, base, ops)` | base → ops in order → `{record, applied, steps, dropped}`. The one reconstruction. `steps` carries each applied op with the adapter's sentence, so a page's readout needs no second pass. |
-| `createEditSession(adapter, baseRecord, {base, certified})` | `apply`, `undo`, `ops`, `record`, `certified`, `setCertified`, `payload`. `payload()` is `{base, edits, certified}`, where `base` is an opaque tag. |
+| `createEditSession(adapter, baseRecord, {base, certified})` | `apply`, `undo`, `redo`, `redoCount`, `ops`, `record`, `certified`, `setCertified`, `payload`. `payload()` is `{base, edits, certified}`, where `base` is an opaque tag. `redo` re-applies the last undone op through `applyOne`; a new applied edit clears the redo list, a refused op or a no-op does not, and the list is never part of the payload. |
 | `group(label, ops)` | A stroke, fill or paste: applied all-or-nothing, one entry in the op list, one undo. Nested groups are refused. |
 | `rectCopy` / `rectPasteOps` | Copy a rectangle of descriptors; paste it back as one group, clipped to the destination. `only: '<field>'` filters to one descriptor field (`tilesOnly` and `entitiesOnly` are aliases, `FILTER_ALIASES`); a field the descriptor lacks is refused. |
 | `floodOps` | Repaint the 4-connected component of cells whose descriptor matches the seed's, as one group (using `gridFlood.reachableFrom`). |
+| `rectFillOps` | Write one descriptor into every cell of a rectangle, as one group. |
+| `rectClearOps` / `rectReplaceOps` / `rectMoveOps` | Empty a rectangle (all fields or the named ones); paste a clip so each landed cell ends up holding exactly the clip's kept fields; cut a rectangle and paste it elsewhere as one group, reading the destination after the cut. All three need the adapter's optional `clearOps` and refuse by name without it. |
 | `describeOps(ops)` | The readout line, for example `3 edit(s) (1 group of 12)`. |
 
 ### Two rules
@@ -63,7 +66,7 @@ The core never judges whether an edit is legal for the game. Editing is free; ce
 
 1. **The canvas tool — one `armed` value.** `brush`, `rect`, `paste`, `flood` (`TOOLS`), a page tool, or nothing; `Escape` clears it. A **page tool** is `{id, label, key, at(cell)}`, for gestures the page brings (Seedling's click-to-anchor template placement, the set editor's two-click link).
 2. **A stroke is one group.** A drag paints every cell it visits, once each and in order, and records one `group`, so one undo removes the whole stroke. The click the browser fires after release is swallowed.
-3. **The command table is the one writer of the key map.** The page supplies `{id, label, key, run}` rows; the view adds the four tools and `Escape`. Two rows claiming one key are refused. `Ctrl/Cmd+Z` resolves to the page's own `undo` row.
+3. **The command table is the one writer of the key map.** The page supplies `{id, label, key, run}` rows; the view adds the four tools and `Escape`. Two rows claiming one key are refused. `Ctrl/Cmd+Z` resolves to the page's own `undo` row, and `Ctrl/Cmd+Shift+Z` and `Ctrl/Cmd+Y` to its `redo` row (`REDO_COMMAND_ID`) when it has one; a page without one keeps `Ctrl/Cmd+Shift+Z` on undo. A page option `replace: true` makes PASTE use `rectReplaceOps`, and `clipOrigin` says where the clip was copied from.
 4. **The selection overlay.** The page draws the substrate; the view draws, on its own element, the rectangle being copied and the paste anchor. Hover stays the page's. A page may add shapes through an optional `shapes()`, drawn after the view's own.
 
 Shapes are in cell space with fractions allowed (the centre of cell 3 is `{x: 3.5}`). The kinds are `rect`, `paste` and `polyline` (`SHAPE_KINDS`); `arrow` and `arrowBack` are flags on a polyline, and a head is drawn along the last segment. `assertShape` validates a shape and refuses an unknown kind by name.
