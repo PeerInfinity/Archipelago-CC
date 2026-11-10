@@ -1,5 +1,14 @@
 from dataclasses import dataclass
 from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
+from . import _spoiler_hook_client
+
+
+class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
+    # The client's option, re-homed. AP's restricted unpickler (WebHost generation; test_pickle_dumps_default) only
+    # loads Option classes from a module whose name ends in "options", and the client's module doesn't. Everything
+    # else, the description included, is the client's (test/test_spoiler_hook_callers.py pins that).
+    __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
+
 
 class VanillaPlacement(Toggle):
     """
@@ -132,6 +141,7 @@ class MetamathOptions(PerGameCommonOptions):
     starting_statements: StartingStatements
     auto_download_database: AutoDownloadDatabase
     entrance_rule_mode: EntranceRuleMode
+    spoiler_data_in_slot_data: SpoilerDataInSlotData
 
 metamath_option_groups = [
     OptionGroup("Proof Settings", [

@@ -12,10 +12,13 @@ These editors are built on the substrate-free machinery in [Procgen Editing Core
 |---|---|
 | `paint` | `{tx, ty, layer?, terrain \| column}` — either of the game's two tile layers; on `tiles`, any tileset column, not only the generator's four terrain names |
 | `place` | `{tx, ty, type, attrs, nodes?}` |
-| `attrs` | `{tx, ty, attrs}` — the last entity in the cell; attributes are replaced, not merged |
+| `attrs` | `{tx, ty, attrs, which?}` — the last entity in the cell, or the `which`th; attributes are replaced, not merged |
 | `remove` | `{tx, ty, which?}` — the last entity in the cell, or the `which`th (0-based, in `entities` order) |
-| `nodes` | `{tx, ty, nodes}` — replaces that entity's `<node>` children; an empty list removes the field |
+| `nodes` | `{tx, ty, nodes, which?}` — replaces that entity's `<node>` children; an empty list removes the field |
 | `resize` | `{width, height, anchor}` — the one op about the room rather than a cell |
+| `erase` | `{tx, ty, layer?}` — takes the tile off one layer (`tiles` when absent); refused when there is no tile there |
+
+`which` is omitted when it was not given, on all three ops, so an edit list recorded before it existed reads the same. `erase` is what lets a clear, a replace paste of an untiled cell and a move's cut leave a cell with no tile; `paint` can only write a column.
 
 **The entity vocabulary is derived from the game's project file.** `scripts/procgen/extract-seedling-ogmo-schema.py` reads `Shrum.oep` (the Ogmo project file the game's rooms were authored with) into `seedlingDemo/fixtures/seedling-ogmo-schema.json`: the entity declarations with their typed values, defaults and ranges, the two tilesets and the three layers. Its `--check` is byte identity, and `provenance.oep_sha256` tells a changed source apart from a changed script.
 
@@ -32,7 +35,9 @@ Ogmo does not always write every declared attribute: some shipped entities omit 
 | `set-room` | one room of an injected level set, possibly a live set session (below); an `embed`-sourced room is refused |
 | `generate` | always refused by name — the GENERATE arm owns that identity |
 
-**Known limits.** A paste does not clear the destination's entities (there is no clear-cell op, and `writeOps` sees a descriptor, not the record), so pasting onto an occupied cell adds to it. Every op path writes attributes in sorted order, so editing a vanilla cell reorders that entity's attributes in the saved OEL: the values are unchanged but the bytes differ.
+**Clearing a cell.** The adapter declares the edit core's optional `clearOps(record, tx, ty, {fields, incoming})`: the ops that empty a cell's tile (`erase`), cliffside (`erase` on `cliffsides`) and bodies (one bare `remove` per body, so each takes the body that is last at that moment). `writeOps` cannot do this because it sees a descriptor, never the record. A tile the incoming descriptor is about to overwrite is not erased first.
+
+**Known limits.** The ADD paste (the default) still does not clear the destination, so pasting onto an occupied cell adds to it; the REPLACE paste is the one that empties the cell first. Every op path writes attributes in sorted order, so editing a vanilla cell reorders that entity's attributes in the saved OEL: the values are unchanged but the bytes differ.
 
 ## The Seedling SET session (`seedlingDemo/seedlingSetAdapter.js`)
 
@@ -167,10 +172,69 @@ Cross-part links are authored from derived exit ids, and any displacement is pre
 
 - **Entity types** come from the whole `.oep` schema: a `<datalist>` grouped by the project file's folders, with a `<select>` to narrow suggestions. The type field stays free text, so an undeclared type can still be placed (and is then refused by `buildLevelWorld` if the model cannot build it). The attribute form is generated from the declaration's values and ranges and writes the JSON box, which remains the single source of the op. Empty means omitted.
 - **The default place type** is `watchEditor.DEFAULT_PLACE_TYPE`, checked at import against the first body the generator palette places.
-- **Tiles** are addressed by column: every column of `tiles` and every pixelmask of `cliffsides`, behind a layer `<select>`. The generator's four terrain names stay as the first group and keep their own op spelling (`{terrain:'ground'}` and `{column:0}` fold to the same record but are different ops). Columns are grouped by `tileSemantics(type).kind`. Each option shows a colour swatch in the canvas's colour for that tile type. Hovering a cell prints what `readCell` returns.
+- **Tiles** are addressed by column: every column of `tiles` and every pixelmask of `cliffsides`, behind a layer `<select>`. The generator's four terrain names stay as the first group and keep their own op spelling (`{terrain:'ground'}` and `{column:0}` fold to the same record but are different ops). Columns are grouped by `tileSemantics(type).kind`. Each option shows a colour swatch in the canvas's colour for that tile type. Hovering a cell prints what `readCell` returns, with each body's in-cell ordinal.
+- **The tile-art palette** (`#genEditTileArt`) is a grid of one chip per column, drawn from the same sheets the room is drawn with: `watchArt.paletteTileFrame(art, layer, column)` picks the frame through the renderer's own `TILE_ART` rule for an isolated tile (autotile mask 0, an animation's first frame), and a `cliffsides` column draws `seedling:scenery/cliffside` frame = column. Clicking a chip sets the terrain `<select>`, which stays the one value the op is built from. A column whose sheet is missing, or not yet decoded, or the "Seedling art" toggle being off, shows that column's swatch (`data-fallback`). The swatches were chosen when no tileset image was served (the art was only inside the recompiled `.wasm`); the lab's content-pack art (`graphics.seedling`) removed that reason, and a `<select>` option still cannot hold an image, which is why the art is a grid beside it.
+- **The body picker** (`#genEditWhich`) says which body of a cell `attrs` and `remove` address. Its default is "the LAST", which writes the bare op. Clicking a cell that holds several bodies in either mode lists them there; pick one and click that cell again to add `which`.
 - **Types the JS model cannot build.** `levelWorld.ENTITY_CLASSES` covers a subset of the declared types. A room holding another type still accepts the edit; the readout names the types, and ▶ load in wasm is the certifier.
 
-**Room flags.** `lightalpha`, `daynight`, `snow`, `blur`, `blur2`, `droplet` and `<control>` are entities in the OEL but level properties in the game. Their form uses the existing ops (a presence flag is `place`/`remove`, an attribute flag adds `attrs`), and its roster is `seedlingSemantics.LEVEL_PROPERTY_TAGS`. A new flag is placed at the origin, where the shipped rooms put theirs. Where a flag shares its cell with another entity and is not the last one, `attrs` cannot address it and the form refuses; `remove` can, through `which`, but the form does not pass it yet. Only `<control>`'s `fallthrough` changes the JS model (pits); the page names the wasm as the only certifier of the others.
+**Room flags.** `lightalpha`, `daynight`, `snow`, `blur`, `blur2`, `droplet` and `<control>` are entities in the OEL but level properties in the game. Their form uses the existing ops (a presence flag is `place`/`remove`, an attribute flag adds `attrs`), and its roster is `seedlingSemantics.LEVEL_PROPERTY_TAGS`. A new flag is placed at the origin, where the shipped rooms put theirs. Where a flag shares its cell with another entity and is not the last one, both ops address it through `which` (the form passes it only then, so a last-body flag's op is unchanged). Only `<control>`'s `fallthrough` changes the JS model (pits); the page names the wasm as the only certifier of the others.
+
+**The gestures.** All of them are tools of the one editor view, so one is armed at a time and Escape disarms it. Each lands as one group, so one undo takes it back.
+
+| Gesture | Key | What it does |
+|---|---|---|
+| BRUSH | `b` | paints, places, edits attrs or removes at each cell of a click or drag, per the brush mode |
+| RECT (copy) | `r` | two clicks: the corners of the rectangle copied to the clipboard |
+| PASTE | `p` | one click: the clipboard's top-left lands there, as ADD or REPLACE (`#genEditPasteMode`), filtered by field (`#genEditPasteOnly`) |
+| FLOOD | `f` | one click: the 4-connected cells that look like it are repainted with the brush's target |
+| FILL a rectangle | `l` | two clicks: every cell of the rectangle gets the brush's target (a PAINT column or a PLACE body) |
+| CLEAR a rectangle | `x` | two clicks: every cell of the rectangle is emptied of everything, or of one field (`#genEditClearWhat`) |
+| MOVE the selection | `m` | one click: the RECT selection is cut from where it was copied and pasted there (ADD or REPLACE, same filter); overlapping moves read the destination after the cut. A selection can be moved once; RECT again to move again |
+| LINK a group | `k` | first click picks an entity and highlights its partners; the next click moves it into that partner's group. Shift-click gives the two a new group of their own (one edit); Shift-click the picked entity to detach it alone; click it again to drop the pick |
+| NODE a rope end | `n` | first click picks a rope; the next click puts its end in that column, on the rope's own row |
+| (clear the tool) | `Escape` | disarms whatever is armed |
+| UNDO | `Ctrl/Cmd+Z` | the fold over a shorter list |
+| REDO | `Ctrl/Cmd+Shift+Z`, `Ctrl/Cmd+Y` | re-applies the last undone edit; any new edit clears the redo list |
+
+REDO lives in the shared edit core (`session.redo()`, `redoCount()`); the redo list is not part of the payload. A page that registers no `redo` command keeps the old keys: `Ctrl/Cmd+Shift+Z` still reaches its undo, and `Ctrl/Cmd+Y` stays unbound. The maze lab's EDIT arm registers one (`#labRedo`). GENERATE's host keeps its own redo list, valid only on the state the last undo left; a STEP, a directive or a load voids it. FILL, CLEAR and MOVE are built by the core's `rectFillOps`, `rectClearOps` and `rectMoveOps`, and the REPLACE paste by `rectReplaceOps`; the last three need the adapter's `clearOps` and refuse by name without it. Removals go through the same ops as always, so every rule that refuses a removal refuses a clear, a replace or a move the same way (an empty cell's `remove`, and a generated room's save refusing a moved door or AP item).
+
+### Entity links
+
+`seedlingDemo/entityLinks.js` reads what a room's entities are wired to, builds the edits and names the problems. It adds no op: a group is edited by `attrs` and a rope's end by `nodes`, so a link edit is an ordinary entry in the edit list. The overlay is drawn through `editorView`'s `shapes()`, with `#genEditShowLinks` to hide it; the shared core draws nothing of its own for it.
+
+| Link | What the game reads | In the editor |
+|---|---|---|
+| Group (`tset`) | The `Activators` classes share a number; a publisher (`button`, `buttonroom`, `rope`) reaches every other one with the same `t`. A missing attribute is group 0 | Drawn publisher → responder; rewired with LINK |
+| Sentinel group (`tset < 0`) | A meaning of its own to the class: on a lock "opens when the room has no enemies", on a crusher "always armed" | Not a wire. Not drawn; refused as a partner |
+| Forced group | `shieldlock`, `shieldlocknorm` and `bosslock` take theirs from the constructor | Refused by name |
+| Cross-room `buttonroom` (`room` is not -1) | Its `tset` is a persistence flag of that level, not a group of this room | Named in the readout; edit it with ATTRS |
+| Implicit publisher | A `wand` pickup and a dying `finalboss` publish group 0 | Drawn and counted as a partner; not editable |
+| Rope end (`<node>`) | `rope` alone declares nodes (Ogmo limit 1). The loader keeps the last node and passes only its `x` | Drawn; moved with NODE |
+
+The door links (`to`, `fallthrough`) belong to the set editor's `connect` and are not part of this.
+
+No moving platforms exist in this game, so a rope's end is the only path to edit. Removing a rope's node is not offered, because the game cannot load a rope without one, and there is nothing to reorder with one node.
+
+**What a save refuses.** Only what the game cannot load: a rope with no node, which kills the level loader on a null point. The OEL download, ▶ load, closing a room into a set and a generated room's save all refuse it with the same sentence. The payload download still works, since a payload is unfinished work and not something the game reads.
+
+**What only warns**, in `#genEditLinkIssues`, because the room loads and plays:
+
+| Issue | Meaning |
+|---|---|
+| `group-no-publisher` | Responders nothing in this room activates, which is also what a removed button leaves behind. Some shipped rooms are like this, so it cannot be a refusal |
+| `group-no-responder` | A publisher wired to nothing |
+| `publisher-sentinel-group` | A publisher in a negative group |
+| `rope-many-nodes`, `rope-node-left`, `rope-node-row` | Extra nodes are ignored; an end left of the pulley gives a negative collider; a node's `y` is ignored |
+| `tset-unread`, `tset-not-an-integer` | A `tset` on a type that never reads it; a value the game reads as 0 |
+
+**SOLVE and links.** A link edit makes a new record, so the room is uncertified until SOLVE is pressed again, as for any edit. The readout says by name which wires SOLVE cannot see: it asks the model's own `groupResponders` for each responder and reports any that is missing (`rocklock`, `lightpole`, `fallrocklarge`, a grouped `crusher`), and it names cross-room buttons and implicit publishers.
+
+**SOLVE in EDIT.** SOLVE certifies the room on screen through the oracle GENERATE uses (`editSolve.solveEditedRoom` → `procgenSeedling.seedlingOracle`, whose `solve` is `procgenOracle.solve` under the record's own pins). `certifyGenRoom` does not fit: it re-draws a generated room's model from its seed and knobs, which a hand-edited room does not have. The two things the oracle needs that a room with no ladder does not carry are inputs on the page:
+
+- **the goal** (`#editSolveGoal`), one of the room's own (`editSolveGoals`): each pickup, AP item or chest, then each exit. An exit that leads to another level is listed and refused by name, because the oracle's level source is this one record. A room with no goal refuses by name (`NO_GOAL_REFUSAL`).
+- **the inventory** (`#editSolveItems`), seam item flags as JSON; `{}` means none, and the verdict names what it was solved under.
+
+The boot is the spawn the still frame drew the player at. A SOLVED verdict stamps `setCertified(true)`, and ▶ load ships the room as a one-room set with the certification tape and the model's expected end state, through the same builder GENERATE's ship uses; any other verdict stamps `false` and shows the oracle's text. An edit makes a new record, so a later edit leaves the room uncertified until SOLVE is pressed again. `window.__editorEdit.solve` reports the last solve and whether it is about the room on screen.
 
 **Resize.** Width, height and anchor build one `resize` op. `resizeWarnings` previews what would be lost, without blocking; a crop that would drop a tile or entity is refused by the op and the refusal is printed verbatim.
 

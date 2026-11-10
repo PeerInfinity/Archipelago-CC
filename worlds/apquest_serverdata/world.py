@@ -7,6 +7,7 @@ from worlds.AutoWorld import World
 # Imports of your world's files must be relative.
 from . import items, locations, regions, rules, web_world
 from . import options as apquest_options  # rename due to a name conflict with World.options
+from . import _spoiler_hook_client  # the optional Spoiler Export Hook; imports nothing at load time
 
 # APQuest will go through all the parts of the world api one step at a time,
 # with many examples and comments across multiple files.
@@ -81,6 +82,15 @@ class APQuestServerDataWorld(World):
     # slot_data is just a dictionary using basic types, that will be converted to json when sent to the client.
     def fill_slot_data(self) -> Mapping[str, Any]:
         # If you need access to the player's chosen options on the client side, there is a helper for that.
-        return self.options.as_dict(
-            "hard_mode", "hammer", "extra_starting_chest", "confetti_explosiveness", "player_sprite"
-        )
+        return {
+            **self.options.as_dict(
+                "hard_mode", "hammer", "extra_starting_chest", "confetti_explosiveness", "player_sprite"
+            ),
+            # Empty unless this slot set spoiler_data_in_slot_data.
+            **_spoiler_hook_client.slot_data(self),
+        }
+
+    # Runs once per world class, after every world's own pre_output; the first asking class computes for all slots.
+    @classmethod
+    def stage_pre_output(cls, multiworld) -> None:
+        _spoiler_hook_client.prepare(cls, multiworld)

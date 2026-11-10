@@ -16,6 +16,19 @@
  *      gameState. Gated against loop mode — when loop mode is active,
  *      loops' _processFrame handles deduction and we'd otherwise
  *      double-bill.
+ *
+ * ⛓ WHICH REGIONS THE DEDUCTION OWNS. This module is wired whatever the
+ * world contains, so `manaEnabled` alone says nothing about who bills a
+ * region. Two kinds of region are never charged here (`notChargedHere`):
+ *   - another substrate that declares `sharing.mana` bills the pool itself
+ *     (maze per tile, jta and omsi by mirroring their native resource);
+ *   - a substrate that loop mode prices by its own play, a SUMMARY recording
+ *     (`loopSupport.summaryRecording`) or its reported game clock
+ *     (`loopSupport.playClock`), costs nothing with loop mode off: the flat
+ *     location and move defaults here were never its price (Cloudberry,
+ *     Noiz2sa, Bounce, flash_seedling, flash_seedling_gen; ⚖ Robert
+ *     2026-11-09, "Remove the charge" and "Free too, as a follow-up").
+ * Any other substrate stays on this leg. The display half is unaffected.
  */
 
 import { centralRegistry } from '../../app/core/centralRegistry.js';
@@ -24,7 +37,10 @@ import {
     xpAdjustedCost,
     chargeMana,
     fireLoopResetTeleport,
+    isManaDeclarer,
 } from '../resourceChannels/resourceChannelsLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { captureShapeOf, CAPTURE_SHAPES } from '../procgenCore/substratePredicates.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 
 // Registry id shared with the in-process textAdventureSubstrate (both
@@ -121,7 +137,8 @@ function handleRegionChanged(data) {
     // region and loop mode is inactive. Resolve manaEnabled for the
     // old region (the cached _currentRegionHasMana applied to it,
     // since it was the current region at the time the event fired).
-    if (!fromReset && oldRegion && _currentRegionHasMana && !_isLoopModeActive) {
+    if (!fromReset && oldRegion && _currentRegionHasMana && !_isLoopModeActive
+        && !notChargedHere(oldRegion)) {
         deductRegionMoveMana(oldRegion);
     }
 
@@ -131,7 +148,26 @@ function handleRegionChanged(data) {
 }
 
 function _shouldDeductMana() {
-    return _currentRegionHasMana && !_isLoopModeActive;
+    return _currentRegionHasMana && !_isLoopModeActive
+        && !notChargedHere(_currentRegionId);
+}
+
+/**
+ * True when a charge from here would be wrong: the region's substrate bills
+ * the shared pool itself, or loop mode prices its regions by its own play (see
+ * the header). Read from the registry at charge time: this module can
+ * initialize before the region's substrate has registered.
+ */
+function notChargedHere(regionName) {
+    const substrate = resolveRegionInfo(regionName)?.substrate;
+    if (!substrate || substrate === SUBSTRATE_ID) return false;
+    return isManaDeclarer(substrate) || pricedByItsOwnPlay(substrate);
+}
+
+function pricedByItsOwnPlay(substrateId) {
+    const entry = substrateRegistry.get(substrateId);
+    return !!entry && (entry.loopSupport?.playClock === true
+        || captureShapeOf(entry) === CAPTURE_SHAPES.SUMMARY);
 }
 
 function resolveRegionInfo(regionName) {

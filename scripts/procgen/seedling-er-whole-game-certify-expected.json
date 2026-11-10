@@ -1,0 +1,15 @@
+{
+  "$comment": "The ER arm's OWN baseline (probe-seedling-whole-game-certify.mjs --source=er; ER E4c). The whole-game maze certifier's NEW arm over the seedling_er world: the preset's shuffled atlas (make-seedling-er-preset.mjs buildSeedlingErSource) projected into the maze (make-seedling-playthrough-maze.mjs buildPlaythroughMaze({source})), every crossing judged where the SHUFFLED graph lands it. Pinned: `accepted` and `threw` (counts) and every problem row BY NAME; a drift is a FAIL row naming it. Vanilla's own triple (1/16/0) is held by seedling-derived-rules-expected.json, never here. Measured E4c at main aed20db22e + the slice (local node run, 4 shards): 1 / 16 / 0, the accepted set equal to vanilla's row for row; the one problem is vanilla's own L63 framing row (OPEN_L63, probe-seedling-derived-rules.mjs EXPLAINED_PROBLEMS), which no stair touches. A rules or shuffle slice that moves a row re-records this file and names the row.",
+  "problems": [
+    {
+      "row": "level_53__r9c10 @ L53 flag 2: lock@144,208 cleared (from level_53__r14c9) holding [Ghost Spear]: derived true, atlas false",
+      "$why": "vanilla's OPEN_L53 row (the maze derivation has no one-sided clear, so it reaches the event from the L54 pocket with the Ghost Spear; the game and the atlas do not): the same row as the vanilla arm's"
+    },
+    {
+      "row": "level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false",
+      "$why": "vanilla's OPEN_L63 row (block-state framing of r0c1's foothold, rules-4 Q4 census): L63 has no stair, so the shuffle does not move it"
+    }
+  ],
+  "accepted": 16,
+  "threw": 0
+}

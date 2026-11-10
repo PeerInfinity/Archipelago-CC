@@ -70,10 +70,12 @@ describe('R-A4: L20\'s lock@32,80 still keeps the alcove closed until its press 
         expect([...reach].filter((n) => n.startsWith('level_20')).sort()).toEqual(['level_20__r3c1']);
     });
 
-    it('(c) AP collects no Shield for free: Level 020 - Shield first becomes accessible at sphere >= 1 (2.2 today)', () => {
+    it('(c) AP collects no Shield for free: Level 020 - Shield first becomes accessible at sphere >= 1 (2.3 today)', () => {
         const sphere = firstAccessibleSphere(read(SPHERES_FILE), 'Level 020 - Shield');
         expect(sphere).toBeGreaterThanOrEqual(1);
-        expect(sphere).toBe(2.2);
+        // ⛓ rules-l26-rocklock-pocket: 2.2 -> 2.3, a sub-step renumbering only — `L18 flag 0` is collected as its own step in
+        //   sphere 2 (the major sphere and every real location's order hold).
+        expect(sphere).toBe(2.3);
     });
 
     it('(d) the press implies the Shield: every exit into the press\'s room requires it, and only L20\'s own regions enter it', () => {

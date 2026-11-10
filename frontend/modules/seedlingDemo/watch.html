@@ -292,6 +292,11 @@
 <meta charset="utf-8">
 <title>Seedling bot — watch</title>
 <style>
+  /* ⛓ Seedling editor E1 — the tile-art palette's chips (pixel art: no smoothing). */
+  #genEditTileArt { display: flex; flex-wrap: wrap; gap: 2px; }
+  #genEditTileArt .tileChip { width: 32px; height: 32px; image-rendering: pixelated; cursor: pointer; border: 1px solid #333; }
+  #genEditTileArt .tileChip.picked { border-color: #ffd75f; }
+  #genEditTileArt .tileChip[data-fallback] { opacity: 0.8; }
   :root { color-scheme: dark; }
   body {
     margin: 0; background: #0b0b0e; color: #d8d8e0;
@@ -1114,6 +1119,15 @@
     <div class="line">
       <span id="editSetNote" class="note"></span>
     </div>
+    <!-- ⛓⛓ Seedling editor E1 — SOLVE IN EDIT: what the SOLVE button below asks the oracle.
+         The GOAL is one of this room's own (a pickup, AP item or chest; an exit back into the
+         room); the INVENTORY is typed (seam item flags as JSON, {} = none). -->
+    <div class="line">
+      <label for="editSolveGoal">SOLVE goal</label>
+      <select id="editSolveGoal"></select>
+      <label for="editSolveItems">inventory</label>
+      <input id="editSolveItems" value="{}" style="width:14em" title='seam item flags, e.g. {"hasSword": true}'>
+    </div>
     </details>
 
     <!--
@@ -1246,6 +1260,12 @@
            `Object.keys(adapter.readCell(...))` and a fourth field arrives as an
            option with no edit here (`editCore.descriptorFieldsOf`). -->
       <select id="genEditPasteOnly"></select>
+      <!-- ⛓ Seedling editor E1 — ADD (the default, every payload so far) or REPLACE:
+           a replace paste empties each landed cell's kept fields first. -->
+      <select id="genEditPasteMode" title="ADD puts the clip on top of what is there; REPLACE empties the cell first"></select>
+      <!-- ⛓ E1 — what CLEAR (x) empties: every field, or one (derived from the descriptor). -->
+      <label for="genEditClearWhat">clear</label>
+      <select id="genEditClearWhat"></select>
       <span id="genEditClipNote" class="note"></span>
     </div>
     <div class="line">
@@ -1270,6 +1290,10 @@
       <select id="genEditLayer"></select>
       <label for="genEditTerrain">terrain</label>
       <select id="genEditTerrain"></select>
+      <!-- ⛓ E1 — which body of a cell ATTRS / REMOVE address: filled with the bodies of the
+           last multi-body cell clicked; its default is "the LAST", the bare op. -->
+      <label for="genEditWhich">target</label>
+      <select id="genEditWhich" title="click a cell holding several bodies in ATTRS or REMOVE mode to list them here"></select>
       <!-- ⛔ A free INPUT with a datalist and NOT a select: the WORLD is the
            adjudicator (`buildLevelWorld` refuses an untranscribed tag by name
            with its construction site), so a type nobody offered must be
@@ -1282,7 +1306,14 @@
       <datalist id="genEditTypes"></datalist>
       <label>attrs <input id="genEditAttrs" style="width:15em"></label>
       <button id="genEditUndo" disabled>UNDO the last edit</button>
+      <button id="genEditRedo" disabled title="Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y">REDO</button>
       <button id="genEditSolve" disabled>SOLVE — certify what is on screen</button>
+    </div>
+    <!-- ⛓ E2 — what the room's entities are wired to. LINK (k) and NODE (n) are gestures, in the row above. -->
+    <div id="genEditLinks">
+      <label title="draw each group wire and rope span over the room"><input type="checkbox" id="genEditShowLinks" checked> links</label>
+      <span id="genEditLinkNote"></span>
+      <ul id="genEditLinkIssues"></ul>
     </div>
     <!-- ⛓ THE TYPED ATTRIBUTE FORM — one input per value the `.oep` declares
          for the selected type, carrying that declaration's own min/max. It
@@ -1290,6 +1321,10 @@
          the op is built from, so a type the schema does not declare still has
          somewhere to be spelled. ⛔ EMPTY MEANS OMITTED (`fillDefaults` is
          OFF — plan §11.5 item 2). -->
+    <!-- ⛓⛓ Seedling editor E1 — THE TILE-ART PALETTE: one chip per column of the layer above,
+         drawn from the sheets the room is drawn with (watchArt); a chip with no sheet is its
+         swatch. A chip SETS the terrain select, which stays the one value the op is built from. -->
+    <div class="line" id="genEditTileArt"></div>
     <div class="line" id="genEditAttrForm"></div>
     <div class="line">
       <span id="genEditRoster" class="note"></span>
@@ -1303,7 +1338,8 @@
          tile TYPE (`TILE_COLUMN_TO_TYPE`'s own name), its cliffside and its
          bodies — the first time this page says what is under the cursor. -->
     <div class="line">
-      <span id="genEditCellNote" class="note"></span>
+      <!-- ⛓ E2 — it keeps its line when empty: a hover that adds one moves the canvas between a press and its release. -->
+      <span id="genEditCellNote" class="note" style="display:block;line-height:1.4;min-height:1.4em"></span>
     </div>
     <div class="line">
       <span id="genEditCert" class="note"></span>

@@ -251,6 +251,106 @@ export function deriveLockEvents(projection, ctx) {
 }
 
 /**
+ * ⛓⛓ RULES rocklock-pocket — **AN ENCOUNTER LOCK THAT ONE SIDE CANNOT CLEAR IS THAT SIDE'S EVENT, NOT ITS WEAPON.**
+ * A `tSet == -1` lock (`Lock.checkEnemies`, `Puzzlements/Lock.as:111`; `RockLock.update`, `RockLock.as:52`) opens
+ * when `Game.totalEnemies() == 0`, and the kill-lock census (`seedlingPlaythroughOverlay.killLockRoomRuling`) prices
+ * crossing it as the conjunction of its counted bodies' kill arms — from EITHER side. That holds only on a side the
+ * player can reach those bodies from. While the lock is shut it is `Solid` (`RockLock.as:19,27`, `Lock.as:34`), so it
+ * CUTS the room. A body is reached from a side when:
+ *   - it stands in that side's own component, every kill-lock of the room shut (the player walks up to it); or
+ *   - it can be hit ACROSS the cut. The slash is `collideLine("Solid", …)`-tested EXCEPT with the Ghost Sword or on a
+ *     Flyer (`Player.as:917`); the Spear's thrust is NOT line-tested at all (`Player.as:966-985`: a 32x5
+ *     `collideRectInto`); a `WandShot` stops at `Solid` (`WandShot.as:69`, its `solids`). So a body the farther of
+ *     those two rects could reach from the side's tiles (`a.reach` / the body's `reach`), or a chaser that comes within
+ *     its own `runRange` of them (`combat.ENEMY_CLASSES[tag].aggro`, e.g. `Puncher.as:22`) and would park against the
+ *     lock's face, MAY be reached — that side is UNDECIDED, and today's rule is kept.
+ * A side with a body reached by NEITHER cannot clear the room with any inventory: it `cannot`.
+ *
+ * Such a side then crosses only once the lock is OPEN, which the game records when its tag is >= 0
+ * (`RockLock.check`, `RockLock.as:34-37`; `Lock.check`, `Lock.as:42`: removed on every later build): the caller makes
+ * the cell a LATCH entered from that side, and the analyzer prices the crossing as the lock's event, collected on the
+ * side that clears it (`deriveLockEvents`). A tag < 0 records nothing: that entry is then walled.
+ *
+ * Pure geometry over the grid: the caller supplies passability and the bodies.
+ *
+ * @param {object} a
+ * @param {number} a.width
+ * @param {number} a.height
+ * @param {number} a.tile the tile size in pixels
+ * @param {(x:number, y:number) => boolean} a.passable a cell the flood may walk (permissive: any cell that is not
+ *   wall or sink — gated material counts, which can only make a side clear MORE rooms, the old rule's direction)
+ * @param {number[][]} a.lockTiles this lock's tiles
+ * @param {Set<string>} a.closed every `"x,y"` the room's shut kill-locks claim (never walked)
+ * @param {{at:string, centre:number[], runRange:number|null, reach?:number}[]} a.bodies the counted bodies that do
+ *   not die on their own; `runRange` = the distance under which it runs at the player (null = it never does);
+ *   `reach` = the farthest an across-the-cut arm reaches it from (default `a.reach`)
+ * @param {number} [a.reach] the farthest an across-the-cut arm reaches from the player's centre
+ * @returns {{steps:{tile:number[], dir:string}[], size:number, verdict:'clears'|'cannot'|'undecided',
+ *   beyond:string[], undecided:string[]}[]} per side: the steps INTO the lock from it, and why
+ */
+export const ENCOUNTER_DIRS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
+export function encounterLockSides({ width, height, tile, passable, lockTiles, closed, bodies, reach }) {
+    const inGrid = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
+    const walk = (x, y) => inGrid(x, y) && !closed.has(`${x},${y}`) && passable(x, y);
+    const flood = (sx, sy) => {
+        const seen = new Set([`${sx},${sy}`]);
+        const queue = [[sx, sy]];
+        while (queue.length > 0) {
+            const [x, y] = queue.pop();
+            for (const [dx, dy] of Object.values(ENCOUNTER_DIRS)) {
+                const k = `${x + dx},${y + dy}`;
+                if (seen.has(k) || !walk(x + dx, y + dy)) continue;
+                seen.add(k);
+                queue.push([x + dx, y + dy]);
+            }
+        }
+        return seen;
+    };
+    const sides = [];
+    for (const [tx, ty] of lockTiles) {
+        for (const [dir, [dx, dy]] of Object.entries(ENCOUNTER_DIRS)) {
+            // The step INTO the lock moving `dir` starts on the cell behind it.
+            const [nx, ny] = [tx - dx, ty - dy];
+            if (!walk(nx, ny)) continue;
+            let side = sides.find((s) => s.tiles.has(`${nx},${ny}`));
+            if (!side) {
+                side = { tiles: flood(nx, ny), steps: [] };
+                sides.push(side);
+            }
+            side.steps.push({ tile: [tx, ty], dir });
+        }
+    }
+    // The nearest a point of the side's tiles comes to a body's centre.
+    const distance = (side, [cx, cy]) => {
+        let best = Infinity;
+        for (const k of side.tiles) {
+            const [x, y] = k.split(',').map(Number);
+            const px = Math.max(x * tile, Math.min(cx, (x + 1) * tile));
+            const py = Math.max(y * tile, Math.min(cy, (y + 1) * tile));
+            best = Math.min(best, Math.hypot(px - cx, py - cy));
+        }
+        return best;
+    };
+    // A body stands in a side when its centre's tile, or (a body whose own solid fills its tile) a 4-neighbour of it, is there.
+    const standsIn = (side, [cx, cy]) => {
+        const [x, y] = [Math.floor(cx / tile), Math.floor(cy / tile)];
+        return [[0, 0], ...Object.values(ENCOUNTER_DIRS)].some(([dx, dy]) => side.tiles.has(`${x + dx},${y + dy}`));
+    };
+    return sides.map((side) => {
+        const beyond = [];
+        const undecided = [];
+        for (const b of bodies) {
+            if (standsIn(side, b.centre)) continue;
+            const d = distance(side, b.centre);
+            if (d <= (b.reach ?? reach) || (b.runRange !== null && d <= b.runRange)) undecided.push(b.at);
+            else beyond.push(b.at);
+        }
+        const verdict = beyond.length > 0 ? 'cannot' : undecided.length > 0 ? 'undecided' : 'clears';
+        return { steps: side.steps, size: side.tiles.size, verdict, beyond, undecided };
+    });
+}
+
+/**
  * ⛓⛓ RULES l38-button-event — **A CROSS-ROOM BUTTON PRESS AS AN AP EVENT.** A `ButtonRoom` whose `room >= 0`
  * writes `Game.setPersistence(t, persist, room)` (`ButtonRoom.as:93`): its TSET, as a tag, in ANOTHER level, with
  * `persist = !flip` — `flip` = a CLEAR. L38's `buttonroom@32,48 {t 8, flip 1, room 39}` clears `{39,8}`, and

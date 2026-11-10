@@ -42,6 +42,7 @@ import { AP_ITEM_TYPE, AP_LOOK } from './apPlacementRewriter.js';
 import { GEN_ROOM_TILE_SIZE, deserializeGenRoom } from './seedlingGenRoomPayload.js';
 import { certifyGenRoom, extractGenRules } from './seedlingGenRoom.js';
 import { stableStringify } from '../procgenCore/contentIdentity.js';
+import { saveRefusal } from './entityLinks.js';
 
 const cellPx = (cell) => ({ x: cell.tx * GEN_ROOM_TILE_SIZE, y: cell.ty * GEN_ROOM_TILE_SIZE });
 const key = (e) => stableStringify(e);
@@ -168,6 +169,9 @@ function save(saved, { regionId, payload }) {
             JSON.stringify(source ? Object.keys(source) : (saved && Object.keys(saved)))));
     }
     const record = bareRecordOf(edited, payload, regionId);
+    // ⛓ E2 — a room the game's loader dies on is refused here by the same sentence the page's own save uses.
+    const unloadable = saveRefusal(record, { schema: null });
+    if (unloadable) throw new Error(`in "${regionId}": ${unloadable}`);
     let next = payload;
     if (key(record) !== key(payload.record)) {
         const cert = certifyGenRoom({ ...payload, record }, regionId);

@@ -21,6 +21,11 @@
  *                          refuses nothing vanilla allows (vanilla's own sphere 0 is the floor).
  *     PERMISSIVE           no MOVED stair lands in the sub-region of a permissive binding E1 (D) marks AT RISK (the
  *                          classifier pins them, PIN-PERMISSIVE; this re-reads the census so a pin dropped is caught).
+ *   resume({atlas, classification, vanilla})   (ER E4c) a RESUMED envelope's warm-up: the state the later steps read
+ *                          without having run pool/classify in this process — the producer's analysis pass (the compile
+ *                          needs it), with the envelope's atlas REFUSED unless it is this tree's build byte for byte; the
+ *                          census (PERMISSIVE re-reads it); vanilla's sphere 0 (EARLY-SPHERE), off the envelope's vanilla
+ *                          compile. It never re-pools: the envelope's atlas and classification stand. Warm, it is a no-op.
  */
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -112,6 +117,22 @@ export async function seedlingEntranceShuffleHooks() {
                 if (hit.length) out.push(`PERMISSIVE: ${p.binding} [${p.subRegion}] — moved stair(s) ${hit.join(', ')} land in it`);
             }
             return out;
+        },
+        resume: async ({ atlas, vanilla = null }) => {
+            if (!built) {
+                built = P.buildPlaythroughAtlas();
+                if (JSON.stringify(built) !== JSON.stringify(atlas)) {
+                    throw new Error(`seedling entranceShuffle: the envelope's pooled atlas ${atlas?.atlas_id} is not this tree's build `
+                        + `${built.atlas_id} — an envelope resumes only over the atlas it pooled`);
+                }
+            }
+            if (!census) {
+                const inputs = await C.loadCensusInputs();
+                census = K.censusErDoorways({ ...inputs, atlas });
+            }
+            if (vanillaSphereZero === null && vanilla) {
+                vanillaSphereZero = sphereZeroAccessible(generateSphereLog(vanilla, { playerId: 1 })).length;
+            }
         },
         /** The census the last classify took (for the report and the tests). */
         get census() { return census; },

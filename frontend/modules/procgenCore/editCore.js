@@ -207,6 +207,16 @@ const requireCellSpace = (adapter, what) => {
  */
 export const ADAPTER_OPTIONAL_MEMBERS = Object.freeze({
     bases: 'object',
+    /**
+     * ⛓ Seedling editor E1 — `clearOps(record, tx, ty, {fields, incoming})` →
+     * the ops that EMPTY the named descriptor fields of one cell (`fields`:
+     * the field names, or `null` for all; `incoming`: the descriptor a paste
+     * is about to write there, or `null`). It is what a REPLACE paste, a CLEAR
+     * and a MOVE need and `writeOps` cannot give (it sees a descriptor, never
+     * the record). ⛔ Absent means the substrate has no clear, and the three
+     * functions that need it refuse by name.
+     */
+    clearOps: 'function',
 });
 
 /**
@@ -671,6 +681,15 @@ export function createEditSession(adapter, baseRecord, { base = null, certified 
     let ops = Object.freeze([]);
     let record = baseRecord;
     let cert = certified;
+    /**
+     * ⛓⛓ **THE REDO LIST — the ops UNDO took off, most recent LAST** (Seedling
+     * editor E1, additive). ⛔ It is NOT identity: `payload()` never carries it,
+     * and a session that never undid holds an empty one, so every payload this
+     * file has ever written is unchanged. A NEW applied edit clears it (the
+     * history forked); a refused op and a no-op leave it alone, for the same
+     * reason they leave `certified` alone — neither is an edit.
+     */
+    let undone = Object.freeze([]);
 
     const refold = () => {
         const out = foldEdits(adapter, baseRecord, ops);
@@ -711,6 +730,7 @@ export function createEditSession(adapter, baseRecord, { base = null, certified 
             }
             record = res.record;
             ops = Object.freeze([...ops, res.op ?? op]);
+            undone = Object.freeze([]);
             cert = null;
             return Object.freeze({
                 ok: true,
@@ -755,11 +775,43 @@ export function createEditSession(adapter, baseRecord, { base = null, certified 
          */
         undo() {
             if (ops.length === 0) return false;
+            undone = Object.freeze([...undone, ops[ops.length - 1]]);
             ops = Object.freeze(ops.slice(0, -1));
             refold();
             cert = null;
             return true;
         },
+
+        /**
+         * ⛓⛓ **REDO RE-APPLIES THE LAST UNDONE OP THROUGH `applyOne`** (E1,
+         * additive) — the same door every op goes through, onto the record the
+         * undo left. ⛔ Not a stored record: the fold is deterministic, so the
+         * record after a redo is byte-identical to the one before the undo, and
+         * a stored copy could only promise that if nothing else wrote it.
+         *
+         * ⚠ At an EMPTY redo list it returns `false` and changes nothing (the
+         * undo contract, mirrored). A redo the adapter now REFUSES cannot happen
+         * through this session (nothing but `apply` clears the list, and `apply`
+         * empties it), so it is refused by name rather than skipped.
+         */
+        redo() {
+            if (undone.length === 0) return false;
+            const op = undone[undone.length - 1];
+            const res = applyOne(adapter, record, op);
+            if (!res.ok) {
+                fail(`editCore: REDO of ${opLabel(op)} was REFUSED on the record the undo `
+                    + `left: ${res.description} ⛔ The redo list holds only ops this session `
+                    + 'applied and then undid, so a refusal here is a defect in the fold.');
+            }
+            undone = Object.freeze(undone.slice(0, -1));
+            record = res.record;
+            ops = Object.freeze([...ops, res.op ?? op]);
+            cert = null;
+            return true;
+        },
+
+        /** ⛓ How many ops REDO can bring back (E1). */
+        redoCount: () => undone.length,
 
         ops: () => ops,
         record: () => record,
@@ -1055,6 +1107,189 @@ export function floodOps(adapter, record, x, y, targetDescriptor, { label = null
             + `${JSON.stringify(targetDescriptor)}.`);
     }
     return group(label ?? `flood (${x},${y}) — ${keys.length} cell(s)`, ops);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ RECTANGLE FILL, CLEAR AND MOVE — Seedling editor E1, ADDITIVE
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ A rectangle inside the grid, or a refusal naming the grid (rectCopy's rule). */
+const assertRect = (adapter, record, { x, y, w, h }, what) => {
+    const b = assertBounds(adapter, record);
+    for (const [n, v] of [['w', w], ['h', h]]) {
+        if (!Number.isInteger(v) || v <= 0) {
+            fail(`editCore: ${what} ${n} must be a positive integer, got ${JSON.stringify(v)}.`);
+        }
+    }
+    if (!Number.isInteger(x) || !Number.isInteger(y)
+        || x < 0 || y < 0 || x + w > b.w || y + h > b.h) {
+        fail(`editCore: ${what} names ${w}x${h} at (${x},${y}), which runs off the `
+            + `${b.w}x${b.h} ${adapter.name} grid. ⛔ Refused rather than clipped, for `
+            + "`rectCopy`'s reason: a rectangle silently smaller than the one asked for is "
+            + 'a different edit.');
+    }
+};
+
+/** ⛓ The cells of a rectangle in grid order (y, then x) — the order a payload is read in. */
+const rectCells = ({ x, y, w, h }) => {
+    const out = [];
+    for (let dy = 0; dy < h; dy += 1) for (let dx = 0; dx < w; dx += 1) out.push([x + dx, y + dy]);
+    return out;
+};
+
+const cellOpsOf = (adapter, cellOps) => {
+    if (!Array.isArray(cellOps)) {
+        fail(`editCore: ${adapter.name} returned ${JSON.stringify(cellOps)} for a cell — it `
+            + 'must be an ARRAY of atomic ops (possibly empty).');
+    }
+    return cellOps;
+};
+
+const requireClear = (adapter, what) => {
+    if (typeof adapter.clearOps !== 'function') {
+        fail(`editCore: ${adapter.name} declares no \`clearOps\`, so ${what} cannot be built — `
+            + 'emptying a cell needs the RECORD (how many bodies stand there), and `writeOps` '
+            + 'only ever sees a descriptor. ⛔ Refused by name rather than degraded to an ADD.');
+    }
+};
+
+/**
+ * ⛓⛓ **A RECTANGLE PAINTED WITH ONE DESCRIPTOR** — `floodOps`' write, over a
+ * rectangle instead of a component. One group, so one undo takes the fill back.
+ * ⛔ An off-grid rectangle refuses (rectCopy's rule); a target that writes
+ * nothing refuses by name (floodOps' rule).
+ */
+export function rectFillOps(adapter, record, rect, targetDescriptor, { label = null } = {}) {
+    assertAdapter(adapter);
+    requireCellSpace(adapter, 'rectFillOps');
+    assertRect(adapter, record, rect, 'rectFillOps');
+    const ops = [];
+    for (const [tx, ty] of rectCells(rect)) {
+        ops.push(...cellOpsOf(adapter, adapter.writeOps(targetDescriptor, tx, ty)));
+    }
+    if (ops.length === 0) {
+        fail(`editCore: rectFillOps of ${rect.w}x${rect.h} at (${rect.x},${rect.y}) produced NO `
+            + `ops — ${adapter.name}.writeOps emitted nothing for the target descriptor `
+            + `${JSON.stringify(targetDescriptor)}.`);
+    }
+    return group(label ?? `fill ${rect.w}x${rect.h} at (${rect.x},${rect.y})`, ops);
+}
+
+/**
+ * ⛓⛓ **A RECTANGLE EMPTIED** — the adapter's `clearOps` per cell, as one group.
+ * `fields` names the descriptor fields to empty (`null`: all of them).
+ * ⛔ A rectangle with nothing to clear refuses by name: an empty group is
+ * refused, and "nothing was there" is a different sentence from "it is gone".
+ */
+export function rectClearOps(adapter, record, rect, { fields = null, label = null } = {}) {
+    assertAdapter(adapter);
+    requireCellSpace(adapter, 'rectClearOps');
+    requireClear(adapter, 'a CLEAR');
+    assertRect(adapter, record, rect, 'rectClearOps');
+    const ops = [];
+    for (const [tx, ty] of rectCells(rect)) {
+        ops.push(...cellOpsOf(adapter, adapter.clearOps(record, tx, ty, { fields, incoming: null })));
+    }
+    if (ops.length === 0) {
+        fail(`editCore: CLEAR of ${rect.w}x${rect.h} at (${rect.x},${rect.y}) found nothing to `
+            + `clear${fields ? ` in [${fields.join(', ')}]` : ''} — every cell is already `
+            + 'empty there. ⛔ Refused: an empty group is not an edit.');
+    }
+    const what = fields ? ` ${fields.join('+')}` : '';
+    return group(label ?? `clear${what} ${rect.w}x${rect.h} at (${rect.x},${rect.y})`, ops);
+}
+
+/**
+ * ⛓⛓⛓ **A REPLACE PASTE** — `rectPasteOps` with each landed cell's KEPT
+ * fields emptied first (the adapter's `clearOps`), so the destination ends up
+ * looking like the clip instead of the clip ADDED to it. ⛔ The ADD paste is
+ * untouched and still the default: this is a second function, never a flag
+ * that changes what `rectPasteOps` emits.
+ *
+ * ⚠ The clears are read off `record` — the record the paste lands on — and
+ * each cell's clear precedes its own writes, so cells never interfere.
+ */
+export function rectReplaceOps(adapter, record, clip, x, y, {
+    tilesOnly = false, entitiesOnly = false, only = null, label = null,
+} = {}) {
+    assertAdapter(adapter);
+    requireCellSpace(adapter, 'rectReplaceOps');
+    requireClear(adapter, 'a REPLACE paste');
+    const field = filterFieldOf({ tilesOnly, entitiesOnly, only });
+    if (!clip || !Number.isInteger(clip.w) || !Number.isInteger(clip.h)
+        || !Array.isArray(clip.cells)) {
+        fail(`editCore: rectReplaceOps needs a clip from rectCopy (\`{w, h, cells}\`), got `
+            + `${JSON.stringify(clip)}.`);
+    }
+    /**
+     * ⚠ NOT built on `rectPasteOps`: an ADD of an EMPTY field is refused (it
+     * writes nothing), but a REPLACE of one is real — it empties the
+     * destination's field. Only a replace that neither writes nor clears refuses.
+     */
+    const b = assertBounds(adapter, record);
+    const ops = [];
+    for (let dy = 0; dy < clip.h; dy += 1) {
+        for (let dx = 0; dx < clip.w; dx += 1) {
+            const tx = x + dx;
+            const ty = y + dy;
+            if (tx < 0 || ty < 0 || tx >= b.w || ty >= b.h) continue;
+            const incoming = filterDescriptor(adapter, clip.cells[dy][dx], { only: field });
+            ops.push(...cellOpsOf(adapter, adapter.clearOps(record, tx, ty, {
+                fields: Object.keys(incoming), incoming,
+            })));
+            ops.push(...cellOpsOf(adapter, adapter.writeOps(incoming, tx, ty)));
+        }
+    }
+    if (ops.length === 0) {
+        fail(`editCore: a REPLACE of a ${clip.w}x${clip.h} clip at (${x},${y}) neither writes nor `
+            + 'clears anything — every landed cell already holds exactly what the clip does '
+            + `${field === null ? '' : `in \`${field}\` `}(or the clip landed off the `
+            + `${b.w}x${b.h} ${adapter.name} grid). ⛔ An empty group is refused.`);
+    }
+    const what = field === null ? '' : ` ${field}`;
+    return group(label ?? `replace${what} ${clip.w}x${clip.h} at (${x},${y})`, ops);
+}
+
+/**
+ * ⛓⛓⛓ **A MOVE — CUT + PASTE AS ONE GROUP.** The source rectangle
+ * (`from = {x, y}`, the clip's size) is emptied of the kept fields, then the
+ * clip is pasted at `(x, y)` onto the record the clear left — so a move whose
+ * source and destination overlap reads the destination AFTER the cut.
+ * `replace` picks the paste kind. ⛔ One group, so one undo puts it all back.
+ */
+export function rectMoveOps(adapter, record, clip, from, x, y, {
+    tilesOnly = false, entitiesOnly = false, only = null, replace = false, label = null,
+} = {}) {
+    assertAdapter(adapter);
+    requireCellSpace(adapter, 'rectMoveOps');
+    requireClear(adapter, 'a MOVE');
+    const field = filterFieldOf({ tilesOnly, entitiesOnly, only });
+    const rect = { x: from?.x, y: from?.y, w: clip?.w, h: clip?.h };
+    assertRect(adapter, record, rect, 'rectMoveOps');
+    if (rect.x === x && rect.y === y) {
+        fail(`editCore: a MOVE of ${clip.w}x${clip.h} from (${x},${y}) to the same place is not `
+            + 'a move. ⛔ Refused rather than recorded as a cut and paste that change nothing.');
+    }
+    const fields = field === null ? null : [field];
+    const cut = [];
+    for (const [tx, ty] of rectCells(rect)) {
+        cut.push(...cellOpsOf(adapter, adapter.clearOps(record, tx, ty, { fields, incoming: null })));
+    }
+    let after = record;
+    if (cut.length) {
+        const res = applyOne(adapter, record, group('cut', cut));
+        if (!res.ok) {
+            fail(`editCore: the CUT half of a MOVE was refused: ${res.description}`);
+        }
+        after = res.record;
+    }
+    const opts = { only: field };
+    const paste = replace
+        ? rectReplaceOps(adapter, after, clip, x, y, opts)
+        : rectPasteOps(adapter, after, clip, x, y, opts);
+    const what = field === null ? '' : ` ${field}`;
+    return group(label ?? `move${what} ${clip.w}x${clip.h} (${rect.x},${rect.y})→(${x},${y})`,
+        [...cut, ...paste.ops]);
 }
 
 /* ══════════════════════════════════════════════════════════════════════

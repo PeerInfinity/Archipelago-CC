@@ -438,8 +438,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   No name, exit or location moves.
         // ⛓ tile-l89-feather-swim (2b2661b7… -> b0bc6b9c): L89's Feather is bound to its cheapest way, so its sub_region moves
         //   r9c6 -> r1c10 and it is charged Has(Progressive Swim) (atlas id f60d4a58 -> 9c051b83). No name or exit moves.
+        // ⛓ rules-l26-rocklock-pocket (b0bc6b9c… -> 3e1ee485): an encounter lock a door pocket cannot clear (L18, L26, L53)
+        //   is a latch from the pocket, so its two-way internal row splits (internal exits only; atlas id 9c051b83 -> eff9e209).
+        //   No name, exit or location moves (the overlay fixture `--check`s byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('b0bc6b9c6d047ac7f8aab7cf894b38f9');
+            .toBe('3e1ee485eaad20a8a8eb35f28e24f784');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

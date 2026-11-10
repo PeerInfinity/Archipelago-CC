@@ -291,6 +291,7 @@ import {
  * what made widening the roster a page change and not a data change.
  */
 import { DEFAULT_PLACE_TYPE, mountWatchEditor } from './watchEditor.js';
+import { EditSolveError, editSolveGoals, parseSolveItems, solveEditedRoom } from './editSolve.js';
 import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
 /**
  * ⛓⛓⛓ EDITOR v3 D2 — the SET session's DOM, and the three things it cannot
@@ -314,8 +315,9 @@ import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
-import { TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
+import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
+import { saveRefusal } from './entityLinks.js';
 /**
  * ⛓ THE ONE OEL READER AND THE ONE WRITER, which now sit in one file — EDITOR
  * v3 C1 moved `parseOelLevel` beside `recordToOel` so the EDIT arm's
@@ -332,6 +334,19 @@ import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
  * the two can be armed at a time"*) would be a claim nothing kept.
  */
 const TEMPLATE_TOOL = 'template';
+
+/**
+ * ⛓ Seedling editor E1 — THE EDITOR PALETTE's tile art: the frame `watchArt.paletteTileFrame` names on the
+ * sheets this page decoded, or `null` (the chip is its swatch). ⛔ It follows the "Seedling art" toggle exactly
+ * as the canvas does, so a chip never shows art the room is not drawn in. `state()` keys the chips' redraw.
+ */
+function editorTileFrame(layer, column) {
+    if (!labArtActive()) return null;
+    const fr = paletteTileFrame(labArt.art, layer, column);
+    const image = fr ? labArt.images?.get(fr.sheetRef) : null;
+    return image ? { image, sx: fr.sx, sy: fr.sy, sw: fr.sw, sh: fr.sh } : null;
+}
+editorTileFrame.state = () => `${labArt.status}:${labArt.on}`;
 import { createLifetimeHolder } from './watchLifetime.js';
 // ⛓ SLICE 4 (constructive-mode arc): ONE summary of this page's state, in the
 // shape `procgenCore/labProtocol.js` asks for. ⛔ A PROJECTION of the readouts
@@ -367,7 +382,7 @@ import {
 // ⛓ LAB L2 (seedling-lab-static-art): the original graphics, static — see `watchArt.js`.
 import {
     createLabArtPainter, labArt, labArtActive, labArtOps, mountLabArtToggle, publishLabArtDraw, rememberRoomRecord,
-    roomRecordOf, setLabArtRedraw, placementBodies,
+    roomRecordOf, setLabArtRedraw, placementBodies, paletteTileFrame, loadLabArt,
 } from './watchArt.js';
 // ⛓ seedling-gen-biomes-1 (C1): the generated room's LOOK, drawn by the generate arm (never written to its record).
 import { LAB_LOOK_CHOICES, LAB_LOOK_OWN, applyLook, labLookOf } from './procgenLook.js';
@@ -5962,6 +5977,10 @@ function mountEdits(edits) {
  * and for the O(N²) price it costs, which is stated before it is spent.
  */
 async function runGenerate(params, lifetime) {
+    /** ⛓ E1 — GENERATE's redo list, and the state it is valid on. ⛔ At the TOP of the arm:
+     *  `updateEditButtons` is a hoisted function declaration that reads them. */
+    let genUndone = [];
+    let genUndoneFor = null;
     /**
      * ⛓ KICKED HERE AND AWAITED AT THE PALETTE, ~2,400 lines down: the fetch
      * overlaps the arm's own setup instead of standing in front of it. ⛔ Not
@@ -7709,6 +7728,9 @@ async function runGenerate(params, lifetime) {
     function updateEditButtons() {
         const n = (state?.edits ?? []).length;
         $('genEditUndo').disabled = busyNow || n === 0;
+        // ⛓ E1 — the redo list lives on the HOST, which is built below this function and may
+        //   not exist yet on the first call (a TDZ the first E1 browser run measured).
+        $('genEditRedo').disabled = busyNow || genUndone.length === 0 || genUndoneFor !== state;
         $('genEditSolve').disabled = busyNow || !state?.record;
     }
 
@@ -7779,6 +7801,7 @@ async function runGenerate(params, lifetime) {
             }
             state = next;
             certified = null;
+            genUndone = [];
             return { ok: true, applied: true, op, description: describeEdit(op) };
         },
         /**
@@ -7790,10 +7813,38 @@ async function runGenerate(params, lifetime) {
          */
         undo() {
             if ((state?.edits ?? []).length === 0) return false;
+            const taken = state.edits[state.edits.length - 1];   // `editState` keeps the OPS themselves
+            // ⛓ E1 — the REDO list belongs to the state the last undo LEFT. A second
+            //   undo in a row extends it; anything else that replaced `state` in
+            //   between (a STEP, a directive, a LOAD) voids it.
+            const keep = genUndoneFor === state ? genUndone : [];
             state = undoEdit(state);
+            genUndone = [...keep, taken];
+            genUndoneFor = state;
             certified = null;
             return true;
         },
+        /**
+         * ⛓⛓ Seedling editor E1 — REDO, through `editState` like every edit. ⛔ Only
+         * onto the very state the last undo left: anything else that replaced
+         * `state` in between (a STEP, a directive, a LOAD) makes the list stale,
+         * and replaying it there would be an edit nobody made to that level.
+         */
+        redo() {
+            if (genUndone.length === 0 || genUndoneFor !== state || busyNow) {
+                genUndone = [];
+                return false;
+            }
+            const op = genUndone[genUndone.length - 1];
+            const next = editState(state, op);
+            if (next === state) { genUndone = []; return false; }
+            state = next;
+            genUndone = genUndone.slice(0, -1);
+            genUndoneFor = state;
+            certified = null;
+            return true;
+        },
+        redoCount: () => (genUndoneFor === state ? genUndone.length : 0),
     };
 
     /**
@@ -8606,15 +8657,15 @@ async function runGenerate(params, lifetime) {
          * file: the MODEL's builder (the room-flags reach readout MEASURES a
          * flag by building the world with it and without it, rather than
          * reading `as3: null` off the class table, which answers construction
-         * and not reach) and the CANVAS's own tile palette (there is no tileset
-         * PNG in this repo — the art is inside the recompiled `.wasm` — so the
-         * column picker shows a SWATCH, and it must be the colour the canvas
-         * actually paints).
+         * and not reach) and the CANVAS's own tile palette (the picker's
+         * swatches and the art grid's fallback — the art itself is
+         * `editorTileFrame`, Seedling editor E1).
          */
         buildWorld: buildLevelWorld,
         tileColours: TILE_COLOURS,
         solidColour: SOLID_COLOUR,
         floorColour: FLOOR_COLOUR,
+        tileFrame: editorTileFrame,
         say: (text, bad) => {
             $('status').className = bad ? 'bad' : '';
             $('status').textContent = text;
@@ -8634,6 +8685,20 @@ async function runGenerate(params, lifetime) {
                     if (n === 0 || busyNow) return;
                     generateHost.undo();
                     void afterEdit(`UNDO — ${n - 1} manual edit(s) remain`);
+                },
+            },
+            {
+                id: REDO_COMMAND_ID,
+                label: 'REDO the last undone edit',
+                run: () => {
+                    if (busyNow) return;
+                    if (!generateHost.redo()) {
+                        $('status').className = 'bad';
+                        $('status').textContent = 'nothing to REDO — no edit has been undone on '
+                            + 'the level now on screen';
+                        return;
+                    }
+                    void afterEdit(`REDO — ${generateHost.redoCount()} more can be redone`);
                 },
             },
             {
@@ -8680,7 +8745,10 @@ async function runGenerate(params, lifetime) {
     editor.palette.setType(DEFAULT_PLACE_TYPE);
     editor.setMode('off');
     lifetime.on($('genEditUndo'), 'click', () => editor.view.run(UNDO_COMMAND_ID));
+    lifetime.on($('genEditRedo'), 'click', () => editor.view.run(REDO_COMMAND_ID));
     lifetime.on($('genEditSolve'), 'click', () => editor.view.run('solve'));
+    // ⛓ E1 — the palette's chips redraw once the art has loaded (the redraw slot is the arm's view's).
+    void loadLabArt().then(() => { if (lifetime.alive()) editor?.refreshTileArt(); });
 
     await show('the SKELETON');
 
@@ -9012,6 +9080,13 @@ async function runEditor(params, lifetime) {
      */
     let baseRecord = null;
     let lastWhy = null;
+    /** ⛓ E1 — the spawn the last draw chose, and the last SOLVE (with the record it solved). */
+    let lastSpawn = null;
+    let lastSolve = null;
+    let lastSolveRecord = null;
+    let solveGoalsFor = null;
+    /** ⛓ E1 — is `lastSolve` about the room NOW on screen? An edit makes a new record. */
+    const solveIsCurrent = () => lastSolve !== null && lastSolveRecord === session.record();
 
     /* ── THE DRAW ─────────────────────────────────────────────────── */
 
@@ -9051,6 +9126,8 @@ async function runEditor(params, lifetime) {
          */
         try {
             const spawn = chooseSpawn(src, block, record.level);
+            // ⛓ E1 — SOLVE boots where this still frame put the player.
+            lastSpawn = spawn ? { level: record.level, x: spawn.x, y: spawn.y } : null;
             const staged = spawn
                 ? { ...block, boot: { ...block.boot, x: spawn.x, y: spawn.y } }
                 : block;
@@ -9107,19 +9184,55 @@ async function runEditor(params, lifetime) {
         /**
          * ⛔ THIS ARM'S OWN ANSWER ABOUT THE TWO BUTTONS, because the RULE is
          * the arm's: UNDO needs an edit to undo (the same rule GENERATE's
-         * `updateEditButtons` keeps), and SOLVE is LIVE here and refuses with a
-         * REASON when pressed — this arm has no oracle, and a dead button would
-         * be silent about which of the two reasons it was.
+         * `updateEditButtons` keeps), and SOLVE is LIVE here (Seedling editor E1:
+         * it asks the oracle, or refuses by name when the room has no goal).
          */
         $('genEditUndo').disabled = n === 0;
+        $('genEditRedo').disabled = session.redoCount() === 0;
         $('genEditSolve').disabled = false;
         $('genEditCert').className = 'note bad';
-        $('genEditCert').textContent = session.certified === true
-            ? '✔ CERTIFIED'
-            : '⛔ UNCERTIFIED — nothing has solved the room now on screen. ⚠ This arm has no '
-                + 'ORACLE: a room with no ladder has no palette and no pin union to solve it '
-                + 'under (§3.5). ▶ load in wasm is the certifier here.';
+        /**
+         * ⛓⛓ Seedling editor E1 — SOLVE answers here now. The three states are
+         * the tri-state's: `null` nobody asked (or an edit since), `false` the
+         * oracle said no (its verdict and text VERBATIM), `true` it solved —
+         * naming the goal and the inventory it was asked under.
+         */
+        const cur = solveIsCurrent() ? lastSolve : null;
+        $('genEditCert').textContent = session.certified === true && cur
+            ? `✔ CERTIFIED — the oracle SOLVED this exact record (${cur.goalLabel}) in `
+                + `${cur.ticks} tick(s), under ${cur.items ? JSON.stringify(cur.items) : 'NO items'}`
+            : session.certified === false && cur
+                ? `⛔ UNCERTIFIED — the oracle answered ${cur.verdict ?? cur.errorName} for `
+                    + `${cur.goalLabel ?? 'the goal'}: ${cur.reasonText ?? '(no text)'}`
+                : `⛔ UNCERTIFIED — nothing has solved the room now on screen`
+                    + (n && lastSolve ? ' (an edit since the last SOLVE)' : '')
+                    + '. Press SOLVE: it asks the oracle for the goal and inventory chosen in '
+                    + 'the SOLVE line above.';
         if (session.certified === true) $('genEditCert').className = 'note';
+        // ⛓ E1 — the goal picker follows the RECORD (an edit can add or remove a goal).
+        if (solveGoalsFor !== session.record()) {
+            solveGoalsFor = session.record();
+            const sel = $('editSolveGoal');
+            if (sel) {
+                const keep = sel.value;
+                const goals = editSolveGoals(session.record());
+                sel.innerHTML = '';
+                for (const g of goals) {
+                    const o = document.createElement('option');
+                    o.value = g.id;
+                    o.textContent = g.refused ? `${g.label} (⛔ refused)` : g.label;
+                    sel.appendChild(o);
+                }
+                if (goals.length === 0) {
+                    const o = document.createElement('option');
+                    o.value = '';
+                    o.textContent = '(no goal in this room)';
+                    sel.appendChild(o);
+                }
+                const firstAskable = goals.find((g) => g.goal)?.id ?? goals[0]?.id ?? '';
+                sel.value = goals.some((g) => g.id === keep) ? keep : firstAskable;
+            }
+        }
         editorUi?.render();
         /**
          * ⛓ THE OP LIST, THROUGH THE CORE'S OWN SENTENCES — `foldEdits().steps`
@@ -9161,6 +9274,8 @@ async function runEditor(params, lifetime) {
             level: session.record(),
             why: lastWhy,
             transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
+            /** ⛓ E2 — what the room is wired to, and the issues the panel lists. */
+            get links() { return editorUi?.links() ?? null; },
             /**
              * ⛓ EDITOR v3 C2 — WHICH SET IS HELD and how many of its rooms this
              * page could open. ⛔ The set itself is NOT echoed here: it is up to
@@ -9200,6 +9315,18 @@ async function runEditor(params, lifetime) {
                     .reduce((n, r) => n + (r?.locations?.length ?? 0), 0),
             } : null,
             flags: roomFlagsIn(session.record()).map((f) => f.tag),
+            /** ⛓ E1 — the last SOLVE, and whether it is about the room on screen. */
+            solve: lastSolve ? {
+                current: solveIsCurrent(),
+                verdict: lastSolve.verdict ?? null,
+                ticks: lastSolve.ticks ?? null,
+                goalId: lastSolve.goalId ?? null,
+                items: lastSolve.items ?? null,
+                reasonText: lastSolve.reasonText ?? null,
+                refusedByPage: lastSolve.refusedByPage ?? null,
+                tape: Boolean(lastSolve.tape),
+            } : null,
+            redo: session.redoCount(),
         };
     };
 
@@ -9248,7 +9375,7 @@ async function runEditor(params, lifetime) {
     };
     // ⛓ LAB L2: an art change repaints the room and the set strip (its stills
     // re-key on the mode — `watchArt.labStillKey`); the status line is untouched.
-    setLabArtRedraw(() => { drawRoom(); setUi?.render(); }, lifetime);
+    setLabArtRedraw(() => { drawRoom(); setUi?.render(); editorUi?.refreshTileArt(); }, lifetime);
 
     /* ── THE SHIP ─────────────────────────────────────────────────── */
 
@@ -9300,10 +9427,31 @@ async function runEditor(params, lifetime) {
         },
     });
 
-    const shippableEdit = () => (setSession ? shippableSet() : {
+    /** ⛓ E2 — ▶ load sends the room to the game, so a room its loader dies on refuses by the save's own sentence. */
+    const refuseUnloadable = (record) => {
+        const why = saveRefusal(record, { schema: ogmoSchema });
+        if (why) throw new Error(why);
+        return record;
+    };
+
+    const shippableEdit = () => (setSession ? shippableSet() : (session.certified === true
+        && solveIsCurrent() && lastSolve.tape) ? {
+        what: 'ship this room + the tape SOLVE certified it with (Seedling editor E1)',
+        build: () => shipOneRoomWithTape({
+            record: refuseUnloadable(session.record()),
+            solved: lastSolve,
+            setOpts: {
+                name: `edit_${baseTag?.kind ?? 'room'}_${session.record().level}`,
+                setId: `watch-edit-${baseTag?.kind ?? 'room'}-${session.record().level}`,
+                provenance: { base: baseTag, edits: session.ops().length, solved: lastSolve.goalId },
+            },
+            label: (set) => `${describeBase(baseTag)} + ${session.ops().length} edit(s), SOLVED `
+                + `(${lastSolve.goalLabel}) — a ONE-ROOM set (${set.set_id}) with its certification tape`,
+        }),
+    } : {
         what: 'ship this room into the recompiled game (keyboard-driven; no expectation)',
         build: () => {
-            const record = session.record();
+            const record = refuseUnloadable(session.record());
             const { set, chunks, mapped } = buildOneRoomSet({
                 record,
                 name: `edit_${baseTag?.kind ?? 'room'}_${record.level}`,
@@ -9315,9 +9463,10 @@ async function runEditor(params, lifetime) {
                 chunks,
                 tape: { boot: { ...boot.boot, level: mapped.room }, presses: [] },
                 expect: null,
-                expectWhy: 'nothing has solved this room — the EDIT arm has no oracle, so the '
-                    + 'ship carries a ZERO-INPUT tape and the keyboard drives (MANUAL\'s arm, '
-                    + 'already). An expectation here would be a claim about a run nobody made.',
+                expectWhy: 'nothing has solved this room — press SOLVE to certify it and ship '
+                    + 'its tape; until then the ship carries a ZERO-INPUT tape and the keyboard '
+                    + 'drives (MANUAL\'s arm, already). An expectation here would be a claim '
+                    + 'about a run nobody made.',
                 modelStream: null,
                 modelStreamWhy: 'no per-tick comparison: there is no recorded walk of an '
                     + 'edited room to compare the game against',
@@ -9409,15 +9558,15 @@ async function runEditor(params, lifetime) {
              * file: the MODEL's builder (the room-flags reach readout MEASURES a
              * flag by building the world with it and without it, rather than
              * reading `as3: null` off the class table, which answers construction
-             * and not reach) and the CANVAS's own tile palette (there is no tileset
-             * PNG in this repo — the art is inside the recompiled `.wasm` — so the
-             * column picker shows a SWATCH, and it must be the colour the canvas
-             * actually paints).
+             * and not reach) and the CANVAS's own tile palette (the picker's
+             * swatches and the art grid's fallback — the art itself is
+             * `editorTileFrame`, Seedling editor E1).
              */
             buildWorld: buildLevelWorld,
             tileColours: TILE_COLOURS,
             solidColour: SOLID_COLOUR,
             floorColour: FLOOR_COLOUR,
+            tileFrame: editorTileFrame,
             say: (text, bad) => {
                 $('status').className = bad ? 'bad' : '';
                 $('status').textContent = text;
@@ -9438,6 +9587,23 @@ async function runEditor(params, lifetime) {
                     const n = session.ops().length;
                     if (!session.undo()) return;
                     redraw(`UNDO — ${n - 1} edit(s) remain`);
+                },
+            }, {
+                /**
+                 * ⛓ Seedling editor E1 — the session's own `redo` (`editCore`), so
+                 * the record after it is the fold of the longer list, byte for byte.
+                 */
+                id: REDO_COMMAND_ID,
+                label: 'REDO the last undone edit',
+                run: () => {
+                    if (!session.redo()) {
+                        $('status').className = 'bad';
+                        $('status').textContent = 'nothing to REDO — no edit has been undone '
+                            + 'since the last one';
+                        return;
+                    }
+                    redraw(`REDO — ${session.ops().length} edit(s), `
+                        + `${session.redoCount()} more can be redone`);
                 },
             }],
         });
@@ -9764,6 +9930,7 @@ async function runEditor(params, lifetime) {
     redraw(`EDIT — ${describeBase(baseTag)}`);
 
     lifetime.on($('genEditUndo'), 'click', () => editorUi.view.run(UNDO_COMMAND_ID));
+    lifetime.on($('genEditRedo'), 'click', () => editorUi.view.run(REDO_COMMAND_ID));
     /**
      * ⛔ **SOLVE IS OFFERED AND SAYS WHY IT CANNOT ANSWER.** This arm has no
      * palette and no pin union — a room with no ladder was solved under no
@@ -9771,12 +9938,48 @@ async function runEditor(params, lifetime) {
      * have been silent about which of the two reasons it was; this names it.
      */
     $('genEditSolve').disabled = false;
+    /**
+     * ⛓⛓⛓ Seedling editor E1 — **SOLVE CERTIFIES THE EDITED ROOM** through the
+     * oracle GENERATE uses (`editSolve.solveEditedRoom` → `seedlingOracle`). The
+     * old refusal's two reasons are now inputs on the page: the GOAL (one of the
+     * room's own, `#editSolveGoal`) and the INVENTORY (`#editSolveItems`, typed,
+     * `{}` = none). A page-side refusal (no goal, an exit out of the room, a bad
+     * inventory) is said by name and certifies nothing; the oracle's verdict is
+     * stamped with `setCertified`, and a SOLVED tape is offered to ▶ load.
+     */
     lifetime.on($('genEditSolve'), 'click', () => {
-        $('status').className = 'bad';
-        $('status').textContent = 'this arm has NO ORACLE. A room with no ladder has no '
-            + 'palette and no pin union to solve it under, and inventing one would certify it '
-            + 'under an inventory nobody asked for (§3.5). ▶ load in wasm is the certifier '
-            + 'here; "open in editor" from GENERATE keeps the ladder\'s.';
+        const record = session.record();
+        let out;
+        try {
+            out = solveEditedRoom(record, {
+                boot: lastSpawn,
+                goalId: $('editSolveGoal')?.value || null,
+                items: parseSolveItems($('editSolveItems')?.value ?? ''),
+            });
+        } catch (e) {
+            if (!(e instanceof EditSolveError)) {
+                // ⛔ An engine/oracle THROW that is not a refusal class is shown with its
+                //   name, not swallowed: the room is uncertified and the reader sees why.
+                out = { verdict: null, errorName: e?.name ?? 'Error', reasonText: e?.message ?? String(e) };
+            } else {
+                lastSolve = { refusedByPage: e.message, verdict: null, reasonText: e.message };
+                lastSolveRecord = record;
+                $('status').className = 'bad';
+                $('status').textContent = `SOLVE refused — ${e.message}`;
+                render();
+                return;
+            }
+        }
+        lastSolve = out;
+        lastSolveRecord = record;
+        const solved = out.verdict === 'SOLVED';
+        session.setCertified(solved);
+        $('status').className = solved ? '' : 'bad';
+        $('status').textContent = solved
+            ? `SOLVE — SOLVED (${out.goalLabel}) in ${out.ticks} tick(s); the tape is ready for ▶ load`
+            : `SOLVE — ${out.verdict ?? out.errorName}: ${out.reasonText ?? '(no text)'}`;
+        render();
+        setShippable(shippableEdit());
     });
 
     /**
@@ -9976,9 +10179,17 @@ async function runEditor(params, lifetime) {
     lifetime.on($('editDownload'), 'click', () => download(
         `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.json`,
         `${JSON.stringify(payloadNow(), null, 2)}\n`, 'application/json'));
-    lifetime.on($('editDownloadOel'), 'click', () => download(
-        `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.oel`,
-        recordToOel(session.record()), 'application/xml'));
+    lifetime.on($('editDownloadOel'), 'click', () => {
+        // ⛓ E2 — an OEL is what the game loads, so a room its loader dies on is not written.
+        const why = saveRefusal(session.record(), { schema: ogmoSchema });
+        if (why) {
+            $('status').className = 'bad';
+            $('status').textContent = why;
+            return;
+        }
+        download(`edit-${baseTag?.kind ?? 'room'}-${session.record().level}.oel`,
+            recordToOel(session.record()), 'application/xml');
+    });
 
     /**
      * ⛓⛓⛓ **THE SET, THE OVERLAY AND THE `apMapping` COMPANION — `#editDownloadSet`
@@ -10127,16 +10338,29 @@ function buildOneRoomSet({ record, summary = null, seed = 0, name, setId, proven
 
 function buildGenerateShip(state, solved) {
     const entryName = `${state.biome}_seed${state.seed}_step${state.step}`;
-    const { set, chunks, mapped } = buildOneRoomSet({
+    return shipOneRoomWithTape({
         record: state.record,
-        summary: state.summary,
-        seed: state.seed,
-        name: entryName,
-        setId: `watch-oneroom-${state.biome}-${state.seed}-${state.step}`,
-        provenance: {
-            biome: state.biome, seed: state.seed, step: state.step, bounds: state.bounds,
+        solved,
+        setOpts: {
+            summary: state.summary,
+            seed: state.seed,
+            name: entryName,
+            setId: `watch-oneroom-${state.biome}-${state.seed}-${state.step}`,
+            provenance: {
+                biome: state.biome, seed: state.seed, step: state.step, bounds: state.bounds,
+            },
         },
+        label: (set) => `${entryName} — the certification tape, in a ONE-ROOM set (${set.set_id})`,
     });
+}
+
+/**
+ * ⛓ A ONE-ROOM SET + ITS CERTIFICATION TAPE — GENERATE's ship, factored out so
+ * the EDIT arm's SOLVE (Seedling editor E1) ships its solved tape by the same
+ * path. Unchanged for GENERATE: the same calls in the same order.
+ */
+function shipOneRoomWithTape({ record, solved, setOpts, label }) {
+    const { set, chunks, mapped } = buildOneRoomSet({ record, ...setOpts });
     /**
      * ⛔ THE MODEL'S END STATE COMES FROM THE **UNREMAPPED** TAPE, walked in
      * the level source that HAS level 900 — the model has no room 0 to walk.
@@ -10144,7 +10368,7 @@ function buildGenerateShip(state, solved) {
      * model's own. Walking the remapped tape here would ask the JS engine for
      * a room it does not have and refuse.
      */
-    const walked = collectRun(solved.tape, levelSourceFromAtlas(atlasOf(state.record)),
+    const walked = collectRun(solved.tape, levelSourceFromAtlas(atlasOf(record)),
         { scratchPersistence: true });
     if (walked.error) {
         throw new Error('the JS model would not re-walk the certification tape, so there is '
@@ -10162,7 +10386,7 @@ function buildGenerateShip(state, solved) {
      * of at one (§18.15.3's reason, one instrument further along).
      */
     const modelStream = remapStreamRooms(modelStreamOf(walked), set.rooms.length,
-        [state.record.level]);
+        [record.level]);
     return {
         levelSet: set,
         chunks,
@@ -10172,7 +10396,7 @@ function buildGenerateShip(state, solved) {
         expect: { ...modelEnd, level: mapped.room },
         modelStream,
         modelStreamWhy: null,
-        label: `${entryName} — the certification tape, in a ONE-ROOM set (${set.set_id})`,
+        label: label(set),
         note: mapped.why,
     };
 }
