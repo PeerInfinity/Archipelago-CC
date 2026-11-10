@@ -38,7 +38,7 @@ Manifest schema (JSON, version 1)
 ---------------------------------
     {
       "schema": 1,
-      "survey": "NewDocs/plans/branch-worktree-cleanup-2026-11-10.md",   (optional, informational)
+      "survey": "branch-worktree-cleanup-2026-11-10.md",   (optional, informational: the survey record)
       "items": [ <item>, ... ]
     }
 An item is an object with exactly these keys (an unknown key refuses the manifest):
