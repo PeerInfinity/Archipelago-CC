@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-eff9e209",
+  "atlas_id": "seedling-b06ae22d",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "eff9e209" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "b06ae22d" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -5223,7 +5223,7 @@
           {
             "from": "r5c0",
             "to": "r5c9",
-            "bidirectional": true,
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": {
               "rule": "And",
@@ -5238,6 +5238,28 @@
                     { "rule": "Has", "args": { "item_name": "Wand" } }
                   ]
                 }
+              ]
+            }
+          },
+          {
+            "from": "r5c9",
+            "to": "r5c0",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Wand" } }
+                  ]
+                },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_60__r5c0" } }
               ]
             }
           }
@@ -6068,10 +6090,16 @@
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                  ]
+                }
               ]
             }
           },
