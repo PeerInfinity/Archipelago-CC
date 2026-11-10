@@ -37,9 +37,13 @@ export function staged(leg) {
     return { passes, source, tape, levelSource: levelSourceFromAtlas(source.records) };
 }
 
-/** A captured leg solved as the worker does, under the switches; the plan re-driven on a fresh run. */
-export function solveLeg(leg, switches) {
-    const { passes, source, tape, levelSource } = staged(leg);
+/**
+ * A captured leg solved as the worker does, under the switches; the plan re-driven on a fresh run. `goal` swaps the
+ * request's solver goal (a door leg from the same arrival: the request is otherwise the page's own).
+ */
+export function solveLeg(leg, switches, { goal = null } = {}) {
+    const { passes, source, tape: captured, levelSource } = staged(leg);
+    const tape = goal ? { ...captured, solverGoal: goal } : captured;
     resetKillLockLineStanceCounts();
     const answer = under(switches, () => solveAnytime({ ...tape, source, levelSource }, { passes }));
     const line = KILLLOCK_LINE_STANCE_COUNTS.rows.map(({ id, stance, verdict }) => ({ id, stance, verdict }));

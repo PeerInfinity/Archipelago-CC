@@ -106,6 +106,27 @@ describe('hammer-phase NEW-LOCKS — L26 `{26,0}` (legs 286, 289): the rocklock 
     });
 });
 
+describe('hammer-phase NEW-LOCKS — L26, the door behind the rocklock (the frontier\'s order, not a clear-tag)', () => {
+    // 289's own request (the L27 arrival) with its goal swapped for the L28 teleporter at (144,208), which stands
+    // behind `rocklock@112,208`: the walk's own L26 crossing. The leg list holds no such leg (the rules gate that
+    // edge on the flag), so the request is the page's and the goal is the row's.
+    const DOOR = { kind: 'reach-exit', exit: { x: 144, y: 208 } };
+
+    it('OFF: no corridor, and the rocklock on the frontier has no strategy row', () => {
+        const off = solveLeg(LEG_289, NONE, { goal: DOOR });
+        expect(off.ok).toBe(false);
+        expect(off.message).toMatch(/no corridor for goal reach-exit toward \(152,216\) in level 26\. .*rocklock@112,208/);
+    });
+
+    it('`ROCKLOCK_KILL` + the rewind: the frontier kills the punchers, the rocklock fades, the walk crosses to L28, 0 hits', () => {
+        const on = solveLeg(LEG_289, { ...NONE, rock: true, rewind: true }, { goal: DOOR });
+        expect(on).toMatchObject({ ok: true, ticks: 357, planSha: 'ac2590edef0b', verbs: ['kill', 'walk'], hits: 0,
+            deaths: 0, level: 28 });
+        expect(on.writes).toEqual([{ level: 26, tag: 0, at: 314, lock: 'rocklock@112,208' }]);
+        expect(solveLeg(LEG_289, ALL, { goal: DOOR })).toMatchObject({ ok: true, ticks: 357, planSha: 'ac2590edef0b' });
+    });
+});
+
 describe('hammer-phase NEW-LOCKS — L53 `{53,2}` (legs 910, 911): the pinned chasers (`KILLLOCK_LINE_STANCE`)', () => {
     it('the line stances are derived from the body\'s own Solids: from 911\'s arrival every jellyfish\'s cells lie in '
         + 'the arena it is walled into, and the puncher\'s in its corridor', () => {

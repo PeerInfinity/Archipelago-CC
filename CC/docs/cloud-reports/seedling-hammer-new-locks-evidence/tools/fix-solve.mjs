@@ -14,6 +14,8 @@ if (file.endsWith('.gz')) cap = JSON.parse(gunzipSync(readFileSync(file)).toStri
 else cap = readFileSync(file, 'utf8').trim().split('\n').map(JSON.parse).find((r) => String(r.id) === id).requests.find((c) => String(c.i) === String(i ?? 0));
 const req = restoreRequest(cap.request);
 const { passes = JR.ANYTIME_PASSES, source, ...tape } = req;
+// WHAT-IF (measure only): GOAL='<json>' swaps the request's solver goal (a door leg from the same arrival)
+if (process.env.GOAL) { tape.solverGoal = JSON.parse(process.env.GOAL); tape.name = 'what-if-goal'; }
 const levelSource = levelSourceFromAtlas(source.records);
 const t0 = Date.now();
 const a = JR.solveAnytime({ ...tape, source, levelSource }, { passes });
