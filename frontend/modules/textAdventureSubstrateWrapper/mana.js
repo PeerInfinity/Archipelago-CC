@@ -22,11 +22,12 @@
  * region. Two kinds of region are never charged here (`notChargedHere`):
  *   - another substrate that declares `sharing.mana` bills the pool itself
  *     (maze per tile, jta and omsi by mirroring their native resource);
- *   - a substrate whose loop-mode price is its game clock alone, a SUMMARY
- *     recording (`loopSupport.summaryRecording`) charged by its reported play
- *     clock (`loopSupport.playClock`), costs nothing with loop mode off: the
- *     flat location and move defaults here were never its price (Cloudberry
- *     and Noiz2sa; ⚖ Robert 2026-11-09, "Remove the charge").
+ *   - a substrate that loop mode prices by its own play, a SUMMARY recording
+ *     (`loopSupport.summaryRecording`) or its reported game clock
+ *     (`loopSupport.playClock`), costs nothing with loop mode off: the flat
+ *     location and move defaults here were never its price (Cloudberry,
+ *     Noiz2sa, Bounce, flash_seedling, flash_seedling_gen; ⚖ Robert
+ *     2026-11-09, "Remove the charge" and "Free too, as a follow-up").
  * Any other substrate stays on this leg. The display half is unaffected.
  */
 
@@ -153,20 +154,20 @@ function _shouldDeductMana() {
 
 /**
  * True when a charge from here would be wrong: the region's substrate bills
- * the shared pool itself, or prices its regions by its game clock alone (see
+ * the shared pool itself, or loop mode prices its regions by its own play (see
  * the header). Read from the registry at charge time: this module can
  * initialize before the region's substrate has registered.
  */
 function notChargedHere(regionName) {
     const substrate = resolveRegionInfo(regionName)?.substrate;
     if (!substrate || substrate === SUBSTRATE_ID) return false;
-    return isManaDeclarer(substrate) || pricedByPlayClockAlone(substrate);
+    return isManaDeclarer(substrate) || pricedByItsOwnPlay(substrate);
 }
 
-function pricedByPlayClockAlone(substrateId) {
+function pricedByItsOwnPlay(substrateId) {
     const entry = substrateRegistry.get(substrateId);
-    return !!entry && entry.loopSupport?.playClock === true
-        && captureShapeOf(entry) === CAPTURE_SHAPES.SUMMARY;
+    return !!entry && (entry.loopSupport?.playClock === true
+        || captureShapeOf(entry) === CAPTURE_SHAPES.SUMMARY);
 }
 
 function resolveRegionInfo(regionName) {
