@@ -15,6 +15,12 @@
  *   ON   both witnesses at 0 px on every sampled tick; the knock press's ledger is three knocked hit ticks of 11
  *        dispatches each, then two empty ones (the body left the flame); `hits` 0 and `hitsTimer` 0 throughout
  *
+ *   firespinner-r5-press-{delay,glide,repeat}  the three COMMITTED L39 block-glide tapes, played as themselves: their
+ *                            t10 Fire press knocks `spinner@224,112` (t17), and glide/repeat's later presses knock
+ *                            `spinner@112,88`. The committed expectations hold the player only, so the OFF model's
+ *                            spinners had never been checked: OFF leaves the game at t19 on all three; ON is 0 px
+ *                            (spinners and fire blocks; the blocks agree in both arms)
+ *
  * Mutants (copy + restore, `levelRun.js`): (m1) the knockback FROM the mirror point (direction reversed) → the ON knock
  * row reds; (m2) `t: 'Sword', damage 1` in place of Fire → the ON knock row and the no-damage row red; (m3) the arm
  * ungated (`&& CONTACT_FIDELITY.fireSpinnerArm` dropped) with the census still the placement → the OFF throw row reds.
@@ -25,7 +31,7 @@ import { join } from 'node:path';
 import { CONTACT_FIDELITY_DEFAULTS, CONTACT_FIDELITY_KEYS } from './contactFidelity.js';
 import { FIRE_ARM_POLICY } from './presses.js';
 import { FIRESPINNER_END, FIRESPINNER_PRESS, FIRESPINNER_THROW_END, FIRESPINNER_THROW_PRESS,
-    FIRESPINNER_WITNESS, FIRESPINNER_WITNESS_DIR, compareFireSpinnerWitness, fireSpinnerModelSamples, fireSpinnerTape,
+    FIRESPINNER_ROSTER, FIRESPINNER_WITNESS, FIRESPINNER_WITNESS_DIR, committedTape, compareFireSpinnerWitness, fireSpinnerModelSamples, fireSpinnerTape,
     unpackFireSpinnerSample } from './fidelityFireSpinner.js';
 
 const ON = { fireSpinnerArm: true };
@@ -93,6 +99,19 @@ describe('fidelity FIRESPINNER — ON: the game witnesses at 0 px', () => {
     it('the phantom press reaches nothing ON (the census tests the live body)', async () => {
         const m = await fireSpinnerModelSamples(load('firespinner-l39-phantom').tape, ON);
         expect(m.firePresses.filter((p) => p.t === FIRESPINNER_THROW_PRESS).flatMap((p) => p.hits)).toEqual([]);
+    });
+
+    it.each(FIRESPINNER_ROSTER)('committed %s — ON reproduces the game at 0 px; OFF leaves it at t19 on a spinner', async (name) => {
+        const rec = load(`firespinner-${name}`);
+        expect(rec.tape).toEqual(committedTape(name));
+        const game = rec.samples.map(unpackFireSpinnerSample);
+        const on = await fireSpinnerModelSamples(rec.tape, ON);
+        expect(on.error).toBeNull();
+        expect(compareFireSpinnerWitness(game, on.samples)).toEqual([]);
+        const off = await fireSpinnerModelSamples(rec.tape, OFF);
+        const bad = compareFireSpinnerWitness(game, off.samples);
+        expect(bad[0]).toMatch(/^t 19: spinners/);
+        expect(bad.some((b) => b.includes('blocks'))).toBe(false);
     });
 
     it('the tape end constants are the recorded ones', () => {

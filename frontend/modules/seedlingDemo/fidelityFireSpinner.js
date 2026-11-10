@@ -49,6 +49,18 @@ export const FIRESPINNER_THROW_PRESS = 690;
 export const FIRESPINNER_THROW_END = 720;
 
 /** The witness tape: `r5-shaft` cut at `end`, plus one `primary` (Fire, equipped at t185) press at `press`. */
+/** A committed tape by name (`fixtures/tapes/<name>.json`), for the roster witnesses (`FIRESPINNER_ROSTER`). */
+export function committedTape(name) {
+    const raw = JSON.parse(readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
+    return raw.tape ?? raw;
+}
+
+/**
+ * ⛓ D2: the committed tapes whose Fire press reaches a spinner's BODY (measured over the whole roster with the key ON;
+ * all three are L39 block-glide tapes, `r5Shaft.SPINNER_WEDGE`'s), each witnessed on the game as itself.
+ */
+export const FIRESPINNER_ROSTER = Object.freeze(['r5-press-delay', 'r5-press-glide', 'r5-press-repeat']);
+
 export function fireSpinnerTape({ press = FIRESPINNER_PRESS, end = FIRESPINNER_END,
     name = FIRESPINNER_WITNESS } = {}) {
     const raw = JSON.parse(readFileSync(join(HERE, 'fixtures', 'tapes', 'r5-shaft.json'), 'utf8'));
@@ -66,31 +78,37 @@ export function fireSpinnerTape({ press = FIRESPINNER_PRESS, end = FIRESPINNER_E
     };
 }
 
-/** The game poll's fold: the player and every live spinner (`botMobiles`), with `hits` and `hits_timer`. */
+/**
+ * The game poll's fold: the player, every live spinner (`botMobiles`, with `hits` and `hits_timer`) and every
+ * `PushableBlockFire` (a spinner body is in a fire block's sweep, `r5Shaft.SPINNER_WEDGE`, so a knocked spinner can move
+ * a block).
+ */
 export function fireSpinnerSampleOf(s, m) {
     const mob = (m.mobiles ?? []).filter((r) => /(^|:)Spinner$/.test(r.cls) && !r.destroy);
     return {
         t: s.tick, level: s.level, x: s.x, y: s.y,
         spinners: mob.map((r) => ({ x: r.x, y: r.y, hits: r.enemy?.hits ?? null, ht: r.enemy?.hits_timer ?? null,
             vx: r.vx, vy: r.vy })),
+        blocks: (m.mobiles ?? []).filter((r) => /(^|:)PushableBlockFire$/.test(r.cls)).map((r) => ({ x: r.x, y: r.y })),
     };
 }
 
-/** The recording's compact row: `[t, level, x, y, spinners]`, spinners `x,y,hits,ht,vx,vy` joined by `;`. */
+/** The recording's compact row: `[t, level, x, y, spinners, blocks]`, spinners `x,y,hits,ht,vx,vy` joined by `;`. */
 export function packFireSpinnerSample(g) {
     const sp = g.spinners.map((b) => [b.x, b.y, b.hits, b.ht, b.vx ?? '', b.vy ?? ''].join(',')).join(';');
-    return [g.t, g.level, g.x, g.y, sp];
+    return [g.t, g.level, g.x, g.y, sp, (g.blocks ?? []).map((b) => `${b.x},${b.y}`).join(';')];
 }
 
 /** The inverse of `packFireSpinnerSample`. */
 export function unpackFireSpinnerSample(row) {
-    const [t, level, x, y, sp] = row;
+    const [t, level, x, y, sp, bl = ''] = row;
     const num = (v) => (v === '' ? null : Number(v));
     const spinners = sp ? sp.split(';').map((p) => {
         const [a, b, h, ht, vx, vy] = p.split(',');
         return { x: Number(a), y: Number(b), hits: num(h), ht: num(ht), vx: num(vx), vy: num(vy) };
     }) : [];
-    return { t, level, x, y, spinners };
+    const blocks = bl ? bl.split(';').map((p) => { const [a, b] = p.split(',').map(Number); return { x: a, y: b }; }) : [];
+    return { t, level, x, y, spinners, blocks };
 }
 
 /**
@@ -119,6 +137,7 @@ export async function fireSpinnerModelSamples(tapeJson, over = {}) {
                     t: o.t, x: o.x, y: o.y, level: run ? run.level : tape.boot.level,
                     spinners: here ? run.entities('spinnerBodies').filter((b) => !b.destroy)
                         .map((b) => ({ x: b.x, y: b.y, hits: b.hits, ht: b.hitsTimer })) : [],
+                    blocks: here ? fireBlocksOf(run) : [],
                 };
                 r = st.next();
             }
@@ -128,6 +147,13 @@ export async function fireSpinnerModelSamples(tapeJson, over = {}) {
         firePresses = run ? run.presses.filter((p) => p.weapon === 'fire') : [];
     });
     return { samples, error, firePresses };
+}
+
+/** The run's live `PushableBlockFire` boxes (the fold's `blocks`, `fidelityL39Shaft`'s reading). */
+function fireBlocksOf(run) {
+    const live = run.entities('pushables');
+    return (run.world.pushables ?? []).filter((p) => p.as3 === 'PushableBlockFire').map((p) => live.get(p.id))
+        .filter((b) => b && !b.removed).map((b) => ({ x: b.rect.x, y: b.rect.y }));
 }
 
 const key = (b) => `${b.x},${b.y},${b.hits},${b.ht}`;
@@ -147,6 +173,8 @@ export function compareFireSpinnerWitness(game, model) {
         const gs = g.spinners.map(key).sort().join(' ');
         const ms = m.spinners.map(key).sort().join(' ');
         if (gs !== ms) bad.push(`t ${g.t}: spinners game [${gs}] model [${ms}]`);
+        const xy = (l) => (l ?? []).map((b) => `${b.x},${b.y}`).sort().join(' ');
+        if (xy(g.blocks) !== xy(m.blocks)) bad.push(`t ${g.t}: blocks game [${xy(g.blocks)}] model [${xy(m.blocks)}]`);
     }
     return bad;
 }

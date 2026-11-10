@@ -13,6 +13,8 @@
  *   --press=<t>     the Fire press tick (default 590)
  *   --end=<t>       the tape's last tick (default 680)
  *   --name=<name>   the witness name (default `firespinner-l39-knock`)
+ *   --tape=<name>   a COMMITTED tape (`fixtures/tapes/<name>.json`) played as itself instead of the staging (D2's
+ *                   roster witnesses: `fidelityFireSpinner.FIRESPINNER_ROSTER`); `--name` defaults to `firespinner-<name>`
  *   --on=<k1,k2>    contact-fidelity keys ON for the model's replay
  *   --record        write `fixtures/firespinner-witness/<name>.json` (the tape and the game's rows)
  *   --dump=a-b      print both sides on those ticks
@@ -31,7 +33,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FIRESPINNER_END, FIRESPINNER_PRESS, FIRESPINNER_WITNESS, FIRESPINNER_WITNESS_DIR,
-    compareFireSpinnerWitness, fireSpinnerModelSamples, fireSpinnerSampleOf, fireSpinnerTape,
+    committedTape, compareFireSpinnerWitness, fireSpinnerModelSamples, fireSpinnerSampleOf, fireSpinnerTape,
     packFireSpinnerSample } from '../../frontend/modules/seedlingDemo/fidelityFireSpinner.js';
 
 argvHelp(import.meta.url);
@@ -80,12 +82,13 @@ async function main() {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    const name = arg('name') ?? FIRESPINNER_WITNESS;
-    const press = Number(arg('press') ?? FIRESPINNER_PRESS);
+    const TAPE = arg('tape');
+    const name = arg('name') ?? (TAPE ? `firespinner-${TAPE}` : FIRESPINNER_WITNESS);
+    const press = TAPE ? null : Number(arg('press') ?? FIRESPINNER_PRESS);
     const end = Number(arg('end') ?? FIRESPINNER_END);
-    const tape = fireSpinnerTape({ press, end, name });
+    const tape = TAPE ? committedTape(TAPE) : fireSpinnerTape({ press, end, name });
     const over = Object.fromEntries((arg('on') ?? '').split(',').filter(Boolean).map((k) => [k, true]));
-    console.log(`      ${name}: ${tape.tick_count} t, Fire press at t${press}`
+    console.log(`      ${name}: ${tape.tick_count} t, ${TAPE ? `the committed tape ${TAPE}` : `Fire press at t${press}`}`
         + `${Object.keys(over).length ? ` (ON: ${Object.keys(over).join(', ')})` : ''}`);
     const model = await fireSpinnerModelSamples(tape, over);
     check(`${name}: the model replays the tape to its end`, model.error === null, model.error ?? '');
@@ -114,24 +117,25 @@ async function main() {
         }
     }
     const bad = compareFireSpinnerWitness(samples, model.samples);
-    check(`${name}: the game reproduces the model at 0 px (the player, every spinner's position, hits, hitsTimer) on `
+    check(`${name}: the game reproduces the model at 0 px (the player, every spinner's position, hits, hitsTimer, every fire block) on `
         + `all ${samples.length} sampled tick(s)`, bad.length === 0, `${bad.length} bad: ${bad.slice(0, 3).join('; ')}`);
     const allSp = samples.flatMap((g) => g.spinners);
     check(`${name}: on the game no spinner takes a hit (hits 0, hits_timer 0 on every sampled tick)`,
         allSp.every((b) => b.hits === 0 && b.ht === 0),
         JSON.stringify(allSp.find((b) => b.hits !== 0 || b.ht !== 0) ?? null));
-    const hitTicks = model.firePresses.filter((p) => p.t === press).map((p) => p.fired);
-    console.log(`      ${name}: the model's hit ticks for the t${press} press ${JSON.stringify(hitTicks)}; its hits `
-        + `${JSON.stringify(model.firePresses.filter((p) => p.t === press).map((p) => p.hits))}`);
+    const knocks = model.firePresses.flatMap((p) => p.hits.filter((h) => h.as3 === 'Spinner')
+        .map((h) => `t${p.t}→${p.fired} ${h.id} ${h.knocked ? 'knocked' : h.why}`));
+    console.log(`      ${name}: the model's Fire→spinner dispatches ${knocks.length ? knocks.join('; ') : 'none'}`);
     console.log(`      ${name}: the game ends at L${status.level} t${status.tick} p(${status.x}, ${status.y})`);
     if (RECORD) {
         mkdirSync(FIRESPINNER_WITNESS_DIR, { recursive: true });
         const path = join(FIRESPINNER_WITNESS_DIR, `${name}.json`);
         writeFileSync(path, `${JSON.stringify({ name, page: PAGE_NAME,
             recordedBy: 'scripts/procgen/probe-seedling-fire-spinner.mjs --record',
-            source: 'fixtures/tapes/r5-shaft.json (fidelityFireSpinner.fireSpinnerTape)', press, end,
+            source: TAPE ? `fixtures/tapes/${TAPE}.json` : 'fixtures/tapes/r5-shaft.json (fidelityFireSpinner.fireSpinnerTape)',
+            press, end: TAPE ? tape.tick_count : end,
             end_status: { level: status.level, tick: status.tick }, tape,
-            rows: '[t, level, x, y, spinners] — spinners `x,y,hits,hits_timer,vx,vy;…` (fidelityFireSpinner.packFireSpinnerSample)',
+            rows: '[t, level, x, y, spinners, blocks] — spinners `x,y,hits,hits_timer,vx,vy;…`, fire blocks `x,y;…` (fidelityFireSpinner.packFireSpinnerSample)',
             samples: samples.map(packFireSpinnerSample) })}\n`);
         console.log(`recorded ${path.slice(REPO.length + 1)} — ${samples.length} tick(s)`);
     }
