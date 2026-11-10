@@ -181,6 +181,31 @@ The load sequence is: loading overlay on → `setDelivery` on the glue → `deli
 
 **Warning:** the randomizer's heavy modules load through a computed specifier built against `document.baseURI`. The bundler (esbuild, `splitting: false`) inlines any literal `import('…')`, and `import.meta.url` would resolve to `dist/` in the bundled build.
 
+### Entrance randomization in the delivered rooms
+
+An entrance-randomized world (`entrance_randomization[slot].placements`, the `entranceShuffle` mode's output: `seedling_er`) moves stairs. The game takes a stairs' destination from the level data (`@to`, `@playerx`, `@playery`, `@sign`), so the shuffle is applied to the set the load delivers: `seedlingDemo/entranceRetarget.js` rewrites each moved stairs' exit, after the AP item rewrite, and the game loads the shuffled room itself. No vanilla room loads in between. The region binding needs no redirect, because a sidecar exit's `target_level` already names the shuffled level.
+
+| Field written | Source |
+|---|---|
+| the room and exit ordinal | the sidecar departure the placement names: its `level` and its `exit_id` (`out_<element>_<x>_<y>`, else its `exit_tiles`), read against the set's own record |
+| `to` | the sidecar's `target_level` |
+| `playerx` / `playery` | the landing of the vanilla exit(s) into that level on `target_spawn`'s tile. `target_spawn` is tile-snapped and the game's landing need not be (the stairs into level 32 lands on (72, 120)); with no such exit, `target_spawn` itself |
+| `sign` | the sign of that vanilla doorway, silenced when the source room is in the region it announces (`signForTransition`). Never the source exit's old sign |
+
+An exit whose data already says that gets no edit, so an identity shuffle changes no byte and a world with no placements gets back the same set object. A plan that cannot be made (a placement with no sidecar departure, a door the set does not hold, a destination with no level) throws by name and the load is refused.
+
+Every load path of such a world either delivers the retargeted rooms or refuses by name (`seedlingRandomizerEligibility.entranceShuffleRefusal`: the panel log, `_apLoadRefusal` and a sticky overlay over the game):
+
+| Path | What it does |
+|---|---|
+| vanilla arm (wasm, and the JS runtime's same delivery) | delivers the item-rewritten set with the moved stairs retargeted |
+| atlas arm | delivers the vanilla record set retargeted (composing with a retag); refused when the record set is not at hand |
+| generated arm | refused: nothing writes a placement into an assembled room |
+| an ineligible load (transport, a missing capability, unreadable assets, a blank slot), a load that throws, no region glue | refused: the game is on its vanilla rooms |
+| a refused delivery | the sticky overlay adds the same sentence |
+
+`scripts/procgen/probe-seedling-wasm-er-retarget.mjs` is the live witness on `seedling_er` (the preset's build, headless logic-only, under the box lock): every coupled pair walked both ways with real keys, one crossing followed by a placed-item pickup, and the refusal on a build that cannot take the delivery. A stairs the delivered room keeps from an item-less player (a lock on its tile, water all round it) is reported `UNWALKED` with that reason. The room-name message is not observable on the current builds (a `Message` is not a `Mobile`, and `Game.sign` is consumed inside the update that sets it), so the witness checks the `@sign` the game was handed.
+
 ### The atlas arm
 
 A world built from real atlas rooms names each location by its atlas region (`Starting House - Chest`), which the goal ledger does not know. The `atlas` arm binds those locations where they stand, without rewriting the room.

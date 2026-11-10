@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 146,
-            "count": 196,
+            "browser": 147,
+            "count": 197,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 517,
-        "browser": 214,
-        "cited": 272,
-        "files": 535,
+        "blockStyle": 518,
+        "browser": 215,
+        "cited": 273,
+        "files": 536,
         "lineStyle": 18,
-        "withDocblock": 535,
-        "withFlags": 454
+        "withDocblock": 536,
+        "withFlags": 455
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -19224,6 +19224,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling solver-walk, slice W7 — the live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path.",
             "path": "scripts/procgen/probe-seedling-wasm-continuation.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "roomOf",
+                "walkable"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "pairs",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-er-retarget.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-item"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-refusal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pairs"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "ENTRANCE RANDOMIZATION E5, IN THE LEVEL DATA — the witness on the wasm runtime. `seedling_er` loaded by `?rules=`, the preset's own build (`flash_panel.wasm`), headless logic-only, under the box lock, on ONE fresh page.",
+            "path": "scripts/procgen/probe-seedling-wasm-er-retarget.mjs"
         },
         {
             "argvHelpers": [
