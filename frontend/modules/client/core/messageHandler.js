@@ -84,6 +84,14 @@ export class MessageHandler {
     this.roomInfo = null;
     this._roomInfoSeq = 0;
     this._awaitingGameChoice = false;
+    // Whether the game in the last Connect came from the loaded rules, rather
+    // than from the player, the room or a preset of this room (see
+    // _retryAfterInvalidGame).
+    this._connectGameFromLoadedRules = false;
+    // A refused game has been retried, and no login has followed yet. Not
+    // reset per socket: a server that refuses and hangs up would otherwise
+    // get a fresh retry from every reconnect, forever.
+    this._invalidGameRetried = false;
     this.players = [];
     // Connected.slot_info: slot number (as a string key) -> { name, game, type, group_members }
     this.slotInfo = {};
@@ -151,7 +159,8 @@ export class MessageHandler {
       this._cancelServerBuild();
       this._cancelRulesWait();
     });
-    this.eventBus.subscribe('connection:close', () => {
+    this.eventBus.subscribe('connection:close', (data) => {
+      if (data?.requested) this._invalidGameRetried = false;
       // The session is over: stop reporting a slot, or isHandshakeComplete()
       // keeps claiming the client is logged in after a disconnect.
       this.clientSlot = null;
@@ -353,7 +362,7 @@ export class MessageHandler {
     if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
       const local = this._loadedGeneratedWorld(loadedGame);
       if (local && !isSameSeed(local.doc.seed_name, data.seed_name)) {
-        this._connectWithOverlay(loadedGame, local);
+        this._connectWithOverlay(loadedGame, local, { fromLoadedRules: true });
         return;
       }
     }
@@ -361,7 +370,7 @@ export class MessageHandler {
       if (!otherPlayersName) {
         log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
         this._warnOnSeedMismatch(data.seed_name);
-        this._sendConnect(loadedGame);
+        this._sendConnect(loadedGame, { fromLoadedRules: true });
         return;
       }
       this._printToConsole(
@@ -433,7 +442,9 @@ export class MessageHandler {
         `No preset matches this room; building ${game} rules from the server's data after login…`,
         'info'
       );
-      this._sendConnect(game);
+      // The fallback is the loaded rules' game; the others are not.
+      const fromLoadedRules = !chosen && roomGames.length !== 1 && game === fallbackGame;
+      this._sendConnect(game, { fromLoadedRules });
       return;
     }
     if (game) {
@@ -587,7 +598,7 @@ export class MessageHandler {
    * are scouted, and the server's placements and slot_data are laid over the
    * local document before the ONE load (_completeServerBuild).
    */
-  _connectWithOverlay(game, local) {
+  _connectWithOverlay(game, local, { fromLoadedRules = false } = {}) {
     this._serverBuild = { game, mode: 'overlay', local, connected: null, held: [], timer: null };
     this._printToConsole(
       local
@@ -596,7 +607,7 @@ export class MessageHandler {
         : `No ${game} rules are loaded; connecting to see whether the server sends them…`,
       'info'
     );
-    this._sendConnect(game);
+    this._sendConnect(game, { fromLoadedRules });
   }
 
   /**
@@ -699,8 +710,10 @@ export class MessageHandler {
     this.eventBus?.publish('ui:printToConsole', { message, type });
   }
 
-  _sendConnect(gameName) {
+  _sendConnect(gameName, { fromLoadedRules = false } = {}) {
     this._awaitingGameChoice = false;
+    // The player picking this very game makes a refusal their answer to see.
+    this._connectGameFromLoadedRules = fromLoadedRules && gameName !== this.chosenGame;
     // Store the game name for this client
     this.clientGameName = gameName;
 
@@ -735,6 +748,7 @@ export class MessageHandler {
     // complete (reconnecting after finishing), the downstream snapshot sync
     // will re-trigger reportGoal() so the slot still registers as goaled.
     this._goalReported = false;
+    this._invalidGameRetried = false;
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -1122,6 +1136,9 @@ export class MessageHandler {
     this.clientTeam = null;
     this.players = [];
 
+    if (this._retryAfterInvalidGame(data)) return;
+    this._invalidGameRetried = false;
+
     // Use injected eventBus
     this.eventBus?.publish('network:connectionRefused', data);
     const message = `Connection refused: ${(data.errors || []).join(', ') || 'unknown reason'}`;
@@ -1131,6 +1148,32 @@ export class MessageHandler {
       message: message,
       type: 'error',
     });
+  }
+
+  /**
+   * The server refused the loaded rules' game for this slot: those rules are
+   * another slot's, even though nothing before Connect could tell (a boot
+   * preset's player is called Player1, and so is a slot of every other room).
+   * Take the no-usable-rules path on the same socket, which a refusal leaves
+   * open as long as network:connectionRefused isn't published. Once per
+   * attempt, and never for a game the player picked.
+   *
+   * @returns {boolean} Whether the refusal was taken over by a retry.
+   */
+  _retryAfterInvalidGame(data) {
+    const errors = data.errors || [];
+    if (errors.length !== 1 || errors[0] !== 'InvalidGame') return false;
+    if (!this._connectGameFromLoadedRules || this._invalidGameRetried) return false;
+    if (!connection.isConnected?.()) return false;
+    this._invalidGameRetried = true;
+    this._connectGameFromLoadedRules = false;
+    this._cancelServerBuild();
+    this._printToConsole(
+      `The server says ${this.clientSlotName} does not play ${this.clientGameName}, so the loaded rules are another slot's; looking for this slot's rules…`,
+      'info'
+    );
+    this._connectWithoutRules(this.roomInfo || {}, roomGamesOf(this.roomInfo), ++this._roomInfoSeq);
+    return true;
   }
 
   /**
