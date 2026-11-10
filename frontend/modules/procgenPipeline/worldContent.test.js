@@ -540,3 +540,24 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
     });
 });
 
+// ── ⛓ C4 — the record on every driver (spiral and grid growth, beside sphere growth and top-down) ──
+describe('⛓ C4 the spiral and grid-growth compiles record procgen_metadata[p].content', async () => {
+    const base = (mode, content) => ({
+        mode,
+        params: {
+            ...DEFAULT_PARAMS, seed: 2, gridWidth: 3, gridHeight: 3, maxRegions: 4, content,
+        },
+        scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: {} },
+        substrateQuotas: { maze: 4 }, substrateMix: {}, substrateMode: 'quotas',
+    });
+    for (const mode of ['shuffledSpiral', 'gridGrowth']) {
+        const world = await runPresetHeadless(await prepareRunFromState(base(mode, ['trial']), { io: memIo() }));
+        const control = await runPresetHeadless(await prepareRunFromState(base(mode, []), { io: memIo() }));
+        it(`${mode}: the list is recorded; the control has no key; the rest is the control's`, () => {
+            const block = world.rulesJson.procgen_metadata['1'];
+            expect(block[RECORDED_CONTENT_KEY]).toEqual(['trial']);
+            expect(RECORDED_CONTENT_KEY in control.rulesJson.procgen_metadata['1']).toBe(false);
+            expect(JSON.stringify(withoutContent(world.rulesJson))).toBe(JSON.stringify(control.rulesJson));
+        });
+    }
+});
