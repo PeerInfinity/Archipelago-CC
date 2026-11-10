@@ -35,8 +35,8 @@ function arrivalRun() {
 
 describe('hammer-phase 376-BOMB — the switch', () => {
     it('ships OFF, read from SEEDLING_BOMB_PHASE_WAIT, and is a name the solver-env channel carries', () => {
-        expect(BOMB_PHASE_WAIT_DEFAULT).toBe(false);
-        expect(BOMB_PHASE_WAIT.enabled).toBe(ENV.SEEDLING_BOMB_PHASE_WAIT === '1');
+        expect(BOMB_PHASE_WAIT_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(BOMB_PHASE_WAIT.enabled).toBe(ENV.SEEDLING_BOMB_PHASE_WAIT !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_BOMB_PHASE_WAIT');
         expect(withBombPhaseWait(true, () => BOMB_PHASE_WAIT.enabled)).toBe(true);
         expect(withBombPhaseWait(false, () => BOMB_PHASE_WAIT.enabled)).toBe(false);

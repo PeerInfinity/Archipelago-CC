@@ -16,6 +16,7 @@
  * OFF (`secondaryUse` false, the shipped default) every verdict is byte-identical: the continuation is never asked.
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -240,7 +241,7 @@ describe('FORCEDHITXC D3 — a crossing is the walk\'s only by the walk\'s OWN e
         expect(q.continuation.why).toMatch(/ran out of budget after 36 fork\(s\) \(\d+ left by another exit\)/);
     });
     it('L40 leg 403 (`… <- in_L43_176_464 -> exit:out_pit_13_20`, LAPSECOST\'s request at budget 160): ON refuses as OFF '
-        + 'does — the continuation\'s hitless `up` leaves by the ARRIVAL door (L43 too), not the pit', () => {
+        + 'does — the continuation\'s hitless `up` leaves by the ARRIVAL door (L43 too), not the pit', () => withL40Flip(false, () => {
         const line = JSON.parse(gunzipSync(readFileSync(join(HERE, '..', '..', '..', 'CC', 'docs', 'cloud-reports',
             'seedling-fidelity-lapsecost-evidence', 'd1', 'leg-403-requests.jsonl.gz'))).toString('utf8').split('\n')[0]);
         const req = restoreRequest(line.requests[0].request);
@@ -267,5 +268,5 @@ describe('FORCEDHITXC D3 — a crossing is the walk\'s only by the walk\'s OWN e
         expect(on.res.message).toBe(off.res.message);
         expect(off.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 1]]);
         expect(on.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 37]]);
-    }, 60000);
+    }), 60000);
 });

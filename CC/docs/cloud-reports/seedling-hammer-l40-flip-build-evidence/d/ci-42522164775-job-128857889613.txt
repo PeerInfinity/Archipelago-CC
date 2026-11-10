@@ -1,0 +1,32 @@
+2026-11-08T20:53:57.9618549Z      ✓ the BACKSTOP (default 300000 ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played  331ms
+2026-11-08T20:55:34.2611090Z      ✓ ⛔ (iv) UNSTAMPED: release.json present with no full-SHA source.commit → a named FAIL  465ms
+2026-11-08T21:01:06.0353276Z stdout | frontend/modules/loopsCostDebugger/costDebuggerAdoption.test.js > _adoptWorkingCopy — a completion that is no longer the latest hand-off is dropped > ⛓ a stale FAILURE does not overwrite the later hand-off's status either
+2026-11-08T21:01:06.0357581Z stdout | frontend/modules/loopsCostDebugger/costDebuggerAdoption.test.js > _adoptWorkingCopy — a completion that is no longer the latest hand-off is dropped > ⛓ a stale FAILURE does not overwrite the later hand-off's status either
+2026-11-08T21:01:59.8115661Z  FAIL  frontend/modules/seedlingDemo/fidelityForcedHitXc.test.js > FORCEDHITXC D3 — a crossing is the walk's only by the walk's OWN exit (`crossingMatches`) > L40 leg 403 (`… <- in_L43_176_464 -> exit:out_pit_13_20`, LAPSECOST's request at budget 160): ON refuses as OFF does — the continuation's hitless `up` leaves by the ARRIVAL door (L43 too), not the pit
+2026-11-08T21:01:59.8118578Z AssertionError: expected { pass: 'dashless', ok: false, …(4) } to match object { pass: 'dashless', ok: false, …(2) }
+2026-11-08T21:01:59.8120049Z - Expected
+2026-11-08T21:01:59.8120358Z + Received
+2026-11-08T21:01:59.8121067Z -   "deadline": "detour",
+2026-11-08T21:01:59.8121779Z -   "limit": "budget",
+2026-11-08T21:01:59.8214905Z  FAIL  frontend/modules/seedlingDemo/fidelityL40Latch.test.js > L40LATCH W0 — the still holder, on the game (`l40latch-stand`) > OFF the solver stands on the latch for the fade and is moved at hold tick 93 (the brief's refusal)
+2026-11-08T21:01:59.8216925Z AssertionError: expected 'solverBot(l40latch) collect (656,528)…' to contain 'hold: hold tick 93 of 131 MOVED, from…'
+2026-11-08T21:01:59.8218025Z - Expected
+2026-11-08T21:01:59.8218441Z + Received
+2026-11-08T21:01:59.8219178Z - hold: hold tick 93 of 131 MOVED, from (888,776)
+2026-11-08T21:01:59.8224003Z + solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret
+2026-11-08T21:01:59.8228685Z +   avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — no walkable tile path in level 40 from tile (55,48) to (30,36). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wat
+2026-11-08T21:01:59.8231225Z +   time: the aim is 446 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+2026-11-08T21:01:59.8233364Z +   bait: no stance within bobsoldier@880,832's leash (80) both pulls its straight line through a kill region and is itself danger-free: 80 cell(s) in leash, 29 of them crossing a region, none of those reachable. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.
+2026-11-08T21:01:59.8236340Z +   kill: no presser in level 40 arms a trap whose lane covers bobsoldier@880,832 — the room has 6 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).
+2026-11-08T21:01:59.8265298Z +          chaser arm: no stance derives for bobsoldier@880,832 on level 40: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 76 cell(s) inside its 80 px leash, 16 of those reachable and with a corridor onward, and 16 of THOSE refused by the forecast [(888,776): the WAIT is dangerous at tick 93 — chaser:bobsoldier@880,832
+2026-11-08T21:01:59.8269768Z +   narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) at (888.0,808.7)
+2026-11-08T21:01:59.8272131Z +   detour: no corridor can be previewed: the via set is every lattice cell of the room (3479 at 16 px), one planned leg each, and the search previews only while fewer than 500 legs are planned, so it would spend the whole set and preview 0 candidates — refused before planning a leg (DETOUR_VIA_BOUND).
+2026-11-08T21:01:59.8273885Z +   forced-hit: no forced hit is proven from (888.0,776.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))
+2026-11-08T21:01:59.8279435Z  FAIL  frontend/modules/seedlingDemo/fidelityLapseCost.test.js > LAPSECOST D1 — the narrow strike policy > MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget
+2026-11-08T21:01:59.8280996Z AssertionError: expected { pass: 'dashless', ok: false, …(4) } to match object { pass: 'dashless', ok: false, …(2) }
+2026-11-08T21:01:59.8282456Z - Expected
+2026-11-08T21:01:59.8282779Z + Received
+2026-11-08T21:01:59.8283602Z -   "deadline": "detour",
+2026-11-08T21:01:59.8284043Z -   "limit": "budget",
+2026-11-08T21:01:59.8373660Z  Test Files  3 failed | 387 passed (390)
+2026-11-08T21:01:59.8432106Z       Tests  3 failed | 9048 passed (9051)

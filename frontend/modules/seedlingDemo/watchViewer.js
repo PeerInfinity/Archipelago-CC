@@ -658,6 +658,11 @@ function readParams() {
          * the parameter the same way and refuse the same values.
          */
         room: readRoomParam(q.get('room')),
+        /**
+         * ⛓ SEEDLING EDITOR E3 — the SET overview's view: the MAP (default) or, with `?setView=strip`, the one-row
+         * strip in index order. Any other value is the map.
+         */
+        setView: q.get('setView') === 'strip' ? 'strip' : 'map',
         side: (q.get('side') || 'js').toLowerCase(),
         speed: Number(q.get('speed') || 1),
         // ⚠ RAW. `parseLayersParam` is where it is decided, and it is pure so
@@ -9310,6 +9315,11 @@ async function runEditor(params, lifetime) {
                  * rather than *"there is no strip"*.
                  */
                 badges: setUi ? setUi.badges() : null,
+                /**
+                 * ⛓ E3 — the MAP as its last paint left it (`null` with the strip shown). A GETTER, because a zoom, a
+                 * toggle or a RE-LAYOUT repaints without a set change and a snapshot would read the paint before it.
+                 */
+                get map() { return setUi ? setUi.map() : null; },
                 openRoom,
                 locations: Object.values(setSession.record().overlay.rooms ?? {})
                     .reduce((n, r) => n + (r?.locations?.length ?? 0), 0),
@@ -9770,6 +9780,8 @@ async function runEditor(params, lifetime) {
             },
             recordToOel,
             drawRoomStill,
+            // ⛓ E3 — the map is the overview unless the URL asked for the strip (`?setView=strip`).
+            overviewMapOn: params.setView !== 'strip',
             emptyLevel: () => emptyLevel({ level: setSession.record().set.rooms.length }),
             say: (text, bad) => {
                 $('status').className = bad ? 'bad' : '';

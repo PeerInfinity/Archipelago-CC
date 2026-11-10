@@ -12,11 +12,13 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchOrbitTape, l40LatchSolve } from './fidelityL40Latch.js';
+import { withL40Flip } from './l40FlipSet.js';
 
 describe('L40LATCH D1 — the latch solve under each arm', () => {
-    it('holdWaitPriced alone: the hold\'s wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier', async () => {
+    it('the pre-flip hammer defaults (withL40Flip(false)), holdWaitPriced alone: the hold\'s wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier', async () => {
         // ⛓ `chaserOrbitKill` named OFF since planning-14's wave-32 flip turned it ON (this row is the D1 arm alone).
-        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: true, chaserOrbitKill: false });
+        // ⛓ the L40 flip's chain refuses elsewhere (the iceturret approach staging): this row pins the pre-flip refusal.
+        const { out, refusal } = await withL40Flip(false, async () => l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: true, chaserOrbitKill: false }));
         expect(out).toBeNull();
         expect(refusal.message).toContain('hold stance (wandlock@480,560): the combat ladder is EXHAUSTED');
         expect(refusal.message).toContain('TIME certifies the mover TO the aim against the danger timeline');
@@ -25,9 +27,10 @@ describe('L40LATCH D1 — the latch solve under each arm', () => {
         expect(refusal.perTick.length).toBe(0);
     }, 900_000);
 
-    it('both ON: the solve\'s refused prefix is the recorded tape', async () => {
+    it('the pre-flip hammer defaults (withL40Flip(false)), both ON: the solve\'s refused prefix is the recorded tape', async () => {
+        // ⛓ the L40 flip's chain moves past this prefix: the witness pins the pre-flip plan, not the shipped defaults.
         const w = JSON.parse(readFileSync(join(L40LATCH_WITNESS_DIR, 'l40latch-orbit-chain.json'), 'utf8'));
-        const tape = await l40LatchOrbitTape();
+        const tape = await withL40Flip(false, () => l40LatchOrbitTape());
         expect(tape.tick_count).toBe(w.tape.tick_count);
         expect(tape.inputs).toEqual(w.tape.inputs);
         expect(tape.equips).toEqual(w.tape.equips);

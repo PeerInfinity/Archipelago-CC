@@ -444,10 +444,11 @@ export function resetPressKillChasersCounts() {
  * a test or a witness. OFF, nothing new is read or built and every walk is byte-identical. ON in a room with no
  * strikeable body (`strikePolicyFor` null) nothing new is asked either.
  */
+// ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_OPPORTUNISTIC_STRIKE=0` opts out.
 export const OPPORTUNISTIC_STRIKE = {
-    enabled: globalThis.process?.env?.SEEDLING_OPPORTUNISTIC_STRIKE === '1',
+    enabled: globalThis.process?.env?.SEEDLING_OPPORTUNISTIC_STRIKE !== '0',
 };
-export const OPPORTUNISTIC_STRIKE_DEFAULT = false;
+export const OPPORTUNISTIC_STRIKE_DEFAULT = true;
 
 /** Run `fn` with `OPPORTUNISTIC_STRIKE` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
 export function withOpportunisticStrike(enabled, fn) {

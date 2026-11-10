@@ -56,9 +56,9 @@ async function latchRunAt(at = null) {
 
 describe('hammer-phase APPROACH: TURRET_APPROACH and FIFTH_ORDER', () => {
     it('both ship OFF, and the env alone turns each on', () => {
-        expect(TURRET_APPROACH_DEFAULT).toBe(false);
+        expect(TURRET_APPROACH_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
         expect(FIFTH_ORDER_DEFAULT).toBe(false);
-        expect(TURRET_APPROACH.enabled).toBe(globalThis.process?.env?.SEEDLING_TURRET_APPROACH === '1');
+        expect(TURRET_APPROACH.enabled).toBe(globalThis.process?.env?.SEEDLING_TURRET_APPROACH !== '0');
         expect(FIFTH_ORDER.enabled).toBe(globalThis.process?.env?.SEEDLING_FIFTH_ORDER === '1');
         withTurretApproach(true, () => expect(TURRET_APPROACH.enabled).toBe(true));
         withTurretApproach(false, () => expect(TURRET_APPROACH.enabled).toBe(false));

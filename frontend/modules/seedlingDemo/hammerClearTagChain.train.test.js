@@ -27,6 +27,7 @@ import { withContactFidelity } from './contactFidelity.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { replayTape, settleSolve, solveFromTape } from './jsRuntimeSolver.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = (name) => JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'hammer-cleartag-chain', name)))
@@ -71,18 +72,18 @@ function solveLeg(name, cc) {
 
 describe('hammer-phase CLEARTAG-CHAIN (train) — flag 12 SOLVED from a tree-unburnt save, 30(c)', () => {
     it('leg 872 (from L43, (328,600)): OFF the set refuses at wall B; ON it SOLVES hitless — the tree burnt, {40,12} '
-        + 'written', () => {
+        + 'written', () => withL40Flip(false, () => {
         const off = solveLeg('leg872-l43-l40-request.json.gz', false);
         expect(off.ok).toBe(false);
         expect(off.message).toMatch(/a clear-tag order does not chain openers$/);
         const on = solveLeg('leg872-l43-l40-request.json.gz', true);
         expect(on).toEqual({ ok: true, work: 3467, ticks: 2389, sha: expect.any(String), hits: [], deaths: 0,
             burned: [TREE], clears: ['40:0', '40:12'] });
-    }, 600000);
+    }), 600000);
 
-    it('leg 871 (from L39, (488,904)): ON it SOLVES hitless — the census\'s wall C does not stand on this head', () => {
+    it('leg 871 (from L39, (488,904)): ON it SOLVES hitless — the census\'s wall C does not stand on this head', () => withL40Flip(false, () => {
         const on = solveLeg('leg871-l39-l40-request.json.gz', true);
         expect(on).toEqual({ ok: true, work: 2772, ticks: 1122, sha: expect.any(String), hits: [], deaths: 0,
             burned: [TREE], clears: ['40:0', '40:12'] });
-    }, 600000);
+    }), 600000);
 });

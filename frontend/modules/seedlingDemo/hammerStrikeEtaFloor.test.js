@@ -34,6 +34,7 @@ import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGu
 // ⛓ hammer-phase PKC / OPP: the witness is the kill across the bob's death, so `PRESS_KILL_CHASERS` and
 // `OPPORTUNISTIC_STRIKE` are pinned OFF (both ship OFF)
 import { withOpportunisticStrike, withPressKillChasers } from './pressKillCost.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 /** A hand-built run: the floor reads `run.state` (position, velocity, the sticky hazard flags) and `run.world`. */
 const stub = ({ x = 0, y = 0, vx = 0, vy = 0, onIce = false, tiles = [] } = {}) => ({
@@ -302,11 +303,11 @@ describe(`${WNAME} — the strike the admissible floor lets the scan see, on the
     };
 
     it('⛓⛓⛓ ON: the solve\'s executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is '
-        + 'the kill across the death)', () => {
+        + 'the kill across the death)', () => withL40Flip(false, () => {
         const { perTick } = solveOn(false);
         expect(perTick.length).toBe(1629);
         expect(perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 1629).map((k) => [...k].sort()));
-    }, 900_000);
+    }), 900_000);
 
     it('⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t778), and the '
         + 'executed prefix is the witness\'s first 778 ticks', () => {

@@ -79,8 +79,9 @@ export class SphereState {
     this.logMetadata = null; // The {type:'metadata'} entry (seed, event_*)
     // Where the loaded log came from: 'file' (a preset's .jsonl, an embedded or
     // uploaded log) or 'room' (the room's slot_data.spoiler_data, expanded by
-    // client/core/spoilerData.js). A file always beats the room: a room log never
-    // replaces a file's, and a file's replaces a room's.
+    // client/core/spoilerData.js). A file beats the room when it is for the room's
+    // seed (its metadata seed_name), or when either seed is unknown; a file for
+    // ANOTHER seed loses to the room's data. See _rivalDecision.
     this.logOrigin = null;
     // Bumped by reset(), so a load started for earlier rules can be dropped.
     this.generation = 0;
@@ -124,11 +125,8 @@ export class SphereState {
     log('info', `Loading sphere log from: ${filePath}${preloadedContent ? ' (pre-loaded content)' : ''}`);
 
     const stale = () => generation !== undefined && generation !== this.generation;
-    const fileHeld = () => origin === 'room' && this.logOrigin === 'file';
-    if (stale() || fileHeld()) {
-      log('info', stale()
-        ? `Not loading ${filePath}: the rules it was started for were replaced.`
-        : `Not loading ${filePath}: a file's sphere log is loaded (${this.sphereLogPath}), and a file beats the room's data.`);
+    if (stale()) {
+      log('info', `Not loading ${filePath}: the rules it was started for were replaced.`);
       return false;
     }
 
@@ -146,8 +144,13 @@ export class SphereState {
         text = await response.text();
       }
 
-      if (stale() || fileHeld()) {
-        log('info', `Dropping ${filePath}: ${stale() ? 'the rules it was fetched for were replaced' : "a file's sphere log loaded meanwhile"}.`);
+      if (stale()) {
+        log('info', `Dropping ${filePath}: the rules it was fetched for were replaced.`);
+        return false;
+      }
+      const refusal = this._rivalDecision(origin, text);
+      if (refusal) {
+        log('info', `Not loading ${filePath}: ${refusal}`);
         return false;
       }
 
@@ -172,6 +175,60 @@ export class SphereState {
       log('error', `Failed to load sphere log from ${filePath}:`, error);
       return false;
     }
+  }
+
+  /**
+   * A file's log and the room's data compete: the file wins when it is for the room's seed. Compared on the
+   * metadata line's `seed_name` (the loaded log's, and the incoming text's). When either seed is unknown (no
+   * metadata line, or no seed_name in it) the file still wins, as it did before seeds were compared: a file with
+   * no seed may be a hand-made or uploaded log the user chose on purpose. Every committed preset's .jsonl names
+   * its seed_name, and the room's expanded log always does.
+   * @param {'file'|'room'} origin - The incoming log's origin
+   * @param {string} text - The incoming log's JSONL text
+   * @returns {string|null} why the incoming log is refused, or null to load it
+   */
+  _rivalDecision(origin, text) {
+    const held = this.logOrigin;
+    if (!held || held === origin) return null;
+    const heldSeed = this.logMetadata?.seed_name;
+    const incomingSeed = SphereState.peekSeedName(text);
+    const known = heldSeed != null && incomingSeed != null;
+    const sameSeed = known && String(heldSeed) === String(incomingSeed);
+    if (origin === 'room') {
+      // A file's log is loaded. The room replaces it only when the file is known to be for another seed.
+      if (known && !sameSeed) {
+        log('info', `The loaded sphere log (${this.sphereLogPath}) is for seed ${heldSeed}, not the room's ${incomingSeed}: using the room's data.`);
+        return null;
+      }
+      return known
+        ? `a file's sphere log for the room's seed ${heldSeed} is loaded (${this.sphereLogPath}), and it beats the room's data.`
+        : `a file's sphere log is loaded (${this.sphereLogPath}) and its seed or the room's is unknown, so the file is kept.`;
+    }
+    // The room's log is loaded and a file arrives. The file replaces it unless it is known to be for another seed.
+    if (known && !sameSeed) {
+      return `it is for seed ${incomingSeed}, and the room's data (seed ${heldSeed}) is loaded.`;
+    }
+    return null;
+  }
+
+  /**
+   * The `seed_name` of a sphere log's {type:'metadata'} line, or null. Reads lines only up to the first
+   * non-metadata entry (the metadata line comes first in every writer's output).
+   * @param {string} text - JSONL text
+   * @returns {string|null}
+   */
+  static peekSeedName(text) {
+    if (typeof text !== 'string') return null;
+    for (const raw of text.split('\n')) {
+      const line = raw.trim();
+      if (!line) continue;
+      let entry;
+      try { entry = JSON.parse(line); } catch { return null; }
+      if (entry?.type === 'log_header') continue;
+      if (entry?.type !== 'metadata') return null;
+      return entry.seed_name != null ? String(entry.seed_name) : null;
+    }
+    return null;
   }
 
   /**
