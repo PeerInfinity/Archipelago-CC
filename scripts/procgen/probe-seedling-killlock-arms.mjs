@@ -19,6 +19,11 @@
  *   RETURN  per other side, booted behind the lock holding only the flag CLEAR's game wrote, nothing granted: the
  *           game builds the lock open and the player walks through.
  *
+ * ⚠ `--margin` (how far inside its tile the player's check point stays) DECIDES A THRUST'S ALIGNMENT. The default 5 keeps
+ * the player out of the pits beside L60's pocket; at 5 the Spear from L71's button cell misses the chamber by 1.5 px and
+ * reads shut, and `--only=71 --margin=2` (no pit beside either side) is the run that asks it: there it kills all five.
+ * An arm is `shut` for a side only when it is shut at every margin the side allows.
+ *
  * Staged: the boot position, the grants, the inputs. Never the flag (but RETURN's, which the game wrote), a kill
  * count, a removed body or a game value. The arms that end with the lock open are the witness's verdict per side;
  * the probe prints them as a `VERDICT` row and FAILS only on a broken instrument (a rebuild, the model's bodies not
