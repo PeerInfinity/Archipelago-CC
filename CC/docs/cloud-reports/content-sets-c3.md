@@ -201,6 +201,10 @@ All CI rows are at the code tip `5cfbb33466`. The report commit after it changes
   slow battery                34/431   (431 passed | 0 failed)
 ```
 
+**At the report commit `20c0f7567a`** (docs only, so the push skipped the frontend workflow), `unittests_frontend.yml`
+was dispatched: run **42913653416**, success, with the same suite row (`1192/26552`, `26552 passed`) and the same
+slow battery (`431/431`). This line is the only change after that commit, and it is to this file alone.
+
 The train tier was skipped, because nothing this slice touched is a train path. The on-push substrate batches do not
 run on a slice branch.
 
