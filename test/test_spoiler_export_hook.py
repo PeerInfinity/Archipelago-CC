@@ -656,7 +656,7 @@ def _mismatches(repo, source_bytes):
 
 
 def test_every_copy_of_the_client_is_byte_identical():
-    """The helper's own copies, and the callers': the hand-written worlds (H2) and their packed .apworlds."""
+    """The helper's own copies, and the callers': the hand-written worlds (H2), the generated ones (H3), and packed copies."""
     source = (HOOK_DIR / CLIENT_NAME).read_bytes()
     found = [where for where, _ in _copies_on_disk(REPO)]
     assert f'worlds/spoiler_export_hook/{CLIENT_NAME}' in found
@@ -665,6 +665,12 @@ def test_every_copy_of_the_client_is_byte_identical():
         assert f'worlds/{package}/{CLIENT_NAME}' in found
     for package in ('metamath', 'depgraph'):
         assert f'apworlds/{package}.apworld!{package}/{CLIENT_NAME}' in found
+    # The generated group (H3): the generator's verbatim copy and every recipe package. (The Feb-09 snapshot
+    # scripts/vanilla-alttp/alttp_worldgen.apworld carries no client, so it is not a copy; planner, 2026-11-10.)
+    assert f'world_generator/ext_template/{CLIENT_NAME}' in found
+    recipes = json.loads((REPO / 'scripts' / 'data' / 'worldgen-package-recipes.json').read_text(encoding='utf-8'))
+    for package in recipes['packages']:
+        assert f'worlds/{package}/{CLIENT_NAME}' in found
     assert _mismatches(REPO, source) == []
 
 
