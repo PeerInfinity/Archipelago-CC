@@ -9,7 +9,7 @@ import {
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
-import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
 import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
@@ -1810,6 +1810,7 @@ export class FlashPanelUI {
       // ⛓ Refused on the WIRING (the transport, the build): the same wiring refuses every rules load the same way,
       // so no same-wiring rules change re-mounts this game (a non-Seedling flash game keeps running).
       this._apLoadRulesIgnored = cheap.failed === 'transport' || cheap.failed === 'capability';
+      this._refuseEntranceShuffle(rawRules, staticData?.playerId, cheap.why);
       return;
     }
 
@@ -1858,6 +1859,7 @@ export class FlashPanelUI {
         // ⛓ VANILLA MAP — the Playback Bot's controllers refuse by THIS reason rather than wait for a map.
         this._apLoadRefusal = loaded.why;
         overlay.remove();
+        this._refuseEntranceShuffle(rawRules, staticData?.playerId, loaded.why);
         return;
       }
       // ⛓ Seedling JS J2 — the assembly report is the Playback Bot's name → cell map.
@@ -1879,6 +1881,7 @@ export class FlashPanelUI {
       if (!glue) {
         this._panelLog('ap placement: no region glue to hand the delivery to', 'error');
         overlay.remove();
+        this._refuseEntranceShuffle(rawRules, staticData?.playerId, 'no region glue to hand the delivery to');
         return;
       }
       // ⛓ Stashed so a gate can read the whole step log — the reset's
@@ -1902,7 +1905,9 @@ export class FlashPanelUI {
     } catch (err) {
       this._panelLog(`ap placement: ${err.message}`, 'error');
       this._apLoadRefusal = `the load threw: ${err.message}`;
-      overlay.setText(`the randomized rooms could not be prepared — ${err.message}`, 'error');
+      const shuffleRefusal = entranceShuffleRefusal(rawRules, staticData?.playerId, err.message);
+      if (shuffleRefusal) this._panelLog(shuffleRefusal, 'error');
+      overlay.setText(shuffleRefusal ?? `the randomized rooms could not be prepared — ${err.message}`, 'error');
       log('error', '[flashPanelUI] seedling randomizer load failed', err);
     } finally {
       // ⛓ THE SAFETY NET, NOT THE MECHANISM. `runSeedlingRandomizerLoad` hides
@@ -1911,6 +1916,24 @@ export class FlashPanelUI {
       // up covers the game forever.
       overlay.detachSafetyNet();
     }
+  }
+
+  /**
+   * ⛓⛓ ER E5 — A SHUFFLED WORLD LEFT ON VANILLA ROOMS IS REFUSED BY NAME. Every path of the randomized load
+   * that ends WITHOUT delivering rooms calls this: when the loaded world places entrances, the game's own
+   * stairs lead where vanilla says and the world's logic says otherwise, so the panel says so in its log and
+   * on a STICKY overlay over the game (the same overlay a refused delivery leaves up). A world that places
+   * no entrance is untouched: nothing is logged and no overlay is made.
+   */
+  _refuseEntranceShuffle(rawRules, playerId, why) {
+    const refusal = entranceShuffleRefusal(rawRules, playerId, why);
+    if (!refusal) return false;
+    this._panelLog(refusal, 'error');
+    this._apLoadRefusal = refusal;
+    const overlay = this._seedlingOverlay();
+    overlay.show();
+    overlay.setText(refusal, 'error');
+    return true;
   }
 
   /** Paint the readout. Hidden until the first find, so a preset with no
