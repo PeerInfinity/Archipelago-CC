@@ -23,6 +23,7 @@ import pytest
 from BaseClasses import CollectionState, get_seed  # noqa: F401  (loads BaseClasses before worlds, as AP does)
 from Fill import balance_multiworld_progression, distribute_items_restrictive
 from Options import Visibility
+from Utils import restricted_dumps, restricted_loads
 from test.general import setup_multiworld
 from worlds import AutoWorld
 from worlds.AutoWorld import AutoWorldRegister
@@ -83,7 +84,16 @@ def test_the_world_carries_a_byte_identical_client(package):
 def test_the_option_is_the_clients_choice_off_by_default_and_out_of_the_text_spoiler(package):
     option = _world_type(package).options_dataclass.type_hints[OPTION]
     client = sys.modules[f'worlds.{package}._spoiler_hook_client']
-    assert option is client.SpoilerDataInSlotData
+    # Re-homed in the options module (the restricted unpickler loads Option classes only from a module whose name
+    # ends in "options"), adding nothing of its own: the description and values stay the byte-pinned client's.
+    assert option.__bases__ == (client.SpoilerDataInSlotData,)
+    assert option.__module__ == f'worlds.{package}.{"options" if package == "apquest_serverdata" else "Options"}'
+    bookkeeping = {'__module__', '__qualname__', '__firstlineno__', '__static_attributes__',
+                   '_abc_impl', '__parameters__', '__abstractmethods__'}
+    own = {key: value for key, value in vars(option).items() if key not in bookkeeping}
+    assert own == {key: vars(client.SpoilerDataInSlotData)[key] for key in own}
+    assert '__doc__' in own and 'options' in own
+    restricted_loads(restricted_dumps(option.from_text('own_slot_with_senders')))
     assert option.default == 0 and option.name_lookup == {0: 'off', 1: 'own_slot', 2: 'own_slot_with_senders'}
     assert not option.visibility & Visibility.spoiler
 

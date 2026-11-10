@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 
-from ._spoiler_hook_client import SpoilerDataInSlotData
+from . import _spoiler_hook_client
 
 # In this file, we define the options the player can pick.
 # The most common types of options are Toggle, Range and Choice.
@@ -14,6 +14,13 @@ from ._spoiler_hook_client import SpoilerDataInSlotData
 
 # For further reading on options, you can also read the Options API Document:
 # https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/options%20api.md
+
+
+class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
+    # The client's option, re-homed. AP's restricted unpickler (WebHost generation; test_pickle_dumps_default) only
+    # loads Option classes from a module whose name ends in "options", and the client's module doesn't. Everything
+    # else, the description included, is the client's (test/test_spoiler_hook_callers.py pins that).
+    __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
 
 
 # The first type of Option we'll discuss is the Toggle.
