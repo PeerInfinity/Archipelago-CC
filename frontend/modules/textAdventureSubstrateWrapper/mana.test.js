@@ -43,12 +43,17 @@ function makeFakeDispatcher() {
     };
 }
 
-const MANA_REGIONS = new Set(['A', 'B', 'SelfBilled', 'SelfBilled2', 'Own', 'Undeclared', 'MazeRoom', 'MazeRoom2']);
+const MANA_REGIONS = new Set(['A', 'B', 'SelfBilled', 'SelfBilled2', 'Own', 'Undeclared', 'MazeRoom', 'MazeRoom2',
+    'Cloudberry', 'Cloudberry2', 'Noiz2sa', 'Noiz2sa2']);
 const REGION_SUBSTRATES = {
     SelfBilled: 'self_billing',
     SelfBilled2: 'self_billing',
     Own: 'text_adventure',
     Undeclared: 'no_declaration',
+    Cloudberry: 'cloudberry',
+    Cloudberry2: 'cloudberry',
+    Noiz2sa: 'noiz2sa',
+    Noiz2sa2: 'noiz2sa',
     MazeRoom: mazeEntry.id,
     MazeRoom2: mazeEntry.id,
 };
@@ -239,12 +244,55 @@ describe('wrapper mana leg — regions another substrate bills', () => {
         expect(gs.getCurrentMana()).toBe(40);
     });
 
-    it('still charges a substrate with no sharing.mana: nothing else bills it with loop mode off', () => {
+    it('does not charge a substrate with no sharing.mana', () => {
         register();
         const { gs, bus } = wire({ currentRegion: 'Undeclared' });
         bus.publish('stateManager:snapshotUpdated', CHECK);
-        expect(gs.getCurrentMana()).toBe(90);
         bus.publish('gameState:regionChanged', { oldRegion: 'Undeclared', newRegion: 'A' });
+        expect(gs.getCurrentMana()).toBe(100);
+    });
+
+    describe.each([
+        ['Cloudberry', 'Cloudberry2'],
+        ['Noiz2sa', 'Noiz2sa2'],
+    ])('%s with loop mode off', (region, next) => {
+        it('a location check costs nothing and earns no region XP', () => {
+            const { gs, bus } = wire({ currentRegion: region });
+            bus.publish('stateManager:snapshotUpdated', CHECK);
+            expect(gs.getCurrentMana()).toBe(100);
+            expect(gs.getRegionXP(region).xp).toBe(0);
+        });
+
+        it('leaving costs nothing, so low mana cannot fire a loop reset from here', () => {
+            const { gs, bus } = wire({ currentRegion: region });
+            gs.deductMana(99);
+            bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: next });
+            expect(gs.getCurrentMana()).toBe(1);
+            expect(gs.getLoopResetCount()).toBe(0);
+        });
+
+        it('leaving into a charged region charges nothing for the room left', () => {
+            const { gs, bus } = wire({ currentRegion: region });
+            bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: 'Own' });
+            expect(gs.getCurrentMana()).toBe(100);
+        });
+
+        it('the mana readout still shows', () => {
+            const { bus } = wire({ currentRegion: region });
+            bus.publish('gameState:manaChanged', {});
+            expect(bus.published.at(-1)).toEqual({
+                event: getHeaderInfoEvent(),
+                data: { text: 'mana: 100.0 / 100.0' },
+            });
+        });
+    });
+
+    it('a text adventure region still pays its check and its move after a Cloudberry room', () => {
+        const { gs, bus } = wire({ currentRegion: 'Cloudberry' });
+        bus.publish('gameState:regionChanged', { oldRegion: 'Cloudberry', newRegion: 'Own' });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
         expect(gs.getCurrentMana()).toBe(40);
     });
 
@@ -257,7 +305,7 @@ describe('wrapper mana leg — regions another substrate bills', () => {
         expect(gs.getCurrentMana()).toBe(50);
     });
 
-    it('reads the declaration at charge time, so a substrate registered after wiring counts', () => {
+    it('needs no registry entry: a named substrate registered after wiring is still not charged', () => {
         const { gs, bus } = wire({ currentRegion: 'SelfBilled' });
         register();
         bus.publish('stateManager:snapshotUpdated', CHECK);
