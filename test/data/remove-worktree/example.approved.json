@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "survey": "NewDocs/plans/branch-worktree-cleanup-2026-11-10.md",
+  "items": [
+    {
+      "kind": "tree",
+      "path": "/home/robert/CC/Archipelago-CC-wt-sdc-depletion-flag",
+      "sha": "177b94d19e0000000000000000000000000000aa",
+      "merge": "ancestor",
+      "dirt": ["?? frontend/modules/resourceChannels/zzDepletionProbe.test.js"],
+      "group": "WD",
+      "ruling": "WD + BM (Recommended)"
+    },
+    {
+      "kind": "local",
+      "ref": "sdc-depletion-flag",
+      "sha": "177b94d19e0000000000000000000000000000aa",
+      "merge": "ancestor",
+      "group": "WD",
+      "ruling": "WD + BM (Recommended)"
+    },
+    {
+      "kind": "fork",
+      "ref": "js-land/train-2026-11-08-55",
+      "sha": "47827619f50000000000000000000000000000bb",
+      "merge": "cherry-equal",
+      "group": "BM",
+      "ruling": "WD + BM (Recommended)"
+    },
+    {
+      "kind": "fork",
+      "ref": "claude/rules-l18-l53-witness-4kzx58",
+      "sha": "6d725190660000000000000000000000000000cc",
+      "merge": "UNMERGED:1",
+      "group": "BH",
+      "ruling": "BH: 6 unmerged refs (Recommended)",
+      "allow_unmerged": true
+    }
+  ]
+}
