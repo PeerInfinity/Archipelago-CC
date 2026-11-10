@@ -23,6 +23,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
 import { stampLoopCosts } from './presetLoopCosts.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
@@ -43,6 +44,7 @@ async function main() {
     // The substrate library registers on import.
     const lib = await import(pathToFileURL(path.join(repoRoot,
         'frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js')));
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
     const { outDir } = resolvePresetOutDir({ repoRoot, gameId: GAME_ID, seedId: SEED_ID });
     const outFile = path.join(outDir, `${SEED_ID}_rules.json`);

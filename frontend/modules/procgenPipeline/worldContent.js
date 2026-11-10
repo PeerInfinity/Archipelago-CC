@@ -322,6 +322,8 @@ const defaultPackCache = new Map();
 const defaultPackPending = new Map();
 /** Content sets built from the cache, by stack (so one stack is one set object). */
 const cachedDefaultSets = new Map();
+/** How many times this process has awaited `preloadDefaultContent` (how a caller proves it was reached). */
+let preloadCalls = 0;
 
 /**
  * The default packs the registry's entries declare (`defaultContentPack`), in
@@ -334,6 +336,11 @@ export function declaredDefaultContentPacks(registry = substrateRegistry) {
         if (id && !out.includes(id)) out.push(id);
     }
     return out;
+}
+
+/** How many `preloadDefaultContent` calls this process has completed (a boot, a setup file, a script's). */
+export function defaultContentPreloadCalls() {
+    return preloadCalls;
 }
 
 /** The default packs this process has preloaded, in the order they finished loading. */
@@ -379,6 +386,7 @@ export async function preloadDefaultContent({ base, readJson, registry = substra
             return defaultPackPending.get(id);
         }));
     }
+    preloadCalls += 1;
     return preloadedDefaultContentPacks();
 }
 
@@ -387,6 +395,7 @@ export function resetDefaultContentCache() {
     defaultPackCache.clear();
     defaultPackPending.clear();
     cachedDefaultSets.clear();
+    preloadCalls = 0;
 }
 
 /**

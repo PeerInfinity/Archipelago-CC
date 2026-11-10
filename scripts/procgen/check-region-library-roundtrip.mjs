@@ -33,6 +33,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
 import { generatePythonOrExit } from './repoPython.js';
+import { preloadScriptContent } from './preloadContent.mjs';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -85,6 +86,7 @@ try {
 
     // --- Pass A: JS pipeline ------------------------------------------
     await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/mazeRoom/mazeRoomLibrary.js')));
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const engine = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/procgenPipeline/procgenPipelineEngine.js')));
     const validator = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/procgenPipeline/regionLibraryValidator.js')));
     const { substrateRegistry } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/shared/procgen/substrateRegistry.js')));

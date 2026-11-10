@@ -24,6 +24,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { preloadScriptContent } from '../procgen/preloadContent.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -219,6 +220,7 @@ async function main() {
         if (!rel) throw new Error(`Unknown substrate '${id}' (no loader registered in SUBSTRATE_LOADERS)`);
         await import(path.join(PROJECT_ROOT, rel));
     }
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const enginePath = path.join(
         PROJECT_ROOT, 'frontend', 'modules', 'procgenPipeline',
         'procgenPipelineEngine.js',

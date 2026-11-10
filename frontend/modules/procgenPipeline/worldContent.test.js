@@ -29,7 +29,7 @@ import {
     CONTENT_SET_KEY, DEFAULT_CONTENT_PACK_FIELD, EMPTY_CONTENT_SET, RECORDED_CONTENT_KEY, WorldContentError,
     assertContentLoaded, attachContentSet, attachEnvelopeContent, contentListOf, contentParamRefusal, contentRegionParams,
     effectiveContentStack, isContentSet, loadContentSet, recordedContentOf,
-    declaredDefaultContentPacks, defaultContentSetOf, documentContentOf, preloadDefaultContent,
+    declaredDefaultContentPacks, defaultContentPreloadCalls, defaultContentSetOf, documentContentOf, preloadDefaultContent,
     preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET,
 } from './worldContent.js';
 
@@ -388,6 +388,7 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
         expect(declaredDefaultContentPacks()).toEqual([]);
         expect(await preloadDefaultContent({ base: MEM, readJson })).toEqual([]);
         expect(readJson).not.toHaveBeenCalled();
+        expect(defaultContentPreloadCalls()).toBe(1);
     });
     it('loads the concepts and text layers of each declared pack once; a second call reads nothing', async () => {
         const io = memIo();
@@ -538,3 +539,4 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
         });
     });
 });
+

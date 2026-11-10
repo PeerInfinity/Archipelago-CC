@@ -61,6 +61,7 @@ import {
     DEFAULT_REGION_COST,
     DEFAULT_LOCATION_COST,
 } from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
+import { preloadScriptContent } from '../procgen/preloadContent.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
@@ -306,6 +307,7 @@ async function main() {
         vanillaFixture: JSON.parse(fs.readFileSync(path.join(repoRoot,
             'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8')),
     };
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     for (const preset of PRESETS) {
         if (only && preset.gameId !== only) continue;
         console.log(`\n--- ${preset.gameId}`);

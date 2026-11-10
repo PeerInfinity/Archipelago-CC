@@ -70,6 +70,9 @@ import { buildEditedRegion } from '../../frontend/modules/bounceRegionEditor/bui
 
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
+import { preloadScriptContent } from './preloadContent.mjs';
+
+await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
 argvHelp(import.meta.url);
 failOnCrash();

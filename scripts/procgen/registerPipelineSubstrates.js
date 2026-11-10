@@ -21,6 +21,10 @@
  * rather than ending the run: its ids are then absent, and a quota naming
  * one is refused as not registered (`checkSubstrateIds`).
  *
+ * ⛓ CONTENT SETS C4 — it also awaits `preloadScriptContent()` after the
+ * libraries register, so a driver's synchronous builders find the default
+ * packs those libraries declare in the process-level cache.
+ *
  * Usage (from a driver's main):
  *   import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
  *   const loads = await loadPipelineSubstrates();
@@ -31,6 +35,7 @@ import { substrateRegistry } from '../../frontend/modules/shared/procgen/substra
 import { pipelineLayoutsOf } from '../../frontend/modules/procgenCore/substratePredicates.js';
 import { isLibrarySourceId } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { UsageError } from './cliRun.js';
+import { preloadScriptContent } from './preloadContent.mjs';
 
 let loading = null;
 
@@ -54,6 +59,9 @@ export function loadPipelineSubstrates() {
             const registered = substrateRegistry.getAll().map((e) => e.id).filter((id) => !before.has(id));
             loads.push(Object.freeze({ library, registered, error }));
         }
+        // ⛓ CONTENT SETS C4 — every driver's synchronous builders read the default packs the libraries
+        //   just registered from the process-level cache: preload them here, once (a no-op while none is declared).
+        await preloadScriptContent();
         return Object.freeze(loads);
     })();
     return loading;

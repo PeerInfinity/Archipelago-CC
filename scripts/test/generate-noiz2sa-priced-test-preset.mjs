@@ -21,6 +21,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
@@ -36,6 +37,7 @@ async function main() {
     const { mergeSubstrateItemLib } = await imp('frontend/modules/procgenPipeline/sphereConfigHooks.js');
     const { DEFAULT_ITEMS } = await imp('frontend/modules/shared/procgen/library.js');
     const lib = await imp('frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js');
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const pricing = await imp('frontend/modules/noiz2saSubstrate/noiz2saPricing.js');
 
     const at = process.argv.indexOf('--final-span');
