@@ -39,7 +39,7 @@
 | `stateManager:snapshotUpdated` | Updates current sphere based on newly checked locations |
 | `client:roomSpoilerData` | Loads the room's spoiler data (expanded by `client/core/spoilerData.js`) as the log, only while no file's log is loaded |
 
-**A file always beats the room.** `SphereState.logOrigin` is `'file'` (a preset's `.jsonl`, an embedded or uploaded log) or `'room'`. A room log is refused while a file's log is loaded; a file's log replaces a room's. `reset()` (every `stateManager:rulesLoaded`) bumps `generation`, and the auto-loads pass the generation they were started for, so a fetch that finishes after the rules changed is dropped. A sphere whose log line names its sender (`received_from`, from the room's data with `own_slot_with_senders`) carries `receivedFrom: [{ player, location }]`; no other sphere has the field.
+**A file always beats the room.** `SphereState.logOrigin` is `'file'` (a preset's `.jsonl`, an embedded or uploaded log) or `'room'`. A room log is refused while a file's log is loaded; a file's log replaces a room's. `reset()` (every `stateManager:rulesLoaded`) bumps `generation`, and the auto-loads pass the generation they were started for, so a fetch that finishes after the rules changed is dropped. The parser reads only the current player's entry of each line; another world's entry on the same line (a room log with `own_slot_with_senders`, or a per-player file, names its senders that way) is visible only through `getRawSphereLog`.
 
 ## Public Functions
 

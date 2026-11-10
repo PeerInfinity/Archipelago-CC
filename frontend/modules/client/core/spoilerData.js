@@ -9,13 +9,21 @@
 //
 // The record (format 1):
 //   { format, seed_name, player, start: [item…], unreachable,
-//     steps: [[walk label, own location | null, item received | null, ([sender player, sender location])?]…] }
+//     steps: [[walk label, own location | null, item received | null, ([sender player, sender location])?]…],
+//     regions?: { start: [region…], steps: [[row index, [region…]]…] } }
 // Each item or location is the AP id when the game's DataPackage gives back
 // that exact name, otherwise the name (events have no id; ALttP's Progressive
 // Bow carries an id the package resolves to "Progressive Bow (Alt)"). The 4th
 // element is there only with own_slot_with_senders, and only on a row whose
 // item comes from another player's location; that location follows the same
-// id rule against the SENDER's game.
+// id rule against the SENDER's game. `regions` is there only with the world's
+// spoiler_data_include_regions option: the regions first reachable at the
+// start and after each listed row (names; regions have no ids).
+//
+// The lines are those of the exporter's per-player sphere log
+// (json_tools.sphere_log_per_player) for the same seed: the own player's
+// entry, and on a step whose item another world sends, that world's entry
+// limited to that location, with empty deltas. A test holds the two equal.
 
 export const SPOILER_DATA_KEY = 'spoiler_data';
 export const SPOILER_DATA_OMITTED_KEY = 'spoiler_data_omitted';
@@ -79,9 +87,10 @@ const nameFrom = (table, value, kind) =>
 /**
  * slot_data.spoiler_data → sphere-log lines ({type:'metadata'}, then one
  * incremental state_update per step), or null for a format this client does
- * not read. A row with a sender gives its state_update a
- * `received_from: [{ player, location }]` beside the own player's usual fields;
- * sphereState keeps it on that sphere (`receivedFrom`).
+ * not read. A row with a sender also gives its state_update the sender's entry,
+ * `player_data[sender] = { empty deltas, sphere_locations: [sender location] }`,
+ * as the per-player file has it. Regions, when sent, fill
+ * `new_accessible_regions` (the start list on sphere 0).
  */
 export function expandSpoilerData(record, tables) {
   if (!SPOILER_DATA_FORMATS.has(record?.format)) return null;
@@ -94,10 +103,11 @@ export function expandSpoilerData(record, tables) {
   // The rows sent by name: events, plus any coded name that does not round-trip (as the prototype measured).
   const eventLocations = [...new Set(steps.filter(([, l]) => typeof l === 'string').map(([, l]) => l))].sort();
   const eventItems = [...new Set(steps.filter(([, , i]) => typeof i === 'string').map(([, , i]) => i))].sort();
-  const update = (baseItems, sphereLocations) => ({
+  const regionsAt = new Map(record.regions?.steps || []);
+  const update = (baseItems, sphereLocations, regions = []) => ({
     new_inventory_details: { base_items: baseItems, resolved_items: {} },
     new_accessible_locations: [],
-    new_accessible_regions: [],
+    new_accessible_regions: regions,
     sphere_locations: sphereLocations,
   });
   const lines = [
@@ -105,22 +115,29 @@ export function expandSpoilerData(record, tables) {
       type: 'metadata',
       seed_name: record.seed_name,
       source: 'room spoiler_data',
+      // As the per-player file's metadata: the senders' entries on later lines do not make it their log.
+      filtered_to_player: p,
       event_locations: { [p]: eventLocations },
       event_items: { [p]: eventItems },
     },
-    { type: 'state_update', sphere_index: '0', player_data: { [p]: update(startItems, []) } },
+    {
+      type: 'state_update',
+      sphere_index: '0',
+      player_data: { [p]: update(startItems, [], record.regions?.start || []) },
+    },
   ];
-  for (const [label, own, received, sender] of steps) {
-    const data = update(received === null ? {} : { [item(received)]: 1 }, own === null ? [] : [location(own)]);
+  steps.forEach(([label, own, received, sender], index) => {
+    const playerData = {
+      [p]: update(received === null ? {} : { [item(received)]: 1 }, own === null ? [] : [location(own)],
+        regionsAt.get(index) || []),
+    };
     if (Array.isArray(sender)) {
       const [senderPlayer, senderLocation] = sender;
-      data.received_from = [{
-        player: String(senderPlayer),
-        location: nameFrom(tables.senderLocationIdToName(senderPlayer), senderLocation, 'Location'),
-      }];
+      playerData[String(senderPlayer)] =
+        update({}, [nameFrom(tables.senderLocationIdToName(senderPlayer), senderLocation, 'Location')]);
     }
-    lines.push({ type: 'state_update', sphere_index: label, player_data: { [p]: data } });
-  }
+    lines.push({ type: 'state_update', sphere_index: label, player_data: playerData });
+  });
   return lines;
 }
 

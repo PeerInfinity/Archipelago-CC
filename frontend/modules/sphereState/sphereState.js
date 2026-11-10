@@ -53,17 +53,6 @@ function compareSphereIndices(a, b) {
   return a.fractionalSphere - b.fractionalSphere;
 }
 
-/**
- * The sphere's senders, when the log names them: the room's spoiler data with
- * own_slot_with_senders gives a step `received_from: [{ player, location }]`
- * (the other player's location that sends this step's item). Absent otherwise,
- * so a log without it parses exactly as before.
- */
-function receivedFromOf(playerData) {
-  const from = playerData?.received_from;
-  return Array.isArray(from) && from.length > 0 ? { receivedFrom: from } : {};
-}
-
 export class SphereState {
   constructor(eventBus) {
     this.eventBus = eventBus;
@@ -328,7 +317,6 @@ export class SphereState {
         accessibleLocations: playerData?.accessible_locations || [],
         accessibleRegions: playerData?.accessible_regions || [],
         inventoryDetails: playerData?.inventory_details || { base_items: {}, resolved_items: {} },
-        ...receivedFromOf(playerData),
       });
     }
   }
@@ -413,7 +401,6 @@ export class SphereState {
         accessibleLocations: Array.from(accumulated.accessibleLocations).sort(),
         accessibleRegions: Array.from(accumulated.accessibleRegions).sort(),
         inventoryDetails: { ...accumulated.inventoryDetails },
-        ...receivedFromOf(playerData),
       });
     }
   }
