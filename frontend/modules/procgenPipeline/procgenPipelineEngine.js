@@ -1148,7 +1148,8 @@ function buildSubstrateRegion({
 }) {
     const adapter = getAdapter(substrate);
     // ⛓ CONTENT SETS C3 — a region whose packs were never loaded is refused by name (no-op when none are needed).
-    assertContentLoaded(params, substrate);
+    //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
+    params = assertContentLoaded(params, substrate);
     if (typeof adapter.generateRegionCore !== 'function') {
         throw new Error(
             `Substrate '${substrate}' has no generateRegionCore — it is a `
@@ -3429,7 +3430,9 @@ const LOCATION_FIT_MAX_ATTEMPTS = 10;
 function generateRegionProcedural(spec) {
     const adapter = getAdapter(spec.substrate);
     // ⛓ CONTENT SETS C3 — the region's content packs must be in `params.contentSet` (no-op when none are needed).
-    assertContentLoaded(spec.params, spec.substrate);
+    //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
+    const contentParams = assertContentLoaded(spec.params, spec.substrate);
+    if (contentParams !== spec.params) spec = { ...spec, params: contentParams };
 
     // Core exit specs — size-independent, so reused across retry-grow
     // attempts below.

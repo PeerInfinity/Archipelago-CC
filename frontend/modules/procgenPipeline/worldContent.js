@@ -193,11 +193,18 @@ export async function loadContentSet(stack, { base, readJson, concepts = CONCEPT
  *
  * ⛔ A non-empty effective stack (for `substrateIds`) with no loaded set holding
  * it is REFUSED by name: the entry point did not await `loadContentSet`.
+ * ⛓ C4 — except a stack made only of DEFAULT packs with no set handed in
+ * (`contentSet` null): that set is built from the preload cache
+ * (`defaultContentSetOf`), so a synchronous builder needs no load of its own.
  */
 export function contentRegionParams({ params, contentSet = null, substrateIds = [] }) {
     const own = assertContentParam(params?.content);
     const stack = effectiveContentStack({ substrateIds, content: own });
     if (!stack.length) return {};
+    // ⛓ C4 — a stack of DEFAULT packs only, with no set handed in: built from the preload cache
+    //   (refused by name when a pack was not preloaded). A stack naming `params.content` still
+    //   needs the awaited load.
+    if (contentSet === null && !own.length) contentSet = defaultContentSetOf(stack);
     if (!isContentSet(contentSet) || stack.some((id) => !contentSet.ids.includes(id))) {
         throw new WorldContentError(`the world's content stack [${stack.join(', ')}] was not loaded `
             + `(the set given holds [${isContentSet(contentSet) ? contentSet.ids.join(', ') : 'nothing'}]): `
@@ -212,21 +219,32 @@ export function contentRegionParams({ params, contentSet = null, substrateIds = 
 /**
  * ⛓ The engine's region seam: the packs a region of `substrateId` needs (its
  * entry's default pack, then the world's own `params.content`) must be in
- * `params.contentSet`. Nothing needed ⇒ returns at once.
+ * `params.contentSet`. Returns the params the region is built with: `params`
+ * ITSELF when nothing is needed or the set is there.
+ *
+ * ⛓ C4 — a region that needs only its entry's DEFAULT pack and was handed no set
+ * (a synchronous caller that never assembled one: the APWorld editor's
+ * regenerate, a worker's job) gets `{ ...params, contentSet }` built from the
+ * preload cache; a default pack that was not preloaded is refused by name.
  */
 export function assertContentLoaded(params, substrateId, registry = substrateRegistry) {
     const needed = [];
     const own = defaultContentPackOf(registry.get(substrateId));
     if (own) needed.push(own);
-    for (const id of params?.[RECORDED_CONTENT_KEY] ?? []) needed.push(id);
-    if (!needed.length) return;
+    const named = params?.[RECORDED_CONTENT_KEY] ?? [];
+    for (const id of named) if (!needed.includes(id)) needed.push(id);
+    if (!needed.length) return params;
     const set = params?.[CONTENT_SET_KEY];
+    if ((set === undefined || set === null) && !named.length) {
+        return { ...(params ?? {}), [CONTENT_SET_KEY]: defaultContentSetOf(needed) };
+    }
     const missing = needed.filter((id) => !isContentSet(set) || !set.ids.includes(id));
     if (missing.length) {
         throw new WorldContentError(`a "${substrateId}" region needs the content pack(s) [${missing.join(', ')}], `
             + 'and no loaded content set holds them: the envelope was resumed or rebuilt without '
             + 'attachContentSet, or its entry point never called loadContentSet');
     }
+    return params;
 }
 
 /** `{content: [...]}` for the metadata block when the world names its own content, else `{}`. */
@@ -290,4 +308,126 @@ export async function attachEnvelopeContent(env, io = {}) {
     if (regionParams) regionParams[CONTENT_SET_KEY] = contentSet;
     else env.config.regionParams = { [CONTENT_SET_KEY]: contentSet };
     return env;
+}
+
+/* ── ⛓⛓ CONTENT SETS C4 — the process-level cache of DEFAULT packs ─────── */
+
+/** Loaded default packs by id (the `loadPackStack` row: `{ id, pack, base, layers }`). */
+const defaultPackCache = new Map();
+/** The load in flight per id, so two concurrent preloads read each pack once. */
+const defaultPackPending = new Map();
+/** Content sets built from the cache, by stack (so one stack is one set object). */
+const cachedDefaultSets = new Map();
+
+/**
+ * The default packs the registry's entries declare (`defaultContentPack`), in
+ * registry order, once each — what `preloadDefaultContent` loads.
+ */
+export function declaredDefaultContentPacks(registry = substrateRegistry) {
+    const out = [];
+    for (const entry of registry.getAll()) {
+        const id = defaultContentPackOf(entry);
+        if (id && !out.includes(id)) out.push(id);
+    }
+    return out;
+}
+
+/** The default packs this process has preloaded, in the order they finished loading. */
+export function preloadedDefaultContentPacks() {
+    return Object.freeze([...defaultPackCache.keys()]);
+}
+
+/**
+ * ⛓⛓ **PRELOAD THE DEFAULT PACKS, ONCE PER PROCESS.** Loads the `concepts` and
+ * `text` layers (`CONTENT_LAYERS`) of every default pack `registry`'s entries
+ * declare and keeps them, so a SYNCHRONOUS builder (`buildRunFromState`, the
+ * APWorld editor's regenerate, a fixed-config check script) builds a world whose
+ * stack is made only of default packs without a load of its own
+ * (`contentRegionParams`, `assertContentLoaded`).
+ *
+ * Call it — awaited — at the start of a process that builds worlds
+ * synchronously, AFTER its substrate libraries have registered (it reads the
+ * registry as it stands). A pack already loaded is not read again, so a second
+ * call is a no-op; a later call after more entries registered loads only the new
+ * packs. With no entry declaring a default pack it calls `readJson` zero times.
+ * Each pack's concepts are held to the mechanic table (`assertPresents`) as it
+ * loads, so a bad pack is refused here, by name, not mid-generation.
+ *
+ * `{ base, readJson }` is the `loadContentSet` io (`browserPackIo()` when
+ * `readJson` is absent; node passes `nodePackIo()`). Returns the preloaded ids.
+ */
+export async function preloadDefaultContent({ base, readJson, registry = substrateRegistry, concepts = CONCEPTS } = {}) {
+    const wanted = declaredDefaultContentPacks(registry).filter((id) => !defaultPackCache.has(id));
+    if (wanted.length) {
+        const io = readJson ? { base, readJson } : browserPackIo(base ? { base } : {});
+        await Promise.all(wanted.map((id) => {
+            if (!defaultPackPending.has(id)) {
+                defaultPackPending.set(id, (async () => {
+                    try {
+                        const [loaded] = await loadPackStack([id], { ...io, only: CONTENT_LAYERS });
+                        assertPresents(createPackConcepts([loaded]), concepts);
+                        defaultPackCache.set(id, loaded);
+                    } finally {
+                        defaultPackPending.delete(id);
+                    }
+                })());
+            }
+            return defaultPackPending.get(id);
+        }));
+    }
+    return preloadedDefaultContentPacks();
+}
+
+/** For tests: forget every preloaded pack and every set built from them. */
+export function resetDefaultContentCache() {
+    defaultPackCache.clear();
+    defaultPackPending.clear();
+    cachedDefaultSets.clear();
+}
+
+/**
+ * ⛓ The content set of a stack of DEFAULT packs, built SYNCHRONOUSLY from the
+ * preload cache. It equals `loadContentSet(stack)`'s (same `ids`, same reader
+ * answers: the same loaded rows through the same readers), and one stack always
+ * answers the same set object. A pack the cache does not hold is refused by
+ * name, telling the caller to await `preloadDefaultContent` first.
+ */
+export function defaultContentSetOf(stack) {
+    const ids = assertContentParam(stack);
+    if (!ids.length) return EMPTY_CONTENT_SET;
+    const key = ids.join('\u0000');
+    const hit = cachedDefaultSets.get(key);
+    if (hit) return hit;
+    const missing = ids.filter((id) => !defaultPackCache.has(id));
+    if (missing.length) {
+        throw new WorldContentError(`the default content pack(s) [${missing.join(', ')}] were not preloaded `
+            + `(preloaded: [${[...defaultPackCache.keys()].join(', ')}]): this process builds a world `
+            + 'synchronously, so it must await preloadDefaultContent (after its substrate libraries register) '
+            + 'before it builds');
+    }
+    const loaded = ids.map((id) => defaultPackCache.get(id));
+    const packConcepts = createPackConcepts(loaded);
+    assertPresents(packConcepts, CONCEPTS);
+    const set = freezeContentSet(ids, packConcepts, createTextLibrary(loaded));
+    cachedDefaultSets.set(key, set);
+    return set;
+}
+
+/**
+ * `regionParams` without its loaded set — for arguments that leave the process
+ * (a worker's `postMessage`, which cannot clone the set's readers) or are
+ * recorded (an op's `provenance`). `regionParams` ITSELF when it holds none.
+ */
+export function withoutContentSet(regionParams) {
+    if (!regionParams || typeof regionParams !== 'object' || !(CONTENT_SET_KEY in regionParams)) return regionParams;
+    const { [CONTENT_SET_KEY]: _set, ...rest } = regionParams;
+    return rest;
+}
+
+/**
+ * The content list a document records for player `p` (`procgen_metadata[p].content`,
+ * ⚠ a PER-PLAYER map), validated; `[]` when it names none.
+ */
+export function documentContentOf(doc, player) {
+    return [...assertContentParam(doc?.procgen_metadata?.[String(player)]?.[RECORDED_CONTENT_KEY])];
 }
