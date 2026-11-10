@@ -1692,12 +1692,70 @@ export function effectiveInventory(world, inventory, playerPos, blocks, broken, 
     const held = heldTokens(world, playerPos, blocks);
     const cut = ropeTokens(world, inventory, broken);
     const down = latchTokens(world, inventory, latched);
-    if (held === null && cut === null && down === null) return inventory;
+    const opened = openerEvents(world, latched);
+    if (held === null && cut === null && down === null && opened === null) return inventory;
     const out = copyInventory(inventory);
     for (const token of held ?? []) holdInInventory(out, token);
     for (const token of cut ?? []) holdInInventory(out, token);
     for (const token of down ?? []) holdInInventory(out, token);
+    for (const token of opened ?? []) holdInInventory(out, token);
     return out;
+}
+
+/** ⛓ SIDED OPENERS (R-A4b): the events of the sided openers opened this visit (`state.latched`), or null when none is. */
+export function openerEvents(world, latched) {
+    if (!latched || latched.length === 0) return null;
+    let out = null;
+    for (const o of sidedOpeners(world)) if (latched.includes(o.key)) (out ??= []).push(o.event);
+    return out;
+}
+
+/** The neighbour a one-sided lock opens from (`probe`). */
+const OPENER_PROBE = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
+
+/** Does `rule` name `item` in a `Has`? */
+function ruleNamesItem(rule, item) {
+    if (!rule || typeof rule !== 'object') return false;
+    if (rule.rule === 'Has' && rule.args?.item_name === item) return true;
+    return (rule.children ?? []).some((c) => ruleNamesItem(c, item));
+}
+
+/**
+ * ⛓⛓ SIDED LATCHING OPENERS (session tile-rules-automation-r-a4b; ⚖ Robert 2026-11-08 "A: R-A4b sided openers (Recommended)").
+ * A ShieldLock opens only for a player on its west face (`ShieldLock.as:32`) and a BossLock only from the row below it
+ * (`BossLock.as:62`), and once opened neither closes again for the visit: nothing resets `activate` (a ShieldLock's group is
+ * -2, a BossLock's -1, and no presser in any level file has either). So within ONE walk a lock opened from its side is open
+ * from the far side too, and the walk needs no AP event for that: the same search that stood on the probe cell records it.
+ *
+ * Read off the data, no level list: a non-struck obstacle whose `events` entry has a `probe` (the side it opens from) and whose
+ * cell carries an ENTRY GATE naming that event (its closed side costs it).
+ * `[{key, stand, event, id, rule}]`: `stand` is the probe cell; `rule` is the event's own rule on a stacked cell (null: the
+ * cell's clearance). CACHED per obstacle map. Throws on two openers on one cell: `state.latched` holds one mark per cell.
+ */
+const OPENER_CACHE = new WeakMap();
+export function sidedOpeners(world) {
+    if (!world.entryGates || world.entryGates.size === 0 || !world.obstacles) return [];
+    const hit = OPENER_CACHE.get(world.obstacles);
+    if (hit && hit.gates === world.entryGates && hit.size === world.obstacles.size) return hit.rows;
+    const rows = [];
+    for (const [cell, id] of world.obstacles) {
+        const entry = world.obstacleLib?.[id];
+        if (!entry?.events || entry.struck_by) continue;
+        const [x, y] = cell.split(',').map(Number);
+        for (const ev of entry.events) {
+            if (!ev.probe) continue;
+            const closed = ['N', 'E', 'S', 'W'].some((dir) => {
+                const gate = world.entryGates.get(`${x},${y},${dir}`);
+                return gate !== undefined && gate !== null && ruleNamesItem(world.obstacleLib[gate]?.clear_rule, ev.name);
+            });
+            if (!closed) continue;
+            const [dx, dy] = OPENER_PROBE[ev.probe];
+            if (rows.some((r) => r.key === cell)) throw new Error(`sidedOpeners: two openers on cell ${cell} (${id}); state.latched holds one mark per cell`);
+            rows.push({ key: cell, stand: posKey(x + dx, y + dy), event: ev.name, id, rule: ev.rule ?? null });
+        }
+    }
+    OPENER_CACHE.set(world.obstacles, { gates: world.entryGates, size: world.obstacles.size, rows });
+    return rows;
 }
 
 /**
@@ -1753,9 +1811,9 @@ export function latchCells(world) {
     return cells;
 }
 
-/** True iff this world places a latching button — the switch for `state.latched` (absence keeps every other key). */
+/** True iff this world places a latching button or a sided opener — the switch for `state.latched` (absence keeps every other key). */
 export function hasLatches(world) {
-    return latchCells(world).length > 0;
+    return latchCells(world).length > 0 || sidedOpeners(world).length > 0;
 }
 
 /**
@@ -1766,7 +1824,7 @@ export function hasLatches(world) {
  * dropped within a visit, so the record would only split each state in two (measured, session tile-mechanisms-m4-latch:
  * L40's three latches laid, full inventory, 138,112 states = the base 17,312 × 8 with it; the base's without).
  */
-function noteLatches(world, state, carried = state.inventory) {
+function noteLatches(world, state, carried = state.inventory, from = null) {
     if (state.latched === undefined) return;
     const here = posKey(state.player_pos.x, state.player_pos.y);
     let added = false;
@@ -1774,6 +1832,17 @@ function noteLatches(world, state, carried = state.inventory) {
         if (state.latched.includes(key) || (entry.latch.event && carried.has(entry.latch.event))) continue;
         if (key !== here && !state.blocks?.includes(key)) continue;
         state.latched.push(key);
+        added = true;
+    }
+    // ⛓ SIDED OPENERS (`sidedOpeners`): one opens when the player stands on its probe cell holding its clearance. The carried event is skipped like a latching button's: it is open already, and the record would only split the state.
+    // `from` is the cell this step LEFT: an arrival on the probe cell (L19's stairs) stood there holding the item too, though the start state is noted before a search sets its inventory.
+    const stoodOn = (cell) => cell === here || (from !== null && cell === posKey(from.x, from.y));
+    for (const o of sidedOpeners(world)) {
+        if (!stoodOn(o.stand) || state.latched.includes(o.key) || carried.has(o.event)) continue;
+        const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
+        const cleared = o.rule ? isObstacleCleared('own', inv, { own: { clear_set_type: 'rule', clear_rule: o.rule } }) : isObstacleCleared(o.id, inv, world.obstacleLib);
+        if (!cleared) continue;
+        state.latched.push(o.key);
         added = true;
     }
     if (added) state.latched.sort();
@@ -1955,7 +2024,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         return null;
     }
     // ⛓ LATCHING BUTTONS — on the final stance: what is pressed now stays down for the visit.
-    noteLatches(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory);
+    noteLatches(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory, state.player_pos);
     return next;
 }
 

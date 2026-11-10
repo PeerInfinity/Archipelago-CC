@@ -156,8 +156,21 @@ describe('the maze producer over the shuffled atlas (buildPlaythroughMaze({sourc
         const named = [...flash].filter(([, n]) => n !== null);
         expect(named.length).toBeGreaterThan(0);
         for (const [k, n] of named) expect(maze.get(k), k).toBe(n);
-        // without `endpoints`, the maze's internal crossings' synthetic ids are keys too, and collide
-        expect(() => apExitNamesByEndpoint(doc)).toThrow(/compiled to two names/);
+    });
+    it('two exits of one atlas region with one synthetic id and two names throw; `endpoints` filtering leaves them out (a gadget doc)', () => {
+        // ⛓ tile-rules-automation-r-a4b (⚖ design-4): the guard's input is built here, not read off whichever committed level
+        // happens to compile two crossings to one synthetic id (L20 did, until it became one level world).
+        const payload = (exits) => ({ playable_payload: { atlas_region: 'level_gadget', exits } });
+        const doc = { preset_sidecars: { 1: {
+            level_gadget__r0c0: payload([{ atlas_exit_id: 'cross_r0c0', exitName: 'level_gadget__r1c0 -> level_gadget__r0c0' }]),
+            level_gadget__r2c0: payload([
+                { atlas_exit_id: 'cross_r0c0', exitName: 'level_gadget__r2c0 -> level_gadget__r0c0' },
+                { atlas_exit_id: 'out_stairs_0_0', exitName: 'level_gadget__r2c0 -> level_x' },
+            ]),
+        } } };
+        expect(() => apExitNamesByEndpoint(doc)).toThrow(/level_gadget\/cross_r0c0 compiled to two names/);
+        const real = apExitNamesByEndpoint(doc, '1', { endpoints: new Set(['level_gadget/out_stairs_0_0']) });
+        expect([...real]).toEqual([['level_gadget/out_stairs_0_0', 'level_gadget__r2c0 -> level_x']]);
     });
     it('the permissive bound is read off the compile\'s own layer and equals vanilla\'s (the bindings are the rooms build\'s)', () => {
         const er = MAZE.playthroughPermissiveLocations({ source: { atlas, roomsAtlas: env.pool.atlas } });

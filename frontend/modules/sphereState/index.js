@@ -405,8 +405,9 @@ async function loadEmbeddedFirstThenFile(sphereState, rulesPath, separateFilePat
 
 /**
  * The room's spoiler data, expanded by client/core/spoilerData.js on Connected:
- * { source, text, entries }. Loaded only while no file's log is (a file always
- * beats the room); a file that finishes loading later replaces it.
+ * { source, text, entries }. A file's log for the room's seed (or of unknown seed)
+ * beats it, in either arrival order; a file for ANOTHER seed loses to it
+ * (SphereState._rivalDecision).
  * EXPORTED for the rows.
  */
 export async function handleRoomSpoilerData(data) {

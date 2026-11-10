@@ -5,8 +5,8 @@
  *     prune really skips there (a pin that never skips proves nothing). Mutant MEASURED red by this file: the own-event
  *     exclusion dropped (a latch's own event target probed holding its event) loses the press's minimal set.
  *   - A latch whose held token arms a TRAP is refused by name (holding its event arms something: not proven monotone).
- *   - The committed `seedling_playthrough_maze` preset lays exactly L40's three latches (session tile-lay-l40-latches; the
- *     producer lays them from the rules' in-room press events): one payload, the cells `L40_LATCHES` checks.
+ *   - The committed `seedling_playthrough_maze` preset lays exactly L40's three latches, and since R-A4b L20's one (session tile-lay-l40-latches; the
+ *     producer lays them from the rules' in-room press events): the cells `L40_LATCHES` and `L20_LATCHES` check.
  * The L40-laid pins (search count; on ≡ off native and scripted) are the slow and train tiers':
  * `deriveLevelWorldLogic.latchSandwich.slow.test.js`, `deriveLevelWorldLogic.latchSandwich.train.test.js`.
  */
@@ -15,7 +15,7 @@ import { deserializeMazeWorld } from '../mazeRoomEngine.js';
 import { deriveEntryLogic, latchSandwich, nativeReachUnder } from './deriveLevelWorldLogic.js';
 import { latchEvents, regionItems, regionTargets, reachedTarget } from './deriveTileLogic.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { RULES, L40_LATCHES, payloadLatches, unlayLatches } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, L20_LATCHES, L40_LATCHES, payloadLatches, unlayLatches } from './deriveLevelWorldLogic.fixture.js';
 
 const EV = 'Latch L pressed';
 
@@ -136,20 +136,23 @@ describe('latch sandwich — the unproven case is refused by name', () => {
     });
 });
 
-describe('latch sandwich — the committed preset lays exactly L40\'s three latches (session tile-lay-l40-latches)', () => {
-    it('one payload lays latches, level_40__r0c53: the cells L40_LATCHES names (a literal that only CHECKS the producer)', () => {
+describe('latch sandwich — the committed preset lays exactly L40\'s three latches and L20\'s one (session tile-lay-l40-latches, R-A4b)', () => {
+    it('two payloads lay latches, level_20__r1c4 and level_40__r0c53: the cells L20_LATCHES and L40_LATCHES name (literals that only CHECK the producer)', () => {
         const payloads = Object.entries(RULES.preset_sidecars['1']).filter(([, s]) => s.playable_payload);
         expect(payloads.length).toBeGreaterThan(50);
         const laying = payloads.filter(([, s]) => Object.values(s.playable_payload.buttonLib ?? {}).some((b) => b.latch)).map(([k]) => k);
-        expect(laying).toEqual(['level_40__r0c53']);
+        expect(laying).toEqual(['level_20__r1c4', 'level_40__r0c53']);
         const laid = payloadLatches(RULES.preset_sidecars['1'].level_40__r0c53.playable_payload);
         expect(Object.fromEntries(Object.entries(laid).map(([g, { button, locks }]) => [g, { button, locks }])))
             .toEqual(JSON.parse(JSON.stringify(L40_LATCHES)));
+        const laidL20 = payloadLatches(RULES.preset_sidecars['1'].level_20__r1c4.playable_payload);
+        expect(Object.fromEntries(Object.entries(laidL20).map(([g, { button, locks }]) => [g, { button, locks }])))
+            .toEqual(JSON.parse(JSON.stringify(L20_LATCHES)));
         // each latch's event is an AP event location of the rules (the certifier's "no AP location" would name it otherwise)
         const apEvents = new Set(Object.values(RULES.regions['1']).flatMap((r) => r.locations.filter((l) => l.event).map((l) => l.name)));
-        expect(Object.values(laid).every((l) => apEvents.has(l.event))).toBe(true);
+        expect([...Object.values(laid), ...Object.values(laidL20)].every((l) => apEvents.has(l.event))).toBe(true);
         const withEvents = payloads.map(([, s]) => deserializeMazeWorld(s.playable_payload)).filter((w) => latchEvents(w).length > 0);
-        expect(withEvents.length).toBe(1);
+        expect(withEvents.length).toBe(2);
     });
     it('unlayLatches strips every latch (no level named): no payload lays one after it', () => {
         const bare = unlayLatches(RULES);

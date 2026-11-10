@@ -122,6 +122,18 @@ describe('mana primitives', () => {
         expect(gs.getRegionXP('R1').xp).toBe(0);
     });
 
+    it('chargeMana reports no depletion while noManaDepletionReset is set: the pool runs negative with debt', () => {
+        registerManaSubstrate('ta');
+        const gs = createGameStateSingleton(null);
+        gs.noManaDepletionReset = true;
+        expect(chargeMana({ substrateId: 'ta', amount: 130, regionId: 'R1' }))
+            .toEqual({ charged: true, depleted: false });
+        expect(gs.getCurrentMana()).toBe(-30);
+        expect(gs.manaDebt).toBe(30);
+        gs.noManaDepletionReset = false;
+        expect(chargeMana({ substrateId: 'ta', amount: 1 }).depleted).toBe(true);
+    });
+
     it('chargeMana without a regionId awards no XP (the bridge-style drain)', () => {
         registerManaSubstrate('jta');
         const gs = createGameStateSingleton(null);
@@ -384,6 +396,34 @@ describe('channel event router (index.js)', () => {
             },
             opts: { initialTarget: 'bottom' },
         }]);
+    });
+
+    // ⚖ Robert 2026-11-09, "Honour it everywhere": the JtA/omsi mirrored
+    // drains honour noManaDepletionReset in both loop modes.
+    describe.each([['off', false], ['on', true]])('noManaDepletionReset, loop mode %s', (_l, loopOn) => {
+        it('flag on: a drain that empties the pool runs it negative, with no reset and no teleport', () => {
+            gs.isLoopModeActive = loopOn;
+            gs.noManaDepletionReset = true;
+            bus.publish(RESOURCE_DELTA_EVENT, { substrateId: 'jta', resource: 'mana', amount: -130 });
+            expect(gs.getCurrentMana()).toBe(-30);
+            expect(gs.getLoopResetCount()).toBe(0);
+            expect(dispatcher.published).toHaveLength(0);
+        });
+
+        it('flag off: the same drain resets and teleports as before', () => {
+            gs.isLoopModeActive = loopOn;
+            gs.noManaDepletionReset = false;
+            bus.publish(RESOURCE_DELTA_EVENT, { substrateId: 'jta', resource: 'mana', amount: -130 });
+            expect(gs.getCurrentMana()).toBe(100);
+            expect(gs.getLoopResetCount()).toBe(1);
+            expect(dispatcher.published).toHaveLength(1);
+        });
+    });
+
+    it('a game-side reset request is answered with a reset even with the flag set (the run ended in the game itself)', () => {
+        gs.noManaDepletionReset = true;
+        bus.publish(RESOURCE_RESET_EVENT, { substrateId: 'jta', resource: 'mana' });
+        expect(gs.getLoopResetCount()).toBe(1);
     });
 
     it('routes a positive delta to an unclamped gain', () => {

@@ -1517,6 +1517,57 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
             MazeRoomUI.setModuleApis(null);
         }
     });
+
+    // ⚖ Robert 2026-11-09, "Honour it everywhere": noManaDepletionReset holds
+    // for the maze's own charge in both loop modes (chargeMana reports no
+    // depletion with the flag set), as the loops' own resets read it.
+    describe.each([
+        ['loop mode off (hand play)', false],
+        ['loop mode on (a loops-driven walk)', true],
+    ])('noManaDepletionReset, %s', (_label, loopOn) => {
+        function stepAt4Mana(gs, { flag }) {
+            const dispatcherCalls = [];
+            MazeRoomUI.setModuleApis({ eventBus: null, dispatcher: {
+                publish: (event, data, opts) => dispatcherCalls.push({ event, data, opts }),
+            } });
+            gs.setStartRegions(['Menu']);
+            gs.isLoopModeActive = loopOn;
+            gs.noManaDepletionReset = flag;
+            gs.currentMana = 4; // a 5-mana step empties the pool
+            const panel = new MazeRoomUI(null, {});
+            panel.world = { manaEnabled: true, longestShortestPath: 10, itemLocationNames: new Map() };
+            panel.currentRegionId = 'Forest';
+            panel.externalCheckedLocations = new Set();
+            panel._isLoopModeActive = loopOn;
+            panel._loopsDrivenAction = loopOn ? { type: 'regionMove' } : null;
+            panel._publishLoopsCompleted = () => {};
+            panel._costDataManager = makeStubCostDataManager({ regionCosts: { Forest: 50 } });
+            try {
+                panel._deductMazeStepMana({ x: 3, y: 3 });
+            } finally {
+                MazeRoomUI.setModuleApis(null);
+            }
+            return { panel, dispatcherCalls };
+        }
+
+        it('flag on: the step runs mana negative, with no reset and no teleport', () => {
+            const gs = createGameStateSingleton(null);
+            const { panel, dispatcherCalls } = stepAt4Mana(gs, { flag: true });
+            expect(gs.getCurrentMana()).toBe(-1);
+            expect(gs.manaDebt).toBe(1);
+            expect(gs.getLoopResetCount()).toBe(0);
+            expect(dispatcherCalls).toHaveLength(0);
+            if (loopOn) expect(panel._loopsDrivenAction).not.toBeNull();
+        });
+
+        it('flag off: the step resets and teleports as before', () => {
+            const gs = createGameStateSingleton(null);
+            const { dispatcherCalls } = stepAt4Mana(gs, { flag: false });
+            expect(gs.getCurrentMana()).toBe(gs.getMaxMana());
+            expect(gs.getLoopResetCount()).toBe(1);
+            expect(dispatcherCalls.filter((c) => c.event === 'user:regionMove')).toHaveLength(1);
+        });
+    });
 });
 
 describe('MazeRoomUI — action queue integration (Phase 1)', () => {

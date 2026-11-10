@@ -183,6 +183,7 @@ import './modules/tests/testCases/omsiUnlockTests.js';
 import './modules/tests/testCases/omsiRegionSplitTests.js';
 import './modules/tests/testCases/mazeConsumableTileTests.js';
 import './modules/tests/testCases/mazeBlockModeTests.js';
+import './modules/tests/testCases/manaDepletionFlagTests.js';
 import './modules/tests/testCases/seedlingAtlasMazeTests.js';
 import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
