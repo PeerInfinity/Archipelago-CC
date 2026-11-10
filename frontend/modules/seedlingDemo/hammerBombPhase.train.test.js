@@ -31,6 +31,7 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { atlasLevelSource } from './levelSource.js';
 import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
 import { BOMB_PHASE_WAIT, BOMB_PHASE_WAIT_COUNTS, withBombPhaseWait } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = join(HERE, 'fixtures', 'hammer-376-bomb');
@@ -81,7 +82,7 @@ const digest = (plan) => createHash('md5').update(JSON.stringify(plan.solution.m
     .digest('hex').slice(0, 12);
 
 describe('hammer-phase 376-BOMB — leg 376 at hammer phase 23', () => {
-    it('OFF: the page\'s 640 trips at the forced-hit rung\'s forks (main\'s answer)', () => {
+    it('OFF: the page\'s 640 trips at the forced-hit rung\'s forks (main\'s answer)', () => withL40Flip(false, () => {
         const { answer, counts } = solve376(5333, false);
         expect(BOMB_PHASE_WAIT.enabled).toBe(false);
         expect(answer.ok).toBe(false);
@@ -89,7 +90,7 @@ describe('hammer-phase 376-BOMB — leg 376 at hammer phase 23', () => {
         expect(answer.passes.map((p) => [p.pass, p.ok, p.work, p.deadline ?? null])).toEqual([
             ['dashless', false, 641, 'crusher-fork'], ['full', false, 1, 'walk']]);
         expect(counts.asked).toBe(0);
-    }, TIMEOUT);
+    }), TIMEOUT);
 
     it('ON: SOLVED hitless inside the page\'s 640, by a 4-tick still wait before the walk to the rock', () => {
         for (const seam of [5333, 5243]) {
@@ -107,7 +108,7 @@ describe('hammer-phase 376-BOMB — leg 376 at hammer phase 23', () => {
 });
 
 describe('hammer-phase 376-BOMB — a control phase', () => {
-    it('phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)', () => {
+    it('phase 15 (seam 5280): the arm is asked and keeps nothing, so ON = OFF key for key (rewound, no row)', () => withL40Flip(false, () => {
         const off = solve376(5280, false);
         const on = solve376(5280, true);
         expect(off.answer.ok).toBe(true);
@@ -118,5 +119,5 @@ describe('hammer-phase 376-BOMB — a control phase', () => {
         expect(on.counts.kept).toEqual([]);
         // the asks cost work units (the arm's `time` checkpoints and its probes), never a key
         expect(on.answer.work).toBeGreaterThan(off.answer.work);
-    }, TIMEOUT);
+    }), TIMEOUT);
 });

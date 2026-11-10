@@ -155,7 +155,6 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
             'level_12__r42c28 → level_83 (landing 2,54) | 7020/131072',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
-            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 2/8 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',

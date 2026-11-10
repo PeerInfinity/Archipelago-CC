@@ -34,5 +34,9 @@ describe('seedling_playthrough_maze — scripted ≡ native on every region', ()
         expect(native.problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
         expect(scripted.problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
         expect(scripted.lines).toEqual(native.lines);
-    }, 900_000);
+    // ⚖ Robert 2026-11-09, via the liaison: "Raise to 1,200 s (Recommended)" (session tile-rules-automation-r-a4b). Measured on CI,
+    // normalised to each run's own L40 scripted time: the control 2d1283375e projects to ~875 s and the R-A4b tip (sided openers)
+    // to ~976 s on the slowest runner seen, so 1,200 s leaves ~23% headroom. Only this test's limit: `vitest.calib.config.js`'s
+    // `testTimeout` stays, and a per-test limit overrides it (measured: with this one raised, the test passed at 971 s).
+    }, 1_200_000);
 });

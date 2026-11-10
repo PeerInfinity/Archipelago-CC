@@ -39,12 +39,12 @@ function arrivalRun(row) {
 
 describe('hammer-phase PIT-WEST — the fast rows', () => {
     it('both switches ship OFF, and the env alone turns each on', () => {
-        expect(CHOOSER_CUT_DEFAULT).toBe(false);
-        expect(CHOOSER_CUT.enabled).toBe(ENV.SEEDLING_CHOOSER_CUT === '1');
+        expect(CHOOSER_CUT_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(CHOOSER_CUT.enabled).toBe(ENV.SEEDLING_CHOOSER_CUT !== '0');
         withChooserCut(true, () => expect(CHOOSER_CUT.enabled).toBe(true));
         withChooserCut(false, () => expect(CHOOSER_CUT.enabled).toBe(false));
-        expect(DETOUR_VIA_BOUND_DEFAULT).toBe(false);
-        expect(DETOUR_VIA_BOUND.enabled).toBe(ENV.SEEDLING_DETOUR_VIA_BOUND === '1');
+        expect(DETOUR_VIA_BOUND_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(DETOUR_VIA_BOUND.enabled).toBe(ENV.SEEDLING_DETOUR_VIA_BOUND !== '0');
         withDetourViaBound(true, () => expect(DETOUR_VIA_BOUND.enabled).toBe(true));
         withDetourViaBound(false, () => expect(DETOUR_VIA_BOUND.enabled).toBe(false));
     });

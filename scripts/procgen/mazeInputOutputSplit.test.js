@@ -78,12 +78,13 @@ describe('red-first: a COMPOSED charge never reaches a world; a HAND term always
 
 describe('which plain levels become level worlds: the item-axis test, not a list', () => {
     // A level that starts failing (or passing) a test shows up here by name.
-    it('every plain multi-sub-region level is one level world but two, each kept per sub-region and saying why', () => {
+    it('every plain multi-sub-region level is one level world but one, kept per sub-region and saying why', () => {
         const { report, levelWorlds } = buildPlaythroughMaze({ levels: LEVELS, embedSphereLog: false });
         const kept = Object.fromEntries(report.maze_notes.filter((n) => n.kind === 'plain_kept_per_sub_region').map((n) => [n.region_id, n.message]));
-        expect(Object.keys(kept).sort()).toEqual(['level_20', 'level_94']);
-        // L20: its ButtonRoom latches lock@32,80 in the same level (an in-room press, rules-l20-button-latch).
-        expect(kept.level_20).toContain('L20 flag 4: lock@32,80 cleared');
+        expect(Object.keys(kept).sort()).toEqual(['level_94']);
+        // ⛓ L20 (session tile-rules-automation-r-a4b, ⚖ Robert 2026-11-08 "A: R-A4b sided openers (Recommended)"): its ButtonRoom latches
+        // lock@32,80 and stands behind a ShieldLock; with the sided-opener primitive the press is laid and L20 is ONE level world.
+        expect(report.maze_notes.some((n) => n.kind === 'level_world' && n.region_id === 'level_20')).toBe(true);
         // L94: r2c16 <-> r3c4 crosses TreeLarge's per-pixel mask; the physics model prices it, the grid cannot.
         expect(kept.level_94).toContain('r2c16 <-> r3c4 goes through material only the physics model walks');
         // ⛓ L12 (session tile-l12-one-world, ⚖ Robert 2026-11-04 "A: Build after R-A3 (Recommended)"): 15 items, 32,768 lattice

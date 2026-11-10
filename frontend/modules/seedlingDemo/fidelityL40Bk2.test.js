@@ -15,6 +15,7 @@
  * that plan is refused, and a seam where OFF's plan is hitless answers the same plan ON.
  */
 import { describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
@@ -80,7 +81,10 @@ describe('L40BK2 D1 — a weigh\'s holder derived under the rest of the stance h
         }
     }, 60_000);
 
-    it('ON: the chain walks the south door\'s links and ends in the hammer arc\'s press kill (D3\'s hand-over)', async () => {
+    it('ON: the chain walks the south door\'s links and ends in the hammer arc\'s press kill (D3\'s hand-over)', () => withL40Flip(false, async () => {
+        // ⛓ L40-FLIP-BUILD: pinned without the flip set (a BEFORE pin). With the flip ON this door-shut solve stops earlier, at
+        // `buttonroom@880,768` (APPROACH_DOOR/LATCH_WEIGH_FIRST try the south door first); the route never reaches this state —
+        // the walk carries the door (DOOR-CARRY).
         const { out, refusal } = await l40Bk2Solve(await l40Bk2Step67Boot(), L40BK2_D1_SWITCHES);
         expect(out).toBeNull();
         expect(refusal.message).not.toContain('no REACHABLE stance inside button@816,400');
@@ -88,7 +92,7 @@ describe('L40BK2 D1 — a weigh\'s holder derived under the rest of the stance h
             + '-> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 '
             + '(chaser bob@736,752)');
         expect(refusal.message).toContain('PRESS_KILL_REBOOT_GUARD');
-    }, 300_000);
+    }), 300_000);
 });
 
 describe('L40BK2 D1 — the solver\'s own chain from inside the lock room, on the game (p4g, 0 px)', () => {
@@ -137,22 +141,22 @@ describe('L40BK2 D2 — leg 368: a struck spinner priced where the walk\'s own s
         expect(line.requests[0].request.staging.seam.time).toBe(5280);
     });
 
-    it('OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144\'s hammer at t1222 (L40RES\'s hit)', () => {
+    it('OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144\'s hammer at t1222 (L40RES\'s hit)', () => withL40Flip(false, () => {
         const a = solveAt(5290, { dashSpinnerForecast: false });
         expect([a.ok, a.ticks, a.plan]).toEqual([true, 1600, '1da60bcb4c0d']);
         expect(a.hits).toEqual([[1222, 'spinner-hammer', 'spinner@192,144']]);
-    }, 120_000);
+    }), 120_000);
 
-    it('ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold\'s refusal, no hit plan', () => {
+    it('ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold\'s refusal, no hit plan', () => withL40Flip(false, () => {
         const a = solveAt(5290, L40BK2_D2_SWITCHES);
         expect(a.ok).toBe(false);
         expect(a.message).toMatch(/-> hold: the hold stands still .* inside bombpusher@112,128's 256 px reach/);
-    }, 120_000);
+    }), 120_000);
 
-    it('ON, seam 5280: OFF\'s hitless 1558 t plan, the same plan byte for byte', () => {
+    it('ON, seam 5280: OFF\'s hitless 1558 t plan, the same plan byte for byte', () => withL40Flip(false, () => {
         const off = solveAt(5280, { dashSpinnerForecast: false });
         const on = solveAt(5280, L40BK2_D2_SWITCHES);
         expect([off.ok, off.ticks, off.plan, off.hits]).toEqual([true, 1558, '32f29414cd8e', []]);
         expect(on).toEqual(off);
-    }, 240_000);
+    }), 240_000);
 });

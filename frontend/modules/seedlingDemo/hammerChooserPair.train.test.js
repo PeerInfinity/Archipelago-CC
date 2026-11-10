@@ -37,6 +37,7 @@ import { buildTape } from './botDriverV1.js';
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = join(HERE, 'fixtures', 'hammer-cpair');
@@ -87,7 +88,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
 
     it('853 at 5196: OFF the burn stance\'s walk refuses on bob@736,752 with the chooser silent; ON the pair '
         + 'bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on '
-        + 'to the spinner@816,848 press kill', () => {
+        + 'to the spinner@816,848 press kill', () => withL40Flip(false, () => {
         const off = solveLeg(LEG853, 5196, false);
         expect(off.ok).toBe(false);
         expect(off.message).toContain('-> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED');
@@ -100,10 +101,10 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         expect(on.counts.last).toEqual(['bob@736,752', 'bobsoldier@880,832']);
         expect(on.counts.kills).toEqual([{ id: 'bob@736,752', t: 855, how: 'dwell', dead: true }]);
         expect(on.message).toContain('-> kill (spinner@816,848) by press: the player died at t1046 (chaser bob@736,800)');
-    }, 240_000);
+    }), 240_000);
 
     it('853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF',
-        () => {
+        () => withL40Flip(false, () => {
             const off = solveLeg(LEG853, 5172, false);
             // ⛓ CPWIT flip: the PAIR arm's question (size 2); the shipped triple arm admits here
             const on = withPairSize(2, () => solveLeg(LEG853, 5172, true));
@@ -111,7 +112,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
             expect(on.counts.admitted).toBe(0);
             expect([on.ok, on.work, on.message]).toEqual([off.ok, off.work, off.message]);
             expect(off.message).toContain('chaser:bobsoldier@880,832');
-        }, 240_000);
+        }), 240_000);
 
     it('356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF', () => {
         const off = solveLeg(LEG356, null, false, Infinity);
@@ -122,7 +123,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
     }, 240_000);
 
     it('the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + '
-        + 'puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit', () => {
+        + 'puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit', () => withL40Flip(false, () => {
         const off = solveLeg(LEG367, null, false, Infinity);
         expect(off.ok).toBe(false);
         expect(off.message).toContain('the caller\'s anytime deadline');
@@ -136,7 +137,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
             expect(on.counts.last).toEqual(['bob@192,480', 'bob@224,496', 'puncher@128,624']);
             expect(on.counts.kills[0]).toEqual({ id: 'bob@192,480', t: 745, how: 'dwell', dead: true });
         });
-    }, 360_000);
+    }), 360_000);
 
     it('the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1\'s regression stays closed)', () => {
         const raw = JSON.parse(readFileSync(join(HERE, 'fixtures', 'tapes', 'r9-solve-16.json'), 'utf8'));

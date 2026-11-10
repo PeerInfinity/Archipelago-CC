@@ -20,6 +20,7 @@
  * is the hit-aware spinner forecast (the hammer arc's); this file pins the model against the game and the measurement.
  */
 import { describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -69,14 +70,20 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
         expect(h.map((r) => r.id)).not.toContain('wandlock@512,480');
     });
 
-    it('OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey\'s text', async () => {
+    it('OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey\'s text', () => withL40Flip(false, async () => {
+        // ⛓ L40-FLIP-BUILD: pinned without the flip set (a BEFORE pin). With the flip ON this door-shut solve stops earlier, at
+        // `buttonroom@880,768` (APPROACH_DOOR/LATCH_WEIGH_FIRST try the south door first); the route never reaches this state —
+        // the walk carries the door (DOOR-CARRY).
         const e = await withContactFidelity({ stanceReentryNextDoor: false }, solveStep93);
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain('-> hold stance (wandlock@448,432): STANCE_REENTRY — the walk to '
             + 'wandlock@448,432\'s `hold` stance (488,392) is itself blocked by wandlock@448,432 at tick 0');
-    }, 120_000);
+    }), 120_000);
 
-    it('ON: the re-entry passes to the chest (the south door\'s chain); the end is the chest walk\'s press kill', async () => {
+    it('ON: the re-entry passes to the chest (the south door\'s chain); the end is the chest walk\'s press kill', () => withL40Flip(false, async () => {
+        // ⛓ L40-FLIP-BUILD: pinned without the flip set (a BEFORE pin). With the flip ON this door-shut solve stops earlier, at
+        // `buttonroom@880,768` (APPROACH_DOOR/LATCH_WEIGH_FIRST try the south door first); the route never reaches this state —
+        // the walk carries the door (DOOR-CARRY).
         const e = await withContactFidelity({ stanceReentryNextDoor: true }, solveStep93);
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).not.toContain('STANCE_REENTRY');
@@ -84,7 +91,7 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
             // ⛓ t780 since hammer's STRIKE_ETA_FLOOR flip (main 6faff978ce; t1266 before it): the floor moves the press
             // timing, the end (the chest walk's press-kill death on bob@736,752) is the same — hammer's region.
             + '-> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752)');
-    }, 300_000);
+    }), 300_000);
 });
 
 describe('L40RES D1 — leg 368 at seam time 5290: the game\'s t1222 hit is the model\'s too', () => {

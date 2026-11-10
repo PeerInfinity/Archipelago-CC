@@ -19,6 +19,7 @@ import {
     CHOOSER_PAIR, ICETURRET_STATIC_KILL_COUNTS, resetChooserPairCounts, resetIceTurretStaticKillCounts, withChooserPair,
     withIceTurretStaticKill,
 } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 /** Run `fn` with `CHOOSER_PAIR`'s largest set at `size` (CPAIR's measurement arm), restoring it. */
 async function withPairSize(size, fn) {
@@ -32,7 +33,7 @@ async function withPairSize(size, fn) {
 }
 
 describe('hammer-phase ICEST on the latch chain (slow)', () => {
-    it('ON alone: the walk back refuses at t271 on bob@736,800, OFF\'s refusal byte for byte', async () => {
+    it('ON alone: the walk back refuses at t271 on bob@736,800, OFF\'s refusal byte for byte', async () => withL40Flip(false, async () => {
         const boot = await l40LatchBoot();
         // ⛓ CPAIR flip: `CHOOSER_PAIR` pinned OFF (ON at size 3 since its flip); this row is the pre-pair walk back
         const off = await withChooserPair(false, () => withIceTurretStaticKill(false, () => l40LatchSolve(boot)));
@@ -42,9 +43,9 @@ describe('hammer-phase ICEST on the latch chain (slow)', () => {
         expect(on.refusal.message).toBe(off.refusal.message);
         expect(on.refusal.perTick.map((k) => [...k])).toEqual(off.refusal.perTick.map((k) => [...k]));
         expect(ICETURRET_STATIC_KILL_COUNTS.handed).toEqual([]);
-    }, 900000);
+    }), 900000);
 
-    it('ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit', async () => {
+    it('ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit', async () => withL40Flip(false, async () => {
         const boot = await l40LatchBoot();
         resetIceTurretStaticKillCounts();
         resetChooserPairCounts();
@@ -54,5 +55,5 @@ describe('hammer-phase ICEST on the latch chain (slow)', () => {
         expect(ICETURRET_STATIC_KILL_COUNTS.kills[0]).toMatchObject({ id: 'iceturret@472,400', t: 577, dead: false });
         expect(r.refusal.message).toMatch(/-> kill \(iceturret@472,400\): no side of iceturret@472,400 gives a hitless kill — up: no try is hitless/);
         expect(r.refusal.message).not.toMatch(/HIT during the ice-turret arm/);
-    }, 600000);
+    }), 600000);
 });

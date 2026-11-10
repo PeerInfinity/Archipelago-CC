@@ -1154,10 +1154,27 @@
       <span id="editSetIdentity" class="note"></span>
     </div>
     <div id="editSetRooms"></div>
+    <!--
+      ⛓ SEEDLING EDITOR E3 — THE MAP. The same canvas shows either the MAP (a 2D layout DERIVED from the exits;
+      nothing about it is stored) or the STRIP (one cell per room, in index order — still the adapter's own grid,
+      kept because RECT/PASTE between sets addresses an index RANGE). `?setView=strip` opens on the strip.
+      Pan: scroll the panel. Zoom: + / − / 0 on the focused map, the buttons, or Ctrl+wheel.
+    -->
+    <div class="line">
+      <label for="editSetMapView">map view</label>
+      <input type="checkbox" id="editSetMapView" checked>
+      <button id="editSetZoomOut">−</button>
+      <button id="editSetZoomIn">+</button>
+      <button id="editSetZoomFit">fit</button>
+      <button id="editSetMapRelayout">RE-LAYOUT</button>
+      <button id="editSetDisconnectTool">DISCONNECT on the map (d)</button>
+      <span class="note">click a room to select it, double-click to open it</span>
+    </div>
     <div class="line" id="editSetOverviewWrap"
-         style="position:relative;overflow-x:auto;max-width:100%">
+         style="position:relative;overflow:auto;max-width:100%;max-height:640px">
       <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
     </div>
+    <div class="line"><span id="editSetMapNote" class="note" style="display:block;min-height:1.4em"></span></div>
     <div class="line">
       <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
       <label for="editSetExitList">the selected room's exits</label>

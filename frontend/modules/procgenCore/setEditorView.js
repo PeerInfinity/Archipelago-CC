@@ -79,6 +79,9 @@ export class SetEditorViewError extends Error {
 
 const fail = (message) => { throw new SetEditorViewError(message); };
 
+/** E3: one zoom step of the map (keys `+`/`-`, the buttons, Ctrl+wheel). */
+const MAP_ZOOM_STEP = 1.25;
+
 /**
  * ⛓ `reportOver`'s own discipline (`setEditorCore.js:54`): a reader that was
  * not handed in refuses BY NAME rather than becoming `undefined is not a
@@ -203,6 +206,15 @@ const el = (doc, tag, className, text) => {
  *   installs its bridge ASYNCHRONOUSLY and after its first draw — a value read
  *   at mount would say "standalone" for every hosted session
  * @param {object}  [o.doc]        the DOM the `edit*` ids live in
+ * @param {object}  [o.overviewMap] (Seedling editor E3, additive) a 2D MAP of the set drawn on the SAME overview
+ *   canvas, in place of the strip: `{frame(record), shapes(record, frame, {selected}), roomAt(record, frame, p),
+ *   linkAt(record, frame, p, {selected}), markerAt(record, frame, p, room), setZoom(z), zoom, reset(),
+ *   state(record)}`, all in CANVAS PIXELS (see `seedlingDemo/seedlingSetMap.createSetMap`). ⛔ A VIEW: the
+ *   adapter's one-row grid, the room ids and every op are unchanged, and a click still answers `{tx: room, ty: 0}`.
+ *   `null` (the default) is today's strip, untouched. The substrate builds the provider, because which way a door
+ *   leads is a fact about the substrate's documents.
+ * @param {boolean} [o.overviewMapOn] whether the map (rather than the strip) is shown at mount — `false` unless
+ *   asked, so a caller that never heard of the map keeps the strip; `#editSetMapView` toggles it
  */
 export function mountSetEditor({
     lifetime, session, adapter, deps = {}, compileRegionAtlas, validateRegionAtlas,
@@ -215,6 +227,7 @@ export function mountSetEditor({
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
     loadZip = null, apworldEditor = null,
+    overviewMap = null, overviewMapOn = false,
     doc = globalThis.document,
 } = {}) {
     /**
@@ -395,6 +408,110 @@ export function mountSetEditor({
     const layoutNow = () => overviewLayout(roomCount(),
         overview?.parentNode?.clientWidth ?? OVERVIEW.cellPx * roomCount());
 
+    /**
+     * ⛓ ONE ROOM'S STILL, FROM THE CACHE OR DRAWN NOW — shared by the strip and the map (E3), so both read the
+     * same `stillKey` and one cache. `null` when there is no renderer or no key.
+     */
+    const stillOf = (i, cell) => {
+        const key = stillKey(cell);
+        if (!drawRoomStill || key === null) return null;
+        let still = stills.get(i);
+        if (!still || still.key !== key) {
+            const c = doc.createElement('canvas');
+            let why = null;
+            try {
+                why = drawRoomStill(c, cell, i);
+            } catch (e) {
+                if (!(e instanceof Error)) throw e;
+                why = e.message;
+            }
+            still = { key, canvas: why ? null : c, why };
+            stills.set(i, still);
+        }
+        return still;
+    };
+
+    /* ── THE MAP (Seedling editor E3) — the same canvas, a 2D geometry from `overviewMap` ── */
+
+    /** Whether the map, not the strip, is on the canvas. Only ever true with a provider. */
+    let mapOn = overviewMap !== null && overviewMapOn === true;
+    /** The map's last frame — what `cellAt` and the shapes are measured against. */
+    let mapFrame = null;
+    /** A DISCONNECT picked on the map and waiting for its confirming click: `{room, value, link}`. */
+    let disconnectPick = null;
+
+    const paintMap = () => {
+        const layout = overviewMap.frame(record());
+        mapFrame = layout;
+        overview.width = layout.width;
+        overview.height = layout.height;
+        overview.style.width = `${layout.width}px`;
+        overview.style.height = `${layout.height}px`;
+        const ctx = overview.getContext ? overview.getContext('2d') : null;
+        if (!ctx) return;
+        ctx.clearRect(0, 0, layout.width, layout.height);
+        ctx.fillStyle = '#0c0c0c';
+        ctx.fillRect(0, 0, layout.width, layout.height);
+        for (let i = 0; i < roomCount(); i += 1) {
+            const cell = adapterFns.readSetCell(record(), i, 0);
+            const r = layout.cells[i];
+            ctx.save();
+            ctx.fillStyle = i === selected ? '#204050' : '#181818';
+            ctx.fillRect(r.x, r.y, r.w, r.h);
+            const still = r.w >= OVERVIEW.minStillPx ? stillOf(i, cell) : null;
+            const drew = Boolean(still?.canvas && still.canvas.width > 0);
+            if (drew) ctx.drawImage(still.canvas, r.still.x, r.still.y, r.still.w, r.still.h);
+            ctx.strokeStyle = i === selected ? '#7fe0ff' : '#555';
+            ctx.lineWidth = i === selected ? 2 : 1;
+            ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1);
+            ctx.fillStyle = drew ? '#ffd75f' : '#bbb';
+            ctx.font = '10px monospace';
+            ctx.fillText(`L${i}`, r.x + 3, r.y + 11);
+            const isEmbed = sourceKind(cell) === 'embed';
+            badgeFlags.push(isEmbed);
+            if (isEmbed) ctx.fillText('⛔embed', r.x + 3, r.y + 23);
+            const substrate = cellSubstrate(cell);
+            substrateFlags.push(substrate ?? null);
+            if (substrate) {
+                ctx.fillStyle = '#8fd7a0';
+                ctx.fillText(substrate, r.x + 3, r.y + (isEmbed ? 35 : 23));
+            }
+            ctx.restore();
+        }
+    };
+
+    /** A pointer event as a point on the map canvas, in canvas pixels. */
+    const mapPoint = (ev) => {
+        const rect = overview.getBoundingClientRect();
+        if (!(rect.width > 0) || !(rect.height > 0)) return null;
+        return {
+            x: ((ev.clientX - rect.left) / rect.width) * overview.width,
+            y: ((ev.clientY - rect.top) / rect.height) * overview.height,
+        };
+    };
+
+    /**
+     * ⛓ The map's shapes, in the overlay's CELL space. `editorView` scales a shape by the adapter's bounds
+     * (`{w: rooms, h: 1}`), so a canvas pixel `(x, y)` is cell `(x·n/width, y/height)`. The provider's `link` and
+     * `marker` fields are its own and are stripped here.
+     */
+    const mapShapes = () => {
+        if (!mapFrame || !(mapFrame.width > 0)) return [];
+        const n = Math.max(1, roomCount());
+        const sx = n / mapFrame.width;
+        const sy = 1 / mapFrame.height;
+        return overviewMap.shapes(record(), mapFrame, { selected }).map((sh) => {
+            const { link, marker, ...rest } = sh;
+            const pick = disconnectPick && link && link.kind === disconnectPick.link.kind
+                && link.a === disconnectPick.link.a && link.b === disconnectPick.link.b;
+            return {
+                ...rest,
+                ...(pick ? { highlight: true, label: `✂ ${rest.label ?? 'DISCONNECT?'}` } : {}),
+                points: rest.points.map((pt) => ({ x: pt.x * sx, y: pt.y * sy })),
+            };
+        });
+    };
+
     const paintStrip = () => {
         /**
          * ⛔ RESET BEFORE THE EARLY RETURNS, so `badges()` describes THIS paint
@@ -405,6 +522,8 @@ export function mountSetEditor({
         badgeFlags = [];
         substrateFlags = [];
         if (!overview) return;
+        if (mapOn) { paintMap(); return; }
+        mapFrame = null;
         const layout = layoutNow();
         overview.width = layout.width;
         overview.height = layout.height;
@@ -432,22 +551,9 @@ export function mountSetEditor({
              * — the index, or a fresh object — would either never invalidate or
              * never hit.
              */
-            const key = stillKey(cell);
             let drew = false;
-            if (layout.stills && drawRoomStill && key !== null) {
-                let still = stills.get(i);
-                if (!still || still.key !== key) {
-                    const c = doc.createElement('canvas');
-                    let why = null;
-                    try {
-                        why = drawRoomStill(c, cell, i);
-                    } catch (e) {
-                        if (!(e instanceof Error)) throw e;
-                        why = e.message;
-                    }
-                    still = { key, canvas: why ? null : c, why };
-                    stills.set(i, still);
-                }
+            const still = layout.stills ? stillOf(i, cell) : null;
+            if (still) {
                 if (still.canvas && still.canvas.width > 0) {
                     ctx.drawImage(still.canvas, x + 2, top + 2,
                         layout.cellPx - 4, h - 4);
@@ -516,6 +622,17 @@ export function mountSetEditor({
      * not a second row.
      */
     const cellAt = (ev) => {
+        if (mapOn) {
+            // ⛓ E3: a map click is still answered in the adapter's own coordinates — `{tx: room, ty: 0}`.
+            const p = mapPoint(ev);
+            const room = p && mapFrame ? overviewMap.roomAt(record(), mapFrame, p) : null;
+            /**
+             * ⛔ A LINK LIES BETWEEN ROOMS, so with DISCONNECT armed a click in the gap is still a press: it is
+             * handed on (as the selected room, which the tool ignores) with its point, and the tool decides.
+             */
+            if (room === null && p && view?.tool === 'disconnect') return { tx: selected, ty: 0, point: p };
+            return room === null ? null : { tx: room, ty: 0, point: p };
+        }
         const rect = overview.getBoundingClientRect();
         const n = roomCount();
         if (!(rect.width > 0) || n === 0) return null;
@@ -623,6 +740,19 @@ export function mountSetEditor({
      * exists at all).
      */
     const connectAt = (cell) => {
+        /**
+         * ⛓ E3: ON THE MAP, a click on one of the SOURCE room's door ticks picks THAT exit and keeps CONNECT armed
+         * — the list beside it is set to it, so the op below still reads its source exit from the one control.
+         */
+        if (armedExit !== null && mapOn && cell.point && cell.tx === armedExit.room) {
+            const marker = overviewMap.markerAt(record(), mapFrame, cell.point, cell.tx);
+            const sel = $('editSetExitList');
+            if (marker && sel) {
+                sel.value = exits.valueOf(rows[cell.tx].exitList[marker.index]);
+                say(`CONNECT — source exit is #${marker.index} of room ${cell.tx}; now click the TARGET room.`);
+                return;
+            }
+        }
         if (armedExit === null) {
             selectRoom(cell.tx);
             armedExit = { room: cell.tx };
@@ -647,6 +777,71 @@ export function mountSetEditor({
         });
         armedExit = null;
         view.setTool(null);
+    };
+
+    /**
+     * ⛓⛓ E3 — DISCONNECT ON THE MAP: the first click on a link picks the door it means (the room at the nearer end,
+     * its first exit to the other room — or the one already chosen in the exit list) and says what the press will
+     * do, ordinal shift included; a second click on the same link applies the one `disconnect`. Every refusal is the
+     * adapter's own sentence. A pit or a `named_rooms` arrival is not an exit and is refused here by name.
+     */
+    const disconnectAt = (cell) => {
+        const p = cell.point;
+        const hit = p && mapFrame ? overviewMap.linkAt(record(), mapFrame, p, { selected }) : null;
+        if (!hit) {
+            say('DISCONNECT — click ON a link (a line between two rooms); that point is a room, not a link', true);
+            return;
+        }
+        const { link } = hit;
+        if (link.kind !== 'exit') {
+            say(link.kind === 'pit'
+                ? `DISCONNECT refused — that line is a PIT (room ${link.from} falls to room ${link.to}), a `
+                    + '`fallthrough` on the room, not an exit; `disconnect` addresses exits only'
+                : `DISCONNECT refused — that line is a named_rooms arrival (\`${link.key}\`), not an exit; `
+                    + 'it is the manifest\'s, edited in the manifest form', true);
+            return;
+        }
+        if (disconnectPick && disconnectPick.link.a === link.a && disconnectPick.link.b === link.b) {
+            const { room, value } = disconnectPick;
+            disconnectPick = null;
+            const res = applySet(exits.disconnectOp(room, value));
+            if (!res?.ok || !res.applied) render();
+            return;
+        }
+        const other = hit.nearRoom === link.a ? link.b : link.a;
+        let room = hit.nearRoom;
+        let candidates = (rows[room]?.exitList ?? []).filter((ex) => ex.to === other);
+        if (candidates.length === 0) {
+            room = other;
+            candidates = (rows[room]?.exitList ?? []).filter((ex) => ex.to === hit.nearRoom);
+        }
+        if (candidates.length === 0) {
+            say(`DISCONNECT — no exit of room ${link.a} or ${link.b} leads to the other`, true);
+            return;
+        }
+        selectRoom(room);
+        const sel = $('editSetExitList');
+        const chosen = candidates.find((ex) => String(exits.valueOf(ex)) === sel?.value) ?? candidates[0];
+        if (sel) sel.value = String(exits.valueOf(chosen));
+        disconnectPick = { room, value: exits.valueOf(chosen), link };
+        const effect = exits.disconnectEffect ? exits.disconnectEffect(rows, room, exits.valueOf(chosen)) : '';
+        say(`DISCONNECT ${exits.labelOf(chosen)} of room ${room}? Click the SAME link again to apply (Escape `
+            + `cancels).${candidates.length > 1 ? ` ${candidates.length} exits of room ${room} lead there; pick another `
+            + 'in the exit list, then click the link.' : ''} ${effect}`);
+        renderMapNote();
+        view.repaint();
+    };
+
+    /** ⛓ E3: the note under the map — what a DISCONNECT of the listed exit would do, said before the press. */
+    const renderMapNote = () => {
+        const note = $('editSetMapNote');
+        if (!note) return;
+        if (!overviewMap) { note.textContent = ''; return; }
+        const value = $('editSetExitList')?.value ?? '';
+        const ex = (rows[selected]?.exitList ?? []).find((e) => String(exits.valueOf(e)) === value);
+        const effect = ex && exits.disconnectEffect ? exits.disconnectEffect(rows, selected, value) : '';
+        note.textContent = (disconnectPick ? '✂ PICKED — click the same link again to apply. ' : '')
+            + (ex ? `DISCONNECT ${exits.labelOf(ex)} of room ${selected}: ${effect}` : '');
     };
 
     const view = mountEditorView({
@@ -679,8 +874,11 @@ export function mountSetEditor({
         }),
         floodTarget: () => null,
         pasteOptions: () => ({}),
-        tools: [{ id: 'connect', label: 'CONNECT two rooms', key: 'c', at: connectAt }],
-        shapes: () => exitArrowShapes(rows, { selected }),
+        tools: [
+            { id: 'connect', label: 'CONNECT two rooms', key: 'c', at: connectAt },
+            ...(overviewMap ? [{ id: 'disconnect', label: 'DISCONNECT a link (map)', key: 'd', at: disconnectAt }] : []),
+        ],
+        shapes: () => (mapOn ? mapShapes() : exitArrowShapes(rows, { selected })),
         commands: [{
             id: UNDO_COMMAND_ID,
             label: 'UNDO the last SET edit',
@@ -692,7 +890,12 @@ export function mountSetEditor({
                 render();
                 onSetChange?.({ why: 'op' });
             },
-        }],
+        }, ...(overviewMap ? [
+            { id: 'mapZoomIn', label: 'ZOOM the map in', key: '+', run: () => zoomBy(MAP_ZOOM_STEP) },
+            { id: 'mapZoomInEq', label: 'ZOOM the map in', key: '=', run: () => zoomBy(MAP_ZOOM_STEP) },
+            { id: 'mapZoomOut', label: 'ZOOM the map out', key: '-', run: () => zoomBy(1 / MAP_ZOOM_STEP) },
+            { id: 'mapZoomFit', label: 'FIT the map to the panel', key: '0', run: () => zoomFit() },
+        ] : [])],
         /**
          * ⛓⛓⛓ **WHICH SESSION `Ctrl+Z` HITS IS THE DOM'S OWN FOCUS.** This view
          * binds its keys to the OVERVIEW CANVAS; the room editor's view binds
@@ -703,7 +906,10 @@ export function mountSetEditor({
          */
         keyTarget: overview,
         say,
-        offRoom: () => 'that point is past the last room of the strip',
+        offRoom: (t) => (mapOn
+            ? (t === 'disconnect' ? 'DISCONNECT — click ON a link (a line between two rooms)'
+                : 'that point is not on a room of the map')
+            : 'that point is past the last room of the strip'),
         onChange: ({ result }) => {
             if (result?.applied) {
                 stills.clear();
@@ -736,6 +942,101 @@ export function mountSetEditor({
 
     // ⛓ See `keyTarget` above — the strip owns its keys.
     mine.on(overview, 'keydown', (e) => e.stopPropagation());
+
+    /* ── E3: THE MAP'S OWN CONTROLS — zoom, the view toggle, re-layout, select and open ── */
+
+    function zoomBy(k) {
+        if (!overviewMap) return;
+        const before = overviewMap.zoom;
+        const z = overviewMap.setZoom(before * k);
+        say(`MAP zoom ${z.toFixed(2)}×${z === before ? ' (at the limit)' : ''}`);
+        render();
+    }
+    function zoomFit() {
+        if (!overviewMap || !mapOn) return;
+        overviewMap.setZoom(1);
+        const f = overviewMap.frame(record());
+        const avail = overview?.parentNode?.clientWidth ?? f.width;
+        const z = overviewMap.setZoom(Math.max(0.01, avail / f.width));
+        say(`MAP fitted to the panel: zoom ${z.toFixed(2)}×`);
+        render();
+    }
+    const openRoomFromMap = (i) => {
+        const row = rows[i];
+        if (!row) return;
+        if (!row.openable) {
+            say(`room ${i} cannot be opened here — ${row.why ?? 'its exits cannot be read'}`, true);
+            return;
+        }
+        selectRoom(i);
+        openRoomAt(i);
+        render();
+        onSetChange?.({ why: 'room' });
+    };
+    if (overviewMap && overview) {
+        /**
+         * ⛓ A click with NOTHING ARMED (or the idle BRUSH) selects the room under it and highlights its links in
+         * and out; a double click opens it in the room editor, exactly as the rooms table's OPEN does. ⚠
+         * `editorView`'s own click listener runs first and says why a brush cannot paint a set; this one runs after
+         * it and says what the click did.
+         */
+        /** ⛓ The set view's idle state: nothing armed, or the default BRUSH (which a set refuses by name). */
+        const idle = () => view.tool === null || view.tool === 'brush';
+        /**
+         * ⛔ IDLENESS IS READ AT THE PRESS, not at the click: a CONNECT that lands (or is refused) disarms itself
+         * inside `editorView`'s click handler, which runs first — read then, the same click would also "select" and
+         * write over the op's own sentence.
+         */
+        let idleAtPress = false;
+        mine.on(overview, 'mousedown', () => { idleAtPress = idle(); });
+        mine.on(overview, 'click', (ev) => {
+            if (!mapOn || !idleAtPress) return;
+            const c = cellAt(ev);
+            if (!c) return;
+            selectRoom(c.tx);
+            say(`selected room ${c.tx} — its links in and out are highlighted; double-click (or OPEN) edits it, `
+                + 'C arms CONNECT, D arms DISCONNECT');
+        });
+        mine.on(overview, 'dblclick', (ev) => {
+            if (!mapOn || !idle() || !idleAtPress) return;
+            const c = cellAt(ev);
+            if (c) openRoomFromMap(c.tx);
+        });
+        mine.on(overview, 'wheel', (ev) => {
+            if (!mapOn || !(ev.ctrlKey || ev.metaKey)) return;
+            ev.preventDefault();
+            zoomBy(ev.deltaY < 0 ? MAP_ZOOM_STEP : 1 / MAP_ZOOM_STEP);
+        });
+        const toggle = $('editSetMapView');
+        if (toggle) {
+            toggle.checked = mapOn;
+            mine.on(toggle, 'change', () => {
+                mapOn = Boolean(toggle.checked);
+                disconnectPick = null;
+                if (!mapOn && view.tool === 'disconnect') view.setTool(null);
+                say(mapOn ? 'the overview is the MAP' : 'the overview is the STRIP (one cell per room, in index order)');
+                render();
+            });
+        }
+        for (const [id, run] of [['editSetZoomIn', () => zoomBy(MAP_ZOOM_STEP)],
+            ['editSetZoomOut', () => zoomBy(1 / MAP_ZOOM_STEP)], ['editSetZoomFit', zoomFit],
+            ['editSetMapRelayout', () => {
+                overviewMap.reset();
+                say('MAP re-laid out — the canonical layout of this set (positions are derived; none are stored)');
+                render();
+            }],
+            ['editSetDisconnectTool', () => {
+                if (!mapOn) { say('DISCONNECT on the map needs the MAP view', true); return; }
+                view.setTool('disconnect');
+                say('DISCONNECT is ARMED — click a link once to pick it (the note says what it would do), '
+                    + 'again to apply. Escape disarms.');
+            }]]) {
+            const b = $(id);
+            if (b) mine.on(b, 'click', run);
+        }
+        const list = $('editSetExitList');
+        if (list) mine.on(list, 'change', () => renderMapNote());
+    }
 
     /* ── THE ONE OP PATH ───────────────────────────────────────────── */
 
@@ -1200,7 +1501,7 @@ export function mountSetEditor({
             + ` · ${view.describe()}`
             + (open ? ` · ROOM ${open.room} open with ${open.ops} edit(s)` : ' · no room open')
             + ` · ⌨ Ctrl+Z here hits the ${focusInSet ? NOUN : 'ROOM'} session `
-            + `(the strip owns its keys; focus it to undo the ${NOUN})`;
+            + `(the ${mapOn ? 'map' : 'strip'} owns its keys; focus it to undo the ${NOUN})`;
     };
 
     /* ── RENDER ────────────────────────────────────────────────────── */
@@ -1250,6 +1551,7 @@ export function mountSetEditor({
          * initialised (its first call is the last statement of this mount), so
          * this is not the mount-time call that hits the TDZ.
          */
+        if (view.tool !== 'disconnect') disconnectPick = null;
         view.repaint();
         fillExitSelect('editSetExitList', selected);
         fillOrdinalSelect();
@@ -1258,6 +1560,7 @@ export function mountSetEditor({
         renderManifest();
         renderRoomForm();
         renderIdentity();
+        renderMapNote();
         paintApworldButton();
         const close = $('editRoomClose');
         if (close) close.disabled = roomSession() === null;
@@ -1731,6 +2034,16 @@ export function mountSetEditor({
         substrates: () => [...substrateFlags],
         applySet,
         selectRoom,
+        /**
+         * ⛓ E3 — the MAP, as its last paint left it: `null` with no provider or with the strip shown. Positions are
+         * grid cells; `rule` is `canonical` | `sticky` | `unchanged`, `moved` how many rooms the last re-layout moved.
+         */
+        map: () => (overviewMap && mapOn ? {
+            ...overviewMap.state(record()),
+            frame: mapFrame ? { width: mapFrame.width, height: mapFrame.height } : null,
+            cells: mapFrame ? mapFrame.cells.map((c) => [c.x, c.y, c.w, c.h]) : [],
+            picked: disconnectPick ? { room: disconnectPick.room, value: disconnectPick.value } : null,
+        } : null),
         report: () => lastReport,
         destroy() {
             view.destroy();
