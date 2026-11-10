@@ -196,6 +196,9 @@ export async function loadContentSet(stack, { base, readJson, concepts = CONCEPT
  * ⛓ C4 — except a stack made only of DEFAULT packs with no set handed in
  * (`contentSet` null): that set is built from the preload cache
  * (`defaultContentSetOf`), so a synchronous builder needs no load of its own.
+ * ⛓ C4 — `contentSet: DEFER_CONTENT_SET` composes arguments for a job that
+ * attaches its set where it RUNS (the APWorld editor's worker): the world's own
+ * list only, no set, no refusal.
  */
 export function contentRegionParams({ params, contentSet = null, substrateIds = [] }) {
     const own = assertContentParam(params?.content);
@@ -204,6 +207,7 @@ export function contentRegionParams({ params, contentSet = null, substrateIds = 
     // ⛓ C4 — a stack of DEFAULT packs only, with no set handed in: built from the preload cache
     //   (refused by name when a pack was not preloaded). A stack naming `params.content` still
     //   needs the awaited load.
+    if (contentSet === DEFER_CONTENT_SET) return own.length ? { [RECORDED_CONTENT_KEY]: [...own] } : {};
     if (contentSet === null && !own.length) contentSet = defaultContentSetOf(stack);
     if (!isContentSet(contentSet) || stack.some((id) => !contentSet.ids.includes(id))) {
         throw new WorldContentError(`the world's content stack [${stack.join(', ')}] was not loaded `
@@ -414,15 +418,11 @@ export function defaultContentSetOf(stack) {
 }
 
 /**
- * `regionParams` without its loaded set — for arguments that leave the process
- * (a worker's `postMessage`, which cannot clone the set's readers) or are
- * recorded (an op's `provenance`). `regionParams` ITSELF when it holds none.
+ * The `contentSet` that DEFERS the set: arguments composed here are posted to a
+ * worker (whose `postMessage` cannot clone the set's readers) or recorded in an
+ * op's `provenance`, and the job attaches the set where it runs.
  */
-export function withoutContentSet(regionParams) {
-    if (!regionParams || typeof regionParams !== 'object' || !(CONTENT_SET_KEY in regionParams)) return regionParams;
-    const { [CONTENT_SET_KEY]: _set, ...rest } = regionParams;
-    return rest;
-}
+export const DEFER_CONTENT_SET = Object.freeze({ deferred: 'the job attaches its content set where it runs' });
 
 /**
  * The content list a document records for player `p` (`procgen_metadata[p].content`,

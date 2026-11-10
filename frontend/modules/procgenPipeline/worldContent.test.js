@@ -30,7 +30,7 @@ import {
     assertContentLoaded, attachContentSet, attachEnvelopeContent, contentListOf, contentParamRefusal, contentRegionParams,
     effectiveContentStack, isContentSet, loadContentSet, recordedContentOf,
     declaredDefaultContentPacks, defaultContentSetOf, documentContentOf, preloadDefaultContent,
-    preloadedDefaultContentPacks, resetDefaultContentCache, withoutContentSet,
+    preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET,
 } from './worldContent.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -439,13 +439,10 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
         expect(defaultContentSetOf(stack)).toBe(cached);
         expect(JSON.stringify({ [CONTENT_SET_KEY]: cached })).toBe('{}');
     });
-    it('withoutContentSet drops the set (for a postMessage or a provenance); documentContentOf reads the per-player record', async () => {
-        const rp = { maxIterations: 0 };
-        expect(withoutContentSet(rp)).toBe(rp);
-        const set = await loadContentSet(['trial'], memIo());
-        const posted = withoutContentSet({ ...rp, content: ['trial'], [CONTENT_SET_KEY]: set });
-        expect(posted).toEqual({ ...rp, content: ['trial'] });
-        expect(() => structuredClone(posted)).not.toThrow();
+    it('DEFER_CONTENT_SET composes the list only (no set, no refusal); documentContentOf reads the per-player record', () => {
+        const reg = { params: { content: ['trial'] }, contentSet: DEFER_CONTENT_SET, substrateIds: ['maze'] };
+        expect(contentRegionParams(reg)).toEqual({ [RECORDED_CONTENT_KEY]: ['trial'] });
+        expect(contentRegionParams({ ...reg, params: {} })).toEqual({});
         const doc = { procgen_metadata: { 1: { driver: 'x' }, 2: { driver: 'x', [RECORDED_CONTENT_KEY]: ['trial'] } } };
         expect(documentContentOf(doc, 1)).toEqual([]);
         expect(documentContentOf(doc, '2')).toEqual(['trial']);

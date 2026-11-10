@@ -27,6 +27,7 @@ import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { bagFromPayload } from '../procgenCore/regionGenerationForm.js';
 import { assembleLibraryRegionParams, assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts } from '../procgenPipeline/presetRun.js';
+import { DEFER_CONTENT_SET } from '../procgenPipeline/worldContent.js';
 import {
     REGENERATE_BASE_REGION_PARAMS, REGION_SOURCE_KINDS, freeItemsFor, hostsSurplusExitsNatively,
     librarySourceSummary, offersLibrarySource, regionSizeFor,
@@ -209,7 +210,12 @@ export function composeRegenerateArgs(doc, player, region, target, bag, { source
         region,
         substrate: target,
         seed: bag[REGION_GENERATION_SEED_KEY],
-        regionParams: assembleRegionParams({ activeIds: [target], mode: 'topDown', params: bag }),
+        // ⛓ CONTENT SETS C4 — the args are posted to the worker and recorded in a provenance, so they carry
+        //   no loaded set (its readers cannot be cloned): the job attaches it where it runs
+        //   (`regionGenerationRun.attachJobContent`; a default-only stack from that process's preload cache).
+        regionParams: assembleRegionParams({
+            activeIds: [target], mode: 'topDown', params: bag, contentSet: DEFER_CONTENT_SET,
+        }),
         hazardOpts: effectiveHazardOpts(bag),
         ...(tiles ? { size: { width: bag.regionWidth, height: bag.regionHeight } } : {}),
         freeItems: freeItemsFor(doc, player, entry),
