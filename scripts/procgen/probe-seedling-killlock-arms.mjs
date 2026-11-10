@@ -37,6 +37,18 @@
  * Run: node scripts/procgen/probe-seedling-killlock-arms.mjs [--host=http://localhost:8000] [--arm-ticks=1200]
  *      [--clear-ticks=4000] [--settle=240] [--engage=48] [--margin=5] [--only=60] [--arms=sword,spear] [--include-fired] [--wait-for-box=<sec>]
  *      `--include-fired` also asks a lock the census FIRES on (a `cannot` side, each arm alone): the L53 pocket witness
+ *
+ * ⛓ RECORD, `--include-fired` (session tile-encounter-kill-arms, 2026-11-10, local box, headless logic-only; ARMS windows
+ * rebuilds 0 throughout). Each latched kill lock's `cannot` pocket, every arm ALONE, `--margin=7 --arm-ticks=2400
+ * --clear-ticks=1` (CLEAR/RETURN cut on purpose: they ask the room side, which this run does not; their FAIL rows are
+ * that cut, not the instrument):
+ *   | lock                          | pocket side | opens | shut (all 7)                                         | note
+ *   | L53 lock@144,208 {53,2}       | N (L54)     | none  | none sword darksword spear ghostsword wand darkshield | spear + ghostsword kill 2 jellyfish
+ *   |                               |             |       |                                                       | through the lock; puncher@144,104 never moves
+ *   | L18 lock@144,112 {18,0}       | W           | none  | the same seven                                        | both spinners stand
+ *   | L26 rocklock@112,208 {26,0}   | W           | none  | the same seven                                        | spear + ghostsword kill one
+ *   |                               |             |       |                                                       | puncher; puncher@40,216 stands
+ * No arm writes the flag from any of the three pockets, so `opens_from` leaves them out (the maze derivation's `cannot`).
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
