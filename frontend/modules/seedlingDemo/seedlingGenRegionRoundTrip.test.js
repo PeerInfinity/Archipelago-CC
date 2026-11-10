@@ -114,6 +114,20 @@ describe('seedlingGenRegionRoundTrip', () => {
         expect(size.error).toContain('resized');
     }, 120_000);
 
+    it('(3b) a rope with no <node> is REFUSED by name; one with a node is not (Seedling editor E2)', async () => {
+        const { doc, player, name } = committedRooms()[0];
+        const ins = await hub.inspectRegionRoom(doc, player, name);
+        const edit = async (entity) => {
+            const saved = structuredClone(ins.unedited);
+            saved.set.rooms[0].source.record.entities.push(entity);
+            return hub.buildSidecarOp({ saved, inspection: ins });
+        };
+        const bare = { type: 'rope', x: 16, y: 16, attrs: { tset: '0', tag: '0' } };
+        expect((await edit(bare)).error).toContain('has no <node>');
+        const roped = await edit({ ...bare, nodes: [{ x: 48, y: 16 }] });
+        expect(roped.error ?? '').not.toContain('has no <node>');
+    }, 120_000);
+
     it('(4) a harmless edit is certified; walling the goal in is SAVED and flagged', async () => {
         const { doc, player, name } = committedRooms()[0];
         const ins = await hub.inspectRegionRoom(doc, player, name);

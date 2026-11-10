@@ -1309,6 +1309,12 @@
       <button id="genEditRedo" disabled title="Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y">REDO</button>
       <button id="genEditSolve" disabled>SOLVE — certify what is on screen</button>
     </div>
+    <!-- ⛓ E2 — what the room's entities are wired to. LINK (k) and NODE (n) are gestures, in the row above. -->
+    <div id="genEditLinks">
+      <label title="draw each group wire and rope span over the room"><input type="checkbox" id="genEditShowLinks" checked> links</label>
+      <span id="genEditLinkNote"></span>
+      <ul id="genEditLinkIssues"></ul>
+    </div>
     <!-- ⛓ THE TYPED ATTRIBUTE FORM — one input per value the `.oep` declares
          for the selected type, carrying that declaration's own min/max. It
          WRITES the JSON box above and re-reads it; the box stays the ONE value
