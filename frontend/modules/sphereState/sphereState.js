@@ -53,6 +53,17 @@ function compareSphereIndices(a, b) {
   return a.fractionalSphere - b.fractionalSphere;
 }
 
+/**
+ * The sphere's senders, when the log names them: the room's spoiler data with
+ * own_slot_with_senders gives a step `received_from: [{ player, location }]`
+ * (the other player's location that sends this step's item). Absent otherwise,
+ * so a log without it parses exactly as before.
+ */
+function receivedFromOf(playerData) {
+  const from = playerData?.received_from;
+  return Array.isArray(from) && from.length > 0 ? { receivedFrom: from } : {};
+}
+
 export class SphereState {
   constructor(eventBus) {
     this.eventBus = eventBus;
@@ -66,6 +77,13 @@ export class SphereState {
     this.focusLocations = []; // Locations to focus on (only check these in focused mode)
     this.logHeader = null; // Header metadata from log_header event
     this.logMetadata = null; // The {type:'metadata'} entry (seed, event_*)
+    // Where the loaded log came from: 'file' (a preset's .jsonl, an embedded or
+    // uploaded log) or 'room' (the room's slot_data.spoiler_data, expanded by
+    // client/core/spoilerData.js). A file always beats the room: a room log never
+    // replaces a file's, and a file's replaces a room's.
+    this.logOrigin = null;
+    // Bumped by reset(), so a load started for earlier rules can be dropped.
+    this.generation = 0;
   }
 
   /**
@@ -82,6 +100,8 @@ export class SphereState {
     this.focusLocations = [];
     this.logHeader = null;
     this.logMetadata = null;
+    this.logOrigin = null;
+    this.generation += 1;
     // Don't reset currentPlayerId as it comes from static data
 
     if (this.eventBus) {
@@ -93,9 +113,24 @@ export class SphereState {
    * Load sphere log from a file path or pre-loaded content
    * @param {string} filePath - Path to the sphere log JSONL file (used for display/reference)
    * @param {string} [preloadedContent] - Optional pre-loaded JSONL text content. If provided, skips fetch.
+   * @param {Object} [options]
+   * @param {'file'|'room'} [options.origin='file'] - 'room' for the room's spoiler data, which loads only
+   *   while no file's log is loaded.
+   * @param {number} [options.generation] - The generation the load was started for; it is dropped if the
+   *   state was reset since (rules reloaded while the fetch ran).
+   * @returns {Promise<boolean>} true when this log is now the loaded one
    */
-  async loadSphereLog(filePath, preloadedContent = null) {
+  async loadSphereLog(filePath, preloadedContent = null, { origin = 'file', generation } = {}) {
     log('info', `Loading sphere log from: ${filePath}${preloadedContent ? ' (pre-loaded content)' : ''}`);
+
+    const stale = () => generation !== undefined && generation !== this.generation;
+    const fileHeld = () => origin === 'room' && this.logOrigin === 'file';
+    if (stale() || fileHeld()) {
+      log('info', stale()
+        ? `Not loading ${filePath}: the rules it was started for were replaced.`
+        : `Not loading ${filePath}: a file's sphere log is loaded (${this.sphereLogPath}), and a file beats the room's data.`);
+      return false;
+    }
 
     try {
       let text;
@@ -111,8 +146,14 @@ export class SphereState {
         text = await response.text();
       }
 
+      if (stale() || fileHeld()) {
+        log('info', `Dropping ${filePath}: ${stale() ? 'the rules it was fetched for were replaced' : "a file's sphere log loaded meanwhile"}.`);
+        return false;
+      }
+
       this.parseSphereLog(text);
       this.sphereLogPath = filePath;
+      if (this.sphereData.length > 0) this.logOrigin = origin;
 
       log('info', `Successfully loaded ${this.sphereData.length} sphere entries`);
 
@@ -286,7 +327,8 @@ export class SphereState {
         locations: sphereLocations,
         accessibleLocations: playerData?.accessible_locations || [],
         accessibleRegions: playerData?.accessible_regions || [],
-        inventoryDetails: playerData?.inventory_details || { base_items: {}, resolved_items: {} }
+        inventoryDetails: playerData?.inventory_details || { base_items: {}, resolved_items: {} },
+        ...receivedFromOf(playerData),
       });
     }
   }
@@ -370,7 +412,8 @@ export class SphereState {
         locations: sphereLocations,
         accessibleLocations: Array.from(accumulated.accessibleLocations).sort(),
         accessibleRegions: Array.from(accumulated.accessibleRegions).sort(),
-        inventoryDetails: { ...accumulated.inventoryDetails }
+        inventoryDetails: { ...accumulated.inventoryDetails },
+        ...receivedFromOf(playerData),
       });
     }
   }
