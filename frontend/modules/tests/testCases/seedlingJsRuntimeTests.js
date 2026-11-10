@@ -3137,13 +3137,16 @@ export const seedlingWasmRuntimeSolverStopButton = (tc) => withRuntimeRestored(t
         const greyed = await tc.pollForCondition(() => row.stop.disabled, '[wasm] Stop greys out again', 3000, 50);
         tc.reportCondition('[wasm] Stop is disabled again once nothing is solving', !!greyed);
         // the next solve: a fresh worker, and the chest is opened
+        // (no `bot.reset()` here: the bot keeps the region it learned at the load). ⚠ The bot's log keeps the Stop's
+        // `error:` STATUS and appends each later walk note to it (`<status> — <note>`), so an `error:` line is not, by
+        // itself, a new failure: the controller's own `lastRefusal` (cleared by each walkTo) is the witness.
         hold.restore();
-        bot.reset?.();
         bot.walkToLocation(CHESTDOOR_TARGET);
         const checked = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHESTDOOR_TARGET)
-            || errorStatuses(bot).length > 0,
+            || (controller()?.lastRefusal ?? null) !== null,
         `[wasm] the next walk opened ${CHESTDOOR_TARGET}`, 120000, 250);
-        tc.assertEqual('[wasm] the next walk named no error', '[]', JSON.stringify(errorStatuses(bot)));
+        tc.log(`[wasm] next walk: controller ${JSON.stringify({ lastRefusal: controller()?.lastRefusal ?? null, status: controller()?.status?.()?.wasm?.phase ?? null })}`);
+        tc.assertEqual('[wasm] the next walk was refused by nothing (the controller\'s lastRefusal)', null, controller()?.lastRefusal ?? null);
         tc.reportCondition(`[wasm] the next solve worked: ${CHESTDOOR_TARGET}'s locationCheck reached the state manager`,
             !!checked && snapshotFacts(tc).checked.has(CHESTDOOR_TARGET));
         assertNoDeathNoHalt(tc, 'wasm', null);
