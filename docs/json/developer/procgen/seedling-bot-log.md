@@ -27651,6 +27651,33 @@ OFF passes (the exact set was `{target}`); the harvest's ON sweep moved 0 legs b
 "ships" row, and the lab's `procgenChestLoot` B1 + B3 row, split into the OFF BEFORE witness (the loot chest dropped) and
 the ON default (both chests collected, SOLVED).
 
+### Seedling fidelity DRILLWATER — a drill that hops onto water drowns (`drillTerrainSwitch`, OFF)
+
+Wave 37e, planner `seedling-fidelity-planning-18`. Report: `CC/docs/cloud-reports/seedling-fidelity-drillwater.md`.
+
+**W0.** Sweep leg 719 (L91, the L92 arrival → the L89 door) refuses at the combat ladder on `drill@64,80`, before any
+drill step. Of the four shipped drills only L91's can reach a fatal tile (water (40,120), 4 hops); L28's and L88's reach
+none, so no lava or pit game witness exists. Over the census's DRILL-EXIT-PASS what-if, 719 reached the model's own
+refusal: *"hops onto tile type 1 at (40,120) … terrain switch … not modelled for a drill"*.
+
+**D1.** `drill.stepDrill` runs `Enemy.update`'s terrain switch (`Enemy.as:62-112`) behind `drillTerrainSwitch`: water/lava
+→ `destroy` (the `Mobile.death` fade), pit → the `fallInPit` latch (centring `/10`, alpha −0.05, `destroy` + `fell`;
+`fallSpinSpeed` is cosmetic RNG, not modelled). It reads the cell the hop landed on at the NEXT on-screen update. A
+destroyed or falling drill bills no contact and leaves the danger map, but stays an "Enemy" to another hop until removed.
+p4g witness `drillwater-l91-drown`: water hop t16, `destroy` t17, removed t27, hitless; floor control; both 0 px ON.
+
+**D2.** No bait arm needed: with hammer's DRILL-EXIT-PASS wiring (stand-in) + the key ON, 719 is **done on the game page,
+223 t, 0 hits, 0 divergences**. 719's gates are split: hammer's (the timed pass with a weapon; the wake planner's door)
+and this row's (the drown).
+
+**D3.** Flip-ready: bounded set ON 110/112 (the two default rows a flip re-pins), identity + producers = OFF, the 21
+drill-room page legs identical, no survey mover.
+
+**Trap candidates.** (1) A new key appended to the defaults reds the tests that pin "my keys are last" / "only these keys
+follow mine" (`fidelityCeremony126`, `fidelityFrozenPress` at this base). (2) `generate-procgen-reference --check` stays
+green while a new `scripts/procgen/*.mjs` is untracked; the instruments index reads the tracked listing — re-run after
+`git add`.
+
 ### Seedling hammer-phase 376-BOMB — `BOMB_PHASE_WAIT` (OFF): TIME's bomb arm waits out a lobber's bomb phase
 
 ⚖ The user queued it 2026-11-07 (*"Yes, hammer slice (Recommended)"*, from L40-CENSUS's wall H and fidelity

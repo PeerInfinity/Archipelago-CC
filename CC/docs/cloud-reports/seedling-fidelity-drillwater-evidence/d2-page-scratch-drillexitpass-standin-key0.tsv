@@ -1,0 +1,2 @@
+718	level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48	done	190	roomHits=0	divs=0	
+719	level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144	failed	None	roomHits=0	divs=0	the solver declined level_91 -> level_89__r1c10 in level 91 (refusal): levelRun: drill@64,80 in level 91 hops onto tile type 1 at (40,120) on tick 211; `Enemy.update`'s terrain switch (water, lava, a pit) is not modelled for a drill. Refused by name (fidelity DRILL D2).

@@ -634,6 +634,8 @@ describe('who takes the box', () => {
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
             'check-seedling-lab-load-in-js.mjs',
+            // seedling-editor-e1: the lab editor's everyday-editing row (import door: `isEntryPoint` → main())
+            'check-seedling-editor-e1.mjs',
             // seedling-js-tape-bridge: one tape on the JS core and the wasm game, drains diffed (import door: `isEntryPoint` → main())
             'probe-seedling-js-vs-wasm-tape.mjs',
             // cloudberry P2a: the embed gate and the pack maker (import door: `isEntryPoint` → main())
@@ -648,7 +650,9 @@ describe('who takes the box', () => {
             // rules-certifier-tail: L3's water door and L25's apitem on the game (import door: `isEntryPoint` → main())
             'probe-seedling-certifier-tail.mjs',
             // hammer CHEST-INCIDENTAL: two chests opened on one visit, on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-chest-incidental.mjs'];
+            'probe-seedling-chest-incidental.mjs',
+            // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
+            'probe-seedling-drill-water.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -73,6 +73,7 @@ import {
     hasCellSpace,
     rectCopy,
     rectPasteOps,
+    rectReplaceOps,
 } from './editCore.js';
 
 export class EditorViewError extends Error {
@@ -188,6 +189,14 @@ const TOOL_ROWS = Object.freeze([
 
 /** ⛓ The command id `Ctrl/Cmd+Z` resolves to — the page supplies the row. */
 export const UNDO_COMMAND_ID = 'undo';
+
+/**
+ * ⛓ The command id `Ctrl/Cmd+Shift+Z` and `Ctrl/Cmd+Y` resolve to (Seedling
+ * editor E1, additive) — the page supplies the row, exactly as for undo.
+ * ⛔ A page that registers NO redo row keeps today's keys byte for byte:
+ * `Ctrl+Shift+Z` still reaches its undo row and `Ctrl+Y` stays unbound.
+ */
+export const REDO_COMMAND_ID = 'redo';
 
 const isFn = (v) => typeof v === 'function';
 
@@ -332,6 +341,11 @@ export function mountEditorView({
     let corner = null;
     /** The clip a RECT copy produced — a clipboard, NOT an armed state. */
     let clip = null;
+    /**
+     * ⛓ Seedling editor E1 — WHERE that clip was copied from (`{x, y}`), so a
+     * page's MOVE can cut the source. Additive: nothing here reads it.
+     */
+    let clipOrigin = null;
     /** The cells a brush drag has visited, in visit order, de-duplicated. */
     let stroke = null;
     /**
@@ -586,6 +600,7 @@ export function mountEditorView({
         repaint();
         if (!got.ok) return null;
         clip = got.value;
+        clipOrigin = Object.freeze({ x, y });
         /**
          * ⛓⛓ §9.4's BOUNDS, PRINTED THE MOMENT THE CLIP EXISTS **AND AGAIN
          * BEFORE THE PASTE LANDS** — the page names them, this file only
@@ -605,9 +620,20 @@ export function mountEditorView({
         }
         const warn = clipWarnings(clip) ?? [];
         if (warn.length) say(`⚠ ${warn.join(' ⚠ ')}`, true);
-        const built = tryCore('rectPasteOps', () => rectPasteOps(
-            adapter, session.record(), clip, c.tx, c.ty, pasteOptions(),
-        ));
+        /**
+         * ⛓ Seedling editor E1 — `replace: true` in the page's options selects
+         * `rectReplaceOps` (the destination's kept fields emptied first). A page
+         * that never says `replace` gets `rectPasteOps` with the options it
+         * always passed, unchanged.
+         */
+        const { replace = false, ...opts } = pasteOptions() ?? {};
+        const built = replace
+            ? tryCore('rectReplaceOps', () => rectReplaceOps(
+                adapter, session.record(), clip, c.tx, c.ty, opts,
+            ))
+            : tryCore('rectPasteOps', () => rectPasteOps(
+                adapter, session.record(), clip, c.tx, c.ty, opts,
+            ));
         if (!built.ok) return null;
         return applyOp(built.value);
     };
@@ -803,7 +829,14 @@ export function mountEditorView({
          * is the fold over a shorter list and the page's row is what re-renders
          * around it.
          */
-        if ((event.ctrlKey || event.metaKey) && String(event.key).toLowerCase() === 'z') {
+        const modKey = String(event.key).toLowerCase();
+        if ((event.ctrlKey || event.metaKey) && byId.has(REDO_COMMAND_ID)
+            && ((modKey === 'z' && event.shiftKey) || (modKey === 'y' && !event.shiftKey))) {
+            if (isFn(event.preventDefault)) event.preventDefault();
+            byId.get(REDO_COMMAND_ID).run();
+            return;
+        }
+        if ((event.ctrlKey || event.metaKey) && modKey === 'z') {
             const row = byId.get(UNDO_COMMAND_ID);
             if (!row) return;
             if (isFn(event.preventDefault)) event.preventDefault();
@@ -822,6 +855,8 @@ export function mountEditorView({
     return {
         get tool() { return tool; },
         get clip() { return clip; },
+        /** ⛓ E1 — where the clip was copied from, or `null`. */
+        get clipOrigin() { return clipOrigin; },
         get corner() { return corner; },
         setTool,
         /**
@@ -882,6 +917,7 @@ export function mountEditorView({
             corner = null;
             stroke = null;
             clip = null;
+            clipOrigin = null;
             if (overlay.el?.parentNode?.removeChild) {
                 overlay.el.parentNode.removeChild(overlay.el);
             }

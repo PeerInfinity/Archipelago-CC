@@ -945,6 +945,17 @@
     "template_file": "Sonic Adventure 2 Battle.yaml",
     "world_directory": "sa2b"
   },
+  "Spoiler Export Hook": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Spoiler Export Hook",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Spoiler Export Hook.yaml",
+    "world_directory": "spoiler_export_hook"
+  },
   "Starcraft 2": {
     "exporter_path": "exporter/games/official/sc2.py",
     "exporter_size": 29955,

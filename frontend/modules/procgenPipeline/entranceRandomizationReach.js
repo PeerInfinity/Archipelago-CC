@@ -171,16 +171,21 @@ export function makeRulesDocReach(rulesDoc, { shuffled, playerId = DEFAULT_PLAYE
  * compiler's sidecars (`preset_sidecars[p][<AP region>].playable_payload.exits[]`, `{exit_id, exitName}` under
  * `atlas_region`), the graph projection's names, `#k` suffixes and all (`regionAtlasCompiler` `wiredInfo`). Never
  * re-derived from `<from> -> <to>`: a shuffle can move a `#k` suffix onto another exit. Arrival-only endpoints map to null.
+ * ⛓ ER E4c: a MAZE-flavour sidecar keys its exits by AP exit name and names the atlas endpoint in `atlas_exit_id`; that
+ * endpoint is read when present (a flash payload's `exit_id` IS the atlas exit id, and it carries no `atlas_exit_id`).
+ * `endpoints` (optional): the atlas's own `"<region>/<exit_id>"` set — a key outside it is not an atlas endpoint (the maze's
+ * internal crossings carry a synthetic `cross_<sub-region>` id) and is left out.
  *
  * @returns {Map<string, string|null>} `"<atlas region>/<exit_id>"` → AP exit name
  */
-export function apExitNamesByEndpoint(rulesDoc, playerId = DEFAULT_PLAYER_ID) {
+export function apExitNamesByEndpoint(rulesDoc, playerId = DEFAULT_PLAYER_ID, { endpoints = null } = {}) {
     const out = new Map();
     for (const sc of Object.values(rulesDoc.preset_sidecars?.[String(playerId)] ?? {})) {
         const pp = sc?.playable_payload;
         if (!pp?.atlas_region) continue;
         for (const e of pp.exits ?? []) {
-            const k = `${pp.atlas_region}/${e.exit_id}`;
+            const k = `${pp.atlas_region}/${e.atlas_exit_id ?? e.exit_id}`;
+            if (endpoints && !endpoints.has(k)) continue;
             if (out.has(k) && out.get(k) !== (e.exitName ?? null)) {
                 throw new Error(`apExitNamesByEndpoint: ${k} compiled to two names (${out.get(k)}, ${e.exitName})`);
             }

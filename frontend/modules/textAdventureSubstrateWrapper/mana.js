@@ -16,6 +16,15 @@
  *      gameState. Gated against loop mode — when loop mode is active,
  *      loops' _processFrame handles deduction and we'd otherwise
  *      double-bill.
+ *
+ * ⛓ WHICH REGIONS THE DEDUCTION OWNS. This module is wired whatever the
+ * world contains, so `manaEnabled` alone says nothing about who bills a
+ * region. A substrate that declares `sharing.mana` in its registry entry
+ * charges the shared pool for its own regions (maze per tile, jta and omsi
+ * by mirroring their native resource), so a region of ANOTHER declarer is
+ * never charged here: see `billedByItsOwnSubstrate`. The display half is
+ * unaffected. Undeclared substrates have no bill of their own with loop
+ * mode off and stay on this leg.
  */
 
 import { centralRegistry } from '../../app/core/centralRegistry.js';
@@ -24,6 +33,7 @@ import {
     xpAdjustedCost,
     chargeMana,
     fireLoopResetTeleport,
+    isManaDeclarer,
 } from '../resourceChannels/resourceChannelsLibrary.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 
@@ -121,7 +131,8 @@ function handleRegionChanged(data) {
     // region and loop mode is inactive. Resolve manaEnabled for the
     // old region (the cached _currentRegionHasMana applied to it,
     // since it was the current region at the time the event fired).
-    if (!fromReset && oldRegion && _currentRegionHasMana && !_isLoopModeActive) {
+    if (!fromReset && oldRegion && _currentRegionHasMana && !_isLoopModeActive
+        && !billedByItsOwnSubstrate(oldRegion)) {
         deductRegionMoveMana(oldRegion);
     }
 
@@ -131,7 +142,19 @@ function handleRegionChanged(data) {
 }
 
 function _shouldDeductMana() {
-    return _currentRegionHasMana && !_isLoopModeActive;
+    return _currentRegionHasMana && !_isLoopModeActive
+        && !billedByItsOwnSubstrate(_currentRegionId);
+}
+
+/**
+ * True when the region belongs to another substrate that bills the shared
+ * pool itself, so a charge from here would be a second one. Read from the
+ * registry at charge time: this module can initialize before the region's
+ * substrate has registered.
+ */
+function billedByItsOwnSubstrate(regionName) {
+    const substrate = resolveRegionInfo(regionName)?.substrate;
+    return !!substrate && substrate !== SUBSTRATE_ID && isManaDeclarer(substrate);
 }
 
 function resolveRegionInfo(regionName) {

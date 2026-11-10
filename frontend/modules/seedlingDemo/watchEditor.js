@@ -47,8 +47,8 @@ import {
     transcribeBoundText, untranscribedTypes,
 } from './watchEdit.js';
 import {
-    LAYER_COLUMNS, RESIZE_ANCHORS, ROOM_TILES_MAX, ROOM_TILES_MIN, TERRAIN, TERRAIN_NAMES,
-    TILE_LAYERS, columnOfSpec,
+    LAYER_COLUMNS, ProcgenLevelError, RESIZE_ANCHORS, ROOM_TILES_MAX, ROOM_TILES_MIN, TERRAIN,
+    TERRAIN_NAMES, TILE_LAYERS, columnOfSpec,
 } from './procgenLevel.js';
 /**
  * ⛓ EDITOR v3 C2 — the SEMANTICS table, for the column picker's GROUPS and for
@@ -58,9 +58,27 @@ import {
 import {
     CLIFFSIDE_FRAME_FACES, TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES, tileSemantics,
 } from '../flashPanel/seedlingSemantics.js';
-import { TOOLS, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { createLifetime } from './watchLifetime.js';
-import { describeOps, descriptorFieldsOf } from '../procgenCore/editCore.js';
+import {
+    EditCoreError, describeOps, descriptorFieldsOf, rectClearOps, rectFillOps, rectMoveOps,
+} from '../procgenCore/editCore.js';
+
+/**
+ * ⛓⛓ **THE PANEL'S OWN GESTURES** (Seedling editor E1) — `editorView` page
+ * tools, so they share its ONE armed value, its command table and its key map.
+ * FILL and CLEAR are two-click rectangles (like RECT); MOVE spends the RECT
+ * selection at one click. Each lands as ONE group, so one undo takes it back.
+ */
+export const PANEL_TOOLS = Object.freeze({ FILL: 'fill', CLEAR: 'clear', MOVE: 'move' });
+const PANEL_TOOL_ROWS = Object.freeze([
+    Object.freeze({ id: PANEL_TOOLS.FILL, label: 'FILL a rectangle', key: 'l' }),
+    Object.freeze({ id: PANEL_TOOLS.CLEAR, label: 'CLEAR a rectangle', key: 'x' }),
+    Object.freeze({ id: PANEL_TOOLS.MOVE, label: 'MOVE the selection', key: 'm' }),
+]);
+
+/** ⛓ The two paste kinds (`#genEditPasteMode`): `add` is the paste every payload so far was made with. */
+export const PASTE_MODES = Object.freeze(['add', 'replace']);
 
 export class WatchEditorError extends Error {
     constructor(message) {
@@ -714,10 +732,9 @@ export function mountRoomFlags({
                 //   works here (`remove {which}` names this body), so a note that
                 //   said "cannot be changed" would be telling the author not to
                 //   press a control that does exactly what it says.
-                n.textContent = `⚠ at (${f.tx},${f.ty}) and NOT the last body there — `
-                    + 'it can be REMOVED (the op names it by ordinal) but its values cannot '
-                    + 'be edited here (see the note below)';
-                n.className = 'note bad';
+                n.textContent = `at (${f.tx},${f.ty}), body ${f.which} of that cell (NOT the `
+                    + 'last) — both REMOVE and its values address it by ordinal (`which`)';
+                n.className = 'note';
             } else {
                 n.textContent = `at (${f.tx},${f.ty})`;
                 n.className = 'note';
@@ -804,9 +821,13 @@ export function mountRoomFlags({
                 }
                 const g = guard(row.tag, 'attrs');
                 if (g === undefined || g === null) return;
-                // ⛔ NO `which` — `attrs` addresses the LAST body in the cell by
-                //    contract, and the guard has just established this row IS it.
-                view.apply({ op: 'attrs', tx: g.tx, ty: g.ty, attrs: attrsOf(row.tag) });
+                // ⛓ Seedling editor E1 — `which` ONLY when the flag is not the last
+                //    body (attrs takes it now); for the last one the op stays bare,
+                //    byte for byte the op this form always wrote.
+                view.apply({
+                    op: 'attrs', tx: g.tx, ty: g.ty, attrs: attrsOf(row.tag),
+                    ...(g.last ? {} : { which: g.which }),
+                });
             });
         }
     }
@@ -974,10 +995,19 @@ export const brushNoteText = (mode) => ({
  * cannot count bodies; this can, and it counts them in the CLIP, which is what
  * the reader is about to put down.
  */
-export function seedlingClipWarnings(clip, record, adapter) {
+export function seedlingClipWarnings(clip, record, adapter, { replace = false } = {}) {
     const out = [];
     const bodies = (clip?.cells ?? [])
         .flat().reduce((n, c) => n + (c?.entities?.length ?? 0), 0);
+    if (replace) {
+        // ⛓ E1 — a REPLACE paste empties each landed cell's kept fields first, so
+        //   nothing accumulates; the warning says what it does instead.
+        if (bodies > 0 || clip) {
+            out.push('REPLACE mode: each landed cell\'s kept fields are EMPTIED first, so the '
+                + 'destination ends up holding exactly what the clip holds');
+        }
+        return out;
+    }
     if (bodies > 0) {
         out.push(`the clip carries ${bodies} body/bodies and a paste ADDS them — it does NOT `
             + 'clear the destination, so a cell that already holds one will hold both '
@@ -1030,13 +1060,21 @@ export function mountWatchEditor({
      */
     buildWorld = null,
     /**
-     * ⛓ …and the CANVAS's own tile palette, injected. ⚠ There is no tileset PNG
-     * in this repo (measured: not one `.png` under `frontend/modules/flashPanel/`
-     * — the art is inside the recompiled `.wasm`), so the column picker shows a
-     * SWATCH, and it must be the colour the canvas actually paints or the picker
-     * would show one thing and the room another.
+     * ⛓ …and the CANVAS's own tile palette, injected — the `<select>`'s
+     * swatches (an `<option>` can hold a colour, never an image) and the
+     * tile-art grid's fallback. ⛓ Seedling editor E1: the art itself arrives
+     * through `tileFrame`; the swatches were chosen when no tileset image was
+     * served (the art lived only inside the recompiled `.wasm`), and the lab's
+     * content-pack art (`watchArt`, `graphics.seedling`) removed that reason.
      */
     tileColours = null, solidColour = null, floorColour = null,
+    /**
+     * ⛓ Seedling editor E1 — the TILE ART, injected: `(layer, column) →
+     * {image, sx, sy, sw, sh} | null`, read off the sheets `watchArt` draws the
+     * room with (`watchArt.paletteTileFrame`). Absent, or `null` for a column
+     * whose sheet is missing or not yet decoded, and that chip is its SWATCH.
+     */
+    tileFrame = null,
     doc = globalThis.document,
 } = {}) {
     const $ = (id) => doc.getElementById(id);
@@ -1120,7 +1158,7 @@ export function mountWatchEditor({
                 if (colour) {
                     el.style.backgroundColor = colour;
                     el.title = `${o.label} — swatch ${colour} (the canvas's own colour for `
-                        + 'this tile TYPE; there is no tileset image in this repo)';
+                        + 'this tile TYPE — the tile ART is the grid beside this picker)';
                 }
                 og.appendChild(el);
             }
@@ -1131,9 +1169,73 @@ export function mountWatchEditor({
         const sel = groups.flatMap((g) => g.options).find((o) => o.value === terrainSel.value);
         terrainSel.style.backgroundColor = swatchOf(sel?.type ?? null) ?? '';
     };
-    fillTerrain();
-    if (layerSel) mine.on(layerSel, 'change', fillTerrain);
-    mine.on(terrainSel, 'change', fillTerrain);
+    /**
+     * ⛓⛓⛓ **THE TILE-ART PALETTE** (Seedling editor E1) — one chip per option
+     * of the picker above, drawn from the SAME sheets the room is drawn with.
+     *
+     * ⛔ WHY A GRID BESIDE THE `<select>` AND NOT ART IN IT: an `<option>` can
+     * hold text and a background colour, never an image, so the swatch was the
+     * most a `<select>` could show. The swatch's own stated reason (*"there is
+     * no tileset PNG in this repo — the art is inside the recompiled .wasm"*)
+     * stopped being true when the lab gained `watchArt`: the sheets are served
+     * by the `graphics.seedling` content packs and decoded once per page. The
+     * `<select>` stays the ONE value the op is built from; a chip only sets it.
+     *
+     * ⚠ A chip whose sheet is missing (or not decoded yet) is the column's
+     * SWATCH, marked `data-fallback`, so a missing sheet is visible, not blank.
+     */
+    const artBox = $('genEditTileArt');
+    let artDrawnWith = null;
+    const renderTileArt = () => {
+        if (!artBox) return;
+        const groups = paintOptionGroups(layerNow());
+        const key = `${layerNow()}|${tileFrame ? 'art' : 'none'}|${tileFrame?.state?.() ?? ''}`;
+        if (artDrawnWith !== key) {
+            artDrawnWith = key;
+            artBox.innerHTML = '';
+            const seen = new Set();
+            // ⛓ COLUMN order (the sheet's own), one chip per column: a terrain NAME
+            //   and its `column:N` option are one tile, and the name wins the click.
+            const byColumn = groups.flatMap((g) => g.options).slice()
+                .sort((a, b) => a.column - b.column);
+            for (const o of byColumn) {
+                if (seen.has(o.column)) continue;
+                seen.add(o.column);
+                const chip = doc.createElement('canvas');
+                chip.width = 16;
+                chip.height = 16;
+                chip.className = 'tileChip';
+                chip.dataset.column = String(o.column);
+                chip.title = o.label;
+                const fr = tileFrame ? tileFrame(layerNow(), o.column) : null;
+                const ctx = typeof chip.getContext === 'function' ? chip.getContext('2d') : null;
+                if (ctx) ctx.imageSmoothingEnabled = false;
+                if (fr && ctx) {
+                    ctx.drawImage(fr.image, fr.sx, fr.sy, fr.sw, fr.sh, 0, 0, 16, 16);
+                    chip.dataset.art = '1';
+                } else {
+                    const colour = swatchOf(o.type) ?? '#444';
+                    if (ctx) { ctx.fillStyle = colour; ctx.fillRect(0, 0, 16, 16); }
+                    chip.dataset.fallback = colour;
+                }
+                mine.on(chip, 'click', () => {
+                    const want = [...terrainSel.options].find((op) => op.value === o.value)
+                        ?? [...terrainSel.options].find((op) => op.value === COLUMN_VALUE(o.column));
+                    if (want) terrainSel.value = want.value;
+                    fillTerrainAndArt();
+                });
+                artBox.appendChild(chip);
+            }
+        }
+        const sel = groups.flatMap((g) => g.options).find((o) => o.value === terrainSel.value);
+        for (const chip of artBox.children) {
+            chip.classList?.toggle?.('picked', Number(chip.dataset.column) === sel?.column);
+        }
+    };
+    const fillTerrainAndArt = () => { fillTerrain(); renderTileArt(); };
+    fillTerrainAndArt();
+    if (layerSel) mine.on(layerSel, 'change', fillTerrainAndArt);
+    mine.on(terrainSel, 'change', fillTerrainAndArt);
 
     const palette = mountEntityPalette({
         typeInput: $('genEditType'),
@@ -1171,6 +1273,46 @@ export function mountWatchEditor({
      * does: the palette moves without re-arming the brush, and a template
      * captured at arming time would go stale the moment it did.
      */
+    /**
+     * ⛓⛓ **THE BODY PICKER** (Seedling editor E1, `#genEditWhich`) — which body
+     * of a cell `attrs` and `remove` address. ⛔ Its default is "the LAST", which
+     * is the bare op every payload so far recorded, so a click with the picker
+     * untouched writes the op it always wrote. The picker is filled with the
+     * bodies of the cell the last attrs/remove click landed on; picking one and
+     * clicking THAT cell again adds `which`. Another cell resets it to "last".
+     */
+    const whichSel = $('genEditWhich');
+    let whichCell = null;
+    const fillWhich = (tx, ty) => {
+        if (!whichSel) return;
+        const bodies = adapter.readCell(host.record(), tx, ty).entities;
+        whichCell = `${tx},${ty}`;
+        whichSel.innerHTML = '';
+        const last = doc.createElement('option');
+        last.value = '';
+        last.textContent = `the LAST body of (${tx},${ty})`;
+        whichSel.appendChild(last);
+        bodies.forEach((b, i) => {
+            const o = doc.createElement('option');
+            o.value = String(i);
+            o.textContent = `#${i} <${b.type}> at (${tx},${ty})`;
+            whichSel.appendChild(o);
+        });
+        whichSel.value = '';
+    };
+    const whichFor = (tx, ty) => {
+        if (!whichSel) return {};
+        if (whichCell === `${tx},${ty}` && whichSel.value !== '') {
+            return { which: Number(whichSel.value) };
+        }
+        if (whichCell !== `${tx},${ty}`) {
+            const n = adapter.readCell(host.record(), tx, ty).entities.length;
+            if (n > 1) fillWhich(tx, ty);
+            else if (whichCell !== null) { whichCell = null; whichSel.innerHTML = ''; }
+        }
+        return {};
+    };
+
     const brushOp = (tx, ty) => {
         const m = mode();
         if (!BRUSH_MODES.includes(m) || m === 'off') return null;
@@ -1183,7 +1325,7 @@ export function mountWatchEditor({
         if (m === 'paint') {
             return { op: 'paint', tx, ty, layer: layerNow(), ...paintSpecOf(terrainSel.value) };
         }
-        if (m === 'remove') return { op: 'remove', tx, ty };
+        if (m === 'remove') return { op: 'remove', tx, ty, ...whichFor(tx, ty) };
         /**
          * ⛔ `{refused}` AND NOT `null` — `editorView`'s third answer. An
          * unparseable attributes box is not "no brush is armed", and reporting
@@ -1192,7 +1334,7 @@ export function mountWatchEditor({
          */
         let attrs;
         try { attrs = attrsFromBox(); } catch (e) { return { refused: ATTRS_REFUSAL(e) }; }
-        if (m === 'attrs') return { op: 'attrs', tx, ty, attrs };
+        if (m === 'attrs') return { op: 'attrs', tx, ty, attrs, ...whichFor(tx, ty) };
         return { op: 'place', tx, ty, type: $('genEditType').value.trim(), attrs };
     };
 
@@ -1208,8 +1350,17 @@ export function mountWatchEditor({
      * are both *"do this to whatever is already here"*), and `editorView` says
      * so by name when the target is `null`.
      */
+    /**
+     * ⛓⛓ Seedling editor E1 — **THE TARGET OUTLIVES THE MODE SELECT.** Arming
+     * any gesture other than BRUSH sets the mode select to `off` (`syncArmed`,
+     * so the select never claims a brush is armed), which left FLOOD — and
+     * would leave FILL — with no target the moment it was armed: MEASURED, the
+     * first E1 browser run's FILL refused "no target". The target is therefore
+     * the LAST PAINT/PLACE mode picked (`targetMode`), read at the press.
+     */
+    let targetMode = null;
     const floodTarget = () => {
-        const m = mode();
+        const m = mode() === 'off' ? targetMode : mode();
         if (m === 'paint') {
             /**
              * ⛓ C2 — THE FLOOD FILLS THE LAYER THE BRUSH IS ON, and it names
@@ -1220,8 +1371,10 @@ export function mountWatchEditor({
              * "flood this cliffside".
              */
             const layer = layerNow();
-            const column = columnOfSpec(paintSpecOf(terrainSel.value), layer,
-                'watchEditor: the FLOOD target');
+            // ⛓ E1 — a terrain NAME is `columnOfSpec`'s STRING spelling; it was passed
+            //   as `{terrain}` and refused, so a FLOOD with a name selected always threw.
+            const spec = paintSpecOf(terrainSel.value);
+            const column = columnOfSpec(spec.terrain ?? spec, layer, 'watchEditor: the FLOOD target');
             return layer === 'cliffsides' ? { cliff: { column } } : { tile: { column } };
         }
         if (m === 'place') {
@@ -1269,12 +1422,146 @@ export function mountWatchEditor({
     };
     fillPasteFilter();
 
+    const pasteModeSel = $('genEditPasteMode');
+    if (pasteModeSel) {
+        pasteModeSel.innerHTML = '';
+        for (const m of PASTE_MODES) {
+            const o = doc.createElement('option');
+            o.value = m;
+            o.textContent = m === 'add' ? 'ADD to the cell (the default)' : 'REPLACE the cell';
+            pasteModeSel.appendChild(o);
+        }
+        pasteModeSel.value = 'add';
+    }
+    const replaceNow = () => pasteModeSel?.value === 'replace';
+
+    /**
+     * ⛓ `replace` rides ONLY when asked, so an ADD paste hands `editorView` the
+     * exact options it always did (`{}` or `{only}`).
+     */
     const pasteOptions = () => {
         const only = pasteSel?.value ?? '';
-        return only === '' ? {} : { only };
+        return { ...(only === '' ? {} : { only }), ...(replaceNow() ? { replace: true } : {}) };
     };
 
-    const clipWarnings = (clip) => seedlingClipWarnings(clip, host.record(), adapter);
+    const clipWarnings = (clip) => seedlingClipWarnings(clip, host.record(), adapter,
+        { replace: replaceNow() });
+
+    /**
+     * ⛓ THE CLEAR's scope (`#genEditClearWhat`): every field, or one — derived
+     * from the descriptor like the paste filter, so it cannot drift from it.
+     */
+    const clearSel = $('genEditClearWhat');
+    const fillClearWhat = () => {
+        if (!clearSel) return;
+        const record = host.record();
+        if (!record) return;
+        const fields = descriptorFieldsOf(adapter, record);
+        const want = clearSel.value;
+        clearSel.innerHTML = '';
+        const all = doc.createElement('option');
+        all.value = '';
+        all.textContent = 'everything in the cell';
+        clearSel.appendChild(all);
+        for (const f of fields) {
+            const o = doc.createElement('option');
+            o.value = f;
+            o.textContent = `${f} only`;
+            clearSel.appendChild(o);
+        }
+        if ([...clearSel.options].some((o) => o.value === want)) clearSel.value = want;
+    };
+    fillClearWhat();
+
+    /* ── ⛓⛓⛓ FILL · CLEAR · MOVE — the panel's own gestures (E1) ──── */
+
+    /** The first corner of a FILL/CLEAR rectangle, or `null`. */
+    let panelCorner = null;
+    /** The clip a MOVE has already spent — a second MOVE of it would cut the wrong cells. */
+    let spentClip = null;
+    let view = null;
+    const sayBad = (text) => say(text, true);
+    /** A core builder's refusal (it throws) → the status line, verbatim. */
+    const tryBuild = (fn) => {
+        try { return fn(); } catch (e) {
+            // ⛓ by CLASS: the core's refusals and the record's (a bad paint spec);
+            //   anything else is a defect and is rethrown.
+            if (!(e instanceof EditCoreError) && !(e instanceof ProcgenLevelError)) throw e;
+            sayBad(e.message);
+            return null;
+        }
+    };
+    const twoClick = (what, build) => (c) => {
+        if (!panelCorner) {
+            panelCorner = { tx: c.tx, ty: c.ty };
+            say(`${what} corner 1 at (${c.tx},${c.ty}) — click the opposite corner`);
+            view.repaint();
+            return;
+        }
+        const rect = {
+            x: Math.min(panelCorner.tx, c.tx),
+            y: Math.min(panelCorner.ty, c.ty),
+            w: Math.abs(c.tx - panelCorner.tx) + 1,
+            h: Math.abs(c.ty - panelCorner.ty) + 1,
+        };
+        panelCorner = null;
+        const op = tryBuild(() => build(rect));
+        view.repaint();
+        if (op) view.apply(op);
+    };
+    const panelTools = [
+        {
+            ...PANEL_TOOL_ROWS[0],
+            at: twoClick('FILL', (rect) => {
+                const target = floodTarget();
+                if (!target) {
+                    throw new EditCoreError('FILL has no target — set the brush mode to PAINT '
+                        + '(a tile or cliffside column) or PLACE (an entity) first; ATTRS and '
+                        + 'REMOVE are not "make this cell look like X".');
+                }
+                return rectFillOps(adapter, host.record(), rect, target);
+            }),
+        },
+        {
+            ...PANEL_TOOL_ROWS[1],
+            at: twoClick('CLEAR', (rect) => {
+                const field = clearSel?.value ?? '';
+                return rectClearOps(adapter, host.record(), rect,
+                    { fields: field === '' ? null : [field] });
+            }),
+        },
+        {
+            ...PANEL_TOOL_ROWS[2],
+            at: (c) => {
+                const clip = view.clip;
+                const from = view.clipOrigin;
+                if (!clip || !from) {
+                    sayBad('nothing to MOVE — arm RECT and click two opposite corners first; the '
+                        + 'selection is what moves');
+                    return;
+                }
+                if (clip === spentClip) {
+                    sayBad('this selection was already MOVED — its source cells are empty now, '
+                        + 'so moving it again would cut the wrong place. Drag a new RECT.');
+                    return;
+                }
+                const op = tryBuild(() => rectMoveOps(adapter, host.record(), clip, from,
+                    c.tx, c.ty, { ...pasteOptions() }));
+                if (!op) return;
+                const res = view.apply(op);
+                if (res?.applied) spentClip = clip;
+            },
+        },
+    ];
+    const panelShapes = () => {
+        const out = [];
+        if (panelCorner) out.push({ kind: 'rect', x: panelCorner.tx, y: panelCorner.ty, w: 1, h: 1 });
+        if (view?.tool === PANEL_TOOLS.MOVE && view.clip && view.clipOrigin
+            && view.clip !== spentClip) {
+            out.push({ kind: 'rect', ...view.clipOrigin, w: view.clip.w, h: view.clip.h });
+        }
+        return out;
+    };
 
     /* ── THE VIEW ─────────────────────────────────────────────────── */
 
@@ -1286,17 +1573,22 @@ export function mountWatchEditor({
      * describing what it holds.
      */
     const afterChange = (c) => {
+        // ⛓ E1 — a FILL/CLEAR corner dies with its tool, as RECT's does in `editorView`.
+        if (panelCorner && c?.tool !== PANEL_TOOLS.FILL && c?.tool !== PANEL_TOOLS.CLEAR) {
+            panelCorner = null;
+        }
         render();
         if (onChange) onChange(c);
     };
 
-    const view = mountEditorView({
+    view = mountEditorView({
         canvas,
         session: host,
         adapter,
         cellAt,
         commands,
-        tools,
+        tools: [...tools, ...panelTools],
+        shapes: panelShapes,
         brushOp,
         floodTarget,
         pasteOptions,
@@ -1320,8 +1612,9 @@ export function mountWatchEditor({
     const buttons = new Map();
     if (toolBox) {
         toolBox.innerHTML = '';
+        const gestureIds = [...Object.values(TOOLS), ...Object.values(PANEL_TOOLS)];
         for (const row of view.commands) {
-            if (!Object.values(TOOLS).includes(row.id)) continue;
+            if (!gestureIds.includes(row.id)) continue;
             const b = doc.createElement('button');
             b.id = `genEditGesture_${row.id}`;
             b.textContent = row.key ? `${row.label} (${row.key})` : row.label;
@@ -1367,6 +1660,7 @@ export function mountWatchEditor({
     };
 
     mine.on($('genEditTool'), 'change', () => {
+        if (mode() === 'paint' || mode() === 'place') targetMode = mode();
         view.setTool(mode() === 'off' ? null : TOOLS.BRUSH);
         syncArmed();
     });
@@ -1375,8 +1669,11 @@ export function mountWatchEditor({
     const renderClip = () => {
         if (!clipNote) return;
         clipNote.textContent = view.clip
-            ? `clipboard: ${view.clip.w}x${view.clip.h} — ${seedlingClipWarnings(view.clip,
-                host.record(), adapter).join(' ⚠ ') || 'nothing to warn about'}`
+            ? `clipboard: ${view.clip.w}x${view.clip.h}`
+                + `${view.clipOrigin ? ` from (${view.clipOrigin.x},${view.clipOrigin.y})` : ''}`
+                + `${view.clip === spentClip ? ' (MOVED — drag a new RECT to move again)' : ''} — `
+                + `${seedlingClipWarnings(view.clip, host.record(), adapter,
+                    { replace: replaceNow() }).join(' ⚠ ') || 'nothing to warn about'}`
             : 'clipboard: EMPTY — arm RECT and click two opposite corners.';
     };
 
@@ -1431,8 +1728,10 @@ export function mountWatchEditor({
         const cliff = c.cliff ? `cliffside column ${c.cliff.column}` : 'no cliffside';
         const bodies = c.entities.length === 0
             ? 'no bodies'
-            : `${c.entities.length} body/bodies: ${c.entities.map((e) => `<${e.type}>`).join(' ')}`
-                + ' (the LAST one is what `attrs` and `remove` address)';
+            : `${c.entities.length} body/bodies: ${c.entities.map((e, i) => `#${i} <${e.type}>`).join(' ')}`
+                + (c.entities.length > 1
+                    ? ' (attrs/remove address the LAST unless the TARGET box names another)'
+                    : '');
         return `(${at.tx},${at.ty}) — ${tile} · ${cliff} · ${bodies}`;
     };
     if (cellNote) {
@@ -1465,6 +1764,25 @@ export function mountWatchEditor({
             resize.reset();
             fillPasteFilter();
         }
+        if (record && record !== lastRecord) {
+            fillClearWhat();
+            // ⛓ E1 — the body picker described the OLD record's cell: re-list that
+            //   cell's bodies from the NEW record, keeping a pick that still exists.
+            if (whichSel && whichCell !== null) {
+                const [wx, wy] = whichCell.split(',').map(Number);
+                const keep = whichSel.value;
+                const n = wx < record.width && wy < record.height
+                    ? adapter.readCell(record, wx, wy).entities.length : 0;
+                if (n > 1) {
+                    fillWhich(wx, wy);
+                    if (keep !== '' && Number(keep) < n) whichSel.value = keep;
+                } else {
+                    whichCell = null;
+                    whichSel.innerHTML = '';
+                }
+            }
+        }
+        renderTileArt();
         lastRecord = record;
     };
 
@@ -1479,12 +1797,16 @@ export function mountWatchEditor({
         /** ⛓ The mode, for a host that has to write it (a reset, a replay). */
         setMode(m) {
             $('genEditTool').value = m;
+            if (m === 'paint' || m === 'place') targetMode = m;
             view.setTool(m === 'off' ? null : TOOLS.BRUSH);
             syncArmed();
         },
         mode,
         brushOp,
         undoCommandId: UNDO_COMMAND_ID,
+        redoCommandId: REDO_COMMAND_ID,
+        /** ⛓ E1 — re-draw the tile-art chips (the art finished loading, or the toggle moved). */
+        refreshTileArt: () => { artDrawnWith = null; renderTileArt(); },
         /**
          * ⛓⛓ **RETIRING `mine` IS WHAT DETACHES EVERY LISTENER THIS PANEL
          * REGISTERED** — its own, the palette's, the flags form's, the resize

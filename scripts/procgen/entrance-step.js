@@ -5,13 +5,17 @@
  * registry declares for the atlas (`entranceShuffleHooksFor`). Writes the envelope's PUBLIC fields as JSON and, after
  * `compile`, the compiled rules.json.
  *
- * ⛓ The envelope's INTERNAL fields (the pooled atlas, the vanilla compile, the live shuffle binding) are not written:
- * every run re-pools and re-classifies (deterministic, ~10 s). `--attempt K` resumes the draw sequence at draw K.
+ * ⛓ `-o` writes the envelope's PUBLIC fields (a report). ⛓ ER E4c: `--save PATH` writes the WHOLE serialized envelope
+ * (`serializeEntranceEnvelope`: the INTERNAL pooled atlas and vanilla compile included; only the session-only live shuffle
+ * binding is left out), and `--resume PATH` continues that envelope from its `completed` (`deserializeEntranceEnvelope`):
+ * it never re-pools, re-classifies or re-compiles vanilla — the substrate's `resume` hook warms its process state from it.
  *
  * Run:
  *   node scripts/procgen/entrance-step.js run --atlas seedling-9c051b83 --seed 1 -o er-env.json --rules-out er-rules.json
  *   node scripts/procgen/entrance-step.js run --atlas seedling-9c051b83 --seed 1 --to classify -o er-classify.json
  *   node scripts/procgen/entrance-step.js run --atlas <id> --seed 7 --max-attempts 20 --sweep events -o -
+ *   node scripts/procgen/entrance-step.js run --atlas seedling-9c051b83 --seed 1 --to shuffle --save er-shuffle.env.json
+ *   node scripts/procgen/entrance-step.js run --resume er-shuffle.env.json --rules-out er-rules.json
  *
  * Flags:
  *   --atlas ID          the content source (an atlas id a registered substrate's `entranceShuffle.atlasIds` holds)
@@ -19,11 +23,16 @@
  *   --to STEP           stop after pool | classify | shuffle | compile (default compile)
  *   --max-attempts N    draws before the run refuses (default 50)
  *   --sweep S           the reach's inventory: placed (default, vanilla items) | events (GER's all-state)
+ *   --game-name NAME    the compiled world's game name (default: the substrate producer's own; the seedling_er preset's
+ *                       is `Seedling Playthrough ER`, so this reproduces it byte for byte)
  *   -o, --out PATH      the envelope JSON (`-` = stdout; default: none)
  *   --rules-out PATH    after compile: the compiled rules.json
+ *   --save PATH         the WHOLE serialized envelope (resumable)
+ *   --resume PATH       continue a --save'd envelope (its atlas, seed, attempts, sweep and game name are its own: --atlas,
+ *                       --seed, --max-attempts, --sweep and --game-name are refused with it)
  *   -h, --help          print this and exit
  */
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -31,11 +40,12 @@ argvHelp(import.meta.url);
 
 const STEP_NAMES = ['pool', 'classify', 'shuffle', 'compile'];
 
-/** argv → `{atlas, seed, to, maxAttempts, sweep, out, rulesOut}` (throws on a bad flag). */
+/** argv → `{atlas, seed, to, maxAttempts, sweep, out, rulesOut, save, resume, gameName}` (throws on a bad flag). */
 export function parseEntranceStepArgs(argv) {
     const [cmd, ...rest] = argv;
     if (cmd !== 'run') throw new Error(`entrance-step: the subcommand is \`run\`, got ${JSON.stringify(cmd)}`);
-    const o = { seed: 1, to: 'compile', maxAttempts: 50, sweep: 'placed', out: null, rulesOut: null, atlas: null };
+    const o = { seed: 1, to: 'compile', maxAttempts: 50, sweep: 'placed', out: null, rulesOut: null, atlas: null, save: null, resume: null, gameName: null };
+    const given = new Set();
     for (let i = 0; i < rest.length; i += 1) {
         const a = rest[i];
         const v = () => {
@@ -44,6 +54,7 @@ export function parseEntranceStepArgs(argv) {
             i += 1;
             return x;
         };
+        given.add(a);
         if (a === '--atlas') o.atlas = v();
         else if (a === '--seed') o.seed = Number(v());
         else if (a === '--to') o.to = v();
@@ -51,9 +62,15 @@ export function parseEntranceStepArgs(argv) {
         else if (a === '--sweep') o.sweep = v();
         else if (a === '-o' || a === '--out') o.out = v();
         else if (a === '--rules-out') o.rulesOut = v();
+        else if (a === '--save') o.save = v();
+        else if (a === '--game-name') o.gameName = v();
+        else if (a === '--resume') o.resume = v();
         else throw new Error(`entrance-step: unknown flag ${a}`);
     }
-    if (!o.atlas) throw new Error('entrance-step: --atlas names the content source');
+    if (o.resume) {
+        const own = ['--atlas', '--seed', '--max-attempts', '--sweep', '--game-name'].filter((f) => given.has(f));
+        if (own.length) throw new Error(`entrance-step: --resume continues the envelope's own run; ${own.join(', ')} cannot be given with it`);
+    } else if (!o.atlas) throw new Error('entrance-step: --atlas names the content source');
     if (!Number.isInteger(o.seed)) throw new Error('entrance-step: --seed is an integer');
     if (!STEP_NAMES.includes(o.to)) throw new Error(`entrance-step: --to is one of ${STEP_NAMES.join(', ')}`);
     if (!Number.isInteger(o.maxAttempts) || o.maxAttempts < 1) throw new Error('entrance-step: --max-attempts is a positive integer');
@@ -85,9 +102,15 @@ async function main() {
     await loadPipelineSubstrates();
     const M = await import('../../frontend/modules/procgenPipeline/entranceShuffleSteps.js');
     const { stringifyRulesJson } = await import('../../frontend/modules/shared/rulesJsonBuilder.js');
-    const hooks = await M.entranceShuffleHooksFor(o.atlas).load();
-    const env = M.newEntranceEnvelope({ atlasId: o.atlas, seed: o.seed, maxAttempts: o.maxAttempts, sweep: o.sweep });
-    for (const step of M.ENTRANCE_STEPS) {
+    const env = o.resume ? M.deserializeEntranceEnvelope(JSON.parse(readFileSync(o.resume, 'utf8')))
+        : M.newEntranceEnvelope({ atlasId: o.atlas, seed: o.seed, maxAttempts: o.maxAttempts, sweep: o.sweep, gameName: o.gameName });
+    const hooks = await M.entranceShuffleHooksFor(env.source.atlasId).load();
+    if (M.ENTRANCE_STEPS.indexOf(o.to) < env.completed) {
+        console.error(`entrance-step: --to ${o.to} is behind the envelope (completed ${env.completed}, ${M.ENTRANCE_STEPS[env.completed]})`);
+        process.exit(1);
+    }
+    if (o.resume) console.error(`entrance-step: resumed ${o.resume} at completed ${env.completed} (${M.ENTRANCE_STEPS[env.completed] ?? 'none'})`);
+    for (const step of M.ENTRANCE_STEPS.slice(env.completed + 1)) {
         const t0 = Date.now();
         // eslint-disable-next-line no-await-in-loop
         await M.runEntranceStep(step, env, { hooks });
@@ -100,6 +123,7 @@ async function main() {
             + `${a.rejectedUnbeatable} unbeatable, ${a.rejectedCheck} check-rejected); ${env.compile.moved.length} exit(s) moved, `
             + `${env.compile.spheres} sphere states`);
     }
+    if (o.save) writeFileSync(o.save, `${JSON.stringify(M.serializeEntranceEnvelope(env))}\n`);
     if (o.out) {
         const text = `${JSON.stringify(publicEnvelope(env, M.ENTRANCE_ENVELOPE_FIELDS), null, 2)}\n`;
         if (o.out === '-') process.stdout.write(text);

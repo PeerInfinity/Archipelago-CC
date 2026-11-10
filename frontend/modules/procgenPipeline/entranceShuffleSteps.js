@@ -26,6 +26,15 @@
 // `scripts/procgen/entrance-step.js` CLI, and `scripts/procgen/make-seedling-er-preset.mjs`.
 //
 // ⛔ VANILLA IS UNTOUCHED: nothing here writes a file; the vanilla compile is the producer's, byte for byte.
+//
+// ⛓ ER E4c — SERIALIZE / RESUME. `serializeEntranceEnvelope` writes every field but the session-only `_binding` (the live E3
+// binding: closures over the vanilla compile, rebuilt from `vanilla` + `classify` by `shuffleBinding`); the INTERNAL fields
+// (the pooled atlas, the vanilla compile) ride along, so `deserializeEntranceEnvelope` + `runEntranceToStep` continue from
+// `completed` and NEVER re-pool, re-classify or re-compile vanilla. A substrate whose hooks hold process state the later
+// steps read (Seedling's: the producer's analysis pass, the census its checks re-read, vanilla's sphere 0) declares
+// `hooks.resume({atlas, classification, vanilla})`, which the shuffle and compile steps call first: it WARMS that state from
+// the envelope (and may verify the envelope against its own source) — it returns nothing the envelope keeps, and a warm
+// hooks object answers it as a no-op.
 
 import { randomizeEntrances, EntranceRandomizationError } from '../procgenCore/entranceRandomizer.js';
 import { entranceRandomizationProblems } from '../procgenCore/entranceRandomizationCheck.js';
@@ -35,6 +44,8 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { makeRulesDocReach, apExitNamesByEndpoint } from './entranceRandomizationReach.js';
 import { stampAtlasIdentity } from './regionAtlasValidator.js';
 import {
+    serializeEnvelope as serializeEnvelopeGeneric,
+    deserializeEnvelope as deserializeEnvelopeGeneric,
     runStep as runStepGeneric,
     runToStep as runToStepGeneric,
     detectCompleted as detectCompletedGeneric,
@@ -263,6 +274,13 @@ const needHooks = (opts) => {
     return opts.hooks;
 };
 
+/** The hooks, warmed from the envelope (`hooks.resume`, when the substrate declares one; see the header). */
+const warmHooks = async (env, opts) => {
+    const hooks = needHooks(opts);
+    await hooks.resume?.({ atlas: env.pool.atlas, classification: env.classify, vanilla: env.vanilla?.rules ?? null });
+    return hooks;
+};
+
 const RUNNERS = {
     pool: async (env, opts) => {
         const { atlas } = await needHooks(opts).pool({ atlasId: env.source.atlasId });
@@ -282,7 +300,7 @@ const RUNNERS = {
         return env;
     },
     shuffle: async (env, opts) => {
-        const hooks = needHooks(opts);
+        const hooks = await warmHooks(env, opts);
         if (!env.vanilla) env.vanilla = { rules: (await hooks.compile(env.pool.atlas, { moved: new Set() })).rules };
         const binding = shuffleBinding(env.vanilla.rules, env.classify, { sweep: env.sweep ?? ER_SWEEP });
         const from = env.shuffle ? env.shuffle.attempt + 1 : 0;
@@ -292,7 +310,7 @@ const RUNNERS = {
         return env;
     },
     compile: async (env, opts) => {
-        const hooks = needHooks(opts);
+        const hooks = await warmHooks(env, opts);
         for (;;) {
             const { attempt, placements } = env.shuffle;
             const { atlas, moved } = applyPlacements(env.pool.atlas, env.classify, placements);
@@ -354,7 +372,8 @@ const DESCRIPTOR = {
     steps: ENTRANCE_STEPS,
     runners: RUNNERS,
     present: PRESENT,
-    codecs: {},
+    // `_binding` is session-only (closures): never serialized; the compile step rebuilds it from `vanilla` + `classify`.
+    codecs: { _binding: { encode: () => undefined } },
     nextStep: (env) => (env.completed < ENTRANCE_STEPS.length - 1 ? ENTRANCE_STEPS[env.completed + 1] : null),
     fields: ENTRANCE_ENVELOPE_FIELDS,
 };
@@ -382,4 +401,30 @@ export async function runEntranceToStep(env, toStep = 'compile', opts = {}) {
 /** The `completed` index from data presence. */
 export function detectEntranceCompleted(env) {
     return detectCompletedGeneric(env, DESCRIPTOR);
+}
+
+/** Live envelope → JSON-safe plain object (every field but the session-only `_binding`; see the header). */
+export function serializeEntranceEnvelope(env) {
+    const out = serializeEnvelopeGeneric(env, DESCRIPTOR);
+    delete out._binding;
+    return out;
+}
+
+/**
+ * JSON-safe plain object (from `serializeEntranceEnvelope`) → live envelope, ready to resume from its `completed`. Refuses
+ * an envelope of another mode or version (`EnvelopeStampError`), and one whose `completed` its data does not bear out.
+ */
+export function deserializeEntranceEnvelope(obj) {
+    const env = deserializeEnvelopeGeneric(obj, DESCRIPTOR);
+    const present = detectEntranceCompleted(env);
+    if (env.completed > present) {
+        throw new Error(`entranceShuffle: the envelope says completed ${env.completed}, but its data reaches only ${present}`);
+    }
+    if (env.completed >= ENTRANCE_STEPS.indexOf('shuffle') && !env.vanilla) {
+        throw new Error('entranceShuffle: the envelope ran the shuffle but carries no vanilla compile (an envelope of PUBLIC fields only cannot resume)');
+    }
+    if (env.completed >= ENTRANCE_STEPS.indexOf('pool') && !env.pool?.atlas) {
+        throw new Error('entranceShuffle: the envelope ran the pool but carries no atlas (an envelope of PUBLIC fields only cannot resume)');
+    }
+    return env;
 }
