@@ -56,13 +56,21 @@
  *              `#game`. The refusal session is the wasm arm's (it needs a staged build that lacks a
  *              capability; the JS runtime is no build in the manifest) and does not run here.
  *
+ *   --runtime=both BOTH ARMS IN ONE INVOCATION AND ONE LOG: the wasm session first (with its refusal session, and
+ *              its `CHANNEL: headless logic-only` line, the proof that run did not rasterise), then the JS
+ *              session, each on fresh pages of one browser, under one box lock, every check of each arm run as
+ *              above. Each `PASS:`/`FAIL:`/`ROW`/`UNWALKED:`/`INFO:` line carries its arm after the keyword
+ *              (`PASS: [wasm] …`, `ROW [js] …`); the verdict is one, the sum of both arms' failures. ⛔ The JS
+ *              arm prints NO channel line (it has no `__swfGpu` to read): the one in the log is the wasm arm's.
+ *              With the wasm build not staged the whole invocation SKIPs (exit 0), as the wasm arm does alone.
+ *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`
  * (exit 1).
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); on the wasm arm the wasm
  * build (the `flashPanel/wasm` submodule), or it SKIPs (exit 0). The JS arm needs no build.
  *
- * Run: node scripts/procgen/probe-seedling-wasm-er-retarget.mjs [--runtime=wasm|js] [--host=http://localhost:8000] [--pairs=0,3] [--no-item] [--no-refusal] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-wasm-er-retarget.mjs [--runtime=wasm|js|both] [--host=http://localhost:8000] [--pairs=0,3] [--no-item] [--no-refusal] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -93,6 +101,19 @@ export function runtimeOf(argv) {
     const given = argv.find((a) => a.startsWith('--runtime='))?.slice('--runtime='.length) ?? RUNTIMES[0];
     return RUNTIMES.includes(given) ? given : null;
 }
+
+/** `--runtime=both`: every runtime of `RUNTIMES`, in that order (the wasm session first), in one invocation. */
+export const BOTH = 'both';
+
+/** The arms an invocation plays: `[runtime]`, every runtime in `RUNTIMES`' order for `--runtime=both`, or null. */
+export function armsOf(argv) {
+    if (argv.some((a) => a === `--runtime=${BOTH}`)) return [...RUNTIMES];
+    const one = runtimeOf(argv);
+    return one ? [one] : null;
+}
+
+/** What a line of an arm carries after its keyword: `[runtime] ` when several arms share the log, else nothing. */
+export const armPrefix = (arms, runtime) => (arms.length > 1 ? `[${runtime}] ` : '');
 
 const ARROWS = [[0, -1, 'ArrowUp'], [-1, 0, 'ArrowLeft'], [1, 0, 'ArrowRight'], [0, 1, 'ArrowDown']];
 const ARROW_KEY_CODES = Object.freeze({ ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40 });
@@ -224,13 +245,39 @@ export function messageTitles(repo) {
 if (isEntryPoint(import.meta.url)) await main();
 
 async function main() {
-    const RUNTIME = runtimeOf(process.argv);
-    if (!RUNTIME) {
-        console.log(`unknown --runtime (one of ${RUNTIMES.join(', ')})`);
+    const ARMS = armsOf(process.argv);
+    if (!ARMS) {
+        console.log(`unknown --runtime (one of ${[...RUNTIMES, BOTH].join(', ')})`);
         process.exit(2);
     }
+    const asked = ARMS.length > 1 ? BOTH : ARMS[0];
+    takeBoxLockOrExit({ name: `probe-seedling-wasm-er-retarget.mjs${asked === RUNTIMES[0] ? '' : ` --runtime=${asked}`}`, kind: 'browser' });
+    const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
+    let failed = 0;
+    for (const runtime of ARMS) {
+        // ⛓ one arm at a time, in `RUNTIMES`' order: the wasm session (and its channel line) first
+        // eslint-disable-next-line no-await-in-loop
+        const armFailed = await playArm(runtime, { browser, arm: armPrefix(ARMS, runtime) });
+        if (armFailed === null) {
+            // the wasm build is not staged: said by the arm, and the whole invocation skips
+            await browser.close();
+            process.exit(0);
+        }
+        if (ARMS.length > 1) console.log(`INFO: ${armPrefix(ARMS, runtime)}arm done: ${armFailed} check(s) failed`);
+        failed += armFailed;
+    }
+    await browser.close();
+    console.log(bootRetriesLine());
+    console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
+    process.exit(failed === 0 ? 0 : 1);
+}
+
+/**
+ * One arm of the witness, on fresh pages of `browser`: its failed-check count, or null when its build is not
+ * staged (the SKIP line is printed here). `arm` is what each of its lines carries after the keyword.
+ */
+async function playArm(RUNTIME, { browser, arm }) {
     const JS = RUNTIME === 'js';
-    takeBoxLockOrExit({ name: `probe-seedling-wasm-er-retarget.mjs${JS ? ' --runtime=js' : ''}`, kind: 'browser' });
     const HERE = dirname(fileURLToPath(import.meta.url));
     const REPO = join(HERE, '..', '..');
     const FRONTEND = join(REPO, 'frontend');
@@ -250,7 +297,7 @@ async function main() {
     const GAME_PAGE = JS ? JS_PAGE : WASM_PAGE;
     if (!JS && (!WASM_PAGE || !existsSync(join(FRONTEND, 'modules/flashPanel/wasm', WASM_PAGE)))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
-        process.exit(0);
+        return null;
     }
 
     // ── the world, made here the way the page makes it ──────────────────
@@ -289,12 +336,7 @@ async function main() {
         && existsSync(join(FRONTEND, 'modules/flashPanel/wasm', b.name, 'game.html'))) ?? null) : null;
     const TITLES = messageTitles(REPO);
 
-    const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
-    const failed = await withBootRetry('ER', () => runSession());
-    await browser.close();
-    console.log(bootRetriesLine());
-    console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
-    process.exit(failed === 0 ? 0 : 1);
+    return withBootRetry(arm ? `ER ${RUNTIME}` : 'ER', () => runSession());
 
     async function runSession() {
         const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
@@ -302,7 +344,7 @@ async function main() {
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
         const rp = createRoomPlay({ page, wasmPage: GAME_PAGE, logs, name: `er-retarget-${RUNTIME}` });
-        const { check } = rp;
+        const check = (label, ok, detail) => rp.check(`${arm}${label}`, ok, detail);
         /**
          * The keyboard into the game. The JS page's canvas is `#game` (the wasm page's `#canvas` is what the
          * shared hands click and focus), so on the JS arm the same two recipes run here against it.
@@ -354,7 +396,7 @@ async function main() {
                 await page.evaluate(() => { window.__erRelease = null; });
             }
         };
-        const out = (tag, o) => console.log(`ROW ${tag} ${JSON.stringify(o)}`);
+        const out = (tag, o) => console.log(`ROW ${arm}${tag} ${JSON.stringify(o)}`);
         const panelLog = () => page.evaluate(() => (document.querySelector('.flash-panel-log')?.textContent ?? ''));
         const panelLogTail = async () => (await panelLog()).split('\n').slice(-12).join(' | ');
         const glue = () => page.evaluate(async () => {
@@ -482,7 +524,7 @@ async function main() {
             legs.total += 1;
             if (spots.length === 0) {
                 legs.unwalked.push({ leg: tag, exit: row.exit, door: row.door, why });
-                console.log(`UNWALKED: ${name} — ${why}`);
+                console.log(`UNWALKED: ${arm}${name} — ${why}`);
                 return null;
             }
             let fired = null;
@@ -508,7 +550,7 @@ async function main() {
             if (!fired && spots.every((sp) => sp.hazard)) {
                 const reason = `the stairs fired from none of its ${spots.length} approach cell(s), and every one is water, lava or a pit in the delivered room`;
                 legs.unwalked.push({ leg: tag, exit: row.exit, door: row.door, why: reason, tried });
-                console.log(`UNWALKED: ${name} — ${reason} — ${JSON.stringify(tried)}`);
+                console.log(`UNWALKED: ${arm}${name} — ${reason} — ${JSON.stringify(tried)}`);
                 return null;
             }
             check(`${name}: walking onto the stairs fired it`, !!fired,
@@ -686,13 +728,13 @@ async function main() {
                 check('a moved stairs lands in a room with a placed walk-in pickup the flood reaches', !!ITEM, ITEM ? ITEM.entry.location : 'none');
                 if (ITEM) await itemLeg(ITEM);
             }
-            console.log(`INFO: the room-name message is not observable ${JS ? 'through the bridge verbs this witness reads' : 'on this build'}; each leg row carries the sign the game was handed (Message.as titles: ${JSON.stringify(TITLES)})`);
-            console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s)${JS ? '' : ' (the logic-only channel\'s device loss)'}`);
-            console.log(`INFO: panel log: ${await panelLogTail().catch(() => '?')}`);
+            console.log(`INFO: ${arm}the room-name message is not observable ${JS ? 'through the bridge verbs this witness reads' : 'on this build'}; each leg row carries the sign the game was handed (Message.as titles: ${JSON.stringify(TITLES)})`);
+            console.log(`INFO: ${arm}${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s)${JS ? '' : ' (the logic-only channel\'s device loss)'}`);
+            console.log(`INFO: ${arm}panel log: ${await panelLogTail().catch(() => '?')}`);
         } catch (e) {
             if (isBootFault(e)) { await page.close(); throw e; }
             check(`fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
-            console.log(`INFO: panel log: ${await panelLogTail().catch(() => '?')}`);
+            console.log(`INFO: ${arm}panel log: ${await panelLogTail().catch(() => '?')}`);
         }
         await page.close();
         return rp.failures() + (WITH_REFUSAL ? await refusalSession() : 0);
@@ -706,8 +748,10 @@ async function main() {
         const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
-        const { check, failures, waitFor, gameFrame } = createRoomPlay({ page, wasmPage: OTHER_BUILD ? `${OTHER_BUILD.name}/game.html` : WASM_PAGE,
+        const refusal = createRoomPlay({ page, wasmPage: OTHER_BUILD ? `${OTHER_BUILD.name}/game.html` : WASM_PAGE,
             logs, name: 'er-refusal' });
+        const { failures, waitFor, gameFrame } = refusal;
+        const check = (label, ok, detail) => refusal.check(`${arm}${label}`, ok, detail);
         try {
             check('the manifest holds a staged build that lacks a capability the preset\'s build declares', !!OTHER_BUILD,
                 OTHER_BUILD ? `${OTHER_BUILD.name}: ${JSON.stringify(OTHER_BUILD.capabilities ?? [])}` : 'none');
@@ -733,7 +777,7 @@ async function main() {
                     log: (document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').filter((l) => l.includes('ENTRANCE RANDOMIZATION')) };
             }), 180000);
             const brief = (t) => (typeof t === 'string' && t.length > 260 ? `${t.slice(0, 260)}… (${t.length} chars)` : t);
-            console.log(`ROW refusal ${JSON.stringify({ build: OTHER_BUILD.name, refusal: brief(seen.refusal), delivered: seen.delivered,
+            console.log(`ROW ${arm}refusal ${JSON.stringify({ build: OTHER_BUILD.name, refusal: brief(seen.refusal), delivered: seen.delivered,
                 overlay: seen.overlay ? { shown: seen.overlay.shown, sameText: seen.overlay.text === seen.refusal } : null, logLines: seen.log.length })}`);
             check(`REFUSAL (${OTHER_BUILD.name}): the load is refused and names the entrance randomization, with the reason`,
                 typeof seen.refusal === 'string' && seen.refusal.startsWith('ENTRANCE RANDOMIZATION') && seen.refusal.includes('not delivered')

@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { RULES_PATH, RUNTIMES, keyReleaseOf, pickRetargetPairs, runtimeOf } from './probe-seedling-wasm-er-retarget.mjs';
+import { BOTH, RULES_PATH, RUNTIMES, armPrefix, armsOf, keyReleaseOf, pickRetargetPairs, runtimeOf } from './probe-seedling-wasm-er-retarget.mjs';
 import { loadSeedlingRandomizer } from '../../frontend/modules/flashPanel/seedlingRandomizerWiring.js';
 
 const FRONTEND = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'frontend');
@@ -49,6 +49,29 @@ describe('probe-seedling-wasm-er-retarget: the runtime arm', () => {
         for (const runtime of RUNTIMES) expect(runtimeOf(['node', 'probe', `--runtime=${runtime}`])).toBe(runtime);
         expect(runtimeOf(['--runtime=flash'])).toBeNull();
         expect(runtimeOf(['--runtime='])).toBeNull();
+    });
+
+    it('--runtime=both plays every runtime in one invocation, the wasm session first, and names each arm on its lines', () => {
+        expect(RUNTIMES).not.toContain(BOTH);
+        const both = armsOf(['node', 'probe', `--runtime=${BOTH}`, '--pairs=0']);
+        expect(both).toEqual([...RUNTIMES]);
+        // the wasm arm prints the channel line the log is graded on: it runs first
+        expect(both[0]).toBe('wasm');
+        expect(both.at(-1)).toBe('js');
+        // one arm alone is the invocation it always was: that runtime, and no prefix on its lines
+        expect(armsOf([])).toEqual([RUNTIMES[0]]);
+        for (const runtime of RUNTIMES) {
+            const one = armsOf([`--runtime=${runtime}`]);
+            expect(one).toEqual([runtime]);
+            expect(armPrefix(one, runtime)).toBe('');
+            expect(armPrefix(both, runtime)).toBe(`[${runtime}] `);
+        }
+        expect(new Set(both.map((runtime) => armPrefix(both, runtime))).size).toBe(both.length);
+        // the single-runtime parse does not take it, and nothing else is an arm
+        expect(runtimeOf([`--runtime=${BOTH}`])).toBeNull();
+        expect(armsOf(['--runtime=flash'])).toBeNull();
+        expect(armsOf(['--runtime='])).toBeNull();
+        expect(armsOf([`--runtime=${BOTH},js`])).toBeNull();
     });
 
     it('the release dispatched on the door report names the arrow the way both runtimes read it', () => {
