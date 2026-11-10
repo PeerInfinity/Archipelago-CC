@@ -47,6 +47,10 @@ export const L40_LATCHES = Object.freeze({
     1: { button: [10, 8], locks: [[11, 5], [11, 13]] },
     3: { button: [55, 48], locks: [[30, 35]] },
 });
+/** L20's one laid latch (session tile-rules-automation-r-a4b): the ButtonRoom behind the ShieldLock and the lock it opens. A literal that only CHECKS the producer. */
+export const L20_LATCHES = Object.freeze({
+    0: { button: [12, 1], locks: [[2, 5]] },
+});
 export const L40_REGIONS = ['level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36', 'level_40__r36c35', 'level_40__r48c54'];
 
 /**
