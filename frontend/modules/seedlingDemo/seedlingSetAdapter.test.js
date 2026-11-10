@@ -1370,6 +1370,14 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
         return { record, s, roomSession, roomAdapter, tag };
     };
 
+    /** ⛓ E2 — MUTANT: the close forgets the check, and a set takes a room the game's loader dies on. */
+    it('a room holding a rope with no <node> is not closed into the set', () => {
+        const { s, roomSession } = open();
+        expect(roomSession.apply({ op: 'place', tx: 2, ty: 2, type: 'rope', attrs: {} }).ok).toBe(true);
+        expect(() => closeRoomSession(s, roomSession, 2)).toThrow(/has no <node>/);
+        expect(s.ops()).toHaveLength(0);
+    });
+
     it('N room edits become ONE set op, and the set_id does not move', () => {
         const { record, s, roomSession } = open();
         const before = s.record().set.rooms[2].source.record;

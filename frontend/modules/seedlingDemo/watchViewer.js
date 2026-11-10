@@ -317,6 +317,7 @@ import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js'
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
+import { saveRefusal } from './entityLinks.js';
 /**
  * ⛓ THE ONE OEL READER AND THE ONE WRITER, which now sit in one file — EDITOR
  * v3 C1 moved `parseOelLevel` beside `recordToOel` so the EDIT arm's
@@ -9273,6 +9274,8 @@ async function runEditor(params, lifetime) {
             level: session.record(),
             why: lastWhy,
             transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
+            /** ⛓ E2 — what the room is wired to, and the issues the panel lists. */
+            get links() { return editorUi?.links() ?? null; },
             /**
              * ⛓ EDITOR v3 C2 — WHICH SET IS HELD and how many of its rooms this
              * page could open. ⛔ The set itself is NOT echoed here: it is up to
@@ -9424,11 +9427,18 @@ async function runEditor(params, lifetime) {
         },
     });
 
+    /** ⛓ E2 — ▶ load sends the room to the game, so a room its loader dies on refuses by the save's own sentence. */
+    const refuseUnloadable = (record) => {
+        const why = saveRefusal(record, { schema: ogmoSchema });
+        if (why) throw new Error(why);
+        return record;
+    };
+
     const shippableEdit = () => (setSession ? shippableSet() : (session.certified === true
         && solveIsCurrent() && lastSolve.tape) ? {
         what: 'ship this room + the tape SOLVE certified it with (Seedling editor E1)',
         build: () => shipOneRoomWithTape({
-            record: session.record(),
+            record: refuseUnloadable(session.record()),
             solved: lastSolve,
             setOpts: {
                 name: `edit_${baseTag?.kind ?? 'room'}_${session.record().level}`,
@@ -9441,7 +9451,7 @@ async function runEditor(params, lifetime) {
     } : {
         what: 'ship this room into the recompiled game (keyboard-driven; no expectation)',
         build: () => {
-            const record = session.record();
+            const record = refuseUnloadable(session.record());
             const { set, chunks, mapped } = buildOneRoomSet({
                 record,
                 name: `edit_${baseTag?.kind ?? 'room'}_${record.level}`,
@@ -10169,9 +10179,17 @@ async function runEditor(params, lifetime) {
     lifetime.on($('editDownload'), 'click', () => download(
         `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.json`,
         `${JSON.stringify(payloadNow(), null, 2)}\n`, 'application/json'));
-    lifetime.on($('editDownloadOel'), 'click', () => download(
-        `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.oel`,
-        recordToOel(session.record()), 'application/xml'));
+    lifetime.on($('editDownloadOel'), 'click', () => {
+        // ⛓ E2 — an OEL is what the game loads, so a room its loader dies on is not written.
+        const why = saveRefusal(session.record(), { schema: ogmoSchema });
+        if (why) {
+            $('status').className = 'bad';
+            $('status').textContent = why;
+            return;
+        }
+        download(`edit-${baseTag?.kind ?? 'room'}-${session.record().level}.oel`,
+            recordToOel(session.record()), 'application/xml');
+    });
 
     /**
      * ⛓⛓⛓ **THE SET, THE OVERLAY AND THE `apMapping` COMPANION — `#editDownloadSet`
