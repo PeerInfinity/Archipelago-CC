@@ -19,7 +19,8 @@
  *              both ways (`--pairs=0,3` takes a subset; `ROW pairs` lists them).
  *   each leg   the Tools teleport puts the AP player beside the stairs (a free cell next to its tile, read off
  *              the delivered room: the cell the partner stairs lands on when that is one); the key towards the
- *              stairs is held until the game fires a door. A stairs the delivered room does not let a player
+ *              stairs is held until the game fires a door, and released from inside the page on that very
+ *              report (so no tick of the shuffled room is played with the arrow held). A stairs the delivered room does not let a player
  *              with no item walk onto (a lock on its tile; lava all round it, tried and not fired) is reported
  *              `UNWALKED:` with that reason. Then:
  *                - the `level` reports of the crossing are exactly [the shuffled level]: no vanilla level;
@@ -94,6 +95,16 @@ export function runtimeOf(argv) {
 }
 
 const ARROWS = [[0, -1, 'ArrowUp'], [-1, 0, 'ArrowLeft'], [1, 0, 'ArrowRight'], [0, 1, 'ArrowDown']];
+const ARROW_KEY_CODES = Object.freeze({ ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40 });
+
+/**
+ * The DOM `keyup` that releases a held arrow, as both runtimes read one: `{key, code, keyCode}` (the JS runtime's
+ * page reads `code`, the wasm build's emscripten handlers `keyCode`). Null for a key that is no arrow.
+ */
+export function keyReleaseOf(key) {
+    const keyCode = ARROW_KEY_CODES[key];
+    return keyCode ? { key, code: key, keyCode } : null;
+}
 
 /**
  * The coupled stairs pairs of a retarget plan, in placement order, read off the preset and the plan alone
@@ -323,6 +334,26 @@ async function main() {
             }
             return { value, ms: Date.now() - start };
         };
+        /**
+         * ⛔ THE HELD ARROW COMES UP THE INSTANT THE DOOR FIRES, INSIDE THE PAGE. `holdUntil` releases only after
+         * node has polled the door report (every 50 ms, each poll a round trip), and the game steps on in the
+         * shuffled room with the arrow still held: how many ticks is the poll's luck. MEASURED on the JS runtime
+         * (1 CI run of 3), on a landing under three arrow traps and one tile above the destination's own
+         * stairs: with the release delayed 0 or 16 ms past the report the first volley knocks the player UP and
+         * it stays; delayed 32 or 48 ms (a tick or two walked up) the volley knocks it DOWN onto those stairs
+         * and the game goes back; from 64 ms on it stays again. So the key is ARMED here and the report recorder
+         * (`installReports`) dispatches its `keyup` into the game's frame from the `pendingExit` report itself,
+         * the game's own call: no tick of the shuffled room is played with the arrow held. The keyboard's own
+         * release still follows in `holdUntil`: it is then a release of a key the game no longer holds.
+         */
+        const holdToDoor = async (key, until, ceilingMs) => {
+            await page.evaluate((release) => { window.__erRelease = release; }, keyReleaseOf(key));
+            try {
+                return await holdUntil(key, until, ceilingMs);
+            } finally {
+                await page.evaluate(() => { window.__erRelease = null; });
+            }
+        };
         const out = (tag, o) => console.log(`ROW ${tag} ${JSON.stringify(o)}`);
         const panelLog = () => page.evaluate(() => (document.querySelector('.flash-panel-log')?.textContent ?? ''));
         const panelLogTail = async () => (await panelLog()).split('\n').slice(-12).join(' | ');
@@ -341,8 +372,13 @@ async function main() {
          * has declared so far (`playerPositionX/Y` are declared before `level`, so a level report's stamp is the
          * landing the game constructed that level with). The adapter re-installs `_stateHook` on the bridge at
          * every push tick, so the wrap is on the adapter's own field.
+         *
+         * A `pendingExit` report also RELEASES the arrow `holdToDoor` armed (`window.__erRelease`): a `keyup`
+         * dispatched into the game's frame, at every target a runtime may listen on (the document, the window,
+         * the canvas: an extra event where nobody listens is inert), before the report is passed on. The report
+         * row says what was dispatched (`released`).
          */
-        const installReports = () => page.evaluate(async () => {
+        const installReports = () => page.evaluate(async (gamePage) => {
             const a = (await import('./modules/flashPanel/index.js')).getActivePanelInstance()?.adapter;
             if (!a || a.__erReports) return !!a;
             window.__erReports = [];
@@ -353,14 +389,26 @@ async function main() {
             a._stateHook = (property, value) => {
                 if (property === 'playerPositionX') pos.x = Number(value);
                 if (property === 'playerPositionY') pos.y = Number(value);
+                let released = null;
+                if (property === 'pendingExit' && window.__erRelease) {
+                    const { key, code, keyCode } = window.__erRelease;
+                    window.__erRelease = null;
+                    const w = [...document.querySelectorAll('iframe')].find((f) => f.src.includes(gamePage))?.contentWindow;
+                    const targets = w?.document ? [w.document, w, w.document.querySelector('canvas')].filter(Boolean) : [];
+                    for (const t of targets) {
+                        t.dispatchEvent(new w.KeyboardEvent('keyup', { key, code, keyCode, which: keyCode, bubbles: true, cancelable: true }));
+                    }
+                    released = `${key} x ${targets.length} target(s)`;
+                }
                 if (property === 'level' || property === 'pendingExit') {
-                    window.__erReports.push({ property, value, ms: Math.round(performance.now()), x: pos.x, y: pos.y });
+                    window.__erReports.push({ property, value, ms: Math.round(performance.now()), x: pos.x, y: pos.y,
+                        ...(released ? { released } : {}) });
                 }
                 return hook(property, value);
             };
             a.__erReports = true;
             return true;
-        });
+        }, GAME_PAGE);
         const reports = () => page.evaluate(() => window.__erReports ?? []);
         const warnings = () => logs.filter((l) => l.includes('has no marked exit to')).length;
         /** Every leg asked for: walked, or unwalkable by hand for a reason read off the delivered room. */
@@ -451,7 +499,7 @@ async function main() {
                 const reports0 = (await reports()).length;
                 const warn0 = warnings();
                 // eslint-disable-next-line no-await-in-loop
-                const held = await holdUntil(spot.key, async () => ((await reports()).slice(reports0)
+                const held = await holdToDoor(spot.key, async () => ((await reports()).slice(reports0)
                     .some((r) => r.property === 'pendingExit') ? 'fired' : null), 5000);
                 if (held.value === 'fired') { fired = { spot, g0, moves0, reports0, warn0, held }; break; }
                 // eslint-disable-next-line no-await-in-loop
@@ -498,7 +546,7 @@ async function main() {
                 moves, counted, warnings: warnings() - warn0,
                 message: { deliveredSign: sign, announces: sign > 0 ? (TITLES?.[sign - 1] ?? `title ${sign}`) : null,
                     observed: 'not observable on this build' },
-                heldMs: fired.held.ms, settle: end.error ?? 'settled',
+                heldMs: fired.held.ms, keyReleasedOnDoor: seen.find((r) => r.released)?.released ?? null, settle: end.error ?? 'settled',
             };
             out(`${tag} leg`, m);
             const tile = leg.tileSize;

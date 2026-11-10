@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { RULES_PATH, RUNTIMES, pickRetargetPairs, runtimeOf } from './probe-seedling-wasm-er-retarget.mjs';
+import { RULES_PATH, RUNTIMES, keyReleaseOf, pickRetargetPairs, runtimeOf } from './probe-seedling-wasm-er-retarget.mjs';
 import { loadSeedlingRandomizer } from '../../frontend/modules/flashPanel/seedlingRandomizerWiring.js';
 
 const FRONTEND = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'frontend');
@@ -49,6 +49,15 @@ describe('probe-seedling-wasm-er-retarget: the runtime arm', () => {
         for (const runtime of RUNTIMES) expect(runtimeOf(['node', 'probe', `--runtime=${runtime}`])).toBe(runtime);
         expect(runtimeOf(['--runtime=flash'])).toBeNull();
         expect(runtimeOf(['--runtime='])).toBeNull();
+    });
+
+    it('the release dispatched on the door report names the arrow the way both runtimes read it', () => {
+        const arrows = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'];
+        const releases = arrows.map(keyReleaseOf);
+        // the JS runtime reads `code`, the wasm build `keyCode`: both are the key's own
+        for (const [i, r] of releases.entries()) expect(r).toEqual({ key: arrows[i], code: arrows[i], keyCode: 37 + i });
+        expect(new Set(releases.map((r) => r.keyCode)).size).toBe(arrows.length);
+        expect(keyReleaseOf('KeyX')).toBeNull();
     });
 
     it('both arms walk the same world: one delivered set, the same coupled pairs, every moved stairs in one', async () => {
