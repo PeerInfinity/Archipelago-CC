@@ -1,0 +1,27 @@
+CENSUS: leg 873 request 1, captured at seam time 5216, budget 2560
+SEAM-SWEEP: leg 873: 1 distinct answer(s) over 25 seam time(s)
+  t=5204 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5205 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5206 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5207 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5208 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5209 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5210 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5211 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5212 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5213 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5214 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5215 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5216 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5217 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5218 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5219 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5220 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5221 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5222 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5223 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5224 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5225 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5226 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5227 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
+  t=5228 error work=2561 [dashless:1381,full:1180/sword-dash] PLAN
