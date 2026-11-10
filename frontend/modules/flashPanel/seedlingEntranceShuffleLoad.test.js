@@ -119,10 +119,12 @@ describe('the vanilla arm delivers an entrance-randomized world RETARGETED', () 
     });
 
     it('the JS runtime takes the same delivery (transport js): the retargeted set', async () => {
+        const wasm = (await load(ER)).r;
         const { r } = await load(ER, { transport: 'js', manifest: null });
-        // whatever the JS runtime's verdict is on this world, a delivery it arms is the retargeted one
-        if (r.verdict === 'eligible') expect(r.entrances.retargeted).toBeGreaterThan(0);
-        else expect(r.delivery).toBe(null);
+        expect(r.verdict, r.why).toBe('eligible');
+        expect(r.eligibility.arm).toBe(RANDOMIZER_ARMS.VANILLA);
+        expect(r.entrances.retargeted).toBe(wasm.entrances.retargeted);
+        expect(r.set.set_id).toBe(wasm.set.set_id);
     });
 });
 

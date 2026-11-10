@@ -19,8 +19,8 @@
  *   each leg   the Tools teleport puts the AP player beside the stairs (a free cell next to its tile, read off
  *              the delivered room: the cell the partner stairs lands on when that is one); the key towards the
  *              stairs is held until the game fires a door. A stairs the delivered room does not let a player
- *              with no item walk onto (a lock on its tile; water all round it) is reported `UNWALKED:` with that
- *              reason, not walked. Then:
+ *              with no item walk onto (a lock on its tile; lava all round it, tried and not fired) is reported
+ *              `UNWALKED:` with that reason. Then:
  *                - the `level` reports of the crossing are exactly [the shuffled level]: no vanilla level;
  *                - the position the game reported WITH that level is the retargeted `@playerx` / `@playery`
  *                  (the data, not the vanilla landing: this is what tells the two apart when the vanilla and
@@ -108,11 +108,14 @@ export function pickRetargetPairs(rules, moved) {
 
 /**
  * Where to stand to walk onto a stairs by hand, with no item: `{spots, why}`. `spots` are the free cells next
- * to its tile in the delivered room (the flood's, every solid live) that are no hazard (water, lava, a pit: the
- * room's own collision world), the one the partner lands on first; each `{x, y, key}`, a `new Game` position
- * (the cell's top-left) and the arrow from there onto the stairs. With no spot, `why` says what the delivered
- * room puts in the way: a solid ON the stairs' tile (a lock), or hazards all round it (the logic gates such a
- * stairs behind an item, and the witness carries none).
+ * to its tile in the delivered room (the flood's, every solid live), the one the partner lands on first and
+ * the HAZARD cells last (water, lava, a pit, by the room's own collision world: `hazard: true`); each
+ * `{x, y, key}`, a `new Game` position (the cell's top-left) and the arrow from there onto the stairs. With no
+ * spot, `why` says what the delivered room puts in the way: a solid ON the stairs' tile (a lock), or no free
+ * cell. ⚠ A hazard cell is still TRIED: MEASURED, one stairs' only approach cell is flagged water and walks
+ * (shallow), while another's four are lava and the player does not move. A leg is unwalkable by hand only when
+ * no cell fired the stairs and every cell was a hazard (the logic gates such a stairs behind an item, and the
+ * witness carries none).
  */
 export function approachSpots(record, leg, { walkableCellsFrom, buildLevelWorld }) {
     const [tx, ty] = leg.tile;
@@ -127,15 +130,12 @@ export function approachSpots(record, leg, { walkableCellsFrom, buildLevelWorld 
     const hazards = new Set([...world.lethalTerrainTiles, ...world.pitTiles].map((t) => `${Math.floor(t.x / size)},${Math.floor(t.y / size)}`));
     const landing = { tx: Math.floor(leg.partnerLanding.x / size), ty: Math.floor(leg.partnerLanding.y / size) };
     const free = ARROWS.map(([dx, dy]) => ({ tx: tx + dx, ty: ty + dy })).filter((c) => flood.has(`${c.tx},${c.ty}`));
-    const spots = free.filter((c) => !hazards.has(`${c.tx},${c.ty}`))
+    const spots = free
         .map((c) => ({ x: c.tx * size, y: c.ty * size,
             key: ARROWS.find(([dx, dy]) => dx === tx - c.tx && dy === ty - c.ty)[2],
-            partner: c.tx === landing.tx && c.ty === landing.ty }))
-        .sort((a, b) => Number(b.partner) - Number(a.partner));
-    if (spots.length > 0) return { spots, why: null };
-    return { spots, why: free.length > 0
-        ? `every free cell beside the stairs' tile is water, lava or a pit in the delivered room (${free.length} cell(s))`
-        : 'the delivered room has no free cell beside the stairs\' tile' };
+            partner: c.tx === landing.tx && c.ty === landing.ty, hazard: hazards.has(`${c.tx},${c.ty}`) }))
+        .sort((a, b) => (Number(a.hazard) - Number(b.hazard)) || (Number(b.partner) - Number(a.partner)));
+    return { spots, why: spots.length > 0 ? null : 'the delivered room has no free cell beside the stairs\' tile' };
 }
 
 /**
@@ -232,7 +232,7 @@ async function main() {
     const PAIRS = pickRetargetPairs(PRESET, MOVED);
     const wanted = arg('pairs', null);
     const TAKEN = wanted === null ? PAIRS.map((_, i) => i) : wanted.split(',').map(Number);
-    const walkable = (leg) => approachSpots(roomOf(leg.level), leg, { walkableCellsFrom, buildLevelWorld }).spots.length > 0;
+    const walkable = (leg) => approachSpots(roomOf(leg.level), leg, { walkableCellsFrom, buildLevelWorld }).spots.some((sp) => !sp.hazard);
     const ITEM = WITH_ITEM ? pickItemLeg(PAIRS.flatMap((p) => [p.out, p.back]).filter(walkable), WORLD.entries ?? [], roomOf, walkableCellsFrom) : null;
     // ⛓ the refusal: the same world on a staged build that cannot take this delivery (it lacks a capability the
     // preset's own build declares), picked from the manifest
@@ -389,6 +389,12 @@ async function main() {
                 if (held.value === 'fired') { fired = { spot, g0, moves0, reports0, warn0, held }; break; }
                 // eslint-disable-next-line no-await-in-loop
                 tried.push({ spot, why: 'no door fired', live: await rp.livePlayer() });
+            }
+            if (!fired && spots.every((sp) => sp.hazard)) {
+                const reason = `the stairs fired from none of its ${spots.length} approach cell(s), and every one is water, lava or a pit in the delivered room`;
+                legs.unwalked.push({ leg: tag, exit: row.exit, door: row.door, why: reason, tried });
+                console.log(`UNWALKED: ${name} — ${reason} — ${JSON.stringify(tried)}`);
+                return null;
             }
             check(`${name}: walking onto the stairs fired it`, !!fired,
                 fired ? JSON.stringify({ from: fired.spot, ms: fired.held.ms, skipped: tried }) : JSON.stringify(tried));

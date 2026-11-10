@@ -204,7 +204,7 @@ Every load path of such a world either delivers the retargeted rooms or refuses 
 | an ineligible load (transport, a missing capability, unreadable assets, a blank slot), a load that throws, no region glue | refused: the game is on its vanilla rooms |
 | a refused delivery | the sticky overlay adds the same sentence |
 
-`scripts/procgen/probe-seedling-wasm-er-retarget.mjs` is the live witness on `seedling_er` (the preset's build, headless logic-only, under the box lock): every coupled pair walked both ways with real keys, one crossing followed by a placed-item pickup, and the refusal on a build that cannot take the delivery. A stairs the delivered room keeps from an item-less player (a lock on its tile, water all round it) is reported `UNWALKED` with that reason. The room-name message is not observable on the current builds (a `Message` is not a `Mobile`, and `Game.sign` is consumed inside the update that sets it), so the witness checks the `@sign` the game was handed.
+`scripts/procgen/probe-seedling-wasm-er-retarget.mjs` is the live witness on `seedling_er` (the preset's build, headless logic-only, under the box lock): every coupled pair walked both ways with real keys, one crossing followed by a placed-item pickup, and the refusal on a build that cannot take the delivery. A stairs the delivered room keeps from an item-less player (a lock on its tile; lava all round it, tried and not fired) is reported `UNWALKED` with that reason. The room-name message is not observable on the current builds (a `Message` is not a `Mobile`, and `Game.sign` is consumed inside the update that sets it), so the witness checks the `@sign` the game was handed.
 
 ### The atlas arm
 
