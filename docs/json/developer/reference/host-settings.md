@@ -19,6 +19,7 @@ All settings below are under the `general_options` section of `host.yaml`.
 | [`log_integer_sphere_details`](#log_integer_sphere_details) | bool | `false` | Sphere Logging |
 | [`auto_collect_events`](#auto_collect_events) | bool | `false` | Sphere Logging |
 | [`filter_event_items`](#filter_event_items) | bool | `false` | Sphere Logging |
+| [`sphere_log_per_player`](#sphere_log_per_player) | bool | `false` | Sphere Logging |
 | [`update_frontend_presets`](#update_frontend_presets) | bool | `false` | Preset Management |
 | [`skip_preset_copy_if_rules_identical`](#skip_preset_copy_if_rules_identical) | bool | `false` | Preset Management |
 | [`clear_game_presets`](#clear_game_presets) | bool | `false` | Preset Management |
@@ -190,6 +191,19 @@ Enable this when generating sphere logs that will be compared against UT output 
 When `true`, event locations (those with `address=None`) and their items are excluded from sphere log output. This matches UT's output format, which doesn't report events.
 
 Like `auto_collect_events`, this is primarily for UT comparison testing where the sphere log format needs to match what UT produces.
+
+### `sphere_log_per_player`
+
+- **Type:** `bool`
+- **Default:** `false` (and absent from every `update_host_settings.py` preset)
+
+When `true` and the seed has more than one player, the logger also writes `AP_<seed>_P<n>_sphere_log.jsonl` for each player, beside the combined `AP_<seed>_sphere_log.jsonl`, which is unchanged. Player n's file holds:
+
+- the metadata line, plus `filtered_to_player: "<n>"`;
+- sphere 0 with n's entry only;
+- each later line that is about n (n has a location in it, receives an item from another world in it, or has any delta in it), with n's entry and, for each other world whose location in that line gives n an item, that world's entry limited to those locations, with empty deltas.
+
+The preset copy takes these files too while the setting is on. These are the same lines the client rebuilds from a room's spoiler data (`client/core/spoilerData.js`, the Spoiler Export Hook's `own_slot_with_senders`); `client/core/spoilerData.logFormat.test.js` holds the two equal.
 
 ---
 

@@ -674,6 +674,23 @@ export class SeedlingPlaybackController {
         return this._wasmEngine?.expectArrival?.() === true;
     }
 
+    /**
+     * ⛓ SOLVER LIMIT OFF — the panel's Stop: stop the solve in flight on whichever runtime walks (the JS page's
+     * `stopSolve`, the wasm engine's). Each TERMINATES its worker and FAILS the goal by name. false = none in flight.
+     */
+    stopSolve() {
+        const p = this._page();
+        if (p?.stopSolve) return p.stopSolve() === true;
+        return this._wasmEngine?.stopSolve?.() === true;
+    }
+
+    /** ⛓ SOLVER LIMIT OFF — is a solve in flight on this instance's runtime (Stop is enabled only then)? */
+    get solving() {
+        const p = this._page();
+        if (p) return p.solving === true;
+        return this._wasmEngine?.solving === true;
+    }
+
     /** ⛓ SOLVE PROGRESS — the wasm engine's solve service, or null (no engine built: nothing has solved here). */
     wasmSolveService() {
         try { return this._wasmEngine?.solveService ?? null; } catch { return null; }
@@ -736,6 +753,8 @@ export class SeedlingPlaybackController {
             getBudgetWork: () => this._getSurface?.()?.wasm?.solverBudgetWork ?? null,
             // ⛓ SHOULD-STOP — the upgrade window (work units), read live at each solve's start (null = the engine's own).
             getUpgradeWindowWork: () => this._getSurface?.()?.solverUpgradeWindowWork ?? null,
+            // ⛓ SOLVER LIMIT OFF — the backstop (ms; 0 = off), read live at each solve's start (null = the engine's own).
+            getBackstopMs: () => this._getSurface?.()?.solverBackstopMs ?? null,
             // ⛓ AXE_DODGE HOOK — `on` / `off` / `default`, applied to the engine's own model at each solve.
             getAxeDodgeAskPerPreview: () => this._getSurface?.()?.wasm?.axeDodgeAskPerPreview ?? null,
             // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default`, applied to the engine's own solver at each solve.
@@ -868,6 +887,14 @@ export class SeedlingPlaybackController {
         if (s.solverUpgradeWindowWork !== undefined && s.solverUpgradeWindowWork !== null) {
             page.setSolverUpgradeWindowWork?.(s.solverUpgradeWindowWork);
         }
+        // ⛓ SOLVER LIMIT OFF — and the two limits, once the panel has read them: "no work limit" hands the page 0,
+        // un-ticked hands it null (the page's own budget: 640, or its URL knob); the backstop hands its ms (0 = off),
+        // or null at the setting's default (the page's own: 300 s, or its URL knob). The wasm engine reads the same
+        // values through `getBudgetWork` / `getBackstopMs`. undefined = the panel has not read them yet.
+        if (s.solverNoWorkLimit !== undefined && s.solverNoWorkLimit !== null) {
+            page.setSolverBudgetWork?.(s.solverNoWorkLimit ? 0 : null);
+        }
+        if (s.solverBackstopMs !== undefined) page.setSolverBackstopMs?.(s.solverBackstopMs);
         const answer = page.walkTo(r.goal);
         if (!answer?.ok) return this._refuse(`the JS runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
         this.lastGoal = r.goal;

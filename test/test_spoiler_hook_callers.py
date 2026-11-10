@@ -33,6 +33,7 @@ import worlds.spoiler_export_hook as hook
 REPO = Path(__file__).resolve().parents[1]
 CLIENT_NAME = '_spoiler_hook_client.py'
 OPTION = hook.OPTION
+REGIONS = hook.REGIONS_OPTION
 RECORD = hook.SLOT_DATA_KEY
 OMITTED = 'spoiler_data_omitted'
 
@@ -51,10 +52,12 @@ def _world_type(package):
     return AutoWorldRegister.world_types[WORLDS[package][0]]
 
 
-def _generate(packages, levels, seed):
+def _generate(packages, levels, seed, regions=None):
     """One slot per (package, level): the generation steps AP's Main runs up to the output step."""
     worlds = [_world_type(package) for package in packages]
-    options = [{**WORLDS[package][1], OPTION: level} for package, level in zip(packages, levels)]
+    regions = regions or [False] * len(packages)
+    options = [{**WORLDS[package][1], OPTION: level, REGIONS: on}
+               for package, level, on in zip(packages, levels, regions)]
     multiworld = setup_multiworld(worlds, seed=seed, options=options)
     distribute_items_restrictive(multiworld)
     AutoWorld.call_all(multiworld, 'post_fill')
@@ -103,6 +106,21 @@ def test_the_option_is_the_clients_choice_off_by_default_and_out_of_the_text_spo
 
 
 @pytest.mark.parametrize('package', WORLDS)
+def test_the_regions_option_is_the_clients_toggle_off_by_default_and_out_of_the_text_spoiler(package):
+    option = _world_type(package).options_dataclass.type_hints[REGIONS]
+    client = sys.modules[f'worlds.{package}._spoiler_hook_client']
+    assert option.__bases__ == (client.SpoilerDataIncludeRegions,)
+    assert option.__module__ == f'worlds.{package}.{"options" if package == "apquest_serverdata" else "Options"}'
+    bookkeeping = {'__module__', '__qualname__', '__firstlineno__', '__static_attributes__',
+                   '_abc_impl', '__parameters__', '__abstractmethods__'}
+    own = {key: value for key, value in vars(option).items() if key not in bookkeeping}
+    assert own == {key: vars(client.SpoilerDataIncludeRegions)[key] for key in own}
+    assert '__doc__' in own
+    restricted_loads(restricted_dumps(option.from_any(True)))
+    assert option.default == 0 and not option.visibility & Visibility.spoiler
+
+
+@pytest.mark.parametrize('package', WORLDS)
 def test_the_world_class_has_the_stage_hook(package):
     assert 'stage_pre_output' in vars(_world_type(package))
 
@@ -117,8 +135,8 @@ def pair(request):
     return package, baseline
 
 
-def _run(package, level, present, seed=1):
-    multiworld = _generate([package, package], [level, 'off'], seed=seed)
+def _run(package, level, present, seed=1, regions=False):
+    multiworld = _generate([package, package], [level, 'off'], seed=seed, regions=[regions, False])
     if present:
         return multiworld, _output(multiworld)
     with _absent():
@@ -164,6 +182,35 @@ def test_senders_name_the_other_slot_and_own_slot_does_not(pair):
     assert [row[:3] for row in senders[1][RECORD]['steps']] == own[1][RECORD]['steps']
 
 
+@pytest.mark.parametrize('level', LEVELS[1:])
+def test_regions_add_only_their_field_through_the_real_stages(pair, level):
+    package, baseline = pair
+    _, plain = _run(package, level, present=True)
+    multiworld, with_regions = _run(package, level, present=True, regions=True)
+    record = with_regions[1][RECORD]
+    regions = record.pop('regions')
+    assert record == plain[1][RECORD] and with_regions[2] == plain[2]
+    _check_regions(multiworld, 1, record, regions)
+
+
+def test_regions_without_spoiler_data_add_nothing(pair):
+    package, baseline = pair
+    _, slot_data = _run(package, 'off', present=True, regions=True)
+    assert slot_data == baseline
+
+
+def _check_regions(multiworld, player, record, regions):
+    """Each region once, every one a region of this slot, the start reachable with nothing collected."""
+    from BaseClasses import CollectionState
+    sent = regions['start'] + [name for _, names in regions['steps'] for name in names]
+    assert len(sent) == len(set(sent))
+    assert set(sent) <= {region.name for region in multiworld.get_regions(player)}
+    empty = CollectionState(multiworld)
+    assert set(regions['start']) == {r.name for r in multiworld.get_regions(player) if r.can_reach(empty)}
+    for index, names in regions['steps']:
+        assert names and record['steps'][index][2] is not None
+
+
 def _check_record(multiworld, player, record, with_senders):
     """The record against the multiworld it came from: own locations, items received, senders."""
     world = multiworld.worlds[player]
@@ -196,11 +243,16 @@ def test_sweep_all_four_worlds_on_real_seeds_with_the_helper(capsys):
         seed = get_seed()
         seeds.append(seed)
         levels = [LEVELS[1 + (index + offset) % 2] for offset in range(len(packages))]
-        multiworld = _generate(packages, levels, seed=seed)
+        regions = [(index + offset) % 3 == 0 for offset in range(len(packages))]
+        multiworld = _generate(packages, levels, seed=seed, regions=regions)
         slot_data = _output(multiworld)
-        for player, level in zip(multiworld.player_ids, levels):
+        for player, level, on in zip(multiworld.player_ids, levels, regions):
             assert OMITTED not in slot_data[player], (seed, player)
-            _check_record(multiworld, player, slot_data[player][RECORD], level == 'own_slot_with_senders')
+            record = dict(slot_data[player][RECORD])
+            assert ('regions' in record) == on, (seed, player)
+            if on:
+                _check_regions(multiworld, player, record, record.pop('regions'))
+            _check_record(multiworld, player, record, level == 'own_slot_with_senders')
             checked += 1
     with capsys.disabled():
         print(f'\nspoiler hook sweep: {len(seeds)} seeds from get_seed(), {checked} slot records checked: '

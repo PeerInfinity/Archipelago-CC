@@ -113,6 +113,7 @@ import {
 import {
     ANYTIME_PASSES, betterAnswer, budgetCut, forcedHitFieldsOf, forcedHitNote, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVE_BACKSTOP_MS,
     SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK,
+    backstopKnob, backstopPassed, budgetKnob, budgetLimited, budgetText, ownBudgetClause, SOLVE_STOPPED_BY_PLAYER,
 } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { continuationHoldSeam, holdSeamRestage, holdsMap } from '../seedlingDemo/wasmHoldSeam.js';
@@ -210,6 +211,8 @@ const roomEquips = (r) => equipsMap(r?.equips);
  *   (`{legPrecheck, noSwingPrefix, keepPartial}`, each `on` / `off` / `default`), applied to THIS instance's dash
  *   shape (`dashShapeHook.applyDashShape`) at each solve's start (its worker gets the request's stamp); absent = untouched
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): a named failure, never an answer
+ * @param {() => number|null} [deps.getBackstopMs]  ⛓ SOLVER LIMIT OFF — the live knob (`flashPanel.seedlingSolverBackstopSeconds`
+ *   / `seedlingSolverBackstopOff`, in ms; 0 = off), read at each solve's start; null = `backstopMs`
  * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
  *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate).
  *   ⛓ DELIVERY TICK — its optional `checked(locationName)` (true / false; null = cannot tell) is the state
@@ -220,7 +223,7 @@ export function createWasmPlayback({
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetWork = SOLVER_BUDGET_WORK,
-    getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS,
+    getBudgetWork = null, getUpgradeWindowWork = null, getDelivery = null, backstopMs = SOLVE_BACKSTOP_MS, getBackstopMs = null,
     getAxeDodgeAskPerPreview = null, getDashOnlyWindow = null, getDashShape = null,
 }) {
     /** ⛓ O3 — the budget (work units) a solve starts with: the knob's live value, else the engine's own. */
@@ -228,8 +231,15 @@ export function createWasmPlayback({
     const baseBudget = () => {
         let v = null;
         try { v = getBudgetWork?.() ?? null; } catch { v = null; }
-        const n = Number(v);
-        return v !== null && Number.isFinite(n) && n > 0 ? n : ownBudget;
+        // ⛓ SOLVER LIMIT OFF — `budgetKnob`: positive = that budget, 0 = no work limit, else the engine's own.
+        return budgetKnob(v, ownBudget);
+    };
+    /** ⛓ SOLVER LIMIT OFF — the backstop (ms) a solve starts with: the knob, else the engine's own; 0 = off. */
+    let ownBackstopMs = backstopKnob(backstopMs, SOLVE_BACKSTOP_MS);
+    const baseBackstopMs = () => {
+        let v = null;
+        try { v = getBackstopMs?.() ?? null; } catch { v = null; }
+        return backstopKnob(v, ownBackstopMs);
     };
     /** The upgrade window (work units) a solve starts with: the knob, else the engine's own; ≤ 0 = the whole budget. */
     const upgradeWindow = () => {
@@ -378,7 +388,7 @@ export function createWasmPlayback({
         // ⛓ WIND CUTSCENE — cold starts that found the scene under a resolved record (each still waited out)
         sceneLeaks: [],
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
-        expiries: 0, provisionalPlays: 0, retries: 0, passes: {}, backstops: 0,
+        expiries: 0, provisionalPlays: 0, retries: 0, passes: {}, backstops: 0, stops: 0,
         // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
         deliveries: [], deliveryDeferred: [], gateHeld: 0,
         // ⛓ SERVED LOCATION — deliveries that met a location goal whose own check had fired: no freeze, no re-solve
@@ -1378,7 +1388,8 @@ export function createWasmPlayback({
         // ⛓ SHOULD-STOP — and the deadlines its passes run under (`passShouldStop`).
         const req = request.producer ? request
             : { ...request, passes: request.passes ?? ANYTIME_PASSES, budgetWork: budget, upgradeWindowWork: upgradeWindow() };
-        play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
+        play = { ...playInit, t0: now(), request: req, budget, budgets: budgetLimited(budget) ? [budget] : [], retries: 0, best: null,
+            backstopMs: baseBackstopMs() };
         applyAxeDodge();
         applyDashOnly();
         applyDashShapeDep();
@@ -1387,7 +1398,7 @@ export function createWasmPlayback({
         phase = 'solving';
         tl('solve', { name: req.name ?? null });
         note(`${walkerInstrument ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
-            + `(budget ${budget} work units)`);
+            + `(budget ${budgetText(budget)})`);
         schedule(pollSolve, SOLVE_POLL_MS);
     }
 
@@ -1397,6 +1408,8 @@ export function createWasmPlayback({
      * pass that had not answered. What a pass answered before the cut is kept (`play.best`).
      */
     function retrySolve(cut) {
+        // ⛓ SOLVER LIMIT OFF — no work limit, nothing to multiply (and no pass is ever cut by a budget then).
+        if (!budgetLimited(play.budget)) return false;
         stats.retries += 1;
         play.retries += 1;
         if (betterAnswer(play.best, cut.provisional)) play.best = cut.provisional;
@@ -1496,9 +1509,9 @@ export function createWasmPlayback({
             // already found is NOT played — a machine that is too slow ends the walk, it never changes the plan.
             const why = !handle.started && t - play.t0 > LOAD_BUDGET_MS
                 ? `the solver did not start within the ${LOAD_BUDGET_MS / 1000} s load backstop on this machine on ${goal.kind} in level ${goal.level} (terminated)`
-                : handle.started && t - (handle.startedAt ?? play.t0) > backstopMs
-                    ? `the solve exceeded the backstop on this machine (${secs(backstopMs)}) on ${goal.kind} in level ${goal.level} `
-                        + `(terminated; the solve's own budget is ${play.budget} work units)`
+                : handle.started && backstopPassed(play.backstopMs, t - (handle.startedAt ?? play.t0))
+                    ? `the solve exceeded the backstop on this machine (${secs(play.backstopMs)}) on ${goal.kind} in level ${goal.level} `
+                        + `(terminated; ${ownBudgetClause(play.budget)})`
                     : null;
             if (!why) {
                 schedule(pollSolve, SOLVE_POLL_MS);
@@ -1510,6 +1523,13 @@ export function createWasmPlayback({
             return;
         }
         let res = handle.result;
+        // ⛓ SOLVER LIMIT OFF — a solve STOPPED at the shared service (`handle.stop`, the panel's Stop): the goal FAILS by
+        // name and the room is released; nothing of it is played, nothing is retried.
+        if (res?.kind === 'stopped') {
+            stats.stops += 1;
+            fail(`${SOLVE_STOPPED_BY_PLAYER} on ${goal.kind} in level ${goal.level} (terminated; ${ownBudgetClause(play.budget)})`);
+            return;
+        }
         // ⛓ DETERMINISTIC BUDGET / O2 — the cut is the ANSWER's (a pass cut at the work budget), never the clock's.
         if (!play.request.producer && budgetCut(res)) {
             stats.expiries += 1;
@@ -2331,9 +2351,27 @@ export function createWasmPlayback({
         /** The upgrade window the next solve starts with, in work units (null = the whole budget). */
         get upgradeWindowWork() { return upgradeWindow(); },
         /** ⛓ O3 — the engine's own budget (the twin of the JS page's `setSolverBudgetWork`); the knob, when set, wins. */
-        setBudgetWork(n) { const v = Number(n); if (Number.isFinite(v) && v > 0) ownBudget = v; },
-        /** The wall-clock backstop, in ms (a named failure, never an answer). */
-        get backstopMs() { return backstopMs; },
+        setBudgetWork(n) { ownBudget = budgetKnob(n, ownBudget); },
+        /** The wall-clock backstop the next solve starts with, in ms (a named failure, never an answer; 0 = off). */
+        get backstopMs() { return baseBackstopMs(); },
+        /** ⛓ SOLVER LIMIT OFF — the engine's own backstop (ms; 0 = off; the knob, when set, wins). */
+        setBackstopMs(ms) { ownBackstopMs = backstopKnob(ms, ownBackstopMs); },
+        /** ⛓ SOLVER LIMIT OFF — true while a solve is in flight (the panel's Stop is enabled only then). */
+        get solving() { return phase === 'solving' && Boolean(handle) && !handle.settled; },
+        /**
+         * ⛓ SOLVER LIMIT OFF — the panel's Stop: TERMINATE the solve in flight (the shared worker service's
+         * `handle.stop`: the worker goes, the next solve builds a fresh one) and FAIL the goal by name; the room is
+         * released (`fail` → `release`), nothing of the solve is played. false = no solve in flight.
+         */
+        stopSolve() {
+            if (phase !== 'solving' || !handle || handle.settled) return false;
+            const g = goal;
+            try { handle.stop ? handle.stop(SOLVE_STOPPED_BY_PLAYER) : handle.cancel(); } catch { /* already gone */ }
+            stats.stops += 1;
+            fail(`${SOLVE_STOPPED_BY_PLAYER} on ${g?.kind ?? 'the goal'} in level ${g?.level ?? '?'} (terminated; `
+                + `${ownBudgetClause(play?.budget)})`);
+            return true;
+        },
         /** ⛓ WG — whether this engine stages a mounted generated set (a label: ⛓ §5.36 they are solver rooms). */
         get generated() { return generated; },
         /** The tape producer: `'solver'`, or the `'walker'` INSTRUMENT. */

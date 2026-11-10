@@ -2035,6 +2035,227 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+// ── ⛓ SOLVER LIMIT OFF (⚖ the user 2026-11-10): Stop, and the solver's limits off, IN the Flash panel ──────────────
+//
+// "It was specifically in the panel that I wanted the option to disable the timeout. And I agree that if we do that,
+// then we should add a manual stop button." · "Which limit should off turn off?" → "Both" · "I don't currently see the
+// solver limit control in the flash panel. I want to add it there." The Solver section's first row: Stop (enabled only
+// while a solve is in flight), "No work limit", the backstop's seconds and "Backstop off".
+
+const SOLVER_LIMIT_KEYS = Object.freeze({
+    noWorkLimit: 'moduleSettings.flashPanel.seedlingSolverNoWorkLimit',
+    backstopSeconds: 'moduleSettings.flashPanel.seedlingSolverBackstopSeconds',
+    backstopOff: 'moduleSettings.flashPanel.seedlingSolverBackstopOff',
+});
+const STOPPED_BY_PLAYER = /^the solve was stopped by the player on reach-exit in level 12 \(terminated; /;
+
+/** Read the three limit settings (to put them back after the row). */
+async function readSolverLimits() {
+    const out = {};
+    for (const [k, key] of Object.entries(SOLVER_LIMIT_KEYS)) {
+        try { out[k] = await settingsManager.getSetting(key); } catch { out[k] = undefined; }
+    }
+    return out;
+}
+async function writeSolverLimits(values) {
+    for (const [k, key] of Object.entries(SOLVER_LIMIT_KEYS)) {
+        if (values[k] === undefined) continue;
+        try { await settingsManager.updateSetting(key, values[k], { persist: false }); } catch { /* best effort */ }
+    }
+}
+const SOLVER_LIMIT_DEFAULTS = Object.freeze({ noWorkLimit: false, backstopSeconds: 300, backstopOff: false });
+
+/** The panel's Solver-row controls (`seedlingSolverLimitControls.js`). */
+const solverRow = (panel) => ({
+    stop: panel.rootElement.querySelector('.flash-panel-solver-stop'),
+    noLimit: panel.rootElement.querySelector('.flash-panel-solver-no-limit'),
+    off: panel.rootElement.querySelector('.flash-panel-solver-backstop-off'),
+    seconds: panel.rootElement.querySelector('.flash-panel-solver-backstop-seconds'),
+});
+
+/** The slow room's door return spawn (the arrival `slowRoomOnPage` uses). */
+async function slowRoomSpawn() {
+    const map = await (await fetch(new URL(VANILLA_MAP_URL, document.baseURI).href)).json();
+    const tile = (p) => [Math.floor(p.x / map.tile_size), Math.floor(p.y / map.tile_size)];
+    return returnSpawnTable(map).get(returnKey(SLOW_ROOM.level, ...tile(SLOW_ROOM.door)));
+}
+
+/**
+ * Re-arrive at the slow room's door and walk its exit — the arrival, ONE run tick and the goal in ONE synchronous
+ * turn (the page's clock runs its slots on other event-loop turns), so every walk asks its solve from the SAME state
+ * (the same staging, the same prefix): two solves of it differ only by what the row changed. Then wait for the walk
+ * to settle (done / failed).
+ */
+async function walkSlowRoomFresh(tc, rt, spawn, exitTile, label) {
+    try { rt.playback.reset(); } catch { /* best effort */ }
+    const run0 = rt.run;
+    rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [SLOW_ROOM.level, spawn.x, spawn.y] }]);
+    rt.tick();
+    tc.assertEqual(`${label}: a fresh run in level ${SLOW_ROOM.level}`, true, rt.run !== run0 && rt.run?.level === SLOW_ROOM.level);
+    rt.playback.walkTo({ kind: 'exit', level: SLOW_ROOM.level, tiles: [exitTile] });
+    rt.playback.play();
+    return tc.pollForCondition(() => rt.playback.state === 'done' || rt.playback.state === 'failed', label, 60000, 100);
+}
+
+export async function seedlingJsRuntimeSolverStopButton(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = false;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    const previousLimits = await readSolverLimits();
+    let rt = null;
+    let hold = null;
+    try {
+        // ⛔ The row's own initial state: both limits at their defaults (640 work, 300 s backstop).
+        await writeSolverLimits(SOLVER_LIMIT_DEFAULTS);
+        const up = await slowRoomOnPage(tc);
+        if (!up) return tc.getOverallResult();
+        ({ rt } = up);
+        const panel = getActivePanelInstance();
+        const row = solverRow(panel);
+        tc.reportCondition('the Solver section has the Stop button and the limit controls', !!(row.stop && row.noLimit && row.off && row.seconds));
+        if (!row.stop) return tc.getOverallResult();
+        tc.assertEqual('Stop is disabled while nothing is solving', true, row.stop.disabled);
+        // ⛓ IN-APP TIMING CONTROLS — the ROW keeps the solve in flight (a real worker that starts and never answers).
+        hold = holdSolveWorker(up.win, rt.playback.solveService, { answer: false });
+        const workers0 = rt.playback.solveService.stats.workers;
+        rt.playback.walkTo({ kind: 'exit', level: SLOW_ROOM.level, tiles: [up.exitTile] });
+        rt.playback.play();
+        const enabled = await tc.pollForCondition(() => rt.playback.solving && !row.stop.disabled,
+            'a solve is in flight and the panel\'s Stop is ENABLED', 15000, 50);
+        tc.reportCondition('Stop is enabled while the solve runs', !!enabled);
+        if (!enabled) return tc.getOverallResult();
+        const heldAt = rt.run.ticksCompleted;
+        row.stop.click();
+        const failed = await tc.pollForCondition(() => rt.playback.state === 'failed', 'Stop failed the goal', 5000, 50);
+        tc.log(`after Stop: ${rt.playback.reason}; service ${JSON.stringify(rt.playback.solveService.stats)}`);
+        tc.reportCondition('the goal FAILED after Stop', !!failed);
+        tc.assertEqual('the failure NAMES the stop', true, STOPPED_BY_PLAYER.test(rt.playback.reason ?? ''));
+        tc.assertEqual('the worker was TERMINATED by Stop (the service\'s stop count)', 1, rt.playback.solveService.stats.stopped);
+        const s = rt.playback.solverStats;
+        tc.assertEqual('one stop; no solve, decline, backstop or play', '1/0/0/0/0', `${s.stops}/${s.solves}/${s.declines}/${s.backstops}/${s.played}`);
+        tc.assertEqual('the room is no longer held ("solving…" is over)', false, rt.playback.solving);
+        const stepped = await tc.pollForCondition(() => rt.run.ticksCompleted > heldAt + 5,
+            'the game steps again after Stop (not left frozen)', 5000, 50);
+        tc.reportCondition('the game is not left frozen at "solving…"', !!stepped);
+        const greyed = await tc.pollForCondition(() => row.stop.disabled, 'Stop greys out again', 2000, 50);
+        tc.reportCondition('Stop is disabled again once nothing is solving', !!greyed);
+        // the next solve: a FRESH worker, and it succeeds
+        hold.restore();
+        hold = null;
+        const settled = await walkSlowRoomFresh(tc, rt, await slowRoomSpawn(), up.exitTile, 'the next solve settled');
+        const s2 = rt.playback.solverStats;
+        tc.log(`next solve: ${rt.playback.state} ${rt.playback.reason ?? ''}; lastSolve ${JSON.stringify(s2.lastSolve)}`);
+        tc.reportCondition('the next walk settled', !!settled);
+        tc.assertEqual('the next solve SOLVED and the walk is done', 'done/1', `${rt.playback.state}/${s2.solves}`);
+        tc.assertEqual('it ran in a FRESH worker (one more than before the stop)', true,
+            rt.playback.solveService.stats.workers > workers0);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+    } finally {
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { hold?.restore(); } catch { /* best effort */ }
+        await writeSolverLimits(previousLimits);
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-stop-button',
+    name: 'Seedling JS runtime: the Flash panel\'s Stop terminates the solve in flight, the goal FAILS by name, and the next solve works',
+    description: 'With flashPanel.runtime = js and the solver mode ON on seedling_atlas, both solver limits at their defaults: '
+        + 'the page is teleported to level 12\'s door and the ROW keeps the solve in flight (the page\'s next worker starts '
+        + 'and never answers). The Solver section\'s Stop is disabled, then enabled while the solve runs; pressing it '
+        + 'terminates the worker and the goal FAILS with "the solve was stopped by the player …"; the room is released '
+        + '(the game steps again) and Stop greys out. The next walk of the same exit solves in a fresh worker and is done.',
+    testFunction: seedlingJsRuntimeSolverStopButton,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingJsRuntimeSolverLimitsOff(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = false;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    const previousLimits = await readSolverLimits();
+    let rt = null;
+    try {
+        // ⛔ The row's own initial state: both limits at their defaults.
+        await writeSolverLimits(SOLVER_LIMIT_DEFAULTS);
+        const up = await slowRoomOnPage(tc);
+        if (!up) return tc.getOverallResult();
+        ({ rt } = up);
+        const panel = getActivePanelInstance();
+        const row = solverRow(panel);
+        tc.reportCondition('the Solver section has the limit controls', !!(row.noLimit && row.off && row.seconds));
+        if (!row.noLimit) return tc.getOverallResult();
+        tc.assertEqual('at the defaults the page solves with 640 work units and a 300 s backstop', '640/300000/false/false/300',
+            `${rt.playback.solverBudgetWork}/${rt.playback.solverBackstopMs}/${row.noLimit.checked}/${row.off.checked}/${row.seconds.value}`);
+        // (b) the defaults' plan — a solve that ends by itself (W0) and trips nothing
+        const spawn = await slowRoomSpawn();
+        const a = await walkSlowRoomFresh(tc, rt, spawn, up.exitTile, 'the defaults\' solve settled');
+        const plan = (st) => JSON.stringify({ keys: st.lastSolve?.keys ?? null, verbs: st.lastSolve?.verbs ?? null,
+            pass: st.lastSolve?.pass ?? null, prefix: st.lastSolve?.prefix ?? null, end: st.lastSolve?.end ?? null });
+        const sA = rt.playback.solverStats;
+        const planA = plan(sA);
+        tc.log(`defaults: ${rt.playback.state}; plan ${planA}; passes ${JSON.stringify(sA.lastSolve?.passes ?? null)}`);
+        tc.reportCondition('the defaults\' walk settled', !!a);
+        tc.assertEqual('the defaults SOLVED the slow room (js-runtime-L12-reach-exit)', 'done/1', `${rt.playback.state}/${sA.solves}`);
+        tc.assertEqual('no pass row of the defaults\' solve carries a deadline (nothing was cut: W0\'s pick)', false,
+            (sA.lastSolve?.passes ?? []).some((r) => r.deadline));
+        // ⛓ 3a — the panel's controls write the SAME settings, and the page reads them for the next solve
+        panel.setSectionOpen('solver', true);
+        row.noLimit.click();
+        row.off.click();
+        const wrote = await tc.pollForCondition(async () => (await settingsManager.getSetting(SOLVER_LIMIT_KEYS.noWorkLimit)) === true
+            && (await settingsManager.getSetting(SOLVER_LIMIT_KEYS.backstopOff)) === true,
+        'the checkboxes wrote flashPanel.seedlingSolverNoWorkLimit and seedlingSolverBackstopOff', 5000, 100);
+        tc.reportCondition('the Flash panel\'s checkboxes wrote the settings the Settings panel shows', !!wrote);
+        const read = await tc.pollForCondition(() => rt.playback.solverBudgetWork === 0 && rt.playback.solverBackstopMs === 0,
+            'the JS page reads no work limit (0) and backstop off (0)', 5000, 100);
+        tc.reportCondition('the page took both limits off', !!read);
+        tc.assertEqual('the seconds field is disabled while the backstop is off; the row says so', true,
+            row.seconds.disabled && /no work limit, no backstop/.test(panel.rootElement.querySelector('.flash-panel-solver-limit-status')?.textContent ?? ''));
+        // (b) both off: the same plan, from the same state
+        const b = await walkSlowRoomFresh(tc, rt, spawn, up.exitTile, 'the both-off solve settled');
+        const sB = rt.playback.solverStats;
+        const planB = plan(sB);
+        tc.log(`both off: ${rt.playback.state}; plan ${planB}; passes ${JSON.stringify(sB.lastSolve?.passes ?? null)}`);
+        tc.reportCondition('the both-off walk settled by itself', !!b);
+        tc.assertEqual('both off SOLVED it (no work limit: the stats name budget 0)', 'done/2/0', `${rt.playback.state}/${sB.solves}/${sB.budgetWork}`);
+        tc.assertEqual('both off finds the SAME plan as the defaults (keys, verbs, pass, prefix, end)', planA, planB);
+        tc.assertEqual('both off: no stop, no backstop', '0/0', `${sB.stops}/${sB.backstops}`);
+        // un-ticked again: the page is back on its own limits
+        row.noLimit.click();
+        row.off.click();
+        const back = await tc.pollForCondition(() => rt.playback.solverBudgetWork === 640 && rt.playback.solverBackstopMs === 300000,
+            'un-ticked: the page is back on 640 / 300 s', 5000, 100);
+        tc.reportCondition('un-ticking puts the page back on its own limits', !!back);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+    } finally {
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        await writeSolverLimits(previousLimits);
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-limits-off',
+    name: 'Seedling JS runtime: the Flash panel turns the solver\'s limits off (no work limit, no backstop) and a solve that ends by itself finds the same plan',
+    description: 'With flashPanel.runtime = js and the solver mode ON on seedling_atlas, both limits at their defaults: level '
+        + '12\'s door → its exit is solved (js-runtime-L12-reach-exit; no pass row carries a deadline). Then the Solver '
+        + 'section\'s "No work limit" and "Backstop off" checkboxes are clicked: they write flashPanel.seedlingSolverNoWorkLimit '
+        + 'and seedlingSolverBackstopOff, and the page reads budget 0 and backstop 0. The same walk then solves with BOTH limits '
+        + 'off and finds the same plan (keys, verbs, pass, prefix, end). Un-ticked, the page is back on 640 / 300 s.',
+    testFunction: seedlingJsRuntimeSolverLimitsOff,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
     let previousRuntime = 'auto';
     let previousSolver = false;
@@ -2845,6 +3066,109 @@ for (const [id, runtime, fn] of [
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/**
+ * ⛓ SOLVER LIMIT OFF — the ROW's hold on the wasm engine's solver worker. The engine's solve service builds its worker
+ * in THIS window (`new Worker(…, {name: 'seedling-js-solver'})`); while installed, each such worker is a REAL one whose
+ * `started` passes through and nothing after it (it never answers). Every other worker (the state manager's) is built
+ * as it always is. `restore()` puts the window's Worker back.
+ */
+function holdWasmSolverWorkers(win) {
+    const RealWorker = win.Worker;
+    const record = { wrapped: 0, started: 0, swallowed: 0, terminated: 0 };
+    function HeldWorker(url, opts) {
+        if (opts?.name !== 'seedling-js-solver') return new RealWorker(url, opts);
+        const real = new RealWorker(url, opts);
+        record.wrapped += 1;
+        let dead = false;
+        const self = { onmessage: null, onerror: null };
+        real.onmessage = (event) => {
+            if (dead) return;
+            if (event.data?.type === 'started') { record.started += 1; self.onmessage?.(event); return; }
+            record.swallowed += 1;
+        };
+        real.onerror = (event) => { if (!dead) self.onerror?.(event); };
+        self.postMessage = (msg) => real.postMessage(msg);
+        self.terminate = () => { dead = true; record.terminated += 1; real.terminate(); };
+        return self;
+    }
+    win.Worker = HeldWorker;
+    return { record, restore() { if (win.Worker === HeldWorker) win.Worker = RealWorker; } };
+}
+
+export const seedlingWasmRuntimeSolverStopButton = (tc) => withRuntimeRestored(tc, async () => {
+    const previousLimits = await readSolverLimits();
+    let hold = null;
+    try {
+        // ⛔ The row's own initial state: both limits at their defaults; a reset bot.
+        await writeSolverLimits(SOLVER_LIMIT_DEFAULTS);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+        const bot = (await tc.pollForValue(() => getBotPanel(), 'playback bot panel instance', 5000, 100))?.getBot?.() ?? null;
+        tc.reportCondition('[wasm] the playback bot is mounted', !!bot);
+        if (!bot) return;
+        bot.reset?.();
+        const up = await generatedPresetOn(tc, 'wasm', { presetPath: CHESTDOOR_PATH });
+        if (!up) return;
+        const row = solverRow(up.panel);
+        tc.reportCondition('[wasm] the Solver section has the Stop button', !!row.stop);
+        if (!row.stop) return;
+        tc.assertEqual('[wasm] Stop is disabled while nothing is solving', true, row.stop.disabled);
+        await tc.stateManager.pingWorker('before-walk', 5000);
+        tc.assertEqual(`[wasm] ${CHESTDOOR_TARGET} is not checked before the walk`, false, snapshotFacts(tc).checked.has(CHESTDOOR_TARGET));
+        hold = holdWasmSolverWorkers(window);
+        bot.walkToLocation(CHESTDOOR_TARGET);
+        const controller = () => substrateRegistry.get('flash_seedling_gen')?.getPlaybackController?.() ?? null;
+        const enabled = await tc.pollForCondition(() => controller()?.solving === true && !row.stop.disabled,
+            '[wasm] the engine is solving and the panel\'s Stop is ENABLED', 90000, 100);
+        tc.log(`[wasm] held worker ${JSON.stringify(hold.record)}; controller ${JSON.stringify(controller()?.status?.() ?? null)}`);
+        tc.reportCondition('[wasm] Stop is enabled while the wasm engine solves', !!enabled);
+        if (!enabled) return;
+        row.stop.click();
+        const failed = await tc.pollForCondition(() => errorStatuses(bot).length > 0, '[wasm] Stop failed the walk', 10000, 100);
+        const errors = errorStatuses(bot);
+        tc.log(`[wasm] after Stop: ${JSON.stringify(errors)}; engine ${JSON.stringify(controller()?.status?.()?.wasm?.phase ?? null)}`);
+        tc.reportCondition('[wasm] the walk FAILED after Stop', !!failed);
+        tc.assertEqual('[wasm] the failure NAMES the stop', true,
+            errors.some((e) => /the solve was stopped by the player on location in level 0 \(terminated; /.test(e)));
+        tc.assertEqual('[wasm] the solver worker was TERMINATED (one wrapped, it started, it was terminated)', '1/1/1',
+            `${hold.record.wrapped}/${hold.record.started}/${hold.record.terminated}`);
+        tc.assertEqual('[wasm] the engine is idle: the room was released, not left frozen on the solve', 'idle',
+            controller()?.status?.()?.wasm?.phase ?? null);
+        const greyed = await tc.pollForCondition(() => row.stop.disabled, '[wasm] Stop greys out again', 3000, 50);
+        tc.reportCondition('[wasm] Stop is disabled again once nothing is solving', !!greyed);
+        // the next solve: a fresh worker, and the chest is opened
+        // (no `bot.reset()` here: the bot keeps the region it learned at the load). ⚠ The bot's log keeps the Stop's
+        // `error:` STATUS and appends each later walk note to it (`<status> — <note>`), so an `error:` line is not, by
+        // itself, a new failure: the controller's own `lastRefusal` (cleared by each walkTo) is the witness.
+        hold.restore();
+        bot.walkToLocation(CHESTDOOR_TARGET);
+        const checked = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHESTDOOR_TARGET)
+            || (controller()?.lastRefusal ?? null) !== null,
+        `[wasm] the next walk opened ${CHESTDOOR_TARGET}`, 120000, 250);
+        tc.log(`[wasm] next walk: controller ${JSON.stringify({ lastRefusal: controller()?.lastRefusal ?? null, status: controller()?.status?.()?.wasm?.phase ?? null })}`);
+        tc.assertEqual('[wasm] the next walk was refused by nothing (the controller\'s lastRefusal)', null, controller()?.lastRefusal ?? null);
+        tc.reportCondition(`[wasm] the next solve worked: ${CHESTDOOR_TARGET}'s locationCheck reached the state manager`,
+            !!checked && snapshotFacts(tc).checked.has(CHESTDOOR_TARGET));
+        assertNoDeathNoHalt(tc, 'wasm', null);
+    } finally {
+        try { hold?.restore(); } catch { /* best effort */ }
+        await writeSolverLimits(previousLimits);
+    }
+});
+
+registerTest({
+    id: 'seedling-wasm-runtime-solver-stop-button',
+    name: 'Seedling (wasm runtime): the Flash panel\'s Stop terminates the engine\'s solve, the walk FAILS by name, and the next solve works',
+    description: 'With flashPanel.runtime = wasm on the committed seedling_generated_chestdoor preset, both solver limits at '
+        + 'their defaults: the Playback Bot walks to region_0_0 - Chest and the ROW keeps the engine\'s solve in flight (its '
+        + 'solver worker starts and never answers). The Solver section\'s Stop is disabled, then enabled while the engine '
+        + 'solves; pressing it stops the solve through the shared worker service (the worker is terminated) and the walk '
+        + 'FAILS with "the solve was stopped by the player …"; the engine is idle (the room released) and Stop greys out. '
+        + 'The next walk solves in a fresh worker and its locationCheck reaches the state manager.',
+    testFunction: seedlingWasmRuntimeSolverStopButton,
+    category: 'Seedling wasm runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 /**
  * ⛓ The Flash (Ruffle) runtime has no feet: a Bot block's walkTo there is refused BY NAME, and loops turns the

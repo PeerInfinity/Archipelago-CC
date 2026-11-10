@@ -526,3 +526,121 @@ describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisi
         service.dispose();
     });
 });
+
+/**
+ * ⛓ SOLVER LIMIT OFF (⚖ the user 2026-11-10: the option to turn the solver's limits off, IN the panel, and "a manual
+ * stop button") — Stop terminates the worker, the goal FAILS by name, the game is not left held, the next solve gets a
+ * fresh worker and works; "no work limit" (0) and "backstop off" (0) on the JS page.
+ *
+ *   l1 Stop does not terminate the worker (`handle.stop` settles but keeps it)   -> 'Stop mid-solve …' reds (terminated)
+ *   l2 the stopped answer is a decline (the walker walks instead)                 -> 'Stop mid-solve …' reds (FAILED/reason)
+ *   l3 the backstop's 0 is read as "the default" (300 s), not "off"              -> 'backstop OFF …' reds (getter 0)
+ *   l4 the budget's 0 is read as "the default" (640)                             -> 'no work limit …' reds (budgetWork 0)
+ */
+describe('⛓ SOLVER LIMIT OFF — Stop, "no work limit" and "backstop off" on the JS page', () => {
+    /** A worker double that says `started` and never answers (a solve in flight for as long as the row wants). */
+    function silentService() {
+        const workers = [];
+        const service = createWorkerSolveService({ createWorker: () => {
+            const w = { onmessage: null, onerror: null, terminated: false, posted: [],
+                postMessage(m) { w.posted.push(m); if (m.type === 'solve') setTimeout(() => w.onmessage?.({ data: { type: 'started', id: m.id } }), 0); },
+                terminate() { w.terminated = true; } };
+            workers.push(w);
+            return w;
+        } });
+        services.push(service);
+        return { service, workers };
+    }
+
+    it('Stop mid-solve (the REAL worker): terminated, the goal FAILS by name, the game steps again, and the next solve gets a FRESH worker and solves', async () => {
+        const { service, workers } = workerService();
+        const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service });
+        rt.playback.setSolverWalk(true);
+        rt.tick();
+        expect(rt.playback.solving).toBe(true);
+        expect(service.busy).toBe(true);
+        expect(rt.playback.stopSolve()).toBe(true);
+        expect(rt.playback.stopSolve()).toBe(false); // nothing left to stop
+        expect(rt.playback.solving).toBe(false); // the panel's Stop greys out at once
+        expect(workers[0].terminated).toBe(true);
+        expect(service.stats).toMatchObject({ stopped: 1, live: false });
+        rt.tick();
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(rt.playback.reason).toMatch(/^the solve was stopped by the player on reach-exit in level 12 \(terminated; the solve's own budget is 640 work units\)/);
+        expect(rt.playback.solverStats).toMatchObject({ stops: 1, solves: 0, declines: 0, played: 0 });
+        // not frozen: the page steps its room again
+        const ticks = rt.run.ticksCompleted;
+        for (let t = 0; t < 10; t += 1) rt.tick();
+        expect(rt.run.ticksCompleted).toBe(ticks + 10);
+        // the next solve: a fresh worker, and it solves
+        expect(rt.playback.walkTo(rt.playback.goal ?? { kind: 'exit', level: 12, tiles: [] }).ok).toBe(true);
+        rt.playback.play();
+        await settleAsync(rt);
+        expect(workers.length).toBe(2);
+        expect(rt.playback.state).toBe(WALK_STATES.DONE);
+        expect(rt.playback.solverStats.solves).toBe(1);
+    }, 120000);
+
+    it('Stop through the SERVICE (the panel\'s path: `service.stop()`): the same named failure, never a decline', async () => {
+        const { service, workers } = silentService();
+        const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service });
+        rt.playback.setSolverWalk(true);
+        rt.tick();
+        await sleep(10);
+        expect(service.busy).toBe(true);
+        expect(service.stop()).toBe(true);
+        expect(workers[0].terminated).toBe(true);
+        rt.tick();
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(rt.playback.reason).toMatch(/^the solve was stopped by the player on reach-exit in level 12/);
+        expect(rt.playback.solverStats).toMatchObject({ stops: 1, declines: 0, played: 0 });
+    }, 60000);
+
+    it('backstop OFF (0): a solve that never answers is still in flight past the old backstop\'s reach, until Stop', async () => {
+        const { service } = silentService();
+        const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service, solverBackstopMs: 0 });
+        expect(rt.playback.solverBackstopMs).toBe(0);
+        rt.playback.setSolverWalk(true);
+        // a 1 ms backstop would have fired a hundred times over; off, it never does
+        rt.playback.setSolverBackstopMs(1);
+        expect(rt.playback.solverBackstopMs).toBe(1);
+        rt.playback.setSolverBackstopMs(0);
+        expect(rt.playback.solverBackstopMs).toBe(0);
+        const t0 = Date.now();
+        while (Date.now() - t0 < 300) { rt.tick(); await sleep(5); }
+        expect(rt.playback.solving).toBe(true);
+        expect(rt.playback.solverStats.backstops).toBe(0);
+        rt.playback.stopSolve();
+        rt.tick();
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        // null = the page's own again (the construction's: here 0, off)
+        rt.playback.setSolverBackstopMs(null);
+        expect(rt.playback.solverBackstopMs).toBe(0);
+        expect(createJsRuntime().playback.solverBackstopMs).toBe(SOLVE_BACKSTOP_MS);
+    }, 60000);
+
+    it('no work limit (0): the request carries budgetWork 0, the attempt has no budgets; a stored budget keeps its meaning; null = the page\'s own', async () => {
+        const { service, workers } = silentService();
+        const rt = midRoom({ ...WITNESSES[2], walkTicks: 0, solveService: service, solverBudgetWork: 0 });
+        expect(rt.playback.solverBudgetWork).toBe(0);
+        rt.playback.setSolverWalk(true);
+        rt.tick();
+        await sleep(10);
+        const posted = workers[0].posted.find((m) => m.type === 'solve');
+        expect(posted.request.budgetWork).toBe(0);
+        rt.playback.stopSolve();
+        rt.tick();
+        expect(rt.playback.reason).toMatch(/\(terminated; the solve had no work limit\)/);
+        // the page's setter: 640 / unset keep their meaning; 0 = no limit; null = the construction's own; junk = unchanged
+        const page = createJsRuntime().playback;
+        expect(page.solverBudgetWork).toBe(640);
+        page.setSolverBudgetWork(0);
+        expect(page.solverBudgetWork).toBe(0);
+        page.setSolverBudgetWork('junk');
+        expect(page.solverBudgetWork).toBe(0);
+        page.setSolverBudgetWork(null);
+        expect(page.solverBudgetWork).toBe(640);
+        page.setSolverBudgetWork(800);
+        expect(page.solverBudgetWork).toBe(800);
+    }, 60000);
+});

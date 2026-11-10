@@ -99,21 +99,25 @@ describe.each(PLAYERS)('slot %s: the expanded record against the exporter\'s all
     expect(entries).toEqual(plannerEntries(LOG, p));
   });
 
-  it('with senders: the same rows, and each sender is the location the log collected at that step', async () => {
+  it("with senders: the same rows, and each sender's entry is the log's entry for that world at that step", async () => {
     const lines = expandSpoilerData(SENDERS[p], tables(p));
     expect(plannerEntries(lines, p)).toEqual(plannerEntries(LOG, p));
-    const room = await loaded(jsonl(lines), p);
-    const withSenders = room.getSphereData().filter((e) => e.receivedFrom);
+    const withSenders = lines.filter((l) => l.type === 'state_update' && Object.keys(l.player_data).length > 1);
+    expect(withSenders.length).toBeGreaterThan(0);
     expect(withSenders).toHaveLength(SENDERS[p].steps.filter((row) => row.length === 4).length);
     const logAt = new Map(LOG.filter((l) => l.type === 'state_update').map((l) => [l.sphere_index, l]));
-    for (const sphere of withSenders) {
-      const [{ player, location }] = sphere.receivedFrom;
-      expect(player).not.toBe(p);
-      expect(logAt.get(sphere.sphereIndex).player_data[player].sphere_locations).toEqual([location]);
+    for (const line of withSenders) {
+      for (const [player, entry] of Object.entries(line.player_data)) {
+        if (player === p) continue;
+        // A fractional step changes nothing for the sender, so its whole entry in the combined log is this one.
+        expect(entry).toEqual(logAt.get(line.sphere_index).player_data[player]);
+      }
     }
-    // Without senders nothing carries the field, and the rest of the view is unchanged.
+    // Without senders no line carries another world, and the own player's view is unchanged by them.
+    const room = await loaded(jsonl(lines), p);
     const plain = await loaded(jsonl(expandSpoilerData(OWN[p], tables(p))), p);
-    expect(plain.getSphereData().some((e) => 'receivedFrom' in e)).toBe(false);
+    expect(expandSpoilerData(OWN[p], tables(p)).every((l) => !l.player_data || Object.keys(l.player_data).length === 1))
+      .toBe(true);
     expect(view(room)).toEqual(view(plain));
   });
 });
@@ -138,7 +142,13 @@ describe('ids and names', () => {
     expect(lines[0]).toMatchObject({ type: 'metadata', seed_name: 's', event_locations: { 1: ['Event'] }, event_items: { 1: ['Win'] } });
     expect(lines[1].player_data['1'].new_inventory_details.base_items).toEqual({ Sword: 1 });
     expect(lines[2].player_data['1']).toMatchObject({ sphere_locations: ['A Chest'], new_inventory_details: { base_items: { Sword: 1 } } });
-    expect(lines[3].player_data['1'].received_from).toEqual([{ player: '2', location: 'B Chest' }]);
+    expect(lines[3].player_data['2']).toEqual({
+      new_inventory_details: { base_items: {}, resolved_items: {} },
+      new_accessible_locations: [],
+      new_accessible_regions: [],
+      sphere_locations: ['B Chest'],
+    });
+    expect(lines[3].player_data['1']).not.toHaveProperty('received_from');
     expect(lines[3].player_data['1'].sphere_locations).toEqual([]);
     expect(lines[4].player_data['1']).toMatchObject({ sphere_locations: ['Event'], new_inventory_details: { base_items: { Win: 1 } } });
   });
