@@ -1927,9 +1927,9 @@ export const CONTACT_FIDELITY = {
      * `world.spinners` (the roster the visit was built with) and absent from `run.entities('spinnerBodies')` is not priced
      * at its placement; one in its death fade is still in the roster (and still harmful: the live arm prices it); a run
      * with no roster read or a world with no spinner list is priced as OFF. OFF: byte-identical.
-     * `SEEDLING_SPINNER_ROSTER_GONE=0|1`.
+     * `SEEDLING_SPINNER_ROSTER_GONE=0|1`. ON since the wave-38 joint flip (⚖ user 2026-11-10).
      */
-    spinnerRosterGone: false,
+    spinnerRosterGone: true,
     /**
      * fidelity FIRESPINNER D1 (wave 38) — A FIRE PRESS THAT REACHES A SPINNER KNOCKS IT BACK AND DOES NO DAMAGE.
      * `Player.fire()` dispatches `genericHit(e, "Fire", fireForce 0.325, 0)` ELEVEN times a hit tick for an "Enemy"
@@ -1942,9 +1942,9 @@ export const CONTACT_FIDELITY = {
      * has no arm for it"*). ON: `fireRespondersIn` takes the run's live spinner bodies (`spinners`, the sword census's
      * join: a removed one drops out, type "Enemy", 11 dispatches) and `applyFire`'s Spinner arm calls
      * `spinner.hitSpinner(t: 'Fire')` once per dispatch. Game witness: `fidelityFireSpinner.js` (p4g, 0 px). OFF:
-     * byte-identical (the placement test and the throw). `SEEDLING_FIRE_SPINNER_ARM=0|1`.
+     * byte-identical (the placement test and the throw). `SEEDLING_FIRE_SPINNER_ARM=0|1`. ON since the wave-38 joint flip (⚖ user 2026-11-10).
      */
-    fireSpinnerArm: false,
+    fireSpinnerArm: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

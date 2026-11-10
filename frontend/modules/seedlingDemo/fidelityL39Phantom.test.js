@@ -92,11 +92,11 @@ describe('L39PHANTOM D0 — a Pulser kills spinner@112,88, on the game (p4g), re
     });
 });
 
-describe('L39PHANTOM D1 — `spinnerRosterGone` (OFF by default)', () => {
+describe('L39PHANTOM D1 — `spinnerRosterGone` (ON since the wave-38 joint flip, ⚖ user 2026-11-10)', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_SPINNER_ROSTER_GONE)(
-        'ships OFF, the newest key; its env name is a known worker env name', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.spinnerRosterGone).toBe(false);
-            expect(CONTACT_FIDELITY.spinnerRosterGone).toBe(false);
+        'ships ON, followed only by its sibling key; its env name is a known worker env name', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.spinnerRosterGone).toBe(true);
+            expect(CONTACT_FIDELITY.spinnerRosterGone).toBe(true);
             // ⛓ FIRESPINNER `fireSpinnerArm` (wave 38's sibling) follows it.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             expect(keys.slice(keys.indexOf('spinnerRosterGone') + 1)).toEqual(['fireSpinnerArm']);

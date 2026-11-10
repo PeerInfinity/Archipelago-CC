@@ -390,10 +390,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             rockGoneFencepost: true,
             // ⛓ fidelity DRILLWATER D1 (wave 37e): a drill's `Enemy.update` terrain switch (water/lava/pit) — ON since its flip (⚖ user 2026-11-08).
             drillTerrainSwitch: true,
-            // ⛓ fidelity L39PHANTOM D1 (wave 38): a spinner the run's roster lost is not priced at its placement — OFF until licensed.
-            spinnerRosterGone: false,
-            // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ships OFF.
-            fireSpinnerArm: false });
+            // ⛓ fidelity L39PHANTOM D1 (wave 38): a spinner the run's roster lost is not priced at its placement — ON since the wave-38 joint flip (⚖ user 2026-11-10).
+            spinnerRosterGone: true,
+            // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ON since the wave-38 joint flip (⚖ user 2026-11-10).
+            fireSpinnerArm: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
