@@ -32,8 +32,8 @@ describe('CEREMONY126 — the switches', () => {
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const at = keys.indexOf('ceremonyPressForecast');
             expect(keys.slice(at, at + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
-            // ⛓ wave 38: L39PHANTOM `spinnerRosterGone` (OFF) after them.
-            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'spinnerRosterGone'].includes(k)))
+            // ⛓ wave 38: L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm` after them.
+            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'spinnerRosterGone', 'fireSpinnerArm'].includes(k)))
                 .toEqual([]);
         });
     it('the env names are known worker env names', () => {

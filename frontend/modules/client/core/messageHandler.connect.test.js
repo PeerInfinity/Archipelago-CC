@@ -12,6 +12,9 @@
  * (by RoomInfo.seed_name + slot name + the room's games), or connects as the
  * game the player picked, or the room's only game, or waits for a pick. A
  * seed_name mismatch with usable rules warns and connects anyway.
+ *
+ * Rules loaded for another player (the slot name isn't their player's name)
+ * are not used either, even when their game is in the room.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -328,6 +331,198 @@ describe('MessageHandler connect flow — seed check, game picker, preset auto-l
 
       expect(consoleLines().some((l) => l.message.startsWith('Could not load'))).toBe(true);
       expect(connects()[0].game).toBe('APQuest');
+    });
+  });
+
+  describe("rules for a game the room has, but another player's", () => {
+    const ROOM_GAMES = ['Archipelago', 'A Hat in Time', 'A Link to the Past', 'A Short Hike', 'Adventure'];
+    const OTHER_SEED = '22222222222222222222';
+    const room = (seed = SEED) => ({ cmd: 'RoomInfo', games: ROOM_GAMES, seed_name: seed });
+
+    /** One loaded player, named `name` (omitted: the document names nobody). */
+    function loadPlayer(game, name, seedName = SEED) {
+      loadRules(game, seedName);
+      if (name) stateManagerMock.staticData.player_names = { 1: name };
+    }
+
+    /** The multiworld rules file, loaded as `playerId`. */
+    function loadMultiworld(playerId) {
+      stateManagerMock.staticData = { ...multiworldStaticData(playerId), seed_name: SEED };
+      stateManagerMock.gameName = 'Multiworld';
+    }
+
+    function serveMultiworldPreset() {
+      const rulesPath = `./presets/multiworld/${FOLDER}/${FOLDER}_P2_rules.json`;
+      const rulesDoc = { seed_name: SEED };
+      serve(
+        {
+          multiworld: {
+            folders: {
+              [FOLDER]: {
+                games: [
+                  { player: 1, name: 'Player1', game: 'A Hat in Time' },
+                  { player: 2, name: 'Player2', game: 'A Link to the Past' },
+                  { player: 3, name: 'Player3', game: 'A Short Hike' },
+                  { player: 4, name: 'Player4', game: 'Adventure' },
+                ],
+                files: [`${FOLDER}_rules.json`, `${FOLDER}_P2_rules.json`],
+              },
+            },
+          },
+        },
+        { [rulesPath]: rulesDoc }
+      );
+      bus.subscribe('files:jsonLoaded', (event) => {
+        expect(event).toMatchObject({ selectedPlayerId: '2', sourceName: rulesPath });
+        expect(connects()).toEqual([]);
+        stateManagerMock.staticData = { ...multiworldStaticData('2'), seed_name: SEED };
+        setTimeout(() => bus.publish('stateManager:rulesLoaded', { source: rulesPath }), 0);
+      });
+    }
+
+    it("loads the room's preset for the slot and connects as the slot's game", async () => {
+      loadPlayer('Adventure', 'Player1');
+      handler.clientSlotName = 'Player2';
+      serveMultiworldPreset();
+
+      await handler._handleRoomInfo(room());
+
+      expect(connects()).toHaveLength(1);
+      expect(connects()[0]).toMatchObject({ game: 'A Link to the Past', name: 'Player2' });
+      expect(consoleLines().some((l) => l.message.includes('for Player1, not Player2'))).toBe(true);
+    });
+
+    it("asks for the game in a multi-game room with no preset; the loaded game isn't sent", async () => {
+      loadPlayer('Adventure', 'Player1');
+      handler.clientSlotName = 'Player2';
+
+      await handler._handleRoomInfo(room());
+
+      expect(connects()).toEqual([]);
+      expect(handler.isAwaitingGameChoice()).toBe(true);
+    });
+
+    it('a matching slot name changes nothing: no preset lookup, the loaded game is sent', async () => {
+      loadPlayer('Adventure', 'Player4');
+      handler.clientSlotName = 'Player4';
+
+      await handler._handleRoomInfo(room());
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(connects()[0]).toMatchObject({ game: 'Adventure', name: 'Player4' });
+    });
+
+    it("multiworld rules compare the loaded player's name, not every player's", async () => {
+      loadMultiworld('2');
+      handler.clientSlotName = 'Player2';
+      await handler._handleRoomInfo(room());
+      expect(connects()[0]).toMatchObject({ game: 'A Link to the Past', name: 'Player2' });
+
+      connectionMock.send.mockClear();
+      loadMultiworld('2');
+      handler.clientSlotName = 'Player3';
+      await handler._handleRoomInfo(room());
+      // Player3 is in the document, but the Connect would carry Player2's game.
+      expect(connects()).toEqual([]);
+      expect(handler.isAwaitingGameChoice()).toBe(true);
+    });
+
+    it.each([
+      ['a seedless document', () => {
+        loadPlayer('Adventure', 'Player1');
+        delete stateManagerMock.staticData.seed_name;
+      }],
+      ['an empty seed_name', () => loadPlayer('Adventure', 'Player1', '')],
+      ['a document with no player names', () => loadPlayer('Adventure', null)],
+    ])('%s: no name comparison, the loaded game is sent', async (_label, load) => {
+      load();
+      handler.clientSlotName = 'Player2';
+
+      await handler._handleRoomInfo(room());
+
+      expect(connects()[0]).toMatchObject({ game: 'Adventure', name: 'Player2' });
+    });
+
+    it('known limit: a same-named slot of another game is not detected', async () => {
+      loadPlayer('Adventure', 'Player1');
+      handler.clientSlotName = 'Player1';
+
+      await handler._handleRoomInfo(room());
+
+      expect(connects()[0]).toMatchObject({ game: 'Adventure', name: 'Player1' });
+    });
+
+    describe('a builder game at another seed', () => {
+      const BUILDER_ROOM = { cmd: 'RoomInfo', games: ['Archipelago', 'Metamath', 'APQuest'], seed_name: SEED };
+
+      it('a matching name still builds the loaded game', async () => {
+        loadPlayer('Metamath', 'Mathy', OTHER_SEED);
+        handler.clientSlotName = 'Mathy';
+
+        await handler._handleRoomInfo(BUILDER_ROOM);
+
+        expect(connects()[0]).toMatchObject({ game: 'Metamath', name: 'Mathy' });
+        expect(handler._serverBuild?.game).toBe('Metamath');
+      });
+
+      it('another name does not assume the loaded game in a multi-game room', async () => {
+        loadPlayer('Metamath', 'Mathy', OTHER_SEED);
+        handler.clientSlotName = 'Other';
+
+        await handler._handleRoomInfo(BUILDER_ROOM);
+
+        expect(connects()).toEqual([]);
+        expect(handler.isAwaitingGameChoice()).toBe(true);
+      });
+
+      it("another name still builds in the game's own single-game room", async () => {
+        loadPlayer('Metamath', 'Mathy', OTHER_SEED);
+        handler.clientSlotName = 'Other';
+
+        await handler._handleRoomInfo({ cmd: 'RoomInfo', games: ['Archipelago', 'Metamath'], seed_name: SEED });
+
+        expect(connects()[0]).toMatchObject({ game: 'Metamath', name: 'Other' });
+        expect(handler._serverBuild?.game).toBe('Metamath');
+      });
+    });
+
+    describe('a local generated world', () => {
+      afterEach(() => {
+        stateManagerMock.rawPayload = null;
+      });
+
+      function loadGeneratedWorld(seedName) {
+        loadPlayer('Cloudberry', 'Player1', seedName);
+        stateManagerMock.rawPayload = {
+          rawJsonData: {
+            seed_name: seedName,
+            player_names: { 1: 'Player1' },
+            world: { 1: { game: 'Cloudberry', options: { use_canonical_options: true } } },
+          },
+          selectedPlayerInfo: { playerId: '1' },
+          source: 'local.json',
+        };
+      }
+
+      it('at another seed, another slot name still uses the overlay', async () => {
+        loadGeneratedWorld(OTHER_SEED);
+        handler.clientSlotName = 'Berry';
+
+        await handler._handleRoomInfo({ cmd: 'RoomInfo', games: ['Archipelago', 'Cloudberry', 'APQuest'], seed_name: SEED });
+
+        expect(connects()[0]).toMatchObject({ game: 'Cloudberry', name: 'Berry' });
+        expect(handler._serverBuild?.mode).toBe('overlay');
+      });
+
+      it('at this seed, another slot name is another player', async () => {
+        loadGeneratedWorld(SEED);
+        handler.clientSlotName = 'Berry';
+
+        await handler._handleRoomInfo({ cmd: 'RoomInfo', games: ['Archipelago', 'Cloudberry', 'APQuest'], seed_name: SEED });
+
+        expect(connects()).toEqual([]);
+        expect(handler.isAwaitingGameChoice()).toBe(true);
+      });
     });
   });
 });

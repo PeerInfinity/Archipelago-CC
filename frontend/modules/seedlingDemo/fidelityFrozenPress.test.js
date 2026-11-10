@@ -42,8 +42,8 @@ describe('FROZENPRESS — the switch', () => {
             // ⛓ wave 37d: L25APITEM `apChestItem`; wave 37c: KNOCKBACK376 `rockGoneFencepost` (landed after it).
             const W37B = ['previewBeamTowerDrift', 'ceremonyPressForecast', 'ceremonyWalkHandoff', 'apChestItem'];
             const W37C = ['rockGoneFencepost'];
-            // ⛓ wave 38: L39PHANTOM `spinnerRosterGone` (OFF).
-            const W38 = ['spinnerRosterGone'];
+            // ⛓ wave 38: L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm`.
+            const W38 = ['spinnerRosterGone', 'fireSpinnerArm'];
             expect(after.filter((k) => !W37B.includes(k) && !W37C.includes(k) && !W38.includes(k))).toEqual([]);
         });
     it('`SEEDLING_FROZEN_PRESS_FORECAST` is a known worker env name; `freezeForecast` is a progress field', () => {

@@ -1916,6 +1916,21 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_SPINNER_ROSTER_GONE=0|1`.
      */
     spinnerRosterGone: false,
+    /**
+     * fidelity FIRESPINNER D1 (wave 38) — A FIRE PRESS THAT REACHES A SPINNER KNOCKS IT BACK AND DOES NO DAMAGE.
+     * `Player.fire()` dispatches `genericHit(e, "Fire", fireForce 0.325, 0)` ELEVEN times a hit tick for an "Enemy"
+     * (`hitables[0]`; `vc` is not cleared between the eleven passes, `Player.as:1022-1033`), and `Enemy.hit`'s
+     * `hitByFire || t != "Fire"` is false for a Spinner, so each is `knockback(0.325, player)` and nothing else — no
+     * `hits +=`, no `hitsTimer =`, and none at all while `hitsTimer > 0` (unless the dark latch) or under the freeze
+     * (`Enemy.as:141-181`, `Player.as:1065-1077`). `FIRE_ARM_POLICY.Spinner` said `modelled`; the dispatch had no arm, and
+     * `fireRespondersIn` tested the spinner's `.oel` PLACEMENT, so a press whose flame met the BODY did nothing in the
+     * model and a press near the long-vacated cell threw (*"`FIRE_ARM_POLICY` calls Spinner modelled and this dispatch
+     * has no arm for it"*). ON: `fireRespondersIn` takes the run's live spinner bodies (`spinners`, the sword census's
+     * join: a removed one drops out, type "Enemy", 11 dispatches) and `applyFire`'s Spinner arm calls
+     * `spinner.hitSpinner(t: 'Fire')` once per dispatch. Game witness: `fidelityFireSpinner.js` (p4g, 0 px). OFF:
+     * byte-identical (the placement test and the throw). `SEEDLING_FIRE_SPINNER_ARM=0|1`.
+     */
+    fireSpinnerArm: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2298,6 +2313,9 @@ if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '0') CONTACT_FIDEL
 // ⛓ fidelity L39PHANTOM D1: `SEEDLING_SPINNER_ROSTER_GONE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '1') CONTACT_FIDELITY.spinnerRosterGone = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '0') CONTACT_FIDELITY.spinnerRosterGone = false;
+// ⛓ fidelity FIRESPINNER D1: `SEEDLING_FIRE_SPINNER_ARM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '1') CONTACT_FIDELITY.fireSpinnerArm = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '0') CONTACT_FIDELITY.fireSpinnerArm = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

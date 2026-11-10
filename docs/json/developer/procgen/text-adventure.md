@@ -16,7 +16,7 @@ The wrapper mounts the engine in a same-origin iframe and owns everything Archip
 |------|------|
 | `bridge.js` | Runs inside the iframe. Turns host AP state into engine calls, and engine clicks into dispatcher events. |
 | `playbackProxy.js` / `playbackBridge.js` | The PlaybackController contract across the iframe boundary, used by the playback bot ([Playback and Debugging Tools](./playback-and-debugging.md#the-playbackcontroller-contract-and-iframe-proxies)) and by a loops Bot block (`TextAdventurePlaybackProxy.perform`). |
-| `mana.js` | Shows loop-mode mana in the engine header, and charges a region's move cost on departure when loop mode is off. |
+| `mana.js` | Shows loop-mode mana in the engine header. When loop mode is off, charges location checks and a region's move cost on departure, except in regions of another substrate that declares `sharing.mana`, because those substrates bill the pool themselves. |
 | `textAdventureRoom.js` | Build-time hooks and the payload serializer (below). |
 | `textAdventureRegionRoundTrip.js` | Document round trip for the APWorld hub. |
 | `textAdventureCompositeMap.js` | Composite-map painter. |

@@ -77,7 +77,7 @@ import {
     distanceRectPoint, slashRect, spearRect,
     SPEAR_REPEAT_OFFSETS, pressRectTouches, spearGameRect, spearHitRect,
 } from './presses.js';
-import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
+import { FIRE_DAMAGE, FIRE_FORCE, FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
 import {
     TAGS_PER_LEVEL, brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
@@ -4816,6 +4816,16 @@ export function createLevelRun({
         }
         return out.size === 0 ? null : out;
     };
+    /** ⛓ fidelity FIRESPINNER D1: `spinnerPressBodiesNow` plus the entity position (the fire census's origin). */
+    const spinnerFireBodiesNow = () => {
+        const st = spinnerStateFor(level);
+        if (st.byId.size === 0) return null;
+        const out = new Map();
+        for (const [id, sp] of st.byId) {
+            out.set(id, { rect: spinnerRect(sp), x: sp.x, y: sp.y, removed: sp.removed === true });
+        }
+        return out;
+    };
     const spinnerPressBodiesNow = () => {
         const st = spinnerStateFor(level);
         if (st.byId.size === 0) return null;
@@ -6532,7 +6542,9 @@ export function createLevelRun({
         const { pressTick } = fire;
         const player = { x: state.x, y: state.y };
         const pushState = pushableStateFor(level);
-        const audit = auditFire(world, player, { pushables: pushableRects(pushState), turrets: turretRectsNow() });
+        const audit = auditFire(world, player, { pushables: pushableRects(pushState), turrets: turretRectsNow(),
+            // ⛓ fidelity FIRESPINNER D1 (`fireSpinnerArm`, OFF → null: the census placement, as before).
+            spinners: CONTACT_FIDELITY.fireSpinnerArm ? spinnerFireBodiesNow() : null });
         if (audit.refused.length > 0) {
             throw new Error(`levelRun: the fire press at tick ${pressTick} in level `
                 + `${level} reaches `
@@ -6654,6 +6666,34 @@ export function createLevelRun({
                 // `rope@104,392` — a key nothing else in the run shares.
                 const id = r.id;
                 hits.push(pullRope(r, id));
+                continue;
+            }
+            if (r.as3 === 'Spinner' && CONTACT_FIDELITY.fireSpinnerArm) {
+                /**
+                 * ── ⛓⛓ fidelity FIRESPINNER D1: THE KNOCKBACK, AND NOTHING ELSE ─────
+                 *
+                 * `genericHit`'s `e is Enemy` arm: `(e as Enemy).hit(0.325, new Point(x, y), 0, "Fire")`, ELEVEN times
+                 * a hit tick (`r.dispatches`: an "Enemy" is `hitables[0]` and `vc` keeps it for all eleven passes).
+                 * `Enemy.hit`'s fire arm is `knockback(f, p)` only — `hitByFire` is false — behind the same
+                 * `hitsTimer <= 0 || hitByDarkStuff` and `!Game.freezeObjects` gates; `hitSpinner`'s `t === 'Fire'`
+                 * branch is that, verbatim. Each knockback reads the body's position, which a knockback does not
+                 * move, so the eleven are the same impulse added eleven times (summed in order, as the game does).
+                 */
+                const spSt = spinnerStateFor(level);
+                const sp = spSt.byId.get(r.spinnerId);
+                if (!sp) {
+                    throw new Error(`levelRun: the fire press at tick ${pressTick} reaches ${r.spinnerId} in level `
+                        + `${level}, which is not in the run's Spinner state.`);
+                }
+                let after = sp;
+                for (let k = 0; k < r.dispatches; k += 1) {
+                    after = hitSpinner(after, { force: FIRE_FORCE, from: player, damage: FIRE_DAMAGE, t: 'Fire',
+                        frozen: ceremony !== null });
+                }
+                spSt.byId.set(sp.id, after);
+                hits.push({ as3: 'Spinner', id: sp.id, knocked: after !== sp, dispatches: r.dispatches,
+                    why: after !== sp ? null : (sp.destroy ? 'the body is already dying'
+                        : (ceremony !== null ? 'the freeze' : `i-frames — hitsTimer ${sp.hitsTimer} > 0`)) });
                 continue;
             }
             throw new Error(`levelRun: \`FIRE_ARM_POLICY\` calls ${r.as3} modelled and `
