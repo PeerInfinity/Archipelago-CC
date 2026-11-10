@@ -21,6 +21,7 @@ import { l40LatchBoot, l40LatchSolve } from './fidelityL40Latch.js';
 import {
     CHOOSER_PAIR, withApproachDoor, withFifthOrder, withLatchWeighFirst, withStanceBurn, withTurretApproach,
 } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const TREE = 'burnabletree@872,784';
 
@@ -70,7 +71,7 @@ describe('hammer-phase POCKET-BURN on the latch boot, south of the door (slow)',
     }, 900000);
 
     it('pocket shut, ON: the burn is raised for the hold\'s stance, and the refusal moves past the pocket to the burn '
-        + 'walk\'s combat (bobsoldier@880,832)', async () => {
+        + 'walk\'s combat (bobsoldier@880,832)', async () => withL40Flip(false, async () => {
         const r = await arm(await southBoot(true), true);
         expect(r.out).toBeNull();
         expect(r.refusal.message).not.toContain('no REACHABLE stance inside buttonroom@880,768');
@@ -78,9 +79,9 @@ describe('hammer-phase POCKET-BURN on the latch boot, south of the door (slow)',
             + 'passes through danger at');
         expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: 'bobsoldier@880,832',
             sources: ['chaser:bobsoldier@880,832'] });
-    }, 900000);
+    }), 900000);
 
-    it('pocket open, ON: SOUTHDOOR\'s solve unchanged — Boss Key 2 hitless at t4810 on a fresh run', async () => {
+    it('pocket open, ON: SOUTHDOOR\'s solve unchanged — Boss Key 2 hitless at t4810 on a fresh run', async () => withL40Flip(false, async () => {
         const boot = await southBoot(false);
         const r = await arm(boot, true);
         expect(r.refusal).toBeNull();
@@ -91,5 +92,5 @@ describe('hammer-phase POCKET-BURN on the latch boot, south of the door (slow)',
         expect(seen.hits).toEqual([]);
         expect(seen.deaths).toBe(0);
         expect(seen.collected).toEqual([{ t: 4810, keyType: 2 }]);
-    }, 1200000);
+    }), 1200000);
 });

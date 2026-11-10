@@ -22,6 +22,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, solveAnytime } from './jsRuntimeSolver.js';
 import { withPressKillBombs } from './pressKillCost.js';
 import { withContactFidelity } from './contactFidelity.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -44,12 +45,12 @@ describe('the press kill\'s "nowhere to be" names the refuges the shake band hid
     // ⛓ control since planning-13's wave-31 shakeExactSplit flip (⚖ user "Exact for split"; hammer-2's ruling (a)):
     //   the row's SUBJECT is a banded refuge, so SHAKEEXACT is pinned OFF here (bisected by env: no other wave-31 key
     //   moves it); its ON sibling below is the evidence SHAKEEXACT dissolves the band at 5266.
-    it('371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so (shakeExactSplit OFF)', () => {
+    it('371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so (shakeExactSplit OFF)', () => withL40Flip(false, () => {
         const r = withContactFidelity({ shakeExactSplit: false }, () => solve371(5266, { bombs: false }));
         expect([r.ok, r.work]).toEqual([false, 92]);
         expect(r.message.endsWith(`${NOWHERE} (PRESS_KILL_SHAKE_GUARD: 12 refuge candidate(s) whose preview the `
             + 'camera-shake band hid are not counted.)')).toBe(true);
-    }, 120_000);
+    }), 120_000);
 
     it('371 at 5266, `PRESS_KILL_BOMBS` OFF, shakeExactSplit ON (the default since wave 31): no refuge is banded — the '
         + 'press kill is passed and the dashless pass refuses later, at the paced bomb-pusher hold', () => {
@@ -61,11 +62,11 @@ describe('the press kill\'s "nowhere to be" names the refuges the shake band hid
         expect(r.message).toContain('bomb:bombpusher@112,128');
     }, 120_000);
 
-    it('371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW\'s suffix, no other)', () => {
+    it('371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW\'s suffix, no other)', () => withL40Flip(false, () => {
         const r = solve371(5265, { bombs: true });
         expect([r.ok, r.work]).toEqual([false, 92]);
         expect(r.message.endsWith(`${NOWHERE} (PRESS_KILL_BOMBS: a refuge whose walk or wait a forecast Bomb's `
             + 'Explosion lands on is not counted.)')).toBe(true);
         expect(r.message).not.toContain('PRESS_KILL_SHAKE_GUARD');
-    }, 120_000);
+    }), 120_000);
 });

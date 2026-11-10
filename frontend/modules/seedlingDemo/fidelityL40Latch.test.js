@@ -14,6 +14,7 @@
  * `l40latch-orbit-chain` is those 271 ticks on p4g at 0 px.
  */
 import { describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -67,12 +68,12 @@ describe('L40LATCH W0 — the still holder, on the game (`l40latch-stand`)', () 
         ]);
     });
 
-    it('OFF the solver stands on the latch for the fade and is moved at hold tick 93 (the brief\'s refusal)', async () => {
+    it('OFF the solver stands on the latch for the fade and is moved at hold tick 93 (the brief\'s refusal)', () => withL40Flip(false, async () => {
         // ⛓ both keys named OFF since planning-14's wave-32 flip turned them ON.
         const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: false, chaserOrbitKill: false });
         expect(out).toBeNull();
         expect(refusal.message).toContain('hold: hold tick 93 of 131 MOVED, from (888,776)');
-    }, 120_000);
+    }), 120_000);
 });
 
 describe('L40LATCH D1b — the orbit kill', () => {

@@ -27,6 +27,7 @@ import {
 } from './pressKillGuards.js';
 import { CHOOSER_PAIR, withChooserPair, withIceTurretStaticKill, withLatchWeighFirst } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SPIN_BODY = 'spinner@816,848';
@@ -69,14 +70,14 @@ function solve860(on, opts) {
 }
 
 describe('hammer-phase SPIN — leg 860, A5, deadline 10240, seam 5950', () => {
-    it('OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C\'s wall)', () => {
+    it('OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C\'s wall)', () => withL40Flip(false, () => {
         const { answer, kills } = solve860(false);
         expect(answer.ok).toBe(false);
         expect(answer.message).toMatch(/kill \(spinner@816,848\) by press: every key set — the plan's own and 5 alternative\(s\) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at \(770\.96,860\.99\) in level 40\. There is no step out\. The corner formed 19 tick\(s\) after the press on spinner@816,848 LANDED at t2744/);
         expect(kills.some((k) => k.bodies.includes(SPIN_BODY))).toBe(false);
-    }, 900_000);
+    }), 900_000);
 
-    it('ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death', () => {
+    it('ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death', () => withL40Flip(false, () => {
         const { kills, counts, tape, source } = solve860(true);
         const mine = kills.filter((k) => k.bodies.includes(SPIN_BODY));
         expect(mine.length).toBeGreaterThan(0);
@@ -97,5 +98,5 @@ describe('hammer-phase SPIN — leg 860, A5, deadline 10240, seam 5950', () => {
         expect(run.playerDeaths.length).toBe(0);
         expect((run.ledger('spinnerPressHits') ?? []).filter((h) => h.landed && h.id === SPIN_BODY).map((h) => h.t))
             .toEqual(k.landings.filter((l) => l.id === SPIN_BODY).map((l) => l.t));
-    }, 900_000);
+    }), 900_000);
 });

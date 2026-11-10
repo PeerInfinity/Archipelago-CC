@@ -28,6 +28,7 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { settleSolve, solveFromTape } from './jsRuntimeSolver.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ENV = globalThis.process?.env ?? {};
@@ -56,12 +57,12 @@ const NO_BURN = () => ({ asked: ['burn'], key: 'burn', verbs: new Set(['burn']),
 
 describe('hammer-phase CLEARTAG-CHAIN — the clear-tag verb runs its stance prerequisite (`CLEARTAG_CHAIN`)', () => {
     it('ships OFF (`SEEDLING_CLEARTAG_CHAIN=1` turns it on in node; the page channel knows the name)', () => {
-        expect(CLEARTAG_CHAIN_DEFAULT).toBe(false);
-        expect(CLEARTAG_CHAIN.enabled).toBe(ENV.SEEDLING_CLEARTAG_CHAIN === '1');
+        expect(CLEARTAG_CHAIN_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(CLEARTAG_CHAIN.enabled).toBe(ENV.SEEDLING_CLEARTAG_CHAIN !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CLEARTAG_CHAIN');
         expect(withClearTagChain(true, () => CLEARTAG_CHAIN.enabled)).toBe(true);
         expect(withClearTagChain(false, () => CLEARTAG_CHAIN.enabled)).toBe(false);
-        expect(CLEARTAG_CHAIN.enabled).toBe(ENV.SEEDLING_CLEARTAG_CHAIN === '1');
+        expect(CLEARTAG_CHAIN.enabled).toBe(ENV.SEEDLING_CLEARTAG_CHAIN !== '0');
     });
 
     it('OFF (`STANCE_BURN` ON): wall B — the burn is named and the clear-tag arm refuses to chain it', () => {
@@ -73,14 +74,14 @@ describe('hammer-phase CLEARTAG-CHAIN — the clear-tag verb runs its stance pre
         expect(off.work).toBe(182);
     }, 120000);
 
-    it('ON (`STANCE_BURN` ON): the burn runs first, and the refusal moves to the burn walk\'s SE fight (wall A1)', () => {
+    it('ON (`STANCE_BURN` ON): the burn runs first, and the refusal moves to the burn walk\'s SE fight (wall A1)', () => withL40Flip(false, () => {
         const on = dashless872({ sb: true, cc: true });
         expect(on.ok).toBe(false);
         expect(on.message.startsWith(`${CT} -> burn stance (${TREE}) -> kill (spinner@880,848) by press: the player `
             + 'died at t799 (chaser bob@736,752) while pressing spinner@880,848')).toBe(true);
         expect(on.message).not.toContain('does not chain openers');
         expect([on.work, sha(on.message)]).toEqual([232, ON_SB_SHA]);
-    }, 120000);
+    }), 120000);
 
     it('ON without `STANCE_BURN` = OFF byte for byte (no prerequisite is named, so nothing is chained)', () => {
         const off = dashless872({ sb: false, cc: false });
