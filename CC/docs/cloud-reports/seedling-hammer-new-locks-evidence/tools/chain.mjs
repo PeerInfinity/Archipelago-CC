@@ -86,6 +86,11 @@ for (const p of passes) {
     if (answer.kind === 'divergence') { best = answer; break; }
 }
 Array.prototype.push = origPush;
+if (args.tries) {
+    const SB = await import(ROOT + '/frontend/modules/seedlingDemo/solverBot.js');
+    for (const r of SB.KILLLOCK_CHASER_REWIND_COUNTS.tries) console.log('TRY', JSON.stringify(r).slice(0, Number(args.tries) || 600));
+    for (const r of SB.KILLLOCK_LINE_STANCE_COUNTS?.rows ?? []) console.log('LINE', JSON.stringify(r).slice(0, Number(args.tries) || 600));
+}
 // 30(c): a SOLVED plan's keys on a FRESH run of the request's staging, row by row against the plan's expected rows;
 // its hits and deaths (BK2COMBAT's arms.mjs `modelled`, copied).
 const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
