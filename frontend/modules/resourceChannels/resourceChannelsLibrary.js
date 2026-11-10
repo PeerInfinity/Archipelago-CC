@@ -135,6 +135,12 @@ export function xpAdjustedCost(baseCost, regionId) {
  * both loop modes (⚖ Robert 2026-11-09, "Honour it everywhere", slice
  * sdc-depletion-flag).
  *
+ * ⚖ NOT a depletion: a reset the GAME asks for when its own run ends
+ * (`substrate:resourceReset`, handled in index.js). JtA latches its run at
+ * energy 0 and waits for that reset, so a JtA room still loop-resets with the
+ * flag set: measured, and kept on purpose (⚖ Robert 2026-11-09, "Exempt JtA's
+ * own run end"). It is not a bug in this flag.
+ *
  * @returns {{ charged: boolean, depleted: boolean }}
  */
 export function chargeMana({ substrateId, amount, regionId = null }) {

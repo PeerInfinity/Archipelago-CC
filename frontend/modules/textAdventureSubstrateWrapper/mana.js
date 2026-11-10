@@ -29,6 +29,11 @@
  *     Noiz2sa, Bounce, flash_seedling, flash_seedling_gen; ⚖ Robert
  *     2026-11-09, "Remove the charge" and "Free too, as a follow-up").
  * Any other substrate stays on this leg. The display half is unaffected.
+ *
+ * Depletion resets the loop unless `gameState.noManaDepletionReset` is set:
+ * `chargeMana` then reports no depletion and the pool runs negative. A move
+ * into a JtA room on a negative pool can still loop-reset, from JtA's own run
+ * end, which is exempt from the flag (⚖ Robert 2026-11-09; see chargeMana).
  */
 
 import { centralRegistry } from '../../app/core/centralRegistry.js';
