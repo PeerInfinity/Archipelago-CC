@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
+from ._spoiler_hook_client import SpoilerDataInSlotData
 
 
 class GraphFileSelection(TextChoice):
@@ -94,6 +95,7 @@ class DepGraphOptions(PerGameCommonOptions):
     randomize_starting_nodes: RandomizeStartingNodes
     starting_nodes: StartingNodes
     entrance_rule_mode: EntranceRuleMode
+    spoiler_data_in_slot_data: SpoilerDataInSlotData
 
 
 depgraph_option_groups = [

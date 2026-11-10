@@ -6,6 +6,7 @@ These map directly to APCalcConfig fields in the generator.
 
 from dataclasses import dataclass
 from Options import Range, Toggle, PerGameCommonOptions, OptionGroup
+from ._spoiler_hook_client import SpoilerDataInSlotData
 
 
 class NumSpheres(Range):
@@ -82,6 +83,7 @@ class APCalcOptions(PerGameCommonOptions):
     trash_per_sphere: TrashPerSphere
     max_branches: MaxBranches
     randomize_items: RandomizeItems
+    spoiler_data_in_slot_data: SpoilerDataInSlotData
 
 
 apcalc_option_groups = [

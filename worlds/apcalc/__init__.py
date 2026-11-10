@@ -13,6 +13,8 @@ from BaseClasses import ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin, Has, And, Or
 
+from . import _spoiler_hook_client
+
 from .Items import APCalcItem, item_table, item_name_to_id
 from .Locations import (
     APCalcLocation, location_name_to_id, MAX_LOCATIONS,
@@ -314,6 +316,11 @@ class APCalcWorld(RuleWorldMixin, World):
         # Event items (Checked N, Victory) have no ID
         return APCalcItem(name, ItemClassification.progression, None, self.player)
 
+    @classmethod
+    def stage_pre_output(cls, multiworld) -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)
+
     def fill_slot_data(self) -> Dict[str, Any]:
         """Data sent to the client for gameplay, and for the client to rebuild
         the rules.json from (frontend/modules/apcalc/apcalcRulesBuilder.js)."""
@@ -365,6 +372,7 @@ class APCalcWorld(RuleWorldMixin, World):
             "max_branches": self.options.max_branches.value,
             "randomize_items": bool(self.options.randomize_items.value),
             "goal": "all_locations",
+            **_spoiler_hook_client.slot_data(self),
         }
 
     # --- Helpers ---

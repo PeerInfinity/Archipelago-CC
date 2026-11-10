@@ -537,11 +537,15 @@ def _mismatches(repo, source_bytes):
 
 
 def test_every_copy_of_the_client_is_byte_identical():
-    """No apworld carries the client yet; the helper's own .apworld is the copy this reads today."""
+    """The helper's own copies, and the callers': the hand-written worlds (H2) and their packed .apworlds."""
     source = (HOOK_DIR / CLIENT_NAME).read_bytes()
     found = [where for where, _ in _copies_on_disk(REPO)]
     assert f'worlds/spoiler_export_hook/{CLIENT_NAME}' in found
     assert f'apworlds/spoiler_export_hook.apworld!spoiler_export_hook/{CLIENT_NAME}' in found
+    for package in ('metamath', 'depgraph', 'apcalc', 'apquest_serverdata'):
+        assert f'worlds/{package}/{CLIENT_NAME}' in found
+    for package in ('metamath', 'depgraph'):
+        assert f'apworlds/{package}.apworld!{package}/{CLIENT_NAME}' in found
     assert _mismatches(REPO, source) == []
 
 

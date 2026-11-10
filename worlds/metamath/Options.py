@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
+from ._spoiler_hook_client import SpoilerDataInSlotData
 
 class VanillaPlacement(Toggle):
     """
@@ -132,6 +133,7 @@ class MetamathOptions(PerGameCommonOptions):
     starting_statements: StartingStatements
     auto_download_database: AutoDownloadDatabase
     entrance_rule_mode: EntranceRuleMode
+    spoiler_data_in_slot_data: SpoilerDataInSlotData
 
 metamath_option_groups = [
     OptionGroup("Proof Settings", [

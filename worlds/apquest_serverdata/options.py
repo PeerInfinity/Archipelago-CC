@@ -2,6 +2,8 @@ from dataclasses import dataclass
 
 from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 
+from ._spoiler_hook_client import SpoilerDataInSlotData
+
 # In this file, we define the options the player can pick.
 # The most common types of options are Toggle, Range and Choice.
 
@@ -115,6 +117,7 @@ class APQuestOptions(PerGameCommonOptions):
     trap_chance: TrapChance
     confetti_explosiveness: ConfettiExplosiveness
     player_sprite: PlayerSprite
+    spoiler_data_in_slot_data: SpoilerDataInSlotData
 
 
 # If we want to group our options by similar type, we can do so as well. This looks nice on the website.
