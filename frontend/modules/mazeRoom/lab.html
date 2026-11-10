@@ -548,6 +548,7 @@
       <div class="line">
         <b>palette</b> <span class="note">— pick one, then click a tile (or DRAG: one stroke is ONE undo)</span>
         <button id="labUndo">UNDO one edit</button>
+        <button id="labRedo" title="Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y">REDO</button>
       </div>
       <div id="labPalette"></div>
       <!-- ⛓⛓ EDITOR v3 SLICE A2 — the tools `procgenCore/editCore` proved in A1,
@@ -557,7 +558,7 @@
            are rendered from `editorView`'s own COMMAND TABLE, so the label and
            the key here cannot drift from the key that actually fires. -->
       <div class="line">
-        <b>tool</b> <span class="note">— Escape clears it; Ctrl/Cmd+Z undoes</span>
+        <b>tool</b> <span class="note">— Escape clears it; Ctrl/Cmd+Z undoes; Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y redoes</span>
       </div>
       <div id="labTools"></div>
       <div class="line">

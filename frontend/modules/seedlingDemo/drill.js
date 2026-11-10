@@ -38,6 +38,27 @@
 import { createSpriteAnim, stepSpriteAnim } from './chasers.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 
+/**
+ * ⛓ fidelity DRILLWATER D1 (`CONTACT_FIDELITY.drillTerrainSwitch`, OFF) — `Enemy.update`'s TERRAIN SWITCH, FOR A DRILL.
+ * `Drill.as` overrides none of `dieInWater` / `dieInLava` / `canFallInPit` (`Enemy.as:33,39-40`: all true), and
+ * `Drill.update` calls `super.update()` FIRST, so the switch reads the cell the drill's hop LANDED on at its NEXT
+ * on-screen update (`Enemy.as:62-112`; `getState`, `:131-139`, is `nearestToPoint("Tile", x, y).t`):
+ * ```
+ *   if (!activeOffScreen && !onScreen()) return;            // the gate (a drill is never activeOffScreen)
+ *   switch (getState()) { case 1: destroy = true;            // Water
+ *                         case 6: if (!fallInPit) fallInPit = true;   // Pit (a latch)
+ *                         case 17: destroy = true; }         // Lava
+ *   if (!destroy && fallInPit) { x += (floor(x/16)*16 + 8 − x)/10; y += …; angle += fallSpinSpeed;
+ *                                alpha −= 0.05; if (alpha <= 0) { destroy = true; fell = true; } }
+ *   else { super.update() [Mobile.death: alpha −= 0.1, remove at <= 0]; if (!destroy) { hitUpdate(); hitPlayer(); } }
+ * ```
+ * ⛔ `fallSpinSpeed` is `8 * FP.choose(-1, 1)` — COSMETIC RNG (the sprite angle only): never modelled. ⛓ A falling
+ * drill runs no `hitUpdate` (its i-frame stops) and no `hitPlayer`, but `Drill.update`'s tail still runs (it tests only
+ * `destroy` and "die"): it can still hop, and the latch keeps it falling where it lands. A destroyed body stays an
+ * "Enemy" (a wall to another drill's hop) until `World.remove`, exactly as a killed one.
+ */
+export const DRILL_TERRAIN = Object.freeze({ water: 1, pit: 6, lava: 17, fallAlphaSpeed: 0.05, fallPull: 10 });
+
 export const DRILL = Object.freeze({
     /** `super(_x + Tile.w/2, _y + Tile.h/2)`. */
     dx: 8,
@@ -93,6 +114,7 @@ function play(d, name) {
  *   `lineBlocked(x0, y0, x1, y1)`  `collideLine("Solid", …)`
  *   `collides(rect)`       `collideTypes(solids, …)` for the hop
  *   `hitPlayer(d)`         the contact; returns the body as the call left it
+ *   `tileTypeAt(x, y)`     `getState()` — `nearestToPoint("Tile", x, y).t` (read only with `drillTerrainSwitch` ON)
  * @returns {{d, contact: boolean, hopped: boolean}}
  */
 export function stepDrill(s, ctx) {
@@ -101,12 +123,37 @@ export function stepDrill(s, ctx) {
     let contact = false;
     // ── Enemy.update (activeOffScreen is never set for this class) ──
     if (ctx.onScreen(drillRect(d))) {
+        // ⛓ fidelity DRILLWATER D1: the terrain switch, then the pit's descent INSTEAD OF `super.update()` (OFF: absent)
+        let falling = false;
+        if (CONTACT_FIDELITY.drillTerrainSwitch && typeof ctx.tileTypeAt === 'function') {
+            const t = ctx.tileTypeAt(d.x, d.y) ?? 0;
+            if (t === DRILL_TERRAIN.water || t === DRILL_TERRAIN.lava) {
+                if (!d.destroy) d.terrainDeath = t === DRILL_TERRAIN.water ? 'water' : 'lava';
+                d.destroy = true;
+            } else if (t === DRILL_TERRAIN.pit && !d.fallInPit) {
+                d.fallInPit = true;
+            }
+            if (!d.destroy && d.fallInPit) {
+                falling = true;
+                d.x += (Math.floor(d.x / DRILL.tile) * DRILL.tile + DRILL.tile / 2 - d.x) / DRILL_TERRAIN.fallPull;
+                d.y += (Math.floor(d.y / DRILL.tile) * DRILL.tile + DRILL.tile / 2 - d.y) / DRILL_TERRAIN.fallPull;
+                // `Image.alpha`'s setter clamps to [0, 1]
+                d.alpha = Math.max(0, d.alpha - DRILL_TERRAIN.fallAlphaSpeed);
+                if (d.alpha <= 0) {
+                    d.destroy = true;
+                    d.fell = true;
+                    d.terrainDeath = 'pit';
+                }
+            }
+        }
         // `Mobile.death()`, at the end of `mobileUpdate`: a destroyed body fades 0.1 a tick and is removed at <= 0
-        if (d.destroy) {
+        if (falling) {
+            // the descent replaced `super.update()`: no fade, no `hitUpdate`, no `hitPlayer` this tick
+        } else if (d.destroy) {
             d.alpha -= DRILL.alphaFade;
             if (d.alpha <= 0) d.removed = true;
         }
-        if (!d.destroy) {
+        if (!falling && !d.destroy) {
             if (d.hitsTimer > 0) d.hitsTimer -= 1;
             if (d.anim !== 'die' && d.hitsTimer <= 0 && ctx.playerBox && rectsOverlapStrict(drillRect(d), ctx.playerBox)) {
                 contact = true;
