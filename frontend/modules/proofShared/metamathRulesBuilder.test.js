@@ -8,8 +8,9 @@
  * DataPackage tables (the file's item and location IDs). The output is then
  * compared field by field with the file.
  *
- * Cases: every committed MetaMath preset (all entrance_rule_mode 1, and their
- * slot_data predates sending the mode, so they also exercise the fallback),
+ * Cases: every committed MetaMath preset (all entrance_rule_mode 1; seed 1's
+ * slot_data sends the mode, the other seeds' slot_data predates it, so they
+ * exercise the fallback),
  * plus committed fixtures for modes 0, 2 and 3. The mode-2 fixture has six
  * starting statements, some with dependencies; the mode-3 fixture is player 1
  * of a Metamath + APQuest room, so four of its locations hold APQuest items.

@@ -5,7 +5,8 @@
 // whose world asked for it (option spoiler_data_in_slot_data). It is expanded
 // here, with the server's DataPackage, into the incremental sphere-log lines
 // sphereState.loadSphereLog already parses, and handed to sphereState, which
-// uses it only when no file's log is loaded (a file always beats the room).
+// uses it unless a file's log for the room's seed is loaded (a file of another
+// seed loses to the room; one of unknown seed still wins).
 //
 // The record (format 1):
 //   { format, seed_name, player, start: [item…], unreachable,

@@ -79,6 +79,7 @@ import {
     ruleTargetKeys as coreRuleTargetKeys, ruleTargetsOver,
 } from '../procgenCore/setEditorCore.js';
 import { mountSetEditor } from '../procgenCore/setEditorView.js';
+import { createSetMap } from './seedlingSetMap.js';
 // ⛓ LAB L2: a still drawn with the art and one drawn as rectangles are two pictures of one room.
 import { labStillKey } from './watchArt.js';
 
@@ -422,7 +423,33 @@ const SET_EXITS = Object.freeze({
             (_, i) => ({ value: String(i), label: `#${i}` }));
     },
     disconnectOp: (room, value) => ({ op: 'disconnect', room, exitIndex: Number(value) }),
+    /**
+     * ⛓ E3 — WHAT A `disconnect` WILL DO, said before the press: the exit ELEMENT is deleted (the format has no
+     * inert door), so every later exit of the room moves down one ordinal; and what is left between the two rooms.
+     */
+    disconnectEffect: (rows, room, value) => disconnectEffectOf(rows, room, Number(value)),
 });
+
+/**
+ * The sentence `SET_EXITS.disconnectEffect` says. Exported for the unit rows.
+ * @param {object[]} rows  `roomRowsOf`'s rows
+ */
+export function disconnectEffectOf(rows, room, index) {
+    const list = rows[room]?.exitList ?? [];
+    const ex = list[index];
+    if (!ex) return `room ${room} has no exit #${index} (it has ${list.length}) — the op would be refused`;
+    const later = list.slice(index + 1);
+    const shift = later.length
+        ? `ordinals SHIFT: ${later.map((e) => `#${e.index}→#${e.index - 1}`).join(', ')} of room ${room}`
+        : `no later exit of room ${room} renumbers`;
+    const sameWay = list.filter((e, i) => i !== index && e.to === ex.to).length;
+    const back = (rows[ex.to]?.exitList ?? []).filter((e) => e.to === room).length;
+    let left;
+    if (sameWay > 0) left = `room ${room} keeps ${sameWay} other exit(s) to room ${ex.to}`;
+    else if (back > 0) left = `the pair becomes ONE-WAY: room ${ex.to} → room ${room} remains`;
+    else left = `no link remains between rooms ${room} and ${ex.to}`;
+    return `deletes the ${ex.element} at (${ex.x},${ex.y}); ${shift}; ${left}.`;
+}
 
 /**
  * ⛓⛓ **A SEEDLING LOCATION IS AN OEL ENTITY AT EXACT PIXELS.** ⛔ Read out of
@@ -569,5 +596,10 @@ export function mountWatchSetEditor({
         addRoomOp: emptyLevel === null ? null : (at) => ({
             op: 'add-room', record: emptyLevel(), name: `room ${at}`,
         }),
+        /**
+         * ⛓ E3 — THE MAP: a derived 2D layout of this set on the overview canvas (`seedlingSetMap`). One provider
+         * per mount, so its remembered positions die with the document they were laid out for.
+         */
+        overviewMap: createSetMap({ parseOel: deps.parseOel, tileSize: deps.tileSize }),
     });
 }

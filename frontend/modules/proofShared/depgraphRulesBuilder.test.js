@@ -9,8 +9,9 @@
  * compared field by field with the file.
  *
  * Cases: every committed DepGraph preset (all entrance_rule_mode 1 with no
- * starting nodes, and their slot_data predates sending the mode and the graph
- * key, so they also exercise the fallback), plus committed fixtures for the
+ * starting nodes; seed 1's slot_data sends the mode and the graph key, the
+ * other seeds' slot_data predates both, so they exercise the fallback), plus
+ * committed fixtures for the
  * option values the presets don't cover: modes 0, 2 and 3, starting nodes
  * (randomized and in order), player 1 of a DepGraph + APQuest room, and the
  * real-server check's seed (strict, 53 random starting nodes, ten of them

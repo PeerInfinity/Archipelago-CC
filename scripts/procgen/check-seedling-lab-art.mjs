@@ -197,7 +197,8 @@ async function main() {
         const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
         const errors = [];
         page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
-        await page.goto(`${PAGE}?source=edit&level=4`, { waitUntil: 'domcontentloaded' });
+        // ⛓ Seedling editor E3: the SET overview opens on the MAP; this row reads the STRIP's cells.
+        await page.goto(`${PAGE}?source=edit&level=4&setView=strip`, { waitUntil: 'domcontentloaded' });
         await page.waitForFunction(() => window.__labArt?.status === 'ready', null, { timeout: 90000 });
         await page.fill('#editLoad', JSON.stringify(set));
         await page.click('#editLoadGo');
