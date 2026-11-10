@@ -671,7 +671,12 @@ def test_every_copy_of_the_client_is_byte_identical():
     recipes = json.loads((REPO / 'scripts' / 'data' / 'worldgen-package-recipes.json').read_text(encoding='utf-8'))
     for package in recipes['packages']:
         assert f'worlds/{package}/{CLIENT_NAME}' in found
-    assert _mismatches(REPO, source) == []
+    mismatches = _mismatches(REPO, source)
+    crlf = [where for where, data in _copies_on_disk(REPO) if where in mismatches and b'\r\n' in data]
+    assert mismatches == [], (
+        f'copies differ from worlds/spoiler_export_hook/{CLIENT_NAME}: {mismatches}'
+        + (f'; CRLF line endings in {crlf} — a checkout outside the `**/{CLIENT_NAME} text eol=lf` rule in'
+           ' .gitattributes (or a copy written with CRLF)' if crlf else ''))
 
 
 def test_the_pin_catches_a_mismatching_copy(tmp_path):
