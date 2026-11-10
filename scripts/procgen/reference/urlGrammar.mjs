@@ -192,6 +192,8 @@ const PARAM_NOTES = {
      */
     world: { field: { watch: null, lab: 'world' }, codec: 'a path to a WORLD BUNDLE `.zip` (a level set + a region library + the `world.json` that names them)', terms: ['content-source', 'region'] },
     room: { field: { watch: 'room', lab: 'room' }, codec: 'a non-negative integer INDEX into the held document\'s rooms — `urlParams.readRoomParam`, shared by both pages', terms: ['region'] },
+    /** ⛓ Seedling editor E3 — which view the SET overview opens on. Watch-only: the maze lab has no map. */
+    setView: { field: { watch: 'setView', lab: null }, codec: '`strip` opens the SET overview on the one-row strip; anything else (or absent) is the 2D MAP derived from the exits', terms: ['region'] },
     tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'solver'] },
     expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'certification'] },
     /**
@@ -290,6 +292,8 @@ const DEFAULTS_ON_EMPTY = {
          * "open no room", never `0`).
          */
         room: null,
+        /** ⛓ Seedling editor E3 — `readParams` answers `'map'` for an absent `?setView=` (listed like `room`). */
+        setView: 'map',
     },
     lab: M.mazeLab.readLabParams(''),
 };
