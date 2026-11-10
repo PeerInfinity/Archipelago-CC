@@ -660,6 +660,18 @@
             "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door under a 300 ms wall-clock BACKSTOP, the solve held in flight by the ROW (a wrapped page worker that starts and never answers — never the solve's speed) (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
         },
         {
+            "id": "seedling-js-runtime-solver-stop-button",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOLVER LIMIT OFF (the user 2026-11-10: a manual stop button). Runtime js + the solver mode ON on seedling_atlas, both limits at their defaults: level 12's door, the solve held in flight by the ROW (a wrapped page worker that starts and never answers). The Flash panel's Solver-section Stop is disabled, then enabled while the solve runs; pressed, it terminates the worker and the goal FAILS BY NAME (\"the solve was stopped by the player …\"); the game steps again and Stop greys out; the next walk solves in a FRESH worker and is done."
+        },
+        {
+            "id": "seedling-js-runtime-solver-limits-off",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOLVER LIMIT OFF (the user 2026-11-10: both limits off, in the panel). Runtime js + the solver mode ON on seedling_atlas: level 12's door → its exit solved at the defaults (js-runtime-L12-reach-exit, no pass row with a deadline); the Solver section's \"No work limit\" and \"Backstop off\" checkboxes write the settings and the page reads 0 / 0; the same walk from the same state solves with both off and finds the same plan (keys, verbs, pass, prefix, end). Un-ticked: 640 / 300 s again."
+        },
+        {
             "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -706,6 +718,12 @@
             "enabled": true,
             "category": "Seedling wasm runtime",
             "_comment": "seedling-gen-chestdoor-preset. The REAL wasm game (WebGPU, the seedling-wasm batch's launch) on the committed seedling_generated_chestdoor preset: the Playback Bot walks to the door chest region_0_0 - Chest (the WG engine stages the mounted set, the solver's tape opens the chest from below) and the row ends on its locationCheck — that location alone, the game's own pendingCheck of {level 0, tag 1}, no error status. Room 1's chest (two goals, Q5) is not walked."
+        },
+        {
+            "id": "seedling-wasm-runtime-solver-stop-button",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "SOLVER LIMIT OFF (the user 2026-11-10: a manual stop button). The REAL wasm game (WebGPU) on seedling_generated_chestdoor, both limits at their defaults: the Playback Bot walks to region_0_0 - Chest and the ROW keeps the engine's solve in flight (its solver worker starts and never answers). The Solver section's Stop is enabled while the engine solves; pressed, it stops the solve through the shared worker service (terminated) and the walk FAILS BY NAME; the engine is idle (released) and Stop greys out; the next walk opens the chest (its locationCheck)."
         },
         {
             "id": "seedling-js-runtime-loop-play-clock-drains-mana",
