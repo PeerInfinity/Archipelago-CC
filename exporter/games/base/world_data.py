@@ -18,8 +18,9 @@ logger = logging.getLogger(__name__)
 # Options that only decide what the server SENDS, with no effect on the world's logic, pool or placements,
 # are not exported: no rules document reader needs them, and exporting one would move every export of
 # every package that defines it. `rules_in_slot_data_max_kb`: a world_generator package's cap on its
-# slot_data rules document (world_generator/_embedded_rules.py).
-TRANSPORT_ONLY_OPTIONS = frozenset({'rules_in_slot_data_max_kb'})
+# slot_data rules document (world_generator/_embedded_rules.py). `spoiler_data_in_slot_data`: asks the
+# optional Spoiler Export Hook apworld (worlds/spoiler_export_hook) for this slot's sphere record.
+TRANSPORT_ONLY_OPTIONS = frozenset({'rules_in_slot_data_max_kb', 'spoiler_data_in_slot_data'})
 
 
 class WorldDataMixin:
@@ -275,11 +276,12 @@ class WorldDataMixin:
         # hook which wraps fill_slot_data() on both the base class and all subclasses)
         # A world_generator package's `worldgen_rules` (its whole rules document, for the web client) is
         # NOT re-exported: the export IS a rules document, and carrying it would double every export.
-        # Its `worldgen_rules_omitted` note is kept.
+        # Its `worldgen_rules_omitted` note is kept. Likewise `spoiler_data` (worlds/spoiler_export_hook): it
+        # is this room's own sphere record, for a client with no rules file, and the export has its own log.
         if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
             slot_data = world._cached_slot_data
-            if isinstance(slot_data, dict) and 'worldgen_rules' in slot_data:
-                slot_data = {k: v for k, v in slot_data.items() if k != 'worldgen_rules'}
+            if isinstance(slot_data, dict) and ('worldgen_rules' in slot_data or 'spoiler_data' in slot_data):
+                slot_data = {k: v for k, v in slot_data.items() if k != 'worldgen_rules' and k != 'spoiler_data'}
             if slot_data:
                 world_data['slot_data'] = slot_data
 
