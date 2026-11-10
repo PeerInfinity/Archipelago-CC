@@ -61,7 +61,7 @@ import {
     DEFAULT_REGION_COST,
     DEFAULT_LOCATION_COST,
 } from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
-import { preloadScriptContent } from '../procgen/preloadContent.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');

@@ -69,7 +69,7 @@ import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 import { argvHelp } from './argvHelp.js';
 import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
-import { preloadScriptContent } from './preloadContent.mjs';
+import { preloadScriptContent } from './preloadContent.js';
 
 await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 

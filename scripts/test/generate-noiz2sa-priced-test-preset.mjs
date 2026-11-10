@@ -21,7 +21,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
-import { preloadScriptContent } from '../procgen/preloadContent.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');

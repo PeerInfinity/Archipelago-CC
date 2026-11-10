@@ -52,7 +52,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { generatePythonOrExit } from './repoPython.js';
-import { preloadScriptContent } from './preloadContent.mjs';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 

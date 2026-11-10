@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
 import { stampLoopCosts } from './presetLoopCosts.mjs';
-import { preloadScriptContent } from '../procgen/preloadContent.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 
 const here = path.dirname(fileURLToPath(import.meta.url));

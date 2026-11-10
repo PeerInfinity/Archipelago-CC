@@ -37,7 +37,7 @@ import {
 
 
 import { argvHelp } from './argvHelp.js';
-import { preloadScriptContent } from './preloadContent.mjs';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));

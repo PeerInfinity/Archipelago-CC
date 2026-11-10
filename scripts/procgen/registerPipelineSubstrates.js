@@ -35,7 +35,7 @@ import { substrateRegistry } from '../../frontend/modules/shared/procgen/substra
 import { pipelineLayoutsOf } from '../../frontend/modules/procgenCore/substratePredicates.js';
 import { isLibrarySourceId } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { UsageError } from './cliRun.js';
-import { preloadScriptContent } from './preloadContent.mjs';
+import { preloadScriptContent } from './preloadContent.js';
 
 let loading = null;
 

@@ -62,7 +62,7 @@ import {
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
-import { preloadScriptContent } from './preloadContent.mjs';
+import { preloadScriptContent } from './preloadContent.js';
 
 await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
