@@ -167,6 +167,10 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
             if (Number.isFinite(budgetWork) && budgetWork > 0) {
                 snap.budget.limit = { shouldStop: budgetWork,
                     ...(windowed && Number.isFinite(windowAt) ? { window: windowAt } : {}) };
+            } else if (budgetWork === 0) {
+                // ⛓ SOLVER LIMIT OFF — "no work limit" (`SOLVER_BUDGET_NO_LIMIT`): said, never a limit of 0. No
+                // deadline is installed, so nothing counts work (`spent` stays 0); the view says so by name.
+                snap.budget.limit = { shouldStop: null, noLimit: true };
             }
             snap.budget.wallBySite = Object.fromEntries(wallBySite);
             const rate = rateOf(spent, snap.budget.limit, now);

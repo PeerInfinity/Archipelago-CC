@@ -120,7 +120,9 @@ self.onmessage = (event) => {
         // ⛓ SOLVE-PROGRESS S3 — the `request` stamp is READ from the request (and the envelope's `progressAttempt`,
         // the service's held-retry label); it is built only for a tap, and nothing is written back.
         const budgetWork = tape.budgetWork ?? null;
-        const windowAt = budgetWork !== null ? upgradeWindowWork(budgetWork, tape.upgradeWindowWork ?? null) : null;
+        // ⛓ SOLVER LIMIT OFF — no window without a limit (0 = no work limit: `passShouldStop` installs none either).
+        const windowAt = Number.isFinite(budgetWork) && budgetWork > 0
+            ? upgradeWindowWork(budgetWork, tape.upgradeWindowWork ?? null) : null;
         const tap = progress ? createProgressTap({ passes, clock, budgetWork, windowAt,
             minIntervalMs: progressIntervalMs(msg.progressIntervalMs),
             request: requestIdentity(tape, { passes, windowAt, attempt: msg.progressAttempt ?? null }),
