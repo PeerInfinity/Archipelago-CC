@@ -53,8 +53,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 63,
-            "count": 102,
+            "browser": 64,
+            "count": 103,
             "id": "check"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 516,
-        "browser": 213,
-        "cited": 272,
-        "files": 534,
+        "blockStyle": 517,
+        "browser": 214,
+        "cited": 273,
+        "files": 535,
         "lineStyle": 18,
-        "withDocblock": 534,
-        "withFlags": 453
+        "withDocblock": 535,
+        "withFlags": 454
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3698,6 +3698,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-editor-e2 — **SEEDLING EDITOR E2, IN A REAL BROWSER**: entity links on `watch.html?source=edit`.",
             "path": "scripts/procgen/check-seedling-editor-e2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check",
+                "json",
+                "settled"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-editor.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-editor-e3.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-editor-e3 — **SEEDLING EDITOR E3, IN A REAL BROWSER**: the level set as a 2D MAP on `watch.html?source=edit`.",
+            "path": "scripts/procgen/check-seedling-editor-e3.mjs"
         },
         {
             "argvHelpers": [

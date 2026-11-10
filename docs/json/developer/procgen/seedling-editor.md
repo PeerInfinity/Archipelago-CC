@@ -65,7 +65,7 @@ The session record is `{set, overlay}`. The region atlas is **derived** from the
 
 The overlay (`seedlingSetOverlay.js`, built on `procgenCore/setOverlay.js`) is `{schema_version, overlay_id?, rooms: {[i]: {name?, locations?, rules?}}, neverEnter?, regions?}`, keyed by room index. It is pure data: `overlayToDeriveInput` builds the derivation's location guard from it on every derivation, because an op payload cannot hold a function. Rule targets are `exit:<exit_id>` or `loc:<name>`. Exit ids are the derivation's own (`out_<type>_<x>_<y>`, `in_L<from>_<x>_<y>`, and the pit spellings). `regions` lives in the overlay because the level-set schema allows no extra top-level fields.
 
-**Rooms are a one-row grid.** `bounds` is `{w: rooms.length, h: 1}`; row 1 is refused. A room's position is its id, so a second axis would address nothing. This also makes `rectCopy`/`rectPasteOps` copy rooms between sets with no extra code. A paste past the end is refused (`writeOps` cannot see where the end is); grow a set with `add-room`. The cell descriptor is `{room: {name, source, music, music_override_exempt?, snow_gradient?}, overlay}`, with no `id`.
+**Rooms are a one-row grid.** `bounds` is `{w: rooms.length, h: 1}`; row 1 is refused. A room's position is its id, so a second axis would address nothing. (The page's 2D MAP of a set is a view of this grid, not a second axis: see "The map" below.) This also makes `rectCopy`/`rectPasteOps` copy rooms between sets with no extra code. A paste past the end is refused (`writeOps` cannot see where the end is); grow a set with `add-room`. The cell descriptor is `{room: {name, source, music, music_override_exempt?, snow_gradient?}, overlay}`, with no `id`.
 
 ### Set ops (`SET_OP_KINDS`)
 
@@ -215,7 +215,7 @@ The door links (`to`, `fallthrough`) belong to the set editor's `connect` and ar
 
 No moving platforms exist in this game, so a rope's end is the only path to edit. Removing a rope's node is not offered, because the game cannot load a rope without one, and there is nothing to reorder with one node.
 
-**What a save refuses.** Only what the game cannot load: a rope with no node, which kills the level loader on a null point. The OEL download, ▶ load, closing a room into a set and a generated room's save all refuse it with the same sentence. The payload download still works, since a payload is unfinished work and not something the game reads.
+**What a save refuses.** Only what the game cannot load: a rope with no node, on which the level loader dies, or reuses an earlier rope's end. AS3's `var pt` is function-scoped (`Game.as` ~2419–2427), so a nodeless rope after a noded one in the same room takes that rope's end `x`; with no earlier rope it dies on a null point. The OEL download, ▶ load, closing a room into a set and a generated room's save all refuse it with the same sentence. The payload download still works, since a payload is unfinished work and not something the game reads.
 
 **What only warns**, in `#genEditLinkIssues`, because the room loads and plays:
 
@@ -242,13 +242,40 @@ The boot is the spawn the still frame drew the player at. A SOLVED verdict stamp
 
 A level set loaded in the LOAD box, or `#editLoadVanilla` (which derives the vanilla rooms as a `record` set from the map extract and manifest the page already holds, fetching nothing), opens a set session through `seedlingDemo/watchSetEditor.js`, the Seedling binding of `mountSetEditor` ([Procgen Editing Core](./editing-core.md#the-set-editor)). The room adapter's `levelSetSource` is `setSessionRoomSource(session)`. An overlay pasted into the box is recognised by shape: its `rooms` is an object keyed by index, where a set's is an array.
 
-- **The strip** shows one cell per room, matching the adapter's one-row grid. Exits are drawn as arcs above it, one line per pair of rooms; a two-way door is one line with two heads. The selected room's incoming links are highlighted. Thumbnails are drawn by the page's `previewLevel` into an offscreen canvas with its readouts turned off.
+- **The overview** is one canvas that shows either the MAP (below; the default) or the STRIP. `#editSetMapView` toggles it and `?setView=strip` opens on the strip.
+- **The strip** shows one cell per room, matching the adapter's one-row grid. Exits are drawn as arcs above it, one line per pair of rooms; a two-way door is one line with two heads. The selected room's incoming links are highlighted. Thumbnails are drawn by the page's `previewLevel` into an offscreen canvas with its readouts turned off. It is kept because RECT/PASTE between sets addresses a range of room INDICES, which reads as a contiguous run only here.
 - **Linking** is a two-click page tool: click the source room, then the target, and one `connect` lands. The return door is chosen by ordinal; a target without that exit is refused with its real count.
-- **Two sessions, one undo key.** The strip binds its keys to the strip canvas, the room editor to the document, and a stopper keeps one keypress from reaching both. The identity line says which session an undo will hit. A renumbering op (`reorder`, `add-room`, `remove-room`) discards an open room session's unsaved edits, saying how many, and reopens the room at its new index. Download is refused while a room session holds unsaved edits.
+- **Two sessions, one undo key.** The overview (map or strip) binds its keys to its canvas, the room editor to the document, and a stopper keeps one keypress from reaching both. The identity line says which session an undo will hit. A renumbering op (`reorder`, `add-room`, `remove-room`) discards an open room session's unsaved edits, saying how many, and reopens the room at its new index. Download is refused while a room session holds unsaved edits.
 - **Forms** are derived: the manifest form from `SET_FIELDS`, `named_rooms` keys and arrival positions from `levelSetValidator.NAMED_ROOMS`, the music range from the game's song list. Rule targets are recomputed when the record or selection changes (an op, an undo, a selection), never per keystroke. Arrival (`in_*`) exits are marked as gating nothing.
 - **REPORT** runs `rulesJsonOf(session, deps, {compileRegionAtlas})` and lists: `validateLevelSet`, `validateRegionAtlas` with schema, unwired exits by room and ordinal, every free edge (read from the compiled rules, whose `access_rule` is what the world will do), every authored rule that reaches no compiled edge, unreachable regions by name, and the overlay's location count against the compiled one. The `rules.json` download is disabled, with its reason shown, while the graph does not close, the set is invalid or a rule is inert; the set and overlay downloads stay available. A room with no door at all is dropped by the derivation, so what the reachability check catches is an island of two or more rooms linked only to each other.
 - **Downloads.** `downloadSet(session)` validates, stamps once and returns the set, the stamped overlay and the `apMappingInvalidation` companion. `rules.json` is written with `stringifyRulesJson`. ▶ load in wasm ships the whole set through `validatedChunks`, booting at the manifest's `start`.
 - **Lifetimes.** Each LOAD remounts the panel on its own lifetime, so an old mount's listeners never act on a new session.
+
+### The map
+
+The map (`seedlingDemo/seedlingSetMap.js`, handed to the shared mount as `overviewMap`) is a 2D layout of the set **derived from its exits**. The game stores no room position (a room is an id), so nothing about the map is stored: not in the set, its OEL or the overlay. A set always renders as derived, and every click is still answered as a room index.
+
+**Which way a door leads.** A door within 20% of an edge of its room leads through that edge; an interior door takes the side its arrival lands on in the target, reversed; anything else (most stairs, pits, `named_rooms` arrivals) has no direction. Over the vanilla 116 most doors lead through their own edge, and most teleporters leave one edge and arrive at the opposite edge of the target, which is what makes a direction honest.
+
+**The layout.** Breadth-first from the manifest's `start` room: a room reached through a directed door goes one cell that way, or to the nearest free cell on that side; a room reached without a direction takes the nearest free cell; rooms no link reaches start a new group to the right. A uniform grid cannot honour every door (a hub room has several on one side), so the layout aims for the right side rather than adjacency; a unit row pins that the directions place more links on their side than a direction-blind layout does.
+
+**Stability.** The layout is a function of the exit graph alone, so an edit that changes no door moves nothing. While the rooms stay the same rooms (count, names and sizes), a `connect`, a `disconnect` or their undo moves **no** room: the new link is drawn where it falls. A renumbering (`add-room`, `remove-room`, `reorder`) re-derives the layout, and RE-LAYOUT (`#editSetMapRelayout`) asks for it at any time.
+
+**What it draws.** Each room's still (the strip's thumbnail, letterboxed) in its own cell. Doors are one line per pair of rooms, two heads for two-way; pits and `named_rooms` arrivals are separate lines, marked `pit` and `★` (the key is spelled out when highlighted). The selected room's links in and out are highlighted, and its doors are ticked with their ordinals.
+
+**Gestures on the map** (the room editor's table above holds the rest):
+
+| Gesture | Key | What it does |
+|---|---|---|
+| SELECT | click (nothing armed) | selects the room; its links in and out are highlighted |
+| OPEN | double-click | opens the room in the room editor, as the rooms table's OPEN does |
+| CONNECT | `c` | the source room, optionally a door tick on it (picks that exit), then the target: one `connect`, with the return door from `#editSetTargetExit` |
+| DISCONNECT | `d` | first click on a link picks the door it means (the room at the nearer end; the exit list chooses among several) and says what the op will do, the ordinal shift included (`#editSetMapNote`); a second click on the same link applies one `disconnect`. A pit or a `named_rooms` arrival is refused by name |
+| ZOOM | `+` / `=`, `-`, `0` (fit), Ctrl+wheel | zooms the map; the panel scrolls to pan |
+| (clear the tool) | `Escape` | disarms CONNECT or DISCONNECT and drops a picked link |
+| UNDO / REDO | `Ctrl/Cmd+Z` with the map focused | the SET session's undo |
+
+Every refusal is the adapter's own sentence (self-join, a return ordinal the target lacks, an exit with children, a door a location is marked on). Tests: `seedlingEditorE3.test.js`, the `overviewMap` rows of `procgenCore/setEditorView.test.js`, and the browser row `scripts/procgen/check-seedling-editor-e3.mjs`.
 
 **Control ids.** `genEdit*` is a control both arms mount; `edit*` is a control only the EDIT arm has (inside `#editOnly`). `scripts/procgen/check-seedling-editor-arm.mjs` checks this over the live DOM.
 
