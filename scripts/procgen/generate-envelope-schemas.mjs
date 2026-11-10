@@ -4,7 +4,7 @@
  * envelope kind to `frontend/schema/envelopes/<kind>.schema.json` (§5au item 9).
  *
  * The schemas are generated, never typed: each mode's `*_ENVELOPE_FIELDS`
- * table (sphereSteps.js / spiralSteps.js / topDownSteps.js) declares every
+ * table (sphereSteps.js / spiralSteps.js / topDownSteps.js / entranceShuffleSteps.js) declares every
  * top-level field with its type, the step that writes it and whether it is
  * public or internal, and `envelopeSchema` (steppedPipeline.js) turns that
  * into JSON Schema 2020-12 with `"additionalProperties": false`. Marking is
@@ -36,6 +36,7 @@ const MODES = [
     ['frontend/modules/procgenPipeline/sphereSteps.js', 'sphereEnvelopeSchema'],
     ['frontend/modules/procgenPipeline/spiralSteps.js', 'spiralEnvelopeSchema'],
     ['frontend/modules/procgenPipeline/topDownSteps.js', 'topDownEnvelopeSchema'],
+    ['frontend/modules/procgenPipeline/entranceShuffleSteps.js', 'entranceEnvelopeSchema'],
 ];
 
 /** `[{kind, path, text}]`, one per mode, in MODES order. */
