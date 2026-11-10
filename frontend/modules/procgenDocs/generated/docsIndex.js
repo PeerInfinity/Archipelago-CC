@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1272,
         "indexHeadings": 2,
-        "lines": 35483,
+        "lines": 35490,
         "pages": 4,
-        "words": 525757
+        "words": 526093
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -274,7 +274,7 @@ export const DOCS_INDEX = frz({
             "file": "concepts.md",
             "h1": "Concepts",
             "headings": 20,
-            "lines": 234,
+            "lines": 241,
             "links": [
                 "gotchas.md",
                 "paths-and-obstacles.md",
@@ -283,7 +283,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 4091
+            "words": 4427
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
