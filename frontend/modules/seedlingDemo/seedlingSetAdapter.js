@@ -79,6 +79,7 @@
  * come to disagree.
  */
 
+import { saveRefusal } from './entityLinks.js';
 import {
     canonicalJson, createEditSession, foldEdits, group,
 } from '../procgenCore/editCore.js';
@@ -1682,6 +1683,9 @@ export function setSessionRoomSource(session) {
  * @param {number} room         the room index the room session was opened on
  */
 export function closeRoomSession(setSession, roomSession, room) {
+    // ⛓ E2 — a set holding a room the game's loader dies on is not a set anyone can play.
+    const unloadable = saveRefusal(roomSession.record(), { schema: null });
+    if (unloadable) fail(`seedlingSetAdapter: room ${room} — ${unloadable}`);
     const result = setSession.apply({ op: 'replace-room', room, record: roomSession.record() });
     if (!result.ok) {
         fail(`seedlingSetAdapter: closing room ${room} into the set session was REFUSED — `

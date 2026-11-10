@@ -63,6 +63,11 @@ import { createLifetime } from './watchLifetime.js';
 import {
     EditCoreError, describeOps, descriptorFieldsOf, rectClearOps, rectFillOps, rectMoveOps,
 } from '../procgenCore/editCore.js';
+import {
+    bindOps, describeLinks, isLinkable, isPathed, linkIssues, linkShapes, linksOf, ropeEndOp, solverNotes,
+    unlinkableReason,
+} from './entityLinks.js';
+import { tileAtOel } from './procgenLevel.js';
 
 /**
  * ⛓⛓ **THE PANEL'S OWN GESTURES** (Seedling editor E1) — `editorView` page
@@ -70,11 +75,15 @@ import {
  * FILL and CLEAR are two-click rectangles (like RECT); MOVE spends the RECT
  * selection at one click. Each lands as ONE group, so one undo takes it back.
  */
-export const PANEL_TOOLS = Object.freeze({ FILL: 'fill', CLEAR: 'clear', MOVE: 'move' });
+export const PANEL_TOOLS = Object.freeze({
+    FILL: 'fill', CLEAR: 'clear', MOVE: 'move', LINK: 'link', NODE: 'node',
+});
 const PANEL_TOOL_ROWS = Object.freeze([
     Object.freeze({ id: PANEL_TOOLS.FILL, label: 'FILL a rectangle', key: 'l' }),
     Object.freeze({ id: PANEL_TOOLS.CLEAR, label: 'CLEAR a rectangle', key: 'x' }),
     Object.freeze({ id: PANEL_TOOLS.MOVE, label: 'MOVE the selection', key: 'm' }),
+    Object.freeze({ id: PANEL_TOOLS.LINK, label: 'LINK a group', key: 'k' }),
+    Object.freeze({ id: PANEL_TOOLS.NODE, label: 'NODE a rope end', key: 'n' }),
 ]);
 
 /** ⛓ The two paste kinds (`#genEditPasteMode`): `add` is the paste every payload so far was made with. */
@@ -1553,8 +1562,148 @@ export function mountWatchEditor({
             },
         },
     ];
+    /* ── ⛓⛓⛓ LINK · NODE — what an entity is wired to (E2, `entityLinks`) ── */
+
+    /** The picked body, by its place in `entities` and what stood there; a stale pick resolves to `null`. */
+    let linkPick = null;
+    let pickTool = null;
+    let shiftHeld = false;
+    const showLinksBox = $('genEditShowLinks');
+    const pickNow = () => {
+        const e = linkPick ? host.record()?.entities?.[linkPick.index] : null;
+        return e && e.type === linkPick.type && e.x === linkPick.x && e.y === linkPick.y ? linkPick.index : null;
+    };
+    const setPick = (index) => {
+        const e = index === null ? null : host.record().entities[index];
+        linkPick = e ? { index, type: e.type, x: e.x, y: e.y } : null;
+    };
+    const cellIndices = (record, tx, ty) => record.entities.flatMap((e, i) => {
+        const at = tileAtOel(e.x, e.y);
+        return at.tx === tx && at.ty === ty ? [i] : [];
+    });
+    /**
+     * ⛓⛓ THE BODY A LINK CLICK MEANT. One body that can take part is that body. Several are the existing TARGET box's
+     * question (`#genEditWhich`): it lists the cell, the reader picks, and clicking the cell again takes the pick.
+     */
+    const linkBodyAt = (c, fits, nothing) => {
+        const record = host.record();
+        const inCell = cellIndices(record, c.tx, c.ty);
+        const able = inCell.filter((i) => fits(record.entities[i].type));
+        if (able.length === 1) return able[0];
+        if (able.length === 0) {
+            sayBad(inCell.length === 0 ? `(${c.tx},${c.ty}) holds no body — ${nothing}`
+                : unlinkableReason(record, inCell[inCell.length - 1], { schema }) ?? nothing);
+            return null;
+        }
+        if (whichSel && whichCell === `${c.tx},${c.ty}` && whichSel.value !== '') {
+            const chosen = inCell[Number(whichSel.value)];
+            if (able.includes(chosen)) return chosen;
+            sayBad(unlinkableReason(record, chosen, { schema }) ?? nothing);
+            return null;
+        }
+        if (!whichSel) return able[able.length - 1];
+        fillWhich(c.tx, c.ty);
+        sayBad(`(${c.tx},${c.ty}) holds ${able.length} bodies this can address — pick one in the target box and click `
+            + 'the cell again');
+        return null;
+    };
+    const choose = (index, tool, what) => {
+        setPick(index);
+        pickTool = tool;
+        say(`${describeLinks(host.record(), index, { schema })} ${what}`);
+        renderLinks();
+        view.repaint();
+    };
+    const unpick = () => {
+        setPick(null);
+        say('nothing is picked');
+        renderLinks();
+        view.repaint();
+    };
+    const applyBuilt = (built) => {
+        if (built.refused) { sayBad(built.refused); return; }
+        view.apply(built);
+    };
+    const linkAt = (c) => {
+        const got = linkBodyAt(c, (type) => isLinkable(schema, type), 'click a button, a rope or what answers them');
+        if (got === null) return;
+        const cur = pickNow();
+        if (cur === null) {
+            choose(got, PANEL_TOOLS.LINK, 'Click its new partner; Shift-click for a new group of the two.');
+        } else if (got === cur && !shiftHeld) {
+            unpick();
+        } else {
+            applyBuilt(bindOps(host.record(), cur, got, { schema, fresh: shiftHeld }));
+        }
+    };
+    const nodeAt = (c) => {
+        const cur = pickNow();
+        const record = host.record();
+        if (cur === null) {
+            const got = linkBodyAt(c, (type) => isPathed(schema, type), 'click a rope');
+            if (got !== null) choose(got, PANEL_TOOLS.NODE, 'Click the column its end goes to.');
+            return;
+        }
+        const here = tileAtOel(record.entities[cur].x, record.entities[cur].y);
+        if (here.tx === c.tx && here.ty === c.ty) { unpick(); return; }
+        applyBuilt(ropeEndOp(record, cur, c.tx, { schema }));
+    };
+    panelTools.push(
+        { ...PANEL_TOOL_ROWS[3], at: linkAt },
+        { ...PANEL_TOOL_ROWS[4], at: nodeAt },
+    );
+
+    const linkBox = $('genEditLinkNote');
+    const issueBox = $('genEditLinkIssues');
+    let linkFacts = { record: null, links: [], issues: [], notes: [] };
+    const factsNow = () => {
+        const record = host.record();
+        if (linkFacts.record !== record) {
+            linkFacts = record && schema
+                ? {
+                    record,
+                    links: linksOf(record, { schema }),
+                    issues: linkIssues(record, { schema }),
+                    notes: solverNotes(record, { schema, buildWorld }),
+                }
+                : { record, links: [], issues: [], notes: [] };
+        }
+        return linkFacts;
+    };
+    /** ⛓ The readout of the room's links: the count, the pick, and every issue by name. */
+    function renderLinks() {
+        if (!linkBox) return;
+        const record = host.record();
+        if (!record || !schema) {
+            linkBox.textContent = record ? 'links: this page has no Ogmo schema, so it cannot say what is wired.' : '';
+            if (issueBox) issueBox.innerHTML = '';
+            return;
+        }
+        const { links, issues, notes } = factsNow();
+        const n = (kind) => links.filter((l) => l.kind === kind).length;
+        const cur = pickNow();
+        linkBox.textContent = `links: ${n('group')} group wire(s), ${n('rope')} rope(s), ${n('cross-room')} cross-room`
+            + `${cur === null ? '' : ` · ${describeLinks(record, cur, { schema })}`}`;
+        if (!issueBox) return;
+        issueBox.innerHTML = '';
+        for (const [cls, text] of [
+            ...issues.map((i) => [i.severity, `${i.severity === 'refuse' ? '⛔' : '⚠'} ${i.message}`]),
+            ...notes.map((t) => ['note', `⚠ ${t}`]),
+        ]) {
+            const li = doc.createElement('li');
+            li.className = `link-${cls}`;
+            li.textContent = text;
+            issueBox.appendChild(li);
+        }
+    }
+    if (showLinksBox) mine.on(showLinksBox, 'change', () => view.repaint());
+
     const panelShapes = () => {
         const out = [];
+        const room = host.record();
+        if (room && schema && (showLinksBox?.checked ?? true)) {
+            out.push(...linkShapes(room, { schema, selected: pickNow() }));
+        }
         if (panelCorner) out.push({ kind: 'rect', x: panelCorner.tx, y: panelCorner.ty, w: 1, h: 1 });
         if (view?.tool === PANEL_TOOLS.MOVE && view.clip && view.clipOrigin
             && view.clip !== spentClip) {
@@ -1577,6 +1726,8 @@ export function mountWatchEditor({
         if (panelCorner && c?.tool !== PANEL_TOOLS.FILL && c?.tool !== PANEL_TOOLS.CLEAR) {
             panelCorner = null;
         }
+        // ⛓ E2 — a pick dies with the tool that made it.
+        if (linkPick && c?.tool !== pickTool) setPick(null);
         render();
         if (onChange) onChange(c);
     };
@@ -1585,7 +1736,8 @@ export function mountWatchEditor({
         canvas,
         session: host,
         adapter,
-        cellAt,
+        // ⛓ E2 — `at(cell)` is handed a cell, so the Shift of a LINK click is read here.
+        cellAt: (event) => { shiftHeld = Boolean(event?.shiftKey); return cellAt(event); },
         commands,
         tools: [...tools, ...panelTools],
         shapes: panelShapes,
@@ -1783,6 +1935,9 @@ export function mountWatchEditor({
             }
         }
         renderTileArt();
+        renderLinks();
+        // ⛓ E2 — an undo or a redo moves the record with no gesture for the overlay to repaint after.
+        if (record !== lastRecord) view.repaint();
         lastRecord = record;
     };
 
@@ -1807,6 +1962,11 @@ export function mountWatchEditor({
         redoCommandId: REDO_COMMAND_ID,
         /** ⛓ E1 — re-draw the tile-art chips (the art finished loading, or the toggle moved). */
         refreshTileArt: () => { artDrawnWith = null; renderTileArt(); },
+        /** ⛓ E2 — the links of the room on screen, for a readout and a browser row. */
+        links: () => {
+            const { links, issues, notes } = factsNow();
+            return { links, issues, notes, picked: pickNow() };
+        },
         /**
          * ⛓⛓ **RETIRING `mine` IS WHAT DETACHES EVERY LISTENER THIS PANEL
          * REGISTERED** — its own, the palette's, the flags form's, the resize

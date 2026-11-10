@@ -11,7 +11,7 @@ import {
     crossRoomButtonsOf, inRoomLatchButtonsOf, IN_ROOM_PRESS_GATE_KIND, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
     parseSolidId, poleKillsOf, poleLightReaches, POLE_LIGHT_ARM, rowVerdict, ruleItemNames,
     deriveInRoomPoleEvents, inRoomPolesOf, poleThrustStances, BUTTON_GATE_KIND, IN_ROOM_POLE_GATE_KIND,
-    deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, ropePeerEffect, ropesOf, ropeVerdict,
+    deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, ropePeerEffect, ropesOf, ropeVerdict, encounterLockSides,
 } from './seedlingObstacleEvents.js';
 import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
 import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
@@ -159,6 +159,43 @@ describe('lock events (deriveLockEvents)', () => {
     it('ruleItemNames reads Has, HasAny/HasAll and nesting', () => {
         expect(ruleItemNames({ rule: 'Or', children: [has('a'), { rule: 'HasAny', args: { item_names: ['b', 'c'] } }] }))
             .toEqual(['a', 'b', 'c']);
+    });
+});
+
+describe('encounter-lock sides (encounterLockSides) — RULES rocklock-pocket', () => {
+    // A 1-tile-high corridor, tile 16: [0 1] L [3 4 ... ] with the lock at x=2. The west side holds the body.
+    const corridor = (width, body, extra = {}) => encounterLockSides({
+        width, height: 1, tile: 16, passable: () => true, lockTiles: [[2, 0]], closed: new Set(['2,0']),
+        bodies: [{ at: 'b@0,0', centre: body, runRange: null, ...extra }], reach: 20,
+    });
+    it('the side the body stands in CLEARS; the far side, out of every arm\'s reach, CANNOT', () => {
+        const sides = corridor(8, [8, 8]);
+        expect(sides.map((s) => s.verdict)).toEqual(['clears', 'cannot']);
+        // the steps INTO the lock: from the west moving E, from the east moving W
+        expect(sides.map((s) => s.steps)).toEqual([[{ tile: [2, 0], dir: 'E' }], [{ tile: [2, 0], dir: 'W' }]]);
+        expect(sides[1].beyond).toEqual(['b@0,0']);
+        expect(sides.map((s) => s.size)).toEqual([2, 5]);
+    });
+    it('a body the across-the-cut reach covers, or a chaser whose runRange covers the side, leaves it UNDECIDED', () => {
+        // 24 px from the east side's nearest tile point (x=48): beyond the default reach 20, inside the body's own 30
+        expect(corridor(8, [24, 8]).map((s) => s.verdict)).toEqual(['clears', 'cannot']);
+        expect(corridor(8, [24, 8], { reach: 30 }).map((s) => s.verdict)).toEqual(['clears', 'undecided']);
+        // 40 px: a chaser whose runRange is 40 comes to the lock's face
+        expect(corridor(8, [8, 8], { runRange: 40 }).map((s) => s.verdict)).toEqual(['clears', 'undecided']);
+        expect(corridor(8, [8, 8], { runRange: 39 }).map((s) => s.verdict)).toEqual(['clears', 'cannot']);
+    });
+    it('a body whose own solid fills its tile stands in the side of a 4-neighbour', () => {
+        const sides = encounterLockSides({
+            width: 5, height: 1, tile: 16, passable: (x) => x !== 0, lockTiles: [[2, 0]], closed: new Set(['2,0']),
+            bodies: [{ at: 'turret@0,0', centre: [8, 8], runRange: null }], reach: 0,
+        });
+        expect(sides.map((s) => s.verdict)).toEqual(['clears', 'cannot']);
+    });
+    it('a lock with no counted body clears from every side; a side the flood never reaches is not a side', () => {
+        const none = encounterLockSides({
+            width: 5, height: 1, tile: 16, passable: (x) => x !== 4, lockTiles: [[2, 0]], closed: new Set(['2,0']), bodies: [], reach: 0,
+        });
+        expect(none.map((s) => [s.verdict, s.size])).toEqual([['clears', 2], ['clears', 1]]);
     });
 });
 

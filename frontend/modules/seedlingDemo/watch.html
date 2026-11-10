@@ -1309,6 +1309,12 @@
       <button id="genEditRedo" disabled title="Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y">REDO</button>
       <button id="genEditSolve" disabled>SOLVE — certify what is on screen</button>
     </div>
+    <!-- ⛓ E2 — what the room's entities are wired to. LINK (k) and NODE (n) are gestures, in the row above. -->
+    <div id="genEditLinks">
+      <label title="draw each group wire and rope span over the room"><input type="checkbox" id="genEditShowLinks" checked> links</label>
+      <span id="genEditLinkNote"></span>
+      <ul id="genEditLinkIssues"></ul>
+    </div>
     <!-- ⛓ THE TYPED ATTRIBUTE FORM — one input per value the `.oep` declares
          for the selected type, carrying that declaration's own min/max. It
          WRITES the JSON box above and re-reads it; the box stays the ONE value
@@ -1332,7 +1338,8 @@
          tile TYPE (`TILE_COLUMN_TO_TYPE`'s own name), its cliffside and its
          bodies — the first time this page says what is under the cursor. -->
     <div class="line">
-      <span id="genEditCellNote" class="note"></span>
+      <!-- ⛓ E2 — it keeps its line when empty: a hover that adds one moves the canvas between a press and its release. -->
+      <span id="genEditCellNote" class="note" style="display:block;line-height:1.4;min-height:1.4em"></span>
     </div>
     <div class="line">
       <span id="genEditCert" class="note"></span>

@@ -37,6 +37,9 @@
 |-------|---------|
 | `stateManager:rulesLoaded` | Resets sphere state and auto-loads sphere log from preset directory |
 | `stateManager:snapshotUpdated` | Updates current sphere based on newly checked locations |
+| `client:roomSpoilerData` | Loads the room's spoiler data (expanded by `client/core/spoilerData.js`) as the log, only while no file's log is loaded |
+
+**A file always beats the room.** `SphereState.logOrigin` is `'file'` (a preset's `.jsonl`, an embedded or uploaded log) or `'room'`. A room log is refused while a file's log is loaded; a file's log replaces a room's. `reset()` (every `stateManager:rulesLoaded`) bumps `generation`, and the auto-loads pass the generation they were started for, so a fetch that finishes after the rules changed is dropped. A sphere whose log line names its sender (`received_from`, from the room's data with `own_slot_with_senders`) carries `receivedFrom: [{ player, location }]`; no other sphere has the field.
 
 ## Public Functions
 
@@ -57,7 +60,7 @@ Registered with `centralRegistry`:
 | `getSphereByIndex(int, frac)` | `int: number, frac: number` | `Object` | Gets specific sphere data |
 | `getAllSpheresForInteger(int)` | `int: number` | `Array` | Gets all fractional spheres for an integer |
 | `getCurrentPlayerId()` | - | `string` | Returns current player ID |
-| `loadSphereLog(path, content)` | `path: string, content?: string` | `Promise` | Manually loads sphere log |
+| `loadSphereLog(path, content, options)` | `path: string, content?: string, options?: { origin: 'file'\|'room', generation }` | `Promise<boolean>` | Manually loads sphere log (origin `'file'` by default) |
 | `setCurrentPlayerId(id)` | `id: string` | - | Sets current player and re-filters data |
 | `isFocusedMode()` | - | `boolean` | Returns whether this is a focused test log |
 | `getFocusLocations()` | - | `Array` | Returns locations to focus on in focused mode |
