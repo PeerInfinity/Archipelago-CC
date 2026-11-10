@@ -236,7 +236,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 514,
         "browser": 211,
-        "cited": 272,
+        "cited": 273,
         "files": 532,
         "lineStyle": 18,
         "withDocblock": 532,
@@ -13401,7 +13401,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-fire-spinner.mjs",
@@ -13435,6 +13437,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
                 }
             ],
             "inheritedFlags": [
