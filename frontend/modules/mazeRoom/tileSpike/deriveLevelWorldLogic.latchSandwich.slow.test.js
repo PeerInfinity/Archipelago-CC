@@ -28,7 +28,9 @@ describe('latch sandwich — L40 laid, native: the search count', () => {
         const bare = unlayLatches();
         const on = deriveLevelWorldLogic(L40(bare), HELPERS, { native: true });
         const off = deriveLevelWorldLogic(L40(bare), HELPERS, { native: true, latchSandwich: false });
-        expect(on.engine).toEqual({ searches: 267, states: 328_476, skipped: 0 });
+        // ⛓ R-A4b: 328,476 → 376,330 states (+14.6%): `unlayLatches` strips the buttons but not L40's flag-8 BossLock, a sided opener
+        // whose per-visit mark splits the search states. It adds no search (267), and this pin guards the prune's no-op, not a bound.
+        expect(on.engine).toEqual({ searches: 267, states: 376_330, skipped: 0 });
         expect(off.engine).toEqual(on.engine);
     }, 120_000);
     // ⛓ THE PRESS TARGETS, PRICED (session tile-lay-l40-latches; the in-world event class, half (a)): each latch's own press
