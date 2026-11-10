@@ -62,6 +62,7 @@ import {
     parentExitIdTowardChild,
 } from './procgenPipelineEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { recordedContentOf } from './worldContent.js';
 import {
     planSpheres,
     computeItemSpheres,
@@ -522,6 +523,8 @@ function stepCompile(env) {
             // ⛓ T0b — the world's concept list, so a rebuild realises its
             // appended gates as the concepts (omitted when it names none).
             ...recordedConceptsOf(c.regionParams),
+            // ⛓ CONTENT SETS C3 — the world's own content stack (omitted when it names none).
+            ...recordedContentOf(c.regionParams),
         },
     });
     const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), env.plan);

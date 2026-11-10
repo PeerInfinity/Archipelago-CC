@@ -1,0 +1,273 @@
+/**
+ * procgenPipeline/worldContent — **A WORLD NAMES ITS CONTENT STACK** (⛓ CONTENT
+ * SETS C3, ⚖ the user 2026-11-10: Q4 and Q8).
+ *
+ * Q4: a world selects a `content` stack per player, recorded in its slot's
+ * `procgen_metadata` block beside `concepts`. The default is each substrate's
+ * own pack, so every existing world compiles byte-equal.
+ * Q8: text, names and colours resolve at GENERATION and are written into the
+ * world document. So the stack is loaded once, BEFORE generation, and handed to
+ * the synchronous placers as data.
+ *
+ * The channel, end to end:
+ *
+ *   params.content            the pack ids the world names (default `[]`), beside
+ *                             `params.concepts` and validated like it
+ *   effectiveContentStack     ONE rule: the `defaultContentPack` of each substrate
+ *                             in the world's mix, in registry order, without
+ *                             duplicates, then `params.content` in order
+ *   loadContentSet            async: the stack → a frozen CONTENT SET
+ *                             `{ ids, concepts, text }` (`packConcepts`,
+ *                             `textLibrary`), after `assertPresents`
+ *   regionParams.contentSet   the loaded set, on the channel `params.concepts`
+ *                             uses (`sphereConfigHooks.assembleRegionParams`), so
+ *                             each region's `generateRegionCore` / `placeFromRules`
+ *                             receives it as `params.contentSet`
+ *   regionParams.content      the world's own list, which the drivers record as
+ *                             `procgen_metadata[p].content` (`recordedContentOf`)
+ *                             and `rebuildEnvelopeFromRulesJson` reads back
+ *
+ * ⛔ BYTE-EQUALITY. An EMPTY stack (no `params.content`, no substrate in the mix
+ * declaring a default pack) loads nothing — `readJson` is never called — and
+ * adds NO key to `regionParams`, the envelope or the document.
+ *
+ * ⛔ THE SET IS RUNTIME STATE, NOT DOCUMENT STATE. Its readers are functions.
+ * `JSON.stringify` omits it (a non-enumerable `toJSON` answering `undefined`),
+ * so a saved envelope keeps `regionParams.content` and drops `contentSet`; a
+ * resumed or rebuilt envelope re-attaches it (`attachContentSet`) before it
+ * generates. A placer that needs a set that was never loaded is refused by name
+ * (`assertContentLoaded`, called at the engine's region seam), so a generation
+ * entry point that forgot to load cannot silently build a world without its
+ * content.
+ */
+
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { loadPackStack, packsBaseUrl, PACK_ID_PATTERN } from '../contentPacks/contentPacks.js';
+import { createPackConcepts } from '../packConcepts/packConcepts.js';
+import { createTextLibrary } from '../textLibrary/textLibrary.js';
+import { assertPresents } from '../procgenCore/contentRoles.js';
+import { CONCEPTS } from '../procgenCore/concepts.js';
+
+/** The params key, the regionParams key and the `procgen_metadata[p]` key for the world's own list. */
+export const RECORDED_CONTENT_KEY = 'content';
+/** The regionParams key the loaded set rides on (runtime only: never serialised). */
+export const CONTENT_SET_KEY = 'contentSet';
+/** The registry-entry field naming a substrate's built-in pack. */
+export const DEFAULT_CONTENT_PACK_FIELD = 'defaultContentPack';
+/** The layers a content set reads; a pack's other layers (art, sound) are not fetched. */
+export const CONTENT_LAYERS = Object.freeze(['concepts', 'text']);
+
+export class WorldContentError extends Error {
+    constructor(message) {
+        super(`world content: ${message}`);
+        this.name = 'WorldContentError';
+    }
+}
+
+/** A refusal sentence for a `params.content` value, or null when it is a list of distinct pack ids. */
+export function contentParamRefusal(list) {
+    if (list === undefined || list === null) return null;
+    if (!Array.isArray(list)) return `params.content is not a list (${JSON.stringify(list)})`;
+    const seen = new Set();
+    for (const id of list) {
+        if (typeof id !== 'string' || !PACK_ID_PATTERN.test(id)) {
+            return `params.content names ${JSON.stringify(id)}, which is not a pack id (${PACK_ID_PATTERN})`;
+        }
+        if (seen.has(id)) return `params.content names "${id}" twice`;
+        seen.add(id);
+    }
+    return null;
+}
+
+/** Throws `WorldContentError` on a malformed `params.content`; returns the list (`[]` when absent). */
+export function assertContentParam(list) {
+    const refusal = contentParamRefusal(list);
+    if (refusal) throw new WorldContentError(refusal);
+    return list ?? [];
+}
+
+/** A registry entry's default pack id, or null. A malformed value is refused by name. */
+export function defaultContentPackOf(entry) {
+    const id = entry?.[DEFAULT_CONTENT_PACK_FIELD];
+    if (id === undefined || id === null) return null;
+    if (typeof id !== 'string' || !PACK_ID_PATTERN.test(id)) {
+        throw new WorldContentError(`entry "${entry?.id}"'s ${DEFAULT_CONTENT_PACK_FIELD} `
+            + `${JSON.stringify(id)} is not a pack id (${PACK_ID_PATTERN})`);
+    }
+    return id;
+}
+
+/**
+ * ⛓ **THE WORLD'S EFFECTIVE STACK — THE ONE RULE.** The `defaultContentPack` of
+ * each substrate in `substrateIds` (the world's mix; any order, repeats allowed),
+ * taken in REGISTRY order (`substrateRegistry.getAll()`: by id), without
+ * duplicates; then `content` (the world's `params.content`) in its own order. A
+ * pack the defaults already named keeps its first position: the stack is an
+ * override order, and one pack can only sit at one place in it.
+ *
+ * `registry` is injectable for tests; an id it does not hold contributes nothing.
+ */
+export function effectiveContentStack({ substrateIds = [], content = [], registry = substrateRegistry } = {}) {
+    const own = assertContentParam(content);
+    const inMix = new Set(substrateIds);
+    const out = [];
+    for (const entry of registry.getAll()) {
+        if (!inMix.has(entry.id)) continue;
+        const id = defaultContentPackOf(entry);
+        if (id && !out.includes(id)) out.push(id);
+    }
+    for (const id of own) if (!out.includes(id)) out.push(id);
+    return out;
+}
+
+const setBrand = new WeakSet();
+
+function freezeContentSet(ids, concepts, text) {
+    const set = { ids: Object.freeze([...ids]), concepts, text };
+    // A saved envelope drops the set (its readers are functions) and keeps the ids it came from.
+    Object.defineProperty(set, 'toJSON', { value: () => undefined, enumerable: false });
+    Object.freeze(set);
+    setBrand.add(set);
+    return set;
+}
+
+/** The content set of an empty stack: no concepts, no text. Shared and frozen. */
+export const EMPTY_CONTENT_SET = freezeContentSet([], createPackConcepts([]), createTextLibrary([]));
+
+/** True for a set `loadContentSet` built (or `EMPTY_CONTENT_SET`). */
+export function isContentSet(value) {
+    return value !== null && typeof value === 'object' && setBrand.has(value);
+}
+
+/**
+ * The browser's `{ base, readJson }`: `fetch` over `packsBaseUrl()` (the
+ * committed `frontend/packs/`, or `packs/` beside a bundled page). Node callers
+ * pass `contentPacks/nodePackIo.js`'s `nodePackIo()` instead.
+ */
+export function browserPackIo({ win = globalThis, base = packsBaseUrl() } = {}) {
+    return {
+        base,
+        readJson: async (url) => {
+            const r = await win.fetch(url, { cache: 'no-store' });
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+        },
+    };
+}
+
+/**
+ * ⛓ **LOAD THE STACK, ONCE, BEFORE GENERATION.** `stack` is an effective stack
+ * (`effectiveContentStack`); `io` is `{ base, readJson }` (default
+ * `browserPackIo()`). Returns a frozen content set
+ * `{ ids, concepts: createPackConcepts(loaded), text: createTextLibrary(loaded) }`,
+ * after `assertPresents` holds every pack concept's `presents` to `concepts`
+ * (the mechanic concept table).
+ *
+ * ⛔ An EMPTY stack returns `EMPTY_CONTENT_SET` without calling `readJson`.
+ * A pack that cannot be read or parsed is refused by name (`ContentPackError`).
+ */
+export async function loadContentSet(stack, { base, readJson, concepts = CONCEPTS } = {}) {
+    const ids = assertContentParam(stack);
+    if (!ids.length) return EMPTY_CONTENT_SET;
+    const io = readJson ? { base, readJson } : browserPackIo(base ? { base } : {});
+    const loaded = await loadPackStack(ids, { ...io, only: CONTENT_LAYERS });
+    const packConcepts = createPackConcepts(loaded);
+    assertPresents(packConcepts, concepts);
+    return freezeContentSet(ids, packConcepts, createTextLibrary(loaded));
+}
+
+/**
+ * The regionParams keys the world's content adds: `content` (its own list) when
+ * `params.content` is non-empty, `contentSet` when the set is non-empty. `{}`
+ * otherwise — so a world that names no content takes no new key.
+ *
+ * ⛔ A non-empty effective stack (for `substrateIds`) with no loaded set holding
+ * it is REFUSED by name: the entry point did not await `loadContentSet`.
+ */
+export function contentRegionParams({ params, contentSet = null, substrateIds = [] }) {
+    const own = assertContentParam(params?.content);
+    const stack = effectiveContentStack({ substrateIds, content: own });
+    if (!stack.length) return {};
+    if (!isContentSet(contentSet) || stack.some((id) => !contentSet.ids.includes(id))) {
+        throw new WorldContentError(`the world's content stack [${stack.join(', ')}] was not loaded `
+            + `(the set given holds [${isContentSet(contentSet) ? contentSet.ids.join(', ') : 'nothing'}]): `
+            + 'a generation entry point awaits loadContentSet before it builds the run');
+    }
+    return {
+        ...(own.length ? { [RECORDED_CONTENT_KEY]: [...own] } : {}),
+        [CONTENT_SET_KEY]: contentSet,
+    };
+}
+
+/**
+ * ⛓ The engine's region seam: the packs a region of `substrateId` needs (its
+ * entry's default pack, then the world's own `params.content`) must be in
+ * `params.contentSet`. Nothing needed ⇒ returns at once.
+ */
+export function assertContentLoaded(params, substrateId, registry = substrateRegistry) {
+    const needed = [];
+    const own = defaultContentPackOf(registry.get(substrateId));
+    if (own) needed.push(own);
+    for (const id of params?.[RECORDED_CONTENT_KEY] ?? []) needed.push(id);
+    if (!needed.length) return;
+    const set = params?.[CONTENT_SET_KEY];
+    const missing = needed.filter((id) => !isContentSet(set) || !set.ids.includes(id));
+    if (missing.length) {
+        throw new WorldContentError(`a "${substrateId}" region needs the content pack(s) [${missing.join(', ')}], `
+            + 'and no loaded content set holds them: the envelope was resumed or rebuilt without '
+            + 'attachContentSet, or its entry point never called loadContentSet');
+    }
+}
+
+/** `{content: [...]}` for the metadata block when the world names its own content, else `{}`. */
+export function recordedContentOf(regionParams) {
+    const list = regionParams?.[RECORDED_CONTENT_KEY];
+    return Array.isArray(list) && list.length ? { [RECORDED_CONTENT_KEY]: [...list] } : {};
+}
+
+/**
+ * ⛓ **RE-ATTACH THE SET TO A RESUMED OR REBUILT ENVELOPE.** `regionParams` holds
+ * the world's own `content` (recorded, or carried by a saved envelope);
+ * `substrateIds` the substrates in its mix. Loads the effective stack and returns
+ * `regionParams` with `contentSet` set — or `regionParams` ITSELF, untouched,
+ * when the stack is empty (no load, no new key).
+ */
+export async function attachContentSet(regionParams, { substrateIds = [], ...io } = {}) {
+    const stack = effectiveContentStack({ substrateIds, content: regionParams?.[RECORDED_CONTENT_KEY] ?? [] });
+    if (!stack.length) return regionParams;
+    const contentSet = await loadContentSet(stack, io);
+    return { ...(regionParams ?? {}), [CONTENT_SET_KEY]: contentSet };
+}
+
+/**
+ * The substrates a live envelope's regions use: its nodes' (sphere growth,
+ * rebuilt or resumed), its quota / mix keys with a positive value, and its start
+ * substrate. The `substrateIds` an envelope's `attachContentSet` takes.
+ */
+export function envelopeSubstrateIds(env) {
+    const ids = new Set();
+    for (const n of env?.nodes ?? []) if (n?.substrate) ids.add(n.substrate);
+    const c = env?.config ?? {};
+    for (const dict of [c.substrateQuotas, c.growthParams?.substrateQuotas, c.substrateMix, env?.opts?.substrateQuotas]) {
+        for (const [id, n] of Object.entries(dict ?? {})) if (Number(n) > 0) ids.add(id);
+    }
+    if (c.startSubstrate) ids.add(c.startSubstrate);
+    return [...ids];
+}
+
+/**
+ * ⛓ **A RESUMED OR REBUILT ENVELOPE, READY TO GENERATE.** Loads the envelope's
+ * effective stack (its `regionParams.content` over `envelopeSubstrateIds`) and
+ * sets the set on `env.config.regionParams` and `env.opts.regionParams` (the
+ * rebuild aliases the two). An empty stack leaves the envelope untouched. Returns
+ * `env`. The append path's entry points (the panel's import, `sphere-step append`)
+ * await this between `rebuildEnvelopeFromRulesJson` and `appendSphere`.
+ */
+export async function attachEnvelopeContent(env, io = {}) {
+    const holders = [env?.config, env?.opts].filter((h) => h && typeof h === 'object');
+    const current = holders.find((h) => h.regionParams)?.regionParams ?? {};
+    const next = await attachContentSet(current, { substrateIds: envelopeSubstrateIds(env), ...io });
+    if (next === current) return env;
+    for (const h of holders) if (h.regionParams === current || h === env.config) h.regionParams = next;
+    return env;
+}
