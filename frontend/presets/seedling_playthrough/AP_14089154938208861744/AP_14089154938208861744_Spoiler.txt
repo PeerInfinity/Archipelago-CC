@@ -41,6 +41,7 @@ L12 flag 12: bosslock@32,864 cleared: L12 flag 12: bosslock@32,864 cleared
 Level 015 - Chest: Seal
 L16 flag 0: rope@32,16 cleared: L16 flag 0: rope@32,16 cleared
 Level 017 - Chest: Seal
+L18 flag 0: lock@144,112 cleared: L18 flag 0: lock@144,112 cleared
 Level 019 - Shieldspire: Seal
 L19 flag 1: bosslock@48,32 cleared: L19 flag 1: bosslock@48,32 cleared
 Level 019 - Boss Key 0: Red Key
@@ -49,6 +50,7 @@ L20 flag 0: shieldlocknorm@176,16 cleared: L20 flag 0: shieldlocknorm@176,16 cle
 L20 flag 4: lock@32,80 cleared: L20 flag 4: lock@32,80 cleared
 L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
 Level 025 - Chest: Seal
+L26 flag 0: rocklock@112,208 cleared: L26 flag 0: rocklock@112,208 cleared
 L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
 Level 029 - Boss Key 1: Green Key
 Level 030 - Torchpickup: Light
@@ -77,6 +79,7 @@ Level 046 - Chest: Seal
 L48 flag 1: bosslock@48,144 cleared: L48 flag 1: bosslock@48,144 cleared
 Level 048 - Chest: Seal
 Level 049 - Conch: Progressive Swim
+L53 flag 2: lock@144,208 cleared: L53 flag 2: lock@144,208 cleared
 Level 055 - Boss Key 3: Blue Key
 Level 057 - Tentacled Beast: Seal
 L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
@@ -127,6 +130,7 @@ Playthrough:
   Level 036 - Chest: Seal
 }
 3: {
+  L18 flag 0: lock@144,112 cleared: L18 flag 0: lock@144,112 cleared
   Level 017 - Chest: Seal
   Level 019 - Boss Key 0: Red Key
   Level 019 - Shieldspire: Seal
@@ -135,6 +139,7 @@ Playthrough:
   L12 flag 4: bosslock@416,240 cleared: L12 flag 4: bosslock@416,240 cleared
   L12 flag 5: bosslock@432,240 cleared: L12 flag 5: bosslock@432,240 cleared
   L19 flag 1: bosslock@48,32 cleared: L19 flag 1: bosslock@48,32 cleared
+  L26 flag 0: rocklock@112,208 cleared: L26 flag 0: rocklock@112,208 cleared
   L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
   Level 020 - Shield: Progressive Shield
   Level 025 - Chest: Seal
@@ -161,6 +166,7 @@ Playthrough:
 }
 7: {
   L40 flag 12: wandlock@480,560 cleared: L40 flag 12: wandlock@480,560 cleared
+  L53 flag 2: lock@144,208 cleared: L53 flag 2: lock@144,208 cleared
   L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
   L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
   Level 015 - Chest: Seal
