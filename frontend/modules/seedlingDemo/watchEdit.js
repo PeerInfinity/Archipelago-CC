@@ -93,6 +93,16 @@ const fail = (message) => { throw new WatchEditError(message); };
  */
 export const EDIT_OPS = Object.freeze([
     'paint', 'place', 'attrs', 'remove', 'nodes', 'resize',
+    /**
+     * ⛓ Seedling editor E1 — `erase {tx, ty, layer?}` takes the tile OFF one
+     * layer (`tiles` when `layer` is absent, the same byte-inert default
+     * `paint` uses). There was no op for it: `paint` can only write a column,
+     * so a CLEAR, a REPLACE paste of an untiled cell and a MOVE's cut had no
+     * way to leave a cell absent. ⛔ It refuses an already-absent tile, as
+     * `remove` refuses an empty cell: an op that did nothing would be dropped
+     * from the identity with no sentence.
+     */
+    'erase',
 ]);
 
 /**
@@ -436,7 +446,10 @@ export function roomFlagsIn(record) {
  */
 export function roomFlagOpRefusal(record, flag, what) {
     if (!flag || flag.last) return null;
-    if (what === 'remove') return null;
+    // ⛓ Seedling editor E1 — `attrs` takes `which` too now, so both ops reach
+    //   a flag that is not the last body in its cell; the sentence below is
+    //   kept for an op that still cannot (none today).
+    if (what === 'remove' || what === 'attrs') return null;
     const i = entityIndexAt(record, flag.tx, flag.ty);
     const other = record.entities[i];
     return `⛔ REFUSED — <${flag.tag}> is at (${flag.tx},${flag.ty}) and it is NOT the last `
@@ -709,6 +722,14 @@ export function normalizeEdit(op, { schema = null, fillDefaults = false } = {}) 
     });
     const base = { op: op.op, tx: cell[0], ty: cell[1] };
     if (op.op === 'paint') return normalizePaint(op, base);
+    if (op.op === 'erase') {
+        const layer = op.layer ?? 'tiles';
+        if (!TILE_LAYERS.includes(layer)) {
+            fail(`watchEdit: an erase edit's layer must be one of [${TILE_LAYERS.join(', ')}], got `
+                + `${JSON.stringify(op.layer)}.`);
+        }
+        return Object.freeze(layer === 'tiles' ? base : { ...base, layer });
+    }
     if (op.op === 'remove') {
         /**
          * ⛓⛓ **`which` IS OMITTED WHEN IT WAS NOT GIVEN, and that is the whole
@@ -732,7 +753,20 @@ export function normalizeEdit(op, { schema = null, fillDefaults = false } = {}) 
         }
         return Object.freeze({ ...base, which: op.which });
     }
-    if (op.op === 'nodes') return Object.freeze({ ...base, nodes: normalizeNodes(op, schema) });
+    /**
+     * ⛓ Seedling editor E1 — `which` reaches `attrs` and `nodes` too, with
+     * `remove`'s exact rule: ABSENT means "the last", so every edit list
+     * recorded before it is byte-identical.
+     */
+    const withWhich = (o) => {
+        if (op.which === undefined) return Object.freeze(o);
+        if (!Number.isInteger(op.which) || op.which < 0) {
+            fail(`watchEdit: a ${op.op} edit's \`which\` is a 0-based ordinal among the `
+                + `entities in that cell, got ${JSON.stringify(op.which)}. Omit it for "the last".`);
+        }
+        return Object.freeze({ ...o, which: op.which });
+    };
+    if (op.op === 'nodes') return withWhich({ ...base, nodes: normalizeNodes(op, schema) });
     // place / attrs — both carry an attrs object; place also carries a type.
     if (op.op === 'attrs') {
         /**
@@ -741,7 +775,7 @@ export function normalizeEdit(op, { schema = null, fillDefaults = false } = {}) 
          * entity in this cell*, whose TYPE is a fact about the RECORD. The
          * check therefore lives at `applyEdit`, which has one.
          */
-        return Object.freeze({ ...base, attrs: normalizeAttrs(op.op, op.attrs) });
+        return withWhich({ ...base, attrs: normalizeAttrs(op.op, op.attrs) });
     }
     if (typeof op.type !== 'string' || op.type === '') {
         fail(`watchEdit: a place edit needs a non-empty entity type, got `
@@ -929,11 +963,10 @@ export function entityIndicesAt(record, tx, ty) {
 /**
  * ⛓⛓⛓ **THE ENTITY AN OP ADDRESSES — the LAST in the cell, or the `which`th.**
  *
- * ⛔ `which` IS `remove`'s ALONE (E3b, §22.4). `normalizeEdit` lets it through
- * on no other op, so the branch below cannot be reached by an `attrs` or
- * `nodes` edit even though they come through this same door: "the last entity
- * in this cell" is those two ops' whole contract, and a second address for
- * them would be a second vocabulary.
+ * ⛓ `which` was `remove`'s alone (E3b, §22.4); Seedling editor E1 lets
+ * `attrs` and `nodes` carry it too, so the room-flags form and the attrs brush
+ * can reach a body that is not the last one. ABSENT is still "the last" on all
+ * three, so every edit list recorded before either slice reads the same.
  *
  * ⚠ AN OUT-OF-RANGE `which` REFUSES AND SAYS HOW MANY THE CELL HOLDS. Clamping
  * to the last would make a payload reconstruct a DIFFERENT level on a record
@@ -964,6 +997,29 @@ const requireEntityAt = (record, op) => {
     }
     return i;
 };
+
+/**
+ * ⛓ `erase`: the layer's entry for (tx, ty) dropped. ⛔ REFUSES an absent tile
+ * (or an absent layer) by name — see `EDIT_OPS`.
+ */
+function eraseTile(record, op) {
+    const layer = op.layer ?? 'tiles';
+    const l = (record.layers ?? []).find((x) => x.name === layer);
+    const has = (l?.tiles ?? []).some(([tx, ty]) => tx === op.tx && ty === op.ty);
+    if (!has) {
+        fail(`watchEdit: an erase edit names cell (${op.tx},${op.ty}) on "${layer}", which `
+            + `holds no tile there${l ? '' : ' (the room has no such layer)'}. ⛔ It refuses `
+            + 'rather than doing nothing, for `remove`\'s reason.');
+    }
+    const layers = record.layers.map((x) => Object.freeze({
+        ...x,
+        tiles: Object.freeze(x === l
+            ? x.tiles.filter(([tx, ty]) => !(tx === op.tx && ty === op.ty)) : [...x.tiles]),
+    }));
+    return Object.freeze({
+        ...record, layers: Object.freeze(layers), entities: Object.freeze([...record.entities]),
+    });
+}
 
 /**
  * ONE op, applied. PURE — a new frozen record out, the old one untouched.
@@ -1012,6 +1068,7 @@ export function applyEdit(record, rawOp, { schema = null, fillDefaults = false }
     if (op.op === 'resize') {
         return resizeRoom(record, { width: op.width, height: op.height, anchor: op.anchor });
     }
+    if (op.op === 'erase') return eraseTile(record, op);
     if (op.op === 'place') {
         const body = { type: op.type, ...oelAtTile(op.tx, op.ty), attrs: { ...op.attrs } };
         if (op.nodes) body.nodes = op.nodes.map((n) => ({ ...n }));
@@ -1025,7 +1082,7 @@ export function applyEdit(record, rawOp, { schema = null, fillDefaults = false }
         const i = requireEntityAt(record, op);
         const subject = record.entities[i];
         if (schema && !entityDecl(schema, subject.type).nodes) {
-            fail(`watchEdit: a nodes edit names cell (${op.tx},${op.ty}), whose last entity `
+            fail(`watchEdit: a nodes edit names cell (${op.tx},${op.ty}), whose addressed entity `
                 + `is <${subject.type}> — and \`Shrum.oep\` does not declare <nodes> for it. `
                 + 'The node list would be written into the OEL and read by nothing.');
         }
@@ -1194,6 +1251,7 @@ export function describeEdit(op) {
         return `EDIT nodes ${at} → ${op.nodes.length === 0 ? 'none'
             : op.nodes.map((n) => `${n.x},${n.y}`).join(' ')}`;
     }
+    if (op.op === 'erase') return `EDIT erase ${at}${op.layer ? ` [${op.layer}]` : ''} → no tile`;
     if (op.op === 'paint') {
         const what = op.terrain !== undefined ? op.terrain : `column ${op.column}`;
         return `EDIT paint ${at}${op.layer ? ` [${op.layer}]` : ''} → ${what}`;
@@ -1210,5 +1268,6 @@ export function describeEdit(op) {
             : `entity ${op.which} there`} is gone`;
     }
     const keys = Object.keys(op.attrs ?? {});
-    return `EDIT attrs ${at} → {${keys.map((k) => `${k}=${op.attrs[k]}`).join(' ')}}`;
+    return `EDIT attrs ${at}${op.which === undefined ? '' : ` entity ${op.which}`} → `
+        + `{${keys.map((k) => `${k}=${op.attrs[k]}`).join(' ')}}`;
 }

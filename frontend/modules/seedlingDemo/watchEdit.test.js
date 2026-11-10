@@ -55,8 +55,8 @@ const ladder = (step = 2) => generateStep({ ...SUBJECT, step });
 const j = (v) => JSON.stringify(v);
 
 describe('the op set — closed, and normalized before anything is applied', () => {
-    it('the ops ARE the set every reader shares — slice 11\'s four, plus B\'s two', () => {
-        expect(EDIT_OPS).toEqual(['paint', 'place', 'attrs', 'remove', 'nodes', 'resize']);
+    it('the ops ARE the set every reader shares — slice 11\'s four, plus B\'s two, plus E1\'s erase', () => {
+        expect(EDIT_OPS).toEqual(['paint', 'place', 'attrs', 'remove', 'nodes', 'resize', 'erase']);
         expect(Object.isFrozen(EDIT_OPS)).toBe(true);
     });
 
@@ -74,7 +74,7 @@ describe('the op set — closed, and normalized before anything is applied', () 
 
     it('an unknown op refuses BY NAME and names the whole set', () => {
         expect(() => normalizeEdit({ op: 'nudge', tx: 1, ty: 1 }))
-            .toThrow(/is not one of the 6 edit ops \[paint, place, attrs, remove, nodes, resize\]/);
+            .toThrow(/is not one of the 7 edit ops \[paint, place, attrs, remove, nodes, resize, erase\]/);
     });
 
     /**
@@ -562,6 +562,7 @@ describe('describeEdit — the pane\'s row, in the brief\'s own spelling', () =>
             remove: { ...at, op: 'remove' },
             nodes: { ...at, op: 'nodes', nodes: [{ x: 16, y: 32 }] },
             resize: { op: 'resize', width: 12, height: 12 },
+            erase: { ...at, op: 'erase' },
         };
         for (const op of EDIT_OPS) {
             expect(describeEdit(normalizeEdit(samples[op])), op).toMatch(/^EDIT /);
@@ -1142,7 +1143,7 @@ describe('⛓⛓⛓ A FLAG IS READ AT ITS OWN CELL, AND `last` IS WHETHER THE OP
      * CONTRACT and still refuses.
      */
     it('⛔⛔ MEASURED: 2 of the 155 committed flag instances are NOT the last body in their '
-        + 'cell — `remove` names them by ordinal, `attrs` still cannot', () => {
+        + 'cell — `remove` and (since Seedling editor E1) `attrs` name them by ordinal', () => {
         let total = 0;
         let shared = 0;
         let notLast = 0;
@@ -1163,12 +1164,8 @@ describe('⛓⛓⛓ A FLAG IS READ AT ITS OWN CELL, AND `last` IS WHETHER THE OP
                 if (!f.last) {
                     notLast += 1;
                     expect(roomFlagOpRefusal(record, f, 'remove')).toBe(null);
-                    const why = roomFlagOpRefusal(record, f, 'attrs');
-                    expect(why).toMatch(/NOT the last body in that cell/);
-                    expect(why).toMatch(/REWRITE/);
-                    // ⛔ …and the sentence no longer promises a vocabulary change
-                    //    it already got.
-                    expect(why).not.toMatch(/vocabulary change/);
+                    // ⛓ E1 — `attrs` takes `which` now, so the form refuses neither.
+                    expect(roomFlagOpRefusal(record, f, 'attrs')).toBe(null);
                 }
             }
         }
