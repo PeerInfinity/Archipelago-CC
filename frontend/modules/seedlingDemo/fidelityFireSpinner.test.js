@@ -43,6 +43,7 @@ describe('fidelity FIRESPINNER — the key', () => {
     it('ships OFF, and FIRE_ARM_POLICY still calls Spinner modelled', () => {
         expect(CONTACT_FIDELITY_KEYS).toContain('fireSpinnerArm');
         expect(CONTACT_FIDELITY_DEFAULTS.fireSpinnerArm).toBe(false);
+        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('fireSpinnerArm');
         expect(FIRE_ARM_POLICY.Spinner.policy).toBe('modelled');
     });
 

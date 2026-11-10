@@ -32,7 +32,7 @@ describe('CEREMONY126 — the switches', () => {
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const at = keys.indexOf('ceremonyPressForecast');
             expect(keys.slice(at, at + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
-            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost'].includes(k))).toEqual([]);
+            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'fireSpinnerArm'].includes(k))).toEqual([]);
         });
     it('the env names are known worker env names', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CEREMONY_PRESS_FORECAST');
