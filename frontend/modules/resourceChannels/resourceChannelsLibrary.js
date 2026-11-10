@@ -127,6 +127,20 @@ export function xpAdjustedCost(baseCost, regionId) {
  * acted on — the caller runs its own pre-reset cleanup and then calls
  * fireLoopResetTeleport, preserving each leg's exact ordering.
  *
+ * `depleted` honours `gameState.noManaDepletionReset`: with the flag set
+ * the pool runs negative (deductMana keeps the debt) and `depleted` stays
+ * false, so no leg resets — exactly as the loops' own out-of-mana resets
+ * read the flag. Every leg that resets on `depleted` (the text adventure
+ * wrapper, the maze, the JtA/omsi mirror router) gets it from here, in
+ * both loop modes (⚖ Robert 2026-11-09, "Honour it everywhere", slice
+ * sdc-depletion-flag).
+ *
+ * ⚖ NOT a depletion: a reset the GAME asks for when its own run ends
+ * (`substrate:resourceReset`, handled in index.js). JtA latches its run at
+ * energy 0 and waits for that reset, so a JtA room still loop-resets with the
+ * flag set: measured, and kept on purpose (⚖ Robert 2026-11-09, "Exempt JtA's
+ * own run end"). It is not a bug in this flag.
+ *
  * @returns {{ charged: boolean, depleted: boolean }}
  */
 export function chargeMana({ substrateId, amount, regionId = null }) {
@@ -135,7 +149,8 @@ export function chargeMana({ substrateId, amount, regionId = null }) {
     if (!gs) return { charged: false, depleted: false };
     gs.deductMana(amount);
     if (regionId) gs.addRegionXP?.(regionId, amount);
-    return { charged: true, depleted: (gs.getCurrentMana?.() ?? 0) <= 0 };
+    const depleted = (gs.getCurrentMana?.() ?? 0) <= 0 && !gs.noManaDepletionReset;
+    return { charged: true, depleted };
 }
 
 /**

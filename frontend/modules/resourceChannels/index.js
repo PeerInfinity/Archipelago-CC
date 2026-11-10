@@ -167,6 +167,13 @@ function handleResourceBonus(data) {
     setMaxManaBonus(data.substrateId, Math.max(0, bonus));
 }
 
+/**
+ * A game-side reset request: the substrate's own run ended (JtA latched at
+ * energy 0). Answered whatever `noManaDepletionReset` says — this is the
+ * game's run end, not a pool depletion, and declining it would leave the game
+ * frozen in its latched run (⚖ Robert 2026-11-09, "Exempt JtA's own run end";
+ * see chargeMana).
+ */
 function handleResourceReset(data) {
     if (!_validChannelEvent(data, RESOURCE_RESET_EVENT)) return;
     const gs = _gs();

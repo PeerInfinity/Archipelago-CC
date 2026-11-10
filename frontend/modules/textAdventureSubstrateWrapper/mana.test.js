@@ -367,6 +367,69 @@ describe('wrapper mana leg — regions another substrate bills', () => {
     });
 });
 
+describe('wrapper mana leg — noManaDepletionReset (loop mode off)', () => {
+    // ⚖ Robert 2026-11-09, "Honour it everywhere": a text adventure room
+    // honours the flag with loop mode off (chargeMana reports no depletion
+    // while it is set), as the loops' own out-of-mana resets do.
+
+    it('a move that empties the pool with the flag set runs mana negative: no reset, no teleport', () => {
+        const { gs, bus, dispatcher } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        gs.deductMana(60); // 40 left; the move costs 50
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getCurrentMana()).toBe(-10);
+        expect(gs.manaDebt).toBe(10);
+        expect(gs.getLoopResetCount()).toBe(0);
+        expect(dispatcher.published).toHaveLength(0);
+    });
+
+    it('checks that empty the pool with the flag set are all charged, and none resets', () => {
+        const { gs, bus, dispatcher } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        gs.deductMana(85); // 15 left; L1 → 5, L2 → -5, L3 → -15
+        bus.publish('stateManager:snapshotUpdated', {
+            snapshot: { checkedLocations: ['L1', 'L2', 'L3'] },
+        });
+        expect(gs.getCurrentMana()).toBe(-15);
+        expect(gs.getRegionXP('Own').xp).toBe(30);
+        expect(gs.getLoopResetCount()).toBe(0);
+        expect(dispatcher.published).toHaveLength(0);
+    });
+
+    it('with the flag clear, the same move still resets and teleports', () => {
+        const { gs, bus, dispatcher } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = false;
+        gs.deductMana(60);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getLoopResetCount()).toBe(1);
+        expect(gs.getCurrentMana()).toBe(100);
+        expect(dispatcher.published).toHaveLength(1);
+    });
+
+    it('clearing the flag again restores the reset at the next depletion', () => {
+        const { gs, bus } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        gs.deductMana(60);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getLoopResetCount()).toBe(0);
+        gs.noManaDepletionReset = false;
+        bus.publish('stateManager:snapshotUpdated', { snapshot: { checkedLocations: ['L1'] } });
+        expect(gs.getLoopResetCount()).toBe(1);
+        expect(gs.getCurrentMana()).toBe(100);
+    });
+
+    it('loop mode on is unchanged: this leg charges nothing, so the flag has nothing to suppress', () => {
+        const { gs, bus } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        bus.publish('gameState:loopModeChanged', { active: true });
+        gs.deductMana(60);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        bus.publish('stateManager:snapshotUpdated', { snapshot: { checkedLocations: ['L1'] } });
+        expect(gs.getCurrentMana()).toBe(40);
+        expect(gs.getLoopResetCount()).toBe(0);
+    });
+});
+
 describe('wrapper mana leg — header info', () => {
     it('publishes the mana readout for mana regions and null otherwise', () => {
         const { bus } = wire();
