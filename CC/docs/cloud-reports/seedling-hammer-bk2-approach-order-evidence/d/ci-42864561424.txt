@@ -1,0 +1,7 @@
+CI vitest @ 0b163182c — run 42864561424 success (2026-11-10T17:24:05Z)
+  job "JavaScript Unit Tests (Vitest shard 1/3)"  completed success  396/9104
+  job "JavaScript Unit Tests (Vitest shard 2/3)"  completed success  396/9107
+  job "JavaScript Unit Tests (Vitest shard 3/3)"  completed success  395/8126
+  job "JavaScript Unit Tests (slow Vitest)"  completed success  34/431
+  suite: vitest (unfiltered)  1187/26337   (26337 passed | 0 skipped | 0 failed)
+  slow battery                34/431   (431 passed | 0 failed)
