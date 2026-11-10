@@ -195,9 +195,9 @@ async function main() {
         await clickCell(cellOf(OTHER), ['Shift']);
         await settled(1, 'a SHIFT LINK');
         const list = (await edit()).editList;
-        check(list.length === 1 && list[0].op === 'group' && list[0].ops.length === 2,
-            '⛓ a new group for the two is ONE edit of two members', json(list));
         const fresh = bindOps(LINK_ROOM, PUB.index, OTHER.index, { schema, fresh: true });
+        check(list.length === 1 && list[0].op === 'group' && list[0].ops.length === fresh.ops.length,
+            `⛓ Shift lands as a single edit, a group of ${fresh.ops.length} op(s) as node builds it`, json(list));
         check(json((await edit()).level) === json(fold(LINK_ROOM, [fresh])), '⛓⛓ …equal to node\'s fold');
         await page.click('#genEditUndo');
         await settled(0, 'UNDO of a SHIFT LINK');
