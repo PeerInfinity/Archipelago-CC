@@ -266,15 +266,22 @@ describe('wrapper mana leg — regions another substrate bills', () => {
     });
 
     it.each([
-        ['a summary recording without a play clock', 'SummaryNoClock', { summaryRecording: true }],
-        ['a play clock without a summary recording', 'ClockNotSummary', { playClock: true }],
-    ])('still charges %s (only the two together mean "priced by time alone")', (_label, region, loopSupport) => {
+        ['a summary recording without a play clock (Bounce)', 'SummaryNoClock', { summaryRecording: true }],
+        ['a play clock without a summary recording (flash_seedling, flash_seedling_gen)', 'ClockNotSummary', { playClock: true }],
+    ])('does not charge %s: loop mode prices it by its own play', (_label, region, loopSupport) => {
         substrateRegistry.register({ id: REGION_SUBSTRATES[region], loopSupport });
         const { gs, bus } = wire({ currentRegion: region });
         bus.publish('stateManager:snapshotUpdated', CHECK);
-        expect(gs.getCurrentMana()).toBe(90);
         bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: 'A' });
-        expect(gs.getCurrentMana()).toBe(40);
+        expect(gs.getCurrentMana()).toBe(100);
+        expect(gs.getLoopResetCount()).toBe(0);
+    });
+
+    it('still charges an entry that declares loopSupport without a summary recording or a play clock', () => {
+        substrateRegistry.register({ id: 'no_declaration', loopSupport: { executeVia: 'solver', record: true } });
+        const { gs, bus } = wire({ currentRegion: 'Undeclared' });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
     });
 
     it('still charges a Cloudberry region while its entry has not registered (read at charge time)', () => {
