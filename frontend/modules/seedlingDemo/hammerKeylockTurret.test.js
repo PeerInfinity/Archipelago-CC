@@ -25,6 +25,7 @@ import { POST_SWORD_ITEMS } from './procgenPalette.js';
 import {
     KEYLOCK_TURRET, KEYLOCK_TURRET_COUNTS, KEYLOCK_TURRET_DEFAULT, resetKeylockTurretCounts, withKeylockTurret,
 } from './solverBot.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const LOCK = 'bosslock@480,352';
 const TURRET = 'iceturret@472,400';
@@ -56,8 +57,8 @@ const ZERO_CELLS = /no REACHABLE stance on bosslock@\d+,\d+'s key line in level 
 
 describe('hammer-phase KEYLOCK-TURRET: KEYLOCK_TURRET', () => {
     it('ships OFF, and the env alone turns it on', () => {
-        expect(KEYLOCK_TURRET_DEFAULT).toBe(false);
-        expect(KEYLOCK_TURRET.enabled).toBe(globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET === '1');
+        expect(KEYLOCK_TURRET_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(KEYLOCK_TURRET.enabled).toBe(globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET !== '0');
         withKeylockTurret(true, () => expect(KEYLOCK_TURRET.enabled).toBe(true));
         withKeylockTurret(false, () => expect(KEYLOCK_TURRET.enabled).toBe(false));
     });
@@ -109,11 +110,11 @@ describe('hammer-phase KEYLOCK-TURRET: KEYLOCK_TURRET', () => {
             side: 'up', wait: 25, forks: 27 }]);
     }, 180000);
 
-    it('L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH\'s staging point', () => {
+    it('L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH\'s staging point', () => withL40Flip(false, () => {
         resetKeylockTurretCounts();
         const on = withKeylockTurret(true, () => solveL40Flag8(l40Flag8Staging({ ...LEG_412, door: false })));
         expect(on.ok).toBe(false);
         expect(on.message).toMatch(/-> keylock -> kill \(iceturret@472,400\): no approach to iceturret@472,400 from the staging point \(488,579\) is hitless — 12 fork\(s\), \{"no-plan":12\}/);
         expect(KEYLOCK_TURRET_COUNTS.stances[0]).toMatchObject({ lock: LOCK, live: [TURRET], stance: { x: 488, y: 376 } });
-    }, 180000);
+    }), 180000);
 });

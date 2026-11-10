@@ -1,0 +1,40 @@
+== A wave6 ON, no carry
+ 394 failed    62287 seam 5222  [('diverged', 'bait+kill', 936), ('failed', '', None)]  the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHA
+ 869 failed    37058 seam 5219  [('failed', '', None)]  the solver declined Level 040 - Boss Key 2 in level 40 (pass dashless): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance
+ 871 failed    82239 seam 5218  [('diverged', 'bait+hold+kill', 936), ('failed', '', None)]  the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,
+ 376 failed    15908 seam 5326  [('failed', '', None)]  the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact -> hold stance 
+ 377 done      66693 seam 5325  [('done', 'hold+kill+walk', None)]  
+ 395 failed    29366 seam 5324  [('failed', '', None)]  the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,35
+ 411 timeout   90032 seam 5218  [('stopped', 'bait+kill', None)]  
+ 870 failed    74488 seam 5216  [('failed', '', None)]  the solver declined Level 040 - Boss Key 2 in level 40 (pass dashless): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance
+ 872 timeout   90175 seam 5202  [('stopped', 'bait+hold+kill', None)]  
+ 412 failed     7498 seam 5314  [('failed', '', None)]  the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,35
+== B defaults, no carry
+ 394 failed    28967 seam 5211  [('failed', '', None)]  the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHA
+ 871 failed     7675 seam 5213  [('failed', '', None)]  the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,
+ 376 done      83206 seam 5301  [('done', 'hold+kill+walk', None)]  
+ 377 timeout   90626 seam 5316  [('diverged', 'hold+kill+walk', 1256), ('stopped', 'hold+walk', None)]  
+ 411 failed    32024 seam 5196  [('failed', '', None)]  the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) 
+ 872 failed    11554 seam 5201  [('failed', '', None)]  the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,
+== C wave6+LTS+BPW(+OPF inert), carry
+ 871 timeout   90128 seam 5200  [('stopped', 'bait+hold+kill', None)]  
+ 872 timeout   90012 seam 5205  [('interrupted', '', None), ('stopped', '', None)]  
+ 394 done      88981 seam 5208  [('done', 'bait+kill', None)]  
+ 411 done      72795 seam 5229  [('done', 'bait+kill', None)]  
+ 869 failed    32320 seam 5209  [('failed', '', None)]  the solver ran out of 640, then 2560 work units on its held retry on location in level 40: solverBot(wasm-location-40): the caller's anytime
+ 870 timeout   90124 seam 5222  [('stopped', 'shove+walk+weigh', None)]  
+ 376 done      49106 seam 5297  [('done', 'hold+walk', None)]  
+ 377 done      69924 seam 5329  [('done', 'hold+kill+walk', None)]  
+ 395 done      53437 seam 5344  [('done', 'keylock+walk', None)]  
+ 412 done      40608 seam 5336  [('done', 'keylock+walk', None)]  
+== CI 42145740415 wave6 ON (1 of 3)
+ 411 timeout   90173 seam 5219  [('stopped', '', None)]  
+ 412 failed     8058 seam 5323  [('failed', '', None)]  the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,35
+ 869 failed    40915 seam 5223  [('failed', '', None)]  the solver declined Level 040 - Boss Key 2 in level 40 (pass dashless): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance
+ 870 failed    37039 seam 5222  [('failed', '', None)]  the solver declined Level 040 - Boss Key 2 in level 40 (refusal): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (push
+ 376 failed    11444 seam 5336  [('failed', '', None)]  the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact -> hold: the ho
+ 871 done      90213 seam 5217  [('interrupted', '', None), ('done', 'burn+hold', None)]  
+ 377 failed    16175 seam 5323  [('failed', '', None)]  the solver declined L40 flag 1: wandlock@176,80 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,1} wandlock@176,80 
+ 872 failed    34894 seam 5223  [('failed', '', None)]  the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,
+ 394 failed    53194 seam 5216  [('diverged', 'bait+kill', 1028), ('failed', '', None)]  the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHA
+ 395 failed    32629 seam 5334  [('failed', '', None)]  the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,35

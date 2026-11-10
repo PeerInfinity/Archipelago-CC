@@ -25,6 +25,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set (fidelity-18's request)
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { dirname, join } from 'node:path';
@@ -122,7 +123,7 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
         expect(keysOf(on)).toEqual(keysOf(base));
     }, 60000);
 
-    it('MUTANT (the companion off): ON, the same request is refused at the DETOUR rung\'s budget', () => {
+    it('MUTANT (the companion off): ON, the same request is refused at the DETOUR rung\'s budget', () => withL40Flip(false, () => {
         const req = leg403();
         LAPSE_NARROW_RETRY.enabled = false;
         try {
@@ -132,7 +133,7 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
         } finally {
             LAPSE_NARROW_RETRY.enabled = true;
         }
-    }, 60000);
+    }), 60000);
 });
 
 const leg773 = () => {

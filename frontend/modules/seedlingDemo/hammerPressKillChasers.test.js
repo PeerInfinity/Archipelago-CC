@@ -23,6 +23,7 @@ import {
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS, PRESS_KILL_CHASERS_DEFAULT, resetPressKillChasersCounts,
     withPressKillChasers,
 } from './pressKillCost.js';
+import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const BOOT = join(HERE, 'fixtures', 'l40bk2-witness', 'step67-boot.json');
@@ -63,7 +64,7 @@ describe('hammer-phase PKC — the press kill prices the chasers beside its walk
     });
 
     it('step 67: OFF the kill walks into bob@736,752 and dies; ON it takes no hit, and the keys are OFF\'s until the '
-        + 'step that met the bob', () => {
+        + 'step that met the bob', () => withL40Flip(false, () => {
         const off = solveChest(false);
         expect(off.error).toBeInstanceOf(SolverRefusal);
         expect(off.error.message).toContain('kill (spinner@880,848) by press: the player died at t780 '
@@ -85,5 +86,5 @@ describe('hammer-phase PKC — the press kill prices the chasers beside its walk
         expect(on.countsAtSame.swapped).toBe(0);
         expect(on.keys.slice(0, SAME_THROUGH + 1)).toEqual(off.keys.slice(0, SAME_THROUGH + 1));
         expect(on.keys[SAME_THROUGH + 1]).not.toBe(off.keys[SAME_THROUGH + 1]);
-    }, 240_000);
+    }), 240_000);
 });

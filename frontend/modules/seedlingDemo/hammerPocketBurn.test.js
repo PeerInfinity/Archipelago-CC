@@ -50,8 +50,8 @@ const NO_BURN = () => ({ asked: ['burn'], key: 'burn', verbs: new Set(['burn']),
 
 describe('hammer-phase POCKET-BURN: STANCE_BURN', () => {
     it('ships OFF', () => {
-        expect(STANCE_BURN_DEFAULT).toBe(false);
-        expect(STANCE_BURN.enabled).toBe(globalThis.process?.env?.SEEDLING_STANCE_BURN === '1');
+        expect(STANCE_BURN_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(STANCE_BURN.enabled).toBe(globalThis.process?.env?.SEEDLING_STANCE_BURN !== '0');
         const was = STANCE_BURN.enabled;
         expect(withStanceBurn(true, () => STANCE_BURN.enabled)).toBe(true);
         expect(withStanceBurn(false, () => STANCE_BURN.enabled)).toBe(false);

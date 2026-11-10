@@ -121,6 +121,8 @@ async function main() {
     const { createTapeStepper } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
+    // ⛓ L40-FLIP-BUILD: the BEFORE arms are recorded at the pre-flip defaults, so they run without the L40 flip set.
+    const { withL40Flip } = await import(join(MODULE, 'l40FlipSet.js'));
     const w = L30KEYLOCK_STEP52;
     let failures = 0;
     const check = (name, ok, detail) => {
@@ -152,7 +154,7 @@ async function main() {
 
     // ── OFF: the base solver's walk is hit on the key line, and it refuses only at the next walk's gate ──
     {
-        const off = await l30keylockPlan(224, { rescan: false, waitPriced: false, orbit: false });
+        const off = await withL40Flip(false, () => l30keylockPlan(224, { rescan: false, waitPriced: false, orbit: false }));
         check('both switches OFF, (224,80): the staging REFUSES at the gate after the keylock (the survey\'s step-52 text)',
             off.solved === null && /the danger map forbids \(71\.77\d*,50\.11\d*\) — chaser:bobsoldier@48,80/
                 .test(off.refusal?.message ?? ''), (off.refusal?.message ?? 'it solved').slice(0, 200));
@@ -178,7 +180,7 @@ async function main() {
 
     // ── ON: the solver's own plan from each pit landing ──
     for (const x of L30_PIT_LANDINGS) {
-        const off = await l30keylockPlan(x, { rescan: false, waitPriced: false, orbit: false });
+        const off = await withL40Flip(false, () => l30keylockPlan(x, { rescan: false, waitPriced: false, orbit: false }));
         check(`both switches OFF, (${x},80): REFUSED, and the walk it drove was hit on the key line`,
             off.solved === null && (off.run?.playerHits?.length ?? 0) >= 2,
             `${(off.refusal?.message ?? 'it solved').slice(0, 120)} — hits ${off.run?.playerHits?.length ?? '?'}`);
