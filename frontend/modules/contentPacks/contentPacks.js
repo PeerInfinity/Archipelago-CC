@@ -34,9 +34,12 @@
  * `art` — the art library (`artLibrary/`); `sfx` — the sound-effect library
  * (`sfxLibrary/`, ⛓ SOUND EFFECTS, ⚖ the user 2026-10-26); `music` — the
  * music library (`musicLibrary/`, ⛓ MUSIC, ⚖ the user 2026-10-27; reserved
- * until it was built).
+ * until it was built); `concepts` — the pack-concept reader (`packConcepts/`:
+ * characters, places, objects, information) and `text` — the text library
+ * (`textLibrary/`: strings and word lists), both ⛓ CONTENT SETS C1 (⚖ the user
+ * 2026-11-10).
  */
-export const KNOWN_LAYERS = Object.freeze(['art', 'sfx', 'music']);
+export const KNOWN_LAYERS = Object.freeze(['art', 'sfx', 'music', 'concepts', 'text']);
 
 /**
  * Layer names RESERVED for a consumer that is planned but not built: a pack
@@ -45,8 +48,11 @@ export const KNOWN_LAYERS = Object.freeze(['art', 'sfx', 'music']);
  */
 export const RESERVED_LAYERS = Object.freeze([]);
 
-/** The registry's stack tables, one per consumer kind: `graphics` (the art), `sfx` and `music`. */
-export const STACK_KINDS = Object.freeze(['graphics', 'sfx', 'music']);
+/**
+ * The registry's stack tables, one per consumer kind: `graphics` (the art), `sfx`, `music` and `content` (a
+ * CONTENT SET — a theme: the stack a world's concepts and text resolve from, ⛓ CONTENT SETS C1).
+ */
+export const STACK_KINDS = Object.freeze(['graphics', 'sfx', 'music', 'content']);
 
 /** A key is `<namespace>:<path>`: lower-camel namespace, a non-empty path. */
 export const KEY_PATTERN = /^[a-z][a-zA-Z0-9-]*:[A-Za-z0-9_./-]+$/;
@@ -88,8 +94,9 @@ export function parsePack(json, expectedId = null, { known = KNOWN_LAYERS, reser
 }
 
 /**
- * Validate the registry `packs.json`; returns `{ packs: [ids], stacks: {name: [ids]}, sfxStacks: {…}, musicStacks: {…} }`.
- * `stacks` is the `graphics` table (its name predates the second kind); `sfxStacks` is `sfx`'s, `musicStacks` `music`'s.
+ * Validate the registry `packs.json`; returns `{ packs: [ids], stacks: {name: [ids]}, sfxStacks: {…}, musicStacks: {…},
+ * contentStacks: {…} }`. `stacks` is the `graphics` table (its name predates the second kind); `sfxStacks` is `sfx`'s,
+ * `musicStacks` `music`'s, `contentStacks` `content`'s. Every table may be absent or empty (→ `{}`).
  */
 export function parseRegistry(json) {
     if (!json || json.schema_version !== 1 || !Array.isArray(json.packs)) {
@@ -109,7 +116,13 @@ export function parseRegistry(json) {
         }
         tables[kind] = Object.freeze(stacks);
     }
-    return Object.freeze({ packs: Object.freeze(ids), stacks: tables.graphics, sfxStacks: tables.sfx, musicStacks: tables.music });
+    return Object.freeze({
+        packs: Object.freeze(ids),
+        stacks: tables.graphics,
+        sfxStacks: tables.sfx,
+        musicStacks: tables.music,
+        contentStacks: tables.content,
+    });
 }
 
 /**

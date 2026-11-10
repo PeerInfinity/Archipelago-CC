@@ -1,11 +1,12 @@
 # contentPacks
 
 **Content packs: data directories under `frontend/packs/<id>/` that can be stacked.** This module finds them,
-loads several at once, and merges them in a defined order. It is shared by the art library now
-(`../artLibrary/`), and it is shaped for the concept library to use later.
+loads several at once, and merges them in a defined order. Its readers are the art library (`../artLibrary/`),
+the sound-effect and music libraries (`../sfxLibrary/`, `../musicLibrary/`), the pack-concept reader
+(`../packConcepts/`) and the text library (`../textLibrary/`).
 
 - `contentPacks.js`:
-  - `parseRegistry` reads `frontend/packs/packs.json`: the packs, plus the named **stacks** under `graphics`.
+  - `parseRegistry` reads `frontend/packs/packs.json`: the packs, plus the named **stacks** per kind (below).
   - `loadPackStack(ids, { base, readJson })` loads each pack's `pack.json` and its layers, in order.
   - `mergeKeyed` merges one keyed table across the stack.
   - `packsBaseUrl` returns `../../packs/` unbundled and the page's `packs/` in a bundle.
@@ -21,11 +22,27 @@ loads several at once, and merges them in a defined order. It is shared by the a
   - a layer this loader does not know;
   - a path that leaves the pack;
   - an un-namespaced key.
-- **Layers:** `KNOWN_LAYERS` is `['art', 'sfx']`: the art library and the sound-effect library
-  (`../sfxLibrary/`). `RESERVED_LAYERS` is `['music']`: a pack that declares it is refused, saying the layer is
-  reserved, until the music library is built. There is room for `concepts/` and maze `rules/` later; a new consumer
-  adds its layer name there.
-- **Stacks:** `packs.json` names them per kind: `graphics` (`parseRegistry(...).stacks`) and `sfx` (`.sfxStacks`).
+- **Layers:** `KNOWN_LAYERS` names each layer and its reader:
+
+  | Layer | Manifest | Reader |
+  |---|---|---|
+  | `art` | `art/manifest.json` | `../artLibrary/` |
+  | `sfx` | `sfx/manifest.json` | `../sfxLibrary/` |
+  | `music` | `music/manifest.json` | `../musicLibrary/` |
+  | `concepts` | `concepts/manifest.json` | `../packConcepts/`: characters, places, objects and information |
+  | `text` | `text/manifest.json` | `../textLibrary/`: strings and word lists |
+
+  `RESERVED_LAYERS` is empty. A layer named there is refused, saying it is reserved, until its reader is built.
+  A new consumer adds its layer name to `KNOWN_LAYERS`.
+- **Stacks:** `packs.json` names them per kind (`STACK_KINDS`). Each table may be absent or empty.
+
+  | Kind | `parseRegistry(...)` field | What it is |
+  |---|---|---|
+  | `graphics` | `.stacks` | the art stack a renderer asks for (`?graphics=<id>`) |
+  | `sfx` | `.sfxStacks` | the sound-effect stack |
+  | `music` | `.musicStacks` | the music stack |
+  | `content` | `.contentStacks` | a **content set** (a theme): the stack a world's concepts and text resolve from |
+
   `loadPackStack(ids, { only: ['art'] })` reads only the named layers.
 - DOM-free: the caller supplies `readJson`. Node tests read the committed packs from disk.
 
