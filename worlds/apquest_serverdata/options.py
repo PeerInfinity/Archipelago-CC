@@ -23,6 +23,11 @@ class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
     __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
 
 
+class SpoilerDataIncludeRegions(_spoiler_hook_client.SpoilerDataIncludeRegions):
+    # Re-homed for the same reason as SpoilerDataInSlotData above.
+    __doc__ = _spoiler_hook_client.SpoilerDataIncludeRegions.__doc__
+
+
 # The first type of Option we'll discuss is the Toggle.
 # A toggle is an option that can either be on or off. This will be represented by a checkbox on the website.
 # The default for a toggle is "off".
@@ -125,6 +130,7 @@ class APQuestOptions(PerGameCommonOptions):
     confetti_explosiveness: ConfettiExplosiveness
     player_sprite: PlayerSprite
     spoiler_data_in_slot_data: SpoilerDataInSlotData
+    spoiler_data_include_regions: SpoilerDataIncludeRegions
 
 
 # If we want to group our options by similar type, we can do so as well. This looks nice on the website.

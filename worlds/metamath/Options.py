@@ -10,6 +10,11 @@ class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
     __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
 
 
+class SpoilerDataIncludeRegions(_spoiler_hook_client.SpoilerDataIncludeRegions):
+    # Re-homed for the same reason as SpoilerDataInSlotData above.
+    __doc__ = _spoiler_hook_client.SpoilerDataIncludeRegions.__doc__
+
+
 class VanillaPlacement(Toggle):
     """
     If enabled, items will be placed in their original locations (proof statements will be
@@ -142,6 +147,7 @@ class MetamathOptions(PerGameCommonOptions):
     auto_download_database: AutoDownloadDatabase
     entrance_rule_mode: EntranceRuleMode
     spoiler_data_in_slot_data: SpoilerDataInSlotData
+    spoiler_data_include_regions: SpoilerDataIncludeRegions
 
 metamath_option_groups = [
     OptionGroup("Proof Settings", [
