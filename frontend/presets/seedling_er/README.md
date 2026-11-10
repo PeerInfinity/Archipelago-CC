@@ -25,7 +25,16 @@ the committed playthrough atlas (`frontend/modules/flashPanel/atlases/seedling-p
   rules (the sphere walk collects every location and The Seed); Seedling's checks (sphere 0 no smaller than
   vanilla's; no moved stair lands on an at-risk permissive binding).
 - ⛔ **Not playable as a shuffle yet** (Q3): the game still takes a stair to its vanilla room; the play-time
-  redirect is E5. No world package or Generate.py seed is built from it (that is the ER world-package step).
+  redirect is E5.
+- **Gated as a world (E4c)**, with nothing committed beside it:
+  - the **whole-game maze certifier** has an ER arm with its own baseline: `node scripts/procgen/probe-seedling-whole-game-certify.mjs
+    --source=er` rebuilds this preset's shuffled atlas (`make-seedling-er-preset.mjs` `buildSeedlingErSource`, refused unless it
+    compiles to this file), projects it into the maze (`make-seedling-playthrough-maze.mjs` `buildPlaythroughMaze({source})`) and
+    holds the verdict against `scripts/procgen/seedling-er-whole-game-certify-expected.json`;
+  - the **Python reachability** checks run over a world package generated from this file into a temp dir
+    (`test/test_seedling_er_reachability.py`, the package recipe `scripts/lib/worldgen_recipe.py`): no package under `worlds/`.
+  - The shuffled atlas, by hand: `node scripts/procgen/make-seedling-er-preset.mjs --atlas-out=er-atlas.json`, then
+    `node scripts/procgen/make-seedling-playthrough-maze.mjs --source=er-atlas.json --out=er-maze.json`.
 
 The world is a FUNCTION of the committed atlas, producer and derived-rule table and of the run
 (`seedlingErState()` in the producer: the atlas id and seed 1), never a hand edit. Regenerate (deterministic,
@@ -37,8 +46,9 @@ node scripts/procgen/make-seedling-er-preset.mjs --check  # the gate
 ```
 
 Regenerate it whenever the playthrough rules move (after the playthrough recipe's producers), and re-run its
-pins (`scripts/procgen/seedlingErMode.test.js`). The same run, stepped: `node scripts/procgen/entrance-step.js
-run --atlas <atlas id> --seed 1 -o env.json --rules-out rules.json`.
+pins (`scripts/procgen/seedlingErMode.test.js`). The same run, stepped (byte-identical to this file): `node scripts/procgen/entrance-step.js
+run --atlas <atlas id> --seed 1 --game-name "Seedling Playthrough ER" -o env.json --rules-out rules.json`; `--to shuffle --save
+env.json` then `run --resume env.json --rules-out rules.json` gives the same file without re-pooling (ER E4c).
 
 Registered once with
 `python scripts/utils/register-preset.py --game-id seedling_er frontend/presets/seedling_er/AP_1/AP_1_rules.json`;

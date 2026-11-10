@@ -388,6 +388,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             apChestItem: true,
             // ⛓ fidelity KNOCKBACK376 D1 (wave 37c): a broken rock's cell opens on the game's tick — ON since its flip (⚖ user 2026-11-05).
             rockGoneFencepost: true,
+            // ⛓ fidelity DRILLWATER D1 (wave 37e): a drill's `Enemy.update` terrain switch (water/lava/pit) — ON since its flip (⚖ user 2026-11-08).
+            drillTerrainSwitch: true,
             // ⛓ fidelity L39PHANTOM D1 (wave 38): a spinner the run's roster lost is not priced at its placement — OFF until licensed.
             spinnerRosterGone: false,
             // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ships OFF.

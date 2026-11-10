@@ -28,12 +28,12 @@ describe('CEREMONY126 — the switches', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
             expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(true);
             // ⛓ wave 37d (L25APITEM) appended `apChestItem` after them, then wave 37c (KNOCKBACK376) `rockGoneFencepost`
-            // (it landed after L25): D1 then D2, adjacent, followed only by later-landing keys.
+            // (it landed after L25), then wave 37e (DRILLWATER) `drillTerrainSwitch`: D1 then D2, adjacent, followed only by later-landing keys.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
             const at = keys.indexOf('ceremonyPressForecast');
             expect(keys.slice(at, at + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
-            // ⛓ wave 38: L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm` after them.
-            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'spinnerRosterGone', 'fireSpinnerArm'].includes(k)))
+            // ⛓ wave 37e: DRILLWATER `drillTerrainSwitch`; wave 38: L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm` after them.
+            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'drillTerrainSwitch', 'spinnerRosterGone', 'fireSpinnerArm'].includes(k)))
                 .toEqual([]);
         });
     it('the env names are known worker env names', () => {

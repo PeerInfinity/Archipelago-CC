@@ -1502,6 +1502,10 @@ export function staticEnemyDanger(run, box) {
         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
         const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
         if (liveDrill?.removed) continue;
+        // ⛓ fidelity DRILLWATER D1: a drowned/burnt or falling drill bills no contact — `destroy` gates `Enemy.hitPlayer`,
+        // and the pit's descent replaces it (`Enemy.as:96-111`). Its body fades out; nothing to price. (A sword-killed
+        // drill's "die"/fade pricing is DRILLKILL's and is left as it was: this reads the terrain verdict only.)
+        if (CONTACT_FIDELITY.drillTerrainSwitch && liveDrill && (liveDrill.terrainDeath || liveDrill.fallInPit === true)) continue;
         const liveTurret = liveTurretContactRect(run, inst);
         const r = liveDrill ? liveDrill.rect : (liveTurret ? liveTurret.rect : contactRect(inst));
         if (!r) continue;

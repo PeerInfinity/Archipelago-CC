@@ -1,0 +1,51 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 80bed19b63..7c8e951bf1 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -22848,7 +22848,7 @@ function drillWakes(run, d, q, slack = DRILL_KILL.wakeSlack) {
+ 
+ /** The planned walk from `from` to `to`, sampled every 2 px (both ends included), or null when no corridor plans. */
+ function plannedWalkSamples(run, from, to, opts) {
+-    const wps = planWaypointsOrNull(run.world, from, to, null, opts);
++    const wps = planWaypointsOrNull(run.world, from, to, true ? (opts.allowTeleporter ?? null) : null, opts);
+     if (wps === null) return null;
+     const pts = [{ x: from.x, y: from.y }, ...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
+     const out = [];
+@@ -23031,13 +23031,15 @@ function execDrillKill(run, perTick, id, kw, stance, ctx) {
+  * stance would wake, killed (nearest walk first). Null when the switch is OFF or no live drill is woken.
+  */
+ function execDrillKillsFirst(run, perTick, resolved, ctx) {
++    if (globalThis.process?.env?.CENSUS_DBG) console.error('DBG killsFirst', JSON.stringify({kf:CONTACT_FIDELITY.drillKillFirst, live:CONTACT_FIDELITY.drillLive, mixed:CONTACT_FIDELITY.drillMixedRooms, drills: liveDrills(run).map(d=>[d.id,d.x,d.y]), aim: resolved.stance, me:[run.state.x,run.state.y], kw: drillKillWeapon(run)}));
+     if (!(CONTACT_FIDELITY.drillKillFirst && CONTACT_FIDELITY.drillLive && CONTACT_FIDELITY.drillMixedRooms)) return null;
+     if (liveDrills(run).length === 0) return null;
+     const aim = resolved.stance ?? resolved.approach?.[0] ?? { x: run.state.x, y: run.state.y };
+     const kills = [];
+     for (let n = 0; ; n += 1) {
+         const opts = solverPlanOpts(run, senseContacts(run));
+-        const walk = plannedWalkSamples(run, run.state, aim, opts) ?? [{ x: run.state.x, y: run.state.y }, aim];
++        const walk = plannedWalkSamples(run, run.state, aim, (true ? { ...opts, extraVolumes: dangerVolumes(run, 0).filter((v) => !String(v.id).startsWith('drill')), ...(resolved.allowTeleporter !== undefined ? { allowTeleporter: resolved.allowTeleporter } : {}) } : opts)) ?? [{ x: run.state.x, y: run.state.y }, aim];
++        if (globalThis.process?.env?.CENSUS_DBG) { const w0 = walk; const d=liveDrills(run)[0]; console.error('DBG walk', w0===null?'NULL':w0.length, 'minDist', Math.min(...walk.map(q=>Math.hypot(q.x-d.x,q.y-d.y))).toFixed(1), 'wakesAny', walk.some(q=>drillWakes(run,d,q,0)), 'range', DRILL.runRange); }
+         const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
+         if (woken.length === 0) break;
+         const names = woken.map((d) => d.id).join(', ');
+@@ -23494,9 +23496,10 @@ function certifyExitPass(f, keys, cross) {
+ function execDrillTimedPassExit(run, perTick, door, ctx) {
+     if (!(CONTACT_FIDELITY.drillTimedPassExit && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive
+         && CONTACT_FIDELITY.drillMixedRooms)) return null;
+-    if (liveDrills(run).length === 0 || drillKillWeapon(run) !== null) return null;
++    if (globalThis.process?.env?.CENSUS_DBG) console.error('DBG passExit', JSON.stringify({drills: liveDrills(run).map(d=>d.id), kw: drillKillWeapon(run)}));
++    if (liveDrills(run).length === 0 || (drillKillWeapon(run) !== null && false)) return null;
+     const opts = solverPlanOpts(run, senseContacts(run));
+-    const walk = plannedWalkSamples(run, run.state, door.centre, opts) ?? [{ x: run.state.x, y: run.state.y },
++    const walk = plannedWalkSamples(run, run.state, door.centre, (true ? { ...opts, extraVolumes: dangerVolumes(run, 0).filter((v) => !String(v.id).startsWith('drill')), allowTeleporter: door.index } : opts)) ?? [{ x: run.state.x, y: run.state.y },
+         door.centre];
+     const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
+     if (woken.length === 0) return null;
+@@ -32260,6 +32263,7 @@ function solveSegmentUnder({
+             // blocks (`exitAimFor`); the step-off's straight walk back keeps
+             // the centre it was witnessed with.
+             // ⛓ seedling-fidelity-residue D-A: a door past a drill this run cannot kill is a timed pass (null OFF).
++            if (!stepOff?.dir && globalThis.process?.env?.CENSUS_WI_B === '1') execDrillKillsFirst(run, perTick, { stance: centre, allowTeleporter: index }, { what: whatExit, walkTo, goal, equip, fork });
+             const exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
+                 { what: whatExit, goal, fork });
+             const t = exitPass?.transition

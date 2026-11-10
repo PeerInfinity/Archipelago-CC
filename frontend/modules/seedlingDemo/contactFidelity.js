@@ -1902,6 +1902,20 @@ export const CONTACT_FIDELITY = {
      */
     rockGoneFencepost: true,
     /**
+     * fidelity DRILLWATER D1 (wave 37e) — A DRILL THAT HOPS ONTO WATER DROWNS. `Drill.as` overrides none of
+     * `dieInWater` / `dieInLava` / `canFallInPit` (`Enemy.as:33,39-40`), and `Drill.update` calls `super.update()` first,
+     * so `Enemy.update`'s terrain switch (`Enemy.as:62-112`) reads the cell the hop landed on at the drill's NEXT on-screen
+     * update: water (1) and lava (17) set `destroy` (the 0.1 `Mobile.death` fade, removed at alpha <= 0); a pit (6)
+     * latches `fallInPit` (the centring pull `/10`, `alpha -= 0.05`, `destroy` + `fell` at <= 0; `fallSpinSpeed` is
+     * cosmetic RNG, never modelled). A destroyed or falling drill bills no contact (`destroy` gates `hitPlayer`; the
+     * descent replaces `super.update()`) and the danger map stops pricing it, but it stays an "Enemy" to another drill's
+     * hop until removed. ON: `drill.stepDrill` runs the switch (ctx `tileTypeAt`), `levelRun.stepDrillsNow`'s DRILL D2
+     * refusal ("terrain switch … not modelled for a drill") is retired, `drillBodies` carries `fallInPit`/`fell`.
+     * Measured: L91's `drill@64,80` is the one shipped drill with a fatal tile in its hop reach (water (40,120), 4 hops).
+     * OFF: byte-identical. `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`. ON since the DRILLWATER flip (⚖ user 2026-11-08).
+     */
+    drillTerrainSwitch: true,
+    /**
      * fidelity L39PHANTOM D1 (wave 38) — A SPINNER THE RUN'S ROSTER LOST IS GONE, WHATEVER KILLED IT. The danger map's
      * static ingredient (`dangerMap.staticEnemyDanger` / `dangerVolumes`, through `spinnersTheRunSteps`) skipped a
      * census spinner only while it was in the live roster or had a LANDED press hit (`spinnerPressHits`), so a spinner
@@ -2310,6 +2324,9 @@ if (globalThis.process?.env?.SEEDLING_AP_CHEST_ITEM === '0') CONTACT_FIDELITY.ap
 // ⛓ fidelity KNOCKBACK376 D1: `SEEDLING_ROCK_GONE_FENCEPOST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '1') CONTACT_FIDELITY.rockGoneFencepost = true;
 if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '0') CONTACT_FIDELITY.rockGoneFencepost = false;
+// ⛓ fidelity DRILLWATER D1: `SEEDLING_DRILL_TERRAIN_SWITCH=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TERRAIN_SWITCH === '1') CONTACT_FIDELITY.drillTerrainSwitch = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TERRAIN_SWITCH === '0') CONTACT_FIDELITY.drillTerrainSwitch = false;
 // ⛓ fidelity L39PHANTOM D1: `SEEDLING_SPINNER_ROSTER_GONE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '1') CONTACT_FIDELITY.spinnerRosterGone = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '0') CONTACT_FIDELITY.spinnerRosterGone = false;

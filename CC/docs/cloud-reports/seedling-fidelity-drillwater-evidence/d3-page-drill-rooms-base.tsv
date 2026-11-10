@@ -1,0 +1,21 @@
+700	level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0	done	476	roomHits=2	divs=0	
+701	level_88 <- in_L12_304_0 -> exit:out_teleporter_96_304	crossed	4	roomHits=0	divs=0	
+702	level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0	done	379	roomHits=2	divs=0	
+703	level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0	done	5	roomHits=0	divs=0	
+704	level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304	failed	None	roomHits=0	divs=0	the solver declined level_88 -> level_12__r0c19 in level 88 (refusal): solverBot(wasm-exit-88) reach-exit (96,304)->L12: the combat ladder is EXHAUSTED. The corridor passes through danger at (136.9,144.4) — enemy:drill@128,160 (a stepped drill, priced as a static box where it stands now (136,152) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)) — and every r
+705	level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0	done	86	roomHits=0	divs=0	
+706	level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0	done	76	roomHits=0	divs=0	
+707	level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304	crossed	213	roomHits=1	divs=0	
+708	level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0	done	5	roomHits=0	divs=0	
+292	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96	done	58	roomHits=0	divs=0	
+293	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0	done	5	roomHits=0	divs=0	
+295	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96	done	5	roomHits=0	divs=0	
+296	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0	done	58	roomHits=0	divs=0	
+299	level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304	done	4	roomHits=0	divs=0	
+298	level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16	done	5	roomHits=0	divs=0	
+717	level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144	done	7	roomHits=0	divs=0	
+718	level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48	failed	None	roomHits=0	divs=0	the solver declined level_91 -> level_92__r4c2 in level 91 (refusal): solverBot(wasm-exit-91) reach-exit (240,48)->L92: the combat ladder is EXHAUSTED. The corridor passes through danger at (66.3,93.7) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)) — and every rung of 
+719	level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144	failed	None	roomHits=0	divs=0	the solver declined level_91 -> level_89__r1c10 in level 91 (refusal): solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)) — and every rung of
+720	level_91 <- in_L92_32_144 -> exit:out_teleporter_240_48	done	5	roomHits=0	divs=0	
+294	level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared	done	170	roomHits=0	divs=0	
+297	level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared	done	303	roomHits=0	divs=0	

@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
-import { parseArgs, needsOldCert, oldFramingSource, shardRegions, mergeArm, OLD_FRAMING_HOOK } from './probe-seedling-whole-game-certify.mjs';
+import { parseArgs, needsOldCert, oldFramingSource, shardRegions, mergeArm, OLD_FRAMING_HOOK, baselineDrift, ER_EXPECTED_FILE } from './probe-seedling-whole-game-certify.mjs';
 import { l3Tapes, readRun, expectL3, DOOR_TO } from './probe-seedling-l3-water-door.mjs';
 import { PIN_NAMES, parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
 
@@ -21,15 +21,39 @@ const CERT_SRC = readFileSync(`${ROOT}frontend/modules/mazeRoom/tileSpike/certif
 
 describe('probe-seedling-whole-game-certify — argv', () => {
     it('defaults: 4 shards, both arms, the seedling-probe artifact dir', () => {
-        expect(parseArgs(['node', 'x'])).toEqual({ shards: 4, out: 'test-results/seedling-probe', arms: ['new', 'old'] });
+        expect(parseArgs(['node', 'x'])).toEqual({ shards: 4, out: 'test-results/seedling-probe', arms: ['new', 'old'], source: 'vanilla' });
     });
     it('reads --shards / --arms / --out', () => {
-        expect(parseArgs(['node', 'x', '--shards=2', '--arms=new', '--out=o'])).toEqual({ shards: 2, out: 'o', arms: ['new'] });
+        expect(parseArgs(['node', 'x', '--shards=2', '--arms=new', '--out=o'])).toEqual({ shards: 2, out: 'o', arms: ['new'], source: 'vanilla' });
+        expect(parseArgs(['node', 'x', '--source=er']).source).toBe('er');
     });
     it('refuses a bad shard count or an unknown arm', () => {
         expect(() => parseArgs(['node', 'x', '--shards=0'])).toThrow(/--shards/);
         expect(() => parseArgs(['node', 'x', '--shards=two'])).toThrow(/--shards/);
         expect(() => parseArgs(['node', 'x', '--arms=new,stricter'])).toThrow(/stricter/);
+        expect(() => parseArgs(['node', 'x', '--source=shuffled'])).toThrow(/--source: unknown source shuffled/);
+    });
+});
+
+describe('probe-seedling-whole-game-certify — the ER arm\'s own baseline (ER E4c)', () => {
+    const expected = JSON.parse(readFileSync(ER_EXPECTED_FILE, 'utf8'));
+    const arm = () => ({ problems: expected.problems.map((p) => p.row), accepted: Array.from({ length: expected.accepted }, (_, i) => ({ label: `a${i}` })), threw: [] });
+    it('the committed baseline names every problem row and pins the accepted / threw counts', () => {
+        expect(expected.problems.every((p) => typeof p.row === 'string' && p.row.length > 0 && p.$why)).toBe(true);
+        expect(Number.isInteger(expected.accepted) && Number.isInteger(expected.threw)).toBe(true);
+        expect(baselineDrift(arm(), expected).drift).toEqual([]);
+    });
+    it('MUTANTS: a new problem, a vanished one, a moved count or a throw is a drift line naming it', () => {
+        const a = arm();
+        a.problems = [...a.problems, 'level_9 → level_8 holding []: derived true, atlas false'];
+        expect(baselineDrift(a, expected).drift).toEqual(['problem only measured: level_9 → level_8 holding []: derived true, atlas false']);
+        const b = arm();
+        const gone = b.problems.shift();
+        expect(baselineDrift(b, expected).drift).toEqual([`problem only pinned: ${gone}`]);
+        const c = arm();
+        c.accepted.pop();
+        c.threw.push('shard 0: boom');
+        expect(baselineDrift(c, expected).drift).toEqual([`accepted: expected ${expected.accepted}, measured ${expected.accepted - 1}`, `threw: expected ${expected.threw}, measured ${expected.threw + 1}`]);
     });
 });
 
