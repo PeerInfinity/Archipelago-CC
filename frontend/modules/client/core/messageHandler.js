@@ -34,6 +34,7 @@ import {
   WORLDGEN_RULES_KEY,
   WORLDGEN_RULES_OMITTED_KEY,
 } from './localRulesOverlay.js';
+import { applyReceivedItems, goalMet } from './goalCheck.js';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -105,6 +106,8 @@ export class MessageHandler {
     // connection. Guards against re-sending CLIENT_GOAL on every subsequent
     // location check or re-render. Reset on (re)connect in _handleConnected.
     this._goalReported = false;
+    // What the server has delivered on this connection: item name -> count.
+    this._serverItems = new Map();
   }
 
   // Add method to inject eventBus
@@ -327,8 +330,11 @@ export class MessageHandler {
     // The loaded rules decide the game, as long as they are for a game this
     // room has. Rules for another game can't describe this slot (the app
     // always boots with SOME preset loaded, so "no rules" alone never
-    // happens); those are treated as no usable rules.
+    // happens); those are treated as no usable rules. So are rules for a game
+    // the room has but for another player: RoomInfo has no slot -> game map,
+    // and their game would get this slot refused with InvalidGame.
     const loadedGame = this.getClientGameName();
+    const otherPlayersName = this._loadedPlayerNameIfNotThisSlot();
     // Rules this client can build from server data are rebuilt for a room of
     // another seed (unless a preset matches it), not used as they are.
     const loadedSeed = stateManagerProxySingleton?.getStaticData?.()?.seed_name;
@@ -341,7 +347,9 @@ export class MessageHandler {
         `The loaded ${loadedGame} rules are for seed ${loadedSeed}; this room is seed ${data.seed_name}.`,
         'info'
       );
-      return this._connectWithoutRules(data, roomGames, roomInfoSeq, loadedGame);
+      return this._connectWithoutRules(
+        data, roomGames, roomInfoSeq, otherPlayersName ? null : loadedGame
+      );
     }
     // Rules a generated world was built from are the room's logic at any
     // seed: the server's placements and slot_data are laid over them.
@@ -353,18 +361,40 @@ export class MessageHandler {
       }
     }
     if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
-      log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
-      this._warnOnSeedMismatch(data.seed_name);
-      this._sendConnect(loadedGame);
-      return;
-    }
-    if (loadedGame) {
+      if (!otherPlayersName) {
+        log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
+        this._warnOnSeedMismatch(data.seed_name);
+        this._sendConnect(loadedGame);
+        return;
+      }
+      this._printToConsole(
+        `The loaded rules are for ${otherPlayersName}, not ${this.clientSlotName}; looking for this slot's rules…`,
+        'info'
+      );
+    } else if (loadedGame) {
       this._printToConsole(
         `The loaded rules are for ${loadedGame}, which this room does not have (${roomGames.join(', ')}).`,
         'warning'
       );
     }
     return this._connectWithoutRules(data, roomGames, roomInfoSeq);
+  }
+
+  /**
+   * The loaded player's name, when the slot being connected with is someone
+   * else. Only the loaded player counts, even if the document holds several:
+   * that player's game is the one the Connect packet would carry. Null when
+   * there is nothing to compare: a seedless document (it describes no
+   * particular room) or one with no name for the loaded player.
+   *
+   * @returns {string|null}
+   */
+  _loadedPlayerNameIfNotThisSlot() {
+    const staticData = stateManagerProxySingleton?.getStaticData?.();
+    const playerId = staticData?.playerId;
+    if (!staticData?.seed_name || playerId === undefined || playerId === null) return null;
+    const name = staticData.player_names?.[String(playerId)];
+    return name && this.clientSlotName && name !== this.clientSlotName ? name : null;
   }
 
   /**
@@ -708,6 +738,7 @@ export class MessageHandler {
     // complete (reconnecting after finishing), the downstream snapshot sync
     // will re-trigger reportGoal() so the slot still registers as goaled.
     this._goalReported = false;
+    this._serverItems.clear();
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -1209,6 +1240,9 @@ export class MessageHandler {
       );
     }
 
+    applyReceivedItems(this._serverItems, data.index, processedItemDetails.map((d) => d.itemName));
+    this._reportGoalIfMet();
+
     // Publish notification
     this.eventBus?.publish('game:itemsReceived', {
       index: data.index, // Original index from server packet
@@ -1222,6 +1256,12 @@ export class MessageHandler {
         senderName: d.senderSlot !== null ? (this.slotInfo?.[String(d.senderSlot)]?.name ?? null) : null,
       })),
     });
+  }
+
+  /** Reports the goal once the server's items satisfy the slot's completion condition (see goalCheck.js). */
+  _reportGoalIfMet() {
+    const game = this.slotInfo?.[String(this.clientSlot)]?.game ?? this.clientGameName;
+    if (goalMet(getLastRawJsonData?.()?.rawJsonData, this.clientSlot, game, this._serverItems)) this.reportGoal();
   }
 
   _logDebug(message, ...args) {
