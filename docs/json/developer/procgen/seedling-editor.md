@@ -190,11 +190,44 @@ Cross-part links are authored from derived exit ids, and any displacement is pre
 | FILL a rectangle | `l` | two clicks: every cell of the rectangle gets the brush's target (a PAINT column or a PLACE body) |
 | CLEAR a rectangle | `x` | two clicks: every cell of the rectangle is emptied of everything, or of one field (`#genEditClearWhat`) |
 | MOVE the selection | `m` | one click: the RECT selection is cut from where it was copied and pasted there (ADD or REPLACE, same filter); overlapping moves read the destination after the cut. A selection can be moved once; RECT again to move again |
+| LINK a group | `k` | first click picks an entity and highlights its partners; the next click moves it into that partner's group. Shift-click gives the two a new group of their own (one edit); Shift-click the picked entity to detach it alone; click it again to drop the pick |
+| NODE a rope end | `n` | first click picks a rope; the next click puts its end in that column, on the rope's own row |
 | (clear the tool) | `Escape` | disarms whatever is armed |
 | UNDO | `Ctrl/Cmd+Z` | the fold over a shorter list |
 | REDO | `Ctrl/Cmd+Shift+Z`, `Ctrl/Cmd+Y` | re-applies the last undone edit; any new edit clears the redo list |
 
 REDO lives in the shared edit core (`session.redo()`, `redoCount()`); the redo list is not part of the payload. A page that registers no `redo` command keeps the old keys: `Ctrl/Cmd+Shift+Z` still reaches its undo, and `Ctrl/Cmd+Y` stays unbound. The maze lab's EDIT arm registers one (`#labRedo`). GENERATE's host keeps its own redo list, valid only on the state the last undo left; a STEP, a directive or a load voids it. FILL, CLEAR and MOVE are built by the core's `rectFillOps`, `rectClearOps` and `rectMoveOps`, and the REPLACE paste by `rectReplaceOps`; the last three need the adapter's `clearOps` and refuse by name without it. Removals go through the same ops as always, so every rule that refuses a removal refuses a clear, a replace or a move the same way (an empty cell's `remove`, and a generated room's save refusing a moved door or AP item).
+
+### Entity links
+
+`seedlingDemo/entityLinks.js` reads what a room's entities are wired to, builds the edits and names the problems. It adds no op: a group is edited by `attrs` and a rope's end by `nodes`, so a link edit is an ordinary entry in the edit list. The overlay is drawn through `editorView`'s `shapes()`, with `#genEditShowLinks` to hide it; the shared core draws nothing of its own for it.
+
+| Link | What the game reads | In the editor |
+|---|---|---|
+| Group (`tset`) | The `Activators` classes share a number; a publisher (`button`, `buttonroom`, `rope`) reaches every other one with the same `t`. A missing attribute is group 0 | Drawn publisher → responder; rewired with LINK |
+| Sentinel group (`tset < 0`) | A meaning of its own to the class: on a lock "opens when the room has no enemies", on a crusher "always armed" | Not a wire. Not drawn; refused as a partner |
+| Forced group | `shieldlock`, `shieldlocknorm` and `bosslock` take theirs from the constructor | Refused by name |
+| Cross-room `buttonroom` (`room` is not -1) | Its `tset` is a persistence flag of that level, not a group of this room | Named in the readout; edit it with ATTRS |
+| Implicit publisher | A `wand` pickup and a dying `finalboss` publish group 0 | Drawn and counted as a partner; not editable |
+| Rope end (`<node>`) | `rope` alone declares nodes (Ogmo limit 1). The loader keeps the last node and passes only its `x` | Drawn; moved with NODE |
+
+The door links (`to`, `fallthrough`) belong to the set editor's `connect` and are not part of this.
+
+No moving platforms exist in this game, so a rope's end is the only path to edit. Removing a rope's node is not offered, because the game cannot load a rope without one, and there is nothing to reorder with one node.
+
+**What a save refuses.** Only what the game cannot load: a rope with no node, which kills the level loader on a null point. The OEL download, ▶ load, closing a room into a set and a generated room's save all refuse it with the same sentence. The payload download still works, since a payload is unfinished work and not something the game reads.
+
+**What only warns**, in `#genEditLinkIssues`, because the room loads and plays:
+
+| Issue | Meaning |
+|---|---|
+| `group-no-publisher` | Responders nothing in this room activates, which is also what a removed button leaves behind. Some shipped rooms are like this, so it cannot be a refusal |
+| `group-no-responder` | A publisher wired to nothing |
+| `publisher-sentinel-group` | A publisher in a negative group |
+| `rope-many-nodes`, `rope-node-left`, `rope-node-row` | Extra nodes are ignored; an end left of the pulley gives a negative collider; a node's `y` is ignored |
+| `tset-unread`, `tset-not-an-integer` | A `tset` on a type that never reads it; a value the game reads as 0 |
+
+**SOLVE and links.** A link edit makes a new record, so the room is uncertified until SOLVE is pressed again, as for any edit. The readout says by name which wires SOLVE cannot see: it asks the model's own `groupResponders` for each responder and reports any that is missing (`rocklock`, `lightpole`, `fallrocklarge`, a grouped `crusher`), and it names cross-room buttons and implicit publishers.
 
 **SOLVE in EDIT.** SOLVE certifies the room on screen through the oracle GENERATE uses (`editSolve.solveEditedRoom` → `procgenSeedling.seedlingOracle`, whose `solve` is `procgenOracle.solve` under the record's own pins). `certifyGenRoom` does not fit: it re-draws a generated room's model from its seed and knobs, which a hand-edited room does not have. The two things the oracle needs that a room with no ladder does not carry are inputs on the page:
 

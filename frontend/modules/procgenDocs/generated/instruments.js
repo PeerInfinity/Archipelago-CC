@@ -53,8 +53,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 62,
-            "count": 101,
+            "browser": 63,
+            "count": 102,
             "id": "check"
         },
         {
@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 147,
-            "count": 197,
+            "browser": 146,
+            "count": 196,
             "id": "probe"
         },
         {
@@ -236,7 +236,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 517,
         "browser": 214,
-        "cited": 274,
+        "cited": 272,
         "files": 535,
         "lineStyle": 18,
         "withDocblock": 535,
@@ -3656,6 +3656,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-editor-e1 — **SEEDLING EDITOR E1, IN A REAL BROWSER**: the everyday-editing tools on `watch.html?source=edit`, plus REDO on the maze lab's EDIT arm (the shared `editorView` reaching both).",
             "path": "scripts/procgen/check-seedling-editor-e1.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check",
+                "edit",
+                "json",
+                "settled",
+                "status"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-editor-e2.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-editor-e2 — **SEEDLING EDITOR E2, IN A REAL BROWSER**: entity links on `watch.html?source=edit`.",
+            "path": "scripts/procgen/check-seedling-editor-e2.mjs"
         },
         {
             "argvHelpers": [
@@ -13222,6 +13264,68 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "clear-ticks",
+                "host",
+                "only",
+                "settle",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-encounter-latch.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-ticks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "settle"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling ENCOUNTER-LOCK LATCH, THE GAME'S WAY (rules `rules-l26-rocklock-pocket`).",
+            "path": "scripts/procgen/probe-seedling-encounter-latch.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
@@ -13506,71 +13610,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg",
-                "check"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md",
-                "docs/json/developer/procgen/seedling-bot.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "probe-seedling-fire-spinner.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "dump"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "end"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "on"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "press"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "record"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "tape"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "probe-seedling-fire-spinner — ⛓⛓⛓ seedling-fidelity-firespinner: A FIRE PRESS REACHING A SPINNER, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
-            "path": "scripts/procgen/probe-seedling-fire-spinner.mjs"
         },
         {
             "argvHelpers": [
@@ -14919,46 +14958,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md",
-                "docs/json/developer/procgen/seedling-bot.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "probe-seedling-l39-pulser-kill.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "dump"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "record"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "probe-seedling-l39-pulser-kill — ⛓⛓ seedling-fidelity-l39phantom D0: A PULSER KILLS `spinner@112,88` IN L39, ON THE GAME, and what is left of it afterwards (its fade, its removal), compared with the model tick by tick at 0 px.",
-            "path": "scripts/procgen/probe-seedling-l39-pulser-kill.mjs"
         },
         {
             "argvHelpers": [

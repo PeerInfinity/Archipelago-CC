@@ -14,6 +14,8 @@ import {
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { chargeMana } from '../resourceChannels/resourceChannelsLibrary.js';
 import { substrateRegistryEntry as mazeEntry } from '../mazeRoom/mazeRoomLibrary.js';
+import { substrateRegistryEntry as cloudberryEntry } from '../cloudberryDemo/cloudberryLibrary.js';
+import { substrateRegistryEntry as noiz2saEntry } from '../noiz2saSubstrate/noiz2saSubstrateLibrary.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
 
 function makeFakeBus() {
@@ -43,12 +45,19 @@ function makeFakeDispatcher() {
     };
 }
 
-const MANA_REGIONS = new Set(['A', 'B', 'SelfBilled', 'SelfBilled2', 'Own', 'Undeclared', 'MazeRoom', 'MazeRoom2']);
+const MANA_REGIONS = new Set(['A', 'B', 'SelfBilled', 'SelfBilled2', 'Own', 'Undeclared', 'MazeRoom', 'MazeRoom2',
+    'Cloudberry', 'Cloudberry2', 'Noiz2sa', 'Noiz2sa2', 'SummaryNoClock', 'ClockNotSummary']);
 const REGION_SUBSTRATES = {
     SelfBilled: 'self_billing',
     SelfBilled2: 'self_billing',
     Own: 'text_adventure',
     Undeclared: 'no_declaration',
+    Cloudberry: 'cloudberry',
+    Cloudberry2: 'cloudberry',
+    Noiz2sa: 'noiz2sa',
+    Noiz2sa2: 'noiz2sa',
+    SummaryNoClock: 'summary_no_clock',
+    ClockNotSummary: 'clock_not_summary',
     MazeRoom: mazeEntry.id,
     MazeRoom2: mazeEntry.id,
 };
@@ -248,6 +257,89 @@ describe('wrapper mana leg — regions another substrate bills', () => {
         expect(gs.getCurrentMana()).toBe(40);
     });
 
+    it('⛓ premise: the real Cloudberry and Noiz2sa entries declare a summary recording priced by their play clock, and no sharing.mana', () => {
+        for (const e of [cloudberryEntry, noiz2saEntry]) {
+            expect(e.loopSupport.summaryRecording).toBe(true);
+            expect(e.loopSupport.playClock).toBe(true);
+            expect(e.sharing?.mana).toBeUndefined();
+        }
+    });
+
+    it.each([
+        ['a summary recording without a play clock (Bounce)', 'SummaryNoClock', { summaryRecording: true }],
+        ['a play clock without a summary recording (flash_seedling, flash_seedling_gen)', 'ClockNotSummary', { playClock: true }],
+    ])('does not charge %s: loop mode prices it by its own play', (_label, region, loopSupport) => {
+        substrateRegistry.register({ id: REGION_SUBSTRATES[region], loopSupport });
+        const { gs, bus } = wire({ currentRegion: region });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: 'A' });
+        expect(gs.getCurrentMana()).toBe(100);
+        expect(gs.getLoopResetCount()).toBe(0);
+    });
+
+    it('still charges an entry that declares loopSupport without a summary recording or a play clock', () => {
+        substrateRegistry.register({ id: 'no_declaration', loopSupport: { executeVia: 'solver', record: true } });
+        const { gs, bus } = wire({ currentRegion: 'Undeclared' });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
+    });
+
+    it('still charges a Cloudberry region while its entry has not registered (read at charge time)', () => {
+        const { gs, bus } = wire({ currentRegion: 'Cloudberry' });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
+        substrateRegistry.register(cloudberryEntry);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Cloudberry', newRegion: 'Cloudberry2' });
+        expect(gs.getCurrentMana()).toBe(90);
+    });
+
+    describe.each([
+        ['Cloudberry', 'Cloudberry2', cloudberryEntry],
+        ['Noiz2sa', 'Noiz2sa2', noiz2saEntry],
+    ])('%s with loop mode off', (region, next, entry) => {
+        beforeEach(() => { substrateRegistry.register(entry); });
+
+        it('a location check costs nothing and earns no region XP', () => {
+            const { gs, bus } = wire({ currentRegion: region });
+            bus.publish('stateManager:snapshotUpdated', CHECK);
+            expect(gs.getCurrentMana()).toBe(100);
+            expect(gs.getRegionXP(region).xp).toBe(0);
+        });
+
+        it('leaving costs nothing, so low mana cannot fire a loop reset from here', () => {
+            const { gs, bus } = wire({ currentRegion: region });
+            gs.deductMana(99);
+            bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: next });
+            expect(gs.getCurrentMana()).toBe(1);
+            expect(gs.getLoopResetCount()).toBe(0);
+        });
+
+        it('leaving into a charged region charges nothing for the room left', () => {
+            const { gs, bus } = wire({ currentRegion: region });
+            bus.publish('gameState:regionChanged', { oldRegion: region, newRegion: 'Own' });
+            expect(gs.getCurrentMana()).toBe(100);
+        });
+
+        it('the mana readout still shows', () => {
+            const { bus } = wire({ currentRegion: region });
+            bus.publish('gameState:manaChanged', {});
+            expect(bus.published.at(-1)).toEqual({
+                event: getHeaderInfoEvent(),
+                data: { text: 'mana: 100.0 / 100.0' },
+            });
+        });
+    });
+
+    it('a text adventure region still pays its check and its move after a Cloudberry room', () => {
+        substrateRegistry.register(cloudberryEntry);
+        const { gs, bus } = wire({ currentRegion: 'Cloudberry' });
+        bus.publish('gameState:regionChanged', { oldRegion: 'Cloudberry', newRegion: 'Own' });
+        bus.publish('stateManager:snapshotUpdated', CHECK);
+        expect(gs.getCurrentMana()).toBe(90);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getCurrentMana()).toBe(40);
+    });
+
     it('moving from a self-billed region into a charged one bills only the region this leg owns', () => {
         register();
         const { gs, bus } = wire({ currentRegion: 'SelfBilled' });
@@ -272,6 +364,69 @@ describe('wrapper mana leg — regions another substrate bills', () => {
             event: getHeaderInfoEvent(),
             data: { text: 'mana: 100.0 / 100.0' },
         });
+    });
+});
+
+describe('wrapper mana leg — noManaDepletionReset (loop mode off)', () => {
+    // ⚖ Robert 2026-11-09, "Honour it everywhere": a text adventure room
+    // honours the flag with loop mode off (chargeMana reports no depletion
+    // while it is set), as the loops' own out-of-mana resets do.
+
+    it('a move that empties the pool with the flag set runs mana negative: no reset, no teleport', () => {
+        const { gs, bus, dispatcher } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        gs.deductMana(60); // 40 left; the move costs 50
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getCurrentMana()).toBe(-10);
+        expect(gs.manaDebt).toBe(10);
+        expect(gs.getLoopResetCount()).toBe(0);
+        expect(dispatcher.published).toHaveLength(0);
+    });
+
+    it('checks that empty the pool with the flag set are all charged, and none resets', () => {
+        const { gs, bus, dispatcher } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        gs.deductMana(85); // 15 left; L1 → 5, L2 → -5, L3 → -15
+        bus.publish('stateManager:snapshotUpdated', {
+            snapshot: { checkedLocations: ['L1', 'L2', 'L3'] },
+        });
+        expect(gs.getCurrentMana()).toBe(-15);
+        expect(gs.getRegionXP('Own').xp).toBe(30);
+        expect(gs.getLoopResetCount()).toBe(0);
+        expect(dispatcher.published).toHaveLength(0);
+    });
+
+    it('with the flag clear, the same move still resets and teleports', () => {
+        const { gs, bus, dispatcher } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = false;
+        gs.deductMana(60);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getLoopResetCount()).toBe(1);
+        expect(gs.getCurrentMana()).toBe(100);
+        expect(dispatcher.published).toHaveLength(1);
+    });
+
+    it('clearing the flag again restores the reset at the next depletion', () => {
+        const { gs, bus } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        gs.deductMana(60);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        expect(gs.getLoopResetCount()).toBe(0);
+        gs.noManaDepletionReset = false;
+        bus.publish('stateManager:snapshotUpdated', { snapshot: { checkedLocations: ['L1'] } });
+        expect(gs.getLoopResetCount()).toBe(1);
+        expect(gs.getCurrentMana()).toBe(100);
+    });
+
+    it('loop mode on is unchanged: this leg charges nothing, so the flag has nothing to suppress', () => {
+        const { gs, bus } = wire({ currentRegion: 'Own' });
+        gs.noManaDepletionReset = true;
+        bus.publish('gameState:loopModeChanged', { active: true });
+        gs.deductMana(60);
+        bus.publish('gameState:regionChanged', { oldRegion: 'Own', newRegion: 'A' });
+        bus.publish('stateManager:snapshotUpdated', { snapshot: { checkedLocations: ['L1'] } });
+        expect(gs.getCurrentMana()).toBe(40);
+        expect(gs.getLoopResetCount()).toBe(0);
     });
 });
 

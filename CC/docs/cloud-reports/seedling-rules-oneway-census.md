@@ -96,10 +96,10 @@ collisions over all 116 levels). The only implicit writers are `Yeti.as:48` (`{5
 | `wand` | 1 | inert-in-AP | the L43 location: an `apitem` in the AP delivery, with no Activators |
 | `bosslock` | 14 | 12 priced · 2 harmless | 12 obstacle events, each with a `side` ("walking its key line"). L56 `@96,16` and L66 `@72,64` have no event: in each, the south key line faces the room's arrivals ((16,112) from L52; (72,80) from L70), and the far side (L56's pit to L57; L66's door to L70) is reached only through it |
 | `shieldlock` / `shieldlocknorm` | 1 / 2 | 1 priced · 2 harmless | L71 `@288,256` is an event with a side. **L12 `@288,704`**: opens from the WEST only, so a player in the east pocket (`level_12__r43c21` + L34) cannot open it. But L34's only entrance is that pocket, and the pocket's only entrance is `r0c19` through the lock from the west, which removes the lock for good (tset −2, tag 10). So the rules' east→west `Has(Shield)` edge is never needed while the lock is shut. L20 `@176,16`: the west side is the main room; the east tile is `buttonroom@192,16`'s dead end |
-| `lock` | 13 | 8 priced · 5 harmless | tset −1 ×8: room-clear locks that `check()` keeps open. tset ≥ 0 ×5: held by a button (B, not one-way); L82's is the pocket's exit |
+| `lock` | 13 | 8 priced · 5 harmless | tset −1 ×8: room-clear locks that `check()` keeps open (⛓ RULES rocklock-pocket: L18 `@144,112` and L53 `@144,208` are, like L26's rock lock, cleared only from their room; their door pockets cross on the lock's event. L60 `@128,80`'s pocket stays on the weapon rule, undecided: its jellyfish come to the lock's face, where the Ghost Sword's slash reaches through, `Player.as:917`). tset ≥ 0 ×5: held by a button (B, not one-way); L82's is the pocket's exit |
 | `grasslock` | 1 | priced | L28, held by the fallen rock (`L28 flag 0`, effect "holds") |
 | `wandlock` | 15 | 1 priced · 14 harmless | `L39 flag 8` (the cross-level latch from L38); the rest are button/cover puzzles (B) |
-| `rocklock` | 2 | priced | L26 tset −1 (room clear; `check()` removes it once cleared; the rules charge the kill per crossing); `L112 flag 1` (FinalBoss's `activateAll(t0)`) |
+| `rocklock` | 2 | priced | L26 tset −1 (room clear; `check()` removes it once cleared). ⛓ Corrected by RULES rocklock-pocket: the kill is charged from the room side `level_26__r2c4` only; from the L28 pocket `level_26__r13c8` no inventory clears the room (`puncher@32,208` never reaches it), so the pocket's crossing costs the event `L26 flag 0: rocklock@112,208 cleared`, collected in `r2c4` (`seedlingObstacleEvents.encounterLockSides`); `L112 flag 1` (FinalBoss's `activateAll(t0)`) |
 | `magicallock` / `…fire` / `breakablerock` / `…ghost` / `burnabletree` / `karlore` / `finaldoor` / `teleporter`(L58) / `yeti` | 4/2/22/2/6/1/1/1/1 | priced | item- or talk-gated persistent openers, openable from any side (wand shot / strike / fire / talk); events where a flag matters (`L0 flag 1/4`, `L12 flag 7`, `L24 flag 0`, `L58 flag 1`, `L113 flag 0`) |
 | `chest` | 16 | harmless | opens, never closes; a location chest is an `apitem` (8×8, not Solid) in the AP delivery, so its tile is at most more open (the rules price `chest` open). Its *pickup side* is a separate, already-queued item: a vanilla Chest opens only from the line under it (`Chest.as:63`), an `apitem` from any side (the rules arc's 2026-10-27 FUTURE row, held for the next AS3 recompile) |
 | `lightpole` / `darktrap` | 20 / 7 | 6+7 priced · 14 harmless | the dark-trap pole events (`L62 flag 0`, `L63 flag 1/6/7`, `L65 flag 0`, `L101 flag 0`); 14 poles have no darktrap reading them (lighting only, which is fidelity W34 LIGHTPOLE's ground) |
@@ -231,7 +231,7 @@ AS3, wasm or gitlinks. No `pytest` run, no unfiltered vitest. The dev server on 
 | L16 | `button@272,48` | tset=1 | harmless | momentary; the verdict is its responder row |
 | L16 | `pushableblock@256,80` |  | harmless | no persistence |
 | L17 | `chest@128,16` | tag=0 | harmless | opens, never closes; a location chest is an apitem in the AP delivery (not Solid) |
-| L18 | `lock@144,112` | tset=-1 tag=0 | priced | room-clear lock; check() removes it once cleared (persistent opener) |
+| L18 | `lock@144,112` | tset=-1 tag=0 | priced | room-clear lock; check() removes it once cleared (persistent opener). ⛓ rocklock-pocket: from the L19 pocket `r7c10` it costs `L18 flag 0: lock@144,112 cleared` (collected in `r1c1`) |
 | L18 | `spinner@48,96` | tag=-1 | harmless | opens nothing; not Solid |
 | L18 | `spinner@112,48` | tag=-1 | harmless | opens nothing; not Solid |
 | L19 | `shieldboss@80,32` | tag=0 | priced | gated overlay row |
@@ -243,7 +243,7 @@ AS3, wasm or gitlinks. No `pytest` run, no unfiltered vitest. The dev server on 
 | L24 | `burnabletree@32,128` | tag=0 | priced | G(hasFire) |
 | L25 | `pushableblock@80,64` |  | harmless | no persistence |
 | L25 | `chest@96,96` | tag=0 | harmless | opens, never closes; a location chest is an apitem in the AP delivery (not Solid) |
-| L26 | `rocklock@112,208` | tset=-1 tag=0 | priced |  |
+| L26 | `rocklock@112,208` | tset=-1 tag=0 | priced | ⛓ rocklock-pocket: from the L28 pocket `r13c8` it costs `L26 flag 0: rocklock@112,208 cleared` (collected in `r2c4`); the weapon from `r2c4` |
 | L28 | `fallrock@112,240` | tset=1 tag=1 | priced | L28 flag 0: rope@160,64 cleared (action "opens" fallrock "holds"): it lands on button@112,240 and holds grasslock@176,208 open; the four spires around it leave a ring (no cut). Witness: probe-seedling-rope-events.mjs |
 | L28 | `rope@160,64` | tset=1 tag=0 | priced | L28 flag 0: rope@160,64 cleared |
 | L28 | `button@112,240` | tset=0 | harmless | momentary; the verdict is its responder row |
@@ -350,7 +350,7 @@ AS3, wasm or gitlinks. No `pytest` run, no unfiltered vitest. The dev server on 
 | L48 | `chest@152,184` | tag=0 | harmless | opens, never closes; a location chest is an apitem in the AP delivery (not Solid) |
 | L48 | `karlore@112,272` | tag=-1 | priced | G(hasFire) overlay row |
 | L48 | `bosslock@48,144` | keyType=3 tag=1 | priced | L48 flag 1: bosslock@48,144 cleared (sided: the key line south) |
-| L53 | `lock@144,208` | tset=-1 tag=2 | priced | room-clear lock; check() removes it once cleared (persistent opener) |
+| L53 | `lock@144,208` | tset=-1 tag=2 | priced | room-clear lock; check() removes it once cleared (persistent opener). ⛓ rocklock-pocket: from the L54 pocket `r14c9` it costs `L53 flag 2: lock@144,208 cleared` (collected in `r9c10`) |
 | L53 | `breakablerock@112,128` | tag=0 | priced | G(hasSword|hasSpear) |
 | L53 | `breakablerock@128,160` | tag=1 | priced | G(hasSword|hasSpear) |
 | L56 | `bosslock@96,16` | keyType=3 tag=0 | harmless | no event; the south key line faces the room's arrivals, and the far side is reached only through it |
@@ -358,7 +358,7 @@ AS3, wasm or gitlinks. No `pytest` run, no unfiltered vitest. The dev server on 
 | L57 | `watcher@48,32` | tag=1 | harmless | no other entity in its level reads its tag (no shared tags in any level); invisible, not Solid |
 | L58 | `yeti@56,56` | tag=0 | priced | L58 flag 1 |
 | L58 | `teleporter@80,16` | tag=1 invert=0 | priced | L58 flag 1: yeti@56,56 (Yeti.as:46-48 writes tag 1) |
-| L60 | `lock@128,80` | tset=-1 tag=0 | priced | room-clear lock; check() removes it once cleared (persistent opener) |
+| L60 | `lock@128,80` | tset=-1 tag=0 | priced | room-clear lock; check() removes it once cleared (persistent opener). ⛓ rocklock-pocket: its L61 pocket is UNDECIDED (the Ghost Sword may reach the jellyfish through it); the weapon rule is kept |
 | L61 | `buttonroom@176,40` | tset=1 tag=1 flip=1 room=63 | priced | cross-level write {63,1}: L63 flag 1: lightpole@64,88 cleared |
 | L62 | `lightpole@120,200` | tset=-1 tag=0 invert=0 | priced | L62 flag 0: lightpole@120,200 cleared |
 | L62 | `darktrap@112,208` | tag=1 | priced | dark-trap pole events |

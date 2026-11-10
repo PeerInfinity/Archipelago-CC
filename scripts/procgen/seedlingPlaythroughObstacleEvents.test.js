@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
     withEventGates,
 } from './make-seedling-playthrough-rules.mjs';
 
@@ -322,5 +322,49 @@ describe('the playthrough\'s obstacle events', () => {
             expect(b).toMatchObject({ id: null, event: true, locked: true });
             expect(EXPORT.items['1'][c.name]).toMatchObject({ id: null, event: true });
         }
+    });
+});
+
+describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => {
+    const named = (rows) => rows.map((r) => r.name);
+    it('the census fires on the kill-locks whose door pocket no inventory clears the room from, and names why the rest do not', () => {
+        const rows = playthroughEncounterLocks();
+        expect(named(rows.filter((r) => r.fires))).toEqual([
+            'L18 flag 0: lock@144,112 cleared', 'L26 flag 0: rocklock@112,208 cleared', 'L53 flag 2: lock@144,208 cleared']);
+        expect(rows.filter((r) => r.fires).every((r) => r.latch)).toBe(true);
+        const why = Object.fromEntries(rows.filter((r) => !r.fires).map((r) => [r.name, r.why]));
+        expect(why['L39 flag 8: wandlock@144,592 cleared']).toBe('a cross-level ButtonRoom also clears its tag');
+        expect(why['L71 flag 0: lock@112,192 cleared']).toBe('no side clears the room (today\'s rule kept)');
+        // L60: its jellyfish come to the lock's face, where the Ghost Sword reaches through (Player.as:917)
+        const l60 = rows.find((r) => r.level === 60);
+        expect(l60.sides.map((s) => s.verdict).sort()).toEqual(['clears', 'undecided']);
+        // L26: the census's pocket (the L28 door's) cannot reach puncher@32,208 by any arm
+        const l26 = rows.find((r) => r.level === 26).sides.find((s) => s.verdict === 'cannot');
+        expect(l26).toMatchObject({ beyond: ['puncher@32,208'], steps: [{ tile: [7, 13], dir: 'W' }] });
+    });
+
+    it('each fired lock is a lock event on the side that clears it, and only the pocket\'s crossing asks for it', () => {
+        const R = RULES.regions['1'];
+        for (const row of playthroughEncounterLocks().filter((r) => r.fires)) {
+            const ev = locks.events.find((e) => e.name === row.name);
+            expect(ev, row.name).toBeDefined();
+            const side = ev.fields.side;
+            expect(eventsOf(RULES).find((e) => e.name === row.name)).toMatchObject({ region: side, event_kind: 'game_state' });
+            const asks = (e) => JSON.stringify(e.access_rule).includes(JSON.stringify(row.name));
+            for (const pocket of ev.fields.across) {
+                const back = R[pocket].exits.find((e) => e.connected_region === side);
+                const forth = R[side].exits.find((e) => e.connected_region === pocket);
+                expect(asks(back), `${pocket} -> ${side}`).toBe(true);
+                expect(asks(forth), `${side} -> ${pocket}`).toBe(false);
+            }
+        }
+    });
+
+    it('L26: the pocket\'s crossing is the weapon AND the room\'s cleared lock; the room\'s own is the weapon alone', () => {
+        const R = RULES.regions['1'];
+        const forth = R.level_26__r2c4.exits.find((e) => e.connected_region === 'level_26__r13c8').access_rule;
+        const back = R.level_26__r13c8.exits.find((e) => e.connected_region === 'level_26__r2c4').access_rule;
+        expect(back).toEqual({ rule: 'And', children: [forth, { rule: 'Has', args: { item_name: 'L26 flag 0: rocklock@112,208 cleared' } }] });
+        expect(JSON.stringify(forth)).not.toContain('cleared');
     });
 });

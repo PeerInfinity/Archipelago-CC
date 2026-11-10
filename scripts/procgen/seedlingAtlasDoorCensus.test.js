@@ -56,7 +56,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('115 regions, 54 carry a subgraph: 201 sub-regions, 301 internal exits, 206 of them need Progressive Swim', () => {
+    it('115 regions, 54 carry a subgraph: 201 sub-regions, 304 internal exits, 206 of them need Progressive Swim', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
@@ -109,11 +109,15 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   Has(Shield) -> Has(L20 flag 4) (lock@32,80 costs its own press). No door, sub-region or internal-exit count moves.
         // ⛓ tile-l89-feather-swim — restamped (f60d4a58 -> 9c051b83): ONE location moves sub-region, L89's Feather r9c6 -> r1c10
         //   and is charged Has(Progressive Swim) (bound to its cheapest way). No door, sub-region or internal-exit count moves.
-        expect(c.atlasId).toBe('seedling-9c051b83');
+        // ⛓ rules-l26-rocklock-pocket — restamped (9c051b83 -> eff9e209): an encounter lock one side cannot clear (L18, L26,
+        //   L53: the door pocket behind a kill-lock) is a latch from that side, so each two-way internal row splits into the
+        //   room's weapon row and the pocket's return (301 -> 304 internal exits). No door, sub-region or swim row moves.
+        expect(c.atlasId).toBe('seedling-eff9e209');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 201, 301, 206]);
+        // ⛓ rules-l26-rocklock-pocket: 301 -> 304 internal exits (L18/L26/L53's two-way rows split at their latch).
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 201, 304, 206]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },

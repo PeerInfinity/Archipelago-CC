@@ -499,6 +499,26 @@
             "category": "Maze block modes"
         },
         {
+            "id": "mana-depletion-flag-maze",
+            "enabled": true,
+            "category": "Mana depletion flag"
+        },
+        {
+            "id": "mana-depletion-flag-jta",
+            "enabled": true,
+            "category": "Mana depletion flag"
+        },
+        {
+            "id": "mana-depletion-flag-omsi",
+            "enabled": true,
+            "category": "Mana depletion flag"
+        },
+        {
+            "id": "mana-depletion-flag-text-adventure",
+            "enabled": true,
+            "category": "Mana depletion flag"
+        },
+        {
             "id": "seedling-atlas-maze-boundary-crossing",
             "enabled": true,
             "category": "Seedling atlas maze",

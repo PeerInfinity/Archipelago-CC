@@ -36,6 +36,10 @@ For a game whose rules can be built from server data (Metamath, DepGraph, APCalc
 
 Because slot_data only arrives with `Connected`, a game with no exact-seed preset and no builder always connects first and decides after login. A server document is refused by name and the client falls back to a local document when its `format` is not the client's `WORLDGEN_RULES_FORMAT` (an older or newer generator), when it carries a retired rules.json shape, when it fails the ID check, or when it fails to load. A world whose document was over its `rules_in_slot_data_max_kb` sends `worldgen_rules_omitted` instead, and the console says so.
 
+#### The room's spoiler data
+
+A world that uses the Spoiler Export Hook (`worlds/spoiler_export_hook/`, option `spoiler_data_in_slot_data`) sends its slot's sphere order in slot_data as `spoiler_data`: format 1, `steps` of `[walk label, own location or null, item received or null]`, plus `[sender player, sender location]` as a 4th element with `own_slot_with_senders`. Each value is the AP id where the DataPackage gives that exact name back, otherwise the name. On `Connected`, `client/core/spoilerData.js` expands it with the DataPackage into an incremental sphere log and publishes it as `client:roomSpoilerData`; `sphereState` loads it only while no file's log is loaded. **A file always beats the room:** an exact-seed preset's `.jsonl` (or an embedded log) is kept, and replaces the room's log if it finishes loading later. The room's log fills the gap on the server-document, local-overlay and builder paths, which have no file log. `spoiler_data_omitted` gives one console line saying why (for example, the generator had no Spoiler Export Hook); with neither key nothing is said. A format the client does not read (`SPOILER_DATA_FORMATS`), another slot's record, or a game missing from the DataPackage gives a warning and no log. The overlay never copies `spoiler_data` or `spoiler_data_omitted` into the world's slot_data (`slotDataWithoutRules`). Fixtures: `client/core/fixtures/spoilerData/make_fixtures.py` regenerates them from the real helper.
+
 The overlay also writes the room's item into each procgen pickup's sidecar entry (`playable_payload.items[].id`, and `locations[].item` for the Seedling generated rooms). A maze draws and collects a pickup only when its id is set, and a server-sent document carries none.
 
 #### Events Published
@@ -46,6 +50,7 @@ While most of its actions result in calls to the `StateManager` (which then publ
 -   `game:roomInfo`: Published when server room information is received.
 -   `game:locationsScouted`: Published when the server answers the connect-time scout. The payload is `{ locations }`, one entry per location: `{ locationId, locationName, itemId, itemName, player, playerName, game, flags, progression, useful, trap }`. `player`, `playerName` and `game` describe the slot that receives the item. `itemName` comes from that slot's game in the DataPackage, and is `null` if the DataPackage doesn't have it.
 -   `network:connectionRefused`: Published when the server refuses the connection attempt.
+-   `client:roomSpoilerData`: Published on `Connected` when the room's slot_data carries a `spoiler_data` record this client reads. The payload is `{ source, text, entries }`: `source` is `room:<seed>:P<slot>`, `text` the expanded incremental sphere log (JSONL). `sphereState` subscribes.
 
 #### Events Subscribed To
 
