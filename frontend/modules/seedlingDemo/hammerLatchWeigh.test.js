@@ -54,8 +54,8 @@ const keysOf = (perTick) => perTick.map((k) => [...k].sort());
 
 describe('hammer-phase LWEIGH: LATCH_WEIGH_FIRST', () => {
     it('ships OFF, and the env alone turns it on', () => {
-        expect(LATCH_WEIGH_FIRST_DEFAULT).toBe(false);
-        expect(LATCH_WEIGH_FIRST.enabled).toBe(globalThis.process?.env?.SEEDLING_LATCH_WEIGH_FIRST === '1');
+        expect(LATCH_WEIGH_FIRST_DEFAULT).toBe(true); // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD)
+        expect(LATCH_WEIGH_FIRST.enabled).toBe(globalThis.process?.env?.SEEDLING_LATCH_WEIGH_FIRST !== '0');
         withLatchWeighFirst(true, () => expect(LATCH_WEIGH_FIRST.enabled).toBe(true));
         withLatchWeighFirst(false, () => expect(LATCH_WEIGH_FIRST.enabled).toBe(false));
     });
