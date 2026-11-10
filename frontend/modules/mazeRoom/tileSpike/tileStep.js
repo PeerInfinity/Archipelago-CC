@@ -110,7 +110,8 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
     // ⛓ PULLS: the trap whose disc this STEP (from `playerPos`, moving `dir`) enters from outside — the native geometry
     // (`pullCatching`) — and its gate's combos, which the `pulled` helper asks; null when no trap catches the step.
     const catching = dir === null ? null : pullCatching(world, playerPos, { x, y });
-    const openerOf = sidedOpeners(world).find((o) => o.key === key && o.stand === posKey(playerPos.x, playerPos.y));
+    const atCell = openerIndex(world).byCell.get(key);
+    const openerOf = atCell !== undefined && atCell.stand === posKey(playerPos.x, playerPos.y) ? atCell : undefined;
     return {
         floor: isFloor(world, x, y),
         block: onBlock,
@@ -241,6 +242,29 @@ export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_
 }
 
 /**
+ * ⛓ SIDED OPENERS — a lookup over the world's openers (`sidedOpeners`, the same data `tile.opener` is read from): by lock
+ * cell, and by probe cell. Only an index: whether a lock opens is the `opens` helper's answer. Cached per opener list.
+ */
+const OPENER_INDEX = new WeakMap();
+const NO_OPENERS = Object.freeze({ byCell: new Map(), byStand: new Map() });
+export function openerIndex(world) {
+    const rows = sidedOpeners(world);
+    if (rows.length === 0) return NO_OPENERS;
+    let hit = OPENER_INDEX.get(rows);
+    if (hit) return hit;
+    const byCell = new Map();
+    const byStand = new Map();
+    for (const o of rows) {
+        byCell.set(o.key, o);
+        if (!byStand.has(o.stand)) byStand.set(o.stand, []);
+        byStand.get(o.stand).push(o);
+    }
+    hit = { byCell, byStand };
+    OPENER_INDEX.set(rows, hit);
+    return hit;
+}
+
+/**
  * `step`'s contract: the next state, or a refusal naming the PRIMITIVE that refused —
  * `{ next: null, refused: { primitive, cell, helper } }`. `latch: false` turns the item pickup
  * off: an AP-logic search holds a fixed inventory and a location tile grants nothing.
@@ -269,8 +293,13 @@ function scriptedLatch(world, next, helpers, tileLib, from = null) {
         next.latched.push(key);
         added = true;
     }
-    // ⛓ SIDED OPENERS: the OPEN primitive (`tileLib.lock.opens`), the native `noteLatches`' other half. `tile.opener` is null off the probe cell.
-    for (const o of sidedOpeners(world)) {
+    // ⛓ SIDED OPENERS: the OPEN primitive (`tileLib.lock.opens`), the native `noteLatches`' other half. `tile.opener` is null off the
+    // probe cell, so only the openers whose probe cell is this stance or the cell the step left are asked (`openerIndex`).
+    const { byStand } = openerIndex(world);
+    if (byStand.size === 0) { if (added) next.latched.sort(); return; }
+    const asked = [...(byStand.get(posKey(next.player_pos.x, next.player_pos.y)) ?? []),
+        ...(from !== null && (from.x !== next.player_pos.x || from.y !== next.player_pos.y) ? byStand.get(posKey(from.x, from.y)) ?? [] : [])];
+    for (const o of asked) {
         if (next.latched.includes(o.key) || next.inventory.has(o.event)) continue;
         const [x, y] = o.key.split(',').map(Number);
         // The stance after the step, else the cell it left (the native `noteLatches`' `from`: an arrival on the probe cell).

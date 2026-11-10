@@ -16,7 +16,8 @@ import {
     createState, step, whyBlocked, mazeVisitedKey, worldInputs, deserializeMazeWorld, holdInInventory,
     sidedOpeners, openerEvents, effectiveInventory, hasLatches, INPUT_WAIT,
 } from './mazeRoomEngine.js';
-import { scriptedStep } from './tileSpike/tileStep.js';
+import { readFileSync } from 'node:fs';
+import { scriptedStep, scriptedEffectiveInventory, openerIndex, MAZE_TILE_LIB } from './tileSpike/tileStep.js';
 import { reachUnder, regionItems } from './tileSpike/deriveTileLogic.js';
 import { nativeReachUnder } from './tileSpike/deriveLevelWorldLogic.js';
 import HELPERS from './tileSpike/maze_tiles.helpers.json' with { type: 'json' };
@@ -268,5 +269,49 @@ describe('sided openers — derived logic', () => {
         for (const reach of [reachUnder(w, [], HELPERS), nativeReachUnder(w, [])]) {
             expect([...reach.cells.keys()]).not.toContain('3,1');
         }
+    });
+});
+
+describe('sided openers — the scripted fast path skips nothing (probe-cell index, no copy when nothing is marked)', () => {
+    const sidecars = JSON.parse(readFileSync(new URL('../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8')).preset_sidecars['1'];
+    const openerWorlds = Object.entries(sidecars).filter(([, s]) => s.playable_payload)
+        .map(([name, s]) => [name, deserializeMazeWorld(s.playable_payload)]).filter(([, w]) => sidedOpeners(w).length > 0);
+    it('the committed preset has opener worlds, L12 among them, with six openers', () => {
+        expect(openerWorlds.map(([n]) => n)).toContain('level_12__r0c19');
+        expect(sidedOpeners(openerWorlds.find(([n]) => n === 'level_12__r0c19')[1]).length).toBe(6);
+    });
+    it('every opener of every committed world is in the index, under its lock cell and its probe cell', () => {
+        for (const [, w] of openerWorlds) {
+            const { byCell, byStand } = openerIndex(w);
+            for (const o of sidedOpeners(w)) {
+                expect(byCell.get(o.key)).toBe(o);
+                expect(byStand.get(o.stand)).toContain(o);
+            }
+            expect([...byStand.values()].flat().length).toBe(sidedOpeners(w).length);
+        }
+    });
+    it('on L12 the scripted step marks each of its six openers where the native one does, from its probe cell', () => {
+        const [, w] = openerWorlds.find(([n]) => n === 'level_12__r0c19');
+        for (const o of sidedOpeners(w)) {
+            const [sx, sy] = o.stand.split(',').map(Number);
+            const s = createState(w);
+            s.inventory = new Set([...regionItems(w)].filter((i) => i !== o.event));
+            s.player_pos = { x: sx, y: sy };
+            for (const input of [...worldInputs(w), INPUT_WAIT]) {
+                const native = step(w, s, input);
+                const { next } = scriptedStep(w, s, input, HELPERS);
+                expect(next === null ? null : mazeVisitedKey(next)).toBe(native === null ? null : mazeVisitedKey(native));
+            }
+            expect(step(w, s, INPUT_WAIT)?.latched ?? []).toContain(o.key);   // the native step does mark it from here
+        }
+    });
+    it('no copy when nothing is marked: a world with openers hands back the carried inventory itself', () => {
+        const w = world(ROOM);
+        const carried = new Set([ITEM]);
+        expect(scriptedEffectiveInventory(w, carried, { x: 1, y: 1 }, undefined, MAZE_TILE_LIB, HELPERS, undefined, [])).toBe(carried);
+        expect(effectiveInventory(w, carried, { x: 1, y: 1 }, undefined, undefined, [])).toBe(carried);
+        const marked = scriptedEffectiveInventory(w, carried, { x: 1, y: 1 }, undefined, MAZE_TILE_LIB, HELPERS, undefined, ['3,1']);
+        expect(marked).not.toBe(carried);
+        expect(marked.has(EV)).toBe(true);
     });
 });
