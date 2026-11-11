@@ -26,8 +26,18 @@ import {
     effectiveHazardOpts, activeSubstrateDict,
     GENERATION_COST, substrateGenerationCost, presetSubstrateIds, heavySubstrateIds,
     gridDimsForSource, pinnedGridKeys, sourceSizedParams, topDownGridSide, TOPDOWN_GRID_KEYS,
-    TOPDOWN_GRID_INPUT_MAX,
+    TOPDOWN_GRID_INPUT_MAX, worldContentStackOf,
 } from './presetRun.js';
+import { CONTENT_SET_KEY, defaultContentSetOf } from './worldContent.js';
+
+/**
+ * ⛓ CONTENT SETS R1 — a world whose mix declares a default content pack (the text adventure's) carries the set
+ * built from the preload cache on its `regionParams`, and nothing else (it names no content of its own).
+ */
+const defaultContentParams = (bundle) => {
+    const stack = worldContentStackOf(bundle);
+    return stack.length ? { [CONTENT_SET_KEY]: defaultContentSetOf(stack) } : {};
+};
 import { getPresetById } from './presetDefs.js';
 import {
     ZONE_PATH_EXIT_CEILING, realisesThroughZonePath, zoneExitCeilingRefusal,
@@ -202,7 +212,7 @@ describe('buildRunFromState — top-down', () => {
             gridDims: { width: 3, height: 3 },
             regionSizeBase: { width: 8, height: 6 },
             substrateMix: { maze: 2, text_adventure: 1 },
-            regionParams: {},
+            regionParams: defaultContentParams(bundle),
             hazardOpts: null,
             sphereLog: null,
             enableLoopMode: false,
@@ -344,7 +354,7 @@ describe('buildRunFromState — grid growth', () => {
                 itemPool: { key_blue: 1 },
                 obstaclePool: { door_blue: 1 },
                 seed: 5,
-                regionParams: {},
+                regionParams: defaultContentParams(bundle),
                 growthParams: {
                     maxItemsPerRegion: 2,
                     maxRegions: 4,

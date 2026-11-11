@@ -331,20 +331,24 @@ describe('the corpus census — printed, then pinned', () => {
          *              concepts.md § Content roles (`doc` 296 → 297).
          *   397 → 399  content sets C3 (2026-11-10): concepts.md § A world's content stack → substrate-registry.md,
          *              and substrate-registry.md's `defaultContentPack` paragraph → that § (`doc` 297 → 299).
+         *   399 → 402  content sets R1 (2026-11-11): concepts.md → text-adventure.md § Content roles, that § →
+         *              concepts.md § Content roles (`doc` 299 → 301), text-adventure.md's realisations → its own
+         *              § Content roles (`same-doc` 36 → 37). The two registry paragraphs became table rows (their
+         *              links kept).
          */
         expect(by).toEqual({
-            'same-doc': 36,
-            doc: 299,
+            'same-doc': 37,
+            doc: 301,
             external: 22,
             repo: 42,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(399);
+        expect(CORPUS.length).toBe(402);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(299);
+        expect(docs).toHaveLength(301);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
