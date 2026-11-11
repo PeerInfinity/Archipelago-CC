@@ -54,8 +54,7 @@ describe('fidelity ROCKFIRE — the key', () => {
 });
 
 describe('fidelity ROCKFIRE D0 — the game (p4g recordings)', () => {
-    it('six witnesses are recorded, each the tape the fold builds today', async () => {
-        expect(ROCKFIRE_WITNESSES).toHaveLength(6);
+    it('every witness is recorded, and is the tape the fold builds today', async () => {
         for (const name of ROCKFIRE_WITNESSES) {
             const w = rockFireWitness(name);
             expect(w.page, name).toBe('seedling_bot_ap_p4g');

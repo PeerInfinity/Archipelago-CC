@@ -27915,3 +27915,35 @@ stance's stray check (`auditFire` without `spinners`) still refuses a stance who
 
 **Trap candidate.** A committed tape whose expectations are the player only certifies nothing about the bodies it
 moves: `r5-press-glide`/`-repeat` were called "byte-exact" for the block wedge while their spinners were off from t19.
+
+### Seedling fidelity ROCKFIRE — a Fire press that reaches a breakable rock breaks it as a swing would (`fireRockArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 39 (⚖ the user's GO 2026-11-10, *"Bob + BreakableRock now"*). Base
+`c670857f64` (the frozen wave-38 joint flip). The report is `CC/docs/cloud-reports/seedling-fidelity-rockfire.md`.
+
+**W0.** FIRESPINNER's residue holds. `FIRE_ARM_POLICY.BreakableRock` says `modelled`, `levelRun.applyFire` had no
+BreakableRock arm, and a Fire press whose flame reaches a rock throws (*"`FIRE_ARM_POLICY` calls BreakableRock modelled
+and this dispatch has no arm for it"*; reproduced in L40 held against `breakablerock@176,128`, and in L101 against
+`breakablerockghost@224,96`). The AS3 (`Player.fire` :1014-1037, `genericHit` :1073-1092, `Puzzlements/BreakableRock.as`):
+`genericHit`'s rock arm is `hit(hasGhostSword ? 1 : 0)` for every `t`, and `hit` is `if (rockType <= _t) play("break")`,
+so Fire breaks a rockType-0 rock WITHOUT the Ghost Sword too (`0 <= 0`); only the two ghost rocks (L3, L101) need it.
+A rock's ctor sets `type = "Solid"` (*"Was "Rock""*): `hitables[6]`, five dispatches a hit tick, where the model's
+`FIRE_HITABLE_TYPE_BY_ARM` said "Rock" (eight). `endAnim` writes the flag and removes the rock. Census: twelve levels
+hold a BreakableRock (L0, 3, 15, 16, 30, 40, 41, 53, 73, 92, 100, 101); no committed tape presses Fire at one (the
+roster replayed with the key ON: 22 tapes fire, none reaches a rock), and no solver arm can plan it.
+
+**D0** (game witness, p4g, before the model change): `probe-seedling-rock-fire.mjs --record`
+(`fixtures/rockfire-witness/`). The game exposes no rock row, so the rock is read through its solid (the tapes hold the
+player against it) and its write (`persistence_cleared`). L40's rock under Fire breaks with and without the Ghost
+Sword (flag on obs 22, cell open on obs 23); the Sword control is three ticks sooner (19 / 20); L101's ghost rock
+under Fire does nothing without the Ghost Sword and breaks with it (22 / 23). The game agrees with the AS3 reading.
+
+**D1** (`fireRockArm`, OFF, last key, `SEEDLING_FIRE_ROCK_ARM`): the sword arm's rock body is hoisted unchanged into
+`hitBreakableRock` and `applyFire`'s new arm calls it (one model of the rock), on the sword arm's clock and not under
+the freeze; the census row's type is "Solid" under the key. ON, all the witnesses (a sixth added: a second press over
+the gone rocks' cells) reproduce at 0 px. OFF keeps the throw. Four mutants red as predicted.
+
+**D2** (ON, measured): the bounded set reds only the defaults pin; the survey's 33 rock-room steps are byte-identical
+ON vs OFF. No solver arm plans a Fire press at a rock: each Fire stance planner refuses a stance whose flame reaches
+one, and the `break` verb takes the Sword or the Ghost Sword. A Fire `break` arm (the game offers it to a run with Fire
+and no Sword) is a follow-up, not part of this key.

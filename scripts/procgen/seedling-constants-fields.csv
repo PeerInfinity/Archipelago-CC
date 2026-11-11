@@ -160,10 +160,10 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|5,phys
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|1,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|applyFire|ha9f0d85f|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyFire|-1,rule,sentinel,,-1 = no persistTag
-frontend/modules/seedlingDemo/levelRun.js|applyThrust|h727dcf9b|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|hitBreakableRock|h727dcf9b|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|applyThrust|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|applyThrust|hd859c130|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyThrust|-1,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|hitBreakableRock|-1,rule,sentinel,,-1 = no persistTag
 frontend/modules/seedlingDemo/levelRun.js|stepChestsNow|hc9a4f741|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChestsNow|8,physics,magnitude,,seal piece spawns at chest centre (half tile)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|solidOver,physics,magnitude,,chest 16px solid box
