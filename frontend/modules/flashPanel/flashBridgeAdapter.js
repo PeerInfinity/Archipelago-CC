@@ -559,6 +559,7 @@ export class FlashBridgeAdapter {
       locationName,
       originator: 'FlashPanel',
       originalDOMEvent: false,
+      reportedByGame: true, // the game reported it: physical, never logic-gated (client/core/checkGate.js)
     };
     this.dispatcher.publish('user:locationCheck', payload, {
       initialTarget: 'bottom',

@@ -29,6 +29,11 @@ GitHub Pages serves only `frontend/`.
   writes into a world document). It is HAND-MADE, under the repository's MIT licence (see `pack.json`). Every
   committed text-adventure world compiles byte-equal from it, so an edit here changes what a regenerated world says:
   `frontend/modules/procgenPipeline/conceptTrialWorld.test.js` and `check-procgen-presets` hold the committed bytes.
+- `maze/` is the maze substrate's DEFAULT content pack (content sets R2). It has a `concepts` layer only: one pack
+  concept per mechanic concept the maze realises, each `presents` it and carries the `look` (colour + symbol) the
+  maze writes into a world's payload at generation (a gate also takes the concept's `name`; an item keeps its AP
+  item name, which is logic). HAND-MADE, under the repository's MIT licence (see `pack.json`). The same edit rule
+  holds: `conceptTrialWorld.test.js` and `mazeRoom/mazeContent.test.js` hold the committed bytes.
 
 ⛔ **The seedling and archipelago packs are GENERATED. Do not edit them.** Regenerate with
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets

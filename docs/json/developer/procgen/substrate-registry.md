@@ -385,8 +385,8 @@ Groups are this document's own § headings, matched to a field by the section th
 |---|---|---|---|---|---|---|---|---|---|
 | `applyContentModules` | — | — | — | — | — | fn | — | — | — |
 | `conceptRealisations` | — | — | — | — | — | {guardian, swim, sword, water} | — | — | {guardian, swim, sword, water} |
-| `contentRoles` | — | — | — | — | — | — | — | — | {gate, item, place} |
-| `defaultContentPack` | — | — | — | — | — | — | — | — | text-adventure |
+| `contentRoles` | — | — | — | — | — | {gate, item} | — | — | {gate, item, place} |
+| `defaultContentPack` | — | — | — | — | — | maze | — | — | text-adventure |
 | `extractPathsAndObstacles` | — | — | — | fn | — | fn | — | — | fn |
 | `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |
