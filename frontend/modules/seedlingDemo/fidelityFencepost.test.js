@@ -12,16 +12,20 @@
  * every between-ticks read (`run.entities('spinnerBodies')`, the press/fire censuses, `spinnerDeaths`) kept the corpse
  * one read past the game (L39PHANTOM D0, `isRemovePendingFencepost`: the game's last listed read is t1277, the model's
  * t1278). ON: `advance` settles the pending removal at the END of the tick that stepped it
- * (`levelRun.settleSpinnerRemovalsNow`), after everything that tick's update reads. The next tick's `stepSpinner`
- * returns the removed body unchanged, and the removal LEDGER (`spinnerWrites`, `assertSpinnerRemovalIsDeclared`'s F5
- * stamp) is written on that next tick exactly as before: one clock.
+ * (`levelRun.settleSpinnerRemovalsNow`), after everything that tick's update reads, and runs the removal's own WRITE
+ * loop there too (`spinnerWrites`, the banked clear, `assertSpinnerRemovalIsDeclared`'s kill-lock declaration), with
+ * the values it stamped a tick later (`ticksCompleted` has already moved): one clock. A first cut left the write on
+ * the next tick, and `solverBot`'s kill verb, which ends on the roster and then asks `spinnerKillLockOpens`, threw
+ * *"recorded NOTHING"* in L18 (`solve-seedling-r8-l18 --check`): a body gone with its ledger empty is two clocks.
  *
  * Rows predicted before the change; mutants made by copy + restore (the report lists the measured reds):
  *   M1 the `CONTACT_FIDELITY.spinnerRemoveRead` gate dropped from the settle → "OFF: the named fencepost" and the
  *      default-arm L39PHANTOM row red (the fencepost is gone with the key OFF)
  *   M2 the settle moved ABOVE the tick's body (the top of `advance`)         → "ON: zero fencepost ticks" reds (a
  *      between-ticks read still lists the corpse) and the source-shape row reds
- *   M3 the settle also stamps the ledger a tick early (`spinnerWritten` loop run inside it) → "one clock" reds
+ *   M3 the settle flips the body and does NOT run the write loop (`stepped.bank()` dropped) → "between ticks the
+ *      roster and the ledger agree" reds (the body is gone and `spinnerKillLockOpens` has no row for it yet)
+ *   M5 the write loop's stamp moved by the settle (`t: ticksCompleted` there)  → "ONE CLOCK" reds
  *   M4 `stepSpinner` itself sets `removed` on the alpha-zero step (the wrong fix: the alpha-zero tick's contact and
  *      block sweep lose the body)                                             → the source-shape row and
  *      `spinner.test.js`'s removePending rows red
@@ -180,6 +184,36 @@ describe('FENCEPOST D1 — `spinnerRemoveRead` (OFF)', () => {
         expect(on.deaths).toEqual(off.deaths);
     });
 
+    it('between ticks the roster and the ledger agree: on the first read a body is gone, its kill-lock declaration and its write are there', () => {
+        const at = (over) => withContactFidelity(over, () => {
+            let run = null;
+            const rows = [];
+            const st = createTapeStepper(loadTape('f1c-l18-lock-removal'),
+                { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } });
+            let r = st.next();
+            while (!r.done) {
+                const t = r.value.observation.t;
+                if (run && t >= 314 && t <= 318) {
+                    rows.push({ t, listed: ids(run.entities('spinnerBodies')).length,
+                        opens: run.ledger('spinnerKillLockOpens').filter((o) => !o.nil).length,
+                        writes: run.ledger('spinnerWrites').length });
+                }
+                r = st.next();
+            }
+            return rows;
+        });
+        // OFF: the last body's corpse is listed at 316 and the ledger lands with its drop at 317
+        expect(at(OFF)).toEqual([
+            { t: 314, listed: 1, opens: 0, writes: 1 }, { t: 315, listed: 1, opens: 0, writes: 1 },
+            { t: 316, listed: 1, opens: 0, writes: 1 }, { t: 317, listed: 0, opens: 1, writes: 2 },
+            { t: 318, listed: 0, opens: 1, writes: 2 }]);
+        // ON: both move together, one read sooner — never a read with the body gone and the ledger empty
+        expect(at(ON)).toEqual([
+            { t: 314, listed: 1, opens: 0, writes: 1 }, { t: 315, listed: 1, opens: 0, writes: 1 },
+            { t: 316, listed: 0, opens: 1, writes: 2 }, { t: 317, listed: 0, opens: 1, writes: 2 },
+            { t: 318, listed: 0, opens: 1, writes: 2 }]);
+    });
+
     it('a pit death (L92, `r5-feather`): the same one read', () => {
         const off = rosterTrace('r5-feather', OFF);
         const on = rosterTrace('r5-feather', ON);
@@ -192,6 +226,9 @@ describe('FENCEPOST D1 — `spinnerRemoveRead` (OFF)', () => {
     it('SOURCE SHAPE: the settle runs once, at the end of `advance`, after the tick\'s body; `stepSpinner` is not changed', () => {
         const calls = LEVEL_RUN_SRC.match(/settleSpinnerRemovalsNow\(\)/g) ?? [];
         expect(calls.length).toBe(1);
+        // the write loop is ONE arrow with two callers: in place (as before) and the settle's `stepped.bank()`
+        expect(LEVEL_RUN_SRC.match(/bankSpinnerRemovals\(\);/g)?.length).toBe(1);
+        expect(LEVEL_RUN_SRC.match(/stepped\.bank\(\)/g)?.length).toBe(1);
         const body = LEVEL_RUN_SRC.slice(LEVEL_RUN_SRC.indexOf('        advance(held) {'));
         // the tick's body is one arrow; the settle is below its close and above the return of its result
         expect(body).toMatch(/advance\(held\) \{\n\s+\/\/[^\n]*FENCEPOST[^\n]*\n\s+spinnersSteppedThisTick = null;[^\n]*\n\s+const advanced = \(\(\) => \{/);

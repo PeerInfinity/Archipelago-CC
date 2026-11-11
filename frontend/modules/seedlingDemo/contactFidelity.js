@@ -1975,11 +1975,12 @@ export const CONTACT_FIDELITY = {
      * observation the game does not (L39PHANTOM D0, `fidelityL39Phantom.isRemovePendingFencepost`: the game's last
      * listed read is t1277, the model's t1278). ON: `levelRun.advance` settles a pending removal at the END of the tick
      * that stepped it (`settleSpinnerRemovalsNow`: `removed: true, removePending: false`), below everything that
-     * tick's update reads, so the alpha-zero tick's contact and block sweep still see the body. The next tick's
-     * `stepSpinner` returns the removed body unchanged and the removal LEDGER (`spinnerWrites`,
-     * `assertSpinnerRemovalIsDeclared`'s F5 stamp, the banked clear) is written on that next tick exactly as before —
-     * one clock, not two. Nothing stepped changes: every committed tape's observation stream is byte-identical ON and
-     * OFF. `spinner.js` is not changed (the hammer arc's forecasts step their own copies with it). Game witness: the D0
+     * tick's update reads, so the alpha-zero tick's contact and block sweep still see the body, and runs the removal's
+     * own write loop there (`spinnerWrites`, the banked clear, `assertSpinnerRemovalIsDeclared`'s kill-lock
+     * declaration) with the values it stamped a tick later — one clock, not two: no read has the body gone and its
+     * ledger empty (`solverBot`'s kill verb ends on the roster and then asks `spinnerKillLockOpens`). Nothing stepped
+     * changes: every committed tape's observation stream is byte-identical ON and OFF. What moves is a PLAN: a kill
+     * verb ends one tick sooner per spinner death. `spinner.js` is not changed (the hammer arc's forecasts step their own copies with it). Game witness: the D0
      * recording `fixtures/l39shaft-witness/l39phantom-pulser-kill.json` (p4g), zero fencepost ticks ON. OFF:
      * byte-identical. `SEEDLING_SPINNER_REMOVE_READ=0|1`.
      */

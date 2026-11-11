@@ -4137,22 +4137,34 @@ export function createLevelRun({
     /**
      * ⛓⛓ fidelity FENCEPOST D1 (`CONTACT_FIDELITY.spinnerRemoveRead`) — `updateLists()` FOR A FADED-OUT SPINNER.
      * `Engine.update` is `World.update(); World.updateLists();`, so a spinner whose `death()` reached `alpha <= 0`
-     * this tick is out of the world when the tick ENDS; `stepSpinner` only says `removePending` and flips `removed`
-     * at the top of the next step, so every read between the two ticks listed a body the game has dropped. ON: the
-     * state `advance` stepped this tick gets the flip here, at the tick's end — below the contact, the block sweep
-     * and everything else that tick reads (the body is in the world for the whole of its last update). The removal's
-     * WRITE stays where it is: the loop under `stepSpinners` runs on the next tick, finds `removed` (as it always
-     * did, by then) and stamps the same `t` — `assertSpinnerRemovalIsDeclared`'s F5 clock is not moved.
+     * this tick is out of the world, and its `removed()` has run, when the tick ENDS; `stepSpinner` only says
+     * `removePending` and flips `removed` at the top of the next step, so every read between the two ticks listed a
+     * body the game has dropped. ON: the state `advance` stepped this tick gets the flip here, at the tick's end —
+     * below the contact, the block sweep and everything else that tick reads (the body is in the world for the whole
+     * of its last update).
+     *
+     * ⛔ AND THE REMOVAL'S WRITE COMES WITH IT — ONE CLOCK. The loop under `stepSpinners` (the flag, `spinnerWrites`,
+     * `assertSpinnerRemovalIsDeclared`'s kill-lock declaration) used to find `removed` on the next tick; left there,
+     * a reader between the two ticks would see the body gone and the ledger empty (measured: `solverBot`'s kill verb
+     * ends on the roster and then asks `spinnerKillLockOpens`, and threw *"recorded NOTHING"* in L18). The same loop
+     * runs here instead, and every value it stamps is the one it stamped a tick later: `ticksCompleted` has already
+     * moved, so `t: ticksCompleted + 1` and F5's `removedAt = ticksCompleted` read the same numbers at this tick's end
+     * as at the next tick's spinner step. ⚠ Not on a tick that left the level (a transition, a death's reboot): OFF
+     * never wrote that removal either (the room's next tick never came), and this does not start to.
      * `spinnersSteppedThisTick` is a one-tick transient: null between ticks, never run state.
      */
     let spinnersSteppedThisTick = null;
     const settleSpinnerRemovalsNow = () => {
-        const st = spinnersSteppedThisTick;
+        const stepped = spinnersSteppedThisTick;
         spinnersSteppedThisTick = null;
-        if (st === null || !CONTACT_FIDELITY.spinnerRemoveRead) return;
-        for (const [id, s] of st.byId) {
-            if (s.removePending) st.byId.set(id, { ...s, removed: true, removePending: false });
+        if (stepped === null || !CONTACT_FIDELITY.spinnerRemoveRead) return;
+        let flipped = false;
+        for (const [id, s] of stepped.st.byId) {
+            if (!s.removePending) continue;
+            stepped.st.byId.set(id, { ...s, removed: true, removePending: false });
+            flipped = true;
         }
+        if (flipped && stepped.level === level && spinnerStates.get(level) === stepped.st) stepped.bank();
     };
     const spinnerStateFor = (n) => {
         if (!spinnerStates.has(n)) {
@@ -21665,7 +21677,6 @@ export function createLevelRun({
                 // different (and wrong) change.
                 assertDialogueFreeSpinnerRoom(spinState);
                 stepSpinners(spinState, spinnerCtx());
-                spinnersSteppedThisTick = spinState; // ⛓ fidelity FENCEPOST D1: settled at the tick's end
                 stepSpinnerContactsNow(spinState);
                 /**
                  * ⛔⛔ AND THE FLAG A REMOVAL WRITES, BANKED HERE.
@@ -21682,6 +21693,9 @@ export function createLevelRun({
                  * an empty `earnedClears` and a full `spinnerDeaths`, and the
                  * ledger claim is phrased over the writes.
                  */
+                // ⛓ fidelity FENCEPOST D1: the loop is one arrow so the tick's settle can run it again, at the tick's END, for a
+                // body it has just flipped (`settleSpinnerRemovalsNow`); here it runs exactly as it always did.
+                const bankSpinnerRemovals = () => {
                 for (const s of spinState.byId.values()) {
                     if (!s.removed || spinnerWritten.has(s.id)) continue;
                     spinnerWritten.add(s.id);
@@ -21755,6 +21769,9 @@ export function createLevelRun({
                     });
                     assertSpinnerRemovalIsDeclared(s);
                 }
+                };
+                bankSpinnerRemovals();
+                spinnersSteppedThisTick = { st: spinState, level, bank: bankSpinnerRemovals };
             }
             // ── ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE, BETWEEN THEM ────────
             // `Game.loadlevel` adds the spinners at `:2250`, the shieldboss
