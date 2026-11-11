@@ -142,15 +142,35 @@
  * (`countedPoolOf`, `deriveLegs`' `counted`), named in `routeMode.pooled`. It needs `--through` and writes under
  * `…/through-<sphere>-route-only/`, so the two modes never share a cache.
  * The chosen mode is named in `route.json` (`routeMode`).
+ *
+ * ── `--preset=<id>` (ER E6) ──────────────────────────────────────────────
+ *
+ * WHICH WORLD is walked: a directory under `frontend/presets/` (default `seedling_playthrough`, and without the
+ * flag nothing here moves). The three sources are then that preset's own (`surveyPreset.js`): its rules export; its
+ * sphere order, DERIVED from those rules by the shared sphere walk (the committed artifact is the default
+ * preset's, and the derivation reproduces it row for row); and the rooms it is PLAYED on — a world whose rules
+ * place entrances (`entrance_randomization`) is surveyed on the delivered rooms, each moved stairs rewritten as the
+ * randomized load rewrites it (`entranceRetarget.js`), so a crossing's `to` and arrival are the game's. A staged
+ * step the route reaches BEFORE its Sword boots from the true-start block (the campaign's pre-sword state), not the
+ * post-sword latch. It needs `--through` and writes under `…/<preset>/through-<sphere>[-route-only]/`.
+ *   node scripts/procgen/survey-seedling-route.mjs --preset=seedling_er --through=end --out=<file.json>
+ *
+ * `--carry-earned=<survey.json>` (ER E6, opt-in): a SECOND-PASS reading for the rows a survey refused — a step also
+ * boots with the flags the EARLIER solved visits to its level earned in that survey (see `CARRY_EARNED`).
+ *   node scripts/procgen/survey-seedling-route.mjs --preset=seedling_er --through=end --only=357 \
+ *       --carry-earned=<first pass.json> --out=<second pass.json>
  */
 
 import { dirname, join, resolve as resolvePath } from 'node:path';
 import { execFile } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
-import { deriveStagedGrant, stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit } from './surveyGrants.js';
+import {
+    carriedEarnedFor, deriveStagedGrant, inheritedFlagsFor, preSwordBaseOf, stageGrantSave, stagedBlockCheck, stagedRng,
+    tapeCoversVisit,
+} from './surveyGrants.js';
 import {
     RESTART_TARGET, countedPoolOf, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
@@ -179,6 +199,7 @@ import { parseDashMode, dashModeNote } from './dashMode.js';
 
 import { argvHelp } from './argvHelp.js';
 import { seedlingSurveyDir, throughSurveyDir } from './seedlingSurveyDir.js';
+import { DEFAULT_SURVEY_PRESET, assertPresetId, deliveredMapDocument, presetRulesPath, sphereOrderFor } from './surveyPreset.js';
 
 argvHelp(import.meta.url);
 const DASH_MODE = parseDashMode(
@@ -221,6 +242,17 @@ if (ONLY !== null && !ONLY.split(',').some((s) => s.trim())) {
     process.exit(2);
 }
 const THROUGH = argOf('through', null);
+/** ⛓ ER E6 — which world: a preset id (`surveyPreset.js`). Absent = the playthrough, and nothing moves. */
+const PRESET = (() => {
+    try { return assertPresetId(argOf('preset', DEFAULT_SURVEY_PRESET)); } catch (e) {
+        console.error(`ERROR: ${e.message}`);
+        return process.exit(2);
+    }
+})();
+if (PRESET !== DEFAULT_SURVEY_PRESET && THROUGH === null) {
+    console.error(`ERROR: --preset=${PRESET} needs --through=<sphere>|end — the default survey is the playthrough's shield route`);
+    process.exit(2);
+}
 const OUT_FILE = argOf('out', null);
 /** ⛓ FRONTIER2 — which legs: `full` (every sphere row) or `route-only` (the progression pickups). */
 const ROUTE_MODE = argOf('route', 'full');
@@ -240,8 +272,35 @@ if (OUT_FILE && THROUGH === null) {
     console.error('ERROR: --out= is the extended survey\'s (--through=<sphere>|end); the default survey writes survey.json');
     process.exit(2);
 }
+/**
+ * ⛓ ER E6 — `--carry-earned=<survey.json>` (OPT-IN; absent = today's survey, byte for byte). Every step is solved
+ * ALONE from a declared boot, so a body an earlier visit removed for good (a broken rock, an opened kill-lock, a boss
+ * it had to fight to cross: the run's `earnedClears`, the flags the game SAVES) stands again at the next visit. On
+ * the playthrough that costs a re-break; on a world that crosses one room many times (`seedling_er`: L16 nine
+ * times, L19 eight) a later visit can refuse on a body the walk already removed. ⚠ A flag is carried only because a
+ * solved visit EARNED it: staging a boss goal's `report` alone was tried and withdrawn (a fight clears several flags
+ * — L32's clears four — and the report without the others boots a room the game never holds). With the flag, a step ALSO boots
+ * with the `earnedClears` of its own level from the EARLIER rows of the named survey that SOLVED (the prior run of
+ * this same route: `--through`, `--route` and `--preset` must be its own). The row names what it carried
+ * (`boot.carriedEarned`), so a carried row is never read as an independent one. ⚖ A SECOND-PASS READING, not the
+ * survey's verdict: it answers "does this visit solve given what the earlier visits did", for the rows the first
+ * pass refused (`--only=`).
+ */
+const CARRY_EARNED = argOf('carry-earned', null);
+if (CARRY_EARNED !== null && THROUGH === null) {
+    console.error('ERROR: --carry-earned= is the extended survey\'s (--through=<sphere>|end)');
+    process.exit(2);
+}
+const CARRY_ROWS = CARRY_EARNED === null ? null : (() => {
+    try { return JSON.parse(readFileSync(resolvePath(CARRY_EARNED), 'utf8')).rows ?? []; } catch (e) {
+        console.error(`ERROR: --carry-earned=${CARRY_EARNED}: ${e.message}`);
+        return process.exit(2);
+    }
+})();
 /** `.cache/seedling-survey/`, or `…/through-<sphere>/` under `--through` (gitignored either way). */
-const OUT_DIR = THROUGH !== null ? throughSurveyDir(REPO, THROUGH, ROUTE_MODE) : seedlingSurveyDir(REPO);
+const OUT_DIR = THROUGH !== null
+    ? throughSurveyDir(REPO, THROUGH, ROUTE_MODE, PRESET === DEFAULT_SURVEY_PRESET ? null : PRESET)
+    : seedlingSurveyDir(REPO);
 const DERIVE_ONLY = process.argv.includes('--derive-only');
 /**
  * ⛔ THE TIMEOUT IS A NAMED BOUND, NOT A GENEROUS ONE. Measured on this
@@ -266,23 +325,31 @@ const TIMEOUT_S = Number(argOf('timeout', '120'));
  */
 const { patchedMapDocument, SEEDLING_SET_PATCHES } = await import(join(MODULE, 'seedlingSetPatches.js'));
 const { levelSourceFromAtlas } = await import(join(MODULE, 'atlasSource.js'));
-const atlas = patchedMapDocument(JSON.parse(readFileSync(
-    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8')));
-const spheres = JSON.parse(readFileSync(
-    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json'), 'utf8'));
+/** The AP rules export for the surveyed world — found, never hardcoded (`surveyPreset.presetRulesPath`). */
+function apRulesPath() {
+    return presetRulesPath(REPO, PRESET);
+}
+const apRules = (() => {
+    try { return JSON.parse(readFileSync(apRulesPath(), 'utf8')); } catch (e) {
+        if (PRESET === DEFAULT_SURVEY_PRESET) throw e;
+        console.error(`ERROR: ${e.message}`);
+        return process.exit(2);
+    }
+})();
+/**
+ * ⛓ ER E6 — the rooms the world is PLAYED on: a world that places entrances has its moved stairs rewritten in the
+ * delivered set, and the survey reads those rooms (`deliveredMapDocument`; a world that places none gets the
+ * patched document itself, the same object).
+ */
+const { doc: atlas, plan: ENTRANCE_PLAN } = deliveredMapDocument(patchedMapDocument(JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'))), apRules);
+/** ⛓ ER E6 — the world's own sphere order: the committed artifact (the default preset) or derived from its rules. */
+const SPHERE_ORDER = sphereOrderFor({ repo: REPO, preset: PRESET, rules: apRules });
+const spheres = { order: SPHERE_ORDER.order };
 /** ⛓ SWIM U2 D3: the AP item → flash name → property tables the staged grant maps through. */
 const GAME = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
 
-/** The AP rules export for the playthrough world — found, never hardcoded. */
-function apRulesPath() {
-    const base = join(REPO, 'frontend', 'presets', 'seedling_playthrough');
-    const seed = readdirSync(base).find((d) => d.startsWith('AP_'));
-    if (!seed) throw new Error(`no AP_* export under ${base} — the region graph is the `
-        + 'route derivation\'s authority on gating and this survey cannot proceed without it');
-    return join(base, seed, `${seed}_rules.json`);
-}
-const apRules = JSON.parse(readFileSync(apRulesPath(), 'utf8'));
 const REGIONS = apRules.regions['1'];
 /** ⛓ R4b — the world's `seals_required` (the export's option; absent = the game's own 16): the seal log's N. */
 const SEALS_REQUIRED = apRules.world?.['1']?.options?.seals_required;
@@ -973,6 +1040,7 @@ function deriveRoute() {
     return { legs, visits, steps, persistence: new Map(steps.map((s, i) => [String(s.step), persistence[i]])) };
 }
 
+
 /**
  * ⛓ THE ALTERNATIVE LEG, SURVEYED — and it is here because the MEASUREMENT
  * demanded it, not because the charter asked for two routes.
@@ -1190,6 +1258,32 @@ for (const name of CAMPAIGN_TAPES) {
  * different file, and this re-point is PREDICTED to move nothing.
  */
 const STAGED_BASE = 'r8-solve-11';
+/**
+ * ⛓ ER E6 — **THE PRE-SWORD TWIN, DERIVED.** `STAGED_BASE` is the POST-sword latch, and on the playthrough every room
+ * the route enters before its Sword has a committed tape, so no staged row ever needed another. A world whose
+ * stairs lead elsewhere walks rooms before the Sword that no tape boots (measured on `seedling_er`: steps 2–7), and
+ * handing them `hasSword` would solve them with a sword the walk does not hold. Such a row is staged from the
+ * campaign's own pre-sword state instead: the FIRST campaign tape whose block carries a seam holding no item
+ * (found, never typed), re-pointed exactly as `STAGED_BASE` is. Under `--through` only (`stagedBaseFor`).
+ */
+const PRE_SWORD_BASE = preSwordBaseOf(CAMPAIGN_TAPES, committedTape);
+/** The Sword's AP item, read off the post-sword latch's own grant mapping (asserted where the latch is granted). */
+const SWORD_ITEM = 'Progressive Sword';
+/** Does the walk hold the Sword entering `step`? (an earlier step's goal collected a row that grants it) */
+function walkHoldsSword(step) {
+    const swordRows = new Set(PICKUP_ROWS.filter((p) => p.item === SWORD_ITEM).map((p) => p.location));
+    return route.steps.some((s) => typeof s.step === 'number' && s.step < step.step
+        && s.goals.some((g) => g.kind !== 'skip' && swordRows.has(g.location)));
+}
+/** Which latch a staged `step` is constructed from: the post-sword one once the walk holds the Sword. */
+function stagedBaseFor(step) {
+    if (!THROUGH || typeof step.step !== 'number' || walkHoldsSword(step)) return STAGED_BASE;
+    if (!PRE_SWORD_BASE) {
+        throw new Error(`step ${step.step} (L${step.level}) is staged before the route's Sword, and no campaign tape `
+            + `carries a pre-sword seam — ${STAGED_BASE}'s post-sword latch is not this visit's.`);
+    }
+    return PRE_SWORD_BASE;
+}
 
 /**
  * A staged row that ALREADY has a committed tape — the one place the staged
@@ -1229,7 +1323,7 @@ function stagedGrantFor(step, latchItems) {
         //   counted into `saveCounts` — RULES survey-save-arrays).
         unpresentable: 'report',
     });
-    const sword = grant?.from.find((f) => f.item === 'Progressive Sword');
+    const sword = grant?.from.find((f) => f.item === SWORD_ITEM);
     if (sword && sword.grants !== 'latched hasSword') {
         throw new Error(`staged grant for step ${step.step}: the route's Sword (step ${sword.step}) `
             + `derives '${sword.grants}', but ${STAGED_BASE} is the POST-SWORD latch — the latch `
@@ -1287,10 +1381,13 @@ function bootFor(step) {
                 : `${tape}'s committed v8 boot block, verbatim (it boots at ${key})`,
         };
     }
+    const stagedBase = stagedBaseFor(step);
     return {
         kind: 'staged',
-        source: STAGED_BASE,
-        note: `${STAGED_BASE}'s committed v8 block (the campaign's own post-sword latch) `
+        source: stagedBase,
+        note: (stagedBase === STAGED_BASE
+            ? `${STAGED_BASE}'s committed v8 block (the campaign's own post-sword latch) `
+            : `${stagedBase}'s committed block (the campaign's own PRE-sword state: the walk holds no Sword yet) `)
             + `re-pointed at ${key} — R8 slice 8's construction for r8-solve-18`
             // ⛓ SWIM T3 D3: a pit landing is staged as a plain `new Game`
             // at the fall's ctor args — on the ground, NOT the 83 px ceiling
@@ -1324,7 +1421,8 @@ function lateVisitTo(step, tape) {
     const grant = committedGrantFor(step, tape);
     const { covers, beyond } = tapeCoversVisit(grant, raw.save?.keys ?? []);
     if (covers) return null;
-    if (!grant.from.some((f) => f.item === 'Progressive Sword')) {
+    // ⛓ ER E6: a late visit with no Sword is staged from the pre-sword state (`stagedBaseFor`); with neither, it refuses.
+    if (!grant.from.some((f) => f.item === SWORD_ITEM) && !PRE_SWORD_BASE) {
         throw new Error(`step ${step.step} is a late visit to ${tape}'s door (the walk holds ${beyond.join(', ')}) `
             + `with no Sword — the staged boot is ${STAGED_BASE}'s post-sword latch, which this visit never earned.`);
     }
@@ -1371,6 +1469,20 @@ async function solveOneStep(step) {
         staging.boot = { level: step.level, x: step.arrival.x, y: step.arrival.y };
         // ⛓ RULES survey-tentacle-staging: the room runs the game's `Rng.split`, not the base tape's (`stagedRng`).
         staging.rng = stagedRng(staging.rng, SHIPPED_RNG);
+    }
+    /**
+     * ⛓ ER E6 — **AN INHERITED FLAG IS THE WALK'S ONLY WHERE THE WALK HAS BEEN.** The latch's own `persistence` rows are
+     * the rooms the CAMPAIGN had opened by its latch (L5, L8, L10: the road to the Sword). The playthrough's route
+     * visits every one of them before its first staged row, so they were always the walk's too. A world that reaches
+     * such a room later, or first, would boot it already opened by a walk that never stood in it. So a staged row
+     * keeps an inherited flag only for a level an EARLIER step visited; what it drops is named on the row.
+     */
+    let droppedInherited = [];
+    if (boot.kind === 'staged' && THROUGH && typeof step.step === 'number') {
+        const { kept, dropped } = inheritedFlagsFor(staging.persistence,
+            route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step).map((s) => s.level));
+        droppedInherited = dropped;
+        staging.persistence = kept;
     }
     /** ⛓ RULES survey-cleanup: the block as constructed, before the walk's grants (`stagedBlockCheck`). */
     const construction = JSON.parse(JSON.stringify({ boot: staging.boot, save: staging.save ?? null,
@@ -1451,6 +1563,14 @@ async function solveOneStep(step) {
     for (const flag of route.persistence.get(String(step.step)) ?? []) {
         if (!staging.persistence.some((r) => r.level === flag.level && r.tag === flag.tag)) {
             staging.persistence.push({ ...flag });
+        }
+    }
+    /** ⛓ ER E6 `--carry-earned`: the flags the earlier SOLVED visits to this level earned, staged once each. */
+    const carriedEarned = [];
+    if (CARRY_ROWS && typeof step.step === 'number') {
+        for (const { text, ...flag } of carriedEarnedFor(CARRY_ROWS, step, staging.persistence)) {
+            staging.persistence.push(flag);
+            carriedEarned.push(text);
         }
     }
     /**
@@ -1669,6 +1789,9 @@ async function solveOneStep(step) {
             strippedTimedClears: inheritedTimed.map((r) => `{${r.level},${r.tag}}@${r.at}`),
             ...(saveGrant && boot.kind === 'staged' ? { saveGrant } : {}),
             ...(stagedSave ? { stagedSave } : {}),
+            ...(carriedEarned.length ? { carriedEarned } : {}),
+            ...(droppedInherited.length
+                ? { droppedInheritedFlags: droppedInherited.map((r) => `{${r.level},${r.tag}}${r.at !== undefined ? `@${r.at}` : ''}`) } : {}),
         },
         withCommittedDeclarations: withCommitted,
         goals: step.goals,
@@ -1842,7 +1965,14 @@ const routeDoc = {
         ap_rules: apRulesPath().slice(REPO.length + 1),
         atlas: 'frontend/modules/flashPanel/atlases/seedling-map.json',
         set_patches: SEEDLING_SET_PATCHES.map((p) => p.id),
-        spheres: 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json',
+        spheres: SPHERE_ORDER.source,
+        // ⛓ ER E6: a non-default world names itself and what its delivery moved (absent on the playthrough)
+        ...(PRESET !== DEFAULT_SURVEY_PRESET ? {
+            preset: PRESET,
+            entrance_retarget: ENTRANCE_PLAN
+                ? { placements: ENTRANCE_PLAN.placements, moved: ENTRANCE_PLAN.moved.length, unmoved: ENTRANCE_PLAN.unmoved }
+                : null,
+        } : {}),
     },
     /**
      * ⛓ FRONTIER2 — the route's MODE, named in the artifact (under `--through`
@@ -2056,6 +2186,8 @@ for (const step of [...route.steps, ...addendum]) {
     const res = await new Promise((resolve) => {
         execFile(process.execPath, [fileURLToPath(import.meta.url), `--step=${step.step}`,
             ...(THROUGH ? [`--through=${THROUGH}`, `--route=${ROUTE_MODE}`] : []),
+            ...(PRESET !== DEFAULT_SURVEY_PRESET ? [`--preset=${PRESET}`] : []),
+            ...(CARRY_EARNED !== null ? [`--carry-earned=${resolvePath(CARRY_EARNED)}`] : []),
             ...(DISABLE ? [`--disable=${DISABLE.join(',')}`] : [])], {
             cwd: REPO, timeout: TIMEOUT_S * 1000, maxBuffer: 64 * 1024 * 1024, killSignal: 'SIGKILL',
         }, (err, stdout, stderr) => {
