@@ -10,6 +10,11 @@ class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
     __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
 
 
+class SpoilerDataIncludeRegions(_spoiler_hook_client.SpoilerDataIncludeRegions):
+    # Re-homed for the same reason as SpoilerDataInSlotData above.
+    __doc__ = _spoiler_hook_client.SpoilerDataIncludeRegions.__doc__
+
+
 class GraphFileSelection(TextChoice):
     """
     The dependency graph to use. Select from bundled examples or enter a file path
@@ -103,6 +108,7 @@ class DepGraphOptions(PerGameCommonOptions):
     starting_nodes: StartingNodes
     entrance_rule_mode: EntranceRuleMode
     spoiler_data_in_slot_data: SpoilerDataInSlotData
+    spoiler_data_include_regions: SpoilerDataIncludeRegions
 
 
 depgraph_option_groups = [

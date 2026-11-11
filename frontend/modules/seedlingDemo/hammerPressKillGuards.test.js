@@ -45,11 +45,15 @@ function stagingOf() {
     return staging;
 }
 
-/** The run at t2439: the base's press kill, key for key. */
-function runAtHo1() {
+/**
+ * The run at `n` (default the fixture's t2439): the base's press kill, key for key.
+ * ⛓ HO1's witness tick is t2437 since the BOBIFRAME flip (`chaserSpinnerWalls` ON, ⚖ user 2026-11-11): the walled bob
+ * stands elsewhere, so t2439's preview no longer meets the shake band; t2437's does (scanned t2396..t2439: the only one).
+ */
+function runAtHo1(n) {
     const { keys, ticks } = JSON.parse(readFileSync(join(FIX, 'ho1-keys-t2439.json'), 'utf8'));
     const run = createRunForStaging(stagingOf(), atlasLevelSource());
-    for (let t = 0; t < ticks; t += 1) run.advance(new Set(keys[t]));
+    for (let t = 0; t < (n ?? ticks); t += 1) run.advance(new Set(keys[t]));
     return run;
 }
 
@@ -74,12 +78,13 @@ describe('hammer-phase LB — the press kill guards', () => {
         expect(isShakeBandThrow(forecast.message)).toBe(false);
     });
 
-    it('HO1: at t2439 the strike preview throws OFF; ON the band\'s candidates are refused by name (the strike floor '
+    it('HO1: at t2437 the strike preview throws OFF; ON the band\'s candidates are refused by name (the strike floor '
         + 'OFF: the keys\' own)', () => withStrikeEtaFloor(false, () => {
-        const run = runAtHo1();
+        const run = runAtHo1(2437);
         // ⛔ the precondition, so a drifted fixture fails by name rather than by a missing throw
-        expect(run.ticksCompleted).toBe(2439);
-        expect(run.ledger('playerDeaths').map((d) => d.t)).toEqual([1202, 2395]);
+        expect(run.ticksCompleted).toBe(2437);
+        // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the second death is t2394 (t2395 before).
+        expect(run.ledger('playerDeaths').map((d) => d.t)).toEqual([1202, 2394]);
         const body = run.entities('spinnerBodies').find((b) => b.id === TARGET);
         expect(body.hitsTimer).toBe(0);
         let off = null;
@@ -99,9 +104,10 @@ describe('hammer-phase LB — the press kill guards', () => {
         // scan goes on past it to a strike whose own preview the band does not touch (measured at the base)
         const cont = withPressKillShakeGuard(true, () => deriveStrike(run, TARGET, new Set(), 0, { continuation: true }));
         expect({ cell: cont.cell, pressAt: cont.pressAt, fromContinuation: cont.fromContinuation })
-            .toEqual({ cell: { x: 664, y: 680 }, pressAt: 3276, fromContinuation: true });
+            // ⛓ at t2437 under the BOBIFRAME flip: (648,680) pressed at t3297 ((664,680) at t3276 from t2439 before).
+            .toEqual({ cell: { x: 648, y: 680 }, pressAt: 3297, fromContinuation: true });
         // ⛔ the run is not touched by the derivation, either way
-        expect(run.ticksCompleted).toBe(2439);
+        expect(run.ticksCompleted).toBe(2437);
     }), 120_000);
 
     /** One bounded solve: OFF ⇒ the sentinel's tick; ON ⇒ the refusal. */
@@ -122,22 +128,23 @@ describe('hammer-phase LB — the press kill guards', () => {
         return { e: null, t: run.ticksCompleted, deaths: [] };
     };
 
-    it('HO2 OFF: the press kill carries on past the death at t788', () => withL40Flip(false, () => {
+    it('HO2 OFF: the press kill carries on past the death at t787', () => withL40Flip(false, () => {
         const r = capped(false);
         expect(r.e?.sentinel).toBe(true);
         expect(r.t).toBe(1300);
-        expect(r.deaths).toEqual([788]); // t1202 with the strike floor OFF (SFF)
+        // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the death is t787 (t788 before).
+        expect(r.deaths).toEqual([787]); // t1202 with the strike floor OFF (SFF)
     }), 600_000);
 
     it('HO2 ON: the press kill is refused by name on the tick of the first death', () => withL40Flip(false, () => {
         const r = capped(true);
         expect(r.e).toBeInstanceOf(SolverRefusal);
-        expect(r.t).toBe(788);
-        expect(r.deaths).toEqual([788]); // t1202 with the strike floor OFF (SFF)
+        expect(r.t).toBe(787);
+        expect(r.deaths).toEqual([787]); // t1202 with the strike floor OFF (SFF)
         // ⚠ fields, never the whole error (a failing match on a refusal can OOM the pretty-printer)
         expect(r.e.obstacle).toEqual({ kind: 'danger', id: 'bob@736,752' });
-        expect(r.e.perTick.length).toBe(788);
-        expect(String(r.e.message)).toMatch(/the player died at t788 \(chaser bob@736,752\) while pressing spinner@880,848, after 1 landing\(s\)/);
+        expect(r.e.perTick.length).toBe(787);
+        expect(String(r.e.message)).toMatch(/the player died at t787 \(chaser bob@736,752\) while pressing spinner@880,848, after 1 landing\(s\)/);
         expect(progressKind(r.e)).toBe('danger');
     }), 600_000);
 });

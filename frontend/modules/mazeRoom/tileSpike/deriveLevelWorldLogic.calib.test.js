@@ -22,15 +22,14 @@ const PERMISSIVE = playthroughPermissiveLocations();
 // mirrors: a test file cannot be imported without registering its suites). Session tile-rules-automation-r-a1 found this
 // file still expecting no problem at all after OPEN_L63 was named, which would red every P3 calib pass.
 const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
-// ⛓ rules-l26-rocklock-pocket: and `OPEN_L53` (deriveLevelWorldLogic.fixture.js says why), mirrored the same way.
-const OPEN_L53 = 'level_53__r9c10 @ L53 flag 2: lock@144,208 cleared (from level_53__r14c9) holding [Ghost Spear]: derived true, atlas false';
+// ⛓ tile-encounter-kill-arms: `OPEN_L53` and `OPEN_L60` closed (deriveLevelWorldLogic.fixture.js's CLOSED_* note).
 
 describe('seedling_playthrough_maze — scripted ≡ native on every region', () => {
     it('every region, both engines, only the named OPEN row and the same lines', () => {
         const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
         const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(native.problems).toEqual([OPEN_L53, OPEN_L63]);
-        expect(scripted.problems).toEqual([OPEN_L53, OPEN_L63]);
+        expect(native.problems).toEqual([OPEN_L63]);
+        expect(scripted.problems).toEqual([OPEN_L63]);
         expect(scripted.lines).toEqual(native.lines);
     // ⚖ Robert 2026-11-09, via the liaison: "Raise to 1,200 s (Recommended)" (session tile-rules-automation-r-a4b). Measured on CI,
     // normalised to each run's own L40 scripted time: the control 2d1283375e projects to ~875 s and the R-A4b tip (sided openers)

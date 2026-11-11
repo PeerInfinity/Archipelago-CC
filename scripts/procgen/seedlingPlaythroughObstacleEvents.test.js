@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged, doorwaysBesideLanding,
     withEventGates,
 } from './make-seedling-playthrough-rules.mjs';
 
@@ -99,7 +99,21 @@ describe('the playthrough\'s obstacle events', () => {
         const has = { rule: 'Has', args: { item_name: 'L16 flag 0: rope@32,16 cleared' } };
         // L17's stairs land IN the lane: the departure costs the cut (no tank-a-hit, ⚖ 2026-10-21)
         expect(regions.level_17.exits.find((x) => x.connected_region === 'level_16__r3c7').access_rule).toEqual(has);
-        expect(ropes.exitGates).toEqual([{ region_id: 'level_17', exit_id: 'out_stairsup_32_48', rule: has }]);
+        // ⚖ 2026-11-10: closed in EITHER direction — the way back out through the same doorway costs the cut too
+        expect(regions.level_16__r3c7.exits.find((x) => x.connected_region === 'level_17').access_rule).toEqual(has);
+        expect(ropes.exitGates).toEqual([
+            { region_id: 'level_17', exit_id: 'out_stairsup_32_48', rule: has },
+            { region_id: 'level_16', exit_id: 'out_stairsdown_112_64', rule: has },
+        ]);
+        // the pairing is the game's return-spawn table, read off the landing: one door for a stairs landing, and the
+        // gate rows of L16 name no other door (its falls into L17 stand outside the lane and are nobody's partner)
+        expect(doorwaysBesideLanding({ from: 17, door: 'stairsup@32,48', level: 16 }))
+            .toEqual([{ region_id: 'level_16', exit_id: 'out_stairsdown_112_64' }]);
+        expect(doorwaysBesideLanding({ from: 15, door: 'stairsdown@144,16', level: 16 }))
+            .toEqual([{ region_id: 'level_16', exit_id: 'out_stairsup_16_64' }]);
+        for (const x of regions.level_16__r1c9.exits.filter((e) => e.connected_region === 'level_17')) {
+            expect(x.access_rule, x.name).toEqual({ rule: 'True_' });
+        }
         for (const to of ['level_16__r1c1', 'level_16__r1c9']) {
             expect(regions.level_16__r3c7.exits.find((x) => x.connected_region === to).access_rule, to).toEqual(has);
         }
@@ -334,10 +348,6 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
         expect(rows.filter((r) => r.fires).every((r) => r.latch)).toBe(true);
         const why = Object.fromEntries(rows.filter((r) => !r.fires).map((r) => [r.name, r.why]));
         expect(why['L39 flag 8: wandlock@144,592 cleared']).toBe('a cross-level ButtonRoom also clears its tag');
-        expect(why['L71 flag 0: lock@112,192 cleared']).toBe('no side clears the room (today\'s rule kept)');
-        // L60: its jellyfish come to the lock's face, where the Ghost Sword reaches through (Player.as:917)
-        const l60 = rows.find((r) => r.level === 60);
-        expect(l60.sides.map((s) => s.verdict).sort()).toEqual(['clears', 'undecided']);
         // L26: the census's pocket (the L28 door's) cannot reach puncher@32,208 by any arm
         const l26 = rows.find((r) => r.level === 26).sides.find((s) => s.verdict === 'cannot');
         expect(l26).toMatchObject({ beyond: ['puncher@32,208'], steps: [{ tile: [7, 13], dir: 'W' }] });
@@ -358,6 +368,42 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
                 expect(asks(forth), `${side} -> ${pocket}`).toBe(false);
             }
         }
+    });
+
+    // ⛓ RULES l60-l71-killlock — an `across` side: the game kills a chaser parked behind a Solid with the Spear's thrust and
+    // the Ghost Sword's slash, and with nothing else (`probe-seedling-killlock-arms.mjs`).
+    const has = (item_name) => ({ rule: 'Has', args: { item_name } });
+    const exitRule = (from, to) => RULES.regions['1'][from].exits.find((e) => e.connected_region === to)?.access_rule;
+    it('an across side pays the arms that pass a Solid: the census names them, never a level', () => {
+        const through = playthroughEncounterLocks().filter((r) => r.through);
+        expect(through.every((r) => !r.fires && r.why === null)).toBe(true);
+        expect(through.map((r) => [r.name, r.through.event, r.sides.map((s) => s.verdict).sort()])).toEqual([
+            ['L60 flag 0: lock@128,80 cleared', true, ['across', 'clears']],
+            ['L71 flag 0: lock@112,192 cleared', false, ['across', 'across']],
+        ]);
+        // the arms are the bodies' own kill arms that pass a Solid: the thrust, and the slash as the Ghost Sword
+        for (const r of through) expect(r.through.flags).toEqual([['hasGhostSword', 'hasSpear']]);
+        // only a lock with a side that clears, and a tag that records it, is a latch
+        expect(through.map((r) => r.latch)).toEqual([true, false]);
+    });
+
+    it('L60: the pocket crosses on the room\'s cleared lock OR the Spear; the room\'s own crossing is unchanged', () => {
+        const event = 'L60 flag 0: lock@128,80 cleared';
+        const forth = exitRule('level_60__r5c0', 'level_60__r5c9');
+        const back = exitRule('level_60__r5c9', 'level_60__r5c0');
+        expect(JSON.stringify(forth)).not.toContain('cleared');
+        expect(back).toEqual({ rule: 'And', children: [...forth.children, { rule: 'Or', children: [has(event), has('Ghost Spear')] }] });
+        expect(eventsOf(RULES).find((e) => e.name === event)).toMatchObject({ region: 'level_60__r5c0', event_kind: 'game_state' });
+    });
+
+    it('L71: no side clears the room by walking, so each crossing pays the Spear and no event is minted', () => {
+        for (const [from, to] of [['level_71__r13c7', 'level_71__r11c7'], ['level_71__r11c7', 'level_71__r13c7']]) {
+            const rule = exitRule(from, to);
+            expect(rule.rule, `${from} -> ${to}`).toBe('And');
+            expect(rule.children).toContainEqual(has('Ghost Spear'));
+            expect(JSON.stringify(rule)).not.toContain('cleared');
+        }
+        expect(eventsOf(RULES).find((e) => e.name === 'L71 flag 0: lock@112,192 cleared')).toBeUndefined();
     });
 
     it('L26: the pocket\'s crossing is the weapon AND the room\'s cleared lock; the room\'s own is the weapon alone', () => {

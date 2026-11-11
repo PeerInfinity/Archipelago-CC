@@ -221,9 +221,12 @@ describe('the committed playthrough\'s leg list', () => {
         //   swing lights the pole from the landing), so their legs are no longer gated on the event alone.
         // ⛓ rules-l112-owl-rocklock: 45 -> 42 — L112 splits at its rock, so the L113 arrival lands in r0c7 and its legs to
         //   the L111 door, the Owl and the rock's own flag are crossings of the rock now, not legs (2 staged, 1 skipped).
-        expect(gated.length).toBe(42);
+        // ⛓ rules-l16-l17-trap-transition: 42 -> 44 — L16's stairs down stand beside the landing in the armed lane, so
+        //   their departure costs the cut (⚖ user 2026-11-10: closed in either direction) and L17's arrival through
+        //   in_L16_112_64 is gated by flag:L16:0: its two legs (the stairs back up, the chest) stage it.
+        expect(gated.length).toBe(44);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(35); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(37); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35; l16-l17-trap-transition: 35 -> 37
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -264,23 +267,28 @@ describe('the committed playthrough\'s leg list', () => {
         //   encounter-lock events are locations on their rooms' sides, so L18 r1c1's L16 arrival gains a leg to `L18 flag 0`
         //   (223) and L26 r2c4's two arrivals (in_L25_0_96, in_L27_32_0) one each to `L26 flag 0` (286, 289). L53's event
         //   stands in r9c10, which no AP exit lands in: link legs only. No leg gained or lost a goal event.
+        // ⛓ rules-l60-l71-killlock: the SAME legs by key, every id from 514 on shifted by +1 — L60's kill-lock event is a
+        //   location on its room's side, so L60 r5c0's L59 arrival gains a leg to `L60 flag 0` (514). No leg gained or lost a
+        //   goal event (L60's pocket return stages nothing: the route holds the Ghost Spear, the Or's other arm).
+        // ⛓ rules-l16-l17-trap-transition: the SAME legs by key and id; leg 220 (L17's stairs arrival back up its own
+        //   stairs) leaves `flag:L16:0`'s goal list — its ARRIVAL stages the cut now, so the goal has nothing left to stage.
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
-            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [361],
-            'flag:L62:0': [533, 538, 543, 548, 553, 584], 'flag:L63:1': [535, 540, 545, 550, 555, 559, 564, 569, 574],
-            'flag:L63:6': [587, 589], 'flag:L63:7': [590],
-            'flag:L71:2': [639, 641], 'flag:L12:7+flag:L12:12': [659], 'flag:L101:0': [766],
-            'flag:L112:1': [810, 811, 817, 818, 824, 825, 831, 832, 838, 839],
-            'flag:L114:0': [812, 813, 814, 819, 820, 821, 826, 827, 828, 833, 834, 840, 841],
-            'flag:L113:0': [849, 850, 851, 852],
+            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [361],
+            'flag:L62:0': [534, 539, 544, 549, 554, 585], 'flag:L63:1': [536, 541, 546, 551, 556, 560, 565, 570, 575],
+            'flag:L63:6': [588, 590], 'flag:L63:7': [591],
+            'flag:L71:2': [640, 642], 'flag:L12:7+flag:L12:12': [660], 'flag:L101:0': [767],
+            'flag:L112:1': [811, 812, 818, 819, 825, 826, 832, 833, 839, 840],
+            'flag:L114:0': [813, 814, 815, 820, 821, 822, 827, 828, 829, 834, 835, 841, 842],
+            'flag:L113:0': [850, 851, 852, 853],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[813].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[814].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[533].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[535].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[534].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[536].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });
@@ -318,7 +326,7 @@ describe('the committed playthrough\'s leg list', () => {
             .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));
         const pressed = arrivalStaged.filter((l) => l.stagedEvents.some((e) => PRESS.has(e.eventId)));
         expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
-            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608']);
+            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '17,48,48', '38,144,16', '39,144,608']); // + L17 (48,48): l16-l17-trap-transition
         for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
         const byArrival = new Map(arrivalStaged.filter((l) => !pressed.includes(l))
             .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));

@@ -294,6 +294,22 @@ export function departuresLandingAt(doc, landing, why = 'landing') {
     return deps;
 }
 /**
+ * ⛓ RULES l16-l17-trap-transition — **THE DOORWAY A LANDING STANDS BESIDE**: the departures of the landing's OWN level
+ * through the other half of its doorway pair. The pairing is the game's (`seedlingReturnSpawns.returnSpawnTable`, the
+ * table the runtime binding and the ER door census pair by): a link of `landing.level` whose return spawn is reached
+ * `via` the landing's door is the door a player standing on the landing leaves by. It is a TILE fact of the level, so
+ * a coupled shuffle (which retargets where the door leads, never where it stands) does not move it.
+ *
+ * Returns `[{region_id, exit_id}]`; NONE is an answer (a one-way arrival has no door back), not a refusal.
+ */
+export function doorwaysBesideLanding(landing) {
+    const door = parseSolidId(landing.door);
+    return (levelOf(landing.level)?.entities ?? []).filter((e) => LINK_TAGS.includes(e.type)).filter((e) => {
+        const via = RETURN_SPAWNS.get(returnKey(landing.level, Math.floor(e.x / TILE), Math.floor(e.y / TILE)))?.via;
+        return via && via.level === landing.from && via.type === door.cls && via.x === door.x && via.y === door.y;
+    }).map((e) => ({ region_id: regionIdFor(landing.level), exit_id: outExitId(e) }));
+}
+/**
  * The VANILLA reading E4a retired — the landing's own door, whatever the doc connects it to. Kept ONLY as the MUTANT the
  * ER swap pins (`seedlingErProducerDecoupling.test.js`) hand a reader to prove its pin goes red; no producer path uses it.
  */
@@ -428,9 +444,20 @@ const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
  *     hitbox.
  * A lock FIRES when one side `clears` and another `cannot`: each step into it from a `cannot` side is walled, and the
  * cell is a latch when its tag records the opening (`tset == -1`, `tag >= 0`). Not fired, by name: a lock whose tag a
- * cross-level ButtonRoom also clears (`CROSS_LEVEL_OPENERS`: that button opens it from either side, its own event), a
- * room no side clears (today's rule kept: the analyzer would drop every way through), and an `undecided` side.
+ * cross-level ButtonRoom also clears (`CROSS_LEVEL_OPENERS`: that button opens it from either side, its own event), and
+ * a room no side clears (the analyzer would drop every way through).
+ *
+ * ⛓ RULES l60-l71-killlock — **AN `across` SIDE PAYS THE ARMS THAT PASS A SOLID** (`row.through`; the game witness is
+ * `probe-seedling-killlock-arms.mjs`, the why `encounterLockSides`). Those arms are read off the bodies' own kill arms
+ * (`KILL_LOCKS` `items`): the Spear's thrust under `hasSpear`, and the slash under `hasSword` only as the Ghost Sword
+ * (`hasGhostSword`). A body neither hurts is never reached across (`through: false`). Each step into the lock from an
+ * `across` side then costs:
+ *   - where another side `clears` and the tag records the opening: `Or(<the lock's event>, <the arms>)`, the cell a
+ *     latch from that side (`latchLocksOf` hands the analyzer both halves);
+ *   - else the arms alone, as an `enter` gate (no side mints an event the side could wait for).
+ * A cross-level lock is left alone, as before.
  */
+const THROUGH_SOLID_ARMS = Object.freeze({ hasSpear: 'hasSpear', hasSword: 'hasGhostSword' });
 const ENCOUNTER_CHASE_KINDS = new Set(['chase', 'chase-through-walls', 'teleport-hop']);
 const ghostReach = (() => {
     const g = SLASH_SPRITES.ghostsword;
@@ -465,13 +492,17 @@ export function encounterLocksOf(level, grid = null) {
         const row = ENEMY_CLASSES[tag];
         if (!row?.ctor || !row.hitbox) throw new Error(`encounter locks: L${level.level} ${b.at} has no ENEMY_CLASSES ctor/hitbox row`);
         const { kind, range } = row.aggro ?? {};
+        const arms = Object.entries(THROUGH_SOLID_ARMS).filter(([item]) => b.items.includes(item)).map(([, flag]) => flag).sort();
         return {
             at: b.at,
             centre: [x + row.ctor.dx, y + row.ctor.dy],
             runRange: ENCOUNTER_CHASE_KINDS.has(kind) && typeof range === 'number' ? range : null,
             reach: ghostReach + Math.hypot(row.hitbox.w, row.hitbox.h) / 2,
+            through: arms.length > 0,
+            arms,
         };
     });
+    const armsOf = new Map(bodies.map((b) => [b.at, b.arms]));
     const out = lockEntities.map((e) => {
         const tag = Number(e.attrs?.tag);
         const lock = { level: level.level, tag, cls: e.type, x: e.x, y: e.y };
@@ -484,38 +515,104 @@ export function encounterLocksOf(level, grid = null) {
         const crossLevel = CROSS_LEVEL_OPENERS.has(`${level.level}:${e.attrs?.tag}`);
         const clears = sides.some((s) => s.verdict === 'clears');
         const cannot = sides.filter((s) => s.verdict === 'cannot');
+        const across = sides.filter((s) => s.verdict === 'across');
         const fires = !crossLevel && clears && cannot.length > 0;
+        const records = Number(e.attrs?.tset) === -1 && Number.isInteger(tag) && tag >= 0;
+        // The across-the-cut arms: per body reached across, any of its arms; every such body (a conjunction, deduped).
+        const disjunctions = [...new Set(across.flatMap((s) => s.across).map((at) => armsOf.get(at).join('|')))].sort();
+        const through = crossLevel || across.length === 0 ? null : {
+            flags: disjunctions.map((d) => d.split('|')),
+            // With a side that clears and a tag that records it, the side may also wait for the event.
+            event: clears && records,
+        };
+        if (through?.event && fires) {
+            throw new Error(`encounter locks: ${lock.name} has a \`cannot\` side and an \`across\` side: one latch cell prices one way in`);
+        }
         const why = crossLevel ? 'a cross-level ButtonRoom also clears its tag'
-            : !clears ? 'no side clears the room (today\'s rule kept)'
-                : cannot.length === 0 ? 'every side clears the room (or is undecided)' : null;
+            : fires || through ? null
+                : !clears ? 'no side clears the room' : 'every side clears the room';
         return {
-            ...lock, at: `${e.type}@${e.x},${e.y}`, sides, fires, why,
-            latch: fires && Number(e.attrs?.tset) === -1 && Number.isInteger(tag) && tag >= 0,
+            ...lock, at: `${e.type}@${e.x},${e.y}`, sides, fires, through, why,
+            latch: (fires || !!through?.event) && records,
             tiles: tilesOf(e),
         };
     });
     encounterMemo.set(level.level, out);
     return out;
 }
+/**
+ * An `across` lock's arms as a grid condition: every disjunction of `through.flags`. An arm whose items already hold
+ * another arm of the same disjunction is dropped (the Ghost Sword is fused FROM the Spear: holding it is holding the
+ * Spear's item, so naming it adds no inventory), which is read off the resolver, never a flag list.
+ */
+const throughCondition = (through) => {
+    const resolved = (flag) => JSON.stringify(analyzerOptions.resolveCondition({ flag }));
+    const holds = (a, b) => {
+        const rule = analyzerOptions.resolveCondition({ flag: a });
+        return rule?.rule === 'And' && (rule.children ?? []).some((c) => JSON.stringify(c) === resolved(b));
+    };
+    const any = through.flags.map((d) => d.filter((a) => !d.some((b) => b !== a && holds(a, b))))
+        .map((d) => (d.length === 1 ? { flag: d[0] } : { any: d.map((flag) => ({ flag })) }));
+    return any.length === 1 ? any[0] : { all: any };
+};
 function stampEncounterLocks(level, grid) {
-    const rows = encounterLocksOf(level).filter((r) => r.fires);
+    const rows = encounterLocksOf(level).filter((r) => r.fires || r.through);
     if (rows.length === 0) return grid;
     const ox = grid.origin?.x ?? 0;
     const oy = grid.origin?.y ?? 0;
     const cells = grid.cells.slice();
+    const stamp = (side, gate, latch) => {
+        for (const { tile: [tx, ty], dir } of side.steps) {
+            const i = (ty - oy) * grid.width + (tx - ox);
+            const cell = cells[i];
+            cells[i] = { ...cell, enter: { ...(cell.enter ?? {}), [dir]: gate }, ...(latch ? { latch: true } : {}) };
+        }
+    };
     for (const row of rows) {
-        for (const side of row.sides.filter((s) => s.verdict === 'cannot')) {
-            for (const { tile: [tx, ty], dir } of side.steps) {
-                const i = (ty - oy) * grid.width + (tx - ox);
-                const cell = cells[i];
-                cells[i] = { ...cell, enter: { ...(cell.enter ?? {}), [dir]: null }, ...(row.latch ? { latch: true } : {}) };
-            }
+        if (row.fires) for (const side of row.sides.filter((s) => s.verdict === 'cannot')) stamp(side, null, row.latch);
+        if (!row.through) continue;
+        // ⛓ RULES l60-l71-killlock: with the event to wait for, a latch (priced `Or(event, arms)` by `latchEvent`);
+        // without one, the arms themselves.
+        for (const side of row.sides.filter((s) => s.verdict === 'across')) {
+            stamp(side, row.through.event ? null : throughCondition(row.through), row.through.event && row.latch);
         }
     }
     return { ...grid, cells };
 }
 /** ⛓ RULES rocklock-pocket — the census over every kill-lock room, for a reader that reports it. */
 export const playthroughEncounterLocks = () => LEVELS.flatMap((level) => encounterLocksOf(level));
+/**
+ * ⛓ ENCOUNTER KILL ARMS (session tile-encounter-kill-arms) — **WHICH NEIGHBOUR OF A LATCHED ENCOUNTER LOCK OPENS IT, AND
+ * WITH WHAT**, for a cell-level reader (the maze's level world). Per latched encounter lock of `level` (`encounterLocksOf`,
+ * `latch`), keyed `"<class>@<x>,<y>"`: `opens_from` = `{<dir>: true | <AP rule>}`, `dir` the neighbour of the lock the
+ * player stands on (the opposite of the census step INTO the lock), from the side grades of `encounterLockSides`:
+ *   - `clears`: `true` — the side clears the room by the room's own rule (the cell's clearance);
+ *   - `across`: the arms that pass a Solid (`throughCondition`, resolved): `Or(<the event>, <those arms>)` is also what the
+ *     step INTO the lock from there costs (the rules' `latchEvent`);
+ *   - `cannot`: no key — that side never clears the room, with any inventory.
+ * Read off the census, never a level list. A lock of more than one tile is refused by name (a direction then names
+ * several neighbours; none exists).
+ */
+const OPPOSITE_DIR = Object.freeze({ N: 'S', S: 'N', E: 'W', W: 'E' });
+export function playthroughEncounterLockOpeners(levelNumber) {
+    const level = LEVELS.find((l) => l.level === levelNumber);
+    const out = new Map();
+    for (const row of level ? encounterLocksOf(level).filter((r) => r.latch) : []) {
+        if (row.tiles.length !== 1) throw new Error(`encounter locks: ${row.name} has ${row.tiles.length} tiles; opens_from names one neighbour per direction`);
+        const opensFrom = {};
+        for (const side of row.sides) {
+            if (side.verdict === 'cannot') continue;
+            let value = true;
+            if (side.verdict === 'across') {
+                value = analyzerOptions.resolveCondition(throughCondition(row.through));
+                if (!value) throw new Error(`encounter locks: ${row.name}'s across-the-cut arms do not resolve to items`);
+            }
+            for (const { dir } of side.steps) opensFrom[OPPOSITE_DIR[dir]] = value;
+        }
+        out.set(row.at, opensFrom);
+    }
+    return out;
+}
 
 /**
  * ⛓ RULES l66-door — **AN ITEM-GATED SOLID THAT CLAIMS NO WHOLE TILE STILL COSTS THE DOOR UNDER IT.**
@@ -667,8 +764,10 @@ function latchLocksOf(level) {
         for (const [tx, ty] of SEM.entityClaims(e, sem, { pixelMaskFootprints: true }).map((c) => c.tile)) out.set(`${tx},${ty}`, lock);
     }
     // ⛓ RULES rocklock-pocket — and every encounter lock latched from a side that cannot clear its room.
+    // ⛓ RULES l60-l71-killlock — an `across` side's latch also opens to its own arms (`through`).
     for (const row of encounterLocksOf(level).filter((r) => r.latch)) {
-        const lock = { level: row.level, tag: row.tag, cls: row.cls, x: row.x, y: row.y, name: row.name };
+        const lock = { level: row.level, tag: row.tag, cls: row.cls, x: row.x, y: row.y, name: row.name,
+            ...(row.through?.event ? { through: throughCondition(row.through) } : {}) };
         for (const [tx, ty] of row.tiles) out.set(`${tx},${ty}`, lock);
     }
     latchLocksMemo.set(level.level, out);
@@ -687,7 +786,13 @@ export function playthroughAnalyzerOptionsFor(level) {
         // ⛓ RULES lock-events: a latched cell is opened once its lock's flag is cleared — the lock's event.
         latchEvent: ([x, y]) => {
             const lock = locks.get(`${x},${y}`);
-            return lock ? { rule: 'Has', args: { item_name: lock.name } } : null;
+            if (!lock) return null;
+            const event = { rule: 'Has', args: { item_name: lock.name } };
+            if (!lock.through) return event;
+            // ⛓ RULES l60-l71-killlock: the side waits for the event, or clears the room across the cut itself.
+            const arms = analyzerOptions.resolveCondition(lock.through);
+            if (!arms) throw new Error(`encounter locks: ${lock.name}'s across-the-cut arms do not resolve to items`);
+            return { rule: 'Or', children: [event, arms] };
         },
         // ⛓ RULES waterfall-door: a landing is a way in, so an approach cost is never charged past one.
         arrivalTiles: () => arrivalTilesFor(level.level),
@@ -2319,6 +2424,8 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
  * One gate IS here: a game LANDING on a charged lane cell (or a door the lane leaves open) stands in the armed lane on
  * arrival, so its departure costs the cut too (`exitGates`, as a landing inside an obstacle costs its event) — ⚖ the
  * user 2026-10-21: logic never expects tanking a hit. (L17's stairs land on L16's (7,3), in `arrowtrap@112,32`'s lane.)
+ * ⚖ The user 2026-11-10: the doorway is closed in EITHER direction until the cut, so the door the landing stands beside
+ * (`doorwaysBesideLanding`: the same doorway, walked back out) costs the cut as well.
  * Refused ropes are printed by name; a rope event NAME in the rules that this mints nowhere is refused (`main`).
  *
  * `place` (optional) answers PLACE without this run's analysis (`regionAnalyses`, filled by `buildPlaythroughAtlas`):
@@ -2368,6 +2475,11 @@ export function playthroughRopeEvents(doc, { place = null, departures = departur
             // ⛓ ER E4a: gate every departure whose doc CONNECTION lands in the lane (`departuresLandingAt`), not the
             // landing's vanilla door — a retargeted arrival would otherwise go ungated (the permissive direction).
             for (const dep of departures(doc, L, 'rope events')) {
+                exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
+            }
+            // ⛓ RULES l16-l17-trap-transition (⚖ the user, 2026-11-10: closed "in either direction" until the cut):
+            // and the way back OUT through the same doorway (`doorwaysBesideLanding`), whatever the doc connects it to.
+            for (const dep of doorwaysBesideLanding(L)) {
                 exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
             }
         }
@@ -2818,7 +2930,7 @@ function main() {
         + `${quiet ? '' : poles.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}: ${JSON.stringify(g.rule)}`).join('')}`
         + `${poles.skipped.length ? `; ${poles.skipped.length} skipped: ${poles.skipped.join('; ')}` : ''}`);
     console.log(`${ropes.events.length} rope cut event(s) [${ropes.events.map((e) => `${e.name} @ ${e.fields.side}`).join('; ')}]; `
-        + `${ropes.exitGates.length} landing(s) in a lane gated${quiet ? '' : ropes.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}; `
+        + `${ropes.exitGates.length} departure(s) through a doorway whose landing stands in a lane gated${quiet ? '' : ropes.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}; `
         + `${ropes.refused.length} rope(s) refused${quiet ? '' : ropes.refused.map((r) => `\n  refused ${r}`).join('')}`);
     console.log(`${talks.events.length} cross-room prerequisite event(s), ${talks.exitGates.length} crossing(s) and `
         + `${talks.eventGates.length} event(s) gated on them`

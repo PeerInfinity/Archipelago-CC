@@ -140,7 +140,7 @@ import { routeDiffersLine } from './frontierReadout.js';
  */
 import { mapDocumentPath } from '../flashPanel/mapDocumentPath.js';
 import { buildStagedTape } from './botDriverV1.js';
-import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
+import { buildLevelSet } from './levelSetExporter.js';
 import {
     planLevelSetChunks, roomSourceKind, stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
@@ -303,7 +303,7 @@ import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
  * for it). Both are headless-safe by their own headers — no `node:` imports, no
  * top-level await — which is what makes them loadable on this page at all.
  */
-import { mountWatchSetEditor } from './watchSetEditor.js';
+import { editorVanillaSet, mountWatchSetEditor } from './watchSetEditor.js';
 import {
     createSeedlingSetAdapter, createSetSession, downloadSet, setRecord, setSessionRoomSource,
 } from './seedlingSetAdapter.js';
@@ -10025,7 +10025,8 @@ async function runEditor(params, lifetime) {
         try {
             // ⚖ MOONROCK: the editor opens the GAME's rooms — the delivery's
             // record patches (`seedlingSetPatches.js`) are not applied here.
-            built = vanillaRecordSet(vanillaSet, atlas, { patches: [] });
+            // `editorVanillaSet` is the one place that choice is written.
+            built = editorVanillaSet(vanillaSet, atlas);
         } catch (e) {
             // The function refuses BY NAME (an unjoinable path, a manifest field
             // that did not survive, an invented one); the page prints its

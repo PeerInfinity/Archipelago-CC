@@ -111,20 +111,28 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
         expect(c.exposure.unmeasured).toEqual([]);
         const exposed = c.exposure.rows.filter((r) => r.stairsLandings.length).map((r) => `${r.fn}:${r.reads}`);
         expect(exposed).toEqual([
-            'doorTilesOf:gameLandings', 'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
+            'doorTilesOf:gameLandings', 'doorwaysBesideLanding:returnSpawnTable', 'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
             'playthroughBlockStoppers:poleKillsOf', 'barrierAnalysis:poleKillsOf', 'barrierAnalysis:buildLevelWorld', 'barrierAnalysis:gameLandings',
             'playthroughRopeEvents:gameLandings', 'RETURN_SPAWNS:returnSpawnTable', 'arrivalSpawnFor:returnSpawnTable',
             'playthroughLandingGates:returnSpawnTable',
         ]);
+        // ⛓ RULES l16-l17-trap-transition: `doorwaysBesideLanding` pairs a rope-lane landing with the door of the SAME level
+        // it stands beside (the map's return spawns). Its stairs rows are L16's own three stairs: departure side, so a
+        // coupled shuffle (which retargets where a door leads, never where it stands) recomputes nothing for it.
+        expect(c.exposure.rows.find((r) => r.fn === 'doorwaysBesideLanding').stairsLandings)
+            .toEqual(['L16 stairsdown@112,64 -> L17', 'L16 stairsup@16,64 -> L15', 'L16 stairsup@352,80 -> L18']);
     });
 
-    it('(B) 65 of 320 cross-level AP exits are gated (63 before rules-certifier-tail charged L54 r1c8 -> L53 r14c9 and L91 -> L89 r1c10 with Swim); 5 sit on a stairs doorway, each conjunct owned by rule', () => {
-        expect(c.gates).toMatchObject({ crossLevel: 320, gated: 65, gatedLandingEvent: 17, gatedLandingTerrain: 15 });
+    // History of `gated`: rules-certifier-tail charged L54 r1c8 -> L53 r14c9 and L91 -> L89 r1c10 with Swim (+2);
+    // rules-l16-l17-trap-transition closed L16 r3c7 -> L17 until the rope is cut (+1, DEPARTURE-owned: the event is L16's own).
+    it('(B) the gated cross-level AP exits are counted; the ones on a stairs doorway are named, each conjunct owned by rule', () => {
+        expect(c.gates).toMatchObject({ crossLevel: 320, gated: 66, gatedLandingEvent: 17, gatedLandingTerrain: 15 });
         expect(c.gates.apExitsWithNoConnection).toEqual([]);
         expect(c.gates.stairsRows.map((r) => `${r.apExit} ${r.owners.map((o) => o.owner).join('+')}`)).toEqual([
             'level_101__r4c9 -> level_102__r5c9 DEPARTURE',
             'level_102__r5c9 -> level_101__r4c9 LANDING',
             'level_12__r13c6 -> level_5__r1c1 LANDING/terrain',
+            'level_16__r3c7 -> level_17 DEPARTURE',
             'level_17 -> level_16__r3c7 LANDING',
             'level_98 -> level_99__r2c7 DEPARTURE',
         ]);

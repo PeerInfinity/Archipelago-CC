@@ -467,6 +467,7 @@ describe('who takes the box', () => {
          * death-spawned mouth, `probe-seedling-tentacle-mouth.mjs`;
          * RULES lock-events the BossLock latch witness, `probe-seedling-bosslock-latch.mjs`;
          * RULES rocklock-pocket the encounter-lock latch witness, `probe-seedling-encounter-latch.mjs`;
+         * RULES l60-l71-killlock the kill-lock arms witness, `probe-seedling-killlock-arms.mjs`;
          * the persistence-vs-reuse-path matrix, `probe-seedling-persistence-rebuild.mjs`;
          * LOOP RESTART the loop-mode Restart's first-move witness, `probe-seedling-loop-restart.mjs`;
          * fidelity CLEARTAG the clear-tag goal's write witness, `probe-seedling-cleartag.mjs`;
@@ -495,6 +496,7 @@ describe('who takes the box', () => {
          * RULES block-path L15's lock held by the block (Sword), shut without a weapon, the diagonal button, the swim, `probe-seedling-l15-block-path.mjs`;
          * RULES rope-events the rope cuts: L16's from the L15 side, L28's rock holding its lock on a later visit (+ the controls), `probe-seedling-rope-events.mjs`;
          * RULES rules-l39 L39's pulser (armed by the cut) and rope run, and L43's open doorway after the Wand, `probe-seedling-l39-pulser.mjs`;
+         * ER E5 the entrance retarget's witness (shuffled stairs walked on the delivered rooms), `probe-seedling-wasm-er-retarget.mjs`;
          * fidelity BOMBPUSHER the lobber/Bomb witness, `probe-seedling-bombpusher.mjs` (its `--reuse` arm runs no browser);
          * fidelity BOMBBLAST the blast-on-a-body witness, `probe-seedling-bomb-blast-body.mjs` (its `--reuse` arm, likewise);
          * ci-skip-rules RULE 3 the full-tier differential, `check-seedling-bot-differential.mjs`, whose
@@ -525,6 +527,7 @@ describe('who takes the box', () => {
          * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`;
          * rules-l0-tighter-probe L0's lake to the L89 door, past the house and up the falls, `probe-seedling-l0-tighter.mjs`;
          * fidelity L39SHAFT the three-block shaft's witnesses (the scripted solution, the solver's plan), `probe-seedling-l39-shaft.mjs`;
+         * fidelity L39PHANTOM a Pulser's kill of `spinner@112,88`, its fade and its removal, `probe-seedling-l39-pulser-kill.mjs`;
          * fidelity L40BK2 L40's Boss Key 2 chain from inside the lock room, `probe-seedling-l40bk2.mjs`;
          * rules-l66-l57-probe L66's door into Dungeon 6 under the off-grid Yellow-Key lock, `probe-seedling-l66-door.mjs`;
          * rules-collider-mismatch the six sealed-with-room cells on the game (moonrockpile, snowhill notch, ice turrets), `probe-seedling-collider-cells.mjs`;
@@ -544,7 +547,10 @@ describe('who takes the box', () => {
          * rules-block-stoppers L65's spear block against its Bob (alive, and killed first), `probe-seedling-l65-bob-block.mjs`;
          * rules-l16-holder-enemies L16's walk-in block against its Bobs on the way to the button, `probe-seedling-l16-holder-bobs.mjs`;
          * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`;
-         * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`.)
+         * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`;
+         * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
+         * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
+         * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -567,10 +573,10 @@ describe('who takes the box', () => {
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
             'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
             'probe-seedling-restart-route.mjs', 'probe-seedling-walk-order.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
-            'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-encounter-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-l107-lane.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
+            'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-encounter-latch.mjs', 'probe-seedling-killlock-arms.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-l107-lane.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
             'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs', 'probe-seedling-l15-block-path.mjs',
-            'probe-seedling-rope-events.mjs', 'probe-seedling-l39-pulser.mjs',
+            'probe-seedling-rope-events.mjs', 'probe-seedling-l39-pulser.mjs', 'probe-seedling-wasm-er-retarget.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
             'probe-seedling-lights.mjs',
@@ -600,6 +606,7 @@ describe('who takes the box', () => {
             'probe-seedling-l0-tighter.mjs',
             'probe-seedling-shake-exact.mjs',
             'probe-seedling-l39-shaft.mjs',
+            'probe-seedling-l39-pulser-kill.mjs',
             'probe-seedling-l40bk2.mjs',
             'probe-seedling-l66-door.mjs',
             'probe-seedling-collider-cells.mjs',
@@ -631,6 +638,10 @@ describe('who takes the box', () => {
             'probe-seedling-turret-snap.mjs',
             // fidelity SECUSE: the X+C tick's game witness (import door: `isEntryPoint` → main())
             'probe-seedling-secondary-use.mjs',
+            // fidelity FIRESPINNER: a Fire press reaching a spinner on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-fire-spinner.mjs',
+            // fidelity ROCKFIRE: a Fire press reaching a BreakableRock on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-rock-fire.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
@@ -641,6 +652,8 @@ describe('who takes the box', () => {
             'check-seedling-editor-e2.mjs',
             // seedling-editor-e3: the lab editor's world-map row (import door: `isEntryPoint` → main())
             'check-seedling-editor-e3.mjs',
+            // maze-world-map: the maze lab's set-arm map row (import door: `isEntryPoint` → main())
+            'check-maze-world-map.mjs',
             // seedling-js-tape-bridge: one tape on the JS core and the wasm game, drains diffed (import door: `isEntryPoint` → main())
             'probe-seedling-js-vs-wasm-tape.mjs',
             // cloudberry P2a: the embed gate and the pack maker (import door: `isEntryPoint` → main())
@@ -657,7 +670,11 @@ describe('who takes the box', () => {
             // hammer CHEST-INCIDENTAL: two chests opened on one visit, on the game (import door: `isEntryPoint` → main())
             'probe-seedling-chest-incidental.mjs',
             // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
-            'probe-seedling-drill-water.mjs'];
+            'probe-seedling-drill-water.mjs',
+            // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
+            'probe-seedling-bobiframe.mjs',
+            // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-er-landings.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

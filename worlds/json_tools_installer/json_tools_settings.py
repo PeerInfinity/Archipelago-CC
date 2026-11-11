@@ -28,6 +28,9 @@ class JSONToolsSettings(Group):
     log_integer_sphere_details: bool = False
     auto_collect_events: bool = False  # Auto-collect event items when locations become accessible
     filter_event_items: bool = False  # Filter out event locations/items from sphere log output (matches UT behavior)
+    # Also write AP_<seed>_P<n>_sphere_log.jsonl per player (multiworlds only): that player's entries, plus only the
+    # entries of other worlds whose locations give it items. The combined file is unchanged. Default off.
+    sphere_log_per_player: bool = False
     update_frontend_presets: bool = False
     clear_game_presets: bool = False  # Delete all existing presets for the current game before generating new ones
     clear_all_presets: bool = False  # Delete all existing presets for ALL games before generating new ones

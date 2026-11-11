@@ -54,6 +54,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Generated: 2026-01-10T19:59:58.329Z"
     },
     {
+        "path": "docs/json/developer/guides/spoiler-export-hook.md",
+        "title": "Spoiler Export Hook: developer notes",
+        "section": "developer/guides",
+        "summary": "How a world sends its sphere order through the optional Spoiler Export Hook, and how the client reads it. For what it is and how to use it, see the user page."
+    },
+    {
         "path": "docs/json/developer/guides/state-management.md",
         "title": "Developer Guide: State Management",
         "section": "developer/guides",
@@ -646,6 +652,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Skip Required Files",
         "section": "features",
         "summary": "A setting that allows seed generation to proceed without ROM files. ROM patching is skipped while all other artifacts (multidata, spoiler log, slot data, JSON export) are produced normally."
+    },
+    {
+        "path": "docs/json/features/spoiler-export-hook.md",
+        "title": "Spoiler Export Hook",
+        "section": "features",
+        "summary": "The Spoiler Export Hook is a small optional apworld. With it installed, a world that supports it can send its slot's sphere order inside the room's slot data. That is the same order the spoiler…"
     },
     {
         "path": "docs/json/features/universal-tracker.md",
@@ -1294,6 +1306,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/features/procgen-substrates.md",
             "docs/json/features/procgen.md",
             "docs/json/features/skip-required-files.md",
+            "docs/json/features/spoiler-export-hook.md",
             "docs/json/features/universal-tracker.md"
         ],
         "children": []
@@ -1404,7 +1417,8 @@ export const HELP_SECTIONS = Object.freeze([
                 "heading": true,
                 "docs": [
                     "docs/json/developer/guides/format-converter.md",
-                    "docs/json/developer/guides/world-generator.md"
+                    "docs/json/developer/guides/world-generator.md",
+                    "docs/json/developer/guides/spoiler-export-hook.md"
                 ],
                 "single": false
             },

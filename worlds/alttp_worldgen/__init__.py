@@ -12,6 +12,7 @@ from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from ._ext import RuleWorldMixin
+from . import _spoiler_hook_client
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -1554,7 +1555,7 @@ class ALTTPWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return self._with_embedded_rules({
+        return {**self._with_embedded_rules({
             "crystals_needed_for_gt": 7,
             "crystals_needed_for_ganon": 7,
             "open_pyramid": 2,
@@ -1586,7 +1587,7 @@ class ALTTPWorld(RuleWorldMixin, World):
             "triforce_pieces_extra": 10,
             "mm_medalion": "Quake",
             "tr_medalion": "Ether",
-        })
+        }), **_spoiler_hook_client.slot_data(self)}
 
     def _with_embedded_rules(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Add the package's rules document (`worldgen_rules`) when it fits rules_in_slot_data_max_kb.
@@ -1618,3 +1619,8 @@ class ALTTPWorld(RuleWorldMixin, World):
             value = getattr(getattr(self.options, name, None), "value", None)
             if isinstance(value, (bool, int, float, str)):
                 options[name] = value
+
+    @classmethod
+    def stage_pre_output(cls, multiworld: "MultiWorld") -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)

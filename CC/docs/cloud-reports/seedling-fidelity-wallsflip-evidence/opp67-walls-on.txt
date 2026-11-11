@@ -1,0 +1,16 @@
+walls true FIRST_AIM 655
+OFF refusal: true solverBot(opp) chest (880,816) stance -> kill (spinner@880,848) by press: the player died at t767 (chaser bob@736,752) while pressing spinne
+OFF hits ["664:chaser:bob@736,752","708:chaser:bob@736,752","767:chaser:bob@736,752"] chaserHits [] counts {"asked":0,"aimed":0,"pressed":0,"withheld":0,"deferred":0,"strikePreviews":0,"refugePreviews":0} events 0
+ON sentinel true 
+ON hits []
+ON chaserHits ["657:bob@736,752:1","687:bob@736,752:2","717:bob@736,752:3"]
+ON bob gone true
+ON counts {"asked":759,"aimed":3,"pressed":3,"withheld":0,"deferred":0,"strikePreviews":1615,"refugePreviews":1032} refugePreviews 1032 dashes []
+ON countsBefore {"asked":653,"aimed":0,"pressed":0,"withheld":0,"deferred":0,"strikePreviews":1615,"refugePreviews":1032}
+first key index ON != OFF: 655 ON ["right","left","down","down","primary","down+right"] OFF ["right","left","down","right","left","down"]
+certified ticks [604]
+drives ["655:aim:bob@736,752","656:press:bob@736,752","682:aim:bob@736,752","683:press:bob@736,752","712:aim:bob@736,752","713:press:bob@736,752"]
+certified[0] t604 previewStrikes ["655:aim:bob@736,752","656:press:bob@736,752","682:aim:bob@736,752","683:press:bob@736,752"]
+bob track around first aim (t, px,py, bx,by): [[652,743.73,732.71,744,755.36],[653,744.32,733.85,744.12,755.14],[654,744,734.77,744,754.92],[655,743.76,736.26,744.12,754.7],[656,743.56,737.5,744,754.48],[657,743.4,738.49,744.12,754.26]]
+event kinds {"strike":3,"drive":6}
+  ev {"kind":"strike","t":604,"cell":{"x":744,"y":776},"pressAt":1337,"previewStrikes":["655:aim:bob@736,752","656:press:bob@736,752","682:aim:bob@736,752","683:press:bob@736,752"]}

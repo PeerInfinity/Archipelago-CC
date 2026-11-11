@@ -27844,3 +27844,262 @@ apitem does not vanish); 10 more chest rows shorter; 66/94/175 still refused, ob
 **Trap candidates.** (1) A survey row that is SOLVED in 0 ticks at a chest is the seal removal (`Chest.checkBySeal` with
 all seals held), not a take — the delivered game has no such removal. (2) Which world a "model" row stands in: the page's
 solver sees the DELIVERED rooms (`world.apItems`), the survey the vanilla ones — the same goal can be two verbs.
+
+### Seedling fidelity BOBIFRAME — L40's `bob@736,752` at t930: a spinner walls the bob; the lapse is the game's (no new key)
+
+Planner `seedling-fidelity-planning-19`, wave 39 (⚖ the user's GO 2026-11-10, *"Bob + BreakableRock now"*). Base
+`a4f57f8c53`. The report is `CC/docs/cloud-reports/seedling-fidelity-bobiframe.md`.
+
+**The claim handed over** (hammer L40-FLIP-BUILD §3.1): on sweep legs `Level 040 - Chest ← L39` / `flag 12 ← L39` the model
+lands `bob@736,752`'s third sword hit at t930 — the last test of the swing pressed at t925, on the tick `hitsTimer` lapses
+(`strikeIframeLapse`) — and the game's bob lives and hits the player at t936. Candidates: the swing's last test tick, or bob
+state the game holds.
+
+**W0.** The leg re-keyed (ids 397 / 875 at this base). The page solves the same 1226-t plan at arrival clock 5222 in node
+(1525 work units) and a 1051-t plan at 5247 (the page's own run here: hit at t824). `Enemy.hit` gates on `hitsTimer <= 0`;
+`Enemy.update` runs `hitUpdate()` behind the off-screen return; `Player.slash()` tests on every tick `slashing` is up
+(`slashDelayMax` 0), five for a plain swing — all three are the model's, line for line.
+
+**D0 (the game, p4g, the delivered AP set).** `probe-seedling-bobiframe.mjs` plays the plan and reads every Bob's `hits` /
+`hits_timer` (`botMobiles`) and the game's own slash-test counter. The first parting is **t544**, 0.177 px: the bob's FIRST
+step is stopped by `spinner@816,848` crossing its box (a Spinner is `type = "Enemy"`, `Bob.solids` hold "Enemy"). From
+there the bob stands elsewhere: hit 1 at t874 (model t867), hit 2 at t906 (model t900), and the t925 swing's five tests
+(t926..t930, counted by the game) meet `hits_timer` 10..6. So neither candidate as worded: the swing and the lapse are
+right, and the missing state is a wall the model already has behind `CONTACT_FIDELITY.chaserSpinnerWalls` (L40CONTACT D1,
+OFF since wave 17). With it ON the model is the game at **0 px over all 1226 ticks** (14,522 Bob comparisons with
+`hits`/`hits_timer`, 5,742 Spinner), hits at t936 / t977 / the lethal t1064 included.
+
+**D1 — no new key.** The brief's `swingLapseLastTick`-style refinement has nothing to refine. Committed instead: the probe,
+`fixtures/bobiframe-witness/` (the default 1226-t plan and the ON 1222-t plan with the game's rows) and
+`fidelityBobIframe.test.js` (8 rows that hold under either default; mutant "the wall returns nothing ON" reds the 2
+predicted rows).
+
+**D2 (`chaserSpinnerWalls` ON, measured; nothing flipped).** The ON plan (1222 t) plays hitless on the game at 0 px, as
+does the 5247 ON plan (1066 t). Seam census of the captured request, 14 arrival clocks: OFF 9 hit-taking plans (6 of
+them lethal) / 4 clean / 1 refused; ON **12 clean / 2 refused / 0 hit-taking** — no clean OFF answer turns into a refusal.
+Only L40 and L92 hold a spinner beside an "Enemy"-walled chaser. Movers ON: bounded vitest 10 reds of 2,123 (the defaults
+row; `fidelityL40Bk2` ×3 and `fidelityL40Res` ×1, fidelity's; `hammerClearTagChain` ×1, `hammerPressKillChasers` ×1,
+`hammerPressKillGuards` ×3, hammer's to sign); train 3/3 both arms; tapeRunner pairs 643 `beea3ad6…` both arms; acceptance
+`abb206c8…` both arms; producer `--check`s 1 red of 98 (`plan-seedling-l40button-witness`: `l40button-l41-part0` drifts —
+a flip owes its re-record); local survey steps 86 / 98 / 137 / 150 identical, 66 / 96 REFUSED both arms with the refusal
+moving from "4 strategies, no corridor" to the weigh's approach (`spinner@880,848`'s hammer).
+
+**STOP → the user (licence) and hammer.** The flip of `chaserSpinnerWalls` is a default flip with one tape re-record and
+five hammer-owned pins; the two ON refusals (seams 5225, 5241) end in the press kill's escape ("no step out" after the
+press on a spinner lands), which is the hammer arc's.
+
+**Trap candidates.** (1) A sword hit "landing on the lapse" in the model and missing on the game is first a POSITION
+question: read the struck body's rows from its first step, not from the swing — here the parting was 386 ticks before the
+swing. (2) A standalone `game.html` boots the VANILLA rooms: a plan solved on the page (the delivered AP set) replays on a
+different room there (L40's Chest is Solid to a spinner, the apitem is not) — deliver the set (`botLoadLevels`) before
+reading a witness. (3) The game's `hits` counter resets on the lethal hit; count hits by `hits_timer` re-arming.
+
+### Seedling fidelity L39PHANTOM — a spinner the run's roster lost is not priced at its placement (`spinnerRosterGone`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 38 (⚖ the user's GO 2026-11-09: *"L39 + Fire arm now"*). Base `2d1283375e`.
+The report is `CC/docs/cloud-reports/seedling-fidelity-l39phantom.md`; it starts from hammer's WALLS-CENSUS-2 §2/§4/§9.
+
+**W0.** The census leg (`level_39__r25c9 <- in_L38_144_0 -> location:Level 039 - Totem Part 72,40`) re-captured on the
+page at this base (p4g, inv, seam 5226): 640 → budget, 2,560 → refused on *"enemy:spinner@112,88 (a static "Enemy" body at
+its placement …)"*, leg FAILED. Node seam census (45 phases, one hammer cycle): 640 lands 20/45, 2,560 39/45 — WALLS-CENSUS-2's
+numbers exactly, shifted one period. AS3: `Pulser.hit` → `Enemy.hit(6, p, 1, "Pulse")` (`Pulser.as:108-111`); 3 hits kill
+(`Enemy.as:153-161`); a destroyed mobile fades `alpha -= 0.1` and is removed at `alpha <= 0` (`Mobile.as:60-71`); a fading
+`Spinner` still swings its hammer (`Spinner.as:66-76`: no `destroy` test after `super.update()`).
+
+**D0** (game witness, `probe-seedling-l39-pulser-kill.mjs`, `fixtures/l39shaft-witness/l39phantom-pulser-kill.json`): the
+committed `l39shaft-solver-step66` tape on p4g (delivered set), every `Spinner` row of `botMobiles` over t1180–1300.
+`pulser@64,96` kills `spinner@112,88` at t1267 on both sides; x, y, hits, hitsTimer, destroy and alpha agree at 0 px on all
+121 ticks but ONE named read: the game's world drops the corpse at t1278, the model's roster lists it at alpha −0.1 one more
+read (`removePending` → `removed` at the next step's top; F5 already stamps the removal ledger at the alpha-zero step).
+Pinned as `isRemovePendingFencepost`, not fixed (spinner.js is not this slice's region).
+
+**D1** (`spinnerRosterGone`, OFF; `SEEDLING_SPINNER_ROSTER_GONE`): `spinnersTheRunSteps(run, world)` also skips every id in
+`world.spinners` — the visit's built roster — once the roster read is an array, so a spinner the roster lost (any killer)
+is not priced at its placement by `staticEnemyDanger` or `dangerVolumes`. Boundaries, each a row
+(`fidelityL39Phantom.test.js`, 9): before the kill ON = OFF byte for byte; in the fade both arms skip it statically and the
+live arm (`spinnerDanger`) prices it; no roster read / no spinner list = OFF. Only L18, L39, L40 and L92 have spinners, so
+every other room is byte-identical by construction. Mutants M1–M3 red (M3 two more than predicted, via a shared helper).
+
+**D2** (key ON): census 640 **44/45**, 2,560 **44/45** (phase 5230 = the live `spinner@224,112`, hammer's L39 (B)); every
+landed plan bills 0 hits in both arms. Page leg ON: DONE on the first request, 0 room hits (one 1-tick divergence at t2212,
+re-solved — residue). Local survey on the 11 spinner-room steps: verdicts unchanged; L39 steps 65/95/136/149 shorter
+(3496→2740, 3376→2624, 3376→2624, 3253→2626 t, 0 hits); L18/L40/L92 equal. Bounded set ON: one red, `fidelityL39Shaft`
+D2 (the step-66 solver tape is the OFF plan: 3496 t recorded, 2740 ON) — a re-record at the flip.
+
+**Trap candidates.** (1) A dead body's receipt is not the run's verdict: the press ledger is ONE killer's; the roster is the
+verdict. (2) A spinner's roster read lists its corpse one read past the game's world (the `removePending` read fencepost).
+
+### Seedling fidelity FIRESPINNER — a Fire press that reaches a spinner knocks it back (`fireSpinnerArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 38 (⚖ the user's GO 2026-11-09, *"L39 + Fire arm now"*). Base `2d1283375e`.
+The report is `CC/docs/cloud-reports/seedling-fidelity-firespinner.md`.
+
+**W0.** hammer WALLS-CENSUS-2's (C) holds, but it is half the gap. `FIRE_ARM_POLICY.Spinner` says `modelled` and
+`levelRun.applyFire` has no Spinner arm; and `presses.fireRespondersIn` tests the spinner's `.oel` PLACEMENT rect (it
+has no live join, unlike the sword census's `spinners`). So a Fire press whose flame reaches the spinner's long-vacated
+CELL throws (*"`FIRE_ARM_POLICY` calls Spinner modelled and this dispatch has no arm for it"*, reproduced on `r5-shaft`
+cut + a press at t690, the body ~80 px off), and a press whose flame reaches the BODY silently does nothing (a press at
+t590). The AS3 (`Player.fire` :1014-1044, `genericHit` :1065-1077, `Enemy.hit` :141-181, `Enemy.knockback` :247-255):
+an "Enemy" is dispatched ELEVEN times a hit tick (`vc` is not cleared between `hitables` passes), each
+`knockback(0.325, player)` and nothing else (`hitByFire` false); the i-frame and freeze gates still apply. Only
+`Player.fire()` dispatches `"Fire"` at a Spinner (a fire-wand shot is `"Wand"`).
+
+**D0** (game witness, p4g, before the model change): `probe-seedling-fire-spinner.mjs --record`
+(`fixtures/firespinner-witness/`): the knock staging moves `spinner@224,112` (v (-0.71,-0.71) → (2.39,1.08) → (5.18,2.90)
+→ (8.04,-0.95), the last a wall reflection) with `hits` 0 and `hits_timer` 0 on every tick; the phantom staging moves
+nothing. `hitSpinner`'s Fire branch agrees.
+
+**D1** (`fireSpinnerArm`, OFF, last key; `SEEDLING_FIRE_SPINNER_ARM`): ON, the fire census joins the run's live spinner
+bodies (removed drop out, type "Enemy") and the arm calls `hitSpinner(t: 'Fire')` once per dispatch. Both stagings
+reproduce the game at 0 px ON. Rows `fidelityFireSpinner.test.js`; mutants: the knockback reversed, a Sword damage hit,
+the arm ungated — each red (the first two also red the ledger row, which I had not predicted).
+
+**D2** (key ON): three COMMITTED L39 tapes press Fire into a spinner body — `r5-press-delay`, `-glide`, `-repeat` (the t10
+press knocks `spinner@224,112` at t17). Their expectations hold only the player, so OFF's spinners had never been
+checked: on the game OFF leaves at t19 on all three, ON is 0 px (spinners and fire blocks; blocks agree both ways). The
+bounded set ON reds 2 rows: the `contactFidelity` defaults pin and `r8Acceptance`'s `R8_D2_SHIELD.pressExposure` (its
+shadow sword count over `r5-press-repeat` now finds a kill, because the bodies are where the knock left them). The
+survey's 11 spinner-room steps are byte-identical ON vs OFF. No solver arm plans a Fire press at a spinner: the fire
+stance's stray check (`auditFire` without `spinners`) still refuses a stance whose flame reaches a placement.
+
+**Trap candidate.** A committed tape whose expectations are the player only certifies nothing about the bodies it
+moves: `r5-press-glide`/`-repeat` were called "byte-exact" for the block wedge while their spinners were off from t19.
+
+### Seedling hammer-phase BK2-APPROACH-ORDER — the turret approach's tries in the volley's order (`TURRET_APPROACH_VOLLEY_ORDER`, OFF)
+
+⚖ The user, 2026-11-09, on leg Boss Key 2 ← L39: *"Land without; slice next (Recommended)"*. With the L40 flip
+(`1f8fc08ec3`) every L40 leg the flip targets solves on the page except `level_40__r32c36 <- in_L39_144_0 ~>
+level_40__r23c29 -> location:Level 040 - Boss Key 2` (door carried): *"the solver ran out of 640, then 2560 work units on
+its held retry"*. No budget is raised here.
+
+**W0 (re-measured on the p4g page and its captured requests in node).** The request replays at **3,236** units; 2,484 of
+them are `approachKillForCorpse`'s forks, and its hitless try is the **276th**: the right side's corridor, wait 29, after
+the push side's corridor (the body, pruned), its two vias and the left side's three routes at 49 waits each. Six solves
+reach the approach, not two: BK2 ← L39 and ← L43, **flag 8 ← L39 and ← L43** (the keylock's turret kill is the same
+approach: flag 8 ← L39 solves OFF with 26 units to spare, 2,534 of 2,560), the latch boot and the latch boot south of the
+door. Their winning tries: (right, corridor, 29) #276 twice, (up, via 466,445, 25) #27 twice, (right, corridor, 30) #376,
+(up, via 466,445, 29) #80.
+
+**What decides the wait.** A stand at the route's first waypoint, inside the range, runs the turret's 45-tick volley
+clock against the walk that follows; the hitless waits are a 1–3 tick window just before the next volley is committed
+(leave earlier and that volley meets the walk; later and the one after it meets the stance or the kill). The probe that
+reads it: on a fork, walk to the waypoint and stand until the turret's `anim` turns to "startshot". The ticks stood are
+the route's ANCHOR. Measured: 32 (BK2 and flag 8 ← L39; win at 29), 35 (← L43; a win AT 35 on the right corridor), 31
+(the latch boot; a win at 31), 33 (south of the door; win at 32). ⚠ The brief asked for a derived 29–31: the derived
+value is 31–35, and the hitless wait is 0–3 before it.
+
+**M (six orders, scratch arms; units, BK2 ← L39).** OFF 3,236 · anchor outward + rank by rank across routes **1,382** ·
+anchor outward, route by route 3,083 · rank by rank, no anchor 3,434 · anchor descending, rank by rank 1,202 · the
+L40-FLIP-BUILD report's "waits from 30 outward" (hard-coded) 2,984 · its "right side first" (hard-coded) 1,022. The anchor
+alone does not fit (the winning route is the seventh of twelve); the ranks alone do not either. No order loses a solve.
+
+**I.** `TURRET_APPROACH_VOLLEY_ORDER` (OFF, `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=1`, in `SOLVER_ENV_NAMES`): the try's
+body became `attempt(side, via, w)` unchanged; OFF loops over it as before, ON `approachTriesByVolley` asks each route's
+waits from its anchor outward (`approachWaitOrder`), rank by rank. Same set of tries; one probe fork a route.
+
+| solve | OFF units · try | ON units · try | plan |
+|---|---|---|---|
+| BK2 ← L39 | 3,236 (**refused at 2,560**) · #276 right corr w29 | **1,382** · #70 (anchor 32, rank 5) | same, key for key (4,491 t) |
+| BK2 ← L43 | 1,021 · #27 up via w25 | 835 · #8 right corr w35 (anchor 35, rank 0) | another (dashless 4,527 vs 4,519 t; played: full pass 4,308 vs 4,306 t), hitless |
+| flag 8 ← L39 | 2,534 · #276 right corr w29 | **680** · #70 | same (718 t) |
+| flag 8 ← L43 | 323 · #27 up via w25 | 132 · #8 right corr w35 | another (740 vs 748 t), hitless |
+| latch boot | 376 forks · right corr w30 | 20 forks · right corr w31 (anchor 31, rank 0) | another (4,144 vs 4,142 t), hitless |
+| latch boot south of the door | 80 forks · up via w29 | 26 forks · up via w32 (anchor 33, rank 1) | refused both, the same later wall |
+| the six captured L40 legs that do not approach, ICEST's pocket boot | — | — | identical |
+
+BK2 ← L39 over the arrival clocks ±12 (the page's own `solveAnytime`, 640/2,560): OFF **0/25**, ON **25/25** (1,381 units
+on the dashless pass at every clock). On the p4g page with the switch through the env channel: **done**, 4,491 ticks,
+no hit, no divergence (solve 33 s; the play needs a leg budget past 180 s — at 180 s it was cut clean at t3313).
+Mutants (each fails the pinned rows): the wait order ascending; route by route; the anchor never read; the switch not
+read. Rows: `hammerApproachOrder.test.js` (4), `hammerApproachOrder.train.test.js` (7, the page's requests in
+`fixtures/hammer-bk2-approach-order/`). Report: `CC/docs/cloud-reports/seedling-hammer-bk2-approach-order.md`.
+
+**Trap candidates.** (1) `TURRET_APPROACH_COUNTS.approaches` holds EVERY pass's approach: under `solveAnytime` the full
+pass asks its own from its own arrival tick, so `[0]` is the dashless pass's. (2) A sweep leg that plays a 4,500-tick
+plan needs `leg_budget_ms` ≥ 300000; a `timeout` with `phase: playing` and no divergence is the harness clock, not the
+plan. (3) Rank by rank costs more than OFF when the only hitless try sits on an early route far from its anchor: the
+bound is OFF's whole set plus one probe a route, and no measured solve is such a room.
+
+### Seedling fidelity ROCKFIRE — a Fire press that reaches a breakable rock breaks it as a swing would (`fireRockArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 39 (⚖ the user's GO 2026-11-10, *"Bob + BreakableRock now"*). Base
+`c670857f64` (the frozen wave-38 joint flip). The report is `CC/docs/cloud-reports/seedling-fidelity-rockfire.md`.
+
+**W0.** FIRESPINNER's residue holds. `FIRE_ARM_POLICY.BreakableRock` says `modelled`, `levelRun.applyFire` had no
+BreakableRock arm, and a Fire press whose flame reaches a rock throws (*"`FIRE_ARM_POLICY` calls BreakableRock modelled
+and this dispatch has no arm for it"*; reproduced in L40 held against `breakablerock@176,128`, and in L101 against
+`breakablerockghost@224,96`). The AS3 (`Player.fire` :1014-1037, `genericHit` :1073-1092, `Puzzlements/BreakableRock.as`):
+`genericHit`'s rock arm is `hit(hasGhostSword ? 1 : 0)` for every `t`, and `hit` is `if (rockType <= _t) play("break")`,
+so Fire breaks a rockType-0 rock WITHOUT the Ghost Sword too (`0 <= 0`); only the two ghost rocks (L3, L101) need it.
+A rock's ctor sets `type = "Solid"` (*"Was "Rock""*): `hitables[6]`, five dispatches a hit tick, where the model's
+`FIRE_HITABLE_TYPE_BY_ARM` said "Rock" (eight). `endAnim` writes the flag and removes the rock. Census: twelve levels
+hold a BreakableRock (L0, 3, 15, 16, 30, 40, 41, 53, 73, 92, 100, 101); no committed tape presses Fire at one (the
+roster replayed with the key ON: 22 tapes fire, none reaches a rock), and no solver arm can plan it.
+
+**D0** (game witness, p4g, before the model change): `probe-seedling-rock-fire.mjs --record`
+(`fixtures/rockfire-witness/`). The game exposes no rock row, so the rock is read through its solid (the tapes hold the
+player against it) and its write (`persistence_cleared`). L40's rock under Fire breaks with and without the Ghost
+Sword (flag on obs 22, cell open on obs 23); the Sword control is three ticks sooner (19 / 20); L101's ghost rock
+under Fire does nothing without the Ghost Sword and breaks with it (22 / 23). The game agrees with the AS3 reading.
+
+**D1** (`fireRockArm`, OFF, last key, `SEEDLING_FIRE_ROCK_ARM`): the sword arm's rock body is hoisted unchanged into
+`hitBreakableRock` and `applyFire`'s new arm calls it (one model of the rock), on the sword arm's clock and not under
+the freeze; the census row's type is "Solid" under the key. ON, all the witnesses (a sixth added: a second press over
+the gone rocks' cells) reproduce at 0 px. OFF keeps the throw. Four mutants red as predicted.
+
+**D2** (ON, measured): the bounded set reds only the defaults pin; the survey's 33 rock-room steps are byte-identical
+ON vs OFF. No solver arm plans a Fire press at a rock: each Fire stance planner refuses a stance whose flame reaches
+one, and the `break` verb takes the Sword or the Ghost Sword. A Fire `break` arm (the game offers it to a run with Fire
+and no Sword) is a follow-up, not part of this key.
+
+### Seedling fidelity WALLSFLIP — every row the `chaserSpinnerWalls` flip moves, explained; one lost uncapped solve handed to hammer
+
+Planner `seedling-fidelity-planning-19`, wave 39b (⚖ the user 2026-11-11, *"Cloud slice finishes it"*). Base
+`fidelity-flip/walls` @ `4931c026e7` (the flip built, NOT licensed). No model, solver, walker or rules source changed.
+The report is `CC/docs/cloud-reports/seedling-fidelity-wallsflip.md`.
+
+**One mechanism behind every mover.** A live spinner stops a chaser whose `solids` hold "Enemy". On L40 that is
+`spinner@816,848` on `bob@736,752`'s first step (x 744 shaft; 2 to 5 px behind from then on) and `bob@288,112` from
+t1251 on the north-west walk. Every moved pin is a tick, a work count or a named body that follows from where those two
+bobs stand. No mover turns a hitless plan into a hit-taking one.
+
+**D1 — `hammerClearTagChain.train` leg 871: a LOST SOLVE of an uncapped pin, and it is the search's.** Under the wall
+the solve refuses at t724 (`burn stance … the combat ladder is EXHAUSTED`, work 885; before: 1122 t, work 2772). The
+pre-wall 1122-t plan is still a hitless walk: it replays row for row on the wall-ON model, and the GAME (p4g, the
+delivered AP set) played it with 0 hits, 1122/1122 ticks sampled, the wall-ON model at 0 px (12,774 bob + 5,206 spinner
+comparisons). The two drives part at t629 (the first opportunistic strike lands a tick later); the first decision
+(`kill spinner@880,848`) ends at t724 instead of t731, 5.5 px further down the shaft and 7.1 px from `bob@736,752`'s body
+(3 hits at t700, still standing until ~t736), and the next plan's ladder names that body and has no rung for it. Handed
+to the hammer arc. ⚠ On the page's own dispatch (shipped defaults, budget 640) the same captured request refuses at
+its deadline in BOTH arms at 13 clocks, as does 872's: the wall moves no page verdict there.
+
+**D2 — leg 872** still solves hitless (work 3467 → 3823, 2389 → 2385 t). **D3 — `hammerChooserPair.train`**: at 5196 no
+pair admits, the shipped size 3 admits the triple and the kill + chain still follow (t855 → t920, death t1046 → t1228);
+at 5172 only the named danger moves. Over 111 clocks (5140..5250, size 2) a pair admits first only at 5148/5193/5238
+(one hammer period apart) and its kill's dwell is hit at tick 3: "a pair admits and kills" has no witness clock under
+the wall. **D4 — `hammerOpportunisticStrike` step 67**: every tick +4 or so (first aim t651 → t655); `deferred` 5 → 0
+and one certified strike walk instead of two. **D5 — `fidelityWandHold` leg 368**: 1601 → 1600 t (one opportunistic
+press at t1430), re-recorded on p4g, 1599/1599 ticks sampled, 0 hits, 0 px. **D6 — skin goldens**: the two
+`bombpusher-L40` goldens are computed from `l40button-l41-part0`, which the flip branch re-recorded; regenerated.
+
+**Gates at the head.** Bounded default tier 168 files 5,049 / 5,049; the 19 Seedling train files that read L40 all
+green; producers 98 run / 0 red; acceptance `abb206c8…` unchanged; tapeRunner pairs 643 `beea3ad6…` unchanged; local
+survey steps 66/86/96/98/137/150 equal verdicts in both arms (66 and 96: refusal text only).
+
+**Trap candidates.** (1) A pin that says "SOLVES" under an uncapped, switch-pinned arm is not a page solve: read the
+same request on the worker's dispatch before calling its loss a regression (871's page arm refuses in both arms).
+(2) A golden computed from a tape moves when the tape is re-recorded, whatever the switch: grep a re-recorded tape's
+name in the tests before the push, not after CI. (3) A refusal that appears two ticks after a kill may be the ladder
+meeting the body it just killed: check the named danger's `hits` before reading it as a live chaser.
+
+### Seedling hammer-phase VOLLEY-FLIP — `TURRET_APPROACH_VOLLEY_ORDER` ON by default
+
+⚖ The user, 2026-11-10: *"Build the flip next (Recommended)"*, after BK2-APPROACH-ORDER landed OFF (train 88, main
+`b133de7af0`). The switch now reads `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER !== '0'`, default `true`; `=0` opts out.
+What moves at the default: L40's Boss Key 2 from L39 solves inside the held retry (3,236 → 1,382 units, the same plan);
+flag 8 from L43 through the keylock arm plays the right side's wait-35 try (8 forks, 740 ticks, hitless) where the
+ascending order played the up side's wait 25 (27 forks, 748 ticks); a keylock approach that refuses asks one anchor probe
+a route more (L40 flag 8 with the south door shut: 12 → 24 forks, the same `no-plan` tally). `hammerKeylockTurret.test.js`
+pins both at the default and keeps the pre-flip values under `withTurretApproachVolleyOrder(false)`. The keylock arm asks
+`approachKillForCorpse` itself, so the order reaches it with `TURRET_APPROACH` off (the slice's "asked only under
+`TURRET_APPROACH`" was too narrow).

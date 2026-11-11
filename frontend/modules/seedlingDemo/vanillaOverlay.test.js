@@ -441,8 +441,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-l26-rocklock-pocket (b0bc6b9c… -> 3e1ee485): an encounter lock a door pocket cannot clear (L18, L26, L53)
         //   is a latch from the pocket, so its two-way internal row splits (internal exits only; atlas id 9c051b83 -> eff9e209).
         //   No name, exit or location moves (the overlay fixture `--check`s byte-identical).
+        // ⛓ rules-l60-l71-killlock (3e1ee485… -> e965075e): a kill-lock side that reaches its bodies only across a Solid pays
+        //   the arms that pass one (L60's pocket row splits, L71's lock row re-spells; internal exits only; atlas id
+        //   eff9e209 -> b06ae22d). No name, exit or location moves (the overlay fixture `--check`s byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('3e1ee485eaad20a8a8eb35f28e24f784');
+            .toBe('e965075ea27e01bafade6fbff93423fb');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

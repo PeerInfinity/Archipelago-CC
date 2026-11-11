@@ -44,10 +44,10 @@
  * solves run off this thread, so the clock below keeps running (and painting
  * "solving…") while one is in flight. ⛓ DETERMINISTIC BUDGET: the budget is
  * WORK, counted in the worker — `?solverBudgetWork=<units>` on this page's URL
- * sets it (a test knob; the default is `SOLVER_BUDGET_WORK`) and
+ * sets it (a test knob; the default is `SOLVER_BUDGET_WORK`; 0 = no work limit) and
  * `?solverUpgradeWindowWork=<units>` the upgrade window
  * (`jsRuntimeSolver.upgradeWindowWork`); `?solverBackstopMs=<ms>` the wall-clock
- * backstop, which only ever FAILS a goal by name. A browser without module
+ * backstop (0 = off), which only ever FAILS a goal by name. A browser without module
  * workers solves in place, as S1 did — said once on the console.
  *
  * ⛓ GRAPHICS G1 — `?graphics=<stack>` paints the room in a content-pack stack's
@@ -272,9 +272,12 @@ export function mountJsRuntimePage(win = window) {
         win.console?.warn?.('[js runtime] no Worker in this browser — the solver mode solves on the page thread (S1)');
     }
     const params = new URL(win.location.href).searchParams;
-    const budgetParam = Number(params.get('solverBudgetWork'));
+    // ⛓ SOLVER LIMIT OFF — `?solverBudgetWork=0` = no work limit and `?solverBackstopMs=0` = backstop off (the same
+    // engine values the Flash panel's checkboxes write); an absent / empty / negative param is the default.
+    const knobParam = (name) => (params.get(name) ?? '') === '' ? NaN : Number(params.get(name));
+    const budgetParam = knobParam('solverBudgetWork');
     const windowParam = Number(params.get('solverUpgradeWindowWork'));
-    const backstopParam = Number(params.get('solverBackstopMs'));
+    const backstopParam = knobParam('solverBackstopMs');
     // ⛓ KILLLOCK HOOK — before the runtime exists, so every run of this page steps under the same switches.
     const killLockParam = params.get('killLockBodies');
     if (killLockParam !== null) applyKillLockBodies(parseKillLockBodies(killLockParam, '?killLockBodies='));
@@ -370,9 +373,9 @@ export function mountJsRuntimePage(win = window) {
         },
         log: (msg) => win.console?.log?.(msg),
         solveService,
-        ...(Number.isFinite(budgetParam) && budgetParam > 0 ? { solverBudgetWork: budgetParam } : {}),
+        ...(Number.isFinite(budgetParam) && budgetParam >= 0 ? { solverBudgetWork: budgetParam } : {}),
         ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowWork: windowParam } : {}),
-        ...(Number.isFinite(backstopParam) && backstopParam > 0 ? { solverBackstopMs: backstopParam } : {}),
+        ...(Number.isFinite(backstopParam) && backstopParam >= 0 ? { solverBackstopMs: backstopParam } : {}),
     });
     // ⛓ SOUND EFFECTS — the page's sound (`jsRuntimeSound.js`): it reads the run after each tick and never feeds it.
     const sound = createPageSound({ win, params, listen: (target, type, handler) => life.on(target, type, handler) });

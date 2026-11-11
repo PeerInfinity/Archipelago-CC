@@ -1,0 +1,27 @@
+CENSUS: leg 873 request 1, captured at seam time 5216, budget 2560
+SEAM-SWEEP: leg 873: 1 distinct answer(s) over 25 seam time(s)
+  t=5204 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5205 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5206 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5207 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5208 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5209 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5210 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5211 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5212 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5213 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5214 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5215 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5216 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5217 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5218 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5219 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5220 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5221 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5222 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5223 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5224 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5225 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5226 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5227 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 
+  t=5228 refusal work=2562 [dashless:2561/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's 

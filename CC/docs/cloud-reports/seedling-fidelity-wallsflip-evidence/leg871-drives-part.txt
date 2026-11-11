@@ -1,0 +1,38 @@
+walls=false: ok work=2772 shadowTicks=1122 runTick=1122 liveRun=shadow hits=[]
+  trace: [["kill","clear-tag","merged: bait decided on the same tick"],["bait","clear-tag","merged: time decided on the same tick; merged: walk decided "],["kill","clear-tag","merged: walk decided on the same tick"],["bait","clear-tag","merged: time decided on the same tick"],["kill","clear-tag","merged: walk decided on the same tick"],["hold","clear-tag","merged: walk decided on the same tick"]]
+  last row: 1122	(888.8,776.6)		- - -
+walls=true: REFUSED work=885 shadowTicks=724 runTick=724 liveRun=shadow hits=[]
+  first line: solverBot(d) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,790.5) — chaser:bob@736,752 (inside leash 80 (d=7.1), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:
+  last row: 724	(743.9,799.0)		(747.6,805.3)h3 (743.9,821.3)h2 (888.0,840.0)h0
+first tick the two DRIVES part (player/keys): 629
+OFF 625	(744.0,720.1)	down	(743.8,741.7)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 625	(744.0,720.1)	down	(744.1,743.9)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 626	(743.8,721.2)	down	(743.9,741.5)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 626	(743.8,721.2)	down	(744.2,743.7)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 627	(743.7,722.7)	down	(743.8,741.3)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 627	(743.7,722.7)	down	(744.1,743.4)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 628	(743.6,724.0)	down	(743.9,741.1)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 628	(743.6,724.0)	down	(744.2,743.2)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 629	(743.6,725.1)	primary	(743.8,740.8)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 629	(743.6,725.1)	down	(744.1,743.0)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 630	(744.3,725.9)	right	(743.9,740.6)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 630	(743.5,725.9)	primary	(744.2,742.8)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 631	(744.1,727.4)	down+left	(743.8,744.9)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 631	(744.3,727.3)	down+right	(744.1,742.6)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 632	(743.9,728.5)	down	(744.2,748.5)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 632	(744.2,728.4)	left	(744.5,746.9)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 633	(743.7,729.5)	down	(744.1,751.3)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 633	(744.1,729.4)	down	(744.4,750.4)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 634	(743.6,731.0)	down	(744.4,753.3)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 634	(744.0,730.8)	down	(744.8,753.2)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 635	(744.3,732.2)	right	(744.3,754.7)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 635	(743.9,732.0)	down	(744.7,755.3)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 636	(744.1,733.2)	left	(744.5,755.2)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 636	(743.9,733.0)	down	(745.0,756.6)h1 (744.0,808.0)h0 (888.0,840.0)h0
+--- ON tail
+ ON 719	(743.9,793.0)	primary	(747.6,805.3)h3 (744.1,813.4)h1 (888.0,840.0)h0
+ ON 720	(743.9,793.3)		(747.6,805.3)h3 (744.0,813.4)h1 (888.0,840.0)h0
+ ON 721	(743.9,793.4)		(747.6,805.3)h3 (744.1,813.4)h1 (888.0,840.0)h0
+ ON 722	(743.9,794.2)	down	(747.6,805.3)h3 (744.0,813.4)h2 (888.0,840.0)h0
+ ON 723	(743.9,796.7)	primary	(747.6,805.3)h3 (744.2,817.7)h2 (888.0,840.0)h0
+ ON 724	(743.9,799.0)		(747.6,805.3)h3 (743.9,821.3)h2 (888.0,840.0)h0

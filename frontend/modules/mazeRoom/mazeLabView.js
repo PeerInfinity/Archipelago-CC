@@ -130,6 +130,7 @@ import {
     worldDoorDisconnectOp, worldDoorOp, worldDoorPreview, worldDoorRows, worldPartDescriptors,
     worldSetBindings,
 } from './mazeSetLab.js';
+import { createMazeSetMap } from './mazeSetMap.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 /**
  * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE WORLD HALF.** W2's three modules take
@@ -1992,6 +1993,26 @@ export function main() {
         'editDownloadSet', 'editDownloadBundle',
     ]);
 
+    /**
+     * ⛓ MAZE WORLD MAP (step A) — the map's controls under a WORLD, which has no map: the toggle is unchecked and
+     * DISABLED and the reason is on the line, rather than a checkbox that does nothing. Under a library the shared
+     * mount owns them (it binds them only when it was handed a provider).
+     */
+    const MAP_CONTROLS = ['editSetMapView', 'editSetZoomOut', 'editSetZoomIn', 'editSetZoomFit',
+        'editSetMapRelayout', 'editSetDisconnectTool'];
+    const syncMapToggle = () => {
+        const world = Boolean(heldWorld);
+        for (const id of MAP_CONTROLS) { if ($(id)) $(id).disabled = world; }
+        if (world && $('editSetMapView')) $('editSetMapView').checked = false;
+        if ($('labSetMapWhy')) {
+            $('labSetMapWhy').textContent = world
+                ? '⛔ NO MAP for a WORLD yet — its rooms are a Seedling level set and a region library, and its '
+                    + 'crossings are the world document\'s own list; the map reads one substrate\'s doors. The STRIP '
+                    + 'shows the world.'
+                : 'on the map: click a room to select it, double-click to open it';
+        }
+    };
+
     const enableSetControls = () => {
         const has = Boolean(setSession) && setRoomCount() > 0;
         for (const id of SET_CONTROLS) { if ($(id)) $(id).disabled = !has; }
@@ -2481,7 +2502,20 @@ export function main() {
                         height: Number($('editSetNewH').value),
                     }),
                 })),
-            say,
+            /**
+             * ⛓ MAZE WORLD MAP (step A) — **ON THE MAP, A MOUNT SENTENCE IS PAINTED WHEN IT IS SAID.** This page's
+             * `say` only stores the message and `render()` paints it, and a map gesture (select, a DISCONNECT pick
+             * and its preview, a refused CONNECT) re-renders the MOUNT but not the page, so its sentence would wait
+             * for the next hover — measured: the status still read the previous Escape's line. ⛔ Map-only, so
+             * the strip's status path is byte-for-byte what it was.
+             */
+            say: (text, bad = false) => {
+                say(text, bad);
+                if (setUi?.map()) {
+                    $('status').textContent = message || '—';
+                    $('status').className = messageBad ? 'bad' : 'ok';
+                }
+            },
             /**
              * ⛓⛓ §21.5's THREE RULES ARRIVE THROUGH THE MOUNT: it computes the
              * renumbering DECISION before the op and calls `discardRoom` /
@@ -2507,8 +2541,17 @@ export function main() {
              * fires once per applied op, and `render()` fires on every hover.
              */
             onSetChange: () => { enableSetControls(); fillDoorSelects(); render(); },
+            /**
+             * ⛓⛓ MAZE WORLD MAP (step A) — **THE MAP, FOR A LIBRARY; THE STRIP, FOR A WORLD.** One provider per
+             * mount (`mazeSetMap.createMazeSetMap`), so its remembered positions die with the document they were
+             * laid out for. ⛔ A WORLD gets none: its rooms are two substrates' documents and its crossings a third
+             * list, and no reader of all three exists yet — `syncMapToggle` says so by name.
+             */
+            overviewMap: heldWorld ? null : createMazeSetMap(),
+            overviewMapOn: !heldWorld && params.setView === 'map',
             doc: document,
         });
+        syncMapToggle();
         enableSetControls();
         /** ⛓ EDITOR INTEGRATION W4 — the door's four `<select>`s are the PAGE's,
          *  filled after the mount for `fillSetRoomSelect`'s reason one control
@@ -3269,6 +3312,12 @@ export function main() {
              */
             set: setSession ? {
                 source: setSource,
+                /**
+                 * ⛓ MAZE WORLD MAP (step A) — the MAP as the mount's last paint left it (`setUi.map()`), `null` with the
+                 * strip shown or under a WORLD. ⛔ A GETTER: a zoom, the toggle and RE-LAYOUT repaint without an
+                 * `onSetChange`, so a snapshot field would be one press behind (E3 met the same on `watch.html`).
+                 */
+                get map() { return setUi ? setUi.map() : null; },
                 /**
                  * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE WORLD, AND THE THREE
                  * FIELDS THAT EXIST ONLY WHEN ONE IS HELD.** ⛔ `null` under a

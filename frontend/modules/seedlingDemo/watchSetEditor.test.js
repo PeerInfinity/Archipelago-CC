@@ -34,7 +34,7 @@ import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../flashPanel/seedling
 import {
     NAMED_ROOMS, MUSIC_COUNT, MUSIC_NONE, stampLevelSetIdentity,
 } from './levelSetValidator.js';
-import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
+import { buildLevelSet } from './levelSetExporter.js';
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
 import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
@@ -828,12 +828,11 @@ describe('⛔ the set editor draws no substrate — the ONE-RENDERER law, as a s
  */
 describe('the VANILLA 116, through the set editor\'s pure half', () => {
     const vanillaSession = () => {
-        const { set } = vanillaRecordSet(
+        const { set } = watchSetEditor.editorVanillaSet( // ⚖ MOONROCK: the editor's vanilla 116 (`#editLoadVanilla`)
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
-            { patches: [] }, // ⚖ MOONROCK: the editor's vanilla 116 (`#editLoadVanilla`)
         );
         const record = setRecord(set, emptyOverlay());
         return createSetSession(adapter, record, { base: { kind: 'set', set_id: set.set_id } });

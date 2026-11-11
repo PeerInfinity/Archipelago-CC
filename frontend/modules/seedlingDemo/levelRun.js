@@ -77,7 +77,7 @@ import {
     distanceRectPoint, slashRect, spearRect,
     SPEAR_REPEAT_OFFSETS, pressRectTouches, spearGameRect, spearHitRect,
 } from './presses.js';
-import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
+import { FIRE_DAMAGE, FIRE_FORCE, FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
 import {
     TAGS_PER_LEVEL, brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
@@ -4816,6 +4816,16 @@ export function createLevelRun({
         }
         return out.size === 0 ? null : out;
     };
+    /** ⛓ fidelity FIRESPINNER D1: `spinnerPressBodiesNow` plus the entity position (the fire census's origin). */
+    const spinnerFireBodiesNow = () => {
+        const st = spinnerStateFor(level);
+        if (st.byId.size === 0) return null;
+        const out = new Map();
+        for (const [id, sp] of st.byId) {
+            out.set(id, { rect: spinnerRect(sp), x: sp.x, y: sp.y, removed: sp.removed === true });
+        }
+        return out;
+    };
     const spinnerPressBodiesNow = () => {
         const st = spinnerStateFor(level);
         if (st.byId.size === 0) return null;
@@ -6528,11 +6538,75 @@ export function createLevelRun({
      * why this applies the audit's whole `modelled` list rather than one
      * intended target.
      */
+    /**
+     * ⛓⛓ THE ROCK HIT — ONE BODY, TWO WEAPONS (fidelity ROCKFIRE D1; `pullRope`'s shape, one mechanic later).
+     *
+     * `Player.genericHit`'s `else if (e is BreakableRock) (e as BreakableRock).hit(hasGhostSword ? 1 : 0)`
+     * (`Player.as:1087-1090`) reads no `t`, so a SWORD press and a FIRE press run the same method. R5 slice 5 built it
+     * inside `applyThrust`; it is hoisted here UNCHANGED, its comments with it, so `applyFire`'s arm
+     * (`CONTACT_FIDELITY.fireRockArm`) is this function and not a copy of it. `id` is the rock's OEL id
+     * (`world.solids[].rockId`); `what` is the error's noun (`press` is the sword arm's own text, byte for byte).
+     * Returns the press ledger row.
+     */
+    const hitBreakableRock = (id, pressTick, what = 'press') => {
+        // ── R5 slice 5: the rock ──────────────────────────────
+        // `hit(_t)` is `if (rockType <= _t) play("break")` and
+        // `Player.as:1071-1074` passes `hasGhostSword ? 1 : 0`. A
+        // press that reaches a rock the weapon cannot break is a
+        // real no-op in the game, so it is one here — recorded,
+        // because "the swing hit nothing" is a leg defect the
+        // fixture author needs to see rather than a silent pass.
+        const rock = world.solids.find((s) => s.rockId === id);
+        if (!rock) {
+            throw new Error(`levelRun: the ${what} at tick ${pressTick} reaches `
+                + `${id} in level ${level}, which is not in the world's solids. `
+                + 'The press census and the geometry disagree about which rocks '
+                + 'exist, which is the two-consumers failure this state family '
+                + 'exists to prevent.');
+        }
+        if (!rockBreaksUnder(rock.rockType, inventory)) {
+            return {
+                as3: 'BreakableRock', id, broke: false,
+                why: `rockType ${rock.rockType} > `
+                    + `${inventory?.hasGhostSword ? 1 : 0} — this weapon cannot `
+                    + 'break it',
+            };
+        }
+        const st = rockStateFor(level);
+        const { started, goneAt } = hitRock(st, rock, ticksCompleted);
+        // ⚠ `endAnim` writes `Game.setPersistence(tag, false)`
+        // UNCONDITIONALLY — its `check()` guard (`tag >= 0 && ...`)
+        // does not apply — so a `tag = -1` rock clears a flag in
+        // ANOTHER LEVEL. Since slice 5 step 0 the resolution goes
+        // through `outOfBandFlagForWriter`, which carries the
+        // FAMILY (`Fire`, `BreakableRock`, `DarkSword`) and refuses
+        // a class nobody has classified; the ledger has to name the
+        // entry or the walk reports a clear nobody can attribute.
+        // An in-band rock keeps the plain arithmetic: the family
+        // helper is for the -1 sentinel only, and says so.
+        if (started) {
+            const tag = rock.persistTag ?? -1;
+            const flag = tag < 0
+                ? outOfBandFlagForWriter({ as3: 'BreakableRock', level, tag })
+                : outOfBandFlagFor(level, tag);
+            rockFlags.set(ledgerKey(flag), { ...flag, id, level, t: ticksCompleted });
+        }
+        return {
+            as3: 'BreakableRock', id, broke: started, goneAt,
+            // A second swing does NOT restart the animation:
+            // `Spritemap.play` early-returns for the anim already
+            // playing. Recorded so a double press reads as the
+            // no-op it is rather than as a shorter break.
+            why: started ? null : 'already breaking — `play("break")` early-returns',
+        };
+    };
     const applyFire = (fire) => {
         const { pressTick } = fire;
         const player = { x: state.x, y: state.y };
         const pushState = pushableStateFor(level);
-        const audit = auditFire(world, player, { pushables: pushableRects(pushState), turrets: turretRectsNow() });
+        const audit = auditFire(world, player, { pushables: pushableRects(pushState), turrets: turretRectsNow(),
+            // ⛓ fidelity FIRESPINNER D1 (`fireSpinnerArm`, OFF → null: the census placement, as before).
+            spinners: CONTACT_FIDELITY.fireSpinnerArm ? spinnerFireBodiesNow() : null });
         if (audit.refused.length > 0) {
             throw new Error(`levelRun: the fire press at tick ${pressTick} in level `
                 + `${level} reaches `
@@ -6654,6 +6728,61 @@ export function createLevelRun({
                 // `rope@104,392` — a key nothing else in the run shares.
                 const id = r.id;
                 hits.push(pullRope(r, id));
+                continue;
+            }
+            if (r.as3 === 'Spinner' && CONTACT_FIDELITY.fireSpinnerArm) {
+                /**
+                 * ── ⛓⛓ fidelity FIRESPINNER D1: THE KNOCKBACK, AND NOTHING ELSE ─────
+                 *
+                 * `genericHit`'s `e is Enemy` arm: `(e as Enemy).hit(0.325, new Point(x, y), 0, "Fire")`, ELEVEN times
+                 * a hit tick (`r.dispatches`: an "Enemy" is `hitables[0]` and `vc` keeps it for all eleven passes).
+                 * `Enemy.hit`'s fire arm is `knockback(f, p)` only — `hitByFire` is false — behind the same
+                 * `hitsTimer <= 0 || hitByDarkStuff` and `!Game.freezeObjects` gates; `hitSpinner`'s `t === 'Fire'`
+                 * branch is that, verbatim. Each knockback reads the body's position, which a knockback does not
+                 * move, so the eleven are the same impulse added eleven times (summed in order, as the game does).
+                 */
+                const spSt = spinnerStateFor(level);
+                const sp = spSt.byId.get(r.spinnerId);
+                if (!sp) {
+                    throw new Error(`levelRun: the fire press at tick ${pressTick} reaches ${r.spinnerId} in level `
+                        + `${level}, which is not in the run's Spinner state.`);
+                }
+                let after = sp;
+                for (let k = 0; k < r.dispatches; k += 1) {
+                    after = hitSpinner(after, { force: FIRE_FORCE, from: player, damage: FIRE_DAMAGE, t: 'Fire',
+                        frozen: ceremony !== null });
+                }
+                spSt.byId.set(sp.id, after);
+                hits.push({ as3: 'Spinner', id: sp.id, knocked: after !== sp, dispatches: r.dispatches,
+                    why: after !== sp ? null : (sp.destroy ? 'the body is already dying'
+                        : (ceremony !== null ? 'the freeze' : `i-frames — hitsTimer ${sp.hitsTimer} > 0`)) });
+                continue;
+            }
+            if (r.as3 === 'BreakableRock' && CONTACT_FIDELITY.fireRockArm) {
+                /**
+                 * ── ⛓⛓ fidelity ROCKFIRE D1: THE FLAME BREAKS A ROCK EXACTLY WHEN A SWING WOULD ─────
+                 *
+                 * `genericHit`'s rock arm is `(e as BreakableRock).hit(hasGhostSword ? 1 : 0)` whatever `t` is, and
+                 * `hit` is `if (rockType <= _t) play("break")`: a rockType-0 rock breaks under Fire with or without
+                 * the Ghost Sword, a ghost rock (rockType 1) only with it held. A BreakableRock is `type = "Solid"`
+                 * (`hitables[6]`), so it is dispatched FIVE times a hit tick (`r.dispatches`), and `Spritemap.play`
+                 * early-returns for the anim already playing: the first dispatch of the first hit tick is the whole
+                 * effect, which `hitRock`'s idempotence already is. `fire()` runs where `slash()` does in
+                 * `Player.update`, so the clock is the sword arm's (`ticksCompleted`): `endAnim` — the persistence
+                 * write, the removal — lands `HIT_TO_GONE_TICKS` after the first hit tick. Game witness:
+                 * `fidelityRockFire.js` (p4g, 0 px; the solid and the write, both rock types, both inventories).
+                 *
+                 * ⚠ `genericHit`'s first line is `if (Game.freezeObjects) return;` — under a ceremony no `hit` is
+                 * made at all (the Spinner arm's `frozen`). Transcribed, NOT game-witnessed (no staging presses Fire
+                 * beside a rock during a pickup).
+                 */
+                const id = r.rockId ?? r.id;
+                if (ceremony !== null) {
+                    hits.push({ as3: 'BreakableRock', id, broke: false, dispatches: r.dispatches,
+                        why: 'the freeze — `genericHit` returns under `Game.freezeObjects`' });
+                    continue;
+                }
+                hits.push({ ...hitBreakableRock(id, pressTick, 'fire press'), dispatches: r.dispatches });
                 continue;
             }
             throw new Error(`levelRun: \`FIRE_ARM_POLICY\` calls ${r.as3} modelled and `
@@ -6865,58 +6994,9 @@ export function createLevelRun({
                 pushState.byId.set(id, after);
                 hits.push({ as3: 'PushableBlockSpear', id, moved, why });
             } else if (r.as3 === 'BreakableRock') {
-                // ── R5 slice 5: the rock ──────────────────────────────
-                // `hit(_t)` is `if (rockType <= _t) play("break")` and
-                // `Player.as:1071-1074` passes `hasGhostSword ? 1 : 0`. A
-                // press that reaches a rock the weapon cannot break is a
-                // real no-op in the game, so it is one here — recorded,
-                // because "the swing hit nothing" is a leg defect the
-                // fixture author needs to see rather than a silent pass.
-                const id = r.rockId ?? `${r.tag}@${r.x},${r.y}`;
-                const rock = world.solids.find((s) => s.rockId === id);
-                if (!rock) {
-                    throw new Error(`levelRun: the press at tick ${pressTick} reaches `
-                        + `${id} in level ${level}, which is not in the world's solids. `
-                        + 'The press census and the geometry disagree about which rocks '
-                        + 'exist, which is the two-consumers failure this state family '
-                        + 'exists to prevent.');
-                }
-                if (!rockBreaksUnder(rock.rockType, inventory)) {
-                    hits.push({
-                        as3: 'BreakableRock', id, broke: false,
-                        why: `rockType ${rock.rockType} > `
-                            + `${inventory?.hasGhostSword ? 1 : 0} — this weapon cannot `
-                            + 'break it',
-                    });
-                    continue;
-                }
-                const st = rockStateFor(level);
-                const { started, goneAt } = hitRock(st, rock, ticksCompleted);
-                // ⚠ `endAnim` writes `Game.setPersistence(tag, false)`
-                // UNCONDITIONALLY — its `check()` guard (`tag >= 0 && ...`)
-                // does not apply — so a `tag = -1` rock clears a flag in
-                // ANOTHER LEVEL. Since slice 5 step 0 the resolution goes
-                // through `outOfBandFlagForWriter`, which carries the
-                // FAMILY (`Fire`, `BreakableRock`, `DarkSword`) and refuses
-                // a class nobody has classified; the ledger has to name the
-                // entry or the walk reports a clear nobody can attribute.
-                // An in-band rock keeps the plain arithmetic: the family
-                // helper is for the -1 sentinel only, and says so.
-                if (started) {
-                    const tag = rock.persistTag ?? -1;
-                    const flag = tag < 0
-                        ? outOfBandFlagForWriter({ as3: 'BreakableRock', level, tag })
-                        : outOfBandFlagFor(level, tag);
-                    rockFlags.set(ledgerKey(flag), { ...flag, id, level, t: ticksCompleted });
-                }
-                hits.push({
-                    as3: 'BreakableRock', id, broke: started, goneAt,
-                    // A second swing does NOT restart the animation:
-                    // `Spritemap.play` early-returns for the anim already
-                    // playing. Recorded so a double press reads as the
-                    // no-op it is rather than as a shorter break.
-                    why: started ? null : 'already breaking — `play("break")` early-returns',
-                });
+                // ⛓ R5 slice 5's rock arm: `hitBreakableRock` (hoisted UNCHANGED at fidelity ROCKFIRE D1; the fire
+                // arm calls the same body).
+                hits.push(hitBreakableRock(r.rockId ?? `${r.tag}@${r.x},${r.y}`, pressTick));
             } else if (r.as3 === 'RopeStart') {
                 /**
                  * ── ⛓⛓⛓ R9 SLICE L16: THE SWORD PULLS THE ROPE ─────────

@@ -28,6 +28,6 @@ describe('hammer-phase KEYLOCK-TURRET (train): L40 leg 395', () => {
         expect(on).toMatchObject({ ok: true, ticks: 718, verbs: ['keylock', 'walk'], hits: [], deaths: 0, open: true,
             dead: true });
         expect(KEYLOCK_TURRET_COUNTS.kills).toEqual([{ lock: LOCK, turret: TURRET, t: 0, dead: true, ticks: 563,
-            side: 'right', wait: 29, forks: 276 }]);
+            side: 'right', wait: 29, forks: 70 }]); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): the same try, met at fork 70 (276 ascending)
     }, 300000);
 });

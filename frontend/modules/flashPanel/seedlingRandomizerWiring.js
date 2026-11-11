@@ -83,6 +83,8 @@ import {
     seedlingRandomizerEligibility,
     TAG_CAPABILITY,
     BOSS_REPORT_CAPABILITY,
+    ENTRANCE_SHUFFLE_NOT_PLAYABLE,
+    entranceShufflePlaces,
 } from './seedlingRandomizerEligibility.js';
 // ⛓ LIGHT: imports nothing, and is already in the panel's static closure.
 import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -110,6 +112,9 @@ export const AP_MODULE_PATHS = Object.freeze({
     validator: 'modules/seedlingDemo/levelSetValidator.js',
     ledger: 'modules/seedlingDemo/r7Acceptance.js',
     derivation: 'modules/seedlingDemo/seedlingAtlasDerivation.js',
+    // ⛓ ER E5 — the entrance retarget (`entranceRetarget.js`): a world that places entrances has its moved
+    // stairs rewritten in the delivered set. Dependency-light (its imports are the rewriter's own closure).
+    entrances: 'modules/seedlingDemo/entranceRetarget.js',
 });
 
 /**
@@ -630,8 +635,10 @@ async function runSeedlingRandomizerLoadSteps({
     const result = loaded.delivery.deliver();
     step('deliver-end', { ok: result.ok, chunks: result.chunks, why: result.why });
     if (!result.ok) {
+        // ⛓ ER E5 — a shuffled world on the vanilla rooms is the wrong world, and the overlay (sticky) says so.
+        const shuffledWorld = (loaded.entrances?.retargeted ?? 0) > 0;
         overlay.setText(`the randomized rooms did NOT load — ${result.why}. The game is `
-            + 'running the vanilla rooms.', 'error');
+            + `running the vanilla rooms.${shuffledWorld ? ` ${ENTRANCE_SHUFFLE_NOT_PLAYABLE}` : ''}`, 'error');
         log(`[ap placement] DELIVERY REFUSED — ${result.why}`, 'error');
         return { ok: false, why: result.why, reset: null, steps, delivered: result };
     }
@@ -890,9 +897,10 @@ export async function loadSeedlingRandomizer({
     }
 
     // ── the heavy modules ───────────────────────────────────────────────
-    const [rewriter, exporter, validator, ledgerMod, derivation] = await Promise.all(
+    const [rewriter, exporter, validator, ledgerMod, derivation, entrances] = await Promise.all(
         [AP_MODULE_PATHS.rewriter, AP_MODULE_PATHS.exporter, AP_MODULE_PATHS.validator,
-            AP_MODULE_PATHS.ledger, AP_MODULE_PATHS.derivation].map((p) => importModule(url(p))));
+            AP_MODULE_PATHS.ledger, AP_MODULE_PATHS.derivation, AP_MODULE_PATHS.entrances]
+            .map((p) => importModule(url(p))));
 
     const roomsByLevel = indexLevels(mapDoc);
     const { locationItemOf, ledgerUsed, census } = buildLocationResolver({
@@ -927,7 +935,7 @@ export async function loadSeedlingRandomizer({
     if (eligibility.arm === RANDOMIZER_ARMS.ATLAS) {
         return loadSeedlingAtlas({
             eligibility, rawRules, locations, playerId, gameConfig, mapDoc, assets,
-            modules: { rewriter, derivation, exporter, validator }, baseUrl, fetchJson,
+            modules: { rewriter, derivation, exporter, validator, entrances }, baseUrl, fetchJson,
             importModule, log,
             // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
             // a delivery needs if the table allocates a tag.
@@ -981,7 +989,22 @@ export async function loadSeedlingRandomizer({
                 + reportRefused.map((r) => r.why).join('; '),
         }, { census, assets, refused: reportRefused });
     }
-    const { set, replaced } = rewriter.rewriteRecordSet(vanilla, table);
+    const { set: placed, replaced } = rewriter.rewriteRecordSet(vanilla, table);
+    /**
+     * ⛓⛓ ER E5 — THE SHUFFLE IS APPLIED TO THE ROOMS THAT ARE DELIVERED. A world that places entrances
+     * (`entrance_randomization`) has each moved stairs' exit rewritten to its shuffled destination, AFTER the
+     * item rewrite (the two touch different entities: an `apitem` is never an exit), so the game itself loads
+     * the shuffled room. A world that places none gets back the very set it handed in. ⛔ A plan that cannot
+     * be made THROWS by name (`EntranceRetargetError`) and the panel refuses the load with it: half the stairs
+     * shuffled is not a world.
+     */
+    const shuffle = entrances.applyEntranceShuffle({ rules: rawRules, slot: playerId, set: placed });
+    const set = shuffle.set;
+    if (shuffle.plan) {
+        log(`[entrance shuffle] ${shuffle.retargeted} stairs exit(s) of the delivered rooms retargeted to their `
+            + `shuffled destinations (${shuffle.plan.unmoved.length} of ${shuffle.plan.placements} placement(s) `
+            + 'already led there)');
+    }
     const invalidation = exporter.apMappingInvalidation(set);
 
     const delivery = new SeedlingLevelSetDelivery({
@@ -1011,6 +1034,9 @@ export async function loadSeedlingRandomizer({
         reports,
         fixed,
         replaced,
+        // ⛓ ER E5 — what the entrance retarget did to the delivered set (null: the world places no entrance).
+        entrances: shuffle.plan ? { retargeted: shuffle.retargeted, moved: shuffle.plan.moved,
+            unmoved: shuffle.plan.unmoved } : null,
         set,
         invalidation,
         census,
@@ -1093,6 +1119,22 @@ export async function loadSeedlingGenerated({
         });
     }
 
+    /**
+     * ⛓ ER E5 — REFUSED BY NAME. This arm assembles its rooms from the rules, and nothing writes an entrance
+     * placement into an assembled room's doors (the retarget is the vanilla set's, `entranceRetarget.js`): a
+     * generated world that places entrances would play the shuffled logic over unshuffled doors.
+     */
+    if (entranceShufflePlaces(rawRules, playerId)) {
+        return refuse({
+            ...eligibility,
+            eligible: false,
+            verdict: 'ineligible',
+            failed: 'generated',
+            why: 'generated: these rules place entrances (entrance randomization), and the generated arm does not '
+                + 'write a placement into the rooms it assembles — refused rather than played with unshuffled doors',
+        });
+    }
+
     const [assembler, validator] = await Promise.all(
         [AP_GENERATED_MODULE_PATHS.generatedSet, AP_GENERATED_MODULE_PATHS.validator]
             .map((p) => importModule(url(p))));
@@ -1128,6 +1170,8 @@ export async function loadSeedlingGenerated({
         checkBinding,
         table,
         replaced: report.apitems.length,
+        // ⛓ ER E5 — always null here: a generated world that places entrances was refused above.
+        entrances: null,
         set,
         invalidation,
         levelOf,
@@ -1228,7 +1272,7 @@ export async function loadSeedlingAtlas({
     }
 
     const levelWorld = await importModule(url(AP_ATLAS_MODULE_PATHS.levelWorld));
-    const { rewriter, derivation, exporter = null, validator = null } = modules;
+    const { rewriter, derivation, exporter = null, validator = null, entrances = null } = modules;
     /**
      * ⛓ R9 slice P4E (C4) — a build declaring `tag` reads an OPTIONAL `@tag` on
      * `bosskey`/`totempart`/`seed`, so the table ALLOCATES one for such a
@@ -1265,13 +1309,35 @@ export async function loadSeedlingAtlas({
     let delivery = null;
     let set = null;
     let invalidation = null;
-    if (retags.length > 0) {
+    /**
+     * ⛓⛓ ER E5 — AN ENTRANCE-RANDOMIZED WORLD OF REAL ROOMS IS DELIVERED TOO. This arm binds the rooms the
+     * game already holds, and those are the VANILLA rooms: their stairs lead where vanilla says. So a world
+     * that places entrances gets the vanilla record set delivered with its moved stairs retargeted (composing
+     * with a retag), or the load is REFUSED BY NAME: it is never bound over rooms the logic does not describe.
+     */
+    const shuffled = entranceShufflePlaces(rawRules, playerId);
+    if (shuffled && (!embed || !exporter || !validator || !entrances)) {
+        return refuse('atlas: these rules place entrances (entrance randomization), and the vanilla record set '
+            + 'or the delivery modules were not handed in — the shuffled stairs cannot be written into the rooms, '
+            + 'and the game\'s own rooms lead where vanilla says');
+    }
+    let shuffle = null;
+    if (retags.length > 0 || shuffled) {
         if (!embed || !exporter || !validator) {
             return refuse('atlas: the build declares `tag` and a location needs one allocated, '
                 + 'but the vanilla record set or the delivery modules were not handed in');
         }
         const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
-        ({ set } = rewriter.retagRecordSet(vanilla, retags));
+        const tagged = retags.length > 0 ? rewriter.retagRecordSet(vanilla, retags).set : vanilla;
+        shuffle = shuffled ? entrances.applyEntranceShuffle({ rules: rawRules, slot: playerId, set: tagged }) : null;
+        if (shuffle?.plan) {
+            log(`[entrance shuffle] atlas arm: ${shuffle.retargeted} stairs exit(s) of the delivered rooms `
+                + 'retargeted to their shuffled destinations');
+        }
+        set = shuffle ? shuffle.set : tagged;
+    }
+    // ⛓ An identity shuffle with no retag changes no room: nothing to deliver, the G7 arm byte for byte.
+    if (set && (retags.length > 0 || (shuffle?.retargeted ?? 0) > 0)) {
         invalidation = exporter.apMappingInvalidation(set);
         delivery = new SeedlingLevelSetDelivery({
             planChunks: validator.planLevelSetChunks, bot, log,
@@ -1302,7 +1368,9 @@ export async function loadSeedlingAtlas({
         refused,
         retags,
         replaced: 0,
-        set,
+        entrances: shuffle?.plan ? { retargeted: shuffle.retargeted, moved: shuffle.plan.moved,
+            unmoved: shuffle.plan.unmoved } : null,
+        set: delivery ? set : null,
         invalidation,
         census,
         assets: { ...(assets ?? {}), atlas: { url: atlasUrl, ok: true, atlasId } },
