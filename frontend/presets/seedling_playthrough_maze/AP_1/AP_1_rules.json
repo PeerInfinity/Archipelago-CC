@@ -3986,8 +3986,8 @@
         "name": "level_39__r0c9",
         "exits": [
           {
-            "name": "level_39__r0c9 -> level_40__r23c29",
-            "connected_region": "level_40__r23c29",
+            "name": "level_39__r0c9 -> level_40__r26c13",
+            "connected_region": "level_40__r26c13",
             "access_rule": {
               "rule": "True_"
             }
@@ -4120,6 +4120,27 @@
             }
           },
           {
+            "name": "level_40__r0c53 -> level_40__r4c4",
+            "connected_region": "level_40__r4c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 1: wandlock@176,80 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 7: wandlock@208,128 cleared"
+                  }
+                }
+              ]
+            }
+          },
+          {
             "name": "level_40__r0c53 -> level_42",
             "connected_region": "level_42",
             "access_rule": {
@@ -4135,71 +4156,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Level 040 - Totem Part 64,144",
-            "id": 30000020,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Totem Shard",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          },
-          {
-            "name": "L40 flag 1: wandlock@176,80 cleared",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "L40 flag 1: wandlock@176,80 cleared",
-              "player": 1,
-              "advancement": true,
-              "type": "Event"
-            },
-            "locked": true,
-            "event": true,
-            "event_id": "flag:L40:1",
-            "event_kind": "game_state",
-            "obstacle": {
-              "level": 40,
-              "tag": 1,
-              "class": "wandlock",
-              "x": 176,
-              "y": 80
-            },
-            "action": {
-              "verb": "press",
-              "item": null,
-              "presser": {
-                "level": 40,
-                "class": "buttonroom",
-                "x": 160,
-                "y": 128
-              }
-            },
-            "side": "level_40__r0c53",
-            "across": [],
-            "targets": [
-              {
-                "level": 40,
-                "tag": 1,
-                "class": "wandlock",
-                "x": 176,
-                "y": 80
-              },
-              {
-                "level": 40,
-                "tag": 1,
-                "class": "wandlock",
-                "x": 176,
-                "y": 208
-              }
-            ]
-          },
           {
             "name": "L40 flag 7: wandlock@208,128 cleared",
             "id": null,
@@ -4261,6 +4217,99 @@
           }
         ]
       },
+      "level_40__r4c4": {
+        "name": "level_40__r4c4",
+        "exits": [
+          {
+            "name": "level_40__r4c4 -> level_40__r0c53",
+            "connected_region": "level_40__r0c53",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 1: wandlock@176,80 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 7: wandlock@208,128 cleared"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 040 - Totem Part 64,144",
+            "id": 30000020,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Totem Shard",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "L40 flag 1: wandlock@176,80 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L40 flag 1: wandlock@176,80 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L40:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 40,
+              "tag": 1,
+              "class": "wandlock",
+              "x": 176,
+              "y": 80
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 40,
+                "class": "buttonroom",
+                "x": 160,
+                "y": 128
+              }
+            },
+            "side": "level_40__r4c4",
+            "across": [],
+            "targets": [
+              {
+                "level": 40,
+                "tag": 1,
+                "class": "wandlock",
+                "x": 176,
+                "y": 80
+              },
+              {
+                "level": 40,
+                "tag": 1,
+                "class": "wandlock",
+                "x": 176,
+                "y": 208
+              }
+            ]
+          }
+        ]
+      },
       "level_40__r23c29": {
         "name": "level_40__r23c29",
         "exits": [
@@ -4275,227 +4324,14 @@
             }
           },
           {
-            "name": "level_40__r23c29 -> level_40__r32c36",
-            "connected_region": "level_40__r32c36",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_40__r36c35",
-            "connected_region": "level_40__r36c35",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_40__r48c54",
-            "connected_region": "level_40__r48c54",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_39__r0c9",
-            "connected_region": "level_39__r0c9",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #2",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #3",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #4",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #5",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #6",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #7",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #8",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #9",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #10",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #11",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #12",
-            "connected_region": "level_43__r13c7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_40__r23c29 -> level_43__r13c7 #13",
-            "connected_region": "level_43__r13c7",
+            "name": "level_40__r23c29 -> level_40__r26c13",
+            "connected_region": "level_40__r26c13",
             "access_rule": {
               "rule": "True_"
             }
           }
         ],
         "locations": [
-          {
-            "name": "Level 040 - Totem Part 160,640",
-            "id": 30000019,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Totem Shard",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          },
-          {
-            "name": "Level 040 - Chest",
-            "id": 30000018,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seal",
-              "player": 1,
-              "advancement": true,
-              "type": "progression"
-            }
-          },
           {
             "name": "L40 flag 8: bosslock@480,352 cleared",
             "id": null,
@@ -4533,12 +4369,249 @@
           }
         ]
       },
+      "level_40__r26c13": {
+        "name": "level_40__r26c13",
+        "exits": [
+          {
+            "name": "level_40__r26c13 -> level_40__r23c29",
+            "connected_region": "level_40__r23c29",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L40 flag 12: wandlock@480,560 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_40__r32c36",
+            "connected_region": "level_40__r32c36",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_40__r36c35",
+            "connected_region": "level_40__r36c35",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_40__r48c54",
+            "connected_region": "level_40__r48c54",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_39__r0c9",
+            "connected_region": "level_39__r0c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #2",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #3",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #4",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #5",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #6",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #7",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #8",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #9",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #10",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #11",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #12",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_40__r26c13 -> level_43__r13c7 #13",
+            "connected_region": "level_43__r13c7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 040 - Totem Part 160,640",
+            "id": 30000019,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Totem Shard",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "Level 040 - Chest",
+            "id": 30000018,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "level_40__r32c36": {
         "name": "level_40__r32c36",
         "exits": [
           {
-            "name": "level_40__r32c36 -> level_40__r23c29",
-            "connected_region": "level_40__r23c29",
+            "name": "level_40__r32c36 -> level_40__r26c13",
+            "connected_region": "level_40__r26c13",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4621,8 +4694,8 @@
         "name": "level_40__r36c35",
         "exits": [
           {
-            "name": "level_40__r36c35 -> level_40__r23c29",
-            "connected_region": "level_40__r23c29",
+            "name": "level_40__r36c35 -> level_40__r26c13",
+            "connected_region": "level_40__r26c13",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4691,8 +4764,8 @@
         "name": "level_40__r48c54",
         "exits": [
           {
-            "name": "level_40__r48c54 -> level_40__r23c29",
-            "connected_region": "level_40__r23c29",
+            "name": "level_40__r48c54 -> level_40__r26c13",
+            "connected_region": "level_40__r26c13",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -5081,8 +5154,8 @@
             }
           },
           {
-            "name": "level_43__r13c7 -> level_40__r23c29",
-            "connected_region": "level_40__r23c29",
+            "name": "level_43__r13c7 -> level_40__r26c13",
+            "connected_region": "level_40__r26c13",
             "access_rule": {
               "rule": "True_"
             }
@@ -14358,7 +14431,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-4992ae0c",
+      "atlas_id": "seedling-d8e88e75",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -27547,12 +27620,12 @@
           },
           "exits": [
             {
-              "exit_id": "level_39__r0c9 -> level_40__r23c29",
+              "exit_id": "level_39__r0c9 -> level_40__r26c13",
               "x": 9,
               "y": 0,
               "side": null,
-              "exitName": "level_39__r0c9 -> level_40__r23c29",
-              "targetRegion": "level_40__r23c29",
+              "exitName": "level_39__r0c9 -> level_40__r26c13",
+              "targetRegion": "level_40__r26c13",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_0"
@@ -29534,22 +29607,22 @@
           },
           "exits": [
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7",
               "x": 20,
               "y": 36,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7",
+              "exitName": "level_40__r26c13 -> level_43__r13c7",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_320_576"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_39__r0c9",
+              "exit_id": "level_40__r26c13 -> level_39__r0c9",
               "x": 30,
               "y": 57,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_39__r0c9",
+              "exitName": "level_40__r26c13 -> level_39__r0c9",
               "targetRegion": "level_39__r0c9",
               "targetExitId": null,
               "isTeleporter": true,
@@ -29578,132 +29651,132 @@
               "atlas_exit_id": "out_teleporter_944_96"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #2",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #2",
               "x": 14,
               "y": 27,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #2",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #2",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_4_20"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #3",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #3",
               "x": 15,
               "y": 27,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #3",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #3",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_5_20"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #4",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #4",
               "x": 23,
               "y": 27,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #4",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #4",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_13_20"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #5",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #5",
               "x": 24,
               "y": 27,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #5",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #5",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_14_20"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #6",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #6",
               "x": 14,
               "y": 28,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #6",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #6",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_4_21"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #7",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #7",
               "x": 15,
               "y": 28,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #7",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #7",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_5_21"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #8",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #8",
               "x": 23,
               "y": 28,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #8",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #8",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_13_21"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #9",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #9",
               "x": 24,
               "y": 28,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #9",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #9",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_14_21"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #10",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #10",
               "x": 14,
               "y": 29,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #10",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #10",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_4_22"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #11",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #11",
               "x": 15,
               "y": 29,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #11",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #11",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_5_22"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #12",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #12",
               "x": 14,
               "y": 30,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #12",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #12",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_pit_4_23"
             },
             {
-              "exit_id": "level_40__r23c29 -> level_43__r13c7 #13",
+              "exit_id": "level_40__r26c13 -> level_43__r13c7 #13",
               "x": 15,
               "y": 30,
               "side": null,
-              "exitName": "level_40__r23c29 -> level_43__r13c7 #13",
+              "exitName": "level_40__r26c13 -> level_43__r13c7 #13",
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
@@ -36361,6 +36434,21 @@
               "display": {
                 "mode": "tree"
               }
+            },
+            "atlas_gate_5": {
+              "id": "atlas_gate_5",
+              "name": "L40 flag 12: wandlock@480,560 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
             }
           },
           "blocks": [
@@ -36588,6 +36676,12 @@
               "y": 22,
               "dir": "S",
               "gate": "atlas_gate_4"
+            },
+            {
+              "x": 28,
+              "y": 27,
+              "dir": "E",
+              "gate": "atlas_gate_5"
             },
             {
               "x": 32,
@@ -41768,7 +41862,9 @@
             "key": "level_40",
             "regions": [
               "level_40__r0c53",
+              "level_40__r4c4",
               "level_40__r23c29",
+              "level_40__r26c13",
               "level_40__r32c36",
               "level_40__r36c35",
               "level_40__r48c54"
@@ -41778,17 +41874,17 @@
               ".....................................................A......",
               ".....................................................A......",
               ".....................................................A......",
-              "....AAAAAAA...AAAAAAA............................AAAAA......",
-              "...AAAAAAAAAAAAAAAAAAAAAAAAAAAA..................AAAAA......",
-              "......A.......AAAAAAAA........A..................AAAAAAAAAAA",
-              "......A.......AAAAAAAA........A..................AAAAA......",
-              "...AAAAAAAA.AAAAAAAAAA........A..................AAAAA......",
-              "...AAAAAAA..AAAAA.AAAA........A..................AAAAA......",
-              "...AAAAAAAAAAAAAAAAAAA........A..................AAAA.......",
-              "......A.......AAAAAAAA........A.....................A.......",
-              "......A.......AAAAAAAA........A.....................A.......",
-              "...AAAAAAAAAAAAAAAAAAA........A.....................A.......",
-              "....AAAAAAA...AAAAAAA.........A.....................A.......",
+              "....BBBBBBB...AAAAAAA............................AAAAA......",
+              "...BBBBBBBB.AAAAAAAAAAAAAAAAAAA..................AAAAA......",
+              "......B.......AAAAAAAA........A..................AAAAAAAAAAA",
+              "......B.......AAAAAAAA........A..................AAAAA......",
+              "...BBBBBBBB.B.AAAAAAAA........A..................AAAAA......",
+              "...BBBBBBB..B.AAA.AAAA........A..................AAAAA......",
+              "...BBBBBBBBBB.AAAAAAAA........A..................AAAA.......",
+              "......B.......AAAAAAAA........A.....................A.......",
+              "......B.......AAAAAAAA........A.....................A.......",
+              "...BBBBBBBB.AAAAAAAAAA........A.....................A.......",
+              "....BBBBBBB...AAAAAAA.........A.....................A.......",
               "..............................A.....................A.......",
               "..............................A.....................A.......",
               "..............................A.....................A.......",
@@ -41797,48 +41893,56 @@
               "..............................A.............................",
               "..............................A.............................",
               "............................................................",
-              ".............................BBB............BBB.............",
-              ".............................BBB.BBBBBBBBBBBBBB.............",
-              ".............................B.B.BB.........BB.BBB.BB.......",
-              ".............BBBB.....BBBB...B.B..B.........B..BBBB.........",
-              ".............BBBBBBBBBBBBBBB.BBB..B.........B...B...........",
-              ".............BBBB.....BBBB...BBB..B........BB...B...........",
-              ".............BBBB.....BBBB...BBB..B........BBBBBB...........",
-              "........BBBBBBBBB............B.B.BB............BB...........",
-              "........B....BBBB............BBB.BB.........................",
-              "........B....................BBB....C...CCC.................",
-              "........B....................BBB....CCCCCCC.................",
-              "........B....................BBB....C...CCC.................",
-              "........B...........B.........B.....C.......................",
-              "........B...........B.........B....D..........B.............",
-              "........B..........BBB........B.....B.........B.............",
-              "........B...........B.........B.....B.........B.............",
-              "........BBBB........B.........B.....B........BBB............",
-              "........BBBB........B.........B.....B........BBB............",
-              "........BBBB........B.........B.....B........BBB............",
-              "........BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB............",
-              "..............................B...............B.............",
-              "..............................B...............B.............",
-              "..............................B...............B.............",
-              "..............................B...............B.............",
-              "..............................B...............B.............",
-              "..............................B...............B.......EEE...",
-              "..............................B...............B.......E.E...",
-              "..............................B...............B.......E.E...",
-              "..............................B...............B........B....",
-              "..............................B...............B........B....",
-              "..............................B...............BBBBBBBBBB....",
-              "..............................B.............................",
-              "..............................B.............................",
-              "..............................B.............................",
-              "..............................B............................."
+              ".............................CCC............CCC.............",
+              ".............................CCC.CCCCCCCCCCCCCC.............",
+              ".............................C.C.CC.........CC.CCC.CC.......",
+              ".............DDDD.....DDDD...C.C..C.........C..CCCC.........",
+              ".............DDDDDDDDDDDDDDD.CCC..C.........C...C...........",
+              ".............DDDD.....DDDD...CCC..C........CC...C...........",
+              ".............DDDD.....DDDD...CCC..C........CCCCCC...........",
+              "........DDDDDDDDD............C.C.CC............CC...........",
+              "........D....DDDD............CCC.CC.........................",
+              "........D....................CCC....E...EEE.................",
+              "........D....................CCC....EEEEEEE.................",
+              "........D....................CCC....E...EEE.................",
+              "........D...........D...............E.......................",
+              "........D...........D.........D....F..........D.............",
+              "........D..........DDD........D.....D.........D.............",
+              "........D...........D.........D.....D.........D.............",
+              "........DDDD........D.........D.....D........DDD............",
+              "........DDDD........D.........D.....D........DDD............",
+              "........DDDD........D.........D.....D........DDD............",
+              "........DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD............",
+              "..............................D...............D.............",
+              "..............................D...............D.............",
+              "..............................D...............D.............",
+              "..............................D...............D.............",
+              "..............................D...............D.............",
+              "..............................D...............D.......GGG...",
+              "..............................D...............D.......G.G...",
+              "..............................D...............D.......G.G...",
+              "..............................D...............D........D....",
+              "..............................D...............D........D....",
+              "..............................D...............DDDDDDDDDD....",
+              "..............................D.............................",
+              "..............................D.............................",
+              "..............................D.............................",
+              "..............................D............................."
             ],
             "entrances": {
               "level_40__r0c53": {
                 "x": 53,
                 "y": 0
               },
+              "level_40__r4c4": {
+                "x": 4,
+                "y": 4
+              },
               "level_40__r23c29": {
+                "x": 29,
+                "y": 23
+              },
+              "level_40__r26c13": {
                 "x": 30,
                 "y": 56
               },
@@ -41857,13 +41961,17 @@
             },
             "links": {
               "level_40__r0c53>level_40__r23c29": "level_40__r0c53 -> level_40__r23c29",
+              "level_40__r0c53>level_40__r4c4": "level_40__r0c53 -> level_40__r4c4",
+              "level_40__r4c4>level_40__r0c53": "level_40__r4c4 -> level_40__r0c53",
               "level_40__r23c29>level_40__r0c53": "level_40__r23c29 -> level_40__r0c53",
-              "level_40__r23c29>level_40__r32c36": "level_40__r23c29 -> level_40__r32c36",
-              "level_40__r32c36>level_40__r23c29": "level_40__r32c36 -> level_40__r23c29",
-              "level_40__r23c29>level_40__r36c35": "level_40__r23c29 -> level_40__r36c35",
-              "level_40__r36c35>level_40__r23c29": "level_40__r36c35 -> level_40__r23c29",
-              "level_40__r23c29>level_40__r48c54": "level_40__r23c29 -> level_40__r48c54",
-              "level_40__r48c54>level_40__r23c29": "level_40__r48c54 -> level_40__r23c29",
+              "level_40__r23c29>level_40__r26c13": "level_40__r23c29 -> level_40__r26c13",
+              "level_40__r26c13>level_40__r23c29": "level_40__r26c13 -> level_40__r23c29",
+              "level_40__r26c13>level_40__r32c36": "level_40__r26c13 -> level_40__r32c36",
+              "level_40__r32c36>level_40__r26c13": "level_40__r32c36 -> level_40__r26c13",
+              "level_40__r26c13>level_40__r36c35": "level_40__r26c13 -> level_40__r36c35",
+              "level_40__r36c35>level_40__r26c13": "level_40__r36c35 -> level_40__r26c13",
+              "level_40__r26c13>level_40__r48c54": "level_40__r26c13 -> level_40__r48c54",
+              "level_40__r48c54>level_40__r26c13": "level_40__r48c54 -> level_40__r26c13",
               "level_40__r32c36>level_40__r36c35": "level_40__r32c36 -> level_40__r36c35",
               "level_40__r36c35>level_40__r32c36": "level_40__r36c35 -> level_40__r32c36"
             }
@@ -41877,7 +41985,15 @@
           }
         }
       },
+      "level_40__r4c4": {
+        "substrate": "maze",
+        "shared_world": "level_40"
+      },
       "level_40__r23c29": {
+        "substrate": "maze",
+        "shared_world": "level_40"
+      },
+      "level_40__r26c13": {
         "substrate": "maze",
         "shared_world": "level_40"
       },
@@ -43088,12 +43204,12 @@
               "atlas_exit_id": "out_teleporter_144_64"
             },
             {
-              "exit_id": "level_43__r13c7 -> level_40__r23c29",
+              "exit_id": "level_43__r13c7 -> level_40__r26c13",
               "x": 11,
               "y": 29,
               "side": null,
-              "exitName": "level_43__r13c7 -> level_40__r23c29",
-              "targetRegion": "level_40__r23c29",
+              "exitName": "level_43__r13c7 -> level_40__r26c13",
+              "targetRegion": "level_40__r26c13",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsup_176_464"
@@ -76337,7 +76453,7 @@
             "level_39__r0c9",
             "level_39__r25c9",
             "level_39__r2c11",
-            "level_40__r23c29",
+            "level_40__r26c13",
             "level_40__r32c36",
             "level_40__r36c35",
             "level_40__r48c54",
@@ -76508,7 +76624,9 @@
             }
           },
           "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_regions": [
+            "level_40__r23c29"
+          ],
           "sphere_locations": [
             "L40 flag 12: wandlock@480,560 cleared"
           ]
@@ -76659,10 +76777,8 @@
             }
           },
           "new_accessible_locations": [
-            "L40 flag 1: wandlock@176,80 cleared",
             "L40 flag 7: wandlock@208,128 cleared",
             "L40 flag 8: bosslock@480,352 cleared",
-            "Level 040 - Totem Part 64,144",
             "Level 041 - Totem Part 240,144",
             "Level 042 - Totem Part 184,152"
           ],
@@ -76846,35 +76962,19 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "L40 flag 1: wandlock@176,80 cleared": 1
-            },
-            "resolved_items": {
-              "L40 flag 1: wandlock@176,80 cleared": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "L40 flag 1: wandlock@176,80 cleared"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "7.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
               "L40 flag 7: wandlock@208,128 cleared": 1
             },
             "resolved_items": {
               "L40 flag 7: wandlock@208,128 cleared": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_locations": [
+            "L40 flag 1: wandlock@176,80 cleared",
+            "Level 040 - Totem Part 64,144"
+          ],
+          "new_accessible_regions": [
+            "level_40__r4c4"
+          ],
           "sphere_locations": [
             "L40 flag 7: wandlock@208,128 cleared"
           ]
@@ -76883,7 +76983,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.3",
+      "sphere_index": "7.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76904,7 +77004,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.4",
+      "sphere_index": "7.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76925,7 +77025,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.5",
+      "sphere_index": "7.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76946,28 +77046,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Totem Shard": 1
-            },
-            "resolved_items": {
-              "Totem Shard": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Level 040 - Totem Part 64,144"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "7.7",
+      "sphere_index": "7.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76988,7 +77067,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.8",
+      "sphere_index": "7.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76999,9 +77078,7 @@
               "Totem Shard": 1
             }
           },
-          "new_accessible_locations": [
-            "Level 043 - Wand"
-          ],
+          "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
             "Level 042 - Totem Part 184,152"
@@ -77011,7 +77088,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.9",
+      "sphere_index": "7.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77032,7 +77109,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.10",
+      "sphere_index": "7.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77074,6 +77151,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L40 flag 1: wandlock@176,80 cleared": 1
+            },
+            "resolved_items": {
+              "L40 flag 1: wandlock@176,80 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L40 flag 1: wandlock@176,80 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "L63 flag 6: lightpole@48,272 cleared": 1
             },
             "resolved_items": {
@@ -77090,7 +77188,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.2",
+      "sphere_index": "8.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77111,7 +77209,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.3",
+      "sphere_index": "8.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77132,35 +77230,30 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.4",
+      "sphere_index": "8.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "Wand": 1
+              "Totem Shard": 1
             },
             "resolved_items": {
-              "Wand": 1
+              "Totem Shard": 1
             }
           },
           "new_accessible_locations": [
-            "L12 flag 7: magicallock@32,864 cleared",
-            "Level 012 - Witch",
-            "Level 043 - Totem of Lacste"
-          ],
-          "new_accessible_regions": [
-            "level_43__r3c8",
-            "level_43__r8c7"
-          ],
-          "sphere_locations": [
             "Level 043 - Wand"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 040 - Totem Part 64,144"
           ]
         }
       }
     },
     {
       "type": "state_update",
-      "sphere_index": "8.5",
+      "sphere_index": "8.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77174,28 +77267,11 @@
           "new_accessible_locations": [
             "L12 flag 11: bosslock@112,192 cleared",
             "L12 flag 12: bosslock@32,864 cleared",
-            "L68 flag 0: bosslock@16,32 cleared",
-            "Level 068 - Health",
-            "Level 069 - Lights",
-            "Level 071 - Chest",
-            "Level 074 - Darkshield"
+            "Level 069 - Lights"
           ],
           "new_accessible_regions": [
-            "level_68__r1c1",
             "level_69",
-            "level_70",
-            "level_71__r0c6",
-            "level_71__r11c7",
-            "level_71__r13c7",
-            "level_72",
-            "level_73__r0c4",
-            "level_73__r3c7",
-            "level_74",
-            "level_75",
-            "level_80__r0c2",
-            "level_83",
-            "level_84__r2c4",
-            "level_85"
+            "level_70"
           ],
           "sphere_locations": [
             "Level 067 - Boss Key 4"
@@ -77252,16 +77328,40 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "L12 flag 7: magicallock@32,864 cleared": 1
+              "Wand": 1
             },
             "resolved_items": {
-              "L12 flag 7: magicallock@32,864 cleared": 1
+              "Wand": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_locations": [
+            "L12 flag 7: magicallock@32,864 cleared",
+            "L68 flag 0: bosslock@16,32 cleared",
+            "Level 012 - Witch",
+            "Level 043 - Totem of Lacste",
+            "Level 068 - Health",
+            "Level 071 - Chest",
+            "Level 074 - Darkshield"
+          ],
+          "new_accessible_regions": [
+            "level_43__r3c8",
+            "level_43__r8c7",
+            "level_68__r1c1",
+            "level_71__r0c6",
+            "level_71__r11c7",
+            "level_71__r13c7",
+            "level_72",
+            "level_73__r0c4",
+            "level_73__r3c7",
+            "level_74",
+            "level_75",
+            "level_80__r0c2",
+            "level_83",
+            "level_84__r2c4",
+            "level_85"
+          ],
           "sphere_locations": [
-            "L12 flag 7: magicallock@32,864 cleared"
+            "Level 043 - Wand"
           ]
         }
       }
@@ -77269,90 +77369,6 @@
     {
       "type": "state_update",
       "sphere_index": "9.4",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "L68 flag 0: bosslock@16,32 cleared": 1
-            },
-            "resolved_items": {
-              "L68 flag 0: bosslock@16,32 cleared": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "L68 flag 0: bosslock@16,32 cleared"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "9.5",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Progressive Sword": 1
-            },
-            "resolved_items": {
-              "Progressive Sword": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Level 012 - Witch"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "9.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Seal": 1
-            },
-            "resolved_items": {
-              "Seal": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Level 043 - Totem of Lacste"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "9.7",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Health": 1
-            },
-            "resolved_items": {
-              "Health": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Level 068 - Health"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "9.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77373,7 +77389,112 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.9",
+      "sphere_index": "10.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L12 flag 7: magicallock@32,864 cleared": 1
+            },
+            "resolved_items": {
+              "L12 flag 7: magicallock@32,864 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L12 flag 7: magicallock@32,864 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L68 flag 0: bosslock@16,32 cleared": 1
+            },
+            "resolved_items": {
+              "L68 flag 0: bosslock@16,32 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L68 flag 0: bosslock@16,32 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Progressive Sword": 1
+            },
+            "resolved_items": {
+              "Progressive Sword": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 012 - Witch"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 043 - Totem of Lacste"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Health": 1
+            },
+            "resolved_items": {
+              "Health": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 068 - Health"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77394,7 +77515,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.10",
+      "sphere_index": "10.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77425,7 +77546,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.1",
+      "sphere_index": "11.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77446,7 +77567,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.2",
+      "sphere_index": "11.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77501,7 +77622,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.1",
+      "sphere_index": "12.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77522,7 +77643,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.2",
+      "sphere_index": "12.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77543,7 +77664,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.3",
+      "sphere_index": "12.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77564,7 +77685,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.4",
+      "sphere_index": "12.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77585,7 +77706,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.5",
+      "sphere_index": "12.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77606,7 +77727,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.6",
+      "sphere_index": "12.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77646,7 +77767,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.1",
+      "sphere_index": "13.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77667,7 +77788,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.2",
+      "sphere_index": "13.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77699,7 +77820,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.3",
+      "sphere_index": "13.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77723,7 +77844,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.4",
+      "sphere_index": "13.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77744,7 +77865,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "13.1",
+      "sphere_index": "14.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77765,7 +77886,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "13.2",
+      "sphere_index": "14.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
