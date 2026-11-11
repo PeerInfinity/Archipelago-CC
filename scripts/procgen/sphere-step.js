@@ -113,6 +113,10 @@ import {
     collectSphereGrowthPrep, assembleRegionParams,
     mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+import {
+    attachEnvelopeContent, contentListOf, effectiveContentStack, loadContentSet,
+} from '../../frontend/modules/procgenPipeline/worldContent.js';
+import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
 
 argvHelp(import.meta.url);
 
@@ -207,7 +211,9 @@ function parseArgs(argv, { configDoc = null } = {}) {
 // panel's _buildSphereConfig / _collectSphereGrowthPrep / _assembleRegionParams
 // take — so the CLI's regionParams match the panel's (the old inline arrow
 // block + minimal {fallBehavior, physicsProfile} regionParams diverged).
-function buildConfig(args) {
+// ⛓ CONTENT SETS C3 — `contentSet` is the world's loaded content set
+// (`loadArgsContent`, awaited first); `--param content=[…]` names the world's own.
+function buildConfig(args, contentSet = null) {
     const selectedSubs = new Set(Object.keys(args.quotas));
     if (args.start) selectedSubs.add(args.start);
     // One goal item (`Victory`): the pool's victory items fold into it, and the
@@ -225,6 +231,8 @@ function buildConfig(args) {
     if (args.physicsProfile != null) params.bouncePhysicsProfile = args.physicsProfile;
     if (args.fallBehavior != null) params.bounceFallBehavior = args.fallBehavior;
     Object.assign(params, args.params);
+    // ⛓ CONTENT SETS C3 — `--param content=a,b` is a string; the param is a list.
+    if (params.content !== undefined) params.content = contentListOf(params.content);
 
     // Pre-plan prep (bounce's free arrow → starting item + pool delta +
     // bounceFreeArrow regionParam) + the full braid regionParams. --no-arrow-
@@ -241,7 +249,7 @@ function buildConfig(args) {
             exclusiveSpheres: {}, regionParams: {}, note: '',
         };
     const regionParams = assembleRegionParams({
-        activeIds, mode: 'sphere', params, extra: prep.regionParams,
+        activeIds, mode: 'sphere', params, extra: prep.regionParams, contentSet,
     });
 
     const quotaIds = Object.keys(args.quotas);
@@ -267,6 +275,13 @@ function buildConfig(args) {
         spheresPerBatch: args.spheresPerBatch,
         itemPool,
     };
+}
+
+/** ⛓ CONTENT SETS C3 — the args' content stack (the mix's default packs, then `--param content`), loaded from disk. */
+async function loadArgsContent(args) {
+    return loadContentSet(effectiveContentStack({
+        substrateIds: activeSubstrateIds(args.quotas, args.start), content: contentListOf(args.params?.content) ?? [],
+    }), nodePackIo());
 }
 
 // --- file I/O ---
@@ -341,7 +356,9 @@ export const SUBSTRATE_CHECK = Object.freeze({
  * @returns {Promise<{envelope: object, rulesJson: object|null, oracleErrors: string[], summary: object}>}
  */
 export async function build(config, { envelope = null, log = () => {}, onProgress = null } = {}) {
-    const env = envelope ? deserializeEnvelope(structuredClone(envelope)) : newEnvelope(buildConfig(config));
+    const env = envelope
+        ? await attachEnvelopeContent(deserializeEnvelope(structuredClone(envelope)), nodePackIo())
+        : newEnvelope(buildConfig(config, await loadArgsContent(config)));
     await runToEnd(env, config, { log, onProgress });
     const rulesJson = env.compile?.rulesJson ?? null;
     return {
@@ -388,12 +405,14 @@ async function main(status) {
     } else if (args.input) {
         env = deserializeEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'plan' || sub === 'run') {
-        env = newEnvelope(buildConfig(args));
+        env = newEnvelope(buildConfig(args, await loadArgsContent(args)));
     } else {
         throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
     }
     // --params overrides the carried config knobs.
     if (args.paramsFile) Object.assign(env.config, readJson(args.paramsFile, '--params'));
+    // ⛓ CONTENT SETS C3 — a resumed or rebuilt envelope carries its content list, not the set: re-attach it.
+    await attachEnvelopeContent(env, nodePackIo());
 
     const onProgress = (ev) => {
         if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
