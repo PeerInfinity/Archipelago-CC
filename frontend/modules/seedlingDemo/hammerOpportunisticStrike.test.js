@@ -14,7 +14,7 @@
  * pre-flip ones; the next paragraph has today's.)
  *
  * ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip + WALLSFLIP, ⚖ user 2026-11-11): `spinner@816,848` walls
- * `bob@736,752`'s first step (t544), so the bob comes up the corridor ~4.6 px behind where the paragraph above has it.
+ * `bob@736,752`'s first step (t544), so the bob comes up the corridor 5.3 px behind where the paragraph above has it (t652: y 755.4 against 750.1).
  * Every tick of this row moved with it (old → new): OFF's contacts t660/t749/t780 → t664/t708/t767 (the same death, the
  * same refusal); ON's first aim t651 → t655, the bob's three hits t653/t683/t722 → t657/t687/t717. ⚠ Two things this row
  * witnessed before the flip it no longer does at this boot (measured to the kill's end, t1422: `deferred` 0, `withheld` 0):
@@ -44,7 +44,7 @@ const BOOT = join(HERE, 'fixtures', 'l40bk2-witness', 'step67-boot.json');
 const ENV = globalThis.process?.env ?? {};
 const BOB = 'bob@736,752';
 /** The first tick the bob is in the sword's reach (and ON's first aim): every key before it is OFF's. */
-const FIRST_AIM = 655; // ⛓ chaserSpinnerWalls ON: 651 before the flip (the walled bob is ~4.6 px further south)
+const FIRST_AIM = 655; // ⛓ chaserSpinnerWalls ON: 651 before the flip (the walled bob is 5.3 px further south)
 
 /** `solveSegment` for the chest from step 67's boot, capped at `cap`; the keys, the chasers' landed hits, the dashes. */
 function solveChest(on, cap) {

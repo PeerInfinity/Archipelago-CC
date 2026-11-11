@@ -1,0 +1,21 @@
+fidelityCorpseBump2:       Tests  3 passed (3) 322.55s
+fidelityL40Bk2:       Tests  1 passed (1) 267.64s
+fidelityL40Latch:       Tests  2 passed (2) 286.55s
+hammerBk2Combat:       Tests  4 passed (4) 428.69s
+hammerBombPhase:       Tests  3 passed (3) 138.78s
+hammerChooserPair:       Tests  2 failed | 4 passed (6) 192.56s
+hammerChooserPair.rerun:       Tests  6 passed (6) 205.31s
+hammerClearTagChain:       Tests  2 failed (2) 113.68s
+hammerClearTagChain.rerun:       Tests  2 passed (2) 159.13s
+hammerEscapeExact:       Tests  2 passed (2) 540.75s
+hammerGhostKillRung:       Tests  7 passed (7) 360.38s
+hammerIceTurretStatic:       Tests  2 passed (2) 482.19s
+hammerKeylockTurret:       Tests  1 passed (1) 36.69s
+hammerLatchWeigh:       Tests  2 passed (2) 502.26s
+hammerOppPressFallback:       Tests  4 passed (4) 111.20s
+hammerPitWest:       Tests  8 passed (8) 146.85s
+hammerPocketBurn:       Tests  4 passed (4) 256.93s
+hammerSouthDoor:       Tests  4 passed (4) 315.26s
+hammerSpinnerPress:       Tests  2 passed (2) 335.19s
+hammerStagedHuntScanMemo:       Tests  1 passed (1) 518.07s
+hammerTurretApproach:       Tests  3 passed (3) 247.19s

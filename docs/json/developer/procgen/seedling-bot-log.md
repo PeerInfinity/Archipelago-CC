@@ -27964,3 +27964,43 @@ stance's stray check (`auditFire` without `spinners`) still refuses a stance who
 
 **Trap candidate.** A committed tape whose expectations are the player only certifies nothing about the bodies it
 moves: `r5-press-glide`/`-repeat` were called "byte-exact" for the block wedge while their spinners were off from t19.
+
+### Seedling fidelity WALLSFLIP — every row the `chaserSpinnerWalls` flip moves, explained; one lost uncapped solve handed to hammer
+
+Planner `seedling-fidelity-planning-19`, wave 39b (⚖ the user 2026-11-11, *"Cloud slice finishes it"*). Base
+`fidelity-flip/walls` @ `4931c026e7` (the flip built, NOT licensed). No model, solver, walker or rules source changed.
+The report is `CC/docs/cloud-reports/seedling-fidelity-wallsflip.md`.
+
+**One mechanism behind every mover.** A live spinner stops a chaser whose `solids` hold "Enemy". On L40 that is
+`spinner@816,848` on `bob@736,752`'s first step (x 744 shaft; 2 to 5 px behind from then on) and `bob@288,112` from
+t1251 on the north-west walk. Every moved pin is a tick, a work count or a named body that follows from where those two
+bobs stand. No mover turns a hitless plan into a hit-taking one.
+
+**D1 — `hammerClearTagChain.train` leg 871: a LOST SOLVE of an uncapped pin, and it is the search's.** Under the wall
+the solve refuses at t724 (`burn stance … the combat ladder is EXHAUSTED`, work 885; before: 1122 t, work 2772). The
+pre-wall 1122-t plan is still a hitless walk: it replays row for row on the wall-ON model, and the GAME (p4g, the
+delivered AP set) played it with 0 hits, 1122/1122 ticks sampled, the wall-ON model at 0 px (12,774 bob + 5,206 spinner
+comparisons). The two drives part at t629 (the first opportunistic strike lands a tick later); the first decision
+(`kill spinner@880,848`) ends at t724 instead of t731, 5.5 px further down the shaft and 7.1 px from `bob@736,752`'s body
+(3 hits at t700, still standing until ~t736), and the next plan's ladder names that body and has no rung for it. Handed
+to the hammer arc. ⚠ On the page's own dispatch (shipped defaults, budget 640) the same captured request refuses at
+its deadline in BOTH arms at 13 clocks, as does 872's: the wall moves no page verdict there.
+
+**D2 — leg 872** still solves hitless (work 3467 → 3823, 2389 → 2385 t). **D3 — `hammerChooserPair.train`**: at 5196 no
+pair admits, the shipped size 3 admits the triple and the kill + chain still follow (t855 → t920, death t1046 → t1228);
+at 5172 only the named danger moves. Over 111 clocks (5140..5250, size 2) a pair admits first only at 5148/5193/5238
+(one hammer period apart) and its kill's dwell is hit at tick 3: "a pair admits and kills" has no witness clock under
+the wall. **D4 — `hammerOpportunisticStrike` step 67**: every tick +4 or so (first aim t651 → t655); `deferred` 5 → 0
+and one certified strike walk instead of two. **D5 — `fidelityWandHold` leg 368**: 1601 → 1600 t (one opportunistic
+press at t1430), re-recorded on p4g, 1599/1599 ticks sampled, 0 hits, 0 px. **D6 — skin goldens**: the two
+`bombpusher-L40` goldens are computed from `l40button-l41-part0`, which the flip branch re-recorded; regenerated.
+
+**Gates at the head.** Bounded default tier 168 files 5,049 / 5,049; the 19 Seedling train files that read L40 all
+green; producers 98 run / 0 red; acceptance `abb206c8…` unchanged; tapeRunner pairs 643 `beea3ad6…` unchanged; local
+survey steps 66/86/96/98/137/150 equal verdicts in both arms (66 and 96: refusal text only).
+
+**Trap candidates.** (1) A pin that says "SOLVES" under an uncapped, switch-pinned arm is not a page solve: read the
+same request on the worker's dispatch before calling its loss a regression (871's page arm refuses in both arms).
+(2) A golden computed from a tape moves when the tape is re-recorded, whatever the switch: grep a re-recorded tape's
+name in the tests before the push, not after CI. (3) A refusal that appears two ticks after a kill may be the ladder
+meeting the body it just killed: check the named danger's `hits` before reading it as a live chaser.
