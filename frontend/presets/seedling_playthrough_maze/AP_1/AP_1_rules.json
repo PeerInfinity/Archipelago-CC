@@ -2625,8 +2625,8 @@
             }
           },
           {
-            "name": "level_21 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_21 -> level_22__r0c6",
+            "connected_region": "level_22__r0c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -2641,33 +2641,73 @@
         ],
         "locations": []
       },
-      "level_22": {
-        "name": "level_22",
+      "level_22__r0c6": {
+        "name": "level_22__r0c6",
         "exits": [
           {
-            "name": "level_22 -> level_25",
-            "connected_region": "level_25",
+            "name": "level_22__r0c6 -> level_22__r8c0",
+            "connected_region": "level_22__r8c0",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_22 -> level_21",
+            "name": "level_22__r0c6 -> level_21",
             "connected_region": "level_21",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_22 -> level_30__r0c4",
-            "connected_region": "level_30__r0c4",
+            "name": "level_22__r0c6 -> level_29__r2c2",
+            "connected_region": "level_29__r2c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_22__r8c0": {
+        "name": "level_22__r8c0",
+        "exits": [
+          {
+            "name": "level_22__r8c0 -> level_22__r0c6",
+            "connected_region": "level_22__r0c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_22__r8c0 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_22 -> level_29__r2c2",
-            "connected_region": "level_29__r2c2",
+            "name": "level_22__r8c0 -> level_30__r0c4",
+            "connected_region": "level_30__r0c4",
             "access_rule": {
               "rule": "True_"
             }
@@ -2762,26 +2802,26 @@
           }
         ]
       },
-      "level_25": {
-        "name": "level_25",
+      "level_25__r2c7": {
+        "name": "level_25__r2c7",
         "exits": [
           {
-            "name": "level_25 -> level_26__r2c4",
-            "connected_region": "level_26__r2c4",
+            "name": "level_25__r2c7 -> level_25__r3c2",
+            "connected_region": "level_25__r3c2",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_25 -> level_28__r0c6",
+            "name": "level_25__r2c7 -> level_28__r0c6",
             "connected_region": "level_28__r0c6",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_25 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_25__r2c7 -> level_22__r8c0",
+            "connected_region": "level_22__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -2802,6 +2842,46 @@
             }
           }
         ]
+      },
+      "level_25__r3c2": {
+        "name": "level_25__r3c2",
+        "exits": [
+          {
+            "name": "level_25__r3c2 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_25__r3c2 -> level_26__r2c4",
+            "connected_region": "level_26__r2c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "level_26__r2c4": {
         "name": "level_26__r2c4",
@@ -2848,8 +2928,8 @@
             }
           },
           {
-            "name": "level_26__r2c4 -> level_25",
-            "connected_region": "level_25",
+            "name": "level_26__r2c4 -> level_25__r3c2",
+            "connected_region": "level_25__r3c2",
             "access_rule": {
               "rule": "True_"
             }
@@ -3006,8 +3086,8 @@
             }
           },
           {
-            "name": "level_28__r0c6 -> level_25",
-            "connected_region": "level_25",
+            "name": "level_28__r0c6 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
             "access_rule": {
               "rule": "True_"
             }
@@ -3144,8 +3224,8 @@
             }
           },
           {
-            "name": "level_29__r2c2 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_29__r2c2 -> level_22__r0c6",
+            "connected_region": "level_22__r0c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -3258,8 +3338,8 @@
             }
           },
           {
-            "name": "level_30__r0c4 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_30__r0c4 -> level_22__r8c0",
+            "connected_region": "level_22__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -14358,7 +14438,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-4992ae0c",
+      "atlas_id": "seedling-d08ef245",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -22239,12 +22319,12 @@
               "atlas_exit_id": "out_teleporter_0_80"
             },
             {
-              "exit_id": "level_21 -> level_22",
+              "exit_id": "level_21 -> level_22__r0c6",
               "x": 5,
               "y": 10,
               "side": null,
-              "exitName": "level_21 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_21 -> level_22__r0c6",
+              "targetRegion": "level_22__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_80_160"
@@ -22273,7 +22353,7 @@
           }
         }
       },
-      "level_22": {
+      "level_22__r0c6": {
         "substrate": "maze",
         "shared_world": "level_22",
         "playable_payload": {
@@ -22286,44 +22366,44 @@
           },
           "exits": [
             {
-              "exit_id": "level_22 -> level_25",
+              "exit_id": "level_22__r8c0 -> level_25__r2c7",
               "x": 0,
               "y": 8,
               "side": null,
-              "exitName": "level_22 -> level_25",
-              "targetRegion": "level_25",
+              "exitName": "level_22__r8c0 -> level_25__r2c7",
+              "targetRegion": "level_25__r2c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_128"
             },
             {
-              "exit_id": "level_22 -> level_21",
+              "exit_id": "level_22__r0c6 -> level_21",
               "x": 6,
               "y": 0,
               "side": null,
-              "exitName": "level_22 -> level_21",
+              "exitName": "level_22__r0c6 -> level_21",
               "targetRegion": "level_21",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_0"
             },
             {
-              "exit_id": "level_22 -> level_30__r0c4",
+              "exit_id": "level_22__r8c0 -> level_30__r0c4",
               "x": 6,
               "y": 12,
               "side": null,
-              "exitName": "level_22 -> level_30__r0c4",
+              "exitName": "level_22__r8c0 -> level_30__r0c4",
               "targetRegion": "level_30__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_192"
             },
             {
-              "exit_id": "level_22 -> level_29__r2c2",
+              "exit_id": "level_22__r0c6 -> level_29__r2c2",
               "x": 12,
               "y": 4,
               "side": null,
-              "exitName": "level_22 -> level_29__r2c2",
+              "exitName": "level_22__r0c6 -> level_29__r2c2",
               "targetRegion": "level_29__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
@@ -22332,17 +22412,131 @@
           ],
           "obstacles": [],
           "items": [],
-          "obstacleLib": {},
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
           "blocks": [
             {
               "x": 6,
               "y": 4
             }
           ],
+          "entry_gates": [
+            {
+              "x": 3,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            }
+          ],
           "shared_world": {
             "key": "level_22",
             "regions": [
-              "level_22"
+              "level_22__r0c6",
+              "level_22__r8c0"
             ],
             "rows": [
               "......A......",
@@ -22352,20 +22546,27 @@
               "..AAAAAAAAAAA",
               "..A.AAAAA....",
               "..AAAA.AAAA..",
-              "...AAAAAAA...",
-              "AAAAAAAAAAA..",
-              "..A.AAAAA.A..",
-              "..AAAAAAAAA..",
-              "......A......",
-              "......A......"
+              ".............",
+              "BBBBBBBBBBB..",
+              "..B.BBBBB.B..",
+              "..BBBBBBBBB..",
+              "......B......",
+              "......B......"
             ],
             "entrances": {
-              "level_22": {
+              "level_22__r0c6": {
                 "x": 6,
                 "y": 1
+              },
+              "level_22__r8c0": {
+                "x": 0,
+                "y": 8
               }
             },
-            "links": {}
+            "links": {
+              "level_22__r0c6>level_22__r8c0": "level_22__r0c6 -> level_22__r8c0",
+              "level_22__r8c0>level_22__r0c6": "level_22__r8c0 -> level_22__r0c6"
+            }
           },
           "atlas_region": "level_22",
           "level": 22,
@@ -22375,6 +22576,10 @@
             "y": 0
           }
         }
+      },
+      "level_22__r8c0": {
+        "substrate": "maze",
+        "shared_world": "level_22"
       },
       "level_23": {
         "substrate": "maze",
@@ -22548,7 +22753,7 @@
           }
         }
       },
-      "level_25": {
+      "level_25__r2c7": {
         "substrate": "maze",
         "shared_world": "level_25",
         "playable_payload": {
@@ -22561,34 +22766,34 @@
           },
           "exits": [
             {
-              "exit_id": "level_25 -> level_26__r2c4",
+              "exit_id": "level_25__r3c2 -> level_26__r2c4",
               "x": 0,
               "y": 6,
               "side": null,
-              "exitName": "level_25 -> level_26__r2c4",
+              "exitName": "level_25__r3c2 -> level_26__r2c4",
               "targetRegion": "level_26__r2c4",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_96"
             },
             {
-              "exit_id": "level_25 -> level_28__r0c6",
+              "exit_id": "level_25__r2c7 -> level_28__r0c6",
               "x": 6,
               "y": 8,
               "side": null,
-              "exitName": "level_25 -> level_28__r0c6",
+              "exitName": "level_25__r2c7 -> level_28__r0c6",
               "targetRegion": "level_28__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_128"
             },
             {
-              "exit_id": "level_25 -> level_22",
+              "exit_id": "level_25__r2c7 -> level_22__r8c0",
               "x": 9,
               "y": 2,
               "side": null,
-              "exitName": "level_25 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_25__r2c7 -> level_22__r8c0",
+              "targetRegion": "level_22__r8c0",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_32"
@@ -22603,36 +22808,133 @@
               "locationName": "Level 025 - Chest"
             }
           ],
-          "obstacleLib": {},
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
           "blocks": [
             {
               "x": 5,
               "y": 4
             }
           ],
+          "entry_gates": [
+            {
+              "x": 3,
+              "y": 3,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 5,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 5,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            }
+          ],
           "shared_world": {
             "key": "level_25",
             "regions": [
-              "level_25"
+              "level_25__r2c7",
+              "level_25__r3c2"
             ],
             "rows": [
               "..........",
               "..........",
               ".......AAA",
-              "..AAAA.A..",
-              "..AAAA.A..",
-              "..AAAAAA..",
-              "AAA...AA..",
+              "..B..A.A..",
+              "..B..A.A..",
+              "..B..AAA..",
+              "BBB...AA..",
               "......A...",
               "......A..."
             ],
             "entrances": {
-              "level_25": {
+              "level_25__r2c7": {
                 "x": 8,
                 "y": 2
+              },
+              "level_25__r3c2": {
+                "x": 0,
+                "y": 6
               }
             },
-            "links": {}
+            "links": {
+              "level_25__r2c7>level_25__r3c2": "level_25__r2c7 -> level_25__r3c2",
+              "level_25__r3c2>level_25__r2c7": "level_25__r3c2 -> level_25__r2c7"
+            }
           },
           "atlas_region": "level_25",
           "level": 25,
@@ -22642,6 +22944,10 @@
             "y": 0
           }
         }
+      },
+      "level_25__r3c2": {
+        "substrate": "maze",
+        "shared_world": "level_25"
       },
       "level_26__r2c4": {
         "substrate": "maze",
@@ -22667,12 +22973,12 @@
               "atlas_exit_id": "out_teleporter_64_304"
             },
             {
-              "exit_id": "level_26__r2c4 -> level_25",
+              "exit_id": "level_26__r2c4 -> level_25__r3c2",
               "x": 9,
               "y": 2,
               "side": null,
-              "exitName": "level_26__r2c4 -> level_25",
-              "targetRegion": "level_25",
+              "exitName": "level_26__r2c4 -> level_25__r3c2",
+              "targetRegion": "level_25__r3c2",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_32"
@@ -22932,12 +23238,12 @@
               "atlas_exit_id": "out_teleporter_0_96"
             },
             {
-              "exit_id": "level_28__r0c6 -> level_25",
+              "exit_id": "level_28__r0c6 -> level_25__r2c7",
               "x": 6,
               "y": 0,
               "side": null,
-              "exitName": "level_28__r0c6 -> level_25",
-              "targetRegion": "level_25",
+              "exitName": "level_28__r0c6 -> level_25__r2c7",
+              "targetRegion": "level_25__r2c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_0"
@@ -23665,12 +23971,12 @@
               "atlas_exit_id": "out_teleporter_0_80"
             },
             {
-              "exit_id": "level_29__r2c2 -> level_22",
+              "exit_id": "level_29__r2c2 -> level_22__r0c6",
               "x": 0,
               "y": 14,
               "side": null,
-              "exitName": "level_29__r2c2 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_29__r2c2 -> level_22__r0c6",
+              "targetRegion": "level_22__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_224"
@@ -23907,12 +24213,12 @@
               "atlas_exit_id": "out_teleporter_0_128"
             },
             {
-              "exit_id": "level_30__r0c4 -> level_22",
+              "exit_id": "level_30__r0c4 -> level_22__r8c0",
               "x": 4,
               "y": 0,
               "side": null,
-              "exitName": "level_30__r0c4 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_30__r0c4 -> level_22__r8c0",
+              "targetRegion": "level_22__r8c0",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_64_0"
@@ -75798,10 +76104,12 @@
             "level_19__r1c1",
             "level_20__r1c4",
             "level_21",
-            "level_22",
+            "level_22__r0c6",
+            "level_22__r8c0",
             "level_23",
             "level_24",
-            "level_25",
+            "level_25__r2c7",
+            "level_25__r3c2",
             "level_26__r13c8",
             "level_26__r2c4",
             "level_27",

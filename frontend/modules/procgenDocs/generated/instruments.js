@@ -236,7 +236,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 524,
         "browser": 221,
-        "cited": 276,
+        "cited": 277,
         "files": 542,
         "lineStyle": 18,
         "withDocblock": 542,
@@ -19255,7 +19255,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "host",
@@ -19266,6 +19268,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-wallflyer-nohit.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "chest"
+                },
                 {
                     "how": [
                         "includes"
