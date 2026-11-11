@@ -1964,7 +1964,7 @@ function inRoomLatchAnalysis(doc) {
                 if (c.free || c.conditionSets.length === 0) continue;
                 if (!c.conditionSets.every((w) => w.tiles.some(([x, y]) => tiles.has(`${x},${y}`)))) continue;
                 // ⛓ R-A4 — a crossing whose EVERY way the grid already charges with this press's own event (the overlay
-                // prices L20's lock@32,80 as exactly its press, `GROUPED_LOCK_EXCEPTIONS`) already requires it: ANDing the
+                // prices such a lock as exactly its press, `IN_ROOM_PRESS_LOCK`, since R-A5 by rule) already requires it: ANDing the
                 // event again would only spell `And(e, e)`. A way without it keeps the gate (the producer's "not gated: the
                 // departure already requires" idiom, `ruleImplies`).
                 const press = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });

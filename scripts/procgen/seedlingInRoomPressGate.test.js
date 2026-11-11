@@ -1,10 +1,12 @@
 // ⛓ tile-rules-automation-r-a4 (⚖ Robert 2026-11-04 "Yes, in R-A4 (Recommended)"; rules-4's rewrite) — L20's lock@32,80
-// costs exactly its own press (`GROUPED_LOCK_EXCEPTIONS`, item-free). Two things are pinned here:
-//   1. the row is still LOAD-BEARING: the lock keeps the four-cell alcove L13's stairs drop into closed until the press.
+// costs exactly its own press (item-free). ⛓ tile-rules-automation-r-a5: no longer a keyed row — the general rule
+// `IN_ROOM_PRESS_LOCK` (a grouped lock whose only opener is one in-room press costs that press) prices it, and every output is
+// byte-identical to the row's. Two things are pinned here:
+//   1. the ruling is LOAD-BEARING: the lock keeps the four-cell alcove L13's stairs drop into closed until the press.
 //      Judged from AP's own outputs (the committed AP_1 and the seed-1 sphere log), never from the overlay row itself;
 //   2. the producer's absorption (`crossingPaysPress`): an in-room latch's gate is skipped only where EVERY way of the
 //      crossing already pays THAT press.
-// Red-first: with the row deleted (the lock ruled OPEN, the table moved aside) the alcove folds into the room, `level_13`
+// Red-first: with the ruling gone (the lock ruled OPEN, the table moved aside) the alcove folds into the room, `level_13`
 // reaches `level_20__r1c4` on True_ and AP collects the Shield at sphere 0.3 — rows 1(a)–(c) go red on that AP_1.
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
