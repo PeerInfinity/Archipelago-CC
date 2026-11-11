@@ -40,10 +40,12 @@ const load = (name) => JSON.parse(readFileSync(join(FIRESPINNER_WITNESS_DIR, `${
 const THROW = '`FIRE_ARM_POLICY` calls Spinner modelled and this dispatch has no arm for it';
 
 describe('fidelity FIRESPINNER — the key', () => {
-    it('ships ON (⚖ user 2026-11-10, the wave-38 joint flip), last in the defaults, and FIRE_ARM_POLICY still calls Spinner modelled', () => {
+    it('ships ON (⚖ user 2026-11-10, the wave-38 joint flip), followed in the defaults only by wave 39\'s key, and FIRE_ARM_POLICY still calls Spinner modelled', () => {
         expect(CONTACT_FIDELITY_KEYS).toContain('fireSpinnerArm');
         expect(CONTACT_FIDELITY_DEFAULTS.fireSpinnerArm).toBe(true);
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('fireSpinnerArm');
+        // ⛓ wave 39: ROCKFIRE `fireRockArm` landed after it.
+        const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+        expect(keys.slice(keys.indexOf('fireSpinnerArm') + 1)).toEqual(['fireRockArm']);
         expect(FIRE_ARM_POLICY.Spinner.policy).toBe('modelled');
     });
 

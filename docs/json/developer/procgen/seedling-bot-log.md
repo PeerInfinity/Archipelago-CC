@@ -27965,6 +27965,93 @@ stance's stray check (`auditFire` without `spinners`) still refuses a stance who
 **Trap candidate.** A committed tape whose expectations are the player only certifies nothing about the bodies it
 moves: `r5-press-glide`/`-repeat` were called "byte-exact" for the block wedge while their spinners were off from t19.
 
+### Seedling hammer-phase BK2-APPROACH-ORDER — the turret approach's tries in the volley's order (`TURRET_APPROACH_VOLLEY_ORDER`, OFF)
+
+⚖ The user, 2026-11-09, on leg Boss Key 2 ← L39: *"Land without; slice next (Recommended)"*. With the L40 flip
+(`1f8fc08ec3`) every L40 leg the flip targets solves on the page except `level_40__r32c36 <- in_L39_144_0 ~>
+level_40__r23c29 -> location:Level 040 - Boss Key 2` (door carried): *"the solver ran out of 640, then 2560 work units on
+its held retry"*. No budget is raised here.
+
+**W0 (re-measured on the p4g page and its captured requests in node).** The request replays at **3,236** units; 2,484 of
+them are `approachKillForCorpse`'s forks, and its hitless try is the **276th**: the right side's corridor, wait 29, after
+the push side's corridor (the body, pruned), its two vias and the left side's three routes at 49 waits each. Six solves
+reach the approach, not two: BK2 ← L39 and ← L43, **flag 8 ← L39 and ← L43** (the keylock's turret kill is the same
+approach: flag 8 ← L39 solves OFF with 26 units to spare, 2,534 of 2,560), the latch boot and the latch boot south of the
+door. Their winning tries: (right, corridor, 29) #276 twice, (up, via 466,445, 25) #27 twice, (right, corridor, 30) #376,
+(up, via 466,445, 29) #80.
+
+**What decides the wait.** A stand at the route's first waypoint, inside the range, runs the turret's 45-tick volley
+clock against the walk that follows; the hitless waits are a 1–3 tick window just before the next volley is committed
+(leave earlier and that volley meets the walk; later and the one after it meets the stance or the kill). The probe that
+reads it: on a fork, walk to the waypoint and stand until the turret's `anim` turns to "startshot". The ticks stood are
+the route's ANCHOR. Measured: 32 (BK2 and flag 8 ← L39; win at 29), 35 (← L43; a win AT 35 on the right corridor), 31
+(the latch boot; a win at 31), 33 (south of the door; win at 32). ⚠ The brief asked for a derived 29–31: the derived
+value is 31–35, and the hitless wait is 0–3 before it.
+
+**M (six orders, scratch arms; units, BK2 ← L39).** OFF 3,236 · anchor outward + rank by rank across routes **1,382** ·
+anchor outward, route by route 3,083 · rank by rank, no anchor 3,434 · anchor descending, rank by rank 1,202 · the
+L40-FLIP-BUILD report's "waits from 30 outward" (hard-coded) 2,984 · its "right side first" (hard-coded) 1,022. The anchor
+alone does not fit (the winning route is the seventh of twelve); the ranks alone do not either. No order loses a solve.
+
+**I.** `TURRET_APPROACH_VOLLEY_ORDER` (OFF, `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=1`, in `SOLVER_ENV_NAMES`): the try's
+body became `attempt(side, via, w)` unchanged; OFF loops over it as before, ON `approachTriesByVolley` asks each route's
+waits from its anchor outward (`approachWaitOrder`), rank by rank. Same set of tries; one probe fork a route.
+
+| solve | OFF units · try | ON units · try | plan |
+|---|---|---|---|
+| BK2 ← L39 | 3,236 (**refused at 2,560**) · #276 right corr w29 | **1,382** · #70 (anchor 32, rank 5) | same, key for key (4,491 t) |
+| BK2 ← L43 | 1,021 · #27 up via w25 | 835 · #8 right corr w35 (anchor 35, rank 0) | another (dashless 4,527 vs 4,519 t; played: full pass 4,308 vs 4,306 t), hitless |
+| flag 8 ← L39 | 2,534 · #276 right corr w29 | **680** · #70 | same (718 t) |
+| flag 8 ← L43 | 323 · #27 up via w25 | 132 · #8 right corr w35 | another (740 vs 748 t), hitless |
+| latch boot | 376 forks · right corr w30 | 20 forks · right corr w31 (anchor 31, rank 0) | another (4,144 vs 4,142 t), hitless |
+| latch boot south of the door | 80 forks · up via w29 | 26 forks · up via w32 (anchor 33, rank 1) | refused both, the same later wall |
+| the six captured L40 legs that do not approach, ICEST's pocket boot | — | — | identical |
+
+BK2 ← L39 over the arrival clocks ±12 (the page's own `solveAnytime`, 640/2,560): OFF **0/25**, ON **25/25** (1,381 units
+on the dashless pass at every clock). On the p4g page with the switch through the env channel: **done**, 4,491 ticks,
+no hit, no divergence (solve 33 s; the play needs a leg budget past 180 s — at 180 s it was cut clean at t3313).
+Mutants (each fails the pinned rows): the wait order ascending; route by route; the anchor never read; the switch not
+read. Rows: `hammerApproachOrder.test.js` (4), `hammerApproachOrder.train.test.js` (7, the page's requests in
+`fixtures/hammer-bk2-approach-order/`). Report: `CC/docs/cloud-reports/seedling-hammer-bk2-approach-order.md`.
+
+**Trap candidates.** (1) `TURRET_APPROACH_COUNTS.approaches` holds EVERY pass's approach: under `solveAnytime` the full
+pass asks its own from its own arrival tick, so `[0]` is the dashless pass's. (2) A sweep leg that plays a 4,500-tick
+plan needs `leg_budget_ms` ≥ 300000; a `timeout` with `phase: playing` and no divergence is the harness clock, not the
+plan. (3) Rank by rank costs more than OFF when the only hitless try sits on an early route far from its anchor: the
+bound is OFF's whole set plus one probe a route, and no measured solve is such a room.
+
+### Seedling fidelity ROCKFIRE — a Fire press that reaches a breakable rock breaks it as a swing would (`fireRockArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 39 (⚖ the user's GO 2026-11-10, *"Bob + BreakableRock now"*). Base
+`c670857f64` (the frozen wave-38 joint flip). The report is `CC/docs/cloud-reports/seedling-fidelity-rockfire.md`.
+
+**W0.** FIRESPINNER's residue holds. `FIRE_ARM_POLICY.BreakableRock` says `modelled`, `levelRun.applyFire` had no
+BreakableRock arm, and a Fire press whose flame reaches a rock throws (*"`FIRE_ARM_POLICY` calls BreakableRock modelled
+and this dispatch has no arm for it"*; reproduced in L40 held against `breakablerock@176,128`, and in L101 against
+`breakablerockghost@224,96`). The AS3 (`Player.fire` :1014-1037, `genericHit` :1073-1092, `Puzzlements/BreakableRock.as`):
+`genericHit`'s rock arm is `hit(hasGhostSword ? 1 : 0)` for every `t`, and `hit` is `if (rockType <= _t) play("break")`,
+so Fire breaks a rockType-0 rock WITHOUT the Ghost Sword too (`0 <= 0`); only the two ghost rocks (L3, L101) need it.
+A rock's ctor sets `type = "Solid"` (*"Was "Rock""*): `hitables[6]`, five dispatches a hit tick, where the model's
+`FIRE_HITABLE_TYPE_BY_ARM` said "Rock" (eight). `endAnim` writes the flag and removes the rock. Census: twelve levels
+hold a BreakableRock (L0, 3, 15, 16, 30, 40, 41, 53, 73, 92, 100, 101); no committed tape presses Fire at one (the
+roster replayed with the key ON: 22 tapes fire, none reaches a rock), and no solver arm can plan it.
+
+**D0** (game witness, p4g, before the model change): `probe-seedling-rock-fire.mjs --record`
+(`fixtures/rockfire-witness/`). The game exposes no rock row, so the rock is read through its solid (the tapes hold the
+player against it) and its write (`persistence_cleared`). L40's rock under Fire breaks with and without the Ghost
+Sword (flag on obs 22, cell open on obs 23); the Sword control is three ticks sooner (19 / 20); L101's ghost rock
+under Fire does nothing without the Ghost Sword and breaks with it (22 / 23). The game agrees with the AS3 reading.
+
+**D1** (`fireRockArm`, OFF, last key, `SEEDLING_FIRE_ROCK_ARM`): the sword arm's rock body is hoisted unchanged into
+`hitBreakableRock` and `applyFire`'s new arm calls it (one model of the rock), on the sword arm's clock and not under
+the freeze; the census row's type is "Solid" under the key. ON, all the witnesses (a sixth added: a second press over
+the gone rocks' cells) reproduce at 0 px. OFF keeps the throw. Four mutants red as predicted.
+
+**D2** (ON, measured): the bounded set reds only the defaults pin; the survey's 33 rock-room steps are byte-identical
+ON vs OFF. No solver arm plans a Fire press at a rock: each Fire stance planner refuses a stance whose flame reaches
+one, and the `break` verb takes the Sword or the Ghost Sword. A Fire `break` arm (the game offers it to a run with Fire
+and no Sword) is a follow-up, not part of this key.
+
 ### Seedling fidelity WALLSFLIP — every row the `chaserSpinnerWalls` flip moves, explained; one lost uncapped solve handed to hammer
 
 Planner `seedling-fidelity-planning-19`, wave 39b (⚖ the user 2026-11-11, *"Cloud slice finishes it"*). Base

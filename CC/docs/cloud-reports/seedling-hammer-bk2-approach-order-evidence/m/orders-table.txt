@@ -1,0 +1,66 @@
+solve                 order       ok    ticks  work  gm        digest        approach (side, via, wait, forks, anchor, rank)
+374/0                 OFF         REF    None    38  -         99c2bade86a2    | solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes throu
+374/0                 bfs-anchor  REF    None    38  -         99c2bade86a2    | solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes throu
+375/0                 OFF         ok     1315   376  hitless   dd7577c1ecd0  
+375/0                 bfs-anchor  ok     1315   376  hitless   dd7577c1ecd0  
+379/0                 OFF         ok     1239    86  hitless   e0472142e231  
+379/0                 bfs-anchor  ok     1239    86  hitless   e0472142e231  
+380/0                 OFF         ok     1429   275  hitless   43a554247859  
+380/0                 bfs-anchor  ok     1429   275  hitless   43a554247859  
+397/1                 OFF         ok     1344   716  hitless   d047aa0911a5  
+397/1                 bfs-anchor  ok     1344   716  hitless   d047aa0911a5  
+398/1                 OFF         ok      718  2534  hitless   e5ef476fae5d  right corr w29 f276 aNone rNone
+398/1                 bfs-anchor  ok      718   680  hitless   e5ef476fae5d  right corr w29 f70 a32 r5
+414/1                 OFF         REF    None  2264  -         e79ae8b6c130    | solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+414/1                 bfs-anchor  REF    None  2264  -         e79ae8b6c130    | solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+415/0                 OFF         ok      748   323  hitless   115cdb423afd  up 466,445 w25 f27 aNone rNone
+415/0                 bfs-anchor  ok      740   132  hitless   6b24dcb493b2  right corr w35 f8 a35 r0
+873/0                 OFF         ok     4491  3236  hitless   2444840d264b  right corr w29 f276 aNone rNone
+873/1                 OFF         ok     4491  3236  hitless   2444840d264b  right corr w29 f276 aNone rNone
+873/1                 bfs-anchor  ok     4491  1382  hitless   2444840d264b  right corr w29 f70 a32 r5
+873/1                 bfs-desc    ok     4491  1202  hitless   2444840d264b  right corr w29 f50 a32 r3
+873/1                 bfs-plain   ok     4491  3434  hitless   2444840d264b  right corr w29 f298 aNone r29
+873/1                 dfs-anchor  ok     4491  3083  hitless   2444840d264b  right corr w29 f259 a32 r5
+873/1                 dfs-right   ok     4491  1022  hitless   2444840d264b  right corr w29 f30 aNone r29
+873/1                 dfs-window  ok     4491  2984  hitless   2444840d264b  right corr w29 f248 aNone r1
+874/1                 OFF         ok     4519  1021  hitless   5284aa54b39c  up 466,445 w25 f27 aNone rNone
+874/1                 bfs-anchor  ok     4527   835  hitless   95b6f3a153a6  right corr w35 f8 a35 r0
+874/1                 bfs-desc    ok     4527   835  hitless   95b6f3a153a6  right corr w35 f8 a35 r0
+874/1                 bfs-plain   ok     4519  3281  hitless   5284aa54b39c  up 466,445 w25 f253 aNone r25
+874/1                 dfs-anchor  ok     4521   941  hitless   f72ad33b405f  up 466,445 w27 f19 a35 r15
+874/1                 dfs-right   ok     4527  1105  hitless   4ddcd37f8348  right corr w34 f35 aNone r34
+874/1                 dfs-window  ok     4521   861  hitless   f72ad33b405f  up 466,445 w27 f11 aNone r5
+875/2                 OFF         ok      103   192  hitless   d7c93af3a165  
+875/2                 bfs-anchor  ok      103   192  hitless   d7c93af3a165  
+876/1                 OFF         ok     1282   887  hitless   856902f5850b  
+876/1                 bfs-anchor  ok     1282   887  hitless   856902f5850b  
+latch@488,464/cp2     OFF         ok     4495        hitless   c10603ef6f32  
+latch@488,464/cp2     bfs-anchor  ok     4495        hitless   c10603ef6f32  
+latch@488,579/cp2     OFF         REF    None        -         8d96cb1b9c39  up 466,445 w29 f80 aNone rNone  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp2     bfs-anchor  REF    None        -         8d96cb1b9c39  up 466,445 w32 f26 a33 r1  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp2     bfs-desc    REF    None        -         8d96cb1b9c39  up 466,445 w32 f26 a33 r1  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp2     bfs-plain   REF    None        -         8d96cb1b9c39  right 467,446 w22 f229 aNone r22  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp2     dfs-anchor  REF    None        -         8d96cb1b9c39  up 466,445 w32 f55 a33 r1  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp2     dfs-right   REF    None        -         8d96cb1b9c39  right corr w29 f30 aNone r29  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp2     dfs-window  REF    None        -         8d96cb1b9c39  up 466,445 w30 f51 aNone r0  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     OFF         REF    None        -         8d96cb1b9c39  up 466,445 w29 f80 aNone rNone  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     bfs-anchor  REF    None        -         8d96cb1b9c39  up 466,445 w32 f26 a33 r1  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     bfs-desc    REF    None        -         8d96cb1b9c39  up 466,445 w32 f26 a33 r1  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     bfs-plain   REF    None        -         8d96cb1b9c39  right 467,446 w22 f229 aNone r22  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     dfs-anchor  REF    None        -         8d96cb1b9c39  up 466,445 w32 f55 a33 r1  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     dfs-right   REF    None        -         8d96cb1b9c39  right corr w29 f30 aNone r29  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     dfs-window  REF    None        -         8d96cb1b9c39  up 466,445 w30 f51 aNone r0  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@latch/cp2       OFF         ok     4142        hitless   e236428ad7f2  right corr w30 f376 aNone rNone
+latch@latch/cp2       bfs-anchor  ok     4144        hitless   93f4abfbe024  right corr w31 f20 a31 r0
+latch@latch/cp2       bfs-desc    ok     4144        hitless   93f4abfbe024  right corr w31 f20 a31 r0
+latch@latch/cp2       bfs-plain   ok     4142        hitless   e236428ad7f2  right corr w30 f310 aNone r30
+latch@latch/cp2       dfs-anchor  ok     4144        hitless   93f4abfbe024  right corr w31 f356 a31 r0
+latch@latch/cp2       dfs-right   ok     4142        hitless   e236428ad7f2  right corr w30 f31 aNone r30
+latch@latch/cp2       dfs-window  ok     4142        hitless   e236428ad7f2  right corr w30 f346 aNone r0
+latch@latch/cp3       OFF         ok     4142        hitless   e236428ad7f2  right corr w30 f376 aNone rNone
+latch@latch/cp3       bfs-anchor  ok     4144        hitless   93f4abfbe024  right corr w31 f20 a31 r0
+latch@latch/cp3       bfs-desc    ok     4144        hitless   93f4abfbe024  right corr w31 f20 a31 r0
+latch@latch/cp3       bfs-plain   ok     4142        hitless   e236428ad7f2  right corr w30 f310 aNone r30
+latch@latch/cp3       dfs-anchor  ok     4144        hitless   93f4abfbe024  right corr w31 f356 a31 r0
+latch@latch/cp3       dfs-right   ok     4142        hitless   e236428ad7f2  right corr w30 f31 aNone r30
+latch@latch/cp3       dfs-window  ok     4142        hitless   e236428ad7f2  right corr w30 f346 aNone r0

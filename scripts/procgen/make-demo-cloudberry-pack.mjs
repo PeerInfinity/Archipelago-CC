@@ -35,6 +35,7 @@ import { chromium } from 'playwright';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { upsertLibraryIndexEntry } from './regionLibraryIndex.js';
 
 argvHelp(import.meta.url);
 
@@ -191,8 +192,8 @@ async function main() {
 
     fs.writeFileSync(OUT, text);
     const index = JSON.parse(fs.readFileSync(INDEX, 'utf8'));
-    index.libraries = (index.libraries ?? []).filter((l) => l.file !== 'demo-cloudberry-pack.json');
-    index.libraries.push({
+    // In place, so the index's row order never depends on which pack maker ran last.
+    upsertLibraryIndexEntry(index, {
         file: 'demo-cloudberry-pack.json',
         library_id: library.library_id,
         name: library.name,

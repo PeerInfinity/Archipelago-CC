@@ -333,7 +333,9 @@ export function seedlingEventTiles(level, events) {
             return out;
         })();
         // ⛓ A one-sided lock (`probe`: BossLock tests the key only on a player below it) is opened from that side only.
-        return { name: ev.name, side: ev.side, mode: ev.mode, tiles, ...(ev.rule ? { rule: ev.rule } : {}), ...(sem?.probe ? { probe: sem.probe } : {}) };
+        // ⛓ An encounter lock (`opens_from`, session tile-encounter-kill-arms) from the neighbours whose side clears its room.
+        return { name: ev.name, side: ev.side, mode: ev.mode, tiles, ...(ev.rule ? { rule: ev.rule } : {}), ...(sem?.probe ? { probe: sem.probe } : {}),
+            ...(ev.opens_from ? { opens_from: ev.opens_from } : {}) };
     });
 }
 
