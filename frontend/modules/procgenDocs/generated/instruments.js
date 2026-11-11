@@ -13346,6 +13346,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "clear-arm",
                 "clear-ticks",
                 "host",
                 "only",
@@ -13355,6 +13356,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-encounter-latch.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-arm"
+                },
                 {
                     "how": [
                         "arg"
@@ -14395,6 +14402,10 @@ export const INSTRUMENTS = frz({
                 }
             ],
             "inheritedFlags": [
+                {
+                    "from": "probe-seedling-encounter-latch.mjs",
+                    "name": "clear-arm"
+                },
                 {
                     "from": "argvHelp.js",
                     "name": "help"
