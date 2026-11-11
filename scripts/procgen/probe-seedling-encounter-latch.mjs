@@ -30,8 +30,12 @@
  * http://localhost:8000); the wasm build, or SKIP. Takes the box lock. Headless LOGIC-ONLY (proved,
  * `CHANNEL: headless logic-only`), so it runs in CI too (`.github/workflows/seedling-probe.yml`).
  *
+ * `--clear-arm=` picks the kill arm the CLEAR loop holds (`CLEAR_ARMS`: `sword`, the default; `spear`, the Ghost Spear
+ * with NO sword; `ghostsword`, the fusion): the same loop, the arm's own grants and its own strike box. The route flags
+ * (`armFlags`) are derived on top of the arm's flags, so a rock the arm itself breaks is walked into and struck.
+ *
  * Run: node scripts/procgen/probe-seedling-encounter-latch.mjs [--host=http://localhost:8000] [--ticks=600]
- *      [--clear-ticks=4000] [--settle=240] [--only=26] [--wait-for-box=<sec>]
+ *      [--clear-ticks=4000] [--settle=240] [--only=26] [--clear-arm=sword] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -46,6 +50,28 @@ argvHelp(import.meta.url);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
+
+/**
+ * The kill arms a CLEAR loop can hold, each ALONE, as tape grants plus the strike box `clearStep` presses inside
+ * (`reach` px along the facing, `across` px off it, from the player's centre to the body's).
+ *   · sword: the slash box (`Player.getSlashRect`: 16 px along, ±16 across; a few px of slack);
+ *   · spear: the thrust (`Player.spear`, `Player.as:954-992`: 32 px along, 5 px thick, NO line-of-sight test), so
+ *     the body's centre must sit within its own half-hitbox of the player's line. With the spear alone in the
+ *     inventory it is slot 0, so `primary` thrusts (`Player.useItem` case 3);
+ *   · ghostsword: the fusion replaces the sword and the spear slots (`Inventory.addItemsFromSave`), so its arm holds
+ *     all three; its slash box is the sword's, wider (`getSlashRect`, `h = width * 2`).
+ * `rest` = the idle ticks a BREAK press waits before its facing tap. The thrust goes where the player FACES, and the
+ * facing follows the velocity, x first (`Player.sprites`: `v.x < 0` → left … else `v.y`), so a one-tick tap toward a
+ * rock straight after a window that slid along its face still faces sideways, and the 5 px thrust misses the rock
+ * (the slash is 32 px across and hits it whichever way it faces: 0). At rest the velocity is dead and the tap alone
+ * sets the facing: friction takes `DEFAULT_FRICTION` 0.25 a tick off a speed of at most (0.8 + 0.8)·√2 (`dMS`, twice:
+ * the cap and one more `accel`, on both axes), 10 ticks.
+ */
+export const CLEAR_ARMS = Object.freeze({
+    sword: Object.freeze({ items: ['sword'], reach: 20, across: 14 }),
+    spear: Object.freeze({ items: ['spear'], reach: 28, across: 5, rest: 10 }),
+    ghostsword: Object.freeze({ items: ['sword', 'spear', 'ghostsword'], reach: 20, across: 14 }),
+});
 
 /** The step directions, as the census names them, to a held key. */
 export const DIR_KEYS = Object.freeze({ N: 'up', E: 'right', S: 'down', W: 'left' });
@@ -89,11 +115,11 @@ export function countedClassesFromSource(gameAs) {
  *     the body's hitbox, so a few px of slack) → tap the facing key for one tick, then `primary`;
  *   · else hold the key(s) toward the next waypoint of `path(from, to)` (tile centres; the body's own tile when none);
  *   · a move chunk that STALLED (`moveStalled`: no progress along the route's step — a breakable rock is the next cell)
- *     → press `primary` facing the step.
+ *     → press `primary` facing the step, after `rest` idle ticks (`CLEAR_ARMS`: the spear's facing; 0 by default).
  * Returns `{inputs, ticks, kind, target}`; a move also carries `keys` and `step`, the key of the route's next step
  * (null when the route has none: the body's own tile).
  */
-export function clearStep({ t, player, bodies, path, lastMove, T = 16, reach = 20, across = 14, moveTicks = 8 }) {
+export function clearStep({ t, player, bodies, path, lastMove, T = 16, reach = 20, across = 14, rest = 0, moveTicks = 8 }) {
     const dist = (b) => Math.hypot(b.x - player.x, b.y - player.y);
     const target = [...bodies].sort((a, b) => dist(a) - dist(b))[0];
     const dx = target.x - player.x;
@@ -105,7 +131,11 @@ export function clearStep({ t, player, bodies, path, lastMove, T = 16, reach = 2
         inputs: [{ key, from: t, to: t + 1 }, { key: 'primary', from: t + 1, to: t + 3 }], ticks: 12, kind: 'attack', key,
     });
     if (along <= reach && off <= across) return { ...press(axisKey), target: target.cls };
-    if (lastMove && lastMove.stuck) return { ...press(lastMove.step ?? lastMove.keys[0]), kind: 'break', target: target.cls };
+    if (lastMove && lastMove.stuck) {
+        const p = press(lastMove.step ?? lastMove.keys[0]);
+        return { ...p, inputs: p.inputs.map((i) => ({ ...i, from: i.from + rest, to: i.to + rest })), ticks: p.ticks + rest,
+            kind: 'break', target: target.cls };
+    }
     const tile = (p) => [Math.floor(p.x / T), Math.floor(p.y / T)];
     const route = path(tile(player), tile(target)) ?? [];
     const [wx, wy] = route.length > 1 ? [route[1][0] * T + T / 2, route[1][1] * T + T / 2] : [target.x, target.y];
@@ -223,6 +253,9 @@ async function main() {
     const CLEAR_TICKS = Number(arg('clear-ticks', '4000'));
     const SETTLE = Number(arg('settle', '240'));
     const only = arg('only', '') ? new Set(arg('only', '').split(',').map(Number)) : null;
+    const CLEAR_ARM = arg('clear-arm', 'sword');
+    const ARM = CLEAR_ARMS[CLEAR_ARM];
+    if (!ARM) { console.log(`FAIL: unknown --clear-arm=${CLEAR_ARM}; know ${Object.keys(CLEAR_ARMS)}`); process.exit(1); }
     const PAGE = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     if (!existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', PAGE))) { console.log(`SKIP: no wasm artifact ${PAGE}`); process.exit(0); }
     const PAGE_URL = `${HOST}/frontend/modules/flashPanel/wasm/${PAGE}/game.html`;
@@ -239,6 +272,7 @@ async function main() {
     const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
     const events = new Map(encounterEventsOf(RULES, P.PLAYTHROUGH_MAP).map((k) => [`${k.level}:${k.tag}`, k]));
     const fired = P.playthroughEncounterLocks().filter((r) => r.fires && (!only || only.has(r.level)));
+    console.log(`CLEAR ARM: ${CLEAR_ARM} (grants ${ARM.items.join('+')}; strike box ${ARM.reach} along, ±${ARM.across} across; a break press rests ${ARM.rest ?? 0} tick(s) first)`);
     console.log(`HOLD: ${HOLD.why} — the CLEAR arm's windows ${HOLD.capable ? 'hold the room between them' : 'CANNOT hold the room: it runs free between them'}`);
     console.log(`PAGE: ${PAGE} · ${fired.length} fired encounter lock(s): ${fired.map((r) => r.name).join(' · ')}`);
 
@@ -361,23 +395,23 @@ async function main() {
             const lockTiles = new Set(row.tiles.map(([x, y]) => `${x},${y}`));
             const cellAt = (x, y) => grid.cells[(y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0))];
             const blocked = (x, y) => lockTiles.has(`${x},${y}`);
-            // THE ARM'S GRANTS, DERIVED: the sword, plus every flag a gated cell (water, a breakable rock) on the route
-            // from the room to a counted body asks for and the sword does not give.
+            // THE ARM'S GRANTS, DERIVED: the kill arm (`--clear-arm`, the sword by default), plus every flag a gated cell
+            // (water, a breakable rock) on the route from the room to a counted body asks for and the arm does not give.
             const bodyTiles = (P.playthroughKillLocks.get(k.level)?.bodies ?? []).map((b) => {
                 const [type, xy] = b.at.split('@');
                 const [bx, by] = xy.split(',').map(Number);
                 const c = ENEMY_CLASSES[type]?.ctor ?? { dx: 8, dy: 8 };
                 return [Math.floor((bx + c.dx) / T), Math.floor((by + c.dy) / T)];
             });
-            const base = new Set(['hasSword']);
+            const base = new Set(ARM.items.map((i) => ITEM_PROPERTIES[i].property));
             const needFlags = armFlags({ width: grid.width, height: grid.height, cellAt, blocked,
                 from: [room.x / T, room.y / T], bodies: bodyTiles, base });
-            const grants = ['sword', ...needFlags.map((f) => ITEM_OF[f]).filter(Boolean)];
+            const grants = [...ARM.items, ...needFlags.map((f) => ITEM_OF[f]).filter(Boolean)];
             const flags = new Set([...base, ...needFlags]);
             const walkable = (x, y) => {
                 const cell = cellAt(x, y);
                 if (blocked(x, y) || ['wall', 'sink'].includes(cell?.kind ?? 'wall')) return false;
-                // A gate the sword breaks (a rock) is walked INTO and broken (`clearStep`'s stalled press); any other gate
+                // A gate the arm breaks (a rock) is walked INTO and broken (`clearStep`'s stalled press); any other gate
                 // is walkable only with its flag granted.
                 return cell.kind !== 'gated' || (cell.conditions ?? []).every((c) => conditionHolds(c, flags));
             };
@@ -407,7 +441,8 @@ async function main() {
                 for (; t < CLEAR_TICKS && live(w).length;) {
                     const me = w.ticks.at(-1);
                     if (lastMove) lastMove.stuck = moveStalled(lastMove, me);
-                    const step = clearStep({ t: 0, player: me, bodies: live(w), path, lastMove });
+                    const step = clearStep({ t: 0, player: me, bodies: live(w), path, lastMove, reach: ARM.reach, across: ARM.across,
+                        rest: ARM.rest ?? 0 });
                     steps[step.kind] += 1;
                     pressCount += step.inputs.filter((i) => i.key === 'primary').length;
                     lastMove = step.kind === 'move' ? { x: me.x, y: me.y, keys: step.keys, step: step.step } : null;
@@ -431,7 +466,7 @@ async function main() {
                 await S.close();
             }
             const killedAt = live(w).length ? null : t;
-            const clearRow = { staged: { boot: room, grants, derivedFlags: needFlags, persistence: [] }, counted: counted0,
+            const clearRow = { arm: CLEAR_ARM, staged: { boot: room, grants, derivedFlags: needFlags, persistence: [] }, counted: counted0,
                 rosterLeft: live(clear).map((m) => `${m.cls}@${Math.round(m.x)},${Math.round(m.y)}`), killedAt, kills,
                 ticks: killedAt === null ? t : t + SETTLE, windows, steps, presses: pressCount, rebuilds, gapFrames, unheld,
                 trail: trail.slice(0, 60) };
