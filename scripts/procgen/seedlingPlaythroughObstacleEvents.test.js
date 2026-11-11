@@ -334,10 +334,6 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
         expect(rows.filter((r) => r.fires).every((r) => r.latch)).toBe(true);
         const why = Object.fromEntries(rows.filter((r) => !r.fires).map((r) => [r.name, r.why]));
         expect(why['L39 flag 8: wandlock@144,592 cleared']).toBe('a cross-level ButtonRoom also clears its tag');
-        expect(why['L71 flag 0: lock@112,192 cleared']).toBe('no side clears the room (today\'s rule kept)');
-        // L60: its jellyfish come to the lock's face, where the Ghost Sword reaches through (Player.as:917)
-        const l60 = rows.find((r) => r.level === 60);
-        expect(l60.sides.map((s) => s.verdict).sort()).toEqual(['clears', 'undecided']);
         // L26: the census's pocket (the L28 door's) cannot reach puncher@32,208 by any arm
         const l26 = rows.find((r) => r.level === 26).sides.find((s) => s.verdict === 'cannot');
         expect(l26).toMatchObject({ beyond: ['puncher@32,208'], steps: [{ tile: [7, 13], dir: 'W' }] });
@@ -358,6 +354,42 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
                 expect(asks(forth), `${side} -> ${pocket}`).toBe(false);
             }
         }
+    });
+
+    // ⛓ RULES l60-l71-killlock — an `across` side: the game kills a chaser parked behind a Solid with the Spear's thrust and
+    // the Ghost Sword's slash, and with nothing else (`probe-seedling-killlock-arms.mjs`).
+    const has = (item_name) => ({ rule: 'Has', args: { item_name } });
+    const exitRule = (from, to) => RULES.regions['1'][from].exits.find((e) => e.connected_region === to)?.access_rule;
+    it('an across side pays the arms that pass a Solid: the census names them, never a level', () => {
+        const through = playthroughEncounterLocks().filter((r) => r.through);
+        expect(through.every((r) => !r.fires && r.why === null)).toBe(true);
+        expect(through.map((r) => [r.name, r.through.event, r.sides.map((s) => s.verdict).sort()])).toEqual([
+            ['L60 flag 0: lock@128,80 cleared', true, ['across', 'clears']],
+            ['L71 flag 0: lock@112,192 cleared', false, ['across', 'across']],
+        ]);
+        // the arms are the bodies' own kill arms that pass a Solid: the thrust, and the slash as the Ghost Sword
+        for (const r of through) expect(r.through.flags).toEqual([['hasGhostSword', 'hasSpear']]);
+        // only a lock with a side that clears, and a tag that records it, is a latch
+        expect(through.map((r) => r.latch)).toEqual([true, false]);
+    });
+
+    it('L60: the pocket crosses on the room\'s cleared lock OR the Spear; the room\'s own crossing is unchanged', () => {
+        const event = 'L60 flag 0: lock@128,80 cleared';
+        const forth = exitRule('level_60__r5c0', 'level_60__r5c9');
+        const back = exitRule('level_60__r5c9', 'level_60__r5c0');
+        expect(JSON.stringify(forth)).not.toContain('cleared');
+        expect(back).toEqual({ rule: 'And', children: [...forth.children, { rule: 'Or', children: [has(event), has('Ghost Spear')] }] });
+        expect(eventsOf(RULES).find((e) => e.name === event)).toMatchObject({ region: 'level_60__r5c0', event_kind: 'game_state' });
+    });
+
+    it('L71: no side clears the room by walking, so each crossing pays the Spear and no event is minted', () => {
+        for (const [from, to] of [['level_71__r13c7', 'level_71__r11c7'], ['level_71__r11c7', 'level_71__r13c7']]) {
+            const rule = exitRule(from, to);
+            expect(rule.rule, `${from} -> ${to}`).toBe('And');
+            expect(rule.children).toContainEqual(has('Ghost Spear'));
+            expect(JSON.stringify(rule)).not.toContain('cleared');
+        }
+        expect(eventsOf(RULES).find((e) => e.name === 'L71 flag 0: lock@112,192 cleared')).toBeUndefined();
     });
 
     it('L26: the pocket\'s crossing is the weapon AND the room\'s cleared lock; the room\'s own is the weapon alone', () => {

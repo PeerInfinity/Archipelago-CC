@@ -68,10 +68,14 @@ import {
     CELL_SPACE_MEMBERS,
     EditCoreError,
     describeOps,
+    descriptorFieldsOf,
     floodOps,
     group,
     hasCellSpace,
+    rectClearOps,
     rectCopy,
+    rectFillOps,
+    rectMoveOps,
     rectPasteOps,
     rectReplaceOps,
 } from './editCore.js';
@@ -198,6 +202,48 @@ export const UNDO_COMMAND_ID = 'undo';
  */
 export const REDO_COMMAND_ID = 'redo';
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SHARED RECTANGLE TOOLS — OPT-IN (editor tools, step B1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **FILL · CLEAR · MOVE, AND THE PASTE MODE — Seedling editor E1's
+ * gestures, moved here unchanged so a second lab can turn them on.**
+ *
+ * They were wired on the Seedling page only (`seedlingDemo/watchEditor.js`).
+ * Every one of them is a cell-space gesture over the core's own builders
+ * (`rectFillOps`, `rectClearOps`, `rectMoveOps`, `rectReplaceOps`) and the RECT
+ * selection this file already owns, so the wiring belongs beside RECT.
+ *
+ * ⛔ **OPT-IN, AND IN THE PAGE'S ORDER.** A page names a shared tool by putting
+ * its id (a STRING, one of `EDIT_TOOLS`) in `tools`, among its own tool
+ * objects; the command table, the key map and every button built from it keep
+ * the page's order. A page that names none — the maze lab — mounts exactly the
+ * four it always had.
+ *
+ * ⛔ **NOTHING SUBSTRATE-SHAPED LIVES HERE.** What a FILL paints is the page's
+ * `floodTarget()`; what a refusal says when there is none is `editTools.
+ * fillRefusal`; which error classes count as a refusal beyond the core's is
+ * `editTools.isRefusal`; the two selects are the page's elements.
+ */
+export const EDIT_TOOLS = Object.freeze({
+    FILL: 'fill',
+    CLEAR: 'clear',
+    MOVE: 'move',
+});
+
+const EDIT_TOOL_ROWS = Object.freeze({
+    [EDIT_TOOLS.FILL]: Object.freeze({ id: EDIT_TOOLS.FILL, label: 'FILL a rectangle', key: 'l' }),
+    [EDIT_TOOLS.CLEAR]: Object.freeze({ id: EDIT_TOOLS.CLEAR, label: 'CLEAR a rectangle', key: 'x' }),
+    [EDIT_TOOLS.MOVE]: Object.freeze({ id: EDIT_TOOLS.MOVE, label: 'MOVE the selection', key: 'm' }),
+});
+
+/** ⛓ The two paste kinds (`editTools.pasteMode`): `add` is the paste every payload so far was made with. */
+export const PASTE_MODES = Object.freeze(['add', 'replace']);
+
+/** ⛓ What FILL says when the page's `floodTarget()` names nothing and the page gave no sentence of its own. */
+const DEFAULT_FILL_REFUSAL = 'FILL has no target — the page\'s palette selection does not name one';
+
 const isFn = (v) => typeof v === 'function';
 
 /**
@@ -242,6 +288,19 @@ export function mountEditorView({
      * a page tool that wants to be one-shot calls `setTool` from its own `at`.
      */
     tools = [],
+    /**
+     * ⛓⛓⛓ **THE SHARED TOOLS' PAGE INPUTS** (editor tools, step B1), all
+     * optional and read only when a shared tool is named in `tools`:
+     *
+     *  · `fillRefusal` — FILL's sentence when `floodTarget()` names nothing;
+     *  · `isRefusal(e)` — an error class the page's own record code throws that
+     *    is a REFUSAL (said, not rethrown), beside `EditCoreError`;
+     *  · `clearWhat` — a `<select>` this file fills with the descriptor's own
+     *    fields (`''` = every field) and CLEAR reads at the press;
+     *  · `pasteMode` — a `<select>` this file fills with `PASTE_MODES`; at
+     *    `replace` a PASTE and a MOVE carry `replace: true`.
+     */
+    editTools = {},
     /**
      * ⛓⛓⛓ **THE PAGE'S OWN SHAPES** — EDITOR v3 D2, optional. `() => shape[]`,
      * merged into this file's own on every repaint and validated at the moment
@@ -317,6 +376,15 @@ export function mountEditorView({
      * rather than at the first click on it.
      */
     const pageTools = [...tools].map((t) => {
+        if (typeof t === 'string') {
+            if (!EDIT_TOOL_ROWS[t]) {
+                fail(`editorView: the shared tool ${JSON.stringify(t)} is not one of `
+                    + `[${Object.values(EDIT_TOOLS).join(', ')}] — a STRING in \`tools\` names a `
+                    + 'shared tool; a page\'s own tool is an object {id, label, key?, at(cell)}.');
+            }
+            // ⛓ `at` is resolved at the press: the gestures below are defined further down.
+            return Object.freeze({ ...EDIT_TOOL_ROWS[t], at: (c) => SHARED_AT[t](c) });
+        }
         if (!t || typeof t.id !== 'string' || !t.id || !isFn(t.at)) {
             fail(`editorView: a page tool must be {id, label, key?, at(cell)}, got `
                 + `${JSON.stringify(t)}.`);
@@ -355,6 +423,58 @@ export function mountEditorView({
      * one-cell drag two code paths for one gesture.
      */
     let swallowClick = false;
+    /** ⛓ B1 — the first corner of a FILL/CLEAR rectangle, or `null`. */
+    let editCorner = null;
+    /** ⛓ B1 — the clip a MOVE has already spent: a second MOVE of it would cut the wrong cells. */
+    let spentClip = null;
+
+    /**
+     * ⛓ B1 — THE PASTE MODE. `replace` rides ONLY when the page's select says
+     * so, so an ADD paste hands the builders exactly the page's own options.
+     */
+    const pasteModeSel = editTools.pasteMode ?? null;
+    if (pasteModeSel) {
+        pasteModeSel.innerHTML = '';
+        for (const m of PASTE_MODES) {
+            const o = doc.createElement('option');
+            o.value = m;
+            o.textContent = m === 'add' ? 'ADD to the cell (the default)' : 'REPLACE the cell';
+            pasteModeSel.appendChild(o);
+        }
+        pasteModeSel.value = 'add';
+    }
+    const replaceNow = () => pasteModeSel?.value === 'replace';
+    const pasteOpts = () => {
+        const base = pasteOptions();
+        return replaceNow() ? { ...base, replace: true } : base;
+    };
+
+    /**
+     * ⛓ B1 — CLEAR's scope select: every field, or one, derived from the
+     * descriptor (like a paste filter) so it cannot drift from it. Refilled by
+     * the page through `refreshEditTools()` when its record changes.
+     */
+    const fillClearWhat = () => {
+        const sel = editTools.clearWhat ?? null;
+        if (!sel) return;
+        const record = session.record();
+        if (!record) return;
+        const fields = descriptorFieldsOf(adapter, record);
+        const want = sel.value;
+        sel.innerHTML = '';
+        const all = doc.createElement('option');
+        all.value = '';
+        all.textContent = 'everything in the cell';
+        sel.appendChild(all);
+        for (const f of fields) {
+            const o = doc.createElement('option');
+            o.value = f;
+            o.textContent = `${f} only`;
+            sel.appendChild(o);
+        }
+        if ([...sel.options].some((o) => o.value === want)) sel.value = want;
+    };
+    fillClearWhat();
 
     /* ── THE OVERLAY ──────────────────────────────────────────────── */
     /**
@@ -481,16 +601,35 @@ export function mountEditorView({
         if (tool === TOOLS.PASTE && clip) {
             out.push({ kind: 'paste', x: 0, y: 0, w: clip.w, h: clip.h });
         }
-        if (!pageShapes) return out;
-        const extra = pageShapes();
-        if (!Array.isArray(extra)) {
-            fail('editorView: the injected `shapes` must return an ARRAY of shapes, got '
-                + `${JSON.stringify(extra)}.`);
+        if (pageShapes) {
+            const extra = pageShapes();
+            if (!Array.isArray(extra)) {
+                fail('editorView: the injected `shapes` must return an ARRAY of shapes, got '
+                    + `${JSON.stringify(extra)}.`);
+            }
+            for (const s of extra) out.push(assertShape(s, 'a shape the page contributed'));
         }
-        for (const s of extra) out.push(assertShape(s, 'a shape the page contributed'));
+        /**
+         * ⛓ B1 — the shared tools' own marks come LAST, after the page's: that is
+         * where they were drawn when the Seedling page contributed them.
+         */
+        if (editCorner) out.push({ kind: 'rect', x: editCorner.tx, y: editCorner.ty, w: 1, h: 1 });
+        if (tool === EDIT_TOOLS.MOVE && clip && clipOrigin && clip !== spentClip) {
+            out.push({ kind: 'rect', ...clipOrigin, w: clip.w, h: clip.h });
+        }
         return out;
     };
     const repaint = () => overlay.paint(shapes());
+
+    /**
+     * ⛓ EVERY `onChange` GOES THROUGH HERE. B1 — a FILL/CLEAR corner dies with
+     * its tool, as RECT's does, and at the moment the Seedling page dropped it:
+     * when the change is reported, before the page hears of it.
+     */
+    const changed = (c) => {
+        if (editCorner && c.tool !== EDIT_TOOLS.FILL && c.tool !== EDIT_TOOLS.CLEAR) editCorner = null;
+        if (onChange) onChange(c);
+    };
 
     /* ── APPLYING ─────────────────────────────────────────────────── */
 
@@ -517,7 +656,7 @@ export function mountEditorView({
             });
         }
         say(res.description, !res.ok);
-        if (onChange) onChange({ session, result: res, tool, clip });
+        changed({ session, result: res, tool, clip });
         repaint();
         return res;
     };
@@ -534,14 +673,12 @@ export function mountEditorView({
         } catch (e) {
             if (!(e instanceof EditCoreError)) throw e;
             say(e.message, true);
-            if (onChange) {
-                onChange({
-                    session,
-                    result: Object.freeze({ ok: false, applied: false, description: e.message }),
-                    tool,
-                    clip,
-                });
-            }
+            changed({
+                session,
+                result: Object.freeze({ ok: false, applied: false, description: e.message }),
+                tool,
+                clip,
+            });
             return { ok: false, what };
         }
     };
@@ -609,7 +746,7 @@ export function mountEditorView({
         const warn = clipWarnings(clip) ?? [];
         say(`copied ${w}x${h} at (${x},${y}) — press PASTE, then click where it goes`
             + (warn.length ? ` ⚠ ${warn.join(' ⚠ ')}` : ''), warn.length > 0);
-        if (onChange) onChange({ session, result: null, tool, clip });
+        changed({ session, result: null, tool, clip });
         return null;
     };
 
@@ -626,7 +763,7 @@ export function mountEditorView({
          * that never says `replace` gets `rectPasteOps` with the options it
          * always passed, unchanged.
          */
-        const { replace = false, ...opts } = pasteOptions() ?? {};
+        const { replace = false, ...opts } = pasteOpts() ?? {};
         const built = replace
             ? tryCore('rectReplaceOps', () => rectReplaceOps(
                 adapter, session.record(), clip, c.tx, c.ty, opts,
@@ -657,6 +794,76 @@ export function mountEditorView({
         return applyOp(built.value);
     };
 
+    /* ── ⛓⛓⛓ FILL · CLEAR · MOVE — the shared rectangle tools (B1) ── */
+
+    /**
+     * ⛓ A builder's refusal (it throws) → the status line, verbatim. The core's
+     * class, and whatever the page's `isRefusal` names (a record's own refusal
+     * class); anything else is a defect and is rethrown. ⚠ Unlike `tryCore` it
+     * does not report a change: E1's gestures never did.
+     */
+    const tryBuild = (fn) => {
+        try { return fn(); } catch (e) {
+            if (!(e instanceof EditCoreError) && !(isFn(editTools.isRefusal) && editTools.isRefusal(e))) throw e;
+            say(e.message, true);
+            return null;
+        }
+    };
+    /** ⛓ A two-click rectangle, like RECT's, whose second click builds and applies ONE op. */
+    const twoClick = (what, build) => (c) => {
+        if (!editCorner) {
+            editCorner = { tx: c.tx, ty: c.ty };
+            say(`${what} corner 1 at (${c.tx},${c.ty}) — click the opposite corner`);
+            repaint();
+            return;
+        }
+        const rect = {
+            x: Math.min(editCorner.tx, c.tx),
+            y: Math.min(editCorner.ty, c.ty),
+            w: Math.abs(c.tx - editCorner.tx) + 1,
+            h: Math.abs(c.ty - editCorner.ty) + 1,
+        };
+        editCorner = null;
+        const op = tryBuild(() => build(rect));
+        repaint();
+        if (op) applyOp(op);
+    };
+    const clearSel = editTools.clearWhat ?? null;
+    const SHARED_AT = Object.freeze({
+        /** ⛓ FILL paints the page's `floodTarget()` into every cell of the rectangle. */
+        [EDIT_TOOLS.FILL]: twoClick('FILL', (rect) => {
+            const target = floodTarget();
+            if (!target) throw new EditCoreError(editTools.fillRefusal ?? DEFAULT_FILL_REFUSAL);
+            return rectFillOps(adapter, session.record(), rect, target);
+        }),
+        /** ⛓ CLEAR empties every field, or the one `clearWhat` names. */
+        [EDIT_TOOLS.CLEAR]: twoClick('CLEAR', (rect) => {
+            const field = clearSel?.value ?? '';
+            return rectClearOps(adapter, session.record(), rect,
+                { fields: field === '' ? null : [field] });
+        }),
+        /** ⛓ MOVE spends the RECT selection at one click: cut, then paste with the paste options. */
+        [EDIT_TOOLS.MOVE]: (c) => {
+            const from = clipOrigin;
+            if (!clip || !from) {
+                say('nothing to MOVE — arm RECT and click two opposite corners first; the '
+                    + 'selection is what moves', true);
+                return;
+            }
+            if (clip === spentClip) {
+                say('this selection was already MOVED — its source cells are empty now, '
+                    + 'so moving it again would cut the wrong place. Drag a new RECT.', true);
+                return;
+            }
+            const moving = clip;
+            const op = tryBuild(() => rectMoveOps(adapter, session.record(), moving, from,
+                c.tx, c.ty, { ...pasteOpts() }));
+            if (!op) return;
+            const res = applyOp(op);
+            if (res?.applied) spentClip = moving;
+        },
+    });
+
     const TOOL_FN = Object.freeze({
         [TOOLS.BRUSH]: brushAt,
         [TOOLS.RECT]: rectAt,
@@ -679,7 +886,7 @@ export function mountEditorView({
         corner = null;
         stroke = null;
         repaint();
-        if (onChange) onChange({ session, result: null, tool, clip });
+        changed({ session, result: null, tool, clip });
     };
 
     const OWN = [
@@ -857,6 +1064,12 @@ export function mountEditorView({
         get clip() { return clip; },
         /** ⛓ E1 — where the clip was copied from, or `null`. */
         get clipOrigin() { return clipOrigin; },
+        /** ⛓ B1 — the clip is one a MOVE already spent. */
+        get clipSpent() { return clip !== null && clip === spentClip; },
+        /** ⛓ B1 — `'add'` / `'replace'` from `editTools.pasteMode`, or `null` with no such select. */
+        get pasteMode() { return pasteModeSel ? pasteModeSel.value : null; },
+        /** ⛓ B1 — refill CLEAR's scope select from the session's record (the page calls it when the record changes). */
+        refreshEditTools: fillClearWhat,
         get corner() { return corner; },
         setTool,
         /**

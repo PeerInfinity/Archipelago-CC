@@ -1487,7 +1487,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         get solving() { return solver.solving; },
         /** ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units (a test knob; the page reads `?solverBudgetWork=`). */
         get solverBudgetWork() { return solver.budgetWork; },
-        setSolverBudgetWork(n) { solver.budgetWork = Number(n); },
+        /** ⛓ SOLVER LIMIT OFF — 0 = no work limit; null = the page's own budget again (`budgetKnob`). */
+        setSolverBudgetWork(n) { solver.budgetWork = n; },
         /**
          * The upgrade window, in work units (`flashPanel.seedlingSolverUpgradeWindowWork`, handed with every
          * goal; the page reads `?solverUpgradeWindowWork=`): null / non-positive = the whole budget.
@@ -1496,7 +1497,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         setSolverUpgradeWindowWork(n) { solver.upgradeWindowWork = n; },
         /** The wall-clock backstop, in ms (a test knob; past it a goal FAILS by name, never plays). */
         get solverBackstopMs() { return solver.backstopMs; },
-        setSolverBackstopMs(ms) { solver.backstopMs = Number(ms); },
+        /** ⛓ SOLVER LIMIT OFF — 0 = off; null = the page's own backstop again (`backstopKnob`). */
+        setSolverBackstopMs(ms) { solver.backstopMs = ms; },
+        /**
+         * ⛓ SOLVER LIMIT OFF — the panel's Stop: terminate the solve in flight; the goal FAILS by name at the next
+         * tick and the next solve gets a fresh worker. false = no solve in flight.
+         */
+        stopSolve() { return solver.stop(); },
         /** ⛓ S2 — the solve service (the page's worker; null = in place). */
         setSolveService(service) { solver.setSolveService(service); },
         get solveService() { return solver.solveService; },

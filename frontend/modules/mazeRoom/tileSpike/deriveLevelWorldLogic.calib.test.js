@@ -24,13 +24,19 @@ const PERMISSIVE = playthroughPermissiveLocations();
 const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
 // ⛓ rules-l26-rocklock-pocket: and `OPEN_L53` (deriveLevelWorldLogic.fixture.js says why), mirrored the same way.
 const OPEN_L53 = 'level_53__r9c10 @ L53 flag 2: lock@144,208 cleared (from level_53__r14c9) holding [Ghost Spear]: derived true, atlas false';
+// ⛓ rules-l60-l71-killlock: and `OPEN_L60` (the fixture says why), mirrored the same way.
+const OPEN_L60 = 'level_60__r5c9 → level_60__r5c0 holding [Ghost Spear,Progressive Swim]: derived false, atlas true';
 
 describe('seedling_playthrough_maze — scripted ≡ native on every region', () => {
     it('every region, both engines, only the named OPEN row and the same lines', () => {
         const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
         const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(native.problems).toEqual([OPEN_L53, OPEN_L63]);
-        expect(scripted.problems).toEqual([OPEN_L53, OPEN_L63]);
+        expect(native.problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
+        expect(scripted.problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
         expect(scripted.lines).toEqual(native.lines);
-    }, 900_000);
+    // ⚖ Robert 2026-11-09, via the liaison: "Raise to 1,200 s (Recommended)" (session tile-rules-automation-r-a4b). Measured on CI,
+    // normalised to each run's own L40 scripted time: the control 2d1283375e projects to ~875 s and the R-A4b tip (sided openers)
+    // to ~976 s on the slowest runner seen, so 1,200 s leaves ~23% headroom. Only this test's limit: `vitest.calib.config.js`'s
+    // `testTimeout` stays, and a per-test limit overrides it (measured: with this one raised, the test passed at 971 s).
+    }, 1_200_000);
 });

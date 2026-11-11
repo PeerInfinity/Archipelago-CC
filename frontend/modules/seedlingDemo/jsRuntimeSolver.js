@@ -229,6 +229,53 @@ export const FINE_CHECKPOINTS = true;
 export const SOLVE_BACKSTOP_MS = 300000;
 
 /**
+ * ⛓ SOLVER LIMIT OFF (⚖ the user 2026-11-10: the option to turn the solver's limits off, in the Flash panel, with a
+ * manual stop button; "Which limit should off turn off?" → "Both") — the ENGINE value of "no work limit": a budget of 0. Every runtime reads it the same way (the JS page's
+ * `?solverBudgetWork=0` / `setSolverBudgetWork(0)`, the wasm engine's `getBudgetWork` → 0); a person never types
+ * it — the Flash panel's "No work limit" checkbox (`flashPanel.seedlingSolverNoWorkLimit`) writes it.
+ * What it does: the request's `budgetWork` is 0, so `passShouldStop` installs NO deadline — no budget AND no upgrade
+ * window (`windowAt` is computed only under a finite budget) — and every pass runs to its own end (the committed
+ * solves' path: acceptance, the survey and the frontier pass no `shouldStop` either). No pass is ever cut by a
+ * budget, so the held retry (×`SOLVE_RETRY_BUDGET_FACTOR`) never fires. ⚠ The plan is still the same on every
+ * machine (nothing reads a clock), but where the upgrade window cuts the full pass at the defaults the plan may
+ * differ from the default's. Only Stop (or the backstop, when on) ends a solve that does not end by itself.
+ */
+export const SOLVER_BUDGET_NO_LIMIT = 0;
+/** ⛓ SOLVER LIMIT OFF — the ENGINE value of "backstop off": 0 ms (the Flash panel's "Backstop off" checkbox writes it). */
+export const SOLVE_BACKSTOP_OFF = 0;
+/** ⛓ SOLVER LIMIT OFF — the named failure Stop gives the goal (the worker is terminated; nothing is played). */
+export const SOLVE_STOPPED_BY_PLAYER = 'the solve was stopped by the player';
+
+/**
+ * ⛓ SOLVER LIMIT OFF — read a budget KNOB: a positive finite number is that budget, 0
+ * (`SOLVER_BUDGET_NO_LIMIT`) is "no limit", anything else (null, '', negative, NaN) is `fallback` (the
+ * runtime's own budget). One rule for every runtime.
+ */
+export function budgetKnob(v, fallback) {
+    if (v === null || v === undefined || v === '') return fallback;
+    const n = Number(v);
+    if (n === SOLVER_BUDGET_NO_LIMIT) return SOLVER_BUDGET_NO_LIMIT;
+    return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+/** ⛓ SOLVER LIMIT OFF — read a backstop KNOB (ms): positive finite = that, 0 = off, anything else = `fallback`. */
+export function backstopKnob(v, fallback) {
+    if (v === null || v === undefined || v === '') return fallback;
+    const n = Number(v);
+    if (n === SOLVE_BACKSTOP_OFF) return SOLVE_BACKSTOP_OFF;
+    return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+/** ⛓ SOLVER LIMIT OFF — is this budget a limit (a positive finite number)? */
+export const budgetLimited = (b) => Number.isFinite(b) && b > 0;
+/** ⛓ SOLVER LIMIT OFF — has this backstop (ms) passed? Off (0) never passes. */
+export const backstopPassed = (backstopMs, elapsedMs) => backstopMs > 0 && elapsedMs > backstopMs;
+/** ⛓ SOLVER LIMIT OFF — how a budget reads in a message: `640 work units`, or `no work limit`. */
+export const budgetText = (b) => (budgetLimited(b) ? `${b} work units` : 'no work limit');
+/** ⛓ SOLVER LIMIT OFF — a failure's budget clause: `the solve's own budget is 640 work units` / `the solve had no work limit`. */
+export const ownBudgetClause = (b) => (budgetLimited(b) ? `the solve's own budget is ${b} work units` : 'the solve had no work limit');
+
+/**
  * ⛓ SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window a solve gives its
  * later passes, in work units from the attempt's start: a non-positive /
  * non-finite / absent window is the WHOLE budget, and a window is never
@@ -450,7 +497,7 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
     // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
     // answer — `betterAnswer` never lets it replace what an earlier attempt's passes said.
     best ??= last ?? { ok: false, kind: 'refusal', message: 'no solver pass ran' };
-    const spent = budgetWork !== null ? { work: work.units } : {};
+    const spent = budgetLimited(budgetWork) ? { work: work.units } : {};
     return { ...best, passes: rows, ...spent, ...(best.ok ? { plan: { ...best.plan, passes: rows, ...spent } } : {}) };
 }
 
@@ -1036,14 +1083,17 @@ export function createRuntimeSolver({
     let pending = null;
     let refutations = 0;
     let lastRefutation = null;
-    let budget = budgetWork;
+    let budget = budgetKnob(budgetWork, SOLVER_BUDGET_WORK);
     let upgradeWindow = windowWork;
+    /** ⛓ SOLVER LIMIT OFF — the construction's backstop (a `null` set restores it); 0 = off. */
+    const ownBackstopMs = backstopKnob(backstopMs, SOLVE_BACKSTOP_MS);
+    backstopMs = ownBackstopMs;
     let service = solveService;
     const inPlace = createInPlaceSolveService({ clock });
     /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
     const playedEquips = new WeakMap();
     const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null, lastDeclineObstacle: null,
-        expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0, backstops: 0 };
+        expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0, backstops: 0, stops: 0 };
 
     const emit = (e) => { try { onEvent(e); } catch { /* a listener's bug is not the solve's */ } };
 
@@ -1090,13 +1140,14 @@ export function createRuntimeSolver({
         };
         const handle = service
             // ⛓ RETRY ATTEMPT — this solver never re-asks a start at a larger budget: each start is attempt 0
-            ? service.start({ ...request, source: { records: getRecords() } }, { attempt: { retry: 0, budgets: [budget] } })
+            ? service.start({ ...request, source: { records: getRecords() } },
+                { attempt: { retry: 0, budgets: budgetLimited(budget) ? [budget] : [] } })
             : inPlace.start({ ...request, levelSource: getLevelSource() });
         pending = { handle, run, session, prefixLength: session.perTick.length, goal, solverGoal, askedAt: clock(), startedAt: null };
         stats.solving = true;
         if (!handle.settled) {
             emit({ type: 'solving', message: `[js runtime] solving ${solverGoal.kind} in level ${goal.level} `
-                + `(budget ${budget} work units) — the room is held while the solver thinks` });
+                + `(budget ${budgetText(budget)}) — the room is held while the solver thinks` });
         }
     }
 
@@ -1104,6 +1155,15 @@ export function createRuntimeSolver({
     function take(run) {
         const p = pending;
         const now = clock();
+        // ⛓ SOLVER LIMIT OFF — Stop: the worker is already terminated (`stop`); the goal FAILS by that name, at once,
+        // and the room is no longer held. A plan the solve had in hand is NOT played.
+        if (p.stopped) {
+            pending = null;
+            stats.solving = false;
+            stats.lastWaitMs = now - p.askedAt;
+            return { failed: `${SOLVE_STOPPED_BY_PLAYER} on ${p.solverGoal.kind} in level ${p.goal.level} (terminated; `
+                + `${ownBudgetClause(budget)})` };
+        }
         // ⛔ A plan is played only from the state it was solved from: a run
         // replaced while the solver thinks makes its answer STALE at once.
         if (p.run !== run || p.session !== getSession()) {
@@ -1118,12 +1178,12 @@ export function createRuntimeSolver({
             // past it the goal FAILS by name, and a plan already in hand is NOT played.
             if (p.startedAt === null && p.handle.started) p.startedAt = now;
             const startedAt = p.startedAt;
-            if (startedAt !== null && now - startedAt > backstopMs) {
+            if (startedAt !== null && backstopPassed(backstopMs, now - startedAt)) {
                 cancel();
                 stats.backstops += 1;
                 stats.lastWaitMs = now - p.askedAt;
                 return { failed: `the solve exceeded the backstop on this machine (${seconds(backstopMs)}) on `
-                    + `${p.solverGoal.kind} in level ${p.goal.level} (terminated; the solve's own budget is ${budget} work units)` };
+                    + `${p.solverGoal.kind} in level ${p.goal.level} (terminated; ${ownBudgetClause(budget)})` };
             }
             if (startedAt === null && now - p.askedAt > loadBudgetMs) {
                 cancel();
@@ -1136,6 +1196,13 @@ export function createRuntimeSolver({
         stats.solving = false;
         stats.lastWaitMs = now - p.askedAt;
         const r = p.handle.result;
+        // ⛓ SOLVER LIMIT OFF — a solve STOPPED at its service (`handle.stop`, the panel's Stop): the goal FAILS by
+        // name — never a decline the walker would walk instead, never a plan.
+        if (r?.kind === 'stopped') {
+            stats.stops += 1;
+            return { failed: `${SOLVE_STOPPED_BY_PLAYER} on ${p.solverGoal.kind} in level ${p.goal.level} (terminated; `
+                + `${ownBudgetClause(budget)})` };
+        }
         // ⛓ DETERMINISTIC BUDGET — a later pass cut at the work budget (the successor of a page expiry).
         const expired = budgetCut(r);
         if (expired) stats.expiries += 1;
@@ -1179,7 +1246,7 @@ export function createRuntimeSolver({
         /** True while a plan is being played (the core's burst and `autoAdvanceText` read it). */
         get planning() { return plan !== null; },
         /** ⛓ S2 — true while a solve is in flight (the page holds the model). */
-        get solving() { return pending !== null; },
+        get solving() { return pending !== null && !pending.stopped; },
         /** Planned keys not yet played. */
         get remaining() { return plan ? plan.solution.length - plan.i : 0; },
         /**
@@ -1193,13 +1260,32 @@ export function createRuntimeSolver({
         get stats() { return { ...stats, refutations: stats.refutations, current: refutations, lastRefutation, budgetWork: budget }; },
         /** ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units (a test knob and the page's `?solverBudgetWork=`). */
         get budgetWork() { return budget; },
-        set budgetWork(n) { if (Number.isFinite(n) && n > 0) budget = n; },
+        /**
+         * ⛓ SOLVER LIMIT OFF — `budgetKnob`'s rule: a positive number is the budget, 0 = no work limit, null /
+         * undefined = the construction's own budget again; anything else leaves the budget as it is.
+         */
+        set budgetWork(n) { budget = n === null || n === undefined ? budgetKnob(budgetWork, SOLVER_BUDGET_WORK) : budgetKnob(n, budget); },
         /** The upgrade window in work units (`upgradeWindowWork`; null / non-positive = the whole budget). */
         get upgradeWindowWork() { return upgradeWindow; },
         set upgradeWindowWork(n) { const v = Number(n); upgradeWindow = n !== null && Number.isFinite(v) && v > 0 ? v : null; },
         /** The wall-clock backstop, in ms (a test knob; it only ever FAILS a goal by name). */
         get backstopMs() { return backstopMs; },
-        set backstopMs(ms) { if (Number.isFinite(ms) && ms > 0) backstopMs = ms; },
+        /** ⛓ SOLVER LIMIT OFF — positive = that many ms, 0 = off, null / undefined = the construction's own. */
+        set backstopMs(ms) { backstopMs = ms === null || ms === undefined ? ownBackstopMs : backstopKnob(ms, backstopMs); },
+        /**
+         * ⛓ SOLVER LIMIT OFF — Stop: TERMINATE the solve in flight (its worker goes; the next solve gets a fresh
+         * one) and fail the goal by name at the next tick (`SOLVE_STOPPED_BY_PLAYER`). false = no solve in flight.
+         */
+        stop() {
+            const p = pending;
+            if (!p || p.stopped) return false;
+            p.stopped = true;
+            stats.stops += 1;
+            // `take` fails the goal at the next tick (`p.stopped`), whatever the handle settles to
+            try { p.handle.stop ? p.handle.stop(SOLVE_STOPPED_BY_PLAYER) : p.handle.cancel(); } catch { /* already gone */ }
+            emit({ type: 'stopped', message: `[js runtime] ${SOLVE_STOPPED_BY_PLAYER} on ${p.solverGoal.kind} in level ${p.goal.level}` });
+            return true;
+        },
         /** ⛓ S2 — swap the solve service (the page's worker; null = in place). Cancels a solve in flight. */
         setSolveService(next) { cancel(); service = next ?? null; if (enabled) service?.warm?.(); },
         get solveService() { return service; },

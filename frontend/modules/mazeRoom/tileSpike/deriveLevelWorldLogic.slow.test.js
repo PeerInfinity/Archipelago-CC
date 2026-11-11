@@ -57,7 +57,7 @@
 import { describe, it, expect } from 'vitest';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { RULES, ATLAS, SAMPLE, OPEN_L53, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, ATLAS, SAMPLE, OPEN_L53, OPEN_L60, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
 
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -74,7 +74,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     it('native engine, every region', () => {
         const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
         // ⛓ rules-l26-rocklock-pocket: + OPEN_L53 (the fixture says why: the atlas is the game's side).
-        expect(problems).toEqual([OPEN_L53, OPEN_L63]);
+        // ⛓ rules-l60-l71-killlock: + OPEN_L60 (its mirror: the latch's own across-the-cut arm, which the level world does not lay).
+        expect(problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
@@ -154,7 +155,6 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
             'level_12__r42c28 → level_83 (landing 2,54) | 7020/131072',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
-            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 2/8 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',

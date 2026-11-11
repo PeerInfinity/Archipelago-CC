@@ -327,20 +327,24 @@ describe('the corpus census — printed, then pinned', () => {
          *              strip (`doc` 293 → 296); cloudberry.md's Files row and § The status strip → its own
          *              § The status strip and § The bot, flash.md's Bot reports row → its § The status strip
          *              (`same-doc` 33 → 36).
+         *   396 → 397  content sets C2 (2026-11-10): substrate-registry.md's `contentRoles` paragraph →
+         *              concepts.md § Content roles (`doc` 296 → 297).
+         *   397 → 399  content sets C3 (2026-11-10): concepts.md § A world's content stack → substrate-registry.md,
+         *              and substrate-registry.md's `defaultContentPack` paragraph → that § (`doc` 297 → 299).
          */
         expect(by).toEqual({
             'same-doc': 36,
-            doc: 296,
+            doc: 299,
             external: 22,
             repo: 42,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(396);
+        expect(CORPUS.length).toBe(399);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(296);
+        expect(docs).toHaveLength(299);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

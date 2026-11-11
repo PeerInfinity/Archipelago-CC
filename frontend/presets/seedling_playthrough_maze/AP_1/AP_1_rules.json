@@ -8694,7 +8694,78 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L60 flag 0: lock@128,80 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "L60 flag 0: lock@128,80 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L60:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 60,
+              "tag": 0,
+              "class": "lock",
+              "x": 128,
+              "y": 80
+            },
+            "action": {
+              "verb": "opened by its activation group (turnOff)",
+              "item": null
+            },
+            "side": "level_60__r5c0",
+            "across": [
+              "level_60__r5c9"
+            ]
+          }
+        ]
       },
       "level_60__r5c9": {
         "name": "level_60__r5c9",
@@ -8737,6 +8808,23 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Wand"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L60 flag 0: lock@128,80 cleared"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
                       }
                     }
                   ]
@@ -10071,19 +10159,30 @@
             "name": "level_71__r11c7 -> level_71__r13c7",
             "connected_region": "level_71__r13c7",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
                 {
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -10098,19 +10197,30 @@
             "name": "level_71__r13c7 -> level_71__r11c7",
             "connected_region": "level_71__r11c7",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
                 {
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -13964,6 +14074,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L60 flag 0: lock@128,80 cleared": {
+        "name": "L60 flag 0: lock@128,80 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L68 flag 0: bosslock@16,32 cleared": {
         "name": "L68 flag 0: bosslock@16,32 cleared",
         "id": null,
@@ -14189,6 +14310,7 @@
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L53 flag 2: lock@144,208 cleared": 1,
+      "L60 flag 0: lock@128,80 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
       "L20 flag 4: lock@32,80 cleared": 1,
       "L39 flag 8: wandlock@144,592 cleared": 1,
@@ -14236,7 +14358,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-47ebbca0",
+      "atlas_id": "seedling-4992ae0c",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -21791,15 +21913,27 @@
       },
       "level_20__r1c4": {
         "substrate": "maze",
+        "shared_world": "level_20",
         "playable_payload": {
           "width": 15,
           "height": 9,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
-            "x": 4,
-            "y": 1
+            "x": 12,
+            "y": 4
           },
           "exits": [
+            {
+              "exit_id": "level_20__r3c1 -> level_13",
+              "x": 1,
+              "y": 3,
+              "side": null,
+              "exitName": "level_20__r3c1 -> level_13",
+              "targetRegion": "level_13",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_16_48"
+            },
             {
               "exit_id": "level_20__r1c4 -> level_19__r1c1",
               "x": 12,
@@ -21810,28 +21944,6 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_192_48"
-            },
-            {
-              "exit_id": "level_20__r1c4 -> level_20__r1c12",
-              "x": 11,
-              "y": 1,
-              "side": null,
-              "exitName": "level_20__r1c4 -> level_20__r1c12",
-              "targetRegion": "level_20__r1c12",
-              "targetExitId": "level_20__r1c12 -> level_20__r1c4",
-              "isTeleporter": false,
-              "atlas_exit_id": "cross_r1c12"
-            },
-            {
-              "exit_id": "level_20__r1c4 -> level_20__r3c1",
-              "x": 2,
-              "y": 5,
-              "side": null,
-              "exitName": "level_20__r1c4 -> level_20__r3c1",
-              "targetRegion": "level_20__r3c1",
-              "targetExitId": "level_20__r3c1 -> level_20__r1c4",
-              "isTeleporter": false,
-              "atlas_exit_id": "cross_r3c1"
             }
           ],
           "obstacles": [
@@ -21843,7 +21955,97 @@
             {
               "x": 2,
               "y": 5,
-              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_1"
+              "id": "lock_0"
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 5,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 2,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 12,
+              "y": 7,
+              "id": "atlas_gate_1"
             }
           ],
           "items": [
@@ -21855,6 +22057,17 @@
             }
           ],
           "obstacleLib": {
+            "lock_0": {
+              "id": "lock_0",
+              "name": "lock (group 0)",
+              "kind": "door",
+              "clear_set": [
+                [
+                  "sw_0"
+                ]
+              ],
+              "color": "#3a7"
+            },
             "atlas_gate_0": {
               "id": "atlas_gate_0",
               "name": "Progressive Shield",
@@ -21872,41 +22085,14 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
-              "name": "L20 flag 4: lock@32,80 cleared",
+              "name": "Progressive Swim",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "Has",
                 "args": {
-                  "item_name": "L20 flag 4: lock@32,80 cleared"
+                  "item_name": "Progressive Swim"
                 }
               },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            },
-            "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_1": {
-              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_1",
-              "name": "L20 flag 4: lock@32,80 cleared + L20 flag 4: lock@32,80 cleared",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "And",
-                "children": [
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L20 flag 4: lock@32,80 cleared"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L20 flag 4: lock@32,80 cleared"
-                    }
-                  }
-                ]
-              },
-              "opened_by": "L20 flag 4: lock@32,80 cleared",
               "color": "#b06eb8",
               "display": {
                 "mode": "tree"
@@ -21933,10 +22119,87 @@
                   "probe": "W"
                 }
               ]
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "L20 flag 0: shieldlocknorm@176,16 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L20 flag 0: shieldlocknorm@176,16 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "buttons": [
+            {
+              "x": 12,
+              "y": 1,
+              "id": "button_0"
+            }
+          ],
+          "buttonLib": {
+            "button_0": {
+              "kind": "button",
+              "holds": "sw_0",
+              "latch": {
+                "event": "L20 flag 4: lock@32,80 cleared"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 11,
+              "y": 1,
+              "dir": "W",
+              "gate": "atlas_gate_2"
+            }
+          ],
+          "shared_world": {
+            "key": "level_20",
+            "regions": [
+              "level_20__r1c4",
+              "level_20__r1c12",
+              "level_20__r3c1"
+            ],
+            "rows": [
+              "...............",
+              "....AAAAAAA.B..",
+              "....A.AAA.A....",
+              ".CC.AAAAAAA.A..",
+              "..C.AAAAAAA.A..",
+              "....A.AAA.A.A..",
+              "..AAA.....AAA..",
+              "...............",
+              "..............."
+            ],
+            "entrances": {
+              "level_20__r1c4": {
+                "x": 12,
+                "y": 4
+              },
+              "level_20__r1c12": {
+                "x": 12,
+                "y": 1
+              },
+              "level_20__r3c1": {
+                "x": 2,
+                "y": 3
+              }
+            },
+            "links": {
+              "level_20__r1c12>level_20__r1c4": "level_20__r1c12 -> level_20__r1c4",
+              "level_20__r1c4>level_20__r1c12": "level_20__r1c4 -> level_20__r1c12",
+              "level_20__r1c4>level_20__r3c1": "level_20__r1c4 -> level_20__r3c1",
+              "level_20__r3c1>level_20__r1c4": "level_20__r3c1 -> level_20__r1c4"
             }
           },
           "atlas_region": "level_20",
-          "atlas_sub_region": "r1c4",
           "level": 20,
           "tile_size": 16,
           "origin": {
@@ -21947,208 +22210,11 @@
       },
       "level_20__r1c12": {
         "substrate": "maze",
-        "playable_payload": {
-          "width": 15,
-          "height": 9,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-          "entrance": {
-            "x": 12,
-            "y": 1
-          },
-          "exits": [
-            {
-              "exit_id": "level_20__r1c12 -> level_20__r1c4",
-              "x": 11,
-              "y": 1,
-              "side": null,
-              "exitName": "level_20__r1c12 -> level_20__r1c4",
-              "targetRegion": "level_20__r1c4",
-              "targetExitId": "level_20__r1c4 -> level_20__r1c12",
-              "isTeleporter": false,
-              "atlas_exit_id": "cross_r1c4"
-            }
-          ],
-          "obstacles": [
-            {
-              "x": 11,
-              "y": 1,
-              "id": "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared"
-            }
-          ],
-          "items": [
-            {
-              "x": 12,
-              "y": 1,
-              "id": "L20 flag 4: lock@32,80 cleared",
-              "locationName": "L20 flag 4: lock@32,80 cleared"
-            }
-          ],
-          "obstacleLib": {
-            "atlas_gate_0": {
-              "id": "atlas_gate_0",
-              "name": "(Progressive Shield AND L20 flag 0: shieldlocknorm@176,16 cleared)",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "And",
-                "children": [
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Progressive Shield"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L20 flag 0: shieldlocknorm@176,16 cleared"
-                    }
-                  }
-                ]
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            },
-            "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared": {
-              "id": "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared",
-              "name": "(Progressive Shield AND L20 flag 0: shieldlocknorm@176,16 cleared): L20 flag 0: shieldlocknorm@176,16 cleared",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "And",
-                "children": [
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Progressive Shield"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L20 flag 0: shieldlocknorm@176,16 cleared"
-                    }
-                  }
-                ]
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "events": [
-                {
-                  "name": "L20 flag 0: shieldlocknorm@176,16 cleared",
-                  "side": "level_20__r1c4",
-                  "probe": "W"
-                }
-              ]
-            }
-          },
-          "atlas_region": "level_20",
-          "atlas_sub_region": "r1c12",
-          "level": 20,
-          "tile_size": 16,
-          "origin": {
-            "x": 0,
-            "y": 0
-          }
-        }
+        "shared_world": "level_20"
       },
       "level_20__r3c1": {
         "substrate": "maze",
-        "playable_payload": {
-          "width": 15,
-          "height": 9,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-          "entrance": {
-            "x": 1,
-            "y": 3
-          },
-          "exits": [
-            {
-              "exit_id": "level_20__r3c1 -> level_13",
-              "x": 1,
-              "y": 3,
-              "side": null,
-              "exitName": "level_20__r3c1 -> level_13",
-              "targetRegion": "level_13",
-              "targetExitId": null,
-              "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_16_48"
-            },
-            {
-              "exit_id": "level_20__r3c1 -> level_20__r1c4",
-              "x": 2,
-              "y": 5,
-              "side": null,
-              "exitName": "level_20__r3c1 -> level_20__r1c4",
-              "targetRegion": "level_20__r1c4",
-              "targetExitId": "level_20__r1c4 -> level_20__r3c1",
-              "isTeleporter": false,
-              "atlas_exit_id": "cross_r1c4"
-            }
-          ],
-          "obstacles": [
-            {
-              "x": 2,
-              "y": 5,
-              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0"
-            }
-          ],
-          "items": [],
-          "obstacleLib": {
-            "atlas_gate_0": {
-              "id": "atlas_gate_0",
-              "name": "L20 flag 4: lock@32,80 cleared",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "L20 flag 4: lock@32,80 cleared"
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            },
-            "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0": {
-              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0",
-              "name": "L20 flag 4: lock@32,80 cleared + L20 flag 4: lock@32,80 cleared",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "And",
-                "children": [
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L20 flag 4: lock@32,80 cleared"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L20 flag 4: lock@32,80 cleared"
-                    }
-                  }
-                ]
-              },
-              "opened_by": "L20 flag 4: lock@32,80 cleared",
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            }
-          },
-          "atlas_region": "level_20",
-          "atlas_sub_region": "r3c1",
-          "level": 20,
-          "tile_size": 16,
-          "origin": {
-            "x": 0,
-            "y": 0
-          }
-        }
+        "shared_world": "level_20"
       },
       "level_21": {
         "substrate": "maze",
@@ -57027,7 +57093,7 @@
             {
               "x": 8,
               "y": 5,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_1~L60 flag 0: lock@128,80 cleared"
             },
             {
               "x": 2,
@@ -57116,8 +57182,68 @@
                 "mode": "tree"
               }
             },
+            "atlas_gate_1~L60 flag 0: lock@128,80 cleared": {
+              "id": "atlas_gate_1~L60 flag 0: lock@128,80 cleared",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand): L60 flag 0: lock@128,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L60 flag 0: lock@128,80 cleared",
+                  "side": "level_60__r5c0"
+                }
+              ]
+            },
             "atlas_gate_2": {
               "id": "atlas_gate_2",
+              "name": "L60 flag 0: lock@128,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L60 flag 0: lock@128,80 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "Progressive Swim x2",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -57135,76 +57261,82 @@
           },
           "entry_gates": [
             {
+              "x": 8,
+              "y": 5,
+              "dir": "W",
+              "gate": "atlas_gate_2"
+            },
+            {
               "x": 2,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 3,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 4,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 5,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 6,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 7,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 2,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 3,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 4,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 5,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 6,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 7,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             }
           ],
           "shared_world": {
@@ -61824,6 +61956,21 @@
             },
             "atlas_gate_3": {
               "id": "atlas_gate_3",
+              "name": "Ghost Spear",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Ghost Spear"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
               "name": "L71 flag 2: shieldlock@288,256 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -61853,10 +62000,22 @@
           },
           "entry_gates": [
             {
+              "x": 7,
+              "y": 12,
+              "dir": "N",
+              "gate": "atlas_gate_3"
+            },
+            {
+              "x": 7,
+              "y": 12,
+              "dir": "S",
+              "gate": "atlas_gate_3"
+            },
+            {
               "x": 18,
               "y": 16,
               "dir": "W",
-              "gate": "atlas_gate_3"
+              "gate": "atlas_gate_4"
             }
           ],
           "shared_world": {
@@ -76216,6 +76375,7 @@
           },
           "new_accessible_locations": [
             "L53 flag 2: lock@144,208 cleared",
+            "L60 flag 0: lock@128,80 cleared",
             "L62 flag 0: lightpole@120,200 cleared",
             "L63 flag 1: lightpole@64,88 cleared",
             "Level 015 - Chest",
@@ -76352,6 +76512,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L60 flag 0: lock@128,80 cleared": 1
+            },
+            "resolved_items": {
+              "L60 flag 0: lock@128,80 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L60 flag 0: lock@128,80 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "6.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "L62 flag 0: lightpole@120,200 cleared": 1
             },
             "resolved_items": {
@@ -76372,7 +76553,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.4",
+      "sphere_index": "6.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76393,7 +76574,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.5",
+      "sphere_index": "6.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76414,7 +76595,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.6",
+      "sphere_index": "6.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76435,7 +76616,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.7",
+      "sphere_index": "6.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76469,7 +76650,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.8",
+      "sphere_index": "6.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76490,7 +76671,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.9",
+      "sphere_index": "6.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76511,7 +76692,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.10",
+      "sphere_index": "6.11",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76532,7 +76713,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.11",
+      "sphere_index": "6.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76553,7 +76734,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.12",
+      "sphere_index": "6.13",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76587,7 +76768,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.13",
+      "sphere_index": "6.14",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76608,7 +76789,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.14",
+      "sphere_index": "6.15",
       "player_data": {
         "1": {
           "new_inventory_details": {

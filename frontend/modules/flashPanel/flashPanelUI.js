@@ -9,7 +9,7 @@ import {
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
-import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
 import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
@@ -24,6 +24,8 @@ import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsV
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
+// ⛓ SOLVER LIMIT OFF — import-free: the Solver section's limit controls and Stop.
+import { SOLVER_LIMIT_PROPS, anySolving, backstopMsOf, buildSolverLimitRow, stopSolves, wasmBudgetKnobOf } from './seedlingSolverLimitControls.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
@@ -78,6 +80,10 @@ const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
 const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetWork';
 /** ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window in WORK units, both runtimes (0 = the budget). */
 const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
+/** ⛓ SOLVER LIMIT OFF — the no-work-limit and backstop settings (both runtimes; the Solver section's row). */
+const SOLVER_LIMIT_SETTING_KEYS = new Set(Object.values(SOLVER_LIMIT_PROPS).map((p) => `moduleSettings.flashPanel.${p}`));
+/** ⛓ SOLVER LIMIT OFF — how often the Stop button re-reads whether a solve is in flight (ms). */
+const SOLVER_STOP_POLL_MS = 250;
 /**
  * ⛓ PANEL LAYOUT — the RETIRED progress-view setting (off | auto | always, and before that a boolean). Read once, when
  * a viewer has no saved section state yet: `always` (or `true`) opens the Solver section. Nothing writes it.
@@ -109,7 +115,9 @@ export const SECTIONS_STORAGE_KEY = 'flashPanel_sections';
  * ⛓ PANEL LAYOUT — the Settings section's controls, in order. Each writes the SAME setting the Settings panel writes
  * (`settingsManager.updateSetting`) and follows it back on `settings:changed`, so the two never disagree; its values
  * and tooltip are the schema's (`centralRegistry`), only the short label is the panel's. `when` says which games /
- * runtimes it applies to. ⛔ Not the solver budgets (⚖ plans identical on every machine) nor the fidelity switches.
+ * runtimes it applies to. ⛔ Not the solver budgets (⚖ plans identical on every machine) nor the fidelity switches —
+ * ⛓ SOLVER LIMIT OFF: the no-work-limit / backstop controls and Stop live in the SOLVER section instead
+ * (`seedlingSolverLimitControls.js`, ⚖ the user 2026-11-10: "I want to add it there").
  */
 const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'runtime', label: 'Runtime', when: 'always' },
@@ -280,6 +288,7 @@ export class FlashPanelUI {
       if (data?.key === SOLVER_UPGRADE_WINDOW_SETTING_KEY || data?.key === '*') {
         this._refreshSolverUpgradeWindow(data.key === '*' ? undefined : data.value);
       }
+      if (SOLVER_LIMIT_SETTING_KEYS.has(data?.key) || data?.key === '*') this._refreshSolverLimits();
       if (KILLLOCK_SETTING_KEY_SET.has(data?.key) || data?.key === '*') {
         // ⛓ KILLLOCK HOOK — the panel's own instance follows at once; a JS page mounted under another set is
         // re-mounted (its session cannot be replayed under a different set). ⛔ Only a real CHANGE re-mounts.
@@ -535,7 +544,8 @@ export class FlashPanelUI {
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
         mapPath: this._atlasMapPath ?? null,
         // ⛓ O3 — the solve budget knob, work units (null until the setting is read: the engine's own default then).
-        solverBudgetWork: this._wasmSolverBudgetWork ?? null,
+        // ⛓ SOLVER LIMIT OFF — "No work limit" ticked = the engine value 0 (no limit); else the numeric knob.
+        solverBudgetWork: wasmBudgetKnobOf(this._solverNoWorkLimit, this._wasmSolverBudgetWork),
         // ⛓ AXE_DODGE HOOK — `on` / `off` / `default` (null until the setting is read: the model's own value then).
         axeDodgeAskPerPreview: this._axeDodgeAsk ?? null,
         // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default` (null until the setting is read: the switch's own value then).
@@ -557,7 +567,53 @@ export class FlashPanelUI {
       // then a number (0 = the whole budget) or null (unset = the runtime's own default). The JS page gets it
       // with every goal.
       solverUpgradeWindowWork: this._solverUpgradeWindowWork,
+      // ⛓ SOLVER LIMIT OFF — both runtimes, undefined until the settings are read: "No work limit" (a boolean) and
+      // the backstop in ms (0 = off, null = the runtime's own: the setting at its default).
+      solverNoWorkLimit: this._solverNoWorkLimit,
+      solverBackstopMs: this._solverBackstopMs,
     };
+  }
+
+  /**
+   * ⛓ SOLVER LIMIT OFF — read the no-work-limit and backstop settings (the schema is the default source), cache them
+   * for the surface, show them in the Solver row and hand them to a live JS page at once (the controller also hands
+   * them with every goal; the wasm engines read the surface at each solve's start).
+   */
+  async _refreshSolverLimits() {
+    const read = async (prop) => {
+      try { return await settingsManager.getSetting(`moduleSettings.flashPanel.${prop}`); } catch { return undefined; }
+    };
+    const noWorkLimit = await read(SOLVER_LIMIT_PROPS.noWorkLimit);
+    const backstopSeconds = await read(SOLVER_LIMIT_PROPS.backstopSeconds);
+    const backstopOff = await read(SOLVER_LIMIT_PROPS.backstopOff);
+    this._solverNoWorkLimit = noWorkLimit === true;
+    this._solverBackstopMs = backstopMsOf({ seconds: backstopSeconds, off: backstopOff === true });
+    this._solverLimits?.sync({ noWorkLimit: this._solverNoWorkLimit, backstopSeconds, backstopOff: backstopOff === true });
+    try {
+      const page = this.seedlingPlaybackSurface?.()?.jsRuntime?.playback;
+      if (page) {
+        page.setSolverBudgetWork?.(this._solverNoWorkLimit ? 0 : null);
+        page.setSolverBackstopMs?.(this._solverBackstopMs);
+      }
+    } catch { /* the page is not up yet — the next walkTo carries them */ }
+  }
+
+  /**
+   * ⛓ SOLVER LIMIT OFF — the panel's Stop: stop every solve in flight through its solve service (the worker is
+   * TERMINATED; the runtime fails the goal by name and the next solve gets a fresh worker). Returns how many.
+   */
+  stopSolve() {
+    const n = stopSolves(this._solveServices());
+    this._panelLog(n ? `[solver] stopped by the player (${n} solve${n === 1 ? '' : 's'} terminated)` : '[solver] Stop: no solve in flight');
+    this._renderSolverStop();
+    return n;
+  }
+
+  /** ⛓ SOLVER LIMIT OFF — Stop is enabled only while a solve is in flight. */
+  _renderSolverStop() {
+    let on = false;
+    try { on = anySolving(this._solveServices()); } catch { on = false; }
+    this._solverLimits?.setSolving(on);
   }
 
   /**
@@ -1020,7 +1076,21 @@ export class FlashPanelUI {
       onState: (state) => this._solveProgressLine.update(state),
     });
     this.stageElement.after(this._solveProgressLine.element);
-    this.sections.solver.append(this._solveProgressView.element);
+    // ⛓ SOLVER LIMIT OFF — the Solver section's first row: Stop (enabled only while a solve is in flight), "No work
+    // limit", the backstop's seconds and "Backstop off". Each writes the same setting the Settings panel writes.
+    let limitSpecs = new Map();
+    try {
+      limitSpecs = new Map((centralRegistry.getModuleSettingSchema?.('flashPanel') ?? []).map((r) => [r.prop, r.spec]));
+    } catch { /* no registry (a unit test) */ }
+    this._solverLimits = buildSolverLimitRow(document, {
+      specs: limitSpecs,
+      onWrite: (prop, value) => this._writeSetting(prop, value),
+      onStop: () => this.stopSolve(),
+    });
+    this.sections.solver.append(this._solverLimits.element, this._solveProgressView.element);
+    if (typeof setInterval === 'function') {
+      this._solverStopTimer = setInterval(() => this._renderSolverStop(), SOLVER_STOP_POLL_MS);
+    }
 
     this.apFoundElement = this.rootElement.querySelector('.flash-panel-ap-found');
     this.apFoundHeadline = this.rootElement.querySelector('.flash-panel-ap-found-headline');
@@ -1810,6 +1880,7 @@ export class FlashPanelUI {
       // ⛓ Refused on the WIRING (the transport, the build): the same wiring refuses every rules load the same way,
       // so no same-wiring rules change re-mounts this game (a non-Seedling flash game keeps running).
       this._apLoadRulesIgnored = cheap.failed === 'transport' || cheap.failed === 'capability';
+      this._refuseEntranceShuffle(rawRules, staticData?.playerId, cheap.why);
       return;
     }
 
@@ -1858,6 +1929,7 @@ export class FlashPanelUI {
         // ⛓ VANILLA MAP — the Playback Bot's controllers refuse by THIS reason rather than wait for a map.
         this._apLoadRefusal = loaded.why;
         overlay.remove();
+        this._refuseEntranceShuffle(rawRules, staticData?.playerId, loaded.why);
         return;
       }
       // ⛓ Seedling JS J2 — the assembly report is the Playback Bot's name → cell map.
@@ -1879,6 +1951,7 @@ export class FlashPanelUI {
       if (!glue) {
         this._panelLog('ap placement: no region glue to hand the delivery to', 'error');
         overlay.remove();
+        this._refuseEntranceShuffle(rawRules, staticData?.playerId, 'no region glue to hand the delivery to');
         return;
       }
       // ⛓ Stashed so a gate can read the whole step log — the reset's
@@ -1902,7 +1975,9 @@ export class FlashPanelUI {
     } catch (err) {
       this._panelLog(`ap placement: ${err.message}`, 'error');
       this._apLoadRefusal = `the load threw: ${err.message}`;
-      overlay.setText(`the randomized rooms could not be prepared — ${err.message}`, 'error');
+      const shuffleRefusal = entranceShuffleRefusal(rawRules, staticData?.playerId, err.message);
+      if (shuffleRefusal) this._panelLog(shuffleRefusal, 'error');
+      overlay.setText(shuffleRefusal ?? `the randomized rooms could not be prepared — ${err.message}`, 'error');
       log('error', '[flashPanelUI] seedling randomizer load failed', err);
     } finally {
       // ⛓ THE SAFETY NET, NOT THE MECHANISM. `runSeedlingRandomizerLoad` hides
@@ -1911,6 +1986,24 @@ export class FlashPanelUI {
       // up covers the game forever.
       overlay.detachSafetyNet();
     }
+  }
+
+  /**
+   * ⛓⛓ ER E5 — A SHUFFLED WORLD LEFT ON VANILLA ROOMS IS REFUSED BY NAME. Every path of the randomized load
+   * that ends WITHOUT delivering rooms calls this: when the loaded world places entrances, the game's own
+   * stairs lead where vanilla says and the world's logic says otherwise, so the panel says so in its log and
+   * on a STICKY overlay over the game (the same overlay a refused delivery leaves up). A world that places
+   * no entrance is untouched: nothing is logged and no overlay is made.
+   */
+  _refuseEntranceShuffle(rawRules, playerId, why) {
+    const refusal = entranceShuffleRefusal(rawRules, playerId, why);
+    if (!refusal) return false;
+    this._panelLog(refusal, 'error');
+    this._apLoadRefusal = refusal;
+    const overlay = this._seedlingOverlay();
+    overlay.show();
+    overlay.setText(refusal, 'error');
+    return true;
   }
 
   /** Paint the readout. Hidden until the first find, so a preset with no
@@ -2042,7 +2135,7 @@ export class FlashPanelUI {
       if (this._initStale(epoch)) return;
       this._initRuntime = runtime;
       for (const refresh of [this._refreshSolverWalk, this._refreshWasmSolverBudget,
-        this._refreshSolverUpgradeWindow, this._refreshKillLockBodies, this._refreshContactFidelity,
+        this._refreshSolverUpgradeWindow, this._refreshSolverLimits, this._refreshKillLockBodies, this._refreshContactFidelity,
         this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics,
         this._refreshJsSpeed, this._refreshJsSound]) {
         await refresh.call(this);
@@ -2458,6 +2551,7 @@ export class FlashPanelUI {
     this._stageObserver?.disconnect();
     this._stageObserver = null;
     if (this._speedReadoutTimer) { clearInterval(this._speedReadoutTimer); this._speedReadoutTimer = null; }
+    if (this._solverStopTimer) { clearInterval(this._solverStopTimer); this._solverStopTimer = null; }
     if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);

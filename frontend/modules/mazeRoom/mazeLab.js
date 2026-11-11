@@ -382,6 +382,13 @@ export function readLabParams(search) {
          * document's rooms — one document up. See `readRoomParam`.
          */
         room: readRoomParam(q.get('room')),
+        /**
+         * ⛓ MAZE WORLD MAP (step A) — the SET overview's view: the one-row STRIP (the default here) or, with
+         * `?setView=map`, the 2D MAP derived from the overlay's links. ⛔ The default is the strip, not the map as on
+         * `watch.html`: a WORLD session (`?world=`) in this same arm has no map, and a default that differed between
+         * a library and a world would make the one parameter mean two things. Copied forward, never written.
+         */
+        setView: q.get('setView') === 'map' ? 'map' : 'strip',
         /** RUN-ALL on load. `?run=1` is also how the step encoding is read. */
         run: q.get('run') === '1',
     };

@@ -261,14 +261,19 @@ const isEntries = (v) => Array.isArray(v) && v.length > 0;
  * beside it, which the hub cannot fetch — it does not know the document's path),
  * else the document's EMBEDDED `sphere_log`, else none. A log is usable only if
  * one of its entries carries `player_data[player]` (a log for another document
- * would price nothing). `{entries, source, forPlayer}`; `entries` null when
- * neither is a non-empty list.
+ * would price nothing). A log whose metadata names `filtered_to_player` (a
+ * per-player sphere log, or the room's spoiler data) is for that player only:
+ * its other worlds' entries are senders, a few locations each, not their logs.
+ * `{entries, source, forPlayer}`; `entries` null when neither is a non-empty list.
  */
 export function initialiseSphereLog(doc, player, pageLog = null) {
     const p = String(player);
     const [entries, source] = isEntries(pageLog) ? [pageLog, SPHERE_LOG_SOURCE.PAGE]
         : isEntries(doc?.sphere_log) ? [doc.sphere_log, SPHERE_LOG_SOURCE.EMBEDDED] : [null, null];
-    const forPlayer = !!entries && entries.some((e) => e?.player_data && Object.hasOwn(e.player_data, p));
+    const filteredTo = entries?.find((e) => e?.type === 'metadata')?.filtered_to_player;
+    const forPlayer = !!entries && (filteredTo !== undefined && filteredTo !== null
+        ? String(filteredTo) === p
+        : entries.some((e) => e?.player_data && Object.hasOwn(e.player_data, p)));
     return { entries, source, forPlayer };
 }
 

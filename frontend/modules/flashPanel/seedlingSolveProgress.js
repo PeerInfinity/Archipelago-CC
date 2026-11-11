@@ -91,14 +91,25 @@ export function applyProgress(state, note, now) {
     };
 }
 
-/** The meter: `{spent, limit, window, fraction}` from a snapshot's stamps (`limit` null in place). */
+/**
+ * The meter: `{spent, limit, window, fraction, noLimit}` from a snapshot's stamps (`limit` null in place).
+ * ⛓ SOLVER LIMIT OFF — `noLimit` (present only when true) = the solve runs with no work limit (`budget.limit.noLimit`): `limit` and
+ * `fraction` are null (never NaN, 0 % or Infinity), and nothing counts work (no deadline is asked).
+ */
 export function meterOf(snapshot) {
     const b = snapshot?.budget ?? {};
     const spent = b.spent?.shouldStop ?? b.work?.shouldStop ?? 0;
-    const limit = Number.isFinite(b.limit?.shouldStop) ? b.limit.shouldStop : null;
-    const window = Number.isFinite(b.limit?.window) ? b.limit.window : null;
-    return { spent, limit, window, fraction: limit ? Math.min(1, spent / limit) : null };
+    const limit = Number.isFinite(b.limit?.shouldStop) && b.limit.shouldStop > 0 ? b.limit.shouldStop : null;
+    const window = limit !== null && Number.isFinite(b.limit?.window) ? b.limit.window : null;
+    return { spent, limit, window, fraction: limit ? Math.min(1, spent / limit) : null,
+        ...(b.limit?.noLimit === true ? { noLimit: true } : {}) };
 }
+
+/** ⛓ SOLVER LIMIT OFF — the meter's text with no work limit: by name, with the segment's checkpoint count. */
+export const noLimitMeterText = (snapshot) => {
+    const n = asksBySite(snapshot).total;
+    return `no work limit · ${n} checkpoint${n === 1 ? '' : 's'} this segment (work is counted only under a limit)`;
+};
 
 const rejectedOf = (n) => Object.values(n.rejections ?? {}).reduce((a, b) => a + b, 0);
 
@@ -374,6 +385,8 @@ export function requestText(request) {
     }
     const switches = Object.entries(request.switches ?? {});
     if (switches.length) parts.push(`switches ${switches.map(([k, v]) => `${k}=${switchValue(v)}`).join(', ')}`);
+    // ⛓ SOLVER LIMIT OFF — a no-limit request (budget 0) says so; its attempt has no budgets, so no label.
+    if (request.budgetWork === 0) parts.push('no work limit');
     const a = request.attempt;
     if (a && typeof a === 'object' && a.label) parts.push(`attempt ${a.label}${a.retry > 0 ? ` (retry ${a.retry})` : ''}`);
     return `request: ${parts.join(' · ')}`;

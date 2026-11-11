@@ -37,13 +37,62 @@ def _is_fractional_sphere(sphere_index: Union[int, str]) -> bool:
     return '.' in index_str
 
 
+def per_player_log_filename(seed_name: str, player: int) -> str:
+    """The per-player file of `sphere_log_per_player`, named as the per-player rules files are (`_P<n>_`)."""
+    return f"AP_{seed_name}_P{player}_sphere_log.jsonl"
+
+
+def _has_delta(entry: Dict[str, Any]) -> bool:
+    inventory = entry.get("new_inventory_details") or {}
+    return bool(inventory.get("base_items") or inventory.get("resolved_items")
+                or entry.get("new_accessible_locations") or entry.get("new_accessible_regions"))
+
+
+def filter_entry_for_player(log_entry: Dict[str, Any], player: int,
+                            current_sphere_locations: Set["Location"]) -> Optional[Dict[str, Any]]:
+    """One line of the per-player file for `player`, or None when that line is not about it.
+
+    Kept: the player's own entry, and for each other world whose location in this line gives the player an item,
+    that world's entry limited to those locations, with empty deltas (at a fractional step that is that world's
+    real entry: its state did not change). Sphere 0 carries the player's entry only. A line is kept when the player
+    has a location in it, receives an item from another world in it, or (incremental) has any delta in it.
+    """
+    player_data = log_entry["player_data"]
+    own = player_data.get(player)
+    if own is None:
+        return None
+    entries = {player: own}
+    if log_entry["sphere_index"] not in ("0", "0.0"):
+        givers: Dict[int, List[str]] = {}
+        for location in current_sphere_locations:
+            if location.item and location.item.player == player and location.player != player:
+                givers.setdefault(location.player, []).append(location.name)
+        if not (own.get("sphere_locations") or givers or _has_delta(own)):
+            return None
+        incremental = "inventory_details" not in own
+        for giver, names in givers.items():
+            if incremental:
+                entries[giver] = {"new_inventory_details": {"base_items": {}, "resolved_items": {}},
+                                  "new_accessible_locations": [], "new_accessible_regions": [],
+                                  "sphere_locations": sorted(names)}
+            else:
+                entries[giver] = {"sphere_locations": sorted(names)}
+    return {"type": log_entry["type"], "sphere_index": log_entry["sphere_index"],
+            "player_data": {str(p): entries[p] for p in sorted(entries)}}
+
+
 def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Union[int, str],
                        current_sphere_locations: Set["Location"],
                        current_collection_state: "CollectionState",
                        verbose_mode: bool = True,
                        extend_sphere_log_to_all_locations: bool = False,
-                       filter_event_items: bool = False) -> None:
-    """Logs details of the current sphere to the provided file handler."""
+                       filter_event_items: bool = False,
+                       player_file_handlers: Optional[Dict[int, Any]] = None) -> None:
+    """Logs details of the current sphere to the provided file handler.
+
+    With player_file_handlers ({player: handle}, `sphere_log_per_player`), each player's file also gets this
+    line filtered by filter_entry_for_player. The combined file's line is written exactly as without them.
+    """
     global _previous_fractional_state, _previous_integer_state
 
     if not file_handler:
@@ -215,6 +264,14 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
         file_handler.write(json.dumps(log_entry) + "\n")
         file_handler.flush()
 
+        if player_file_handlers:
+            keyed = {**log_entry, "player_data": dict(player_specific_data)}
+            for player, handler in player_file_handlers.items():
+                filtered = filter_entry_for_player(keyed, player, current_sphere_locations)
+                if filtered is not None:
+                    handler.write(json.dumps(filtered) + "\n")
+                    handler.flush()
+
     except Exception as e:
         logging.error(f"Error during spoiler sphere logging for sphere {sphere_index}: {e}")
 
@@ -275,6 +332,8 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     extend_sphere_log_to_all_locations = jt.extend_sphere_log_to_all_locations
     auto_collect_events = jt.auto_collect_events
     filter_event_items = jt.filter_event_items
+    # One filtered file per player beside the combined one (default off; read by getattr: a stub may lack it).
+    sphere_log_per_player = bool(getattr(jt, 'sphere_log_per_player', False))
 
     # Reset state trackers at the start
     _previous_fractional_state = None
@@ -301,7 +360,20 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     except Exception as e:
         logging.error(f"Failed to open spoiler log file {log_file_path}: {e}")
         spoiler_log_file_handler = None
-    
+
+    player_file_handlers: Dict[int, Any] = {}
+    if spoiler_log_file_handler and sphere_log_per_player and len(spoiler.multiworld.player_ids) > 1:
+        try:
+            for player_id in spoiler.multiworld.player_ids:
+                path = os.path.join(log_output_directory,
+                                    per_player_log_filename(str(spoiler.multiworld.seed_name), player_id))
+                player_file_handlers[player_id] = open(path, "w")
+        except Exception as e:
+            logging.error(f"Failed to open a per-player sphere log file: {e}")
+            for handler in player_file_handlers.values():
+                handler.close()
+            player_file_handlers = {}
+
     multiworld = spoiler.multiworld
     restore_later: Dict["Location", Optional["Item"]] = {}
     removed_precollected: List["Item"] = []
@@ -332,6 +404,9 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
             }
             spoiler_log_file_handler.write(json.dumps(metadata_entry) + "\n")
             spoiler_log_file_handler.flush()
+            for player_id, handler in player_file_handlers.items():
+                handler.write(json.dumps({**metadata_entry, "filtered_to_player": str(player_id)}) + "\n")
+                handler.flush()
             logging.debug(f"Wrote sphere log metadata with {sum(len(v) for v in event_metadata['event_locations'].values())} event locations and {sum(len(v) for v in event_metadata['event_items'].values())} event items")
 
         if extend_sphere_log_to_all_locations:
@@ -443,7 +518,7 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                 )
 
             # Log the final "sphere 0" state (contains all precollected items + auto-collected events)
-            log_sphere_details(spoiler_log_file_handler, multiworld, 0, set(), current_playthrough_state.copy(), verbose_sphere_log, extend_sphere_log_to_all_locations, filter_event_items)
+            log_sphere_details(spoiler_log_file_handler, multiworld, 0, set(), current_playthrough_state.copy(), verbose_sphere_log, extend_sphere_log_to_all_locations, filter_event_items, player_file_handlers)
         
         if not spoiler_log_file_handler:
             # If not logging, ensure state includes precollected items for main loop
@@ -486,7 +561,8 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                                      current_playthrough_state.copy(),
                                      verbose_sphere_log,
                                      extend_sphere_log_to_all_locations,
-                                     filter_event_items)
+                                     filter_event_items,
+                                     player_file_handlers)
 
             # After all items in the current_full_sphere_locations are processed individually:
             final_collection_spheres.append(current_full_sphere_locations)
@@ -499,7 +575,8 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                                  current_playthrough_state.copy(),  # State AFTER all items in this sphere are collected
                                  verbose_sphere_log,
                                  extend_sphere_log_to_all_locations,
-                                 filter_event_items)
+                                 filter_event_items,
+                                 player_file_handlers)
             
             logging.debug('Calculated final sphere %i, containing %i of %i progress items.', 
                           main_sphere_index_counter, len(current_full_sphere_locations), len(required_locations))
@@ -517,6 +594,11 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
             spoiler.create_paths(current_playthrough_state, final_collection_spheres)  # type: ignore[arg-type]
 
     finally:
+        for handler in player_file_handlers.values():
+            try:
+                handler.close()
+            except Exception as e:
+                logging.error(f"Error closing a per-player sphere log file: {e}")
         if spoiler_log_file_handler:
             try:
                 spoiler_log_file_handler.close()

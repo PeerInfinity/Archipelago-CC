@@ -263,6 +263,16 @@ EMBEDDED_RULES_SECTION = '''
 '''
 
 
+# The optional Spoiler Export Hook apworld (_spoiler_hook_client.py, written verbatim by generator.py):
+# one walk per seed here, and fill_slot_data merges this slot's record. Plain text (no f-string).
+SPOILER_HOOK_SECTION = '''
+    @classmethod
+    def stage_pre_output(cls, multiworld: "MultiWorld") -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)
+'''
+
+
 def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
     """Generate __init__.py (main world file) content.
 
@@ -1110,16 +1120,16 @@ class _ShopWrapper:
         fill_slot_data_section = f'''
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return self._with_embedded_rules({{
+        return {{**self._with_embedded_rules({{
 {slot_data_content}
-        }})
-''' + EMBEDDED_RULES_SECTION
+        }}), **_spoiler_hook_client.slot_data(self)}}
+''' + EMBEDDED_RULES_SECTION + SPOILER_HOOK_SECTION
     else:
         fill_slot_data_section = '''
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return self._with_embedded_rules({})
-''' + EMBEDDED_RULES_SECTION
+        return {**self._with_embedded_rules({}), **_spoiler_hook_client.slot_data(self)}
+''' + EMBEDDED_RULES_SECTION + SPOILER_HOOK_SECTION
 
     # Build optional imports
     types_import = 'import types\n' if needs_types_import else ''
@@ -1182,6 +1192,7 @@ from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from ._ext import RuleWorldMixin
+from . import _spoiler_hook_client
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld

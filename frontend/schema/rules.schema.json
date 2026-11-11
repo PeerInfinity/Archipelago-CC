@@ -422,6 +422,13 @@
               "minItems": 1,
               "description": "The concept ids the world named (concept library T0b; `procgenCore/concepts.js` `CONCEPTS`). Producers: procgenPipeline/sphereSteps.js and topDownSteps.js via `recordedConceptsOf` (omitted entirely when the world names none). Read back by `rebuildEnvelopeFromRulesJson` into `regionParams.concepts`, so an appended sphere's gates are realised as the world's concepts."
             },
+            "content": {
+              "type": "array",
+              "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+              "minItems": 1,
+              "uniqueItems": true,
+              "description": "The world's OWN content stack: the pack ids (`frontend/packs/`) it named in `params.content`, laid after the default packs of the substrates in its mix (content sets C3; `procgenPipeline/worldContent.js` `effectiveContentStack`). Producers: procgenPipeline/sphereSteps.js and topDownSteps.js via `recordedContentOf` (omitted entirely when the world names none: the default packs are derivable from the mix and are not recorded). Read back by `rebuildEnvelopeFromRulesJson` into `regionParams.content`."
+            },
             "introductions": {
               "type": "object",
               "description": "How many regions configured to introduce an item of their own (a generated Seedling room asked for a key gate) got one, and why the rest did not (procgen-region-introduced, 2026-11-03: the user, on a room configured for a key gate that got none, \"Accept, and report it\"). `requested` counts the regions whose substrate declares `itemIntroduction` with a non-empty `introducibleItems(params)`; `placed` the ones that hold an item they introduced; `notPlaced` the rest by reason, the names declared ONCE in procgenCore/itemIntroduction.js `INTRODUCTION_NOT_PLACED_REASONS` (last-wave-of-plan, batch-boundary, no-host, filler-region, not-drawn). Producer: procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (`introductionReport`, folded from the note each driver leaves on the regions it builds). ABSENT, never empty, when no region was configured, so every other world's metadata is unchanged.",
