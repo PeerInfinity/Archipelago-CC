@@ -1978,9 +1978,9 @@ export const CONTACT_FIDELITY = {
      * rock for such a run on the same two guards and where some cell's flame reaches it alone (L40's three and L41's
      * two have none, and stay walls). A run that holds the Sword keeps the sword's path whatever slot is
      * selected. Game witness: `fidelityFireBreak.js` (p4g, 0 px, hitless). OFF: byte-identical (the refusal that
-     * names the sword). `SEEDLING_FIRE_BREAK_ARM=0|1`.
+     * names the sword). `SEEDLING_FIRE_BREAK_ARM=0|1`. ON since the FIREBREAK flip (⚖ user 2026-11-11).
      */
-    fireBreakArm: false,
+    fireBreakArm: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

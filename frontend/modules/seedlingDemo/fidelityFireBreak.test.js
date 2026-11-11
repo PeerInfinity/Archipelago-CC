@@ -73,10 +73,10 @@ const hitsOf = (run) => (run.ledger('playerHits') ?? []).length;
 
 describe('fidelity FIREBREAK — the key', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FIRE_BREAK_ARM)(
-        'ships OFF, last in the defaults; its env name is a known worker env name', () => {
+        'ships ON (⚖ user 2026-11-11, the FIREBREAK flip), last in the defaults; its env name is a known worker env name', () => {
             expect(CONTACT_FIDELITY_KEYS).toContain('fireBreakArm');
-            expect(CONTACT_FIDELITY_DEFAULTS.fireBreakArm).toBe(false);
-            expect(CONTACT_FIDELITY.fireBreakArm).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS.fireBreakArm).toBe(true);
+            expect(CONTACT_FIDELITY.fireBreakArm).toBe(true);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('fireBreakArm');
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FIRE_BREAK_ARM');
         });
