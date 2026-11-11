@@ -418,6 +418,16 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
         return m ? Number(m[1]) : null;
     });
     let step = '';
+    /**
+     * ⚠ A VIEWPORT shot, the strip scrolled in. Measured: a `fullPage: true` screenshot of an `isMobile` context
+     * DROPS its touch emulation for the rest of the page's life (`(pointer: coarse)` false, `maxTouchPoints` 0), so
+     * the option's `auto` rightly shows nothing at the next START — the harness's own artifact, red only with
+     * `--shots`.
+     */
+    const shot = async (page, name) => {
+        await page.locator('.flash-touch-controls').first().scrollIntoViewIfNeeded().catch(() => {});
+        await page.screenshot({ path: join(SHOTS, name) });
+    };
     const startManual = async (page) => {
         await page.tap('#manualStart');
         step = 'waitForFunction () => document.getElementById(manualStart).disabled, null,';
@@ -448,7 +458,7 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
             check(h.held === 'ArrowRight' && x0 !== null && x1 > x0,
                 'touch T1: a REAL held touch on the d-pad (right) moves MANUAL’s run',
                 `held=${h.held} hit=${h.hit} x ${x0} → ${x1}`);
-            if (SHOTS) await page.screenshot({ path: join(SHOTS, 'touch-manual-running.png'), fullPage: true });
+            if (SHOTS) await shot(page, 'touch-manual-running.png');
             await page.tap('#manualStop');
             step = 'waitForFunction () => window.__editorManual?.roundTrip !== undefined, null, ';
             await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined, null, { timeout: 60000 });
@@ -482,7 +492,7 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
             check(h2.held === 'ArrowRight' && after.x > before.x,
                 'touch T2: a REAL held touch on that d-pad (right) moves the player in the JS frame',
                 `held=${h2.held} hit=${h2.hit} (${before.x}, ${before.y}) → (${after.x}, ${after.y})`);
-            if (SHOTS) await page.screenshot({ path: join(SHOTS, 'touch-manual-plus-js.png'), fullPage: true });
+            if (SHOTS) await shot(page, 'touch-manual-plus-js.png');
             check(errors.length === 0, 'touch T1/T2: no page errors', errors.join(' | '));
         } catch (e) {
             check(false, 'touch T1/T2: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);
@@ -599,7 +609,7 @@ async function touchSection({ PAGE, TAPE, check, SHOTS }) {
             check(h.held === 'ArrowRight' && after.x > before.x,
                 'touch T5: a REAL held touch on that d-pad (right) moves the player in the REAL (wasm) game',
                 `held=${h.held} hit=${h.hit} (${before.x}, ${before.y}) → (${after.x}, ${after.y})`);
-            if (SHOTS) await page.screenshot({ path: join(SHOTS, 'touch-manual-plus-wasm.png'), fullPage: true });
+            if (SHOTS) await shot(page, 'touch-manual-plus-wasm.png');
             check(errors.length === 0, 'touch T5: no page errors', errors.join(' | '));
         } catch (e) {
             check(false, 'touch T5: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);

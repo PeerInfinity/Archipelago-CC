@@ -5573,6 +5573,11 @@ async function mountManualTouch(lifetime, keys, canvas, isDriving) {
  * ship ends with the arm. `manualApply` is the live MANUAL mount's re-decide, or null.
  */
 const touchStrips = { frameShip: false, manualApply: null };
+/** ⛓ Read-only diagnostics for the gates: which strip is owed, and why (no gate writes through this). */
+globalThis.__labTouch = {
+    get frameShip() { return touchStrips.frameShip; },
+    get manualApply() { return Boolean(touchStrips.manualApply); },
+};
 function setFrameShipHoldsTouch(on) {
     if (touchStrips.frameShip === on) return;
     touchStrips.frameShip = on;
