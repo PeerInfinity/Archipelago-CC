@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "_comment": "The text adventure's DEFAULT content pack (content sets R1): one pack concept per mechanic concept the text adventure realises. Each presents that concept and names its text slots (text-library keys in this pack's text layer). The slots are the ones the substrate's contentRoles ask for; what each slot MEANS (which message of the room it becomes) is the substrate's code (textAdventureRoom.js).",
+  "concepts": {
+    "text-adventure:object/sword": {
+      "kind": "object",
+      "name": "Sword",
+      "description": "A blade keen enough to fell the guardian.",
+      "text": {
+        "checkMessage": "text-adventure:concept/sword/checkMessage"
+      },
+      "presents": "sword"
+    },
+    "text-adventure:object/swim": {
+      "kind": "object",
+      "name": "Swimming",
+      "description": "The knack of swimming, for crossing deep water.",
+      "text": {
+        "checkMessage": "text-adventure:concept/swim/checkMessage"
+      },
+      "presents": "swim"
+    },
+    "text-adventure:character/guardian": {
+      "kind": "character",
+      "name": "Guardian",
+      "description": "A hulking armoured guardian that bars a passage until it is fought with a sword.",
+      "text": {
+        "blocked": "text-adventure:concept/guardian/blocked",
+        "passedWith": "text-adventure:concept/guardian/passedWith"
+      },
+      "presents": "guardian"
+    },
+    "text-adventure:object/water": {
+      "kind": "object",
+      "name": "Water",
+      "description": "Deep water that floods a passage until it is crossed by swimming.",
+      "text": {
+        "blocked": "text-adventure:concept/water/blocked",
+        "passedWith": "text-adventure:concept/water/passedWith"
+      },
+      "presents": "water"
+    }
+  }
+}
