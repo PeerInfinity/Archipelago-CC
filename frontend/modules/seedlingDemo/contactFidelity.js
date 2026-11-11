@@ -1962,6 +1962,28 @@ export const CONTACT_FIDELITY = {
      * and without it). OFF: byte-identical (the throw). `SEEDLING_FIRE_ROCK_ARM=0|1`. ON since the ROCKFIRE flip (⚖ user 2026-11-11).
      */
     fireRockArm: true,
+    /**
+     * fidelity FENCEPOST D1 (wave 40) — A SPINNER WHOSE FADE REACHED ZERO LEAVES THE ROSTER ON THE READ THE GAME'S WORLD
+     * HAS DROPPED IT BY. `Mobile.death` (`Mobile.as:60-71`) calls `FP.world.remove` on the alpha-zero update, and
+     * `Engine.update` (`net/flashpunk/Engine.as:70-78`) is `FP._world.update(); FP._world.updateLists();`: the entity is
+     * out of the world, and `Spinner.removed()` has run, at the END of that update, so no read between frames lists it.
+     * On that update itself it is still in every type list (`Spinner.update` swings the hammer below `super.update()`
+     * with no `destroy` test, `Enemies/Spinner.as:66-76`; a block's sweep still collides with it). `spinner.stepSpinner`
+     * sets `removePending` on the alpha-zero step and `removed` at the top of the NEXT step, so every between-ticks read
+     * (`run.entities('spinnerBodies')` and its consumers — `dangerMap.spinnerDanger`'s live arm at horizon 0, the
+     * solver's kill-end test, the skins —, the press and fire censuses, `spinnerDeaths`) listed the corpse for one
+     * observation the game does not (L39PHANTOM D0, `fidelityL39Phantom.isRemovePendingFencepost`: the game's last
+     * listed read is t1277, the model's t1278). ON: `levelRun.advance` settles a pending removal at the END of the tick
+     * that stepped it (`settleSpinnerRemovalsNow`: `removed: true, removePending: false`), below everything that
+     * tick's update reads, so the alpha-zero tick's contact and block sweep still see the body. The next tick's
+     * `stepSpinner` returns the removed body unchanged and the removal LEDGER (`spinnerWrites`,
+     * `assertSpinnerRemovalIsDeclared`'s F5 stamp, the banked clear) is written on that next tick exactly as before —
+     * one clock, not two. Nothing stepped changes: every committed tape's observation stream is byte-identical ON and
+     * OFF. `spinner.js` is not changed (the hammer arc's forecasts step their own copies with it). Game witness: the D0
+     * recording `fixtures/l39shaft-witness/l39phantom-pulser-kill.json` (p4g), zero fencepost ticks ON. OFF:
+     * byte-identical. `SEEDLING_SPINNER_REMOVE_READ=0|1`.
+     */
+    spinnerRemoveRead: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2353,6 +2375,9 @@ if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '0') CONTACT_FIDELITY
 // ⛓ fidelity ROCKFIRE D1: `SEEDLING_FIRE_ROCK_ARM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '1') CONTACT_FIDELITY.fireRockArm = true;
 if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '0') CONTACT_FIDELITY.fireRockArm = false;
+// ⛓ fidelity FENCEPOST D1: `SEEDLING_SPINNER_REMOVE_READ=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '1') CONTACT_FIDELITY.spinnerRemoveRead = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '0') CONTACT_FIDELITY.spinnerRemoveRead = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

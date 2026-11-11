@@ -4134,6 +4134,26 @@ export function createLevelRun({
      * so this state never reaches the player's sweep.
      */
     const spinnerStates = new Map();
+    /**
+     * ⛓⛓ fidelity FENCEPOST D1 (`CONTACT_FIDELITY.spinnerRemoveRead`) — `updateLists()` FOR A FADED-OUT SPINNER.
+     * `Engine.update` is `World.update(); World.updateLists();`, so a spinner whose `death()` reached `alpha <= 0`
+     * this tick is out of the world when the tick ENDS; `stepSpinner` only says `removePending` and flips `removed`
+     * at the top of the next step, so every read between the two ticks listed a body the game has dropped. ON: the
+     * state `advance` stepped this tick gets the flip here, at the tick's end — below the contact, the block sweep
+     * and everything else that tick reads (the body is in the world for the whole of its last update). The removal's
+     * WRITE stays where it is: the loop under `stepSpinners` runs on the next tick, finds `removed` (as it always
+     * did, by then) and stamps the same `t` — `assertSpinnerRemovalIsDeclared`'s F5 clock is not moved.
+     * `spinnersSteppedThisTick` is a one-tick transient: null between ticks, never run state.
+     */
+    let spinnersSteppedThisTick = null;
+    const settleSpinnerRemovalsNow = () => {
+        const st = spinnersSteppedThisTick;
+        spinnersSteppedThisTick = null;
+        if (st === null || !CONTACT_FIDELITY.spinnerRemoveRead) return;
+        for (const [id, s] of st.byId) {
+            if (s.removePending) st.byId.set(id, { ...s, removed: true, removePending: false });
+        }
+    };
     const spinnerStateFor = (n) => {
         if (!spinnerStates.has(n)) {
             // ⚠ HERE rather than at a call site: this is the one place a
@@ -21525,6 +21545,9 @@ export function createLevelRun({
          * can, and one that wants them cannot get them back.
          */
         advance(held) {
+            // ⛓ fidelity FENCEPOST D1: the tick's body, unchanged, as one arrow — `settleSpinnerRemovalsNow` is its `updateLists()` tail.
+            spinnersSteppedThisTick = null; // a tick that threw below its spinner step leaves no survivor
+            const advanced = (() => {
             // ⛓⛓ ARC 3 SLICE 2d: THE FORECAST MEMO DIES FIRST, above every
             // line that can move a body, a block or a world. Its key would
             // catch this tick anyway (`ticksCompleted` moves below); this is
@@ -21642,6 +21665,7 @@ export function createLevelRun({
                 // different (and wrong) change.
                 assertDialogueFreeSpinnerRoom(spinState);
                 stepSpinners(spinState, spinnerCtx());
+                spinnersSteppedThisTick = spinState; // ⛓ fidelity FENCEPOST D1: settled at the tick's end
                 stepSpinnerContactsNow(spinState);
                 /**
                  * ⛔⛔ AND THE FLAG A REMOVAL WRITES, BANKED HERE.
@@ -23885,6 +23909,9 @@ export function createLevelRun({
                     },
             });
             return { transition: record, grant, ...hits };
+            })();
+            settleSpinnerRemovalsNow();
+            return advanced;
         },
     };
 }

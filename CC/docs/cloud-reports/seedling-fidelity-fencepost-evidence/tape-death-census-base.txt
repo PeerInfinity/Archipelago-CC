@@ -292,4 +292,3 @@ watcher-l37-silent-lean md5 271457387ee60101243316f272621030
 watchertalk-l114-clear-16 md5 0bfac3802f963a4ae3eb5957b933183b
 watchertalk-l114-clear-32 md5 613ff875116c6d160ba3b6bcf6c02602
 ## 293 tape(s): 14 cross a spinner death, 25 corpse read(s) (destroy && alpha <= 0), 0 replay error(s); on=[] off=[]
-EXIT 0

@@ -47,7 +47,8 @@ describe('fidelity ROCKFIRE — the key', () => {
             expect(CONTACT_FIDELITY_KEYS).toContain('fireRockArm');
             expect(CONTACT_FIDELITY_DEFAULTS.fireRockArm).toBe(true);
             expect(CONTACT_FIDELITY.fireRockArm).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('fireRockArm');
+            // ⛓ wave 40: FENCEPOST `spinnerRemoveRead` landed after it.
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fireRockArm') + 1)).toEqual(['spinnerRemoveRead']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FIRE_ROCK_ARM');
             expect(FIRE_ARM_POLICY.BreakableRock.policy).toBe('modelled');
         });
