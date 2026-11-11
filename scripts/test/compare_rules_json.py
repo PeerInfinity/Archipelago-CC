@@ -8,6 +8,7 @@ from a WorldGen export to verify that the world_generator preserves all data.
 Usage:
     python scripts/test/compare_rules_json.py <original_rules.json> <worldgen_rules.json>
     python scripts/test/compare_rules_json.py --ignore-canonical <original> <worldgen>
+    python scripts/test/compare_rules_json.py --ignore-canonical --victory-location <original> <worldgen>
 
 Options:
     --ignore-canonical  Ignore differences caused by --canonical-seed flag:
@@ -15,6 +16,12 @@ Options:
                         - locked flags on locations
                         - item placements (item.name, item.advancement)
                         - randomize_items option (WorldGen-specific)
+    --victory-location  The worldgen package was built with --victory-location (its recipe
+                        has "victory_location": true): apply the same transform
+                        (world_generator/_victory_location.py) to the ORIGINAL before
+                        comparing, so exactly the expected changes cancel - the goal
+                        item's id (and event/type/Event group), the goal location's
+                        event, id and pinned - and anything else still shows.
 
 Example:
     python scripts/test/compare_rules_json.py \\
@@ -2184,6 +2191,19 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     return False
 
 
+def apply_expected_victory_location(original: Dict[str, Any]) -> List[str]:
+    """Apply world_generator's victory_location transform to the original export, per slot, so the
+    differences it causes in a package built with --victory-location are expected (they cancel)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from world_generator._victory_location import apply_victory_location
+    changes: List[str] = []
+    for player in sorted((original.get('game_info') or {}).keys()):
+        changes.extend(apply_victory_location(original, player_id=player))
+    for line in changes:
+        print(f"  (victory_location expected: {line})")
+    return changes
+
+
 def filter_canonical_differences(
     differences: List[Tuple[str, Any, Any]]
 ) -> List[Tuple[str, Any, Any]]:
@@ -2199,6 +2219,10 @@ def main():
     if '--ignore-canonical' in args:
         ignore_canonical = True
         args.remove('--ignore-canonical')
+    victory_location = False
+    if '--victory-location' in args:
+        victory_location = True
+        args.remove('--victory-location')
 
     if len(args) < 2:
         print(__doc__)
@@ -2228,6 +2252,9 @@ def main():
 
     with open(worldgen_path) as f:
         worldgen = json.load(f)
+
+    if victory_location:
+        apply_expected_victory_location(original)
 
     # Normalize both to remove WorldGen name differences
     original_normalized = normalize_worldgen_names(original)

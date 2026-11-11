@@ -27,6 +27,20 @@ def _generate_completion_lambda(rule_dict: Dict[str, Any],
     """
     rule_type = rule_dict.get('type')
 
+    # Rule Builder form ({"rule": "Has", "args": {"item_name", "count"}}; TOEM rule builder's goal).
+    # Without this the goal fell back to the event-victory heuristic below, which finds nothing once
+    # the goal is an ID-bearing location (design-victory-location), leaving no completion_condition.
+    if rule_dict.get('rule') == 'Has':
+        args = rule_dict.get('args') or {}
+        item = args.get('item_name')
+        count = args.get('count', 1)
+        if not isinstance(item, str) or not isinstance(count, int):
+            return None
+        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+        if count > 1:
+            return f'state.has("{item_escaped}", self.player, {count})'
+        return f'state.has("{item_escaped}", self.player)'
+
     if rule_type in ('item_check', 'count_check'):
         item_raw = rule_dict.get('item', '')
         # item can be a string or a dict (e.g., f_string with a 'value' field)
