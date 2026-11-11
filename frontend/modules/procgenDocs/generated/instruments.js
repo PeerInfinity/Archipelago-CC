@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 148,
-            "count": 198,
+            "browser": 150,
+            "count": 200,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 521,
-        "browser": 218,
-        "cited": 274,
-        "files": 539,
+        "blockStyle": 523,
+        "browser": 220,
+        "cited": 276,
+        "files": 541,
         "lineStyle": 18,
-        "withDocblock": 539,
-        "withFlags": 458
+        "withDocblock": 541,
+        "withFlags": 460
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13346,6 +13346,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "clear-arm",
                 "clear-ticks",
                 "host",
                 "only",
@@ -13355,6 +13356,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-encounter-latch.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-arm"
+                },
                 {
                     "how": [
                         "arg"
@@ -13689,6 +13696,71 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-fire-spinner.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "end"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "on"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "press"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-fire-spinner — ⛓⛓⛓ seedling-fidelity-firespinner: A FIRE PRESS REACHING A SPINNER, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-fire-spinner.mjs"
         },
         {
             "argvHelpers": [
@@ -14306,6 +14378,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "include-fired"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "margin"
@@ -14324,6 +14402,10 @@ export const INSTRUMENTS = frz({
                 }
             ],
             "inheritedFlags": [
+                {
+                    "from": "probe-seedling-encounter-latch.mjs",
+                    "name": "clear-arm"
+                },
                 {
                     "from": "argvHelp.js",
                     "name": "help"
@@ -15124,6 +15206,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l39-pulser-kill.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l39-pulser-kill — ⛓⛓ seedling-fidelity-l39phantom D0: A PULSER KILLS `spinner@112,88` IN L39, ON THE GAME, and what is left of it afterwards (its fade, its removal), compared with the model tick by tick at 0 px.",
+            "path": "scripts/procgen/probe-seedling-l39-pulser-kill.mjs"
         },
         {
             "argvHelpers": [

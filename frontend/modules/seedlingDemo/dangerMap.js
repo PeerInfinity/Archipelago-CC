@@ -1375,10 +1375,34 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
  * if it is not in the live roster now, the run removed it. A spinner the run
  * never steps (a room whose roster is not tracked) has no such row and is still
  * priced at its placement, which is the honest reading there.
+ *
+ * ⛓⛓ fidelity L39PHANTOM D1 (`CONTACT_FIDELITY.spinnerRosterGone`, OFF) — **AND A SPINNER ANYTHING ELSE KILLED.** The
+ * press ledger is ONE killer's receipt. A `Pulser`'s ring (`Pulser.as:108-111`, `t: "Pulse"`; the model's
+ * `stepPulsersNow`), a bomb, a dark hit, a ghost swing, water, lava or a pit write no `spinnerPressHits` row, so their
+ * corpse fell through to "a static Enemy body at its placement" — trap 157's dead half again. Measured (WALLS-CENSUS-2,
+ * re-measured at this slice's base): L39's `pulser@64,96` kills `spinner@112,88` (game-witnessed at 0 px:
+ * `fidelityL39Phantom`, t1267, removed from the game's world at t1278), and the dashless pass of the census leg
+ * (`level_39__r25c9 <- in_L38_144_0 -> Level 039 - Totem Part 72,40`) then refuses on its placement with the live
+ * roster empty. ON: a spinner the run's OWN roster was built with (`world.spinners`, `createSpinnerState`'s source:
+ * every live `Spinner` at the visit's start, `check()` applied) that is ABSENT from the live roster now was removed by
+ * the run — whatever removed it — and is not priced at its placement either.
+ *   · the roster is built whole at the visit's first read (`activeOffScreen`: no spinner spawns or wakes later), so
+ *     "absent" never means "not yet";
+ *   · a spinner in its death fade is still IN the roster (`spinnerRects` filters `removed`, not `destroy`) and is
+ *     still harmful there (`Spinner.update` swings the hammer after `super.update()` with no `destroy` test), so it
+ *     stays with the live arm (`spinnerDanger`), as OFF;
+ *   · a run with no roster read (`spinnerBodies` not an array) or a world with no `spinners` list: nothing changes, so
+ *     a room the run does not step is priced exactly as OFF.
+ * OFF: byte-identical (the press ledger only). `SEEDLING_SPINNER_ROSTER_GONE=0|1`.
  */
-function spinnersTheRunSteps(run) {
-    const ids = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
+function spinnersTheRunSteps(run, world = null) {
+    const roster = run.entities('spinnerBodies');
+    const ids = new Set((roster ?? []).map((b) => b.id));
     for (const h of (run.ledger('spinnerPressHits') ?? [])) if (h.landed) ids.add(h.id);
+    if (CONTACT_FIDELITY.spinnerRosterGone && Array.isArray(roster)) {
+        // every spinner the visit was built with; the live ones are in `ids` already, so this adds exactly the gone
+        for (const s of (world?.spinners ?? [])) ids.add(s.id);
+    }
     return ids;
 }
 
@@ -1459,7 +1483,7 @@ export function staticEnemyDanger(run, box) {
      * ⛓ U6 — AND A SPINNER THE RUN KILLED IS NOT AT ITS PLACEMENT EITHER
      * (`spinnersTheRunSteps`).
      */
-    const live = spinnersTheRunSteps(run);
+    const live = spinnersTheRunSteps(run, world);
     const harmless = darkTrapsHarmless(run);
     /**
      * ⛓ fidelity DRILL D2 (`drillMixedRooms`): a drill the run STEPS is not at its placement once it has hopped — the
@@ -1802,7 +1826,7 @@ export function dangerVolumes(run, horizon = 0) {
      * live half and this is the other half of. ⛓ U6: the killed ones too
      * (`spinnersTheRunSteps`).
      */
-    const live = spinnersTheRunSteps(run);
+    const live = spinnersTheRunSteps(run, world);
     const harmless = darkTrapsHarmless(run);
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;

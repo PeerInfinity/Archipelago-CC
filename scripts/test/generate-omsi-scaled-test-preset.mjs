@@ -41,6 +41,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
 import { stampLoopCosts } from './presetLoopCosts.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -77,6 +78,7 @@ async function main() {
     // Substrate libraries register on import.
     await load('frontend/modules/mazeRoom/mazeRoomLibrary.js');
     await load('frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js');
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const { ensureUnlockTable } = await load('frontend/modules/omsiSubstrateWrapper/unlockPool.js');
 
     // The ① config seam is synchronous, so the fork's unlock table has
@@ -95,6 +97,17 @@ async function main() {
         regionSize: { width: 8, height: 6 },
         itemPool: {},
         obstaclePool: {},
+        // ⛔ The omsi region ends this world: its own table puts the victory on
+        // travel_onward / start_journey. Since a6139f91a8 (spiral item layer,
+        // 2026-10-11, "omsi deferred") the engine otherwise PLACES the goal on
+        // the last item-holding (maze) cell and turns omsi's victory into filler
+        // — stepped-pipeline.md § The goal: "A world has a goal when
+        // `config.goalItem` says so, or else …"; null says this world has no
+        // engine-placed goal. Without it this producer exits 1 ('pool
+        // imbalance' / 'Region Library Filler') on every run, in any order
+        // (slice omsi-test-presets-order, 2026-11-11). Pinned by
+        // frontend/modules/omsiSubstrateWrapper/omsiTestPresetProducers.slow.test.js.
+        goalItem: null,
         seed: SEED,
         growthParams: {
             substrateQuotas: { maze: 2, omsi: TOWNS },

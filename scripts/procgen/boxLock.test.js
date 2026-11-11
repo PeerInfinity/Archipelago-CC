@@ -527,6 +527,7 @@ describe('who takes the box', () => {
          * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`;
          * rules-l0-tighter-probe L0's lake to the L89 door, past the house and up the falls, `probe-seedling-l0-tighter.mjs`;
          * fidelity L39SHAFT the three-block shaft's witnesses (the scripted solution, the solver's plan), `probe-seedling-l39-shaft.mjs`;
+         * fidelity L39PHANTOM a Pulser's kill of `spinner@112,88`, its fade and its removal, `probe-seedling-l39-pulser-kill.mjs`;
          * fidelity L40BK2 L40's Boss Key 2 chain from inside the lock room, `probe-seedling-l40bk2.mjs`;
          * rules-l66-l57-probe L66's door into Dungeon 6 under the off-grid Yellow-Key lock, `probe-seedling-l66-door.mjs`;
          * rules-collider-mismatch the six sealed-with-room cells on the game (moonrockpile, snowhill notch, ice turrets), `probe-seedling-collider-cells.mjs`;
@@ -546,7 +547,8 @@ describe('who takes the box', () => {
          * rules-block-stoppers L65's spear block against its Bob (alive, and killed first), `probe-seedling-l65-bob-block.mjs`;
          * rules-l16-holder-enemies L16's walk-in block against its Bobs on the way to the button, `probe-seedling-l16-holder-bobs.mjs`;
          * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`;
-         * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`.)
+         * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`;
+         * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -602,6 +604,7 @@ describe('who takes the box', () => {
             'probe-seedling-l0-tighter.mjs',
             'probe-seedling-shake-exact.mjs',
             'probe-seedling-l39-shaft.mjs',
+            'probe-seedling-l39-pulser-kill.mjs',
             'probe-seedling-l40bk2.mjs',
             'probe-seedling-l66-door.mjs',
             'probe-seedling-collider-cells.mjs',
@@ -633,6 +636,8 @@ describe('who takes the box', () => {
             'probe-seedling-turret-snap.mjs',
             // fidelity SECUSE: the X+C tick's game witness (import door: `isEntryPoint` → main())
             'probe-seedling-secondary-use.mjs',
+            // fidelity FIRESPINNER: a Fire press reaching a spinner on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-fire-spinner.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())

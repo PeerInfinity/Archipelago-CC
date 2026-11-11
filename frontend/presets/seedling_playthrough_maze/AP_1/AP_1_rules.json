@@ -21602,7 +21602,10 @@
               "events": [
                 {
                   "name": "L18 flag 0: lock@144,112 cleared",
-                  "side": "level_18__r1c1"
+                  "side": "level_18__r1c1",
+                  "opens_from": {
+                    "W": true
+                  }
                 }
               ]
             },
@@ -22781,7 +22784,12 @@
               "events": [
                 {
                   "name": "L26 flag 0: rocklock@112,208 cleared",
-                  "side": "level_26__r2c4"
+                  "side": "level_26__r2c4",
+                  "opens_from": {
+                    "S": true,
+                    "W": true,
+                    "N": true
+                  }
                 }
               ]
             },
@@ -53372,7 +53380,10 @@
               "events": [
                 {
                   "name": "L53 flag 2: lock@144,208 cleared",
-                  "side": "level_53__r9c10"
+                  "side": "level_53__r9c10",
+                  "opens_from": {
+                    "N": true
+                  }
                 }
               ]
             },
@@ -57226,19 +57237,39 @@
               "events": [
                 {
                   "name": "L60 flag 0: lock@128,80 cleared",
-                  "side": "level_60__r5c0"
+                  "side": "level_60__r5c0",
+                  "opens_from": {
+                    "W": true,
+                    "E": {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  }
                 }
               ]
             },
             "atlas_gate_2": {
               "id": "atlas_gate_2",
-              "name": "L60 flag 0: lock@128,80 cleared",
+              "name": "(L60 flag 0: lock@128,80 cleared OR Ghost Spear)",
               "clear_set_type": "rule",
               "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "L60 flag 0: lock@128,80 cleared"
-                }
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L60 flag 0: lock@128,80 cleared"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
               },
               "color": "#b06eb8",
               "display": {

@@ -57,7 +57,7 @@
 import { describe, it, expect } from 'vitest';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { RULES, ATLAS, SAMPLE, OPEN_L53, OPEN_L60, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, ATLAS, SAMPLE, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
 
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -73,9 +73,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
-        // ⛓ rules-l26-rocklock-pocket: + OPEN_L53 (the fixture says why: the atlas is the game's side).
-        // ⛓ rules-l60-l71-killlock: + OPEN_L60 (its mirror: the latch's own across-the-cut arm, which the level world does not lay).
-        expect(problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
+        // ⛓ tile-encounter-kill-arms: OPEN_L53 and OPEN_L60 closed (the fixture's CLOSED_* note says how).
+        expect(problems).toEqual([OPEN_L63]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',

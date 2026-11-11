@@ -27,6 +27,14 @@ describe('armSubjects', () => {
         ];
         expect(armSubjects(rows)).toEqual([undecided, none]);
     });
+    it('`--include-fired` (tile-encounter-kill-arms: the L53/L18/L26 pocket witness) also takes a FIRED lock with a side that is not `clears`', () => {
+        const fired = row(true, null, 'clears', 'cannot');
+        const firedAllClear = row(true, null, 'clears', 'clears');
+        const crossLevel = row(true, 'a cross-level ButtonRoom also clears its tag', 'cannot', 'clears');
+        const none = row(false, 'no side clears the room', 'undecided', 'undecided');
+        expect(armSubjects([fired, firedAllClear, crossLevel, none], { includeFired: true })).toEqual([fired, none]);
+        expect(armSubjects([fired, firedAllClear, crossLevel, none])).toEqual([none]);
+    });
 });
 
 describe('standPoint', () => {

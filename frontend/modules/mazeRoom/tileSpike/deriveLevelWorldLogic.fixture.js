@@ -28,27 +28,23 @@ export const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15
  */
 export const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
 /**
- * ⛓ OPEN_L53 (session rules-l26-rocklock-pocket, routed to the planner): the rules now price L53's `lock@144,208` (tset -1) from its
- * L54 door pocket `level_53__r14c9` as its EVENT (`L53 flag 2`, collected in r9c10): from the pocket the room is never cleared —
- * `puncher@136,96` sits 120 px away, beyond its `runRange` 80 (`Puncher.as:22`) and every arm that passes the shut lock
- * (`seedlingObstacleEvents.encounterLockSides`; game witness `probe-seedling-encounter-latch.mjs` BARE: the lock stands and no
- * `{53,2}` is written). The maze's level-world derivation does not know a one-sided clear: holding the Ghost Spear (whose thrust
- * is not line-tested, `Player.as:966-985`) it reaches the event from the pocket. The atlas is the game's side here; the
- * derivation's kill model is the open half (not this slice's: a tileSpike / derived-table engine change).
+ * ⛓ `OPEN_L53` and `OPEN_L60` are CLOSED (session tile-encounter-kill-arms; ⚖ Robert 2026-11-10 "A: Encounter-lock kill arms
+ * (Recommended)"). Both came from the maze derivation's model of a latched ENCOUNTER (kill-to-open) lock (`RockLock.as`: tSet -1
+ * opens when `totalEnemies() == 0`), erring in opposite directions:
+ *   - L53 `lock@144,208` (from session rules-l26-rocklock-pocket): the derivation fired its event from the L54 door pocket
+ *     `level_53__r14c9`, where the room is never cleared (`puncher@136,96` is 120 px away, beyond its `runRange` 80, `Puncher.as:22`;
+ *     game witness `probe-seedling-killlock-arms.mjs --only=53 --include-fired`: no arm alone writes `{53,2}`). LOOSER than the game.
+ *   - L60 `lock@128,80` (from session rules-l60-l71-killlock): the rules price the pocket's entry `Or(<L60 flag 0>, Ghost Spear)`
+ *     (the Spear's thrust kills the jellyfish ACROSS the shut lock; witness 49/49 + 30/30), and the maze world laid the latch
+ *     knowing only its event. STRICTER than the rules.
+ * The fix reads the rules' own side grades (`encounterLockSides`, via `playthroughEncounterLockOpeners`) onto the event as
+ * `opens_from`: `deriveTileLogic.eventAdjacentCell` fires it only from a clears/across neighbour, and the projection's
+ * `latchEntry` lays an across side's entry as `Or(event, arms)`. The same grades closed three hidden firings with no row of
+ * their own (L18's and L26's pockets with any arm, L60's pocket with the Sword alone). The strings stay for the red-first mutants
+ * in `encounterKillArms.test.js`, which strip the field and see each row come back.
  */
-export const OPEN_L53 = 'level_53__r9c10 @ L53 flag 2: lock@144,208 cleared (from level_53__r14c9) holding [Ghost Spear]: derived true, atlas false';
-/**
- * ⛓ OPEN_L60 (session rules-l60-l71-killlock, routed to the planner): the rules now price L60's `lock@128,80` (tset -1) from its
- * L61 door pocket `level_60__r5c9` as `Or(<its event, L60 flag 0, collected in r5c0>, Ghost Spear)`: the pocket reaches the room's
- * jellyfish only ACROSS the shut lock, where the Spear's thrust and the Ghost Sword's slash kill them and no other arm does
- * (`seedlingObstacleEvents.encounterLockSides` `across`; game witness `probe-seedling-killlock-arms.mjs`: both arms empty the
- * roster from the pocket, the game writes `{60,0}` and the lock opens). The grid carries that as a LATCH entered from the pocket,
- * and the latch's own arm lives in the rules' `latchEvent`; the maze's level world lays the latch and knows only its event, so
- * holding the Spear with no event it does not cross. The atlas is the game's side here; the derivation's latch model is the open
- * half (not this slice's: a tileSpike / derived-table engine change). The MIRROR of OPEN_L53: there the derivation is looser than
- * the game, here it is tighter.
- */
-export const OPEN_L60 = 'level_60__r5c9 → level_60__r5c0 holding [Ghost Spear,Progressive Swim]: derived false, atlas true';
+export const CLOSED_L53 = 'level_53__r9c10 @ L53 flag 2: lock@144,208 cleared (from level_53__r14c9) holding [Ghost Spear]: derived true, atlas false';
+export const CLOSED_L60 = 'level_60__r5c9 → level_60__r5c0 holding [Ghost Spear,Progressive Swim]: derived false, atlas true';
 /**
  * ⛓ The second OPEN row, `OPEN_L3_L111` (⚖ user 2026-10-31, session tile-primitives-sphere-order-12: "Going from L3 to L111 requires
  * swim, and the rules should model that"), is GONE: `level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive

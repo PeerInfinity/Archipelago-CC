@@ -32,6 +32,9 @@ import {
 // top-down harnesses): region object minus the runtime Map (exits), as an array.
 
 import { argvHelp } from './argvHelp.js';
+import { preloadScriptContent } from './preloadContent.js';
+
+await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
 argvHelp(import.meta.url);
 function dumpGrid(grid) {

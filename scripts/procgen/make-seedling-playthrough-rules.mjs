@@ -581,6 +581,38 @@ function stampEncounterLocks(level, grid) {
 }
 /** ⛓ RULES rocklock-pocket — the census over every kill-lock room, for a reader that reports it. */
 export const playthroughEncounterLocks = () => LEVELS.flatMap((level) => encounterLocksOf(level));
+/**
+ * ⛓ ENCOUNTER KILL ARMS (session tile-encounter-kill-arms) — **WHICH NEIGHBOUR OF A LATCHED ENCOUNTER LOCK OPENS IT, AND
+ * WITH WHAT**, for a cell-level reader (the maze's level world). Per latched encounter lock of `level` (`encounterLocksOf`,
+ * `latch`), keyed `"<class>@<x>,<y>"`: `opens_from` = `{<dir>: true | <AP rule>}`, `dir` the neighbour of the lock the
+ * player stands on (the opposite of the census step INTO the lock), from the side grades of `encounterLockSides`:
+ *   - `clears`: `true` — the side clears the room by the room's own rule (the cell's clearance);
+ *   - `across`: the arms that pass a Solid (`throughCondition`, resolved): `Or(<the event>, <those arms>)` is also what the
+ *     step INTO the lock from there costs (the rules' `latchEvent`);
+ *   - `cannot`: no key — that side never clears the room, with any inventory.
+ * Read off the census, never a level list. A lock of more than one tile is refused by name (a direction then names
+ * several neighbours; none exists).
+ */
+const OPPOSITE_DIR = Object.freeze({ N: 'S', S: 'N', E: 'W', W: 'E' });
+export function playthroughEncounterLockOpeners(levelNumber) {
+    const level = LEVELS.find((l) => l.level === levelNumber);
+    const out = new Map();
+    for (const row of level ? encounterLocksOf(level).filter((r) => r.latch) : []) {
+        if (row.tiles.length !== 1) throw new Error(`encounter locks: ${row.name} has ${row.tiles.length} tiles; opens_from names one neighbour per direction`);
+        const opensFrom = {};
+        for (const side of row.sides) {
+            if (side.verdict === 'cannot') continue;
+            let value = true;
+            if (side.verdict === 'across') {
+                value = analyzerOptions.resolveCondition(throughCondition(row.through));
+                if (!value) throw new Error(`encounter locks: ${row.name}'s across-the-cut arms do not resolve to items`);
+            }
+            for (const { dir } of side.steps) opensFrom[OPPOSITE_DIR[dir]] = value;
+        }
+        out.set(row.at, opensFrom);
+    }
+    return out;
+}
 
 /**
  * ⛓ RULES l66-door — **AN ITEM-GATED SOLID THAT CLAIMS NO WHOLE TILE STILL COSTS THE DOOR UNDER IT.**
