@@ -17,6 +17,8 @@
  *           `countedClassesFromSource`), face it, press `primary`, until the game's roster is empty. Granted: the
  *           sword, plus the flags a gated cell on the route to a body asks for (`armFlags`: L53's water → the conch).
  *           Then the GAME must WRITE `{level, tag}` (`RockLock.as:65`, `Lock.turnOff` `Lock.as:96`) — a FAIL if not.
+ *           Every window with a successor HOLDS the room (`heldWindow`: the build's `hold` capability), so no frame
+ *           runs between two windows and the arm is the same arm on every machine — a check of its own.
  *           Staged: boot, grants, inputs. Never the flag, a kill count, a body;
  *   BUILT   booted in the POCKET with the event's own flag staged as persistence, nothing granted, holding INTO the
  *           lock: the game BUILDS it open (`RockLock.check` `RockLock.as:34-37`, `Lock.check` `Lock.as:42`) and the
@@ -86,8 +88,10 @@ export function countedClassesFromSource(gameAs) {
  *   · a body inside the sword's slash box (`Player.getSlashRect`: 16 px along the facing, ±16 across; the press tests
  *     the body's hitbox, so a few px of slack) → tap the facing key for one tick, then `primary`;
  *   · else hold the key(s) toward the next waypoint of `path(from, to)` (tile centres; the body's own tile when none);
- *   · a move chunk that did not move the player (a breakable rock in the way) → press `primary` facing that way.
- * Returns `{inputs, ticks, kind, target}`.
+ *   · a move chunk that STALLED (`moveStalled`: no progress along the route's step — a breakable rock is the next cell)
+ *     → press `primary` facing the step.
+ * Returns `{inputs, ticks, kind, target}`; a move also carries `keys` and `step`, the key of the route's next step
+ * (null when the route has none: the body's own tile).
  */
 export function clearStep({ t, player, bodies, path, lastMove, T = 16, reach = 20, across = 14, moveTicks = 8 }) {
     const dist = (b) => Math.hypot(b.x - player.x, b.y - player.y);
@@ -101,7 +105,7 @@ export function clearStep({ t, player, bodies, path, lastMove, T = 16, reach = 2
         inputs: [{ key, from: t, to: t + 1 }, { key: 'primary', from: t + 1, to: t + 3 }], ticks: 12, kind: 'attack', key,
     });
     if (along <= reach && off <= across) return { ...press(axisKey), target: target.cls };
-    if (lastMove && lastMove.stuck) return { ...press(lastMove.keys[0]), kind: 'break', target: target.cls };
+    if (lastMove && lastMove.stuck) return { ...press(lastMove.step ?? lastMove.keys[0]), kind: 'break', target: target.cls };
     const tile = (p) => [Math.floor(p.x / T), Math.floor(p.y / T)];
     const route = path(tile(player), tile(target)) ?? [];
     const [wx, wy] = route.length > 1 ? [route[1][0] * T + T / 2, route[1][1] * T + T / 2] : [target.x, target.y];
@@ -109,7 +113,27 @@ export function clearStep({ t, player, bodies, path, lastMove, T = 16, reach = 2
     if (Math.abs(wx - player.x) > 1) keys.push(wx > player.x ? 'right' : 'left');
     if (Math.abs(wy - player.y) > 1) keys.push(wy > player.y ? 'down' : 'up');
     if (!keys.length) keys.push(axisKey);
-    return { inputs: keys.map((key) => ({ key, from: t, to: t + moveTicks })), ticks: moveTicks, kind: 'move', keys, target: target.cls };
+    const [sx, sy] = route.length > 1 ? [route[1][0] - route[0][0], route[1][1] - route[0][1]] : [0, 0];
+    const step = Object.keys(STEP_OF).find((key) => STEP_OF[key][0] === sx && STEP_OF[key][1] === sy) ?? null;
+    return { inputs: keys.map((key) => ({ key, from: t, to: t + moveTicks })), ticks: moveTicks, kind: 'move', keys, step,
+        target: target.cls };
+}
+
+/** A held key's unit step, in tiles (and pixels). */
+const STEP_OF = Object.freeze({ right: [1, 0], left: [-1, 0], down: [0, 1], up: [0, -1] });
+
+/**
+ * Did a move window STALL? `last` is the move as it started (`{x, y, step}`: the player then, and the key of the
+ * route's next step), `now` the player after it. With a step, the measure is PROGRESS ALONG IT: under one pixel is a
+ * stall, however far the player went sideways. (The total displacement is the wrong measure: held against a rock, the
+ * player still slides along it toward the waypoint's other coordinate, overshoots it, and comes back the next window —
+ * a walk that never stops and never arrives.) With no step, any displacement under one pixel. Pure.
+ */
+export function moveStalled(last, now) {
+    const [ax, ay] = STEP_OF[last.step] ?? [0, 0];
+    const dx = now.x - last.x;
+    const dy = now.y - last.y;
+    return last.step ? dx * ax + dy * ay < 1 : Math.hypot(dx, dy) < 1;
 }
 
 /** A 4-neighbour BFS over `passable(x, y)` tiles: the tile path `[from, …, to]`, or null. */
@@ -176,6 +200,18 @@ export function passedLock(ys, xs, dir, [px, py], T) {
     return Math.max(...ys) > py + T;
 }
 
+/**
+ * A CLEAR-arm window that HAS a successor, as the game is to be handed it. On a build declaring the `hold` capability
+ * the window is stamped `hold: true` (`tapeFormat.holdingWindowTape`, projected by `gameVisibleTape` — the director's
+ * own two calls), so the game FREEZES the room at the window's last tick until the next `botStart`. Without it the
+ * room steps on every wall-clock frame the page spends between two windows, and the closed loop's next decision is
+ * taken on a room that has moved on by a number of frames the machine's load picks. On a build that cannot hold, the
+ * tape is returned untouched (the loader would refuse tape_version 12). Pure.
+ */
+export function heldWindow(tape, { capable, holdingWindowTape, gameVisibleTape }) {
+    return capable ? gameVisibleTape(holdingWindowTape(tape)) : tape;
+}
+
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
 
@@ -190,7 +226,12 @@ async function main() {
     const PAGE = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     if (!existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', PAGE))) { console.log(`SKIP: no wasm artifact ${PAGE}`); process.exit(0); }
     const PAGE_URL = `${HOST}/frontend/modules/flashPanel/wasm/${PAGE}/game.html`;
-    const { PIN_NAMES, parseTape, ITEM_PROPERTIES } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
+    const { PIN_NAMES, parseTape, ITEM_PROPERTIES, holdingWindowTape, gameVisibleTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
+    // Can this build HOLD the room between two windows? Read from the manifest's `capabilities`, never from its name.
+    const { holdCapabilityOf } = await import(join(REPO, 'frontend/modules/seedlingDemo/watchWasm.js'));
+    const HOLD = holdCapabilityOf(JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/wasm/builds.json'), 'utf8')),
+        `../flashPanel/wasm/${PAGE}/game.html`);
+    const held = (tape) => heldWindow(tape, { capable: HOLD.capable, holdingWindowTape, gameVisibleTape });
     const ITEM_OF = Object.fromEntries(Object.entries(ITEM_PROPERTIES).map(([item, p]) => [p.property, item]));
     const P = await import(join(REPO, 'scripts/procgen/make-seedling-playthrough-rules.mjs'));
     const { ENEMY_CLASSES } = await import(join(REPO, 'frontend/modules/seedlingDemo/combat.js'));
@@ -198,6 +239,7 @@ async function main() {
     const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
     const events = new Map(encounterEventsOf(RULES, P.PLAYTHROUGH_MAP).map((k) => [`${k.level}:${k.tag}`, k]));
     const fired = P.playthroughEncounterLocks().filter((r) => r.fires && (!only || only.has(r.level)));
+    console.log(`HOLD: ${HOLD.why} — the CLEAR arm's windows ${HOLD.capable ? 'hold the room between them' : 'CANNOT hold the room: it runs free between them'}`);
     console.log(`PAGE: ${PAGE} · ${fired.length} fired encounter lock(s): ${fired.map((r) => r.name).join(' · ')}`);
 
     takeBoxLockOrExit({ name: 'probe-seedling-encounter-latch.mjs', kind: 'browser' });
@@ -261,7 +303,7 @@ async function main() {
             const drained = await botJson('botDrain');
             const st = await botJson('botStatus');
             return { ticks: drained.ticks ?? [], cleared: st.persistence_cleared ?? [], 
-                gameTime: st.game_time ?? null, mobiles: (await botJson('botMobiles')).mobiles ?? [] };
+                gameTime: st.game_time ?? null, held: st.held === true, mobiles: (await botJson('botMobiles')).mobiles ?? [] };
         };
         return { play, close: () => page.close() };
     };
@@ -304,6 +346,12 @@ async function main() {
             // window of `SETTLE` idle ticks (the lock fades 0.01 alpha a tick before `turnOff` writes the flag,
             // `Lock.as:65-96`), and the probe reads what the game wrote there. Nothing is staged but the boot, the
             // grants and the inputs: no flag, no kill count, no body removed.
+            // ⛔ EVERY WINDOW WITH A SUCCESSOR HOLDS THE ROOM (`heldWindow`): the game freezes at the window's last tick
+            // until the next `botStart`, so the roster the probe reads IS the room the next window starts in. Free-running,
+            // the room stepped ~2 frames per window on the wall clock (the page's own time between two tapes), a count
+            // the machine's load picks: the same arm then killed in a different order, walked out of the level (a
+            // rebuild) or never stalled against L53's rock. `gapFrames` counts those frames and must be 0; `unheld`
+            // counts the windows the game did not report held. The SETTLE window has no successor and does not hold.
             // ⚠ Every window's `botStart` re-sweeps the persistence TABLE to the fresh start (`Bot.as`, RULING 25), so a
             // write in an earlier window (L53's breakable rock, a Spinner's `setPersistence(-1)` aliasing to
             // `{level-1, 29}`) is not read back; the lock's own write lands in the SETTLE window (its fade outlasts a
@@ -329,7 +377,7 @@ async function main() {
             const walkable = (x, y) => {
                 const cell = cellAt(x, y);
                 if (blocked(x, y) || ['wall', 'sink'].includes(cell?.kind ?? 'wall')) return false;
-                // A gate the sword breaks (a rock) is walked INTO and broken (`clearStep`'s stuck press); any other gate
+                // A gate the sword breaks (a rock) is walked INTO and broken (`clearStep`'s stalled press); any other gate
                 // is walkable only with its flag granted.
                 return cell.kind !== 'gated' || (cell.conditions ?? []).every((c) => conditionHolds(c, flags));
             };
@@ -343,6 +391,7 @@ async function main() {
             let lastMove = null;
             let rebuilds = 0;
             let gapFrames = 0;
+            let unheld = 0;
             let windows = 0;
             let pressCount = 0;
             let counted0 = [];
@@ -350,21 +399,23 @@ async function main() {
             const kills = [];
             const trail = [];
             try {
-                w = await S.play(tapeOf(name, k.level, room, [], [], grants, 1));
+                w = await S.play(held(tapeOf(name, k.level, room, [], [], grants, 1)));
+                if (!w.held) unheld += 1;
                 const roster0 = live(w).map((m) => ({ cls: m.cls, x: Math.round(m.x), y: Math.round(m.y) }));
                 counted0 = roster0;
                 let alive = roster0.length;
                 for (; t < CLEAR_TICKS && live(w).length;) {
                     const me = w.ticks.at(-1);
-                    if (lastMove) lastMove.stuck = Math.hypot(me.x - lastMove.x, me.y - lastMove.y) < 1;
+                    if (lastMove) lastMove.stuck = moveStalled(lastMove, me);
                     const step = clearStep({ t: 0, player: me, bodies: live(w), path, lastMove });
                     steps[step.kind] += 1;
                     pressCount += step.inputs.filter((i) => i.key === 'primary').length;
-                    lastMove = step.kind === 'move' ? { x: me.x, y: me.y, keys: step.keys } : null;
+                    lastMove = step.kind === 'move' ? { x: me.x, y: me.y, keys: step.keys, step: step.step } : null;
                     if (trail.length < 400) trail.push([t, step.kind[0], Math.round(me.x), Math.round(me.y)]);
                     const before = w;
-                    w = await S.play(tapeOf(name, k.level, room, step.inputs, [], grants, step.ticks, 0));
+                    w = await S.play(held(tapeOf(name, k.level, room, step.inputs, [], grants, step.ticks, 0)));
                     windows += 1;
+                    if (!w.held) unheld += 1;
                     // A window that did not continue the live room (a rebuild) restarts at the boot: the player jumps.
                     const first = w.ticks[0];
                     if (first && Math.hypot(first.x - me.x, first.y - me.y) > 6) rebuilds += 1;
@@ -382,7 +433,7 @@ async function main() {
             const killedAt = live(w).length ? null : t;
             const clearRow = { staged: { boot: room, grants, derivedFlags: needFlags, persistence: [] }, counted: counted0,
                 rosterLeft: live(clear).map((m) => `${m.cls}@${Math.round(m.x)},${Math.round(m.y)}`), killedAt, kills,
-                ticks: killedAt === null ? t : t + SETTLE, windows, steps, presses: pressCount, rebuilds, gapFrames,
+                ticks: killedAt === null ? t : t + SETTLE, windows, steps, presses: pressCount, rebuilds, gapFrames, unheld,
                 trail: trail.slice(0, 60) };
             if (fromSource) {
                 const model = modelBodies(k.level);
@@ -391,6 +442,10 @@ async function main() {
                     JSON.stringify(model) === JSON.stringify(game), JSON.stringify({ model, game: counted0 }));
             }
             check(`${id}: CLEAR — every window continued the live room (no rebuild)`, rebuilds === 0, `rebuilds ${rebuilds}`);
+            if (HOLD.capable) {
+                check(`${id}: CLEAR — the room was HELD between the windows (the game reports every hold; no frame ran free)`,
+                    gapFrames === 0 && unheld === 0, `gapFrames ${gapFrames}, unheld ${unheld} of ${windows + 1}`);
+            }
             check(`${id}: CLEAR — game combat from the room empties the counted roster`, killedAt !== null,
                 JSON.stringify(clearRow));
             const written = clear.cleared.filter((c) => Number(c.level) === k.level && Number(c.tag) === k.tag)
