@@ -176,13 +176,19 @@ describe('encounter-lock sides (encounterLockSides) — RULES rocklock-pocket', 
         expect(sides[1].beyond).toEqual(['b@0,0']);
         expect(sides.map((s) => s.size)).toEqual([2, 5]);
     });
-    it('a body the across-the-cut reach covers, or a chaser whose runRange covers the side, leaves it UNDECIDED', () => {
+    it('a body the across-the-cut reach covers, or a chaser whose runRange covers the side, is reached ACROSS', () => {
         // 24 px from the east side's nearest tile point (x=48): beyond the default reach 20, inside the body's own 30
         expect(corridor(8, [24, 8]).map((s) => s.verdict)).toEqual(['clears', 'cannot']);
-        expect(corridor(8, [24, 8], { reach: 30 }).map((s) => s.verdict)).toEqual(['clears', 'undecided']);
+        expect(corridor(8, [24, 8], { reach: 30 }).map((s) => s.verdict)).toEqual(['clears', 'across']);
         // 40 px: a chaser whose runRange is 40 comes to the lock's face
-        expect(corridor(8, [8, 8], { runRange: 40 }).map((s) => s.verdict)).toEqual(['clears', 'undecided']);
+        const chaser = corridor(8, [8, 8], { runRange: 40 });
+        expect(chaser.map((s) => s.verdict)).toEqual(['clears', 'across']);
+        expect(chaser[1]).toMatchObject({ across: ['b@0,0'], beyond: [] });
         expect(corridor(8, [8, 8], { runRange: 39 }).map((s) => s.verdict)).toEqual(['clears', 'cannot']);
+    });
+    it('a body no arm that passes a Solid hurts is never reached across (RULES l60-l71-killlock)', () => {
+        expect(corridor(8, [8, 8], { runRange: 40, through: false }).map((s) => s.verdict)).toEqual(['clears', 'cannot']);
+        expect(corridor(8, [24, 8], { reach: 30, through: false }).map((s) => s.verdict)).toEqual(['clears', 'cannot']);
     });
     it('a body whose own solid fills its tile stands in the side of a 4-neighbour', () => {
         const sides = encounterLockSides({

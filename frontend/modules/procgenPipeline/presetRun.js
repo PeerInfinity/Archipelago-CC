@@ -43,6 +43,7 @@ import { newEnvelope as newSphereEnvelope, runToStep as runSphereToStep } from '
 import { newSpiralEnvelope, runSpiralToStep } from './spiralSteps.js';
 import { buildTopDownEnvelope, runTopDownToStep } from './topDownSteps.js';
 import { newEntranceEnvelope, runEntranceToStep, entranceShuffleHooksFor } from './entranceShuffleSteps.js';
+import { effectiveContentStack, loadContentSet, recordedContentOf } from './worldContent.js';
 
 export const DEFAULT_PARAMS = {
     seed: 1,
@@ -102,6 +103,14 @@ export const DEFAULT_PARAMS = {
     // Reaches each region's `placeFromRules` as `params.concepts`
     // (`sphereConfigHooks.assembleRegionParams`).
     concepts: [],
+    // ⛓ CONTENT SETS C3 — the world's own content stack: pack ids (`frontend/packs/`)
+    // laid AFTER the default packs of the substrates in its mix
+    // (`worldContent.effectiveContentStack`). EMPTY by default; with no substrate
+    // declaring a `defaultContentPack`, an empty list loads nothing and adds no
+    // key, so every world is byte-identical to one built before the knob. Loaded
+    // once before generation (`prepareRunFromState`), recorded as
+    // `procgen_metadata[p].content` only when non-empty.
+    content: [],
     // Substrate-specific params (e.g. bounce's fall behavior / physics
     // profile / braid layout, the maze's hazards and its library's connection
     // strictness) are
@@ -421,7 +430,7 @@ export function buildSphereConfig(state, resolvedLibraries = []) {
  * cfg + prep → the sphere runner's flat resolved config. `itemPool` is the
  * POST-prep pool the plan is built from (prep may have removed items).
  */
-export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries = [] }) {
+export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries = [], contentSet = null }) {
     // A selected library's substrates contribute the regionParams their library
     // entries read (the maze's connection strictness flags, region-library F6c)
     // — ONLY when such a library is selected, so a world without one takes no
@@ -437,7 +446,7 @@ export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries
         regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
         itemLib: cfg.itemLib,
         regionParams: assembleRegionParams({
-            activeIds: cfg.activeIds, mode: 'sphere', params, extra: regionParamsExtra,
+            activeIds: cfg.activeIds, mode: 'sphere', params, extra: regionParamsExtra, contentSet,
         }),
         hazardOpts: cfg.hazardOpts,
         maxItemsPerRegion: cfg.maxItemsPerRegion,
@@ -479,7 +488,7 @@ export function buildSphereRun(state, { resolvedLibraries = [] } = {}) {
         startSubstrate: cfg.startSub, seed: cfg.seed, params: state.params,
     });
     const config = sphereRunConfig(cfg, prep, itemPool,
-        { params: state.params, resolvedLibraries });
+        { params: state.params, resolvedLibraries, contentSet: state.contentSet ?? null });
     return { cfg, prep, itemPool, config };
 }
 
@@ -525,7 +534,9 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         //   so a per-region knob reaches the core here too. Measured byte-inert for
         //   every digest, shipped preset and committed spiral preset (the hooks'
         //   defaults build what `{}` built).
-        regionParams: assembleRegionParams({ activeIds: Object.keys(substrateQuotas), mode: 'sphere', params }),
+        regionParams: assembleRegionParams({
+            activeIds: Object.keys(substrateQuotas), mode: 'sphere', params, contentSet: state.contentSet ?? null,
+        }),
         growthParams: {
             substrateQuotas,
             maxItemsPerRegion,
@@ -576,7 +587,7 @@ export function buildTopDownRun(state, { topDownSource = null, sphereLog = null 
         gridDims: { width: gridWidth, height: gridHeight },
         regionSizeBase: { width: regionWidth, height: regionHeight },
         substrateMix: mix,
-        regionParams: assembleRegionParams({ activeIds, mode: 'topDown', params }),
+        regionParams: assembleRegionParams({ activeIds, mode: 'topDown', params, contentSet: state.contentSet ?? null }),
         hazardOpts: effectiveHazardOpts(params),
         sphereLog,
         enableLoopMode: !!params.enableLoopMode,
@@ -608,7 +619,9 @@ export function buildGridRun(state) {
             obstaclePool: { ...state.scenario.obstacles },
             seed,
             // ⛓ seedling generated G3 — the spiral's pass-through, for the grid.
-            regionParams: assembleRegionParams({ activeIds: Object.keys(quotas ?? mix ?? {}), mode: 'sphere', params }),
+            regionParams: assembleRegionParams({
+                activeIds: Object.keys(quotas ?? mix ?? {}), mode: 'sphere', params, contentSet: state.contentSet ?? null,
+            }),
             growthParams: {
                 maxItemsPerRegion,
                 maxRegions: maxRegions ?? null,
@@ -639,6 +652,8 @@ export function compileGridRun(run, { grid, stats, startCell }) {
         procgenMetadata: {
             driver: 'grid-growth',
             stop_reason: stats.stopReason,
+            // ⛓ CONTENT SETS C4 — the world's own content stack (omitted when it names none).
+            ...recordedContentOf(run.grow?.regionParams),
         },
     });
 }
@@ -708,23 +723,12 @@ export function heavySubstrateIds(bundle) {
  */
 export function buildRunFromState(bundle, {
     defaults = panelDefaultParams(), resolvedLibraries = [],
-    topDownSource = null, sphereLog = null,
+    topDownSource = null, sphereLog = null, contentSet = null,
 } = {}) {
-    if (!VALID_MODES.includes(bundle?.mode)) {
-        throw new Error(`buildRunFromState: the bundle's mode ${JSON.stringify(bundle?.mode)} `
-            + `is not one of ${VALID_MODES.join(', ')}, so there is no pipeline to assemble a run for`);
-    }
-    const state = applyPresetState(bundle, {
-        defaults,
-        hasSubstrate: (id) => substrateRegistry.has(id),
-        current: {
-            params: defaults,
-            scenario: { items: {}, obstacles: {} },
-            substrateMode: 'quotas',
-            mode: bundle.mode,
-            libraries: [],
-        },
-    });
+    const state = normalisedRunState(bundle, defaults);
+    // ⛓ CONTENT SETS C3 — the loaded set rides on the state the builders read
+    // (`state.contentSet`, as the panel's own `this.contentSet`); null = none loaded.
+    state.contentSet = contentSet;
     const { mode } = state;
     if (mode === 'entranceShuffle') return { mode, run: buildEntranceRun(bundle) };
     if (mode === 'sphereGrowth') return { mode, run: buildSphereRun(state, { resolvedLibraries }) };
@@ -737,6 +741,61 @@ export function buildRunFromState(bundle, {
         return { mode, run: buildTopDownRun({ ...state, params }, { topDownSource, sphereLog }) };
     }
     return { mode, run: buildGridRun(state) };
+}
+
+/** The bundle, normalised as `buildRunFromState` reads it (`applyPresetState`). A bundle naming no valid mode is refused. */
+function normalisedRunState(bundle, defaults) {
+    if (!VALID_MODES.includes(bundle?.mode)) {
+        throw new Error(`buildRunFromState: the bundle's mode ${JSON.stringify(bundle?.mode)} `
+            + `is not one of ${VALID_MODES.join(', ')}, so there is no pipeline to assemble a run for`);
+    }
+    return applyPresetState(bundle, {
+        defaults,
+        hasSubstrate: (id) => substrateRegistry.has(id),
+        current: {
+            params: defaults,
+            scenario: { items: {}, obstacles: {} },
+            substrateMode: 'quotas',
+            mode: bundle.mode,
+            libraries: [],
+        },
+    });
+}
+
+/**
+ * ⛓ CONTENT SETS C3 — the substrates whose default packs a world's content stack
+ * opens with: the positive entries of the mode's own dict (`activeSubstrateDict`),
+ * the start substrate, and the substrates the selected sphere libraries realise.
+ * A superset of every builder's `activeIds`, so the set loaded from it holds
+ * every pack `assembleRegionParams` asks for.
+ */
+export function worldContentSubstrateIds(state, { resolvedLibraries = [] } = {}) {
+    const ids = selectedItemSubstrates(state, sphereLibrarySubstrateIds(resolvedLibraries ?? []));
+    const start = state?.params?.startSubstrate;
+    if (start && start !== 'auto' && !ids.includes(start)) ids.push(start);
+    return ids;
+}
+
+/** The world's effective content stack (`worldContent.effectiveContentStack` over `worldContentSubstrateIds`). */
+export function worldContentStackOf(state, opts = {}) {
+    return effectiveContentStack({
+        substrateIds: worldContentSubstrateIds(state, opts), content: state?.params?.content ?? [],
+    });
+}
+
+/**
+ * ⛓ CONTENT SETS C3 — **THE ASYNC ENTRY: LOAD THE WORLD'S CONTENT, THEN BUILD ITS
+ * RUN.** `buildRunFromState` with the world's content set loaded first
+ * (`worldContent.loadContentSet` over `worldContentStackOf`). `io` is
+ * `{ base, readJson }` (the browser's `fetch` by default; node passes
+ * `contentPacks/nodePackIo.js`). An empty stack loads nothing and builds exactly
+ * the run `buildRunFromState` builds.
+ */
+export async function prepareRunFromState(bundle, { io = {}, ...opts } = {}) {
+    const defaults = opts.defaults ?? panelDefaultParams();
+    const state = normalisedRunState(bundle, defaults);
+    const contentSet = await loadContentSet(worldContentStackOf(state, opts), io);
+    return buildRunFromState(bundle, { ...opts, defaults, contentSet });
 }
 
 /**

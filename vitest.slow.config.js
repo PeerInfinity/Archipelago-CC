@@ -24,6 +24,10 @@ export default defineConfig({
         ...configDefaults.exclude,
     ],
     environment: 'node',
+
+    // ⛓ CONTENT SETS C4 — each test file's synchronous world builders find the default content
+    // packs its substrates declare preloaded (a no-op while none is declared; see the file).
+    setupFiles: ['scripts/test/vitestDefaultContentSetup.js'],
     globals: false,
     reporters: ['default'],
     // Serial across files: no CPU contention -> no contention-induced timeouts.

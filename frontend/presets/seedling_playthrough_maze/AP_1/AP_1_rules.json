@@ -8694,7 +8694,78 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L60 flag 0: lock@128,80 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Shield",
+                        "count": 2
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "L60 flag 0: lock@128,80 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L60:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 60,
+              "tag": 0,
+              "class": "lock",
+              "x": 128,
+              "y": 80
+            },
+            "action": {
+              "verb": "opened by its activation group (turnOff)",
+              "item": null
+            },
+            "side": "level_60__r5c0",
+            "across": [
+              "level_60__r5c9"
+            ]
+          }
+        ]
       },
       "level_60__r5c9": {
         "name": "level_60__r5c9",
@@ -8737,6 +8808,23 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Wand"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L60 flag 0: lock@128,80 cleared"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
                       }
                     }
                   ]
@@ -10071,19 +10159,30 @@
             "name": "level_71__r11c7 -> level_71__r13c7",
             "connected_region": "level_71__r13c7",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
                 {
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -10098,19 +10197,30 @@
             "name": "level_71__r13c7 -> level_71__r11c7",
             "connected_region": "level_71__r11c7",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
                 {
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -13964,6 +14074,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L60 flag 0: lock@128,80 cleared": {
+        "name": "L60 flag 0: lock@128,80 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L68 flag 0: bosslock@16,32 cleared": {
         "name": "L68 flag 0: bosslock@16,32 cleared",
         "id": null,
@@ -14189,6 +14310,7 @@
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L53 flag 2: lock@144,208 cleared": 1,
+      "L60 flag 0: lock@128,80 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
       "L20 flag 4: lock@32,80 cleared": 1,
       "L39 flag 8: wandlock@144,592 cleared": 1,
@@ -14236,7 +14358,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-47ebbca0",
+      "atlas_id": "seedling-4992ae0c",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -56971,7 +57093,7 @@
             {
               "x": 8,
               "y": 5,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_1~L60 flag 0: lock@128,80 cleared"
             },
             {
               "x": 2,
@@ -57060,8 +57182,68 @@
                 "mode": "tree"
               }
             },
+            "atlas_gate_1~L60 flag 0: lock@128,80 cleared": {
+              "id": "atlas_gate_1~L60 flag 0: lock@128,80 cleared",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand): L60 flag 0: lock@128,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L60 flag 0: lock@128,80 cleared",
+                  "side": "level_60__r5c0"
+                }
+              ]
+            },
             "atlas_gate_2": {
               "id": "atlas_gate_2",
+              "name": "L60 flag 0: lock@128,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L60 flag 0: lock@128,80 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "Progressive Swim x2",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -57079,76 +57261,82 @@
           },
           "entry_gates": [
             {
+              "x": 8,
+              "y": 5,
+              "dir": "W",
+              "gate": "atlas_gate_2"
+            },
+            {
               "x": 2,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 3,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 4,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 5,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 6,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 7,
               "y": 6,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 2,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 3,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 4,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 5,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 6,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             },
             {
               "x": 7,
               "y": 7,
               "dir": "N",
-              "gate": "atlas_gate_2"
+              "gate": "atlas_gate_3"
             }
           ],
           "shared_world": {
@@ -61768,6 +61956,21 @@
             },
             "atlas_gate_3": {
               "id": "atlas_gate_3",
+              "name": "Ghost Spear",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Ghost Spear"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
               "name": "L71 flag 2: shieldlock@288,256 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -61797,10 +62000,22 @@
           },
           "entry_gates": [
             {
+              "x": 7,
+              "y": 12,
+              "dir": "N",
+              "gate": "atlas_gate_3"
+            },
+            {
+              "x": 7,
+              "y": 12,
+              "dir": "S",
+              "gate": "atlas_gate_3"
+            },
+            {
               "x": 18,
               "y": 16,
               "dir": "W",
-              "gate": "atlas_gate_3"
+              "gate": "atlas_gate_4"
             }
           ],
           "shared_world": {
@@ -76160,6 +76375,7 @@
           },
           "new_accessible_locations": [
             "L53 flag 2: lock@144,208 cleared",
+            "L60 flag 0: lock@128,80 cleared",
             "L62 flag 0: lightpole@120,200 cleared",
             "L63 flag 1: lightpole@64,88 cleared",
             "Level 015 - Chest",
@@ -76296,6 +76512,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L60 flag 0: lock@128,80 cleared": 1
+            },
+            "resolved_items": {
+              "L60 flag 0: lock@128,80 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L60 flag 0: lock@128,80 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "6.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "L62 flag 0: lightpole@120,200 cleared": 1
             },
             "resolved_items": {
@@ -76316,7 +76553,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.4",
+      "sphere_index": "6.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76337,7 +76574,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.5",
+      "sphere_index": "6.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76358,7 +76595,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.6",
+      "sphere_index": "6.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76379,7 +76616,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.7",
+      "sphere_index": "6.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76413,7 +76650,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.8",
+      "sphere_index": "6.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76434,7 +76671,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.9",
+      "sphere_index": "6.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76455,7 +76692,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.10",
+      "sphere_index": "6.11",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76476,7 +76713,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.11",
+      "sphere_index": "6.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76497,7 +76734,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.12",
+      "sphere_index": "6.13",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76531,7 +76768,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.13",
+      "sphere_index": "6.14",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -76552,7 +76789,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.14",
+      "sphere_index": "6.15",
       "player_data": {
         "1": {
           "new_inventory_details": {

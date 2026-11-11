@@ -44,6 +44,7 @@ import {
     getRegionExits, linkIsAdjacentOnSide, perimeterMidpoint, serializeRegionEntry,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
+import { RECORDED_CONTENT_KEY, documentContentOf } from '../procgenPipeline/worldContent.js';
 import { grantedLibraryItems } from '../procgenPipeline/topDownSteps.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { OPPOSITE_SIDE, SIDES, mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
@@ -562,6 +563,15 @@ export function regenerateRegionEntry({
         ...REGENERATE_BASE_REGION_PARAMS,
         ...(regionParams && typeof regionParams === 'object' ? regionParams : defaultRegionParamsFor(reg)),
     };
+    // ⛓ CONTENT SETS C4 — the document's own content list (`procgen_metadata[p].content`) when the
+    //   caller's params name none, so the region seam asks for that set: a job that attached it
+    //   (`attachJobContent`) builds with it, and a synchronous caller that could not (an op replayed
+    //   with no inlined result) is REFUSED by name instead of placing without it. Nothing when the
+    //   document names no content (no new key).
+    if (!(RECORDED_CONTENT_KEY in params)) {
+        const own = documentContentOf(doc, player);
+        if (own.length) params[RECORDED_CONTENT_KEY] = own;
+    }
     // ⛓ P5d — the entry gate the document does not carry, recovered (sphere growth's own record first).
     const { spec, gate: entryGate } = withRecoveredEntryGate(doc, player, region,
         buildDocumentRegionSpec(doc, player, region, { size, substrate: target }),

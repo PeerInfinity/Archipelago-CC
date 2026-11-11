@@ -32,6 +32,8 @@
  *   --enable-loop-mode      compute loop_costs in the rules.json
  *   --region-xp-effect E    loop-mode xp effect (default cost)
  *   --discovery-mode M      follow (default: discovery follows loop mode) | on | off
+ *   --param content=a,b     the world's own content stack (pack ids; recorded as
+ *                           procgen_metadata[p].content). The only --param key read.
  *   --victory-item NAME     completion item for an envelope whose ③ predates the
  *                           item layer; a fresh ③ names its own goal (`Victory`,
  *                           or none), which ④ uses instead
@@ -105,6 +107,10 @@ import {
     serializeSpiralEnvelope, deserializeSpiralEnvelope,
 } from '../../frontend/modules/procgenPipeline/spiralSteps.js';
 import { discoveryModeConfig } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import {
+    RECORDED_CONTENT_KEY, attachContentSet, attachEnvelopeContent, contentListOf, envelopeSubstrateIds,
+} from '../../frontend/modules/procgenPipeline/worldContent.js';
+import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
 
 argvHelp(import.meta.url);
 
@@ -144,6 +150,7 @@ const FLAGS = {
     '--region-xp-effect': W.regionXpEffect,
     '--discovery-mode': W.discoveryMode,
     '--victory-item': flag('victoryItem', KIND.str),
+    '--param': W.param,
     '-i': W.input,
     '--input': W.input,
     '-o': W.out,
@@ -189,6 +196,8 @@ function parseArgs(argv, { configDoc = null } = {}) {
         enableLoopMode: false,
         regionXpEffect: 'cost',
         victoryItem: null,
+        // ⛓ CONTENT SETS C4 — `--param content=a,b` (the only key a spiral reads; any other is refused).
+        params: {},
         // X1 maze consumable tiles — byte-inert defaults (all zero).
         consumableTiles: 0,
         consumableCount: 1,
@@ -386,6 +395,11 @@ function buildEnv(args) {
     if (Object.keys(args.quotas).length === 0) {
         throw new UsageError('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
     }
+    const unread = Object.keys(args.params ?? {}).filter((k) => k !== RECORDED_CONTENT_KEY);
+    if (unread.length) {
+        throw new UsageError(`--param ${unread.join(', ')}: spiral-step reads only --param ${RECORDED_CONTENT_KEY}=<pack ids> `
+            + '(its regions take no other substrate param)');
+    }
     const jtaCfg = buildJtaSubstrateConfig(args);
     const omsiCfg = buildOmsiSubstrateConfig(args, jtaCfg);
     const consumableTileOpts = buildConsumableTileConfig(args, jtaCfg);
@@ -417,6 +431,21 @@ function buildEnv(args) {
         completionConditionItem: args.victoryItem ?? resolveVictory(args.quotas),
     };
     return newSpiralEnvelope({ config, compileIn });
+}
+
+/**
+ * ⛓ CONTENT SETS C4 — `--param content=a,b` names the world's own content stack: it is
+ * loaded (over the mix's default packs) onto the fresh envelope's `regionParams`, and the
+ * compile records it as `procgen_metadata[p].content`. No `--param content` ⇒ the envelope
+ * is untouched (`regionParams` stays `{}`, nothing is read); a stack of default packs only
+ * is built from the preload cache (`loadPipelineSubstrates`) at the region seam.
+ */
+async function attachArgsContent(env, args) {
+    const content = contentListOf(args.params?.[RECORDED_CONTENT_KEY]) ?? [];
+    if (!content.length) return env;
+    env.config.regionParams = await attachContentSet({ ...env.config.regionParams, [RECORDED_CONTENT_KEY]: content },
+        { substrateIds: envelopeSubstrateIds(env), ...nodePackIo() });
+    return env;
 }
 
 // --- main ---
@@ -455,7 +484,11 @@ export const SUBSTRATE_CHECK = Object.freeze({
  * @returns {Promise<{envelope: object, rulesJson: object|null, summary: object}>}
  */
 export async function build(config, { envelope = null, log = () => {} } = {}) {
-    const env = envelope ? deserializeSpiralEnvelope(structuredClone(envelope)) : buildEnv(config);
+    // ⛓ CONTENT SETS C3 — a fresh world's `regionParams` is `{}` unless `--param content=` names a stack (C4:
+    // `attachArgsContent`); a resumed envelope (one the panel saved) carries its content list, not the set: re-attach it.
+    const env = envelope
+        ? await attachEnvelopeContent(deserializeSpiralEnvelope(structuredClone(envelope)), nodePackIo())
+        : await attachArgsContent(buildEnv(config), config);
     await runToEnd(env, config, { log });
     const rulesJson = env.compile?.rulesJson ?? null;
     return {
@@ -483,9 +516,9 @@ async function main(status) {
 
     let env;
     if (args.input) {
-        env = deserializeSpiralEnvelope(readJson(args.input, '-i'));
+        env = await attachEnvelopeContent(deserializeSpiralEnvelope(readJson(args.input, '-i')), nodePackIo());
     } else if (sub === 'arrange' || sub === 'run') {
-        env = buildEnv(args);
+        env = await attachArgsContent(buildEnv(args), args);
     } else {
         throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'arrange')`);
     }

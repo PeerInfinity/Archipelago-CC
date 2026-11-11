@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1275,
         "indexHeadings": 2,
-        "lines": 35643,
+        "lines": 35603,
         "pages": 4,
-        "words": 528987
+        "words": 529135
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 26,
-            "lines": 335,
+            "lines": 337,
             "links": [
                 "architecture.md",
                 "cloudberry.md",
@@ -73,7 +73,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 7652
+            "words": 7730
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -108,7 +108,7 @@ export const DOCS_INDEX = frz({
             "file": "editing-core.md",
             "h1": "Procgen Editing Core",
             "headings": 22,
-            "lines": 218,
+            "lines": 220,
             "links": [
                 "architecture.md",
                 "maze.md",
@@ -117,7 +117,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/editing-core.md",
-            "words": 4024
+            "words": 4208
         },
         {
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
@@ -132,7 +132,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7124
+            "words": 7147
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
@@ -273,8 +273,8 @@ export const DOCS_INDEX = frz({
             "description": "A concept is a thing a world can be about — a sword, a guardian, water, a coloured door — declared once, in no substrate's words, so that the planner can ask every substrate the same question: *can you show this, and what does it do to reachability?* The concept library is how a substrate declares what it can enforce, how a planned rule selects one of those declarations, and what the substrate'…",
             "file": "concepts.md",
             "h1": "Concepts",
-            "headings": 19,
-            "lines": 221,
+            "headings": 20,
+            "lines": 241,
             "links": [
                 "gotchas.md",
                 "paths-and-obstacles.md",
@@ -283,7 +283,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 3644
+            "words": 4476
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
@@ -346,7 +346,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 53085
+            "words": 52941
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -374,8 +374,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 771,
-            "lines": 27961,
+            "headings": 769,
+            "lines": 27872,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -383,7 +383,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 311917
+            "words": 310587
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
@@ -409,8 +409,8 @@ export const DOCS_INDEX = frz({
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the shared iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 33,
-            "lines": 820,
+            "headings": 34,
+            "lines": 845,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -423,7 +423,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 32781
+            "words": 33286
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",

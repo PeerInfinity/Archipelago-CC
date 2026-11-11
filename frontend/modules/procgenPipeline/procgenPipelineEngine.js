@@ -55,6 +55,7 @@ import {
 } from '../procgenCore/itemIntroduction.js';
 import { goalContainerReportOfSidecars } from '../procgenCore/goalContainer.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
+import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf } from './worldContent.js';
 
 /** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
 const registryEntryOf = (substrateId) => substrateRegistry.get(substrateId);
@@ -1146,6 +1147,9 @@ function buildSubstrateRegion({
     introduced = null,
 }) {
     const adapter = getAdapter(substrate);
+    // ⛓ CONTENT SETS C3 — a region whose packs were never loaded is refused by name (no-op when none are needed).
+    //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
+    params = assertContentLoaded(params, substrate);
     if (typeof adapter.generateRegionCore !== 'function') {
         throw new Error(
             `Substrate '${substrate}' has no generateRegionCore — it is a `
@@ -3425,6 +3429,10 @@ const LOCATION_FIT_MAX_ATTEMPTS = 10;
 
 function generateRegionProcedural(spec) {
     const adapter = getAdapter(spec.substrate);
+    // ⛓ CONTENT SETS C3 — the region's content packs must be in `params.contentSet` (no-op when none are needed).
+    //   C4: a region needing only its default pack, handed no set, takes it from the preload cache.
+    const contentParams = assertContentLoaded(spec.params, spec.substrate);
+    if (contentParams !== spec.params) spec = { ...spec, params: contentParams };
 
     // Core exit specs — size-independent, so reused across retry-grow
     // attempts below.
@@ -3524,6 +3532,7 @@ function generateRegionProcedural(spec) {
         }
         // ⛓ CONCEPT LIBRARY T1 — `params` carries the world's concept list
         // (`params.concepts`) to the placer that realises a gate as one.
+        // ⛓ CONTENT SETS C3 — and the world's loaded content set (`params.contentSet`).
         placement = adapter.placeFromRules(core.world, {
             exit_rules, location_rules, item_placements, rng: spec.rng, params: spec.params,
         });
@@ -5251,10 +5260,17 @@ export function recordedConceptsOf(regionParams) {
 /**
  * The rebuild's `regionParams`: the caller's (or `{}`), with a recorded
  * concept list laid UNDER it — a caller that passes its own `concepts` wins.
+ * ⛓ CONTENT SETS C3 — the recorded content list (`procgen_metadata[p].content`)
+ * comes back the same way, as `regionParams.content`; a caller's own wins. The
+ * loaded set does not: the rebuild is synchronous, so its caller awaits
+ * `worldContent.attachContentSet` before it generates (an append).
  * Nothing recorded ⇒ exactly `opts.regionParams ?? {}`, as before T0b.
  */
 export function rebuildRegionParams(meta, optsRegionParams) {
-    const recorded = recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] });
+    const recorded = {
+        ...recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] }),
+        ...recordedContentOf({ [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY] }),
+    };
     if (!Object.keys(recorded).length) return optsRegionParams ?? {};
     return { ...recorded, ...(optsRegionParams ?? {}) };
 }
