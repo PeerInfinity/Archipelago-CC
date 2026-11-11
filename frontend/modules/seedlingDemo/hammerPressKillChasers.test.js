@@ -30,7 +30,8 @@ const BOOT = join(HERE, 'fixtures', 'l40bk2-witness', 'step67-boot.json');
 const ENV = globalThis.process?.env ?? {};
 const CAP = 800;
 /** The last tick ON's keys equal OFF's (the first ON swap is the step that would have met the bob at t660). */
-const SAME_THROUGH = 657;
+// ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so ON and OFF first part at t662 (t658 before).
+const SAME_THROUGH = 661;
 
 /** `solveSegment` for the chest from step 67's boot, `advance` capped at `CAP`; every key and the counts once t657 is decided. */
 function solveChest(on) {
@@ -67,10 +68,11 @@ describe('hammer-phase PKC — the press kill prices the chasers beside its walk
         + 'step that met the bob', () => withL40Flip(false, () => {
         const off = solveChest(false);
         expect(off.error).toBeInstanceOf(SolverRefusal);
-        expect(off.error.message).toContain('kill (spinner@880,848) by press: the player died at t780 '
+        expect(off.error.message).toContain('kill (spinner@880,848) by press: the player died at t767 '
             + '(chaser bob@736,752)');
         expect(off.error.message).toContain('PRESS_KILL_REBOOT_GUARD');
-        expect(off.hits).toEqual(['660:chaser:bob@736,752', '749:chaser:bob@736,752', '780:chaser:bob@736,752']);
+        // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the OFF walk's three bob hits are t664/t708/t767 (t660/t749/t780 before).
+        expect(off.hits).toEqual(['664:chaser:bob@736,752', '708:chaser:bob@736,752', '767:chaser:bob@736,752']);
         // ⛔ OFF never builds the step's forecast
         expect(off.counts).toEqual({ asked: 0, swapped: 0, unavoidable: 0, banded: 0 });
 
