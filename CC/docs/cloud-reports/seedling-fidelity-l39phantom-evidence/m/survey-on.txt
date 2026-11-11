@@ -1,0 +1,11 @@
+== step 27 — L18 ... SOLVED 467 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es)
+== step 65 — L39 ... SOLVED 2740 ticks, 25 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 66 — L40 ... REFUSED — solverBot(survey-step-66) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candida
+== step 86 — L92 ... SOLVED 395 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 95 — L39 ... SOLVED 2624 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 96 — L40 ... REFUSED — solverBot(survey-step-96) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candida
+== step 98 — L40 ... SOLVED 70 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 136 — L39 ... SOLVED 2624 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 137 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 149 — L39 ... SOLVED 2626 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+== step 150 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
