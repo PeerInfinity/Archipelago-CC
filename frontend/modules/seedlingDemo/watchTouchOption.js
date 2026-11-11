@@ -60,3 +60,15 @@ export function initialLabTouchSetting({ storage, search }) {
 export function labTouchShownInitially({ storage, search, matchMediaFn }) {
     return touchControlsVisible(initialLabTouchSetting({ storage, search }), { search, matchMediaFn });
 }
+
+/**
+ * ⛓ (seedling-lab-touch-fix) The note under a frame's strip while a tape drives the frame, and the rule that decides
+ * it: a ship whose stage list holds a `finished…` stage plays a tape first, and holds the frame until the LAST such
+ * stage is reached. `state` is the ship's own readout state (`stages`, `reached`) — the bridge's `finished`, never a
+ * timer or a tick count. Used by `watchViewer.mountFrameTouch` (presentation only: the runtime is the one gate).
+ */
+export const FRAME_TAPE_NOTE = 'Replaying — the controls take over when the tape ends';
+export function tapeHoldsFrame(state) {
+    const fins = (state?.stages ?? []).filter((s) => /^finished\b/.test(s));
+    return fins.length > 0 && !state.reached.includes(fins[fins.length - 1]);
+}

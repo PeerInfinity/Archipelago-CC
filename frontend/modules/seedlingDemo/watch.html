@@ -494,10 +494,12 @@
   #trace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
   [hidden] { display: none !important; }
 
-  /* ⛓ MANUAL's on-screen controls (slice seedling-lab-touch-visible): shown
-     under the canvas from the moment MANUAL is the source, dimmed until START
-     — a press only reaches the run while it is driving. */
-  body:has(#manualStart:not([disabled])) #stage .flash-touch-controls { opacity: .45; }
+  /* ⛓ MANUAL's on-screen controls show only while its run drives (mounted at
+     START, unmounted at STOP — seedling-lab-touch-fix, ⚖ the user 2026-11-11),
+     so L1b's "dimmed until START" rule has nothing left to dim. */
+  /* ⛓ A frame's strip while a TAPE drives the frame (`tapeHoldsFrame`): dimmed,
+     with the note under it. Presentation only: it still takes presses. */
+  #frame + .flash-touch-controls[data-lab-tape="replaying"] { opacity: .45; }
 </style>
 </head>
 <body>
@@ -608,6 +610,8 @@
          "press ▶ load in wasm, then ▶ Start". -->
     <span id="wasmShip">
       <button id="loadWasm" disabled>&#9654; load in wasm</button>
+      <!-- ⛓ seedling-lab-touch-fix: the on-screen controls under the wasm frame, as #jsTouch's under the JS one. -->
+      <label class="note"><input id="wasmTouch" type="checkbox" disabled> on-screen controls</label>
       <span id="loadWasmNote" class="note"></span>
     </span>
     <!-- ⛓⛓ LAB L3 — ▶ LOAD IN JS (⚖ user, 2026-10-28: "a 'Load in JS' button" …
@@ -677,10 +681,11 @@
         <!-- ⛓ The on-screen controls (a d-pad + X/C/V under the canvas, the
              flash panel's `touchControls.js`), with the panel's own setting:
              auto (a touch device, or ?touch=1; ?touch=0 hides) / on / off.
-             Here, beside START, because it shows the moment MANUAL is the
-             source — the controls it governs appear at that moment too.
-             Remembered per browser (slice seedling-lab-touch-visible). -->
-        <label title="a d-pad and the X/C/V buttons under the canvas — they press the same keys the keyboard does, while a run is going">on-screen controls <select id="manualTouch" disabled>
+             Here, beside START: the option shows the moment MANUAL is the
+             source, and the controls it governs appear when START is pressed
+             and go at STOP (seedling-lab-touch-fix). Remembered per browser
+             (slice seedling-lab-touch-visible). -->
+        <label title="a d-pad and the X/C/V buttons under the canvas while a run is going (after START) — they press the same keys the keyboard does">on-screen controls <select id="manualTouch" disabled>
           <option value="auto">auto (touch screens)</option>
           <option value="on">on</option>
           <option value="off">off</option>
