@@ -1340,7 +1340,10 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
      * prediction turns on WHICH tapes the arm can move, and a room list would
      * have named ten where the gates name two.
      */
-    it('⛔ the two exposed tapes are DERIVED by driving the roster, not declared', () => {
+    // ⛓ wave-38 joint flip (⚖ user 2026-11-10): slice 6's prediction was measured on the model BEFORE `fireSpinnerArm`
+    // (a Fire press then moved no spinner), so it is re-asked on THAT model; the shipped default's own measurement is
+    // the next row, stated separately rather than editing a prediction after its measurement.
+    it('⛔ the two exposed tapes are DERIVED by driving the roster, not declared (the model it was stated on: fireSpinnerArm OFF)', () => withContactFidelity({ fireSpinnerArm: false }, () => {
         const tapeDir = join(HERE, 'fixtures', 'tapes');
         const names = readdirSync(tapeDir).filter((f) => f.endsWith('.json'))
             .map((f) => f.replace(/\.json$/, ''))
@@ -1368,6 +1371,25 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
         const added = new Set(R8_D2_SHIELD.pressExposure.reachingAdded.map((a) => a.name));
         expect(measured.tapes.filter((n) => !added.has(n) && n !== 'r8-l18-spinner-press'))
             .toEqual(['r5-press-glide', 'r5-press-repeat']);
+    }), 300000);
+
+    /**
+     * ⛓ wave-38 joint flip (⚖ user 2026-11-10) — THE SAME SHADOW AT THE SHIPPED DEFAULT, MEASURED (not a prediction).
+     * With `fireSpinnerArm` ON the L39 tapes' Fire presses knock `spinner@112,88` where the game does (game-witnessed at
+     * 0 px, `fixtures/firespinner-witness/firespinner-r5-press-*.json`), so the counterfactual SWORD shadow over
+     * `r5-press-repeat` now reaches that body three times and would kill it; `r5-press-glide`'s single landing is unchanged.
+     * The tapes' presses are Fire (no damage): no committed tape kills a spinner, only the sword shadow would.
+     */
+    it('the sword shadow at the shipped default (fireSpinnerArm ON): r5-press-glide unchanged, r5-press-repeat lands 3 on spinner@112,88', () => {
+        const tapeDir = join(HERE, 'fixtures', 'tapes');
+        const pick = (l) => l.map((x) => ({ t: x.t, id: x.id, hits: x.hits, killed: x.killed }));
+        expect(pick(spinnerLandingsFor(tapeDir, 'r5-press-glide')))
+            .toEqual([{ t: 108, id: 'spinner@112,88', hits: 1, killed: false }]);
+        expect(pick(spinnerLandingsFor(tapeDir, 'r5-press-repeat'))).toEqual([
+            { t: 108, id: 'spinner@112,88', hits: 1, killed: false },
+            { t: 192, id: 'spinner@112,88', hits: 2, killed: false },
+            { t: 276, id: 'spinner@112,88', hits: 3, killed: true },
+        ]);
     // 300s, not 120s: this drives the whole disk-derived roster synchronously,
     // and the quiet-machine cost was already 113.8s at 153 tapes (2026-08-11,
     // twice red under load at 120s). The bound must survive roster growth and
