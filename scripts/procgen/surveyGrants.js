@@ -273,3 +273,83 @@ export function stagedBlockCheck(construction, tape, shipped) {
     const differs = STAGED_BLOCK_FIELDS.filter((f) => JSON.stringify(construction[f] ?? null) !== JSON.stringify(want[f]));
     return { ok: differs.length === 0, differs };
 }
+
+/**
+ * ⛓⛓ ER E6 — **THE STAGING OF A ROUTE THAT COMES BACK.** Four rules the playthrough's route never exercised (every
+ * room before its Sword has a committed tape; it never re-enters a boss's room; the latch's opened rooms are all
+ * behind it), and a world whose stairs lead elsewhere does. Each is pure (unit rows: `surveyGrants.test.js`), and
+ * each is inert where the playthrough stands (measured when they landed: its `route.json` is byte-identical in the
+ * default survey and through 4.2 and `end`, both routes).
+ */
+
+/**
+ * The campaign's PRE-SWORD state: the first of `names` whose tape block carries a seam holding no item, else null.
+ * A staged row the walk enters before its Sword is constructed from it, not from the post-sword latch.
+ *
+ * @param {string[]} names campaign tape names, in campaign order
+ * @param {(name: string) => object} tapeOf name → the tape's raw document
+ */
+export function preSwordBaseOf(names, tapeOf) {
+    return names.find((name) => {
+        const items = tapeOf(name)?.seam?.items;
+        return items && typeof items === 'object' && !Object.values(items).some(Boolean);
+    }) ?? null;
+}
+
+/**
+ * A latch's own `persistence` rows are the rooms the CAMPAIGN had opened by that latch. A staged row keeps one only
+ * for a level the walk visited at an EARLIER step: `{kept, dropped}`.
+ *
+ * @param {Array<{level:number, tag:number}>} persistence the latch's rows
+ * @param {Iterable<number>} visitedLevels the levels of the route's earlier steps
+ */
+export function inheritedFlagsFor(persistence, visitedLevels) {
+    const visited = new Set(visitedLevels);
+    const rows = persistence ?? [];
+    return { kept: rows.filter((r) => visited.has(r.level)), dropped: rows.filter((r) => !visited.has(r.level)) };
+}
+
+/**
+ * The kills the walk REPORTED before step `i`, in step `i`'s own level: the `report` `{level, tag}` of every goal an
+ * earlier step carries (a `skip` — a boss no executor fights — reports nothing), less what `already` stages.
+ *
+ * @param {Array<{level:number, goals:Array}>} steps the route's steps, in order
+ * @param {number} i the index of the step being staged
+ * @param {Array<{level:number, tag:number}>} [already] flags the step already boots with
+ * @returns {Array<{level:number, tag:number}>}
+ */
+export function reportedKillsBefore(steps, i, already = []) {
+    const out = [];
+    for (const s of steps.slice(0, i)) {
+        for (const g of s.goals ?? []) {
+            const r = g.kind !== 'skip' ? g.report : null;
+            if (!r || r.level !== steps[i].level) continue;
+            if ([...already, ...out].some((f) => f.level === r.level && f.tag === r.tag)) continue;
+            out.push({ level: r.level, tag: r.tag });
+        }
+    }
+    return out;
+}
+
+/**
+ * `--carry-earned`: the flags the EARLIER rows of a prior survey earned in `step`'s level (`replay.earnedClears`,
+ * spelled `{level,tag}`), from the rows that SOLVED, less what `already` stages: `[{level, tag, text}]`.
+ *
+ * @param {Array<{step:*, verdict:string, replay:?{earnedClears:?string[]}}>} rows the prior survey's rows
+ * @param {{step:number, level:number}} step
+ * @param {Array<{level:number, tag:number}>} [already]
+ */
+export function carriedEarnedFor(rows, step, already = []) {
+    const out = [];
+    for (const row of rows ?? []) {
+        if (typeof row.step !== 'number' || row.step >= step.step || row.verdict !== 'SOLVED') continue;
+        for (const text of row.replay?.earnedClears ?? []) {
+            const m = /^\{(-?\d+),(-?\d+)\}$/.exec(text);
+            if (!m || Number(m[1]) !== step.level) continue;
+            const flag = { level: Number(m[1]), tag: Number(m[2]) };
+            if ([...already, ...out].some((f) => f.level === flag.level && f.tag === flag.tag)) continue;
+            out.push({ ...flag, text });
+        }
+    }
+    return out;
+}

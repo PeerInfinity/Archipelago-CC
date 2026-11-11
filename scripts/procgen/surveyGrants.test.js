@@ -8,7 +8,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    deriveStagedGrant, STAGED_BLOCK_FIELDS, stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit,
+    carriedEarnedFor, deriveStagedGrant, inheritedFlagsFor, preSwordBaseOf, reportedKillsBefore, STAGED_BLOCK_FIELDS,
+    stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit,
 } from './surveyGrants.js';
 import { parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
 import { solveStaging, stagingFromTape } from '../../frontend/modules/seedlingDemo/tapeRunner.js';
@@ -305,5 +306,78 @@ describe('stagedBlockCheck — the staged construction is R8\'s (RULES survey-cl
     it('the tape\'s own unsplit rng is normalised the same way the construction\'s is', () => {
         expect(other.rng.split).toBe(false);
         expect(construct().rng.split).toBe(true);
+    });
+});
+
+describe('ER E6 — the staging of a route that comes back', () => {
+    const tapeOf = (name) => JSON.parse(readFileSync(
+        new URL(`../../frontend/modules/seedlingDemo/fixtures/tapes/${name}.json`, import.meta.url), 'utf8'));
+    const CAMPAIGN = Array.from({ length: 11 }, (_, i) => `r8-solve-${i + 1}`);
+
+    it('the pre-sword base is the first campaign tape whose seam holds no item (found on the real tapes)', () => {
+        const base = preSwordBaseOf(CAMPAIGN, tapeOf);
+        expect(base).not.toBeNull();
+        const items = tapeOf(base).seam.items;
+        expect(Object.values(items).some(Boolean)).toBe(false);
+        // every campaign tape BEFORE it has no seam to stage from; the post-sword latch is not it
+        for (const name of CAMPAIGN.slice(0, CAMPAIGN.indexOf(base))) expect(tapeOf(name).seam ?? null).toBeNull();
+        expect(tapeOf('r8-solve-11').seam.items.hasSword).toBe(true);
+        expect(base).not.toBe('r8-solve-11');
+        // synthetic: a seam that holds something is passed over; no candidate is null, never a guess
+        const fake = { a: { seam: null }, b: { seam: { items: { hasSword: true } } }, c: { seam: { items: { hasSword: false } } } };
+        expect(preSwordBaseOf(['a', 'b', 'c'], (n) => fake[n])).toBe('c');
+        expect(preSwordBaseOf(['a', 'b'], (n) => fake[n])).toBeNull();
+    });
+
+    it('an inherited flag is kept only for a level the walk has visited', () => {
+        const latch = tapeOf('r8-solve-11').persistence;
+        expect(latch.length).toBeGreaterThan(0);
+        const levels = [...new Set(latch.map((r) => r.level))];
+        // visited them all (the playthrough's own case): nothing dropped
+        expect(inheritedFlagsFor(latch, levels)).toEqual({ kept: latch, dropped: [] });
+        // visited none: nothing kept
+        expect(inheritedFlagsFor(latch, [])).toEqual({ kept: [], dropped: latch });
+        // visited one: exactly its rows
+        const one = inheritedFlagsFor(latch, [levels[0]]);
+        expect(one.kept.every((r) => r.level === levels[0])).toBe(true);
+        expect(one.dropped.every((r) => r.level !== levels[0])).toBe(true);
+        expect(one.kept.length + one.dropped.length).toBe(latch.length);
+        expect(inheritedFlagsFor(undefined, [1])).toEqual({ kept: [], dropped: [] });
+    });
+
+    it('a reported kill is staged in the LATER visits to its own level only', () => {
+        const fight = { kind: 'clear-tag', report: { level: 19, tag: 0 } };
+        const steps = [
+            { level: 18, goals: [{ kind: 'reach-exit' }] },
+            { level: 19, goals: [{ kind: 'collect-placement' }, fight, { kind: 'reach-exit' }] },
+            { level: 40, goals: [{ kind: 'reach-exit' }] },
+            { level: 19, goals: [{ kind: 'reach-exit' }] },
+            { level: 32, goals: [{ kind: 'skip', report: { level: 32, tag: 3 } }] },
+            { level: 32, goals: [{ kind: 'encounter', report: { level: 32, tag: 3 } }] },
+            { level: 32, goals: [{ kind: 'reach-exit' }] },
+        ];
+        expect(reportedKillsBefore(steps, 1)).toEqual([]);                      // the visit that fights
+        expect(reportedKillsBefore(steps, 2)).toEqual([]);                      // another level
+        expect(reportedKillsBefore(steps, 3)).toEqual([{ level: 19, tag: 0 }]); // back in the room
+        expect(reportedKillsBefore(steps, 3, [{ level: 19, tag: 0 }])).toEqual([]); // already staged: once
+        expect(reportedKillsBefore(steps, 5)).toEqual([]);                      // a skip reported nothing
+        expect(reportedKillsBefore(steps, 6)).toEqual([{ level: 32, tag: 3 }]);
+    });
+
+    it('--carry-earned: the earlier SOLVED rows of the same level, each flag once', () => {
+        const rows = [
+            { step: 1, verdict: 'SOLVED', replay: { earnedClears: ['{16,3}', '{16,6}'] } },
+            { step: 2, verdict: 'REFUSED', replay: null },
+            { step: 3, verdict: 'SOLVED', replay: { earnedClears: ['{16,3}', '{16,4}', '{19,0}', 'not a flag'] } },
+            { step: 'A4', verdict: 'SOLVED', replay: { earnedClears: ['{16,9}'] } },
+            { step: 9, verdict: 'SOLVED', replay: { earnedClears: ['{16,7}'] } },
+        ];
+        const got = carriedEarnedFor(rows, { step: 5, level: 16 });
+        expect(got.map((f) => f.text)).toEqual(['{16,3}', '{16,6}', '{16,4}']);
+        expect(got[0]).toEqual({ level: 16, tag: 3, text: '{16,3}' });
+        expect(carriedEarnedFor(rows, { step: 5, level: 16 }, [{ level: 16, tag: 3 }]).map((f) => f.text)).toEqual(['{16,6}', '{16,4}']);
+        expect(carriedEarnedFor(rows, { step: 5, level: 19 }).map((f) => f.text)).toEqual(['{19,0}']);
+        expect(carriedEarnedFor(rows, { step: 1, level: 16 })).toEqual([]);
+        expect(carriedEarnedFor(null, { step: 5, level: 16 })).toEqual([]);
     });
 });
