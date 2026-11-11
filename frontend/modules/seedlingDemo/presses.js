@@ -1356,6 +1356,9 @@ export function fireRespondersIn(world, player, { pushables: live = null, turret
             type: FIRE_HITABLE_TYPE_BY_ARM[r.as3] ?? 'Solid',
             // ⛓ FIRESPINNER: a Spinner is `type = "Enemy"` (`Enemy`'s ctor), `hitables[0]`: ELEVEN dispatches a tick.
             ...(liveSpinner ? { type: 'Enemy' } : {}),
+            // ⛓ fidelity ROCKFIRE D1 (`fireRockArm`): a BreakableRock is `type = "Solid"` (its ctor: *"Was "Rock""*,
+            // `Puzzlements/BreakableRock.as:41`), `hitables[6]`: FIVE dispatches a tick, not a "Rock"'s eight.
+            ...(CONTACT_FIDELITY.fireRockArm && r.as3 === 'BreakableRock' ? { type: 'Solid' } : {}),
         });
     }
     const hits = fireHits(player, targets);
@@ -1373,6 +1376,8 @@ export const FIRE_HITABLE_TYPE_BY_ARM = Object.freeze({
     PushableBlockFire: 'Solid',
     PushableBlockSpear: 'Solid',
     RopeStart: 'Rope',
+    // ⚠ fidelity ROCKFIRE: the shipped ctor says `type = "Solid"; //Was "Rock"`. This row is what the census read
+    // before `fireRockArm`; ON, `fireRespondersIn` overrides it to 'Solid' (five dispatches). Kept for the OFF arm.
     BreakableRock: 'Rock',
     Tree: 'Tree',
     // ⚠ A `BurnableTree`'s `type` is "Solid", NOT "Tree", and its own ctor

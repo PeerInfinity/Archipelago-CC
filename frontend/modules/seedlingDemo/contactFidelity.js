@@ -534,8 +534,9 @@ export const CONTACT_FIDELITY = {
      * spinner where this tick's spinner step left it, and the forecast (`chaserForecastNow`) steps its own copy of
      * the spinners beside the chasers (the press's hits on a spinner are not forecast). ⛔ OFF by default (no
      * licence); `SEEDLING_CHASER_SPINNER_WALLS=0|1` for a node measurement.
+     * ON since the BOBIFRAME flip (⚖ user 2026-11-11): the game witness `fixtures/bobiframe-witness/` (p4g, 0 px).
      */
-    chaserSpinnerWalls: false,
+    chaserSpinnerWalls: true,
     /**
      * fidelity CORRIDOR D2 — THE WALK'S CORRIDOR PRICES THE LIVE WALLFLYERS AND DRILLS AT THE TICKS IT PASSES THEM.
      *
@@ -1945,6 +1946,22 @@ export const CONTACT_FIDELITY = {
      * byte-identical (the placement test and the throw). `SEEDLING_FIRE_SPINNER_ARM=0|1`. ON since the wave-38 joint flip (⚖ user 2026-11-10).
      */
     fireSpinnerArm: true,
+    /**
+     * fidelity ROCKFIRE D1 (wave 39) — A FIRE PRESS THAT REACHES A BREAKABLE ROCK BREAKS IT EXACTLY WHEN A SWING WOULD.
+     * `Player.genericHit`'s rock arm is `(e as BreakableRock).hit(hasGhostSword ? 1 : 0)` for every `t`
+     * (`Player.as:1087-1090`), and `hit` is `if (rockType <= _t) play("break")` (`Puzzlements/BreakableRock.as:57-67`):
+     * Fire breaks a rockType-0 rock with or without the Ghost Sword, and a ghost rock (rockType 1) only with it held;
+     * `endAnim` writes the rock's persistence flag and removes it. A BreakableRock is `type = "Solid"`
+     * (`hitables[6]`): five dispatches a hit tick, of which the first is the whole effect (`Spritemap.play`
+     * early-returns). `FIRE_ARM_POLICY.BreakableRock` said `modelled` and `levelRun.applyFire` had no arm, so a Fire
+     * press whose flame reached a rock threw (*"`FIRE_ARM_POLICY` calls BreakableRock modelled and this dispatch has no
+     * arm for it"*). ON: `applyFire`'s BreakableRock arm calls `hitBreakableRock`, the sword arm's own body (hoisted
+     * unchanged: one model of the rock, `breakableRocks.hitRock`, the same `goneAt`/flag/`rockGoneFencepost`
+     * handling), on the sword arm's clock, and not at all under the freeze; the census row's type is "Solid". Game
+     * witness: `fidelityRockFire.js` (p4g, 0 px: L40's rock with and without the Ghost Sword, L101's ghost rock with
+     * and without it). OFF: byte-identical (the throw). `SEEDLING_FIRE_ROCK_ARM=0|1`. ON since the ROCKFIRE flip (⚖ user 2026-11-11).
+     */
+    fireRockArm: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2333,6 +2350,9 @@ if (globalThis.process?.env?.SEEDLING_SPINNER_ROSTER_GONE === '0') CONTACT_FIDEL
 // ⛓ fidelity FIRESPINNER D1: `SEEDLING_FIRE_SPINNER_ARM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '1') CONTACT_FIDELITY.fireSpinnerArm = true;
 if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '0') CONTACT_FIDELITY.fireSpinnerArm = false;
+// ⛓ fidelity ROCKFIRE D1: `SEEDLING_FIRE_ROCK_ARM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '1') CONTACT_FIDELITY.fireRockArm = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '0') CONTACT_FIDELITY.fireRockArm = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

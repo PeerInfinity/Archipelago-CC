@@ -1,0 +1,8 @@
+== train OFF: tests 3 passed 3 failed 0
+passed fidelityL40Bk2.train.test.js › L40BK2 D1 — the pocket chain witness is the solver's plan the pre-flip hammer defaults (withL40Flip(false)): the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape
+passed fidelityL40Latch.train.test.js › L40LATCH D1 — the latch solve under each arm the pre-flip hammer defaults (withL40Flip(false)), holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier
+passed fidelityL40Latch.train.test.js › L40LATCH D1 — the latch solve under each arm the pre-flip hammer defaults (withL40Flip(false)), both ON: the solve's refused prefix is the recorded tape
+== train ON: tests 3 passed 3 failed 0
+passed fidelityL40Bk2.train.test.js › L40BK2 D1 — the pocket chain witness is the solver's plan the pre-flip hammer defaults (withL40Flip(false)): the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape
+passed fidelityL40Latch.train.test.js › L40LATCH D1 — the latch solve under each arm the pre-flip hammer defaults (withL40Flip(false)), holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier
+passed fidelityL40Latch.train.test.js › L40LATCH D1 — the latch solve under each arm the pre-flip hammer defaults (withL40Flip(false)), both ON: the solve's refused prefix is the recorded tape

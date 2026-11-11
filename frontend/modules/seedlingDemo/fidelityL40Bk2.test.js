@@ -89,7 +89,8 @@ describe('L40BK2 D1 — a weigh\'s holder derived under the rest of the stance h
         expect(out).toBeNull();
         expect(refusal.message).not.toContain('no REACHABLE stance inside button@816,400');
         expect(refusal.message).toContain('-> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) '
-            + '-> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 '
+            + '-> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t767 '
+            // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the bob reaches the press 13 ticks sooner (t780 before).
             + '(chaser bob@736,752)');
         expect(refusal.message).toContain('PRESS_KILL_REBOOT_GUARD');
     }), 300_000);
@@ -143,7 +144,8 @@ describe('L40BK2 D2 — leg 368: a struck spinner priced where the walk\'s own s
 
     it('OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144\'s hammer at t1222 (L40RES\'s hit)', () => withL40Flip(false, () => {
         const a = solveAt(5290, { dashSpinnerForecast: false });
-        expect([a.ok, a.ticks, a.plan]).toEqual([true, 1600, '1da60bcb4c0d']);
+        // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the plan is 1567 t (1600 t, `1da60bcb4c0d`, before).
+        expect([a.ok, a.ticks, a.plan]).toEqual([true, 1567, 'abf1e13c3bf7']);
         expect(a.hits).toEqual([[1222, 'spinner-hammer', 'spinner@192,144']]);
     }), 120_000);
 
@@ -156,7 +158,8 @@ describe('L40BK2 D2 — leg 368: a struck spinner priced where the walk\'s own s
     it('ON, seam 5280: OFF\'s hitless 1558 t plan, the same plan byte for byte', () => withL40Flip(false, () => {
         const off = solveAt(5280, { dashSpinnerForecast: false });
         const on = solveAt(5280, L40BK2_D2_SWITCHES);
-        expect([off.ok, off.ticks, off.plan, off.hits]).toEqual([true, 1558, '32f29414cd8e', []]);
+        // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the plan is 1555 t (1558 t, `32f29414cd8e`, before), still hitless.
+        expect([off.ok, off.ticks, off.plan, off.hits]).toEqual([true, 1555, '2c4b20d9853c', []]);
         expect(on).toEqual(off);
     }), 240_000);
 });
