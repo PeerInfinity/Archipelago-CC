@@ -106,6 +106,15 @@ const { apExitNamesByEndpoint } = await imp('frontend/modules/procgenPipeline/en
 const DERIVED_TABLE = TBL.readDerivedRuleTable();
 const { PUSHABLE_KINDS, blockCrossingCost } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
 const { deriveWeaponFootprint } = await imp('frontend/modules/flashPanel/seedlingWeaponFootprints.js');
+// ⛓⛓ RULES no-hit-directional — ⚖ the user, 2026-11-11: "Add the directional gates for now, but make a note to reexamine
+// this later." The per-room table of directional no-hit gates and its reader (`seedlingNoHitDirectionalGates.js`, whose
+// header carries the ruling and the general rule to re-examine); the witness plans the table must stand on.
+const { wallFlyerBands } = await imp('frontend/modules/flashPanel/seedlingWallFlyerBands.js');
+const { noHitDirectionalGatesFor, stampNoHitDirectionalGates } = await imp('frontend/modules/flashPanel/seedlingNoHitDirectionalGates.js');
+export const NO_HIT_GATES_FILE = path.join(repoRoot, 'frontend/modules/flashPanel/seedlingNoHitDirectionalGates.json');
+export const NO_HIT_PLANS_FILE = path.join(repoRoot, 'scripts/procgen/seedling-wallflyer-nohit-plans.json');
+const NO_HIT_GATES = JSON.parse(fs.readFileSync(NO_HIT_GATES_FILE, 'utf8'));
+const NO_HIT_PLANS = JSON.parse(fs.readFileSync(NO_HIT_PLANS_FILE, 'utf8'));
 
 /**
  * ⛓⛓ RULES patched-set — **THE PLAYTHROUGH READS THE DELIVERED SET.** `seedling_playthrough` is the one
@@ -409,10 +418,40 @@ const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
         },
     );
     const base = build({});
-    if (!ROPES.some((r) => r.level === level.level && !r.verdict.refuse)) return stampOffGridGatedSolids(level, base);
+    if (!ROPES.some((r) => r.level === level.level && !r.verdict.refuse)) return stampNoHitGates(level, stampOffGridGatedSolids(level, base));
     const cellCharges = ropeChargesFor(level, base);
-    return stampOffGridGatedSolids(level, cellCharges.length ? build({ cellCharges }) : base);
+    return stampNoHitGates(level, stampOffGridGatedSolids(level, cellCharges.length ? build({ cellCharges }) : base));
 };
+/**
+ * ⛓⛓ RULES no-hit-directional — one level's directional no-hit gates (⚖ the user 2026-11-11, a per-room table FOR NOW,
+ * to be re-examined: `seedlingNoHitDirectionalGates.js`), checked against the level's own flyer bands and the witness
+ * plans, and stamped on its grid as `dirs` gates. `doorOf` hands the reader each door's tile and the tile its landing
+ * stands on (the far room's link back), so a witness is checked to cross the band the way the gate says.
+ */
+const noHitGatesMemo = new Map();
+export function playthroughNoHitGatesFor(level, { table = NO_HIT_GATES, plans = NO_HIT_PLANS } = {}) {
+    const memo = table === NO_HIT_GATES && plans === NO_HIT_PLANS;
+    if (memo && noHitGatesMemo.has(level.level)) return noHitGatesMemo.get(level.level);
+    let gates = [];
+    if ((table.gates ?? []).some((g) => g.level === level.level)) {
+        const tileOf = (x, y) => [Math.floor(Number(x) / TILE), Math.floor(Number(y) / TILE)];
+        const doorOf = (levelNo, to) => {
+            const door = (levelOf(levelNo)?.entities ?? []).find((e) => LINK_TAGS.includes(e.type) && Number(e.attrs?.to) === to);
+            const back = (levelOf(to)?.entities ?? []).find((e) => LINK_TAGS.includes(e.type) && Number(e.attrs?.to) === levelNo);
+            return door && back ? { door: tileOf(door.x, door.y), landing: tileOf(back.attrs.playerx, back.attrs.playery) } : null;
+        };
+        gates = noHitDirectionalGatesFor(table, plans, level, wallFlyerBands(level, buildLevelWorld(level)), doorOf);
+    }
+    if (memo) noHitGatesMemo.set(level.level, gates);
+    return gates;
+}
+/** ⛓⛓ RULES no-hit-directional — every gate of the committed table, read (so a row of a level the set lacks is refused). */
+export function playthroughNoHitGates(options = {}) {
+    const table = options.table ?? NO_HIT_GATES;
+    for (const g of table.gates ?? []) if (!levelOf(g.level)) throw new Error(`no-hit directional gates: the set holds no level ${g.level}`);
+    return LEVELS.flatMap((level) => playthroughNoHitGatesFor(level, options));
+}
+const stampNoHitGates = (level, grid) => stampNoHitDirectionalGates(grid, playthroughNoHitGatesFor(level), doorTilesOf(level));
 
 /**
  * ⛓⛓ RULES rocklock-pocket — **AN ENCOUNTER LOCK ONE SIDE CANNOT CLEAR, AS A LATCH FROM THAT SIDE.** The geometry and
@@ -882,6 +921,12 @@ function pitChainsFor(rooms) {
 
 export function buildPlaythroughAtlas() {
     notes.length = 0;
+    // ⛓⛓ RULES no-hit-directional: every row of the table is read (a row of a level the set lacks, or one that lost a
+    // witness plan, refuses here by name), and each is named in the run's notes.
+    for (const g of playthroughNoHitGates()) {
+        note(`level_${g.gate.level}: NO-HIT DIRECTIONAL GATE (per-room table, to be re-examined): moving ${g.blocked} across `
+            + `${g.gate.band.join(' + ')} costs ${g.gate.arms.join(' | ')} (witnesses ${[...g.gate.witness.notFound, ...Object.values(g.gate.witness.arms)].join(', ')})`);
+    }
     prunedPockets.length = 0;
     droppedRegions.length = 0;
     lavaTrapLifts.length = 0;

@@ -103,6 +103,7 @@ export async function loadCensusInputs({ producer = true } = {}) {
     const solidRows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP));
     const chainLevels = new Set(P.pitChains.map((c) => c.landing.level));
     const everyLevel = new Set(MAP.levels.map((L) => L.level));
+    const noHitGateLevels = new Set(P.playthroughNoHitGates().map((g) => g.gate.level));
     /** ⛓ Each scanned reader's DOMAIN: the landings (or departures) it consumes, measured on the delivered map. */
     const readerDomains = {
         doorTilesOf: { what: 'landings INTO a rope level (the doors a rope lane leaves open)', landings: into(ropeLevels) },
@@ -113,6 +114,10 @@ export async function loadCensusInputs({ producer = true } = {}) {
         arrivalSpawnFor: { what: 'every arrival exit\'s return spawn', landings: all },
         playthroughLandingGates: { what: 'every arrival exit\'s return spawn, priced for lethal terrain', landings: all },
         pitChainsFor: { what: 'the links a fall lands on (descent census, the room\'s own links\' @to)', landings: ownLinks(chainLevels) },
+        // ⛓ rules-no-hit-directional: a gated room's flyer bands (its solids) and its witnesses' doors: the room's own links
+        // and the landings their links back give (`doorOf`). A stairs shuffle keeps every room's door and landing tiles.
+        playthroughNoHitGatesFor: { what: 'the links of a room that holds a directional no-hit gate, and the landings into it (its witnesses\' door and landing tiles)',
+            landings: [...into(noHitGateLevels), ...ownLinks(noHitGateLevels)] },
         derivePlaythroughLayer: { what: 'every link (the atlas derivation itself: E4 rewrites its output)', landings: ownLinks(everyLevel) },
         // A buildLevelWorld call (wherever it sits) models the room's OWN links (their @to/@playerx).
         'reads:buildLevelWorld': { what: 'the room\'s own links (departure-side model)', landings: ownLinks(everyLevel) },
