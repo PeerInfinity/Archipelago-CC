@@ -267,23 +267,26 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-l60-l71-killlock: the SAME legs by key, every id from 514 on shifted by +1 — L60's kill-lock event is a
         //   location on its room's side, so L60 r5c0's L59 arrival gains a leg to `L60 flag 0` (514). No leg gained or lost a
         //   goal event (L60's pocket return stages nothing: the route holds the Ghost Spear, the Or's other arm).
+        // ⛓ rules-no-hit-directional: the SAME legs by key, every id from 260 on shifted by -8 and from 284 by -13 — L22 and
+        //   L25 split at their directional no-hit gates, so L22's 16 one-region door legs are 8 within-side legs (244-251) and
+        //   L25's 12 are 7 (264-270); the cross-side pairs are internal crossings. No leg gained or lost a goal event.
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
-            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [361],
-            'flag:L62:0': [534, 539, 544, 549, 554, 585], 'flag:L63:1': [536, 541, 546, 551, 556, 560, 565, 570, 575],
-            'flag:L63:6': [588, 590], 'flag:L63:7': [591],
-            'flag:L71:2': [640, 642], 'flag:L12:7+flag:L12:12': [660], 'flag:L101:0': [767],
-            'flag:L112:1': [811, 812, 818, 819, 825, 826, 832, 833, 839, 840],
-            'flag:L114:0': [813, 814, 815, 820, 821, 822, 827, 828, 829, 834, 835, 841, 842],
-            'flag:L113:0': [850, 851, 852, 853],
+            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [348],
+            'flag:L62:0': [521, 526, 531, 536, 541, 572], 'flag:L63:1': [523, 528, 533, 538, 543, 547, 552, 557, 562],
+            'flag:L63:6': [575, 577], 'flag:L63:7': [578],
+            'flag:L71:2': [627, 629], 'flag:L12:7+flag:L12:12': [647], 'flag:L101:0': [754],
+            'flag:L112:1': [798, 799, 805, 806, 812, 813, 819, 820, 826, 827],
+            'flag:L114:0': [800, 801, 802, 807, 808, 809, 814, 815, 816, 821, 822, 828, 829],
+            'flag:L113:0': [837, 838, 839, 840],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[814].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[801].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[534].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[536].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[521].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[523].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });

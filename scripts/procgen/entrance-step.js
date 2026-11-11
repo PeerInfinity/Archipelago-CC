@@ -11,8 +11,8 @@
  * it never re-pools, re-classifies or re-compiles vanilla — the substrate's `resume` hook warms its process state from it.
  *
  * Run:
- *   node scripts/procgen/entrance-step.js run --atlas seedling-b06ae22d --seed 1 -o er-env.json --rules-out er-rules.json
- *   node scripts/procgen/entrance-step.js run --atlas seedling-b06ae22d --seed 1 --to classify -o er-classify.json
+ *   node scripts/procgen/entrance-step.js run --atlas seedling-296d76b0 --seed 1 -o er-env.json --rules-out er-rules.json
+ *   node scripts/procgen/entrance-step.js run --atlas seedling-296d76b0 --seed 1 --to classify -o er-classify.json
  *   node scripts/procgen/entrance-step.js run --atlas <id> --seed 7 --max-attempts 20 --sweep events -o -
  *   node scripts/procgen/entrance-step.js run --atlas seedling-9c051b83 --seed 1 --to shuffle --save er-shuffle.env.json
  *   node scripts/procgen/entrance-step.js run --resume er-shuffle.env.json --rules-out er-rules.json
