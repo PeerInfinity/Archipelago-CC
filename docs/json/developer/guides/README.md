@@ -30,6 +30,7 @@ Tools for converting between formats and generating code:
 
 - **[Rule Format Converter](./format-converter.md)**: Bidirectional conversion between Archipelago-CC and Rule Builder JSON formats
 - **[World Generator](./world-generator.md)**: Generate complete Archipelago world packages from JSON rules files
+- **[Spoiler Export Hook](./spoiler-export-hook.md)**: How a world sends its sphere order in slot_data through the optional hook, and where the client reads it
 
 ## Reference Documents
 

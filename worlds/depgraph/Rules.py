@@ -2,8 +2,10 @@ from typing import List, Dict, Set, Optional
 from worlds.generic.Rules import add_rule
 from collections import defaultdict, deque
 import csv
+import io
 import json
 import os
+import pkgutil
 import re
 
 
@@ -91,9 +93,45 @@ def topological_sort_graph(node_ids: List[str], dependencies: Dict[str, Set[str]
     return result
 
 
-def parse_json_graph(path: str) -> GraphStructure:
+def _decode_text(data: bytes) -> str:
+    """Decode UTF-8 bytes exactly as ``open(path, 'r', encoding='utf-8')``
+    would read them (universal newlines), so a bundled graph parses the same
+    whether it was read from a directory or from inside a packed .apworld."""
+    return io.TextIOWrapper(io.BytesIO(data), encoding='utf-8').read()
+
+
+def _read_file_text(path: str) -> str:
+    with open(path, 'rb') as f:
+        return _decode_text(f.read())
+
+
+def _read_bundled_text(filename: str) -> str:
+    """Read ``data/<filename>`` from this package.
+
+    ``pkgutil.get_data`` goes through the package's loader, so it works both
+    for an unpacked ``worlds/depgraph/`` directory and for a packed
+    ``custom_worlds/depgraph.apworld`` (a zip, loaded by zipimport), where
+    ``os.path.join(dirname(__file__), 'data', ...)`` names a path inside the
+    zip that ``open()`` cannot read.
     """
-    Parse a JSON graph file into a GraphStructure.
+    try:
+        data = pkgutil.get_data(__package__, f"data/{filename}")
+    except OSError as e:
+        raise FileNotFoundError(f"Bundled graph file data/{filename} not found in package {__package__}") from e
+    if data is None:
+        raise FileNotFoundError(f"Package {__package__} has no loader that can read data/{filename}")
+    return _decode_text(data)
+
+
+def parse_json_graph(path: str) -> GraphStructure:
+    """Parse a JSON graph file on the filesystem into a GraphStructure."""
+    return parse_json_graph_text(_read_file_text(path), path)
+
+
+def parse_json_graph_text(content: str, path: str) -> GraphStructure:
+    """
+    Parse JSON graph text into a GraphStructure. ``path`` names the source
+    (for the default title and error messages); it is never opened.
 
     Expected format:
     {
@@ -107,8 +145,7 @@ def parse_json_graph(path: str) -> GraphStructure:
         }
     }
     """
-    with open(path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    data = json.loads(content)
 
     if not data.get("nodes"):
         raise ValueError(f"JSON graph file {path} has no 'nodes' field or it is empty")
@@ -158,8 +195,14 @@ def parse_json_graph(path: str) -> GraphStructure:
 
 
 def parse_dot_graph(path: str) -> GraphStructure:
+    """Parse a DOT graph file on the filesystem into a GraphStructure."""
+    return parse_dot_graph_text(_read_file_text(path), path)
+
+
+def parse_dot_graph_text(content: str, path: str) -> GraphStructure:
     """
-    Parse a DOT graph file into a GraphStructure.
+    Parse DOT graph text into a GraphStructure. ``path`` names the source
+    (for the default title and error messages); it is never opened.
 
     Supports basic DOT syntax:
         digraph "Title" {
@@ -168,9 +211,6 @@ def parse_dot_graph(path: str) -> GraphStructure:
             a -> b;
         }
     """
-    with open(path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
     structure = GraphStructure()
 
     # Extract title from digraph declaration
@@ -234,15 +274,19 @@ def parse_dot_graph(path: str) -> GraphStructure:
 
 
 def parse_csv_graph(path: str) -> GraphStructure:
+    """Parse a CSV graph file on the filesystem into a GraphStructure."""
+    return parse_csv_graph_text(_read_file_text(path), path)
+
+
+def parse_csv_graph_text(content: str, path: str) -> GraphStructure:
     """
-    Parse a CSV graph file into a GraphStructure.
+    Parse CSV graph text into a GraphStructure. ``path`` names the source
+    (for the default title and error messages); it is never opened.
 
     Expected columns: id, label, depends_on, description
     depends_on is semicolon-separated list of node IDs.
     """
-    with open(path, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
+    rows = list(csv.DictReader(io.StringIO(content, newline='')))
 
     if not rows:
         raise ValueError(f"CSV graph file {path} is empty")
@@ -310,21 +354,17 @@ def parse_depgraph(graph_key: str) -> GraphStructure:
     """
     # Check bundled graphs first
     bundled_graphs = {
-        "tech_tree": ("tech_tree.json", parse_json_graph),
-        "skill_tree": ("skill_tree.dot", parse_dot_graph),
-        "recipe_chain": ("recipe_chain.csv", parse_csv_graph),
-        "baking_adventure": ("baking_adventure.json", parse_json_graph),
-        "coding_adventure": ("coding_adventure.json", parse_json_graph),
-        "swfrecomp_vibe_coding": ("swfrecomp_vibe_coding.json", parse_json_graph),
-        "taskflow_example": ("taskflow_example.json", parse_json_graph),
+        "tech_tree": ("tech_tree.json", parse_json_graph_text),
+        "skill_tree": ("skill_tree.dot", parse_dot_graph_text),
+        "recipe_chain": ("recipe_chain.csv", parse_csv_graph_text),
+        "baking_adventure": ("baking_adventure.json", parse_json_graph_text),
+        "coding_adventure": ("coding_adventure.json", parse_json_graph_text),
+        "swfrecomp_vibe_coding": ("swfrecomp_vibe_coding.json", parse_json_graph_text),
+        "taskflow_example": ("taskflow_example.json", parse_json_graph_text),
     }
     if graph_key in bundled_graphs:
         filename, parser = bundled_graphs[graph_key]
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
-        path = os.path.join(data_dir, filename)
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Bundled graph '{graph_key}' not found at {path}")
-        return parser(path)
+        return parser(_read_bundled_text(filename), filename)
 
     # Treat as filesystem path
     if not os.path.exists(graph_key):

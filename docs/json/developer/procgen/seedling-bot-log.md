@@ -27844,3 +27844,74 @@ apitem does not vanish); 10 more chest rows shorter; 66/94/175 still refused, ob
 **Trap candidates.** (1) A survey row that is SOLVED in 0 ticks at a chest is the seal removal (`Chest.checkBySeal` with
 all seals held), not a take — the delivered game has no such removal. (2) Which world a "model" row stands in: the page's
 solver sees the DELIVERED rooms (`world.apItems`), the survey the vanilla ones — the same goal can be two verbs.
+
+### Seedling fidelity L39PHANTOM — a spinner the run's roster lost is not priced at its placement (`spinnerRosterGone`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 38 (⚖ the user's GO 2026-11-09: *"L39 + Fire arm now"*). Base `2d1283375e`.
+The report is `CC/docs/cloud-reports/seedling-fidelity-l39phantom.md`; it starts from hammer's WALLS-CENSUS-2 §2/§4/§9.
+
+**W0.** The census leg (`level_39__r25c9 <- in_L38_144_0 -> location:Level 039 - Totem Part 72,40`) re-captured on the
+page at this base (p4g, inv, seam 5226): 640 → budget, 2,560 → refused on *"enemy:spinner@112,88 (a static "Enemy" body at
+its placement …)"*, leg FAILED. Node seam census (45 phases, one hammer cycle): 640 lands 20/45, 2,560 39/45 — WALLS-CENSUS-2's
+numbers exactly, shifted one period. AS3: `Pulser.hit` → `Enemy.hit(6, p, 1, "Pulse")` (`Pulser.as:108-111`); 3 hits kill
+(`Enemy.as:153-161`); a destroyed mobile fades `alpha -= 0.1` and is removed at `alpha <= 0` (`Mobile.as:60-71`); a fading
+`Spinner` still swings its hammer (`Spinner.as:66-76`: no `destroy` test after `super.update()`).
+
+**D0** (game witness, `probe-seedling-l39-pulser-kill.mjs`, `fixtures/l39shaft-witness/l39phantom-pulser-kill.json`): the
+committed `l39shaft-solver-step66` tape on p4g (delivered set), every `Spinner` row of `botMobiles` over t1180–1300.
+`pulser@64,96` kills `spinner@112,88` at t1267 on both sides; x, y, hits, hitsTimer, destroy and alpha agree at 0 px on all
+121 ticks but ONE named read: the game's world drops the corpse at t1278, the model's roster lists it at alpha −0.1 one more
+read (`removePending` → `removed` at the next step's top; F5 already stamps the removal ledger at the alpha-zero step).
+Pinned as `isRemovePendingFencepost`, not fixed (spinner.js is not this slice's region).
+
+**D1** (`spinnerRosterGone`, OFF; `SEEDLING_SPINNER_ROSTER_GONE`): `spinnersTheRunSteps(run, world)` also skips every id in
+`world.spinners` — the visit's built roster — once the roster read is an array, so a spinner the roster lost (any killer)
+is not priced at its placement by `staticEnemyDanger` or `dangerVolumes`. Boundaries, each a row
+(`fidelityL39Phantom.test.js`, 9): before the kill ON = OFF byte for byte; in the fade both arms skip it statically and the
+live arm (`spinnerDanger`) prices it; no roster read / no spinner list = OFF. Only L18, L39, L40 and L92 have spinners, so
+every other room is byte-identical by construction. Mutants M1–M3 red (M3 two more than predicted, via a shared helper).
+
+**D2** (key ON): census 640 **44/45**, 2,560 **44/45** (phase 5230 = the live `spinner@224,112`, hammer's L39 (B)); every
+landed plan bills 0 hits in both arms. Page leg ON: DONE on the first request, 0 room hits (one 1-tick divergence at t2212,
+re-solved — residue). Local survey on the 11 spinner-room steps: verdicts unchanged; L39 steps 65/95/136/149 shorter
+(3496→2740, 3376→2624, 3376→2624, 3253→2626 t, 0 hits); L18/L40/L92 equal. Bounded set ON: one red, `fidelityL39Shaft`
+D2 (the step-66 solver tape is the OFF plan: 3496 t recorded, 2740 ON) — a re-record at the flip.
+
+**Trap candidates.** (1) A dead body's receipt is not the run's verdict: the press ledger is ONE killer's; the roster is the
+verdict. (2) A spinner's roster read lists its corpse one read past the game's world (the `removePending` read fencepost).
+
+### Seedling fidelity FIRESPINNER — a Fire press that reaches a spinner knocks it back (`fireSpinnerArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 38 (⚖ the user's GO 2026-11-09, *"L39 + Fire arm now"*). Base `2d1283375e`.
+The report is `CC/docs/cloud-reports/seedling-fidelity-firespinner.md`.
+
+**W0.** hammer WALLS-CENSUS-2's (C) holds, but it is half the gap. `FIRE_ARM_POLICY.Spinner` says `modelled` and
+`levelRun.applyFire` has no Spinner arm; and `presses.fireRespondersIn` tests the spinner's `.oel` PLACEMENT rect (it
+has no live join, unlike the sword census's `spinners`). So a Fire press whose flame reaches the spinner's long-vacated
+CELL throws (*"`FIRE_ARM_POLICY` calls Spinner modelled and this dispatch has no arm for it"*, reproduced on `r5-shaft`
+cut + a press at t690, the body ~80 px off), and a press whose flame reaches the BODY silently does nothing (a press at
+t590). The AS3 (`Player.fire` :1014-1044, `genericHit` :1065-1077, `Enemy.hit` :141-181, `Enemy.knockback` :247-255):
+an "Enemy" is dispatched ELEVEN times a hit tick (`vc` is not cleared between `hitables` passes), each
+`knockback(0.325, player)` and nothing else (`hitByFire` false); the i-frame and freeze gates still apply. Only
+`Player.fire()` dispatches `"Fire"` at a Spinner (a fire-wand shot is `"Wand"`).
+
+**D0** (game witness, p4g, before the model change): `probe-seedling-fire-spinner.mjs --record`
+(`fixtures/firespinner-witness/`): the knock staging moves `spinner@224,112` (v (-0.71,-0.71) → (2.39,1.08) → (5.18,2.90)
+→ (8.04,-0.95), the last a wall reflection) with `hits` 0 and `hits_timer` 0 on every tick; the phantom staging moves
+nothing. `hitSpinner`'s Fire branch agrees.
+
+**D1** (`fireSpinnerArm`, OFF, last key; `SEEDLING_FIRE_SPINNER_ARM`): ON, the fire census joins the run's live spinner
+bodies (removed drop out, type "Enemy") and the arm calls `hitSpinner(t: 'Fire')` once per dispatch. Both stagings
+reproduce the game at 0 px ON. Rows `fidelityFireSpinner.test.js`; mutants: the knockback reversed, a Sword damage hit,
+the arm ungated — each red (the first two also red the ledger row, which I had not predicted).
+
+**D2** (key ON): three COMMITTED L39 tapes press Fire into a spinner body — `r5-press-delay`, `-glide`, `-repeat` (the t10
+press knocks `spinner@224,112` at t17). Their expectations hold only the player, so OFF's spinners had never been
+checked: on the game OFF leaves at t19 on all three, ON is 0 px (spinners and fire blocks; blocks agree both ways). The
+bounded set ON reds 2 rows: the `contactFidelity` defaults pin and `r8Acceptance`'s `R8_D2_SHIELD.pressExposure` (its
+shadow sword count over `r5-press-repeat` now finds a kill, because the bodies are where the knock left them). The
+survey's 11 spinner-room steps are byte-identical ON vs OFF. No solver arm plans a Fire press at a spinner: the fire
+stance's stray check (`auditFire` without `spinners`) still refuses a stance whose flame reaches a placement.
+
+**Trap candidate.** A committed tape whose expectations are the player only certifies nothing about the bodies it
+moves: `r5-press-glide`/`-repeat` were called "byte-exact" for the block wedge while their spinners were off from t19.

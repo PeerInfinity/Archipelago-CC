@@ -105,7 +105,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
         || !!process.env.SEEDLING_BAIT_PARKED_TAIL
-        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -389,7 +389,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity KNOCKBACK376 D1 (wave 37c): a broken rock's cell opens on the game's tick — ON since its flip (⚖ user 2026-11-05).
             rockGoneFencepost: true,
             // ⛓ fidelity DRILLWATER D1 (wave 37e): a drill's `Enemy.update` terrain switch (water/lava/pit) — ON since its flip (⚖ user 2026-11-08).
-            drillTerrainSwitch: true });
+            drillTerrainSwitch: true,
+            // ⛓ fidelity L39PHANTOM D1 (wave 38): a spinner the run's roster lost is not priced at its placement — ON since the wave-38 joint flip (⚖ user 2026-11-10).
+            spinnerRosterGone: true,
+            // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ON since the wave-38 joint flip (⚖ user 2026-11-10).
+            fireSpinnerArm: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
