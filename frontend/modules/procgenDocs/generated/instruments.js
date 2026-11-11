@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 147,
-            "count": 197,
+            "browser": 148,
+            "count": 198,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 520,
-        "browser": 217,
+        "blockStyle": 521,
+        "browser": 218,
         "cited": 274,
-        "files": 538,
+        "files": 539,
         "lineStyle": 18,
-        "withDocblock": 538,
-        "withFlags": 457
+        "withDocblock": 539,
+        "withFlags": 458
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14252,6 +14252,93 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-js-vs-wasm-tape.mjs — ⛓ PHASE B (`seedling-js-tape-bridge`): ONE TAPE, RUN THE SAME WAY ON BOTH RUNTIMES, and the two drains diffed.",
             "path": "scripts/procgen/probe-seedling-js-vs-wasm-tape.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arm-ticks",
+                "arms",
+                "clear-ticks",
+                "engage",
+                "host",
+                "margin",
+                "only",
+                "settle",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-killlock-arms.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arm-ticks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-ticks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "engage"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "margin"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "settle"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "probe-seedling-encounter-latch.mjs",
+                    "name": "ticks"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling KILL-LOCK ARMS, THE GAME'S WAY (rules `rules-l60-l71-killlock`).",
+            "path": "scripts/procgen/probe-seedling-killlock-arms.mjs"
         },
         {
             "argvHelpers": [

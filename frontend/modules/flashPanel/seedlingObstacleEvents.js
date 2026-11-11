@@ -262,14 +262,27 @@ export function deriveLockEvents(projection, ctx) {
  *     Flyer (`Player.as:917`); the Spear's thrust is NOT line-tested at all (`Player.as:966-985`: a 32x5
  *     `collideRectInto`); a `WandShot` stops at `Solid` (`WandShot.as:69`, its `solids`). So a body the farther of
  *     those two rects could reach from the side's tiles (`a.reach` / the body's `reach`), or a chaser that comes within
- *     its own `runRange` of them (`combat.ENEMY_CLASSES[tag].aggro`, e.g. `Puncher.as:22`) and would park against the
- *     lock's face, MAY be reached — that side is UNDECIDED, and today's rule is kept.
+ *     its own `runRange` of them (`combat.ENEMY_CLASSES[tag].aggro`, e.g. `Puncher.as:22`) and parks against the
+ *     Solid between them, is reached ACROSS: by those two arms and no other.
  * A side with a body reached by NEITHER cannot clear the room with any inventory: it `cannot`.
  *
- * Such a side then crosses only once the lock is OPEN, which the game records when its tag is >= 0
+ * ⛓ RULES l60-l71-killlock — **`across` IS THE GAME'S VERDICT, NOT A DOUBT.** This grade was `undecided` (today's
+ * weapon rule kept) until the game was asked (`probe-seedling-killlock-arms.mjs`, wasm, one arm at a time, the player
+ * kept to the side's own tiles):
+ *   - L60's L61 pocket: `jellyfish@120,112` floats over the pit to the pocket's edge, where any arm kills it;
+ *     `jellyfish@56,64` (`runRange` 160, `Jellyfish.as:22`) runs at the player and parks on the far face of
+ *     `lock@128,80`. The sword, the dark sword, the wand and the dark shield never hurt it there; the Spear's thrust and
+ *     the Ghost Sword's slash each kill it through the shut lock, and the game then writes the flag and opens the lock.
+ *   - L71's `lock@112,192`: the five lavarunners (`runRange` 80, `Bob.as:21`) stand on floor in a walled 3x3 chamber
+ *     neither side walks into. From the L85 pocket and from the button cell alike they run at the player and park on
+ *     the far face of the WALL, where the same two arms kill them and no other does.
+ * So a side graded `across` clears the room with an arm that passes a `Solid`, and with nothing else.
+ *
+ * A side that cannot clear crosses only once the lock is OPEN, which the game records when its tag is >= 0
  * (`RockLock.check`, `RockLock.as:34-37`; `Lock.check`, `Lock.as:42`: removed on every later build): the caller makes
  * the cell a LATCH entered from that side, and the analyzer prices the crossing as the lock's event, collected on the
- * side that clears it (`deriveLockEvents`). A tag < 0 records nothing: that entry is then walled.
+ * side that clears it (`deriveLockEvents`). A tag < 0 records nothing: that entry is then walled. An `across` side
+ * crosses on the same event OR its own across-the-cut arm.
  *
  * Pure geometry over the grid: the caller supplies passability and the bodies.
  *
@@ -281,12 +294,13 @@ export function deriveLockEvents(projection, ctx) {
  *   wall or sink — gated material counts, which can only make a side clear MORE rooms, the old rule's direction)
  * @param {number[][]} a.lockTiles this lock's tiles
  * @param {Set<string>} a.closed every `"x,y"` the room's shut kill-locks claim (never walked)
- * @param {{at:string, centre:number[], runRange:number|null, reach?:number}[]} a.bodies the counted bodies that do
- *   not die on their own; `runRange` = the distance under which it runs at the player (null = it never does);
- *   `reach` = the farthest an across-the-cut arm reaches it from (default `a.reach`)
+ * @param {{at:string, centre:number[], runRange:number|null, reach?:number, through?:boolean}[]} a.bodies the counted
+ *   bodies that do not die on their own; `runRange` = the distance under which it runs at the player (null = it never
+ *   does); `reach` = the farthest an across-the-cut arm reaches it from (default `a.reach`); `through: false` = no
+ *   arm that passes a `Solid` hurts this body (it is then reached only by standing in the side)
  * @param {number} [a.reach] the farthest an across-the-cut arm reaches from the player's centre
- * @returns {{steps:{tile:number[], dir:string}[], size:number, verdict:'clears'|'cannot'|'undecided',
- *   beyond:string[], undecided:string[]}[]} per side: the steps INTO the lock from it, and why
+ * @returns {{steps:{tile:number[], dir:string}[], size:number, verdict:'clears'|'cannot'|'across',
+ *   beyond:string[], across:string[]}[]} per side: the steps INTO the lock from it, and why
  */
 export const ENCOUNTER_DIRS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
 export function encounterLockSides({ width, height, tile, passable, lockTiles, closed, bodies, reach }) {
@@ -338,15 +352,15 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
     };
     return sides.map((side) => {
         const beyond = [];
-        const undecided = [];
+        const across = [];
         for (const b of bodies) {
             if (standsIn(side, b.centre)) continue;
             const d = distance(side, b.centre);
-            if (d <= (b.reach ?? reach) || (b.runRange !== null && d <= b.runRange)) undecided.push(b.at);
+            if (b.through !== false && (d <= (b.reach ?? reach) || (b.runRange !== null && d <= b.runRange))) across.push(b.at);
             else beyond.push(b.at);
         }
-        const verdict = beyond.length > 0 ? 'cannot' : undecided.length > 0 ? 'undecided' : 'clears';
-        return { steps: side.steps, size: side.tiles.size, verdict, beyond, undecided };
+        const verdict = beyond.length > 0 ? 'cannot' : across.length > 0 ? 'across' : 'clears';
+        return { steps: side.steps, size: side.tiles.size, verdict, beyond, across };
     });
 }
 
