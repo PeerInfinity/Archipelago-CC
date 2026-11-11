@@ -17,6 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { upsertLibraryIndexEntry } from './regionLibraryIndex.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -73,8 +74,8 @@ fs.writeFileSync(OUT, `${JSON.stringify(library, null, 2)}\n`);
 
 // Register (or update) the index entry.
 const index = JSON.parse(fs.readFileSync(INDEX, 'utf8'));
-index.libraries = (index.libraries ?? []).filter((l) => l.file !== 'demo-bounce-pack.json');
-index.libraries.push({
+// In place, so the index's row order never depends on which pack maker ran last.
+upsertLibraryIndexEntry(index, {
     file: 'demo-bounce-pack.json',
     library_id: library.library_id,
     name: library.name,
