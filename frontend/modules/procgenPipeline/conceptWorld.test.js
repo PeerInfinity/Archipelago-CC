@@ -22,7 +22,7 @@ import { buildRunFromState, runPresetHeadless, mergedItemLib } from './presetRun
 import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { getItemRenderHints } from '../shared/procgen/library.js';
-import { MAZE_DEFAULT_CONTENT_PACK, presentedLook } from '../mazeRoom/mazeConcepts.js';
+import { MAZE_DEFAULT_CONTENT_PACK, presentedLook } from '../mazeRoom/mazeContent.js';
 import { defaultContentSetOf } from './worldContent.js';
 import { GOAL_ITEM, GOAL_ITEM_DEF } from '../procgenCore/goalItem.js';
 

@@ -30,7 +30,7 @@ The realisations are `mazeConcepts.js`'s `MAZE_CONCEPT_REALISATIONS`, declared o
 
 ### Content roles
 
-The entry declares `defaultContentPack: 'maze'` and `contentRoles` (both in `mazeConcepts.js`); the contract is [Concepts § Content roles](./concepts.md#content-roles).
+The entry declares `defaultContentPack: 'maze'` and `contentRoles` (both in `mazeContent.js`); the contract is [Concepts § Content roles](./concepts.md#content-roles).
 
 | Role | Accepts | Needs | Written as |
 |---|---|---|---|
@@ -39,7 +39,7 @@ The entry declares `defaultContentPack: 'maze'` and `contentRoles` (both in `maz
 
 - **The default pack**, `frontend/packs/maze/`, has one pack concept per realised mechanic concept, each `presents` it and carries the `look` the maze wrote before R2, byte for byte (the gates' values were `MAZE_CONCEPT_REALISATIONS[c].art`; the items' are the concept table's own rows), so every committed world compiles unchanged.
 - **Which look is shown.** `presentedLook(contentSet, role, concept)` takes the pack concepts that fill the role (`candidatesForRole`: right `presents`, a `look`) and present the concept, latest pack in the stack first. A later pack that presents the mechanic with a look wins; one that presents it without a look falls through. ⚠ This is why the maze does not use `concepts.presenting(id)` alone: in a world with a text-adventure region the text adventure's default pack is later in the stack and presents the guardian with no look.
-- **When.** At generation (⚖ Q8): `conceptGateFor` resolves a selected gate's look after the draw, so a content set never changes which concept is chosen; `generateRegionCore` passes the item library through `presentItemLib`, which rewrites the rows the world's concept list marked (`concept: '<id>'`) in place (key order kept) and returns the library unchanged, reading nothing, when no row is marked. A selected concept with no content set, or with no pack filling the role for it, is refused by name (`MAZE_CONTENT_REFUSALS`).
+- **When, and where.** At generation (⚖ Q8), in a PRESENTATION PASS outside the engine. The engine (`mazeRoomEngine.js`, `mazeConcepts.js`) is in the import closure whose md5 the Seedling derived-rule table pins, and that closure holds logic only, so the engine still writes its own built-in looks (a gate's `MAZE_CONCEPT_REALISATIONS[c].art`, an item's concept-table row) as an inert fallback. The registry entry's `generateRegionCore` and `placeFromRules` (`mazeRoomLibrary.js`) call the engine and then `presentMazeWorld` (`mazeContent.js`), which overwrites the role's fields on every concept row (a concept gate in `obstacleLib`, a marked row in `itemLib`) from `params.contentSet`, key order kept, replacing the libraries rather than mutating them. The draw happens in the engine first, so a content set never changes which concept is chosen. With the default pack the values equal the fallback (pinned), so every world is byte-equal; a world with no concept row reads nothing. A concept row with no content set, or with no pack filling the role for it, is refused by name (`MAZE_CONTENT_REFUSALS`). ⛔ `mazeContent.js` is imported only from outside that closure (pinned). A caller that uses the engine directly, not the entry, gets the fallback looks.
 - **What is not content.** Which fields a role writes (`ROLE_WRITES`) and how a concept gate is painted (`paintConceptGate`) are behaviour (⚖ Q6) and stay in code. The play-time palette (`mazeRoomRender.js`'s `COLORS`) and the Seedling skin are not read from a content set yet.
 
 ## Biomes and wall backends

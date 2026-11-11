@@ -29,7 +29,7 @@ import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js
 import { CONCEPT_TRIAL_STATE } from './presetDefs.js';
 import { buildRunFromState, runPresetHeadless, mergedItemLib } from './presetRun.js';
 import { CONCEPTS, isConceptRow } from '../procgenCore/concepts.js';
-import { MAZE_DEFAULT_CONTENT_PACK, presentedLook } from '../mazeRoom/mazeConcepts.js';
+import { MAZE_DEFAULT_CONTENT_PACK, presentedLook } from '../mazeRoom/mazeContent.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { presentedProse } from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
 import { defaultContentSetOf } from './worldContent.js';

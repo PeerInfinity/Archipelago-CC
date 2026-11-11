@@ -1,5 +1,10 @@
 # Content sets R2: the maze loads its baked content from its default pack (as built)
 
+> ⚠ **REWORKED** (§ Rework, near the end): the consumer described in §2–§3 no longer lives in `mazeConcepts.js` /
+> `mazeRoomEngine.js`. It moved, with the same behaviour, to `mazeRoom/mazeContent.js` as a presentation pass the
+> registry hooks run after the engine; both engine files are byte-identical to main's. §9.10's table regeneration is
+> undone (the table is main's).
+
 Branch `content-r2`, based on `origin/content-r1` (`085800fdc8`). `origin/main` did not contain `085800fdc8` when this
 slice began. Three code commits, then this report:
 
@@ -291,6 +296,105 @@ ids). A role per tile kind would need ~14 roles, each matching on a field the co
 
 Quoted at the final tip in the REPORT BACK message (not in a further commit). At the code tip `1456b060e9` the push's
 `unittests` run 43047552134 succeeded.
+
+## Rework: looks out of the engine closure
+
+**Why** (⚖ tile-primitives-design-4, the derived-rule table's owner, via the planner, 2026-11-11): the maze ENGINE
+closure (the import closure of `tileSpike/certifyPlaythroughMaze.js`, whose md5 the Seedling derived-rule table pins)
+holds LOGIC only. With looks imported there, every future look edit would move `engineMd5` and restart the table and a
+calibration pass.
+
+**What changed** (a merge of `origin/main` `cf4d9a6874` into this branch, then one rework commit; a merge, not a
+rebase, because a rebase would force-push a branch that content-sets-r3 builds on):
+
+- `mazeRoomEngine.js` and `mazeConcepts.js` are **byte-identical to main's** (`git diff origin/main` on both: empty).
+  The engine writes its built-in looks again (`MAZE_CONCEPT_REALISATIONS[c].art` for a gate, the concept table's row
+  for an item): the INERT FALLBACK.
+- **New `frontend/modules/mazeRoom/mazeContent.js`** holds everything R2 had added to `mazeConcepts.js`
+  (`MAZE_DEFAULT_CONTENT_PACK`, `MAZE_CONTENT_ROLES`, `ROLE_WRITES`, `MAZE_CONTENT_REFUSALS`, `presentedLook`,
+  `presentItemLib`) plus the pass: `presentObstacleLib`, `presentMazeWorld(world, contentSet)` and two hook wrappers.
+- **The pass.** `mazeRoomLibrary.js` (not in the closure, measured) now declares
+  `generateRegionCore: presentingRegionCore(spatialCore)` and `placeFromRules: presentingPlaceFromRules(ruleGatePlacer)`.
+  The engine runs first. Then `presentMazeWorld` overwrites the role's fields on every concept row from
+  `params.contentSet`: name, color and symbol on a concept gate in `obstacleLib`; color and symbol on a marked row in
+  `itemLib`. Key order is kept, the libraries are replaced rather than mutated, and the engine's return value passes
+  through. A world with no concept row reads nothing and needs no set. The refusals (no set; no presenter) now belong
+  to the pass.
+- ⚠ A caller that uses the ENGINE directly (not the registry entry) gets the fallback looks. Every pipeline build goes
+  through the entry. The engine-level suites (`mazeConcepts.test.js`, `mazeConceptPaint.test.js`,
+  `conceptSeam.test.js`) are main's again, since they test the engine.
+- `seedling-playthrough-derived-rules.json` is **main's**: the merge took main's side, so §9.10's regeneration has no
+  effect left.
+
+**The closure, measured** (`node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`). I ran it at main
+`cf4d9a6874` (in an archive of `origin/main`) and at this tip, and diffed the two listings: they are IDENTICAL. All 42
+files are byte-identical to main's (`git diff origin/main` over the 42: 0 lines). None of `mazeRoomLibrary.js`,
+`mazeContent.js`, `contentRoles.js`, `packConcepts.js` or `contentPacks.js` is in it:
+
+```
+frontend/modules/mazeRoom/mazeArrival.js
+frontend/modules/mazeRoom/mazeConcepts.js
+frontend/modules/mazeRoom/mazeRoomBiomeLibrary.js
+frontend/modules/mazeRoom/mazeRoomEngine.js
+frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.js
+frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.js
+frontend/modules/mazeRoom/tileSpike/deriveTileLogic.js
+frontend/modules/mazeRoom/tileSpike/learnLattice.js
+frontend/modules/mazeRoom/tileSpike/tileStep.js
+frontend/modules/procgenCore/behaviourBlocks.js
+frontend/modules/procgenCore/concepts.js
+frontend/modules/procgenCore/differentialGrade.js
+frontend/modules/procgenCore/elements.js
+frontend/modules/procgenCore/skeletonKinds.js
+frontend/modules/procgenCore/templateContract.js
+frontend/modules/procgenPipeline/conceptSelection.js
+frontend/modules/procgenPipeline/ruleRequirements.js
+frontend/modules/shared/gameLogic/generic/genericLogic.js
+frontend/modules/shared/playerIdUtils.js
+frontend/modules/shared/procgen/library.js
+frontend/modules/shared/procgen/mazeAlgorithms/gridTiles.js
+frontend/modules/shared/procgen/mazeAlgorithms/postProcessors.js
+frontend/modules/shared/procgen/mazeAlgorithms/registry.js
+frontend/modules/shared/procgen/spatialPrimitives.js
+frontend/modules/shared/profiler.js
+frontend/modules/shared/rng.js
+frontend/modules/shared/ruleEngine.js
+frontend/modules/shared/ruleEngine/astAttributes.js
+frontend/modules/shared/ruleEngine/astChecks.js
+frontend/modules/shared/ruleEngine/astCollections.js
+frontend/modules/shared/ruleEngine/astFunctionCalls.js
+frontend/modules/shared/ruleEngine/astHelpers.js
+frontend/modules/shared/ruleEngine/astImperative.js
+frontend/modules/shared/ruleEngine/astLogic.js
+frontend/modules/shared/ruleEngine/astReachability.js
+frontend/modules/shared/ruleEngine/core.js
+frontend/modules/shared/ruleEngine/helperScope.js
+frontend/modules/shared/ruleEngine/helpers.js
+frontend/modules/shared/ruleEngine/index.js
+frontend/modules/shared/ruleEngine/ruleBuilderEvaluator.js
+frontend/modules/shared/rulesJsonBuilder.js
+frontend/modules/shared/simulatorCore.js
+engineMd5 3e333bfa0a7692f8120aeaa9a1591119 (42 files, root frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.js)
+```
+
+**Pins** (`mazeContent.test.js`):
+- the closure, read through `importClosure`, holds the engine and none of `contentRoles.js`, `packConcepts.js`,
+  `contentPacks.js`, `mazeContent.js`, `mazeRoomLibrary.js`;
+- each gate concept's engine fallback `art` equals the default pack's look (the item rows' table values were already
+  pinned equal);
+- with the default set, the entry's hooks (placer and core) build the engine's world byte for byte;
+- a theme changes the gate's name and look and nothing else, key order kept;
+- both refusals;
+- a world with no concept row needs no set.
+
+`mazeRoomLibrary.test.js` now asserts that the two hooks wrap the engine (they are not the engine functions
+themselves).
+
+**Byte-equality, re-measured after the rework.** The 10 `make-seedling-spiral-room-preset.mjs --check` states,
+`check-procgen-maze-recipe.mjs` (AP_1..3) and the top-down recipe (AP_1..3, 7..12) are all equal. AP_4..6 differ
+exactly as before (the APCalc source drift, §5). The bounded run passed after the docs index was regenerated. It
+covered the 42 caller files and the content and docs suites, plus `derivedRuleTableFresh.test.js` and
+`seedlingAtlasDerivation.test.js` (the two that went red before). `maze.md` § Content roles describes the pass.
 
 ## Next slice
 

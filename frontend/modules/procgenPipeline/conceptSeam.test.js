@@ -25,7 +25,6 @@ import { generateTextAdventureRoom, placeTextAdventureRules }
 import { TEXT_ADVENTURE_DEFAULT_CONTENT_PACK }
     from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
 import { defaultContentSetOf } from './worldContent.js';
-import { MAZE_DEFAULT_CONTENT_PACK } from '../mazeRoom/mazeConcepts.js';
 import { substrateRegistryEntry as GEN_ENTRY } from '../flashPanel/flashSeedlingGenLibrary.js';
 // the headless BUILD door: registers the generated-room entry and installs its generator
 import '../flashPanel/flashSeedlingGenBuild.js';
@@ -100,9 +99,7 @@ describe('generateRegionProcedural hands `spec.params` to placeFromRules', () =>
                 serializeWorld: tileGridSerializer,
             });
         }
-        // ⛓ CONTENT SETS R2 — the maze's placer resolves a selected gate's look from the set, so the probe
-        // hands the maze's default one (the probe entry declares no pack, so the seam passes params through).
-        const params = { concepts: ['guardian', 'sword'], contentSet: defaultContentSetOf([MAZE_DEFAULT_CONTENT_PACK]) };
+        const params = { concepts: ['guardian', 'sword'] };
         generateRegion({
             substrate: PROBE, region_id: 'r0', size: { width: 8, height: 6 },
             entrances: [{ side: 'W', tile: { x: 0, y: 3 } }], exits: [{ exit_id: 'e0', side: 'E', target_region: 'r1', access_rule: SWORD_GATE }],
