@@ -28,6 +28,9 @@ on:
   # The same run on demand. A dispatch runs at the ref it is dispatched on
   # (`gh workflow run` defaults to main); only a run at main is the nightly.
   workflow_dispatch:
+  # TEMP (reverted next commit): register + prove the nightly on its branch.
+  push:
+    branches: [ci-nightly-manual-batches]
 
 # Its own group: a second nightly waits behind the first, never stacks on it.
 # (Not the manual workflow's runs — a dispatch there is a different group.)
