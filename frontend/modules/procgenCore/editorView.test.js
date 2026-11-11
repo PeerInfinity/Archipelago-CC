@@ -1173,18 +1173,7 @@ describe('⛓⛓⛓ the SHARED tools are opt-in, named by id among the page\'s o
         expect(() => u.click(1, 1)).toThrow(TypeError);
     });
 
-    /** MUTANT: drop the corner reset from `changed` — the corner outlives its tool and is drawn on. */
-    it('⛓ a FILL corner dies with its tool, when the change is reported', () => {
-        const t = harness({ tools: [EDIT_TOOLS.FILL] });
-        t.view.setTool(EDIT_TOOLS.FILL);
-        t.click(0, 0);
-        t.view.setTool(TOOLS.RECT);
-        const last = t.painted[t.painted.length - 1];
-        // ⚠ E1's order, kept: the setTool repaint still shows the corner; the NEXT repaint does not
-        expect(last.some((s) => s.x === 0 && s.y === 0 && s.w === 1)).toBe(true);
-        t.view.repaint();
-        expect(t.painted[t.painted.length - 1]).toEqual([]);
-    });
+
 
     /*
      * ⛓⛓ editor-corner-reset — A CORNER BELONGS TO THE TOOL THAT SET IT. Before it, FILL and CLEAR
@@ -1230,6 +1219,27 @@ describe('⛓⛓⛓ the SHARED tools are opt-in, named by id among the page\'s o
         t.view.setTool(EDIT_TOOLS.FILL); t.click(1, 1);
         t.view.setTool(EDIT_TOOLS.FILL); t.click(3, 2);
         expect(t.last().text).toBe('fill 3x2 at (1,1) (12 op(s))');
+    });
+
+    /** MUTANT: drop the corner reset from `setTool` — the switch's own repaint still draws the corner. */
+    it('⛓ a FILL corner dies with its tool, and the switch\'s own repaint no longer draws it', () => {
+        const t = harness({ tools: [EDIT_TOOLS.FILL] });
+        t.view.setTool(EDIT_TOOLS.FILL);
+        t.click(0, 0);
+        t.view.setTool(TOOLS.RECT);
+        // ⛓ editor-corner-reset: B1 kept E1's order, and this repaint still showed the dead corner
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
+        t.view.repaint();
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
+    });
+    /** MUTANT: as above — red at FILL → CLEAR, the case the user hit. */
+    it('⛓ FILL → CLEAR: the switch draws no corner; re-arming FILL still draws FILL\'s', () => {
+        const t = shared();
+        t.view.setTool(EDIT_TOOLS.FILL); t.click(1, 1);
+        t.view.setTool(EDIT_TOOLS.FILL);
+        expect(t.painted[t.painted.length - 1]).toEqual([{ kind: 'rect', x: 1, y: 1, w: 1, h: 1 }]);
+        t.view.setTool(EDIT_TOOLS.CLEAR);
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
     });
 
     it('⛓ the PASTE MODE select is filled with PASTE_MODES at `add`; at `replace` the paste carries it', () => {

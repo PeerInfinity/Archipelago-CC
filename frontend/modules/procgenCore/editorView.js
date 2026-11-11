@@ -892,6 +892,9 @@ export function mountEditorView({
         tool = t;
         corner = null;
         stroke = null;
+        // ⛓ editor-corner-reset — before the repaint, so the switch does not draw a corner the new
+        //   tool does not hold (B1 kept E1's order, which left it on screen until the next gesture).
+        if (editCorner && t !== editCorner.owner) editCorner = null;
         repaint();
         changed({ session, result: null, tool, clip });
     };
