@@ -162,7 +162,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             // ⛓ tile-lay-l40-latches: L40's two r0c53 presses, priced from r0c53's second landing (53,1): the points holding
             // the press's own event are skipped [own event] (as L24's tree). L40 flag 12's press stands in r48c54, which no AP
             // exit lands in (walked in from another member), so it has no landing row. 102 → 104.
-            'level_40__r0c53 @ L40 flag 1: wandlock@176,80 cleared (landing 53,1) | 192/512 [own event]',
+            // ⛓ tile-rules-automation-r-a5: flag 1's press stands in r4c4 now (its wand locks cost their presses), which no AP exit
+            // lands in, so it has no landing row. 99 → 98.
             'level_40__r0c53 @ L40 flag 7: wandlock@208,128 cleared (landing 53,1) | 192/512 [own event]',
             'level_48__r7c0 → level_53__r2c2 (landing 1,7) | 6/16',
             'level_49 @ Level 049 - Conch (landing 2,7) | 1/2',

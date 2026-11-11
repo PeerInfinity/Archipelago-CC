@@ -165,7 +165,11 @@ describe('the derived / hand split, over the whole map', () => {
         const verdicts = new Set(puzzleLockVerdicts().map((v) => `L${v.level} ${v.door}`));
         expect(['L40 wandlock@448,432', 'L40 wandlock@800,400'].filter((d) => !verdicts.has(d))).toHaveLength(2);
         const hand = playthroughHandRuledGridFor(L40);
-        expect(at(hand, 28, 27).enter).toEqual({ N: null, S: null });
+        // ⛓ tile-rules-automation-r-a5: + `E: [flag 12]`. `E` is a step INTO (28,27) moving east, from (27,27) in the body; the
+        //   player-reach price floods from the t2 button (30,24) to (27,27) without the lock, and the only such way is south
+        //   through wandlock@480,560, which now costs its press (flag 12). Named, pre-existing divergence: an iceturret corpse on
+        //   the button would hold it, but the holder census counts no enemy (⚖ "Enemies don't count", 2026-10-20).
+        expect(at(hand, 28, 27).enter).toEqual({ N: null, S: null, E: [{ event: 'L40 flag 12: wandlock@480,560 cleared' }] });
         expect(at(hand, 50, 25).enter).toEqual({ S: null });
     });
 });
