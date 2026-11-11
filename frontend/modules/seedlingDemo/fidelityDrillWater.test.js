@@ -33,9 +33,11 @@ const load = (name) => JSON.parse(readFileSync(join(DRILL_WATER_WITNESS_DIR, `${
 
 describe('fidelity DRILLWATER — the key', () => {
     it.skipIf(!!process.env.SEEDLING_DRILL_TERRAIN_SWITCH || !!process.env.SEEDLING_CONTACT_FIDELITY)(
-        'ships ON (⚖ user 2026-11-08, the DRILLWATER flip), last in the defaults, with its env name in the worker table', () => {
+        'ships ON (⚖ user 2026-11-08, the DRILLWATER flip), followed in the defaults only by the wave-38 and wave-39 keys, with its env name in the worker table', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.drillTerrainSwitch).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('drillTerrainSwitch');
+            // ⛓ wave 38 (L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm`) landed after it; then wave 39's ROCKFIRE `fireRockArm`.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf('drillTerrainSwitch') + 1)).toEqual(['spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DRILL_TERRAIN_SWITCH');
         });
 });

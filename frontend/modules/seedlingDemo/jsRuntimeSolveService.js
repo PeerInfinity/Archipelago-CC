@@ -100,7 +100,8 @@ export function explicitAttempt(attempt) {
     if (!attempt || typeof attempt !== 'object') return null;
     const { retry, budgets } = attempt;
     if (!Number.isInteger(retry) || retry < 0) return null;
-    return { retry, budgets: Array.isArray(budgets) ? budgets.filter(Number.isFinite) : [] };
+    // ⛓ SOLVER LIMIT OFF — "no work limit" (0) is not a budget: a no-limit attempt's list is empty (no label).
+    return { retry, budgets: Array.isArray(budgets) ? budgets.filter((b) => Number.isFinite(b) && b > 0) : [] };
 }
 
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
@@ -125,7 +126,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
     const sourceIds = new WeakMap();
     /** source ids the CURRENT worker holds. */
     let sent = new Set();
-    const stats = { workers: 0, solves: 0, terminated: 0, errors: 0, progress: 0, progressDropped: 0 };
+    const stats = { workers: 0, solves: 0, terminated: 0, errors: 0, progress: 0, progressDropped: 0, stopped: 0 };
     /**
      * ⛓ SOLVE PROGRESS — listener -> the interval it asked (ms, a function, or undefined = the default); a solve asks
      * for the stream only while this is non-empty.
@@ -146,7 +147,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             && request.solverGoal === lastAsk.solverGoal && ticks === lastAsk.ticks
             && Number.isFinite(budget) && Number.isFinite(lastAsk.budgets.at(-1)) && budget > lastAsk.budgets.at(-1);
         const attempt = given ?? (again ? { retry: lastAsk.retry + 1, budgets: [...lastAsk.budgets, budget] }
-            : { retry: 0, budgets: Number.isFinite(budget) ? [budget] : [] });
+            : { retry: 0, budgets: Number.isFinite(budget) && budget > 0 ? [budget] : [] });
         lastAsk = { staging: request.staging, solverGoal: request.solverGoal, ticks, ...attempt };
         return attempt;
     }
@@ -251,6 +252,18 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
                     stats.terminated += 1;
                     drop();
                 },
+                /**
+                 * ⛓ SOLVER LIMIT OFF — Stop: the worker is TERMINATED (the next `start` builds a fresh one) and the
+                 * handle settles with a NAMED answer (`kind: 'stopped'`), never a plan. false = already settled.
+                 */
+                stop(why = 'stopped by the player') {
+                    if (handle.settled) return false;
+                    settle(handle, { ok: false, kind: 'stopped', message: String(why) });
+                    stats.terminated += 1;
+                    stats.stopped += 1;
+                    drop();
+                    return true;
+                },
             };
             const w = ensure();
             current = handle;
@@ -287,6 +300,10 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
         },
         get progressSubscribed() { return progressListeners.size > 0; },
         get currentSolveId() { return current && !current.settled ? current.id : null; },
+        /** ⛓ SOLVER LIMIT OFF — is a solve in flight (Stop is enabled only then)? */
+        get busy() { return Boolean(current && !current.settled); },
+        /** ⛓ SOLVER LIMIT OFF — Stop the solve in flight (`handle.stop`); false = none in flight. */
+        stop(why) { return current && !current.settled ? current.stop(why) : false; },
         dispose() { if (current) current.cancel(); drop(); progressListeners.clear(); lastAsk = null; },
     };
 }

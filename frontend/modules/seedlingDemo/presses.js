@@ -1299,7 +1299,7 @@ export const FIRE_ARM_POLICY = Object.freeze({
  * all. Including it and then filtering would make the audit's `live` list
  * disagree with what the game dispatches.
  */
-export function fireRespondersIn(world, player, { pushables: live = null, turrets = null } = {}) {
+export function fireRespondersIn(world, player, { pushables: live = null, turrets = null, spinners = null } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`fireRespondersIn: level ${world.level} was built without `
             + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
@@ -1323,6 +1323,16 @@ export function fireRespondersIn(world, player, { pushables: live = null, turret
                 origin = { x: now.x - now.rect.x, y: now.y - now.rect.y };
             }
         }
+        // ⛓ fidelity FIRESPINNER D1 (`fireSpinnerArm`, OFF): a spinner is tested where its body is NOW (a billiard leaves
+        // its `.oel` cell on the visit's first tick); a removed one is not in `collideRectInto`'s type list at all.
+        let liveSpinner = false;
+        if (CONTACT_FIDELITY.fireSpinnerArm && spinners && r.spinnerId && spinners.has(r.spinnerId)) {
+            const now = spinners.get(r.spinnerId);
+            if (now.removed) continue;
+            rect = now.rect;
+            origin = { x: now.x - now.rect.x, y: now.y - now.rect.y };
+            liveSpinner = true;
+        }
         targets.push({
             ...r,
             rect,
@@ -1344,6 +1354,11 @@ export function fireRespondersIn(world, player, { pushables: live = null, turret
             // fire rect's candidate list is by TYPE, and `fireHits` refuses
             // a type it does not know rather than skipping it silently.
             type: FIRE_HITABLE_TYPE_BY_ARM[r.as3] ?? 'Solid',
+            // ⛓ FIRESPINNER: a Spinner is `type = "Enemy"` (`Enemy`'s ctor), `hitables[0]`: ELEVEN dispatches a tick.
+            ...(liveSpinner ? { type: 'Enemy' } : {}),
+            // ⛓ fidelity ROCKFIRE D1 (`fireRockArm`): a BreakableRock is `type = "Solid"` (its ctor: *"Was "Rock""*,
+            // `Puzzlements/BreakableRock.as:41`), `hitables[6]`: FIVE dispatches a tick, not a "Rock"'s eight.
+            ...(CONTACT_FIDELITY.fireRockArm && r.as3 === 'BreakableRock' ? { type: 'Solid' } : {}),
         });
     }
     const hits = fireHits(player, targets);
@@ -1361,6 +1376,8 @@ export const FIRE_HITABLE_TYPE_BY_ARM = Object.freeze({
     PushableBlockFire: 'Solid',
     PushableBlockSpear: 'Solid',
     RopeStart: 'Rope',
+    // ⚠ fidelity ROCKFIRE: the shipped ctor says `type = "Solid"; //Was "Rock"`. This row is what the census read
+    // before `fireRockArm`; ON, `fireRespondersIn` overrides it to 'Solid' (five dispatches). Kept for the OFF arm.
     BreakableRock: 'Rock',
     Tree: 'Tree',
     // ⚠ A `BurnableTree`'s `type` is "Solid", NOT "Tree", and its own ctor
@@ -1383,8 +1400,8 @@ export const FIRE_HITABLE_TYPE_BY_ARM = Object.freeze({
  * `auditPress` for the fire weapon: everything the rect reaches, split by
  * what this rung does with it.
  */
-export function auditFire(world, player, { pushables = null, turrets = null } = {}) {
-    const live = fireRespondersIn(world, player, { pushables, turrets });
+export function auditFire(world, player, { pushables = null, turrets = null, spinners = null } = {}) {
+    const live = fireRespondersIn(world, player, { pushables, turrets, spinners });
     const verdict = (r) => FIRE_ARM_POLICY[r.as3];
     const refused = live.filter((r) => (verdict(r)?.policy ?? 'refused') === 'refused');
     const modelled = live.filter((r) => verdict(r)?.policy === 'modelled');

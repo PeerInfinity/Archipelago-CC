@@ -78,9 +78,10 @@ describe('hammer-phase CLEARTAG-CHAIN — the clear-tag verb runs its stance pre
         const on = dashless872({ sb: true, cc: true });
         expect(on.ok).toBe(false);
         expect(on.message.startsWith(`${CT} -> burn stance (${TREE}) -> kill (spinner@880,848) by press: the player `
-            + 'died at t799 (chaser bob@736,752) while pressing spinner@880,848')).toBe(true);
+            + 'died at t817 (chaser bob@736,752) while pressing spinner@880,848')).toBe(true);
         expect(on.message).not.toContain('does not chain openers');
-        expect([on.work, sha(on.message)]).toEqual([232, ON_SB_SHA]);
+        // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the burn still runs first; the press-kill death is t817 after 2 landings (t799, work 232, before).
+        expect([on.work, sha(on.message)]).toEqual([233, ON_SB_SHA]);
     }), 120000);
 
     it('ON without `STANCE_BURN` = OFF byte for byte (no prerequisite is named, so nothing is chained)', () => {
@@ -100,4 +101,4 @@ describe('hammer-phase CLEARTAG-CHAIN — the clear-tag verb runs its stance pre
 
 /** Measured at `97739720dd` (main, the slice's start) and this slice's head: the dashless messages' sha256 heads. */
 const DEFAULTS_SHA = 'cd5f0db75f2a';
-const ON_SB_SHA = '77fd61ad701c';
+const ON_SB_SHA = '7f0b11e8dd92';

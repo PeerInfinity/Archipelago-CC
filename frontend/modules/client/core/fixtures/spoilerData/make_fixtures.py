@@ -13,9 +13,14 @@ Writes, next to this file:
     seed.json                   seed name, slot_info, and the DataPackage tables of the seed's games (what the server sends)
     own_slot.json               {player: record} with own_slot
     own_slot_with_senders.json  {player: record} with own_slot_with_senders
+    own_slot_regions.json       {player: record} with own_slot + spoiler_data_include_regions
+    own_slot_with_senders_regions.json  {player: record} with own_slot_with_senders + regions
     omitted.json                the slot_data the client file gives when the helper is not installed
     unknown_format.json         slot 1's own_slot record with a format number no frontend reads (FUTURE_FORMAT)
     sphere_log.jsonl            the exporter's all-locations log (fractional details, as committed presets log)
+    sphere_log_P1.jsonl, sphere_log_P2.jsonl
+                                the same run's per-player files (json_tools.sphere_log_per_player): what the
+                                expanded room lines are compared with, like with like
 
 ALttP is here for the name that does not round-trip: its Progressive Bow carries an id the DataPackage resolves to
 "Progressive Bow (Alt)", so the helper sends the name. The script refuses to write if that case is missing.
@@ -40,14 +45,15 @@ def write_json(name, value):
         handle.write("\n")
 
 
-def records(hook, multiworld, walked, with_senders):
-    return {str(player): hook.compact_for(multiworld, walked, player, with_senders) for player in multiworld.worlds}
+def records(hook, multiworld, walked, with_senders, with_regions=False):
+    return {str(player): hook.compact_for(multiworld, walked, player, with_senders, with_regions)
+            for player in multiworld.worlds}
 
 
 def capture(multiworld):
     hook = importlib.import_module("worlds.spoiler_export_hook")
     client = importlib.import_module("worlds.spoiler_export_hook._spoiler_hook_client")
-    walked = hook.walk(multiworld)
+    walked = hook.walk(multiworld, list(multiworld.worlds))
     own = records(hook, multiworld, walked, False)
     senders = records(hook, multiworld, walked, True)
 
@@ -66,6 +72,8 @@ def capture(multiworld):
     })
     write_json("own_slot.json", own)
     write_json("own_slot_with_senders.json", senders)
+    write_json("own_slot_regions.json", records(hook, multiworld, walked, False, True))
+    write_json("own_slot_with_senders_regions.json", records(hook, multiworld, walked, True, True))
     write_json("unknown_format.json", {**own["1"], "format": FUTURE_FORMAT})
 
     # The client file's own answer when the helper module cannot be imported.
@@ -84,16 +92,23 @@ def capture(multiworld):
     import worlds.json_tools_installer.json_tools_settings as json_tools
     json_tools.get_json_tools_settings = lambda: types.SimpleNamespace(
         log_fractional_sphere_details=True, log_integer_sphere_details=False, verbose_sphere_log=False,
-        extend_sphere_log_to_all_locations=True, auto_collect_events=False, filter_event_items=False)
+        extend_sphere_log_to_all_locations=True, auto_collect_events=False, filter_event_items=False,
+        sphere_log_per_player=True)
+    written = {"sphere_log.jsonl": f"AP_{multiworld.seed_name}_sphere_log.jsonl"}
+    for player in multiworld.worlds:
+        written[f"sphere_log_P{player}.jsonl"] = sphere_logger.per_player_log_filename(str(multiworld.seed_name), player)
     with tempfile.TemporaryDirectory() as tmp:
         multiworld.temp_dir_for_sphere_log = tmp
         saved_playthrough = dict(getattr(multiworld.spoiler, "playthrough", {}) or {})
         sphere_logger.create_playthrough_with_logging(multiworld.spoiler, create_paths=False)
         multiworld.spoiler.playthrough = saved_playthrough
-        with open(os.path.join(tmp, f"AP_{multiworld.seed_name}_sphere_log.jsonl"), encoding="utf-8") as handle:
-            text = handle.read()
-    with open(os.path.join(HERE, "sphere_log.jsonl"), "w", encoding="utf-8", newline="\n") as handle:
-        handle.write(text)
+        texts = {}
+        for fixture, name in written.items():
+            with open(os.path.join(tmp, name), encoding="utf-8") as handle:
+                texts[fixture] = handle.read()
+    for fixture, text in texts.items():
+        with open(os.path.join(HERE, fixture), "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
     print(f"wrote fixtures for seed {multiworld.seed_name}: slot 1 {len(own['1']['steps'])} rows, "
           f"slot 2 {len(own['2']['steps'])} rows, {len(bow_rows)} 'Progressive Bow' row(s) by name")
 

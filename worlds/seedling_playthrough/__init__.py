@@ -11,6 +11,7 @@ from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from ._ext import RuleWorldMixin
+from . import _spoiler_hook_client
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -76,6 +77,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
     "L48 flag 1: bosslock@48,144 cleared": "L48 flag 1: bosslock@48,144 cleared",
     "L53 flag 2: lock@144,208 cleared": "L53 flag 2: lock@144,208 cleared",
     "L58 flag 1: yeti@56,56 cleared": "L58 flag 1: yeti@56,56 cleared",
+    "L60 flag 0: lock@128,80 cleared": "L60 flag 0: lock@128,80 cleared",
     "L63 flag 1: lightpole@64,88 cleared": "L63 flag 1: lightpole@64,88 cleared",
     "L62 flag 0: lightpole@120,200 cleared": "L62 flag 0: lightpole@120,200 cleared",
     "L63 flag 7: lightpole@112,272 cleared": "L63 flag 7: lightpole@112,272 cleared",
@@ -243,6 +245,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "L53 flag 2: lock@144,208 cleared": "L53 flag 2: lock@144,208 cleared",
         "Level 055 - Boss Key 3": "Blue Key",
         "L58 flag 1: yeti@56,56 cleared": "L58 flag 1: yeti@56,56 cleared",
+        "L60 flag 0: lock@128,80 cleared": "L60 flag 0: lock@128,80 cleared",
         "L63 flag 1: lightpole@64,88 cleared": "L63 flag 1: lightpole@64,88 cleared",
         "L62 flag 0: lightpole@120,200 cleared": "L62 flag 0: lightpole@120,200 cleared",
         "L63 flag 7: lightpole@112,272 cleared": "L63 flag 7: lightpole@112,272 cleared",
@@ -335,6 +338,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "L53 flag 2: lock@144,208 cleared": "L53 flag 2: lock@144,208 cleared",
         "Level 055 - Boss Key 3": "Blue Key",
         "L58 flag 1: yeti@56,56 cleared": "L58 flag 1: yeti@56,56 cleared",
+        "L60 flag 0: lock@128,80 cleared": "L60 flag 0: lock@128,80 cleared",
         "L63 flag 1: lightpole@64,88 cleared": "L63 flag 1: lightpole@64,88 cleared",
         "L62 flag 0: lightpole@120,200 cleared": "L62 flag 0: lightpole@120,200 cleared",
         "L63 flag 7: lightpole@112,272 cleared": "L63 flag 7: lightpole@112,272 cleared",
@@ -416,6 +420,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 055 - Boss Key 3": True,
         "Level 057 - Tentacled Beast": True,
         "L58 flag 1: yeti@56,56 cleared": True,
+        "L60 flag 0: lock@128,80 cleared": True,
         "L63 flag 1: lightpole@64,88 cleared": True,
         "L62 flag 0: lightpole@120,200 cleared": True,
         "Level 063 - Chest": True,
@@ -763,10 +768,10 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return self._with_embedded_rules({
+        return {**self._with_embedded_rules({
             "boss_location_items": self.options.boss_location_items.value,
             "seals_required": self.options.seals_required.value,
-        })
+        }), **_spoiler_hook_client.slot_data(self)}
 
     def _with_embedded_rules(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Add the package's rules document (`worldgen_rules`) when it fits rules_in_slot_data_max_kb.
@@ -799,3 +804,8 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
             value = getattr(getattr(self.options, name, None), "value", None)
             if isinstance(value, (bool, int, float, str)):
                 options[name] = value
+
+    @classmethod
+    def stage_pre_output(cls, multiworld: "MultiWorld") -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)

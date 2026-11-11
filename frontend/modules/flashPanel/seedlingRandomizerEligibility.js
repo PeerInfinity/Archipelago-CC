@@ -220,6 +220,32 @@ export const DIVERTING_CHECK_IDS = Object.freeze(['generated', 'atlas']);
 /** Which load an eligible verdict names. */
 export const RANDOMIZER_ARMS = Object.freeze({ VANILLA: 'vanilla', GENERATED: 'generated', ATLAS: 'atlas' });
 
+/**
+ * ⛓⛓ ER E5 — DOES THIS WORLD PLACE ENTRANCES? An entrance-randomized Seedling world's stairs are shuffled in
+ * its LOGIC (`entrance_randomization[slot].placements`); they are shuffled in the GAME only when the rooms the
+ * page delivers were retargeted (`seedlingDemo/entranceRetarget.js`, applied by the randomized load). Any path
+ * that ends with the game on its own vanilla rooms would play the shuffled logic over stairs that lead where
+ * vanilla says, so each such path asks this and refuses BY NAME (`entranceShuffleRefusal`).
+ */
+export function entranceShufflePlaces(rules, slot) {
+    const placements = rules?.entrance_randomization?.[String(slot)]?.placements;
+    return Array.isArray(placements) && placements.length > 0;
+}
+
+/** The sentence a shuffled world left on vanilla rooms is told. */
+export const ENTRANCE_SHUFFLE_NOT_PLAYABLE = 'ENTRANCE RANDOMIZATION: this world\'s stairs are shuffled, and the '
+    + 'game is on its vanilla rooms, whose stairs lead where vanilla says — NOT where this world\'s logic says. '
+    + 'It is not playable as loaded.';
+
+/**
+ * The refusal of a path that did not deliver retargeted rooms, or null when the world places no entrance
+ * (every such path is then exactly what it was).
+ */
+export function entranceShuffleRefusal(rules, slot, why) {
+    if (!entranceShufflePlaces(rules, slot)) return null;
+    return `${ENTRANCE_SHUFFLE_NOT_PLAYABLE} (the shuffled rooms were not delivered: ${why})`;
+}
+
 /** The arm each diverting check decides. */
 const ARM_OF_DIVERT = Object.freeze({ generated: RANDOMIZER_ARMS.GENERATED, atlas: RANDOMIZER_ARMS.ATLAS });
 

@@ -288,6 +288,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_16__r3c7 -> level_17", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_16__r6c8 -> level_16__r1c1", player),
         Has('L16 flag 0: rope@32,16 cleared', 1)
     )
@@ -1899,7 +1904,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_60__r5c9 -> level_60__r5c0", player),
-        And(Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand')), Has('Progressive Swim'))
+        And(Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand')), HasAny('L60 flag 0: lock@128,80 cleared', 'Ghost Spear'), Has('Progressive Swim'))
     )
 
     world.set_rule(
@@ -2069,12 +2074,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_71__r11c7 -> level_71__r13c7", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Ghost Spear'))
     )
 
     world.set_rule(
         multiworld.get_entrance("level_71__r13c7 -> level_71__r11c7", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Ghost Spear'))
     )
 
     world.set_rule(
@@ -2960,6 +2965,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Level 057 - Tentacled Beast", player),
         HasAny('Progressive Sword', 'Ghost Spear', 'Wand')
+    )
+
+    world.set_rule(
+        multiworld.get_location("L60 flag 0: lock@128,80 cleared", player),
+        And(Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand')), Has('Progressive Swim'))
     )
 
     world.set_rule(

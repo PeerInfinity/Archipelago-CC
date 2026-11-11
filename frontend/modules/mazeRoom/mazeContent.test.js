@@ -18,9 +18,13 @@ import { describe, expect, it } from 'vitest';
 
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
+import { MAZE_CONCEPT_REALISATIONS, isConceptGate } from './mazeConcepts.js';
 import {
-    MAZE_CONTENT_REFUSALS, MAZE_CONTENT_ROLES, conceptGateFor, isConceptGate, presentItemLib, presentedLook,
-} from './mazeConcepts.js';
+    MAZE_CONTENT_REFUSALS, MAZE_CONTENT_ROLES, presentItemLib, presentObstacleLib, presentedLook,
+} from './mazeContent.js';
+import { generateRegionCore, placeFromRules } from './mazeRoomEngine.js';
+import { serializeMazeWorld } from './mazeSerializer.js';
+import { importClosure } from '../../../scripts/procgen/seedlingDerivedRuleTable.js';
 import { CONCEPTS, isConceptRow, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { assertContentRoles } from '../procgenCore/contentRoles.js';
 import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -102,6 +106,22 @@ describe('the declaration', () => {
     });
 });
 
+describe('⛔ the looks live OUTSIDE the engine closure (R2 rework, ⚖ the derived-rule table\'s owner)', () => {
+    it('the Seedling derived-rule table\'s engine closure holds no content-set module', () => {
+        const closure = importClosure().map((f) => f.replaceAll('\\', '/'));
+        expect(closure.some((f) => f.endsWith('frontend/modules/mazeRoom/mazeRoomEngine.js'))).toBe(true);
+        for (const rel of ['procgenCore/contentRoles.js', 'packConcepts/packConcepts.js', 'mazeRoom/mazeContent.js',
+            'contentPacks/contentPacks.js', 'mazeRoom/mazeRoomLibrary.js']) {
+            expect(closure.filter((f) => f.endsWith(`frontend/modules/${rel}`)), rel).toEqual([]);
+        }
+    });
+    it('the engine\'s inert fallback look of each gate concept equals the default pack\'s (the copies cannot drift)', () => {
+        for (const cid of MAZE_CONTENT_ROLES.gate.accepts.presents) {
+            expect(MAZE_CONCEPT_REALISATIONS[cid].art, cid).toEqual(presentedLook(DEFAULT_SET, 'gate', cid));
+        }
+    });
+});
+
 describe('presentedLook — which pack is shown', () => {
     it('a later pack that presents the mechanic with a look wins', async () => {
         const look = presentedLook(await themeSet(), 'gate', 'guardian');
@@ -127,20 +147,51 @@ describe('presentedLook — which pack is shown', () => {
     });
 });
 
-describe('the placer\'s refusals', () => {
-    const base = DEFAULT_OBSTACLES.logic_gate;
+describe('the entry\'s hooks: the engine, then the presentation pass', () => {
+    const coreInput = (params) => ({
+        region_id: 'r1', size: { width: 10, height: 8 },
+        entrances: [{ side: 'W', tile: { x: 0, y: 3 } }], exits: [{ side: 'E' }], rng: createRng(7), params,
+    });
+    /** One room with Has(sword) on its exit, placed by `place` with `params`. */
+    const placed = (place, params) => {
+        const { world } = generateRegionCore(coreInput({}));
+        const exitId = [...world.exits.keys()][0];
+        const out = place(world, { exit_rules: { [exitId]: SWORD }, location_rules: {}, item_placements: [], rng: createRng(11), params });
+        return { world, out };
+    };
+    it('with the default set the hooks build the engine\'s world, byte for byte', () => {
+        const params = { concepts: ['guardian'], contentSet: DEFAULT_SET };
+        const engine = placed(placeFromRules, params);
+        const hook = placed(substrateRegistryEntry.placeFromRules, params);
+        expect(hook.out).toEqual(engine.out);
+        expect(JSON.stringify(serializeMazeWorld(hook.world, null))).toBe(JSON.stringify(serializeMazeWorld(engine.world, null)));
+        expect(hook.out.placed_logic_gates[0].gate_id).toBe('guardian_gate_0');
+        const core = (fn) => JSON.stringify(serializeMazeWorld(fn(coreInput({ contentSet: DEFAULT_SET })).world, null));
+        expect(core(substrateRegistryEntry.generateRegionCore)).toBe(core(generateRegionCore));
+    });
+    it('a theme changes the gate\'s name and look and nothing else', async () => {
+        const set = await themeSet();
+        const engine = placed(placeFromRules, { concepts: ['guardian'] });
+        const hook = placed(substrateRegistryEntry.placeFromRules, { concepts: ['guardian'], contentSet: set });
+        const gate = themed('character/the-gate');
+        const id = 'guardian_gate_0';
+        expect(Object.keys(hook.world.obstacleLib[id])).toEqual(Object.keys(engine.world.obstacleLib[id]));
+        expect(hook.world.obstacleLib[id]).toEqual({
+            ...engine.world.obstacleLib[id], name: gate.name, color: gate.look.color, symbol: gate.look.symbol,
+        });
+    });
     it('a selected gate concept with no content set is refused by name', () => {
-        expect(() => conceptGateFor(SWORD, { offered: ['guardian'], rng: createRng(1), n: 0, logicGateBase: base }))
+        expect(() => placed(substrateRegistryEntry.placeFromRules, { concepts: ['guardian'] }))
             .toThrow(MAZE_CONTENT_REFUSALS.noContentSet('gate "guardian_gate_0"', 'guardian'));
     });
     it('a selected gate concept no pack in the set presents with a look is refused by name', async () => {
         const set = await loadContentSet([TEXT_ADVENTURE_DEFAULT], themeIo());
-        expect(() => conceptGateFor(SWORD, { offered: ['guardian'], rng: createRng(1), n: 0, logicGateBase: base, contentSet: set }))
+        expect(() => placed(substrateRegistryEntry.placeFromRules, { concepts: ['guardian'], contentSet: set }))
             .toThrow(MAZE_CONTENT_REFUSALS.noPresenter('gate "guardian_gate_0"', 'guardian', 'gate', set.ids));
     });
-    it('a rule no concept realises needs no set (no candidate, nothing read)', () => {
-        expect(conceptGateFor({ rule: 'True_' }, { offered: ['guardian'], rng: createRng(1), n: 0, logicGateBase: base }))
-            .toBeNull();
+    it('a world with no concept row needs no set (nothing read)', () => {
+        expect(() => placed(substrateRegistryEntry.placeFromRules, {})).not.toThrow();
+        expect(presentObstacleLib(DEFAULT_OBSTACLES, undefined)).toBe(DEFAULT_OBSTACLES);
     });
 });
 

@@ -197,7 +197,8 @@ export function gateEvents(world) {
         if (!entry?.events || entry.struck_by) continue;
         for (const ev of entry.events) {
             if (!byEvent.has(ev.name)) {
-                byEvent.set(ev.name, { event: ev.name, side: ev.side, cells: [], ...(ev.rule ? { rule: ev.rule } : {}), ...(ev.probe ? { probe: ev.probe } : {}) });
+                byEvent.set(ev.name, { event: ev.name, side: ev.side, cells: [], ...(ev.rule ? { rule: ev.rule } : {}), ...(ev.probe ? { probe: ev.probe } : {}),
+                    ...(ev.opens_from ? { opens_from: ev.opens_from } : {}) });
             }
             byEvent.get(ev.name).cells.push(cell);
         }
@@ -213,6 +214,10 @@ const PROBE_STEP = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] 
  * The reached cell beside gate event `t` from which its obstacle opens for `set` (`gateEvents`), or `null`. A one-sided
  * lock (`probe`, session tile-primitives-sphere-order-2: `BossLock.update` tests the key on a line just BELOW the lock)
  * opens from that neighbour only.
+ * ⛓ ENCOUNTER KILL ARMS (session tile-encounter-kill-arms): an encounter lock (`opens_from`, the rules' side grades,
+ * `seedlingObstacleEvents.encounterLockSides`) opens from the neighbours its room is cleared from, each by its own way: `true`
+ * = the cell's clearance (a side that walks up to every body), a rule = the arms that pass a Solid (a side that reaches a
+ * body only ACROSS the shut lock). A neighbour it does not name (a side that cannot clear the room) never opens it.
  */
 export function eventAdjacentCell(world, reach, t, set) {
     const inv = inventoryOf(set);
@@ -220,10 +225,16 @@ export function eventAdjacentCell(world, reach, t, set) {
     const own = new Set(t.cells);
     // An event that names its own `rule` (one of several on a stacked cell) opens by it, not by the cell's.
     const ownLib = t.rule ? { own: { clear_set_type: 'rule', clear_rule: t.rule } } : null;
+    const clearedBy = (rule) => isObstacleCleared('own', inv, { own: { clear_set_type: 'rule', clear_rule: rule } });
+    const steps = t.opens_from ? Object.keys(PROBE_STEP).filter((d) => d in t.opens_from)
+        : t.probe ? [t.probe] : ['N', 'E', 'S', 'W'];
     for (const cell of t.cells) {
-        if (!(ownLib ? isObstacleCleared('own', inv, ownLib) : isObstacleCleared(world.obstacles.get(cell), inv, world.obstacleLib))) continue;
+        const cellCleared = ownLib ? isObstacleCleared('own', inv, ownLib) : isObstacleCleared(world.obstacles.get(cell), inv, world.obstacleLib);
         const [x, y] = cell.split(',').map(Number);
-        for (const [dx, dy] of t.probe ? [PROBE_STEP[t.probe]] : [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+        for (const d of steps) {
+            const way = t.opens_from?.[d] ?? true;
+            if (!(way === true ? cellCleared : clearedBy(way))) continue;
+            const [dx, dy] = PROBE_STEP[d];
             const n = `${x + dx},${y + dy}`;
             if (!own.has(n) && reach.cells.has(n)) return n;
         }
@@ -365,6 +376,7 @@ export function regionTargets(world) {
         out.push({
             id: `event:${g.event}@${g.cells[0]}`, kind: 'location', event: g.event, locationName: g.event, x, y,
             side: g.side, adjacent: true, cells: g.cells, ...(g.rule ? { rule: g.rule } : {}), ...(g.probe ? { probe: g.probe } : {}),
+            ...(g.opens_from ? { opens_from: g.opens_from } : {}),
         });
     }
     for (const exit of world.exits.values()) out.push({ id: `exit:${exit.exit_id}`, kind: 'exit', x: exit.x, y: exit.y });

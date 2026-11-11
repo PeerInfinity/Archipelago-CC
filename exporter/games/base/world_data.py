@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 # every package that defines it. `rules_in_slot_data_max_kb`: a world_generator package's cap on its
 # slot_data rules document (world_generator/_embedded_rules.py). `spoiler_data_in_slot_data`: asks the
 # optional Spoiler Export Hook apworld (worlds/spoiler_export_hook) for this slot's sphere record.
-TRANSPORT_ONLY_OPTIONS = frozenset({'rules_in_slot_data_max_kb', 'spoiler_data_in_slot_data'})
+TRANSPORT_ONLY_OPTIONS = frozenset({'rules_in_slot_data_max_kb', 'spoiler_data_in_slot_data',
+                                    'spoiler_data_include_regions'})
 
 
 class WorldDataMixin:

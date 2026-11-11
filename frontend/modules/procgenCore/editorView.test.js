@@ -25,7 +25,10 @@ import { describe, expect, it } from 'vitest';
 
 import { canonicalJson, createEditSession, describeOps } from './editCore.js';
 import { createLifetime } from './pageLifetime.js';
-import { EditorViewError, SHAPE_KINDS, TOOLS, assertShape, mountEditorView } from './editorView.js';
+import {
+    EDIT_TOOLS, EditorViewError, PASTE_MODES, SHAPE_KINDS, TOOLS, assertShape, mountEditorView,
+} from './editorView.js';
+import { FakeElement } from './fakeEditorDom.testkit.js';
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓ THE TOY SUBSTRATE — `editCore.test.js`'s, in the smallest form this
@@ -1092,5 +1095,134 @@ describe('⛔ the view test imports nothing substrate-side', () => {
     it('the scan is not vacuous', () => {
         expect(specifiers).toContain('./editorView.js');
         expect(BINDING.test('../mazeRoom/mazeEditAdapter.js')).toBe(true);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR TOOLS B1 — FILL · CLEAR · MOVE AND THE PASTE MODE, OPT-IN
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓⛓ the SHARED tools are opt-in, named by id among the page\'s own (editor tools B1)', () => {
+    const fakeDoc = { createElement: (t) => new FakeElement(t) };
+    const select = () => new FakeElement('select');
+
+    /** MUTANT: append the shared tools after the page's — the table's order (and so every button) moves. */
+    it('⛓ a STRING in `tools` mounts that shared tool, IN THE PAGE\'S ORDER, with E1\'s label and key', () => {
+        const t = harness({
+            tools: [EDIT_TOOLS.FILL, { id: 'mine', label: 'MINE', key: 'q', at: () => {} }, EDIT_TOOLS.MOVE],
+        });
+        expect(t.view.commands.map((r) => [r.id, r.label, r.key])).toEqual([
+            ...Object.values(TOOLS).map((id) => [id, expect.any(String), expect.any(String)]),
+            ['fill', 'FILL a rectangle', 'l'],
+            ['mine', 'MINE', 'q'],
+            ['move', 'MOVE the selection', 'm'],
+            ['escape', 'CLEAR the armed tool', 'Escape'],
+        ]);
+        t.keyTarget.dispatch('keydown', { key: 'l' });
+        expect(t.view.tool).toBe(EDIT_TOOLS.FILL);
+    });
+
+    it('⛔ an unknown shared-tool name refuses BY NAME at mount', () => {
+        expect(() => harness({ tools: ['spray'] })).toThrow(/"spray" is not one of \[fill, clear, move\]/);
+    });
+
+    /** MUTANT: mount the selects or the tools by default — the maze's table and its keys grow. */
+    it('⛓ with none named nothing moved: the four, Escape, no `l`/`x`/`m`, no paste mode', () => {
+        const t = harness();
+        expect(t.view.commands.map((r) => r.id)).toEqual([...Object.values(TOOLS), 'escape']);
+        expect(['l', 'x', 'm'].some((k) => t.view.keys.has(k))).toBe(false);
+        expect(t.view.pasteMode).toBe(null);
+        expect(t.view.clipSpent).toBe(false);
+    });
+
+    /** MUTANT: FILL with a target in hand builds per cell — `ops()` grows by the cell count, not by 1. */
+    it('⛓ FILL is two clicks and ONE group; the corner is drawn AFTER the page\'s shapes', () => {
+        const t = harness({ tools: [EDIT_TOOLS.FILL], shapes: () => [{ kind: 'rect', x: 5, y: 4, w: 1, h: 1 }] });
+        t.view.setTool(EDIT_TOOLS.FILL);
+        t.click(0, 0);
+        expect(t.last().text).toBe('FILL corner 1 at (0,0) — click the opposite corner');
+        expect(t.painted[t.painted.length - 1].map((s) => [s.x, s.y])).toEqual([[5, 4], [0, 0]]);
+        t.click(2, 1);
+        expect(t.session.ops()).toHaveLength(1);
+        expect(t.session.ops()[0].ops).toHaveLength(12);   // 6 cells × the target's two fields
+        expect(toyAdapter.readCell(t.session.record(), 2, 1).tile).toBe('b');
+    });
+
+    it('⛓ FILL with no target says the PAGE\'s sentence, or this file\'s own when it gave none', () => {
+        const own = harness({ tools: [EDIT_TOOLS.FILL], floodTarget: () => null });
+        own.view.setTool(EDIT_TOOLS.FILL);
+        own.click(0, 0); own.click(1, 1);
+        expect(own.last()).toEqual({ text: 'FILL has no target — the page\'s palette selection does not name one', bad: true });
+        const page = harness({ tools: [EDIT_TOOLS.FILL], floodTarget: () => null, editTools: { fillRefusal: 'pick a brush' } });
+        page.view.setTool(EDIT_TOOLS.FILL);
+        page.click(0, 0); page.click(1, 1);
+        expect(page.last()).toEqual({ text: 'pick a brush', bad: true });
+        expect(page.session.ops()).toEqual([]);
+    });
+
+    it('⛓ `isRefusal` names the page\'s own refusal class; anything else is RETHROWN as a defect', () => {
+        class PageRefusal extends Error {}
+        const boom = (cls) => () => { throw new cls('the record says no'); };
+        const t = harness({ tools: [EDIT_TOOLS.FILL], floodTarget: boom(PageRefusal), editTools: { isRefusal: (e) => e instanceof PageRefusal } });
+        t.view.setTool(EDIT_TOOLS.FILL);
+        t.click(0, 0); t.click(1, 1);
+        expect(t.last()).toEqual({ text: 'the record says no', bad: true });
+        const u = harness({ tools: [EDIT_TOOLS.FILL], floodTarget: boom(TypeError) });
+        u.view.setTool(EDIT_TOOLS.FILL);
+        u.click(0, 0);
+        expect(() => u.click(1, 1)).toThrow(TypeError);
+    });
+
+    /** MUTANT: drop the corner reset from `changed` — the corner outlives its tool and is drawn on. */
+    it('⛓ a FILL corner dies with its tool, when the change is reported', () => {
+        const t = harness({ tools: [EDIT_TOOLS.FILL] });
+        t.view.setTool(EDIT_TOOLS.FILL);
+        t.click(0, 0);
+        t.view.setTool(TOOLS.RECT);
+        const last = t.painted[t.painted.length - 1];
+        // ⚠ E1's order, kept: the setTool repaint still shows the corner; the NEXT repaint does not
+        expect(last.some((s) => s.x === 0 && s.y === 0 && s.w === 1)).toBe(true);
+        t.view.repaint();
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
+    });
+
+    it('⛓ the PASTE MODE select is filled with PASTE_MODES at `add`; at `replace` the paste carries it', () => {
+        const pasteMode = select();
+        const t = harness({ tools: [EDIT_TOOLS.MOVE], editTools: { pasteMode }, doc: fakeDoc });
+        expect(pasteMode.options.map((o) => [o.value, o.textContent])).toEqual([
+            ['add', 'ADD to the cell (the default)'], ['replace', 'REPLACE the cell'],
+        ]);
+        expect(PASTE_MODES).toEqual(['add', 'replace']);
+        expect(t.view.pasteMode).toBe('add');
+        t.view.setTool(TOOLS.BRUSH); t.click(0, 0);
+        t.view.setTool(TOOLS.RECT); t.click(0, 0); t.click(0, 0);
+        pasteMode.value = 'replace';
+        t.view.setTool(TOOLS.PASTE); t.click(3, 3);
+        // ⛓ the toy adapter has no `clearOps`, so the core's REPLACE refusal is the proof `replace` arrived
+        expect(t.last().text).toMatch(/declares no `clearOps`, so a REPLACE paste cannot be built/);
+        pasteMode.value = 'add';
+        t.click(3, 3);
+        expect(t.session.ops()).toHaveLength(2);
+    });
+
+    it('⛓ CLEAR\'s scope select is the descriptor\'s fields, refilled on request, keeping a pick that still exists', () => {
+        const clearWhat = select();
+        const t = harness({ tools: [EDIT_TOOLS.CLEAR], editTools: { clearWhat }, doc: fakeDoc });
+        expect(clearWhat.options.map((o) => o.value)).toEqual(['', 'tile', 'entity']);
+        clearWhat.value = 'entity';
+        t.view.refreshEditTools();
+        expect(clearWhat.value).toBe('entity');
+        t.view.setTool(EDIT_TOOLS.CLEAR); t.click(0, 0); t.click(1, 1);
+        expect(t.last().text).toMatch(/declares no `clearOps`, so a CLEAR cannot be built/);
+    });
+
+    it('⛓ MOVE refuses with nothing selected, by name', () => {
+        const t = harness({ tools: [EDIT_TOOLS.MOVE] });
+        t.view.setTool(EDIT_TOOLS.MOVE);
+        t.click(1, 1);
+        expect(t.last()).toEqual({
+            text: 'nothing to MOVE — arm RECT and click two opposite corners first; the selection is what moves',
+            bad: true,
+        });
     });
 });

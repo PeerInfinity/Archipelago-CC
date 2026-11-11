@@ -16,11 +16,7 @@ import { hashOf, recordingContext } from './drawOpRecorder.js';
 import { drawWorld, plainView } from './mazeRoomRender.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { generateRegionCore, placeFromRules } from './mazeRoomEngine.js';
-import { MAZE_DEFAULT_CONTENT_PACK } from './mazeConcepts.js';
-import { defaultContentSetOf } from '../procgenPipeline/worldContent.js';
-
-/** ⛓ CONTENT SETS R2 — the gates' looks come from the maze's default pack (preloaded by the vitest setup file). */
-const SET = defaultContentSetOf([MAZE_DEFAULT_CONTENT_PACK]);
+import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
 import { createRng } from '../shared/rng.js';
 
 const SWORD = { rule: 'Has', args: { item_name: 'Progressive Sword' } };
@@ -37,7 +33,7 @@ function world(concepts) {
     placeFromRules(w, {
         exit_rules: { [exitId]: SWORD }, location_rules: { loc0: SWIM },
         item_placements: [{ item_id: 'map', location_id: 'loc0' }],
-        rng: createRng(11), params: { concepts, contentSet: SET },
+        rng: createRng(11), params: { concepts },
     });
     return w;
 }
@@ -73,8 +69,8 @@ describe('a concept-less world draws exactly what it drew before the paint', () 
 });
 
 describe('a skinned gate is painted as its concept', () => {
-    const colorOf = (c) => SET.concepts.presenting(c).look.color;
-    const symbolOf = (c) => SET.concepts.presenting(c).look.symbol;
+    const colorOf = (c) => MAZE_CONCEPT_REALISATIONS[c].art.color;
+    const symbolOf = (c) => MAZE_CONCEPT_REALISATIONS[c].art.symbol;
     const drew = (log, c) => ({
         fill: log.some((op) => op.includes(`fillStyle`) && op.includes(colorOf(c))),
         stroke: log.some((op) => op.includes(`strokeStyle`) && op.includes(colorOf(c))),

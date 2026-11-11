@@ -56,6 +56,19 @@ export function roomGamesOf(roomInfo) {
 }
 
 
+/**
+ * The GetDataPackage packet for a room: `games` = RoomInfo's games plus
+ * 'Archipelago'. Without RoomInfo games it still names 'Archipelago', never
+ * an empty request (which an upstream 0.6.8+ server answers with nothing).
+ */
+export function dataPackageRequestFor(roomInfo) {
+  const games = new Set(['Archipelago']);
+  for (const g of roomInfo?.games || []) {
+    if (typeof g === 'string' && g) games.add(g);
+  }
+  return { cmd: 'GetDataPackage', games: [...games] };
+}
+
 /** Both seeds given and equal (a missing seed is seedless: never the same). */
 function isSameSeed(a, b) {
   return a !== undefined && a !== null && a !== '' && b !== undefined && b !== null && b !== '' && String(a) === String(b);
@@ -300,7 +313,7 @@ export class MessageHandler {
     // was removed in the archipelago.js migration (see
     // CC/docs/plans/client-archipelago-js-migration.md).
     log('info', 'Requesting data package from server...');
-    this._requestDataPackage();
+    this._requestDataPackage(data);
 
     // Use injected eventBus
     this.eventBus?.publish('game:roomInfo', data);
@@ -1652,13 +1665,20 @@ Location was force-checked to maintain server sync.`;
     return clientId;
   }
 
-  _requestDataPackage() {
+  /**
+   * Ask the server for the DataPackage of this room's games.
+   *
+   * `games` is required in practice: since upstream 0.6.8 (#5981) MultiServer
+   * answers only the games named there, so a bare GetDataPackage gets
+   * `{"games":{}}`. Older servers (and our fork's) answer everything when
+   * `games` is absent and filter when it is present, so naming the games works
+   * on both. 'Archipelago' (the meta-game: ids -1/-2, "Cheat Console",
+   * "Server") is always included, as the old bare request returned it.
+   * There is no cache: every connect fetches fresh.
+   */
+  _requestDataPackage(roomInfo) {
     if (connection.isConnected()) {
-      connection.send([
-        {
-          cmd: 'GetDataPackage',
-        },
-      ]);
+      connection.send([dataPackageRequestFor(roomInfo)]);
     }
   }
 

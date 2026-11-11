@@ -15,7 +15,7 @@ from typing import Any, ClassVar
 
 from worlds.AutoWorld import WebWorld, World
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 #: Client copies this helper can serve. A helper keeps old entries while their callers exist.
 SUPPORTED_CLIENT_APIS = frozenset({1})
@@ -24,6 +24,8 @@ FORMAT = 1
 OPTION = "spoiler_data_in_slot_data"
 #: The option's value that adds each step's sender. Any other non-zero value is own slot only.
 OWN_SLOT_WITH_SENDERS = 2
+#: The Toggle that adds each step's newly reachable regions. Read with getattr: an older client copy lacks it.
+REGIONS_OPTION = "spoiler_data_include_regions"
 SLOT_DATA_KEY = "spoiler_data"
 #: Above this a slot sends a reason instead (measured maximum is far lower; see the design note).
 MAX_SLOT_BYTES = 1024 * 1024
@@ -41,6 +43,11 @@ def _with_senders(world: World) -> bool:
     return getattr(world.options, OPTION).value == OWN_SLOT_WITH_SENDERS
 
 
+def _with_regions(world: World) -> bool:
+    option = getattr(world.options, REGIONS_OPTION, None)
+    return bool(option is not None and option.value)
+
+
 def _code(address: Any, name: str, known: Any):
     """The AP id only where the game's DataPackage gives back this exact name.
 
@@ -50,10 +57,30 @@ def _code(address: Any, name: str, known: Any):
     return address if isinstance(address, int) and known.get(address) == name else name
 
 
-def walk(multiworld) -> dict:
-    """The sphere walk: [(label, location)] in collection order, one pass, one state, no writes."""
+def walk(multiworld, region_players=()) -> dict:
+    """The sphere walk: [(label, location)] in collection order, one pass, one state, no writes.
+
+    For each player in region_players it also records the regions first reachable at the start and after each
+    step, read from CollectionState's own reachable-region cache (the one can_reach already keeps current). AP
+    marks only the collected item's owner stale, so a player's regions can change only on a step that gives it
+    an item. These equal the exporter logger's new_accessible_regions for that player (measured, six-game seed).
+    """
     from BaseClasses import CollectionState
     state = CollectionState(multiworld)
+    seen = {player: set() for player in region_players}
+
+    def new_regions(player):
+        if state.stale[player]:
+            state.update_reachable_regions(player)
+        reach = state.reachable_regions[player]
+        if len(reach) == len(seen[player]):
+            return []
+        fresh = sorted(region.name for region in reach if region.player == player and region not in seen[player])
+        seen[player].update(reach)
+        return fresh
+
+    start_regions = {player: new_regions(player) for player in seen}
+    step_regions = {player: {} for player in seen}
     candidates = set(multiworld.get_filled_locations())
     steps = []
     sphere = 0
@@ -63,17 +90,27 @@ def walk(multiworld) -> dict:
             break
         for index, location in enumerate(sorted(reachable, key=lambda loc: (loc.player, loc.name)), 1):
             state.collect(location.item, True, location)
-            steps.append((f"{sphere}.{index}", location))
+            label = f"{sphere}.{index}"
+            steps.append((label, location))
+            owner = location.item.player
+            if owner in seen:
+                fresh = new_regions(owner)
+                if fresh:
+                    step_regions[owner][label] = fresh
         candidates -= reachable
         sphere += 1
-    return {"steps": steps, "unreachable": len(candidates), "spheres": sphere}
+    return {"steps": steps, "unreachable": len(candidates), "spheres": sphere,
+            "start_regions": start_regions, "step_regions": step_regions}
 
 
-def compact_for(multiworld, walked: dict, player: int, with_senders: bool = False) -> dict:
+def compact_for(multiworld, walked: dict, player: int, with_senders: bool = False, with_regions: bool = False) -> dict:
     """Own slot: its own locations, and each item it receives, with the walk step of each.
 
     With senders, a row whose item comes from another player's location gains a fourth element, [player, location],
     the location checked against that player's own DataPackage. Every other row, and the format, stay the same.
+
+    With regions (the walk must have been asked for this player's), the record gains
+    "regions": {"start": [names], "steps": [[row index, [names first reachable after that row]]...]}.
     """
     world = multiworld.worlds[player]
     start = [_code(item.code, item.name, world.item_id_to_name) for item in multiworld.precollected_items.get(player, [])]
@@ -89,8 +126,13 @@ def compact_for(multiworld, walked: dict, player: int, with_senders: bool = Fals
                 sender_table = multiworld.worlds[location.player].location_id_to_name
                 row.append([location.player, _code(location.address, location.name, sender_table)])
             rows.append(row)
-    return {"format": FORMAT, "seed_name": str(multiworld.seed_name), "player": player, "start": sorted(start, key=str),
-            "steps": rows, "unreachable": walked["unreachable"]}
+    record = {"format": FORMAT, "seed_name": str(multiworld.seed_name), "player": player,
+              "start": sorted(start, key=str), "steps": rows, "unreachable": walked["unreachable"]}
+    if with_regions:
+        by_label = walked["step_regions"][player]
+        record["regions"] = {"start": walked["start_regions"][player],
+                             "steps": [[index, by_label[row[0]]] for index, row in enumerate(rows) if row[0] in by_label]}
+    return record
 
 
 def prepare(multiworld) -> dict:
@@ -104,10 +146,12 @@ def prepare(multiworld) -> dict:
         result = {"omitted": {player: {"reason": "race"} for player in players}, "data": {}, "seconds": 0.0}
     else:
         started = time.perf_counter()
-        walked = walk(multiworld) if players else {"steps": [], "unreachable": 0}
+        region_players = [player for player in players if _with_regions(multiworld.worlds[player])]
+        walked = walk(multiworld, region_players) if players else {"steps": [], "unreachable": 0}
         data, omitted = {}, {}
         for player in players:
-            record = compact_for(multiworld, walked, player, _with_senders(multiworld.worlds[player]))
+            world = multiworld.worlds[player]
+            record = compact_for(multiworld, walked, player, _with_senders(world), player in region_players)
             size = len(json.dumps(record, separators=(",", ":")))
             if size > MAX_SLOT_BYTES:
                 omitted[player] = {"reason": "over_cap", "size_bytes": size, "cap_bytes": MAX_SLOT_BYTES}

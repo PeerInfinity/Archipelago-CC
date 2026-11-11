@@ -12569,14 +12569,22 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     const tally = {};
     const whys = [];
     let forks = 0;
-    for (const side of sides) {
+    /** The routes of a side: the planned corridor (null), then the plannable via points, nearest the staging point first. */
+    const routesOf = (side) => {
         const V = TURRET_APPROACH_VIA;
         const vias = side.key === 'up' || side.key === 'down'
             ? [{ x: r.x - V, y: side.y }, { x: r.right + V, y: side.y }]
             : [{ x: side.x, y: r.y - V }, { x: side.x, y: r.bottom + V }];
         vias.sort((a, b) => Math.hypot(a.x - stage.x, a.y - stage.y) - Math.hypot(b.x - stage.x, b.y - stage.y));
-        route: for (const via of [null, ...vias.filter((v) => plannerObstacleAt(run.world, v.x, v.y, null, opts) === null)]) {
-            for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
+        return [null, ...vias.filter((v) => plannerObstacleAt(run.world, v.x, v.y, null, opts) === null)];
+    };
+    /**
+     * One try — `side`, `via`, wait `w` — on a fork: the record of a hitless one (already played on the live run and read
+     * back), `TRY_ROUTE_DONE` when the route has no try left at any wait (no corridor, or the turret's body on the walk),
+     * else null. `extra` joins the record and its count row (`TURRET_APPROACH_VOLLEY_ORDER`'s anchor and rank; OFF none).
+     */
+    const TRY_ROUTE_DONE = 'route-done';
+    const attempt = (side, via, w, extra = null) => {
                 const what = `${side.key} ${via ? `via (${via.x},${via.y})` : 'corridor'}, wait ${w}`;
                 const count = (k, why = null) => {
                     tally[k] = (tally[k] ?? 0) + 1;
@@ -12606,16 +12614,16 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                 // ⛔ every try of a route starts from the same staging state, so a route with no corridor has none at
                 // any wait: the route is done (measured: without this, L40 legs 860/861 spent their `crusher-fork`
                 // deadline on 251 corridor-less tries behind the latched south door, and refused on the deadline)
-                if (wps === null) { count('no-plan', `no corridor to (${aim.x},${aim.y})`); continue route; }
+                if (wps === null) { count('no-plan', `no corridor to (${aim.x},${aim.y})`); return TRY_ROUTE_DONE; }
                 // ⛓ the wait, at the route's first waypoint: inside the range it runs the turret's volley clock
                 let ok = true;
                 let rest = wps;
                 if (w > 0) {
                     ok = walkOn(wps.slice(0, 1));
                     for (let i = 0; i < w && ok; i += 1) ok = step(NONE_KEYS);
-                    if (!ok) { count('wait-hit', hitWhy()); continue; }
+                    if (!ok) { count('wait-hit', hitWhy()); return null; }
                     rest = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
-                    if (rest === null) { count('no-plan', `no corridor on from the wait to (${aim.x},${aim.y})`); continue; }
+                    if (rest === null) { count('no-plan', `no corridor on from the wait to (${aim.x},${aim.y})`); return null; }
                 }
                 ok = walkOn(via ? [...rest, { x: side.x, y: side.y }] : rest);
                 if (!ok) {
@@ -12629,17 +12637,16 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                     const h = f.ledger('playerHits').at(-1);
                     const body = h?.source === 'iceturret' && h?.id === id;
                     count(body ? 'approach-body' : 'approach-hit', hitWhy());
-                    if (body) continue route;
-                    continue;
+                    return body ? TRY_ROUTE_DONE : null;
                 }
                 for (let i = 0; ok && !onSnap(f) && i < CORPSE_SNAP_WAIT; i += 1) ok = step(NONE_KEYS);
                 // ⛓ the kill derives its side off the LIVE box (its 0.5 px rest cycle): settle on that one
                 const live = corpseKillSide(f.entities('turrets').get(id).rect, side.dir);
                 if (ok && !hasArrived(f.state, live, DEFAULT_TOLERANCE)) ok = walkOn([{ x: live.x, y: live.y }]);
-                if (!ok) { count('stance-hit', hitWhy()); continue; }
+                if (!ok) { count('stance-hit', hitWhy()); return null; }
                 if (!hasArrived(f.state, live, DEFAULT_TOLERANCE)) {
                     count('not-arrived', `stopped at (${f.state.x.toFixed(1)},${f.state.y.toFixed(1)})`);
-                    continue;
+                    return null;
                 }
                 let rec;
                 try {
@@ -12650,7 +12657,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                     if (!(e instanceof SolverRefusal) && !/^levelRun: /.test(e?.message ?? '')) throw e;
                     count(/HIT/.test(e.message) ? 'kill-hit' : 'kill-refused',
                         e.message.split('\n')[0].split(ctx.what).join('').slice(0, 160));
-                    continue;
+                    return null;
                 }
                 for (let i = 0; (f.blastsInFlight.length > 0 || i < CORPSE_POST_KILL_STAND) && i < CORPSE_BLAST_WAIT && ok;
                     i += 1) {
@@ -12658,7 +12665,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                 }
                 if (!ok || f.blastsInFlight.length > 0 || !f.entities('turrets').get(id)?.dead) {
                     count('after-kill', ok ? 'a blast still in flight' : hitWhy());
-                    continue;
+                    return null;
                 }
                 // 3. played on the live run, key for key, and read back
                 for (const held of keys) {
@@ -12670,16 +12677,97 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                         + `${Boolean(run.entities('turrets').get(id)?.dead)}, hits ${run.ledger('playerHits').length - hitsBefore}`);
                 }
                 const record = { ...rec, side: side.key, stance: { x: live.x, y: live.y }, staging: stage,
-                    via: via ? { ...via } : null, wait: w, forks };
+                    via: via ? { ...via } : null, wait: w, forks, ...extra };
                 TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: side.key,
-                    via: record.via, wait: w, forks });
+                    via: record.via, wait: w, forks, ...extra });
                 return record;
+    };
+    if (TURRET_APPROACH_VOLLEY_ORDER.enabled) {
+        // ⛓ hammer-phase BK2-APPROACH-ORDER (`TURRET_APPROACH_VOLLEY_ORDER`, OFF): the same tries, in the volley's order
+        const record = approachTriesByVolley(id, sides.map((side) => ({ side, routes: routesOf(side) })), attempt,
+            TRY_ROUTE_DONE, { exempt, fork: () => {
+                const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} approach tr(ies)`);
+                forks += 1;
+                return f;
+            } });
+        if (record !== null) return record;
+    } else {
+        for (const side of sides) {
+            route: for (const via of routesOf(side)) {
+                for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
+                    const record = attempt(side, via, w);
+                    if (record === TRY_ROUTE_DONE) continue route;
+                    if (record !== null) return record;
+                }
             }
         }
     }
     TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: null, forks, tally });
     return refuse(`no approach to ${id} from the staging point (${stage.x},${stage.y}) is hitless — ${forks} fork(s), `
         + `${JSON.stringify(tally)}: ${whys.join(' | ')}`);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE BK2-APPROACH-ORDER (`TURRET_APPROACH_VOLLEY_ORDER`, OFF) — THE APPROACH'S TRIES IN THE
+ * VOLLEY'S ORDER. The wait `approachKillForCorpse` looks for is a phase of the turret's volley clock, so a route's
+ * waits are asked from that clock outward, and every route gets its best-placed wait before any route gets its second.
+ *
+ * `approachVolleyAnchor`: on a fork, the route's own walk to its first waypoint and then a stand there, until the
+ * turret's `anim` turns to "startshot" (`turretDamage`'s clock; `IceTurret.update` plays it when `shootTimer` runs
+ * out in range). The number of ticks stood is the route's ANCHOR: the wait whose walk leaves the waypoint on the tick
+ * the next volley is committed. null when the route has no corridor, the walk or the stand is hit or crosses a door,
+ * or no startshot begins inside `TURRET_APPROACH_WAIT_MAX` ticks (out of range, or held by an i-frame).
+ */
+function approachVolleyAnchor(f, id, aim, exempt) {
+    const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
+    if (wps === null) return null;
+    const hits = f.ledger('playerHits').length;
+    const step = (held) => !f.advance(held).transition && f.ledger('playerHits').length === hits;
+    for (const sm of previewWalk(f, wps.slice(0, 1), DEFAULT_TOLERANCE).samples) if (sm.held && !step(sm.held)) return null;
+    const animOf = () => f.turretDamage.find((u) => u.id === id)?.anim ?? null;
+    let was = animOf();
+    for (let i = 1; i <= TURRET_APPROACH_WAIT_MAX; i += 1) {
+        if (!step(NONE_KEYS)) return null;
+        const now = animOf();
+        if (now === 'startshot' && was !== 'startshot') return i;
+        was = now;
+    }
+    return null;
+}
+
+/** The waits 0 … `TURRET_APPROACH_WAIT_MAX` from `anchor` outward, the earlier of a pair first; null = ascending (OFF's). */
+export function approachWaitOrder(anchor) {
+    const all = Array.from({ length: TURRET_APPROACH_WAIT_MAX + 1 }, (_, w) => w);
+    if (anchor === null) return all;
+    return all.sort((a, b) => Math.abs(a - anchor) - Math.abs(b - anchor) || a - b);
+}
+
+/**
+ * The tries of `approachKillForCorpse` in the volley's order: `sides` (`{side, routes}`, OFF's sides and routes in OFF's
+ * order) are asked rank by rank — rank k is each live route's k-th wait off its own anchor (`approachWaitOrder`) — so
+ * the set of tries is OFF's and only their order moves. A route's anchor is probed (one fork) when the route is first
+ * reached; `attempt` is OFF's try, word for word, and a route it reports done leaves the ranks. Returns the hitless
+ * try's record (its count row carries `order: 'volley'`, the route's `anchor` and the `rank`), or null when no try is.
+ */
+function approachTriesByVolley(id, sides, attempt, DONE, ctx) {
+    let live = sides.flatMap(({ side, routes }) => routes.map((via) => ({ side, via, order: null, anchor: null })));
+    for (let rank = 0; live.length > 0; rank += 1) {
+        const next = [];
+        for (const rt of live) {
+            if (rt.order === null) {
+                rt.anchor = approachVolleyAnchor(ctx.fork(), id, rt.via ?? { x: rt.side.x, y: rt.side.y }, ctx.exempt);
+                rt.order = approachWaitOrder(rt.anchor);
+            }
+            if (rank >= rt.order.length) continue;
+            const record = attempt(rt.side, rt.via, rt.order[rank], { order: 'volley', anchor: rt.anchor, rank });
+            if (record === DONE) continue;
+            if (record !== null) return record;
+            next.push(rt);
+        }
+        live = next;
+    }
+    return null;
 }
 
 /**
@@ -16773,6 +16861,28 @@ export const TURRET_APPROACH_COUNTS = { approaches: [] };
 /** Zero `TURRET_APPROACH_COUNTS`. */
 export function resetTurretApproachCounts() {
     TURRET_APPROACH_COUNTS.approaches = [];
+}
+
+/**
+ * `TURRET_APPROACH_VOLLEY_ORDER` (ON since the volley flip, ⚖ the user 2026-11-10: *"Build the flip next"*; asked
+ * wherever `approachKillForCorpse` is: `TURRET_APPROACH`'s corpse weigh and `KEYLOCK_TURRET`'s keylock arm; hammer-phase
+ * BK2-APPROACH-ORDER, ⚖ the user ruled the slice on 2026-11-09: *"Land without; slice next"*): `approachKillForCorpse` asks its tries in the volley's
+ * order (`approachTriesByVolley`) — each route's waits outward from the wait that leaves its first waypoint as the
+ * turret's next "startshot" begins (probed on one fork a route), and rank by rank across the routes, in place of side
+ * by side, route by route, wait 0 … 48. The tries are the same set; WHICH hitless try is found first can differ, so it
+ * is a preference change. OFF, nothing is probed and the order is the pre-flip one, byte-identical.
+ * `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=0` opts out / `withTurretApproachVolleyOrder(enabled, fn)`.
+ */
+// ⚖ ON by default since the volley flip (the user, 2026-11-10: *"Build the flip next (Recommended)"*):
+// `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=0` opts out.
+export const TURRET_APPROACH_VOLLEY_ORDER = {
+    enabled: globalThis.process?.env?.SEEDLING_TURRET_APPROACH_VOLLEY_ORDER !== '0',
+};
+export const TURRET_APPROACH_VOLLEY_ORDER_DEFAULT = true;
+
+/** Run `fn` with `TURRET_APPROACH_VOLLEY_ORDER` set to `enabled`, restoring the previous value. */
+export function withTurretApproachVolleyOrder(enabled, fn) {
+    return withSwitch(TURRET_APPROACH_VOLLEY_ORDER, enabled, fn);
 }
 
 /**

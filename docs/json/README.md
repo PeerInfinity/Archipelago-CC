@@ -30,6 +30,7 @@ For an overview of all major features in this project, see the **[Features Index
 - [Web Frontend & Tracker](../../frontend/README.md) — Browser-based tracker with region graph, discovery mode, and reachability analysis
 - [JSON Tools Installer](../../worlds/json_tools_installer/README.md) — One-click APWorld installer for vanilla Archipelago
 - [Skip Required Files](./features/skip-required-files.md) — Generate seeds without ROM files
+- [Spoiler Export Hook](./features/spoiler-export-hook.md) — Optional apworld: a room carries its own sphere order, so Loop mode works with no spoiler file
 
 **World Generation & Tracking:**
 - [World Generator](../../world_generator/README.md) — Convert JSON rules back into functional Python worlds
