@@ -28103,3 +28103,13 @@ a route more (L40 flag 8 with the south door shut: 12 → 24 forks, the same `no
 pins both at the default and keeps the pre-flip values under `withTurretApproachVolleyOrder(false)`. The keylock arm asks
 `approachKillForCorpse` itself, so the order reaches it with `TURRET_APPROACH` off (the slice's "asked only under
 `TURRET_APPROACH`" was too narrow).
+
+### Seedling hammer-phase DRILL-EXIT-FLIP — `DRILL_EXIT_PASS` ON by default
+
+⚖ The user, 2026-11-11: *"DRILL_EXIT_PASS flip"* (the hammer replan after the volley flip). The switch now reads
+`SEEDLING_DRILL_EXIT_PASS !== '0'`, default `true`; `=0` opts out. It was ready once fidelity's DRILL-WATER put the
+drill's hop into water in the model (`drillTerrainSwitch` ON): L91's two legs across `drill@64,80` both solve with the
+armed timed pass, 718 (L89 arrival → L92) in 190 ticks and 719 (the whole-game walk's L91 → L89) in 223, each certified
+on a fork and hitless. A walk that solves is never pre-empted and a walk that refuses after spending ticks keeps its
+refusal (L88's 704), so the flip moves only door legs whose walk refuses on a live drill before a tick is spent.
+`hammerDrillExitPass.test.js` pins both arms explicitly; its switch row now pins the default ON.

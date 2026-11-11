@@ -24172,7 +24172,7 @@ function certifyExitPass(f, keys, cross) {
  *   · it returned at once when the run holds a drill-killing weapon (residue D-A was built for the Fire-alone L28 run);
  *   · its wake test ("does the walk to the door wake a drill?") planned the walk with no door allowed, so a walk to a
  *     door centre never planned and the straight-line fallback passed 80 px from the drill (wake range 48).
- * `DRILL_EXIT_PASS` (OFF) is a RUNG AFTER THE WALK: when the door's walk (`walkTo`) refuses with a live drill as its
+ * `DRILL_EXIT_PASS` (ON since the drill-exit flip, ⚖ the user 2026-11-11: *"DRILL_EXIT_PASS flip"*) is a RUNG AFTER THE WALK: when the door's walk (`walkTo`) refuses with a live drill as its
  * obstacle, before a tick is spent and with no deadline tripped (`drillExitPassAfterRefusal`), the timed pass is asked
  * ARMED — a held weapon does not skip it, and its wake test's walk is the planner's walk to the door
  * (`plannedWalkSamples`' `allowTeleporter` = the door). A walk that solves is never pre-empted (the census's shape, the
@@ -24182,11 +24182,14 @@ function certifyExitPass(f, keys, cross) {
  * arm finds no stance: "north/south/west not plannable floor, east wakes it").
  * Measured: 718 SOLVED 190 t hitless (node and the p4g page); 719 refuses by name on the drill's hop into water
  * (fidelity DRILL D2, `Enemy.update`'s terrain switch — fidelity's DRILL-WATER), raised on the certificate's fork; the
- * other 19 legs in a drill's room (L28, L88, L91) answer OFF's plan byte for byte. `SEEDLING_DRILL_EXIT_PASS=1` /
- * `withDrillExitPass(enabled, fn)`. OFF, nothing is read and the executor is byte-identical.
+ * other 19 legs in a drill's room (L28, L88, L91) answer OFF's plan byte for byte. Since fidelity's DRILL-WATER
+ * (`drillTerrainSwitch` ON) 719 SOLVES too (223 t, certified to L89 hitless). `SEEDLING_DRILL_EXIT_PASS=0` opts out /
+ * `withDrillExitPass(enabled, fn)`. OFF, nothing is read and the executor is the pre-flip one, byte-identical.
  */
-export const DRILL_EXIT_PASS = { enabled: globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS === '1' };
-export const DRILL_EXIT_PASS_DEFAULT = false;
+// ⚖ ON by default since the drill-exit flip (the user, 2026-11-11: *"DRILL_EXIT_PASS flip"*):
+// `SEEDLING_DRILL_EXIT_PASS=0` opts out.
+export const DRILL_EXIT_PASS = { enabled: globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS !== '0' };
+export const DRILL_EXIT_PASS_DEFAULT = true;
 
 /** Run `fn` with `DRILL_EXIT_PASS` set to `enabled`, restoring the previous value. */
 export function withDrillExitPass(enabled, fn) {
