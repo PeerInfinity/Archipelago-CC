@@ -1,0 +1,119 @@
+{"summary":{"id":1,"name":"wasm-continue-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":567,"ok":true,"kind":null,"work":12,"message":null}}
+{"summary":{"id":2,"name":"wasm-exit-2","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":314,"ok":true,"kind":null,"work":4,"message":null}}
+{"summary":{"id":3,"name":"wasm-exit-3","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":533,"ok":true,"kind":null,"work":16,"message":null}}
+{"summary":{"id":4,"name":"wasm-exit-4","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":234,"ok":true,"kind":null,"work":23,"message":null}}
+{"summary":{"id":5,"name":"wasm-exit-5","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":496,"ok":true,"kind":null,"work":22,"message":null}}
+{"summary":{"id":6,"name":"wasm-exit-6","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":289,"ok":true,"kind":null,"work":15,"message":null}}
+{"summary":{"id":7,"name":"wasm-exit-7","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":361,"ok":true,"kind":null,"work":10,"message":null}}
+{"summary":{"id":8,"name":"wasm-exit-8","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":276,"ok":true,"kind":null,"work":64,"message":null}}
+{"summary":{"id":9,"name":"wasm-exit-9","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":344,"ok":true,"kind":null,"work":8,"message":null}}
+{"summary":{"id":10,"name":"wasm-location-10","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":143,"ok":true,"kind":null,"work":4,"message":null}}
+{"summary":{"id":11,"name":"wasm-continue-exit-10","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":121,"ok":true,"kind":null,"work":9,"message":null}}
+{"summary":{"id":12,"name":"wasm-location-11","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":129,"ok":true,"kind":null,"work":9,"message":null}}
+{"summary":{"id":13,"name":"wasm-continue-exit-11","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":264,"ok":true,"kind":null,"work":16,"message":null}}
+{"summary":{"id":14,"name":"wasm-exit-3","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":559,"ok":true,"kind":null,"work":58,"message":null}}
+{"summary":{"id":15,"name":"wasm-exit-2","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":219,"ok":true,"kind":null,"work":24,"message":null}}
+{"summary":{"id":16,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":598,"ok":true,"kind":null,"work":84,"message":null}}
+{"summary":{"id":17,"name":"wasm-location-86","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":285,"ok":true,"kind":null,"work":24,"message":null}}
+{"summary":{"id":18,"name":"wasm-continue-exit-86","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":288,"ok":true,"kind":null,"work":12,"message":null}}
+{"summary":{"id":19,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":756,"ok":true,"kind":null,"work":122,"message":null}}
+{"summary":{"id":20,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1578,"ok":true,"kind":null,"work":152,"message":null}}
+{"summary":{"id":21,"name":"wasm-location-36","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":608,"ok":true,"kind":null,"work":42,"message":null}}
+{"summary":{"id":22,"name":"wasm-continue-exit-36","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":296,"ok":true,"kind":null,"work":66,"message":null}}
+{"summary":{"id":23,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1804,"ok":true,"kind":null,"work":149,"message":null}}
+{"summary":{"id":24,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":800,"ok":true,"kind":null,"work":126,"message":null}}
+{"summary":{"id":25,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":76,"ok":true,"kind":null,"work":20,"message":null}}
+{"summary":{"id":26,"name":"wasm-exit-14","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":856,"ok":true,"kind":null,"work":99,"message":null}}
+{"summary":{"id":27,"name":"wasm-exit-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":682,"ok":true,"kind":null,"work":321,"message":null}}
+{"summary":{"id":28,"name":"wasm-location-16","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1519,"ok":true,"kind":null,"work":63,"message":null}}
+{"summary":{"id":29,"name":"wasm-continue-exit-16","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":883,"ok":true,"kind":null,"work":84,"message":null}}
+{"summary":{"id":30,"name":"wasm-location-17","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":154,"ok":true,"kind":null,"work":9,"message":null}}
+{"summary":{"id":31,"name":"wasm-continue-exit-17","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":364,"ok":true,"kind":null,"work":44,"message":null}}
+{"summary":{"id":32,"name":"wasm-exit-16","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1131,"ok":true,"kind":null,"work":318,"message":null}}
+{"summary":{"id":33,"name":"wasm-exit-18","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":3009,"ok":true,"kind":null,"work":54,"message":null}}
+{"summary":{"id":34,"name":"wasm-location-19","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":463,"ok":true,"kind":null,"work":133,"message":null}}
+{"summary":{"id":35,"name":"wasm-continue-location-19","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":299,"ok":true,"kind":null,"work":38,"message":null}}
+{"summary":{"id":36,"name":"wasm-continue-exit-19","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":364,"ok":true,"kind":null,"work":126,"message":null}}
+{"summary":{"id":37,"name":"wasm-location-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":508,"ok":true,"kind":null,"work":43,"message":null}}
+{"summary":{"id":38,"name":"wasm-continue-location-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":423,"ok":true,"kind":null,"work":53,"message":null}}
+{"summary":{"id":39,"name":"wasm-continue-exit-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":95,"ok":false,"kind":"refusal","work":2,"message":"solverBot(wasm-continue-exit-20): no corridor for goal reach-exit toward (24,56) in level 20. Obstacle: proximity-hazard:shieldlocknorm (shieldlocknorm@176,16). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 20 from tile (12,1) to (1,3). The two are in differe"}}
+{"summary":{"id":40,"name":"wasm-exit-20","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":564,"ok":true,"kind":null,"work":132,"message":null}}
+{"summary":{"id":41,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":385,"ok":true,"kind":null,"work":52,"message":null}}
+{"summary":{"id":42,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":530,"ok":true,"kind":null,"work":124,"message":null}}
+{"summary":{"id":43,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":5384,"ok":true,"kind":null,"work":641,"message":null}}
+{"summary":{"id":44,"name":"wasm-exit-21","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":555,"ok":true,"kind":null,"work":16,"message":null}}
+{"summary":{"id":45,"name":"wasm-exit-22","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":588,"ok":true,"kind":null,"work":63,"message":null}}
+{"summary":{"id":46,"name":"wasm-location-25","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":271,"ok":true,"kind":null,"work":24,"message":null}}
+{"summary":{"id":47,"name":"wasm-continue-exit-25","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":389,"ok":true,"kind":null,"work":24,"message":null}}
+{"summary":{"id":48,"name":"wasm-exit-22","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":607,"ok":true,"kind":null,"work":101,"message":null}}
+{"summary":{"id":49,"name":"wasm-location-29","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":414,"ok":true,"kind":null,"work":100,"message":null}}
+{"summary":{"id":50,"name":"wasm-continue-exit-29","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":197,"ok":true,"kind":null,"work":37,"message":null}}
+{"summary":{"id":51,"name":"wasm-exit-31","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":753,"ok":true,"kind":null,"work":154,"message":null}}
+{"summary":{"id":52,"name":"wasm-location-30","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":879,"ok":true,"kind":null,"work":184,"message":null}}
+{"summary":{"id":53,"name":"wasm-continue-exit-30","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":786,"ok":true,"kind":null,"work":82,"message":null}}
+{"summary":{"id":54,"name":"wasm-location-32","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":18910,"ok":true,"kind":null,"work":50,"message":null}}
+{"summary":{"id":55,"name":"wasm-continue-exit-32","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":208,"ok":true,"kind":null,"work":73,"message":null}}
+{"summary":{"id":56,"name":"wasm-exit-30","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1102,"ok":true,"kind":null,"work":365,"message":null}}
+{"summary":{"id":57,"name":"wasm-exit-22","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":810,"ok":true,"kind":null,"work":91,"message":null}}
+{"summary":{"id":58,"name":"wasm-exit-21","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":408,"ok":true,"kind":null,"work":16,"message":null}}
+{"summary":{"id":59,"name":"wasm-exit-23","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":20,"ok":true,"kind":null,"work":9,"message":null}}
+{"summary":{"id":60,"name":"wasm-exit-24","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":591,"ok":true,"kind":null,"work":72,"message":null}}
+{"summary":{"id":61,"name":"wasm-location-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":10589,"ok":true,"kind":null,"work":642,"message":null}}
+{"summary":{"id":62,"name":"wasm-continue-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2362,"ok":true,"kind":null,"work":273,"message":null}}
+{"summary":{"id":63,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":864,"ok":true,"kind":null,"work":148,"message":null}}
+{"summary":{"id":64,"name":"wasm-location-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":728,"ok":true,"kind":null,"work":152,"message":null}}
+{"summary":{"id":65,"name":"wasm-continue-exit-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":289,"ok":false,"kind":"refusal","work":11,"message":"solverBot(wasm-continue-exit-38) reach-exit (144,304)->L37 -> hold: every responder in group t=2 [cover@208,224] is ALREADY OPEN before the hold begins, so holding the button proves nothing about it. A hold that changes nothing is a check that cannot fail."}}
+{"summary":{"id":66,"name":"wasm-exit-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1287,"ok":true,"kind":null,"work":9,"message":null}}
+{"summary":{"id":67,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":925,"ok":true,"kind":null,"work":140,"message":null}}
+{"summary":{"id":68,"name":"wasm-exit-44","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":532,"ok":true,"kind":null,"work":100,"message":null}}
+{"summary":{"id":69,"name":"wasm-exit-45","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":965,"ok":true,"kind":null,"work":125,"message":null}}
+{"summary":{"id":70,"name":"wasm-exit-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":752,"ok":true,"kind":null,"work":132,"message":null}}
+{"summary":{"id":71,"name":"wasm-exit-47","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":574,"ok":true,"kind":null,"work":128,"message":null}}
+{"summary":{"id":72,"name":"wasm-exit-48","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1769,"ok":false,"kind":"refusal","work":642,"message":"solverBot(wasm-exit-48): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-48) reach-pit (11,3)->L49's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `should"}}
+{"summary":{"id":73,"name":"wasm-exit-48","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":2827,"ok":true,"kind":null,"work":1384,"message":null}}
+{"summary":{"id":74,"name":"wasm-location-49","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":105,"ok":true,"kind":null,"work":98,"message":null}}
+{"summary":{"id":75,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":255,"ok":true,"kind":null,"work":24,"message":null}}
+{"summary":{"id":76,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":271,"ok":true,"kind":null,"work":20,"message":null}}
+{"summary":{"id":77,"name":"wasm-exit-14","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":694,"ok":true,"kind":null,"work":56,"message":null}}
+{"summary":{"id":78,"name":"wasm-location-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":370,"ok":true,"kind":null,"work":110,"message":null}}
+{"summary":{"id":79,"name":"wasm-continue-exit-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":324,"ok":true,"kind":null,"work":109,"message":null}}
+{"summary":{"id":80,"name":"wasm-continue-exit-15","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":613,"ok":true,"kind":null,"work":109,"message":null}}
+{"summary":{"id":81,"name":"wasm-exit-14","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":573,"ok":true,"kind":null,"work":39,"message":null}}
+{"summary":{"id":82,"name":"wasm-exit-13","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":183,"ok":true,"kind":null,"work":52,"message":null}}
+{"summary":{"id":83,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":311,"ok":true,"kind":null,"work":121,"message":null}}
+{"summary":{"id":84,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1502,"ok":true,"kind":null,"work":191,"message":null}}
+{"summary":{"id":85,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1140,"ok":true,"kind":null,"work":134,"message":null}}
+{"summary":{"id":86,"name":"wasm-location-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":379,"ok":true,"kind":null,"work":88,"message":null}}
+{"summary":{"id":87,"name":"wasm-continue-exit-38","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":417,"ok":true,"kind":null,"work":43,"message":null}}
+{"summary":{"id":88,"name":"wasm-location-39","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2982,"ok":true,"kind":null,"work":641,"message":null}}
+{"summary":{"id":89,"name":"wasm-continue-exit-39","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1313,"ok":true,"kind":null,"work":28,"message":null}}
+{"summary":{"id":90,"name":"wasm-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":7116,"ok":false,"kind":"refusal","work":644,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the calle"}}
+{"summary":{"id":91,"name":"wasm-location-40","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":27064,"ok":false,"kind":"refusal","work":2562,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the calle"}}
+{"summary":{"id":92,"name":"wasm-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":10801,"ok":false,"kind":"refusal","work":644,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the calle"}}
+{"summary":{"id":93,"name":"wasm-location-40","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":27888,"ok":true,"kind":null,"work":1566,"message":null}}
+{"summary":{"id":94,"name":"wasm-continue-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":6377,"ok":false,"kind":"refusal","work":136,"message":"solverBot(wasm-continue-location-40) apitem (160,640) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (605.5,680.8) — spinner:spinner@816,848 (a live Spinner BODY at (600.6,679.9) at horizon 441 — `Enemy.hitPlayer`'s 7x7 `collide(\"Player\", x, y)` at force 3) — and ever"}}
+{"summary":{"id":95,"name":"wasm-location-40","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1003,"ok":true,"kind":null,"work":65,"message":null}}
+{"summary":{"id":96,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":716,"ok":true,"kind":null,"work":118,"message":null}}
+{"summary":{"id":97,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1906,"ok":true,"kind":null,"work":191,"message":null}}
+{"summary":{"id":98,"name":"wasm-exit-37","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":207,"ok":true,"kind":null,"work":17,"message":null}}
+{"summary":{"id":99,"name":"wasm-exit-44","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":500,"ok":true,"kind":null,"work":105,"message":null}}
+{"summary":{"id":100,"name":"wasm-exit-45","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":692,"ok":true,"kind":null,"work":134,"message":null}}
+{"summary":{"id":101,"name":"wasm-location-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":451,"ok":true,"kind":null,"work":142,"message":null}}
+{"summary":{"id":102,"name":"wasm-continue-exit-46","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1003,"ok":true,"kind":null,"work":140,"message":null}}
+{"summary":{"id":103,"name":"wasm-exit-47","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":861,"ok":true,"kind":null,"work":126,"message":null}}
+{"summary":{"id":104,"name":"wasm-location-48","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":470,"ok":true,"kind":null,"work":115,"message":null}}
+{"summary":{"id":105,"name":"wasm-continue-exit-48","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":636,"ok":true,"kind":null,"work":112,"message":null}}
+{"summary":{"id":106,"name":"wasm-exit-49","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":155,"ok":true,"kind":null,"work":98,"message":null}}
+{"summary":{"id":107,"name":"wasm-exit-50","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1034,"ok":true,"kind":null,"work":174,"message":null}}
+{"summary":{"id":108,"name":"wasm-exit-50","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1198,"ok":true,"kind":null,"work":174,"message":null}}
+{"summary":{"id":109,"name":"wasm-exit-51","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":379,"ok":true,"kind":null,"work":106,"message":null}}
+{"summary":{"id":110,"name":"wasm-exit-51","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":544,"ok":true,"kind":null,"work":106,"message":null}}
+{"summary":{"id":111,"name":"wasm-exit-53","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":2064,"ok":false,"kind":"refusal","work":643,"message":"solverBot(wasm-exit-53): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-53) reach-exit (144,240)->L54's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `sh"}}
+{"summary":{"id":112,"name":"wasm-exit-53","budget":2560,"attempt":{"retry":1,"budgets":[640,2560]},"ms":8816,"ok":false,"kind":"refusal","work":2562,"message":"solverBot(wasm-exit-53) reach-exit (144,240)->L54 -> kill -> chaser kill (jellyfish@152,168) by press: the dwell was HIT at dwell tick 145 (run tick 374; source chaser jellyfish@144,192; 14 guard step(s) so far). The run is the oracle; the stance and the lapse guard were a heuristic."}}
+{"summary":{"id":113,"name":"wasm-exit-0","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":881,"ok":true,"kind":null,"work":118,"message":null}}
+{"summary":{"id":114,"name":"wasm-exit-12","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1728,"ok":true,"kind":null,"work":125,"message":null}}
+{"summary":{"id":115,"name":"wasm-exit-88","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1143,"ok":true,"kind":null,"work":186,"message":null}}
+{"summary":{"id":116,"name":"wasm-exit-87","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1461,"ok":true,"kind":null,"work":154,"message":null}}
+{"summary":{"id":117,"name":"wasm-exit-92","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":1303,"ok":true,"kind":null,"work":149,"message":null}}
+{"summary":{"id":118,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":809,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}}
+{"summary":{"id":119,"name":"wasm-exit-91","budget":640,"attempt":{"retry":0,"budgets":[640]},"ms":483,"ok":false,"kind":"refusal","work":20,"message":"solverBot(wasm-exit-91) reach-exit (16,144)->L89: the combat ladder is EXHAUSTED. The corridor passes through danger at (78.6,87.2) — enemy:drill@64,80 (a stepped drill, priced as a static box where it stands now (72,88) (`drillMixedRooms`: it hops only when the player is in its run range with a cle"}}

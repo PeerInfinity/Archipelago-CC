@@ -1,0 +1,25 @@
+A = wasm-location-40 (id 90)
+B = level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2 (id 873)
+source records equal: false
+DIFF req.staging.persistence
+   A: [{"level":0,"tag":1},{"level":3,"tag":0},{"level":5,"tag":0},{"level":8,"tag":0},{"level":8,"tag":1},{"level":10,"tag":0},{"level":11,"tag":0},{"level":12,"tag":2},{"level":12,"tag":3},{"level":12,"tag":5},{"level":12,"tag":9},{"level":12,"tag":10},{"level":15,"tag":0},{"level":15,"tag":1},{"level":15,"tag":2},{"level":15,"tag":3},{"level":16,"tag":0},{"level":16,"tag":3},{"level":16,"tag":4},{"le
+   B: [{"level":40,"tag":12}]
+DIFF req.staging.save.totem_parts
+   A: [0]
+   B: []
+DIFF req.staging.save.seal_parts
+   A: [0,1,2,3,4,5,6,7,8,9]
+   B: [0,1,2,3,4,5,6]
+DIFF req.staging.rng.seed
+   A: 2132250561
+   B: 1510219060
+DIFF req.staging.seam.items.canSwim
+   A: true
+   B: false
+DIFF req.staging.seam.time
+   A: 33630
+   B: 5216
+DIFF req.budgetWork
+   A: 640
+   B: 2560
+live bodies: A 15, B 15

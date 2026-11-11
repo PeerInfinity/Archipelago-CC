@@ -1,0 +1,2 @@
+APPROACHES [{"turret":"iceturret@472,400","t":563,"side":"right","via":null,"wait":29,"forks":70,"order":"volley","anchor":32,"rank":5}] ANCHORS []
+90/0 walk+40:12 SOLVED 4491 gm={"gm":true,"hits":[],"deaths":0} work=1382 ms=24564 passes=[{"pass":"dashless","ok":true,"kind":null,"work":1381,"ms":23755,"ticks":4491,"capped":false},{"pass":"full","ok":false,"kind":"refusal","work":1,"ms":6,"ticks":null,"capped":false}]
