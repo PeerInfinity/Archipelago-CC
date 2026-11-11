@@ -24,6 +24,9 @@ import {
 } from '../../procgenLabPanel/labRoomEditor.js';
 import { makeSetRecordEnvelope } from '../../procgenCore/labRoomEnvelope.js';
 import appEventBus from '../../../app/core/eventBus.js';
+import {
+    declaredDefaultContentPacks, defaultContentPreloadCalls, preloadedDefaultContentPacks,
+} from '../../procgenPipeline/worldContent.js';
 import { getPanelInstance as bounceEditorInstance } from '../../bounceRegionEditor/index.js';
 
 const PANEL_SELECTOR = '.procgen-pipeline-panel';
@@ -157,6 +160,37 @@ registerTest({
                + 'as the hover, computed in the row; what is stored stays the id. The module is the oracle, the '
                + 'picker the subject.',
     testFunction: procgenPipelineSubstrateRowsShowLabelAndCard,
+    category: 'procgenPipeline',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓ CONTENT SETS C4 — **THE BOOT PRELOADED THE DEFAULT CONTENT PACKS.** The
+ * synchronous builders (the pipeline panel's re-roll, the APWorld editor's
+ * regenerate) read the default packs the substrates declare from a process-level
+ * cache, which `app/initialization/index.js` fills before any of them can
+ * generate. The row reads the module the boot called: it was called (at least
+ * once), and every pack the live registry's entries declare is in the cache.
+ * The same row in the bundled boot proves the bundle runs the call too.
+ */
+async function procgenPipelineBootPreloadedDefaultContent(testController) {
+    const calls = defaultContentPreloadCalls();
+    testController.reportCondition(`the boot awaited preloadDefaultContent (${calls} call(s) in this page)`, calls >= 1);
+    const declared = declaredDefaultContentPacks();
+    const preloaded = preloadedDefaultContentPacks();
+    const missing = declared.filter((id) => !preloaded.includes(id));
+    testController.reportCondition(`every default pack the registry declares is preloaded (declared [${declared.join(', ')}], `
+        + `preloaded [${preloaded.join(', ')}], missing [${missing.join(', ')}])`, missing.length === 0);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'procgen-pipeline-boot-preloaded-default-content',
+    name: 'Procgen Pipeline: the boot preloaded the default content packs the substrates declare',
+    description: 'CONTENT SETS C4. app/initialization/index.js awaits worldContent.preloadDefaultContent after the '
+               + 'modules register and before anything can generate; the row asserts the call happened in this page '
+               + 'and every pack the registry declares as a defaultContentPack is in the cache.',
+    testFunction: procgenPipelineBootPreloadedDefaultContent,
     category: 'procgenPipeline',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

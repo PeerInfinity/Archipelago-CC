@@ -62,6 +62,7 @@ import {
     FIELD_VISIBILITY,
     envelopeSchema,
 } from './steppedPipeline.js';
+import { recordedContentOf } from './worldContent.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPIRAL_STEPS = Object.freeze(['arrange', 'content', 'regions', 'compile']);
@@ -232,6 +233,9 @@ function stepCompile(env) {
         procgenMetadata: {
             driver: 'shuffled-spiral',
             stop_reason: stats.stopReason,
+            // ⛓ CONTENT SETS C4 — the world's own content stack (omitted when it names none), so the app
+            //   reads the stack from the document whatever driver built it.
+            ...recordedContentOf(env.config?.regionParams),
         },
     });
     const unplaced = unplacedGoalSentence(rulesJson);

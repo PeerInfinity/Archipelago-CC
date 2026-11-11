@@ -62,6 +62,9 @@ import {
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
+import { preloadScriptContent } from './preloadContent.js';
+
+await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives

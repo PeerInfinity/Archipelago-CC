@@ -17,6 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -27,6 +28,7 @@ const INDEX = path.join(repoRoot, 'frontend/region-libraries/region_library_file
 const imp = (p) => import(pathToFileURL(path.join(repoRoot, p)));
 await imp('frontend/modules/mazeRoom/mazeRoomLibrary.js'); // registers maze + bounce
 const { extractZoneRules } = await imp('frontend/modules/bounceDemo/bounceDemoLibrary.js');
+await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 const { substrateRegistry } = await imp('frontend/modules/shared/procgen/substrateRegistry.js');
 const { assembleZoneRegion } = await imp('frontend/modules/procgenPipeline/procgenPipelineEngine.js');
 const { stampLibraryIdentity, validateRegionLibrary } = await imp('frontend/modules/procgenPipeline/regionLibraryValidator.js');
