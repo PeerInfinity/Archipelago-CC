@@ -1,10 +1,13 @@
 # Content sets R3: the second theme (`meta`), its trial world, and the content picker (as built)
 
 Branch `content-r3`, based on `origin/content-r2` at `98627f3f29` (`origin/main` did not contain it when the slice
-began). ⚠ `origin/content-r2` has since been reworked (`87676367e3`, the maze's looks moved out of the engine closure);
-this branch is NOT rebased onto it: the planner rebases it when the reworked R2 is ready. This slice reads the maze only
-through its declared roles and the world document's rows; it edits no file in the maze engine's closure (the Seedling
-derived-rule table's `engineFiles` names none of the files this slice touched, and `derivedRuleTableFresh` passes).
+began), then MERGED with the reworked `origin/content-r2` `87676367e3` (which itself merged main `cf4d9a6874` and moved
+the maze's looks into `mazeRoom/mazeContent.js`, applied by the registry hooks). The merge's conflicts were the two
+generated docs-index regions (`procgenDocs/generated/docsIndex.js`, the procgen `README.md` index), resolved by
+regenerating; no gitlink moved. This slice reads the maze only through its declared roles and the world document's
+rows (no import of `mazeConcepts.js` / `mazeContent.js` internals; every maze world is built through
+`prepareRunFromState`, so through the entry's hooks), and edits no file in the maze engine's closure. After the merge:
+both producers' `--check` (`concept-trial`, `meta-trial`) match, and the bounded run (34 files, 1034 tests) passes.
 
 | Commit | Part |
 |---|---|
@@ -14,7 +17,7 @@ derived-rule table's `engineFiles` names none of the files this slice touched, a
 | `fef63ab2ff` | 3. the in-app row `meta-trial-plays` |
 | `ced9119357` | 6. docs; the regenerated procgen index; the link census |
 
-26 files, +1746/−30 against the base, 0 gitlinks, no submodule edited.
+26 files, +1746/−30 against the base `98627f3f29` (before the merge), 0 gitlinks, no submodule edited.
 
 ## 1. The pack, and every line of it
 
