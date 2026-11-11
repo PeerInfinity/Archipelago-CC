@@ -808,6 +808,7 @@ function _publishLocationCheck(locationName) {
         locationName,
         regionName: _currentRegionId,
         originator: 'omsiSubstrate',
+        reportedByGame: true, // the game completed the action: physical, never logic-gated (client/core/checkGate.js)
         ...(_replayInFlight ? { fromLoop: true } : {}),
     }, { initialTarget: 'bottom' });
 }
