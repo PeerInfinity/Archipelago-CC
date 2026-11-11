@@ -12,6 +12,11 @@
         "run": 42518084641,
         "job": 128845395585,
         "ms": 69870
+      },
+      "frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js": {
+        "run": 42869375330,
+        "job": 130016210205,
+        "ms": 334247
       }
     },
     "local": {
@@ -31,6 +36,7 @@
     "frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js": 380,
     "frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js": 372,
     "frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js": 345,
+    "frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js": 334,
     "frontend/modules/seedlingDemo/fidelityL40Bk2.train.test.js": 322,
     "frontend/modules/seedlingDemo/fidelityL40Latch.train.test.js": 300,
     "frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js": 277,

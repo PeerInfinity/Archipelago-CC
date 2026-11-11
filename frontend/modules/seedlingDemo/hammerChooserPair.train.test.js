@@ -20,6 +20,19 @@
  * (`size: 3`): its empty climb needs three bodies, and a triple's first kill opens the walk to the L43 pit.
  * Every row but 356's and 367's (which solve on their full pass) asks the dashless pass alone.
  * The L16 guard re-derives `r9-solve-16` with the switch ON: C1's measured regression (`bob@208,32` handed to BAIT).
+ *
+ * ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip + WALLSFLIP, ⚖ user 2026-11-11): `spinner@816,848` walls
+ * `bob@736,752`'s first step, so both x≈744 bobs meet the corridor elsewhere than the paragraphs above have them.
+ *   - 5196: OFF is unchanged in kind (silent on `bob@736,752`). ON no PAIR admits any more: the shipped size 3 admits the
+ *     TRIPLE `bob@736,752` + `bob@736,800` + `bobsoldier@880,832` (4 sets asked), the chaser arm still kills the bob
+ *     (t855 → t920) and the chain still moves on to the `spinner@816,848` press kill and its chaser death (t1046 → t1228).
+ *   - 5172: still no pair admits and the pair arm = OFF; the OFF refusal's named danger is `chaser:bob@736,800` (was
+ *     `chaser:bobsoldier@880,832`). At size 3 the first climb admits a triple there (4 sets), as the title says.
+ * ⚠ COVERAGE NAMED: with the wall, no arrival clock of 5140..5250 (size 2, 111 clocks) has a PAIR that admits AND a kill
+ * that follows. A pair admits first at 5148, 5193 and 5238 only (`bob@736,752` + `bobsoldier@880,832`, 2 sets), and there the
+ * arm's dwell is hit at tick 3 (`kill (bob@736,752) by press: the dwell was HIT`). "A pair admits and its first kill
+ * lands" is therefore witnessed by 367's triple arm and by 5196's triple, not by a pair. The hammer arc signs this re-pin
+ * (`CC/docs/cloud-reports/seedling-fidelity-wallsflip.md` § D3).
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -86,9 +99,9 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         expect(CHOOSER_PAIR.size).toBe(ENV.SEEDLING_CHOOSER_PAIR_SIZE === '2' ? 2 : 3);
     });
 
-    it('853 at 5196: OFF the burn stance\'s walk refuses on bob@736,752 with the chooser silent; ON the pair '
-        + 'bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on '
-        + 'to the spinner@816,848 press kill', () => withL40Flip(false, () => {
+    it('853 at 5196: OFF the burn stance\'s walk refuses on bob@736,752 with the chooser silent; ON the set '
+        + 'bob@736,752 + bob@736,800 + bobsoldier@880,832 admits (a TRIPLE since chaserSpinnerWalls: no pair does), the '
+        + 'chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill', () => withL40Flip(false, () => {
         const off = solveLeg(LEG853, 5196, false);
         expect(off.ok).toBe(false);
         expect(off.message).toContain('-> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED');
@@ -98,9 +111,12 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
 
         const on = solveLeg(LEG853, 5196, true);
         expect(on.ok).toBe(false);
-        expect(on.counts.last).toEqual(['bob@736,752', 'bobsoldier@880,832']);
-        expect(on.counts.kills).toEqual([{ id: 'bob@736,752', t: 855, how: 'dwell', dead: true }]);
-        expect(on.message).toContain('-> kill (spinner@816,848) by press: the player died at t1046 (chaser bob@736,800)');
+        // ⛓ chaserSpinnerWalls ON: the pair ['bob@736,752', 'bobsoldier@880,832'] before the flip; kill t855, death t1046
+        expect(on.counts.asked).toBe(1);
+        expect(on.counts.sets).toBe(4); // the three pairs refused, then the triple
+        expect(on.counts.last).toEqual(['bob@736,752', 'bob@736,800', 'bobsoldier@880,832']);
+        expect(on.counts.kills).toEqual([{ id: 'bob@736,752', t: 920, how: 'dwell', dead: true }]);
+        expect(on.message).toContain('-> kill (spinner@816,848) by press: the player died at t1228 (chaser bob@736,800)');
     }), 240_000);
 
     it('853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF',
@@ -111,7 +127,9 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
             expect(on.counts.asked).toBeGreaterThan(0);
             expect(on.counts.admitted).toBe(0);
             expect([on.ok, on.work, on.message]).toEqual([off.ok, off.work, off.message]);
-            expect(off.message).toContain('chaser:bobsoldier@880,832');
+            // ⛓ chaserSpinnerWalls ON: the corridor meets bob@736,800 first ('chaser:bobsoldier@880,832' before the flip)
+            expect(off.message).toContain('chaser:bob@736,800');
+            expect(off.message).toContain(SILENT);
         }), 240_000);
 
     it('356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF', () => {

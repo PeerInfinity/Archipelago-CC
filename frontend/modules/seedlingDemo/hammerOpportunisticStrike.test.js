@@ -10,7 +10,18 @@
  * ticks: it aims at the bob at t651 and presses at t652, the hit lands at t653, and the bob dies to the third
  * opportunistic hit at t722, with no hit on the player. The strike walk certified at t604 struck the same bob on the
  * same ticks in its preview (⚖ 30(c)).
- * Both solves are capped (an `advance` sentinel) so the rows stay inside the kill.
+ * Both solves are capped (an `advance` sentinel) so the rows stay inside the kill. (The ticks of this paragraph are the
+ * pre-flip ones; the next paragraph has today's.)
+ *
+ * ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip + WALLSFLIP, ⚖ user 2026-11-11): `spinner@816,848` walls
+ * `bob@736,752`'s first step (t544), so the bob comes up the corridor 5.3 px behind where the paragraph above has it (t652: y 755.4 against 750.1).
+ * Every tick of this row moved with it (old → new): OFF's contacts t660/t749/t780 → t664/t708/t767 (the same death, the
+ * same refusal); ON's first aim t651 → t655, the bob's three hits t653/t683/t722 → t657/t687/t717. ⚠ Two things this row
+ * witnessed before the flip it no longer does at this boot (measured to the kill's end, t1422: `deferred` 0, `withheld` 0):
+ * (1) no kill aim is DEFERRED behind an opportunistic window (`deferred` was 5); (2) there is ONE certified strike walk
+ * with previewed strikes (t604), not two (t604, t718) — the bob dies at t717 to a third strike the drive took at t712/713
+ * that the t604 preview did not hold, where before the preview held a `bob@736,800` strike the drive withheld. The
+ * hammer arc signs this re-pin (`CC/docs/cloud-reports/seedling-fidelity-wallsflip.md` § D4).
  */
 
 import { describe, expect, it } from 'vitest';
@@ -33,7 +44,7 @@ const BOOT = join(HERE, 'fixtures', 'l40bk2-witness', 'step67-boot.json');
 const ENV = globalThis.process?.env ?? {};
 const BOB = 'bob@736,752';
 /** The first tick the bob is in the sword's reach (and ON's first aim): every key before it is OFF's. */
-const FIRST_AIM = 651;
+const FIRST_AIM = 655; // ⛓ chaserSpinnerWalls ON: 651 before the flip (the walled bob is 5.3 px further south)
 
 /** `solveSegment` for the chest from step 67's boot, capped at `cap`; the keys, the chasers' landed hits, the dashes. */
 function solveChest(on, cap) {
@@ -82,13 +93,14 @@ describe('hammer-phase OPP — opportunistic strikes in the press kill', () => {
     });
 
     it('step 67: OFF the kill passes bob@736,752 in reach without pressing and dies; ON it strikes the bob from '
-        + 't651, the hits land in the model and the bob dies, the keys are OFF\'s until the first aim, and the walk '
+        + 't655, the hits land in the model and the bob dies, the keys are OFF\'s until the first aim, and the walk '
         + 'the kill certified struck the bob on the same ticks (preview = drive)', () => {
         const off = solveChest(false, 800);
         expect(off.error).toBeInstanceOf(SolverRefusal);
-        expect(off.error.message).toContain('kill (spinner@880,848) by press: the player died at t780 '
+        expect(off.error.message).toContain('kill (spinner@880,848) by press: the player died at t767 '
             + '(chaser bob@736,752)');
-        expect(off.hits).toEqual(['660:chaser:bob@736,752', '749:chaser:bob@736,752', '780:chaser:bob@736,752']);
+        // ⛓ chaserSpinnerWalls ON: t660/t749/t780 before the flip (PKC's step-67 row moved the same way)
+        expect(off.hits).toEqual(['664:chaser:bob@736,752', '708:chaser:bob@736,752', '767:chaser:bob@736,752']);
         // ⛔ OFF never presses at a chaser (its one press is the kill's own spinner aim at t510) and asks nothing new
         expect(off.chaserHits).toEqual([]);
         expect(off.counts).toEqual({ asked: 0, aimed: 0, pressed: 0, withheld: 0, deferred: 0, strikePreviews: 0,
@@ -99,41 +111,48 @@ describe('hammer-phase OPP — opportunistic strikes in the press kill', () => {
         expect(on.error?.sentinel).toBe(true);
         expect(on.hits).toEqual([]);
         // the opportunistic presses land on the bob in the game model, and the third kills it
-        expect(on.chaserHits.filter((h) => h.includes(BOB))).toEqual([`653:${BOB}:1`, `683:${BOB}:2`, `722:${BOB}:3`]);
+        expect(on.chaserHits.filter((h) => h.includes(BOB))).toEqual([`657:${BOB}:1`, `687:${BOB}:2`, `717:${BOB}:3`]);
         expect((on.run.entities('chasers') ?? []).some((c) => c.id === BOB && !c.removed)).toBe(false);
         expect(on.counts.aimed).toBe(3);
         expect(on.counts.pressed).toBe(3);
         // ⛔ no press of the run dashed: the kill's own aim waits out the window an opportunistic press opened
         expect(on.dashes).toEqual([]);
-        expect(on.counts.deferred).toBeGreaterThan(0);
+        // ⛓ chaserSpinnerWalls ON: no kill aim falls inside an opportunistic window any more (5 deferrals before the flip;
+        // 0 here and 0 through the kill's end at t1422) — this row no longer witnesses a deferral, only that nothing dashed
+        expect(on.counts.deferred).toBe(0);
         // every strike and refuge walk the kill previewed was walked with a policy
         expect(on.counts.strikePreviews).toBeGreaterThan(0);
         expect(on.counts.refugePreviews).toBe(on.refugePreviews);
 
-        // ON with no body in reach is OFF: asked on every walk tick to t650, nothing aimed. The aim at t651 faces the
-        // bob below, which is the walk's own `down`; t652's press is the first key ON holds differently
+        // ON with no body in reach is OFF: asked on every walk tick to t654, nothing aimed. The aim at t655 faces the
+        // bob below (`down`), and t656 presses. ⛓ chaserSpinnerWalls ON: the aim is now the first key ON holds
+        // differently (OFF's walk holds `right` at t655; before the flip the t651 aim was the walk's own `down`, and
+        // the press was the first differing key)
         expect(on.countsBefore.asked).toBeGreaterThan(0);
         expect(on.countsBefore.aimed).toBe(0);
-        expect(on.keys.slice(0, FIRST_AIM + 1)).toEqual(off.keys.slice(0, FIRST_AIM + 1));
+        expect(on.keys.slice(0, FIRST_AIM)).toEqual(off.keys.slice(0, FIRST_AIM));
         expect(on.keys[FIRST_AIM]).toBe('down');
+        expect(off.keys[FIRST_AIM]).toBe('right');
         expect(on.keys[FIRST_AIM + 1]).toBe('primary');
         expect(off.keys[FIRST_AIM + 1]).not.toBe('primary');
 
         // ⚖ 30(c): the walk each strike certified was previewed WITH the policy and the press kill's own body offer,
         // and the drive struck as it did. The press kill's drive leaves its preview (`stepToward`/`safeStep`, PKC's
-        // measured gap: 2.0 px south at t651, 5.3 px by t696), so the drive's strikes are a PREFIX of the preview's:
-        // equal where the two walks are together, parting only where the drive's own view withholds a body (t698,
-        // `bob@736,800`, whose strike would land in the hammer from where the drive actually stands).
+        // measured gap), so the two strike lists agree where the walks are together and part where they are not.
+        // ⛓ chaserSpinnerWalls ON: ONE certified walk holds previewed strikes (t604; before the flip a second at t718
+        // previewed the bob's third strike). The drive takes both of its strikes on their ticks, then a third at
+        // t712/t713 the preview did not hold (the bob dies to it at t717): the PREVIEW is now a prefix of the DRIVE,
+        // where before the drive was a prefix of the preview (which held a `bob@736,800` strike the drive withheld).
         const drives = on.events.filter((e) => e.kind === 'drive').map(({ t, decision, target }) => ({ tick: t,
             decision, target }));
         const certified = on.events.filter((e) => e.kind === 'strike' && e.previewStrikes.length > 0);
-        expect(certified.map((e) => e.t)).toEqual([604, 718]);
-        const first = drives.filter((d) => d.tick >= 604 && d.tick < 718);
-        expect(first).toEqual(certified[0].previewStrikes.slice(0, first.length));
-        expect(first.map((s) => `${s.tick}:${s.decision}:${s.target}`)).toEqual([
-            `651:aim:${BOB}`, `652:press:${BOB}`, `678:aim:${BOB}`, `679:press:${BOB}`]);
-        expect(certified[0].previewStrikes.slice(first.length).map((s) => `${s.tick}:${s.decision}:${s.target}`))
-            .toEqual(['698:aim:bob@736,800', '699:press:bob@736,800']);
-        expect(drives.filter((d) => d.tick >= 718)).toEqual(certified[1].previewStrikes);
+        expect(certified.map((e) => e.t)).toEqual([604]);
+        const preview = certified[0].previewStrikes;
+        const drove = drives.filter((d) => d.tick >= 604);
+        expect(drove.slice(0, preview.length)).toEqual(preview);
+        expect(preview.map((s) => `${s.tick}:${s.decision}:${s.target}`)).toEqual([
+            `655:aim:${BOB}`, `656:press:${BOB}`, `682:aim:${BOB}`, `683:press:${BOB}`]);
+        expect(drove.slice(preview.length).map((s) => `${s.tick}:${s.decision}:${s.target}`))
+            .toEqual([`712:aim:${BOB}`, `713:press:${BOB}`]);
     }, 300_000);
 });

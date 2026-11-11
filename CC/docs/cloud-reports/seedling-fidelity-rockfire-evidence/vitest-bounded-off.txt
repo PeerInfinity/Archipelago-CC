@@ -1,0 +1,10 @@
+ FAIL  scripts/procgen/lintGateLabels.test.js > ⛔ the allowlist — a NEW typed count reds, an old one is named > every finding on the tree today is one the allowlist already knows
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > (i) the committed census is current — --check over the tree > no RED item: no new physics/rule/unclassified literal, nothing to retire, nothing stale
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > (ii) the classification is complete and well-formed > every reviewed target reaches at least one row
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > (iii) the key does not carry the line > blank lines inserted above statements in a temp copy move lines and no key
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > the mutants — each in a temp copy of the closure > (a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > the mutants — each in a temp copy of the closure > (b) PREDICTED GREEN: a new literal inside a cosmetic table
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > the mutants — each in a temp copy of the closure > (c) PREDICTED RED: a committed physics row's statement deleted must be RETIRED
+ Test Files  2 failed | 140 passed (142)
+      Tests  7 failed | 4611 passed (4618)
+   Duration  444.42s (transform 16.93s, setup 0ms, import 123.97s, tests 1622.12s, environment 19ms)

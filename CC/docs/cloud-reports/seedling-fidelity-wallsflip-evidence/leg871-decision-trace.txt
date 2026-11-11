@@ -1,0 +1,12 @@
+
+== walls=false: ok 1122 t
+   {"t":0,"verb":"kill","target":"spinner@880,848","saw":[488,904],"note":"merged: bait decided on the same tick"}
+   {"t":731,"verb":"bait","target":null,"saw":[744,793],"note":"merged: time decided on the same tick; merged: walk decided on the same tick"}
+   {"t":895,"verb":"kill","target":"bobsoldier@880,832","saw":[856,857],"note":"merged: walk decided on the same tick"}
+   {"t":966,"verb":"bait","target":null,"saw":[888,853],"note":"merged: time decided on the same tick"}
+   {"t":977,"verb":"kill","target":"bobsoldier@880,832","saw":[879,861],"note":"merged: walk decided on the same tick"}
+   {"t":1074,"verb":"hold","target":null,"saw":[889,824],"note":"merged: walk decided on the same tick"}
+
+== walls=true: REFUSED at t724
+refusal fields: name,goal,obstacle,considered,rows,perTick,pending,dangerQueries,bound,equips | obstacle {"kind":"danger","id":"bob@736,752","sources":["chaser:bob@736,752"]}
+  (no trace rows on this object)

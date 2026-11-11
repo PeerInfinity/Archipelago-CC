@@ -5,6 +5,7 @@
 import { profiler } from '../../modules/shared/profiler.js';
 import { resolveIframeUrl } from '../config/knownIframePages.js';
 import { resolveMetaGamePath } from '../config/knownMetaGames.js';
+import { browserPackIo, preloadDefaultContent } from '../../modules/procgenPipeline/worldContent.js';
 
 // Delay (ms) between panel activation and iframe/metagame loading
 const IFRAME_LOAD_DELAY_MS = 500;
@@ -94,6 +95,20 @@ import { getDefaultLayoutConfig } from '../layout/layoutLoader.js';
  * @throws {Error} If initialization fails
  * @returns {Promise<void>}
  */
+/**
+ * ⛓ CONTENT SETS C4 — `worldContent.preloadDefaultContent` over the page's packs,
+ * awaited at boot (after phase 5's registrations) and after a module registered
+ * later. A pack that cannot load is logged, not fatal: a world that needs it is
+ * then refused by name when it is built.
+ */
+async function preloadBootContent(logger) {
+  try {
+    await preloadDefaultContent(browserPackIo());
+  } catch (e) {
+    logger.error('init', 'world content: the default content packs could not be preloaded', e);
+  }
+}
+
 export async function initializeApplication(dependencies) {
   const {
     logger,
@@ -276,6 +291,12 @@ export async function initializeApplication(dependencies) {
     createRegistrationApi: createRegistrationApiWrapper,
   });
   profiler.end('phase5:loadModules');
+
+  // ⛓ CONTENT SETS C4 — the default content packs the substrates just registered (their modules'
+  //   register() calls ran in phase 5) are preloaded BEFORE any panel, the APWorld editor or a
+  //   substrate can generate: the synchronous builders read them from the process-level cache.
+  //   A no-op (no request) while no substrate declares a default pack.
+  await preloadBootContent(logger);
 
   // --- Phase 6: Apply Data to Registered Modules ---
   profiler.start('phase6:applyDataToModules');
@@ -873,6 +894,8 @@ function createModuleManagerApi(options) {
           );
           await actualModuleObject.register(registrationApi);
           logger.info('init', `Module ${moduleId} dynamically registered.`);
+          // ⛓ CONTENT SETS C4 — a substrate registered after boot: preload the default pack it declares.
+          await preloadBootContent(logger);
 
           // Register components with Golden Layout (desktop only)
           if (window.goldenLayoutInstance) {

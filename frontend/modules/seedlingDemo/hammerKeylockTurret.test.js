@@ -24,6 +24,7 @@ import { DEFAULT_BUDGET, bootStaging, solve } from './procgenOracle.js';
 import { POST_SWORD_ITEMS } from './procgenPalette.js';
 import {
     KEYLOCK_TURRET, KEYLOCK_TURRET_COUNTS, KEYLOCK_TURRET_DEFAULT, resetKeylockTurretCounts, withKeylockTurret,
+    withTurretApproachVolleyOrder,
 } from './solverBot.js';
 import { withL40Flip } from './l40FlipSet.js'; // ⛓ L40-FLIP-BUILD: BEFORE pins recorded without the flip set
 
@@ -94,7 +95,10 @@ describe('hammer-phase KEYLOCK-TURRET: KEYLOCK_TURRET', () => {
         }
     }, 120000);
 
-    it('L40 leg 412 with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 748, hitless on a fresh run', () => {
+    // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default; the keylock arm asks `approachKillForCorpse` itself):
+    // the approach meets the right side's wait-35 try first (8 forks, a 740-tick hitless plan) where the ascending order
+    // met the up side's wait-25 try (27 forks, 748). Both hitless; the volley-OFF arm keeps the pre-flip witness.
+    it('L40 leg 412 with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 740 (volley order), hitless on a fresh run; volley OFF: 748', () => {
         const staging = l40Flag8Staging(LEG_412);
         const off = withKeylockTurret(false, () => solveL40Flag8(staging));
         expect(off.ok).toBe(false);
@@ -102,19 +106,28 @@ describe('hammer-phase KEYLOCK-TURRET: KEYLOCK_TURRET', () => {
         expect(off.message).toContain('from (328,600)');
         resetKeylockTurretCounts();
         const on = withKeylockTurret(true, () => solveL40Flag8(staging));
-        expect(on).toMatchObject({ ok: true, ticks: 748, verbs: ['keylock', 'walk'], hits: [], deaths: 0, open: true,
+        expect(on).toMatchObject({ ok: true, ticks: 740, verbs: ['keylock', 'walk'], hits: [], deaths: 0, open: true,
             dead: true });
         expect(KEYLOCK_TURRET_COUNTS.stances[0]).toEqual({ lock: LOCK, t: 0, turrets: [TURRET], live: [TURRET],
             stance: { x: 488, y: 376 } });
+        expect(KEYLOCK_TURRET_COUNTS.kills).toEqual([{ lock: LOCK, turret: TURRET, t: 0, dead: true, ticks: 585,
+            side: 'right', wait: 35, forks: 8 }]);
+        resetKeylockTurretCounts();
+        const ascending = withTurretApproachVolleyOrder(false, () => withKeylockTurret(true, () => solveL40Flag8(staging)));
+        expect(ascending).toMatchObject({ ok: true, ticks: 748, verbs: ['keylock', 'walk'], hits: [], deaths: 0,
+            open: true, dead: true });
         expect(KEYLOCK_TURRET_COUNTS.kills).toEqual([{ lock: LOCK, turret: TURRET, t: 0, dead: true, ticks: 579,
             side: 'up', wait: 25, forks: 27 }]);
-    }, 180000);
+    }, 240000);
 
     it('L40 leg 412 with the south door shut (no tag 12): ON refuses by name at APPROACH\'s staging point', () => withL40Flip(false, () => {
         resetKeylockTurretCounts();
         const on = withKeylockTurret(true, () => solveL40Flag8(l40Flag8Staging({ ...LEG_412, door: false })));
         expect(on.ok).toBe(false);
-        expect(on.message).toMatch(/-> keylock -> kill \(iceturret@472,400\): no approach to iceturret@472,400 from the staging point \(488,579\) is hitless — 12 fork\(s\), \{"no-plan":12\}/);
+        // ⛓ VOLLEY FLIP: the same 12 tries, plus one anchor probe a route (12): 24 forks, the same `no-plan` tally.
+        expect(on.message).toMatch(/-> keylock -> kill \(iceturret@472,400\): no approach to iceturret@472,400 from the staging point \(488,579\) is hitless — 24 fork\(s\), \{"no-plan":12\}/);
         expect(KEYLOCK_TURRET_COUNTS.stances[0]).toMatchObject({ lock: LOCK, live: [TURRET], stance: { x: 488, y: 376 } });
-    }), 180000);
+        const ascending = withTurretApproachVolleyOrder(false, () => withKeylockTurret(true, () => solveL40Flag8(l40Flag8Staging({ ...LEG_412, door: false }))));
+        expect(ascending.message).toMatch(/no approach to iceturret@472,400 from the staging point \(488,579\) is hitless — 12 fork\(s\), \{"no-plan":12\}/);
+    }), 240000);
 });

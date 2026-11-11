@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
@@ -29,6 +29,8 @@ import {
     CONTENT_SET_KEY, DEFAULT_CONTENT_PACK_FIELD, EMPTY_CONTENT_SET, RECORDED_CONTENT_KEY, WorldContentError,
     assertContentLoaded, attachContentSet, attachEnvelopeContent, contentListOf, contentParamRefusal, contentRegionParams,
     effectiveContentStack, isContentSet, loadContentSet, recordedContentOf,
+    declaredDefaultContentPacks, defaultContentPreloadCalls, defaultContentSetOf, documentContentOf, preloadDefaultContent,
+    preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET, withoutContentSet,
 } from './worldContent.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -212,7 +214,10 @@ describe('the channel — assembleRegionParams and the region seam', () => {
         const set = await loadContentSet(['trial'], memIo());
         expect(() => assertContentLoaded({ [RECORDED_CONTENT_KEY]: ['trial'], [CONTENT_SET_KEY]: set }, 'maze')).not.toThrow();
         const reg = fakeRegistry([{ id: 'own', [DEFAULT_CONTENT_PACK_FIELD]: 'own-pack' }]);
-        expect(() => assertContentLoaded({}, 'own', reg)).toThrow(/needs the content pack\(s\) \[own-pack\]/);
+        // ⛓ C4 — a region needing only its default pack, handed no set, asks the preload cache: not preloaded ⇒ refused.
+        expect(() => assertContentLoaded({}, 'own', reg)).toThrow(/\[own-pack\] were not preloaded.*preloadDefaultContent/);
+        expect(() => assertContentLoaded({ [CONTENT_SET_KEY]: set }, 'own', reg))
+            .toThrow(/needs the content pack\(s\) \[own-pack\]/);
     });
     it('buildRunFromState refuses a world naming content when nothing was loaded (an entry point that forgot)', () => {
         const bundle = { ...CONCEPT_TRIAL_STATE, params: { ...CONCEPT_TRIAL_STATE.params, content: ['trial'] } };
@@ -353,6 +358,14 @@ describe('the append path — rebuild, attach, append', async () => {
         expect(JSON.stringify(withoutContent(env.compile.rulesJson))).toBe(JSON.stringify(ctrlEnv.compile.rulesJson));
     });
 
+    it('⛓ C4 serializeEnvelope drops the live set (an in-process caller clones it); the list stays', async () => {
+        const env = await attachEnvelopeContent(rebuildEnvelopeFromRulesJson(structuredClone(world.rulesJson), OPTS), memIo());
+        expect(isContentSet(env.config.regionParams[CONTENT_SET_KEY])).toBe(true);
+        const out = serializeEnvelope(env);
+        expect(() => structuredClone(out)).not.toThrow();
+        expect(out.config.regionParams).toEqual({ [RECORDED_CONTENT_KEY]: ['trial'] });
+        expect(isContentSet(env.config.regionParams[CONTENT_SET_KEY])).toBe(true);
+    });
     it('a saved envelope round-trips the list without the set; re-attaching restores it', async () => {
         const io = memIo();
         const env = await attachEnvelopeContent(rebuildEnvelopeFromRulesJson(structuredClone(world.rulesJson), OPTS), io);
@@ -361,4 +374,215 @@ describe('the append path — rebuild, attach, append', async () => {
         await attachEnvelopeContent(back, memIo());
         expect(isContentSet(back.config.regionParams[CONTENT_SET_KEY])).toBe(true);
     });
+});
+
+// ── ⛓⛓ CONTENT SETS C4 — the preload cache of default packs ─────────────
+/** The fixture's packs as default packs of a stand-in registry, one entry each. */
+const declaringRegistry = (packIds) => fakeRegistry(packIds.map((id) => ({ id: `sub-${id}`, [DEFAULT_CONTENT_PACK_FIELD]: id })));
+/** Every answer a set's readers give, as plain data (the equality the two paths owe). */
+const readerAnswers = (set) => ({
+    ids: [...set.ids],
+    concepts: set.concepts.keys().map((k) => [k, set.concepts.get(k)]),
+    presenting: Object.fromEntries(set.concepts.keys().map((k) => set.concepts.get(k).presents).filter(Boolean)
+        .map((m) => [m, set.concepts.presenting(m)?.key ?? null])),
+    text: set.text.keys().map((k) => [k, set.text.string(k), set.text.list(k), set.text.packOf(k)]),
+});
+
+describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
+    // The vitest setup file preloads every committed pack before this file runs: start each case empty.
+    beforeEach(() => resetDefaultContentCache());
+    afterEach(() => resetDefaultContentCache());
+
+    it('⛔ with no entry declaring a default pack it calls readJson zero times (the registry today)', async () => {
+        const readJson = vi.fn();
+        expect(declaredDefaultContentPacks()).toEqual([]);
+        expect(await preloadDefaultContent({ base: MEM, readJson })).toEqual([]);
+        expect(readJson).not.toHaveBeenCalled();
+        expect(defaultContentPreloadCalls()).toBe(1);
+    });
+    it('loads the concepts and text layers of each declared pack once; a second call reads nothing', async () => {
+        const io = memIo();
+        const registry = declaringRegistry(Object.keys(FIXTURE));
+        expect(await preloadDefaultContent({ ...io, registry })).toEqual(declaredDefaultContentPacks(registry));
+        const first = [...io.read];
+        expect(first.filter((u) => u.endsWith('/pack.json')).length).toBe(Object.keys(FIXTURE).length);
+        expect(first.some((u) => u.includes('/art/'))).toBe(false);
+        await preloadDefaultContent({ ...io, registry });
+        expect(io.read).toEqual(first);
+    });
+    it('concurrent preloads read each pack once', async () => {
+        const io = memIo();
+        const registry = declaringRegistry(['trial']);
+        await Promise.all([preloadDefaultContent({ ...io, registry }), preloadDefaultContent({ ...io, registry })]);
+        expect(io.read.filter((u) => u.endsWith('/pack.json'))).toEqual([`${MEM}trial/pack.json`]);
+    });
+    it('a later call loads only the packs entries registered since', async () => {
+        const io = memIo();
+        await preloadDefaultContent({ ...io, registry: declaringRegistry(['trial']) });
+        const before = io.read.length;
+        await preloadDefaultContent({ ...io, registry: declaringRegistry(['trial', 'later']) });
+        expect(io.read.slice(before).filter((u) => u.endsWith('/pack.json'))).toEqual([`${MEM}later/pack.json`]);
+        expect(preloadedDefaultContentPacks()).toEqual(['trial', 'later']);
+    });
+    it('ids preloads the named packs instead of the declared ones (the vitest setup file\'s every-committed-pack call)', async () => {
+        const io = memIo();
+        expect(await preloadDefaultContent({ ...io, ids: Object.keys(FIXTURE) })).toEqual(Object.keys(FIXTURE));
+        expect(declaredDefaultContentPacks()).toEqual([]);
+        await expect(preloadDefaultContent({ ...io, ids: 'trial' })).rejects.toThrow(/not a list/);
+    });
+    it('⛔ the setup file preloads every committed pack (a superset of any default pack)', async () => {
+        resetDefaultContentCache();
+        const reg = parseRegistry(JSON.parse(readFileSync(join(ROOT, 'frontend/packs/packs.json'), 'utf8')));
+        await preloadDefaultContent({ ...nodePackIo(), ids: [...reg.packs] });
+        for (const id of reg.packs) expect(defaultContentSetOf([id]).ids).toEqual([id]);
+    });
+    it('a bad pack is refused as it preloads, by name, and is not cached', async () => {
+        const files = structuredClone(FIXTURE);
+        files.trial.concepts.concepts['trial:character/the-gate'].presents = 'dragon';
+        await expect(preloadDefaultContent({ ...memIo(files), registry: declaringRegistry(['trial']) }))
+            .rejects.toThrow(/presents "dragon"/);
+        expect(preloadedDefaultContentPacks()).toEqual([]);
+        await expect(preloadDefaultContent({ ...memIo(), registry: declaringRegistry(['absent']) }))
+            .rejects.toBeInstanceOf(ContentPackError);
+    });
+    it('⛔ a default pack that was not preloaded is refused by name, saying to call preloadDefaultContent', () => {
+        expect(() => defaultContentSetOf(['trial'])).toThrow(WorldContentError);
+        expect(() => defaultContentSetOf(['trial'])).toThrow(/\[trial\] were not preloaded.*await preloadDefaultContent/);
+        expect(defaultContentSetOf([])).toBe(EMPTY_CONTENT_SET);
+    });
+    it('⛓ the same stack gets the same set by either path: equal ids and equal reader answers', async () => {
+        const stack = Object.keys(FIXTURE);
+        await preloadDefaultContent({ ...memIo(), registry: declaringRegistry(stack) });
+        const cached = defaultContentSetOf(stack);
+        const loaded = await loadContentSet(stack, memIo());
+        expect(isContentSet(cached)).toBe(true);
+        expect(Object.isFrozen(cached)).toBe(true);
+        expect(readerAnswers(cached)).toEqual(readerAnswers(loaded));
+        expect(readerAnswers(cached).text.length).toBeGreaterThan(0);
+        expect(defaultContentSetOf(stack)).toBe(cached);
+        expect(JSON.stringify({ [CONTENT_SET_KEY]: cached })).toBe('{}');
+    });
+    it('DEFER_CONTENT_SET composes the list only (no set, no refusal); documentContentOf reads the per-player record', () => {
+        const reg = { params: { content: ['trial'] }, contentSet: DEFER_CONTENT_SET, substrateIds: ['maze'] };
+        expect(contentRegionParams(reg)).toEqual({ [RECORDED_CONTENT_KEY]: ['trial'] });
+        expect(contentRegionParams({ ...reg, params: {} })).toEqual({});
+        const rp = { maxIterations: 0 };
+        expect(withoutContentSet(rp)).toBe(rp);
+        expect(withoutContentSet({ ...rp, [CONTENT_SET_KEY]: EMPTY_CONTENT_SET })).toEqual(rp);
+        const doc = { procgen_metadata: { 1: { driver: 'x' }, 2: { driver: 'x', [RECORDED_CONTENT_KEY]: ['trial'] } } };
+        expect(documentContentOf(doc, 1)).toEqual([]);
+        expect(documentContentOf(doc, '2')).toEqual(['trial']);
+        expect(documentContentOf({}, 1)).toEqual([]);
+        expect(() => documentContentOf({ procgen_metadata: { 1: { content: 'trial' } } }, 1)).toThrow(WorldContentError);
+    });
+});
+
+describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cache (fixture entries declare the pack)', () => {
+    const substrates = Object.keys(CONCEPT_TRIAL_STATE.substrateQuotas);
+    const PACK = 'trial';
+    /** Run `fn` with the world's substrates declaring PACK, their placers recording the set they receive. */
+    async function withDeclaringEntries(fn) {
+        const received = [];
+        const originals = new Map(substrates.map((id) => [id, substrateRegistry.get(id)]));
+        for (const [id, entry] of originals) {
+            const wrap = (hook, paramsOf) => (...args) => {
+                received.push({ substrate: id, hook, set: paramsOf(args)?.[CONTENT_SET_KEY] ?? null });
+                return entry[hook](...args);
+            };
+            substrateRegistry.entries.set(id, {
+                ...entry,
+                [DEFAULT_CONTENT_PACK_FIELD]: PACK,
+                generateRegionCore: wrap('generateRegionCore', (a) => a[0].params),
+                placeFromRules: wrap('placeFromRules', (a) => a[1].params),
+            });
+        }
+        try {
+            return await fn(received);
+        } finally {
+            for (const [id, entry] of originals) substrateRegistry.entries.set(id, entry);
+            resetDefaultContentCache();
+        }
+    }
+    const committed = readFileSync(join(ROOT, 'frontend/presets/concept_trial/AP_1/AP_1_rules.json'), 'utf8');
+
+    it('⛔ without the preload, the synchronous buildRunFromState is refused by name', async () => {
+        await withDeclaringEntries(async () => {
+            expect(() => buildRunFromState(structuredClone(CONCEPT_TRIAL_STATE))).toThrow(/preloadDefaultContent/);
+        });
+    });
+
+    it('after the preload, buildRunFromState builds; every placer got the cached set; the document is the committed one', async () => {
+        await withDeclaringEntries(async (received) => {
+            const io = memIo();
+            await preloadDefaultContent(io);
+            const read = io.read.length;
+            const world = await runPresetHeadless(buildRunFromState(structuredClone(CONCEPT_TRIAL_STATE)));
+            expect(io.read.length).toBe(read);
+            const sets = new Set(received.map((r) => r.set));
+            expect(sets.size).toBe(1);
+            const [set] = sets;
+            expect(set).toBe(defaultContentSetOf([PACK]));
+            expect(new Set(received.map((r) => r.substrate))).toEqual(new Set(substrates));
+            // No substrate reads the set yet and the world names no content: the document is byte for byte the preset.
+            expect(JSON.stringify(world.rulesJson, null, 2)).toBe(committed);
+        });
+    });
+
+    it('the awaited path (prepareRunFromState) and the cache path give equal sets and equal documents', async () => {
+        await withDeclaringEntries(async (received) => {
+            await preloadDefaultContent(memIo());
+            const viaCache = await runPresetHeadless(buildRunFromState(structuredClone(CONCEPT_TRIAL_STATE)));
+            const cacheSet = received.at(-1).set;
+            received.length = 0;
+            const viaLoad = await runPresetHeadless(await prepareRunFromState(structuredClone(CONCEPT_TRIAL_STATE), { io: memIo() }));
+            const loadSet = received.at(-1).set;
+            expect(loadSet).not.toBe(cacheSet);
+            expect(readerAnswers(loadSet)).toEqual(readerAnswers(cacheSet));
+            expect(JSON.stringify(viaLoad.rulesJson)).toBe(JSON.stringify(viaCache.rulesJson));
+        });
+    });
+
+    it('a region handed no set (a caller that never assembled one) takes its default pack from the cache at the seam', async () => {
+        await withDeclaringEntries(async () => {
+            const params = { maxIterations: 0 };
+            expect(() => assertContentLoaded(params, substrates[0])).toThrow(/preloadDefaultContent/);
+            await preloadDefaultContent(memIo());
+            const out = assertContentLoaded(params, substrates[0]);
+            expect(out).not.toBe(params);
+            expect(out).toEqual({ ...params, [CONTENT_SET_KEY]: defaultContentSetOf([PACK]) });
+            expect(assertContentLoaded(out, substrates[0])).toBe(out);
+        });
+    });
+
+    it('⛔ a stack naming params.content still needs the awaited load (C3\'s path, unchanged)', async () => {
+        await withDeclaringEntries(async () => {
+            await preloadDefaultContent(memIo());
+            const named = { ...CONCEPT_TRIAL_STATE, params: { ...CONCEPT_TRIAL_STATE.params, content: ['later'] } };
+            expect(() => buildRunFromState(structuredClone(named))).toThrow(/\[trial, later\] was not loaded/);
+            const world = await runPresetHeadless(await prepareRunFromState(structuredClone(named), { io: memIo() }));
+            expect(world.rulesJson.procgen_metadata['1'][RECORDED_CONTENT_KEY]).toEqual(['later']);
+        });
+    });
+});
+
+// ── ⛓ C4 — the record on every driver (spiral and grid growth, beside sphere growth and top-down) ──
+describe('⛓ C4 the spiral and grid-growth compiles record procgen_metadata[p].content', async () => {
+    const base = (mode, content) => ({
+        mode,
+        params: {
+            ...DEFAULT_PARAMS, seed: 2, gridWidth: 3, gridHeight: 3, maxRegions: 4, content,
+        },
+        scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: {} },
+        substrateQuotas: { maze: 4 }, substrateMix: {}, substrateMode: 'quotas',
+    });
+    for (const mode of ['shuffledSpiral', 'gridGrowth']) {
+        const world = await runPresetHeadless(await prepareRunFromState(base(mode, ['trial']), { io: memIo() }));
+        const control = await runPresetHeadless(await prepareRunFromState(base(mode, []), { io: memIo() }));
+        it(`${mode}: the list is recorded; the control has no key; the rest is the control's`, () => {
+            const block = world.rulesJson.procgen_metadata['1'];
+            expect(block[RECORDED_CONTENT_KEY]).toEqual(['trial']);
+            expect(RECORDED_CONTENT_KEY in control.rulesJson.procgen_metadata['1']).toBe(false);
+            expect(JSON.stringify(withoutContent(world.rulesJson))).toBe(JSON.stringify(control.rulesJson));
+        });
+    }
 });

@@ -1,0 +1,6 @@
+ ✓ frontend/modules/seedlingDemo/hammerApproachOrder.test.js (4 tests) 13ms
+      Tests  4 passed (4)
+     × ON: SOLVED inside the budget — the same try, the 70th (anchor 32, rank 5); OFF's plan; hitless on a fresh run 65200ms
+     × ON: the right side's corridor at its anchor (wait 35, rank 0, the 8th fork), 4,527 ticks, fewer units, hitless 88632ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 3 skipped (5)
