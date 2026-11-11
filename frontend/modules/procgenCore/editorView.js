@@ -423,7 +423,11 @@ export function mountEditorView({
      * one-cell drag two code paths for one gesture.
      */
     let swallowClick = false;
-    /** ⛓ B1 — the first corner of a FILL/CLEAR rectangle, or `null`. */
+    /**
+     * ⛓ B1 — the first corner of a FILL/CLEAR rectangle, or `null`. Its `owner`
+     * is the tool that set it: a corner belongs to ONE tool, so a FILL corner is
+     * not CLEAR's (editor-corner-reset).
+     */
     let editCorner = null;
     /** ⛓ B1 — the clip a MOVE has already spent: a second MOVE of it would cut the wrong cells. */
     let spentClip = null;
@@ -625,9 +629,12 @@ export function mountEditorView({
      * ⛓ EVERY `onChange` GOES THROUGH HERE. B1 — a FILL/CLEAR corner dies with
      * its tool, as RECT's does, and at the moment the Seedling page dropped it:
      * when the change is reported, before the page hears of it.
+     * ⛔ ITS OWN tool, not "FILL or CLEAR": a switch between the two used to keep
+     * the corner, so `l`, click, `x`, click CLEARED a rectangle from FILL's
+     * corner (editor-corner-reset). Re-arming the SAME tool keeps it.
      */
     const changed = (c) => {
-        if (editCorner && c.tool !== EDIT_TOOLS.FILL && c.tool !== EDIT_TOOLS.CLEAR) editCorner = null;
+        if (editCorner && c.tool !== editCorner.owner) editCorner = null;
         if (onChange) onChange(c);
     };
 
@@ -812,7 +819,7 @@ export function mountEditorView({
     /** ⛓ A two-click rectangle, like RECT's, whose second click builds and applies ONE op. */
     const twoClick = (what, build) => (c) => {
         if (!editCorner) {
-            editCorner = { tx: c.tx, ty: c.ty };
+            editCorner = { tx: c.tx, ty: c.ty, owner: tool };
             say(`${what} corner 1 at (${c.tx},${c.ty}) — click the opposite corner`);
             repaint();
             return;
