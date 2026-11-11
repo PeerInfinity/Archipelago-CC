@@ -1,0 +1,11 @@
+ ✓ frontend/modules/seedlingDemo/hammerApproachOrder.train.test.js (7 tests) 436205ms
+     ✓ OFF: the page's solve runs out of its 2,560 units at the `crusher-fork` site, inside the approach's tries  63484ms
+     ✓ OFF with the budget lifted: 3,236 units — the hitless try is the 276th (right, the corridor, wait 29)  75768ms
+     ✓ ON: SOLVED inside the budget — the same try, the 70th (anchor 32, rank 5); OFF's plan; hitless on a fresh run  80535ms
+     ✓ OFF: solved inside the budget on the push side's via, wait 25 (its 27th try), 4,519 ticks, hitless  84970ms
+     ✓ ON: the right side's corridor at its anchor (wait 35, rank 0, the 8th fork), 4,527 ticks, fewer units, hitless  64041ms
+     ✓ OFF: solved 26 units inside the budget — the approach's 276th try again (right, the corridor, wait 29)  41304ms
+     ✓ ON: the same plan at about a quarter of the units (anchor 32, rank 5, the 70th fork), hitless on a fresh run  26099ms
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Duration  439.78s (transform 2.59s, setup 0ms, import 3.41s, tests 436.21s, environment 0ms)

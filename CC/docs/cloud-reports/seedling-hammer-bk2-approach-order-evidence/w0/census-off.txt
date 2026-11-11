@@ -1,0 +1,19 @@
+solve                 order       ok    ticks  work  gm        digest        approach (side, via, wait, forks, anchor, rank)
+374/0                 OFF         REF    None    38  -         99c2bade86a2    | solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes throu
+375/0                 OFF         ok     1315   376  hitless   dd7577c1ecd0  
+379/0                 OFF         ok     1239    86  hitless   e0472142e231  
+380/0                 OFF         ok     1429   275  hitless   43a554247859  
+397/1                 OFF         ok     1344   716  hitless   d047aa0911a5  
+398/1                 OFF         ok      718  2534  hitless   e5ef476fae5d  right corr w29 f276 aNone rNone
+414/1                 OFF         REF    None  2264  -         e79ae8b6c130    | solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+415/0                 OFF         ok      748   323  hitless   115cdb423afd  up 466,445 w25 f27 aNone rNone
+873/0                 OFF         ok     4491  3236  hitless   2444840d264b  right corr w29 f276 aNone rNone
+873/1                 OFF         ok     4491  3236  hitless   2444840d264b  right corr w29 f276 aNone rNone
+874/1                 OFF         ok     4519  1021  hitless   5284aa54b39c  up 466,445 w25 f27 aNone rNone
+875/2                 OFF         ok      103   192  hitless   d7c93af3a165  
+876/1                 OFF         ok     1282   887  hitless   856902f5850b  
+latch@488,464/cp2     OFF         ok     4495        hitless   c10603ef6f32  
+latch@488,579/cp2     OFF         REF    None        -         8d96cb1b9c39  up 466,445 w29 f80 aNone rNone  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@488,579/cp3     OFF         REF    None        -         8d96cb1b9c39  up 466,445 w29 f80 aNone rNone  | solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can c
+latch@latch/cp2       OFF         ok     4142        hitless   e236428ad7f2  right corr w30 f376 aNone rNone
+latch@latch/cp3       OFF         ok     4142        hitless   e236428ad7f2  right corr w30 f376 aNone rNone
