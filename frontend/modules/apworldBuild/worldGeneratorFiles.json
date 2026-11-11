@@ -21,6 +21,7 @@
     "_template_rules.py",
     "_template_utils.py",
     "_unknown_kind.py",
+    "_victory_location.py",
     "apworld.py",
     "cli.py",
     "constants.py",
