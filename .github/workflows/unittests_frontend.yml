@@ -552,9 +552,13 @@ jobs:
   # that cannot run on a runner is named in its `EXCLUDED` table WITH its
   # reason and printed as `## PRODUCER-SKIPPED`. A stale exclusion, a file that
   # names neither `--check` nor `--write`, or a `--check` that moves the tree
-  # is red. No submodules: every enrolled producer is pure node over the
-  # atlas and the committed fixtures (measured in a worktree with none
-  # initialised).
+  # is red. ONE submodule, `frontend/modules/shared` (public, depth 1): the
+  # procgen_topdown preset check runs `generate-topdown-preset.js`, which
+  # imports `shared/procgen/substrateRegistry.js` (ERR_MODULE_NOT_FOUND on
+  # all 12 rows without it, run 43069592563). Every other enrolled producer is
+  # pure node over the atlas and the committed fixtures (measured in a worktree
+  # with none initialised); the topdown check was measured green on a
+  # `git archive` copy with `shared` alone.
   # ══════════════════════════════════════════════════════════════════════
   producer-checks:
     name: Producer --checks
@@ -575,6 +579,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Init the shared submodule (procgen_topdown preset check)
+        run: git submodule update --init --depth 1 frontend/modules/shared
 
       - name: Run every producer --check
         timeout-minutes: 35
