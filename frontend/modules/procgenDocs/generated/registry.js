@@ -72,7 +72,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 24,
+            "fields": 26,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -162,6 +162,8 @@ export const REGISTRY = frz({
             "rows": [
                 "applyContentModules",
                 "conceptRealisations",
+                "contentRoles",
+                "defaultContentPack",
                 "extractPathsAndObstacles",
                 "generateRegionCore",
                 "placeFromItems",
@@ -1481,6 +1483,156 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — procedural substrates",
             "name": "conceptRealisations"
+        },
+        {
+            "carriedBy": [
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "{gate, item, place}",
+                    "type": "object",
+                    "value": [
+                        "gate",
+                        "item",
+                        "place"
+                    ]
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "contentRoles"
+        },
+        {
+            "carriedBy": [
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "text-adventure",
+                    "type": "string",
+                    "value": "text-adventure"
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "defaultContentPack"
         },
         {
             "carriedBy": [

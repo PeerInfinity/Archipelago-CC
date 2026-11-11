@@ -302,7 +302,9 @@ describe('⛓ the links the render emits', () => {
         //   396 → 397: content sets C2 — substrate-registry.md's `contentRoles` paragraph → concepts.md § Content roles (1 doc).
         //   397 → 399: content sets C3 — concepts.md § A world's content stack ↔ substrate-registry.md's
         //   `defaultContentPack` paragraph (2 doc).
-        expect(checked).toBe(399);
+        //   399 → 402: content sets R1 — concepts.md (role sentence) → text-adventure.md § Content roles, that §
+        //   → concepts.md § Content roles (2 doc), and text-adventure.md's realisations → its own § (1 same-doc).
+        expect(checked).toBe(402);
     });
 
     it('tags each link with the kind that produced it', () => {

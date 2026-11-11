@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged, doorwaysBesideLanding,
     withEventGates,
 } from './make-seedling-playthrough-rules.mjs';
 
@@ -99,7 +99,21 @@ describe('the playthrough\'s obstacle events', () => {
         const has = { rule: 'Has', args: { item_name: 'L16 flag 0: rope@32,16 cleared' } };
         // L17's stairs land IN the lane: the departure costs the cut (no tank-a-hit, ⚖ 2026-10-21)
         expect(regions.level_17.exits.find((x) => x.connected_region === 'level_16__r3c7').access_rule).toEqual(has);
-        expect(ropes.exitGates).toEqual([{ region_id: 'level_17', exit_id: 'out_stairsup_32_48', rule: has }]);
+        // ⚖ 2026-11-10: closed in EITHER direction — the way back out through the same doorway costs the cut too
+        expect(regions.level_16__r3c7.exits.find((x) => x.connected_region === 'level_17').access_rule).toEqual(has);
+        expect(ropes.exitGates).toEqual([
+            { region_id: 'level_17', exit_id: 'out_stairsup_32_48', rule: has },
+            { region_id: 'level_16', exit_id: 'out_stairsdown_112_64', rule: has },
+        ]);
+        // the pairing is the game's return-spawn table, read off the landing: one door for a stairs landing, and the
+        // gate rows of L16 name no other door (its falls into L17 stand outside the lane and are nobody's partner)
+        expect(doorwaysBesideLanding({ from: 17, door: 'stairsup@32,48', level: 16 }))
+            .toEqual([{ region_id: 'level_16', exit_id: 'out_stairsdown_112_64' }]);
+        expect(doorwaysBesideLanding({ from: 15, door: 'stairsdown@144,16', level: 16 }))
+            .toEqual([{ region_id: 'level_16', exit_id: 'out_stairsup_16_64' }]);
+        for (const x of regions.level_16__r1c9.exits.filter((e) => e.connected_region === 'level_17')) {
+            expect(x.access_rule, x.name).toEqual({ rule: 'True_' });
+        }
         for (const to of ['level_16__r1c1', 'level_16__r1c9']) {
             expect(regions.level_16__r3c7.exits.find((x) => x.connected_region === to).access_rule, to).toEqual(has);
         }

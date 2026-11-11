@@ -221,9 +221,12 @@ describe('the committed playthrough\'s leg list', () => {
         //   swing lights the pole from the landing), so their legs are no longer gated on the event alone.
         // ⛓ rules-l112-owl-rocklock: 45 -> 42 — L112 splits at its rock, so the L113 arrival lands in r0c7 and its legs to
         //   the L111 door, the Owl and the rock's own flag are crossings of the rock now, not legs (2 staged, 1 skipped).
-        expect(gated.length).toBe(42);
+        // ⛓ rules-l16-l17-trap-transition: 42 -> 44 — L16's stairs down stand beside the landing in the armed lane, so
+        //   their departure costs the cut (⚖ user 2026-11-10: closed in either direction) and L17's arrival through
+        //   in_L16_112_64 is gated by flag:L16:0: its two legs (the stairs back up, the chest) stage it.
+        expect(gated.length).toBe(44);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(35); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(37); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35; l16-l17-trap-transition: 35 -> 37
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -267,13 +270,15 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-l60-l71-killlock: the SAME legs by key, every id from 514 on shifted by +1 — L60's kill-lock event is a
         //   location on its room's side, so L60 r5c0's L59 arrival gains a leg to `L60 flag 0` (514). No leg gained or lost a
         //   goal event (L60's pocket return stages nothing: the route holds the Ghost Spear, the Or's other arm).
+        // ⛓ rules-l16-l17-trap-transition: the SAME legs by key and id; leg 220 (L17's stairs arrival back up its own
+        //   stairs) leaves `flag:L16:0`'s goal list — its ARRIVAL stages the cut now, so the goal has nothing left to stage.
         // ⛓ tile-rules-automation-r-a5: the SAME legs by key (measured: 68 goal-event legs, the same keys and events as before),
         //   every id from 528 on shifted by -6 — L40's wand locks cost their presses, so L40 splits: of its 38 door keys that
         //   re-key, 32 stay door legs (the body r23c29 -> r26c13) and 6 become link legs (into r4c4, and the flag-8 legs). No leg
         //   gained or lost a goal event.
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
-            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [361],
+            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [361],
             'flag:L62:0': [528, 533, 538, 543, 548, 579], 'flag:L63:1': [530, 535, 540, 545, 550, 554, 559, 564, 569],
             'flag:L63:6': [582, 584], 'flag:L63:7': [585],
             'flag:L71:2': [634, 636], 'flag:L12:7+flag:L12:12': [654], 'flag:L101:0': [761],
@@ -325,7 +330,7 @@ describe('the committed playthrough\'s leg list', () => {
             .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));
         const pressed = arrivalStaged.filter((l) => l.stagedEvents.some((e) => PRESS.has(e.eventId)));
         expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
-            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608']);
+            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '17,48,48', '38,144,16', '39,144,608']); // + L17 (48,48): l16-l17-trap-transition
         for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
         const byArrival = new Map(arrivalStaged.filter((l) => !pressed.includes(l))
             .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));

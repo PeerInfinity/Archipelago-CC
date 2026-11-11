@@ -31,6 +31,8 @@ import {
 } from '../../shared/procgen/library.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { processMessageTemplate } from '../../textAdventureSubstrateWrapper/templating.js';
+import { presentedProse } from '../../textAdventureSubstrateWrapper/textAdventureRoom.js';
+import { defaultContentSetOf } from '../../procgenPipeline/worldContent.js';
 
 const PROCGEN_RULES_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
@@ -1189,10 +1191,12 @@ async function conceptProseInPlay(testController) {
     const isRoom = (name) => sidecars[name]?.substrate === 'text_adventure';
     const gated = (r) => !!r && r.rule !== 'True_';
     const entryTA = substrateRegistry.get('text_adventure');
-    testController.reportCondition('⛓ premise: the text_adventure entry declares conceptRealisations',
-        !!entryTA?.conceptRealisations?.guardian);
-    if (!entryTA?.conceptRealisations?.guardian) return testController.getOverallResult();
-    const G = entryTA.conceptRealisations.guardian.placements.gate.mechanic.prose;
+    testController.reportCondition('⛓ premise: the text_adventure entry declares conceptRealisations and a default content pack',
+        !!entryTA?.conceptRealisations?.guardian && !!entryTA?.defaultContentPack);
+    if (!entryTA?.conceptRealisations?.guardian || !entryTA?.defaultContentPack) return testController.getOverallResult();
+    // ⛓ CONTENT SETS R1 — the words are the default pack's, which the app's boot preloaded.
+    const contentSet = defaultContentSetOf([entryTA.defaultContentPack]);
+    const G = presentedProse(contentSet, 'gate', 'guardian');
 
     // ⛓ The room and its exit: as tasw-gate-holds-in-play finds them, read off the document.
     const starts = doc.start_regions?.[slot]?.default ?? [];
@@ -1221,7 +1225,7 @@ async function conceptProseInPlay(testController) {
         payload.exits.some((e) => e.exit_id === guarded.name));
     const world = entryTA.deserializeWorld(payload);
     entryTA.placeFromRules(world, {
-        exit_rules: { [guarded.name]: SWORD_RULE }, params: { concepts: ['guardian', 'sword'] },
+        exit_rules: { [guarded.name]: SWORD_RULE }, params: { concepts: ['guardian', 'sword'], contentSet },
     });
     const rewritten = entryTA.serializeWorld(world, entryTA.extractPathsAndObstacles(world, { regionId: room }));
     sidecars[room].playable_payload = {
@@ -1357,6 +1361,108 @@ registerTest({
                + 'asserts the move is refused and the guardian\'s blocked prose is displayed, then grants the '
                + 'sword and asserts the move succeeds with the passedWith prose displayed (concept library T2).',
     testFunction: conceptProseInPlay,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓⛓ CONTENT SETS R1 — **A ROOM'S PLACE IS WHAT THE PLAYER SEES.** A theme's
+ * `place` concept is baked into a room's payload `prose` as `name` and
+ * `description` (pinned in node: `textAdventureContent.test.js`); this row holds
+ * the bridge's half. The world is `procgen_topdown/AP_11` with ONE text-adventure
+ * room behind an open exit given a place IN THE TEST (its payload's `prose`
+ * gains `name` and `description`; the document is mutated in memory only).
+ * Asserts, on entering that room: the arrival line the engine displayed is the
+ * place's description (its `{regionName}` filled), not "You are in …", and the
+ * room's title is the place's name.
+ */
+const PLACE_IN_PLAY = Object.freeze({
+    name: 'The Waiting Room',
+    description: 'A plain room that knows it is {regionName}. The exits are where the generator left them.',
+});
+
+async function roomPlaceInPlay(testController) {
+    const doc = await (await fetch(GATED_TA_PRESET_PATH)).json();
+    const slot = '1';
+    const regions = doc.regions[slot];
+    const sidecars = doc.preset_sidecars?.[slot] ?? {};
+    const isRoom = (name) => sidecars[name]?.substrate === 'text_adventure';
+    const gated = (r) => !!r && r.rule !== 'True_';
+    const starts = doc.start_regions?.[slot]?.default ?? [];
+    let start = null;
+    let entry = null;
+    for (const s of [...(Array.isArray(starts) ? starts : []), ...Object.keys(regions)]) {
+        const e = (regions[s]?.exits ?? []).find((x) => !gated(x.access_rule) && isRoom(x.connected_region)
+            && x.connected_region !== s);
+        if (e) { start = s; entry = e; break; }
+    }
+    testController.reportCondition('⛓ premise: the document has a text-adventure room behind an open exit', !!entry);
+    if (!entry) return testController.getOverallResult();
+    const room = entry.connected_region;
+    const payload = sidecars[room].playable_payload;
+    payload.prose = { ...PLACE_IN_PLAY, exits: { ...(payload.prose?.exits ?? {}) }, locations: { ...(payload.prose?.locations ?? {}) } };
+    const wantLine = processMessageTemplate(PLACE_IN_PLAY.description, { regionName: room });
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+    const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 10000);
+    testController.eventBus.publish('files:jsonLoaded', {
+        jsonData: doc, selectedPlayerId: slot, sourceName: 'tasw-room-place-in-play',
+    });
+    await rulesLoaded;
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.log(`start ${start} --${entry.name}--> ${room} (given the place "${PLACE_IN_PLAY.name}")`);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
+    const iframeDoc = () => document.querySelector('iframe.tasw-iframe')?.contentDocument ?? null;
+    const click = (el) => el.dispatchEvent(new el.ownerDocument.defaultView.MouseEvent('click',
+        { bubbles: true, cancelable: true }));
+    const linkFor = (id) => [...(iframeDoc()?.querySelectorAll('[data-exit-id]') ?? [])]
+        .find((l) => l.getAttribute('data-exit-id') === id) ?? null;
+    const messages = () => [...(iframeDoc()?.querySelectorAll('.tae-msg') ?? [])].map((m) => m.textContent);
+    const title = () => iframeDoc()?.querySelector('.tae-actions-title')?.textContent ?? null;
+
+    const mounted = await testController.pollForCondition(
+        () => [start, room].includes(gs.getCurrentRegion()) && iframeDoc()?.querySelector('.tae-actions') !== null,
+        `the wrapper rendered ${start} or ${room}`, 15000, 300);
+    testController.reportCondition(`the wrapper rendered ${start} or ${room}`, !!mounted);
+    if (!mounted) return testController.getOverallResult();
+    const before = messages().length;
+    if (gs.getCurrentRegion() === start) {
+        for (let i = 0; i < 20 && !linkFor(entry.name); i++) {
+            const explore = iframeDoc()?.querySelector('[data-action="explore"]');
+            if (!explore) break;
+            click(explore);
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 200));
+        }
+        testController.reportCondition(`the wrapper rendered ${start}'s exit ${entry.name}`, !!linkFor(entry.name));
+        if (!linkFor(entry.name)) return testController.getOverallResult();
+        click(linkFor(entry.name));
+    }
+    const inRoom = await testController.pollForCondition(() => gs.getCurrentRegion() === room,
+        `the player is in ${room}`, 8000, 100);
+    testController.reportCondition(`the player is in ${room}`, !!inRoom);
+    if (!inRoom) return testController.getOverallResult();
+    const said = await testController.pollForCondition(() => messages().includes(wantLine),
+        `the engine displayed ${room}'s place description on arrival`, 5000, 100);
+    testController.reportCondition(`the engine displayed ${room}'s place description on arrival`, !!said);
+    testController.reportCondition(`…and not the generic "You are in ${room}." line`,
+        !messages().slice(before).includes(`You are in ${room}.`));
+    const titled = await testController.pollForCondition(() => title() === PLACE_IN_PLAY.name,
+        `${room}'s title is the place's name`, 5000, 100);
+    testController.reportCondition(`${room}'s title is the place's name (it read "${title()}")`, !!titled);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'tasw-room-place-in-play',
+    name: 'Wrapper: a room whose payload carries a place shows its name as the title and its description on arrival',
+    description: 'Loads procgen_topdown/AP_11 with one text-adventure room\'s payload prose given a name and a '
+               + 'description (a theme\'s place concept, content sets R1); enters the room and asserts the arrival '
+               + 'line is the description and the title is the name.',
+    testFunction: roomPlaceInPlay,
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

@@ -288,6 +288,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_16__r3c7 -> level_17", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_16__r6c8 -> level_16__r1c1", player),
         Has('L16 flag 0: rope@32,16 cleared', 1)
     )

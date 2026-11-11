@@ -54,7 +54,7 @@ export async function loadCensusInputs({ producer = true } = {}) {
     const { patchedMapDocument } = await imp('frontend/modules/seedlingDemo/seedlingSetPatches.js');
     const mapDoc = patchedMapDocument(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
     const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
-    const { TRIGGER_FOR_NAMED_ROOM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
+    const { TRIGGER_FOR_NAMED_ROOM, outExitId, regionIdFor } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
     const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
     const { obstacleEventName } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
     // The inverse of `obstacleEventName`, built FROM it (sentinels in, a pattern out), so the format is not respelled.
@@ -103,12 +103,20 @@ export async function loadCensusInputs({ producer = true } = {}) {
     const solidRows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP));
     const chainLevels = new Set(P.pitChains.map((c) => c.landing.level));
     const everyLevel = new Set(MAP.levels.map((L) => L.level));
+    // `doorwaysBesideLanding`'s domain, measured by CALLING it: over every landing INTO a rope level (the widest set its
+    // one caller, `playthroughRopeEvents`, can hand it), the rope level's OWN links it answers with. It pairs a landing
+    // with a door of the SAME level through the map's return spawns, so its rows are departure-side (as `buildLevelWorld`'s).
+    const besideExits = new Set(into(ropeLevels).flatMap((g) => P.doorwaysBesideLanding(g).map((d) => `${d.region_id}/${d.exit_id}`)));
+    const besideDoors = MAP.levels.filter((L) => ropeLevels.has(L.level)).flatMap((L) => (L.entities ?? [])
+        .filter((e) => e.attrs?.to !== undefined && e.attrs?.playerx !== undefined && besideExits.has(`${regionIdFor(L.level)}/${outExitId(e)}`))
+        .map((e) => ({ from: L.level, door: `${e.type}@${e.x},${e.y}`, level: Number(e.attrs.to) })));
     /** ⛓ Each scanned reader's DOMAIN: the landings (or departures) it consumes, measured on the delivered map. */
     const readerDomains = {
         doorTilesOf: { what: 'landings INTO a rope level (the doors a rope lane leaves open)', landings: into(ropeLevels) },
         playthroughRopeEvents: { what: 'landings INTO a minted rope\'s level inside its lane (exitGates)', landings: into(ropeLevels) },
         barrierAnalysis: { what: 'landings INTO a button-target / in-room-pole level (the "cut" pass: needs the vanilla departure -> region connection)', landings: into(barrierLevels) },
         playthroughObstacleEvents: { what: 'every game landing the arrival-solid census finds inside a persistence solid', landings: solidRows.map((r) => r.landing) },
+        doorwaysBesideLanding: { what: 'a rope level\'s OWN doors that a landing stands beside (the return-spawn pair of the landing\'s door; a TILE fact of the level: the gate rides the departure, whatever it connects to)', landings: besideDoors },
         RETURN_SPAWNS: { what: 'every door\'s return spawn (the reverse link\'s playerx/y)', landings: all },
         arrivalSpawnFor: { what: 'every arrival exit\'s return spawn', landings: all },
         playthroughLandingGates: { what: 'every arrival exit\'s return spawn, priced for lethal terrain', landings: all },
