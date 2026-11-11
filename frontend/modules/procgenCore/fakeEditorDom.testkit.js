@@ -162,6 +162,16 @@ export function idsInHtml(html, prefix) {
 }
 
 /**
+ * ⛓ The ids (with `prefix`) of every element the HTML ships with a bare `checked` attribute — a checkbox
+ * the page opens ticked, which a harness must open ticked too or it mounts a different page.
+ */
+export function checkedIdsInHtml(html, prefix) {
+    return [...html.matchAll(/<input\b[^>]*\bid="([^"]+)"[^>]*>/g)]
+        .filter((m) => m[1].startsWith(prefix) && /\schecked(\s|>|=|\/)/.test(m[0]))
+        .map((m) => m[1]);
+}
+
+/**
  * ⛓ The static `<option value="…">` list of one `<select id="…">` in the HTML, so a harness can fill a select
  * the page ships pre-filled (the mode select) from the page itself.
  */

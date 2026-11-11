@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { createEditSession } from '../procgenCore/editCore.js';
-import { fakeDocument, idsInHtml, staticOptionsOf } from '../procgenCore/fakeEditorDom.testkit.js';
+import { checkedIdsInHtml, fakeDocument, idsInHtml, staticOptionsOf } from '../procgenCore/fakeEditorDom.testkit.js';
 import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
 import { mountWatchEditor } from './watchEditor.js';
 import { createLifetime } from './watchLifetime.js';
@@ -52,6 +52,8 @@ function surfaceOf(record) {
         o.value = v;
         $('genEditTool').appendChild(o);
     }
+    // ⛓ …and its ticked checkboxes (`#genEditShowLinks`: the link overlay is ON when the page opens)
+    for (const id of checkedIdsInHtml(HTML, 'genEdit')) $(id).checked = true;
     const canvasParent = doc.createElement('div');
     const canvas = canvasParent.appendChild(doc.createElement('canvas'));
     canvas.width = record.width * 16;
@@ -124,6 +126,7 @@ function surfaceOf(record) {
     key('x'); click(xs[0], ys[0]); canvas.dispatch('click', { cell: null }); snap('clear-off');
     // a re-render on a new record refills the clear select and keeps its pick
     ui.render(); out.clearWhatAfter = [$('genEditClearWhat').value, $('genEditClearWhat').options.length];
+    out.showLinks = $('genEditShowLinks').checked;
     out.log = log;
     out.oel = JSON.stringify(host.record());
     ui.destroy();
@@ -136,9 +139,9 @@ const L = (n) => MAP.levels.find((l) => l.level === n);
 
 /** ⛓ Measured on origin/main 856d1aec89 before the move. */
 const BEFORE_THE_MOVE = Object.freeze({
-    L14: 'dec45d288d80ea1ddae86cec0495af376950a05eea5e67d18321f7d47c832189',
-    L38: '5bc6488dd2b36278fa6f15330413d4fb3e9501fe79ada8466316da6943189abc',
-    generated: 'e9d80c3cf807609e6c29b6c31365f56c6e6cef93c8155d15f3f93a7325e7c139',
+    L14: 'e0f2d347283f9d88920372b06074151a6dbc5c70d85e8c051d6555a357826856',
+    L38: '8a4f47cd612d667d43ce2f3f105d8fec7d44fe957cabf9b9d059b48063af21cd',
+    generated: 'df4065efa08eced8295076a3017e94b8c33ed857fd4450f8091b42eb0b958156',
 });
 
 describe('the Seedling editor\'s tool surface across the move to procgenCore/editorView', () => {
@@ -154,6 +157,7 @@ describe('the Seedling editor\'s tool surface across the move to procgenCore/edi
             expect(applied).toBeGreaterThanOrEqual(4);
             expect(s.log.some((e) => e[0] === 'say' && /already MOVED/.test(e[2]))).toBe(true);
             expect(s.log.some((e) => e[0] === 'say' && /FILL has no target/.test(e[2]))).toBe(true);
+            expect(s.showLinks).toBe(true);
             expect(digestOf(rec())).toBe(BEFORE_THE_MOVE[name]);
         },
     );
