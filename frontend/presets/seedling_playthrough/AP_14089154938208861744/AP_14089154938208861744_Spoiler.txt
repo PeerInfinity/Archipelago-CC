@@ -83,6 +83,7 @@ L53 flag 2: lock@144,208 cleared: L53 flag 2: lock@144,208 cleared
 Level 055 - Boss Key 3: Blue Key
 Level 057 - Tentacled Beast: Seal
 L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
+L60 flag 0: lock@128,80 cleared: L60 flag 0: lock@128,80 cleared
 L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
 L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
 Level 063 - Chest: Seal
@@ -167,6 +168,7 @@ Playthrough:
 7: {
   L40 flag 12: wandlock@480,560 cleared: L40 flag 12: wandlock@480,560 cleared
   L53 flag 2: lock@144,208 cleared: L53 flag 2: lock@144,208 cleared
+  L60 flag 0: lock@128,80 cleared: L60 flag 0: lock@128,80 cleared
   L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
   L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
   Level 015 - Chest: Seal

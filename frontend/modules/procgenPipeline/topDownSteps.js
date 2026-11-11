@@ -44,6 +44,7 @@ import {
     serializeGrid,
     deserializeGrid,
 } from './procgenPipelineEngine.js';
+import { recordedContentOf } from './worldContent.js';
 // Generic stepped-pipeline machinery — the driver/resume/serde skeleton shared
 // with sphere (and spiral). This module supplies the top-down DESCRIPTOR; the
 // harness drives it. See steppedPipeline.js for the descriptor + codec contract.
@@ -163,6 +164,8 @@ function stepCompile(env, { onProgress = null } = {}) {
             ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
             // ⛓ T0b — the world's concept list (omitted when it names none).
             ...recordedConceptsOf(env.opts?.regionParams),
+            // ⛓ CONTENT SETS C3 — the world's own content stack (omitted when it names none).
+            ...recordedContentOf(env.opts?.regionParams),
         },
     });
     env.compile = {

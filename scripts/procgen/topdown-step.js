@@ -76,6 +76,10 @@ import {
 import {
     defaultProcgenParams, assembleRegionParams,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+import {
+    attachEnvelopeContent, contentListOf, effectiveContentStack, loadContentSet,
+} from '../../frontend/modules/procgenPipeline/worldContent.js';
+import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
 
 argvHelp(import.meta.url);
 
@@ -167,15 +171,18 @@ function writeOut(path, obj, fallbackName) {
 
 // Build a fresh envelope from --source + world flags (mirrors the panel's
 // _buildTDEnvelope: substrate params via the shared hooks, mode 'topDown').
-function buildEnv(args, { sourceDoc = null } = {}) {
+// ⛓ CONTENT SETS C3 — `contentSet` is the world's loaded content set (`loadArgsContent`, awaited first).
+function buildEnv(args, { sourceDoc = null, contentSet = null } = {}) {
     const source = sourceDoc ?? readJson(args.source, '--source');
     const params = defaultProcgenParams({});
     if (args.physicsProfile != null) params.bouncePhysicsProfile = args.physicsProfile;
     if (args.fallBehavior != null) params.bounceFallBehavior = args.fallBehavior;
     Object.assign(params, args.params);
+    // ⛓ CONTENT SETS C3 — `--param content=a,b` is a string; the param is a list.
+    if (params.content !== undefined) params.content = contentListOf(params.content);
     const activeIds = Object.entries(args.mix)
         .filter(([, w]) => Number(w) > 0).map(([id]) => id);
-    const regionParams = assembleRegionParams({ activeIds, mode: 'topDown', params });
+    const regionParams = assembleRegionParams({ activeIds, mode: 'topDown', params, contentSet });
     const sphereLog = args.sphereLog ? readSphereLog(args.sphereLog) : null;
     return buildTopDownEnvelope({
         source,
@@ -190,6 +197,12 @@ function buildEnv(args, { sourceDoc = null } = {}) {
         regionXpEffect: args.regionXpEffect,
         discoveryMode: args.discoveryMode ?? 'follow',
     });
+}
+
+/** ⛓ CONTENT SETS C3 — the args' content stack (the mix's default packs, then `--param content`), loaded from disk. */
+async function loadArgsContent(args) {
+    const substrateIds = Object.entries(args.mix ?? {}).filter(([, w]) => Number(w) > 0).map(([id]) => id);
+    return loadContentSet(effectiveContentStack({ substrateIds, content: contentListOf(args.params?.content) ?? [] }), nodePackIo());
 }
 
 // --- main ---
@@ -243,8 +256,12 @@ export const SUBSTRATE_CHECK = Object.freeze({ layout: 'topdown', tool: 'topdown
  */
 export async function build(config, { envelope = null, source = null, log = () => {}, onProgress = null } = {}) {
     let env;
-    if (envelope) env = deserializeTDEnvelope(structuredClone(envelope));
-    else if (source || config.source) env = buildEnv(config, { sourceDoc: source ? structuredClone(source) : null });
+    if (envelope) env = await attachEnvelopeContent(deserializeTDEnvelope(structuredClone(envelope)), nodePackIo());
+    else if (source || config.source) {
+        env = buildEnv(config, {
+            sourceDoc: source ? structuredClone(source) : null, contentSet: await loadArgsContent(config),
+        });
+    }
     else throw new UsageError('topdown-step needs a source rules.json (`source`) or an `envelope` to resume');
     await runToEnd(env, config, { log, onProgress });
     const rulesJson = env.compile?.rulesJson ?? null;
@@ -273,10 +290,11 @@ async function main(status) {
 
     let env;
     if (args.input) {
-        env = deserializeTDEnvelope(readJson(args.input, '-i'));
+        // ⛓ CONTENT SETS C3 — a resumed envelope carries its content list, not the set: re-attach it.
+        env = await attachEnvelopeContent(deserializeTDEnvelope(readJson(args.input, '-i')), nodePackIo());
     } else if (sub === 'layout' || sub === 'run') {
         if (!args.source) throw new UsageError(`${sub} requires --source <rules.json> (or -i <envelope.json>)`);
-        env = buildEnv(args);
+        env = buildEnv(args, { contentSet: await loadArgsContent(args) });
     } else {
         throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'layout')`);
     }

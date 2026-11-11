@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 149,
-            "count": 199,
+            "browser": 150,
+            "count": 200,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 522,
-        "browser": 219,
+        "blockStyle": 523,
+        "browser": 220,
         "cited": 276,
-        "files": 540,
+        "files": 541,
         "lineStyle": 18,
-        "withDocblock": 540,
-        "withFlags": 459
+        "withDocblock": 541,
+        "withFlags": 460
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14320,6 +14320,93 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arm-ticks",
+                "arms",
+                "clear-ticks",
+                "engage",
+                "host",
+                "margin",
+                "only",
+                "settle",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-killlock-arms.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arm-ticks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-ticks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "engage"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "margin"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "settle"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "probe-seedling-encounter-latch.mjs",
+                    "name": "ticks"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling KILL-LOCK ARMS, THE GAME'S WAY (rules `rules-l60-l71-killlock`).",
+            "path": "scripts/procgen/probe-seedling-killlock-arms.mjs"
+        },
+        {
+            "argvHelpers": [
                 "SEEDS",
                 "arg"
             ],
@@ -17694,59 +17781,6 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md",
-                "docs/json/developer/procgen/seedling-bot.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "probe-seedling-rock-fire.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "dump"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "on"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "record"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "probe-seedling-rock-fire — ⛓⛓⛓ seedling-fidelity-rockfire: A FIRE PRESS REACHING A BREAKABLE ROCK, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
-            "path": "scripts/procgen/probe-seedling-rock-fire.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg",
-                "check"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
@@ -19461,6 +19495,70 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling solver-walk, slice W7 — the live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path.",
             "path": "scripts/procgen/probe-seedling-wasm-continuation.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "roomOf",
+                "walkable"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "pairs",
+                "runtime",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-er-retarget.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-item"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-refusal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pairs"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "runtime"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "ENTRANCE RANDOMIZATION E5, IN THE LEVEL DATA — the witness, on the wasm runtime (the default) or on the Seedling JS runtime (`--runtime=js`, below). `seedling_er` loaded by `?rules=`, the preset's own build (`flash_panel.wasm`), headless logic-only, under the box lock, on ONE fresh page.",
+            "path": "scripts/procgen/probe-seedling-wasm-er-retarget.mjs"
         },
         {
             "argvHelpers": [
