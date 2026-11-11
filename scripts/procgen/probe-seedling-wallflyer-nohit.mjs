@@ -25,11 +25,20 @@
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build, or SKIP.
  * Takes the box lock. Headless LOGIC-ONLY (`CHANNEL: headless logic-only`), so it runs in CI too.
  *
- * Run: node scripts/procgen/probe-seedling-wallflyer-nohit.mjs [--host=http://localhost:8000] [--only=l22-25-29-sword,…] [--repeat=N] [--dump]
+ * ⛓ `--chest` (slice rules-no-hit-directional, a REPORT, no rule reads it): **from which side does L25's chest open?**
+ * `Chest.as:63` opens a chest only for a player on the line just under its bottom edge, and until then it is a Solid.
+ * L25's chest stands in the mouth of the corridor to L28's door, so that line is reached from L28's door only. The
+ * `CHEST_CASES` walk at it on the game: from L22's door against its east face and from above (expected SHUT: the player
+ * never stands in the chest's cell or the cell under it), and from L28's door (expected OPEN: the player walks up
+ * through the chest's cell). The keys are a waypoint walk on the model; the game is the judge. Not a no-hit question:
+ * hits are printed, not checked.
+ *
+ * Run: node scripts/procgen/probe-seedling-wallflyer-nohit.mjs [--host=http://localhost:8000] [--only=l22-25-29-sword,…] [--repeat=N] [--dump] [--chest]
  *      node scripts/procgen/probe-seedling-wallflyer-nohit.mjs --search=l22-25-29-none,… [--max-nodes=N] [--write]
  * `--only=` plays the named cases only.
  * `--repeat=N` plays every plan N times, each on its own fresh page.
  * `--dump` prints every tenth observation of each run.
+ * `--chest` plays the `CHEST_CASES` INSTEAD of the no-hit plans (`--only=`, `--repeat=` and `--dump` apply to them).
  * `--search=` runs the model search for the named cases INSTEAD of playing (no browser, no box lock); `--max-nodes=N`
  * is its node budget (default 60000); `--write` records what it found (or did not) in the plans file.
  */
@@ -246,6 +255,52 @@ export async function searchNoHit(map, c, { macro = SEARCH.macro, weight = SEARC
     return { found: false, nodes, exhausted: heap.length === 0 };
 }
 
+/**
+ * `--chest`: the walks at L25's chest. `way` is tile cells the player's centre is walked to in order (from the landing
+ * of `from`'s door), `holds` the key holds after it, `expect` what the game should show.
+ */
+export const CHEST_CASES = Object.freeze([
+    { name: 'l25-22-chest-east', level: 25, from: 22, way: [[7, 2], [7, 6]], holds: [[['left', 'down'], 45]], expect: 'shut' },
+    { name: 'l25-22-chest-above', level: 25, from: 22, way: [[7, 2], [7, 5], [6, 5]], holds: [[['down'], 35]], expect: 'shut' },
+    { name: 'l25-28-chest-below', level: 25, from: 28, way: [], holds: [[[], 70], [['up'], 90]], expect: 'open' },
+]);
+/** The one chest of a level, as its Solid rect (`Chest.as`: a 16x16 hitbox on its tile). */
+export function chestOf(map, levelNo) {
+    const chests = (map.levels.find((l) => l.level === levelNo)?.entities ?? []).filter((e) => e.type === 'chest');
+    if (chests.length !== 1) throw new Error(`probe-seedling-wallflyer-nohit: L${levelNo} holds ${chests.length} chests, not one`);
+    return { x: chests[0].x, y: chests[0].y, right: chests[0].x + TILE, bottom: chests[0].y + TILE };
+}
+/** A chest case's keys: the waypoint walk and the holds, played on the model (which only chooses the keys). */
+export async function chestCaseKeys(map, c) {
+    const run = await modelRun(await caseStaging(map, { level: c.level, from: c.from, arm: 'none' }));
+    const perTick = [];
+    const advance = (keys) => { run.advance(new Set(keys)); perTick.push([...keys].sort()); };
+    for (let i = 0; i < SEARCH.lead; i += 1) advance([]);
+    for (const [tx, ty] of c.way) {
+        const wx = tx * TILE + TILE / 2;
+        const wy = ty * TILE + TILE / 2;
+        for (let n = 0; n < 400 && run.level === c.level; n += 1) {
+            const dx = wx - run.state.x;
+            const dy = wy - run.state.y;
+            if (Math.abs(dx) < 1.5 && Math.abs(dy) < 1.5) break;
+            advance([...(dx > 1.4 ? ['right'] : dx < -1.4 ? ['left'] : []), ...(dy > 1.4 ? ['down'] : dy < -1.4 ? ['up'] : [])]);
+        }
+    }
+    for (const [keys, ticks] of c.holds) for (let i = 0; i < ticks && run.level === c.level; i += 1) advance(keys);
+    return { perTick, model: { level: run.level, x: run.state.x, y: run.state.y, hits: run.playerHits.map((h) => `${h.t}:${h.id}`) } };
+}
+/**
+ * What a run's observations say about the chest: `inChest` / `under` = how many have the player's centre in the chest's
+ * cell / in the cell under it (the only place its opening line is touched from). A closed chest is a Solid, so a centre
+ * inside its cell means it opened. `centre` maps an observation to the player's centre.
+ */
+export function readChestRun(ticks, chest, centre = (o) => ({ x: o.x, y: o.y })) {
+    const inRect = (p, r) => p.x >= r.x && p.x < r.right && p.y >= r.y && p.y < r.bottom;
+    const below = { x: chest.x, y: chest.bottom, right: chest.right, bottom: chest.bottom + TILE };
+    return { inChest: ticks.filter((o) => inRect(centre(o), chest)).length, under: ticks.filter((o) => inRect(centre(o), below)).length,
+        levels: [...new Set(ticks.map((o) => o.level))], final: ticks.at(-1) ?? null };
+}
+
 export const readPlans = (file = PLANS_FILE) => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { plans: {}, notFound: {} });
 
 /** A case's tape for the game: the staging, the keys, nothing disabled. */
@@ -396,6 +451,37 @@ async function main() {
     };
     try {
         const repeat = Math.max(1, Number(arg('repeat', '1')) || 1);
+        if (process.argv.includes('--chest')) {
+            for (const c of CHEST_CASES.filter((x) => !only || only.includes(x.name)).flatMap((e) => Array(repeat).fill(e))) {
+                const chest = chestOf(map, c.level);
+                const { perTick, model } = await chestCaseKeys(map, c);
+                const staging = await caseStaging(map, { level: c.level, from: c.from, arm: 'none' });
+                const { requiredTapeVersion } = await M('tapeFormat.js');
+                const t = { ...staging, game: 'seedling', name: `wallflyer-nohit-${c.name}`, description: `probe-seedling-wallflyer-nohit --chest: ${c.name}`,
+                    noclip: false, noDamage: false, noHazards: [], grants: [], equips: [], tick_count: perTick.length, inputs: spansOf(perTick) };
+                const tape = parseTape({ ...t, tape_version: requiredTapeVersion(t, 8), pins: [...PIN_NAMES] });
+                const g = await play(tape);
+                // Read every observation relative to the first, which is the landing (its cell's centre, as the model reports it).
+                const off = { x: tape.boot.x + TILE / 2 - (g.ticks[0]?.x ?? 0), y: tape.boot.y + TILE / 2 - (g.ticks[0]?.y ?? 0) };
+                const read = readChestRun(g.ticks, chest, (o) => ({ x: o.x + off.x, y: o.y + off.y }));
+                console.log(`ROW ${JSON.stringify({ case: c.name, expect: c.expect, set_id: set.set_id, mounted: g.mounted?.active, observations: g.ticks.length,
+                    boot: tape.boot, chest, centreOffset: off, maxHits: g.maxHits, model, ...read })}`);
+                if (process.argv.includes('--dump')) console.log(`TICKS ${g.ticks.filter((o) => o.t % 10 === 0).map((o) => `${o.t}:${o.level}:${o.x.toFixed(1)},${o.y.toFixed(1)}`).join(' ')}`);
+                check(`${c.name}: the game ran the tape to its end on the delivered set`,
+                    g.ticks.length === tape.tick_count + 1 && g.mounted?.active === set.set_id, `${g.ticks.length} obs, ${g.mounted?.active}`);
+                check(`${c.name}: the GAME stays in L${c.level}`, read.levels.length === 1 && read.levels[0] === c.level, JSON.stringify(read.levels));
+                if (c.expect === 'shut') {
+                    check(`${c.name}: from L${c.from}'s door the player never stands in the chest's cell or under it (the chest stays a Solid, unopened)`,
+                        read.inChest === 0 && read.under === 0, JSON.stringify(read));
+                } else {
+                    check(`${c.name}: from L${c.from}'s door the player lands under the chest and then walks up THROUGH its cell (it opened)`,
+                        read.under > 0 && read.inChest > 0, JSON.stringify(read));
+                }
+            }
+            console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
+            await browser.close();
+            process.exit(failed === 0 ? 0 : 1);
+        }
         for (const { name, perTick } of picked.flatMap((e) => Array(repeat).fill(e))) {
             const c = parseCase(name);
             const model = await replayOnModel(map, c, perTick);
