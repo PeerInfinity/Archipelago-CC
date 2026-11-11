@@ -294,6 +294,22 @@ export function departuresLandingAt(doc, landing, why = 'landing') {
     return deps;
 }
 /**
+ * ⛓ RULES l16-l17-trap-transition — **THE DOORWAY A LANDING STANDS BESIDE**: the departures of the landing's OWN level
+ * through the other half of its doorway pair. The pairing is the game's (`seedlingReturnSpawns.returnSpawnTable`, the
+ * table the runtime binding and the ER door census pair by): a link of `landing.level` whose return spawn is reached
+ * `via` the landing's door is the door a player standing on the landing leaves by. It is a TILE fact of the level, so
+ * a coupled shuffle (which retargets where the door leads, never where it stands) does not move it.
+ *
+ * Returns `[{region_id, exit_id}]`; NONE is an answer (a one-way arrival has no door back), not a refusal.
+ */
+export function doorwaysBesideLanding(landing) {
+    const door = parseSolidId(landing.door);
+    return (levelOf(landing.level)?.entities ?? []).filter((e) => LINK_TAGS.includes(e.type)).filter((e) => {
+        const via = RETURN_SPAWNS.get(returnKey(landing.level, Math.floor(e.x / TILE), Math.floor(e.y / TILE)))?.via;
+        return via && via.level === landing.from && via.type === door.cls && via.x === door.x && via.y === door.y;
+    }).map((e) => ({ region_id: regionIdFor(landing.level), exit_id: outExitId(e) }));
+}
+/**
  * The VANILLA reading E4a retired — the landing's own door, whatever the doc connects it to. Kept ONLY as the MUTANT the
  * ER swap pins (`seedlingErProducerDecoupling.test.js`) hand a reader to prove its pin goes red; no producer path uses it.
  */
@@ -2408,6 +2424,8 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
  * One gate IS here: a game LANDING on a charged lane cell (or a door the lane leaves open) stands in the armed lane on
  * arrival, so its departure costs the cut too (`exitGates`, as a landing inside an obstacle costs its event) — ⚖ the
  * user 2026-10-21: logic never expects tanking a hit. (L17's stairs land on L16's (7,3), in `arrowtrap@112,32`'s lane.)
+ * ⚖ The user 2026-11-10: the doorway is closed in EITHER direction until the cut, so the door the landing stands beside
+ * (`doorwaysBesideLanding`: the same doorway, walked back out) costs the cut as well.
  * Refused ropes are printed by name; a rope event NAME in the rules that this mints nowhere is refused (`main`).
  *
  * `place` (optional) answers PLACE without this run's analysis (`regionAnalyses`, filled by `buildPlaythroughAtlas`):
@@ -2457,6 +2475,11 @@ export function playthroughRopeEvents(doc, { place = null, departures = departur
             // ⛓ ER E4a: gate every departure whose doc CONNECTION lands in the lane (`departuresLandingAt`), not the
             // landing's vanilla door — a retargeted arrival would otherwise go ungated (the permissive direction).
             for (const dep of departures(doc, L, 'rope events')) {
+                exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
+            }
+            // ⛓ RULES l16-l17-trap-transition (⚖ the user, 2026-11-10: closed "in either direction" until the cut):
+            // and the way back OUT through the same doorway (`doorwaysBesideLanding`), whatever the doc connects it to.
+            for (const dep of doorwaysBesideLanding(L)) {
                 exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
             }
         }
@@ -2907,7 +2930,7 @@ function main() {
         + `${quiet ? '' : poles.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}: ${JSON.stringify(g.rule)}`).join('')}`
         + `${poles.skipped.length ? `; ${poles.skipped.length} skipped: ${poles.skipped.join('; ')}` : ''}`);
     console.log(`${ropes.events.length} rope cut event(s) [${ropes.events.map((e) => `${e.name} @ ${e.fields.side}`).join('; ')}]; `
-        + `${ropes.exitGates.length} landing(s) in a lane gated${quiet ? '' : ropes.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}; `
+        + `${ropes.exitGates.length} departure(s) through a doorway whose landing stands in a lane gated${quiet ? '' : ropes.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}; `
         + `${ropes.refused.length} rope(s) refused${quiet ? '' : ropes.refused.map((r) => `\n  refused ${r}`).join('')}`);
     console.log(`${talks.events.length} cross-room prerequisite event(s), ${talks.exitGates.length} crossing(s) and `
         + `${talks.eventGates.length} event(s) gated on them`

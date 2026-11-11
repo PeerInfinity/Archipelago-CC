@@ -127,10 +127,8 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 | `extractPathsAndObstacles` | Extract the access rules the generated geometry enforces, to check them against the authored ones. |
 | `applyContentModules` | Optional post-build pass for content modules (the maze's hazards). |
 | `conceptRealisations` | Optional. The substrate's half of the concept library: `{<concept id>: {tier, art?, placements?}}`, which concepts it can realise and how, checked by `assertRealisations`. `placeFromRules` selects a gate's realisation by its rule over the world's offered concepts (`selectRealisation`). See [Concepts](./concepts.md). |
-
-`contentRoles` is optional, and no entry declares it yet, so it has no row in the table above: the generated matrix would report a row that no entry carries. It lists the kinds of content the substrate can show, as `{<role>: {accepts: {kinds} or {presents}, needs?: {look?, art?, text?}, why}}`, and a content pack's concepts fill them. `assertContentRoles` checks it, and `candidatesForRole` lists the pack concepts that fill a role. The first entry to declare it moves this paragraph into a table row. See [Concepts § Content roles](./concepts.md#content-roles).
-
-`defaultContentPack` is optional too, and no entry declares it yet, so it has no table row either. It names the substrate's built-in content pack by id (a directory under `frontend/packs/`). A world's content stack starts with the default packs of the substrates in its mix, in registry order, and then adds the world's own `params.content` (`effectiveContentStack` in `procgenPipeline/worldContent.js`). The first entry to declare it moves this paragraph into a table row. See [Concepts § A world's content stack](./concepts.md#a-worlds-content-stack).
+| `contentRoles` | Optional. The kinds of content the substrate can show from a content pack, as `{<role>: {accepts: {kinds} or {presents}, needs?: {look?, art?, text?}, why}}`; a pack's concepts fill them. `assertContentRoles` checks it, and `candidatesForRole` lists the pack concepts that fill a role. The text adventure declares `gate` and `item` (a mechanic concept's prose slots) and `place` (a room's name and description). See [Concepts § Content roles](./concepts.md#content-roles). |
+| `defaultContentPack` | Optional. The substrate's built-in content pack, by id (a directory under `frontend/packs/`). A world's content stack starts with the default packs of the substrates in its mix, in registry order, and then adds the world's own `params.content` (`effectiveContentStack` in `procgenPipeline/worldContent.js`). See [Concepts § A world's content stack](./concepts.md#a-worlds-content-stack). |
 
 ### What the player holds on arrival (`held`)
 
@@ -295,7 +293,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 100 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 102 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -387,6 +385,8 @@ Groups are this document's own § headings, matched to a field by the section th
 |---|---|---|---|---|---|---|---|---|---|
 | `applyContentModules` | — | — | — | — | — | fn | — | — | — |
 | `conceptRealisations` | — | — | — | — | — | {guardian, swim, sword, water} | — | — | {guardian, swim, sword, water} |
+| `contentRoles` | — | — | — | — | — | — | — | — | {gate, item, place} |
+| `defaultContentPack` | — | — | — | — | — | — | — | — | text-adventure |
 | `extractPathsAndObstacles` | — | — | — | fn | — | fn | — | — | fn |
 | `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |

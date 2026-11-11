@@ -1,6 +1,6 @@
 {
   "$comment": "The whole-game pin of probe-seedling-derived-rules.mjs (session tile-rules-automation-r-a1). Every leaf under `summary` must equal the probe's SUMMARY; a key not named here is not pinned. Provenance per block in its own $comment. A rules slice that moves rows re-records this file (and says which rows moved). RE-RECORDED for rules-l20-button-latch (rules-4): its one new location, the in-room press event 'L20 flag 4: lock@32,80 cleared' at level_20__r1c12, is +1 element: derived, equal to today's rule, and an exact echo-free override in one more region (elements 472→473, location derived 58→59, w0 location equal 61→62, routeA overridable/echo-free/exact +1, their regions +1). Certifier and echoes unchanged. RE-RECORDED for tile-lay-l40-latches (Q5 slice 2, ⚖ 'B: Prune, then lay'; CI probe 41771063364 @40a6f357c8 vs control 41771066033 @d928ddb77d, which matched the previous pin): L40's three in-room presses are new event locations, laid as latches. +3 elements (414→417). The two r0c53 presses (L40 flag 1, flag 7) are derived True_ from its landing (53,1): location.derived 57→59, w0.location.equal 59→61. L40 flag 12's press is the FIRST element of level_40__r48c54, an internal-only member no AP exit lands in, priced from both inbound members (r0c53, r23c29) — arrival-dependent and agreeing: location.arrival-dependent 20→22, w0.location.arrival-dependent 10→11, arrivals.regionsPriced 199→200, arrivalNodes 232→234, regionsPerArrivalCount.2 27→28, regionsArrivalDependent 21→22, routeA internal-only 24→25, sharedBinding 28→29. Certifier (1/17/0) and echoes (32) unchanged; L20 stays per sub-region (its latch would drop GROUPED_LOCK_EXCEPTIONS' hasShield charge). RE-RECORDED by R-A3 (session tile-rules-automation-r-a3; CI probe 41869808165 @b3e8818028 = main 6ee66ca952 + R-A3, no table committed; control 41863108049 @6ee66ca952 matched the previous pin; designer design-3 accepted the 12 deltas): echoes 32->37 (rule-less rows planted; carrier mapping), routeA exact redefined (label derived: path-vs-edge excluded), sharedBinding widened to every event-layer event (rules-4 ruling (a)). measuredAt moved to b3e8818028. RE-RECORDED by tile-l12-one-world (⚖ Robert 2026-11-04 \"A: Build after R-A3 (Recommended)\"; CI probe 41940484322 @c0fe1681d8 = main 0885fec4b3 + the build; control 41925434089 @0885fec4b3 matched the previous pin; designer design-3 GO, rules-planning-5 PASS): L12 compiles and derives as ONE level world (15 items, 32,768 lattice points, inside LEVEL_WORLD_MAX_POINTS). Every drift is L12; certifier 1/17/0 and every non-L12 row unchanged; 0 verdict moves. measuredAt moved to c0fe1681d8. RE-RECORDED for tile-l89-feather-swim (⚖ Robert 2026-11-07 'Re-record (Recommended)'; CI probe 42404592200 @f862c0c552 vs control 42404596913 @0d575b78ea, which matched the previous pin): L89's Feather is bound to its cheapest way (level_89__r1c10 by Swim, `cheapestLocationBinding`) instead of the west ledge r9c6 (True_, permissive). Its 3 arrival-dependent STRICTER rows (from r11c12/r1c10/r1c15; the r11c12 one accepted on permissiveBindings) become 1 derived row EQUAL to AP (landing 13,1): certifier accepted 17→16, location derived 59→60, location arrival-dependent 22→19, w0 location equal 61→62, w0 location arrival-dependent 11→10, arrivals regionsPriced 200→199, arrivalNodes 234→231, regionsPerArrivalCount.3 3→2, regionsArrivalDependent 22→21, routeA internal-only 25→24. Problems, echoes and the table unchanged. RE-RECORDED for tile-rules-automation-r-a4b (sided openers; ⚖ Robert 2026-11-08 and the L20 re-record \"Yes, re-record L20 (Recommended)\"): L20 becomes one level world, so its 9 element rows re-frame; every moved count traces to L20's three regions. RE-RECORDED by tile-encounter-kill-arms (⚖ Robert 2026-11-10 \"Yes, re-record (Recommended)\"; CI probe 42886614103 @96ea8331cc = L60's d30819a5c9 + the slice vs control 42886589748 @d30819a5c9, which matched the previous pin): exactly two element rows move, problem → agrees. The L53 location `@L53 flag 2` from the L54 pocket r14c9 (the event no longer fires from a `cannot` neighbour; it is arrival-dependent, agreeing) and the L60 pair r5c9 → r5c0 (the pocket's entry is laid as the rules' Or(event, Ghost Spear); derived, agreeing). Moved: certifier.problems 3→1; labels.pair.derived 202→203; labels.location.arrival-dependent 22→23. Every other count, the echoes and the table's rows, exclusions and counts are unchanged.",
-  "measuredAt": "96ea8331cc",
+  "measuredAt": "69e7a8e9cf",
   "summary": {
     "certifier": {
       "$comment": "The whole-game certifier's triple (problems / accepted / threw). At main 491f3286d9 (Q1 landed): 1 / 17 / 0, the L63 framing row only (was 2/18/0 at 1e5b7efd98 with OPEN L3→L111). RE-RECORDED by tile-encounter-kill-arms (⚖ Robert 2026-11-10 \"Yes, re-record (Recommended)\"; CI probe 42886614103 @96ea8331cc vs control 42886589748 @d30819a5c9, which matched the previous pin): OPEN_L53 and OPEN_L60 close, 3 / 16 / 0 → 1 / 16 / 0.",
@@ -30,10 +30,10 @@
         "derived": 203
       },
       "exit": {
-        "derived": 289,
+        "derived": 290,
         "echoed": 13,
         "arrival-dependent": 54,
-        "path-vs-edge": 19
+        "path-vs-edge": 18
       },
       "location": {
         "derived": 62,
@@ -45,9 +45,9 @@
     "w0": {
       "$comment": "W0's per-element truth table (scratch analyze.mjs, CI 41533423669 @35373cb69d): exits leaving a world 392, locations 80. Independent of the echo. At 491f3286d9 the exit verdicts move with Q1: equal 349, stricter 9, arrival-dependent 25. RE-RECORDED by R-A2 (session tile-rules-automation-r-a2; CI probe 41736083977 @c5764cf46f = main 06fe11dea5 + R-A2; control 41735447136 @06fe11dea5 matched the previous pin): the INPUT/OUTPUT SPLIT. The maze worlds copy only the overlay hand terms (OV.handExitTerms + OV.handLocationTerms); 18 plain multi-sub-region levels are one level world each; kept per sub-region, by derived tests: L12 (15 items over LEVEL_WORLD_LATTICE_CAP), L20 (its own in-room press opens a target in the same world), L94 (r2c16↔r3c4 crosses TreeLarge per-pixel mask, priced by the physics model). Exit elements fewer (in-world exits became pairs). Moved: exit.equal 349→293; exit.arrival-dependent 25→28; exit.stricter 9→7; exit.looser 9→5; location.equal 62→59; location.stricter 11→12; location.arrival-dependent 8→10. RE-RECORDED by tile-l12-one-world (⚖ Robert 2026-11-04 \"A: Build after R-A3 (Recommended)\"; CI probe 41940484322 @c0fe1681d8 = main 0885fec4b3 + the build; control 41925434089 @0885fec4b3 matched the previous pin; designer design-3 GO, rules-planning-5 PASS): L12 compiles and derives as ONE level world (15 items, 32,768 lattice points, inside LEVEL_WORLD_MAX_POINTS). The 12 in-world L12 exits are pairs now, not world-exit elements. Moved: exit.equal 293->281.",
       "exit": {
-        "equal": 277,
+        "equal": 278,
         "arrival-dependent": 28,
-        "stricter": 7,
+        "stricter": 6,
         "looser": 5
       },
       "location": {
@@ -81,9 +81,9 @@
       "overridableEchoed": 9,
       "overridableEchoFree": 136,
       "regionsWithAnEchoFreeOverride": 60,
-      "overridablePartial": 10,
-      "overridableExact": 124,
-      "regionsWithAnExactOverride": 55
+      "overridablePartial": 12,
+      "overridableExact": 122,
+      "regionsWithAnExactOverride": 54
     },
     "unpriced": 302,
     "sharedBinding": 150,
@@ -92,9 +92,9 @@
     "$sharedBinding": "R-A2 (rules-4): elements whose derived rule names a LOCK event the maze lays from playthroughLockEvents (the lock↔event binding is shared; the lock censuses check it against the game). R-A3 must not override on them without a game witness. RE-RECORDED by R-A3 (session tile-rules-automation-r-a3; CI probe 41869808165 @b3e8818028 = main 6ee66ca952 + R-A3, no table committed; control 41863108049 @6ee66ca952 matched the previous pin; designer design-3 accepted the 12 deltas): WIDENED (rules-4 ruling (a), 2026-11-04: \"WIDEN sharedBinding to every event-layer event\"): an element whose derived rule names ANY event the compiled document places (obstacle, lock, button, pole, rope, talk), or that IS an event location. 29->141. RE-RECORDED by tile-l12-one-world (⚖ Robert 2026-11-04 \"A: Build after R-A3 (Recommended)\"; CI probe 41940484322 @c0fe1681d8 = main 0885fec4b3 + the build; control 41925434089 @0885fec4b3 matched the previous pin; designer design-3 GO, rules-planning-5 PASS): L12 compiles and derives as ONE level world (15 items, 32,768 lattice points, inside LEVEL_WORLD_MAX_POINTS). +14 net, all L12: 18 one-world pairs that cross an L12 lock-event cell come in, 4 per-sub-region L12 exits go (r0c19 -> r13c6, r0c19 -> r40c4, r0c37 -> r0c19, r43c21 -> r0c19). L71 flag 2, L63 flag 6 and L63 flag 1 unchanged. 141->155. RE-RECORDED by rules-sharedbinding-witnesses (rules-4's R-A3 ruling (c): re-admit per row on a GAME witness; ⚖ Robert 2026-11-06 \"Accept reorder\" for L65 r0c2 -> L63 r10c2; CI probe 42325030301 @a4c69dcfee = main 6473024aa8 + the slice; the only drifts were these counts): the binding ledger scripts/procgen/seedling-binding-witnesses.json witnesses L71 flag 2, L63 flag 6 and L63 flag 1 (probe-seedling-cleartag.mjs --set=bindings --repeat=8, p4g, 8/8 per arm). The 14 elements naming only those events move from sharedBinding to bindingWitnessed (new count): 155->141. 3 are exact (the 3 new table rows); the 11 others are arrival-dependent, path-vs-edge or derived-but-not-overridable.",
     "table": {
       "$comment": "R-A3: the derived-rule table the probe emits (exact minus sharedBinding minus TABLE_EXCLUSIONS). RE-RECORDED by tile-l12-one-world (⚖ Robert 2026-11-04 \"A: Build after R-A3 (Recommended)\"; CI probe 41940484322 @c0fe1681d8 = main 0885fec4b3 + the build; control 41925434089 @0885fec4b3 matched the previous pin; designer design-3 GO, rules-planning-5 PASS): L12 compiles and derives as ONE level world (15 items, 32,768 lattice points, inside LEVEL_WORLD_MAX_POINTS). 10 L12 rows REMOVED (the routeA move above), 0 added, 0 changed; each removed rule was byte-identical to the composed rule, so AP_1 stays e4020557. Excluded 12->11 (r0c19 -> L0 r11c19 leaves the exact set). Moved: rows 127->117; regions 60->56; excluded 12->11. RE-RECORDED by rules-sharedbinding-witnesses (rules-4's R-A3 ruling (c): re-admit per row on a GAME witness; ⚖ Robert 2026-11-06 \"Accept reorder\" for L65 r0c2 -> L63 r10c2; CI probe 42325030301 @a4c69dcfee = main 6473024aa8 + the slice; the only drifts were these counts): 3 exact elements leave sharedBinding: L76 -> L71 r0c6 (L71 flag 2), @L63 flag 1 at L61 r0c10 (an event-location row, event: true), L65 r0c2 -> L63 r10c2 (L63 flag 6; its And children reordered vs the composition, truth-table equal: AP_1 2 lines, Rules.py 1, seed 1 identical). 0 removed, 0 changed. Moved: rows 117->120; excluded 11->8; regions 56 unchanged.",
-      "rows": 117,
-      "regions": 54,
-      "excluded": 7
+      "rows": 116,
+      "regions": 53,
+      "excluded": 6
     }
   }
 }

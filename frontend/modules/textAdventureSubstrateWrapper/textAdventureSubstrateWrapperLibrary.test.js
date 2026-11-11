@@ -25,6 +25,8 @@ import {
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { CONCEPTS, assertRealisations, conceptsRealisedBy } from '../procgenCore/concepts.js';
 import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
+import { presentedProse } from './textAdventureRoom.js';
+import { defaultContentSetOf } from '../procgenPipeline/worldContent.js';
 
 describe('textAdventureSubstrateWrapperLibrary substrateRegistryEntry', () => {
     it('claims the text-adventure identity and load event, with the WRAPPER panel', () => {
@@ -115,13 +117,15 @@ describe('textAdventureSubstrateWrapperLibrary substrateRegistryEntry', () => {
             { concept: 'guardian', kind: 'enemy', tier: 'mechanic', placements: [{ key: 'gate', effect: 'requires' }] },
             { concept: 'water', kind: 'obstacle', tier: 'mechanic', placements: [{ key: 'gate', effect: 'requires' }] },
         ]);
+        // ⛓ CONTENT SETS R1 — the words are the default pack's, read through the entry's roles.
+        const set = defaultContentSetOf([substrateRegistryEntry.defaultContentPack]);
         for (const cid of ['guardian', 'water']) {
-            const { blocked, passedWith } = TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid].placements.gate.mechanic.prose;
+            const { blocked, passedWith } = presentedProse(set, 'gate', cid);
             expect(blocked, cid).toMatch(/\{destinationRegion\}/);
             expect(passedWith, cid).toMatch(/\{destinationRegion\}/);
         }
         // passedWith names the weakness / the crossing
-        expect(TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate.mechanic.prose.passedWith).toMatch(/sword/);
-        expect(TEXT_ADVENTURE_CONCEPT_REALISATIONS.water.placements.gate.mechanic.prose.passedWith).toMatch(/[Ss]wim/);
+        expect(presentedProse(set, 'gate', 'guardian').passedWith).toMatch(/sword/);
+        expect(presentedProse(set, 'gate', 'water').passedWith).toMatch(/[Ss]wim/);
     });
 });

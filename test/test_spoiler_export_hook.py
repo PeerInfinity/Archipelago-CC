@@ -665,8 +665,7 @@ def test_every_copy_of_the_client_is_byte_identical():
         assert f'worlds/{package}/{CLIENT_NAME}' in found
     for package in ('metamath', 'depgraph'):
         assert f'apworlds/{package}.apworld!{package}/{CLIENT_NAME}' in found
-    # The generated group (H3): the generator's verbatim copy and every recipe package. (The Feb-09 snapshot
-    # scripts/vanilla-alttp/alttp_worldgen.apworld carries no client, so it is not a copy; planner, 2026-11-10.)
+    # The generated group (H3): the generator's verbatim copy and every recipe package.
     assert f'world_generator/ext_template/{CLIENT_NAME}' in found
     recipes = json.loads((REPO / 'scripts' / 'data' / 'worldgen-package-recipes.json').read_text(encoding='utf-8'))
     for package in recipes['packages']:
