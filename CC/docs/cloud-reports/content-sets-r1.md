@@ -202,10 +202,15 @@ not compiled by procgen), so the procgen surface is **four**, matching the plan:
 7. **Templates are authored markup**: a pack description's HTML is not escaped (as with the per-game file); only its
    values are. A theme author can therefore inject markup, as the per-game file author always could.
 8. The exit labels still name regions by id (§6): naming them needs every room's place before its payload loads.
+9. **Defect my bounded run missed, CI found** (JSUT 42943133715 at `e54d17f7ab`, default-tier shard 3/3):
+   `procgenPipeline/conceptSeam.test.js` calls `placeTextAdventureRules` with `params.concepts` and no `contentSet`,
+   so the placer refused it (`noContentSet`, the intended behaviour). The fix hands both legs the default content
+   set, so the test still pins only that `params.concepts` changes nothing. Lesson for R2: grep every caller of the
+   placer (`git grep -al placeTextAdventureRules`) into the bounded run, not only the files the slice touched.
 
 ## 10. CI
 
-All CI rows are at the **code tip `1778cd770f`**; the report commit after it changes only `CC/docs/`. Run ids at the
+CI is quoted at the final tip (the `conceptSeam` fix, §9.9, which also carries this record). Run ids at the
 final tip are in the REPORT BACK message (not in a further commit).
 
 ## Next slice

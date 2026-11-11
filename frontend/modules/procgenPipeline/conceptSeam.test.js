@@ -22,6 +22,9 @@ import { generateRegion } from './procgenPipelineEngine.js';
 import { CONCEPTS, isConceptRow, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { generateTextAdventureRoom, placeTextAdventureRules }
     from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
+import { TEXT_ADVENTURE_DEFAULT_CONTENT_PACK }
+    from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
+import { defaultContentSetOf } from './worldContent.js';
 import { substrateRegistryEntry as GEN_ENTRY } from '../flashPanel/flashSeedlingGenLibrary.js';
 // the headless BUILD door: registers the generated-room entry and installs its generator
 import '../flashPanel/flashSeedlingGenBuild.js';
@@ -123,8 +126,10 @@ describe('the other procedural placers ignore `params`', () => {
         };
         const a = build();
         const b = build();
-        const outA = placeTextAdventureRules(a.world, input);
-        const outB = placeTextAdventureRules(b.world, { ...input, params: { concepts: ALL } });
+        // the words come from the default pack (both legs alike); only params.concepts differs
+        const contentSet = defaultContentSetOf([TEXT_ADVENTURE_DEFAULT_CONTENT_PACK]);
+        const outA = placeTextAdventureRules(a.world, { ...input, params: { contentSet } });
+        const outB = placeTextAdventureRules(b.world, { ...input, params: { contentSet, concepts: ALL } });
         expect(outB).toEqual(outA);
         expect([...b.world.exits.entries()]).toEqual([...a.world.exits.entries()]);
         expect(b.world.locations).toEqual(a.world.locations);
