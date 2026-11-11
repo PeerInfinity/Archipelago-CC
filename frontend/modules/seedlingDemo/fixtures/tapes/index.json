@@ -449,7 +449,7 @@
     },
     {
       "file": "l40button-l41-part0.json",
-      "tickCount": 1601,
+      "tickCount": 1600,
       "bootLevel": 40,
       "tapeVersion": 8,
       "noHazards": []

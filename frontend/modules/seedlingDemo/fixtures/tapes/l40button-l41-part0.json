@@ -89,7 +89,7 @@
             "index": 1
         }
     },
-    "tick_count": 1601,
+    "tick_count": 1600,
     "inputs": [
         {
             "key": "left",
@@ -629,6 +629,21 @@
         {
             "key": "right",
             "from": 1416,
+            "to": 1431
+        },
+        {
+            "key": "primary",
+            "from": 1430,
+            "to": 1431
+        },
+        {
+            "key": "left",
+            "from": 1431,
+            "to": 1432
+        },
+        {
+            "key": "right",
+            "from": 1432,
             "to": 1435
         },
         {
@@ -642,6 +657,11 @@
             "to": 1437
         },
         {
+            "key": "right",
+            "from": 1437,
+            "to": 1439
+        },
+        {
             "key": "up",
             "from": 1438,
             "to": 1439
@@ -652,24 +672,39 @@
             "to": 1439
         },
         {
-            "key": "right",
-            "from": 1437,
-            "to": 1447
-        },
-        {
             "key": "down",
-            "from": 1446,
-            "to": 1447
+            "from": 1439,
+            "to": 1440
         },
         {
             "key": "left",
-            "from": 1447,
-            "to": 1448
+            "from": 1439,
+            "to": 1441
+        },
+        {
+            "key": "up",
+            "from": 1440,
+            "to": 1442
         },
         {
             "key": "right",
-            "from": 1448,
-            "to": 1449
+            "from": 1441,
+            "to": 1442
+        },
+        {
+            "key": "left",
+            "from": 1442,
+            "to": 1443
+        },
+        {
+            "key": "right",
+            "from": 1443,
+            "to": 1444
+        },
+        {
+            "key": "down",
+            "from": 1444,
+            "to": 1445
         },
         {
             "key": "primary",
@@ -682,189 +717,184 @@
             "to": 1459
         },
         {
-            "key": "primary",
-            "from": 1470,
-            "to": 1471
+            "key": "up",
+            "from": 1448,
+            "to": 1477
         },
         {
-            "key": "primary",
+            "key": "down",
+            "from": 1477,
+            "to": 1478
+        },
+        {
+            "key": "up",
             "from": 1478,
             "to": 1479
         },
         {
-            "key": "up",
-            "from": 1453,
+            "key": "down",
+            "from": 1479,
             "to": 1480
         },
         {
-            "key": "primary",
+            "key": "up",
             "from": 1480,
             "to": 1481
         },
         {
-            "key": "down",
-            "from": 1480,
+            "key": "primary",
+            "from": 1482,
+            "to": 1483
+        },
+        {
+            "key": "primary",
+            "from": 1484,
             "to": 1485
         },
         {
-            "key": "up",
-            "from": 1485,
-            "to": 1486
+            "key": "primary",
+            "from": 1490,
+            "to": 1491
         },
         {
             "key": "primary",
-            "from": 1486,
-            "to": 1487
+            "from": 1496,
+            "to": 1497
         },
         {
             "key": "primary",
-            "from": 1492,
-            "to": 1493
+            "from": 1502,
+            "to": 1503
         },
         {
             "key": "primary",
-            "from": 1498,
-            "to": 1499
+            "from": 1504,
+            "to": 1505
         },
         {
             "key": "primary",
-            "from": 1500,
-            "to": 1501
+            "from": 1510,
+            "to": 1511
         },
         {
             "key": "primary",
-            "from": 1506,
-            "to": 1507
+            "from": 1516,
+            "to": 1517
         },
         {
             "key": "primary",
-            "from": 1512,
-            "to": 1513
-        },
-        {
-            "key": "primary",
-            "from": 1518,
-            "to": 1519
-        },
-        {
-            "key": "primary",
-            "from": 1520,
-            "to": 1521
+            "from": 1522,
+            "to": 1523
         },
         {
             "key": "left",
-            "from": 1487,
-            "to": 1527
+            "from": 1485,
+            "to": 1525
         },
         {
             "key": "primary",
-            "from": 1526,
-            "to": 1527
+            "from": 1524,
+            "to": 1525
         },
         {
             "key": "right",
-            "from": 1527,
+            "from": 1525,
             "to": 1529
         },
         {
             "key": "left",
             "from": 1529,
-            "to": 1537
-        },
-        {
-            "key": "primary",
-            "from": 1538,
-            "to": 1539
+            "to": 1531
         },
         {
             "key": "right",
-            "from": 1539,
-            "to": 1540
+            "from": 1533,
+            "to": 1535
         },
         {
             "key": "primary",
-            "from": 1540,
-            "to": 1541
+            "from": 1542,
+            "to": 1543
         },
         {
             "key": "primary",
-            "from": 1546,
-            "to": 1547
+            "from": 1544,
+            "to": 1545
         },
         {
             "key": "down",
-            "from": 1541,
-            "to": 1553
+            "from": 1539,
+            "to": 1551
         },
         {
             "key": "primary",
-            "from": 1552,
-            "to": 1553
+            "from": 1550,
+            "to": 1551
         },
         {
             "key": "up",
-            "from": 1553,
-            "to": 1554
+            "from": 1551,
+            "to": 1552
+        },
+        {
+            "key": "down",
+            "from": 1552,
+            "to": 1557
         },
         {
             "key": "primary",
-            "from": 1558,
+            "from": 1556,
+            "to": 1557
+        },
+        {
+            "key": "up",
+            "from": 1557,
             "to": 1559
         },
         {
             "key": "down",
-            "from": 1554,
-            "to": 1561
+            "from": 1559,
+            "to": 1565
+        },
+        {
+            "key": "up",
+            "from": 1566,
+            "to": 1568
         },
         {
             "key": "primary",
-            "from": 1560,
-            "to": 1561
-        },
-        {
-            "key": "up",
-            "from": 1561,
-            "to": 1562
-        },
-        {
-            "key": "down",
-            "from": 1562,
-            "to": 1567
-        },
-        {
-            "key": "up",
             "from": 1569,
             "to": 1570
         },
         {
             "key": "primary",
-            "from": 1578,
-            "to": 1579
+            "from": 1571,
+            "to": 1572
         },
         {
             "key": "primary",
-            "from": 1580,
-            "to": 1581
+            "from": 1577,
+            "to": 1578
         },
         {
             "key": "left",
-            "from": 1571,
-            "to": 1587
-        },
-        {
-            "key": "primary",
-            "from": 1586,
-            "to": 1587
+            "from": 1572,
+            "to": 1591
         },
         {
             "key": "right",
-            "from": 1587,
-            "to": 1589
-        },
-        {
-            "key": "right",
-            "from": 1590,
+            "from": 1591,
             "to": 1592
+        },
+        {
+            "key": "left",
+            "from": 1594,
+            "to": 1595
+        },
+        {
+            "key": "right",
+            "from": 1595,
+            "to": 1596
         },
         {
             "key": "left",
@@ -874,24 +904,19 @@
         {
             "key": "right",
             "from": 1597,
-            "to": 1598
-        },
-        {
-            "key": "left",
-            "from": 1598,
             "to": 1599
         },
         {
             "key": "down",
-            "from": 1596,
-            "to": 1601
+            "from": 1594,
+            "to": 1600
         },
         {
-            "key": "right",
+            "key": "left",
             "from": 1599,
-            "to": 1601
+            "to": 1600
         }
     ],
     "tape_version": 8,
-    "description": "⛓⛓⛓ SEEDLING FIDELITY L40BUTTON — sweep-4 leg 378 (`level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144`): L40 from L41 teleporter@0,160, arrival (928,96), to `Totem Part 64,144`. The solver's own plan with `STANCE_ROCKS` ON: `hold` buttonroom@272,208 (group 0 latches), `break` the NW cluster's rocks {22,23,24}, `hold` buttonroom@160,128 (group 1 latches), collect — the order `r5-l40-part0` recorded from inside the cluster, here from the arrival. Group 2 (`button@480,384`, `wandlock@448,432`), which the OFF refusal named, is never touched. 1601 t. The survey's staging (`r8-solve-11` re-pointed at the arrival; items [canSwim, hasFire, hasShield, hasTorch], keys [0, 1, 2]). Authored by scripts/procgen/plan-seedling-l40button-witness.mjs. ⛓ DAMAGE ON (L40REREC, wave 31): planned at the shipped contact-fidelity defaults, the hold on buttonroom@272,208 PACED out of `bombpusher@112,128`'s blasts (`movingWait` + `bombBlastBody`), recorded on the game (p4g) with the hit path live: 0 hits, 0 px."
+    "description": "⛓⛓⛓ SEEDLING FIDELITY L40BUTTON — sweep-4 leg 378 (`level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144`): L40 from L41 teleporter@0,160, arrival (928,96), to `Totem Part 64,144`. The solver's own plan with `STANCE_ROCKS` ON: `hold` buttonroom@272,208 (group 0 latches), `break` the NW cluster's rocks {22,23,24}, `hold` buttonroom@160,128 (group 1 latches), collect — the order `r5-l40-part0` recorded from inside the cluster, here from the arrival. Group 2 (`button@480,384`, `wandlock@448,432`), which the OFF refusal named, is never touched. 1600 t. The survey's staging (`r8-solve-11` re-pointed at the arrival; items [canSwim, hasFire, hasShield, hasTorch], keys [0, 1, 2]). Authored by scripts/procgen/plan-seedling-l40button-witness.mjs. ⛓ DAMAGE ON (L40REREC, wave 31): planned at the shipped contact-fidelity defaults, the hold on buttonroom@272,208 PACED out of `bombpusher@112,128`'s blasts (`movingWait` + `bombBlastBody`), recorded on the game (p4g) with the hit path live: 0 hits, 0 px."
 }
