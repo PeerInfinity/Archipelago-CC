@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1281,
+        "headings": 1282,
         "indexHeadings": 2,
-        "lines": 35811,
+        "lines": 35854,
         "pages": 4,
-        "words": 533464
+        "words": 534219
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -206,8 +206,8 @@ export const DOCS_INDEX = frz({
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
             "file": "maze.md",
             "h1": "Maze Substrate",
-            "headings": 28,
-            "lines": 376,
+            "headings": 29,
+            "lines": 417,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -219,14 +219,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 19216
+            "words": 19884
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
             "headings": 16,
-            "lines": 234,
+            "lines": 235,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -235,7 +235,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 3249
+            "words": 3284
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
@@ -274,16 +274,17 @@ export const DOCS_INDEX = frz({
             "file": "concepts.md",
             "h1": "Concepts",
             "headings": 20,
-            "lines": 241,
+            "lines": 242,
             "links": [
                 "gotchas.md",
+                "maze.md",
                 "paths-and-obstacles.md",
                 "seedling-solver-surface.md",
                 "substrate-registry.md",
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 4577
+            "words": 4629
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",

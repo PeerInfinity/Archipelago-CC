@@ -97,6 +97,7 @@ The canvas draw is `drawWorld(ctx, world, view)` in `mazeRoom/mazeRoomRender.js`
 | `seenTiles` | `Set` of `"x,y"`, or `null` for full blackout |
 | `isExitVisible` / `isLocationVisible` | Discovery filters (playback only) |
 | `isConsumableCollected` | `(x,y) => boolean`, or `null` when nothing tracks them |
+| `tileArt` | `{art, images}` from a world's content stack: the things `mazeTileArt.MAZE_ART_KEYS` keys are drawn from the pack, the rest as with `null`. Ignored under `seedlingSkin`. See [Tile art from a content pack](./maze.md#tile-art-from-a-content-pack-mazetileartjs) |
 
 `plainView({tilePx})` turns every filter off. `mazeRoomRender.test.js` runs in node without a canvas, so it compares an ordered draw-op log recorded by `drawOpRecorder.js`, which throws on any member it does not model.
 

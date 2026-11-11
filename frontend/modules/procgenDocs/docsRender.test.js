@@ -304,7 +304,9 @@ describe('⛓ the links the render emits', () => {
         //   `defaultContentPack` paragraph (2 doc).
         //   399 → 402: content sets R1 — concepts.md (role sentence) → text-adventure.md § Content roles, that §
         //   → concepts.md § Content roles (2 doc), and text-adventure.md's realisations → its own § (1 same-doc).
-        expect(checked).toBe(402);
+        //   402 → 404: content sets R2b — concepts.md § A world's content stack and maze-lab.md's `tileArt` row →
+        //   maze.md § Tile art from a content pack (2 doc).
+        expect(checked).toBe(404);
     });
 
     it('tags each link with the kind that produced it', () => {

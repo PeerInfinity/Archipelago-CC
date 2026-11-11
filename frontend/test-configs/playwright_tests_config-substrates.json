@@ -547,6 +547,12 @@
             "_comment": "maze-seedling-art-1 (S1): the playthrough maze over its level's room in the Seedling graphics; sheets decoded, the static layer's build/hit counts, the toggle; logs the render cost art on vs off (L0, L12). maze-seedling-art-2 (S2): the live sprites drew after a move (census refusals 0, the player a sprite). No batch claims this category, so it rides `fast`."
         },
         {
+            "id": "maze-tile-art-from-pack-stack",
+            "enabled": true,
+            "category": "Maze tile art",
+            "_comment": "Content sets R2b: a plain maze world drawn from a FIXTURE pack stack (in-memory packs, sheets painted on an OffscreenCanvas): the wall pixel is the later pack's, the floor the earlier pack's, the un-keyed exit COLORS.exit. No batch claims this category, so it rides `fast`."
+        },
+        {
             "id": "seedling-atlas-sphere-placed-region",
             "enabled": true,
             "category": "Seedling atlas maze",

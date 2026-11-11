@@ -91,6 +91,9 @@ import {
     mapDocumentPath, playerOfRawPayload, regionAtlasOf, rulesOfRawPayload,
 } from '../flashPanel/mapDocumentPath.js';
 import { resolveMazeArrival } from './mazeArrival.js';
+import { loadMazeTileArt } from './mazeTileArt.js';
+import { browserDecoder } from '../artLibrary/artLibrary.js';
+import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
 /**
  * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
  * lab page's canvas has used it since editor v3; the panel divided by the
@@ -363,6 +366,13 @@ export class MazeRoomUI {
         // world object → its tiles before its FIRST edit (maze-seedling-art-2):
         // the art cannot show an edited wall, so the bake paints those cells.
         this._seedlingBaseTiles = new WeakMap();
+        // ⛓ CONTENT SETS R2b — the maze's tiles from the world's content stack: null (not asked), or
+        // {status:'loading'|'ready'|'failed', key (the stack, joined), tileArt, keyed, failed, error}.
+        this._tileArt = null;
+        // The pack io the load uses: null = the browser's (`browserPackIo` + `browserDecoder`); the in-app row
+        // sets a fixture (`setTileArtSourceForTests`).
+        this._tileArtIo = null;
+        this._tileArtContentOverride = null;
         this._seedlingLayerStats = { builds: 0, hits: 0 };
         this.seenTilesByRegion = new Map(); // regionId -> Set<posKey>
         // Direct-explore button state: set true while a user-initiated
@@ -3959,6 +3969,86 @@ export class MazeRoomUI {
      * captured from THIS method before the extraction, compared against both
      * this adapter and a direct `drawWorld` call.
      */
+    /**
+     * ⛓ CONTENT SETS R2b — the world's effective content stack for the maze's ART: the maze entry's default pack (if
+     * it declares one) then the loaded slot's recorded `procgen_metadata[p].content` (⚠ a per-player map), through
+     * `worldContent.effectiveContentStack` — the one stack rule, so a later pack wins per key by `mergeKeyed`. The
+     * substrate set is the maze alone, as the region job's `attachJobContent` reads it (`[args.substrate]`).
+     */
+    _tileArtStack() {
+        let content = [];
+        if (Array.isArray(this._tileArtContentOverride)) {
+            return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content: this._tileArtContentOverride });
+        }
+        try {
+            const { rules, player } = this._loadedRules();
+            if (rules && player !== null && player !== undefined) content = documentContentOf(rules, player);
+        } catch (err) {
+            console.warn(`[mazeRoom] tile art: the world's content list is unreadable (${err.message}); drawing without it`);
+        }
+        return effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content });
+    }
+
+    /**
+     * The `tileArt` view field: `{art, images}` once the world's stack has art for a maze key, else null (draw as
+     * today). ⛔ Never for a Seedling-atlas world (`_seedlingSkin()` answers a level): the Seedling skin draws there,
+     * with its toggle on or off, and this seam is not used. An empty stack resolves at once and reads nothing; a
+     * non-empty one loads once per stack and re-renders when it lands (only if it brought art).
+     */
+    _tileArtView() {
+        if (this._seedlingSkin()) return null;
+        const stack = this._tileArtStack();
+        const key = stack.join(',');
+        if (this._tileArt?.key !== key) {
+            if (stack.length === 0) {
+                this._tileArt = { status: 'ready', key, tileArt: null, keyed: {}, failed: [] };
+            } else {
+                this._startTileArtLoad(stack, key);
+            }
+        }
+        return this._tileArt.status === 'ready' ? this._tileArt.tileArt : null;
+    }
+
+    _startTileArtLoad(stack, key) {
+        this._tileArt = { status: 'loading', key, tileArt: null, keyed: {}, failed: [] };
+        const io = this._tileArtIo ?? { ...browserPackIo(), decode: browserDecoder() };
+        loadMazeTileArt(stack, io).then((loaded) => {
+            if (this._tileArt?.key !== key) return;
+            if (loaded.failed.length) console.warn(`[mazeRoom] tile art: ${loaded.failed.length} sheet(s) failed (drawn in the maze's own colours): ${loaded.failed.join('; ')}`);
+            this._tileArt = { status: 'ready', key, ...loaded };
+            if (loaded.tileArt) this.render();
+        }, (err) => {
+            if (this._tileArt?.key !== key) return;
+            console.error(`[mazeRoom] tile art did not load (drawn in the maze's own colours): ${err.message}`);
+            this._tileArt = { status: 'failed', key, tileArt: null, keyed: {}, failed: [], error: err.message };
+        });
+    }
+
+    /** What the in-app row reads: the stack, the load, which things the art keys and from which pack. */
+    getTileArtStatus() {
+        const a = this._tileArt;
+        return {
+            stack: a?.key ? a.key.split(',') : [],
+            status: a?.status ?? 'idle',
+            error: a?.error ?? null,
+            keyed: { ...(a?.keyed ?? {}) },
+            sheets: a?.tileArt?.images?.size ?? 0,
+            failedSheets: a?.failed?.length ?? 0,
+        };
+    }
+
+    /**
+     * TEST SEAM (the in-app row): load the tile art through `io` (`{ base, readJson, decode }`) instead of the
+     * browser's, and forget what was loaded; `null` restores the browser's. `content` (optional) replaces the world's
+     * recorded content list for the load (`content`) — a fixture theme with no committed world that names it.
+     */
+    setTileArtSourceForTests(io, { content = null } = {}) {
+        this._tileArtIo = io;
+        this._tileArt = null;
+        this._tileArtContentOverride = content;
+        this.render();
+    }
+
     _drawWorld(canvas, seedlingSkin = this._seedlingSkinView()) {
         const ctx = canvas.getContext('2d');
         const view = {
@@ -3983,6 +4073,7 @@ export class MazeRoomUI {
             blockKinds: this.state?.blockKinds ?? null,
             livePulsers: this.state ? livePulsers(this.world, this.state, this.externalInventory ?? undefined) : null,
             latched: this.state?.latched ?? null,
+            tileArt: seedlingSkin ? null : this._tileArtView(),
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);
