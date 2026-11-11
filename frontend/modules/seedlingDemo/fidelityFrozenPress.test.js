@@ -44,7 +44,9 @@ describe('FROZENPRESS — the switch', () => {
             const W37C = ['rockGoneFencepost', 'drillTerrainSwitch'];
             // ⛓ wave 38: L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm`.
             const W38 = ['spinnerRosterGone', 'fireSpinnerArm'];
-            expect(after.filter((k) => !W37B.includes(k) && !W37C.includes(k) && !W38.includes(k))).toEqual([]);
+            // ⛓ wave 39: ROCKFIRE `fireRockArm`.
+            const W39 = ['fireRockArm'];
+            expect(after.filter((k) => !W37B.includes(k) && !W37C.includes(k) && !W38.includes(k) && !W39.includes(k))).toEqual([]);
         });
     it('`SEEDLING_FROZEN_PRESS_FORECAST` is a known worker env name; `freezeForecast` is a progress field', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FROZEN_PRESS_FORECAST');

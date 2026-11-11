@@ -549,7 +549,8 @@ describe('who takes the box', () => {
          * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`;
          * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`;
          * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
-         * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`.)
+         * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
+         * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -639,6 +640,8 @@ describe('who takes the box', () => {
             'probe-seedling-secondary-use.mjs',
             // fidelity FIRESPINNER: a Fire press reaching a spinner on the game (import door: `isEntryPoint` → main())
             'probe-seedling-fire-spinner.mjs',
+            // fidelity ROCKFIRE: a Fire press reaching a BreakableRock on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-rock-fire.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())

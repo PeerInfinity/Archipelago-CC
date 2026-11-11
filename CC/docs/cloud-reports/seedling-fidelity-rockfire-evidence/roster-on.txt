@@ -1,0 +1,2 @@
+PARSE index.json tape_version must be one of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, got undefined
+tapes 294; with a Fire press that fired 22; with a Fire press reaching a BreakableRock 0; errors 1
