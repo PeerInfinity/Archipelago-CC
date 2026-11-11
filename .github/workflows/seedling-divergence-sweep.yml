@@ -208,6 +208,9 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
       timeout: ${{ steps.plan.outputs.timeout }}
       legs: ${{ steps.plan.outputs.legs }}
+      # ⛓ THE SHARD COUNT the partition was made with: the input, or on a KEYED run min(input, legs). The shard and
+      # merge jobs read THIS, never `inputs.shards` — each shard re-partitions with `--shard=i/n`, so n must match.
+      shards: ${{ steps.plan.outputs.shards }}
       census: ${{ steps.plan.outputs.census }}
     steps:
       # ⛓ NOT the wasm: the leg list reads the committed rules and the map document. ⛔ But it DOES import
@@ -255,7 +258,16 @@ jobs:
             # ⛓ an id / key list is partitioned too (the subset, by the same price); `pickLegs` throws on an unknown key
             node --input-type=module -e "import fs from 'node:fs';import {pickLegs} from './scripts/procgen/seedling-divergence-legs.mjs';const legs=fs.readFileSync('$L','utf8').split('\n').filter(Boolean).map((l)=>JSON.parse(l));const pick=pickLegs(legs,{ids:(process.env.IDS||'').split(',').filter(Boolean).map(Number),keys:(process.env.KEYS||'').split('|').filter(Boolean)});console.log('SELECTED: '+pick.length+' leg(s)');fs.writeFileSync('$L.sub',pick.map((l)=>JSON.stringify(l)).join('\n')+'\n')"
             mv "$L.sub" "$L"
+            # ⛓ KEYED RUNS: min(shards, legs) (⚖ Robert 2026-11-11, "the js planner's keyed-shard fix") — a 3-leg
+            # keyed sweep runs 3 shard jobs, not 10 with 7 empty. An unkeyed sweep keeps the input as it is.
+            # No max-parallel and no concurrency group (⚖ 11-08: ≤ 10 shards, never waiting for runners).
+            N=$(grep -c . "$L" || true)
+            if [ "$N" -ge 1 ] && [ "$N" -lt "$SHARDS" ]; then
+              echo "SHARDS: ${SHARDS} requested, ${N} keyed leg(s) -> ${N} shard(s)" | tee -a plan.txt
+              SHARDS=$N
+            fi
           fi
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
             ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
             ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${SOLVER_ENV:+--solver-env="$SOLVER_ENV"} | tee -a plan.txt
@@ -289,7 +301,7 @@ jobs:
           retention-days: 90
 
   shard:
-    name: Divergence sweep — shard ${{ matrix.shard }}/${{ inputs.shards }}
+    name: Divergence sweep — shard ${{ matrix.shard }}/${{ needs.plan.outputs.shards }}
     needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
@@ -336,10 +348,10 @@ jobs:
           name: divergence-legs
           path: test-results/divergence-sweep
 
-      - name: 'Run shard ${{ matrix.shard }}/${{ inputs.shards }} (${{ inputs.mode }}, ${{ inputs.producer }}, ${{ inputs.page }})'
+      - name: 'Run shard ${{ matrix.shard }}/${{ needs.plan.outputs.shards }} (${{ inputs.mode }}, ${{ inputs.producer }}, ${{ inputs.page }})'
         id: sweep
         env:
-          SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+          SHARD: ${{ matrix.shard }}/${{ needs.plan.outputs.shards }}
           I: ${{ matrix.shard }}
           MODE: ${{ inputs.mode }}
           PRODUCER: ${{ inputs.producer }}
@@ -399,7 +411,7 @@ jobs:
       - name: Summary
         if: always()
         env:
-          SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+          SHARD: ${{ matrix.shard }}/${{ needs.plan.outputs.shards }}
           I: ${{ matrix.shard }}
         run: |
           D=test-results/divergence-sweep
@@ -423,7 +435,7 @@ jobs:
           retention-days: 90
 
   merge:
-    name: Divergence sweep — merge (${{ inputs.shards }} shards)
+    name: Divergence sweep — merge (${{ needs.plan.outputs.shards }} shards)
     needs: [plan, shard]
     # ⛓ ALWAYS, so a failed or missing shard is NAMED here.
     if: always() && needs.plan.result == 'success'
@@ -455,7 +467,7 @@ jobs:
         env:
           LEGS: ${{ needs.plan.outputs.legs }}
           MATRIX: ${{ needs.plan.outputs.matrix }}
-          SHARDS: ${{ inputs.shards }}
+          SHARDS: ${{ needs.plan.outputs.shards }}
         run: |
           mkdir -p merged
           : > merged/rows.jsonl
