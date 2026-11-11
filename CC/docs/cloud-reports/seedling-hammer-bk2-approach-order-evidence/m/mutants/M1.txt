@@ -1,0 +1,10 @@
+     ✓ ships OFF, the env alone turns it on, and the scope restores it 2ms
+     ✓ no anchor (no startshot seen from the route's first waypoint): the waits ascend, as OFF asks them 1ms
+     × an anchor: the anchor first, then outward, the earlier of each pair first — every wait exactly once 10ms
+     × an anchor on the range's edge runs the one way there is 2ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+     × ON: SOLVED inside the budget — the same try, the 70th (anchor 32, rank 5); OFF's plan; hitless on a fresh run 69864ms
+     × ON: the right side's corridor at its anchor (wait 35, rank 0, the 8th fork), 4,527 ticks, fewer units, hitless 65289ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 3 skipped (5)

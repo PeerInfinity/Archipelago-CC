@@ -1,0 +1,27 @@
+CENSUS: leg 874 request 1, captured at seam time 5232, budget 2560
+SEAM-SWEEP: leg 874: 1 distinct answer(s) over 25 seam time(s)
+  t=5220 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5221 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5222 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5223 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5224 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5225 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5226 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5227 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5228 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5229 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5230 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5231 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5232 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5233 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5234 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5235 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5236 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5237 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5238 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5239 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5240 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5241 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5242 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5243 error work=1706 [dashless:834,full:872/sword-dash] PLAN
+  t=5244 error work=1706 [dashless:834,full:872/sword-dash] PLAN
