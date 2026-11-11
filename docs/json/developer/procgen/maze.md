@@ -300,7 +300,19 @@ The other `COLORS` keys are state signals or edges and get no key: `exitBlocked`
     "maze:tile/wall":  { "sheet": "tiles", "fw": 16, "fh": 16, "only": [1] } } }
 ```
 
-A key the theme does not carry falls through to an earlier pack in the stack, or to `COLORS`. The module is presentation only and sits outside the maze engine's import closure (`seedlingDerivedRuleTable.js --print-engine-closure`); `mazeTileArt.test.js` asserts this. The in-app row `maze-tile-art-from-pack-stack` (`fast`) reads the canvas pixels under a fixture stack.
+A theme needs no image at all: the same keys may be **shapes** (rect, circle, line and polygon, each with a fill and/or stroke), rasterised once at load and drawn like a one-frame sprite. The format is in [the art library's README](../../../../frontend/modules/artLibrary/README.md#shapes-art-with-no-image-file).
+
+```jsonc
+// a theme with no image: the wall a dark slab, the player a blue disc with two eyes
+{ "schema_version": 1,
+  "shapes": {
+    "maze:tile/wall": { "w": 16, "h": 16, "draw": [ { "rect": [0, 0, 16, 16], "fill": "#30343c" } ] },
+    "maze:character/player": { "w": 16, "h": 16, "draw": [
+      { "circle": [8, 8, 6], "fill": "#4aa8ff" },
+      { "circle": [6, 7, 1], "fill": "#000000" }, { "circle": [10, 7, 1], "fill": "#000000" } ] } } }
+```
+
+A key the theme does not carry falls through to an earlier pack in the stack, or to `COLORS`. A later pack wins a key whichever kind either pack used. The module is presentation only and sits outside the maze engine's import closure (`seedlingDerivedRuleTable.js --print-engine-closure`); `mazeTileArt.test.js` asserts this. The in-app row `maze-tile-art-from-pack-stack` (`fast`) reads the canvas pixels under a fixture stack.
 
 ## A real game's map as maze regions
 

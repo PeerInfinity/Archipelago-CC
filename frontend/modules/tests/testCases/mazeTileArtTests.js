@@ -3,9 +3,13 @@
  *
  *   maze-tile-art-from-pack-stack — loads a plain (non-Seedling) maze world, points the panel's tile-art load at a
  *   FIXTURE stack of two packs (in-memory `readJson`; sheets painted on an OffscreenCanvas, so no image file is
- *   committed), and reads the canvas: a wall cell shows the LATER pack's wall (it overrides the earlier pack's — the
- *   pack stack's `mergeKeyed`), a floor cell the earlier pack's floor, and an exit cell — a key neither pack carries —
- *   the maze's own `COLORS.exit`. Then it restores the browser's load and the plain draw.
+ *   committed), and reads the canvas pixels (the pack stack's `mergeKeyed`: a later pack wins per key):
+ *     · a WALL cell — the later pack's sprite over the earlier pack's sprite;
+ *     · a FLOOR cell — the later pack's SHAPE over the earlier pack's sprite (part 2: rasterised in the page by
+ *       `artLibrary.browserRasteriser`, the panel's own rasteriser);
+ *     · the PLAYER — a key only the earlier pack carries, so it falls through to it;
+ *     · an EXIT cell — a key neither pack carries — the maze's own `COLORS.exit`.
+ *   Then it restores the browser's load.
  *
  * The draw-op pins (no art → today's ops, the fallbacks) are in node: `mazeRoom/mazeTileArt.test.js`.
  */
@@ -13,6 +17,7 @@ import { registerTest } from '../testRegistry.js';
 import { getPanelInstance } from '../../mazeRoom/index.js';
 import { COLORS, TILE_PX } from '../../mazeRoom/mazeRoomRender.js';
 import { MAZE_ART_KEYS } from '../../mazeRoom/mazeTileArt.js';
+import { browserRasteriser } from '../../artLibrary/artLibrary.js';
 
 const PRESET = './presets/procgen_maze/AP_1/AP_1_rules.json';
 const FIX_BASE = 'https://fixture.invalid/packs/';
@@ -22,8 +27,12 @@ const LATE = 'r2b-fixture-late';
 const SHEET_COLOUR = Object.freeze({
     [`${EARLY}/art/sheets/wall.png`]: [200, 30, 200],
     [`${EARLY}/art/sheets/floor.png`]: [30, 200, 60],
+    [`${EARLY}/art/sheets/player.png`]: [240, 240, 40],
     [`${LATE}/art/sheets/wall.png`]: [250, 140, 0],
 });
+/** The later pack's floor SHAPE: one rect over the whole tile, so its centre pixel is this colour. */
+const FLOOR_SHAPE_RGB = [20, 90, 220];
+const toHex = (rgb) => `#${rgb.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 
 const pack = (id) => ({ schema_version: 1, id, title: id, licence: 'in-app test fixture', layers: { art: 'art/manifest.json' } });
 const sheet = { file: 'sheets/wall.png', w: 16, h: 16 };
@@ -31,10 +40,11 @@ const FIXTURE = Object.freeze({
     [`${EARLY}/pack.json`]: pack(EARLY),
     [`${EARLY}/art/manifest.json`]: {
         schema_version: 1,
-        sheets: { wall: sheet, floor: { ...sheet, file: 'sheets/floor.png' } },
+        sheets: { wall: sheet, floor: { ...sheet, file: 'sheets/floor.png' }, player: { ...sheet, file: 'sheets/player.png' } },
         sprites: {
             [MAZE_ART_KEYS.wall.key]: { sheet: 'wall', fw: 16, fh: 16 },
             [MAZE_ART_KEYS.floor.key]: { sheet: 'floor', fw: 16, fh: 16 },
+            [MAZE_ART_KEYS.player.key]: { sheet: 'player', fw: 16, fh: 16 },
         },
     },
     [`${LATE}/pack.json`]: pack(LATE),
@@ -42,6 +52,7 @@ const FIXTURE = Object.freeze({
         schema_version: 1,
         sheets: { wall: sheet },
         sprites: { [MAZE_ART_KEYS.wall.key]: { sheet: 'wall', fw: 16, fh: 16 } },
+        shapes: { [MAZE_ART_KEYS.floor.key]: { w: 16, h: 16, draw: [{ rect: [0, 0, 16, 16], fill: toHex(FLOOR_SHAPE_RGB) }] } },
     },
 });
 
@@ -61,6 +72,7 @@ const fixtureIo = () => ({
         g.fillRect(0, 0, 16, 16);
         return createImageBitmap(c);
     },
+    rasterise: browserRasteriser(),
 });
 
 const hexRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
@@ -91,6 +103,9 @@ async function tileArtFromPackStack(testController) {
     if (!panel) return testController.getOverallResult();
     testController.reportCondition('a plain maze world (no Seedling skin)', panel._seedlingSkin() === null);
 
+    // The row sets its own view state: fog off, so every cell it reads is drawn (restored after).
+    const fogWas = panel.fogEnabled;
+    panel.fogEnabled = false;
     try {
         panel.setTileArtSourceForTests(fixtureIo(), { content: [EARLY, LATE] });
         const status = await testController.pollForValue(() => {
@@ -101,7 +116,8 @@ async function tileArtFromPackStack(testController) {
         testController.reportCondition('the tile art loaded', status?.status === 'ready');
         testController.reportCondition('the stack is the fixture\'s, in order', JSON.stringify(status?.stack?.slice(-2)) === JSON.stringify([EARLY, LATE]));
         testController.reportCondition('wall keyed by the LATER pack', status?.keyed?.wall === LATE);
-        testController.reportCondition('floor keyed by the earlier pack', status?.keyed?.floor === EARLY);
+        testController.reportCondition('floor keyed by the LATER pack (its shape)', status?.keyed?.floor === LATE);
+        testController.reportCondition('player keyed by the earlier pack (falls through)', status?.keyed?.player === EARLY);
         testController.reportCondition('no sheet failed', status?.failedSheets === 0);
 
         panel.render();
@@ -119,15 +135,18 @@ async function tileArtFromPackStack(testController) {
             && !panel.world.obstacles?.has(`${e.x},${e.y}`));
         testController.reportCondition('the world has a wall, a floor and an exit cell to read', !!(wall && floor && exit));
         if (!(wall && floor && exit)) return testController.getOverallResult();
-        const seen = { wall: centre(wall), floor: centre(floor), exit: centre(exit) };
+        const seen = { wall: centre(wall), floor: centre(floor), exit: centre(exit), player: centre(panel.state.player_pos) };
         testController.log(`pixels: ${JSON.stringify(seen)} at ${JSON.stringify({ wall, floor, exit: { x: exit.x, y: exit.y } })}`);
         testController.reportCondition('the wall shows the LATER pack\'s image',
             JSON.stringify(seen.wall) === JSON.stringify(SHEET_COLOUR[`${LATE}/art/sheets/wall.png`]));
-        testController.reportCondition('the floor shows the earlier pack\'s image',
-            JSON.stringify(seen.floor) === JSON.stringify(SHEET_COLOUR[`${EARLY}/art/sheets/floor.png`]));
+        testController.reportCondition('the floor shows the LATER pack\'s shape (rasterised in the page)',
+            JSON.stringify(seen.floor) === JSON.stringify(FLOOR_SHAPE_RGB));
+        testController.reportCondition('the player shows the earlier pack\'s image (no later pack keys it)',
+            JSON.stringify(seen.player) === JSON.stringify(SHEET_COLOUR[`${EARLY}/art/sheets/player.png`]));
         testController.reportCondition('the un-keyed exit shows COLORS.exit',
             JSON.stringify(seen.exit) === JSON.stringify(hexRgb(COLORS.exit)));
     } finally {
+        panel.fogEnabled = fogWas;
         panel.setTileArtSourceForTests(null);
     }
     const restored = panel.getTileArtStatus();
@@ -138,9 +157,10 @@ async function tileArtFromPackStack(testController) {
 
 registerTest({
     id: 'maze-tile-art-from-pack-stack',
-    name: 'Maze tile art: a pack stack supplies the tiles, a later pack wins, the rest falls back',
+    name: 'Maze tile art: a pack stack supplies the tiles (images and shapes), a later pack wins, the rest falls back',
     description: 'Points the maze panel\'s play-time tile-art load at a fixture stack of two packs and reads the canvas: '
-        + 'the wall is the later pack\'s, the floor the earlier pack\'s, the un-keyed exit COLORS.exit.',
+        + 'the wall is the later pack\'s sprite, the floor the later pack\'s shape, the player the earlier pack\'s '
+        + 'sprite, the un-keyed exit COLORS.exit.',
     testFunction: tileArtFromPackStack,
     category: 'Maze tile art',
     enabled: false, // off by default — runs only in the test-substrates mode

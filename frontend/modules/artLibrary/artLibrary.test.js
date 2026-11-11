@@ -8,7 +8,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { loadPackStack } from '../contentPacks/contentPacks.js';
-import { FP_ELAPSED_PER_TICK, createArtLibrary, loadSheetImages, parseArtManifest } from './artLibrary.js';
+import {
+    FP_ELAPSED_PER_TICK, SHAPE_PRIMITIVES, createArtLibrary, loadSheetImages, paintShape, parseArtManifest, shapeSheetRef,
+} from './artLibrary.js';
+import { recordingContext } from '../mazeRoom/drawOpRecorder.js';
 
 const BASE = pathToFileURL(`${join(dirname(fileURLToPath(import.meta.url)), '../../packs')}/`).href;
 const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'));
@@ -107,5 +110,86 @@ describe('refusals and image loading', () => {
         });
         expect(images.size).toBe(sheets.length - 1);
         expect(failed).toEqual([`seedling/Water (${BASE}seedling/art/sheets/Water.png): boom`]);
+    });
+});
+
+describe('⛓ SHAPES — an art entry drawn from basic shapes (content sets R2b)', () => {
+    const SHAPE = Object.freeze({ w: 16, h: 16, draw: [
+        { rect: [0, 0, 16, 16], fill: '#30343c' },
+        { circle: [8, 8, 6], fill: '#4aa8ff', stroke: '#000000', width: 2 },
+        { line: [0, 0, 16, 16], stroke: '#ffffff80' },
+        { polygon: [[8, 1], [15, 15], [1, 15]], fill: '#e0c040' },
+    ] });
+    const manifest = (extra) => ({ schema_version: 1, ...extra });
+    const sheetPack = (id, key) => ({ id, base: BASE, layers: { art: manifest({
+        sheets: { S: { file: 's.png', w: 16, h: 16 } }, sprites: { [key]: { sheet: 'S', fw: 16, fh: 16 } } }) } });
+    const shapePack = (id, key, shape = SHAPE) => ({ id, base: BASE, layers: { art: manifest({ shapes: { [key]: shape } }) } });
+    const refused = (shape) => () => parseArtManifest(manifest({ shapes: { 'p:x/y': shape } }), 'p');
+    const op = (o) => ({ w: 4, h: 4, draw: [o] });
+
+    it('a manifest with every primitive parses', () => {
+        expect(SHAPE.draw.map((o) => SHAPE_PRIMITIVES.find((p) => p in o))).toEqual([...SHAPE_PRIMITIVES]);
+        expect(() => parseArtManifest(manifest({ shapes: { 'p:x/y': SHAPE } }), 'p')).not.toThrow();
+    });
+
+    it('refuses by name: an unknown primitive, two primitives, a bad colour, no paint, a filled line, a bare width', () => {
+        expect(refused(op({ ellipse: [1, 1, 1, 1], fill: '#000000' }))).toThrow(/shape "p:x\/y" draw\[0\]: "ellipse" is not a shape primitive/);
+        expect(refused(op({ rect: [0, 0, 1, 1], circle: [1, 1, 1], fill: '#000000' }))).toThrow(/exactly one primitive .* got rect \+ circle/);
+        expect(refused(op({ rect: [0, 0, 1, 1], fill: 'red' }))).toThrow(/fill "red" is not #rrggbb or #rrggbbaa/);
+        expect(refused(op({ rect: [0, 0, 1, 1], fill: '#12345' }))).toThrow(/is not #rrggbb/);
+        expect(refused(op({ rect: [0, 0, 1, 1] }))).toThrow(/paints nothing/);
+        expect(refused(op({ line: [0, 0, 1, 1], fill: '#000000' }))).toThrow(/a line has no inside to fill/);
+        expect(refused(op({ rect: [0, 0, 1, 1], fill: '#000000', width: 2 }))).toThrow(/width without a stroke/);
+        expect(refused(op({ rect: [0, 0, 0, 1], fill: '#000000' }))).toThrow(/rect is \[x, y, w, h\] with w, h > 0/);
+        expect(refused(op({ polygon: [[0, 0], [1, 1]], fill: '#000000' }))).toThrow(/at least 3 points/);
+        expect(refused({ w: 4, h: 4, draw: [] })).toThrow(/has no draw list/);
+        expect(refused({ w: 4.5, h: 4, draw: [{ rect: [0, 0, 1, 1], fill: '#000000' }] })).toThrow(/integer w, h > 0/);
+        expect(refused({ ...op({ rect: [0, 0, 1, 1], fill: '#000000' }), sheet: 'S' })).toThrow(/field "sheet" is not one a shape takes/);
+    });
+
+    it('one pack may not draw a key both ways', () => {
+        expect(() => parseArtManifest(manifest({
+            sheets: { S: { file: 's.png', w: 16, h: 16 } }, sprites: { 'p:x/y': { sheet: 'S', fw: 16, fh: 16 } }, shapes: { 'p:x/y': SHAPE },
+        }), 'p')).toThrow(/"p:x\/y" is both a sprite and a shape/);
+    });
+
+    it('the later pack wins whichever kind it is: a shape over a sprite, and a sprite over a shape', () => {
+        const K = 'p:tile/wall';
+        const shapeWins = createArtLibrary([sheetPack('early', K), shapePack('late', K)]);
+        expect([shapeWins.kindOf(K), shapeWins.packOf(K)]).toEqual(['shape', 'late']);
+        expect(shapeWins.frameRect(K, 0)).toEqual({ sheetRef: shapeSheetRef('late', K), sx: 0, sy: 0, sw: 16, sh: 16, ox: 0, oy: 0, frame: 0 });
+        expect(shapeWins.frameRect(K, 5).frame).toBe(0);  // one frame: every index draws it
+        const spriteWins = createArtLibrary([shapePack('early', K), sheetPack('late', K)]);
+        expect([spriteWins.kindOf(K), spriteWins.packOf(K)]).toEqual(['sprite', 'late']);
+        expect(spriteWins.frameRect(K, 0).sheetRef).toBe('late/S');
+    });
+
+    it('rasterised ONCE at load: the rasteriser receives the recipe, the image sits under the shape\'s sheetRef', async () => {
+        const K = 'p:tile/wall';
+        const lib = createArtLibrary([sheetPack('early', 'p:tile/floor'), shapePack('late', K)]);
+        const got = [];
+        const { images, failed } = await loadSheetImages(lib, async (url) => ({ url }), async (shape) => { got.push(shape); return { shape: true }; });
+        expect(got).toEqual([SHAPE]);
+        expect(failed).toEqual([]);
+        expect(images.get(lib.frameRect(K, 0).sheetRef)).toEqual({ shape: true });
+        expect(images.get('early/S')).toEqual({ url: `${BASE}art/s.png` });
+    });
+
+    it('with no rasteriser a shape is a FAILED sheet, named — its key falls back, nothing throws', async () => {
+        const lib = createArtLibrary([shapePack('late', 'p:tile/wall')]);
+        const { images, failed } = await loadSheetImages(lib, async () => { throw new Error('no image here'); });
+        expect(images.size).toBe(0);
+        expect(failed).toEqual([`${shapeSheetRef('late', 'p:tile/wall')} (shape): no rasteriser was given for a shape entry`]);
+    });
+
+    it('paintShape draws the recipe in order, at its own pixels', () => {
+        const ctx = recordingContext();
+        paintShape(ctx, SHAPE);
+        expect(ctx.__log).toEqual([
+            'beginPath()', 'rect(0,0,16,16)', 'fillStyle="#30343c"', 'fill()',
+            'beginPath()', `arc(8,8,6,0,${Math.PI * 2})`, 'fillStyle="#4aa8ff"', 'fill()', 'strokeStyle="#000000"', 'lineWidth=2', 'stroke()',
+            'beginPath()', 'moveTo(0,0)', 'lineTo(16,16)', 'strokeStyle="#ffffff80"', 'lineWidth=1', 'stroke()',
+            'beginPath()', 'moveTo(8,1)', 'lineTo(15,15)', 'lineTo(1,15)', 'closePath()', 'fillStyle="#e0c040"', 'fill()',
+        ]);
     });
 });

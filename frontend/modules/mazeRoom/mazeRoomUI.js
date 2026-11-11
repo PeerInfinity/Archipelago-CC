@@ -92,7 +92,7 @@ import {
 } from '../flashPanel/mapDocumentPath.js';
 import { resolveMazeArrival } from './mazeArrival.js';
 import { loadMazeTileArt } from './mazeTileArt.js';
-import { browserDecoder } from '../artLibrary/artLibrary.js';
+import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
 /**
  * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
@@ -4011,7 +4011,7 @@ export class MazeRoomUI {
 
     _startTileArtLoad(stack, key) {
         this._tileArt = { status: 'loading', key, tileArt: null, keyed: {}, failed: [] };
-        const io = this._tileArtIo ?? { ...browserPackIo(), decode: browserDecoder() };
+        const io = this._tileArtIo ?? { ...browserPackIo(), decode: browserDecoder(), rasterise: browserRasteriser() };
         loadMazeTileArt(stack, io).then((loaded) => {
             if (this._tileArt?.key !== key) return;
             if (loaded.failed.length) console.warn(`[mazeRoom] tile art: ${loaded.failed.length} sheet(s) failed (drawn in the maze's own colours): ${loaded.failed.join('; ')}`);
@@ -4038,7 +4038,7 @@ export class MazeRoomUI {
     }
 
     /**
-     * TEST SEAM (the in-app row): load the tile art through `io` (`{ base, readJson, decode }`) instead of the
+     * TEST SEAM (the in-app row): load the tile art through `io` (`{ base, readJson, decode, rasterise? }`) instead of the
      * browser's, and forget what was loaded; `null` restores the browser's. `content` (optional) replaces the world's
      * recorded content list for the load (`content`) — a fixture theme with no committed world that names it.
      */

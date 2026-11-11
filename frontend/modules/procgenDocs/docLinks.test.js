@@ -337,15 +337,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              links kept).
          *   402 → 404  content sets R2b (2026-11-11, maze tile art): concepts.md § A world's content stack → maze.md
          *              § Tile art from a content pack, and maze-lab.md's `tileArt` view row → that § (`doc` 301 → 303).
+         *   404 → 405  content sets R2b part 2 (shapes): maze.md § Tile art from a content pack → the art library's
+         *              README § Shapes (`repo` 42 → 43).
          */
         expect(by).toEqual({
             'same-doc': 37,
             doc: 303,
             external: 22,
-            repo: 42,
+            repo: 43,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(404);
+        expect(CORPUS.length).toBe(405);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -359,7 +361,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(42);
+        expect(repo).toHaveLength(43);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

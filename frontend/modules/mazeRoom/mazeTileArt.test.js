@@ -212,3 +212,32 @@ describe('outside the maze engine\'s import closure', () => {
         expect(engine.has(relative(ROOT, join(HERE, 'mazeRoomUI.js')))).toBe(false);
     });
 });
+
+describe('⛓ a SHAPE entry through the seam (content sets R2b part 2)', () => {
+    it('a later pack\'s shape overrides an earlier pack\'s sprite for the block; the seam draws the rasterised shape', async () => {
+        const SHAPE_BLOCK = { w: 16, h: 16, draw: [{ rect: [1, 1, 14, 14], fill: '#c8a06a', stroke: '#2a1c0c', width: 2 }] };
+        const files = {
+            ...FIXTURE,
+            'shape-theme/pack.json': pack('shape-theme'),
+            'shape-theme/art/manifest.json': { schema_version: 1, shapes: { [MAZE_ART_KEYS.block.key]: SHAPE_BLOCK } },
+        };
+        const rasterised = [];
+        const io = {
+            base: FIX_BASE,
+            readJson: async (url) => JSON.parse(JSON.stringify(files[url.slice(FIX_BASE.length)])),
+            decode: async (url) => ({ src: url.slice(FIX_BASE.length) }),
+            rasterise: async (shape) => { rasterised.push(shape); return { shape: 'block' }; },
+        };
+        const r = await loadMazeTileArt(['base-theme', 'shape-theme'], io);
+        expect(r.keyed.block).toBe('shape-theme');
+        expect(r.tileArt.art.kindOf(MAZE_ART_KEYS.block.key)).toBe('shape');
+        expect(rasterised).toEqual([SHAPE_BLOCK]);
+        const world = worldOf(RICH[1]);
+        const log = logOf(world, viewFor(world, { tileArt: r.tileArt }));
+        for (const key of world.blocks.keys()) {
+            const [x, y] = key.split(',').map(Number);
+            expect(log).toContain(`drawImage({"shape":"block"},0,0,16,16,${x * 16},${y * 16},16,16)`);
+        }
+        expect(log.filter((l) => l.startsWith('drawImage({"shape"'))).toHaveLength(world.blocks.size);
+    });
+});

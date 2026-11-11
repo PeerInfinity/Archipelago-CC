@@ -24,8 +24,8 @@
  * `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure` imports this file, and this file imports
  * nothing from it (`mazeTileArt.test.js` pins both). A content set changes how the maze looks, never its logic.
  *
- * ⛔ DOM-FREE. The decoder is injected (`artLibrary.browserDecoder` in a browser, a stub in node), as the art
- * library's own `loadSheetImages` takes it; the seam draws with whatever `ctx.drawImage` the caller's context has.
+ * ⛔ DOM-FREE. The decoder and the shape rasteriser are injected (`artLibrary.browserDecoder` /
+ * `browserRasteriser` in a browser, stubs in node), as the art library's own `loadSheetImages` takes them; the seam draws with whatever `ctx.drawImage` the caller's context has.
  *
  * Beside the Seedling skin, not instead of it: a Seedling-atlas world (`mazeSeedlingSkin.seedlingSkinFor`) draws its
  * level's own art and the panel passes no tile art at all.
@@ -127,7 +127,9 @@ export function keyedThings(art) {
 /**
  * ⛓ THE PLAY-TIME LOAD. `ids` is the world's effective content stack (`worldContent.effectiveContentStack`), in
  * override order; `io` is `{ base, readJson }` (`worldContent.browserPackIo()` in a browser); `decode(url)` turns a
- * sheet into an image (`artLibrary.browserDecoder()`).
+ * sheet into an image (`artLibrary.browserDecoder()`) and `rasterise(shape)` a SHAPE entry
+ * (`artLibrary.browserRasteriser()`; without one a shape key falls back, named in `failed`). A key is drawn the same
+ * way whichever kind it is: a shape is rasterised once here into a one-frame sheet of its own.
  *
  * Resolves `{ ids, tileArt, failed, keyed }`: `tileArt` is the seam's `{ art, images }`, or null when no pack in
  * the stack carries a key of the table (nothing is decoded then, and the maze draws as it always has); `failed`
@@ -135,7 +137,7 @@ export function keyedThings(art) {
  * reads nothing. A pack that cannot be read is refused by name (`ContentPackError`): the caller catches it and draws
  * without art.
  */
-export async function loadMazeTileArt(ids, { base, readJson, decode }) {
+export async function loadMazeTileArt(ids, { base, readJson, decode, rasterise = null }) {
     if (!Array.isArray(ids) || ids.length === 0) return { ids: [], tileArt: null, failed: [], keyed: {} };
     const stack = await loadPackStack(ids, { base, readJson, only: ['art'] });
     const art = createArtLibrary(stack);
@@ -145,6 +147,6 @@ export async function loadMazeTileArt(ids, { base, readJson, decode }) {
     // Seedling pack), which the maze would never draw.
     const wanted = new Set(Object.values(MAZE_ART_KEYS).filter((row) => art.has(row.key)).map((row) => art.resolve(row.key).sheetRef));
     const sheets = art.sheetsInUse().filter((s) => wanted.has(s.sheetRef));
-    const { images, failed } = await loadSheetImages({ sheetsInUse: () => sheets }, decode);
+    const { images, failed } = await loadSheetImages({ sheetsInUse: () => sheets }, decode, rasterise);
     return { ids: [...ids], tileArt: Object.freeze({ art, images }), failed, keyed };
 }
