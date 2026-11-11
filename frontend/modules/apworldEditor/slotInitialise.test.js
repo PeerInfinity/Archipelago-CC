@@ -1188,6 +1188,20 @@ describe('S3 — loop mode on an initialise: the build and the op', () => {
         expect(Object.hasOwn(script.op.provenance, 'sphereLog')).toBe(false);
     });
 
+    it('⛓ a log filtered to one player (a per-player file, the room\'s spoiler data) is that player\'s only', () => {
+        // Its other worlds' entries are senders (a few locations each); they must not make it their log.
+        const sender = { new_inventory_details: { base_items: {}, resolved_items: {} },
+            new_accessible_locations: [], new_accessible_regions: [], sphere_locations: ['Their Chest'] };
+        const filtered = [{ type: 'metadata', seed_name: 's', filtered_to_player: '1' },
+            { type: 'state_update', sphere_index: '0', player_data: { 1: { ...sender, sphere_locations: [] } } },
+            { type: 'state_update', sphere_index: '0.1', player_data: { 1: { ...sender, sphere_locations: [] }, 2: sender } }];
+        expect(initialiseSphereLog(DOCS.adventure, '1', filtered).forPlayer).toBe(true);
+        expect(initialiseSphereLog(DOCS.adventure, '2', filtered).forPlayer).toBe(false);
+        // Unfiltered logs keep the old rule: any entry for the player.
+        const combined = [filtered[0], filtered[1], filtered[2]].map((e, i) => (i === 0 ? { type: 'metadata', seed_name: 's' } : e));
+        expect(initialiseSphereLog(DOCS.adventure, '2', combined).forPlayer).toBe(true);
+    });
+
     it('⛔ a generator THROW refuses the op by name — nothing written (no marker block: the hub edits, it does not compile)', () => {
         const broken = [...ADV_LOG, null];
         const res = initialiseSlot({ doc: DOCS.adventure, ...S3_ARGS, loopMode: LOOP_ON, sphereLog: broken });

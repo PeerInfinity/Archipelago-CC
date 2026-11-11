@@ -496,6 +496,7 @@ describe('who takes the box', () => {
          * RULES block-path L15's lock held by the block (Sword), shut without a weapon, the diagonal button, the swim, `probe-seedling-l15-block-path.mjs`;
          * RULES rope-events the rope cuts: L16's from the L15 side, L28's rock holding its lock on a later visit (+ the controls), `probe-seedling-rope-events.mjs`;
          * RULES rules-l39 L39's pulser (armed by the cut) and rope run, and L43's open doorway after the Wand, `probe-seedling-l39-pulser.mjs`;
+         * ER E5 the entrance retarget's witness (shuffled stairs walked on the delivered rooms), `probe-seedling-wasm-er-retarget.mjs`;
          * fidelity BOMBPUSHER the lobber/Bomb witness, `probe-seedling-bombpusher.mjs` (its `--reuse` arm runs no browser);
          * fidelity BOMBBLAST the blast-on-a-body witness, `probe-seedling-bomb-blast-body.mjs` (its `--reuse` arm, likewise);
          * ci-skip-rules RULE 3 the full-tier differential, `check-seedling-bot-differential.mjs`, whose
@@ -571,7 +572,7 @@ describe('who takes the box', () => {
             'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-encounter-latch.mjs', 'probe-seedling-killlock-arms.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-l107-lane.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
             'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs', 'probe-seedling-l15-block-path.mjs',
-            'probe-seedling-rope-events.mjs', 'probe-seedling-l39-pulser.mjs',
+            'probe-seedling-rope-events.mjs', 'probe-seedling-l39-pulser.mjs', 'probe-seedling-wasm-er-retarget.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
             'probe-seedling-lights.mjs',
@@ -642,6 +643,8 @@ describe('who takes the box', () => {
             'check-seedling-editor-e2.mjs',
             // seedling-editor-e3: the lab editor's world-map row (import door: `isEntryPoint` → main())
             'check-seedling-editor-e3.mjs',
+            // maze-world-map: the maze lab's set-arm map row (import door: `isEntryPoint` → main())
+            'check-maze-world-map.mjs',
             // seedling-js-tape-bridge: one tape on the JS core and the wasm game, drains diffed (import door: `isEntryPoint` → main())
             'probe-seedling-js-vs-wasm-tape.mjs',
             // cloudberry P2a: the embed gate and the pack maker (import door: `isEntryPoint` → main())

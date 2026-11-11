@@ -116,9 +116,12 @@ async function main() {
         await imp(rel);
     }
     const { [preset.stateExport]: state } = await imp('frontend/modules/procgenPipeline/presetDefs.js');
-    const { buildRunFromState, runPresetHeadless } = await imp('frontend/modules/procgenPipeline/presetRun.js');
+    const { prepareRunFromState, runPresetHeadless } = await imp('frontend/modules/procgenPipeline/presetRun.js');
+    const { nodePackIo } = await imp('frontend/modules/contentPacks/nodePackIo.js');
 
-    const { rulesJson, ms } = await runPresetHeadless(buildRunFromState(structuredClone(state)));
+    // ⛓ CONTENT SETS C3 — the world's content set loads first (an empty stack reads nothing).
+    const { rulesJson, ms } = await runPresetHeadless(
+        await prepareRunFromState(structuredClone(state), { io: nodePackIo() }));
     const text = JSON.stringify(rulesJson, null, 2);
     const rel = path.relative(repoRoot, OUT_FILE);
     const sidecars = Object.entries(rulesJson.preset_sidecars?.['1'] ?? {});

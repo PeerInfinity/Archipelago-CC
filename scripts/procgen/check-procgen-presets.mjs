@@ -121,8 +121,9 @@ for (const rel of REGISTRY_LIBRARIES) {
     // eslint-disable-next-line no-await-in-loop
     await import(join(ROOT, rel));
 }
-const { buildRunFromState, runPresetHeadless, gridDimsForSource } = await import(
+const { prepareRunFromState, runPresetHeadless, gridDimsForSource } = await import(
     '../../frontend/modules/procgenPipeline/presetRun.js');
+const { nodePackIo } = await import('../../frontend/modules/contentPacks/nodePackIo.js');
 const { resolveLibrarySelection } = await import(
     '../../frontend/modules/procgenPipeline/regionLibraryLoader.js');
 
@@ -142,7 +143,8 @@ async function headlessWorld(preset) {
         ctx.sphereLog = readFileSync(join(ROOT, TOPDOWN_SPHERE_LOG_FILE), 'utf8')
             .split('\n').filter((line) => line.trim()).map((line) => JSON.parse(line));
     }
-    return runPresetHeadless(buildRunFromState(preset.state, ctx));
+    // ⛓ CONTENT SETS C3 — the world's content set loads first, from disk (an empty stack reads nothing).
+    return runPresetHeadless(await prepareRunFromState(preset.state, { ...ctx, io: nodePackIo() }));
 }
 
 /** The first JSON path at which two values differ, or null. */

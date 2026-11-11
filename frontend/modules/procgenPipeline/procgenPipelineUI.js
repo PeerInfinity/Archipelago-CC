@@ -82,8 +82,9 @@ import {
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
     substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
     sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
-    buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
+    buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun, worldContentStackOf,
 } from './presetRun.js';
+import { attachEnvelopeContent, browserPackIo, loadContentSet } from './worldContent.js';
 import { getRegionEditor, openRoomEditor, roomEditorKindOf } from './regionEditors.js';
 import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
@@ -300,6 +301,8 @@ export class ProcgenPipelineUI {
         // Persistence rides the hybrid shape (regionLibraryLoader
         // serializeLibrarySelection); served refs re-fetch on load into this list.
         this.regionLibraries = [];
+        // ⛓ CONTENT SETS C3 — the world's loaded content set (`_loadWorldContent`); runtime only, never saved.
+        this.contentSet = null;
         // Persisted `libraries` refs awaiting the async resolve kicked off by a
         // load/preset-apply. Held so a save during the (ms-long) fetch window
         // round-trips the untouched refs instead of clobbering them with an
@@ -4025,6 +4028,24 @@ export class ProcgenPipelineUI {
 
     // --- Run ---
 
+    /**
+     * ⛓ CONTENT SETS C3 — load the world's content set BEFORE any step builds or
+     * realises regions: `this.contentSet` for a fresh run (the builders read it
+     * off the panel as `state.contentSet`), and the set re-attached to any
+     * pipeline already in flight (a loaded envelope or a rebuilt rules.json
+     * carries the list, not the set). An empty stack reads nothing and changes
+     * nothing. Awaited by Generate, each "Run next step" and Append.
+     */
+    async _loadWorldContent() {
+        const io = browserPackIo();
+        this.contentSet = await loadContentSet(
+            worldContentStackOf(this, { resolvedLibraries: this.regionLibraries }), io);
+        for (const st of [this._stepState, this._tdState, this._spiralState]) {
+            // eslint-disable-next-line no-await-in-loop
+            if (st) await attachEnvelopeContent(st, io);
+        }
+    }
+
     async _runGeneration() {
         if (this.isGenerating) return;
         if (this.mode === 'topDown' && !this.topDownSource) {
@@ -4056,6 +4077,7 @@ export class ProcgenPipelineUI {
         this.render();
 
         try {
+            await this._loadWorldContent();
             if (this.mode === 'topDown') {
                 // async: yields per region so the progress indicator repaints
                 await this._runTopDownAll();
@@ -4284,6 +4306,7 @@ export class ProcgenPipelineUI {
         this.isGenerating = true;
         this.render();
         try {
+            await this._loadWorldContent();
             await this._advanceSpiralStep();
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
@@ -4544,6 +4567,7 @@ export class ProcgenPipelineUI {
         this.isGenerating = true;
         this.render();
         try {
+            await this._loadWorldContent();
             await this._advanceSphereStep();
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
@@ -4605,6 +4629,7 @@ export class ProcgenPipelineUI {
         this.render();
         try {
             const st = this._stepState;
+            await this._loadWorldContent();
             await appendSphere(st, { items }, {
                 onProgress: (ev) => this._onGenerationProgress(ev),
             });
@@ -5018,6 +5043,7 @@ export class ProcgenPipelineUI {
         this.isGenerating = true;
         this.render();
         try {
+            await this._loadWorldContent();
             await this._advanceTDStep();
         } catch (e) {
             this.message = `ERROR: ${e.message}`;

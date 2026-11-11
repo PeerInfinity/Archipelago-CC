@@ -16,6 +16,11 @@ class SpoilerDataInSlotData(_spoiler_hook_client.SpoilerDataInSlotData):
     __doc__ = _spoiler_hook_client.SpoilerDataInSlotData.__doc__
 
 
+class SpoilerDataIncludeRegions(_spoiler_hook_client.SpoilerDataIncludeRegions):
+    # Re-homed for the same reason as SpoilerDataInSlotData above.
+    __doc__ = _spoiler_hook_client.SpoilerDataIncludeRegions.__doc__
+
+
 class NumSpheres(Range):
     """
     Number of generation spheres (including sphere 0).
@@ -91,6 +96,7 @@ class APCalcOptions(PerGameCommonOptions):
     max_branches: MaxBranches
     randomize_items: RandomizeItems
     spoiler_data_in_slot_data: SpoilerDataInSlotData
+    spoiler_data_include_regions: SpoilerDataIncludeRegions
 
 
 apcalc_option_groups = [

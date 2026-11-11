@@ -129,6 +129,49 @@ The maze's cell reads *4 concepts: sword (mechanic), swim (mechanic), guardian (
 
 `itemTagsImpliedBy(entry, concepts)` lists the item tags an entry's concepts carry, by the same tag law `substrateCapabilities.itemTagFeatures` applies to an entry's items.
 
+## Content roles
+
+`conceptRealisations` names, by id, the mechanic concepts a substrate realises. It cannot name a character that a content pack brings. So a registry entry may also declare **roles** in `contentRoles`: the kinds of content it can show, and the fields each kind needs. A pack concept (the `concepts` layer of a content pack, read by `frontend/modules/packConcepts/packConcepts.js`) fills any role whose needs it supplies. The code is `frontend/modules/procgenCore/contentRoles.js`, and it too is browser-safe and names no substrate.
+
+```js
+contentRoles: {
+    gate:      { accepts: { presents: ['guardian', 'water'] }, needs: { look: true, text: ['blocked', 'passedWith'] },
+                 why: 'a planned gate, shown as the concept the rule selected' },
+    character: { accepts: { kinds: ['character'] }, needs: { text: ['greeting'] }, why: 'someone to meet in a room' },
+    info:      { accepts: { kinds: ['info'] }, needs: { text: ['body'] }, why: 'a piece of information held at a location' },
+}
+```
+
+- `accepts` is exactly one of two forms. `kinds` is a non-empty list of pack-concept kinds (`character`, `place`, `object`, `info`; the pack layer owns that list). `presents` is a list of mechanic concept ids. Each must be in the concept table **and** realised by the same entry's `conceptRealisations`, because a role that shows a concept the entry cannot realise is a role nothing selects.
+- `needs` is optional. It may ask for `look` (a colour and a symbol, both required by the pack layer), `art` (an art-library key), and `text`, a list of text slots. Every pack concept has a `name`, so a role never lists it, and listing it is refused.
+- `why` is required.
+
+A role is presentation only. A pack concept that presents `guardian` fills a gate role's presentation; the gate's logic is still the realisation's `effect` and `needs`.
+
+The readers:
+
+- `assertContentRoles(entry, concepts)` checks an entry's roles. It throws a `ConceptContractError` naming the entry, the role and what is wrong. An entry with no `contentRoles` is not an error.
+- `contentRolesOf(entryOrRoles)` takes an entry or its roles object, as `realisationsOf` does.
+- `roleRefusal(role, packConcept)` is `null` when the concept fills the role. Otherwise it is a sentence naming the first thing missing, in this order: the wrong kind (or not presenting an accepted concept), no `look`, no `art`, then each text slot in the role's order. A text slot is checked for presence on the concept. Whether its key resolves in a text library is for the consumer, which holds the stack.
+- `candidatesForRole(entryOrRoles, roleId, packConcepts)` lists the keys of the pack concepts that fill one role, in the library's order. An undeclared role is refused by name.
+- `assertPresents(packConcepts, concepts)` checks that every `presents` in a stack names a concept in the table. The pack layer leaves `presents` opaque on purpose; this is the cross-check.
+- `rolesFilledBy(entryOrRoles, packConcepts)` returns `[{role, concepts}]` in the entry's declared order. It is the input a later chart statement will read. No statement reads it yet.
+
+No registered substrate declares a role yet.
+
+## A world's content stack
+
+A world names the content packs it draws its characters, places, objects and text from in `params.content`: a list of pack ids (`frontend/packs/`), empty by default, beside `params.concepts`. The code is `frontend/modules/procgenPipeline/worldContent.js`.
+
+- **The effective stack.** `effectiveContentStack` is the one rule. It starts with the `defaultContentPack` of each substrate in the world's mix, in registry order and without duplicates, and then adds `params.content` in order. A later pack wins per key. No registered substrate declares a default pack yet, so a world's stack is exactly its own `params.content`. See [Substrate Registry](./substrate-registry.md).
+- **The load.** Text, names and colours resolve at generation and are written into the world document. So the stack is loaded once, before generation: `loadContentSet(stack, {base, readJson})` returns a frozen **content set**, `{ids, concepts, text}`, where `concepts` and `text` are the pack-concept and text-library readers. `assertPresents` runs on it first. An empty stack returns the empty set and never calls `readJson`. In the browser the panel reads with `fetch`; in node, `contentPacks/nodePackIo.js` reads the committed packs from disk.
+- **The channel.** The set reaches every region's `generateRegionCore` and `placeFromRules` as `params.contentSet`, on the same channel as `params.concepts` (`assembleRegionParams`). With it comes the world's own list as `params.content`. Both are added only when the stack is not empty. An entry point that builds a run without loading a non-empty stack is refused by name, and so is a region whose packs are not in the set it was handed.
+- **The entry points.** `prepareRunFromState` is the async form of `buildRunFromState`: it loads the set and then builds the run. The pipeline panel loads the set before Generate, before each *Run next step* and before Append. `sphere-step`, `topdown-step` and `spiral-step` load it as well, and `--param content=a,b` names a world's own stack.
+- **The record.** A sphere-growth or top-down compile records `params.content` in the slot's `procgen_metadata` block as `content`, beside `concepts`, and only when the list is not empty. The default packs are not recorded, because they follow from the mix. `rebuildEnvelopeFromRulesJson` reads the list back into `regionParams.content`, and a caller's own value wins.
+- **The set is runtime state.** The set holds functions, so `JSON.stringify` leaves it out: a saved envelope keeps the list and drops the set. A rebuilt or resumed envelope gets its set back from `attachEnvelopeContent` before it generates. An append from a rebuilt world that was not re-attached is refused at the region seam.
+
+A world that names no content compiles to the bytes it did before the param existed. With a stack, it compiles to the same `rules.json` apart from `procgen_metadata[p].content`, because no substrate reads the set yet. `procgenPipeline/worldContent.test.js` holds both, on the concept trial world.
+
 ## Behaviour
 
 A concept can also say how it **behaves**: what an item hits with, how an enemy answers a hit, what makes an obstacle give way, and what a substrate's realisation of it does. Every behaviour field is optional, and a concept without one is exactly the concept it was before.

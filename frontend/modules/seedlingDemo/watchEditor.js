@@ -58,10 +58,12 @@ import {
 import {
     CLIFFSIDE_FRAME_FACES, TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES, tileSemantics,
 } from '../flashPanel/seedlingSemantics.js';
-import { REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import {
+    EDIT_TOOLS, PASTE_MODES, REDO_COMMAND_ID, TOOLS, UNDO_COMMAND_ID, mountEditorView,
+} from '../procgenCore/editorView.js';
 import { createLifetime } from './watchLifetime.js';
 import {
-    EditCoreError, describeOps, descriptorFieldsOf, rectClearOps, rectFillOps, rectMoveOps,
+    describeOps, descriptorFieldsOf,
 } from '../procgenCore/editCore.js';
 import {
     bindOps, describeLinks, isLinkable, isPathed, linkIssues, linkShapes, linksOf, ropeEndOp, solverNotes,
@@ -70,24 +72,26 @@ import {
 import { tileAtOel } from './procgenLevel.js';
 
 /**
- * ⛓⛓ **THE PANEL'S OWN GESTURES** (Seedling editor E1) — `editorView` page
- * tools, so they share its ONE armed value, its command table and its key map.
- * FILL and CLEAR are two-click rectangles (like RECT); MOVE spends the RECT
- * selection at one click. Each lands as ONE group, so one undo takes it back.
+ * ⛓⛓ **THE PANEL'S GESTURES** — `editorView` page tools, so they share its ONE
+ * armed value, its command table and its key map. FILL, CLEAR and MOVE
+ * (Seedling editor E1) are `editorView`'s SHARED tools since editor-tools B1:
+ * this page opts in by naming them, and only LINK and NODE (E2) are its own.
  */
 export const PANEL_TOOLS = Object.freeze({
-    FILL: 'fill', CLEAR: 'clear', MOVE: 'move', LINK: 'link', NODE: 'node',
+    ...EDIT_TOOLS, LINK: 'link', NODE: 'node',
 });
 const PANEL_TOOL_ROWS = Object.freeze([
-    Object.freeze({ id: PANEL_TOOLS.FILL, label: 'FILL a rectangle', key: 'l' }),
-    Object.freeze({ id: PANEL_TOOLS.CLEAR, label: 'CLEAR a rectangle', key: 'x' }),
-    Object.freeze({ id: PANEL_TOOLS.MOVE, label: 'MOVE the selection', key: 'm' }),
     Object.freeze({ id: PANEL_TOOLS.LINK, label: 'LINK a group', key: 'k' }),
     Object.freeze({ id: PANEL_TOOLS.NODE, label: 'NODE a rope end', key: 'n' }),
 ]);
 
-/** ⛓ The two paste kinds (`#genEditPasteMode`): `add` is the paste every payload so far was made with. */
-export const PASTE_MODES = Object.freeze(['add', 'replace']);
+/** ⛓ The two paste kinds (`#genEditPasteMode`), re-exported from `editorView`, which fills the select now. */
+export { PASTE_MODES };
+
+/** ⛓ FILL's sentence when the brush names no target — the Seedling modes, which `editorView` cannot know. */
+const FILL_REFUSAL = 'FILL has no target — set the brush mode to PAINT '
+    + '(a tile or cliffside column) or PLACE (an entity) first; ATTRS and '
+    + 'REMOVE are not "make this cell look like X".';
 
 export class WatchEditorError extends Error {
     constructor(message) {
@@ -1431,137 +1435,26 @@ export function mountWatchEditor({
     };
     fillPasteFilter();
 
-    const pasteModeSel = $('genEditPasteMode');
-    if (pasteModeSel) {
-        pasteModeSel.innerHTML = '';
-        for (const m of PASTE_MODES) {
-            const o = doc.createElement('option');
-            o.value = m;
-            o.textContent = m === 'add' ? 'ADD to the cell (the default)' : 'REPLACE the cell';
-            pasteModeSel.appendChild(o);
-        }
-        pasteModeSel.value = 'add';
-    }
-    const replaceNow = () => pasteModeSel?.value === 'replace';
-
     /**
-     * ⛓ `replace` rides ONLY when asked, so an ADD paste hands `editorView` the
-     * exact options it always did (`{}` or `{only}`).
+     * ⛓ THE PASTE MODE (`#genEditPasteMode`) is `editorView`'s since B1: it
+     * fills the select and adds `replace: true` to these options when it reads
+     * `replace`, so this is the filter alone (`{}` or `{only}`).
      */
     const pasteOptions = () => {
         const only = pasteSel?.value ?? '';
-        return { ...(only === '' ? {} : { only }), ...(replaceNow() ? { replace: true } : {}) };
+        return only === '' ? {} : { only };
     };
+    let view = null;
+    const replaceNow = () => view?.pasteMode === 'replace';
 
     const clipWarnings = (clip) => seedlingClipWarnings(clip, host.record(), adapter,
         { replace: replaceNow() });
 
-    /**
-     * ⛓ THE CLEAR's scope (`#genEditClearWhat`): every field, or one — derived
-     * from the descriptor like the paste filter, so it cannot drift from it.
-     */
-    const clearSel = $('genEditClearWhat');
-    const fillClearWhat = () => {
-        if (!clearSel) return;
-        const record = host.record();
-        if (!record) return;
-        const fields = descriptorFieldsOf(adapter, record);
-        const want = clearSel.value;
-        clearSel.innerHTML = '';
-        const all = doc.createElement('option');
-        all.value = '';
-        all.textContent = 'everything in the cell';
-        clearSel.appendChild(all);
-        for (const f of fields) {
-            const o = doc.createElement('option');
-            o.value = f;
-            o.textContent = `${f} only`;
-            clearSel.appendChild(o);
-        }
-        if ([...clearSel.options].some((o) => o.value === want)) clearSel.value = want;
-    };
-    fillClearWhat();
+    /* ── ⛓⛓⛓ FILL · CLEAR · MOVE — `editorView`'s shared tools (E1, moved in B1) ── */
 
-    /* ── ⛓⛓⛓ FILL · CLEAR · MOVE — the panel's own gestures (E1) ──── */
-
-    /** The first corner of a FILL/CLEAR rectangle, or `null`. */
-    let panelCorner = null;
-    /** The clip a MOVE has already spent — a second MOVE of it would cut the wrong cells. */
-    let spentClip = null;
-    let view = null;
+    /** ⛓ Named, not wired: `editorView` builds them, in this order, before LINK and NODE. */
+    const panelTools = [EDIT_TOOLS.FILL, EDIT_TOOLS.CLEAR, EDIT_TOOLS.MOVE];
     const sayBad = (text) => say(text, true);
-    /** A core builder's refusal (it throws) → the status line, verbatim. */
-    const tryBuild = (fn) => {
-        try { return fn(); } catch (e) {
-            // ⛓ by CLASS: the core's refusals and the record's (a bad paint spec);
-            //   anything else is a defect and is rethrown.
-            if (!(e instanceof EditCoreError) && !(e instanceof ProcgenLevelError)) throw e;
-            sayBad(e.message);
-            return null;
-        }
-    };
-    const twoClick = (what, build) => (c) => {
-        if (!panelCorner) {
-            panelCorner = { tx: c.tx, ty: c.ty };
-            say(`${what} corner 1 at (${c.tx},${c.ty}) — click the opposite corner`);
-            view.repaint();
-            return;
-        }
-        const rect = {
-            x: Math.min(panelCorner.tx, c.tx),
-            y: Math.min(panelCorner.ty, c.ty),
-            w: Math.abs(c.tx - panelCorner.tx) + 1,
-            h: Math.abs(c.ty - panelCorner.ty) + 1,
-        };
-        panelCorner = null;
-        const op = tryBuild(() => build(rect));
-        view.repaint();
-        if (op) view.apply(op);
-    };
-    const panelTools = [
-        {
-            ...PANEL_TOOL_ROWS[0],
-            at: twoClick('FILL', (rect) => {
-                const target = floodTarget();
-                if (!target) {
-                    throw new EditCoreError('FILL has no target — set the brush mode to PAINT '
-                        + '(a tile or cliffside column) or PLACE (an entity) first; ATTRS and '
-                        + 'REMOVE are not "make this cell look like X".');
-                }
-                return rectFillOps(adapter, host.record(), rect, target);
-            }),
-        },
-        {
-            ...PANEL_TOOL_ROWS[1],
-            at: twoClick('CLEAR', (rect) => {
-                const field = clearSel?.value ?? '';
-                return rectClearOps(adapter, host.record(), rect,
-                    { fields: field === '' ? null : [field] });
-            }),
-        },
-        {
-            ...PANEL_TOOL_ROWS[2],
-            at: (c) => {
-                const clip = view.clip;
-                const from = view.clipOrigin;
-                if (!clip || !from) {
-                    sayBad('nothing to MOVE — arm RECT and click two opposite corners first; the '
-                        + 'selection is what moves');
-                    return;
-                }
-                if (clip === spentClip) {
-                    sayBad('this selection was already MOVED — its source cells are empty now, '
-                        + 'so moving it again would cut the wrong place. Drag a new RECT.');
-                    return;
-                }
-                const op = tryBuild(() => rectMoveOps(adapter, host.record(), clip, from,
-                    c.tx, c.ty, { ...pasteOptions() }));
-                if (!op) return;
-                const res = view.apply(op);
-                if (res?.applied) spentClip = clip;
-            },
-        },
-    ];
     /* ── ⛓⛓⛓ LINK · NODE — what an entity is wired to (E2, `entityLinks`) ── */
 
     /** The picked body, by its place in `entities` and what stood there; a stale pick resolves to `null`. */
@@ -1649,8 +1542,8 @@ export function mountWatchEditor({
         applyBuilt(ropeEndOp(record, cur, c.tx, { schema }));
     };
     panelTools.push(
-        { ...PANEL_TOOL_ROWS[3], at: linkAt },
-        { ...PANEL_TOOL_ROWS[4], at: nodeAt },
+        { ...PANEL_TOOL_ROWS[0], at: linkAt },
+        { ...PANEL_TOOL_ROWS[1], at: nodeAt },
     );
 
     const linkBox = $('genEditLinkNote');
@@ -1704,11 +1597,7 @@ export function mountWatchEditor({
         if (room && schema && (showLinksBox?.checked ?? true)) {
             out.push(...linkShapes(room, { schema, selected: pickNow() }));
         }
-        if (panelCorner) out.push({ kind: 'rect', x: panelCorner.tx, y: panelCorner.ty, w: 1, h: 1 });
-        if (view?.tool === PANEL_TOOLS.MOVE && view.clip && view.clipOrigin
-            && view.clip !== spentClip) {
-            out.push({ kind: 'rect', ...view.clipOrigin, w: view.clip.w, h: view.clip.h });
-        }
+        // ⛓ B1 — the FILL/CLEAR corner and the MOVE ghost are `editorView`'s, drawn after these.
         return out;
     };
 
@@ -1722,10 +1611,7 @@ export function mountWatchEditor({
      * describing what it holds.
      */
     const afterChange = (c) => {
-        // ⛓ E1 — a FILL/CLEAR corner dies with its tool, as RECT's does in `editorView`.
-        if (panelCorner && c?.tool !== PANEL_TOOLS.FILL && c?.tool !== PANEL_TOOLS.CLEAR) {
-            panelCorner = null;
-        }
+        // ⛓ E1 — a FILL/CLEAR corner dies with its tool: `editorView` drops it before calling here (B1).
         // ⛓ E2 — a pick dies with the tool that made it.
         if (linkPick && c?.tool !== pickTool) setPick(null);
         render();
@@ -1740,6 +1626,14 @@ export function mountWatchEditor({
         cellAt: (event) => { shiftHeld = Boolean(event?.shiftKey); return cellAt(event); },
         commands,
         tools: [...tools, ...panelTools],
+        // ⛓ B1 — the shared tools' Seedling inputs: FILL's sentence, the record's own refusal
+        //   class, and the two selects `editorView` fills.
+        editTools: {
+            fillRefusal: FILL_REFUSAL,
+            isRefusal: (e) => e instanceof ProcgenLevelError,
+            clearWhat: $('genEditClearWhat'),
+            pasteMode: $('genEditPasteMode'),
+        },
         shapes: panelShapes,
         brushOp,
         floodTarget,
@@ -1823,7 +1717,7 @@ export function mountWatchEditor({
         clipNote.textContent = view.clip
             ? `clipboard: ${view.clip.w}x${view.clip.h}`
                 + `${view.clipOrigin ? ` from (${view.clipOrigin.x},${view.clipOrigin.y})` : ''}`
-                + `${view.clip === spentClip ? ' (MOVED — drag a new RECT to move again)' : ''} — `
+                + `${view.clipSpent ? ' (MOVED — drag a new RECT to move again)' : ''} — `
                 + `${seedlingClipWarnings(view.clip, host.record(), adapter,
                     { replace: replaceNow() }).join(' ⚠ ') || 'nothing to warn about'}`
             : 'clipboard: EMPTY — arm RECT and click two opposite corners.';
@@ -1917,7 +1811,7 @@ export function mountWatchEditor({
             fillPasteFilter();
         }
         if (record && record !== lastRecord) {
-            fillClearWhat();
+            view.refreshEditTools();
             // ⛓ E1 — the body picker described the OLD record's cell: re-list that
             //   cell's bodies from the NEW record, keeping a pick that still exists.
             if (whichSel && whichCell !== null) {

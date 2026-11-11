@@ -284,6 +284,27 @@ export function roomBaseTag(library, room, entry) {
  *   the two elements, because this file may not touch a DOM (the docblock's own
  *   law) — the page reads its own inputs and hands back a plain object.
  */
+/**
+ * ⛓⛓ MAZE WORLD MAP (step A) — **WHAT A MAZE `disconnect` WILL DO**, the sentence the map's DISCONNECT pick says
+ * before the press (`setEditorView`'s optional `exits.disconnectEffect`; Seedling's is `disconnectEffectOf`).
+ * ⛔ A maze `disconnect` removes the ONE overlay LINK the exit is an end of — both directions of a two-way link —
+ * and deletes no door: the exit stays in its entry's payload, unlinked, and nothing renumbers, because a maze exit
+ * is addressed by `exit_id` and not by an ordinal.
+ * @param {object[]} rows  the mount's rows (`exitList` from `exitsOfRoom`)
+ */
+export function mazeDisconnectEffectOf(rows, room, value) {
+    const list = rows[room]?.exitList ?? [];
+    const ex = list.find((e) => String(e.exit_id) === String(value));
+    if (!ex) return `room ${room} has no exit ${JSON.stringify(value)} — the op would be refused`;
+    if (ex.to === null) return `exit ${ex.exit_id} of room ${room} is not linked — the op would be refused`;
+    const way = ex.one_way ? 'one-way' : 'two-way';
+    const others = list.filter((e) => e !== ex && e.to === ex.to).length;
+    const left = others > 0 ? `room ${room} keeps ${others} other link(s) to room ${ex.to}`
+        : `no link remains between rooms ${room} and ${ex.to}`;
+    return `removes the ${way} link ${room}/${ex.exit_id} — ${ex.to}/${ex.toExit}; both doors stay, unlinked, and `
+        + `no exit renumbers (a maze exit is addressed by exit_id); ${left}.`;
+}
+
 export function mazeSetBindings({
     rulesSchema = null, drawRoomStill = null, blankSize = null,
 } = {}) {
@@ -352,6 +373,8 @@ export function mazeSetBindings({
                 rows.flatMap((r) => r.exitList.map((e) => e.exit_id)))]
                 .map((id) => ({ value: id, label: id })),
             disconnectOp: (room, value) => ({ op: 'disconnect', room, exit_id: String(value) }),
+            /** ⛓ MAZE WORLD MAP (step A) — what the map's DISCONNECT will do, said before the press. */
+            disconnectEffect: (rows, room, value) => mazeDisconnectEffectOf(rows, room, value),
         },
         locations: {
             /** ⛓ DEDUP M13 — the fallback label is `mazeLibraryEntry`'s OWN slot

@@ -25,6 +25,7 @@
     "cli.py",
     "constants.py",
     "ext_template/__init__.py",
+    "ext_template/_spoiler_hook_client.py",
     "ext_template/extra_rules.py",
     "ext_template/world_mixin.py",
     "extractors.py",

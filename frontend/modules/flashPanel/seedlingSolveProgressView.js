@@ -80,7 +80,7 @@
 
 import {
     activePath, applyProgress, asksBySite, bestText, clampText, createSolveProgressFeed, emptyProgress,
-    cachesText, churnText, etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
+    cachesText, churnText, etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, noLimitMeterText, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
     SOLVE_PROGRESS_MODES, tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
@@ -495,6 +495,12 @@ export class SolveProgressView {
 
     _renderMeter() {
         const m = meterOf(this.state.snapshot);
+        if (m.noLimit) {
+            this.meterFill.style.width = '0';
+            this.meterWindow.style.display = 'none';
+            this.meterText.textContent = noLimitMeterText(this.state.snapshot);
+            return;
+        }
         if (m.limit === null) {
             this.meterFill.style.width = '0';
             this.meterWindow.style.display = 'none';
@@ -1003,7 +1009,7 @@ export class SolveProgressLine {
         const m = meterOf(snap);
         const what = s.final ? `${seg.outcome ?? '?'} (solve #${s.solveId})`
             : `solving #${s.solveId} · L${seg.level ?? '?'}${seg.pass ? ` ${seg.pass}` : ''}`;
-        const work = m.limit === null ? `work ${m.spent}` : `work ${m.spent} / ${m.limit}`;
+        const work = m.noLimit ? 'no work limit' : m.limit === null ? `work ${m.spent}` : `work ${m.spent} / ${m.limit}`;
         return [`solver: ${what}`, work, s.final ? null : etaText(snap), bestText(snap.best)].filter(Boolean).join(' · ');
     }
 

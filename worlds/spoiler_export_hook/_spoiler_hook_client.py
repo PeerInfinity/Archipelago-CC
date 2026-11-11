@@ -6,10 +6,11 @@ spec is registered only just before that apworld loads, so a module-level import
 import importlib
 import logging
 
-from Options import Choice, Visibility
+from Options import Choice, Toggle, Visibility
 
 HOOK_MODULE = "worlds.spoiler_export_hook"
 OPTION = "spoiler_data_in_slot_data"
+REGIONS_OPTION = "spoiler_data_include_regions"
 OMITTED_KEY = "spoiler_data_omitted"
 CLIENT_API = 1
 
@@ -33,6 +34,14 @@ class SpoilerDataInSlotData(Choice):
     option_off = 0
     option_own_slot = 1
     option_own_slot_with_senders = 2
+    default = 0
+
+
+class SpoilerDataIncludeRegions(Toggle):
+    """With spoiler data on, also send the regions this slot can reach at the start and after each step, as the
+    spoiler log's sphere file has them. About 2-10 KB more per slot. Does nothing while spoiler data is off."""
+    display_name = "Spoiler data: include reachable regions"
+    visibility = Visibility.all & ~Visibility.spoiler
     default = 0
 
 

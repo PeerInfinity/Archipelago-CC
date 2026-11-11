@@ -192,6 +192,7 @@ function engineOver(arrival, opts = {}) {
         ...(opts.getDashOnlyWindow ? { getDashOnlyWindow: opts.getDashOnlyWindow } : {}),
         ...(opts.getDashShape ? { getDashShape: opts.getDashShape } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
+        ...(opts.getBackstopMs ? { getBackstopMs: opts.getBackstopMs } : {}),
         onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
     });
     return { engine, game, timers, teleports, windows, notes, failures, failExtras, dones, service, swap };
@@ -658,7 +659,9 @@ function scriptSolves(e, script) {
         if (step.decline) return settle({ ...step.decline, passes: [{ pass: 'dashless', ok: false, kind: 'refusal', ticks: null }, cutRow('full')] }, 1);
         const provisional = step.hang === 'dashless' ? inner({ ...request, passes: [ANYTIME_PASSES[0]] }).result : null;
         const h = { settled: false, started: true, startedAt: 0, result: null, provisional, answered: provisional ? 1 : 0, passes: [],
-            cancel() { h.settled = true; h.cancelled = true; } };
+            cancel() { h.settled = true; h.cancelled = true; },
+            // ⛓ SOLVER LIMIT OFF — the worker service's Stop: terminated, settled with a NAMED answer
+            stop(why) { if (h.settled) return false; h.settled = true; h.stopped = why; h.result = { ok: false, kind: 'stopped', message: why }; return true; } };
         e.service.seen.at(-1).handle = h;
         return h;
     };
@@ -2300,5 +2303,97 @@ describe('⛓ ARRIVAL ROW — an arrival plan ships only onto its live run\'s ro
         expect(e.engine.stats.arrivalRow.map((r) => r.outcome)).toEqual(['fallback', 'failed']);
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'freeze']);
         expect(e.timers.pending).toBe(0);
+    });
+});
+
+/**
+ * ⛓ SOLVER LIMIT OFF (⚖ the user 2026-11-10) — the wasm engine: Stop (the shared worker service's `handle.stop`, the
+ * same service the JS page uses), "no work limit" (`getBudgetWork` → 0) and the backstop knob (`getBackstopMs`, 0 = off).
+ *   w1 a stopped answer is not failed by name (polled as a refusal / a budget cut) -> 'Stop …' rows red
+ *   w2 the held retry multiplies a budget of 0                                       -> 'no work limit …' reds (2 requests)
+ *   w3 the backstop knob's 0 is read as the default                                   -> 'the backstop knob …' reds
+ */
+describe('⛓ SOLVER LIMIT OFF — Stop, no work limit and the backstop knob on the wasm engine', () => {
+    const STOPPED = new RegExp(`^the solve was stopped by the player on location in level 86 \\(terminated; the solve's own budget is ${SOLVER_BUDGET_WORK} work units\\)$`);
+
+    it('Stop mid-solve (`stopSolve`): the handle is STOPPED, the goal FAILS by name, the room is released, and the next solve solves', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: 'hang' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.solving, 4000);
+        expect(e.engine.solving).toBe(true);
+        expect(e.engine.stopSolve()).toBe(true);
+        expect(e.engine.stopSolve()).toBe(false);
+        expect(e.engine.solving).toBe(false);
+        expect(e.service.seen[0].handle.stopped).toBe('the solve was stopped by the player');
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(STOPPED);
+        expect(e.engine.stats).toMatchObject({ stops: 1, backstops: 0, retries: 0 });
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.game.calls).toContain('botReset'); // released, not left frozen on the solve
+        // the next solve (a real one) is served
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toHaveLength(1);
+        expect(e.dones).toHaveLength(1);
+    });
+
+    it('Stop through the SERVICE (the panel\'s path: `handle.stop`): the poll FAILS the goal by name, never a decline or a retry', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: 'hang' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.solving, 4000);
+        expect(e.service.seen[0].handle.stop('the solve was stopped by the player')).toBe(true);
+        runUntil(e, () => e.failures.length > 0, 4000);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(STOPPED);
+        expect(e.service.seen).toHaveLength(1);
+        expect(e.engine.stats).toMatchObject({ stops: 1, retries: 0, expiries: 0 });
+    });
+
+    it('no work limit (`getBudgetWork` → 0): the request carries 0, the note says so, the solve is served; a cut never becomes a ×4 retry', () => {
+        const e = engineOver(A, { getBudgetWork: () => 0 });
+        expect(e.engine.budgetWork).toBe(0);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.service.seen[0].request.budgetWork).toBe(0);
+        expect(e.notes.some((n) => /solving… \(budget no work limit\)/.test(n ?? ''))).toBe(true);
+        expect(e.dones).toHaveLength(1);
+        // a stored budget keeps its meaning; unset = the engine's own
+        let knob = 640;
+        const k = engineOver(A, { getBudgetWork: () => knob });
+        expect(k.engine.budgetWork).toBe(640);
+        knob = null;
+        expect(k.engine.budgetWork).toBe(SOLVER_BUDGET_WORK);
+        k.engine.setBudgetWork(0);
+        expect(k.engine.budgetWork).toBe(0);
+        // nothing to multiply: even an answer that claims a budget cut is never asked again at 0 × 4
+        const c = engineOver(A, { getBudgetWork: () => 0 });
+        scriptSolves(c, { 1: 'cut', 2: 'cut' });
+        c.engine.walkTo(CHEST);
+        runUntil(c, () => c.failures.length > 0, 20000);
+        expect(c.service.seen).toHaveLength(1);
+        expect(c.engine.stats.retries).toBe(0);
+    });
+
+    it('the backstop knob (`getBackstopMs`): read at the solve\'s start; 0 = OFF (a hung solve stays in flight until Stop); a number = that backstop', () => {
+        let knob = 0;
+        const e = engineOver(A, { getBackstopMs: () => knob });
+        expect(e.engine.backstopMs).toBe(0);
+        scriptSolves(e, { 1: 'hang', 2: 'hang' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 20000);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.solving).toBe(true);
+        expect(e.engine.stats.backstops).toBe(0);
+        e.engine.stopSolve();
+        expect(e.failures[0]).toMatch(STOPPED);
+        knob = 5000;
+        expect(e.engine.backstopMs).toBe(5000);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 1, 80000);
+        expect(e.failures[1]).toMatch(/^the solve exceeded the backstop on this machine \(5 s\)/);
+        knob = null; // unset → the engine's own (300 s)
+        expect(e.engine.backstopMs).toBe(300000);
     });
 });
