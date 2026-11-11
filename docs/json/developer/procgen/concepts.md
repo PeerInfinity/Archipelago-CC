@@ -159,6 +159,19 @@ The readers:
 
 No registered substrate declares a role yet.
 
+## A world's content stack
+
+A world names the content packs it draws its characters, places, objects and text from in `params.content`: a list of pack ids (`frontend/packs/`), empty by default, beside `params.concepts`. The code is `frontend/modules/procgenPipeline/worldContent.js`.
+
+- **The effective stack.** `effectiveContentStack` is the one rule. It starts with the `defaultContentPack` of each substrate in the world's mix, in registry order and without duplicates, and then adds `params.content` in order. A later pack wins per key. No registered substrate declares a default pack yet, so a world's stack is exactly its own `params.content`. See [Substrate Registry](./substrate-registry.md).
+- **The load.** Text, names and colours resolve at generation and are written into the world document. So the stack is loaded once, before generation: `loadContentSet(stack, {base, readJson})` returns a frozen **content set**, `{ids, concepts, text}`, where `concepts` and `text` are the pack-concept and text-library readers. `assertPresents` runs on it first. An empty stack returns the empty set and never calls `readJson`. In the browser the panel reads with `fetch`; in node, `contentPacks/nodePackIo.js` reads the committed packs from disk.
+- **The channel.** The set reaches every region's `generateRegionCore` and `placeFromRules` as `params.contentSet`, on the same channel as `params.concepts` (`assembleRegionParams`). With it comes the world's own list as `params.content`. Both are added only when the stack is not empty. An entry point that builds a run without loading a non-empty stack is refused by name, and so is a region whose packs are not in the set it was handed.
+- **The entry points.** `prepareRunFromState` is the async form of `buildRunFromState`: it loads the set and then builds the run. The pipeline panel loads the set before Generate, before each *Run next step* and before Append. `sphere-step`, `topdown-step` and `spiral-step` load it as well, and `--param content=a,b` names a world's own stack.
+- **The record.** A sphere-growth or top-down compile records `params.content` in the slot's `procgen_metadata` block as `content`, beside `concepts`, and only when the list is not empty. The default packs are not recorded, because they follow from the mix. `rebuildEnvelopeFromRulesJson` reads the list back into `regionParams.content`, and a caller's own value wins.
+- **The set is runtime state.** The set holds functions, so `JSON.stringify` leaves it out: a saved envelope keeps the list and drops the set. A rebuilt or resumed envelope gets its set back from `attachEnvelopeContent` before it generates. An append from a rebuilt world that was not re-attached is refused at the region seam.
+
+A world that names no content compiles to the bytes it did before the param existed. With a stack, it compiles to the same `rules.json` apart from `procgen_metadata[p].content`, because no substrate reads the set yet. `procgenPipeline/worldContent.test.js` holds both, on the concept trial world.
+
 ## Behaviour
 
 A concept can also say how it **behaves**: what an item hits with, how an enemy answers a hit, what makes an obstacle give way, and what a substrate's realisation of it does. Every behaviour field is optional, and a concept without one is exactly the concept it was before.

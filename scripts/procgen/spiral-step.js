@@ -105,6 +105,8 @@ import {
     serializeSpiralEnvelope, deserializeSpiralEnvelope,
 } from '../../frontend/modules/procgenPipeline/spiralSteps.js';
 import { discoveryModeConfig } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { attachEnvelopeContent } from '../../frontend/modules/procgenPipeline/worldContent.js';
+import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
 
 argvHelp(import.meta.url);
 
@@ -455,7 +457,11 @@ export const SUBSTRATE_CHECK = Object.freeze({
  * @returns {Promise<{envelope: object, rulesJson: object|null, summary: object}>}
  */
 export async function build(config, { envelope = null, log = () => {} } = {}) {
-    const env = envelope ? deserializeSpiralEnvelope(structuredClone(envelope)) : buildEnv(config);
+    // ⛓ CONTENT SETS C3 — this CLI's own worlds pass `regionParams: {}` (they name no content); a resumed envelope
+    // (one the panel saved) carries its content list, not the set: re-attach it.
+    const env = envelope
+        ? await attachEnvelopeContent(deserializeSpiralEnvelope(structuredClone(envelope)), nodePackIo())
+        : buildEnv(config);
     await runToEnd(env, config, { log });
     const rulesJson = env.compile?.rulesJson ?? null;
     return {
@@ -483,7 +489,7 @@ async function main(status) {
 
     let env;
     if (args.input) {
-        env = deserializeSpiralEnvelope(readJson(args.input, '-i'));
+        env = await attachEnvelopeContent(deserializeSpiralEnvelope(readJson(args.input, '-i')), nodePackIo());
     } else if (sub === 'arrange' || sub === 'run') {
         env = buildEnv(args);
     } else {

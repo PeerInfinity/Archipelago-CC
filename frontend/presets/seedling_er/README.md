@@ -24,8 +24,13 @@ the committed playthrough atlas (`frontend/modules/flashPanel/atlases/seedling-p
 - **Checked when it is made**: E2's validator (coupled mirror included); the layout is beatable under its own
   rules (the sphere walk collects every location and The Seed); Seedling's checks (sphere 0 no smaller than
   vanilla's; no moved stair lands on an at-risk permissive binding).
-- ⛔ **Not playable as a shuffle yet** (Q3): the game still takes a stair to its vanilla room; the play-time
-  redirect is E5.
+- **Played as a shuffle through the level data (E5)**: the randomized load delivers the level set with every moved
+  stairs' exit rewritten to its shuffled destination (`frontend/modules/seedlingDemo/entranceRetarget.js`, applied by
+  `flashPanel/seedlingRandomizerWiring.js` after the AP item rewrite), so the game itself loads the shuffled room: no
+  vanilla room in between (Q3's flash is zero) and no redirect in the region binding. A load that does not deliver
+  those rooms (a build without the capabilities, a refused delivery) is refused BY NAME as an entrance-randomized
+  world left on vanilla rooms. Witness: `node scripts/procgen/probe-seedling-wasm-er-retarget.mjs`. The Playback Bot
+  and the JS substrate's own runtime on this world are E6.
 - **Gated as a world (E4c)**, with nothing committed beside it:
   - the **whole-game maze certifier** has an ER arm with its own baseline: `node scripts/procgen/probe-seedling-whole-game-certify.mjs
     --source=er` rebuilds this preset's shuffled atlas (`make-seedling-er-preset.mjs` `buildSeedlingErSource`, refused unless it
