@@ -42,6 +42,15 @@ function loadLibraries() {
                     failed.push({ library, error: String(e?.message ?? e).split('\n')[0] });
                 }
             }
+            // ⛓ CONTENT SETS C4 — this worker's own process-level cache of the default packs its
+            //   libraries declare (its registry is its own), so a region of a default-only stack builds
+            //   synchronously here. A pack that cannot load is reported; a job needing it is refused by name.
+            try {
+                const { preloadDefaultContent } = await import('../procgenPipeline/worldContent.js');
+                await preloadDefaultContent();
+            } catch (e) {
+                failed.push({ library: 'default content packs', error: String(e?.message ?? e).split('\n')[0] });
+            }
             const { regenerateRegionEntry } = await import('./regionRegenerate.js');
             // ⛓ R5b — a ZONE source replaces the region's content; the install it
             //   needs is module-global, which is why it runs HERE and never on the page.

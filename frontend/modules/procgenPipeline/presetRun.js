@@ -43,7 +43,7 @@ import { newEnvelope as newSphereEnvelope, runToStep as runSphereToStep } from '
 import { newSpiralEnvelope, runSpiralToStep } from './spiralSteps.js';
 import { buildTopDownEnvelope, runTopDownToStep } from './topDownSteps.js';
 import { newEntranceEnvelope, runEntranceToStep, entranceShuffleHooksFor } from './entranceShuffleSteps.js';
-import { effectiveContentStack, loadContentSet } from './worldContent.js';
+import { effectiveContentStack, loadContentSet, recordedContentOf } from './worldContent.js';
 
 export const DEFAULT_PARAMS = {
     seed: 1,
@@ -652,6 +652,8 @@ export function compileGridRun(run, { grid, stats, startCell }) {
         procgenMetadata: {
             driver: 'grid-growth',
             stop_reason: stats.stopReason,
+            // ⛓ CONTENT SETS C4 — the world's own content stack (omitted when it names none).
+            ...recordedContentOf(run.grow?.regionParams),
         },
     });
 }

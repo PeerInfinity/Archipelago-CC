@@ -26,6 +26,9 @@
  */
 
 import { SUBSTRATE_LIBRARIES } from '../procgenCore/substrateLibraries.js';
+import {
+    RECORDED_CONTENT_KEY, attachContentSet, browserPackIo, documentContentOf,
+} from '../procgenPipeline/worldContent.js';
 
 /** ⛓ The setting's key under the module's block, and its full settings path. */
 export const REGION_GENERATION_TIMEOUT_KEY = 'regionGenerationTimeoutSeconds';
@@ -190,7 +193,9 @@ export function resolveRegenerateWorkerUrl() {
  * @param {{post: Function, loadLibraries: Function, regenerate: Function,
  *   now?: Function}} io
  */
-export async function runRegenerateJob(args, { post, loadLibraries, regenerate, now = () => performance.now() }) {
+export async function runRegenerateJob(args, {
+    post, loadLibraries, regenerate, now = () => performance.now(), attachContent = attachJobContent,
+}) {
     const t0 = now();
     const { registered, failed } = await loadLibraries();
     post({ type: 'ready', registered, failed, loadMs: now() - t0 });
@@ -209,7 +214,9 @@ export async function runRegenerateJob(args, { post, loadLibraries, regenerate, 
         // ⛓ R5c — a zone job may FETCH (the atlas intake) before it extracts, so it
         //   answers a promise; a realiser job answers synchronously, and awaiting a
         //   value is that value.
-        res = await regenerate(args, { progress: (event) => post({ type: 'progress', event }) });
+        // ⛓ CONTENT SETS C4 — the job's own content set, loaded HERE (the posted args carry none).
+        const job = await attachContent(args);
+        res = await regenerate(job, { progress: (event) => post({ type: 'progress', event }) });
     } catch (e) {
         // ⛓ `regenerateRegionEntry` answers a realiser throw itself; a throw that
         //   escapes it is a defect of the op's own code, reported as the realiser's.
@@ -463,6 +470,7 @@ export function runRegenerateOnPage(args, {
     clearTimer = (t) => clearTimeout(t),
     onPhase = () => {},
     maxRetries = 1,
+    attachContent = attachJobContent,
 } = {}) {
     let phase = 'running';
     const startedAt = now();
@@ -485,7 +493,10 @@ export function runRegenerateOnPage(args, {
     timer = setTimer(() => finish({ ok: false, timedOut: true, phase: 'running', ms: now() - startedAt, budgetMs: timeoutMs }),
         timeoutMs);
     onPhase(phase);
-    regenerateAwaitingGeneration(() => regenerate(args), { collect, maxRetries })
+    // ⛓ CONTENT SETS C4 — the job's content set, attached once before the first ask.
+    Promise.resolve()
+        .then(() => attachContent(args))
+        .then((job) => regenerateAwaitingGeneration(() => regenerate(job), { collect, maxRetries }))
         .catch((e) => ({ ok: false, threw: String(e?.message ?? e), freeItems: [], hostsSurplus: false }))
         .then((res) => finish({ ...res, ms: now() - startedAt }));
     return {
@@ -497,4 +508,38 @@ export function runRegenerateOnPage(args, {
         late: () => late,
         terminated: () => false,
     };
+}
+
+/* ── ⛓⛓ CONTENT SETS C4 — a regenerate job's content set ─────────────── */
+
+/**
+ * ⛓⛓ **ATTACH A REGENERATE JOB'S CONTENT SET WHERE THE JOB RUNS** (the worker,
+ * or the page for a job it finishes). A loaded set cannot cross `postMessage`
+ * (its readers are functions), so `composeRegenerateArgs` posts none; here the
+ * world's own list — the args' `regionParams.content`, else the document's
+ * `procgen_metadata[p].content` — is loaded with `attachContentSet` over the
+ * target's mix, and the job gets `regionParams` carrying both.
+ *
+ * Returns `args` ITSELF (no read) when the document names no content: a stack of
+ * default packs only is built from the process's preload cache at the region
+ * seam. Not attached: an initialise (it refuses a slot that already carries a
+ * `procgen_metadata` block, so no document list can exist; its defaults come
+ * from the cache), a zone source and a library source (neither reaches a
+ * placer), and args with no `regionParams` object (the op's own defaults; the
+ * seam refuses such a job by name when the document names content).
+ *
+ * @param {object} args the job (`runRegenerateJob`'s)
+ * @param {{base, readJson}} io the pack io (default `browserPackIo()`)
+ */
+export async function attachJobContent(args, io = browserPackIo()) {
+    if (!args || args.job === INITIALISE_JOB) return args;
+    // The two source kinds `workerJobAnswer` and `regenerateRegionEntry` hand to no placer.
+    if (args.source?.kind === 'zone' || args.source?.kind === 'library') return args;
+    const rp = args.regionParams;
+    if (!rp || typeof rp !== 'object') return args;
+    const own = rp[RECORDED_CONTENT_KEY] ?? documentContentOf(args.doc, args.player);
+    if (!own.length) return args;
+    const regionParams = await attachContentSet({ ...rp, [RECORDED_CONTENT_KEY]: [...own] },
+        { substrateIds: [args.substrate], ...io });
+    return { ...args, regionParams };
 }

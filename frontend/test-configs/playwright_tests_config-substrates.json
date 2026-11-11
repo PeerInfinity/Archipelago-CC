@@ -1682,6 +1682,12 @@
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
         },
         {
+            "id": "procgen-pipeline-boot-preloaded-default-content",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "CONTENT SETS C4. The boot (app/initialization/index.js, the one initializeApplication both init.js and init-bundled.js call) awaited worldContent.preloadDefaultContent after the modules registered: the call count is at least one and every pack the live registry declares as a defaultContentPack is in the cache. Category procgenPipeline runs in fast, which also runs bundled on push, so the bundle's boot is covered too."
+        },
+        {
             "id": "procgen-pipeline-seedling-gen-edit-round-trip",
             "enabled": true,
             "category": "procgenPipeline",

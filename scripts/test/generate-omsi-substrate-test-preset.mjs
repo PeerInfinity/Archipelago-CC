@@ -44,6 +44,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
 import { stampLoopCosts } from './presetLoopCosts.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -95,6 +96,7 @@ async function main() {
         'frontend/modules/mazeRoom/mazeRoomLibrary.js')));
     await import(pathToFileURL(path.join(repoRoot,
         'frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js')));
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
     await buildAndWrite({ engine, substrateRegistry, mergeSubstrateItemLib, DEFAULT_ITEMS,
         gameId: GAME_ID, gameName: GAME_NAME, awardSchedule: null });
