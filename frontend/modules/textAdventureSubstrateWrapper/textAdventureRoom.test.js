@@ -28,6 +28,7 @@ import {
     generateTextAdventureRoom,
     placeTextAdventureItems,
     placeTextAdventureRules,
+    presentedProse,
     serializeTextAdventureRoom,
 } from './textAdventureRoom.js';
 import {
@@ -39,7 +40,8 @@ import {
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { sidecarFieldsOf, sidecarPayloadErrors } from '../procgenCore/sidecarFields.js';
-import { TEXT_ADVENTURE_CONCEPT_REALISATIONS as TA_REAL } from './textAdventureConceptRealisations.js';
+import { TEXT_ADVENTURE_DEFAULT_CONTENT_PACK } from './textAdventureConceptRealisations.js';
+import { defaultContentSetOf } from '../procgenPipeline/worldContent.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const TRUE = { rule: 'True_' };
@@ -334,8 +336,10 @@ describe('the `prose` field (concept library T2, D1)', () => {
 describe('concept realisations in `placeFromRules` (concept library T2, D3)', () => {
     const SWORD = { rule: 'Has', args: { item_name: 'Progressive Sword' } };
     const SWIM = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
-    const G = TA_REAL.guardian.placements.gate.mechanic.prose;
-    const W = TA_REAL.water.placements.gate.mechanic.prose;
+    // ⛓ CONTENT SETS R1 — the words are the default pack's (preloaded by the vitest setup hook).
+    const SET = defaultContentSetOf([TEXT_ADVENTURE_DEFAULT_CONTENT_PACK]);
+    const G = presentedProse(SET, 'gate', 'guardian');
+    const W = presentedProse(SET, 'gate', 'water');
     const OFFERED = ['sword', 'swim', 'guardian', 'water'];
 
     function conceptRoom(concepts) {
@@ -356,7 +360,7 @@ describe('concept realisations in `placeFromRules` (concept library T2, D3)', ()
                 { item_id: 'Yellow Key', location_id: 'Shelf' },
             ],
             rng: noDrawRng(),
-            ...(concepts === undefined ? {} : { params: { concepts } }),
+            ...(concepts === undefined ? {} : { params: { concepts, contentSet: SET } }),
         });
         return core.world;
     }
@@ -369,7 +373,7 @@ describe('concept realisations in `placeFromRules` (concept library T2, D3)', ()
             Moat: { inaccessibleMessage: W.blocked, moveMessage: W.passedWith },
         });
         // the sword's location speaks the sword's prose (keyed by its AP name); the key's says nothing
-        expect(payload.prose.locations).toEqual({ Keep__Rack: { checkMessage: TA_REAL.sword.prose.checkMessage } });
+        expect(payload.prose.locations).toEqual({ Keep__Rack: { checkMessage: presentedProse(SET, 'item', 'sword').checkMessage } });
         expect(sidecarPayloadErrors(sidecarFieldsOf(substrateRegistryEntry), { ...payload, fogEnabled: true })).toEqual([]);
     });
 

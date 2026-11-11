@@ -2075,7 +2075,10 @@
             "name": "level_16__r3c7 -> level_30__r8c13",
             "connected_region": "level_30__r8c13",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
             },
             "er": {
               "group": "stairsdown",

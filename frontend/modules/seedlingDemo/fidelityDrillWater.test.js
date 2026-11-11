@@ -37,7 +37,7 @@ describe('fidelity DRILLWATER — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.drillTerrainSwitch).toBe(true);
             // ⛓ wave 38 (L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm`) landed after it; then wave 39's ROCKFIRE `fireRockArm`.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf('drillTerrainSwitch') + 1)).toEqual(['spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm', 'spinnerRemoveRead']); // ⛓ wave 40: FENCEPOST
+            expect(keys.slice(keys.indexOf('drillTerrainSwitch') + 1)).toEqual(['spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm', 'fireBreakArm', 'spinnerRemoveRead']); // ⛓ wave 40: FIREBREAK `fireBreakArm`, FENCEPOST `spinnerRemoveRead`
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DRILL_TERRAIN_SWITCH');
         });
 });

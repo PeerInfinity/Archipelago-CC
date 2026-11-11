@@ -26,7 +26,9 @@ import {
 } from './procgenPipelineEngine.js';
 import { appendSphere, runStep } from './sphereSteps.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
-import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
+import { TEXT_ADVENTURE_DEFAULT_CONTENT_PACK } from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
+import { presentedProse } from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
+import { defaultContentSetOf } from './worldContent.js';
 
 const CONCEPT_LIST = ['sword', 'guardian', 'swim', 'water'];
 const bundle = (concepts, { startSubstrate = 'maze', substrateQuotas = { maze: 99 } } = {}) => ({
@@ -106,7 +108,8 @@ describe('T0b D3 — the text-adventure world: an append keeps the gates\' prose
     const control = await runPresetHeadless(buildRunFromState(bundle([], TA_WORLD)));
     const world = await runPresetHeadless(buildRunFromState(bundle(CONCEPT_LIST, TA_WORLD)));
     const proseOf = (rulesJson, rid) => rulesJson.preset_sidecars['1'][rid].playable_payload.prose;
-    const PROSE = (cid) => TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid].placements.gate.mechanic.prose;
+    // ⛓ CONTENT SETS R1 — the words are the default pack's.
+    const PROSE = (cid) => presentedProse(defaultContentSetOf([TEXT_ADVENTURE_DEFAULT_CONTENT_PACK]), 'gate', cid);
 
     it('the world builds headless, oracle clean, rooted in a text-adventure room that carries prose', () => {
         expect(world.oracleErrors ?? []).toEqual([]);

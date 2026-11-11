@@ -23,7 +23,14 @@ GitHub Pages serves only `frontend/`.
   `packs.json`'s `sfx.seedling` is the stack the JS runtime page's sound loads.
 - `archipelago/` holds the fork's AP-item pickup (`ArchipelagoLogo.png`), under MIT (see `pack.json`).
 
-⛔ **Both packs are GENERATED. Do not edit them.** Regenerate with
+- `text-adventure/` is the text adventure substrate's DEFAULT content pack (content sets R1; the registry entry's
+  `defaultContentPack`). It has no art: a `concepts` layer (one pack concept per mechanic concept the text adventure
+  realises, each `presents` it and names its text slots) and a `text` layer (every string the substrate's generation
+  writes into a world document). It is HAND-MADE, under the repository's MIT licence (see `pack.json`). Every
+  committed text-adventure world compiles byte-equal from it, so an edit here changes what a regenerated world says:
+  `frontend/modules/procgenPipeline/conceptTrialWorld.test.js` and `check-procgen-presets` hold the committed bytes.
+
+⛔ **The seedling and archipelago packs are GENERATED. Do not edit them.** Regenerate with
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets
 are the `vendor/seedling` PNGs copied byte for byte, except the font sheet, which
 `scripts/procgen/make-seedling-font.mjs` builds from its glyph table (`--check` compares its bytes; the extractor's
