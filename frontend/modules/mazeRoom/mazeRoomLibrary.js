@@ -47,6 +47,9 @@ import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames, tileGridApExitNames } from './mazeSerializer.js';
 import { mazeCapacityAt } from './mazeLocationCapacity.js';
 import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
+import {
+    MAZE_CONTENT_ROLES, MAZE_DEFAULT_CONTENT_PACK, presentingPlaceFromRules, presentingRegionCore,
+} from './mazeContent.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -164,6 +167,14 @@ export const substrateRegistryEntry = Object.freeze({
     // an item concept gets its rows in its item library instead
     // (`presetRun.mergedItemLib`), which is inert for a concept-less world.
     conceptRealisations: MAZE_CONCEPT_REALISATIONS,
+    // ⛓ CONTENT SETS R2 — the NAMES, colours and symbols of those realisations
+    // come from content packs: this default pack (`frontend/packs/maze/`) is in
+    // every world's stack, and a later pack that fills a role wins. The roles say
+    // what a pack concept must supply; `mazeContent.js` reads them in a
+    // PRESENTATION PASS after the engine returns (the build hooks below), so the
+    // engine — in the Seedling derived-rule table's closure — stays logic only.
+    defaultContentPack: MAZE_DEFAULT_CONTENT_PACK,
+    contentRoles: MAZE_CONTENT_ROLES,
 
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
@@ -266,9 +277,11 @@ export const substrateRegistryEntry = Object.freeze({
     }),
 
     // Build-time adapters
-    generateRegionCore: spatialCore,
+    // ⛓ CONTENT SETS R2 — the engine, then `mazeContent.js`'s presentation pass
+    // (concept rows' looks from `params.contentSet`).
+    generateRegionCore: presentingRegionCore(spatialCore),
     placeFromItems: itemBasedPlacer,
-    placeFromRules: ruleGatePlacer,
+    placeFromRules: presentingPlaceFromRules(ruleGatePlacer),
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
     // ⛓ PRESET SIDECARS D0 — what `serializeWorld` writes, declared beside the

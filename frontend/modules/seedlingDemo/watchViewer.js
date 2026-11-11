@@ -399,7 +399,7 @@ import { initialLabTouchSetting, writeLabTouchSetting } from './watchTouchOption
 // ⛓ LAB L3: ▶ load in JS — the same ship over the JS transport, and the key path into its frame.
 import { JS_STAGES, shipToJs } from './watchWasm.js';
 import { dispatchGameKey } from '../flashPanel/gameInput.js';
-import { labTouchShownInitially } from './watchTouchOption.js';
+import { FRAME_TAPE_NOTE, labTouchShownInitially, tapeHoldsFrame } from './watchTouchOption.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
@@ -5233,7 +5233,7 @@ async function runManual(params, lifetime) {
     lifetime.on(window, 'pagehide', () => keys.release('pagehide'));
     // ⛔ A RETIRED MANUAL LEAVES NO HELD KEY — and no controls (below).
     lifetime.onRetire(() => keys.release('retire'));
-    await mountManualTouch(lifetime, keys, canvas);
+    await mountManualTouch(lifetime, keys, canvas, () => driving);
     if (!lifetime.alive()) return;
 
     const drawLive = () => {
@@ -5333,6 +5333,7 @@ async function runManual(params, lifetime) {
             }
         } catch (e) {
             driving = false;
+            touchStrips.manualApply?.();
             // The run REFUSED (a soft-lock stance, an orphan clear). Its own
             // message, with the tick — and the session is kept, so STOP can
             // still fold what was driven up to it.
@@ -5389,6 +5390,7 @@ async function runManual(params, lifetime) {
         renderer.reset();
         renderer.fit(worldFor(session.run.level));
         driving = true;
+        touchStrips.manualApply?.();
         acc = 0;
         $('manualStart').disabled = true;
         $('manualStop').disabled = false;
@@ -5405,6 +5407,9 @@ async function runManual(params, lifetime) {
         // ⛔ EVERY HELD KEY IS LET GO AT STOP — a key still down here would
         // otherwise be down at the next START, held by nobody.
         keys.release('stop');
+        // ⛓ read BEFORE the re-decide below takes the strip away (it exists only while the run drives)
+        const touchShown = Boolean(document.querySelector('#canvas + .flash-touch-controls'));
+        touchStrips.manualApply?.();
         $('manualStart').disabled = false;
         $('manualStop').disabled = true;
 
@@ -5443,8 +5448,8 @@ async function runManual(params, lifetime) {
             error: trip.error ? trip.error.message : null,
             inputs: trip.tape.inputs,
             clears: session.run.earnedClears.length,
-            // ⛓ the touch row reads these: the controls are mounted, and STOP released.
-            touch: Boolean(document.querySelector('#stage .flash-touch-controls')),
+            // ⛓ the touch row reads these: the controls were mounted when STOP was pressed, and STOP released.
+            touch: touchShown,
             released: keys.lastRelease(),
             held: keys.codes(),
         };
@@ -5501,13 +5506,16 @@ async function runManual(params, lifetime) {
  * `js` transport (Esc is wasm-only: the JS run has no pause menu) — mounted under the canvas and wired to `keys`
  * through `touchSendFor`, so a tap is a `keys.key` press like a keystroke. Shown by `touchControlsVisible` over the
  * `#manualTouch` select — the panel's auto / on / off (auto = `?touch=1` or a coarse pointer; `?touch=0` hides them),
- * remembered per browser (`initialLabTouchSetting`). Mounted when MANUAL is the source, before START: a press is
- * inert until the run drives (the `driving` gate), and the page dims the strip until then.
+ * remembered per browser (`initialLabTouchSetting`).
+ * ⚖ (seedling-lab-touch-fix; the user 2026-11-11: *"I think those controls should only appear after pressing
+ * Start."*) SHOWN ONLY WHILE THE RUN DRIVES (`isDriving`): mounted at START, unmounted at STOP and when the run
+ * refuses (held keys released, as on any unmount). This replaces L1b's "mounted at arm select, dimmed until START":
+ * a strip that showed before START did nothing, which is how it read as broken.
  *
  * ⛔ LIFETIME: the mount is destroyed on retire (its own listeners go with it, every held key released first), and
  * it is `attach`ed to `keys`, so STOP / blur / hidden release a finger still on the d-pad too.
  */
-async function mountManualTouch(lifetime, keys, canvas) {
+async function mountManualTouch(lifetime, keys, canvas, isDriving) {
     const box = $('manualTouch');
     let layout = null;
     try {
@@ -5529,7 +5537,8 @@ async function mountManualTouch(lifetime, keys, canvas) {
     };
     const apply = () => {
         if (!lifetime.alive()) return;
-        if (!touchControlsVisible(box.value, { matchMediaFn: window.matchMedia?.bind(window) })) {
+        if (!isDriving() || touchStrips.frameShip
+            || !touchControlsVisible(box.value, { matchMediaFn: window.matchMedia?.bind(window) })) {
             unmount();
             return;
         }
@@ -5546,8 +5555,33 @@ async function mountManualTouch(lifetime, keys, canvas) {
         writeLabTouchSetting(labStorage(), box.value);
         apply();
     };
+    touchStrips.manualApply = apply;
     lifetime.onRetire(unmount);
+    lifetime.onRetire(() => { if (touchStrips.manualApply === apply) touchStrips.manualApply = null; });
     apply();
+}
+
+/**
+ * ⛓⛓ ONE STRIP AT A TIME (slice `seedling-lab-touch-fix`; ⚖ the user 2026-11-11: *"there are two copies of the
+ * touch controls on the lab page, and one of those copies never did anything"* — on a phone, the deployed site:
+ * *"a set of touchscreen controls above the js and wasm canvas that does nothing"*).
+ *
+ * MANUAL's strip drives the LAB's run (inert until START); a frame's strip drives the FRAME's game. With MANUAL as
+ * the source and a ship pressed, MANUAL's stayed mounted over the frame, and the person playing the frame pressed
+ * the one that only MANUAL's START wakes. So while a ship (▶ load in JS or ▶ load in wasm) holds the frame
+ * (`frameShip`), MANUAL's strip is UNMOUNTED (its held keys released, as on any unmount) and it comes back when the
+ * ship ends with the arm. `manualApply` is the live MANUAL mount's re-decide, or null.
+ */
+const touchStrips = { frameShip: false, manualApply: null };
+/** ⛓ Read-only diagnostics for the gates: which strip is owed, and why (no gate writes through this). */
+globalThis.__labTouch = {
+    get frameShip() { return touchStrips.frameShip; },
+    get manualApply() { return Boolean(touchStrips.manualApply); },
+};
+function setFrameShipHoldsTouch(on) {
+    if (touchStrips.frameShip === on) return;
+    touchStrips.frameShip = on;
+    touchStrips.manualApply?.();
 }
 
 /** `localStorage`, or null where even touching it throws (a sandboxed frame, blocked site data). */
@@ -10605,6 +10639,7 @@ function shipReadout(source, lifetime, transport = 'wasm') {
     const rearm = () => { $(button).disabled = transport === 'js' ? !jsShippable : !shippable; };
     return {
         onStage(stage, message, state) {
+            setFrameTape(tapeHoldsFrame(state));
             $('wasmStage').textContent = `${stage} — ${message}`;
             paintStages(state);
             publish(state);
@@ -10614,6 +10649,7 @@ function shipReadout(source, lifetime, transport = 'wasm') {
             if (stage === 'play') rearm();
         },
         onRefusal(stage, reason, detail, state) {
+            setFrameTape(false);
             $('wasmStage').textContent = `⛔ REFUSED at ${stage}: ${reason}`;
             $('wasmVerdict').textContent = detail;
             $('wasmVerdict').className = 'bad';
@@ -10678,7 +10714,7 @@ async function shipToWasmNow(source, lifetime) {
     btn.disabled = true;
     $('wasmPanel').hidden = false;
     $('wasmPanel').querySelector('h2').textContent = 'THE REAL GAME';
-    jsTouch?.unmount();
+    frameTapeHolds = false;
     $('wasmVerdict').className = '';
     $('wasmVerdict').textContent = '';
     $('wasmHud').innerHTML = '';
@@ -10702,6 +10738,7 @@ async function shipToWasmNow(source, lifetime) {
         });
         return null;
     }
+    mountFrameTouch(lifetime, 'wasm');
     return shipToWasm(payload, {
         frame: $('frame'), lifetime, readout, tolerance: END_STATE_TOLERANCE,
     });
@@ -10720,6 +10757,7 @@ async function shipToJsNow(source, lifetime) {
     $('wasmPanel').hidden = false;
     $('wasmPanel').querySelector('h2').textContent = jsShippable.replay ? 'THE JS GAME — tape replay'
         : 'THE JS GAME — live play';
+    frameTapeHolds = false;
     $('wasmVerdict').className = '';
     $('wasmVerdict').textContent = jsShippable.jsNote ?? '';
     $('wasmHud').innerHTML = '';
@@ -10736,7 +10774,7 @@ async function shipToJsNow(source, lifetime) {
         });
         return null;
     }
-    mountJsTouch(lifetime);
+    mountFrameTouch(lifetime, 'js');
     return shipToJs(payload, { frame: $('frame'), lifetime, readout, gameConfig });
 }
 
@@ -10763,17 +10801,23 @@ function jsHudRows(st, state) {
 }
 
 /**
- * ⛓ LAB L3 — THE ON-SCREEN CONTROLS FOR THE JS FRAME. `jsRuntime.html` has
- * none of its own (measured: no touch strip in the page), so the lab mounts the
- * panel's (`touchControls`) under the frame, on the panel's own path: each key
- * is dispatched on the frame's canvas (`gameInput.dispatchGameKey`), which
- * bubbles to the document the JS page listens on. `setButtons('js')` (no Esc).
- * Shown by the `#jsTouch` box; it starts from the lab's ONE on-screen-controls
- * option (MANUAL's auto / on / off, remembered; `?touch=` overrides —
- * `labTouchShownInitially`), and is a per-ship override: it never writes it.
+ * ⛓ LAB L3 — THE ON-SCREEN CONTROLS FOR THE FRAME. Neither `jsRuntime.html`
+ * nor the wasm build's `game.html` has a strip of its own (measured), so the
+ * lab mounts the panel's (`touchControls`) under the frame, on the panel's own
+ * path: each key is dispatched on the frame's game canvas
+ * (`gameInput.dispatchGameKey`), which the game's page hears as the keyboard.
+ * `setButtons(transport)`: X/C/V for both, Esc (the pause menu) on wasm only.
+ * ⛓ (seedling-lab-touch-fix) ▶ load in wasm got one too — measured first: the
+ * panel's path moves the wasm player as is. ⚖ The user, 2026-11-11, on a phone:
+ * *"No new controls appear when clicking load in wasm."*
+ * Shown by the ship's box (`#jsTouch` / `#wasmTouch`); it starts from the lab's
+ * ONE on-screen-controls option (MANUAL's auto / on / off, remembered; `?touch=`
+ * overrides — `labTouchShownInitially`), and is a per-ship override: it never
+ * writes it. While a ship holds the frame, MANUAL's strip stands down
+ * (`touchStrips`): one strip, under the game being played.
  */
-async function mountJsTouch(lifetime) {
-    const box = $('jsTouch');
+async function mountFrameTouch(lifetime, transport) {
+    const box = $(transport === 'js' ? 'jsTouch' : 'wasmTouch');
     let layout = null;
     try {
         layout = parseTouchLayout((await seedlingGameConfig()).touch_controls);
@@ -10783,9 +10827,22 @@ async function mountJsTouch(lifetime) {
         return;
     }
     if (!lifetime.alive() || !layout) return;
-    jsTouch?.unmount();
+    frameTouch?.unmount();
     let mounted = null;
-    const unmount = () => { mounted?.destroy(); mounted = null; };
+    const note = document.createElement('div');
+    note.className = 'note labTapeNote';
+    note.textContent = FRAME_TAPE_NOTE;
+    const paint = () => {
+        if (!mounted) return;
+        if (frameTapeHolds) {
+            mounted.element.dataset.labTape = 'replaying';
+            mounted.element.after(note);
+        } else {
+            delete mounted.element.dataset.labTape;
+            note.remove();
+        }
+    };
+    const unmount = () => { note.remove(); mounted?.destroy(); mounted = null; };
     const apply = () => {
         if (!lifetime.alive()) return;
         if (!box.checked) { unmount(); return; }
@@ -10793,20 +10850,40 @@ async function mountJsTouch(lifetime) {
         mounted = mountTouchControls({
             doc: document, layout, send: (type, k) => dispatchGameKey($('frame'), type, k),
         });
-        mounted.setButtons('js');
+        mounted.setButtons(transport);
         mounted.setPlacement('below');
         $('frame').after(mounted.element);
+        paint();
     };
-    jsTouch = { unmount };
+    const mine = { unmount, paint };
+    frameTouch = mine;
+    setFrameShipHoldsTouch(true);
     box.disabled = false;
     box.checked = box.dataset.touched === '1' ? box.checked : labTouchShownInitially({
         storage: labStorage(), search: location.search, matchMediaFn: window.matchMedia?.bind(window),
     });
     box.onchange = () => { box.dataset.touched = '1'; apply(); };
-    lifetime.onRetire(() => { unmount(); jsTouch = null; });
+    lifetime.onRetire(() => {
+        unmount();
+        if (frameTouch === mine) { frameTouch = null; setFrameShipHoldsTouch(false); }
+    });
     apply();
 }
-let jsTouch = null;
+
+/**
+ * ⛓⛓ WHILE A TAPE DRIVES THE FRAME, ITS STRIP SAYS SO (seedling-lab-touch-fix; the js gate's conditions, 2026-11-11).
+ * A ship whose stage list has a `finished` stage plays a TAPE first (a REPLAY ship, a solve, a sequence's windows),
+ * and the runtime ignores live input until the tape ends. The strip stays live and still sends; this only DIMS it
+ * (`data-lab-tape`, the page's CSS) and puts a note under it. ⛔ PRESENTATION ONLY: no pointer-events, no swallowed
+ * event; the runtime stays the one gate. ⛔ The state is the SHIP's own stage machine (the bridge's `finished`, read
+ * from the readout's `state`), never a timer or a tick count: held until the LAST `finished…` stage is reached.
+ */
+let frameTapeHolds = false;
+function setFrameTape(on) {
+    frameTapeHolds = on;
+    frameTouch?.paint();
+}
+let frameTouch = null;
 
 /**
  * ⛓ LAB L3 + PHASE B — REPLAY'S ▶ LOAD IN JS: the tape, REPLAYED in the JS

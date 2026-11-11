@@ -100,9 +100,13 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
     });
 
     it('exposes the build-time adapter slots, bound to maze implementations', () => {
-        expect(substrateRegistryEntry.generateRegionCore).toBe(generateRegionCore);
+        // ⛓ CONTENT SETS R2 — the core and the rule placer are the engine's, wrapped by the presentation pass
+        // (`mazeContent.js`; pinned to call the engine and return its value in `mazeContent.test.js`).
+        expect(typeof substrateRegistryEntry.generateRegionCore).toBe('function');
+        expect(substrateRegistryEntry.generateRegionCore).not.toBe(generateRegionCore);
         expect(substrateRegistryEntry.placeFromItems).toBe(placeFromItems);
-        expect(substrateRegistryEntry.placeFromRules).toBe(placeFromRules);
+        expect(typeof substrateRegistryEntry.placeFromRules).toBe('function');
+        expect(substrateRegistryEntry.placeFromRules).not.toBe(placeFromRules);
         expect(substrateRegistryEntry.extractPathsAndObstacles).toBe(extractPathsAndObstacles);
         expect(substrateRegistryEntry.serializeWorld).toBe(serializeMazeWorld);
     });

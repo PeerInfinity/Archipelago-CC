@@ -842,6 +842,7 @@ export class SeedlingRegionGlue {
             locationName: location,
             originator: 'FlashPanel',
             originalDOMEvent: false,
+            reportedByGame: true, // the game's pendingCheck: physical, never logic-gated (client/core/checkGate.js)
         }, { initialTarget: 'bottom' });
         this.stats.locationChecks += 1;
         this._log(`[ap placement] checked "${location}" (${ledgerId})`);
