@@ -237,6 +237,7 @@ function _onSendLocation(flashName) {
         locationName,
         regionName: _currentRegionId,
         originator: 'flashSubstrate',
+        reportedByGame: true, // the game reported the objective: physical, never logic-gated (client/core/checkGate.js)
     }, { initialTarget: 'bottom' });
     log('debug', `objective '${flashName}' -> user:locationCheck (locationName=${locationName})`);
 }

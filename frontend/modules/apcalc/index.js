@@ -173,6 +173,7 @@ function initializeGame(staticData) {
             regionName,
             originator: 'APCalcCheck',
             originalDOMEvent: true,
+            reportedByGame: true, // the game's own check: never logic-gated (client/core/checkGate.js)
         }, { initialTarget: 'bottom' });
     };
 
