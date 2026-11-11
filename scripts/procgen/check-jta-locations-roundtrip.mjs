@@ -50,6 +50,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
 import { generatePythonOrExit } from './repoPython.js';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -128,6 +129,7 @@ try {
     // Substrate libraries register on import.
     await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
     const jtaLib = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const engine = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/procgenPipeline/procgenPipelineEngine.js')));
     const { substrateRegistry } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/shared/procgen/substrateRegistry.js')));
 

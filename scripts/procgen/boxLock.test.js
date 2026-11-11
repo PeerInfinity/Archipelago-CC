@@ -548,6 +548,7 @@ describe('who takes the box', () => {
          * rules-l16-holder-enemies L16's walk-in block against its Bobs on the way to the button, `probe-seedling-l16-holder-bobs.mjs`;
          * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`;
          * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`;
+         * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
          * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
          * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`.)
          */
@@ -669,7 +670,9 @@ describe('who takes the box', () => {
             // hammer CHEST-INCIDENTAL: two chests opened on one visit, on the game (import door: `isEntryPoint` → main())
             'probe-seedling-chest-incidental.mjs',
             // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
-            'probe-seedling-drill-water.mjs'];
+            'probe-seedling-drill-water.mjs',
+            // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-er-landings.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

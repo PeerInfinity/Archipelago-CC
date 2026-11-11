@@ -73,6 +73,11 @@ describe('buildRulesJson — loop_costs is deterministic', () => {
             generateLoopCosts: () => { throw new Error('probe'); },
         }));
         await import('../mazeRoom/mazeRoomLibrary.js');
+        // ⛓ CONTENT SETS C4 — vi.resetModules() gave this test a fresh module graph, so a fresh (empty)
+        //   default-pack cache: preload in it, as the vitest setup file did for the file's first graph.
+        const { preloadDefaultContent } = await import('./worldContent.js');
+        const { nodePackIo } = await import('../contentPacks/nodePackIo.js');
+        await preloadDefaultContent(nodePackIo());
         const engine = await import('./procgenPipelineEngine.js');
         const { grid, startCell } = engine.growMaze({
             gridDims: { width: 3, height: 3 },

@@ -38,7 +38,9 @@ export function seedlingCensusDir(repo) {
  * @param {string} repo the repository root
  * @param {string} through a sphere label, or `end`
  * @param {'full'|'route-only'} mode
+ * @param {?string} [preset] ⛓ ER E6 — a NON-default world's preset id: its surveys live under `<preset>/`, so no
+ *   world shares a cache with the playthrough (null/absent = the playthrough, the path it always had)
  */
-export function throughSurveyDir(repo, through, mode = 'full') {
-    return join(seedlingSurveyDir(repo), `through-${through}${mode === 'full' ? '' : `-${mode}`}`);
+export function throughSurveyDir(repo, through, mode = 'full', preset = null) {
+    return join(seedlingSurveyDir(repo), ...(preset ? [preset] : []), `through-${through}${mode === 'full' ? '' : `-${mode}`}`);
 }

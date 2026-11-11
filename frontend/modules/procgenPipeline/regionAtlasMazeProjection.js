@@ -282,7 +282,10 @@ function bindWorldEvents(builder, events, local, inGrid) {
             // touch — `MagicalLock.as`, `BossLock.as`), so each names its rule; the cell passes once both are open
             // (session tile-primitives-sphere-order-2, ⚖ "Lay touched event cells").
             // A one-sided lock names the side it opens from (`probe`, BossLock.as `update`: a line below the lock).
-            const own = (e) => ({ ...(evs.length > 1 && e.rule ? { rule: e.rule } : {}), ...(e.probe ? { probe: e.probe } : {}) });
+            // ⛓ An encounter lock names the neighbours its room is cleared from, and with what (`opens_from`, session
+            // tile-encounter-kill-arms: `true` = the cell's clearance, else the rule of the arms that pass a Solid).
+            const own = (e) => ({ ...(evs.length > 1 && e.rule ? { rule: e.rule } : {}), ...(e.probe ? { probe: e.probe } : {}),
+                ...(e.opens_from ? { opens_from: e.opens_from } : {}) });
             const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side, ...own(e) })) };
             if (names.length > 0 && base.struck_by) {
                 entry.clear_set = [names.map((n) => n.args.item_name)];
@@ -1209,10 +1212,17 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
     const own = (x, y) => !claimed.has(`${x},${y}`);
     // A latched cell's closed side: entered once its lock was OPENED — the lock's AP event (`bindWorldEvents`, mode
     // 'latch'), as the analyzer prices it (its `latchEvent`); with no event bound there is no way in that side.
-    const latchEntry = (x, y, gate) => {
+    // ⛓ ENCOUNTER KILL ARMS (session tile-encounter-kill-arms): a side that clears the room ACROSS the shut lock (its
+    // `opens_from` neighbour names a rule, the arms that pass a Solid) enters on the event OR those arms, as `latchEvent`.
+    // `from` = the neighbour the step leaves, as a direction from the lock (the move's `face`).
+    const latchEntry = (x, y, from, gate) => {
         if (gate !== null) return gate;
         const events = builder.obstacleLib[builder.obstacles.get(`${x},${y}`)]?.events ?? [];
-        return events.length > 0 ? events.map((e) => ({ ap_event: e.name })) : null;
+        return events.length > 0 ? events.map((e) => {
+            const arms = e.opens_from?.[from];
+            const event = { rule: 'Has', args: { item_name: e.name } };
+            return arms && arms !== true ? { ap_rule: { rule: 'Or', children: [event, arms] } } : { ap_event: e.name };
+        }) : null;
     };
     for (let y = 0; y < grid.height; y += 1) {
         for (let x = 0; x < grid.width; x += 1) {
@@ -1226,12 +1236,12 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
                 const u = cellAt(ux, uy);
                 const gates = [
                     ...(own(ux, uy) ? [u.faces?.[dir], u.dirs?.[dir]] : []),
-                    ...(own(x, y) ? [v.faces?.[face], v.dirs?.[dir], v.latch ? latchEntry(x, y, v.enter?.[dir]) : v.enter?.[dir]] : []),
+                    ...(own(x, y) ? [v.faces?.[face], v.dirs?.[dir], v.latch ? latchEntry(x, y, face, v.enter?.[dir]) : v.enter?.[dir]] : []),
                 ].filter((g) => g !== undefined);
                 if (gates.length === 0) continue;
                 if (gates.includes(null)) { out.push({ x, y, dir, gate: null }); continue; }
                 const conditions = gates.flat();
-                const parts = conditions.map((c) => (c.ap_event ? { rule: 'Has', args: { item_name: c.ap_event } } : resolveCondition(c)));
+                const parts = conditions.map((c) => (c.ap_rule ?? (c.ap_event ? { rule: 'Has', args: { item_name: c.ap_event } } : resolveCondition(c))));
                 if (parts.some((p) => !p)) {
                     note({ kind: 'unresolved_entry_refused', tile: [x, y], message: `entering [${x},${y}] moving ${dir} has a gate condition with no AP item behind it — REFUSED in the level world` });
                     out.push({ x, y, dir, gate: null });

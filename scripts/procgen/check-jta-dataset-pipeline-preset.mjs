@@ -37,6 +37,7 @@ import {
 
 
 import { argvHelp } from './argvHelp.js';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -61,6 +62,7 @@ const imp = (rel) => import(pathToFileURL(path.join(repoRoot, rel)));
 
 async function main() {
     const jtaLib = await imp('frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js');
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const engine = await imp('frontend/modules/procgenPipeline/procgenPipelineEngine.js');
     const { substrateRegistry } = await imp('frontend/modules/shared/procgen/substrateRegistry.js');
     const { mergeSubstrateItemLib } = await imp('frontend/modules/procgenPipeline/sphereConfigHooks.js');

@@ -52,6 +52,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { generatePythonOrExit } from './repoPython.js';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 
@@ -213,6 +214,7 @@ async function main() {
         // ── Pass A: the JS pipeline ─────────────────────────────────────────
         const imp = (p) => import(pathToFileURL(path.join(repoRoot, p)));
         await imp('frontend/modules/cloudberryDemo/cloudberryLibrary.js');
+        await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
         const engine = await imp('frontend/modules/procgenPipeline/procgenPipelineEngine.js');
         const validator = await imp('frontend/modules/procgenPipeline/regionLibraryValidator.js');
         const { substrateRegistry } = await imp('frontend/modules/shared/procgen/substrateRegistry.js');

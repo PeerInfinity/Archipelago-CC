@@ -55,7 +55,7 @@ import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelW
 import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
-    playthroughHandInputs,
+    playthroughHandInputs, playthroughEncounterLockOpeners,
 } from './make-seedling-playthrough-rules.mjs';
 import { levelWorldFits } from '../../frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.js';
 import { deserializeMazeWorld } from '../../frontend/modules/mazeRoom/mazeRoomEngine.js';
@@ -287,6 +287,12 @@ function wholeEventLayer(atlas, rooms = atlas) {
     return producerLayers.get(atlas.atlas_id);
 }
 
+/** A latched lock event's `opens_from` (`playthroughEncounterLockOpeners`), or nothing for a lock that is not an encounter lock. */
+function encounterOpensFrom(obstacle) {
+    const opensFrom = obstacle ? playthroughEncounterLockOpeners(obstacle.level).get(`${obstacle.class}@${obstacle.x},${obstacle.y}`) : undefined;
+    return opensFrom ? { opens_from: opensFrom } : {};
+}
+
 /**
  * ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations, ⚖ 2026-10-23 "All AP; world rocks+locks" +
  * "Carry + name") — the playthrough rules' OBSTACLE, LOCK, BUTTON and TALK events for `levels`, with the exit gates
@@ -330,6 +336,9 @@ export function eventLayerFor(atlas, levels, { minted = [], rooms = atlas } = {}
         name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
         // ⛓ every target the press opens (session tile-lay-l40-latches: an in-room press's group, laid as its latch's locks)
         ...(mode.get(e.name) === 'press' ? { presser: e.fields.action.presser, targets: e.fields.targets ?? [e.fields.obstacle] } : {}),
+        // ⛓ ENCOUNTER KILL ARMS (session tile-encounter-kill-arms): a latched encounter lock names the neighbours whose side
+        // clears its room, and with what (`playthroughEncounterLockOpeners`, the rules' own side grades).
+        ...(mode.get(e.name) === 'latch' ? encounterOpensFrom(e.fields.obstacle) : {}),
     }));
     // ⛓ A press's FAR side (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Lock cell opened by event"): a target the press
     // REMOVES — the producer's own `persistenceEffect` says 'opens' (L39's wand lock, `tSet < 0`: built gone once {39,8} is in

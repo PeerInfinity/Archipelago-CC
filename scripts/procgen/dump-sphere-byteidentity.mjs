@@ -18,6 +18,9 @@ import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanne
 // runtime Map (exits), which we render as a sorted array.
 
 import { argvHelp } from './argvHelp.js';
+import { preloadScriptContent } from './preloadContent.js';
+
+await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
 
 argvHelp(import.meta.url);
 function dumpGrid(grid) {
