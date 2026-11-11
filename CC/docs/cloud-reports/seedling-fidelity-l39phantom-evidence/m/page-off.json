@@ -1,0 +1,73 @@
+{
+ "key": "level_39__r25c9 <- in_L38_144_0 -> location:Level 039 - Totem Part 72,40",
+ "end": "failed",
+ "seamTime": 5226,
+ "roomHits": {
+  "atArrival": 0,
+  "max": 0,
+  "samples": 268,
+  "hits": []
+ },
+ "plans": [
+  {
+   "ok": false,
+   "kind": "refusal",
+   "message": "solverBot(wasm-location-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-39) apitem (72,40) contact's corridor (attempt 1) \u2014 the segment's own work is bounded there, so the solve stops here instead of overrunning. \u23f1 DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) \u2014 this refusal may be the dead",
+   "producer": null,
+   "verbs": null,
+   "ticks": null,
+   "prefix": 0,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "deadline": "crusher-fork"
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "deadline": "walk"
+    }
+   ],
+   "split": true
+  },
+  {
+   "ok": false,
+   "kind": "refusal",
+   "message": "solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.9,100.2) \u2014 enemy:spinner@112,88 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`) \u2014 and every rung of \u2696 \u00a711.8a's order refused:",
+   "producer": null,
+   "verbs": null,
+   "ticks": null,
+   "prefix": 0,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal"
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal"
+    }
+   ],
+   "split": true,
+   "obstacle": {
+    "kind": "danger",
+    "id": "spinner@112,88",
+    "sources": [
+     "enemy:spinner@112,88"
+    ]
+   }
+  }
+ ],
+ "notes": [
+  "[wasm playback] Level 039 - Totem Part 72,40: the solver ran out of 640 work units in level 39 \u2014 asking again with 2560, the room held (retry 1)",
+  "[wasm playback] the solver declined Level 039 - Totem Part 72,40 in level 39 (refusal): solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.9,100.2) \u2014 enemy:spinner@112,88 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`) \u2014 and"
+ ],
+ "divs": [],
+ "failed": "the solver declined Level 039 - Totem Part 72,40 in level 39 (refusal): solverBot(wasm-location-39) apitem (72,40) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (123.9,100.2) \u2014 enemy:spinner@112,88 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (120.4,100.4) \u2014 enemy:spinner@112,88 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`). \u26a0 The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the aim is 126 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [enemy:spinner@112,88] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body",
+ "ms": 6961
+}
