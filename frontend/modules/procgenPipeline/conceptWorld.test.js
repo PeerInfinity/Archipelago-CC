@@ -22,8 +22,12 @@ import { buildRunFromState, runPresetHeadless, mergedItemLib } from './presetRun
 import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { getItemRenderHints } from '../shared/procgen/library.js';
-import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
+import { MAZE_DEFAULT_CONTENT_PACK, presentedLook } from '../mazeRoom/mazeContent.js';
+import { defaultContentSetOf } from './worldContent.js';
 import { GOAL_ITEM, GOAL_ITEM_DEF } from '../procgenCore/goalItem.js';
+
+/** ⛓ CONTENT SETS R2 — a gate's look is the maze's default pack's (`gate` role). */
+const gateLook = (concept) => presentedLook(defaultContentSetOf([MAZE_DEFAULT_CONTENT_PACK]), 'gate', concept);
 
 const CONCEPT_LIST = ['sword', 'guardian', 'swim', 'water'];
 const bundle = (concepts) => ({
@@ -70,7 +74,7 @@ describe('D4 — a maze sphere world over the sword and swim, with and without t
             expect(g.def).toMatchObject({
                 concept, placement: 'gate', clear_set_type: 'rule',
                 clear_rule: { rule: 'Has', args: { item_name: need } },
-                color: MAZE_CONCEPT_REALISATIONS[concept].art.color,
+                color: gateLook(concept).color,
             });
         }
     });

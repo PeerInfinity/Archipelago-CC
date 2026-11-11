@@ -416,6 +416,7 @@ async function main() {
             locationName: itemId,
             regionName: roomId,
             originator: 'textAdventureSubstrateWrapper',
+            reportedByGame: true, // the engine's own examine (it blocks inaccessible items itself; client/core/checkGate.js)
         });
     });
 

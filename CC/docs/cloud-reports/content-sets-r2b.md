@@ -137,6 +137,9 @@ image file*. A complete pack you can copy:
 - **Part 2.4 (one real use): none added.** The maze has no default pack on this base (`frontend/packs/` holds
   `seedling`, `archipelago`, `text-adventure`; the maze entry declares no `defaultContentPack`), so there is nowhere
   to put one.
+  - After merging main at `bc0f06a650` (R2), the maze declares `defaultContentPack: 'maze'`, but
+    `frontend/packs/maze/` carries only a `concepts` layer. Adding a shape entry to it would change the draw ops of
+    every plain maze world, and the BEFORE hashes are the gate, so none was added; the reasoning above stands.
 
 ## 5. The engine closure (`node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`)
 
@@ -258,6 +261,13 @@ engineMd5 3e333bfa0a7692f8120aeaa9a1591119 (42 files, root frontend/modules/maze
    `concepts.md`. Expect a textual conflict in `docLinks.test.js` / `docsRender.test.js`, which is count arithmetic.
    Once R2 declares `defaultContentPack: 'maze'`, every maze world's stack becomes `['maze', …]`. The panel then reads
    `frontend/packs/maze/pack.json` once per stack: a pack without an `art` layer loads nothing and draws as today.
+   **Resolved at the merge of main `bc0f06a650`:**
+   - The census was recomputed by the tests, not summed: `doc` 305, `repo` 43, corpus 407.
+   - `docsIndex.js` was regenerated.
+   - The in-app row's fixture `readJson` now passes paths it does not hold to the real served packs. Before, the
+     stack's leading `maze` pack would have thrown "no fixture".
+   - A unit row in `mazeTileArt.test.js` checks a plain world's own stack: `['maze']` reads `maze/pack.json` once,
+     decodes nothing, and gives `tileArt` null.
 
 ## 9. CI
 

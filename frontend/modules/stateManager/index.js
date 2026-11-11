@@ -92,6 +92,7 @@ import { resolvePlayerId } from '../../utils/playerInference.js';
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 import { FALLBACK_RULES } from '../../data/fallbackRules.js';
 import { persistLastWorld } from './worldPersistence.js';
+import { buildSelectedPlayerInfo } from './selectedPlayerInfo.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -264,10 +265,10 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
       if (!eventData || !eventData.jsonData || eventData.selectedPlayerId === undefined) {
         return;
       }
-      const selectedPlayerInfo = eventData.playerInfo || {
-        playerId: String(eventData.selectedPlayerId),
-        playerName: `Player${eventData.selectedPlayerId}`,
-      };
+      // A given playerInfo is MERGED over the default, never substituted for it: a
+      // name-only playerInfo (the server-built loads sent one) used to leave
+      // selectedPlayerInfo.playerId undefined, and every reader fell back to '1'.
+      const selectedPlayerInfo = buildSelectedPlayerInfo(eventData);
       lastRawJsonPayload = {
         source: eventData.sourceName || eventData.filename || eventData.source || 'userLoadedFile',
         rawJsonData: eventData.jsonData,

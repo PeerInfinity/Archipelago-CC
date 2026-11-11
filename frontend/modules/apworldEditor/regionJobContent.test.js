@@ -18,9 +18,10 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
 import { collectPendingGenerations } from '../procgenPipeline/procgenPipelineEngine.js';
 import {
-    CONTENT_SET_KEY, DEFAULT_CONTENT_PACK_FIELD, RECORDED_CONTENT_KEY, defaultContentSetOf, isContentSet,
-    preloadDefaultContent, resetDefaultContentCache,
+    CONTENT_SET_KEY, DEFAULT_CONTENT_PACK_FIELD, RECORDED_CONTENT_KEY, declaredDefaultContentPacks, defaultContentSetOf,
+    effectiveContentStack, isContentSet, preloadDefaultContent, resetDefaultContentCache,
 } from '../procgenPipeline/worldContent.js';
+import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { composeRegenerateArgs, regionGenerationPlan } from './regionGenerationFlow.js';
 import { regenerateRegionEntry } from './regionRegenerate.js';
 import {
@@ -60,19 +61,32 @@ const FILES = {
     },
     [`${PACK}/text/manifest.json`]: { schema_version: 1, strings: { [`${PACK}:gate/blocked`]: 'The Gate knows.' }, lists: {} },
 };
+/**
+ * `readJson` over FILES, counting reads. ⛓ CONTENT SETS R2: TARGET (the maze) now declares its own default pack,
+ * which is in every stack its region builds with; a pack a REGISTERED entry declares as its default is read from
+ * the committed pack on disk (as `worldContent.test.js`'s `memIo` does), and is not counted in `reads`.
+ */
 function memIo() {
     const reads = [];
+    const disk = nodePackIo();
     return {
         reads,
         base: MEM,
         readJson: async (url) => {
-            reads.push(url);
             const hit = Object.keys(FILES).find((suffix) => url.endsWith(`/${suffix}`));
-            if (!hit) throw new Error(`no file ${url}`);
+            if (!hit) {
+                const rel = url.slice(MEM.length);
+                if (declaredDefaultContentPacks().includes(rel.split('/')[0])) return disk.readJson(new URL(rel, disk.base).href);
+                reads.push(url);
+                throw new Error(`no file ${url}`);
+            }
+            reads.push(url);
             return structuredClone(FILES[hit]);
         },
     };
 }
+/** The stack a TARGET region builds with when its document names `content` (its default pack first since R2). */
+const stackOf = (content) => effectiveContentStack({ substrateIds: [TARGET], content });
 
 /** FOUR with player PLAYER's `procgen_metadata` block naming `list` (⚠ a per-player map). */
 function docNaming(list) {
@@ -102,7 +116,7 @@ describe('⛓ C4 attachJobContent — the job\'s set, loaded where it runs', () 
         const job = await attachJobContent(args, memIo());
         expect(job.regionParams[RECORDED_CONTENT_KEY]).toEqual([PACK]);
         expect(isContentSet(job.regionParams[CONTENT_SET_KEY])).toBe(true);
-        expect(job.regionParams[CONTENT_SET_KEY].ids).toEqual([PACK]);
+        expect(job.regionParams[CONTENT_SET_KEY].ids).toEqual(stackOf([PACK]));
         expect(args.regionParams[CONTENT_SET_KEY]).toBeUndefined();
         // ⛔ the args posted to the worker clone; the attached job would not.
         expect(() => structuredClone(args)).not.toThrow();
@@ -131,10 +145,10 @@ describe('⛓ C4 regenerateRegionEntry reads the document\'s content list', () =
     it('⛔ a content-naming document with no set attached is REFUSED by name (the synchronous op replay)', () => {
         const res = regenerateRegionEntry(argsFor(docNaming([PACK])));
         expect(res.ok).toBe(false);
-        expect(res.threw).toMatch(/^world content: .*\[trial\]/);
+        expect(res.threw).toMatch(new RegExp(`^world content: .*\\[${stackOf([PACK]).join(', ')}\\]`));
     });
 
-    it('with the set attached the regenerate lands, and its entry is the control\'s (no substrate reads the set yet)', async () => {
+    it('with the set attached the regenerate lands, and its entry is the control\'s (the region names no concept)', async () => {
         const res = regenerateRegionEntry(await attachJobContent(argsFor(docNaming([PACK])), memIo()));
         expect(res.ok, res.threw).toBe(true);
         expect(bytes(res.entry)).toBe(bytes(control.entry));
@@ -149,7 +163,7 @@ describe('⛓ C4 regenerateRegionEntry reads the document\'s content list', () =
             regenerate: (job) => { seen = job; return regenerateRegionEntry(job); },
             attachContent: (a) => attachJobContent(a, memIo()),
         });
-        expect(seen.regionParams[CONTENT_SET_KEY].ids).toEqual([PACK]);
+        expect(seen.regionParams[CONTENT_SET_KEY].ids).toEqual(stackOf([PACK]));
         const result = posted.find((m) => m.type === 'result');
         expect(result.ok, result.threw).toBe(true);
         for (const m of posted) expect(() => structuredClone(m)).not.toThrow();
@@ -178,7 +192,7 @@ describe('⛓ C4 regenerateRegionEntry reads the document\'s content list', () =
         });
         const res = await handle.promise;
         expect(res.ok, res.threw).toBe(true);
-        expect(seen.regionParams[CONTENT_SET_KEY].ids).toEqual([PACK]);
+        expect(seen.regionParams[CONTENT_SET_KEY].ids).toEqual(stackOf([PACK]));
     });
 });
 
@@ -188,6 +202,9 @@ describe('⛓ C4 — a target declaring a DEFAULT pack (a fixture entry): the ed
     // ⛓ CONTENT SETS R1 — the real registry now declares a default pack (the text adventure's), which the
     // in-memory io does not hold: the preload reads a FIXTURE registry of the one declaring target.
     const preloadTarget = () => preloadDefaultContent({ ...memIo(), registry: { getAll: () => [substrateRegistry.get(TARGET)] } });
+    // ⛓ R2 — the control is built at collection, while the setup file's preload (TARGET's real default pack among
+    // it) is still cached: a test's afterEach empties the cache.
+    const control = regenerateRegionEntry(argsFor(FOUR));
     afterEach(() => {
         substrateRegistry.entries.set(TARGET, original);
         resetDefaultContentCache();
@@ -201,7 +218,7 @@ describe('⛓ C4 — a target declaring a DEFAULT pack (a fixture entry): the ed
     });
 
     it('preloaded: the composed args carry no set (they clone), the regenerate lands, and its entry is the control\'s', async () => {
-        const control = regenerateRegionEntry(argsFor(FOUR));
+        expect(control.ok, control.threw).toBe(true);
         declare();
         await preloadTarget();
         const bag = { ...plan.defaults };

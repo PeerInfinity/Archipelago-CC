@@ -18,6 +18,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { KEY_PATTERN, loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary } from '../artLibrary/artLibrary.js';
+import { effectiveContentStack } from '../procgenPipeline/worldContent.js';
+import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { importClosure } from '../../../scripts/procgen/seedlingDerivedRuleTable.js';
 import { recordingContext } from './drawOpRecorder.js';
 import { TILE_WALL, createState, deserializeMazeWorld, getTile } from './mazeRoomEngine.js';
@@ -146,6 +148,24 @@ describe('no art available → exactly today\'s draw', () => {
         expect(r.tileArt).toBe(null);
         expect(r.keyed).toEqual({});
         expect(decoded).toEqual([]);
+    });
+
+    it('a plain maze world\'s own stack (its `defaultContentPack`, through effectiveContentStack) reads its pack.json once and draws as today', async () => {
+        // The stack play builds for a world with no `content` (mazeRoomUI `_tileArtStack`): the maze's default pack
+        // only. That pack carries no `art` layer, so no maze key is filled: no sheet is decoded, the view is null.
+        const stack = effectiveContentStack({ substrateIds: [substrateRegistryEntry.id], content: [], registry: { getAll: () => [substrateRegistryEntry] } });
+        expect(stack).toEqual([substrateRegistryEntry.defaultContentPack]);
+        const reads = [];
+        const decoded = [];
+        const r = await loadMazeTileArt(stack, {
+            base: PACKS,
+            readJson: async (url) => { reads.push(url.slice(PACKS.length)); return fsJson(url); },
+            decode: async (u) => { decoded.push(u); return {}; },
+        });
+        expect(reads).toEqual([`${stack[0]}/pack.json`]);
+        expect(decoded).toEqual([]);
+        expect(r.tileArt).toBe(null);
+        expect(r.keyed).toEqual({});
     });
 
     it('an empty stack reads nothing', async () => {

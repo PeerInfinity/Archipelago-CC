@@ -304,10 +304,12 @@ describe('⛓ the links the render emits', () => {
         //   `defaultContentPack` paragraph (2 doc).
         //   399 → 402: content sets R1 — concepts.md (role sentence) → text-adventure.md § Content roles, that §
         //   → concepts.md § Content roles (2 doc), and text-adventure.md's realisations → its own § (1 same-doc).
-        //   402 → 404: content sets R2b — concepts.md § A world's content stack and maze-lab.md's `tileArt` row →
+        //   402 → 404: content sets R2 — concepts.md (the maze's realisations) → maze.md § Content roles, that §
+        //   → concepts.md § Content roles (2 doc).
+        //   404 → 406: content sets R2b — concepts.md § A world's content stack and maze-lab.md's `tileArt` row →
         //   maze.md § Tile art from a content pack (2 doc).
-        //   404 → 405: content sets R2b part 2 — maze.md § Tile art → frontend/modules/artLibrary/README.md § Shapes (1 repo).
-        expect(checked).toBe(405);
+        //   406 → 407: content sets R2b part 2 — maze.md § Tile art → frontend/modules/artLibrary/README.md § Shapes (1 repo).
+        expect(checked).toBe(407);
     });
 
     it('tags each link with the kind that produced it', () => {

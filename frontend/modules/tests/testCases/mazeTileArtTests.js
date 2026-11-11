@@ -18,6 +18,7 @@ import { getPanelInstance } from '../../mazeRoom/index.js';
 import { COLORS, TILE_PX } from '../../mazeRoom/mazeRoomRender.js';
 import { MAZE_ART_KEYS } from '../../mazeRoom/mazeTileArt.js';
 import { browserRasteriser } from '../../artLibrary/artLibrary.js';
+import { browserPackIo } from '../../procgenPipeline/worldContent.js';
 
 const PRESET = './presets/procgen_maze/AP_1/AP_1_rules.json';
 const FIX_BASE = 'https://fixture.invalid/packs/';
@@ -58,9 +59,15 @@ const FIXTURE = Object.freeze({
 
 const fixtureIo = () => ({
     base: FIX_BASE,
+    // A path the fixture does not hold is a REAL pack the world's stack names ahead of the fixture (the maze's
+    // own `defaultContentPack`), read from the served packs directory as play reads it.
     readJson: async (url) => {
-        const hit = FIXTURE[url.slice(FIX_BASE.length)];
-        if (!hit) throw new Error(`no fixture at ${url}`);
+        const rest = url.slice(FIX_BASE.length);
+        const hit = FIXTURE[rest];
+        if (!hit) {
+            const real = browserPackIo();
+            return real.readJson(new URL(rest, real.base).href);
+        }
         return JSON.parse(JSON.stringify(hit));
     },
     decode: async (url) => {
