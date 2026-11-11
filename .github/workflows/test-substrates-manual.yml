@@ -13,10 +13,16 @@ name: Substrate tests — manual batches
 # ⚖ USER RULINGS: 2026-09-27 "make the slow batch manual only, and also move
 # it to either a different workflow or a separate job" (bot-walks);
 # 2026-10-09 "move the noiz2sa tests out of the main set of tests … make them
-# manual" (and the runner rows with them). ⇒ `workflow_dispatch:` and NOTHING
-# ELSE — never push, pull_request or schedule. A separate workflow rather than
-# manual-only jobs inside test-templates.yml, because such a job would show as
-# `skipped` on every push run of that workflow.
+# manual" (and the runner rows with them). ⇒ never push or pull_request. A
+# separate workflow rather than manual-only jobs inside test-templates.yml,
+# because such a job would show as `skipped` on every push run of that workflow.
+#
+# ⛓ ci-nightly-manual-batches (⚖ Robert 2026-11-11, option C: "nightly manual
+# batches"): ONE scheduled run a night, `all` at main, as a drift SIGNAL — never
+# landing evidence. The cron lives in test-substrates-nightly.yml, which CALLS
+# this file (`workflow_call:` below, the same inputs) and adds the morning
+# summary; this file still has no `schedule:` of its own, so a dispatch here
+# is exactly what it was.
 #
 # This file was test-substrates-bot-walks.yml (slice ci-batches-C1); it now
 # takes any manual batch, or `all` of them as parallel jobs.
@@ -49,6 +55,16 @@ on:
           Run on the BUNDLED boot (`npm test -- --bundled`: builds
           frontend/dist/bundle.js and drives `?bundled=true`). Any batch is
           then accepted by name, on-push ones included (seedling-js, apworld, …).
+        type: boolean
+        default: false
+  # ⛓ ci-nightly-manual-batches — test-substrates-nightly.yml calls this with
+  # batch=all; the inputs mirror workflow_dispatch's so `inputs.*` reads the same.
+  workflow_call:
+    inputs:
+      batch:
+        type: string
+        default: all
+      bundled:
         type: boolean
         default: false
 
