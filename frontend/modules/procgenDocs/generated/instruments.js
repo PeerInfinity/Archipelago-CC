@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 153,
-            "count": 203,
+            "browser": 154,
+            "count": 204,
             "id": "probe"
         },
         {
@@ -234,12 +234,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 526,
-        "browser": 223,
+        "blockStyle": 527,
+        "browser": 224,
         "cited": 278,
-        "files": 544,
+        "files": 545,
         "lineStyle": 18,
-        "withDocblock": 544,
+        "withDocblock": 545,
         "withFlags": 463
     },
     "dir": "scripts/procgen",
@@ -15478,6 +15478,28 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l39-shaft — ⛓⛓⛓ seedling-fidelity-l39shaft: L39'S THREE-BLOCK SHAFT, THE USER'S SOLUTION, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-l39-shaft.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40-flag12-lock.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40-flag12-lock — ⛓ R-A5's GAME WITNESS (⚖ design-4 2026-11-11: \"the rule is stricter than main, so it needs a game witness, not only static evidence\").",
+            "path": "scripts/procgen/probe-seedling-l40-flag12-lock.mjs"
         },
         {
             "argvHelpers": [
