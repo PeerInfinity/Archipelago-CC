@@ -299,7 +299,8 @@ describe('⛓ the links the render emits', () => {
         //              § Declarations (G9) (1 doc).
         //   389 → 390: cloudberry P5d — cloudberry.md § the back exit → modules/apworldEditor.md (1 repo).
         //   390 → 396: cloudberry P7a — the status strip: cloudberry.md ↔ flash.md (3 doc), and 3 same-doc.
-        expect(checked).toBe(396);
+        //   396 → 397: content sets C2 — substrate-registry.md's `contentRoles` paragraph → concepts.md § Content roles (1 doc).
+        expect(checked).toBe(397);
     });
 
     it('tags each link with the kind that produced it', () => {

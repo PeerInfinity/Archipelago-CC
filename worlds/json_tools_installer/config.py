@@ -87,6 +87,7 @@ class ExportSettings:
     log_integer_sphere_details: bool = False
     auto_collect_events: bool = False
     filter_event_items: bool = False
+    sphere_log_per_player: bool = False  # mirrors JSONToolsSettings
     update_frontend_presets: bool = False
     use_tracking_mode_config: bool = False
     resolve_options_to_constants: bool = True
@@ -182,6 +183,7 @@ class InstallerConfig:
             log_integer_sphere_details=export_settings.get("log_integer_sphere_details", False),
             auto_collect_events=export_settings.get("auto_collect_events", False),
             filter_event_items=export_settings.get("filter_event_items", False),
+            sphere_log_per_player=export_settings.get("sphere_log_per_player", False),
             update_frontend_presets=export_settings.get("update_frontend_presets", False),
             use_tracking_mode_config=export_settings.get("use_tracking_mode_config", False),
             resolve_options_to_constants=export_settings.get("resolve_options_to_constants", True),

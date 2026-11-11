@@ -85,6 +85,11 @@ def mw(built):
         built.__dict__.pop(name, None)
     for player in (A1, A2, B1):
         built.worlds[player].options.__dict__.pop(hook.OPTION, None)
+        built.worlds[player].options.__dict__.pop(hook.REGIONS_OPTION, None)
+
+
+def _set_regions(world, on):
+    setattr(world.options, hook.REGIONS_OPTION, client.SpoilerDataIncludeRegions(int(on)))
 
 
 def _run_client(multiworld):
@@ -429,6 +434,119 @@ def test_the_option_description_says_what_senders_reveal():
     assert 'Spoiler Export Hook' in description and 'race' in description
 
 
+# ---------------------------------------------------- regions (spoiler_data_include_regions)
+
+def _logger_lines(multiworld, tmp_path):
+    """The exporter's all-locations logger on this multiworld: fractional steps, incremental, nothing filtered."""
+    import exporter.sphere_logger as logger
+    settings = types.SimpleNamespace(log_fractional_sphere_details=True, log_integer_sphere_details=False,
+                                     verbose_sphere_log=False, extend_sphere_log_to_all_locations=True,
+                                     auto_collect_events=False, filter_event_items=False)
+    multiworld.temp_dir_for_sphere_log = str(tmp_path)
+    saved = getattr(multiworld.spoiler, 'playthrough', None)
+    try:
+        with mock.patch('worlds.json_tools_installer.json_tools_settings.get_json_tools_settings',
+                        return_value=settings):
+            logger.create_playthrough_with_logging(multiworld.spoiler, create_paths=False)
+    finally:
+        multiworld.spoiler.playthrough = saved
+        del multiworld.temp_dir_for_sphere_log
+    path = tmp_path / f'AP_{multiworld.seed_name}_sphere_log.jsonl'
+    return [json.loads(line) for line in path.read_text().splitlines()]
+
+
+def test_regions_off_adds_no_field_and_no_work(mw):
+    mw.configure(a1=WITH_SENDERS, a2=OWN_SLOT, b1=OWN_SLOT)
+    plain = hook.walk(mw)
+    assert plain['start_regions'] == {} and plain['step_regions'] == {}
+    result = _run_client(mw)
+    assert all('regions' not in result[player][hook.SLOT_DATA_KEY] for player in (A1, A2, B1))
+
+
+def test_regions_without_spoiler_data_do_nothing(mw):
+    mw.configure(a1=OFF, a2=OFF, b1=OFF)
+    _set_regions(mw.worlds[A1], True)
+    assert _run_client(mw) == {A1: {}, A2: {}, B1: {}}
+
+
+def test_regions_change_nothing_else_in_the_record(mw):
+    """Same walk, same labels, same rows: regions only add their own field."""
+    plain = hook.walk(mw)
+    with_regions = hook.walk(mw, [A1, B1])
+    assert [(l, x.player, x.name) for l, x in plain['steps']] == [(l, x.player, x.name) for l, x in with_regions['steps']]
+    for player in (A1, B1):
+        base = hook.compact_for(mw, plain, player, True)
+        full = hook.compact_for(mw, with_regions, player, True, True)
+        assert {key: value for key, value in full.items() if key != 'regions'} == base
+
+
+def test_each_region_is_sent_once_and_every_reachable_one_is_sent(mw):
+    from BaseClasses import CollectionState
+    walked = hook.walk(mw, [A1, B1])
+    everything = CollectionState(mw)
+    for location in mw.get_filled_locations():
+        everything.collect(location.item, True, location)
+    for player in (A1, B1):
+        regions = hook.compact_for(mw, walked, player, False, True)['regions']
+        sent = regions['start'] + [name for _, names in regions['steps'] for name in names]
+        assert len(sent) == len(set(sent)), 'a region is sent at the step it FIRST becomes reachable, once'
+        assert set(sent) == {region.name for region in mw.get_regions(player) if region.can_reach(everything)}
+        assert regions['start'] and regions['steps'], 'this seed must open regions after the start, or it proves little'
+
+
+def test_a_regions_row_index_names_a_row_that_gives_the_slot_an_item(mw):
+    """AP marks only the item's owner stale, so a slot's regions change only on a step that gives it an item."""
+    walked = hook.walk(mw, [A1, B1])
+    for player in (A1, B1):
+        record = hook.compact_for(mw, walked, player, False, True)
+        for index, names in record['regions']['steps']:
+            assert names and record['steps'][index][2] is not None
+
+
+def test_regions_equal_the_exporter_loggers_at_every_step(mw, tmp_path):
+    """The proof the design rests on: for every slot, at every label, the logger's new_accessible_regions."""
+    walked = hook.walk(mw, [A1, A2, B1])
+    records = {player: hook.compact_for(mw, walked, player, False, True) for player in (A1, A2, B1)}
+    lines = [line for line in _logger_lines(mw, tmp_path) if line['type'] == 'state_update']
+    assert len(lines) == len(walked['steps']) + 1
+    compared = 0
+    for player, record in records.items():
+        mine = {record['steps'][index][0]: names for index, names in record['regions']['steps']}
+        for line in lines:
+            logged = line['player_data'][str(player)]['new_accessible_regions']
+            expected = record['regions']['start'] if line['sphere_index'] == '0' else mine.pop(line['sphere_index'], [])
+            assert sorted(logged) == sorted(expected), (player, line['sphere_index'])
+            compared += bool(logged)
+        assert mine == {}
+    assert compared > 3
+
+
+def test_one_walk_serves_slots_with_and_without_regions(mw):
+    mw.configure(a1=OWN_SLOT, a2=OWN_SLOT, b1=WITH_SENDERS)
+    _set_regions(mw.worlds[A1], True)
+    _set_regions(mw.worlds[B1], True)
+    with mock.patch.object(hook, 'walk', wraps=hook.walk) as walked:
+        result = _run_client(mw)
+    assert walked.call_count == 1 and sorted(walked.call_args.args[1]) == [A1, B1]
+    assert 'regions' in result[A1][hook.SLOT_DATA_KEY] and 'regions' in result[B1][hook.SLOT_DATA_KEY]
+    assert 'regions' not in result[A2][hook.SLOT_DATA_KEY]
+
+
+def test_a_client_copy_without_the_regions_option_gets_no_regions(mw):
+    """An older client file has no Toggle; the helper reads it with getattr, so that slot is simply without regions."""
+    mw.configure(a1=OWN_SLOT, a2=OFF, b1=OFF)
+    mw.worlds[A1].options.__dict__.pop(hook.REGIONS_OPTION, None)
+    assert 'regions' not in _run_client(mw)[A1][hook.SLOT_DATA_KEY]
+
+
+def test_the_regions_option_is_a_toggle_off_by_default_out_of_the_spoiler_and_transport_only():
+    option = client.SpoilerDataIncludeRegions
+    assert client.REGIONS_OPTION == hook.REGIONS_OPTION
+    assert option.default == 0 and option.name_lookup == {0: 'false', 1: 'true'}
+    assert not option.visibility & Visibility.spoiler, 'in the text spoiler it would move every committed _Spoiler.txt'
+    assert hook.REGIONS_OPTION in TRANSPORT_ONLY_OPTIONS
+
+
 # ---------------------------------------------------- the package
 
 def test_it_is_a_hidden_world_nobody_can_play():
@@ -474,7 +592,7 @@ def test_the_client_has_no_import_that_depends_on_load_order():
     tree = ast.parse((HOOK_DIR / CLIENT_NAME).read_text(encoding='utf-8'))
     top_level = [node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))]
     assert sorted(alias.name for node in top_level for alias in node.names) == \
-           ['Choice', 'Visibility', 'importlib', 'logging']
+           ['Choice', 'Toggle', 'Visibility', 'importlib', 'logging']
     assert [node.module for node in top_level if isinstance(node, ast.ImportFrom)] == ['Options']
 
 
@@ -484,6 +602,7 @@ import enum, importlib, importlib.util, json, sys, types, zipimport
 apworld = sys.argv[1]
 options = types.ModuleType("Options")
 options.Choice = type("Choice", (), {})
+options.Toggle = type("Toggle", (), {})
 options.Visibility = enum.IntFlag("Visibility", {"spoiler": 1, "other": 2, "all": 3})
 sys.modules["Options"] = options
 worlds = types.ModuleType("worlds"); worlds.__path__ = []
@@ -537,7 +656,7 @@ def _mismatches(repo, source_bytes):
 
 
 def test_every_copy_of_the_client_is_byte_identical():
-    """The helper's own copies, and the callers': the hand-written worlds (H2) and their packed .apworlds."""
+    """The helper's own copies, and the callers': the hand-written worlds (H2), the generated ones (H3), and packed copies."""
     source = (HOOK_DIR / CLIENT_NAME).read_bytes()
     found = [where for where, _ in _copies_on_disk(REPO)]
     assert f'worlds/spoiler_export_hook/{CLIENT_NAME}' in found
@@ -546,6 +665,12 @@ def test_every_copy_of_the_client_is_byte_identical():
         assert f'worlds/{package}/{CLIENT_NAME}' in found
     for package in ('metamath', 'depgraph'):
         assert f'apworlds/{package}.apworld!{package}/{CLIENT_NAME}' in found
+    # The generated group (H3): the generator's verbatim copy and every recipe package. (The Feb-09 snapshot
+    # scripts/vanilla-alttp/alttp_worldgen.apworld carries no client, so it is not a copy; planner, 2026-11-10.)
+    assert f'world_generator/ext_template/{CLIENT_NAME}' in found
+    recipes = json.loads((REPO / 'scripts' / 'data' / 'worldgen-package-recipes.json').read_text(encoding='utf-8'))
+    for package in recipes['packages']:
+        assert f'worlds/{package}/{CLIENT_NAME}' in found
     mismatches = _mismatches(REPO, source)
     crlf = [where for where, data in _copies_on_disk(REPO) if where in mismatches and b'\r\n' in data]
     assert mismatches == [], (

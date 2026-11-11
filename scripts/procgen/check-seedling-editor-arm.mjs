@@ -162,7 +162,7 @@ const {
 const {
     ROOM_FLAG_TAGS, ROOM_GEOMETRY_BOSSES, flagModelReach, roomFlagsIn,
 } = await M('watchEdit.js');
-const { buildLevelSet, vanillaRecordSet } = await M('levelSetExporter.js');
+const { buildLevelSet } = await M('levelSetExporter.js');
 const {
     NAMED_ROOM_KEYS, indexRoom, planLevelSetChunks, validateLevelSet,
 } = await M('levelSetValidator.js');
@@ -174,7 +174,7 @@ const {
     setRecord, whatLinksHere,
 } = await M('seedlingSetAdapter.js');
 const {
-    OVERVIEW, exitArrowShapes, freeEdgesOf, linkScanBound, linkScanCost, reportOf, roomRowsOf,
+    OVERVIEW, editorVanillaSet, exitArrowShapes, freeEdgesOf, linkScanBound, linkScanCost, reportOf, roomRowsOf,
 } = await M('watchSetEditor.js');
 const { emptyOverlay } = await M('seedlingSetOverlay.js');
 const { tileTypeForPlacement } = await import(
@@ -586,8 +586,8 @@ check(D2_ROWS.length === D2_ROOMS && D2_ROWS.reduce((n, r) => n + r.exits, 0) > 
  * proof rather than a coincidence.
  * ══════════════════════════════════════════════════════════════════════ */
 
-// ⚖ MOONROCK: `{patches: []}`, exactly as the page's `#editLoadVanilla` passes it.
-const VANILLA_XML = vanillaRecordSet(VANILLA, ATLAS, { patches: [] }).set;
+// ⚖ MOONROCK: `editorVanillaSet` (the game's rooms, no delivery patches), the one call the page's `#editLoadVanilla` makes.
+const VANILLA_XML = editorVanillaSet(VANILLA, ATLAS).set;
 check(VANILLA_XML.rooms.length === VANILLA.rooms.length
     // ⛓⛓ EDITOR v3 E1b — EVERY ROOM IS A `record` NOW, and NOT ONE carries the
     //    rendered text: OEL appears only inside a chunk (claim 27b below).

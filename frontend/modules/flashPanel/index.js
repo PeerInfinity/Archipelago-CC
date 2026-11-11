@@ -217,7 +217,44 @@ export function register(registrationApi) {
           + "it (the game is HELD meanwhile). The solver searches without sword dashes first and then with them; "
           + "when the budget runs out and a plan is already in hand, that plan is played. Without one, the room "
           + "stays held and the solver is asked once more with 4× this budget, and only then does the walk stop, "
-          + "saying why. Read at the start of each solve.",
+          + "saying why. Read at the start of each solve. To search with no limit, tick \"Seedling: solver — no work "
+          + "limit\" instead (it overrides this number on both runtimes).",
+      },
+      // ⛓ SOLVER LIMIT OFF (⚖ the user 2026-11-10: "It was specifically in the panel that I wanted the option to disable
+      // the timeout … then we should add a manual stop button"; "Which limit should off turn off?" → "Both"). A NAMED
+      // choice, never "type 0": the neighbouring upgrade window already reads 0 as "the whole budget". Ticked, both
+      // runtimes solve with the engine value 0 (`jsRuntimeSolver.SOLVER_BUDGET_NO_LIMIT`): no budget, no upgrade window,
+      // no held retry. Off by default, so plans and every committed witness are unchanged. The Flash panel's Solver
+      // section shows the same checkbox beside Stop.
+      seedlingSolverNoWorkLimit: {
+        type: 'boolean',
+        default: false,
+        label: 'Seedling: solver — no work limit',
+        description: "Both runtimes, solver (atlas / vanilla) rooms. Ticked, the Playback Bot's solver searches each "
+          + "room with NO work limit: no budget and no upgrade window, so every search runs to its own end, and the "
+          + "\"4× budget\" retry never happens. The plan is still the same on every machine (nothing reads a clock), "
+          + "but where the upgrade window cuts the search with dashes today, the plan may differ from the default's. "
+          + "A solve that does not end by itself runs until the Solver section's Stop button (or the backstop, when "
+          + "it is on). Read at the start of each solve.",
+      },
+      // ⛓ SOLVER LIMIT OFF — the wall-clock BACKSTOP (`jsRuntimeSolver.SOLVE_BACKSTOP_MS`, 300 s) as a setting, both
+      // runtimes. It only ever FAILS a goal by name; it never picks an answer. "Off" is its own checkbox (a named
+      // choice); the engine value of off is 0 ms. The LOAD backstop (`LOAD_BUDGET_MS`) is not this setting.
+      seedlingSolverBackstopSeconds: {
+        type: 'number',
+        default: 300,
+        minimum: 1,
+        label: 'Seedling: solver backstop (seconds)',
+        description: "Both runtimes, solver rooms. A safety net in wall-clock time: a solve still running this many "
+          + "seconds after it started is stopped and the walk fails, saying so (nothing it found is played). It "
+          + "never changes which plan is found; a slow machine only reaches it sooner. Read at the start of each solve.",
+      },
+      seedlingSolverBackstopOff: {
+        type: 'boolean',
+        default: false,
+        label: 'Seedling: solver backstop off',
+        description: "Both runtimes, solver rooms. Ticked, there is no wall-clock backstop: a solve runs until it "
+          + "ends by itself or the Solver section's Stop button is pressed. Read at the start of each solve.",
       },
       // ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the anytime full pass's deadline in WORK units, with a
       // plan in hand (⛓ WINDOW WHOLE PASS: the whole pass stops there, not only its dash search)

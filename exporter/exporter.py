@@ -2659,11 +2659,14 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 PRESET_ARTIFACT_SUFFIXES = ("_rules.json", "_rules-ast.json", "_sphere_log.jsonl")
 
 
-def _preset_artifact_names(filename_base: str, player_ids: Sequence[int] = ()) -> List[str]:
+def _preset_artifact_names(filename_base: str, player_ids: Sequence[int] = (),
+                           per_player_sphere_logs: bool = False) -> List[str]:
     """
     The exact basenames this generation's export can have written into the
     shared output directory: the combined rules (+AST), one per-player rules
-    (+AST) file per player when there is more than one, and the sphere log.
+    (+AST) file per player when there is more than one, and the sphere log,
+    plus one per-player sphere log per player when `sphere_log_per_player` is
+    on (named by the setting, never by what happens to be on disk: see below).
 
     A prefix match on the seed name is NOT enough: seed names collide across
     generations (a 4-player multiworld at --seed 1 and every single-player
@@ -2677,11 +2680,14 @@ def _preset_artifact_names(filename_base: str, player_ids: Sequence[int] = ()) -
             names.append(f"{filename_base}_P{player}_rules.json")
             names.append(f"{filename_base}_P{player}_rules-ast.json")
     names.append(f"{filename_base}_sphere_log.jsonl")
+    if per_player_sphere_logs and len(player_ids) > 1:
+        for player in player_ids:
+            names.append(f"{filename_base}_P{player}_sphere_log.jsonl")
     return names
 
 
 def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], filename_base: str,
-                                 player_ids: Sequence[int] = ()) -> List[str]:
+                                 player_ids: Sequence[int] = (), per_player_sphere_logs: bool = False) -> List[str]:
     """
     Collect the files that should be mirrored into a preset directory.
 
@@ -2695,6 +2701,8 @@ def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], fi
         filename_base: Base name for this seed's output files
         player_ids: This multiworld's player ids; per-player artifacts are
             expected only when there is more than one.
+        per_player_sphere_logs: `sphere_log_per_player` is on, so each
+            player's filtered sphere log is one of the artifacts too.
 
     Returns:
         Sorted list of absolute-or-relative source paths, one per basename.
@@ -2709,7 +2717,7 @@ def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], fi
                 sources[name] = path
 
     if os.path.isdir(output_dir):
-        for name in _preset_artifact_names(filename_base, player_ids):
+        for name in _preset_artifact_names(filename_base, player_ids, per_player_sphere_logs):
             path = os.path.join(output_dir, name)
             if os.path.isfile(path):
                 sources[name] = path
@@ -3236,8 +3244,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
         # The files that make up this preset: this seed's artifacts from the output
         # directory plus everything Main staged for the ZIP.
+        from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
         preset_sources = _collect_preset_source_files(
-            output_dir, staging_dir, filename_base, list(multiworld.player_ids))
+            output_dir, staging_dir, filename_base, list(multiworld.player_ids),
+            bool(getattr(get_json_tools_settings(), 'sphere_log_per_player', False)))
         source_json_paths = {
             os.path.basename(path): path for path in preset_sources if path.endswith('.json')
         }

@@ -94,6 +94,7 @@ Shared modules for the documents every substrate uses:
 | `setEditorCore.js` | The set editor's substrate-free calculations: `roomRowsOf`, `moveOrder` and the renumbering mappings, `renumberDecision`, the `OVERVIEW` strip layout and `exitArrowShapes`, `gateabilityOf`, `inertRulesOf`, `freeEdgesOf`, `reportOver`. |
 | `setOverlay.js` | `createSetOverlay(spec)` — the shape of a set's authored overlay — and `applyOverlayRules(atlas, byRoom)`. |
 | `setEditorView.js` | `mountSetEditor(opts)` — the set editor's DOM (see below). |
+| `setMapLayout.js` | The set MAP's substrate-free half: `canonicalLayout`, the sticky rule, `frameOf`, `mapLinkShapes`, door ticks and picking, behind `createSetMapProvider(reader)`. A substrate's reader says which links a set has and which way each door leads (`seedlingDemo/seedlingSetMap.js`, `mazeRoom/mazeSetMap.js`). |
 | `worldDocument.js`, `worldDerivation.js`, `worldSetAdapter.js` | A world: one session over several set documents. See [The Seedling Editor](./seedling-editor.md#the-world--one-session-over-several-set-documents-procgencoreworldjs). |
 | `labRoomEnvelope.js` | The envelope a lab page sends to its host while a set session is open. |
 
@@ -171,6 +172,7 @@ Every substrate-specific input is a named parameter, checked by name at mount so
 | `linkBound(record)` | `{ok, why}` — whether the link scan is affordable, said out loud either way. |
 | `isRefusal`, `rulesSchema`, `addRoomOp(at)` | The substrate's refusal classes, the parsed `rules.schema.json`, and a builder for the `add-room` op (called inside a `try`, because building it can refuse). |
 | `sourceKind(cell)` | Where a room's contents live (`record`, `xml` or `embed`). The mount records the `embed` answers as it paints and exposes them as `badges()`. |
+| `overviewMap`, `overviewMapOn` | Optional. A map provider (`setMapLayout.createSetMapProvider`) draws the set as a 2D map on the strip's canvas, with select, open, CONNECT, DISCONNECT and zoom on it; `overviewMapOn` says whether the map or the strip shows at mount. Without a provider the strip is unchanged. |
 
 **Downloads.** `adapterFns.download` returns `{members: [{kind, doc, name, label, readout}], report, apMappingWhy?}`, and the mount writes one file and one readout per member. Download readouts are scoped to the press: the handler clears its readouts and increments `__editorSetBundlePresses` / `__editorSetRulesPresses` before any check, so a test can wait on a counter that changes and tell a refused press from an earlier success. The bundle button refuses a member whose `kind` is not in `documentBundle.BUNDLE_KINDS`, quoting the list, rather than dropping it.
 

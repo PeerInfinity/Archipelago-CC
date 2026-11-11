@@ -649,6 +649,8 @@ describe('who takes the box', () => {
             'check-seedling-editor-e2.mjs',
             // seedling-editor-e3: the lab editor's world-map row (import door: `isEntryPoint` → main())
             'check-seedling-editor-e3.mjs',
+            // maze-world-map: the maze lab's set-arm map row (import door: `isEntryPoint` → main())
+            'check-maze-world-map.mjs',
             // seedling-js-tape-bridge: one tape on the JS core and the wasm game, drains diffed (import door: `isEntryPoint` → main())
             'probe-seedling-js-vs-wasm-tape.mjs',
             // cloudberry P2a: the embed gate and the pack maker (import door: `isEntryPoint` → main())

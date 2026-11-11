@@ -14,7 +14,9 @@
 # kind / block_struck / wakes / pulsed (BLOCK KINDS, session tile-mechanisms-m1: the block's kind; the acting use moves it;
 # the acting use wakes it; a pulse moves it), pulse (PULSERS: the group token of the pulser whose reach holds the cell; None = none),
 # latched / latch_event (LATCHING BUTTONS, session tile-mechanisms-m4-latch: the cell's latching button was pressed earlier this
-# visit; the event its latch carries from an earlier visit, None = none).
+# visit; the event its latch carries from an earlier visit, None = none),
+# opener (SIDED OPENERS, session tile-rules-automation-r-a4b: the combos the cell's one-sided lock needs from the player's stance;
+# None when the cell has no opener or the player is not on its probe cell).
 
 
 def cleared(state, player, tile):
@@ -71,3 +73,7 @@ def pulled(state, player, cell, tile):
 
 def latched(state, player, cell, tile):
     return tile.latched or (tile.latch_event is not None and state.has(tile.latch_event, player))
+
+
+def opens(state, player, cell, tile):
+    return tile.opener is not None and any(all(state.count(p[0], player) >= p[1] for p in combo) for combo in tile.opener)

@@ -172,6 +172,13 @@ A library is pasted into the mode's own box, uploaded (`.json`, or a `.zip` bund
 - **A room opens inside this mode**, not by switching to `edit` (see [Gotchas](./gotchas.md)). Closing it folds its edits into one `replace-room` op (`closeRoomSession`).
 - **ADD ROOM** mints `blankMazeRoomPayload({width, height})` (`mazeSetAdapter.js`): a doorless all-floor room, so the REPORT refuses the `rules.json` export until a connect gives it a door. `createWorld` refuses a dimension below 2 by name, and that message reaches the mode's note.
 
+**The map.** The overview can show the library as a 2D map instead of the strip: tick **map view** (`#editSetMapView`), or open with `?setView=map`. The strip is the default here, because RECT/PASTE addresses a range of room indices and a world session has no map. The provider is `mazeRoom/mazeSetMap.js`, over the layout shared with the Seedling editor (`procgenCore/setMapLayout.js`), so the gestures and rules are the Seedling map's (The Seedling Editor, § The map).
+
+- **Which way a door leads.** A maze exit names its `side` and sits on that edge (every exit of the committed pack and of the generated maze presets). Its target is an overlay link, two-way unless `one_way`. An exit with no `side` (a Seedling-derived maze) takes the edge its tile is on, then the side of its arrival in the target, reversed.
+- **The layout** walks the links breadth-first from `overlay.start` (entry 0 if absent), placing each room one cell from the room that reached it on the door's side. Rooms no link reaches form groups to the right, so a library with no overlay lays out as a row.
+- **Stability.** Nothing about the map is stored. A `connect`, a `disconnect` or their undo moves no room while the rooms stay the same (count, ids, names and sizes); a renumbering re-derives the layout, as does RE-LAYOUT.
+- **On the map**, CONNECT (`c`) can pick the source exit by clicking its door tick, and DISCONNECT (`d`) previews first: a maze `disconnect` removes the whole link, both directions, and renumbers nothing. Every refusal is the adapter's own sentence.
+
 ### Editing a world (`?world=<bundle>.zip`)
 
 A **world** is a bundle of a Seedling level set, a region library and the `world.json` naming them (see [Architecture](./architecture.md)). The set mode opens it as one composite session over both parts' rooms; `lab.html` is the world editor's page.
@@ -181,6 +188,7 @@ A **world** is a bundle of a Seedling level set, a region library and the `world
 - Every cell shows its substrate (`readCell().substrate`). Maze cells are drawn with `makeDrawRoomStill`; Seedling cells get a card, because this page does not import Seedling's painter.
 - A maze room opens on this page's canvas; a Seedling room opens in `watch.html`'s edit mode in a frame. Only one room session at a time; the strip refuses a second by name.
 - A cross-part door is authored from the derived exit ids; `one_way` starts unset and must be chosen.
+- A world opens on the strip, even with `?setView=map`. The map toggle is disabled and `#labSetMapWhy` says why: the map reads one substrate's doors, and a world's rooms are two substrates plus the world's own crossings.
 - The download is the four documents in one bundle (`world_id` minted at the press), plus an all-maze `rules.json` projection, since a mixed world does not play in the app yet.
 
 ## Hosted in the frontend
