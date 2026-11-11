@@ -193,3 +193,79 @@ describe('⛓ SHAPES — an art entry drawn from basic shapes (content sets R2b)
         ]);
     });
 });
+
+describe('⛓ a SPRITE-ONLY stack answers exactly as before shapes existed (content sets R2b; the Seedling JS runtime shares this)', () => {
+    /**
+     * The expectation is DERIVED FROM THE MANIFESTS here, independently of the library: walk the stack in order, a key
+     * keeps the position of its FIRST appearance (a `Map.set` on an existing key) and the value of its LAST pack. That is
+     * the pre-shapes `mergeKeyed(…, sprites)` order, so `sheetsInUse` lists each winning sheet once, in that key order,
+     * as `{ sheetRef, url }` and nothing else.
+     */
+    const STACK = ['seedling', 'archipelago'];
+    let loaded;
+    let expected;
+    beforeAll(async () => {
+        loaded = await loadPackStack(STACK, { base: BASE, readJson: fsJson });
+        const order = new Map();
+        for (const l of loaded) {
+            const m = l.layers.art;
+            expect(m.shapes, `${l.id} carries no shapes (this row is about sprite-only stacks)`).toBeUndefined();
+            for (const [key, sp] of Object.entries(m.sprites ?? {})) order.set(key, { pack: l.id, base: l.base, sp, manifest: m });
+        }
+        const resolveOf = (key, { pack, sp, manifest }) => {
+            const sheet = manifest.sheets[sp.sheet];
+            const cols = Math.floor(sheet.w / sp.fw);
+            return { key, pack, sheetRef: `${pack}/${sp.sheet}`, sheet, sprite: sp, cols,
+                frameCount: cols * Math.floor(sheet.h / sp.fh), clocks: manifest.clocks ?? {} };
+        };
+        const sheets = new Map();
+        for (const [key, w] of order) {
+            const r = resolveOf(key, w);
+            if (!sheets.has(r.sheetRef)) sheets.set(r.sheetRef, new URL(r.sheet.file, new URL('art/', w.base)).href);
+        }
+        expected = {
+            keys: [...order.keys()],
+            resolve: Object.fromEntries([...order].map(([k, w]) => [k, resolveOf(k, w)])),
+            sheetsInUse: [...sheets].map(([sheetRef, url]) => ({ sheetRef, url })),
+        };
+    });
+
+    it('keys, packOf and kindOf: every key, in first-appearance order, from its last pack, a sprite', () => {
+        const lib = createArtLibrary(loaded);
+        expect(lib.keys()).toEqual(expected.keys);
+        for (const key of expected.keys) {
+            expect(lib.packOf(key), key).toBe(expected.resolve[key].pack);
+            expect(lib.kindOf(key), key).toBe('sprite');
+        }
+    });
+
+    it('resolve answers the same object, field for field and nothing more, for every key', () => {
+        const lib = createArtLibrary(loaded);
+        for (const key of expected.keys) {
+            const r = lib.resolve(key);
+            expect(Object.keys(r), key).toEqual(Object.keys(expected.resolve[key]));
+            expect(JSON.stringify(r), key).toBe(JSON.stringify(expected.resolve[key]));
+        }
+    });
+
+    it('frameRect over every key and every frame of its sheet is the Spritemap rectangle', () => {
+        const lib = createArtLibrary(loaded);
+        for (const key of expected.keys) {
+            const { sprite: sp, cols, frameCount, sheetRef } = expected.resolve[key];
+            const [ox, oy] = sp.origin ?? [0, 0];
+            for (let frame = 0; frame < frameCount; frame++) {
+                let f = sp.only ? sp.only[frame % sp.only.length] : frame;
+                f = ((f % frameCount) + frameCount) % frameCount;
+                expect(lib.frameRect(key, frame), `${key} #${frame}`).toEqual({
+                    sheetRef, sx: (f % cols) * sp.fw, sy: Math.floor(f / cols) * sp.fh, sw: sp.fw, sh: sp.fh, ox, oy, frame: f,
+                });
+            }
+        }
+    });
+
+    it('sheetsInUse is byte-identical: the same entries, in the same order, each exactly { sheetRef, url }', () => {
+        const lib = createArtLibrary(loaded);
+        expect(JSON.stringify(lib.sheetsInUse())).toBe(JSON.stringify(expected.sheetsInUse));
+        for (const s of lib.sheetsInUse()) expect(Object.keys(s)).toEqual(['sheetRef', 'url']);
+    });
+});
