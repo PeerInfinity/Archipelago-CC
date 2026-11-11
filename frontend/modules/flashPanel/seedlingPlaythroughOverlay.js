@@ -285,7 +285,7 @@ export const RECLOSING_LOCK = Object.freeze({
  * press.
  *
  * THE RULE, from the data (`buildGroupOpeners`), never a list: a grouped lock
- * (`LOCK_FAMILY`, `tSet >= 0`) whose in-level group has NO holding Button and
+ * (`RECLOSING_LOCK_CLASSES`: lock, wandlock, grasslock; `tSet >= 0`) whose in-level group has NO holding Button and
  * exactly ONE latching opener, and that opener is a tagged `room == -1`
  * ButtonRoom, is GATED on that press's AP event (`inRoomPressCondition`).
  *
@@ -716,7 +716,9 @@ function lockRuling(entity, ctx) {
         // press, the lock costs that press (⛓ R-A5, from the census).
         const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
         const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
-        const press = inRoomPressOf(group);
+        // Only the classes a publish opens (`Lock` and its subclasses that keep `activationStep`); a RockLock honours its
+        // tag whatever its tSet and is ruled below.
+        const press = RECLOSING_LOCK_CLASSES.has(entity.type) ? inRoomPressOf(group) : null;
         if (press) return GATED(inRoomPressCondition(ctx.level, group, press, site), IN_ROOM_PRESS_LOCK.cite, IN_ROOM_PRESS_LOCK.why);
         // ⛓ RULES l112-owl-rocklock — and the premise's OTHER half: the group
         // has an in-level opener at all. Checkable only where the caller
