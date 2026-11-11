@@ -671,6 +671,8 @@ describe('who takes the box', () => {
             'probe-seedling-chest-incidental.mjs',
             // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
             'probe-seedling-drill-water.mjs',
+            // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
+            'probe-seedling-bobiframe.mjs',
             // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
             'probe-seedling-er-landings.mjs'];
         const isGuarded = (f) => {

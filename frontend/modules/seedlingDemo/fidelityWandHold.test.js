@@ -36,7 +36,7 @@ const { l40buttonStaging, L40BUTTON_GOAL } = await import('../../../scripts/proc
 const L40_ON = Object.freeze({ movingWait: true, bombBlastBody: true });
 const L40_LEGS = [
     { name: 'wandhold-l41-368-paced', leg: 368, key: 'level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144',
-        boot: { level: 40, x: 928, y: 96 }, still: '(279.41302761753104,215.58073362346732)', ticks: 1601, blasts: 15, bodyHits: 0,
+        boot: { level: 40, x: 928, y: 96 }, still: '(279.41302761753104,215.58073362346732)', ticks: 1600, blasts: 15, bodyHits: 0, // ⛓ WALLSFLIP: 1601 t before chaserSpinnerWalls ON (one opportunistic press at t1430; re-recorded on p4g)
         verbs: ['brave', 'kill', 'hold', 'break', 'hold', 'collect'] },
     { name: 'wandhold-l42-371-paced', leg: 371, key: 'level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144',
         boot: { level: 40, x: 848, y: 16 }, still: '(280.68648150954834,215.81733159973635)', ticks: 1667, blasts: 18, bodyHits: 1,

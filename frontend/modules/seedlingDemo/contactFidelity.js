@@ -534,8 +534,9 @@ export const CONTACT_FIDELITY = {
      * spinner where this tick's spinner step left it, and the forecast (`chaserForecastNow`) steps its own copy of
      * the spinners beside the chasers (the press's hits on a spinner are not forecast). ⛔ OFF by default (no
      * licence); `SEEDLING_CHASER_SPINNER_WALLS=0|1` for a node measurement.
+     * ON since the BOBIFRAME flip (⚖ user 2026-11-11): the game witness `fixtures/bobiframe-witness/` (p4g, 0 px).
      */
-    chaserSpinnerWalls: false,
+    chaserSpinnerWalls: true,
     /**
      * fidelity CORRIDOR D2 — THE WALK'S CORRIDOR PRICES THE LIVE WALLFLYERS AND DRILLS AT THE TICKS IT PASSES THEM.
      *
