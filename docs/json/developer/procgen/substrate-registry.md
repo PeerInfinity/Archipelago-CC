@@ -128,6 +128,8 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 | `applyContentModules` | Optional post-build pass for content modules (the maze's hazards). |
 | `conceptRealisations` | Optional. The substrate's half of the concept library: `{<concept id>: {tier, art?, placements?}}`, which concepts it can realise and how, checked by `assertRealisations`. `placeFromRules` selects a gate's realisation by its rule over the world's offered concepts (`selectRealisation`). See [Concepts](./concepts.md). |
 
+`contentRoles` is optional, and no entry declares it yet, so it has no row in the table above: the generated matrix would report a row that no entry carries. It lists the kinds of content the substrate can show, as `{<role>: {accepts: {kinds} or {presents}, needs?: {look?, art?, text?}, why}}`, and a content pack's concepts fill them. `assertContentRoles` checks it, and `candidatesForRole` lists the pack concepts that fill a role. The first entry to declare it moves this paragraph into a table row. See [Concepts § Content roles](./concepts.md#content-roles).
+
 ### What the player holds on arrival (`held`)
 
 Every region generator may be handed one optional, substrate-agnostic field, `held`: the items the player is expected to hold on FIRST reaching the region being generated, under the world's logic. Its shape is `{ items: {<item>: <count>}, source: 'sphere' | 'arrival-approx', exact, sphere? }`, keyed by the identifier the growth mode deals and gates on.

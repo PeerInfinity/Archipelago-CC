@@ -735,7 +735,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "absentMeans": null,
                     "atDefault": "not written by this page",
-                    "codec": "`strip` opens the SET overview on the one-row strip; anything else (or absent) is the 2D MAP derived from the exits",
+                    "codec": "the SET overview: the one-row STRIP or the 2D MAP derived from the exits. `watch.html`: `strip` opens on the strip, anything else (or absent) the map. `lab.html`: `map` opens on the map, anything else (or absent) the strip, and a world session is always the strip",
                     "defaultField": "setView",
                     "defaultIsUndefined": false,
                     "defaultValue": "map",
@@ -1161,6 +1161,7 @@ export const URL_GRAMMAR = frz({
                 "roster": null,
                 "run": false,
                 "seed": 1,
+                "setView": "strip",
                 "skeleton": {
                     "kind": "empty"
                 },
@@ -1613,6 +1614,27 @@ export const URL_GRAMMAR = frz({
                 },
                 {
                     "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "the SET overview: the one-row STRIP or the 2D MAP derived from the exits. `watch.html`: `strip` opens on the strip, anything else (or absent) the map. `lab.html`: `map` opens on the map, anything else (or absent) the strip, and a world session is always the strip",
+                    "defaultField": "setView",
+                    "defaultIsUndefined": false,
+                    "defaultValue": "strip",
+                    "name": "setView",
+                    "retired": false,
+                    "terms": [
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readLabParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
                     "atDefault": "DELETED at the default",
                     "codec": "parseSkeleton",
                     "defaultField": "skeleton",
@@ -1789,7 +1811,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 405,
+                    "line": 412,
                     "role": "write"
                 }
             ],

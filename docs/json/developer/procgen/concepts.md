@@ -129,6 +129,36 @@ The maze's cell reads *4 concepts: sword (mechanic), swim (mechanic), guardian (
 
 `itemTagsImpliedBy(entry, concepts)` lists the item tags an entry's concepts carry, by the same tag law `substrateCapabilities.itemTagFeatures` applies to an entry's items.
 
+## Content roles
+
+`conceptRealisations` names, by id, the mechanic concepts a substrate realises. It cannot name a character that a content pack brings. So a registry entry may also declare **roles** in `contentRoles`: the kinds of content it can show, and the fields each kind needs. A pack concept (the `concepts` layer of a content pack, read by `frontend/modules/packConcepts/packConcepts.js`) fills any role whose needs it supplies. The code is `frontend/modules/procgenCore/contentRoles.js`, and it too is browser-safe and names no substrate.
+
+```js
+contentRoles: {
+    gate:      { accepts: { presents: ['guardian', 'water'] }, needs: { look: true, text: ['blocked', 'passedWith'] },
+                 why: 'a planned gate, shown as the concept the rule selected' },
+    character: { accepts: { kinds: ['character'] }, needs: { text: ['greeting'] }, why: 'someone to meet in a room' },
+    info:      { accepts: { kinds: ['info'] }, needs: { text: ['body'] }, why: 'a piece of information held at a location' },
+}
+```
+
+- `accepts` is exactly one of two forms. `kinds` is a non-empty list of pack-concept kinds (`character`, `place`, `object`, `info`; the pack layer owns that list). `presents` is a list of mechanic concept ids. Each must be in the concept table **and** realised by the same entry's `conceptRealisations`, because a role that shows a concept the entry cannot realise is a role nothing selects.
+- `needs` is optional. It may ask for `look` (a colour and a symbol, both required by the pack layer), `art` (an art-library key), and `text`, a list of text slots. Every pack concept has a `name`, so a role never lists it, and listing it is refused.
+- `why` is required.
+
+A role is presentation only. A pack concept that presents `guardian` fills a gate role's presentation; the gate's logic is still the realisation's `effect` and `needs`.
+
+The readers:
+
+- `assertContentRoles(entry, concepts)` checks an entry's roles. It throws a `ConceptContractError` naming the entry, the role and what is wrong. An entry with no `contentRoles` is not an error.
+- `contentRolesOf(entryOrRoles)` takes an entry or its roles object, as `realisationsOf` does.
+- `roleRefusal(role, packConcept)` is `null` when the concept fills the role. Otherwise it is a sentence naming the first thing missing, in this order: the wrong kind (or not presenting an accepted concept), no `look`, no `art`, then each text slot in the role's order. A text slot is checked for presence on the concept. Whether its key resolves in a text library is for the consumer, which holds the stack.
+- `candidatesForRole(entryOrRoles, roleId, packConcepts)` lists the keys of the pack concepts that fill one role, in the library's order. An undeclared role is refused by name.
+- `assertPresents(packConcepts, concepts)` checks that every `presents` in a stack names a concept in the table. The pack layer leaves `presents` opaque on purpose; this is the cross-check.
+- `rolesFilledBy(entryOrRoles, packConcepts)` returns `[{role, concepts}]` in the entry's declared order. It is the input a later chart statement will read. No statement reads it yet.
+
+No registered substrate declares a role yet.
+
 ## Behaviour
 
 A concept can also say how it **behaves**: what an item hits with, how an enemy answers a hit, what makes an obstacle give way, and what a substrate's realisation of it does. Every behaviour field is optional, and a concept without one is exactly the concept it was before.

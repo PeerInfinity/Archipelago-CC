@@ -253,7 +253,7 @@ A level set loaded in the LOAD box, or `#editLoadVanilla` (which derives the van
 
 ### The map
 
-The map (`seedlingDemo/seedlingSetMap.js`, handed to the shared mount as `overviewMap`) is a 2D layout of the set **derived from its exits**. The game stores no room position (a room is an id), so nothing about the map is stored: not in the set, its OEL or the overlay. A set always renders as derived, and every click is still answered as a room index.
+The map (`seedlingDemo/seedlingSetMap.js`, handed to the shared mount as `overviewMap`) is a 2D layout of the set **derived from its exits**. The layout, stability rule and drawing are shared with the maze lab's map (`procgenCore/setMapLayout.js`); this file holds Seedling's half, which way a door leads. The game stores no room position (a room is an id), so nothing about the map is stored: not in the set, its OEL or the overlay. A set always renders as derived, and every click is still answered as a room index.
 
 **Which way a door leads.** A door within 20% of an edge of its room leads through that edge; an interior door takes the side its arrival lands on in the target, reversed; anything else (most stairs, pits, `named_rooms` arrivals) has no direction. Over the vanilla 116 most doors lead through their own edge, and most teleporters leave one edge and arrive at the opposite edge of the target, which is what makes a direction honest.
 

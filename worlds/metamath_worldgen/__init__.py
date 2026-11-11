@@ -11,6 +11,7 @@ from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from ._ext import RuleWorldMixin
+from . import _spoiler_hook_client
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -429,14 +430,14 @@ class MetamathWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return self._with_embedded_rules({
+        return {**self._with_embedded_rules({
             "proof_structure": {1: {'label': '2cn', 'expression': '|- 2 e. CC', 'dependencies': [], 'full_text': '2cn: The number 2 is a complex number.  (Contributed by NM, 30-Jul-2004.) Reduce dependencies on axioms.  (Revised by Steven Nguyen, 4-Oct-2022.)'}, 2: {'label': 'ax-1cn', 'expression': '|- 1 e. CC', 'dependencies': [], 'full_text': "ax-1cn: $j restatement 'ax-resscn' of 'axresscn'; $) $( 1 is a complex number.  Axiom 2 of 22 for real and complex numbers, justified by Theorem ~ ax1cn .  (Contributed by NM, 1-Mar-1995.)"}, 3: {'label': 'addassi', 'expression': '|- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'dependencies': [1, 2, 2], 'full_text': 'addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.)', 'instantiated_expression': '|- ( ( 2 + 1 ) + 1 ) = ( 2 + ( 1 + 1 ) )'}, 4: {'label': 'df-2', 'expression': '|- 2 = ( 1 + 1 )', 'dependencies': [], 'full_text': 'df-2: Define the number 2.  (Contributed by NM, 27-May-1999.)'}, 5: {'label': 'df-3', 'expression': '|- 3 = ( 2 + 1 )', 'dependencies': [], 'full_text': 'df-3: Define the number 3.  (Contributed by NM, 27-May-1999.)'}, 6: {'label': 'df-4', 'expression': '|- 4 = ( 3 + 1 )', 'dependencies': [], 'full_text': 'df-4: Define the number 4.  (Contributed by NM, 27-May-1999.)'}, 7: {'label': 'oveq1i', 'expression': '|- ( A F C ) = ( B F C )', 'dependencies': [5], 'full_text': 'oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.)', 'instantiated_expression': '|- ( 3 + 1 ) = ( ( 2 + 1 ) + 1 )'}, 8: {'label': '3eqtri', 'expression': '|- A = D', 'dependencies': [6, 7, 3], 'full_text': "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.)", 'instantiated_expression': '|- 4 = ( 2 + ( 1 + 1 ) )'}, 9: {'label': 'oveq2i', 'expression': '|- ( C F A ) = ( C F B )', 'dependencies': [4], 'full_text': 'oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.)', 'instantiated_expression': '|- ( 2 + 2 ) = ( 2 + ( 1 + 1 ) )'}, 10: {'label': 'eqtr4i', 'expression': '|- A = C', 'dependencies': [9, 8], 'full_text': 'eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.)', 'instantiated_expression': '|- ( 2 + 2 ) = 4'}},
             "starting_statements": [1],
             "theorem": "2p2e4",
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": 0,
             "entrance_rule_mode": 1,
-        })
+        }), **_spoiler_hook_client.slot_data(self)}
 
     def _with_embedded_rules(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Add the package's rules document (`worldgen_rules`) when it fits rules_in_slot_data_max_kb.
@@ -468,3 +469,8 @@ class MetamathWorld(RuleWorldMixin, World):
             value = getattr(getattr(self.options, name, None), "value", None)
             if isinstance(value, (bool, int, float, str)):
                 options[name] = value
+
+    @classmethod
+    def stage_pre_output(cls, multiworld: "MultiWorld") -> None:
+        """Spoiler data for slot_data, from the optional Spoiler Export Hook apworld (one walk per seed)."""
+        _spoiler_hook_client.prepare(cls, multiworld)
