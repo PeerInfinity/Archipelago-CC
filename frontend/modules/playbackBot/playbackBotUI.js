@@ -1808,14 +1808,16 @@ export class PlaybackBotUI {
 
     /**
      * Map a region name to its substrate id via the loaded rules.json's
-     * preset_sidecars. Falls back to 'maze' for non-procgen presets and
-     * for unknown region names — preserves the bot's pre-mixed-substrate
-     * default.
+     * preset_sidecars, under the LOADED player (a room's server-built rules
+     * key them under the room slot, not '1'). Falls back to 'maze' for
+     * non-procgen presets and for unknown region names — preserves the bot's
+     * pre-mixed-substrate default.
      */
     _resolveSubstrateId(regionName) {
         const rulesJson = this._getRulesJson?.() ?? null;
         if (!rulesJson || !regionName) return 'maze';
-        const sidecar = rulesJson.preset_sidecars?.['1']?.[regionName];
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        const sidecar = rulesJson.preset_sidecars?.[playerId]?.[regionName];
         return sidecar?.substrate ?? 'maze';
     }
 
