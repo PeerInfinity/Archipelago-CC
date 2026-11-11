@@ -81,16 +81,16 @@ describe('hammer-phase POCKET-BURN on the latch boot, south of the door (slow)',
             sources: ['chaser:bobsoldier@880,832'] });
     }), 900000);
 
-    it('pocket open, ON: SOUTHDOOR\'s solve unchanged — Boss Key 2 hitless at t4810 on a fresh run', async () => withL40Flip(false, async () => {
+    it('pocket open, ON: SOUTHDOOR\'s solve unchanged — Boss Key 2 hitless at t4812 on a fresh run', async () => withL40Flip(false, async () => {
         const boot = await southBoot(false);
         const r = await arm(boot, true);
         expect(r.refusal).toBeNull();
-        expect(r.out.perTick).toHaveLength(4810);
+        expect(r.out.perTick).toHaveLength(4812); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): 4810 → 4812
         expect(r.out.records.some((x) => x.strategy === 'burn')).toBe(false);
         // ⚖ 30(c): the plan's keys on a FRESH run of the model
         const seen = await replay(boot, r.out.perTick.map((k) => [...k]), r.out.equips);
         expect(seen.hits).toEqual([]);
         expect(seen.deaths).toBe(0);
-        expect(seen.collected).toEqual([{ t: 4810, keyType: 2 }]);
+        expect(seen.collected).toEqual([{ t: 4812, keyType: 2 }]);
     }), 1200000);
 });
