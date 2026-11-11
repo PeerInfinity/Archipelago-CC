@@ -1940,7 +1940,9 @@ function inRoomLatchAnalysis(doc) {
         return new Set((claimed.length ? claimed : [[Math.floor(t.x / TILE), Math.floor(t.y / TILE)]]).map(([x, y]) => `${x},${y}`));
     };
     return {
-        effect: (t) => (PERSISTENCE_RESPONSE[t.type] === 'lock-despawn' && t.publish === true
+        // ⛓ R-A5: the classes a group publish opens are `OV.isPublishOpenedLock` (RockLock too: `RockLock.as:40-46,56-66`), the
+        // same predicate the overlay's in-room press rule names its event by; `lock-despawn` alone missed RockLock.
+        effect: (t) => ((PERSISTENCE_RESPONSE[t.type] === 'lock-despawn' || OV.isPublishOpenedLock(t.type)) && t.publish === true
             ? { effect: 'opens', why: 'a Lock handed activate = true by its latching group (ButtonRoom.as:79-89, Lock.as:activationStep)' }
             : { effect: null, why: `${t.type}: not a Lock opened by the group's publish (response '${PERSISTENCE_RESPONSE[t.type]}', publish ${t.publish})` }),
         pricedByButton: (t) => {

@@ -109,6 +109,12 @@ export const WANDLOCK_IS_A_LOCK = Object.freeze({
  * passes) is neither.
  */
 const LOCK_FAMILY = new Set(['lock', 'wandlock', 'grasslock', 'rocklock']);
+/**
+ * ⛓ R-A5 — the classes a group publish OPENS: every `LOCK_FAMILY` member takes `activate` from its group and fades out
+ * (`Lock.as:64-98` for Lock/WandLock/GrassLock; `RockLock.as:40-46,56-66`: RockLock extends Activators, fades on activate and
+ * types itself ""). The in-room press rule and the rules producer's in-room effect both read this one predicate.
+ */
+export const isPublishOpenedLock = (type) => LOCK_FAMILY.has(type);
 
 /**
  * ⛓⛓ EVERY CROSS-LEVEL PERSISTENCE WRITE, as a set of `"<level>:<tag>"`.
@@ -158,7 +164,7 @@ export function buildCrossLevelOpeners(mapDoc) {
  *
  * Returns `"<level>:<tset>"` -> `{ latching, holders: [[tx, ty], ...], latchers, opened }`, the
  * holders as the tiles their buttons stand on; `latchers` the latching openers (with the tag a press
- * clears); `opened` the group's `RECLOSING_LOCK_CLASSES` members, in MAP ORDER (⛓ R-A5: a press mints
+ * clears); `opened` the group's `isPublishOpenedLock` members, in MAP ORDER (⛓ R-A5: a press mints
  * ONE event, named after its first opening target in map order, `deriveButtonEvents`; every lock of the
  * group names that one event — see `IN_ROOM_PRESS_LOCK`).
  */
@@ -179,7 +185,7 @@ export function buildGroupOpeners(mapDoc, tileSize = 16) {
             if (!Number.isInteger(t) || t < 0) continue;
             const k = `${level.level}:${t}`;
             if (!latching && !HOLDING_OPENER(e)) {
-                if (RECLOSING_LOCK_CLASSES.has(e.type)) {
+                if (isPublishOpenedLock(e.type)) {
                     if (!opened.has(k)) opened.set(k, []);
                     opened.get(k).push({ type: e.type, x: e.x, y: e.y });
                 }
@@ -285,7 +291,7 @@ export const RECLOSING_LOCK = Object.freeze({
  * press.
  *
  * THE RULE, from the data (`buildGroupOpeners`), never a list: a grouped lock
- * (`RECLOSING_LOCK_CLASSES`: lock, wandlock, grasslock; `tSet >= 0`) whose in-level group has NO holding Button and
+ * (`isPublishOpenedLock`: the lock family, RockLock included; `tSet >= 0`) whose in-level group has NO holding Button and
  * exactly ONE latching opener, and that opener is a tagged `room == -1`
  * ButtonRoom, is GATED on that press's AP event (`inRoomPressCondition`).
  *
@@ -716,9 +722,8 @@ function lockRuling(entity, ctx) {
         // press, the lock costs that press (⛓ R-A5, from the census).
         const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
         const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
-        // Only the classes a publish opens (`Lock` and its subclasses that keep `activationStep`); a RockLock honours its
-        // tag whatever its tSet and is ruled below.
-        const press = RECLOSING_LOCK_CLASSES.has(entity.type) ? inRoomPressOf(group) : null;
+        // Only the classes a group publish opens (`isPublishOpenedLock`: the whole lock family, RockLock included).
+        const press = isPublishOpenedLock(entity.type) ? inRoomPressOf(group) : null;
         if (press) return GATED(inRoomPressCondition(ctx.level, group, press, site), IN_ROOM_PRESS_LOCK.cite, IN_ROOM_PRESS_LOCK.why);
         // ⛓ RULES l112-owl-rocklock — and the premise's OTHER half: the group
         // has an in-level opener at all. Checkable only where the caller
@@ -1623,10 +1628,10 @@ export const REFUTATION_LOG = Object.freeze([
             + 'cross-check over the intended vocabulary is unchanged.',
         // ⛓ R-A4: the row is gated on its own PRESS since (the Shield term was redundant); the alcove stays its own
         // region. Kept out of `observed`, which AP_1 serializes: the history text is not re-recorded for a comment.
-        // ⛓ R-A5: this `cite` IS serialized (AP_1, seedling_er). It names the keyed row R-A5 retired; that row is now the
-        // general rule `IN_ROOM_PRESS_LOCK`. The text is history and stays byte-stable (AP_1 4c4ae570 as re-recorded).
+        // ⛓ R-A5: this `cite` IS serialized (AP_1, seedling_er); it named the keyed row R-A5 retired and now names the general
+        // rule that replaced it (a text-only move of AP_1, ⚖ design-4).
         cite: 'Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as '
-            + '+ R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS',
+            + '+ R6 kickoff §13.8 + R7 kickoff §15 — see IN_ROOM_PRESS_LOCK',
     }),
     // ⛓ ENTRY 3 (SWIM T4, plan R-j) — entry 2's sign again: a rule too PERMISSIVE.
     // This time the analyzer SAW the wall. It then paid it in both directions,

@@ -582,14 +582,18 @@ describe('R-A5: a grouped lock whose only opener is one in-room press costs that
         expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 9)])).condition)
             .toEqual({ event: 'L20 flag 9: lock@32,80 cleared' });
     });
-    it('does NOT apply (today\'s ruling stands) where the group is not one in-room press: no census, two presses, a holding Button, a rope, a RockLock', () => {
+    it('does NOT apply (today\'s ruling stands) where the group is not one in-room press: no census, two presses, a holding Button, a rope', () => {
         expect(overlayEntitySemantics(L20, base('lock'), { level: 20 }).kind).toBe('open');
         expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), press(208, 16, 5)])).kind).toBe('open');
         expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), { type: 'button', x: 64, y: 64, attrs: { tset: '0' } }])).kind)
             .toBe('open');
         expect(overlayEntitySemantics(L20, base('lock'), ctxFor([{ type: 'rope', x: 64, y: 64, attrs: { tset: '0', tag: '2' } }])).kind).toBe('open');
         expect(inRoomPressOf(undefined)).toBeNull();
+    });
+    it('a RockLock IS publish-opened (it extends Activators and fades on `activate`, RockLock.as:40-46,56-66): the rule applies', () => {
         const rock = { type: 'rocklock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } };
-        expect(overlayEntitySemantics(rock, base('rocklock'), ctxFor([press(192, 16, 4)], [rock]))?.condition?.event).toBeUndefined();
+        expect(OVERLAY.isPublishOpenedLock('rocklock')).toBe(true);
+        expect(overlayEntitySemantics(rock, base('rocklock'), ctxFor([press(192, 16, 4)], [rock])).condition)
+            .toEqual({ event: 'L20 flag 4: rocklock@32,80 cleared' });
     });
 });
