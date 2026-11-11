@@ -81,21 +81,22 @@ describe('hammer-phase APPROACH on the latch chain (slow)', () => {
         expect(r.refusal.perTick).toHaveLength(1245);
     }, 900000);
 
-    it('ON: the approach is timed on the turret\'s clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run', async () => {
+    it('ON: the approach is timed on the turret\'s clock from cover, the kill is hitless, and Boss Key 2 is collected at t4144 on a fresh run', async () => {
         resetTurretApproachCounts();
         const r = await latchChain(true);
         expect(r.refusal).toBeNull();
-        expect(r.out.perTick).toHaveLength(4142);
-        // the approach: the west stance off the snapped box, the planned corridor, a 30-tick wait at the cover
+        expect(r.out.perTick).toHaveLength(4144);
+        // the approach: the west stance off the snapped box, the planned corridor, a 31-tick wait at the cover
+        // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): the volley's anchor 31 is met first (ascending met wait 30, 4142 t; both hitless)
         expect(TURRET_APPROACH_COUNTS.approaches).toEqual([{ turret: TURRET, t: expect.any(Number), side: 'right',
-            via: null, wait: 30, forks: expect.any(Number) }]);
+            via: null, wait: 31, forks: expect.any(Number), order: 'volley', anchor: 31, rank: 0 }]);
         const weigh = r.out.records.find((x) => x.strategy === 'weigh' && x.corpse);
         expect(weigh.corpse.kill).toBeNull();
         // ⚖ 30(c): the plan's keys on a FRESH run of the model — no hit, no death, the key taken, the corpse pushed
         const { rows, hits, deaths, collected } = await replayLatch(r.out.perTick.map((k) => [...k]), r.out.equips);
         expect(hits).toEqual([]);
         expect(deaths).toBe(0);
-        expect(collected).toEqual([{ t: 4142, keyType: 2 }]);
+        expect(collected).toEqual([{ t: 4144, keyType: 2 }]);
         const death = rows.find((g) => g.dead);
         expect(death.tile).toEqual({ tx: 30, ty: 26 });
         const tiles = [...new Set(rows.filter((g) => g.dead).map((g) => `${g.tile.tx},${g.tile.ty}`))];

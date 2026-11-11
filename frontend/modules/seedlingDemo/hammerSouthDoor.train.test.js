@@ -77,22 +77,22 @@ async function replay(boot, perTick, equips) {
 const SOUTH = { x: 488, y: 579 };
 
 describe('hammer-phase SOUTHDOOR on the latch boot (slow)', () => {
-    it('OFF, south of the latched door: APPROACH\'s refusal on the arrival legs — 12 forks, all no-plan, from (488,579)', async () => {
+    it('OFF, south of the latched door: APPROACH\'s refusal on the arrival legs — 24 forks (12 anchor probes + the 12 tries), all no-plan, from (488,579)', async () => {
         resetApproachDoorCounts();
         const r = await arm(await bootAt(SOUTH), false);
         expect(r.out).toBeNull();
         expect(r.refusal.message).toContain(`-> weigh: no approach to ${TURRET} from the staging point (488,579) is `
-            + 'hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445)');
+            + 'hitless — 24 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445)'); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): one anchor probe a route
         expect(APPROACH_DOOR_COUNTS.doors).toEqual([]);
     }, 900000);
 
-    it('ON, south of the latched door: the door\'s hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run', async () => withL40Flip(false, async () => {
+    it('ON, south of the latched door: the door\'s hold first, the approach from the doorway, Boss Key 2 hitless at t4812 on a fresh run', async () => withL40Flip(false, async () => {
         resetApproachDoorCounts();
         resetTurretApproachCounts();
         const boot = await bootAt(SOUTH);
         const r = await arm(boot, true, true);
         expect(r.refusal).toBeNull();
-        expect(r.out.perTick).toHaveLength(4810);
+        expect(r.out.perTick).toHaveLength(4812); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): wait 27 from the doorway's anchor 28, 2 t later
         // the door: asked at t0 from the staging point, discharged by the ladder's hold, the walk ending in the doorway
         expect(APPROACH_DOOR_COUNTS.doors).toEqual([{ door: DOOR, side: 'up', cell: { x: 488, y: 568 }, turret: TURRET,
             t: 0, ticks: 1368, open: true }]);
@@ -100,26 +100,26 @@ describe('hammer-phase SOUTHDOOR on the latch boot (slow)', () => {
         expect(hold.presser).toEqual({ tag: 'buttonroom', x: 880, y: 768, t: 3 });
         expect(hold.opened).toEqual([DOOR]);
         // the approach: one, after the door, from the doorway
-        expect(TURRET_APPROACH_COUNTS.approaches).toEqual([expect.objectContaining({ turret: TURRET, t: 1632,
+        expect(TURRET_APPROACH_COUNTS.approaches).toEqual([expect.objectContaining({ turret: TURRET, t: 1634,
             side: 'right' })]);
         // ⚖ 30(c): the plan's keys on a FRESH run of the model
         const seen = await replay(boot, r.out.perTick.map((k) => [...k]), r.out.equips);
         expect(seen.hits).toEqual([]);
         expect(seen.deaths).toBe(0);
-        expect(seen.collected).toEqual([{ t: 4810, keyType: 2 }]);
+        expect(seen.collected).toEqual([{ t: 4812, keyType: 2 }]);
         expect(seen.doorAt).toBeLessThan(1368);
         expect(seen.deadAt).toBeGreaterThan(1368);
     }), 1200000);
 
-    it('the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked', async () => {
+    it('the latch staging (the near side once the latch has faded the door): SOLVED 4144 ON, nothing asked', async () => {
         resetApproachDoorCounts();
         resetTurretApproachCounts();
         const r = await arm(await bootAt(null), true);
         expect(r.refusal).toBeNull();
-        expect(r.out.perTick).toHaveLength(4142);
+        expect(r.out.perTick).toHaveLength(4144); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): wait 31 at anchor 31 (ascending: 30, 4142 t)
         expect(APPROACH_DOOR_COUNTS.doors).toEqual([]);
         expect(TURRET_APPROACH_COUNTS.approaches).toEqual([{ turret: TURRET, t: expect.any(Number), side: 'right',
-            via: null, wait: 30, forks: expect.any(Number) }]);
+            via: null, wait: 31, forks: expect.any(Number), order: 'volley', anchor: 31, rank: 0 }]);
     }, 900000);
 
     it('ICEST\'s pocket boot (480,456): ON keys identical to OFF, nothing asked', async () => {
