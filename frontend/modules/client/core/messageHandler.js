@@ -718,7 +718,9 @@ export class MessageHandler {
         jsonData,
         selectedPlayerId: preset.playerId,
         sourceName: preset.path,
-        ...(playerInfo ? { playerInfo } : {}),
+        // playerId travels with every playerInfo: the stateManager's re-emit takes it as the
+        // selectedPlayerInfo, and a name-only object there lost the slot (slot 2+ broke).
+        ...(playerInfo ? { playerInfo: { playerId: String(preset.playerId), ...playerInfo } } : {}),
       });
     });
   }
