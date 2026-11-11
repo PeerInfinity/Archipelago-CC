@@ -1,6 +1,6 @@
 /**
  * The connected path's out-of-logic gate and the false-alarm fix (sdc-ool-guard, ⚖ Robert 2026-11-11, options B + D
- * of NewDocs-plans `server-data/check-out-of-logic-guard.md`).
+ * of the sdc-out-of-logic-guard report).
  *
  * B — connected, a `user:locationCheck` the game did not report is refused when the state manager's snapshot says
  *     the location is unreachable: no `LocationChecks` frame, a `client:locationCheckRefused`, a console warning.
