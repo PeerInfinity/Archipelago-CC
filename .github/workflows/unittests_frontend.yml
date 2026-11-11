@@ -546,8 +546,9 @@ jobs:
   # makes". At `d8fa8e0b19` seven of them were red on main — two since
   # 2026-08-06, one since its own introducing commit — and nothing ran them.
   #
-  # ⛔ The roster is a GLOB inside `ci-producer-checks.mjs` (`plan-seedling-*`
-  # and the `regenerate-*-tapes` regenerators), never typed here; a producer
+  # ⛔ The roster is a GLOB inside `ci-producer-checks.mjs` (`plan-seedling-*`,
+  # the `regenerate-*-tapes` regenerators and `scripts/utils/regenerate-*-presets`,
+  # the procgen_topdown preset check), never typed here; a producer
   # that cannot run on a runner is named in its `EXCLUDED` table WITH its
   # reason and printed as `## PRODUCER-SKIPPED`. A stale exclusion, a file that
   # names neither `--check` nor `--write`, or a `--check` that moves the tree
