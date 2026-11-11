@@ -1178,8 +1178,8 @@ describe('⛓⛓⛓ the SHARED tools are opt-in, named by id among the page\'s o
     /*
      * ⛓⛓ editor-corner-reset — A CORNER BELONGS TO THE TOOL THAT SET IT. Before it, FILL and CLEAR
      * shared one corner across a switch: `l`, click, `x`, click CLEARED a rectangle from FILL's corner.
-     * MUTANT (each row below is red under it): `changed()` drops the corner only when the new tool is
-     * neither FILL nor CLEAR (the B1 clause).
+     * MUTANT (each row below is red under it): `setTool` drops the corner only when the new tool is
+     * neither FILL nor CLEAR (the B1 clause, which lived in `changed()`).
      */
     const shared = () => harness({ tools: [EDIT_TOOLS.FILL, EDIT_TOOLS.CLEAR, EDIT_TOOLS.MOVE] });
     it('⛓ FILL → CLEAR: FILL\'s corner is gone, and CLEAR\'s first click is a NEW corner 1', () => {

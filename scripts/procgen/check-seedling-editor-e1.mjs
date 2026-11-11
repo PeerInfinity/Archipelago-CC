@@ -207,8 +207,8 @@ async function main() {
          * ⛓⛓ editor-corner-reset — A CORNER BELONGS TO THE TOOL THAT SET IT. `l`, click A, `x`, click B used to
          * CLEAR the rectangle A–B from FILL's corner. Now CLEAR's first click is its own corner 1, nothing is
          * applied, and the switch to CLEAR stops drawing FILL's corner mark (`#ffd75f` on the view's overlay).
-         * MUTANT: the B1 clause in `changed()` (drop only when the new tool is neither FILL nor CLEAR) — CLEAR
-         * applies a 2x1 rectangle, edits 3. MUTANT: no drop in `setTool` — A's mark is still drawn after `x`.
+         * MUTANT: base (B1's drop in `changed()`, only when the new tool is neither FILL nor CLEAR) — CLEAR
+         * applies a 2x1 rectangle, edits 3, and A's mark is still drawn after `x` (3 red, measured).
          */
         const markAt = ({ tx, ty }) => page.evaluate(({ x, y }) => {
             const o = document.querySelector('.editorViewOverlay');

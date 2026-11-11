@@ -626,15 +626,10 @@ export function mountEditorView({
     const repaint = () => overlay.paint(shapes());
 
     /**
-     * ⛓ EVERY `onChange` GOES THROUGH HERE. B1 — a FILL/CLEAR corner dies with
-     * its tool, as RECT's does, and at the moment the Seedling page dropped it:
-     * when the change is reported, before the page hears of it.
-     * ⛔ ITS OWN tool, not "FILL or CLEAR": a switch between the two used to keep
-     * the corner, so `l`, click, `x`, click CLEARED a rectangle from FILL's
-     * corner (editor-corner-reset). Re-arming the SAME tool keeps it.
+     * ⛓ EVERY `onChange` GOES THROUGH HERE. (B1 dropped a FILL/CLEAR corner here;
+     * editor-corner-reset moved that into `setTool`, the one place the tool changes.)
      */
     const changed = (c) => {
-        if (editCorner && c.tool !== editCorner.owner) editCorner = null;
         if (onChange) onChange(c);
     };
 
@@ -892,8 +887,11 @@ export function mountEditorView({
         tool = t;
         corner = null;
         stroke = null;
-        // ⛓ editor-corner-reset — before the repaint, so the switch does not draw a corner the new
-        //   tool does not hold (B1 kept E1's order, which left it on screen until the next gesture).
+        // ⛓ editor-corner-reset — a FILL/CLEAR corner dies with ITS OWN tool: any switch to another
+        //   tool (FILL↔CLEAR and Escape included) drops it; re-arming the same tool keeps it. B1 dropped
+        //   it in `changed()` unless the new tool was FILL or CLEAR, so `l`, click, `x`, click CLEARED
+        //   from FILL's corner. ⛔ Before the repaint, so the switch does not draw a corner the new tool
+        //   does not hold (B1 kept E1's order, which left it on screen until the next gesture).
         if (editCorner && t !== editCorner.owner) editCorner = null;
         repaint();
         changed({ session, result: null, tool, clip });
