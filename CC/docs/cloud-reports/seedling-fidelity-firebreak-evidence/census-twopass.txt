@@ -1,0 +1,61 @@
+{"src":"rockjobs.json","i":0,"key":"level_0__r2c13 <- in_L89_160_304 => breakablerock@192,32 {0,3}","segTicks":92,"verdict":"SOLVED","ticks":92,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":2,"key":"level_0__r7c6 <- in_L2_48_16 => breakablerock@192,32 {0,3}","segTicks":349,"verdict":"SOLVED","ticks":349,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":3,"key":"level_0__r7c6 <- in_L13_64_144 => breakablerock@192,32 {0,3}","segTicks":391,"verdict":"SOLVED","ticks":391,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":4,"key":"level_0__r7c6 <- in_L86_48_64 => breakablerock@192,32 {0,3}","segTicks":457,"verdict":"SOLVED","ticks":457,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":5,"key":"level_0__r7c6 <- in_L94_304_160 => breakablerock@192,32 {0,3}","segTicks":406,"verdict":"SOLVED","ticks":406,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":6,"key":"level_0__r7c6 <- in_L94_304_176 => breakablerock@192,32 {0,3}","segTicks":405,"verdict":"SOLVED","ticks":405,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":7,"key":"level_0__r7c6 <- start => breakablerock@192,32 {0,3}","segTicks":352,"verdict":"SOLVED","ticks":352,"hits":0,"breaks":["breakablerock@192,32:fire"]}
+{"src":"rockjobs.json","i":9,"key":"level_0__r2c13 <- in_L89_160_304 => breakablerock@288,176 {0,1}","segTicks":256,"verdict":"SOLVED","ticks":256,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":11,"key":"level_0__r7c6 <- in_L2_48_16 => breakablerock@288,176 {0,1}","segTicks":125,"verdict":"SOLVED","ticks":125,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":12,"key":"level_0__r7c6 <- in_L13_64_144 => breakablerock@288,176 {0,1}","segTicks":289,"verdict":"SOLVED","ticks":289,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":13,"key":"level_0__r7c6 <- in_L86_48_64 => breakablerock@288,176 {0,1}","segTicks":244,"verdict":"SOLVED","ticks":244,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":14,"key":"level_0__r7c6 <- in_L94_304_160 => breakablerock@288,176 {0,1}","segTicks":314,"verdict":"SOLVED","ticks":314,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":15,"key":"level_0__r7c6 <- in_L94_304_176 => breakablerock@288,176 {0,1}","segTicks":319,"verdict":"SOLVED","ticks":319,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":16,"key":"level_0__r7c6 <- start => breakablerock@288,176 {0,1}","segTicks":260,"verdict":"SOLVED","ticks":260,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rockjobs.json","i":18,"key":"level_0__r2c13 <- in_L89_160_304 => breakablerock@80,112 {0,4}","segTicks":352,"verdict":"SOLVED","ticks":352,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":20,"key":"level_0__r7c6 <- in_L2_48_16 => breakablerock@80,112 {0,4}","segTicks":185,"verdict":"SOLVED","ticks":188,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":21,"key":"level_0__r7c6 <- in_L13_64_144 => breakablerock@80,112 {0,4}","segTicks":105,"verdict":"SOLVED","ticks":108,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":22,"key":"level_0__r7c6 <- in_L86_48_64 => breakablerock@80,112 {0,4}","segTicks":251,"verdict":"SOLVED","ticks":254,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":23,"key":"level_0__r7c6 <- in_L94_304_160 => breakablerock@80,112 {0,4}","segTicks":63,"verdict":"SOLVED","ticks":66,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":24,"key":"level_0__r7c6 <- in_L94_304_176 => breakablerock@80,112 {0,4}","segTicks":69,"verdict":"SOLVED","ticks":72,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":25,"key":"level_0__r7c6 <- start => breakablerock@80,112 {0,4}","segTicks":20,"verdict":"SOLVED","ticks":23,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rockjobs.json","i":27,"key":"level_3__r0c4 <- in_L2_48_96 => breakablerock@96,112 {3,0}","segTicks":150,"verdict":"SOLVED","ticks":153,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"rockjobs.json","i":28,"key":"level_3__r0c4 <- in_L4_0_16 => breakablerock@96,112 {3,0}","segTicks":103,"verdict":"SOLVED","ticks":103,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"rockjobs.json","i":29,"key":"level_3__r0c4 <- in_L111_304_176 => breakablerock@96,112 {3,0}","segTicks":89,"verdict":"SOLVED","ticks":89,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"rockjobs.json","i":30,"key":"level_3__r8c6 <- in_L11_32_0 => breakablerock@96,112 {3,0}","segTicks":23,"verdict":"SOLVED","ticks":23,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"rockjobs.json","i":35,"key":"level_15__r1c5 <- in_L14_32_64 => breakablerock@96,80 {15,2}","segTicks":156,"verdict":"SOLVED","ticks":156,"hits":0,"breaks":["breakablerock@96,80:fire"]}
+{"src":"rockjobs.json","i":36,"key":"level_15__r1c9 <- in_L16_16_64 => breakablerock@96,80 {15,2}","segTicks":215,"verdict":"SOLVED","ticks":215,"hits":0,"breaks":["breakablerock@96,80:fire"]}
+{"src":"rockjobs.json","i":37,"key":"level_15__r1c5 <- in_L14_32_64 => breakablerock@96,16 {15,3}","segTicks":234,"verdict":"SOLVED","ticks":234,"hits":0,"breaks":["breakablerock@96,16:fire"]}
+{"src":"rockjobs.json","i":38,"key":"level_15__r1c9 <- in_L16_16_64 => breakablerock@96,16 {15,3}","segTicks":245,"verdict":"SOLVED","ticks":245,"hits":0,"breaks":["breakablerock@96,16:fire"]}
+{"src":"rockjobs.json","i":42,"key":"level_16__r1c1 <- in_L15_144_16 => breakablerock@96,80 {16,4}","segTicks":83,"verdict":"SOLVED","ticks":83,"hits":0,"breaks":["breakablerock@96,80:fire"]}
+{"src":"rockjobs.json","i":45,"key":"level_16__r1c1 <- in_L15_144_16 => breakablerock@96,64 {16,3}","segTicks":84,"verdict":"SOLVED","ticks":84,"hits":0,"breaks":["breakablerock@96,64:fire"]}
+{"src":"rockjobs.json","i":48,"key":"level_16__r1c1 <- in_L15_144_16 => breakablerock@304,64 {16,6}","segTicks":464,"verdict":"SOLVED","ticks":464,"hits":0,"breaks":["breakablerock@304,64:fire"]}
+{"src":"rockjobs.json","i":52,"key":"level_30__r2c10 <- in_L28_304_16 => breakablerock@48,224 {30,1}","segTicks":98,"verdict":"SOLVED","ticks":98,"hits":0,"breaks":["breakablerock@48,224:fire"]}
+{"src":"rockjobs.json","i":53,"key":"level_30__r2c10 <- in_L31_160_384 => breakablerock@48,224 {30,1}","segTicks":160,"verdict":"SOLVED","ticks":160,"hits":0,"breaks":["breakablerock@48,224:fire"]}
+{"src":"rockjobs.json","i":54,"key":"level_30__r2c10 <- in_pit_L32_14_5 => breakablerock@48,224 {30,1}","segTicks":265,"verdict":"SOLVED","ticks":265,"hits":0,"breaks":["breakablerock@48,224:fire"]}
+{"src":"rockjobs.json","i":72,"key":"level_53__r2c2 <- in_L51_176_144 => breakablerock@112,128 {53,0}","segTicks":160,"verdict":"SOLVED","ticks":160,"hits":0,"breaks":["breakablerock@112,128:fire"]}
+{"src":"rockjobs.json","i":88,"key":"level_92__r7c17 <- in_L87_16_32 ~> level_92__r4c2 -> level_91","segTicks":463,"verdict":"SOLVED","ticks":463,"hits":0,"breaks":["breakablerock@256,112:fire","breakablerock@176,48:fire"]}
+{"src":"edgejobs.json","i":4,"key":"level_0__r7c6 <- in_L2_48_16 ~> level_0__r11c19 -> out_teleporter_304_176","segTicks":145,"verdict":"SOLVED","ticks":145,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"edgejobs.json","i":5,"key":"level_0__r7c6 <- in_L13_64_144 ~> level_0__r11c19 -> out_teleporter_304_176","segTicks":310,"verdict":"SOLVED","ticks":310,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"edgejobs.json","i":6,"key":"level_0__r7c6 <- in_L2_48_16 ~> level_0__r6c5 -> out_teleporter_80_96","segTicks":209,"verdict":"SOLVED","ticks":209,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"edgejobs.json","i":7,"key":"level_0__r7c6 <- in_L13_64_144 ~> level_0__r6c5 -> out_teleporter_80_96","segTicks":147,"verdict":"SOLVED","ticks":147,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"edgejobs.json","i":14,"key":"level_3__r0c4 <- in_L2_48_96 ~> level_3__r8c6 -> out_teleporter_96_128","segTicks":172,"verdict":"SOLVED","ticks":172,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"edgejobs.json","i":15,"key":"level_3__r0c4 <- in_L4_0_16 ~> level_3__r8c6 -> out_teleporter_96_128","segTicks":123,"verdict":"SOLVED","ticks":123,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"edgejobs.json","i":17,"key":"level_3__r8c6 <- in_L11_32_0 ~> level_3__r0c4 -> out_teleporter_64_0","segTicks":169,"verdict":"SOLVED","ticks":169,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"rocklegs.json","i":7,"key":"level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared","segTicks":125,"verdict":"SOLVED","ticks":125,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rocklegs.json","i":8,"key":"level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared","segTicks":188,"verdict":"SOLVED","ticks":188,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rocklegs.json","i":14,"key":"level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared","segTicks":289,"verdict":"SOLVED","ticks":289,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rocklegs.json","i":15,"key":"level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared","segTicks":108,"verdict":"SOLVED","ticks":108,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rocklegs.json","i":21,"key":"level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared","segTicks":244,"verdict":"SOLVED","ticks":244,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rocklegs.json","i":22,"key":"level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared","segTicks":254,"verdict":"SOLVED","ticks":254,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rocklegs.json","i":28,"key":"level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared","segTicks":314,"verdict":"SOLVED","ticks":314,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rocklegs.json","i":29,"key":"level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared","segTicks":66,"verdict":"SOLVED","ticks":66,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rocklegs.json","i":35,"key":"level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared","segTicks":319,"verdict":"SOLVED","ticks":319,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rocklegs.json","i":36,"key":"level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared","segTicks":72,"verdict":"SOLVED","ticks":72,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rocklegs.json","i":42,"key":"level_0__r7c6 <- start -> location:L0 flag 1: breakablerock@288,176 cleared","segTicks":260,"verdict":"SOLVED","ticks":260,"hits":0,"breaks":["breakablerock@288,176:fire"]}
+{"src":"rocklegs.json","i":43,"key":"level_0__r7c6 <- start -> location:L0 flag 4: breakablerock@80,112 cleared","segTicks":23,"verdict":"SOLVED","ticks":23,"hits":0,"breaks":["breakablerock@80,112:fire"]}
+{"src":"rocklegs.json","i":54,"key":"level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128","segTicks":36,"verdict":"SOLVED","ticks":36,"hits":0,"breaks":["breakablerock@96,112:fire"]}
+{"src":"rocklegs.json","i":64,"key":"level_30__r2c10 <- in_L28_304_16 -> exit:out_pit_3_34","segTicks":205,"verdict":"SOLVED","ticks":205,"hits":0,"breaks":["breakablerock@48,224:fire"]}
+{"src":"rocklegs.json","i":70,"key":"level_30__r2c10 <- in_L31_160_384 -> exit:out_pit_3_34","segTicks":267,"verdict":"SOLVED","ticks":267,"hits":0,"breaks":["breakablerock@48,224:fire"]}
+{"src":"rocklegs.json","i":76,"key":"level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34","segTicks":372,"verdict":"SOLVED","ticks":372,"hits":0,"breaks":["breakablerock@48,224:fire"]}
+{"SOLVED":60} hits>0 0

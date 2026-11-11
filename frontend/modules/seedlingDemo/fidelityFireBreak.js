@@ -38,6 +38,12 @@ const rockGoal = (level, tag, x, y) => Object.freeze({ kind: 'clear-tag', tag: O
  *                             (the step-off's `break`), steps off through its cell and back on — the crossing to L11
  *   firebreak-l30-pit         L30 from the L28 door's landing (16,128): `breakablerock@48,224` stands on the pit to
  *                             L31; the plan walks the room, breaks it from (40,216) and falls — the crossing to L31
+ *   firebreak-l92-cross       L92 from the L87 door's landing (272,128), Fire with swim, shield, torch and feather: BOTH
+ *                             of the room's rocks (`@256,112` then `@176,48`, each `tag = -1`: no flag the readout
+ *                             holds, so `rocks` is empty and the crossing itself is the reading) and out to L91.
+ *                             ⚠ `arrival: true` — staged by `fidelityArrival.arrivalStaging` (the census's own boot),
+ *                             not `r9-solve-16`'s seam: the room holds a spinner, a jellyfish and a bob, and under that
+ *                             tape's game clock the same request refuses at the spinner's hammer beside (200,72).
  */
 export const FIREBREAK_WITNESSES = Object.freeze([
     Object.freeze({ name: 'firebreak-l0-rock-east', boot: Object.freeze({ level: 0, x: 256, y: 256 }), items: ['hasFire'],
@@ -53,11 +59,19 @@ export const FIREBREAK_WITNESSES = Object.freeze([
     Object.freeze({ name: 'firebreak-l30-pit', boot: Object.freeze({ level: 30, x: 16, y: 128 }), items: ['hasFire'],
         persistence: [], goals: [Object.freeze({ kind: 'reach-pit', pit: Object.freeze({ tx: 3, ty: 14, x: 48, y: 224 }) })],
         rocks: [{ id: 'breakablerock@48,224', tag: 1 }], to: 31 }),
+    Object.freeze({ name: 'firebreak-l92-cross', boot: Object.freeze({ level: 92, x: 272, y: 128 }),
+        items: ['hasFire', 'canSwim', 'hasShield', 'hasTorch', 'hasFeather'], arrival: true, persistence: [],
+        goals: [Object.freeze({ kind: 'reach-exit', exit: Object.freeze({ x: 32, y: 144 }) })],
+        rocks: [], breaks: ['breakablerock@256,112', 'breakablerock@176,48'], to: 91 }),
 ]);
 
 /** A witness's staging: `ropeStaging`'s, with the named slot selected at t0 when the row says `select`. */
 export async function fireBreakStaging(w) {
     const { inventorySlotsFor, INVENTORY_ITEM_IDS } = await import('./tapeFormat.js');
+    if (w.arrival) {
+        const { arrivalStaging } = await import('./fidelityArrival.js');
+        return arrivalStaging(w.boot, { items: w.items });
+    }
     const staging = await ropeStaging(w);
     if (!w.select) return staging;
     const slot = inventorySlotsFor(staging.seam.items).indexOf(INVENTORY_ITEM_IDS[w.select]);
@@ -77,7 +91,7 @@ export async function fireBreakPlan(w, over = FIREBREAK_SWITCHES) {
     const solved = await withContactFidelity(over, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
         goals: w.goals, name: w.name, boot: staging.boot, dashMode: 'all',
-        persistence: staging.persistence, log: () => {},
+        persistence: staging.persistence ?? [], log: () => {},
     }));
     const tape = buildStagedTape({
         staging: { ...staging, persistence: solved.persistence,

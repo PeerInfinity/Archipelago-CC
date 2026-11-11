@@ -1,0 +1,157 @@
+level_0__r11c19 -> level_0__r7c6 [level_0__r11c19 -> level_0__r7c6] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r11c19 -> level_12__r0c19 [level_0__r11c19 -> level_12__r0c19] :: True
+level_0__r14c0 -> level_0__r7c6 [level_0__r14c0 -> level_0__r7c6] :: Progressive Swim
+level_0__r1c6 -> level_0__r2c13 [level_0__r1c6 -> level_0__r2c13] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r2c13 -> level_0__r1c6 [level_0__r2c13 -> level_0__r1c6] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r2c13 -> level_0__r4c16 [level_0__r2c13 -> level_0__r4c16] :: Progressive Swim
+level_0__r2c13 -> level_0__r7c6 [level_0__r2c13 -> level_0__r7c6] :: Progressive Swim
+level_0__r2c13 -> level_89__r11c12 [level_0__r2c13 -> level_89__r11c12] :: Progressive Swim
+level_0__r4c16 -> level_0__r2c13 [level_0__r4c16 -> level_0__r2c13] :: Progressive Swim
+level_0__r4c16 -> level_0__r7c6 [level_0__r4c16 -> level_0__r7c6] :: Progressive Swim
+level_0__r6c5 -> level_0__r7c6 [level_0__r6c5 -> level_0__r7c6] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r6c5 -> level_1 [level_0__r6c5 -> level_1] :: True
+level_0__r7c6 -> level_0__r11c19 [level_0__r7c6 -> level_0__r11c19] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r7c6 -> level_0__r14c0 [level_0__r7c6 -> level_0__r14c0] :: Progressive Swim
+level_0__r7c6 -> level_0__r6c5 [level_0__r7c6 -> level_0__r6c5] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r7c6 -> level_0__r2c13 [level_0__r7c6 -> level_0__r2c13] :: Progressive Swimx2
+level_0__r7c6 -> level_0__r4c16 [level_0__r7c6 -> level_0__r4c16] :: Progressive Swimx2
+level_0__r7c6 -> level_94__r2c16 [level_0__r7c6 -> level_94__r2c16] :: True
+level_0__r7c6 -> level_94__r2c16 [level_0__r7c6 -> level_94__r2c16 #2] :: True
+level_0__r7c6 -> level_13 [level_0__r7c6 -> level_13] :: True
+level_0__r7c6 -> level_86 [level_0__r7c6 -> level_86] :: True
+level_0__r7c6 -> level_2 [level_0__r7c6 -> level_2] :: True
+level_0__r7c6 @ L0 flag 1: breakablerock@288,176 cleared :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_0__r7c6 @ L0 flag 4: breakablerock@80,112 cleared :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_100__r2c3 -> level_100__r4c10 [level_100__r2c3 -> level_100__r4c10] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_100__r2c3 -> level_99__r2c4 [level_100__r2c3 -> level_99__r2c4] :: True
+level_100__r4c10 -> level_100__r2c3 [level_100__r4c10 -> level_100__r2c3] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_100__r4c10 -> level_101__r4c2 [level_100__r4c10 -> level_101__r4c2] :: True
+level_101__r0c6 -> level_101__r4c2 [level_101__r0c6 -> level_101__r4c2] :: {"rule": "HasAll", "args": {"item_names": ["Fire", "Fire Wand Fusion", "Wand"]}}
+level_101__r0c6 -> level_110 [level_101__r0c6 -> level_110] :: True
+level_101__r4c2 -> level_101__r0c6 [level_101__r4c2 -> level_101__r0c6] :: {"rule": "HasAll", "args": {"item_names": ["Fire", "Fire Wand Fusion", "Wand"]}}
+level_101__r4c2 -> level_101__r4c9 [level_101__r4c2 -> level_101__r4c9] :: {"rule": "HasAll", "args": {"item_names": ["Ghost Spear", "Ghost Sword Fusion", "Progressive Sword"]}}
+level_101__r4c2 -> level_102__r5c3 [level_101__r4c2 -> level_102__r5c3] :: True
+level_101__r4c2 @ L101 flag 0: lightpole@144,64 cleared :: Ghost Spear
+level_101__r4c9 -> level_101__r4c2 [level_101__r4c9 -> level_101__r4c2] :: {"rule": "HasAll", "args": {"item_names": ["Ghost Spear", "Ghost Sword Fusion", "Progressive Sword"]}}
+level_101__r4c9 -> level_102__r5c9 [level_101__r4c9 -> level_102__r5c9] :: L101 flag 0: lightpole@144,64 cleared
+level_15__r1c5 -> level_15__r1c9 [level_15__r1c5 -> level_15__r1c9] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Swim", "Progressive Sword"]}}
+level_15__r1c5 -> level_15__r6c8 [level_15__r1c5 -> level_15__r6c8] :: Progressive Swim
+level_15__r1c5 -> level_14 [level_15__r1c5 -> level_14] :: True
+level_15__r1c9 -> level_15__r1c5 [level_15__r1c9 -> level_15__r1c5] :: Or(And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Progressive Swim), Progressive Swim)
+level_15__r1c9 -> level_15__r6c8 [level_15__r1c9 -> level_15__r6c8] :: Progressive Swim
+level_15__r1c9 -> level_16__r1c1 [level_15__r1c9 -> level_16__r1c1] :: True
+level_15__r6c8 -> level_15__r1c5 [level_15__r6c8 -> level_15__r1c5] :: Progressive Swim
+level_15__r6c8 -> level_15__r1c9 [level_15__r6c8 -> level_15__r1c9] :: Progressive Swim
+level_15__r6c8 @ Level 015 - Chest :: True
+level_16__r1c1 -> level_16__r1c9 [level_16__r1c1 -> level_16__r1c9] :: L16 flag 0: rope@32,16 cleared
+level_16__r1c1 -> level_16__r3c7 [level_16__r1c1 -> level_16__r3c7] :: L16 flag 0: rope@32,16 cleared
+level_16__r1c1 -> level_16__r6c8 [level_16__r1c1 -> level_16__r6c8] :: L16 flag 0: rope@32,16 cleared
+level_16__r1c1 -> level_15__r1c9 [level_16__r1c1 -> level_15__r1c9] :: True
+level_16__r1c1 @ L16 flag 0: rope@32,16 cleared :: {"rule": "HasAny", "args": {"item_names": ["Fire", "Ghost Spear", "Progressive Sword"]}}
+level_16__r1c9 -> level_16__r1c1 [level_16__r1c9 -> level_16__r1c1] :: L16 flag 0: rope@32,16 cleared
+level_16__r1c9 -> level_16__r3c7 [level_16__r1c9 -> level_16__r3c7] :: L16 flag 0: rope@32,16 cleared
+level_16__r1c9 -> level_16__r4c21 [level_16__r1c9 -> level_16__r4c21] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_16__r1c9 -> level_16__r6c8 [level_16__r1c9 -> level_16__r6c8] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, L16 flag 0: rope@32,16 cleared)
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17] :: True
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17 #2] :: True
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17 #3] :: True
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17 #4] :: True
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17 #5] :: True
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17 #6] :: True
+level_16__r1c9 -> level_17 [level_16__r1c9 -> level_17 #7] :: True
+level_16__r3c7 -> level_16__r1c1 [level_16__r3c7 -> level_16__r1c1] :: L16 flag 0: rope@32,16 cleared
+level_16__r3c7 -> level_16__r1c9 [level_16__r3c7 -> level_16__r1c9] :: L16 flag 0: rope@32,16 cleared
+level_16__r3c7 -> level_16__r6c8 [level_16__r3c7 -> level_16__r6c8] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, L16 flag 0: rope@32,16 cleared)
+level_16__r3c7 -> level_17 [level_16__r3c7 -> level_17] :: True
+level_16__r4c21 -> level_18__r1c1 [level_16__r4c21 -> level_18__r1c1] :: True
+level_16__r6c8 -> level_16__r1c1 [level_16__r6c8 -> level_16__r1c1] :: L16 flag 0: rope@32,16 cleared
+level_16__r6c8 -> level_16__r1c9 [level_16__r6c8 -> level_16__r1c9] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, L16 flag 0: rope@32,16 cleared)
+level_16__r6c8 -> level_16__r3c7 [level_16__r6c8 -> level_16__r3c7] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, L16 flag 0: rope@32,16 cleared)
+level_30__r0c4 -> level_30__r2c10 [level_30__r0c4 -> level_30__r2c10] :: {"rule": "HasAll", "args": {"item_names": ["Green Key", "L30 flag 0: bosslock@64,32 cleared"]}}
+level_30__r0c4 -> level_22 [level_30__r0c4 -> level_22] :: True
+level_30__r16c17 -> level_30__r17c11 [level_30__r16c17 -> level_30__r17c11] :: Progressive Swim
+level_30__r16c17 -> level_30__r2c10 [level_30__r16c17 -> level_30__r2c10] :: Progressive Swim
+level_30__r17c11 -> level_30__r16c17 [level_30__r17c11 -> level_30__r16c17] :: Progressive Swim
+level_30__r17c11 -> level_30__r2c10 [level_30__r17c11 -> level_30__r2c10] :: Progressive Swim
+level_30__r2c10 -> level_30__r16c17 [level_30__r2c10 -> level_30__r16c17] :: Progressive Swim
+level_30__r2c10 -> level_30__r17c11 [level_30__r2c10 -> level_30__r17c11] :: Progressive Swim
+level_30__r2c10 -> level_30__r0c4 [level_30__r2c10 -> level_30__r0c4] :: Green Key
+level_30__r2c10 -> level_30__r8c13 [level_30__r2c10 -> level_30__r8c13] :: Green Key
+level_30__r2c10 -> level_28__r1c18 [level_30__r2c10 -> level_28__r1c18] :: True
+level_30__r2c10 -> level_31__r24c10 [level_30__r2c10 -> level_31__r24c10] :: True
+level_30__r2c10 -> level_31__r5c24 [level_30__r2c10 -> level_31__r5c24] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_30__r2c10 @ Level 030 - Torchpickup :: True
+level_30__r2c10 @ L30 flag 0: bosslock@64,32 cleared :: Green Key
+level_30__r2c10 @ L30 flag 2: bosslock@224,208 cleared :: Green Key
+level_30__r8c13 -> level_30__r2c10 [level_30__r8c13 -> level_30__r2c10] :: {"rule": "HasAll", "args": {"item_names": ["Green Key", "L30 flag 2: bosslock@224,208 cleared"]}}
+level_30__r8c13 -> level_32 [level_30__r8c13 -> level_32] :: True
+level_3__r0c4 -> level_3__r8c6 [level_3__r0c4 -> level_3__r8c6] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_3__r0c4 -> level_111 [level_3__r0c4 -> level_111] :: {"rule": "HasAll", "args": {"item_names": ["Ghost Spear", "Ghost Sword Fusion", "Progressive Swim", "Progressive Sword"]}}
+level_3__r0c4 -> level_2 [level_3__r0c4 -> level_2] :: True
+level_3__r0c4 -> level_4 [level_3__r0c4 -> level_4] :: True
+level_3__r8c6 -> level_3__r0c4 [level_3__r8c6 -> level_3__r0c4] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_3__r8c6 -> level_11 [level_3__r8c6 -> level_11] :: True
+level_40__r0c53 -> level_40__r23c29 [level_40__r0c53 -> level_40__r23c29] :: {"rule": "HasAll", "args": {"item_names": ["L40 flag 8: bosslock@480,352 cleared", "Purple Key"]}}
+level_40__r0c53 -> level_42 [level_40__r0c53 -> level_42] :: True
+level_40__r0c53 -> level_41__r4c3 [level_40__r0c53 -> level_41__r4c3] :: True
+level_40__r0c53 @ Level 040 - Totem Part 64,144 :: True
+level_40__r0c53 @ L40 flag 1: wandlock@176,80 cleared :: True
+level_40__r0c53 @ L40 flag 7: wandlock@208,128 cleared :: True
+level_40__r23c29 -> level_40__r0c53 [level_40__r23c29 -> level_40__r0c53] :: Purple Key
+level_40__r23c29 -> level_40__r32c36 [level_40__r23c29 -> level_40__r32c36] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r23c29 -> level_40__r36c35 [level_40__r23c29 -> level_40__r36c35] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r23c29 -> level_40__r48c54 [level_40__r23c29 -> level_40__r48c54] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7] :: True
+level_40__r23c29 -> level_39__r0c9 [level_40__r23c29 -> level_39__r0c9] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #2] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #3] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #4] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #5] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #6] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #7] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #8] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #9] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #10] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #11] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #12] :: True
+level_40__r23c29 -> level_43__r13c7 [level_40__r23c29 -> level_43__r13c7 #13] :: True
+level_40__r23c29 @ Level 040 - Totem Part 160,640 :: True
+level_40__r23c29 @ Level 040 - Chest :: True
+level_40__r23c29 @ L40 flag 8: bosslock@480,352 cleared :: Purple Key
+level_40__r32c36 -> level_40__r23c29 [level_40__r32c36 -> level_40__r23c29] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r32c36 -> level_40__r36c35 [level_40__r32c36 -> level_40__r36c35] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r32c36 @ Level 040 - Boss Key 2 :: True
+level_40__r36c35 -> level_40__r23c29 [level_40__r36c35 -> level_40__r23c29] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r36c35 -> level_40__r32c36 [level_40__r36c35 -> level_40__r32c36] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r48c54 -> level_40__r23c29 [level_40__r48c54 -> level_40__r23c29] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_40__r48c54 @ L40 flag 12: wandlock@480,560 cleared :: True
+level_41__r4c15 -> level_41__r4c3 [level_41__r4c15 -> level_41__r4c3] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_41__r4c15 -> level_41__r7c15 [level_41__r4c15 -> level_41__r7c15] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Fire)
+level_41__r4c3 -> level_41__r4c15 [level_41__r4c3 -> level_41__r4c15] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_41__r4c3 -> level_40__r0c53 [level_41__r4c3 -> level_40__r0c53] :: True
+level_41__r7c15 -> level_41__r4c15 [level_41__r7c15 -> level_41__r4c15] :: True
+level_41__r7c15 @ Level 041 - Totem Part 240,144 :: True
+level_53__r14c9 -> level_53__r9c10 [level_53__r14c9 -> level_53__r9c10] :: And({"rule": "HasAnyCount", "args": {"item_counts": {"Progressive Shield": 2, "Ghost Spear": 1, "Progressive Sword": 1, "Wand": 1}}}, L53 flag 2: lock@144,208 cleared)
+level_53__r14c9 -> level_54__r1c8 [level_53__r14c9 -> level_54__r1c8] :: Progressive Swim
+level_53__r2c2 -> level_53__r9c10 [level_53__r2c2 -> level_53__r9c10] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Progressive Swim)
+level_53__r2c2 -> level_51__r3c10 [level_53__r2c2 -> level_51__r3c10] :: True
+level_53__r2c2 -> level_48__r7c0 [level_53__r2c2 -> level_48__r7c0] :: Progressive Swim
+level_53__r9c10 -> level_53__r2c2 [level_53__r9c10 -> level_53__r2c2] :: And({"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}, Progressive Swim)
+level_53__r9c10 -> level_53__r14c9 [level_53__r9c10 -> level_53__r14c9] :: {"rule": "HasAnyCount", "args": {"item_counts": {"Progressive Shield": 2, "Ghost Spear": 1, "Progressive Sword": 1, "Wand": 1}}}
+level_53__r9c10 @ L53 flag 2: lock@144,208 cleared :: {"rule": "HasAnyCount", "args": {"item_counts": {"Progressive Shield": 2, "Ghost Spear": 1, "Progressive Sword": 1, "Wand": 1}}}
+level_73__r0c4 -> level_73__r3c7 [level_73__r0c4 -> level_73__r3c7] :: {"rule": "HasAny", "args": {"item_names": ["Dark Suit", "Ghost Spear", "Progressive Sword"]}}
+level_73__r0c4 -> level_74 [level_73__r0c4 -> level_74] :: True
+level_73__r3c7 -> level_73__r0c4 [level_73__r3c7 -> level_73__r0c4] :: {"rule": "HasAny", "args": {"item_names": ["Dark Suit", "Ghost Spear", "Progressive Sword"]}}
+level_73__r3c7 -> level_72 [level_73__r3c7 -> level_72] :: True
+level_92__r1c7 -> level_92__r3c12 [level_92__r1c7 -> level_92__r3c12] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_92__r1c7 -> level_92__r4c2 [level_92__r1c7 -> level_92__r4c2] :: Progressive Swim
+level_92__r1c7 -> level_92__r7c8 [level_92__r1c7 -> level_92__r7c8] :: Progressive Swim
+level_92__r3c12 -> level_92__r1c7 [level_92__r3c12 -> level_92__r1c7] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_92__r3c12 -> level_92__r7c17 [level_92__r3c12 -> level_92__r7c17] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_92__r4c2 -> level_92__r1c7 [level_92__r4c2 -> level_92__r1c7] :: Progressive Swim
+level_92__r4c2 -> level_92__r7c8 [level_92__r4c2 -> level_92__r7c8] :: Progressive Swim
+level_92__r4c2 -> level_91 [level_92__r4c2 -> level_91] :: True
+level_92__r7c17 -> level_92__r3c12 [level_92__r7c17 -> level_92__r3c12] :: {"rule": "HasAny", "args": {"item_names": ["Ghost Spear", "Progressive Sword"]}}
+level_92__r7c17 -> level_87__r1c3 [level_92__r7c17 -> level_87__r1c3] :: True
+level_92__r7c8 -> level_92__r1c7 [level_92__r7c8 -> level_92__r1c7] :: Progressive Swim
+level_92__r7c8 -> level_92__r4c2 [level_92__r7c8 -> level_92__r4c2] :: Progressive Swim

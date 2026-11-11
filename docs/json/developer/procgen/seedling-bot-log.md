@@ -28091,3 +28091,45 @@ same request on the worker's dispatch before calling its loss a regression (871'
 (2) A golden computed from a tape moves when the tape is re-recorded, whatever the switch: grep a re-recorded tape's
 name in the tests before the push, not after CI. (3) A refusal that appears two ticks after a kill may be the ladder
 meeting the body it just killed: check the named danger's `hits` before reading it as a live chaser.
+
+### Seedling fidelity FIREBREAK — the `break` verb takes Fire for a run that holds no Sword (`fireBreakArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 40 (⚖ the user 2026-11-11, *"Fire break + fencepost now"*). Base
+`4bbf15fea9` (main, train 91: 131 keys, 121 default-ON). The report is
+`CC/docs/cloud-reports/seedling-fidelity-firebreak.md`.
+
+**W0.** ROCKFIRE left the run able to step a Fire press that breaks a rock (`fireRockArm`, ON) and the solver unable
+to plan one: `resolveBreakStrategy` refused every run whose selected slot was not the Sword or a modelled Ghost Sword,
+and every Fire stance planner treats a rock in the flame as a stray. Measured from tile centres, each shipped rock's
+3x3 ring reaches it; what differs is what else the flame reaches. L0's three, L3's `@96,112`, L15's two, L16's
+`@96,64`, `@96,80` and `@304,64`, L30's, L53's two, L73's, L92's two and L100's have a cell that reaches the rock
+alone; every cell beside L40's three and L41's two also reaches a second rock (and L40's, spinners), and L16's
+`@112,80` has one clean cell, on its far side. The rules name `HasAny(Ghost Spear, Progressive Sword)` on every
+rock-gated edge and on L0's two rock events; none names Fire. No leg of the divergence derivation (934) and no leg of
+the survey route (54) holds Fire without the Sword, so neither instrument can see this arm: the census is its own
+(`evidence/census-*.txt`).
+
+**D1** (`fireBreakArm`, OFF, last key, `SEEDLING_FIRE_BREAK_ARM`): `fireBreakAdmits` (the run holds Fire, not the Fire
+Wand, and neither the Sword nor the Ghost Sword), `resolveFireBreak` (the rock's own test, then a stance whose flame
+reaches that rock and nothing else, out of static danger volumes, reachable directly or under the hypothesis without
+this rock) and `execFireBreak` (settle, lean, re-ask the audit, certify the press and its wait hit-free on a fork,
+select the Fire's slot, press once, wait `FIRE_BREAK_WAIT_TICKS` = 23, restore the slot). `rockHypothesis` and the
+step-off's `break` admit the same run. A Ghost Sword held without the Sword is NOT admitted: admitted, L0's west rock
+turned today's named refusal into `levelRun`'s throw at tick 0 (the walk's strike policy presses the ghost slot). The
+certificate came from the census: L73 from the L72 landing pressed at t101 and `bulb@80,80` hit the standing player at
+t115; with the certificate that order refuses naming the bulb. 29 rows, nine mutants red as predicted.
+
+**D2** (the game, p4g, headless): `probe-seedling-fire-break.mjs --record`, six solver plans in
+`fixtures/firebreak-witness/`, each 0 px on every sampled tick with the rock flag on the model's `goneAt + 1` and no
+hit: L0's east and west flagged rocks, the east rock with the Wand selected (the Fire slot selected for the press and
+the Wand's restored), L3's pocket (the rock broken from the latched door, then the crossing to L11), L30's rock on
+the pit (the fall to L31), and L92 from the L87 landing (both `tag = -1` rocks, out to L91, 466 ticks beside a
+spinner, a jellyfish and a bob). ON, a Fire-and-no-Sword run solves 60 census requests OFF refuses (37 of 89
+rock-by-arrival clear-tags, 7 of 20 edge crossings, 16 of 174 legs), every one hitless, the same 60 through
+`twoPassSolve`. The survey's 33 rock-room steps are byte-identical ON and OFF.
+
+**Trap candidates.** (1) A harness that calls `solveSegment` without `forkRun` runs every fork-certified verb
+uncertified: the census took a hit the page's solve would have refused. Pass `forkRun` wherever a result is quoted.
+(2) A request is its staging: L92's crossing solves from `arrivalStaging` and refuses under `r9-solve-16`'s seam clock
+(the spinner's phase). Name the staging beside a verdict. (3) An admission keyed on "holds no Sword" has to read
+`hasGhostSword` too: the strike policy presses that slot on a walk, and `levelRun` throws on it without the Sword.

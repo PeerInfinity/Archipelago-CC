@@ -74,8 +74,9 @@ async function main() {
         if (only && !only.includes(w.name)) continue;
         const { solved, tape } = await fireBreakPlan(w);
         const breaks = solved.out.records.filter((r) => r.strategy === 'break' || r.verb === 'break');
-        check(`${w.name}: the plan breaks ${w.rocks.map((r) => r.id).join(', ')} with Fire`,
-            w.rocks.every((r) => breaks.some((b) => b.target === r.id && b.weapon === 'fire')),
+        const wanted = w.breaks ?? w.rocks.map((r) => r.id);
+        check(`${w.name}: the plan breaks ${wanted.join(', ')} with Fire`,
+            wanted.length > 0 && wanted.every((id) => breaks.some((b) => b.target === id && b.weapon === 'fire')),
             `${solved.out.perTick.length} t; ${breaks.map((b) => `${b.target} ${b.weapon} press t${b.pressedAt} from `
                 + `(${b.stance ? `${b.stance.x},${b.stance.y}` : 'the live position'})${b.lean ? ` lean ${b.lean}` : ''}`).join('; ')}`);
         const model = await fireBreakModelSamples(tape);
