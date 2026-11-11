@@ -17,7 +17,8 @@ RECIPES_FILE = os.path.join('scripts', 'data', 'worldgen-package-recipes.json')
 
 
 def world_generator_command(rules_path: str, output_dir: str, game_name: str,
-                            canonical_seed: Optional[int] = None) -> List[str]:
+                            canonical_seed: Optional[int] = None,
+                            victory_location: bool = False) -> List[str]:
     """The world_generator invocation for one package (always with name substitutions)."""
     cmd = [
         sys.executable, '-m', 'world_generator',
@@ -29,6 +30,8 @@ def world_generator_command(rules_path: str, output_dir: str, game_name: str,
     ]
     if canonical_seed is not None:
         cmd.extend(['--canonical-seed', str(canonical_seed)])
+    if victory_location:
+        cmd.append('--victory-location')
     return cmd
 
 
@@ -81,7 +84,8 @@ def regenerate_and_compare(project_root: str, package: str, recipe: Dict, scratc
     the committed `worlds/<package>` (empty = fresh). Raises RuntimeError when the generator fails."""
     import subprocess
     output_dir = os.path.join(scratch_dir, package)
-    cmd = world_generator_command(recipe['source'], output_dir, recipe['game_name'], recipe.get('canonical_seed'))
+    cmd = world_generator_command(recipe['source'], output_dir, recipe['game_name'], recipe.get('canonical_seed'),
+                                  recipe.get('victory_location', False))
     result = subprocess.run(cmd, cwd=project_root, capture_output=True, text=True, timeout=300)
     if result.returncode != 0:
         raise RuntimeError(f'world_generator failed for {package} (rc {result.returncode}): '
