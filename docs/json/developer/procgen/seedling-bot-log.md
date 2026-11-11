@@ -28091,3 +28091,36 @@ same request on the worker's dispatch before calling its loss a regression (871'
 (2) A golden computed from a tape moves when the tape is re-recorded, whatever the switch: grep a re-recorded tape's
 name in the tests before the push, not after CI. (3) A refusal that appears two ticks after a kill may be the ladder
 meeting the body it just killed: check the named danger's `hits` before reading it as a live chaser.
+
+### Seedling fidelity FENCEPOST — a faded-out spinner leaves the roster on the game's read (`spinnerRemoveRead`, OFF); the flip moves kill plans and is not made
+
+Planner `seedling-fidelity-planning-19`, wave 40 (⚖ the user's GO 2026-11-11, *"Fire break + fencepost now"*). Base
+`4bbf15fea9`. The report is `CC/docs/cloud-reports/seedling-fidelity-fencepost.md`.
+
+**W0.** L39PHANTOM's residue 1 holds, and the cause is one line of FlashPunk: `Engine.update` is `World.update();
+World.updateLists();` (`net/flashpunk/Engine.as:70-78`), so a spinner whose `Mobile.death` reached `alpha <= 0` is out of
+the world, with `Spinner.removed()` run, at the END of that update. `stepSpinner` says `removePending` on that step and
+`removed` at the top of the next, so every between-ticks read keeps the corpse for one observation. Four levels hold a
+spinner (L18, L39, L40, L92). Of the 293 committed tapes, 14 cross a spinner death and hold 25 corpse reads
+(`evidence/tools/tape-death-census.mjs`). ⚠ Read on the way, not fixed: `dangerMap.spinnerDanger` pairs roster bodies
+with forecast rows BY INDEX, so on the corpse read (and on any read whose horizon holds a removal) every body listed
+after the corpse is priced at another body's forecast rect.
+
+**D1** (`spinnerRemoveRead`, OFF, last key, `SEEDLING_SPINNER_REMOVE_READ`): `levelRun.advance`'s body is one arrow and
+`settleSpinnerRemovalsNow` runs below it, the tick's own `updateLists()`: a `removePending` body of the state this tick
+stepped becomes `removed`, after the contact and the block sweep have read it. `spinner.js` is unchanged. ⚠ The first
+cut left the removal's write loop (`spinnerWrites`, the banked clear, the kill-lock declaration) on the next tick; with
+the key ON `solverBot`'s kill verb, which ends on the roster and then asks `spinnerKillLockOpens`, threw *"recorded
+NOTHING"* in L18. The loop is now one arrow with two callers (in place, as before; the settle, ON) and stamps the same
+values either way, so the roster and the ledger move together. ON, the L39PHANTOM game witness has ZERO fencepost
+ticks (the model's readout is the game's: destroy t1267, last listed t1277, gone t1278), and all 293 committed tapes
+replay to byte-identical streams with 0 corpse reads. Mutants M1, M2, M3, M5 red; M4's source-shape prediction was wrong
+(seven other rows caught it).
+
+**D2** (ON, measured; the flip is NOT made): nothing stepped moves, but a PLAN does — the kill verb ends one tick
+sooner per spinner death, and the hammer's 45-tick phase turns that tick into more in L18/L39/L40. Three producers
+drift (`r8-l18`, `r8-d2-chain`, `r9-campaign`: `r8-solve-18` three input rows one tick sooner at 467 ticks,
+`r9-solve-18` 390 → 440), the acceptance batch md5 moves (one row, 232 → 231), 26 bounded vitest rows and most of the
+L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 spinner-room steps keep their verdicts (9
+SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
+hammer arc's signature on its pins, so it waits for a licence.
