@@ -28,13 +28,13 @@ import { installPlaybackBridge } from './playbackBridge.js';
 import { roomAccessibility } from './roomAccessibility.js';
 import { markRuleErrors } from './ruleErrorMarker.js';
 import {
-    customRegionEnterMessage,
     customLocationCheckMessage,
     customLocationInaccessibleMessage,
     customLocationAlreadyCheckedMessage,
     customExitMoveMessage,
     customExitInaccessibleMessage,
     composeProse,
+    arrivalLine,
 } from './templating.js';
 
 const statusEl = document.getElementById('status');
@@ -111,6 +111,29 @@ function captureRegionProse(regionName, world) {
     const exits = world?.exits instanceof Map ? [...world.exits.values()] : (world?.exits ?? []);
     for (const e of exits) if (e?.exit_id) names.set(e.exit_id, e.exitName ?? e.exit_id);
     _regionProse.set(regionName, { prose, exitNameOf: (id) => names.get(id) ?? id });
+}
+
+/**
+ * ⛓ CONTENT SETS R1 — the room's own PLACE, from its payload prose: `{name?,
+ * description?}` (a theme's `place` concept, baked at generation). Read off the
+ * region's payload only — the per-game file's `regions.<name>.description` is
+ * not a world document and stays unread.
+ */
+function ownPlaceOf(regionName) {
+    const prose = _regionProse.get(regionName)?.prose;
+    const text = (v) => (typeof v === 'string' && v !== '' ? v : null);
+    return { name: text(prose?.name), description: text(prose?.description) };
+}
+
+/**
+ * ⛓ CONTENT SETS R1 — a room's title is its place's name when its payload
+ * carries one, else its region id (as before). Applied to the engine's room
+ * when the world is built and whenever a region's payload arrives.
+ */
+function applyOwnPlaceToWorld(regionName) {
+    const room = _activeWorld?.rooms?.[regionName];
+    if (!room) return;
+    room.title = ownPlaceOf(regionName).name ?? regionName;
 }
 
 /** The prose document for one room: its payload prose laid over the per-game file. */
@@ -503,6 +526,7 @@ async function main() {
             // which case the overrides got cached but couldn't be
             // applied. Apply them now so the first compass render is
             // correct.
+            for (const regionName of _regionProse.keys()) applyOwnPlaceToWorld(regionName);
             for (const regionName of _exitSideOverrides.keys()) {
                 applyExitSideOverridesToWorld(regionName);
             }
@@ -679,11 +703,10 @@ async function main() {
             // setCurrentRoom — the engine's managed mode skips its
             // own room description, so this is the only enter prose
             // the player sees.
-            const templated = customRegionEnterMessage(proseDocFor(newRegion), newRegion);
             engine.displayMessage(
-                templated ?? `You are in ${newRegion}.`,
+                arrivalLine(proseDocFor(newRegion), newRegion, ownPlaceOf(newRegion)),
                 'normal',
-                templated ? { html: true } : {},
+                { html: true },
             );
             engine.setCurrentRoom(newRegion);
             evaluateAccessibilityForRoom(engine, client, world, newRegion);
@@ -707,6 +730,7 @@ async function main() {
         captureExitSidesFromSidecar(regionName, data?.world);
         captureRegionProse(regionName, data?.world);
         applyExitSideOverridesToWorld(regionName);
+        applyOwnPlaceToWorld(regionName);
         applyRegionChange(regionName, 'textAdventure:loadRegion');
     });
 

@@ -2,7 +2,7 @@
  * textAdventureSubstrateWrapper/textAdventureConceptRealisations — **THE TEXT
  * ADVENTURE'S HALF OF THE CONCEPT LIBRARY** (concept library T2; plan
  * `concept-library-plan.md` §3.1, the trial's concepts; the contract is
- * `procgenCore/concepts.js`).
+ * `procgenCore/concepts.js`). ⛓ CONTENT SETS R1: **the LOGIC half only.**
  *
  * ⛓ A text-adventure gate has NO GEOMETRY: `placeFromRules` records the rule on
  * the exit, the bridge evaluates `access_rule` at play and refuses the move, so
@@ -10,71 +10,70 @@
  * PLAYER READS — the room's `prose` payload field — and prose is this
  * substrate's mechanic, so every realisation is `tier: 'mechanic'`.
  *
- *   sword, swim  (items)   `prose.checkMessage` — the location that holds the item
+ *   sword, swim  (items)   the location that holds the item says `checkMessage`
  *   guardian     `gate`    requires the sword: `blocked` (the exit's
  *                          `inaccessibleMessage`) and `passedWith` (its
  *                          `moveMessage`, naming the weakness)
  *   water        `gate`    requires swim: the same two
  *
- * The strings are `{var}` templates, resolved at play by `templating.js`
- * (`{destinationRegion}` on an exit, `{item}` on a location).
+ * ⛓ The WORDS are content: they live in the substrate's default content pack
+ * (`frontend/packs/text-adventure/`, the entry's `defaultContentPack`), a pack
+ * concept per mechanic that `presents` it and names those text slots, and
+ * `placeTextAdventureRules` resolves them through the world's content set
+ * (`textAdventureRoom.js`). What a slot MEANS — which message of the room it
+ * becomes, when it shows — is behaviour (⚖ Q6) and stays in code: the slot
+ * tables `GATE_PROSE_SLOTS` / `ITEM_PROSE_SLOTS` below, and the entry's
+ * `contentRoles` that ask for them.
  *
  * ⛔ Node-importable DATA: the registry entry declares it, `placeTextAdventureRules`
  * reads it (`textAdventureRoom.js`), and neither imports the other's module.
  */
 
+/** A gate's text slot → the exit message it is written as. */
+export const GATE_PROSE_SLOTS = Object.freeze({ blocked: 'inaccessibleMessage', passedWith: 'moveMessage' });
+/** A found item's text slot → the location message it is written as. */
+export const ITEM_PROSE_SLOTS = Object.freeze({ checkMessage: 'checkMessage' });
+
 export const TEXT_ADVENTURE_CONCEPT_REALISATIONS = Object.freeze({
-    sword: Object.freeze({
-        tier: 'mechanic',
-        prose: Object.freeze({
-            checkMessage: 'Half-buried in the rubble lies {item}, its edge still keen after who knows how long. '
-                + 'You take up the sword and test its weight. Whatever guards these halls will have to reckon '
-                + 'with it now.',
-        }),
-    }),
-    swim: Object.freeze({
-        tier: 'mechanic',
-        prose: Object.freeze({
-            checkMessage: 'You find {item}, and with it the knack of the water: how to breathe, how to kick, how '
-                + 'to let it take your weight. You can swim now. Deep water will no longer turn you back.',
-        }),
-    }),
+    sword: Object.freeze({ tier: 'mechanic' }),
+    swim: Object.freeze({ tier: 'mechanic' }),
     guardian: Object.freeze({
         tier: 'mechanic',
         placements: Object.freeze({
-            gate: Object.freeze({
-                effect: 'requires',
-                needs: Object.freeze(['sword']),
-                mechanic: Object.freeze({
-                    prose: Object.freeze({
-                        blocked: 'A hulking guardian bars the way to {destinationRegion}, its armoured bulk '
-                            + 'filling the passage. You carry nothing that could hurt it, and it knows it. '
-                            + 'Without a sword, you will not get past.',
-                        passedWith: 'You draw your sword and the guardian lunges, but its armour is split at '
-                            + 'the joints and the blade finds the gap. Its weakness was the sword all along: it '
-                            + 'crumples, and the way to {destinationRegion} lies open.',
-                    }),
-                }),
-            }),
+            gate: Object.freeze({ effect: 'requires', needs: Object.freeze(['sword']) }),
         }),
     }),
     water: Object.freeze({
         tier: 'mechanic',
         placements: Object.freeze({
-            gate: Object.freeze({
-                effect: 'requires',
-                needs: Object.freeze(['swim']),
-                mechanic: Object.freeze({
-                    prose: Object.freeze({
-                        blocked: 'Dark water floods the passage toward {destinationRegion}, too deep to wade and '
-                            + 'too wide to leap. The current tugs at anything that touches it. You cannot cross '
-                            + 'without knowing how to swim.',
-                        passedWith: 'You wade into the water and let it take your weight, kicking out with long, '
-                            + 'even strokes. Swimming carries you across the flood where no footing could, and you '
-                            + 'haul yourself out on the far side, toward {destinationRegion}.',
-                    }),
-                }),
-            }),
+            gate: Object.freeze({ effect: 'requires', needs: Object.freeze(['swim']) }),
         }),
+    }),
+});
+
+/** ⛓ CONTENT SETS R1 — the pack whose words a world gets when it names no theme (the entry's `defaultContentPack`). */
+export const TEXT_ADVENTURE_DEFAULT_CONTENT_PACK = 'text-adventure';
+
+/**
+ * ⛓⛓ CONTENT SETS R1 — **WHAT THE TEXT ADVENTURE CAN SHOW FROM A PACK** (the
+ * entry's `contentRoles`; contract `procgenCore/contentRoles.js`). The slots each
+ * role needs are the keys of the slot tables above, so a role and the placer that
+ * writes it cannot disagree. `character` and `info` are NOT declared: nothing
+ * here shows them yet (step 3).
+ */
+export const TEXT_ADVENTURE_CONTENT_ROLES = Object.freeze({
+    gate: Object.freeze({
+        accepts: Object.freeze({ presents: Object.freeze(['guardian', 'water']) }),
+        needs: Object.freeze({ text: Object.freeze(Object.keys(GATE_PROSE_SLOTS)) }),
+        why: 'A gated exit the rule selected a concept for says why it is shut and how it was passed.',
+    }),
+    item: Object.freeze({
+        accepts: Object.freeze({ presents: Object.freeze(['sword', 'swim']) }),
+        needs: Object.freeze({ text: Object.freeze(Object.keys(ITEM_PROSE_SLOTS)) }),
+        why: 'The location that holds an offered item concept says what the player found.',
+    }),
+    place: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['place']) }),
+        why: 'A room takes a place\'s name and description in place of its region id.',
     }),
 });

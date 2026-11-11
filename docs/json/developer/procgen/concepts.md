@@ -86,7 +86,7 @@ Those rows are **marked** with the concept they came from (`markConceptRow` adds
 
 ## The text adventure
 
-A text-adventure gate has no geometry: the bridge refuses the move while the exit's rule fails, so the realisation is the prose the player reads. `sword`, `swim`, `guardian.gate` and `water.gate` are all `tier: 'mechanic'`. When the planner's rule selects a gate, `placeFromRules` writes that gate's `blocked` and `passedWith` messages into the room's payload `prose`. See [Text Adventure Substrate](./text-adventure.md#concept-realisations).
+A text-adventure gate has no geometry: the bridge refuses the move while the exit's rule fails, so the realisation is the prose the player reads. `sword`, `swim`, `guardian.gate` and `water.gate` are all `tier: 'mechanic'`. When the planner's rule selects a gate, `placeFromRules` writes that gate's `blocked` and `passedWith` messages into the room's payload `prose`. The words come from the world's content set: the text adventure's default content pack (`frontend/packs/text-adventure/`) presents each of the four concepts, and a later pack in the stack that presents one wins. See [Text Adventure Substrate](./text-adventure.md#concept-realisations).
 
 ## A rebuilt world keeps its concepts
 
@@ -157,13 +157,13 @@ The readers:
 - `assertPresents(packConcepts, concepts)` checks that every `presents` in a stack names a concept in the table. The pack layer leaves `presents` opaque on purpose; this is the cross-check.
 - `rolesFilledBy(entryOrRoles, packConcepts)` returns `[{role, concepts}]` in the entry's declared order. It is the input a later chart statement will read. No statement reads it yet.
 
-No registered substrate declares a role yet.
+The text adventure is the first substrate to declare roles: `gate` and `item` (`accepts: {presents}`, the prose slots of a selected gate and of a found item) and `place` (`accepts: {kinds: ['place']}`, a room's name and description). See [Text Adventure Substrate](./text-adventure.md#content-roles).
 
 ## A world's content stack
 
 A world names the content packs it draws its characters, places, objects and text from in `params.content`: a list of pack ids (`frontend/packs/`), empty by default, beside `params.concepts`. The code is `frontend/modules/procgenPipeline/worldContent.js`.
 
-- **The effective stack.** `effectiveContentStack` is the one rule. It starts with the `defaultContentPack` of each substrate in the world's mix, in registry order and without duplicates, and then adds `params.content` in order. A later pack wins per key. No registered substrate declares a default pack yet, so a world's stack is exactly its own `params.content`. See [Substrate Registry](./substrate-registry.md).
+- **The effective stack.** `effectiveContentStack` is the one rule. It starts with the `defaultContentPack` of each substrate in the world's mix, in registry order and without duplicates, and then adds `params.content` in order. A later pack wins per key. The text adventure declares the default pack `text-adventure`, so every world with a text-adventure region has it at the bottom of its stack. See [Substrate Registry](./substrate-registry.md).
 - **The load.** Text, names and colours resolve at generation and are written into the world document. So the stack is loaded once, before generation: `loadContentSet(stack, {base, readJson})` returns a frozen **content set**, `{ids, concepts, text}`, where `concepts` and `text` are the pack-concept and text-library readers. `assertPresents` runs on it first. An empty stack returns the empty set and never calls `readJson`. In the browser the panel reads with `fetch`; in node, `contentPacks/nodePackIo.js` reads the committed packs from disk.
 - **The channel.** The set reaches every region's `generateRegionCore` and `placeFromRules` as `params.contentSet`, on the same channel as `params.concepts` (`assembleRegionParams`). With it comes the world's own list as `params.content`. Both are added only when the stack is not empty. An entry point that builds a run without loading a non-empty stack is refused by name, and so is a region whose packs are not in the set it was handed.
 - **The entry points.** `prepareRunFromState` is the async form of `buildRunFromState`: it loads the set and then builds the run. The pipeline panel loads the set before Generate, before each *Run next step* and before Append. `sphere-step`, `topdown-step` and `spiral-step` load it as well, and `--param content=a,b` names a world's own stack. `spiral-step` reads no other `--param` key.
@@ -177,7 +177,7 @@ A world names the content packs it draws its characters, places, objects and tex
 - **The record.** Every compile records `params.content` in the slot's `procgen_metadata` block as `content`, and only when the list is not empty. That covers sphere growth, top-down, the shuffled spiral and grid growth. Sphere growth and top-down write it beside `concepts`. The default packs are not recorded, because they follow from the mix. `rebuildEnvelopeFromRulesJson` reads the list back into `regionParams.content`, and a caller's own value wins.
 - **The set is runtime state.** The set holds functions, so `JSON.stringify` leaves it out, and `serializeEnvelope` drops it too, because an in-process caller (`runPipeline`) clones what it returns: a saved envelope keeps the list and drops the set. A rebuilt or resumed envelope gets its set back from `attachEnvelopeContent` before it generates. An append from a rebuilt world that was not re-attached is refused at the region seam.
 
-A world that names no content compiles to the bytes it did before the param existed. With a stack, it compiles to the same `rules.json` apart from `procgen_metadata[p].content`, because no substrate reads the set yet. `procgenPipeline/worldContent.test.js` holds both, on the concept trial world.
+A world that names no content compiles to the bytes it did before the param existed: its text-adventure prose comes from the default pack, which holds the strings the substrate wrote from code before. With a stack, it compiles to the same logic; what a later pack presents (a gate's prose, a room's place) is the only other difference. `procgenPipeline/worldContent.test.js` holds the first on the concept trial world, and `textAdventureSubstrateWrapper/textAdventureContent.test.js` the second.
 
 ## Behaviour
 

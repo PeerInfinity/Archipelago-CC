@@ -46,6 +46,11 @@
             "category": "textAdventureSubstrateWrapper"
         },
         {
+            "id": "tasw-room-place-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
             "id": "concept-trial-plays",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
