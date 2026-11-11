@@ -8,8 +8,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
-    ContentPackError, KEY_PATTERN, KNOWN_LAYERS, RESERVED_LAYERS, loadPackStack, mergeKeyed, packsBaseUrl, parsePack,
-    parseRegistry,
+    ContentPackError, KEY_PATTERN, KNOWN_LAYERS, RESERVED_LAYERS, STACK_KINDS, loadPackStack, mergeKeyed, packsBaseUrl,
+    parsePack, parseRegistry,
 } from './contentPacks.js';
 
 const PACKS = join(dirname(fileURLToPath(import.meta.url)), '../../packs');
@@ -87,7 +87,7 @@ describe('⛔ A MALFORMED PACK IS REFUSED BY NAME (never half-loaded)', () => {
     it('an id that disagrees with its directory', () => refuse(pack({ id: 'other' }), ['seedling', 'bad'], /"bad".*id "other" does not match its directory "bad"/));
     it('a schema version this loader cannot read', () => refuse(pack({ schema_version: 2 }), ['bad'], /"bad".*schema_version 2/));
     it('a missing licence', () => refuse(pack({ licence: '' }), ['bad'], /"bad".*licence is missing/));
-    it('a layer nobody reads yet', () => refuse(pack({ layers: { art: 'a.json', concepts: 'c.json' } }), ['bad'], /"bad".*layer "concepts" is not one this loader knows/));
+    it('a layer nobody reads yet', () => refuse(pack({ layers: { art: 'a.json', rules: 'c.json' } }), ['bad'], /"bad".*layer "rules" is not one this loader knows/));
     it('a layer path that leaves the pack', () => refuse(pack({ layers: { art: '../seedling/art/manifest.json' } }), ['bad'], /"bad".*must be a relative path inside the pack/));
     it('a pack that is not there', () => refuse({}, ['seedling', 'nosuchpack'], /"nosuchpack".*pack\.json could not be read/));
     it('a pack named twice in one stack', () => refuse({}, ['seedling', 'seedling'], /named twice/));
@@ -120,7 +120,7 @@ describe('the sfx and music layers', () => {
     const minimal = (layers) => ({ schema_version: 1, id: 'p', title: 't', licence: 'CC0', layers });
 
     it('KNOWN_LAYERS carries sfx and music; nothing is reserved today', () => {
-        expect(KNOWN_LAYERS).toEqual(['art', 'sfx', 'music']);
+        expect(KNOWN_LAYERS).toEqual(expect.arrayContaining(['art', 'sfx', 'music']));
         expect(RESERVED_LAYERS).toEqual([]);
         expect(parsePack(minimal({ sfx: 'sfx/manifest.json' }), 'p').layers.sfx).toBe('sfx/manifest.json');
     });
@@ -160,5 +160,51 @@ describe('the sfx and music layers', () => {
         expect(read.some((u) => u.includes('/sfx/'))).toBe(false);
         const all = await loadPackStack(['seedling'], { base: BASE, readJson: fsJson });
         expect(Object.keys(all[0].layers)).toEqual(['art', 'sfx', 'music']);
+    });
+});
+
+// ⛓ CONTENT SETS C1 (⚖ the user 2026-11-10): the `concepts` and `text` layers, the `content` stack table.
+describe('the concepts and text layers, and the content stacks', () => {
+    const minimal = (layers) => ({ schema_version: 1, id: 'p', title: 't', licence: 'CC0', layers });
+
+    it('KNOWN_LAYERS carries concepts and text; a pack may declare them', () => {
+        expect(KNOWN_LAYERS).toEqual(expect.arrayContaining(['concepts', 'text']));
+        const pack = parsePack(minimal({ concepts: 'concepts/manifest.json', text: 'text/manifest.json' }), 'p');
+        expect(pack.layers).toEqual({ concepts: 'concepts/manifest.json', text: 'text/manifest.json' });
+    });
+
+    it('STACK_KINDS carries content; the committed registry parses with its content table', async () => {
+        expect(STACK_KINDS).toContain('content');
+        const json = await fsJson(new URL('packs.json', BASE).href);
+        const reg = parseRegistry(json);
+        expect(reg.contentStacks).toEqual(json.content ?? {});
+    });
+
+    it('the content table may be absent or empty', () => {
+        expect(parseRegistry({ schema_version: 1, packs: [{ id: 'a' }] }).contentStacks).toEqual({});
+        expect(parseRegistry({ schema_version: 1, packs: [{ id: 'a' }], content: {} }).contentStacks).toEqual({});
+    });
+
+    it('a content stack parses like the others, and refuses an unlisted pack or an empty list by name', () => {
+        const reg = parseRegistry({ schema_version: 1, packs: [{ id: 'a' }, { id: 'b' }], content: { meta: ['a', 'b'] } });
+        expect(reg.contentStacks.meta).toEqual(['a', 'b']);
+        expect(() => parseRegistry({ schema_version: 1, packs: [{ id: 'a' }], content: { x: ['ghost'] } }))
+            .toThrow(/content stack "x" names "ghost"/);
+        expect(() => parseRegistry({ schema_version: 1, packs: [{ id: 'a' }], content: { x: [] } }))
+            .toThrow(/content stack "x" is not a non-empty list/);
+    });
+
+    it('loadPackStack reads a concepts and a text layer like any other', async () => {
+        const files = {
+            'p/pack.json': minimal({ concepts: 'concepts/manifest.json', text: 'text/manifest.json' }),
+            'p/concepts/manifest.json': { schema_version: 1, concepts: {} },
+            'p/text/manifest.json': { schema_version: 1, strings: {} },
+        };
+        const stack = await loadPackStack(['p'], { base: 'mem:/packs/', readJson: async (u) => {
+            const hit = Object.keys(files).find((k) => u.endsWith(k));
+            if (!hit) throw new Error(`no ${u}`);
+            return structuredClone(files[hit]);
+        } });
+        expect(Object.keys(stack[0].layers)).toEqual(['concepts', 'text']);
     });
 });

@@ -12,6 +12,7 @@ An overview of the major features in the Archipelago JSON Export Tools project.
 | **Web Frontend & Tracker** | Modular browser-based tracker with region graph visualization, discovery mode, reachability analysis, and multiple game modes. [Live demo](https://peerinfinity.github.io/Archipelago-CC/) | [frontend/README.md](../../../frontend/README.md) |
 | **JSON Tools Installer** | APWorld package for installing JSON Tools into a vanilla Archipelago installation — no repository clone needed | [worlds/json_tools_installer/README.md](../../../worlds/json_tools_installer/README.md) |
 | **Skip Required Files** | Generate seeds without ROM files for testing, CI/CD, and tool development | [skip-required-files.md](skip-required-files.md) |
+| **Spoiler Export Hook** | Optional apworld: supporting worlds send their sphere order in the room's slot data, so Loop mode and the region views work with no spoiler file | [spoiler-export-hook.md](spoiler-export-hook.md) |
 
 ## World Generation & Tracking
 

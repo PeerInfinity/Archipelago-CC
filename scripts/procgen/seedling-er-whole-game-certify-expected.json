@@ -6,6 +6,10 @@
       "$why": "vanilla's OPEN_L53 row (the maze derivation has no one-sided clear, so it reaches the event from the L54 pocket with the Ghost Spear; the game and the atlas do not): the same row as the vanilla arm's"
     },
     {
+      "row": "level_60__r5c9 → level_60__r5c0 holding [Ghost Spear,Progressive Swim]: derived false, atlas true",
+      "$why": "vanilla's OPEN_L60 row (a maze latch cell knows only its event, so the maze world refuses the Ghost Spear arm the rules grant through the shut lock; the game and the atlas allow it): the same row as the vanilla arm's"
+    },
+    {
       "row": "level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false",
       "$why": "vanilla's OPEN_L63 row (block-state framing of r0c1's foothold, rules-4 Q4 census): L63 has no stair, so the shuffle does not move it"
     }

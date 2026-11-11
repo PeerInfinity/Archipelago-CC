@@ -26,6 +26,7 @@
  * Exits 0 when every check passes, 1 otherwise. Takes the box lock (kind `browser`).
  */
 import { chromium } from '@playwright/test';
+import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -50,14 +51,19 @@ async function main() {
     const { foldEdits } = await M('procgenCore/editCore.js');
     const { loadRulesSchema } = await M('procgenCore/jsonSchemaFiles.js');
     const { tileTypeForPlacement, SEEDLING_TILE_SIZE } = await M('flashPanel/seedlingSemantics.js');
-    const { buildLevelSet } = await M('seedlingDemo/levelSetExporter.js');
+    const { buildLevelSet, vanillaRecordSet } = await M('seedlingDemo/levelSetExporter.js');
+    const { stableStringify } = await M('procgenCore/contentIdentity.js');
     const { emptyLevel } = await M('seedlingDemo/procgenLevel.js');
     const { parseOelLevel } = await M('seedlingDemo/procgenLevelOel.js');
     const { emptyOverlay } = await M('seedlingDemo/seedlingSetOverlay.js');
     const { createSeedlingSetAdapter, setRecord } = await M('seedlingDemo/seedlingSetAdapter.js');
     const { assembleGeneratedSeedlingSet } = await M('seedlingDemo/seedlingGeneratedSet.js');
     const { canonicalLayout, layoutGraphOf, mapLinksOf } = await M('seedlingDemo/seedlingSetMap.js');
-    const { disconnectEffectOf, roomRowsOf } = await M('seedlingDemo/watchSetEditor.js');
+    const { disconnectEffectOf, editorVanillaSet, roomRowsOf } = await M('seedlingDemo/watchSetEditor.js');
+    const readRepoJson = (p) => JSON.parse(readFileSync(join(REPO, p), 'utf8'));
+    const EMBED = readRepoJson('frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json');
+    const MAP_DOC = readRepoJson('frontend/modules/flashPanel/atlases/seedling-map.json');
+    const digest = (v) => createHash('sha256').update(stableStringify(v)).digest('hex');
     const DEPS = {
         parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema: loadRulesSchema(),
         atlas: { game: 'check-seedling-editor-e3', mapDocument: 'check-seedling-editor-e3.json' },
@@ -184,6 +190,20 @@ async function main() {
         const vanillaMap = (await set()).map;
         const vanillaSet = await downloaded();
         check(vanillaSet !== null, 'the vanilla 116 downloads (the set the map is compared against)');
+        /*
+         * ⛓⛓ THE PAGE'S VANILLA ≡ NODE'S NAMED CALL, BY DIGEST (slice `seedling-vanilla-set-arrivals`). The page
+         * and node's unit rows once opened two different copies (the game's rooms vs the delivered set, one
+         * `named_rooms` arrival apart) while every row here compared the page only against itself. MUTANT: the page
+         * calls `vanillaRecordSet`'s default (the delivery's patches) — the digest is the delivered one, and this reds.
+         */
+        const pageDigest = vanillaSet && digest(vanillaSet);
+        const editorDigest = digest(editorVanillaSet(EMBED, MAP_DOC).set);
+        const deliveredDigest = digest(vanillaRecordSet(EMBED, MAP_DOC).set);
+        check(pageDigest === editorDigest && editorDigest !== deliveredDigest,
+            '1 ⛓⛓ the page\'s vanilla 116 IS node\'s `editorVanillaSet` (the game\'s rooms), byte for byte, and not the '
+            + 'delivered set',
+            `page ${pageDigest?.slice(0, 16)} · editorVanillaSet ${editorDigest.slice(0, 16)} · delivered `
+            + `${deliveredDigest.slice(0, 16)} · ${vanillaSet?.set_id}`);
         const nodeVanilla = layoutOf(vanillaSet);
         check(json(vanillaMap.positions) === json(nodeVanilla),
             '1 ⛓⛓ THE MAP of the vanilla 116 is node\'s canonicalLayout of the SAME set (the page\'s own download)',

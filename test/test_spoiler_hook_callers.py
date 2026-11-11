@@ -96,7 +96,8 @@ def test_the_option_is_the_clients_choice_off_by_default_and_out_of_the_text_spo
     assert option.__bases__ == (client.SpoilerDataInSlotData,)
     assert option.__module__ == f'worlds.{package}.{"options" if package == "apquest_serverdata" else "Options"}'
     bookkeeping = {'__module__', '__qualname__', '__firstlineno__', '__static_attributes__',
-                   '_abc_impl', '__parameters__', '__abstractmethods__'}
+                   '_abc_impl', '__parameters__', '__abstractmethods__',
+                   '__slotnames__'}  # pickle's per-class cache, set once any earlier test pickled one (order-dependent)
     own = {key: value for key, value in vars(option).items() if key not in bookkeeping}
     assert own == {key: vars(client.SpoilerDataInSlotData)[key] for key in own}
     assert '__doc__' in own and 'options' in own
@@ -112,7 +113,8 @@ def test_the_regions_option_is_the_clients_toggle_off_by_default_and_out_of_the_
     assert option.__bases__ == (client.SpoilerDataIncludeRegions,)
     assert option.__module__ == f'worlds.{package}.{"options" if package == "apquest_serverdata" else "Options"}'
     bookkeeping = {'__module__', '__qualname__', '__firstlineno__', '__static_attributes__',
-                   '_abc_impl', '__parameters__', '__abstractmethods__'}
+                   '_abc_impl', '__parameters__', '__abstractmethods__',
+                   '__slotnames__'}  # pickle's per-class cache, set once any earlier test pickled one (order-dependent)
     own = {key: value for key, value in vars(option).items() if key not in bookkeeping}
     assert own == {key: vars(client.SpoilerDataIncludeRegions)[key] for key in own}
     assert '__doc__' in own
