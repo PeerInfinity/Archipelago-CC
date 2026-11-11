@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 150,
-            "count": 200,
+            "browser": 151,
+            "count": 201,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 523,
-        "browser": 220,
+        "blockStyle": 524,
+        "browser": 221,
         "cited": 276,
-        "files": 541,
+        "files": 542,
         "lineStyle": 18,
-        "withDocblock": 541,
-        "withFlags": 460
+        "withDocblock": 542,
+        "withFlags": 461
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13499,6 +13499,65 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-encounter-ticks — ⛓⛓ seedling-fidelity-encounters2: AN ENCOUNTER, ASKED OF THE GAME TICK BY SAMPLED TICK (the BobSoldier probe's harness, `probe-seedling-bobsoldier-mobiles.mjs`, pointed at the two encounters).",
             "path": "scripts/procgen/probe-seedling-encounter-ticks.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-er-landings.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-model"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Three steps the shuffled world `seedling_er` asks for and the solver refuses, PLAYED ON THE GAME (slice rules-er-c1-c3-witness).",
+            "path": "scripts/procgen/probe-seedling-er-landings.mjs"
         },
         {
             "argvHelpers": [],
