@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1271,
         "indexHeadings": 2,
-        "lines": 35479,
+        "lines": 35481,
         "pages": 4,
-        "words": 526064
+        "words": 526271
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -108,7 +108,7 @@ export const DOCS_INDEX = frz({
             "file": "editing-core.md",
             "h1": "Procgen Editing Core",
             "headings": 22,
-            "lines": 218,
+            "lines": 220,
             "links": [
                 "architecture.md",
                 "maze.md",
@@ -117,7 +117,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/editing-core.md",
-            "words": 4024
+            "words": 4208
         },
         {
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
@@ -132,7 +132,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7124
+            "words": 7147
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
