@@ -124,6 +124,19 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`BROWSER LOG (${msg.type()}): ${text}`);
     });
 
+    // MEASUREMENT-ONLY (cloud slice seedling-hammer-walk-walls): TEST_MEASURE_CAPTURE_SOLVES=<name regex> and
+    // TEST_MEASURE_CAPTURE_OUT=<jsonl> capture the walk's solve requests (scripts/procgen/seedlingWalkSolveCapture.js).
+    // Unset → nothing is exposed or injected.
+    if (process.env.TEST_MEASURE_CAPTURE_SOLVES && process.env.TEST_MEASURE_CAPTURE_OUT) {
+      const { appendFileSync } = await import('node:fs');
+      const out = process.env.TEST_MEASURE_CAPTURE_OUT;
+      await page.exposeFunction('__measureCaptureWrite', (line) => { appendFileSync(out, `${line}\n`); });
+      await page.addInitScript((pattern) => {
+        import('/scripts/procgen/seedlingWalkSolveCapture.js').then((m) => m.installWalkSolveCapture({
+          pattern, write: (line) => globalThis.__measureCaptureWrite(line) }));
+      }, process.env.TEST_MEASURE_CAPTURE_SOLVES);
+    }
+
     console.log(`PW DEBUG: Navigating to application with parameters:`);
     console.log(`  - machine: ${loadSnapshot()}`);
     console.log(`  - mode: ${testMode}`);
