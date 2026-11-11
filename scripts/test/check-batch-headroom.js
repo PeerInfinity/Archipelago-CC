@@ -53,6 +53,18 @@ export function defaultBudgetMs(source = fs.readFileSync(TEST_LOGIC, 'utf8')) {
 const TERMINAL = new Set(['passed', 'failed']);
 
 /**
+ * The rows a run did not finish: `cutOff` started but never reached a terminal
+ * status; `neverStarted` are the run's notRunIds that never started at all.
+ * (Shared with nightly-manual-summary.js, so the two never disagree.)
+ */
+export function unfinishedRows(data) {
+    const notRun = (data.summary || {}).notRunIds || [];
+    const cutOff = (data.testDetails || []).filter((t) => t.status && !TERMINAL.has(t.status) && t.startTime)
+        .map((t) => t.id);
+    return { cutOff, neverStarted: notRun.filter((id) => !cutOff.includes(id)) };
+}
+
+/**
  * Grade one results payload. Returns
  * { verdict: 'ok'|'warn'|'fail', spanMs, budgetMs, reasons: string[] }.
  *
@@ -66,10 +78,7 @@ export function assessRun(data, budgetFallbackMs) {
     const budgetMs = data.budgetMs || summary.timeoutMs || budgetFallbackMs;
     const reasons = [];
 
-    const notRun = summary.notRunIds || [];
-    const cutOff = rows.filter((t) => t.status && !TERMINAL.has(t.status) && t.startTime)
-        .map((t) => t.id);
-    const neverStarted = notRun.filter((id) => !cutOff.includes(id));
+    const { neverStarted, cutOff } = unfinishedRows(data);
     if (cutOff.length) reasons.push(`CUT OFF mid-test: ${cutOff.join(', ')}`);
     if (neverStarted.length) reasons.push(`NEVER STARTED (${neverStarted.length}): ${neverStarted.join(', ')}`);
     if (summary.timedOut) reasons.push(`timed out: ${summary.error || `budget ${budgetMs} ms`}`);
