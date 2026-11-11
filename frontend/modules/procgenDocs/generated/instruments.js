@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 150,
-            "count": 200,
+            "browser": 151,
+            "count": 201,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 523,
-        "browser": 220,
-        "cited": 276,
-        "files": 541,
+        "blockStyle": 524,
+        "browser": 221,
+        "cited": 277,
+        "files": 542,
         "lineStyle": 18,
-        "withDocblock": 541,
-        "withFlags": 460
+        "withDocblock": 542,
+        "withFlags": 461
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11523,6 +11523,56 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-axe-phase — ⛓⛓⛓ SEEDLING FIDELITY AXE, D1: **WHICH UPDATE OF THE SPINNING AXE TESTS WHICH OBSERVATION, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-axe-phase.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-bobiframe.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING FIDELITY BOBIFRAME (wave 39) — L40's `bob@736,752` on the game, tick by tick, under the solver's own `Level 040 - Chest ← L39` plans (sweep leg key `level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest`).",
+            "path": "scripts/procgen/probe-seedling-bobiframe.mjs"
         },
         {
             "argvHelpers": [
