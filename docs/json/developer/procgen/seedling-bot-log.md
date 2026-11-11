@@ -28113,11 +28113,14 @@ the survey route (54) holds Fire without the Sword, so neither instrument can se
 Wand, and neither the Sword nor the Ghost Sword), `resolveFireBreak` (the rock's own test, then a stance whose flame
 reaches that rock and nothing else, out of static danger volumes, reachable directly or under the hypothesis without
 this rock) and `execFireBreak` (settle, lean, re-ask the audit, certify the press and its wait hit-free on a fork,
-select the Fire's slot, press once, wait `FIRE_BREAK_WAIT_TICKS` = 23, restore the slot). `rockHypothesis` and the
-step-off's `break` admit the same run. A Ghost Sword held without the Sword is NOT admitted: admitted, L0's west rock
+select the Fire's slot, press once, wait `FIRE_BREAK_WAIT_TICKS` = 23, restore the slot). The step-off's `break` takes
+a Fire order when the door is its stance. `rockHypothesis` admits a rock for such a run only where some cell's flame
+reaches it alone (`fireBreakStances`, the resolver's own scan): the bounded set ON found `fidelityL40Button`'s *"a run
+with no sword hypothesises no rock"* red while the guard was missing (L40's three rocks, which no flame reaches
+alone, were hypothesised for a run that held Fire). A Ghost Sword held without the Sword is NOT admitted: admitted, L0's west rock
 turned today's named refusal into `levelRun`'s throw at tick 0 (the walk's strike policy presses the ghost slot). The
 certificate came from the census: L73 from the L72 landing pressed at t101 and `bulb@80,80` hit the standing player at
-t115; with the certificate that order refuses naming the bulb. 29 rows, nine mutants red as predicted.
+t115; with the certificate that order refuses naming the bulb. 30 rows, ten mutants red as predicted.
 
 **D2** (the game, p4g, headless): `probe-seedling-fire-break.mjs --record`, six solver plans in
 `fixtures/firebreak-witness/`, each 0 px on every sampled tick with the rock flag on the model's `goneAt + 1` and no

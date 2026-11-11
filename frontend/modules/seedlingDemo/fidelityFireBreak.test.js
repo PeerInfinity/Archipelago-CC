@@ -27,6 +27,8 @@
  *        -> "L73 … refused NAMING it" reds: SOLVED, with the bulb's hit at t115.
  *   m9 `rockHypothesis` does not admit a Fire run (`if (!swings) return [];`)
  *        -> "L53 … the prerequisite order" reds: "no REACHABLE stance for a Fire press at breakablerock@128,160".
+ *   m10 `rockHypothesis` drops its clean-cell guard (`fireBreakStances(…).viable.length === 0`)
+ *        -> "the hypothesis admits a rock … only where a flame can reach it alone" reds: L41's two are admitted.
  *   m7 `execBreak` loses its Fire dispatch (a Fire order runs the swing's aim-and-press loop)
  *        -> every ON SOLVED row reds.
  */
@@ -40,7 +42,7 @@ import { arrivalStaging } from './fidelityArrival.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, CONTACT_FIDELITY_KEYS, withContactFidelity }
     from './contactFidelity.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
-import { FIRE_BREAK_WAIT_TICKS, solveSegment, SolverRefusal } from './solverBot.js';
+import { FIRE_BREAK_WAIT_TICKS, solveSegment, SolverRefusal, stanceHypothesisProbe } from './solverBot.js';
 import { WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
 import { FIRE_WINDOW } from './fireVerb.js';
 import { FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan }
@@ -192,6 +194,17 @@ describe('fidelity FIREBREAK — D1: the `break` verb with Fire and no Sword (th
         expect(refusal.message).toMatch(/chaser:puncher@136,96/);
         expect(run.rocksBroken).toEqual([]);
     }));
+    it('the hypothesis admits a rock for a Fire run only where a flame can reach it alone: L53\'s two, neither of '
+        + 'L41\'s (OFF: none anywhere)', () => {
+        const rocksIn = (h) => h.filter((r) => r.kind === 'rock').map((r) => r.id).sort();
+        const probe = (boot) => stanceHypothesisProbe(createRunForStaging(arrivalStaging(boot, { items: ['hasFire'] }), SRC));
+        const L53 = { level: 53, x: 192, y: 64 };
+        const L41 = { level: 41, x: 16, y: 160 };
+        expect(OFF(() => rocksIn(probe(L53)))).toEqual([]);
+        expect(ON(() => rocksIn(probe(L53)))).toEqual(['breakablerock@112,128', 'breakablerock@128,160']);
+        // L41's `@224,64` and `@224,80` stand one on the other: every cell beside either reaches both
+        expect(ON(() => rocksIn(probe(L41)))).toEqual([]);
+    });
     it('a ghost rock without the Ghost Sword is refused by name, with no press (L101 `breakablerockghost@224,96`)',
         () => ON(() => {
             const { run, refusal } = solve({ level: 101, x: 240, y: 96 }, [rock(101, 2, 224, 96, 'breakablerockghost')],

@@ -10921,7 +10921,9 @@ function rockHypothesis(run, wall) {
     const inventory = run.progress('inventory');
     const swings = weapon === 'sword'
         || (weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled && !ghostSwingRefusal(inventory));
-    // ⛓ fidelity FIREBREAK D1 (`fireBreakArm`, OFF): a run whose breaker is Fire admits a rock on the same two guards.
+    // ⛓ fidelity FIREBREAK D1 (`fireBreakArm`, OFF): a run whose breaker is Fire admits a rock on the same two guards —
+    // and on a THIRD the swing does not need: the flame has no aim, so "this run can break it at all" also asks for a
+    // cell whose flame reaches the rock alone (`fireBreakStances`). L40's three and L41's two have none, and stay walls.
     if (!swings && !fireBreakAdmits(run)) return [];
     const out = [];
     for (const s of (run.world.solids ?? [])) {
@@ -10929,6 +10931,7 @@ function rockHypothesis(run, wall) {
         const strategy = OBSTACLE_STRATEGIES[`solid:${s.tag}`] ?? null;
         if (strategy !== 'break' || !executorFor(strategy, 'rockHypothesis')) continue;
         if (!rockBreaksUnder(s.rockType, inventory)) continue;
+        if (!swings && fireBreakStances(run, s).viable.length === 0) continue;
         out.push({ id: s.rockId, kind: 'rock', tag: s.tag, strategy });
     }
     return out;
@@ -22287,6 +22290,38 @@ function rockFireReach(run, at, rockId) {
 }
 
 /**
+ * The Fire stances of a rock, before reachability: the `burn` verb's candidate cells (nearest the player first), each
+ * asked of `rockFireReach` from its centre and then from a lean against the rock, kept when the flame reaches the rock
+ * and nothing else and the cell (and the lean's rest) stands in no static danger volume. ONE scan for the resolver and
+ * for `rockHypothesis`, so "this run can break that rock" means the same thing in both.
+ * @returns `{candidates, viable: [{x, y, lean}], missed, crowded, unsafe}`
+ */
+function fireBreakStances(run, rock) {
+    const admit = pullStanceAdmit(run);
+    const candidates = burnStanceCandidates(run, rock, burnWindowTiles(rock));
+    let missed = 0;
+    let crowded = 0;
+    let unsafe = 0;
+    const viable = [];
+    for (const c of candidates) {
+        let reach = rockFireReach(run, c, rock.rockId);
+        let lean = null;
+        if (!reach.hit) {
+            const key = burnLeanKey(c, rock);
+            const leaned = key ? previewLean(run, c, key) : null;
+            const again = leaned ? rockFireReach(run, leaned, rock.rockId) : null;
+            if (!again || !again.hit) { missed += 1; continue; }
+            reach = again;
+            lean = { key, at: leaned };
+        }
+        if (reach.others.length > 0) { crowded += 1; continue; }
+        if (!admit(c) || (lean && !admit(lean.at))) { unsafe += 1; continue; }
+        viable.push({ x: c.x, y: c.y, lean });
+    }
+    return { candidates, viable, missed, crowded, unsafe };
+}
+
+/**
  * RESOLVE a Fire break (`fireBreakAdmits` said yes): the `break` work order with `weapon: 'fire'`.
  *   · THE ROCK'S OWN TEST FIRST (`rockBreaksUnder`, the sword path's second guard): a ghost rock without the Ghost
  *     Sword is `held: false`, by name — the flame would land and do nothing (`rockfire-l101-ghostrock-fire`).
@@ -22352,26 +22387,7 @@ function resolveFireBreak(run, rock, obstacle, contacts, blocked = []) {
         const live = rockFireReach(run, here, rock.rockId);
         if (live.hit && live.others.length === 0) return order(null, { at: here, lean: null }, []);
     }
-    const candidates = burnStanceCandidates(run, rock, burnWindowTiles(rock));
-    let missed = 0;
-    let crowded = 0;
-    let unsafe = 0;
-    const viable = [];
-    for (const c of candidates) {
-        let reach = rockFireReach(run, c, rock.rockId);
-        let lean = null;
-        if (!reach.hit) {
-            const key = burnLeanKey(c, rock);
-            const leaned = key ? previewLean(run, c, key) : null;
-            const again = leaned ? rockFireReach(run, leaned, rock.rockId) : null;
-            if (!again || !again.hit) { missed += 1; continue; }
-            reach = again;
-            lean = { key, at: leaned };
-        }
-        if (reach.others.length > 0) { crowded += 1; continue; }
-        if (!admit(c) || (lean && !admit(lean.at))) { unsafe += 1; continue; }
-        viable.push({ x: c.x, y: c.y, lean });
-    }
+    const { candidates, viable, missed, crowded, unsafe } = fireBreakStances(run, rock);
     const pose = (c) => ({ at: c.lean ? { ...c.lean.at } : { x: c.x, y: c.y }, lean: c.lean ? c.lean.key : null });
     for (const c of viable) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => []);

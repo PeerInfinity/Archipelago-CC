@@ -1975,7 +1975,8 @@ export const CONTACT_FIDELITY = {
      * (`equip`, restored after), presses once and waits for the run's own `brokenRocks` plus the leg's wait: the
      * sword's `WAIT_AFTER_PRESS_TICKS` moved by the flame's later first test (`FIRE_WINDOW.firstHitTick` 4 against a
      * swing's 1; ROCKFIRE's witness: press + 4 hit, flag `goneAt + 1`, cell `goneAt + 2`). `rockHypothesis` admits a
-     * rock for such a run on the same two guards. A run that holds the Sword keeps the sword's path whatever slot is
+     * rock for such a run on the same two guards and where some cell's flame reaches it alone (L40's three and L41's
+     * two have none, and stay walls). A run that holds the Sword keeps the sword's path whatever slot is
      * selected. Game witness: `fidelityFireBreak.js` (p4g, 0 px, hitless). OFF: byte-identical (the refusal that
      * names the sword). `SEEDLING_FIRE_BREAK_ARM=0|1`.
      */
