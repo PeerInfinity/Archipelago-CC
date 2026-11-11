@@ -59,7 +59,7 @@
  *       is at full strength and a held d-pad MOVES the player.
  *   T4. SOLVE before any ship: NO strip.
  *   T5. MANUAL (running) + ▶ load in wasm: ONE strip, under the wasm frame, with Esc, and a held d-pad MOVES the
- *       real game's player. (Headless WebGPU, `headlessWebgpuArgs` — the launch every headless wasm gate uses.)
+ *       real game's player. (Headless WebGPU, `HEADLESS_WEBGPU_ARGS` — the launch every headless wasm gate uses.)
  *
  *   node scripts/procgen/check-seedling-lab-load-in-js.mjs [--host=http://localhost:8000] [--shots=<dir>]
  *        [--only=touch]   (the TOUCH section alone)
@@ -71,7 +71,7 @@ import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { headlessWebgpuArgs } from './headlessChromium.js';
+import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 
 argvHelp(import.meta.url);
 
@@ -351,13 +351,13 @@ async function main() {
 /**
  * ⛓ TOUCH (seedling-lab-touch-fix) — T1–T5 in the header. Every mount is counted on the page (`.flash-touch-controls`
  * anywhere), and every "moves" is the GAME's position, read from the run itself, never the strip's own held mark.
- * Its own browser: the wasm row (T5) needs the repo's headless WebGPU launch (`headlessWebgpuArgs`), the switches
+ * Its own browser: the wasm row (T5) needs the repo's headless WebGPU launch (`HEADLESS_WEBGPU_ARGS`), the switches
  * every headless wasm gate uses.
  */
 async function touchSection({ PAGE, TAPE, check, SHOTS }) {
     const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-hammer-control.json';
     const browser = await chromium.launch({
-        args: headlessWebgpuArgs({ extra: ['--autoplay-policy=user-gesture-required'] }),
+        args: [...HEADLESS_WEBGPU_ARGS, '--autoplay-policy=user-gesture-required'],
     });
     const strips = (page) => page.evaluate(() => [...document.querySelectorAll('.flash-touch-controls')].map((el) => ({
         under: el.previousElementSibling?.id ?? null,
