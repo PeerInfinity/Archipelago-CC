@@ -14371,6 +14371,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "include-fired"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "margin"
