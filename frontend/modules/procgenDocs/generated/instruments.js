@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 150,
-            "count": 200,
+            "browser": 151,
+            "count": 201,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 523,
-        "browser": 220,
-        "cited": 276,
-        "files": 541,
+        "blockStyle": 524,
+        "browser": 221,
+        "cited": 277,
+        "files": 542,
         "lineStyle": 18,
-        "withDocblock": 541,
-        "withFlags": 460
+        "withDocblock": 542,
+        "withFlags": 461
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -17772,6 +17772,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rock-fire.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "on"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rock-fire — ⛓⛓⛓ seedling-fidelity-rockfire: A FIRE PRESS REACHING A BREAKABLE ROCK, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-rock-fire.mjs"
         },
         {
             "argvHelpers": [
