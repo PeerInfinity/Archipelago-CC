@@ -30,6 +30,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -173,6 +174,7 @@ async function main() {
         PROJECT_ROOT, 'frontend', 'modules', 'mazeRoom', 'mazeRoomLibrary.js',
     );
     await import(mazeLibPath);
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const { growMaze, buildRulesJson, stringifyRulesJson } = await import(enginePath);
     const libPath = path.join(
         PROJECT_ROOT, 'frontend', 'modules', 'shared', 'procgen', 'library.js',

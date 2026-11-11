@@ -78,6 +78,7 @@
 // dump-*-byteidentity.mjs) hold the line.
 
 import { replayLayoutEdits, layoutEditStage } from './layoutEdits.js';
+import { withoutContentSet } from './worldContent.js';
 
 /**
  * Run a single named step over the envelope, mutating + returning it. Async
@@ -282,6 +283,14 @@ export function serializeEnvelope(env, desc) {
     const out = { kind: desc.kind, envelope_version: ENVELOPE_VERSION, ...rest };
     for (const [field, codec] of Object.entries(desc.codecs ?? {})) {
         if (env[field] != null && codec.encode) out[field] = codec.encode(env[field], env);
+    }
+    // ⛓ CONTENT SETS C4 — a loaded content set is runtime state (its readers are functions): the
+    //   serialized envelope keeps `regionParams.content` and drops the set, so an in-process caller
+    //   can clone it (`runPipeline` → a step CLI's `build`). A resume re-attaches it.
+    for (const holder of ['config', 'opts']) {
+        const rp = out[holder]?.regionParams;
+        const kept = withoutContentSet(rp);
+        if (kept !== rp) out[holder] = { ...out[holder], regionParams: kept };
     }
     return out;
 }

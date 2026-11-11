@@ -42,6 +42,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { argvHelp } from './argvHelp.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
 import { generatePythonOrExit } from './repoPython.js';
+import { preloadScriptContent } from './preloadContent.js';
 
 argvHelp(import.meta.url);
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -96,6 +97,7 @@ try {
     const imp = (p) => import(pathToFileURL(path.join(repoRoot, p)));
     await imp('frontend/modules/mazeRoom/mazeRoomLibrary.js'); // registers maze (+ bounce via its deps)
     const engine = await imp('frontend/modules/procgenPipeline/procgenPipelineEngine.js');
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const validator = await imp('frontend/modules/procgenPipeline/regionLibraryValidator.js');
     const { planSpheres } = await imp('frontend/modules/procgenPipeline/spherePlanner.js');
     const { substrateRegistry } = await imp('frontend/modules/shared/procgen/substrateRegistry.js');

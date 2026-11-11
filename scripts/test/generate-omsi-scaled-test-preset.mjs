@@ -41,6 +41,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { resolvePresetOutDir } from './presetOutDir.mjs';
 import { stampLoopCosts } from './presetLoopCosts.mjs';
+import { preloadScriptContent } from '../procgen/preloadContent.js';
 
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -77,6 +78,7 @@ async function main() {
     // Substrate libraries register on import.
     await load('frontend/modules/mazeRoom/mazeRoomLibrary.js');
     await load('frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js');
+    await preloadScriptContent(); // ⛓ CONTENT SETS C4 — the default packs, after the libraries register
     const { ensureUnlockTable } = await load('frontend/modules/omsiSubstrateWrapper/unlockPool.js');
 
     // The ① config seam is synchronous, so the fork's unlock table has

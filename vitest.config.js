@@ -30,6 +30,10 @@ export default defineConfig({
     // Environment settings
     environment: 'node',
 
+    // ⛓ CONTENT SETS C4 — each test file's synchronous world builders find the default content
+    // packs its substrates declare preloaded (a no-op while none is declared; see the file).
+    setupFiles: ['scripts/test/vitestDefaultContentSetup.js'],
+
     // Reporter configuration
     reporters: ['default'],
 
