@@ -50,7 +50,7 @@ const L101_ROCK_TAGS = Object.freeze([2]);
 
 /**
  * The witness stagings: `{level, boot, hold, press, ticks, items, weapon, rock, flag}`. Every tick holds `hold` (onto
- * the rock); `primary` on input `press`. `boot` is the tape's (`Game` ctor args: the entity is at +8, +8). `items` are
+ * the rock); `primary` on input `press` (one input, or a list). `boot` is the tape's (`Game` ctor args: the entity is at +8, +8). `items` are
  * laid over the L40 pocket boot's (`fidelityTurretCircle.l40PocketBoot`: Sword, Fire, swim, torch). `weapon: 'fire'`
  * equips the Fire slot at t0. `flag` is the persistence flag `endAnim` writes; `breaks` is the AS3 reading's prediction.
  */
@@ -67,6 +67,14 @@ export const ROCKFIRE_TAPES = Object.freeze({
     'rockfire-l40-fire-ghost': Object.freeze({ level: 40, boot: Object.freeze({ level: 40, x: 192, y: 128 }),
         hold: 'left', press: 10, ticks: 40, items: Object.freeze({ hasGhostSword: true }), weapon: 'fire',
         rock: 'breakablerock@176,128', flag: Object.freeze({ level: 40, tag: 22 }), rockTags: L40_ROCK_TAGS, breaks: true }),
+    /**
+     * TWO Fire presses: input 10 breaks `@176,128` and `@176,144`; input 30 fires again with the walk standing in the
+     * opened cell — the flame's rect covers the two GONE rocks' cells (the game removed them: nothing there to hit) and
+     * reaches the third rock, `@160,144` {40,23}, which breaks on its own clock.
+     */
+    'rockfire-l40-fire-twice': Object.freeze({ level: 40, boot: Object.freeze({ level: 40, x: 192, y: 128 }), hold: 'left',
+        press: Object.freeze([10, 30]), ticks: 60, items: Object.freeze({}), weapon: 'fire', rock: 'breakablerock@176,128',
+        flag: Object.freeze({ level: 40, tag: 22 }), rockTags: L40_ROCK_TAGS, breaks: true }),
     /** A rockType-1 (GHOST) rock, Fire, NO Ghost Sword: `hit(0)`, `1 <= 0` is false → nothing, for the whole tape. */
     'rockfire-l101-ghostrock-fire': Object.freeze({ level: 101, boot: Object.freeze({ level: 101, x: 240, y: 96 }),
         hold: 'left', press: 10, ticks: 40, items: Object.freeze({}), weapon: 'fire',
@@ -85,7 +93,7 @@ export function rockFirePerTick({ hold, press, ticks }) {
     const out = [];
     for (let t = 0; t < ticks; t += 1) {
         const h = new Set([hold]);
-        if (t === press) h.add('primary');
+        if ([press].flat().includes(t)) h.add('primary');
         out.push(h);
     }
     return out;
@@ -111,7 +119,7 @@ export async function rockFireTape(name, over = {}) {
         equips: spec.weapon === 'fire' && slot !== 0 ? [{ t: 0, slot }] : [],
         description: `seedling-fidelity-rockfire D0: L${spec.level} entity (${boot.x + 8},${boot.y + 8}), noDamage, `
             + `${spec.weapon === 'fire' ? 'Fire' : 'the Sword'} equipped${base.seam.items.hasGhostSword ? ', the Ghost Sword held' : ''} — hold ${spec.hold} `
-            + `onto ${spec.rock}, primary on input ${spec.press}; the rock's solid and its persistence write, every `
+            + `onto ${spec.rock}, primary on ${Array.isArray(spec.press) ? `input(s) ${spec.press.join(', ')}` : `input ${spec.press}`}; the rock's solid and its persistence write, every `
             + 'tick (probe-seedling-rock-fire.mjs)',
     };
 }

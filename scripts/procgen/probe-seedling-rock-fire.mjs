@@ -82,7 +82,7 @@ async function main() {
         if (!spec) throw new Error(`unknown witness ${name}; known: ${ROCKFIRE_WITNESSES.join(', ')}`);
         const tape = await rockFireTape(name);
         const model = await rockFireModelSamples(tape, over);
-        console.log(`      ${name}: ${tape.tick_count} t, ${spec.weapon} on input ${spec.press} at ${spec.rock}`
+        console.log(`      ${name}: ${tape.tick_count} t, ${spec.weapon} on input(s) ${[spec.press].flat().join(',')} at ${spec.rock}`
             + `${Object.keys(over).length ? ` (ON: ${Object.keys(over).join(', ')})` : ''}`);
         check(`${name}: the model replays the tape to its end`, model.error === null, model.error ?? '');
         const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
@@ -108,12 +108,12 @@ async function main() {
             }
         }
         const inTape = samples.filter((g) => g.t < tape.tick_count);
-        const gameOpen = firstMoveAfter(inTape, spec.press + 1);
+        const gameOpen = firstMoveAfter(inTape, [spec.press].flat()[0] + 1);
         const gameWrite = firstCleared(inTape, spec.flag.tag);
         const rock = model.rocks.find((r) => r.id === spec.rock) ?? null;
         console.log(`      ${name}: the game — the cell opens on obs ${gameOpen}, {${spec.flag.level},${spec.flag.tag}} `
             + `first cleared on obs ${gameWrite}; the model — hitTick ${rock?.hitTick ?? '-'} goneAt ${rock?.goneAt ?? '-'}, `
-            + `opens on obs ${firstMoveAfter(model.samples, spec.press + 1)}, written on obs `
+            + `opens on obs ${firstMoveAfter(model.samples, [spec.press].flat()[0] + 1)}, written on obs `
             + `${firstCleared(model.samples, spec.flag.tag, 'written')}`);
         check(`${name}: on the game the rock ${spec.breaks ? 'BREAKS (the cell opens and its flag is written)' : 'does NOT break (the cell never opens, no flag is written)'}, as the AS3 reads`,
             spec.breaks ? (gameOpen !== null && gameWrite !== null) : (gameOpen === null && gameWrite === null),
