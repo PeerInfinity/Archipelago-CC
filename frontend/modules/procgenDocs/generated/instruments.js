@@ -19031,6 +19031,8 @@ export const INSTRUMENTS = frz({
                 "max-restarts",
                 "only",
                 "order",
+                "preset",
+                "stall-s",
                 "until"
             ],
             "file": "probe-seedling-walk-order.mjs",
@@ -19070,6 +19072,24 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "preset"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "stall-s"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "trace"
                 },
                 {
                     "how": [
@@ -22410,6 +22430,7 @@ export const INSTRUMENTS = frz({
         {
             "argvHelpers": [
                 "DISABLE",
+                "PRESET",
                 "argOf"
             ],
             "browser": false,
@@ -22430,6 +22451,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "survey-seedling-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "carry-earned"
+                },
                 {
                     "how": [
                         "startsWith"
@@ -22459,6 +22486,12 @@ export const INSTRUMENTS = frz({
                         "argOf"
                     ],
                     "name": "out"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "preset"
                 },
                 {
                     "how": [
