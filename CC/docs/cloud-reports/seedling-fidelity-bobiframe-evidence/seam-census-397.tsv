@@ -1,0 +1,16 @@
+seam	OFF answer	OFF hits on the game model (chaserSpinnerWalls ON)	ON answer	ON hits
+5216	1207 t (dashless:1262 full:1207@sword-dash)	[]	1165 t (dashless:1360 full:1165@sword-dash)	[]
+5217	1207 t (dashless:1262 full:1207@sword-dash)	[]	1165 t (dashless:1360 full:1165@sword-dash)	[]
+5218	1226 t (dashless:1382 full:1226@sword-dash)	['936:bob@736,752', '977:bob@736,800', '1064:bob@736,800']	1222 t (dashless:1270 full:1222@sword-dash)	[]
+5219	1226 t (dashless:1354 full:1226@sword-dash)	['936:bob@736,752', '977:bob@736,800', '1064:bob@736,800']	1222 t (dashless:1270 full:1222@sword-dash)	[]
+5220	1226 t (dashless:1480 full:1226@sword-dash)	['936:bob@736,752', '977:bob@736,800', '1064:bob@736,800']	1222 t (dashless:1270 full:1222@sword-dash)	[]
+5221	1226 t (dashless:1297 full:1226@sword-dash)	['936:bob@736,752', '977:bob@736,800', '1064:bob@736,800']	1222 t (dashless:1270 full:1222@sword-dash)	[]
+5222	1226 t (dashless:1373 full:1226@sword-dash)	['936:bob@736,752', '977:bob@736,800', '1064:bob@736,800']	1222 t (dashless:1270 full:1222@sword-dash)	[]
+5223	1226 t (dashless:1373 full:1226@sword-dash)	['936:bob@736,752', '977:bob@736,800', '1064:bob@736,800']	1222 t (dashless:1270 full:1222@sword-dash)	[]
+5224	1285 t (dashless:1358 full:1285)	[]	1285 t (dashless:1366 full:1285)	[]
+5225	REFUSED (item (880,816) contact -> kill (spinner@880,848) by press: every key set — the p)	-	REFUSED (item (880,816) contact -> kill (spinner@880,848) by press: every key set — the p)	-
+5226	1258 t (dashless:1274 full:1258@sword-dash)	['974:bob@736,752']	1302 t (dashless:1359 full:1302)	[]
+5241	1097 t (dashless:1181 full:1097)	['814:bob@736,752', '890:spinner@816,848']	REFUSED (item (880,816) contact -> kill (spinner@816,848) by press: every key set — the p)	-
+5247	1051 t (dashless:1158 full:1051)	['824:bob@736,752']	1066 t (dashless:1149 full:1066)	[]
+5258	1230 t (dashless:1295 full:1230@sword-dash)	[]	1267 t (dashless:1340 full:1267)	[]
+{"off_hit": 9, "off_clean": 4, "off_ref": 1, "on_clean": 12, "on_ref": 2, "on_hit": 0}

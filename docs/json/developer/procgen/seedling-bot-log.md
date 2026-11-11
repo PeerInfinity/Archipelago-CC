@@ -27844,3 +27844,52 @@ apitem does not vanish); 10 more chest rows shorter; 66/94/175 still refused, ob
 **Trap candidates.** (1) A survey row that is SOLVED in 0 ticks at a chest is the seal removal (`Chest.checkBySeal` with
 all seals held), not a take — the delivered game has no such removal. (2) Which world a "model" row stands in: the page's
 solver sees the DELIVERED rooms (`world.apItems`), the survey the vanilla ones — the same goal can be two verbs.
+
+### Seedling fidelity BOBIFRAME — L40's `bob@736,752` at t930: a spinner walls the bob; the lapse is the game's (no new key)
+
+Planner `seedling-fidelity-planning-19`, wave 39 (⚖ the user's GO 2026-11-10, *"Bob + BreakableRock now"*). Base
+`a4f57f8c53`. The report is `CC/docs/cloud-reports/seedling-fidelity-bobiframe.md`.
+
+**The claim handed over** (hammer L40-FLIP-BUILD §3.1): on sweep legs `Level 040 - Chest ← L39` / `flag 12 ← L39` the model
+lands `bob@736,752`'s third sword hit at t930 — the last test of the swing pressed at t925, on the tick `hitsTimer` lapses
+(`strikeIframeLapse`) — and the game's bob lives and hits the player at t936. Candidates: the swing's last test tick, or bob
+state the game holds.
+
+**W0.** The leg re-keyed (ids 397 / 875 at this base). The page solves the same 1226-t plan at arrival clock 5222 in node
+(1525 work units) and a 1051-t plan at 5247 (the page's own run here: hit at t824). `Enemy.hit` gates on `hitsTimer <= 0`;
+`Enemy.update` runs `hitUpdate()` behind the off-screen return; `Player.slash()` tests on every tick `slashing` is up
+(`slashDelayMax` 0), five for a plain swing — all three are the model's, line for line.
+
+**D0 (the game, p4g, the delivered AP set).** `probe-seedling-bobiframe.mjs` plays the plan and reads every Bob's `hits` /
+`hits_timer` (`botMobiles`) and the game's own slash-test counter. The first parting is **t544**, 0.177 px: the bob's FIRST
+step is stopped by `spinner@816,848` crossing its box (a Spinner is `type = "Enemy"`, `Bob.solids` hold "Enemy"). From
+there the bob stands elsewhere: hit 1 at t874 (model t867), hit 2 at t906 (model t900), and the t925 swing's five tests
+(t926..t930, counted by the game) meet `hits_timer` 10..6. So neither candidate as worded: the swing and the lapse are
+right, and the missing state is a wall the model already has behind `CONTACT_FIDELITY.chaserSpinnerWalls` (L40CONTACT D1,
+OFF since wave 17). With it ON the model is the game at **0 px over all 1226 ticks** (14,522 Bob comparisons with
+`hits`/`hits_timer`, 5,742 Spinner), hits at t936 / t977 / the lethal t1064 included.
+
+**D1 — no new key.** The brief's `swingLapseLastTick`-style refinement has nothing to refine. Committed instead: the probe,
+`fixtures/bobiframe-witness/` (the default 1226-t plan and the ON 1222-t plan with the game's rows) and
+`fidelityBobIframe.test.js` (8 rows that hold under either default; mutant "the wall returns nothing ON" reds the 2
+predicted rows).
+
+**D2 (`chaserSpinnerWalls` ON, measured; nothing flipped).** The ON plan (1222 t) plays hitless on the game at 0 px, as
+does the 5247 ON plan (1066 t). Seam census of the captured request, 14 arrival clocks: OFF 9 hit-taking plans (6 of
+them lethal) / 4 clean / 1 refused; ON **12 clean / 2 refused / 0 hit-taking** — no clean OFF answer turns into a refusal.
+Only L40 and L92 hold a spinner beside an "Enemy"-walled chaser. Movers ON: bounded vitest 10 reds of 2,123 (the defaults
+row; `fidelityL40Bk2` ×3 and `fidelityL40Res` ×1, fidelity's; `hammerClearTagChain` ×1, `hammerPressKillChasers` ×1,
+`hammerPressKillGuards` ×3, hammer's to sign); train 3/3 both arms; tapeRunner pairs 643 `beea3ad6…` both arms; acceptance
+`abb206c8…` both arms; producer `--check`s 1 red of 98 (`plan-seedling-l40button-witness`: `l40button-l41-part0` drifts —
+a flip owes its re-record); local survey steps 86 / 98 / 137 / 150 identical, 66 / 96 REFUSED both arms with the refusal
+moving from "4 strategies, no corridor" to the weigh's approach (`spinner@880,848`'s hammer).
+
+**STOP → the user (licence) and hammer.** The flip of `chaserSpinnerWalls` is a default flip with one tape re-record and
+five hammer-owned pins; the two ON refusals (seams 5225, 5241) end in the press kill's escape ("no step out" after the
+press on a spinner lands), which is the hammer arc's.
+
+**Trap candidates.** (1) A sword hit "landing on the lapse" in the model and missing on the game is first a POSITION
+question: read the struck body's rows from its first step, not from the swing — here the parting was 386 ticks before the
+swing. (2) A standalone `game.html` boots the VANILLA rooms: a plan solved on the page (the delivered AP set) replays on a
+different room there (L40's Chest is Solid to a spinner, the apitem is not) — deliver the set (`botLoadLevels`) before
+reading a witness. (3) The game's `hits` counter resets on the lethal hit; count hits by `hits_timer` re-arming.
