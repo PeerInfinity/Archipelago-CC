@@ -16,15 +16,21 @@
  *   VANILLA    the whole tape on the VANILLA set (the control): the chest stays Solid, `{25,0}` stays set, and the
  *              model's replay on the vanilla rooms (the bottom-line rule) is the game's at 0 px too.
  *
+ * `--through` (slice rules-chest-open-side, a REPORT, no rule reads it) plays ONE more tape INSTEAD of the four arms:
+ * from the same boot (L22's landing), a waypoint walk on the model (`throughKeys`) to the tile east of the chest's
+ * cell, west into the cell, and down the corridor to L28's door. On the DELIVERED set the game takes the apitem and
+ * leaves by L28's door (the cell is no Solid from L22's side); on the VANILLA set the same keys stay in L25 with
+ * `{25,0}` set (the Chest is a Solid there, opened from the line under it only).
+ *
  * `--record` writes `fixtures/l25apitem-witness/oracle.json` (what `fidelityL25ApItem.test.js` holds the model to).
  * Prints `PASS:`/`FAIL:` rows, `ROW {json}`, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000; or `SEEDLING_PORT`); the wasm
  * build, or SKIP. Takes the box lock. Headless LOGIC-ONLY.
  *
- * Run: SEEDLING_PORT=9777 node scripts/procgen/probe-seedling-l25-apitem.mjs [--host=…] [--record]
+ * Run: SEEDLING_PORT=9777 node scripts/procgen/probe-seedling-l25-apitem.mjs [--host=…] [--record] [--through]
  */
 import { chromium } from 'playwright';
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
@@ -39,6 +45,51 @@ const REPO = join(HERE, '..', '..');
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
+
+/**
+ * `--through`: the keys of a walk from the tape's boot THROUGH the chest's cell and on down its column, chosen on the
+ * model over `levelSource` (the game is the judge). The way is read off the room: the tile east of the chest's cell
+ * (reached along the boot's row first), the cell itself, then the room's last row under it. Ends when the model
+ * leaves the level, or after `limit` ticks per waypoint.
+ * @returns {Promise<{perTick: string[][], model: {level:number, x:number, y:number}}>}
+ */
+export async function throughKeys(tape, levelSource, room, { tile = 16, lead = 30, limit = 400, tail = 30 } = {}) {
+    const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
+    const { createRunForStaging, stagingFromTape } = await M('tapeRunner.js');
+    const cell = room.entities.filter((e) => e.type === 'chest' || e.type === 'apitem');
+    if (cell.length !== 1) throw new Error(`probe-seedling-l25-apitem: L${room.level} holds ${cell.length} chest cells, not one`);
+    const [cx, cy] = [Math.floor(cell[0].x / tile), Math.floor(cell[0].y / tile)];
+    const way = [[cx + 1, Math.floor(tape.boot.y / tile)], [cx + 1, cy], [cx, cy], [cx, room.height - 1]];
+    const run = createRunForStaging(stagingFromTape(tape), levelSource, { scratchPersistence: true });
+    const level = run.level;
+    const perTick = [];
+    const advance = (keys) => { run.advance(new Set(keys)); perTick.push([...keys].sort()); };
+    for (let i = 0; i < lead; i += 1) advance([]);
+    for (const [tx, ty] of way) {
+        const wx = tx * tile + tile / 2;
+        const wy = ty * tile + tile / 2;
+        for (let n = 0; n < limit && run.level === level; n += 1) {
+            const dx = wx - run.state.x;
+            const dy = wy - run.state.y;
+            if (Math.abs(dx) < 1.5 && Math.abs(dy) < 1.5) break;
+            advance([...(dx > 1.4 ? ['right'] : dx < -1.4 ? ['left'] : []), ...(dy > 1.4 ? ['down'] : dy < -1.4 ? ['up'] : [])]);
+        }
+    }
+    for (let i = 0; i < tail; i += 1) perTick.push([]);
+    return { perTick, way, model: { level: run.level, x: run.state.x, y: run.state.y } };
+}
+
+/** Per-tick key lists as a tape's `inputs` spans (`{key, from, to}`, `to` exclusive). */
+export function spansOf(perTick) {
+    const spans = [];
+    const open = new Map();
+    perTick.forEach((keys, t) => {
+        for (const [k, from] of [...open]) if (!keys.includes(k)) { spans.push({ key: k, from, to: t }); open.delete(k); }
+        for (const k of keys) if (!open.has(k)) open.set(k, t);
+    });
+    for (const [k, from] of open) spans.push({ key: k, from, to: perTick.length });
+    return spans.sort((a, b) => a.from - b.from || a.key.localeCompare(b.key));
+}
 
 async function main() {
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -125,6 +176,37 @@ async function main() {
     const slot = `${F.L25_SLOT.level},${F.L25_SLOT.tag}`;
     const oracle = { source: 'probe-seedling-l25-apitem.mjs --record (seedling fidelity L25APITEM)', build: PAGE,
         tape: F.L25_TAPE, delivered_set: sets.delivered.set_id, vanilla_set: sets.vanilla.set_id, slot, takenAt };
+    if (process.argv.includes('--through')) {
+        try {
+            const { parseTape } = await M('tapeFormat.js');
+            const room = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'))
+                .levels.find((l) => l.level === F.L25_SLOT.level);
+            const { perTick, way, model: walked } = await throughKeys(tape, sets.deliveredSource, room);
+            const through = parseTape({ ...tape, name: 'l25apitem-through', tick_count: perTick.length, inputs: spansOf(perTick) });
+            const onVanilla = F.l25Replay(through, sets.vanillaSource);
+            const del = await play(sets.delivered, through);
+            const van = await play(sets.vanilla, through);
+            const levelsOf = (r) => [...new Set(r.ticks.map((o) => o.level))];
+            const row = { way, ticks: perTick.length, model: { delivered: walked, vanilla: onVanilla.rows.at(-1) },
+                delivered: { mounted: del.mounted, levels: levelsOf(del), cleared: del.clears.includes(slot), end: del.ticks.at(-1) ?? null, hits: del.hits },
+                vanilla: { mounted: van.mounted, levels: levelsOf(van), cleared: van.clears.includes(slot), end: van.ticks.at(-1) ?? null, hits: van.hits } };
+            console.log(`ROW ${JSON.stringify(row)}`);
+            check('THROUGH: the model\'s walk on the delivered room leaves L25 for L28', walked.level === 28, JSON.stringify(walked));
+            check('THROUGH/DELIVERED: the game ran the tape on the delivered set', del.mounted === sets.delivered.set_id, String(del.mounted));
+            check(`THROUGH/DELIVERED: from L22's landing the game takes the apitem ({${slot}} cleared) and leaves by L28's door`,
+                row.delivered.cleared && row.delivered.end?.level === 28, JSON.stringify(row.delivered));
+            check('THROUGH/VANILLA (control): the same keys stay in L25 and the Chest is not opened ({25,0} set)',
+                van.mounted === sets.vanilla.set_id && !row.vanilla.cleared && row.vanilla.levels.length === 1 && row.vanilla.levels[0] === F.L25_SLOT.level,
+                JSON.stringify(row.vanilla));
+        } catch (e) {
+            console.log(`PAGE LOGS (last 20):\n${logs.slice(-20).join('\n')}`);
+            check('the wasm runs', false, String(e.message).split('\n')[0]);
+        } finally {
+            await browser.close();
+        }
+        console.log(failed ? `${failed} CHECK(S) FAILED` : 'ALL CHECKS PASSED');
+        process.exit(failed ? 1 : 0);
+    }
     try {
         check('the model takes the delivered apitem on some tick, and the vanilla room holds none',
             Number.isInteger(takenAt) && model.vanilla.apItems.length === 0, JSON.stringify(model.delivered.taken));

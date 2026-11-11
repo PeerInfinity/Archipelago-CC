@@ -15171,6 +15171,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "record"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "through"
                 }
             ],
             "inheritedFlags": [
