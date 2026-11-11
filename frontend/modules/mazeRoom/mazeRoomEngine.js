@@ -23,7 +23,7 @@ import {
     tileIndex, getTile, setTile,
 } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { resolveBiome } from './mazeRoomBiomeLibrary.js';
-import { conceptGateFor } from './mazeConcepts.js';
+import { conceptGateFor, presentItemLib } from './mazeConcepts.js';
 // Side-effect: ensure all maze backends are registered before
 // generateMaze runs.
 import './mazeAlgorithms/index.js';
@@ -3552,7 +3552,10 @@ export function generateRegionCore(input) {
 
     // Thread caller-supplied libs onto the world so step() and
     // extractPathsAndObstacles consult the right clear_sets.
-    world.itemLib = item_lib;
+    // ⛓ CONTENT SETS R2 — an item concept's row (marked by the world's concept
+    // list) takes its colour and symbol from the world's content set
+    // (`presentItemLib`); a library with no marked row is threaded as is.
+    world.itemLib = presentItemLib(item_lib, params?.contentSet);
     world.obstacleLib = obstacle_lib;
 
     // Stamp the resolved biome on the world so serializeMazeWorld can
@@ -3746,7 +3749,7 @@ export function placeFromRules(world, input = {}) {
     // empty or absent list returns null with no draw: today's `logic_gate_<n>`.
     const registerGate = (rule) => {
         const skin = conceptGateFor(rule, {
-            offered: params?.concepts, rng, n: gateCounter, logicGateBase,
+            offered: params?.concepts, rng, n: gateCounter, logicGateBase, contentSet: params?.contentSet,
         });
         if (skin) {
             gateCounter++;

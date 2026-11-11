@@ -18,7 +18,10 @@ import {
 } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 import { substrateRegistryEntry as ENTRY } from './mazeRoomLibrary.js';
-import { MAZE_CONCEPT_REALISATIONS, conceptGateFor } from './mazeConcepts.js';
+import {
+    MAZE_CONCEPT_REALISATIONS, MAZE_DEFAULT_CONTENT_PACK, MAZE_CONTENT_REFUSALS, conceptGateFor,
+} from './mazeConcepts.js';
+import { defaultContentSetOf } from '../procgenPipeline/worldContent.js';
 import {
     CONCEPTS, CONCEPT_ITEMS_FEATURE, assertRealisations, conceptsRealisedBy, itemTagsImpliedBy,
 } from '../procgenCore/concepts.js';
@@ -27,6 +30,8 @@ const SWORD = { rule: 'Has', args: { item_name: 'Progressive Sword' } };
 const SWIM = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
 const RED = { rule: 'Has', args: { item_name: 'key_red' } };
 const ALL = Object.keys(CONCEPTS);
+/** ⛓ CONTENT SETS R2 — the maze's default content set (preloaded by the vitest setup file): the gates' looks. */
+const SET = defaultContentSetOf([MAZE_DEFAULT_CONTENT_PACK]);
 
 /** A counting wrap of the shared rng: every `next()` (and so every `choice`) is counted. */
 function countingRng(seed) {
@@ -53,7 +58,7 @@ function place({ exitRule, locRule, params }) {
         location_rules: locRule ? { loc0: locRule } : {},
         item_placements: [{ item_id: 'map', location_id: 'loc0' }],
         rng,
-        ...(params !== undefined ? { params } : {}),
+        ...(params !== undefined ? { params: params.concepts?.length ? { contentSet: SET, ...params } : params } : {}),
     });
     return { world, out, draws: draws() };
 }
@@ -104,10 +109,11 @@ describe('a world that names the concept realises the gate as it — the picture
             const [gate] = got.out.placed_logic_gates;
             expect(gate.gate_id).toBe(`${concept}_gate_0`);
             const def = got.world.obstacleLib[gate.gate_id];
-            const art = MAZE_CONCEPT_REALISATIONS[concept].art;
+            const pack = SET.concepts.presenting(concept);
+            expect(pack.pack).toBe(MAZE_DEFAULT_CONTENT_PACK);
             expect(def).toEqual({
                 ...DEFAULT_OBSTACLES.logic_gate, id: gate.gate_id, clear_set_type: 'rule', clear_rule: rule,
-                concept, placement: 'gate', name: art.name, color: art.color, symbol: art.symbol,
+                concept, placement: 'gate', name: pack.name, color: pack.look.color, symbol: pack.look.symbol,
             });
             expect(getObstacle(got.world, gate.position.x, gate.position.y)).toBe(gate.gate_id);
             expect(compiled(got.world).exits.map((e) => e.rule)).toEqual(compiled(control.world).exits.map((e) => e.rule));
@@ -145,10 +151,16 @@ describe('a world that names the concept realises the gate as it — the picture
         let nexts = 0;
         const bare = { next: () => { nexts += 1; return 0.5; } };
         const base = DEFAULT_OBSTACLES.logic_gate;
-        expect(conceptGateFor(SWORD, { offered: ['guardian'], rng: bare, n: 3, logicGateBase: base }).id)
+        expect(conceptGateFor(SWORD, { offered: ['guardian'], rng: bare, n: 3, logicGateBase: base, contentSet: SET }).id)
             .toBe('guardian_gate_3');
         expect(conceptGateFor(RED, { offered: ALL, rng: bare, n: 0, logicGateBase: base })).toBeNull();
         expect(nexts).toBe(0);
+    });
+
+    it('⛓ R2: a selected concept with no content set is refused by name (its look lives in a pack)', () => {
+        const base = DEFAULT_OBSTACLES.logic_gate;
+        expect(() => conceptGateFor(SWORD, { offered: ['guardian'], rng: createRng(1), n: 0, logicGateBase: base }))
+            .toThrow(MAZE_CONTENT_REFUSALS.noContentSet('gate "guardian_gate_0"', 'guardian'));
     });
 });
 

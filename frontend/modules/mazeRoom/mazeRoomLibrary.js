@@ -46,7 +46,7 @@ import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames, tileGridApExitNames } from './mazeSerializer.js';
 import { mazeCapacityAt } from './mazeLocationCapacity.js';
-import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
+import { MAZE_CONCEPT_REALISATIONS, MAZE_CONTENT_ROLES, MAZE_DEFAULT_CONTENT_PACK } from './mazeConcepts.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -164,6 +164,12 @@ export const substrateRegistryEntry = Object.freeze({
     // an item concept gets its rows in its item library instead
     // (`presetRun.mergedItemLib`), which is inert for a concept-less world.
     conceptRealisations: MAZE_CONCEPT_REALISATIONS,
+    // ⛓ CONTENT SETS R2 — the NAMES, colours and symbols of those realisations
+    // come from content packs: this default pack (`frontend/packs/maze/`) is in
+    // every world's stack, and a later pack that fills a role wins. The roles say
+    // what a pack concept must supply; `mazeConcepts.js` reads them.
+    defaultContentPack: MAZE_DEFAULT_CONTENT_PACK,
+    contentRoles: MAZE_CONTENT_ROLES,
 
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**

@@ -29,7 +29,7 @@ import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js
 import { CONCEPT_TRIAL_STATE } from './presetDefs.js';
 import { buildRunFromState, runPresetHeadless, mergedItemLib } from './presetRun.js';
 import { CONCEPTS, isConceptRow } from '../procgenCore/concepts.js';
-import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
+import { MAZE_DEFAULT_CONTENT_PACK, presentedLook } from '../mazeRoom/mazeConcepts.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { presentedProse } from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
 import { defaultContentSetOf } from './worldContent.js';
@@ -71,7 +71,8 @@ describe('T4 D1 — the concept trial world', async () => {
         expect(lib.water_gate_0).toMatchObject({
             concept: 'water', placement: 'gate', clear_set_type: 'rule',
             clear_rule: { rule: 'Has', args: { item_name: CONCEPTS.swim.item.id } },
-            color: MAZE_CONCEPT_REALISATIONS.water.art.color, symbol: MAZE_CONCEPT_REALISATIONS.water.art.symbol,
+            // ⛓ CONTENT SETS R2 — the name and look are the maze's default pack's (`gate` role).
+            ...presentedLook(defaultContentSetOf([MAZE_DEFAULT_CONTENT_PACK]), 'gate', 'water'),
         });
         const ctrlLib = ctrl.rulesJson.preset_sidecars['1'].region_2_3.playable_payload.obstacleLib;
         expect(Object.keys(ctrlLib)).toEqual(['logic_gate_0']);
