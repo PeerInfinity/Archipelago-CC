@@ -657,7 +657,9 @@ describe('who takes the box', () => {
             // hammer CHEST-INCIDENTAL: two chests opened on one visit, on the game (import door: `isEntryPoint` → main())
             'probe-seedling-chest-incidental.mjs',
             // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
-            'probe-seedling-drill-water.mjs'];
+            'probe-seedling-drill-water.mjs',
+            // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
+            'probe-seedling-bobiframe.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
