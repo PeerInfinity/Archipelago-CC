@@ -8,8 +8,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    carriedEarnedFor, deriveStagedGrant, inheritedFlagsFor, preSwordBaseOf, reportedKillsBefore, STAGED_BLOCK_FIELDS,
-    stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit,
+    carriedEarnedFor, deriveStagedGrant, inheritedFlagsFor, preSwordBaseOf, STAGED_BLOCK_FIELDS, stageGrantSave,
+    stagedBlockCheck, stagedRng, tapeCoversVisit,
 } from './surveyGrants.js';
 import { parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
 import { solveStaging, stagingFromTape } from '../../frontend/modules/seedlingDemo/tapeRunner.js';
@@ -343,25 +343,6 @@ describe('ER E6 — the staging of a route that comes back', () => {
         expect(one.dropped.every((r) => r.level !== levels[0])).toBe(true);
         expect(one.kept.length + one.dropped.length).toBe(latch.length);
         expect(inheritedFlagsFor(undefined, [1])).toEqual({ kept: [], dropped: [] });
-    });
-
-    it('a reported kill is staged in the LATER visits to its own level only', () => {
-        const fight = { kind: 'clear-tag', report: { level: 19, tag: 0 } };
-        const steps = [
-            { level: 18, goals: [{ kind: 'reach-exit' }] },
-            { level: 19, goals: [{ kind: 'collect-placement' }, fight, { kind: 'reach-exit' }] },
-            { level: 40, goals: [{ kind: 'reach-exit' }] },
-            { level: 19, goals: [{ kind: 'reach-exit' }] },
-            { level: 32, goals: [{ kind: 'skip', report: { level: 32, tag: 3 } }] },
-            { level: 32, goals: [{ kind: 'encounter', report: { level: 32, tag: 3 } }] },
-            { level: 32, goals: [{ kind: 'reach-exit' }] },
-        ];
-        expect(reportedKillsBefore(steps, 1)).toEqual([]);                      // the visit that fights
-        expect(reportedKillsBefore(steps, 2)).toEqual([]);                      // another level
-        expect(reportedKillsBefore(steps, 3)).toEqual([{ level: 19, tag: 0 }]); // back in the room
-        expect(reportedKillsBefore(steps, 3, [{ level: 19, tag: 0 }])).toEqual([]); // already staged: once
-        expect(reportedKillsBefore(steps, 5)).toEqual([]);                      // a skip reported nothing
-        expect(reportedKillsBefore(steps, 6)).toEqual([{ level: 32, tag: 3 }]);
     });
 
     it('--carry-earned: the earlier SOLVED rows of the same level, each flag once', () => {

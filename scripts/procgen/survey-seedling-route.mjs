@@ -168,8 +168,8 @@ import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
 import {
-    carriedEarnedFor, deriveStagedGrant, inheritedFlagsFor, preSwordBaseOf, reportedKillsBefore, stageGrantSave,
-    stagedBlockCheck, stagedRng, tapeCoversVisit,
+    carriedEarnedFor, deriveStagedGrant, inheritedFlagsFor, preSwordBaseOf, stageGrantSave, stagedBlockCheck, stagedRng,
+    tapeCoversVisit,
 } from './surveyGrants.js';
 import {
     RESTART_TARGET, countedPoolOf, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
@@ -277,7 +277,9 @@ if (OUT_FILE && THROUGH === null) {
  * ALONE from a declared boot, so a body an earlier visit removed for good (a broken rock, an opened kill-lock, a boss
  * it had to fight to cross: the run's `earnedClears`, the flags the game SAVES) stands again at the next visit. On
  * the playthrough that costs a re-break; on a world that crosses one room many times (`seedling_er`: L16 nine
- * times, L19 eight) a later visit can refuse on a body the walk already removed. With the flag, a step ALSO boots
+ * times, L19 eight) a later visit can refuse on a body the walk already removed. ⚠ A flag is carried only because a
+ * solved visit EARNED it: staging a boss goal's `report` alone was tried and withdrawn (a fight clears several flags
+ * — L32's clears four — and the report without the others boots a room the game never holds). With the flag, a step ALSO boots
  * with the `earnedClears` of its own level from the EARLIER rows of the named survey that SOLVED (the prior run of
  * this same route: `--through`, `--route` and `--preset` must be its own). The row names what it carried
  * (`boot.carriedEarned`), so a carried row is never read as an independent one. ⚖ A SECOND-PASS READING, not the
@@ -1035,19 +1037,7 @@ function deriveRoute() {
             + `${visits.length} — the staging would be handed to the wrong rooms.`);
     }
     const steps = buildSteps(visits, legs, (i) => i + 1);
-    /**
-     * ⛓ ER E6 — **A KILL THE WALK REPORTED STAYS REPORTED.** A boss row's goal ends on its fight's report, the kill's own
-     * `(level, tag)` (`bossGoal`: `report`), and the game keeps that flag: the body is not built again. The playthrough
-     * never enters a boss's room after its report (measured: no later visit, either route), so the survey never staged
-     * one. A world whose stairs lead elsewhere walks back through such a room (`seedling_er`: L19 seven times after the
-     * Shieldspire), and booting it with the boss alive asks every later crossing to win the fight again. So a step
-     * boots with the report of every boss goal an EARLIER step completed IN ITS OWN LEVEL (the room that builds the
-     * body), as `stagedPersistence` stages an event's flag: never in the visit that fights, never before, and a `skip`
-     * (a boss no executor fights) reports nothing. A flag the events already stage is not added twice
-     * (`surveyGrants.reportedKillsBefore`).
-     */
-    return { legs, visits, steps, persistence: new Map(steps.map((s, i) => [String(s.step),
-        [...persistence[i], ...reportedKillsBefore(steps, i, persistence[i])]])) };
+    return { legs, visits, steps, persistence: new Map(steps.map((s, i) => [String(s.step), persistence[i]])) };
 }
 
 

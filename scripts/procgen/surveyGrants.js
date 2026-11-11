@@ -275,9 +275,9 @@ export function stagedBlockCheck(construction, tape, shipped) {
 }
 
 /**
- * ⛓⛓ ER E6 — **THE STAGING OF A ROUTE THAT COMES BACK.** Four rules the playthrough's route never exercised (every
- * room before its Sword has a committed tape; it never re-enters a boss's room; the latch's opened rooms are all
- * behind it), and a world whose stairs lead elsewhere does. Each is pure (unit rows: `surveyGrants.test.js`), and
+ * ⛓⛓ ER E6 — **THE STAGING OF A ROUTE THAT COMES BACK.** Three rules the playthrough's route never exercised (every
+ * room before its Sword has a committed tape; the latch's opened rooms are all behind it; it crosses few rooms
+ * often), and a world whose stairs lead elsewhere does. Each is pure (unit rows: `surveyGrants.test.js`), and
  * each is inert where the playthrough stands (measured when they landed: its `route.json` is byte-identical in the
  * default survey and through 4.2 and `end`, both routes).
  */
@@ -307,28 +307,6 @@ export function inheritedFlagsFor(persistence, visitedLevels) {
     const visited = new Set(visitedLevels);
     const rows = persistence ?? [];
     return { kept: rows.filter((r) => visited.has(r.level)), dropped: rows.filter((r) => !visited.has(r.level)) };
-}
-
-/**
- * The kills the walk REPORTED before step `i`, in step `i`'s own level: the `report` `{level, tag}` of every goal an
- * earlier step carries (a `skip` — a boss no executor fights — reports nothing), less what `already` stages.
- *
- * @param {Array<{level:number, goals:Array}>} steps the route's steps, in order
- * @param {number} i the index of the step being staged
- * @param {Array<{level:number, tag:number}>} [already] flags the step already boots with
- * @returns {Array<{level:number, tag:number}>}
- */
-export function reportedKillsBefore(steps, i, already = []) {
-    const out = [];
-    for (const s of steps.slice(0, i)) {
-        for (const g of s.goals ?? []) {
-            const r = g.kind !== 'skip' ? g.report : null;
-            if (!r || r.level !== steps[i].level) continue;
-            if ([...already, ...out].some((f) => f.level === r.level && f.tag === r.tag)) continue;
-            out.push({ level: r.level, tag: r.tag });
-        }
-    }
-    return out;
 }
 
 /**
