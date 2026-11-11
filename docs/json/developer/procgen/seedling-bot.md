@@ -839,6 +839,17 @@ The printed scope names its two limits: it compares against the JS model of the 
 | `check-seedling-wasm-ship.mjs` | headless by default (pixels on), `--win` for real GPU | SOLVE, GENERATE and a multi-screen generated room through `finished`, the drain and both verdicts |
 | `check-seedling-wasm-element.mjs` | headless | a generated element room's ship through its per-tick verdict |
 
+### On-screen controls on `watch.html`
+
+The lab mounts the flash panel's on-screen controls (`flashPanel/touchControls.js`, the layout from `games/seedling.json`'s `touch_controls`): a d-pad and the X/C/V buttons, under the game they drive. One option governs them, MANUAL's **on-screen controls** select beside START: *auto* shows them on a touch screen (a coarse pointer) or with `?touch=1`, and `?touch=0` hides them; *on* and *off* force them either way. The choice is remembered per browser (`watchTouchOption.js`).
+
+- **MANUAL**: the strip appears under the lab canvas at START and goes at STOP (or when the run refuses). A press is a key on MANUAL's one held-key writer (`watchManual.touchSendFor`).
+- **▶ load in JS** and **▶ load in wasm** (any arm): the strip sits under the frame and dispatches each key on the frame's game canvas, the flash panel's own path. The wasm strip has Esc (the pause menu); the JS one does not. The `#jsTouch` and `#wasmTouch` boxes beside the buttons start from the option and override it for that ship.
+- **One strip at a time.** While a ship holds the frame, MANUAL's strip stands down (unmounted, its held keys released). It comes back with the next START once the ship has ended.
+- **While a tape drives the frame** (a REPLAY ship, a solve, a sequence's windows), the runtime ignores live input. The frame's strip is dimmed, with the note *Replaying — the controls take over when the tape ends*, until the ship's last `finished` stage (`tapeHoldsFrame`). This is presentation only: the strip still sends, and the runtime is the gate.
+
+`check-seedling-lab-load-in-js.mjs`'s TOUCH section drives them in a phone context with real touch input (CDP touch events), the wasm row on the headless WebGPU launch. It counts the strips per arm and asserts that the game's own position moved.
+
 ## The procgen level generator
 
 The Seedling procgen level generator (pass 1 draws elements and connectors over an intra-level area graph, pass 2 places site-typed content) has its design and build history in [seedling-bot-log.md § The procgen ELEMENTS design](./seedling-bot-log.md#the-procgen-elements-design--pass-1--elements--connectors-an-intra-level-area-graph-pass-2-site-typed-designed-2026-08-15-arcs-1-2-and-3-are-closed--arcs-12-on-the-maze-see-mazemd-arc-3--seedling-closed-2026-08-18-over-fourteen-slices-and--arc-3-is-closed-at-the-end-of-this--is-its-summary-arc-4--the-chain--ask-first-arc-5--shortcuts--density--arenas). The current generation passes are described in [architecture.md § Level generation](./architecture.md#level-generation-two-passes-over-one-loop-core), and the area graph in [maze.md § The area graph](./maze.md#the-area-graph). How a generated Seedling room is hosted as a pipeline region is in [flash.md](./flash.md).

@@ -42,7 +42,27 @@
  *       window 2 at its `tick_count`, and the drains held `61 + 48 + 1` observations;
  *   then 4 and 5: after the last window the frame goes on LIVE.
  *
+ * And TOUCH — ⛓ seedling-lab-touch-fix (⚖ the user 2026-11-11: *"the touch controls on the Seedling lab page stopped
+ * working. Also, there are two copies of the touch controls on the lab page, and one of those copies never did
+ * anything."*). A PHONE context (isMobile + hasTouch, so a coarse pointer and the option's `auto` shows them, no
+ * `?touch=`), and REAL touch input: `page.tap` for the buttons, CDP `Input.dispatchTouchEvent` for a held d-pad.
+ * ⛔ The rows above drive the strip with the mouse at a fine pointer, where MANUAL + ▶ load in JS mounts NO strip at
+ * all, so the state the user saw (two strips at once) was never on their screen. Per arm:
+ *
+ *   T1. MANUAL: NO strip before START (⚖ 2026-11-11: "those controls should only appear after pressing Start");
+ *       START shows ONE, under the lab canvas, and a held d-pad MOVES the lab's run (the HUD's position); STOP
+ *       takes it away.
+ *   T2. MANUAL (running) + ▶ load in JS: ONE strip, under the FRAME (MANUAL's stands down while a ship holds the
+ *       frame), at full strength, and a held d-pad MOVES the frame's player.
+ *   T3. REPLAY + ▶ load in JS: ONE strip, under the frame, DIMMED and LABELLED while the tape drives (the ship's
+ *       own stage state), where a held d-pad changes nothing (the per-tick verdict still agrees); at `finished` it
+ *       is at full strength and a held d-pad MOVES the player.
+ *   T4. SOLVE before any ship: NO strip.
+ *   T5. MANUAL (running) + ▶ load in wasm: ONE strip, under the wasm frame, with Esc, and a held d-pad MOVES the
+ *       real game's player. (Headless WebGPU, `headlessWebgpuArgs` — the launch every headless wasm gate uses.)
+ *
  *   node scripts/procgen/check-seedling-lab-load-in-js.mjs [--host=http://localhost:8000] [--shots=<dir>]
+ *        [--only=touch]   (the TOUCH section alone)
  *
  * Exits 0 when every check passes (or SKIPs with no dev server), 1 otherwise. Takes the box lock (kind `browser`).
  */
@@ -51,6 +71,7 @@ import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { headlessWebgpuArgs } from './headlessChromium.js';
 
 argvHelp(import.meta.url);
 
@@ -121,9 +142,10 @@ async function main() {
         },
     ];
 
+    const ONLY = arg('only', '');
     const browser = await chromium.launch({ args: ['--autoplay-policy=user-gesture-required'] });
     try {
-        for (const c of CASES) {
+        for (const c of ONLY === 'touch' ? [] : CASES) {
             const page = await browser.newPage({ viewport: { width: 1400, height: 1100 } });
             const errors = [];
             page.on('pageerror', (e) => errors.push(e.message));
@@ -318,11 +340,274 @@ async function main() {
                 await page.close();
             }
         }
+        await touchSection({ PAGE, TAPE, check, SHOTS });
     } finally {
         await browser.close();
     }
     console.log(failed ? `${failed} CHECK(S) FAILED` : 'ALL CHECKS PASSED');
     process.exit(failed ? 1 : 0);
+}
+
+/**
+ * ⛓ TOUCH (seedling-lab-touch-fix) — T1–T5 in the header. Every mount is counted on the page (`.flash-touch-controls`
+ * anywhere), and every "moves" is the GAME's position, read from the run itself, never the strip's own held mark.
+ * Its own browser: the wasm row (T5) needs the repo's headless WebGPU launch (`headlessWebgpuArgs`), the switches
+ * every headless wasm gate uses.
+ */
+async function touchSection({ PAGE, TAPE, check, SHOTS }) {
+    const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-hammer-control.json';
+    const browser = await chromium.launch({
+        args: headlessWebgpuArgs({ extra: ['--autoplay-policy=user-gesture-required'] }),
+    });
+    const strips = (page) => page.evaluate(() => [...document.querySelectorAll('.flash-touch-controls')].map((el) => ({
+        under: el.previousElementSibling?.id ?? null,
+        opacity: Number(getComputedStyle(el).opacity),
+        tape: el.dataset.labTape ?? null,
+        note: el.nextElementSibling?.classList.contains('labTapeNote') ? el.nextElementSibling.textContent : null,
+        esc: (() => {
+            const e = el.querySelector('.flash-touch-button-menu');
+            return Boolean(e) && getComputedStyle(e).display !== 'none';
+        })(),
+    })));
+    /** A held finger on the d-pad of the strip under `#<under>`, at `side` (1 = right rim, -1 = left), for `ms`. */
+    const hold = async (page, cdp, under, side, ms) => {
+        // ⚠ The page above the strip re-lays out while a run paints its HUD, so the finger is aimed, checked with
+        // elementFromPoint, and re-aimed (up to 3 times) — a touch that lands beside the pad is the harness's miss,
+        // not the page's.
+        let at = null;
+        for (let i = 0; i < 3 && at?.hit !== 'flash-touch-dpad'; i++) {
+            await page.locator(`#${under} + .flash-touch-controls`).scrollIntoViewIfNeeded();
+            at = await page.evaluate(({ u, sd }) => {
+                const r = document.querySelector(`#${u} + .flash-touch-controls .flash-touch-dpad`)
+                    .getBoundingClientRect();
+                const x = r.left + r.width / 2 + sd * r.width * 0.35;
+                const y = r.top + r.height / 2;
+                return { x, y, hit: document.elementFromPoint(x, y)?.className ?? null };
+            }, { u: under, sd: side });
+        }
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: at.x, y: at.y, id: 1 }] });
+        await page.waitForTimeout(ms);
+        const held = await page.evaluate((u) => document.querySelector(`#${u} + .flash-touch-controls`)?.dataset.held
+            ?? null, under);
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+        await page.waitForTimeout(200);
+        return { ...at, held };
+    };
+    const phone = async (q) => {
+        const ctx = await browser.newContext({
+            viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2,
+        });
+        const page = await ctx.newPage();
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(e.message));
+        const cdp = await ctx.newCDPSession(page);
+        await page.goto(`${PAGE}?${q}`, { waitUntil: 'domcontentloaded' });
+        return { ctx, page, cdp, errors };
+    };
+    const frameOf = async (page, re) => {
+        for (let i = 0; i < 300; i++) {
+            const f = page.frames().find((fr) => re.test(fr.url()));
+            if (f) return f;
+            await page.waitForTimeout(200);
+        }
+        return null;
+    };
+    const status = (frame) => frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
+    const hudX = (page) => page.evaluate(() => {
+        const m = document.getElementById('hud').textContent.replace(/\s+/g, ' ').match(/position\s*(-?[\d.]+)/);
+        return m ? Number(m[1]) : null;
+    });
+    let step = '';
+    const startManual = async (page) => {
+        await page.tap('#manualStart');
+        step = 'waitForFunction () => document.getElementById(manualStart).disabled, null,';
+        await page.waitForFunction(() => document.getElementById('manualStart').disabled, null, { timeout: 30000 });
+    };
+
+    // T1 + T2 — MANUAL, then ▶ load in JS on the SAME page, MANUAL's run still going.
+    {
+        const { ctx, page, cdp, errors } = await phone(`source=manual&boot=${BOOT}&speed=1`);
+        try {
+            step = 'waitForSelector #manualStart:not([disabled]), { timeout: 120000 });';
+            await page.waitForSelector('#manualStart:not([disabled])', { timeout: 120000 });
+            step = 'waitForFunction () => !document.getElementById(manualTouch).disabled, null';
+            await page.waitForFunction(() => !document.getElementById('manualTouch').disabled, null,
+                { timeout: 30000 });
+            const pre = await strips(page);
+            check(pre.length === 0, 'touch T1: MANUAL on a phone shows NO strip before START (⚖ 2026-11-11)',
+                JSON.stringify(pre));
+            await startManual(page);
+            step = 'waitForSelector #canvas + .flash-touch-controls, { timeout: 30000 });';
+            await page.waitForSelector('#canvas + .flash-touch-controls', { timeout: 60000 });
+            const s0 = await strips(page);
+            check(s0.length === 1 && s0[0].under === 'canvas' && s0[0].opacity === 1,
+                'touch T1: START shows ONE strip, under the lab canvas, at full strength', JSON.stringify(s0));
+            const x0 = await hudX(page);
+            const h = await hold(page, cdp, 'canvas', 1, 800);
+            const x1 = await hudX(page);
+            check(h.held === 'ArrowRight' && x0 !== null && x1 > x0,
+                'touch T1: a REAL held touch on the d-pad (right) moves MANUAL’s run',
+                `held=${h.held} hit=${h.hit} x ${x0} → ${x1}`);
+            if (SHOTS) await page.screenshot({ path: join(SHOTS, 'touch-manual-running.png'), fullPage: true });
+            await page.tap('#manualStop');
+            step = 'waitForFunction () => window.__editorManual?.roundTrip !== undefined, null, ';
+            await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined, null, { timeout: 60000 });
+            const s1 = await strips(page);
+            check(s1.length === 0, 'touch T1: STOP takes the strip away with the run', JSON.stringify(s1));
+
+            // MANUAL running again, THEN ▶ load in JS: MANUAL's strip must stand down for the frame's.
+            await startManual(page);
+            step = 'waitForSelector #canvas + .flash-touch-controls, { timeout: 30000 });';
+            await page.waitForSelector('#canvas + .flash-touch-controls', { timeout: 60000 });
+            step = 'waitForFunction () => !document.getElementById(loadJs).disabled, null, { t';
+            await page.waitForFunction(() => !document.getElementById('loadJs').disabled, null, { timeout: 120000 });
+            await page.tap('#loadJs');
+            const frame = await frameOf(page, /\/jsRuntime\.html/);
+            step = 'waitForSelector #frame + .flash-touch-controls, { timeout: 30000 });';
+            await page.waitForSelector('#frame + .flash-touch-controls', { timeout: 60000 });
+            await frame.tap('#btn-start');
+            step = 'waitForFunction () => window.__editorJs?.stage === play || window.__editor';
+            await page.waitForFunction(() => window.__editorJs?.stage === 'play' || window.__editorJs?.refusal, null,
+                { timeout: 120000 });
+            const s2 = await strips(page);
+            check(s2.length === 1 && s2[0].under === 'frame',
+                'touch T2: MANUAL (running) + ▶ load in JS shows ONE strip, under the frame (MANUAL’s stands down)',
+                JSON.stringify(s2));
+            check(s2.length > 0 && s2.every((s) => s.opacity === 1 && s.tape === null && !s.esc),
+                'touch T2: …at full strength, no tape note (a live ship), no Esc (the JS run has no pause menu)',
+                JSON.stringify(s2));
+            const before = await status(frame);
+            const h2 = await hold(page, cdp, 'frame', 1, 800);
+            const after = await status(frame);
+            check(h2.held === 'ArrowRight' && after.x > before.x,
+                'touch T2: a REAL held touch on that d-pad (right) moves the player in the JS frame',
+                `held=${h2.held} hit=${h2.hit} (${before.x}, ${before.y}) → (${after.x}, ${after.y})`);
+            if (SHOTS) await page.screenshot({ path: join(SHOTS, 'touch-manual-plus-js.png'), fullPage: true });
+            check(errors.length === 0, 'touch T1/T2: no page errors', errors.join(' | '));
+        } catch (e) {
+            check(false, 'touch T1/T2: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);
+        } finally {
+            await ctx.close();
+        }
+    }
+
+    // T3 — REPLAY + ▶ load in JS: dimmed and labelled while the tape drives (and a held d-pad changes nothing),
+    // full strength and live once it has finished. The state is the ship's own (`__editorJs.reached`).
+    {
+        const { ctx, page, cdp, errors } = await phone(`tape=${TAPE}`);
+        try {
+            step = 'waitForFunction () => !document.getElementById(loadJs).disabled, null, { t';
+            await page.waitForFunction(() => !document.getElementById('loadJs').disabled, null, { timeout: 240000 });
+            const s0 = await strips(page);
+            check(s0.length === 0, 'touch T3: REPLAY mounts no strip before a ship', JSON.stringify(s0));
+            await page.tap('#loadJs');
+            const frame = await frameOf(page, /\/jsRuntime\.html/);
+            step = 'waitForSelector #frame + .flash-touch-controls, { timeout: 30000 });';
+            await page.waitForSelector('#frame + .flash-touch-controls', { timeout: 60000 });
+            await frame.tap('#btn-start');
+            step = 'waitForFunction () => window.__editorJs?.reached?.includes(running)';
+            await page.waitForFunction(() => window.__editorJs?.reached?.includes('running')
+                || window.__editorJs?.refusal, null, { timeout: 120000 });
+            const mid = await strips(page);
+            const midStage = await page.evaluate(() => window.__editorJs?.reached?.at(-1));
+            check(midStage === 'running' && mid.length === 1 && mid[0].under === 'frame' && mid[0].tape === 'replaying'
+                && mid[0].opacity < 1 && mid[0].note === 'Replaying — the controls take over when the tape ends',
+                'touch T3: while the tape drives, ONE strip under the frame, DIMMED and LABELLED',
+                `${midStage} ${JSON.stringify(mid)}`);
+            const h0 = await hold(page, cdp, 'frame', -1, 800);
+            step = 'waitForFunction () => window.__editorJs?.stage === verdict || window.__edi';
+            await page.waitForFunction(() => window.__editorJs?.stage === 'verdict' || window.__editorJs?.refusal, null,
+                { timeout: 180000 });
+            const js = await page.evaluate(() => window.__editorJs);
+            check(h0.held === 'ArrowLeft' && js.verdict?.perTick?.kind === 'agrees',
+                'touch T3: …and a held d-pad mid-replay changes nothing (JS frame vs JS model agrees at every tick)',
+                `held=${h0.held} hit=${h0.hit} at (${h0.x}, ${h0.y}) perTick=${js.verdict?.perTick?.kind}`);
+            const s1 = await strips(page);
+            check(s1.length === 1 && s1[0].under === 'frame' && s1[0].opacity === 1 && s1[0].tape === null
+                && s1[0].note === null,
+                'touch T3: once the tape has finished, the strip is at full strength and the note is gone',
+                JSON.stringify(s1));
+            const before = await status(frame);
+            const h = await hold(page, cdp, 'frame', -1, 800);
+            const after = await status(frame);
+            check(before.finished && h.held === 'ArrowLeft' && after.x < before.x,
+                'touch T3: …and a REAL held touch (left) moves the player in the frame',
+                `finished=${before.finished} held=${h.held} (${before.x}, ${before.y}) → (${after.x}, ${after.y})`);
+            check(errors.length === 0, 'touch T3: no page errors', errors.join(' | '));
+        } catch (e) {
+            check(false, 'touch T3: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);
+        } finally {
+            await ctx.close();
+        }
+    }
+
+    // T4 — SOLVE before a ship: no strip.
+    {
+        const { ctx, page, errors } = await phone(`source=solve&boot=${BOOT}`);
+        try {
+            step = 'waitForSelector #solveGo:not([disabled]), { timeout: 120000 });';
+            await page.waitForSelector('#solveGo:not([disabled])', { timeout: 120000 });
+            await page.waitForTimeout(1000);
+            const s0 = await strips(page);
+            check(s0.length === 0, 'touch T4: SOLVE on a phone mounts no strip before a ship', JSON.stringify(s0));
+            check(errors.length === 0, 'touch T4: no page errors', errors.join(' | '));
+        } catch (e) {
+            check(false, 'touch T4: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);
+        } finally {
+            await ctx.close();
+        }
+    }
+
+    // T5 — MANUAL (running) + ▶ load in wasm: the wasm frame gets the strip (⚖ the user 2026-11-11: "No new
+    // controls appear when clicking load in wasm"), MANUAL's stands down, and a held d-pad moves the REAL game.
+    {
+        const { ctx, page, cdp, errors } = await phone(`source=manual&boot=${BOOT}`);
+        try {
+            step = 'waitForSelector #manualStart:not([disabled]), { timeout: 120000 });';
+            await page.waitForSelector('#manualStart:not([disabled])', { timeout: 120000 });
+            step = 'waitForFunction () => !document.getElementById(manualTouch).disabled, null';
+            await page.waitForFunction(() => !document.getElementById('manualTouch').disabled, null,
+                { timeout: 30000 });
+            await startManual(page);
+            step = 'waitForSelector #canvas + .flash-touch-controls, { timeout: 30000 });';
+            await page.waitForSelector('#canvas + .flash-touch-controls', { timeout: 60000 });
+            step = 'waitForFunction () => !document.getElementById(loadWasm).disabled, null, {';
+            await page.waitForFunction(() => !document.getElementById('loadWasm').disabled, null, { timeout: 120000 });
+            await page.tap('#loadWasm');
+            const frame = await frameOf(page, /\/wasm\/[^/]+\/game\.html/);
+            step = 'waitForSelector #btn-start, { timeout: 120000 });';
+            await frame.waitForSelector('#btn-start', { timeout: 120000 });
+            step = 'waitForSelector #frame + .flash-touch-controls, { timeout: 60000 });';
+            await page.waitForSelector('#frame + .flash-touch-controls', { timeout: 60000 });
+            step = 'waitForFunction () => window.__watch?.wasm?.reached?.includes(runtime)';
+            await page.waitForFunction(() => window.__watch?.wasm?.reached?.includes('runtime')
+                || window.__watch?.wasm?.refusal, null, { timeout: 180000 });
+            await frame.tap('#btn-start');
+            step = 'waitForFunction () => window.__watch?.wasm?.stage === verdict';
+            await page.waitForFunction(() => window.__watch?.wasm?.stage === 'verdict'
+                || window.__watch?.wasm?.refusal, null, { timeout: 240000 });
+            const w = await page.evaluate(() => ({ stage: window.__watch?.wasm?.stage,
+                refusal: window.__watch?.wasm?.refusal ?? null }));
+            const s1 = await strips(page);
+            check(w.stage === 'verdict' && s1.length === 1 && s1[0].under === 'frame' && s1[0].opacity === 1
+                && s1[0].tape === null && s1[0].esc,
+                'touch T5: MANUAL (running) + ▶ load in wasm shows ONE strip, under the wasm frame, with Esc '
+                + '(MANUAL’s stands down)', `${JSON.stringify(w)} ${JSON.stringify(s1)}`);
+            const before = await status(frame);
+            const h = await hold(page, cdp, 'frame', 1, 1200);
+            const after = await status(frame);
+            check(h.held === 'ArrowRight' && after.x > before.x,
+                'touch T5: a REAL held touch on that d-pad (right) moves the player in the REAL (wasm) game',
+                `held=${h.held} hit=${h.hit} (${before.x}, ${before.y}) → (${after.x}, ${after.y})`);
+            if (SHOTS) await page.screenshot({ path: join(SHOTS, 'touch-manual-plus-wasm.png'), fullPage: true });
+            check(errors.length === 0, 'touch T5: no page errors', errors.join(' | '));
+        } catch (e) {
+            check(false, 'touch T5: the case ran to its end', `at [${step}] ${e.message.split('\n')[0]}`);
+        } finally {
+            await ctx.close();
+        }
+    }
+    await browser.close();
 }
 
 if (isEntryPoint(import.meta.url)) main();
