@@ -14,8 +14,9 @@ apworld spec: "Do not write these fields yourself"); the packer stamps them
 add the key to the generator's template.
 
 Three sweeps:
-- every git-tracked ``*.apworld`` (not only ``apworlds/``: ``json_tools_installer``'s own sweep
-  covers that directory and missed ``scripts/vanilla-alttp/``);
+- every git-tracked ``*.apworld`` (not only ``apworlds/``, which ``json_tools_installer``'s own sweep
+  covers: it once missed a snapshot under ``scripts/vanilla-alttp/``, removed 2026-11-11, and any
+  other tracked apworld outside ``apworlds/`` would be missed the same way);
 - every committed generated package (``worldgen-package-recipes.json``) packed by
   ``pack_world_dir``, the function behind ``scripts/build/pack_apworld.py``;
 - the same packages built straight from their rules file by ``build_apworld`` (the

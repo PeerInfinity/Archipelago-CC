@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "_comment": "The text adventure's DEFAULT content pack (content sets R1): every string the text adventure's GENERATION writes into a world document. {placeholder} templates are filled at PLAY by the wrapper (templating.js), which also escapes HTML and highlights the item.",
+  "strings": {
+    "text-adventure:concept/sword/checkMessage": "Half-buried in the rubble lies {item}, its edge still keen after who knows how long. You take up the sword and test its weight. Whatever guards these halls will have to reckon with it now.",
+    "text-adventure:concept/swim/checkMessage": "You find {item}, and with it the knack of the water: how to breathe, how to kick, how to let it take your weight. You can swim now. Deep water will no longer turn you back.",
+    "text-adventure:concept/guardian/blocked": "A hulking guardian bars the way to {destinationRegion}, its armoured bulk filling the passage. You carry nothing that could hurt it, and it knows it. Without a sword, you will not get past.",
+    "text-adventure:concept/guardian/passedWith": "You draw your sword and the guardian lunges, but its armour is split at the joints and the blade finds the gap. Its weakness was the sword all along: it crumples, and the way to {destinationRegion} lies open.",
+    "text-adventure:concept/water/blocked": "Dark water floods the passage toward {destinationRegion}, too deep to wade and too wide to leap. The current tugs at anything that touches it. You cannot cross without knowing how to swim.",
+    "text-adventure:concept/water/passedWith": "You wade into the water and let it take your weight, kicking out with long, even strokes. Swimming carries you across the flood where no footing could, and you haul yourself out on the far side, toward {destinationRegion}."
+  }
+}

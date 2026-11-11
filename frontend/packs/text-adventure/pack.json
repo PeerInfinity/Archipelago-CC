@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "text-adventure",
+  "title": "Text adventure — the built-in prose",
+  "licence": "MIT",
+  "credit": "Written for this repository by its authors (the Archipelago-CC project), under the repository's MIT licence (LICENSE). Hand-made: the strings the text adventure substrate wrote from code until content sets R1.",
+  "source": "frontend/modules/textAdventureSubstrateWrapper/textAdventureConceptRealisations.js (until content sets R1), moved byte for byte",
+  "layers": {
+    "concepts": "concepts/manifest.json",
+    "text": "text/manifest.json"
+  }
+}
