@@ -30,7 +30,9 @@ import { CONCEPT_TRIAL_STATE } from './presetDefs.js';
 import { buildRunFromState, runPresetHeadless, mergedItemLib } from './presetRun.js';
 import { CONCEPTS, isConceptRow } from '../procgenCore/concepts.js';
 import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
-import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { presentedProse } from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
+import { defaultContentSetOf } from './worldContent.js';
 
 const control = { ...CONCEPT_TRIAL_STATE, params: { ...CONCEPT_TRIAL_STATE.params, concepts: [] } };
 /** The document minus its sidecars and minus the recorded concept list (T0b D3's one metadata difference). */
@@ -79,7 +81,9 @@ describe('T4 D1 — the concept trial world', async () => {
     it('the text-adventure START\'s sword-gated exit carries the GUARDIAN\'s prose, and the sword lies in that room', () => {
         const ta = sidecars.region_2_2.playable_payload;
         expect(ta.exitGates).toEqual({ exit: { rule: 'Has', args: { item_name: CONCEPTS.sword.item.id } } });
-        const { blocked, passedWith } = TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate.mechanic.prose;
+        // ⛓ CONTENT SETS R1 — the words are the text adventure's default pack's.
+        const set = defaultContentSetOf([substrateRegistry.get('text_adventure').defaultContentPack]);
+        const { blocked, passedWith } = presentedProse(set, 'gate', 'guardian');
         expect(ta.prose.exits).toEqual({ exit: { inaccessibleMessage: blocked, moveMessage: passedWith } });
         expect(ta.locations).toEqual([{ name: 'region_2_2__loc_0', item: CONCEPTS.sword.item.id }]);
         expect(ctrl.rulesJson.preset_sidecars['1'].region_2_2.playable_payload.prose).toBeUndefined();
@@ -123,5 +127,19 @@ describe('T4 D2 — the committed concept_trial preset IS this world', async () 
         expect(maze.every((s) => s.playable_payload.itemLib['Progressive Swim']?.color === '#40b0c0')).toBe(true);
         const ta = Object.values(sc).filter((s) => s.substrate === 'text_adventure');
         expect(ta.map((s) => Object.keys(s.playable_payload.prose?.exits ?? {}))).toEqual([['exit']]);
+    });
+
+    // ⛓ CONTENT SETS R1 — THE SHARP ONE: every prose string the committed world carries is, character for
+    // character, a string of the text adventure's default pack's text layer, read from disk.
+    it('every prose string in the committed world is a verbatim string of the default pack\'s text layer', () => {
+        const pack = substrateRegistry.get('text_adventure').defaultContentPack;
+        const layer = JSON.parse(readFileSync(join(ROOT, 'frontend/packs', pack, 'text/manifest.json'), 'utf8'));
+        const packStrings = new Set(Object.values(layer.strings));
+        const carried = Object.values(committed.preset_sidecars['1'])
+            .filter((s) => s.substrate === 'text_adventure' && s.playable_payload.prose)
+            .flatMap((s) => [...Object.values(s.playable_payload.prose.exits), ...Object.values(s.playable_payload.prose.locations)])
+            .flatMap((rec) => Object.values(rec));
+        expect(carried.length).toBeGreaterThan(0);
+        expect(carried.filter((t) => !packStrings.has(t))).toEqual([]);
     });
 });

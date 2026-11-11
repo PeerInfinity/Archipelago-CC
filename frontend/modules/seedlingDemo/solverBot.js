@@ -16868,18 +16868,21 @@ export function resetTurretApproachCounts() {
 }
 
 /**
- * `TURRET_APPROACH_VOLLEY_ORDER` (OFF; asked only under `TURRET_APPROACH`; hammer-phase BK2-APPROACH-ORDER, ⚖ the user
- * ruled the slice on 2026-11-09: *"Land without; slice next"*): `approachKillForCorpse` asks its tries in the volley's
+ * `TURRET_APPROACH_VOLLEY_ORDER` (ON since the volley flip, ⚖ the user 2026-11-10: *"Build the flip next"*; asked
+ * wherever `approachKillForCorpse` is: `TURRET_APPROACH`'s corpse weigh and `KEYLOCK_TURRET`'s keylock arm; hammer-phase
+ * BK2-APPROACH-ORDER, ⚖ the user ruled the slice on 2026-11-09: *"Land without; slice next"*): `approachKillForCorpse` asks its tries in the volley's
  * order (`approachTriesByVolley`) — each route's waits outward from the wait that leaves its first waypoint as the
  * turret's next "startshot" begins (probed on one fork a route), and rank by rank across the routes, in place of side
  * by side, route by route, wait 0 … 48. The tries are the same set; WHICH hitless try is found first can differ, so it
- * is a preference change. OFF, nothing is probed and the order is byte-identical.
- * `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=1` / `withTurretApproachVolleyOrder(enabled, fn)`.
+ * is a preference change. OFF, nothing is probed and the order is the pre-flip one, byte-identical.
+ * `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=0` opts out / `withTurretApproachVolleyOrder(enabled, fn)`.
  */
+// ⚖ ON by default since the volley flip (the user, 2026-11-10: *"Build the flip next (Recommended)"*):
+// `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER=0` opts out.
 export const TURRET_APPROACH_VOLLEY_ORDER = {
-    enabled: globalThis.process?.env?.SEEDLING_TURRET_APPROACH_VOLLEY_ORDER === '1',
+    enabled: globalThis.process?.env?.SEEDLING_TURRET_APPROACH_VOLLEY_ORDER !== '0',
 };
-export const TURRET_APPROACH_VOLLEY_ORDER_DEFAULT = false;
+export const TURRET_APPROACH_VOLLEY_ORDER_DEFAULT = true;
 
 /** Run `fn` with `TURRET_APPROACH_VOLLEY_ORDER` set to `enabled`, restoring the previous value. */
 export function withTurretApproachVolleyOrder(enabled, fn) {

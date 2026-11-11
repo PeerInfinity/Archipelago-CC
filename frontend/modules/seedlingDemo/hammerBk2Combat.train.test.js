@@ -99,16 +99,16 @@ describe('hammer-phase BK2COMBAT on the latch boot, south of the door (slow)', (
         expect(fresh.walkBodies).toEqual([]);
     }, 1800000);
 
-    it('pocket open, no OPP, ON: SOUTHDOOR\'s solve unchanged — Boss Key 2 hitless at t4810, the staged hunt never '
+    it('pocket open, no OPP, ON: SOUTHDOOR\'s solve unchanged — Boss Key 2 hitless at t4812, the staged hunt never '
         + 'asked', async () => {
         const boot = await southBoot(false);
         const r = await arm(boot, { opp: false, on: true });
         expect(r.refusal ?? null).toBeNull();
-        expect(r.out.perTick).toHaveLength(4810);
+        expect(r.out.perTick).toHaveLength(4812); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): 4810 → 4812
         expect(CHASER_STAGED_HUNT_COUNTS.asks).toEqual([]);
         const fresh = await replay(boot, r.out.perTick.map((k) => [...k]), r.out.equips ?? []);
         expect(fresh.hits).toEqual([]);
         expect(fresh.deaths).toBe(0);
-        expect(fresh.collected).toContainEqual({ t: 4810, keyType: 2 });
+        expect(fresh.collected).toContainEqual({ t: 4812, keyType: 2 });
     }, 1800000);
 });

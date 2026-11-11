@@ -59,21 +59,38 @@ const FIXTURE = {
         text: { schema_version: 1, strings: { 'trial:gate/blocked': 'Overridden.' }, lists: { 'later:names': ['A'] } },
     },
 };
-/** `readJson` over FIXTURE, counting reads (and the URLs read). */
+/**
+ * `readJson` over FIXTURE, counting reads (and the URLs read). ⛓ CONTENT SETS R1: a pack the fixture does
+ * not hold that a REGISTERED entry declares as its default (the text adventure's, since R1) is read from
+ * the committed pack on disk — it is in every world's stack that holds that substrate — and counted in
+ * `defaultRead`, not `read`, so a count of the FIXTURE's reads is not moved by it. Any other unknown file
+ * is refused as before.
+ */
 function memIo(files = FIXTURE) {
     const read = [];
+    const defaultRead = [];
     const table = {};
     for (const [id, f] of Object.entries(files)) {
         table[`${id}/pack.json`] = f.pack;
         for (const [layer, path] of Object.entries(f.pack.layers)) if (f[layer]) table[`${id}/${path}`] = f[layer];
     }
+    const disk = nodePackIo();
     return {
         read,
+        defaultRead,
         base: MEM,
         readJson: async (url) => {
-            read.push(url);
             const hit = Object.keys(table).find((suffix) => url.endsWith(`/${suffix}`));
-            if (!hit) throw new Error(`no file ${url}`);
+            if (!hit) {
+                const id = url.slice(MEM.length).split('/')[0];
+                if (!declaredDefaultContentPacks().includes(id)) {
+                    read.push(url);
+                    throw new Error(`no file ${url}`);
+                }
+                defaultRead.push(url);
+                return disk.readJson(new URL(url.slice(MEM.length), disk.base).href);
+            }
+            read.push(url);
             return structuredClone(table[hit]);
         },
     };
@@ -146,10 +163,22 @@ describe('effectiveContentStack — the one rule', () => {
         const bad = fakeRegistry([{ id: 'odd', [DEFAULT_CONTENT_PACK_FIELD]: 'Not A Pack' }]);
         expect(() => effectiveContentStack({ substrateIds: ['odd'], registry: bad })).toThrow(/entry "odd"'s defaultContentPack/);
     });
-    it('no registered entry declares a default pack yet, so every world\'s default stack is empty', () => {
+    // ⛓ CONTENT SETS R1 — this pinned "no registered entry declares a default pack yet" until the text adventure
+    // declared one. The empty case is now a FIXTURE registry's, and the real registry's pin is that every declared
+    // default is a committed pack and a world's default stack is exactly its mix's declared defaults.
+    it('a registry whose entries declare no default pack gives every world an empty default stack', () => {
+        const none = fakeRegistry([{ id: 'alpha' }, { id: 'beta' }]);
+        expect(effectiveContentStack({ substrateIds: ['alpha', 'beta'], registry: none })).toEqual([]);
+        expect(declaredDefaultContentPacks(none)).toEqual([]);
+    });
+    it('every registered default pack is a committed pack, and a world\'s default stack is its mix\'s defaults', () => {
+        const committed = parseRegistry(JSON.parse(readFileSync(join(ROOT, 'frontend/packs/packs.json'), 'utf8'))).packs;
         const declarers = substrateRegistry.getAll().filter((e) => e[DEFAULT_CONTENT_PACK_FIELD] !== undefined);
-        expect(declarers.map((e) => e.id)).toEqual([]);
-        expect(worldContentStackOf(CONCEPT_TRIAL_STATE)).toEqual([]);
+        expect(declarers.length).toBeGreaterThan(0);
+        for (const e of declarers) expect([...committed], e.id).toContain(e[DEFAULT_CONTENT_PACK_FIELD]);
+        const mix = Object.keys(CONCEPT_TRIAL_STATE.substrateQuotas);
+        const want = declarers.filter((e) => mix.includes(e.id)).map((e) => e[DEFAULT_CONTENT_PACK_FIELD]);
+        expect(worldContentStackOf(CONCEPT_TRIAL_STATE)).toEqual([...new Set(want)]);
     });
 });
 
@@ -306,7 +335,8 @@ describe('⛔ byte-equality — the concept trial world with a fixture stack is 
         expect(sets.size).toBe(1);
         const [set] = sets;
         expect(isContentSet(set)).toBe(true);
-        expect(set.ids).toEqual(WITH_CONTENT.params.content);
+        // ⛓ R1: the text adventure's default pack is in the stack, before the world's own list.
+        expect(set.ids).toEqual(effectiveContentStack({ substrateIds: substrates, content: WITH_CONTENT.params.content }));
         expect(set.concepts.presenting('guardian').name).toBe('The Gate');
     });
 
@@ -393,10 +423,11 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
     beforeEach(() => resetDefaultContentCache());
     afterEach(() => resetDefaultContentCache());
 
-    it('⛔ with no entry declaring a default pack it calls readJson zero times (the registry today)', async () => {
+    it('⛔ with no entry declaring a default pack it calls readJson zero times (a fixture registry)', async () => {
         const readJson = vi.fn();
-        expect(declaredDefaultContentPacks()).toEqual([]);
-        expect(await preloadDefaultContent({ base: MEM, readJson })).toEqual([]);
+        const registry = fakeRegistry([{ id: 'alpha' }, { id: 'beta' }]);
+        expect(declaredDefaultContentPacks(registry)).toEqual([]);
+        expect(await preloadDefaultContent({ base: MEM, readJson, registry })).toEqual([]);
         expect(readJson).not.toHaveBeenCalled();
         expect(defaultContentPreloadCalls()).toBe(1);
     });
@@ -427,7 +458,8 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
     it('ids preloads the named packs instead of the declared ones (the vitest setup file\'s every-committed-pack call)', async () => {
         const io = memIo();
         expect(await preloadDefaultContent({ ...io, ids: Object.keys(FIXTURE) })).toEqual(Object.keys(FIXTURE));
-        expect(declaredDefaultContentPacks()).toEqual([]);
+        // ⛓ R1: only the named packs are loaded, not the registry's declared ones.
+        expect(preloadedDefaultContentPacks()).toEqual(Object.keys(FIXTURE));
         await expect(preloadDefaultContent({ ...io, ids: 'trial' })).rejects.toThrow(/not a list/);
     });
     it('⛔ the setup file preloads every committed pack (a superset of any default pack)', async () => {
@@ -480,7 +512,10 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
 describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cache (fixture entries declare the pack)', () => {
     const substrates = Object.keys(CONCEPT_TRIAL_STATE.substrateQuotas);
     const PACK = 'trial';
-    /** Run `fn` with the world's substrates declaring PACK, their placers recording the set they receive. */
+    /**
+     * Run `fn` with the world's substrates declaring PACK (⛓ R1: those that declare none of their own — the text
+     * adventure keeps its real default pack), their placers recording the set they receive.
+     */
     async function withDeclaringEntries(fn) {
         const received = [];
         const originals = new Map(substrates.map((id) => [id, substrateRegistry.get(id)]));
@@ -491,7 +526,7 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
             };
             substrateRegistry.entries.set(id, {
                 ...entry,
-                [DEFAULT_CONTENT_PACK_FIELD]: PACK,
+                [DEFAULT_CONTENT_PACK_FIELD]: entry[DEFAULT_CONTENT_PACK_FIELD] ?? PACK,
                 generateRegionCore: wrap('generateRegionCore', (a) => a[0].params),
                 placeFromRules: wrap('placeFromRules', (a) => a[1].params),
             });
@@ -504,6 +539,8 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
         }
     }
     const committed = readFileSync(join(ROOT, 'frontend/presets/concept_trial/AP_1/AP_1_rules.json'), 'utf8');
+    /** The world's default stack under the declaring entries (call inside `withDeclaringEntries`). */
+    const defaultStack = (content = []) => effectiveContentStack({ substrateIds: substrates, content });
 
     it('⛔ without the preload, the synchronous buildRunFromState is refused by name', async () => {
         await withDeclaringEntries(async () => {
@@ -521,9 +558,11 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
             const sets = new Set(received.map((r) => r.set));
             expect(sets.size).toBe(1);
             const [set] = sets;
-            expect(set).toBe(defaultContentSetOf([PACK]));
+            expect(set).toBe(defaultContentSetOf(defaultStack()));
+            expect(set.ids).toContain(PACK);
             expect(new Set(received.map((r) => r.substrate))).toEqual(new Set(substrates));
-            // No substrate reads the set yet and the world names no content: the document is byte for byte the preset.
+            // The world names no content and PACK presents nothing the text adventure can show whole (its Gate
+            // lacks a slot): the document is byte for byte the preset.
             expect(JSON.stringify(world.rulesJson, null, 2)).toBe(committed);
         });
     });
@@ -558,7 +597,8 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
         await withDeclaringEntries(async () => {
             await preloadDefaultContent(memIo());
             const named = { ...CONCEPT_TRIAL_STATE, params: { ...CONCEPT_TRIAL_STATE.params, content: ['later'] } };
-            expect(() => buildRunFromState(structuredClone(named))).toThrow(/\[trial, later\] was not loaded/);
+            const stack = defaultStack(['later']).join(', ');
+            expect(() => buildRunFromState(structuredClone(named))).toThrow(`[${stack}] was not loaded`);
             const world = await runPresetHeadless(await prepareRunFromState(structuredClone(named), { io: memIo() }));
             expect(world.rulesJson.procgen_metadata['1'][RECORDED_CONTENT_KEY]).toEqual(['later']);
         });

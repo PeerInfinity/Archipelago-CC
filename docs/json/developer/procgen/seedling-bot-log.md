@@ -28092,6 +28092,18 @@ same request on the worker's dispatch before calling its loss a regression (871'
 name in the tests before the push, not after CI. (3) A refusal that appears two ticks after a kill may be the ladder
 meeting the body it just killed: check the named danger's `hits` before reading it as a live chaser.
 
+### Seedling hammer-phase VOLLEY-FLIP — `TURRET_APPROACH_VOLLEY_ORDER` ON by default
+
+⚖ The user, 2026-11-10: *"Build the flip next (Recommended)"*, after BK2-APPROACH-ORDER landed OFF (train 88, main
+`b133de7af0`). The switch now reads `SEEDLING_TURRET_APPROACH_VOLLEY_ORDER !== '0'`, default `true`; `=0` opts out.
+What moves at the default: L40's Boss Key 2 from L39 solves inside the held retry (3,236 → 1,382 units, the same plan);
+flag 8 from L43 through the keylock arm plays the right side's wait-35 try (8 forks, 740 ticks, hitless) where the
+ascending order played the up side's wait 25 (27 forks, 748 ticks); a keylock approach that refuses asks one anchor probe
+a route more (L40 flag 8 with the south door shut: 12 → 24 forks, the same `no-plan` tally). `hammerKeylockTurret.test.js`
+pins both at the default and keeps the pre-flip values under `withTurretApproachVolleyOrder(false)`. The keylock arm asks
+`approachKillForCorpse` itself, so the order reaches it with `TURRET_APPROACH` off (the slice's "asked only under
+`TURRET_APPROACH`" was too narrow).
+
 ### Seedling fidelity FIREBREAK — the `break` verb takes Fire for a run that holds no Sword (`fireBreakArm`, OFF)
 
 Planner `seedling-fidelity-planning-19`, wave 40 (⚖ the user 2026-11-11, *"Fire break + fencepost now"*). Base

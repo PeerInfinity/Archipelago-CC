@@ -64,7 +64,7 @@ The engine shows six kinds of message: a region's `enterMessage`, an exit's `mov
 They come from two documents:
 
 - **The per-game file**, `shared/customData/<game>_textadventure.json`, fetched by game name (`customData.js`) and keyed by region, exit and location name across the whole game.
-- **The region's payload `prose`**, a slice of the same shape for one region: `{enterMessage?, exits: {<exit_id>: {moveMessage?, inaccessibleMessage?}}, locations: {<AP name>: {checkMessage?, alreadyCheckedMessage?, inaccessibleMessage?}}}`.
+- **The region's payload `prose`**, a slice of the same shape for one region: `{name?, description?, enterMessage?, exits: {<exit_id>: {moveMessage?, inaccessibleMessage?}}, locations: {<AP name>: {checkMessage?, alreadyCheckedMessage?, inaccessibleMessage?}}}`.
 
 Each message resolves in this order: **the region's payload prose → the per-game file → the bridge's generic line** ("You can't go that way: …"). The fall-through is per message, so a region may override one exit's `inaccessibleMessage` and keep the file's `moveMessage`. `composeProse` in `templating.js` does this: it lays the region's prose over the file and hands the six lookup helpers the result. The bridge caches each region's prose on `textAdventure:loadRegion` and maps its `exit_id` keys to the engine's exit names.
 
@@ -72,10 +72,28 @@ Each message resolves in this order: **the region's payload prose → the per-ga
 
 A text-adventure gate has no geometry. `placeFromRules` records the rule on the exit, and the bridge refuses the move while the rule fails. So what a [concept](./concepts.md) adds here is what the player reads, and every realisation is `tier: 'mechanic'`. The entry declares `conceptRealisations` (`textAdventureConceptRealisations.js`):
 
-- `sword` and `swim` each carry a location `checkMessage`.
-- `guardian` and `water` each have a `gate` placement that requires the sword or swim. Its `mechanic.prose` has a `blocked` message and a `passedWith` message (which names the weakness).
+- `sword` and `swim` each give a location a `checkMessage`.
+- `guardian` and `water` each have a `gate` placement that requires the sword or swim. The gate says a `blocked` message and a `passedWith` message (which names the weakness).
+
+The realisations hold the logic only. The words are content (content sets R1): see [Content roles](#content-roles).
 
 `placeFromRules` offers each exit rule to `selectRealisation` with the world's `params.concepts`. On a match it writes `prose.exits[exit_id] = {inaccessibleMessage: blocked, moveMessage: passedWith}`. A location holding an offered item concept gets that item's `checkMessage`. The rule itself is recorded unchanged. A world that offers no concepts gets no `prose`, and its payloads are byte-identical to what they were before.
+
+## Content roles
+
+The entry declares `defaultContentPack: 'text-adventure'` and `contentRoles` (both in `textAdventureConceptRealisations.js`); the contract is [Concepts § Content roles](./concepts.md#content-roles).
+
+| Role | Accepts | Needs | Written as |
+|---|---|---|---|
+| `gate` | concepts presenting `guardian` or `water` | text `blocked`, `passedWith` | the exit's `inaccessibleMessage`, `moveMessage` |
+| `item` | concepts presenting `sword` or `swim` | text `checkMessage` | the location's `checkMessage` |
+| `place` | kind `place` | — | the room's `name` and `description` |
+
+- **The default pack**, `frontend/packs/text-adventure/`, has one pack concept per realised mechanic concept, each `presents` it and names its text slots, and a `text` layer holding every string the generation writes. The strings are the ones the code held before R1, byte for byte, so every committed world compiles unchanged.
+- **Which words a gate gets.** `presentedProse(contentSet, role, concept)` (`textAdventureRoom.js`) takes the pack concepts that fill the role (`candidatesForRole`) and present the concept, latest pack in the stack first, and returns the first whose every slot resolves in the set's text layer. A later pack that presents the mechanic wins; one that lacks a slot falls through to an earlier pack, in the end the default pack. The templates are written verbatim: `{destinationRegion}` and `{item}` are filled at play by `templating.js`, which also escapes HTML and highlights the item (the text library does neither). A selected concept with no content set, or with no pack presenting it, is refused by name.
+- **What a slot means** is behaviour (⚖ Q6) and stays in code: `GATE_PROSE_SLOTS` and `ITEM_PROSE_SLOTS` map each slot to its message, and the roles' `needs.text` are their keys.
+- **A room's place.** `generateTextAdventureRoom` asks `roomPlace`: the pack concepts that fill `place`, less any from the default pack and any that `presents` a mechanic. With none, nothing is read or drawn and the payload has no new key. Otherwise it picks one by `hash32("<rng state>:<region_id>") mod <count>`, reading the region rng's state without advancing it, so the pick is fixed by the seed and the world's logic is the control's. The place's `name` and `description` go into the payload `prose`. Two rooms may get the same place.
+- **The bridge** shows a room's payload `name` as its title, and on arrival shows its enter message, else its payload `description`, else "You are in <name or region>." (`arrivalLine` in `templating.js`). It reads the description off the payload only, never the per-game file's `regions.<name>.description`.
 
 ## Registry entry
 

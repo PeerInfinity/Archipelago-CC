@@ -15,9 +15,9 @@ import {
 const ASCENDING = Array.from({ length: 49 }, (_, w) => w);
 
 describe('hammer-phase BK2-APPROACH-ORDER: TURRET_APPROACH_VOLLEY_ORDER', () => {
-    it('ships OFF, the env alone turns it on, and the scope restores it', () => {
-        expect(TURRET_APPROACH_VOLLEY_ORDER_DEFAULT).toBe(false);
-        expect(TURRET_APPROACH_VOLLEY_ORDER.enabled).toBe(process.env.SEEDLING_TURRET_APPROACH_VOLLEY_ORDER === '1');
+    it('ships ON since the volley flip, `=0` alone turns it off, and the scope restores it', () => {
+        expect(TURRET_APPROACH_VOLLEY_ORDER_DEFAULT).toBe(true);
+        expect(TURRET_APPROACH_VOLLEY_ORDER.enabled).toBe(process.env.SEEDLING_TURRET_APPROACH_VOLLEY_ORDER !== '0');
         const was = TURRET_APPROACH_VOLLEY_ORDER.enabled;
         expect(withTurretApproachVolleyOrder(true, () => TURRET_APPROACH_VOLLEY_ORDER.enabled)).toBe(true);
         expect(withTurretApproachVolleyOrder(false, () => TURRET_APPROACH_VOLLEY_ORDER.enabled)).toBe(false);
