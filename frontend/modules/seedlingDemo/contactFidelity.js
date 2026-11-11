@@ -1958,9 +1958,9 @@ export const CONTACT_FIDELITY = {
      * unchanged: one model of the rock, `breakableRocks.hitRock`, the same `goneAt`/flag/`rockGoneFencepost`
      * handling), on the sword arm's clock, and not at all under the freeze; the census row's type is "Solid". Game
      * witness: `fidelityRockFire.js` (p4g, 0 px: L40's rock with and without the Ghost Sword, L101's ghost rock with
-     * and without it). OFF: byte-identical (the throw). `SEEDLING_FIRE_ROCK_ARM=0|1`.
+     * and without it). OFF: byte-identical (the throw). `SEEDLING_FIRE_ROCK_ARM=0|1`. ON since the ROCKFIRE flip (⚖ user 2026-11-11).
      */
-    fireRockArm: false,
+    fireRockArm: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

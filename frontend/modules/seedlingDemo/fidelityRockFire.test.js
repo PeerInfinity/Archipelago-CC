@@ -43,10 +43,10 @@ const rockRows = (m) => m.presses.filter((p) => p.weapon === 'fire').map((p) => 
 
 describe('fidelity ROCKFIRE — the key', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FIRE_ROCK_ARM)(
-        'ships OFF, last in the defaults; its env name is a known worker env name; FIRE_ARM_POLICY still calls BreakableRock modelled', () => {
+        'ships ON (⚖ user 2026-11-11, the ROCKFIRE flip), last in the defaults; its env name is a known worker env name; FIRE_ARM_POLICY still calls BreakableRock modelled', () => {
             expect(CONTACT_FIDELITY_KEYS).toContain('fireRockArm');
-            expect(CONTACT_FIDELITY_DEFAULTS.fireRockArm).toBe(false);
-            expect(CONTACT_FIDELITY.fireRockArm).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS.fireRockArm).toBe(true);
+            expect(CONTACT_FIDELITY.fireRockArm).toBe(true);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('fireRockArm');
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FIRE_ROCK_ARM');
             expect(FIRE_ARM_POLICY.BreakableRock.policy).toBe('modelled');
