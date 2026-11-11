@@ -161,8 +161,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity SPINNINGAXE D2: `partialDodgeReprobe` (a phase dodge's partial stall re-probed) ships OFF.
             partialDodgeReprobe: false,
 
-            // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") ships OFF.
-            chaserSpinnerWalls: false,
+            // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") — ON since the BOBIFRAME flip (⚖ user 2026-11-11).
+            chaserSpinnerWalls: true,
 
             // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
             corridorBodyPricing: false,
