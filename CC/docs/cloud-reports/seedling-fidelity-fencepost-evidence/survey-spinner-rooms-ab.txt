@@ -1,0 +1,12 @@
+step level | OFF verdict ticks hits | ON verdict ticks hits | moved
+27 L18 | SOLVED 467 0 0 | SOLVED 467 0 0 | MOVED 
+65 L39 | SOLVED 2740 0 0 | SOLVED 2556 0 0 | MOVED 
+66 L40 | REFUSED None None None | REFUSED None None None | MOVED solverBot(survey-step-66) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest
+86 L92 | SOLVED 395 0 0 | SOLVED 395 0 0 | same 
+95 L39 | SOLVED 2624 0 0 | SOLVED 2422 0 0 | MOVED 
+96 L40 | REFUSED None None None | REFUSED None None None | MOVED solverBot(survey-step-96) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest
+98 L40 | SOLVED 70 0 0 | SOLVED 70 0 0 | same 
+136 L39 | SOLVED 2624 0 0 | SOLVED 2422 0 0 | MOVED 
+137 L40 | SOLVED 172 0 0 | SOLVED 172 0 0 | same 
+149 L39 | SOLVED 2626 0 0 | SOLVED 2398 0 0 | MOVED 
+150 L40 | SOLVED 172 0 0 | SOLVED 172 0 0 | same 

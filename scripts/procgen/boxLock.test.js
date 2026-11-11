@@ -550,7 +550,8 @@ describe('who takes the box', () => {
          * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`;
          * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
          * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
-         * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`.)
+         * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`;
+         * fidelity FIREBREAK the solver's Fire break (a run with Fire and no Sword, L0) on the game, `probe-seedling-fire-break.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -642,6 +643,8 @@ describe('who takes the box', () => {
             'probe-seedling-fire-spinner.mjs',
             // fidelity ROCKFIRE: a Fire press reaching a BreakableRock on the game (import door: `isEntryPoint` → main())
             'probe-seedling-rock-fire.mjs',
+            // fidelity FIREBREAK: the solver's Fire break on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-fire-break.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
