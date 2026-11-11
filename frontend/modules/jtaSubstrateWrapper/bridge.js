@@ -870,6 +870,7 @@ function _handleTaskCompleted(task) {
         locationName,
         regionName: _currentRegionId,
         originator: 'jtaSubstrate',
+        reportedByGame: true, // the game completed the task: physical, never logic-gated (client/core/checkGate.js)
     }, { initialTarget: 'bottom' });
     log('debug', `task ${task.id} (${task.name}) -> user:locationCheck (${locationName})`);
     if (_pendingWalkLocation === locationName) _clearPendingWalk('target checked');

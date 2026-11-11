@@ -31,7 +31,7 @@ import {
 import { CONTENT_SET_KEY, defaultContentSetOf } from './worldContent.js';
 
 /**
- * ⛓ CONTENT SETS R1 — a world whose mix declares a default content pack (the text adventure's) carries the set
+ * ⛓ CONTENT SETS R1 — a world whose mix declares a default content pack (the text adventure's, the maze's) carries the set
  * built from the preload cache on its `regionParams`, and nothing else (it names no content of its own).
  */
 const defaultContentParams = (bundle) => {
@@ -74,7 +74,7 @@ describe('buildRunFromState — shuffled spiral', () => {
                 // engine places `Victory` (the item layer pins it).
                 goalItem: 'Victory',
                 seed: 3,
-                regionParams: {},
+                regionParams: defaultContentParams(bundle),
                 growthParams: {
                     substrateQuotas: { maze: 2, 'library:probe-lib': 2 },
                     maxItemsPerRegion: 2,
@@ -126,7 +126,7 @@ describe('buildRunFromState — sphere growth', () => {
         expect(config).toEqual({
             seed: 2,
             regionSize: { width: 8, height: 6 },
-            regionParams: {},
+            regionParams: defaultContentParams(bundle),
             hazardOpts: {
                 enabled: true, count: 2, maxConsecutiveFails: 10, wallOverlapAllowed: false,
             },

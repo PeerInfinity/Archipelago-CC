@@ -16,6 +16,9 @@
  *
  *   scripts/procgen/plan-seedling-*.mjs
  *   frontend/modules/seedlingDemo/fixtures/regenerate-*-tapes.mjs
+ *   scripts/utils/regenerate-*-presets.mjs   (procgen_topdown, slice
+ *       procgen-topdown-regen 2026-11-11: AP_4–6 went stale against the APCalc
+ *       re-export of 31644f2ecf and nothing regenerated them)
  *
  * A new producer enrols itself by its name. Two dialects are both dry under
  * `--check`: the ones that WRITE unless `--check` (the regenerators, the
@@ -57,13 +60,14 @@ argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 
-/** The two globs, as {dir, test}. */
+/** The globs, as {dir, test}. */
 export const PRODUCER_GLOBS = Object.freeze([
     { dir: 'scripts/procgen', test: (f) => /^plan-seedling-.+\.mjs$/.test(f) },
     {
         dir: 'frontend/modules/seedlingDemo/fixtures',
         test: (f) => /^regenerate-.+-tapes\.mjs$/.test(f),
     },
+    { dir: 'scripts/utils', test: (f) => /^regenerate-.+-presets\.mjs$/.test(f) },
 ]);
 
 /**

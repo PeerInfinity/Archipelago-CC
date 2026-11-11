@@ -594,6 +594,12 @@ async function holdFor(page, codes, ms) {
     const { page, errors } = await open(url);
     console.log(`\n## SOURCE=MANUAL — driven by the ON-SCREEN controls (?touch=1)\n   ${url}`);
     await page.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+    await page.waitForFunction(() => !document.getElementById('manualTouch').disabled, null, { timeout: 30000 });
+    // ⚖ (seedling-lab-touch-fix, the user 2026-11-11: "those controls should only appear after pressing Start")
+    // — the strip is the RUN's: none before START.
+    const preStart = await page.evaluate(() => document.querySelectorAll('.flash-touch-controls').length);
+    check(preStart === 0, '⚖ before START there is NO strip (it appears with the run)', `${preStart} mounted`);
+    await page.click('#manualStart');
     await page.waitForSelector('#stage .flash-touch-controls', { timeout: 30000 });
 
     const mount = await page.evaluate(() => {
@@ -613,7 +619,7 @@ async function holdFor(page, codes, ms) {
         };
     });
     check(mount.box === 'auto' && mount.afterCanvas === 'canvas' && mount.pad && mount.x && mount.c && mount.v,
-        '?touch=1 mounts the d-pad and X/C/V UNDER the canvas, the option at auto (where ?touch= decides)',
+        '?touch=1 mounts the d-pad and X/C/V UNDER the canvas at START, the option at auto (where ?touch= decides)',
         JSON.stringify(mount));
     check(mount.esc === false, '⚠ …and no Esc: the JS run has no pause menu (`transports: ["wasm"]`)',
         `esc shown=${mount.esc}`);
@@ -621,7 +627,6 @@ async function holdFor(page, codes, ms) {
     // ⚠ UNDER the canvas is below the fold at this viewport (the canvas is tall):
     // a pointer outside the viewport hits nothing, so the strip is scrolled in first
     // — AFTER START, whose click scrolls the page back up to the button.
-    await page.click('#manualStart');
     await page.locator('#stage .flash-touch-controls').scrollIntoViewIfNeeded();
     const geo = await page.evaluate(() => {
         const r = (sel) => document.querySelector(sel).getBoundingClientRect();
@@ -634,7 +639,8 @@ async function holdFor(page, codes, ms) {
     });
     const pad = (dx, dy) => [geo.cx + dx * geo.rad * 0.7, geo.cy + dy * geo.rad * 0.7];
     const heldNow = () => page.evaluate(() => ({
-        attr: document.querySelector('#stage .flash-touch-controls').dataset.held ?? '',
+        attr: document.querySelector('#stage .flash-touch-controls')?.dataset.held ?? '',
+        n: document.querySelectorAll('.flash-touch-controls').length,
         hud: document.getElementById('hud').textContent,
     }));
 
@@ -676,6 +682,8 @@ async function holdFor(page, codes, ms) {
     check(m.touch === true && m.released === 'stop' && m.held.length === 0 && afterStop.attr === '',
         '⛔ STOP released EVERY held key — the keyboard set AND the finger still on the pad',
         `released=${m.released} held=${JSON.stringify(m.held)} controls held="${afterStop.attr}"`);
+    check(afterStop.n === 0, '⚖ …and STOP takes the strip away with the run (it comes back at the next START)',
+        `${afterStop.n} mounted after STOP`);
     const keysIn = new Set(m.inputs.map((i) => i.key));
     check(m.ticks > 20 && ['right', 'left', 'primary'].every((k) => keysIn.has(k)),
         '⛓ the TAPE carries the touch presses — right, left and X — as tape keys',
@@ -687,7 +695,10 @@ async function holdFor(page, codes, ms) {
             : JSON.stringify(m.mismatches.slice(0, 4)));
     if (SHOT) await page.screenshot({ path: `${SHOT}/manual-touch.png` });
 
-    // ⛔ A RETIRED MANUAL LEAVES NO CONTROLS. Switch the arm in place.
+    // ⛔ A RETIRED MANUAL LEAVES NO CONTROLS. Switch the arm in place — mid-run (a second START brings the strip
+    // back; since seedling-lab-touch-fix there is none to take away after STOP).
+    await page.click('#manualStart');
+    await page.waitForSelector('#stage .flash-touch-controls', { timeout: 30000 });
     await page.evaluate(() => { delete window.__editorArm; });
     await page.selectOption('#source', 'solve');
     await page.waitForFunction(() => window.__editorArm?.source === 'solve', null, { timeout: 120000 });
@@ -698,6 +709,7 @@ async function holdFor(page, codes, ms) {
 
     // ?touch=0 (and a fine pointer, as headless chromium has) — no controls until asked.
     // ⛓ (L1b) the checkbox became the panel's auto / on / off select; "asked" = choosing `on`.
+    // ⚖ (seedling-lab-touch-fix, 2026-11-11) and the controls are the RUN's: `on` shows them at START.
     const { page: p2, errors: e2 } = await open(
         `${PAGE}?source=manual&boot=${TAPES}/r8-hammer-control.json&touch=0`);
     await p2.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
@@ -707,15 +719,20 @@ async function holdFor(page, codes, ms) {
         n: document.querySelectorAll('.flash-touch-controls').length,
     }));
     await p2.selectOption('#manualTouch', 'on');
+    await p2.click('#manualStart');
+    await p2.waitForFunction(() => document.getElementById('manualStart').disabled, null, { timeout: 30000 });
     const on = await p2.evaluate(() => document.querySelectorAll('#stage .flash-touch-controls').length);
+    await p2.evaluate(() => document.getElementById('manualStop').click());
+    await p2.waitForFunction(() => window.__editorManual?.roundTrip !== undefined, null, { timeout: 60000 });
     check(off.box === 'auto' && off.n === 0 && on === 1,
-        '?touch=0 shows none, and choosing "on" in the on-screen controls option mounts them by hand',
+        '?touch=0 shows none, and choosing "on" in the on-screen controls option mounts them by hand (at START)',
         `before: option=${off.box} mounted=${off.n}; after choosing on: ${on}`);
     check(e2.length === 0, 'no page errors', e2.join(' | ') || 'clean');
     await p2.close();
 }
 
 // ── ROW 6 (seedling-lab-touch-visible): THE OPTION, VISIBLE BEFORE START ─────
+// ⚖ seedling-lab-touch-fix (2026-11-11): the OPTION is still visible before START; the CONTROLS are not.
 /**
  * ⚖ The user (2026-10-29): *"I don't see the touch controls on the lab page. I
  * want it to work similarly to the frontend page, with the controls below the
@@ -724,8 +741,9 @@ async function holdFor(page, codes, ms) {
  *
  * The flash panel's own auto / on / off, remembered per browser. With a FINE
  * pointer (headless chromium) and NO `?touch=`: auto shows none; `on` shows the
- * strip under the canvas AT ONCE — no START — dimmed and inert until START;
- * a reload keeps `on`; `off` hides; a reload keeps `off`. Then a phone-sized
+ * strip under the canvas FROM START TO STOP (⚖ 2026-11-11, seedling-lab-touch-fix;
+ * it was "at once, dimmed until START" before) — a reload keeps `on`; `off`
+ * hides; a reload keeps `off`. Then a phone-sized
  * touch context (a COARSE pointer): auto shows them.
  */
 {
@@ -760,58 +778,58 @@ async function holdFor(page, codes, ms) {
         'a fine pointer with no ?touch= starts at auto: the option is ON THE PAGE beside START, and no controls',
         JSON.stringify(auto));
 
+    // ⚖ seedling-lab-touch-fix (the user 2026-11-11: "I think those controls should only appear after pressing
+    // Start."): the option decides WHETHER a run shows them; START decides WHEN. So each "shows" below is read
+    // DURING a run (START … STOP), and "before START" is now NONE, not dimmed.
+    const during = async () => {
+        await page.click('#manualStart');
+        await page.waitForFunction(() => document.getElementById('manualStart').disabled, null, { timeout: 30000 });
+        const st = await state();
+        await page.evaluate(() => document.getElementById('manualStop').click());
+        await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined, null, { timeout: 60000 });
+        await page.evaluate(() => { delete window.__editorManual; });
+        return st;
+    };
     await page.selectOption('#manualTouch', 'on');
     const on = await state();
-    check(on.n === 1 && on.below && on.afterCanvas === 'canvas' && on.stored === 'on' && !on.driving,
-        '⛓ choosing `on` shows the controls UNDER the canvas at once — before START — and remembers it',
+    check(on.n === 0 && on.stored === 'on' && !on.driving,
+        '⚖ choosing `on` remembers it — and shows NO strip before START (the strip is the run\'s)',
         JSON.stringify(on));
-    check(Number(on.opacity) < 1, '…dimmed while no run is going (a press is inert until START)',
-        `opacity ${on.opacity}`);
+    const onRun = await during();
+    check(onRun.n === 1 && onRun.below && onRun.afterCanvas === 'canvas' && onRun.driving,
+        '⛓ …START shows the controls UNDER the canvas', JSON.stringify(onRun));
+    check(Number(onRun.opacity) === 1, '…at full strength (nothing to dim: they exist only while the run drives)',
+        `opacity ${onRun.opacity}`);
+    const afterRun = await state();
+    check(afterRun.n === 0, '…and STOP takes them away', `${afterRun.n} mounted`);
     if (SHOT) {
         await page.locator('#stage').scrollIntoViewIfNeeded();
         await page.screenshot({ path: `${SHOT}/option-on-desktop.png` });
     }
-    // ⛔ inert before START: a press on the d-pad holds nothing
-    await page.locator('#stage .flash-touch-controls').scrollIntoViewIfNeeded();
-    const g = await page.evaluate(() => {
-        const p = document.querySelector('.flash-touch-dpad').getBoundingClientRect();
-        return { x: p.left + p.width * 0.85, y: p.top + p.height / 2 };
-    });
-    await page.mouse.move(g.x, g.y);
-    await page.mouse.down();
-    await page.waitForTimeout(150);
-    const idleHud = await page.evaluate(() => document.getElementById('hud').textContent);
-    await page.mouse.up();
-    check(!/heldright/.test(idleHud.replace(/\s+/g, '')),
-        '⛔ before START a press reaches nothing (the one writer\'s driving gate)', 'no held right');
-    await page.click('#manualStart');
-    await page.waitForFunction(() => document.getElementById('manualStart').disabled, null, { timeout: 30000 });
-    const live = await state();
-    check(Number(live.opacity) === 1, '…and full strength once the run drives', `opacity ${live.opacity}`);
-    await page.evaluate(() => document.getElementById('manualStop').click());
-    await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined, null, { timeout: 60000 });
 
     await page.reload({ waitUntil: 'domcontentloaded' });
     await ready();
     const kept = await state();
-    check(kept.option === 'on' && kept.n === 1 && kept.below,
-        'a reload keeps `on` — the controls are back under the canvas with no ?touch=', JSON.stringify(kept));
+    const keptRun = await during();
+    check(kept.option === 'on' && kept.n === 0 && keptRun.n === 1 && keptRun.below,
+        'a reload keeps `on` — the controls are back under the canvas at START, with no ?touch=',
+        `${JSON.stringify(kept)} · during a run ${JSON.stringify(keptRun)}`);
 
     await page.selectOption('#manualTouch', 'off');
-    const off = await state();
+    const off = await during();
     await page.reload({ waitUntil: 'domcontentloaded' });
     await ready();
-    const keptOff = await state();
+    const keptOff = await during();
     check(off.n === 0 && off.stored === 'off' && keptOff.option === 'off' && keptOff.n === 0,
-        '`off` hides them, and a reload keeps `off`',
+        '`off` hides them (even during a run), and a reload keeps `off`',
         `after off: ${off.n} mounted; after reload: option=${keptOff.option} mounted=${keptOff.n}`);
 
     // ⛓ ?touch=1 still decides over a remembered `off` (the link starts at auto, where ?touch= is read)
     await page.goto(`${url}&touch=1`, { waitUntil: 'domcontentloaded' });
     await ready();
-    const linked = await state();
+    const linked = await during();
     check(linked.option === 'auto' && linked.n === 1 && linked.stored === 'off',
-        '?touch=1 still shows them over a remembered `off` — without overwriting the choice',
+        '?touch=1 still shows them (during a run) over a remembered `off` — without overwriting the choice',
         JSON.stringify(linked));
     check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');
     await page.close();
@@ -825,6 +843,9 @@ async function holdFor(page, codes, ms) {
     pp.on('pageerror', (e) => pErr.push(`pageerror: ${e.message}`));
     await pp.goto(url, { waitUntil: 'domcontentloaded' });
     await pp.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+    await pp.waitForFunction(() => !document.getElementById('manualTouch').disabled, null, { timeout: 30000 });
+    const phPre = await pp.evaluate(() => document.querySelectorAll('.flash-touch-controls').length);
+    await pp.tap('#manualStart');
     await pp.waitForSelector('#stage .flash-touch-controls', { timeout: 30000 });
     const ph = await pp.evaluate(() => {
         const root = document.querySelector('#stage .flash-touch-controls');
@@ -836,8 +857,8 @@ async function holdFor(page, codes, ms) {
             below: r.top >= c.bottom - 1, fits: r.right <= window.innerWidth + 1,
         };
     });
-    check(ph.coarse && ph.option === 'auto' && ph.below && ph.fits,
-        'a phone (coarse pointer) at auto shows them under the canvas, within the screen width',
+    check(phPre === 0 && ph.coarse && ph.option === 'auto' && ph.below && ph.fits,
+        'a phone (coarse pointer) at auto shows them under the canvas at START (none before), within the screen width',
         JSON.stringify(ph));
     if (SHOT) {
         await pp.locator('#stage').scrollIntoViewIfNeeded();

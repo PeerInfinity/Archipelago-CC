@@ -323,6 +323,8 @@ export class LocationUI {
 
       // Subscribe to state manager location check rejection events
       subscribe('stateManager:locationCheckRejected', this.handleLocationCheckRejected.bind(this));
+      // ...and the client's connected-path refusal (an out-of-logic click while connected sends nothing)
+      subscribe('client:locationCheckRefused', this.handleLocationCheckRejected.bind(this));
 
       // Subscribe to metaGame progress bar cancellation (e.g. user clicked a new location while previous check was in progress)
       subscribe('metaGame:progressBarCancelled', this.handleProgressBarCancelled.bind(this));

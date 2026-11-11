@@ -162,6 +162,7 @@ function initializeGame(staticData) {
             regionName,
             originator: 'VibeCodingSimCheck',
             originalDOMEvent: true,
+            reportedByGame: true, // the game's own check: never logic-gated (client/core/checkGate.js)
         }, { initialTarget: 'bottom' });
     };
 

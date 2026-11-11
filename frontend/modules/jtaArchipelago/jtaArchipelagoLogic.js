@@ -90,6 +90,7 @@ export class JTAArchipelagoLogic {
       this._dispatcher.publish('user:locationCheck', {
         locationName: taskName,
         sourceModule: 'jtaArchipelago',
+        reportedByGame: true, // the game completed the task: never logic-gated (client/core/checkGate.js)
       }, 'bottom');
     } else {
       log('error', 'No dispatcher available for location check');

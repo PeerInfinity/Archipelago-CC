@@ -330,7 +330,9 @@ describe('⛓ #jsTouch follows the lab\'s on-screen-controls option', () => {
         expect(shown('on', true, '?touch=0')).toBe(false);
     });
 
-    const body = (src) => src.slice(src.indexOf('async function mountJsTouch('), src.indexOf('let jsTouch = null;'));
+    // ⛓ seedling-lab-touch-fix: `mountJsTouch` became `mountFrameTouch(lifetime, transport)` (the wasm frame got a
+    // strip too); the pin reads the same rule out of the renamed body.
+    const body = (src) => src.slice(src.indexOf('async function mountFrameTouch('), src.indexOf('let frameTapeHolds = false;'));
     const pinned = (src) => /box\.checked = [^;]*labTouchShownInitially\(\{\s*storage: labStorage\(\), search: location\.search/
         .test(body(src)) && !/writeLabTouchSetting|setItem|touchControlsVisible\('auto'/.test(body(src));
 

@@ -36,6 +36,7 @@ import {
 } from './localRulesOverlay.js';
 import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
+import { needsLogicGate, logicRefusal, refusalMessage } from './checkGate.js';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -128,6 +129,10 @@ export class MessageHandler {
     // connection. Guards against re-sending CLIENT_GOAL on every subsequent
     // location check or re-render. Reset on (re)connect in _handleConnected.
     this._goalReported = false;
+    // Option D of the out-of-logic fix: server ids THIS client sent on this connection, and whether the slot has
+    // goaled/released. A RoomUpdate echo of either is not a logic bug, so it raises no INACCESSIBLE alarm.
+    this._sentLocationIds = new Set();
+    this._slotReleased = false;
     // What the server has delivered on this connection: item name -> count.
     this._serverItems = new Map();
   }
@@ -767,6 +772,8 @@ export class MessageHandler {
     // complete (reconnecting after finishing), the downstream snapshot sync
     // will re-trigger reportGoal() so the slot still registers as goaled.
     this._goalReported = false;
+    this._sentLocationIds = new Set();
+    this._slotReleased = false;
     this._invalidGameRetried = false;
     this._serverItems.clear();
 
@@ -1418,6 +1425,12 @@ export class MessageHandler {
     // PrintJSON is purely for displaying messages to the player
     // Location updates are handled by RoomUpdate, items by ReceivedItems
 
+    // Our slot goaled or released (by any client, or the host): the locations the server checks next are a release,
+    // not a logic mismatch (option D).
+    if ((data.type === 'Goal' || data.type === 'Release') && this._isOwnSlot(data.slot, data.team)) {
+      this._slotReleased = true;
+    }
+
     // Check if this is a chat message (type === 'Chat')
     if (data.type === 'Chat') {
       log('info', '[MessageHandler] Received chat message:', data);
@@ -1545,7 +1558,15 @@ export class MessageHandler {
             // Check if location is accessible according to frontend logic
             const isAccessible = locationReachability[name] === 'reachable';
 
-            if (!isAccessible) {
+            if (!isAccessible && this._echoNeedsNoAlarm(id)) {
+              // Option D: our own send (a game-reported pickup the game physically allowed) or a release after the
+              // goal. Force-check to stay in sync, as below, but this is not a logic bug: no alarm.
+              await stateManager.checkLocation(name, false, true); // forceCheck = true
+              locationsMarked++;
+              this._syncedLocationIds.add(id);
+              log('info', `[MessageHandler _syncLocationsFromServer] "${name}" (${id}) is out of logic but was `
+                + `${this._sentLocationIds.has(id) ? 'sent by this client' : 'released after the goal'}; force-checked, no alarm.`);
+            } else if (!isAccessible) {
               // Location is inaccessible according to frontend logic, but server says it was checked
               // Capture state before force-checking
               const stateBefore = {
@@ -1814,6 +1835,8 @@ Location was force-checked to maintain server sync.`;
     if (!connection.isConnected()) return false;
 
     this._goalReported = true;
+    // The server may release/collect the slot's remaining locations now; their echo is not a logic bug.
+    this._slotReleased = true;
     log('info', '[MessageHandler] Reporting goal completion to server (CLIENT_GOAL).');
     return this.sendStatusUpdate(Config.CLIENT_STATUS.CLIENT_GOAL);
   }
@@ -1942,6 +1965,30 @@ Location was force-checked to maintain server sync.`;
     return this.dispatcher;
   }
 
+  /** Whether a PrintJSON's slot/team is this client's slot. */
+  _isOwnSlot(slot, team) {
+    if (this.clientSlot === null || this.clientSlot === undefined || slot !== this.clientSlot) return false;
+    return team === undefined || team === null || this.clientTeam === null || this.clientTeam === undefined
+      || team === this.clientTeam;
+  }
+
+  /** Option D: a server-checked id that logic calls unreachable is still no logic bug when we sent it, or after the goal. */
+  _echoNeedsNoAlarm(id) {
+    return this._sentLocationIds.has(id) || this._slotReleased;
+  }
+
+  /** The connected path's refusal: the same outcome as the state manager's offline `not_accessible`, plus a message. */
+  _refuseCheck(locationName, reason, eventData) {
+    log('info', `[MessageHandler] Refused location check "${locationName}" (${reason}); nothing sent.`,
+      { originator: eventData?.originator });
+    this.eventBus?.publish('client:locationCheckRefused', {
+      locationName,
+      reason,
+      originator: eventData?.originator ?? null,
+    });
+    this._printToConsole(refusalMessage(locationName, reason), 'warning');
+  }
+
   // Actual method to send location checks, used by the exported handler
   _internalSendLocationChecks(locationIds) {
     log('info', '[MessageHandler] _internalSendLocationChecks called with IDs:', locationIds);
@@ -1993,6 +2040,7 @@ Location was force-checked to maintain server sync.`;
     });
 
     log('info', '[MessageHandler] Sending LocationChecks command with slot:', slot);
+    for (const id of validLocationIds) this._sentLocationIds.add(id);
     connection.send([
       {
         cmd: 'LocationChecks',
@@ -2039,6 +2087,15 @@ export async function handleUserLocationCheckForClient(
       eventData
     );
     if (eventData.locationName) {
+      // The logic gate (checkGate.js): a check the game did not report is refused when the state manager says the
+      // location is unreachable, the same as offline. Nothing is sent and the event is not passed on.
+      if (needsLogicGate(eventName, eventData)) {
+        const reason = await logicRefusal(eventData.locationName, stateManagerProxySingleton);
+        if (reason) {
+          messageHandlerSingleton._refuseCheck(eventData.locationName, reason, eventData);
+          return;
+        }
+      }
       log('info', '[MessageHandler] Getting server ID for location:', eventData.locationName);
       
       let serverId = null;

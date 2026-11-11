@@ -118,6 +118,31 @@ export function findRegionForLocation(locationName) {
 }
 
 /**
+ * Whether the state manager's latest snapshot calls this location unreachable. "Check next" and auto-check skip such a
+ * step: the check would be refused (connected, by the client's logic gate, client/core/checkGate.js; offline, by the
+ * state manager itself). This happens when the proof rule (a dep's location CHECKED) disagrees with AP logic (the dep's
+ * event reachable), e.g. after a dep was checked out of logic. No snapshot, or no answer, is not "unreachable".
+ *
+ * @param {string} locationName
+ * @returns {boolean}
+ */
+export function isLogicUnreachable(locationName) {
+  return stateManager.getLatestStateSnapshot?.()?.locationReachability?.[locationName] === 'unreachable';
+}
+
+/**
+ * Whether a `client:locationCheckRefused` names the step a panel has in flight (its `_checkingStep`): the refusal
+ * produces no snapshot update, so the panel must clear its in-flight guard on the refusal itself.
+ *
+ * @param {Object|null} inFlightStep - the panel's in-flight step (or null)
+ * @param {Object} refusal - the event payload, `{ locationName, reason, originator }`
+ * @returns {boolean}
+ */
+export function refusalNamesStep(inFlightStep, refusal) {
+  return !!inFlightStep && !!refusal && inFlightStep.locationName === refusal.locationName;
+}
+
+/**
  * Dispatch a location check for a proof step.
  *
  * Verifies the location exists, finds its region, and dispatches the event.
