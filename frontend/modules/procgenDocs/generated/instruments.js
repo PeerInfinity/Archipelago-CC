@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 151,
-            "count": 201,
+            "browser": 153,
+            "count": 203,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 524,
-        "browser": 221,
-        "cited": 277,
-        "files": 542,
+        "blockStyle": 526,
+        "browser": 223,
+        "cited": 278,
+        "files": 544,
         "lineStyle": 18,
-        "withDocblock": 542,
-        "withFlags": 461
+        "withDocblock": 544,
+        "withFlags": 463
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11535,6 +11535,56 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-bobiframe.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING FIDELITY BOBIFRAME (wave 39) — L40's `bob@736,752` on the game, tick by tick, under the solver's own `Level 040 - Chest ← L39` plans (sweep leg key `level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest`).",
+            "path": "scripts/procgen/probe-seedling-bobiframe.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-bobsoldier-mobiles.mjs",
             "flags": [
@@ -13346,6 +13396,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "clear-arm",
                 "clear-ticks",
                 "host",
                 "only",
@@ -13355,6 +13406,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-encounter-latch.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "clear-arm"
+                },
                 {
                     "how": [
                         "arg"
@@ -13492,6 +13549,65 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-encounter-ticks — ⛓⛓ seedling-fidelity-encounters2: AN ENCOUNTER, ASKED OF THE GAME TICK BY SAMPLED TICK (the BobSoldier probe's harness, `probe-seedling-bobsoldier-mobiles.mjs`, pointed at the two encounters).",
             "path": "scripts/procgen/probe-seedling-encounter-ticks.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-er-landings.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-model"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Three steps the shuffled world `seedling_er` asks for and the solver refuses, PLAYED ON THE GAME (slice rules-er-c1-c3-witness).",
+            "path": "scripts/procgen/probe-seedling-er-landings.mjs"
         },
         {
             "argvHelpers": [],
@@ -14371,6 +14487,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "include-fired"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "margin"
@@ -14389,6 +14511,10 @@ export const INSTRUMENTS = frz({
                 }
             ],
             "inheritedFlags": [
+                {
+                    "from": "probe-seedling-encounter-latch.mjs",
+                    "name": "clear-arm"
+                },
                 {
                     "from": "argvHelp.js",
                     "name": "help"
@@ -17781,6 +17907,59 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rock-fire.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "on"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rock-fire — ⛓⛓⛓ seedling-fidelity-rockfire: A FIRE PRESS REACHING A BREAKABLE ROCK, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-rock-fire.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
@@ -19136,6 +19315,8 @@ export const INSTRUMENTS = frz({
                 "max-restarts",
                 "only",
                 "order",
+                "preset",
+                "stall-s",
                 "until"
             ],
             "file": "probe-seedling-walk-order.mjs",
@@ -19175,6 +19356,24 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "preset"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "stall-s"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "trace"
                 },
                 {
                     "how": [
@@ -19247,88 +19446,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-wallflyer-mobiles — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S OWN BODY, AND ITS DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (BOBSOLDIER's `probe-seedling-bobsoldier-mobiles.mjs`, one class over).",
             "path": "scripts/procgen/probe-seedling-wallflyer-mobiles.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg",
-                "sorted"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/maze.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
-                "max-nodes",
-                "only",
-                "repeat",
-                "search"
-            ],
-            "file": "probe-seedling-wallflyer-nohit.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "chest"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "dump"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "max-nodes"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "repeat"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "search"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Which item gives a NO-HIT line across a wallflyer's flight, PLAYED ON THE GAME (slice rules-no-hit-l22).",
-            "path": "scripts/procgen/probe-seedling-wallflyer-nohit.mjs"
         },
         {
             "argvHelpers": [
@@ -22597,6 +22714,7 @@ export const INSTRUMENTS = frz({
         {
             "argvHelpers": [
                 "DISABLE",
+                "PRESET",
                 "argOf"
             ],
             "browser": false,
@@ -22617,6 +22735,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "survey-seedling-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "carry-earned"
+                },
                 {
                     "how": [
                         "startsWith"
@@ -22646,6 +22770,12 @@ export const INSTRUMENTS = frz({
                         "argOf"
                     ],
                     "name": "out"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "preset"
                 },
                 {
                     "how": [

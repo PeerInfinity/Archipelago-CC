@@ -1,0 +1,36 @@
+walls=false: ok work=3467 shadowTicks=2389 runTick=2389 liveRun=shadow hits=[]
+  trace: [["kill","clear-tag","merged: bait decided on the same tick"],["bait","clear-tag","merged: time decided on the same tick; merged: walk decided "],["kill","clear-tag","merged: walk decided on the same tick"],["bait","clear-tag","merged: time decided on the same tick"],["kill","clear-tag","merged: walk decided on the same tick"],["hold","clear-tag","merged: walk decided on the same tick"]]
+  last row: 2389	(889.0,776.6)		- - -
+walls=true: ok work=3823 shadowTicks=2385 runTick=2385 liveRun=shadow hits=[]
+  trace: [["kill","clear-tag","merged: bait decided on the same tick"],["bait","clear-tag","merged: time decided on the same tick; merged: walk decided "],["kill","clear-tag","merged: walk decided on the same tick"],["bait","clear-tag","merged: time decided on the same tick"],["kill","clear-tag","merged: walk decided on the same tick"],["hold","clear-tag","merged: walk decided on the same tick"]]
+  last row: 2385	(887.4,775.2)		- - -
+first tick the two DRIVES part (player/keys): 694
+OFF 690	(744.3,716.2)	down	(744.0,738.2)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 690	(744.3,716.2)	down	(744.0,740.3)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 691	(743.6,717.3)	left	(744.1,737.9)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 691	(743.6,717.3)	left	(743.9,740.1)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 692	(743.9,718.1)	right	(744.0,737.7)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 692	(743.9,718.1)	right	(744.0,739.9)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 693	(744.1,719.5)	down	(744.1,737.5)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 693	(744.1,719.5)	down	(743.9,739.7)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 694	(744.2,720.6)	primary	(744.0,737.3)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 694	(744.2,720.6)	down	(744.0,739.5)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 695	(744.4,721.5)	down	(744.1,737.1)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 695	(744.4,721.5)	down	(743.9,739.2)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 696	(743.6,722.9)	down+left	(743.8,741.4)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 696	(744.4,722.1)	primary	(744.0,739.0)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 697	(743.8,724.1)	right	(744.0,744.9)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 697	(743.7,723.3)	down+left	(743.9,738.8)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 698	(744.0,725.1)	down	(743.8,747.7)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 698	(743.9,724.3)	right	(743.9,743.1)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 699	(744.1,726.6)	down	(744.0,749.8)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 699	(744.0,725.8)	down	(743.5,746.7)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 700	(744.2,727.8)	down	(743.7,751.1)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 700	(744.1,727.1)	down	(743.6,749.5)h1 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 701	(744.3,728.9)	down	(743.9,751.7)h1 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 701	(744.2,728.1)	down	(743.2,751.5)h1 (744.0,808.0)h0 (888.0,840.0)h0
+--- window
+OFF 1	(328.8,600.8)	down+right	(744.0,760.0)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 1	(328.8,600.8)	down+right	(744.0,760.0)h0 (744.0,808.0)h0 (888.0,840.0)h0
+OFF 2	(330.2,602.2)	down+right	(744.0,760.0)h0 (744.0,808.0)h0 (888.0,840.0)h0 
+ ON 2	(330.2,602.2)	down+right	(744.0,760.0)h0 (744.0,808.0)h0 (888.0,840.0)h0

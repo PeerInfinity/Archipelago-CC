@@ -19,6 +19,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { bagFromPayload } from '../procgenCore/regionGenerationForm.js';
 import { assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
+import { DEFER_CONTENT_SET } from '../procgenPipeline/worldContent.js';
 import {
     GRANTED_AS_STARTING, REGENERATE_RIDING_FREE, REGENERATE_RODE_FREE, REGENERATE_RULES_UNCHANGED, applyRulesDocOp,
     describeRegeneration, grantsClause, regenerateOpRefusal,
@@ -109,8 +110,10 @@ describe('composeRegenerateArgs — the bag → the op, as top-down composes it'
         for (const target of [...tilesIds(), ...sidesIds()]) {
             const plan = regionGenerationPlan(FOUR, '3', 'region_1_0', target, { seed: 4 });
             const args = composeRegenerateArgs(FOUR, '3', 'region_1_0', target, { ...plan.defaults });
+            // ⛓ CONTENT SETS R1 — the composed args DEFER the set (C4): a target with a default pack would
+            // otherwise carry the cached set, which cannot cross the worker's postMessage.
             expect(args.regionParams, target).toEqual(assembleRegionParams({
-                activeIds: [target], mode: 'topDown', params: plan.defaults,
+                activeIds: [target], mode: 'topDown', params: plan.defaults, contentSet: DEFER_CONTENT_SET,
             }));
             expect(args.seed).toBe(4);
             expect(args.freeItems).toEqual(freeItemsFor(FOUR, '3', substrateRegistry.get(target)));

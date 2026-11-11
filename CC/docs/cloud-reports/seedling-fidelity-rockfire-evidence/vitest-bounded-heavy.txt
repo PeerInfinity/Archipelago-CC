@@ -1,0 +1,5 @@
+frontend/modules/seedlingDemo/fidelityL32ArenaPrefix.slow.test.js
+frontend/modules/seedlingDemo/fidelityL40Bk2.train.test.js
+frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js
+frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js
+frontend/modules/seedlingDemo/hammerL53Killlock.train.test.js

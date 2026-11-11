@@ -57,7 +57,7 @@
 import { describe, it, expect } from 'vitest';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { RULES, ATLAS, SAMPLE, OPEN_L53, OPEN_L60, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, ATLAS, SAMPLE, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
 
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -73,9 +73,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
-        // ⛓ rules-l26-rocklock-pocket: + OPEN_L53 (the fixture says why: the atlas is the game's side).
-        // ⛓ rules-l60-l71-killlock: + OPEN_L60 (its mirror: the latch's own across-the-cut arm, which the level world does not lay).
-        expect(problems).toEqual([OPEN_L53, OPEN_L60, OPEN_L63]);
+        // ⛓ tile-encounter-kill-arms: OPEN_L53 and OPEN_L60 closed (the fixture's CLOSED_* note says how).
+        expect(problems).toEqual([OPEN_L63]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
@@ -135,6 +134,9 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // r42c28's chest, flags 7/12 ×2 and → L83 from (2,54). r42c28 → r0c19 / r0c37 are pairs inside the world now. 104 → 99.
         // ⛓ tile-l89-feather-swim (⚖ Robert 2026-11-07 "Re-record (Recommended)"): L89's Feather is bound to its cheapest way,
         // level_89__r1c10, so it is priced from r1c10's landing from L91 (13,1) like r1c10's door to L91 beside it (1/3). 99 → 100.
+        // ⛓ rules-l16-l17-trap-transition (⚖ user 2026-11-10: the L16 ↔ L17 stairs are closed in either direction until the
+        // cut): L16's stairs down cost the cut, so L17's landing from them (3,3) is not admitted armed — its two rows (the
+        // chest, the stairs back up) are compared at the cut only and skipped by name at the armed point (1/2 each). Two rows come.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -155,6 +157,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
             'level_12__r42c28 → level_83 (landing 2,54) | 7020/131072',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
+            'level_17 @ Level 017 - Chest (landing 3,3) | 1/2',
+            'level_17 → level_16__r3c7 (landing 3,3) | 1/2',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',

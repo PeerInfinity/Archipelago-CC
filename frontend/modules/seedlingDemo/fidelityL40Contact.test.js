@@ -70,9 +70,9 @@ const firstParting = (model) => {
 
 describe('L40CONTACT D1 — a live spinner walls a chaser (`chaserSpinnerWalls`)', () => {
     it.skipIf(process.env.SEEDLING_CHASER_SPINNER_WALLS || process.env.SEEDLING_CONTACT_FIDELITY)(
-        'ships OFF', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.chaserSpinnerWalls).toBe(false);
-            expect(CONTACT_FIDELITY.chaserSpinnerWalls).toBe(false);
+        'ships ON (⚖ user 2026-11-11, the BOBIFRAME flip: game-witnessed at 0 px on L40\'s x 744 shaft)', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.chaserSpinnerWalls).toBe(true);
+            expect(CONTACT_FIDELITY.chaserSpinnerWalls).toBe(true);
         });
 
     it('the witness is the game\'s: one row per bob per tick from t1700 to the tape\'s end, read at worst |Δ| 0 by the ON probe', () => {

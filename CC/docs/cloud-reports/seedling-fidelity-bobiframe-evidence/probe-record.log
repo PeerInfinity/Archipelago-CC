@@ -1,0 +1,17 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-ap-record-01b432a9 · 2 witness tape(s)
+# box lock: TAKEN by probe-seedling-bobiframe.mjs (browser, pid 7525) — head a4f57f8c5, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"name":"l40-chest-l39-s5222-default","ticks":1226,"gameHits":[936,977,1064],"off":{"sampled":1226,"bobComparisons":14246,"spinnerComparisons":5751,"firstPlayer":{"t":936,"game":[745.8594284721097,786.5671307599894],"model":[744.3823614894416,788.6684757218466]},"firstBob":{"t":544,"id":"bob@736,752","d":0.17677669529666673,"game":[744,760,0,0],"model":[743.8232233047033,759.8232233047033,0,0]
+PASS: l40-chest-l39-s5222-default: every tick of the tape was sampled on the game — 1226/1226
+PASS: l40-chest-l39-s5222-default: chaserSpinnerWalls ON — the model is the game at 0 px (player, bobs with hits/hits_timer, spinners) — 14522 bob + 5742 spinner comparison(s); first partings [null,null,null]
+PASS: l40-chest-l39-s5222-default: chaserSpinnerWalls ON — the model bills the game's player hits, on the game's ticks — game [936,977,1064] model [{"t":936,"source":"chaser","id":"bob@736,752"},{"t":977,"source":"chaser","id":"bob@736,800"},{"t":1064,"source":"chaser","id":"bob@736,800"}]
+INFO: l40-chest-l39-s5222-default: chaserSpinnerWalls OFF — first bob parting {"t":544,"id":"bob@736,752","d":0.17677669529666673,"game":[744,760,0,0],"model":[743.8232233047033,759.8232233047033,0,0]}, first player parting {"t":936,"game":[745.8594284721097,786.5671307599894],"model":[744.3823614894416,788.6684757218466]}, model hits []
+recorded frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-default.game.json
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"name":"l40-chest-l39-s5222-walls","ticks":1222,"gameHits":[],"off":{"sampled":1222,"bobComparisons":14222,"spinnerComparisons":5735,"firstPlayer":null,"firstBob":{"t":544,"id":"bob@736,752","d":0.17677669529666673,"game":[744,760,0,0],"model":[743.8232233047033,759.8232233047033,0,0]},"firstSpinner":null,"hits":[]},"on":{"sampled":1222,"bobComparisons":14220,"spinnerComparisons":5735,"firstP
+PASS: l40-chest-l39-s5222-walls: every tick of the tape was sampled on the game — 1222/1222
+PASS: l40-chest-l39-s5222-walls: chaserSpinnerWalls ON — the model is the game at 0 px (player, bobs with hits/hits_timer, spinners) — 14220 bob + 5735 spinner comparison(s); first partings [null,null,null]
+PASS: l40-chest-l39-s5222-walls: chaserSpinnerWalls ON — the model bills the game's player hits, on the game's ticks — game [] model []
+INFO: l40-chest-l39-s5222-walls: chaserSpinnerWalls OFF — first bob parting {"t":544,"id":"bob@736,752","d":0.17677669529666673,"game":[744,760,0,0],"model":[743.8232233047033,759.8232233047033,0,0]}, first player parting null, model hits []
+recorded frontend/modules/seedlingDemo/fixtures/bobiframe-witness/l40-chest-l39-s5222-walls.game.json
+ALL PASS

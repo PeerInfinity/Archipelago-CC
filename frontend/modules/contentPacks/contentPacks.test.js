@@ -3,7 +3,7 @@
  * COMMITTED packs (`frontend/packs/`) plus in-memory packs a test writes.
  */
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -32,9 +32,14 @@ const RESKIN = {
 };
 
 describe('the committed registry and packs', () => {
-    it('packs.json parses; the `seedling` stack is [seedling, archipelago]', async () => {
+    it('packs.json parses and lists every pack directory; the `seedling` stack is [seedling, archipelago]', async () => {
         const reg = parseRegistry(await fsJson(new URL('packs.json', BASE).href));
-        expect(reg.packs).toEqual(['seedling', 'archipelago']);
+        // ⛓ CONTENT SETS R1 — a hand-made pack (the text adventure's default) joined the generated two: the list is
+        // the directories that hold a pack.json, in any order.
+        const dirs = readdirSync(PACKS, { withFileTypes: true })
+            .filter((d) => d.isDirectory() && existsSync(join(PACKS, d.name, 'pack.json'))).map((d) => d.name);
+        expect([...reg.packs].sort()).toEqual(dirs.sort());
+        expect(reg.packs.slice(0, 2)).toEqual(['seedling', 'archipelago']);
         expect(reg.stacks.seedling).toEqual(['seedling', 'archipelago']);
     });
 

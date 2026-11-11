@@ -185,6 +185,9 @@ describe('⛓ C4 regenerateRegionEntry reads the document\'s content list', () =
 describe('⛓ C4 — a target declaring a DEFAULT pack (a fixture entry): the editor builds from the preload cache', () => {
     const original = substrateRegistry.get(TARGET);
     const declare = () => substrateRegistry.entries.set(TARGET, { ...original, [DEFAULT_CONTENT_PACK_FIELD]: PACK });
+    // ⛓ CONTENT SETS R1 — the real registry now declares a default pack (the text adventure's), which the
+    // in-memory io does not hold: the preload reads a FIXTURE registry of the one declaring target.
+    const preloadTarget = () => preloadDefaultContent({ ...memIo(), registry: { getAll: () => [substrateRegistry.get(TARGET)] } });
     afterEach(() => {
         substrateRegistry.entries.set(TARGET, original);
         resetDefaultContentCache();
@@ -200,7 +203,7 @@ describe('⛓ C4 — a target declaring a DEFAULT pack (a fixture entry): the ed
     it('preloaded: the composed args carry no set (they clone), the regenerate lands, and its entry is the control\'s', async () => {
         const control = regenerateRegionEntry(argsFor(FOUR));
         declare();
-        await preloadDefaultContent(memIo());
+        await preloadTarget();
         const bag = { ...plan.defaults };
         // A synchronous builder's assembleRegionParams carries the cached set …
         expect(assembleRegionParams({ activeIds: [TARGET], mode: 'topDown', params: bag })[CONTENT_SET_KEY])
@@ -219,7 +222,7 @@ describe('⛓ C4 — a target declaring a DEFAULT pack (a fixture entry): the ed
 
     it('an initialise\'s knobs (computed where the initialise runs) take the cached set', async () => {
         declare();
-        await preloadDefaultContent(memIo());
+        await preloadTarget();
         expect(initialiseKnobs(TARGET, { ...plan.defaults }).regionParams[CONTENT_SET_KEY]).toBe(defaultContentSetOf([PACK]));
     });
 });

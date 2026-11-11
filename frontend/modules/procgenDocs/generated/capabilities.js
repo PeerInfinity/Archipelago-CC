@@ -981,9 +981,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 100,
+        "fields": 102,
         "fieldsRead": 39,
-        "fieldsUnread": 58,
+        "fieldsUnread": 60,
         "statements": 29,
         "substrates": 9
     },
@@ -4953,6 +4953,8 @@ export const CAPABILITIES = frz({
         "buildRegionParams",
         "buildZoneSpecs",
         "canHostExitGatesBraid",
+        "contentRoles",
+        "defaultContentPack",
         "defaultProcgenParams",
         "driftItems",
         "emitsSpiralContent",

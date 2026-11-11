@@ -60,7 +60,7 @@ describe('CORPSEBUMP2 on the latch chain (slow)', () => {
         const off = await solve(false);
         const on = await solve(true);
         expect(off.refusal).toBeNull();
-        expect(off.out.perTick).toHaveLength(4142);
+        expect(off.out.perTick).toHaveLength(4144); // ⛓ VOLLEY FLIP (`TURRET_APPROACH_VOLLEY_ORDER` ON by default): the latch chain meets wait 31 (ascending: 30, 4142 t); both arms move together
         expect(on.out.perTick.map((k) => [...k])).toEqual(off.out.perTick.map((k) => [...k]));
         expect(on.out.equips).toEqual(off.out.equips);
     }, 900000);

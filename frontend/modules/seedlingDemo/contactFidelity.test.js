@@ -161,8 +161,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity SPINNINGAXE D2: `partialDodgeReprobe` (a phase dodge's partial stall re-probed) ships OFF.
             partialDodgeReprobe: false,
 
-            // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") ships OFF.
-            chaserSpinnerWalls: false,
+            // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") — ON since the BOBIFRAME flip (⚖ user 2026-11-11).
+            chaserSpinnerWalls: true,
 
             // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
             corridorBodyPricing: false,
@@ -393,7 +393,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L39PHANTOM D1 (wave 38): a spinner the run's roster lost is not priced at its placement — ON since the wave-38 joint flip (⚖ user 2026-11-10).
             spinnerRosterGone: true,
             // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ON since the wave-38 joint flip (⚖ user 2026-11-10).
-            fireSpinnerArm: true });
+            fireSpinnerArm: true,
+            // ⛓ fidelity ROCKFIRE D1 (wave 39): a Fire press that reaches a BreakableRock breaks it as a swing would — ON since the ROCKFIRE flip (⚖ user 2026-11-11).
+            fireRockArm: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

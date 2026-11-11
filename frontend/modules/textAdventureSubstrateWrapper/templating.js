@@ -102,6 +102,25 @@ export function customRegionEnterMessage(customData, regionName, vars = {}) {
     return processMessageTemplate(t, { regionName, ...vars });
 }
 
+/**
+ * ⛓ CONTENT SETS R1 — **THE ARRIVAL LINE**, as HTML: the region's enter message
+ * (payload prose → per-game file), else the `description` its payload carries
+ * (a theme's `place`, `{regionName}`-templated and escaped like every message),
+ * else today's generic line — `You are in <region>.` — which names the place
+ * instead of the region id when the payload names one.
+ *
+ * @param {object|null} proseDoc the composed document (`composeProse`)
+ * @param {string} regionName
+ * @param {{name?: string|null, description?: string|null}} [place] the payload's own
+ * @returns {string}
+ */
+export function arrivalLine(proseDoc, regionName, place = {}) {
+    const templated = customRegionEnterMessage(proseDoc, regionName);
+    if (templated) return templated;
+    if (place?.description) return processMessageTemplate(place.description, { regionName });
+    return escapeHtml(`You are in ${place?.name ?? regionName}.`);
+}
+
 export function customLocationCheckMessage(customData, locationName, vars = {}) {
     const t = customData?.locations?.[locationName]?.checkMessage;
     if (!t) return null;

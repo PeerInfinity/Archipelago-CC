@@ -31,7 +31,15 @@
  *      [--order=reachable-cheapest|sphere-cheapest|sphere-in-order|sphere-cheapest+sweep+grab|
  *       reachable-cheapest+pocket-item|reachable-cheapest+pocket-item+grab|reachable-cheapest+lookahead]
  *      [--until=<location>] [--budget-s=1800]
- *      [--expect=<loc>,<loc>,…] [--max-restarts=<n>]
+ *      [--expect=<loc>,<loc>,…] [--max-restarts=<n>] [--preset=<id>] [--trace] [--stall-s=<n>]
+ *
+ * `--preset=<id>` (ER E6; default `seedling_playthrough`, and without it nothing moves): WHICH WORLD is played — a
+ * directory under `frontend/presets/` whose `AP_1/AP_1_rules.json` is loaded by `?rules=`. The sphere log is derived
+ * from that file as before, so `--preset=seedling_er --until="Level 115 - The Seed"` plays the entrance-randomized
+ * world from the new game. The offline answers quoted above are the playthrough's.
+ * `--trace` adds a `ROW <tag> at {region, status, log}` row each time the bot's region or status changes (off: no
+ * row moves). `--stall-s=<n>` ends a session whose bot has sat in an `error:` status, nothing moving, for n seconds
+ * (off: the session waits for the bound, a stop or the budget, as before).
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -46,8 +54,17 @@ import { bootRetriesLine, isBootFault, startWasmGame, withBootRetry } from './se
 
 argvHelp(import.meta.url);
 
-/** The preset, by its rules file (served path relative to `frontend/`). */
-export const RULES_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
+/** The world played when `--preset=` names none. */
+export const DEFAULT_PRESET = 'seedling_playthrough';
+/** A preset's rules file (served path relative to `frontend/`); a preset is a directory name, never a path. */
+export function rulesPathOf(preset) {
+    if (typeof preset !== 'string' || !/^[a-z0-9][a-z0-9_-]*$/.test(preset)) {
+        throw new Error(`--preset=${preset} — a preset is a directory name under frontend/presets/`);
+    }
+    return `./presets/${preset}/AP_1/AP_1_rules.json`;
+}
+/** The default preset, by its rules file. */
+export const RULES_PATH = rulesPathOf(DEFAULT_PRESET);
 /** The JS runtime's page (`flashPanelUI.JS_RUNTIME_PAGE`'s file name). */
 const JS_PAGE = 'jsRuntime.html';
 
@@ -67,10 +84,20 @@ async function main() {
     const UNTIL = arg('until', 'Level 020 - Shield');
     const EXPECT = arg('expect', '') ? arg('expect', '').split(',') : null;
     const MAX_RESTARTS = arg('max-restarts', null) === null ? null : Number(arg('max-restarts', null));
-    const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
+    const TRACE = process.argv.includes('--trace');
+    const STALL_MS = arg('stall-s', null) === null ? null : Number(arg('stall-s', null)) * 1000;
+    const PRESET_ID = arg('preset', DEFAULT_PRESET);
+    let RULES;
+    try { RULES = rulesPathOf(PRESET_ID); } catch (e) { console.error(`ERROR: ${e.message}`); process.exit(2); }
+    if (!existsSync(join(REPO, 'frontend', RULES))) {
+        console.error(`ERROR: --preset=${PRESET_ID}: no ${join('frontend', RULES)}`);
+        process.exit(2);
+    }
+    const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES), 'utf8'));
     const START = PRESET.regions['1'].Menu.exits[0].connected_region;
     const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     const haveWasm = !!WASM_PAGE && existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE));
+    if (PRESET_ID !== DEFAULT_PRESET) console.log(`INFO: preset ${PRESET_ID} (${RULES})`);
     console.log(`INFO: walk order ${ORDER}; until "${UNTIL}"; start ${START}; budget ${BUDGET_MS / 1000} s`);
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
     let failed = 0;
@@ -105,7 +132,7 @@ async function main() {
         });
 
         try {
-            await page.goto(`${HOST}/frontend/?rules=${RULES_PATH}`, { waitUntil: 'domcontentloaded' });
+            await page.goto(`${HOST}/frontend/?rules=${RULES}`, { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             await rp.installWatchers();
             if (S === 'J') {
@@ -162,23 +189,34 @@ async function main() {
                 bot.refresh();
                 await bot.play();
                 return { ok: true, order: bot.getWalkOrder(), head: bot.getCurrentHead?.() ?? null, status: bot.getStatus?.() ?? '' };
-            }, { rulesPath: RULES_PATH, start: START, order: ORDER });
+            }, { rulesPath: RULES, start: START, order: ORDER });
             out('boot', booted);
             check(`${S}: the Playback Bot plays under walk order ${ORDER}`, booted.ok && booted.order === ORDER, JSON.stringify(booted));
 
             // 2. PLAY until the bound is checked, the bot stops, or the budget runs out.
             const t0 = Date.now();
             let last = null;
+            let movedAt = Date.now();
             const done = await waitFor(`"${UNTIL}" checked`, async () => {
                 const b = await botState();
                 if (!last || b.checks.length !== last.checks.length) out('progress', { ms: Date.now() - t0, checks: b.checks, stats: b.stats });
+                // ⛓ ER E6 (`--trace`): where the bot stands and what it says, each time either moves — a long walk's
+                //   stall is then attributable to a room and a status without waiting out the budget.
+                if (TRACE && (!last || b.region !== last.region || b.status !== last.status)) {
+                    out('at', { ms: Date.now() - t0, region: b.region, status: b.status, checked: b.checks.length, log: b.log.slice(-2) });
+                }
+                if (!last || b.region !== last.region || b.status !== last.status || b.checks.length !== last.checks.length) movedAt = Date.now();
                 last = b;
                 if (b.checked.includes(UNTIL)) return b;
+                // ⛓ ER E6 (`--stall-s=`): an `error:` status the bot sits in (still active, nothing moving) ends the
+                //   session by name instead of waiting out the budget.
+                if (STALL_MS !== null && /^error/.test(b.status) && Date.now() - movedAt > STALL_MS) return { ...b, stopped: true, stalled: true };
                 if (!b.active && /^(error|blocked|finished)/.test(b.status)) return { ...b, stopped: true };
                 return null;
             }, BUDGET_MS).catch(() => null);
             const end = done ?? await botState();
             out('result', { ms: Date.now() - t0, reached: end.checked.includes(UNTIL), status: end.status, region: end.region,
+                ...(end.stalled ? { stalled: true } : {}),
                 stats: end.stats, timings: end.timings, checks: end.checks, log: end.log });
             check(`${S}: "${UNTIL}" checked within ${BUDGET_MS / 1000} s`, end.checked.includes(UNTIL), JSON.stringify({ status: end.status, log: end.log }));
             if (EXPECT) {

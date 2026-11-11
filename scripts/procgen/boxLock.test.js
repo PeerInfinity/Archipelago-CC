@@ -548,7 +548,9 @@ describe('who takes the box', () => {
          * rules-l16-holder-enemies L16's walk-in block against its Bobs on the way to the button, `probe-seedling-l16-holder-bobs.mjs`;
          * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`;
          * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`;
+         * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
          * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
+         * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`;
          * rules-no-hit-l22 the no-hit crossings of the wallflyer rooms, per door pair and item arm, `probe-seedling-wallflyer-nohit.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
@@ -639,6 +641,8 @@ describe('who takes the box', () => {
             'probe-seedling-secondary-use.mjs',
             // fidelity FIRESPINNER: a Fire press reaching a spinner on the game (import door: `isEntryPoint` → main())
             'probe-seedling-fire-spinner.mjs',
+            // fidelity ROCKFIRE: a Fire press reaching a BreakableRock on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-rock-fire.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
@@ -669,7 +673,11 @@ describe('who takes the box', () => {
             // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
             'probe-seedling-drill-water.mjs',
             // rules-no-hit-l22: the wallflyer rooms' no-hit crossings on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-wallflyer-nohit.mjs'];
+            'probe-seedling-wallflyer-nohit.mjs',
+            // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
+            'probe-seedling-bobiframe.mjs',
+            // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-er-landings.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

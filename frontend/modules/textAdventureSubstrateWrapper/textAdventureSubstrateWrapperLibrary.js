@@ -33,7 +33,9 @@ import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js
 import { textAdventureRegionRoundTrip } from './textAdventureRegionRoundTrip.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
-import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
+import {
+    TEXT_ADVENTURE_CONCEPT_REALISATIONS, TEXT_ADVENTURE_CONTENT_ROLES, TEXT_ADVENTURE_DEFAULT_CONTENT_PACK,
+} from './textAdventureConceptRealisations.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -170,6 +172,12 @@ export const substrateRegistryEntry = Object.freeze({
     // concepts and writes the room's `prose`; see
     // `textAdventureConceptRealisations.js` and `procgenCore/concepts.js`.
     conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS,
+    // ⛓ CONTENT SETS R1 — the WORDS of those realisations, and a room's place, come
+    // from content packs: this default pack (`frontend/packs/text-adventure/`) is
+    // in every world's stack, and a later pack that fills a role wins. The roles
+    // say what a pack concept must supply; `textAdventureRoom.js` reads them.
+    defaultContentPack: TEXT_ADVENTURE_DEFAULT_CONTENT_PACK,
+    contentRoles: TEXT_ADVENTURE_CONTENT_ROLES,
 });
 
 // Side-effect on import: register the substrate, matching mazeRoomLibrary.js,
