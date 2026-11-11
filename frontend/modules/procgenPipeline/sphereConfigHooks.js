@@ -14,6 +14,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { GOAL_ITEM, goalItemPool, withGoalItemDef } from '../procgenCore/goalItem.js';
+import { contentRegionParams } from './worldContent.js';
 
 /**
  * Merge `base` with every registered substrate's declared
@@ -104,8 +105,14 @@ export function collectSphereGrowthPrep({
  * Merge each active substrate's `buildRegionParams` hook output into one
  * regionParams object. `mode` is 'sphere' | 'topDown'. `extra` (e.g. the
  * pre-plan hook's regionParams contribution) wins last.
+ *
+ * `contentSet` is the world's loaded content set (`worldContent.loadContentSet`,
+ * awaited by the entry point before it builds the run). It rides in as
+ * `contentSet`, with the world's own `content` list, ONLY when the effective
+ * stack is non-empty (`worldContent.contentRegionParams`); a non-empty stack with
+ * no set is refused by name.
  */
-export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra = {} }) {
+export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra = {}, contentSet = null }) {
     const out = {};
     for (const id of activeIds) {
         const fn = substrateRegistry.get(id)?.buildRegionParams;
@@ -116,6 +123,8 @@ export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra
     // params (the engine hands `spec.params` to `placeFromRules`). Written ONLY
     // when non-empty, so a world that names no concept takes no new key.
     if (Array.isArray(params?.concepts) && params.concepts.length > 0) out.concepts = [...params.concepts];
+    // ⛓ CONTENT SETS C3 — the world's content stack, on the same channel (no key when it is empty).
+    Object.assign(out, contentRegionParams({ params, contentSet, substrateIds: activeIds }));
     return out;
 }
 

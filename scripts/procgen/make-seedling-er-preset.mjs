@@ -49,9 +49,11 @@ export function seedlingErState() {
 export async function buildSeedlingErPreset() {
     const { loadPipelineSubstrates } = await import('./registerPipelineSubstrates.js');
     await loadPipelineSubstrates();
-    const { buildRunFromState, runPresetHeadless } = await import('../../frontend/modules/procgenPipeline/presetRun.js');
+    const { prepareRunFromState, runPresetHeadless } = await import('../../frontend/modules/procgenPipeline/presetRun.js');
+    const { nodePackIo } = await import('../../frontend/modules/contentPacks/nodePackIo.js');
     const { stringifyRulesJson } = await import('../../frontend/modules/shared/rulesJsonBuilder.js');
-    const { rulesJson, stats } = await runPresetHeadless(buildRunFromState(seedlingErState()));
+    // ⛓ CONTENT SETS C3 — the async entry (an entranceShuffle bundle has no substrate mix: an empty stack).
+    const { rulesJson, stats } = await runPresetHeadless(await prepareRunFromState(seedlingErState(), { io: nodePackIo() }));
     return { rulesJson, rulesText: stringifyRulesJson(rulesJson), stats };
 }
 

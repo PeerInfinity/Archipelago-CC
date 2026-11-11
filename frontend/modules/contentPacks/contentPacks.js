@@ -57,7 +57,9 @@ export const STACK_KINDS = Object.freeze(['graphics', 'sfx', 'music', 'content']
 /** A key is `<namespace>:<path>`: lower-camel namespace, a non-empty path. */
 export const KEY_PATTERN = /^[a-z][a-zA-Z0-9-]*:[A-Za-z0-9_./-]+$/;
 
-const ID_PATTERN = /^[a-z][a-z0-9-]*$/;
+/** A pack id: the directory name under `frontend/packs/` (lower case, digits, hyphens). */
+export const PACK_ID_PATTERN = /^[a-z][a-z0-9-]*$/;
+const ID_PATTERN = PACK_ID_PATTERN;
 
 export class ContentPackError extends Error {
     constructor(message) {
