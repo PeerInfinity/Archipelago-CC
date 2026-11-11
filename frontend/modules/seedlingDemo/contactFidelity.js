@@ -1962,6 +1962,24 @@ export const CONTACT_FIDELITY = {
      * and without it). OFF: byte-identical (the throw). `SEEDLING_FIRE_ROCK_ARM=0|1`. ON since the ROCKFIRE flip (⚖ user 2026-11-11).
      */
     fireRockArm: true,
+    /**
+     * fidelity FIREBREAK D1 (wave 40) — THE SOLVER'S `break` VERB TAKES FIRE WHEN THE RUN HOLDS NO SWORD. The game
+     * breaks an ordinary rock (rockType 0) under a Fire press with or without the Ghost Sword (`fireRockArm`, ROCKFIRE:
+     * `genericHit` → `BreakableRock.hit(hasGhostSword ? 1 : 0)`, witnessed), and `solverBot.resolveBreakStrategy`
+     * refused every run whose selected slot was not the Sword or a modelled Ghost Sword. ON (and `fireRockArm` ON, the
+     * model's arm): a run that HOLDS Fire (an inventory read, never a grant) and holds neither the Sword nor the Ghost
+     * Sword is resolved to a Fire break — `rockBreaksUnder` first (a ghost rock without the Ghost Sword stays refused by name), then a stance
+     * whose flame reaches the rock and NOTHING ELSE (`presses.auditFire`: the 32x32 rect, the 16 px radius cut; the
+     * burn verb's candidates and lean; a rock already broken this visit is not there to reach), reachable by
+     * `stanceReaches`. `execBreak` settles, leans, re-asks the audit where the walk stopped, selects the Fire's slot
+     * (`equip`, restored after), presses once and waits for the run's own `brokenRocks` plus the leg's wait: the
+     * sword's `WAIT_AFTER_PRESS_TICKS` moved by the flame's later first test (`FIRE_WINDOW.firstHitTick` 4 against a
+     * swing's 1; ROCKFIRE's witness: press + 4 hit, flag `goneAt + 1`, cell `goneAt + 2`). `rockHypothesis` admits a
+     * rock for such a run on the same two guards. A run that holds the Sword keeps the sword's path whatever slot is
+     * selected. Game witness: `fidelityFireBreak.js` (p4g, 0 px, hitless). OFF: byte-identical (the refusal that
+     * names the sword). `SEEDLING_FIRE_BREAK_ARM=0|1`.
+     */
+    fireBreakArm: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2353,6 +2371,9 @@ if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '0') CONTACT_FIDELITY
 // ⛓ fidelity ROCKFIRE D1: `SEEDLING_FIRE_ROCK_ARM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '1') CONTACT_FIDELITY.fireRockArm = true;
 if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '0') CONTACT_FIDELITY.fireRockArm = false;
+// ⛓ fidelity FIREBREAK D1: `SEEDLING_FIRE_BREAK_ARM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_BREAK_ARM === '1') CONTACT_FIDELITY.fireBreakArm = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_BREAK_ARM === '0') CONTACT_FIDELITY.fireBreakArm = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

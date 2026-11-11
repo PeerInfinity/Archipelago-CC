@@ -33,7 +33,7 @@ describe('CEREMONY126 — the switches', () => {
             const at = keys.indexOf('ceremonyPressForecast');
             expect(keys.slice(at, at + 2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
             // ⛓ wave 37e: DRILLWATER `drillTerrainSwitch`; wave 38: L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm`; wave 39: ROCKFIRE `fireRockArm` after them.
-            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'drillTerrainSwitch', 'spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm'].includes(k)))
+            expect(keys.slice(at + 2).filter((k) => !['apChestItem', 'rockGoneFencepost', 'drillTerrainSwitch', 'spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm', 'fireBreakArm'].includes(k))) // ⛓ wave 40: FIREBREAK `fireBreakArm`
                 .toEqual([]);
         });
     it('the env names are known worker env names', () => {

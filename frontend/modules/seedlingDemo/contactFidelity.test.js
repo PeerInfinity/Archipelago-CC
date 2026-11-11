@@ -395,7 +395,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FIRESPINNER D1 (wave 38): a Fire press that reaches a spinner knocks it back (no damage) — ON since the wave-38 joint flip (⚖ user 2026-11-10).
             fireSpinnerArm: true,
             // ⛓ fidelity ROCKFIRE D1 (wave 39): a Fire press that reaches a BreakableRock breaks it as a swing would — ON since the ROCKFIRE flip (⚖ user 2026-11-11).
-            fireRockArm: true });
+            fireRockArm: true,
+            // ⛓ fidelity FIREBREAK D1 (wave 40): the solver's `break` verb takes Fire for a run with no Sword — OFF.
+            fireBreakArm: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
