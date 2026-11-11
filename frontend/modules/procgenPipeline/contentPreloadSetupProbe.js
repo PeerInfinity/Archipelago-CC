@@ -3,8 +3,9 @@
  * default tier, `contentPreloadSetup.slow.test.js` in the slow tier): a fixture
  * registry entry declaring a COMMITTED pack as its default, registered at
  * COLLECTION time (as a substrate library's import registers its entry), must
- * find that pack preloaded by the time the file's tests run — which only the
- * `setupFiles` hook (`scripts/test/vitestDefaultContentSetup.js`) does.
+ * find that pack preloaded — at collection already, and when the tests run —
+ * which only the `setupFiles` hook (`scripts/test/vitestDefaultContentSetup.js`)
+ * does.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -26,6 +27,8 @@ export function defineSetupProbe(tier) {
     const id = `c4-setup-probe-${tier}`;
     // Collection time: the hook's beforeAll has not run yet.
     substrateRegistry.entries.set(id, { id, [DEFAULT_CONTENT_PACK_FIELD]: pack });
+    // A world built while the file is collected (before any beforeAll) finds it too.
+    const atCollection = preloadedDefaultContentPacks();
     afterAll(() => {
         substrateRegistry.entries.delete(id);
         resetDefaultContentCache();
@@ -35,6 +38,7 @@ export function defineSetupProbe(tier) {
             expect(defaultContentPreloadCalls()).toBeGreaterThanOrEqual(1);
             expect(preloadedDefaultContentPacks()).toContain(pack);
             expect(defaultContentSetOf([pack]).ids).toEqual([pack]);
+            expect(atCollection).toContain(pack);
         });
     });
 }

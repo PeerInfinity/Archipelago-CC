@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { afterEach, describe, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
@@ -30,7 +30,7 @@ import {
     assertContentLoaded, attachContentSet, attachEnvelopeContent, contentListOf, contentParamRefusal, contentRegionParams,
     effectiveContentStack, isContentSet, loadContentSet, recordedContentOf,
     declaredDefaultContentPacks, defaultContentPreloadCalls, defaultContentSetOf, documentContentOf, preloadDefaultContent,
-    preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET,
+    preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET, withoutContentSet,
 } from './worldContent.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -358,6 +358,14 @@ describe('the append path — rebuild, attach, append', async () => {
         expect(JSON.stringify(withoutContent(env.compile.rulesJson))).toBe(JSON.stringify(ctrlEnv.compile.rulesJson));
     });
 
+    it('⛓ C4 serializeEnvelope drops the live set (an in-process caller clones it); the list stays', async () => {
+        const env = await attachEnvelopeContent(rebuildEnvelopeFromRulesJson(structuredClone(world.rulesJson), OPTS), memIo());
+        expect(isContentSet(env.config.regionParams[CONTENT_SET_KEY])).toBe(true);
+        const out = serializeEnvelope(env);
+        expect(() => structuredClone(out)).not.toThrow();
+        expect(out.config.regionParams).toEqual({ [RECORDED_CONTENT_KEY]: ['trial'] });
+        expect(isContentSet(env.config.regionParams[CONTENT_SET_KEY])).toBe(true);
+    });
     it('a saved envelope round-trips the list without the set; re-attaching restores it', async () => {
         const io = memIo();
         const env = await attachEnvelopeContent(rebuildEnvelopeFromRulesJson(structuredClone(world.rulesJson), OPTS), io);
@@ -381,6 +389,8 @@ const readerAnswers = (set) => ({
 });
 
 describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
+    // The vitest setup file preloads every committed pack before this file runs: start each case empty.
+    beforeEach(() => resetDefaultContentCache());
     afterEach(() => resetDefaultContentCache());
 
     it('⛔ with no entry declaring a default pack it calls readJson zero times (the registry today)', async () => {
@@ -414,6 +424,18 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
         expect(io.read.slice(before).filter((u) => u.endsWith('/pack.json'))).toEqual([`${MEM}later/pack.json`]);
         expect(preloadedDefaultContentPacks()).toEqual(['trial', 'later']);
     });
+    it('ids preloads the named packs instead of the declared ones (the vitest setup file\'s every-committed-pack call)', async () => {
+        const io = memIo();
+        expect(await preloadDefaultContent({ ...io, ids: Object.keys(FIXTURE) })).toEqual(Object.keys(FIXTURE));
+        expect(declaredDefaultContentPacks()).toEqual([]);
+        await expect(preloadDefaultContent({ ...io, ids: 'trial' })).rejects.toThrow(/not a list/);
+    });
+    it('⛔ the setup file preloads every committed pack (a superset of any default pack)', async () => {
+        resetDefaultContentCache();
+        const reg = parseRegistry(JSON.parse(readFileSync(join(ROOT, 'frontend/packs/packs.json'), 'utf8')));
+        await preloadDefaultContent({ ...nodePackIo(), ids: [...reg.packs] });
+        for (const id of reg.packs) expect(defaultContentSetOf([id]).ids).toEqual([id]);
+    });
     it('a bad pack is refused as it preloads, by name, and is not cached', async () => {
         const files = structuredClone(FIXTURE);
         files.trial.concepts.concepts['trial:character/the-gate'].presents = 'dragon';
@@ -444,6 +466,9 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
         const reg = { params: { content: ['trial'] }, contentSet: DEFER_CONTENT_SET, substrateIds: ['maze'] };
         expect(contentRegionParams(reg)).toEqual({ [RECORDED_CONTENT_KEY]: ['trial'] });
         expect(contentRegionParams({ ...reg, params: {} })).toEqual({});
+        const rp = { maxIterations: 0 };
+        expect(withoutContentSet(rp)).toBe(rp);
+        expect(withoutContentSet({ ...rp, [CONTENT_SET_KEY]: EMPTY_CONTENT_SET })).toEqual(rp);
         const doc = { procgen_metadata: { 1: { driver: 'x' }, 2: { driver: 'x', [RECORDED_CONTENT_KEY]: ['trial'] } } };
         expect(documentContentOf(doc, 1)).toEqual([]);
         expect(documentContentOf(doc, '2')).toEqual(['trial']);

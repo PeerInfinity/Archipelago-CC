@@ -366,12 +366,22 @@ export function preloadedDefaultContentPacks() {
  *
  * `{ base, readJson }` is the `loadContentSet` io (`browserPackIo()` when
  * `readJson` is absent; node passes `nodePackIo()`). Returns the preloaded ids.
+ *
+ * `ids` (optional) names the packs to preload INSTEAD of the registry's
+ * declarations: a process that must preload before its substrates register (a
+ * vitest setup file runs before the test file's imports) preloads every
+ * committed pack (`packs.json`), a superset of any default pack.
  */
-export async function preloadDefaultContent({ base, readJson, registry = substrateRegistry, concepts = CONCEPTS } = {}) {
-    const wanted = declaredDefaultContentPacks(registry).filter((id) => !defaultPackCache.has(id));
+export async function preloadDefaultContent({
+    base, readJson, registry = substrateRegistry, concepts = CONCEPTS, ids = null,
+} = {}) {
+    const named = ids === null ? declaredDefaultContentPacks(registry) : assertContentParam(ids);
+    const wanted = named.filter((id) => !defaultPackCache.has(id));
     if (wanted.length) {
         const io = readJson ? { base, readJson } : browserPackIo(base ? { base } : {});
-        await Promise.all(wanted.map((id) => {
+        // One pack at a time, in the order named, so the cache's order is deterministic; a load
+        // another call already started is awaited, not repeated.
+        for (const id of wanted) {
             if (!defaultPackPending.has(id)) {
                 defaultPackPending.set(id, (async () => {
                     try {
@@ -383,8 +393,9 @@ export async function preloadDefaultContent({ base, readJson, registry = substra
                     }
                 })());
             }
-            return defaultPackPending.get(id);
-        }));
+            // eslint-disable-next-line no-await-in-loop
+            await defaultPackPending.get(id);
+        }
     }
     preloadCalls += 1;
     return preloadedDefaultContentPacks();
@@ -432,6 +443,18 @@ export function defaultContentSetOf(stack) {
  * op's `provenance`, and the job attaches the set where it runs.
  */
 export const DEFER_CONTENT_SET = Object.freeze({ deferred: 'the job attaches its content set where it runs' });
+
+/**
+ * `regionParams` without its loaded set: `regionParams` ITSELF when it holds none.
+ * For a SERIALIZED envelope (`steppedPipeline.serializeEnvelope`), which is
+ * handed on in-process (`runPipeline`) and cloned there: the set is runtime
+ * state, and `structuredClone` cannot copy its readers.
+ */
+export function withoutContentSet(regionParams) {
+    if (!regionParams || typeof regionParams !== 'object' || !(CONTENT_SET_KEY in regionParams)) return regionParams;
+    const { [CONTENT_SET_KEY]: _set, ...rest } = regionParams;
+    return rest;
+}
 
 /**
  * The content list a document records for player `p` (`procgen_metadata[p].content`,

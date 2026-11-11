@@ -8,7 +8,6 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_CONTENT_PACK_FIELD } from './worldContent.js';
 import { defineSetupProbe } from './contentPreloadSetupProbe.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -26,10 +25,11 @@ describe('⛓ C4 every vitest config runs the hook', () => {
             expect(text, cfg).toMatch(new RegExp(`setupFiles: \\[[^\\]]*'${HOOK.replace(/[.]/g, '\\.')}'`));
         }
     });
-    it('the hook asks the registry about the field worldContent names', () => {
-        // ⛔ Read, not imported: importing the hook module would register its beforeAll HERE, and the
+    it('the hook preloads every committed pack (packs.json) through preloadDefaultContent({ids})', () => {
+        // ⛔ Read, not imported: importing the hook module would run its preload HERE, and the
         //   probe above would pass with no setupFiles at all (measured).
         const hook = readFileSync(join(ROOT, HOOK), 'utf8');
-        expect(hook).toContain(`export const SETUP_DEFAULT_PACK_FIELD = '${DEFAULT_CONTENT_PACK_FIELD}';`);
+        expect(hook).toContain("'packs.json'");
+        expect(hook).toMatch(/await preloadDefaultContent\(\{ \.\.\.io, ids: \[\.\.\.packs\] \}\)/);
     });
 });

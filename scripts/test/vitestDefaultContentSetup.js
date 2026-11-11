@@ -4,33 +4,27 @@
  * each vitest config).
  *
  * A suite that builds a world through the synchronous `buildRunFromState` (or the
- * engine's growers) reads the default packs its substrates declare from a
- * process-level cache (`worldContent.preloadDefaultContent`). Each test file runs
- * in its own module graph, so this hook preloads them per file, in a `beforeAll`:
- * by then the file's imports have run and its substrate libraries have
- * registered. It shares the file's module instances, so the cache it fills is
- * the one the file's builders read.
+ * engine's growers, or the APWorld editor's regenerate) reads the default packs
+ * its substrates declare from a process-level cache
+ * (`worldContent.preloadDefaultContent`). Each test file runs in its own module
+ * graph, and this file runs in it FIRST — before the test file's imports and its
+ * collection — so the cache it fills is the one the file's builders read.
  *
- * ⛔ Cost. Most files register no substrate, and none declares a default pack
- * today; the hook imports only the (import-free) registry to ask, and loads
- * `worldContent.js` only when an entry declares one. A file whose registry
- * declares nothing pays one cached import and reads no pack.
- *
- * ⚠ A build at COLLECTION time (in a `describe` callback, or at a module's top
- * level) runs before any `beforeAll`: such a file awaits
- * `preloadDefaultContent(nodePackIo())` itself before it builds (or builds
- * through the async `prepareRunFromState`). The refusal names the call.
+ * ⛔ WHY EVERY COMMITTED PACK, NOT THE REGISTRY'S DECLARATIONS. At this point
+ * the file's substrate libraries have not registered: suites register them in
+ * their own imports, in their own `beforeAll`, or inside a `describe` callback,
+ * and some build a world while they are being collected. Measured on the C4
+ * probe branch (maze and text adventure declaring a committed pack): a
+ * `beforeAll` here saw an empty registry in about twenty world-building files.
+ * A default pack is always a committed pack (`packs.json`), so preloading every
+ * one covers any declaration, at any point in the file.
  */
-import { beforeAll } from 'vitest';
+import { readFileSync } from 'node:fs';
 
-/** The registry-entry field the hook asks about (`worldContent.DEFAULT_CONTENT_PACK_FIELD`; pinned equal). */
-export const SETUP_DEFAULT_PACK_FIELD = 'defaultContentPack';
+import { parseRegistry } from '../../frontend/modules/contentPacks/contentPacks.js';
+import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
+import { preloadDefaultContent } from '../../frontend/modules/procgenPipeline/worldContent.js';
 
-beforeAll(async () => {
-    const { substrateRegistry } = await import('../../frontend/modules/shared/procgen/substrateRegistry.js');
-    const entries = substrateRegistry?.getAll?.() ?? [];
-    if (!entries.some((e) => e?.[SETUP_DEFAULT_PACK_FIELD] !== undefined && e?.[SETUP_DEFAULT_PACK_FIELD] !== null)) return;
-    const { preloadDefaultContent } = await import('../../frontend/modules/procgenPipeline/worldContent.js');
-    const { nodePackIo } = await import('../../frontend/modules/contentPacks/nodePackIo.js');
-    await preloadDefaultContent(nodePackIo());
-});
+const io = nodePackIo();
+const { packs } = parseRegistry(JSON.parse(readFileSync(new URL('packs.json', io.base), 'utf8')));
+await preloadDefaultContent({ ...io, ids: [...packs] });
