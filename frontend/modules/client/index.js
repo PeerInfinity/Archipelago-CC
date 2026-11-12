@@ -7,7 +7,6 @@ import storage from './core/storage.js';
 // connection.js was removed in Phase 5 of the migration. Also exposes
 // window.__apSpike for manual browser-console testing.
 import connection from './core/apClient.js';
-import { getServerLocationId } from './utils/idMapping.js';
 import messageHandler, {
   handleUserLocationCheckForClient,
   handleUserItemCheckForClient,
@@ -344,18 +343,11 @@ export function register(registrationApi) {
   // Used by the timer after batchCheckLocations to notify the server
   registrationApi.registerPublicFunction(moduleInfo.name, 'sendBatchLocationChecks', async (locationNames) => {
     if (!coreMessageHandler || !coreConnection?.isConnected()) return;
-    const serverIds = [];
-    for (const name of locationNames) {
-      let serverId = null;
-      if (coreMessageHandler.serverLocationNameToId?.has(name)) {
-        serverId = coreMessageHandler.serverLocationNameToId.get(name);
-      } else {
-        serverId = await getServerLocationId(name, stateManagerProxySingleton);
-      }
-      if (serverId !== null) serverIds.push(serverId);
-    }
-    if (serverIds.length > 0) {
-      coreMessageHandler._internalSendLocationChecks(serverIds);
+    // The caller (the timer) has already checked every name locally (batchCheckLocations), so a mixed batch
+    // is split: the ID-bearing ones are sent; the ID-less ones (events) stay local and are not checked again.
+    const { ids } = await coreMessageHandler.splitLocationChecks(locationNames);
+    if (ids.length > 0) {
+      coreMessageHandler._internalSendLocationChecks(ids);
     }
   });
 

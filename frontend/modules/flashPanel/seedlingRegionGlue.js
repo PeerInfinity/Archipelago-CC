@@ -850,8 +850,10 @@ export class SeedlingRegionGlue {
 
     /**
      * ⛓ OBSTACLE EVENTS — the game's flag for a game-state event is set: collect the event as a LOCAL event check
-     * (`collectEvent`, the state manager's check with the location's event item) — never `user:locationCheck`, whose
-     * connected path asks the server for an id this location does not have and drops it.
+     * (`collectEvent`, the state manager's FORCED check with the location's event item: the game already did it) —
+     * not `user:locationCheck`, which a connected client also applies locally for an ID-less location
+     * (sdc-connected-events) but through the logic guard. Connected, the event item comes from the server-sent
+     * document, whose event locations keep their items since sdc-connected-events.
      */
     _eventCollect({ location, eventId, level, tag, at }) {
         try {
