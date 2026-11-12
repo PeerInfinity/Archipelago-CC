@@ -138,12 +138,18 @@ describe('the maze lab\'s editor surface across the tools move', () => {
  * as-built quotes the diff): the command table gains `fill (l)`, `clear (x)`, `move (m)` between `flood`
  * and `escape`, the key map gains `l`, `x`, `m`, the `clearWhat` options are `['', 'tile', 'entity']`, and
  * the `unbound-keys` step's three presses now arm FILL (a corner), CLEAR (a corner) and MOVE (refused:
- * the earlier RECT clip, a no-op tiles-only move; ⚠ the CLEAR press completes a 1x1 rect on the FILL
- * corner — `editorView` keeps a FILL/CLEAR corner across a FILL↔CLEAR switch, B1's behaviour). Re-pinned by slice `maze-editor-tools`; ⛔ a change here re-measures and says so.
+ * the earlier RECT clip, a no-op tiles-only move). Re-pinned by slice `maze-editor-tools`; ⛔ a change here
+ * re-measures and says so.
+ *
+ * ⛓ Re-pinned by slice `editor-corner-reset` (a pending FILL/CLEAR corner belongs to the tool that set it; any
+ * switch drops it). Measured base (B2's mount on origin/main add369e82f) vs tip, both seeds: ONE entry moves, the
+ * `unbound-keys` CLEAR click's status — it used to complete a 1x1 rect on FILL's corner (refused, nothing to clear,
+ * `bad` true) and now starts CLEAR's own corner (`CLEAR corner 1 at (1,1) …`, `bad` false). Ops, `onChange`, overlay
+ * strokes, the command table and the world are byte-identical.
  */
 const B2_PAGE_MOUNT = Object.freeze({
-    seed5: 'bd5d122b32ebeba52b56987b790d7a301987b158ec5f72eac47381c2fae1e7ae',
-    seed7: '14e16d8b121efc6090cfe020205df26235ff27e534b82e336a39f7a27fa00d5f',
+    seed5: '64ae264f1f564d5f1986789e1181a883a70a30ac5b855c832a2e076c4129ea98',
+    seed7: '2b866415cc3ba721c35b513c77a0a773c1398f3ecb844a8550bfb99c388a93db',
 });
 
 describe('the maze lab\'s editor surface with B2\'s tools turned on', () => {
