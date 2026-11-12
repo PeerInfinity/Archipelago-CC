@@ -62,8 +62,9 @@
 import { createRunForStaging } from './tapeRunner.js';
 import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
-    solveSegment,
+    clearTagTalkArmOf, solveSegment,
 } from './solverBot.js';
+import { pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 // ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
@@ -670,6 +671,32 @@ export function fightExitGoal(goal, run, { controller: c, exit }) {
 export const solverGoalsOf = (solverGoal) => (solverGoal?.kind === 'sequence' ? solverGoal.goals : [solverGoal]);
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE YETI-TALK — **THE MAPPER PASSES A TALK-CLEARED EVENT.** The solver's clear-tag already
+ * talks a Solid talker to its `doneTalking()` write (the Yeti: `{58,1}` / `{58,0}`, behind `CONTACT_FIDELITY.yetiTalk`,
+ * ON since the fidelity flip), but `clearTagVerbOf` reads only the strategy tables, which hold no `solid:yeti` row, so
+ * this page-side mapper refused the event `no-verb` BEFORE the solver ran ("the solver has no goal for L58 flag 1").
+ * ON, `clearTagVerbOf` asks the solver's own arm (`solverBot.clearTagTalkArmOf`): a class it drives selects `talk` (a
+ * `STRATEGY_EXECUTORS` row, so registered) and the goal goes to the solver, whose clear-tag answers every state by its
+ * own reason (`already-clear`, `cannot-act`, or the talk). A Solid with no arm (a non-talker; a talker whose clear-tag
+ * arm is off) still refuses `no-verb`. OFF: byte-identical.
+ *
+ * ⛓ THE SWITCH: `SEEDLING_TALK_CLEAR_GOAL=1` in a node process or the worker, and — this switch alone, because the
+ * mapper runs on the page's MAIN thread — the page URL's `?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=1`
+ * (`solverEnvChannel.pageSolverEnvSwitchOn`). `withTalkClearGoal(enabled, fn)` for a row.
+ */
+export const TALK_CLEAR_GOAL = {
+    enabled: globalThis.process?.env?.SEEDLING_TALK_CLEAR_GOAL === '1' || pageSolverEnvSwitchOn('SEEDLING_TALK_CLEAR_GOAL'),
+};
+export const TALK_CLEAR_GOAL_DEFAULT = false;
+
+/** Run `fn` with `TALK_CLEAR_GOAL` set to `enabled`, restoring the previous value. */
+export function withTalkClearGoal(enabled, fn) {
+    const was = TALK_CLEAR_GOAL.enabled;
+    TALK_CLEAR_GOAL.enabled = enabled === true;
+    try { return fn(); } finally { TALK_CLEAR_GOAL.enabled = was; }
+}
+
+/**
  * ⛓ EVENT GOALS — the verb the solver's `clear-tag` executor would select for an obstacle key, and whether it is
  * REGISTERED there: `OBSTACLE_STRATEGIES[key]`, refined by the wand rows `refineStrategy` asks first
  * (`WAND_VERB`: a `WAND_TARGET_TAGS` solid is the wand's; a `wandlock` is a `Lock`, so `hold`), looked up as
@@ -681,6 +708,11 @@ export const solverGoalsOf = (solverGoal) => (solverGoal?.kind === 'sequence' ? 
 export function clearTagVerbOf(key) {
     const tag = key.slice(key.indexOf(':') + 1);
     let verb = OBSTACLE_STRATEGIES[key] ?? null;
+    // ⛓⛓ YETI-TALK (`TALK_CLEAR_GOAL`): a Solid whose clear-tag the solver's TALK ARM drives (`clearTagTalkArmOf`, the
+    // arm's own answer) selects `talk`; OFF, or no arm for the class, the table's (none → `no-verb`, byte-identical).
+    if (TALK_CLEAR_GOAL.enabled && key.startsWith('solid:') && verb === null && clearTagTalkArmOf(tag)) {
+        verb = clearTagTalkArmOf(tag);
+    }
     if (WAND_VERB.enabled && key.startsWith('solid:')) {
         if (WAND_TARGET_TAGS.includes(tag)) verb = 'wand';
         else if (verb === 'wand' && tag === 'wandlock') verb = 'hold';
