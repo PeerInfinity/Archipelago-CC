@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "_comment": "The `meta` theme's maze art (content sets R4): SHAPES ONLY, no image file. A world that knows it is a generated game draws itself as a diagram: a floor is a paper cell with a corner tick, a wall a hatched block, the player a marker, each object one plain mark. One style: a 20x20 box (the maze's TILE_PX, so a recipe draws 1:1 in play), stroke width 2 everywhere, a small flat palette — paper #c4c9d2, ink #2e3440, slate #4c5464, the Gate's grey-blue #a0a8b8, and the maze's own meaning colours (exit green #3aa85a, mana cyan #5ac8e8, trap yellow #e0c040, block tan #c8a06a, struck #d05a3a, dormant #7ab8d8, button #ffd75f, pulser #e0e070, pull #a8401a) plus one accent for the player, #e8743a. Every key of the maze's key table (mazeRoom/mazeTileArt.js MAZE_ART_KEYS) is drawn; what the painter draws over a thing (the facing tick, a lane tint, a pulser's ring, a pull's disc, a collected tile's fade, the grid) is unchanged and stays readable on these marks. Art is presentation only: nothing here changes what the world is.",
+  "shapes": {
+    "maze:tile/floor": {
+      "w": 20, "h": 20,
+      "note": "a paper cell with a faint corner tick at its top left",
+      "draw": [
+        { "rect": [0, 0, 20, 20], "fill": "#c4c9d2" },
+        { "polygon": [[3, 3], [7, 3], [7, 5], [5, 5], [5, 7], [3, 7]], "fill": "#a0a8b8" }
+      ]
+    },
+    "maze:tile/wall": {
+      "w": 20, "h": 20,
+      "note": "a slate block ruled with diagonal hatching in the Gate's grey-blue (the hatch lines meet across neighbouring walls)",
+      "draw": [
+        { "rect": [0, 0, 20, 20], "fill": "#4c5464" },
+        { "line": [0, 10, 10, 0], "stroke": "#a0a8b8", "width": 2 },
+        { "line": [0, 20, 20, 0], "stroke": "#a0a8b8", "width": 2 },
+        { "line": [10, 20, 20, 10], "stroke": "#a0a8b8", "width": 2 }
+      ]
+    },
+    "maze:tile/exit": {
+      "w": 20, "h": 20,
+      "note": "an open exit: a green box outline with a green arrow inside, on the floor (a closed exit stays the solid red fill)",
+      "draw": [
+        { "rect": [3, 3, 14, 14], "stroke": "#3aa85a", "width": 2 },
+        { "polygon": [[7, 6], [14, 10], [7, 14]], "fill": "#3aa85a" }
+      ]
+    },
+    "maze:tile/entrance": {
+      "w": 20, "h": 20,
+      "note": "the entrance: four green corner brackets, so it still shows around the player who starts on it",
+      "draw": [
+        { "polygon": [[1, 1], [7, 1], [7, 3], [3, 3], [3, 7], [1, 7]], "fill": "#3aa85a" },
+        { "polygon": [[19, 1], [13, 1], [13, 3], [17, 3], [17, 7], [19, 7]], "fill": "#3aa85a" },
+        { "polygon": [[1, 19], [7, 19], [7, 17], [3, 17], [3, 13], [1, 13]], "fill": "#3aa85a" },
+        { "polygon": [[19, 19], [13, 19], [13, 17], [17, 17], [17, 13], [19, 13]], "fill": "#3aa85a" }
+      ]
+    },
+    "maze:tile/mana": {
+      "w": 20, "h": 20,
+      "note": "a mana refill: a hollow cyan diamond with a plus sign in it (the painter fades it once collected)",
+      "draw": [
+        { "polygon": [[10, 3], [17, 10], [10, 17], [3, 10]], "stroke": "#5ac8e8", "width": 2 },
+        { "line": [10, 7, 10, 13], "stroke": "#5ac8e8", "width": 2 },
+        { "line": [7, 10, 13, 10], "stroke": "#5ac8e8", "width": 2 }
+      ]
+    },
+    "maze:character/player": {
+      "w": 20, "h": 20,
+      "note": "the player: an orange disc ringed in ink with a paper centre, a map's you-are-here marker (the black facing tick is drawn over its edge)",
+      "draw": [
+        { "circle": [10, 10, 6], "fill": "#e8743a", "stroke": "#2e3440", "width": 2 },
+        { "circle": [10, 10, 2], "fill": "#c4c9d2" }
+      ]
+    },
+    "maze:object/trap": {
+      "w": 20, "h": 20,
+      "note": "an arrow trap: a yellow warning triangle outlined in ink with an exclamation mark (its lane stays the armed/silent tint)",
+      "draw": [
+        { "polygon": [[10, 3], [17, 16], [3, 16]], "fill": "#e0c040", "stroke": "#2e3440", "width": 2 },
+        { "line": [10, 7, 10, 11], "stroke": "#2e3440", "width": 2 },
+        { "rect": [9, 13, 2, 1.5], "fill": "#2e3440" }
+      ]
+    },
+    "maze:object/block": {
+      "w": 20, "h": 20,
+      "note": "a pushable block: a tan crate outlined in ink with an X across it",
+      "draw": [
+        { "rect": [3, 3, 14, 14], "fill": "#c8a06a", "stroke": "#2e3440", "width": 2 },
+        { "line": [4, 4, 16, 16], "stroke": "#2e3440", "width": 2 },
+        { "line": [16, 4, 4, 16], "stroke": "#2e3440", "width": 2 }
+      ]
+    },
+    "maze:object/block-struck": {
+      "w": 20, "h": 20,
+      "note": "a struck block (fire, spear, a woken corpse): a red-orange block outlined in ink with an ink triangle pointing up — a block that strikes, not a crate",
+      "draw": [
+        { "rect": [3, 3, 14, 14], "fill": "#d05a3a", "stroke": "#2e3440", "width": 2 },
+        { "polygon": [[10, 6], [14, 14], [6, 14]], "fill": "#2e3440" }
+      ]
+    },
+    "maze:object/block-dormant": {
+      "w": 20, "h": 20,
+      "note": "a dormant block (a turret): a pale blue disc outlined in ink with a level dash — asleep",
+      "draw": [
+        { "circle": [10, 10, 7], "fill": "#7ab8d8", "stroke": "#2e3440", "width": 2 },
+        { "line": [6, 10, 14, 10], "stroke": "#2e3440", "width": 2 }
+      ]
+    },
+    "maze:object/button": {
+      "w": 20, "h": 20,
+      "note": "a button, UP: an empty paper plate outlined in ink with a yellow knob standing in its middle",
+      "draw": [
+        { "rect": [3, 3, 14, 14], "fill": "#c4c9d2", "stroke": "#2e3440", "width": 2 },
+        { "circle": [10, 10, 3.5], "fill": "#ffd75f", "stroke": "#2e3440", "width": 2 }
+      ]
+    },
+    "maze:object/button-down": {
+      "w": 20, "h": 20,
+      "note": "a button, DOWN: the same plate filled yellow with the knob pressed flat to an ink dot (the plate's corners show around the player or block on it)",
+      "draw": [
+        { "rect": [3, 3, 14, 14], "fill": "#ffd75f", "stroke": "#2e3440", "width": 2 },
+        { "circle": [10, 10, 1.5], "fill": "#2e3440" }
+      ]
+    },
+    "maze:object/pulser": {
+      "w": 20, "h": 20,
+      "note": "a pulser's body: a small yellow square outlined in ink with an ink centre dot, kept inside the armed/silent ring the painter strokes round it",
+      "draw": [
+        { "rect": [6, 6, 8, 8], "fill": "#e0e070", "stroke": "#2e3440", "width": 2 },
+        { "circle": [10, 10, 1.5], "fill": "#2e3440" }
+      ]
+    },
+    "maze:object/pull": {
+      "w": 20, "h": 20,
+      "note": "a pull's trap cell: a dark red ring around a dark red centre, a target that draws things in (its disc stays the live/inert tint)",
+      "draw": [
+        { "circle": [10, 10, 6.5], "stroke": "#a8401a", "width": 2 },
+        { "circle": [10, 10, 3], "fill": "#a8401a" }
+      ]
+    }
+  }
+}
