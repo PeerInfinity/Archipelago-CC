@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-b06ae22d",
+  "atlas_id": "seedling-e3ae176e",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "b06ae22d" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "e3ae176e" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -2887,21 +2887,21 @@
           "kind": "teleporter",
           "exit_tiles": [[30,56]],
           "entrance_tile": [30,56],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_stairsdown_320_576",
           "kind": "teleporter",
           "exit_tiles": [[20,36]],
           "entrance_tile": [20,36],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_teleporter_480_912",
           "kind": "teleporter",
           "exit_tiles": [[30,57]],
           "entrance_tile": [30,57],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_teleporter_848_0",
@@ -2922,84 +2922,84 @@
           "kind": "teleporter",
           "exit_tiles": [[14,27]],
           "entrance_tile": [14,27],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_5_20",
           "kind": "teleporter",
           "exit_tiles": [[15,27]],
           "entrance_tile": [15,27],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_13_20",
           "kind": "teleporter",
           "exit_tiles": [[23,27]],
           "entrance_tile": [23,27],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_14_20",
           "kind": "teleporter",
           "exit_tiles": [[24,27]],
           "entrance_tile": [24,27],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_4_21",
           "kind": "teleporter",
           "exit_tiles": [[14,28]],
           "entrance_tile": [14,28],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_5_21",
           "kind": "teleporter",
           "exit_tiles": [[15,28]],
           "entrance_tile": [15,28],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_13_21",
           "kind": "teleporter",
           "exit_tiles": [[23,28]],
           "entrance_tile": [23,28],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_14_21",
           "kind": "teleporter",
           "exit_tiles": [[24,28]],
           "entrance_tile": [24,28],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_4_22",
           "kind": "teleporter",
           "exit_tiles": [[14,29]],
           "entrance_tile": [14,29],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_5_22",
           "kind": "teleporter",
           "exit_tiles": [[15,29]],
           "entrance_tile": [15,29],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_4_23",
           "kind": "teleporter",
           "exit_tiles": [[14,30]],
           "entrance_tile": [14,30],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "out_pit_5_23",
           "kind": "teleporter",
           "exit_tiles": [[15,30]],
           "entrance_tile": [15,30],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "exit_id": "in_L41_0_160",
@@ -3020,7 +3020,7 @@
           "kind": "teleporter",
           "exit_tiles": [[20,37]],
           "entrance_tile": [20,37],
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         }
       ],
       "locations": [
@@ -3034,24 +3034,24 @@
           "name": "Level 040 - Totem Part 64,144",
           "tile": [4,9],
           "vanilla_item": "Totem Shard",
-          "sub_region": "r0c53"
+          "sub_region": "r4c4"
         },
         {
           "name": "Level 040 - Totem Part 160,640",
           "tile": [10,40],
           "vanilla_item": "Totem Shard",
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         },
         {
           "name": "Level 040 - Chest",
           "tile": [55,51],
           "vanilla_item": "Seal",
-          "sub_region": "r23c29"
+          "sub_region": "r26c13"
         }
       ],
       "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c53","r23c29","r32c36","r36c35","r48c54"],
+        "sub_regions": ["r0c53","r4c4","r23c29","r26c13","r32c36","r36c35","r48c54"],
         "internal_exits": [
           {
             "from": "r0c53",
@@ -3067,14 +3067,35 @@
             }
           },
           {
+            "from": "r0c53",
+            "to": "r4c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "L40 flag 1: wandlock@176,80 cleared" } },
+                { "rule": "Has", "args": { "item_name": "L40 flag 7: wandlock@208,128 cleared" } }
+              ]
+            }
+          },
+          {
             "from": "r23c29",
             "to": "r0c53",
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Purple Key" } }
           },
+          { "from": "r23c29", "to": "r26c13", "bidirectional": false, "source": "analyzer" },
           {
-            "from": "r23c29",
+            "from": "r26c13",
+            "to": "r23c29",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "L40 flag 12: wandlock@480,560 cleared" } }
+          },
+          {
+            "from": "r26c13",
             "to": "r32c36",
             "bidirectional": true,
             "source": "manual",
@@ -3093,7 +3114,7 @@
             }
           },
           {
-            "from": "r23c29",
+            "from": "r26c13",
             "to": "r36c35",
             "bidirectional": true,
             "source": "manual",
@@ -3112,7 +3133,7 @@
             }
           },
           {
-            "from": "r23c29",
+            "from": "r26c13",
             "to": "r48c54",
             "bidirectional": true,
             "source": "manual",

@@ -1,0 +1,2 @@
+807 failed roomHits=0 ms=1093 cleared=0 eventFlag={"level":112,"tag":1,"set":false,"collected":false} plans=refusal:: divs=0 env=null
+    FAILED: the solver declined L112 flag 1: rocklock@112,16 cleared in level 112 (refusal): solverBot(wasm-location-112) clear-tag {112,1} rocklock@112,16: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it

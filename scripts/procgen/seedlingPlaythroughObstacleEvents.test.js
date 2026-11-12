@@ -204,7 +204,7 @@ describe('the playthrough\'s obstacle events', () => {
             action: { verb: 'press', item: null, presser: { level: 20, class: 'buttonroom', x: 192, y: 16 } } });
         const has = { rule: 'Has', args: { item_name: e.name } };
         // ⛓ tile-rules-automation-r-a4: NO event-layer gate any more. The overlay prices lock@32,80 as exactly its press
-        // (`GROUPED_LOCK_EXCEPTIONS`), so the grid already charges both crossings with the event, and a second gate would
+        // (`IN_ROOM_PRESS_LOCK`, by rule since R-A5), so the grid already charges both crossings with the event, and a second gate would
         // only spell And(e, e) (`crossingPaysPress`; its rows are in seedlingInRoomPressGate.test.js). The rules still name
         // the event on both directions, below.
         expect(buttons.internalExitGates).toEqual([]);

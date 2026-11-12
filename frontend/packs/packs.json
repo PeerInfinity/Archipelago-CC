@@ -5,7 +5,8 @@
     { "id": "seedling", "title": "Seedling — the original graphics, sound effects and music" },
     { "id": "archipelago", "title": "Archipelago — the fork's AP item pickup" },
     { "id": "text-adventure", "title": "Text adventure — the built-in prose" },
-    { "id": "maze", "title": "Maze — the built-in looks" }
+    { "id": "maze", "title": "Maze — the built-in looks" },
+    { "id": "meta", "title": "Meta — a world that knows it is a generated game" }
   ],
   "graphics": {
     "seedling": ["seedling", "archipelago"]
@@ -16,5 +17,7 @@
   "music": {
     "seedling": ["seedling"]
   },
-  "content": {}
+  "content": {
+    "meta": ["meta"]
+  }
 }

@@ -1,0 +1,25 @@
+census-seedling-solver-surface --check, first (RED: site counts moved + run:scratchClears unlisted):
+RED unlisted: frontend/modules/seedlingDemo/solverBot.js:32896 reaches run:scratchClears — not in the contract table
+RED drift: run:liveGeometryOpts table {"sites":24,"files":{"botDriverV2.js":2,"dangerMap.js":1,"solverBot.js":21}} fresh {"sites":26,"files":{"botDriverV2.js":2,"dangerMap.js":1,"solverBot.js":23}}
+RED drift: run:state table {"sites":859,"files":{"arrivalSolid.js":5,"arrowLaneCrossing.js":2,"botDriverV2.js":117,"crusherBait.js":8,"dangerMap.js":2,"lightsVerb.js":7,"solverBot.js":718}} fresh {"si
+RED drift: run:world table {"sites":421,"files":{"arrivalSolid.js":2,"botDriverV2.js":58,"bulbPlacement.js":1,"crusherBait.js":5,"dangerMap.js":3,"lightsVerb.js":2,"solveProgress.js":2,"solverBot.js":
+RED drift: world:activators table {"sites":38,"files":{"arrivalSolid.js":1,"botDriverV2.js":10,"crusherBait.js":1,"solverBot.js":26}} fresh {"sites":36,"files":{"arrivalSolid.js":1,"botDriverV2.js":10
+RED drift: world:combat table {"sites":22,"files":{"botDriverV2.js":4,"solverBot.js":18}} fresh {"sites":23,"files":{"botDriverV2.js":4,"solverBot.js":19}}
+RED drift: world:height table {"sites":26,"files":{"botDriverV2.js":1,"solveProgress.js":1,"solverBot.js":24}} fresh {"sites":27,"files":{"botDriverV2.js":1,"solveProgress.js":1,"solverBot.js":25}}
+RED drift: world:solidBoxesForMover table {"sites":5,"files":{"botDriverV2.js":2,"crusherBait.js":1,"dangerMap.js":1,"solverBot.js":1}} fresh {"sites":7,"files":{"botDriverV2.js":2,"crusherBait.js":1,
+RED drift: world:solids table {"sites":16,"files":{"arrivalSolid.js":1,"botDriverV2.js":4,"crusherBait.js":1,"lightsVerb.js":1,"solverBot.js":9}} fresh {"sites":18,"files":{"arrivalSolid.js":1,"botDri
+RED drift: world:width table {"sites":28,"files":{"botDriverV2.js":3,"solveProgress.js":1,"solverBot.js":24}} fresh {"sites":29,"files":{"botDriverV2.js":3,"solveProgress.js":1,"solverBot.js":25}}
+RED drift: state:x table {"sites":338,"files":{"arrivalSolid.js":2,"arrowLaneCrossing.js":1,"botDriverV1.js":2,"botDriverV2.js":60,"crusherBait.js":2,"dangerMap.js":1,"lightsVerb.js":2,"solverBot.js":
+RED drift: state:y table {"sites":345,"files":{"arrivalSolid.js":2,"arrowLaneCrossing.js":1,"botDriverV1.js":2,"botDriverV2.js":63,"crusherBait.js":2,"dangerMap.js":1,"lightsVerb.js":2,"solverBot.js":
+RED drift: import:chasers.js#chaserBoxAt table {"sites":7,"files":{"dangerMap.js":5,"solverBot.js":2}} fresh {"sites":8,"files":{"dangerMap.js":5,"solverBot.js":3}}
+RED drift: import:combat.js#ENEMY_CLASSES table {"sites":22,"files":{"bulbPlacement.js":2,"dangerMap.js":4,"encounters.js":1,"solverBot.js":15}} fresh {"sites":25,"files":{"bulbPlacement.js":2,"danger
+RED drift: import:combat.js#KILL_LOCK_TSET table {"sites":5,"files":{"solverBot.js":5}} fresh {"sites":6,"files":{"solverBot.js":6}}
+RED drift: import:levelWorld.js#rectsOverlap table {"sites":57,"files":{"arrivalSolid.js":1,"arrowLaneCrossing.js":1,"botDriverV2.js":12,"dangerMap.js":24,"forcedHit.js":1,"solverBot.js":16,"strikePol
+RED drift: import:levelWorld.js#TILE_SIZE table {"sites":300,"files":{"botDriverV2.js":54,"bulbPlacement.js":2,"crusherBait.js":4,"solverBot.js":240}} fresh {"sites":302,"files":{"botDriverV2.js":54,"
+RED drift: import:presses.js#distanceRectPoint table {"sites":33,"files":{"botDriverV2.js":1,"lavaBossPolicy.js":1,"lightsVerb.js":1,"solverBot.js":27,"strikePolicy.js":2,"tentacleBeastPolicy.js":1}} 
+RED drift: import:presses.js#SLASH_REACH table {"sites":15,"files":{"botDriverV2.js":2,"ghostRopeCut.js":1,"solverBot.js":12}} fresh {"sites":16,"files":{"botDriverV2.js":2,"ghostRopeCut.js":1,"solver
+RED: 20 finding(s) — run --write, then classify
+
+after --write and classifying run:scratchClears (seedling, event-ledger):
+same seedling-solver-surface: 221834 bytes
+GREEN: 372 rows match a fresh census

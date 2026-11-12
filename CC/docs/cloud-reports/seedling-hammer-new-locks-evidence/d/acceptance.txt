@@ -1,0 +1,3 @@
+node scripts/procgen/batch-seedling-acceptance.mjs 2>/dev/null | md5sum
+base a66a450e70 (scratch worktree): abb206c88de25e7ba1874510d493ce85
+head: abb206c88de25e7ba1874510d493ce85  -

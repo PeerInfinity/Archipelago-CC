@@ -1173,16 +1173,72 @@ describe('⛓⛓⛓ the SHARED tools are opt-in, named by id among the page\'s o
         expect(() => u.click(1, 1)).toThrow(TypeError);
     });
 
-    /** MUTANT: drop the corner reset from `changed` — the corner outlives its tool and is drawn on. */
-    it('⛓ a FILL corner dies with its tool, when the change is reported', () => {
+
+
+    /*
+     * ⛓⛓ editor-corner-reset — A CORNER BELONGS TO THE TOOL THAT SET IT. Before it, FILL and CLEAR
+     * shared one corner across a switch: `l`, click, `x`, click CLEARED a rectangle from FILL's corner.
+     * MUTANT (each row below is red under it): `setTool` drops the corner only when the new tool is
+     * neither FILL nor CLEAR (the B1 clause, which lived in `changed()`).
+     */
+    const shared = () => harness({ tools: [EDIT_TOOLS.FILL, EDIT_TOOLS.CLEAR, EDIT_TOOLS.MOVE] });
+    it('⛓ FILL → CLEAR: FILL\'s corner is gone, and CLEAR\'s first click is a NEW corner 1', () => {
+        const t = shared();
+        t.view.setTool(EDIT_TOOLS.FILL); t.click(1, 1);
+        t.view.setTool(EDIT_TOOLS.CLEAR); t.click(3, 2);
+        expect(t.last()).toEqual({ text: 'CLEAR corner 1 at (3,2) — click the opposite corner', bad: false });
+        expect(t.session.ops()).toEqual([]);
+    });
+    it('⛓ CLEAR → FILL: CLEAR\'s corner is gone, and FILL\'s first click is a NEW corner 1, applying nothing', () => {
+        const t = shared();
+        t.view.setTool(EDIT_TOOLS.CLEAR); t.click(1, 1);
+        t.view.setTool(EDIT_TOOLS.FILL); t.click(3, 2);
+        expect(t.last()).toEqual({ text: 'FILL corner 1 at (3,2) — click the opposite corner', bad: false });
+        expect(t.session.ops()).toEqual([]);
+        t.click(4, 3);   // ⛓ and the rectangle it then makes starts at ITS corner, not CLEAR's
+        expect(t.last().text).toBe('fill 2x2 at (3,2) (8 op(s))');
+    });
+    it('⛓ a corner does not come back on a round trip: X → any other tool → X starts at corner 1', () => {
+        const all = [...Object.values(TOOLS), EDIT_TOOLS.FILL, EDIT_TOOLS.CLEAR, EDIT_TOOLS.MOVE];
+        for (const from of [EDIT_TOOLS.FILL, EDIT_TOOLS.CLEAR]) {
+            for (const to of all.filter((x) => x !== from)) {
+                const t = shared();
+                t.view.setTool(from); t.click(1, 1);
+                t.view.setTool(to); t.view.setTool(from); t.click(3, 2);
+                expect(t.last().text, `${from} → ${to} → ${from}`)
+                    .toBe(`${from.toUpperCase()} corner 1 at (3,2) — click the opposite corner`);
+            }
+        }
+    });
+    /**
+     * ⛓ Re-arming the SAME tool is not a switch: the corner stays, as a LINK/NODE pick does on the
+     * Seedling page. MUTANT: drop the corner on every change of a pending corner — red here.
+     */
+    it('⛓ FILL → FILL keeps the corner: the second click completes the rectangle', () => {
+        const t = shared();
+        t.view.setTool(EDIT_TOOLS.FILL); t.click(1, 1);
+        t.view.setTool(EDIT_TOOLS.FILL); t.click(3, 2);
+        expect(t.last().text).toBe('fill 3x2 at (1,1) (12 op(s))');
+    });
+
+    /** MUTANT: drop the corner reset from `setTool` — the switch's own repaint still draws the corner. */
+    it('⛓ a FILL corner dies with its tool, and the switch\'s own repaint no longer draws it', () => {
         const t = harness({ tools: [EDIT_TOOLS.FILL] });
         t.view.setTool(EDIT_TOOLS.FILL);
         t.click(0, 0);
         t.view.setTool(TOOLS.RECT);
-        const last = t.painted[t.painted.length - 1];
-        // ⚠ E1's order, kept: the setTool repaint still shows the corner; the NEXT repaint does not
-        expect(last.some((s) => s.x === 0 && s.y === 0 && s.w === 1)).toBe(true);
+        // ⛓ editor-corner-reset: B1 kept E1's order, and this repaint still showed the dead corner
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
         t.view.repaint();
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
+    });
+    /** MUTANT: as above — red at FILL → CLEAR, the case the user hit. */
+    it('⛓ FILL → CLEAR: the switch draws no corner; re-arming FILL still draws FILL\'s', () => {
+        const t = shared();
+        t.view.setTool(EDIT_TOOLS.FILL); t.click(1, 1);
+        t.view.setTool(EDIT_TOOLS.FILL);
+        expect(t.painted[t.painted.length - 1]).toEqual([{ kind: 'rect', x: 1, y: 1, w: 1, h: 1 }]);
+        t.view.setTool(EDIT_TOOLS.CLEAR);
         expect(t.painted[t.painted.length - 1]).toEqual([]);
     });
 

@@ -137,9 +137,10 @@ describe('the committed seedling_er preset', () => {
     });
     it('L40\'s stair has its own AP exit (E4a\'s FINDING resolved: no split needed; its exit is not one of the twelve `#k` teleporters)', () => {
         const nameOf = (doc) => apExitNamesByEndpoint(doc).get('level_40/out_stairsdown_320_576');
-        expect(nameOf(AP1)).toBe('level_40__r23c29 -> level_43__r13c7');
+        // ⛓ tile-rules-automation-r-a5: L40's body is r26c13 (r23c29 is now the t2-button column).
+        expect(nameOf(AP1)).toBe('level_40__r26c13 -> level_43__r13c7');
         // AP_1: the stair is the base name, the twelve L43 edge teleporters are `#2`..`#13` — thirteen distinct AP exits.
-        const carriers = [...apExitNamesByEndpoint(AP1).entries()].filter(([, n]) => n?.startsWith('level_40__r23c29 -> level_43__r13c7'));
+        const carriers = [...apExitNamesByEndpoint(AP1).entries()].filter(([, n]) => n?.startsWith('level_40__r26c13 -> level_43__r13c7'));
         expect(new Set(carriers.map(([, n]) => n)).size).toBe(carriers.length);
         expect(carriers).toHaveLength(13);
         // the preset names the stair by its own (shuffled) AP exit, in a placement

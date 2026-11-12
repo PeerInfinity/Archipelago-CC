@@ -275,7 +275,8 @@ describe('L40 — the corpse\'s kill rides on its annotated lock and the crossin
             if (JSON.stringify(entry.clear_rule) === JSON.stringify(AND)) entry.clear_rule = { rule: 'Has', args: { item_name: 'Fire' } };
         }
         const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
-        expect(out.problems.filter((x) => x.startsWith('level_40__r23c29 → ') && x.includes('holding [Fire]: derived true, atlas false')).length,
+        // ⛓ tile-rules-automation-r-a5: L40's body is r26c13 (r23c29 is the t2-button column since its wand lock costs flag 12).
+        expect(out.problems.filter((x) => x.startsWith('level_40__r26c13 → ') && x.includes('holding [Fire]: derived true, atlas false')).length,
             JSON.stringify(out.problems)).toBeGreaterThan(0);
     }, 300_000);
 });

@@ -16,21 +16,29 @@ import { RULES, unlayLatches, L40_REGIONS } from './deriveLevelWorldLogic.fixtur
 import { deriveEntryLogic } from './deriveLevelWorldLogic.js';
 
 const L40 = (rules) => deserializeMazeWorld(rules.preset_sidecars['1'].level_40__r0c53.playable_payload);
-const L40_LAID_SEARCH_CEILING = 300;
+/**
+ * ⛓ R-A5 (⚖ design-4, 2026-11-11) — an ABSOLUTE COST TRIPWIRE, not the prune's guard: 700 ≈ 1.23 × the 571 searches measured at
+ * c187b8c594 (R-A5's arm: L40's wand locks cost their presses, so L40 has seven regions, not five). It was 300, tile-latch-prune's
+ * own ceiling over its measured 283 (4386cdda2d, 2026-11-03; no ruling set the number). A disabled prune (2,931 at R-A5) trips it
+ * too; the relative guard (laid ≤ ½ × prune-off, both derived) is the train tier's, which computes both arms.
+ */
+const L40_LAID_SEARCH_CEILING = 700;
 
 describe('latch sandwich — L40 laid, native: the search count', () => {
-    it(`the prune holds L40 laid to ≤ ${L40_LAID_SEARCH_CEILING} engine searches (measured 283; prune removed: 2,045)`, () => {
+    it(`the prune holds L40 laid to ≤ ${L40_LAID_SEARCH_CEILING} engine searches (measured 571 at R-A5; prune removed: 2,931)`, () => {
         const { engine } = deriveLevelWorldLogic(L40(RULES), HELPERS, { native: true });
         expect(engine.searches).toBeLessThanOrEqual(L40_LAID_SEARCH_CEILING);
         expect(engine.skipped).toBeGreaterThan(0);
     }, 120_000);
-    it('L40 with every latch unlaid: the prune is a no-op — 0 skipped, the same 267 searches as prune off', () => {
+    it('L40 with every latch unlaid: the prune is a no-op — 0 skipped, the same searches as prune off', () => {
         const bare = unlayLatches();
         const on = deriveLevelWorldLogic(L40(bare), HELPERS, { native: true });
         const off = deriveLevelWorldLogic(L40(bare), HELPERS, { native: true, latchSandwich: false });
         // ⛓ R-A4b: 328,476 → 376,330 states (+14.6%): `unlayLatches` strips the buttons but not L40's flag-8 BossLock, a sided opener
-        // whose per-visit mark splits the search states. It adds no search (267), and this pin guards the prune's no-op, not a bound.
-        expect(on.engine).toEqual({ searches: 267, states: 376_330, skipped: 0 });
+        // whose per-visit mark splits the search states. This pin guards the prune's no-op, not a bound.
+        // ⛓ R-A5: the literal counts (267 / 376,330, then 745 / 983,510 with L40's seven regions) are dropped: the pin is the no-op
+        // itself, on ≡ off with 0 skipped (⚖ design-4: derive, type no literal count).
+        expect(on.engine.skipped).toBe(0);
         expect(off.engine).toEqual(on.engine);
     }, 120_000);
     // ⛓ THE PRESS TARGETS, PRICED (session tile-lay-l40-latches; the in-world event class, half (a)): each latch's own press
@@ -43,11 +51,12 @@ describe('latch sandwich — L40 laid, native: the search count', () => {
         const entries = L40_REGIONS.map((r) => [r, deriveEntryLogic(w, r, HELPERS, { native: true })]);
         const presses = entries.flatMap(([r, e]) => e.targets.filter((t) => t.event && t.event !== 'L40 flag 8: bosslock@480,352 cleared')
             .map((t) => [r, t.event, t.minimal, t.unreachable]));
+        // ⛓ tile-rules-automation-r-a5: flag 1's press stands in r4c4 (its own wand locks now wall it off r0c53).
         expect(presses).toEqual([
-            ['level_40__r0c53', 'L40 flag 1: wandlock@176,80 cleared', [[]], false],
             ['level_40__r0c53', 'L40 flag 7: wandlock@208,128 cleared', [[]], false],
+            ['level_40__r4c4', 'L40 flag 1: wandlock@176,80 cleared', [[]], false],
             ['level_40__r48c54', 'L40 flag 12: wandlock@480,560 cleared', [[]], false],
         ]);
-        expect(entries.map(([, e]) => e.engine.ownEvent)).toEqual([0, 0, 0, 0, 0]);
+        expect(entries.map(([, e]) => e.engine.ownEvent)).toEqual(L40_REGIONS.map(() => 0));
     }, 120_000);
 });

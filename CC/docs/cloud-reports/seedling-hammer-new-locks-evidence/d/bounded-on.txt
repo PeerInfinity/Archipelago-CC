@@ -1,0 +1,14 @@
+     × 9001 (from the L51 door): OFF the stand-here dwell is hit by the jellyfish; ON the count reaches 0 (all four die to sword presses, J2/J1 after the arm's refused attempts on them), 0 hits 15891ms
+     × 9002 (from the L48 door): OFF the chaser kill runs out its bound; ON every body dies, 0 hits 9252ms
+     × 9001 at budget 960: ON is deadline-bound and says so — the attempt the trip refused is raised as OFF raises it, not rewound 3267ms
+     × flag:L112:1 (rocklock): no-verb (no strategy row) 10ms
+     × flag:L112:1: the SOLVER refuses the mapped goal no-verb too (the pre-check is the solver's answer, not a guess) 62ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/hammerL53Killlock.test.js > hammer-phase L53-KILLLOCK — the L53 kill-lock's chaser arm (`KILLLOCK_CHASER_REWIND`) > 9001 (from the L51 door): OFF the stand-here dwell is hit by the jellyfish; ON the count reaches 0 (all f
+ FAIL  frontend/modules/seedlingDemo/hammerL53Killlock.test.js > hammer-phase L53-KILLLOCK — the L53 kill-lock's chaser arm (`KILLLOCK_CHASER_REWIND`) > 9002 (from the L48 door): OFF the chaser kill runs out its bound; ON every body dies, 0 hits
+ FAIL  frontend/modules/seedlingDemo/hammerL53Killlock.test.js > hammer-phase L53-KILLLOCK — the L53 kill-lock's chaser arm (`KILLLOCK_CHASER_REWIND`) > 9001 at budget 960: ON is deadline-bound and says so — the attempt the trip refused is raised as OFF ra
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js > ⛓ EVENT GOALS — refusals BY THE SOLVER'S REASON, never a blanket > flag:L112:1 (rocklock): no-verb (no strategy row)
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js > ⛓ EVENT GOALS — `clearTagVerbOf` agrees with the solver's own clear-tag > flag:L112:1: the SOLVER refuses the mapped goal no-verb too (the pre-check is the solver's answer, not a guess
+ Test Files  2 failed | 17 passed (19)
+      Tests  5 failed | 385 passed (390)
+   Duration  120.00s (transform 7.37s, setup 0ms, import 26.36s, tests 328.46s, environment 2ms)
