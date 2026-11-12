@@ -11380,6 +11380,27 @@ export const PACE = Object.freeze({
  * ⚖ 30(c): the waited keys are the tape's; the corridor is certified from the state the walk starts in.
  */
 // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_BOMB_PHASE_WAIT=0` opts out.
+/**
+ * ⛓ hammer-phase CONNECTED-L22 (`SEEDLING_WALK_DEATH_REFUSED`, OFF) — **A WALK THAT DIED IS REFUSED BY NAME, WHATEVER
+ * KILLED IT.** `refuseIfDrowned` already refuses a walk a whirlpool drowned (seedling-fidelity-residue D-B); every
+ * other death was invisible to the solve: the drive's respawn put the player back at the room's arrival, it walked
+ * the same corridor into the same hits, and the attempt ended at `maxTicksPerTarget` as *"waypoint N: not reached
+ * within 400 ticks; stalled at … after grazing K solid(s)"* — a STALL, naming the arrival-side trees it grazed after
+ * each respawn, never the deaths. MEASURED (connected room f6, slot 2, L22 → L29 from L25's door, Ghost Spear and no
+ * sword; captured request #49 replayed in node): 9 deaths inside one solve, every one three `wallflyer` hits
+ * (`wallflyer@48,112`, `@128,80`) on the band the corridor crosses unpriced (`corridorBodyPricing` OFF).
+ *
+ * ON: the first death since the walk began refuses, naming the tick, the death count and the last `hitsNamed` hits
+ * before it (`obstacle: {kind: 'death', id}`). The answer stays a refusal, the same verdict: the switch changes its
+ * WORDS and stops the re-plan from the respawn, it does not make a crossing solvable. OFF: not asked (byte-identical).
+ * `refused` collects one row per refusal (measurement).
+ */
+export const WALK_DEATH_REFUSED = {
+    enabled: globalThis.process?.env?.SEEDLING_WALK_DEATH_REFUSED === '1',
+    hitsNamed: 3,
+    refused: [],
+};
+
 export const BOMB_PHASE_WAIT = {
     enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT !== '0',
     /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
@@ -32836,18 +32857,34 @@ function solveSegmentUnder({
      * arrived, whatever the drive did after the respawn. OFF: `deathsNow` is 0 and nothing is asked.
      */
     function deathsNow() {
-        return CONTACT_FIDELITY.whirlpoolDrown ? (run.ledger('playerDeaths') ?? []).length : 0;
+        return (CONTACT_FIDELITY.whirlpoolDrown || WALK_DEATH_REFUSED.enabled)
+            ? (run.ledger('playerDeaths') ?? []).length : 0;
     }
     function refuseIfDrowned(d0, what, goal) {
-        if (!CONTACT_FIDELITY.whirlpoolDrown) return;
-        const d = (run.ledger('playerDeaths') ?? []).slice(d0).find((x) => x.source === 'whirlpool');
-        if (!d) return;
-        refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
-            + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not re-planned '
-            + 'from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+        if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return;
+        const died = (run.ledger('playerDeaths') ?? []).slice(d0);
+        const d = CONTACT_FIDELITY.whirlpoolDrown ? died.find((x) => x.source === 'whirlpool') : undefined;
+        if (d) {
+            refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
+                + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not '
+                + 're-planned from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+        }
+        if (WALK_DEATH_REFUSED.enabled && died.length > 0) refuseWalkDeath(died, what, goal);
+    }
+    /** ⛓ hammer-phase CONNECTED-L22 (`WALK_DEATH_REFUSED` ON only) — see the switch's own docblock. */
+    function refuseWalkDeath(died, what, goal) {
+        const d = died[0];
+        const hits = (run.ledger('playerHits') ?? []).filter((h) => h.t <= d.t && h.level === d.level)
+            .slice(-WALK_DEATH_REFUSED.hitsNamed);
+        const sources = [...new Set(hits.map((h) => h.id ?? h.source))];
+        WALK_DEATH_REFUSED.refused.push({ what, t: d.t, level: d.level, deaths: died.length, sources });
+        refuse(`${what}: the player DIED at run tick ${d.t} in level ${d.level} (${died.length} death(s) on the walk; `
+            + `the hits before the first: ${hits.map((h) => `${h.id ?? h.source} at t${h.t}`).join(', ') || 'none billed'}`
+            + ') — the drive took hits its corridor was certified without; a walk that died is refused, not re-planned '
+            + 'from the respawn', { goal, obstacle: { kind: 'death', id: sources[sources.length - 1] ?? d.source ?? null } });
     }
     const walkTo = (goal, aim, opts) => {
-        if (!CONTACT_FIDELITY.whirlpoolDrown) return walkToRun(goal, aim, opts);
+        if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return walkToRun(goal, aim, opts);
         const d0 = deathsNow();
         let out;
         try {

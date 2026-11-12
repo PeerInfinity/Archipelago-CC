@@ -1,0 +1,42 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": true,
+ "kind": null,
+ "ms": 405,
+ "work": 11,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 240,
+   "work": 11
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "ticks": 240,
+ "verbs": [
+  "walk"
+ ],
+ "level": 25,
+ "hits": [
+  [
+   90,
+   "wallflyer",
+   "wallflyer@64,80"
+  ],
+  [
+   153,
+   "wallflyer",
+   "wallflyer@48,112"
+  ]
+ ],
+ "deaths": 0
+}

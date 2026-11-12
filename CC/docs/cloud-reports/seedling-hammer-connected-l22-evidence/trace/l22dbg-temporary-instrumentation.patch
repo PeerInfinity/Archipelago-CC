@@ -1,0 +1,24 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index 97f92b1ca5..00fb77990f 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -5714,6 +5714,7 @@ function drive(run, target, perTick, {
+         const before = { x: run.state.x, y: run.state.y };
+         const { transition, hitX, hitY } = run.advance(held);
+         ticks++;
++        if (globalThis.process?.env?.L22DBG && (ticks % 10 === 0 || hitX || hitY || (ticks > 130 && ticks < 156))) console.error('L22DBG T', ticks, JSON.stringify({ fall: run.state.fall, H: (() => { try { return run.ledger('playerHits').map((h) => [h.t, h.source, h.id]).slice(-2); } catch (e) { return String(e).slice(0, 60); } })(), D: (() => { try { return run.ledger('playerDeaths').length; } catch (e) { return 'x'; } })(), lvl: run.level, ht: run.state.hazard?.kind ?? null }), what.slice(-30), [...held].join('+') || '-', run.state.x.toFixed(2), run.state.y.toFixed(2), hitX ? 'HX:' + (hitX.what ?? hitX.type ?? JSON.stringify(hitX).slice(0,60)) : '', hitY ? 'HY:' + (hitY.what ?? hitY.type ?? JSON.stringify(hitY).slice(0,60)) : '');
+ 
+         if (transition) {
+             if (until === 'transition') return transition;
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index e34a60f9d5..5895c6b203 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -32652,6 +32652,7 @@ function solveSegmentUnder({
+             const laneCert = laneWalk
+                 ? certifyLaneWalk(wps, laneWalk, { what, goal, crossTo, contacts, axisAligned, narrow })
+                 : null;
++            if (globalThis.process?.env?.L22DBG) console.error('L22DBG WPS', what, 'attempt', attempt, 'from', run.state.x.toFixed(2), run.state.y.toFixed(2), 't', perTick.length, JSON.stringify(wps.map((w) => [w.x, w.y])));
+             try {
+                 for (let wi = 0; wi < wps.length; wi += 1) {
+                     const last = wi === wps.length - 1;
