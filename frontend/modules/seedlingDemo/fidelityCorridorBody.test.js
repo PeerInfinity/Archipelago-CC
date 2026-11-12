@@ -16,6 +16,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
+import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { corridorBodyDanger, dangerAt } from './dangerMap.js';
 import { previewWalk, solveSegment } from './solverBot.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
@@ -166,4 +167,53 @@ describe('fidelity CORRIDOR — the walk corridor prices the live wallflyers and
             const b = on(() => solveBoot('survey-step-170-boot.json'));
             expect(b).toEqual({ ticks: 491, hits: [] });
         }, 120_000);
+});
+
+/**
+ * fidelity CORRIDORFLIP D2 (wave 42) — `corridorForecastMemo`: the forecast's frozen-geometry reads memoised, and its
+ * wallflyer trigger ray rejected exactly by bounding box. A cost change only: every row, every preview and every plan
+ * is the same one. Report: `CC/docs/cloud-reports/seedling-fidelity-corridorflip.md`.
+ */
+describe('fidelity CORRIDORFLIP D2 — the corridor forecast memoises its frozen geometry (`corridorForecastMemo`)', () => {
+    const memo = (v, fn) => withContactFidelity({ corridorBodyPricing: true, unbilledDamageGate: false,
+        corridorForecastMemo: v }, fn);
+    /** Every forecast row of every tick, stepped against the walk's drive (no sword hand-off: the rows alone). */
+    function allRows(walk) {
+        const tape = parseTape(JSON.stringify(walk));
+        const run = createRunForStaging(solveStaging(stagingFromTape(tape)), SRC);
+        const fc = run.corridorBodyForecast();
+        const level = run.level;
+        const out = [];
+        for (let t = 0; t < tape.tick_count; t += 1) {
+            out.push(fc.step(run.state, { slashing: run.progress('slashInfo')?.state?.slashing === true }));
+            const { transition } = run.advance(heldKeysAt(tape, t));
+            if (transition || run.level !== level) break;
+        }
+        return out;
+    }
+
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_CORRIDOR_FORECAST_MEMO)(
+        'ships OFF, appended last, with a worker env name', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.corridorForecastMemo).toBe(false);
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('corridorForecastMemo');
+            expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CORRIDOR_FORECAST_MEMO');
+        });
+
+    it('ON = OFF, row for row, along the step-47 (wallflyers) and step-114 (drill) walks', () => {
+        for (const n of ['survey-step-47.json', 'survey-step-114.json']) {
+            const w = W(n);
+            const a = memo(false, () => allRows(w.walk));
+            const b = memo(true, () => allRows(w.walk));
+            expect(a.length).toBeGreaterThan(100);
+            expect(b).toEqual(a);
+        }
+    });
+
+    it('ON = OFF on a whole solve: step 53 (L22) and step 45 (L22, the dash chain) plan the same ticks', () => {
+        for (const n of ['survey-step-53-boot.json', 'survey-step-45-boot.json']) {
+            const a = memo(false, () => solveBoot(n));
+            const b = memo(true, () => solveBoot(n));
+            expect(b).toEqual(a);
+        }
+    }, 240_000);
 });

@@ -91,7 +91,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_FLYER_LIVE
         || !!process.env.SEEDLING_BEAMTOWER_DRIFT || !!process.env.SEEDLING_BEAMTOWER_BEAM_HIT
         || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT || !!process.env.SEEDLING_PARTIAL_DODGE_REPROBE
-        || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING
+        || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING || !!process.env.SEEDLING_CORRIDOR_FORECAST_MEMO
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -401,7 +401,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FENCEPOST D1 (wave 40): a faded-out spinner leaves the roster on the read the game's world has dropped it by — OFF.
             spinnerRemoveRead: false,
             // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
-            fallRockHoldsButton: true });
+            fallRockHoldsButton: true,
+            // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — OFF.
+            corridorForecastMemo: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

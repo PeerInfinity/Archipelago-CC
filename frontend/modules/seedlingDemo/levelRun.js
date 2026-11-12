@@ -13018,7 +13018,7 @@ export function createLevelRun({
         const fl = new Map(flyers);
         const dr = new Map(drills);
         // ⚠ ONCE: the previewed world is frozen at this tick's geometry (`chaserForecastNow`'s note).
-        const sctx = spinnerCtx();
+        const sctx = corridorForecastCtx(spinnerCtx());
         const shieldOn = CONTACT_FIDELITY.wallFlyerShieldBump && inventory?.hasShield === true;
         const dark = inventory?.hasDarkShield === true;
         const worldRec = world.world;
@@ -13028,6 +13028,63 @@ export function createLevelRun({
             fcam: cam ? { ...cam } : null,
             fband: camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null,
             fshake: shake, fviewTime: clock.now(), first: true }, { sctx, shieldOn, dark, worldRec, target });
+    }
+    /**
+     * ⛓ fidelity CORRIDORFLIP D2 (`CONTACT_FIDELITY.corridorForecastMemo`) — the forecast's frozen context, its two
+     * geometry reads memoised for the forecast's life: `collides(rect)` by `x,y,w,h` and `tileTypeAt(x, y)` by the
+     * point. The context is frozen ONCE per forecast (above) and the run is not advanced while a preview steps the
+     * forecast, so a read at a box it already asked returns the same answer — a resting wallflyer's four
+     * `decideMotion` probes and its tile, every tick. OFF: the context itself, unchanged (byte-identical).
+     */
+    function corridorForecastCtx(sctx) {
+        if (!CONTACT_FIDELITY.corridorForecastMemo) return sctx;
+        // Keyed by number, nested (no string per read): size → x → y.
+        const at = (root, a, b, c) => {
+            let m1 = root.get(a);
+            if (m1 === undefined) { m1 = new Map(); root.set(a, m1); }
+            let m2 = m1.get(b);
+            if (m2 === undefined) { m2 = new Map(); m1.set(b, m2); }
+            return m2;
+        };
+        const hits = new Map();
+        const tiles = new Map();
+        return {
+            ...sctx,
+            collides: (rect) => {
+                const m = at(hits, rect.w * 4096 + rect.h, rect.x);
+                if (m.has(rect.y)) return m.get(rect.y);
+                const v = sctx.collides(rect);
+                m.set(rect.y, v);
+                return v;
+            },
+            tileTypeAt: (x, y) => {
+                const m = at(tiles, 0, x);
+                if (m.has(y)) return m.get(y);
+                const v = sctx.tileTypeAt(x, y);
+                m.set(y, v);
+                return v;
+            },
+            lineHits: corridorLineHits,
+        };
+    }
+    /**
+     * ⛓ fidelity CORRIDORFLIP D2 — `crusher.collideLineSolid`, with an EXACT early reject: every point that function
+     * samples lies inside the segment's truncated end points' bounding box (the major axis steps by 1 from the
+     * truncated start and stops before the truncated end; the minor axis moves monotonically by a fraction of its
+     * delta, never past it), so a box that misses that closed bounding box cannot be sampled. A box that meets it is
+     * asked by the function itself. Used only by the corridor forecast's wallflyer trigger ray, under the memo key.
+     */
+    function corridorLineHits(solids, fromX, fromY, toX, toY) {
+        const fx = Math.trunc(fromX);
+        const fy = Math.trunc(fromY);
+        const tx = Math.trunc(toX);
+        const ty = Math.trunc(toY);
+        const x0 = Math.min(fx, tx);
+        const x1 = Math.max(fx, tx);
+        const y0 = Math.min(fy, ty);
+        const y1 = Math.max(fy, ty);
+        if (!solids.some((s) => s.right > x0 && s.x <= x1 && s.bottom > y0 && s.y <= y1)) return null;
+        return collideLineBoxes(solids, fromX, fromY, toX, toY);
     }
     /**
      * ⛓ fidelity TIMEDPASS D2: the forecast's body, over its own state — so `fork()` hands out an independent copy (the
@@ -13081,6 +13138,8 @@ export function createLevelRun({
                         collides: sctx.collides, probe: sctx.collides, tileTypeAt: sctx.tileTypeAt,
                         onScreen: onScreen(id), frozen: false, playerBox,
                         hitPlayer: (w) => { contact = true; return w; },
+                        // ⛓ fidelity CORRIDORFLIP D2: `undefined` OFF (the stepper's own `collideLineSolid`).
+                        lineHits: sctx.lineHits,
                     });
                     fl.set(id, stepWallFlyerGraphic(out.w));
                     seen.set(`${id}#contact`, contact);

@@ -2026,6 +2026,23 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`. ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
      */
     fallRockHoldsButton: true,
+    /**
+     * fidelity CORRIDORFLIP D2 (wave 42) — THE CORRIDOR FORECAST READS ITS FROZEN GEOMETRY ONCE PER BOX.
+     *
+     * `corridorBodyPricing`'s forecast (`levelRun.corridorBodyForecastNow`) freezes the room's solid/tile context
+     * (`spinnerCtx()`) once and steps every wallflyer and drill against it on every previewed tick. A resting
+     * wallflyer re-asks `decideMotion`'s four wall probes and its tile every tick, at the same position, against the
+     * same frozen context. MEASURED at `a3a5b8182e` (node `--cpu-prof`, the L22 leg `level_22 <- in_L29_0_224`): 62 %
+     * of the ON solve is the forecast's `step`, 55 % inside `stepWallFlyer`, most of it `collidesSolid` — the cost the
+     * wave-17 CI read named (legs done → DEADLINE at the walk site). ON: the forecast memoises the frozen context's
+     * `collides(rect)` by the rect's `x,y,w,h` and `tileTypeAt(x, y)` by the point, for the life of one forecast (a
+     * `fork()` shares the cache: the same frozen context). Neither read changes inside a forecast (the run is not
+     * advanced while a preview steps it), so every answer is the same one; the drills' "Enemy" half (other drills,
+     * chasers) and every line test are NOT memoised. Only reached while the forecast runs (`corridorBodyPricing` ON or
+     * the timed pass's `drillPass`). OFF: byte-identical. ⛔ OFF by default (no licence);
+     * `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1` for a node measurement.
+     */
+    corridorForecastMemo: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2426,6 +2443,9 @@ if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '0') CONTACT_FIDEL
 // ⛓ fidelity ROCKBUTTON D1: `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '1') CONTACT_FIDELITY.fallRockHoldsButton = true;
 if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '0') CONTACT_FIDELITY.fallRockHoldsButton = false;
+// ⛓ fidelity CORRIDORFLIP D2: `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '1') CONTACT_FIDELITY.corridorForecastMemo = true;
+if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '0') CONTACT_FIDELITY.corridorForecastMemo = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

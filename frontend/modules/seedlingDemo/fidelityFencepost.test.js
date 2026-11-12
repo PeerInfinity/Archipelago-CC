@@ -105,7 +105,7 @@ describe('FENCEPOST D1 — `spinnerRemoveRead` (OFF)', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.spinnerRemoveRead).toBe(false);
             expect(CONTACT_FIDELITY.spinnerRemoveRead).toBe(false);
             // ⛓ wave 41: ROCKBUTTON `fallRockHoldsButton` landed after it.
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('spinnerRemoveRead') + 1)).toEqual(['fallRockHoldsButton']);
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('spinnerRemoveRead') + 1)).toEqual(['fallRockHoldsButton', 'corridorForecastMemo']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_SPINNER_REMOVE_READ');
         });
 

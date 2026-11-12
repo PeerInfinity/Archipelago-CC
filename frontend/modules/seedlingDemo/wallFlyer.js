@@ -242,7 +242,8 @@ function stopAxis(pos, rel, collides) {
  * @returns the next state (a new object) plus `{ launched, contact }`.
  */
 export function stepWallFlyer(s, ctx) {
-    const { collides, probe, tileTypeAt, onScreen, frozen = false, playerBox, hitPlayer } = ctx;
+    const { collides, probe, tileTypeAt, onScreen, frozen = false, playerBox, hitPlayer,
+        lineHits = collideLineSolid } = ctx;
     if (s.removed) return { w: s, launched: false, contact: false };
     let w = { ...s };
     let contact = false;
@@ -309,7 +310,9 @@ export function stepWallFlyer(s, ctx) {
     const vt = decideMotion(w, WALLFLYER.moveSpeed, probe);
     const l = len(vt);
     if (l > 0 && playerBox) {
-        const hit = collideLineSolid([playerBox], w.x, w.y,
+        // ⛓ fidelity CORRIDORFLIP D2: `lineHits` is `collideLineSolid` unless a caller hands an exact equivalent
+        // (the corridor forecast's bounding-box early reject, `corridorForecastMemo`).
+        const hit = lineHits([playerBox], w.x, w.y,
             w.x + WALLFLYER.attackRange * (vt.x / l), w.y + WALLFLYER.attackRange * (vt.y / l));
         if (hit) {
             // A re-trigger along the same wall writes the same vector: only a
