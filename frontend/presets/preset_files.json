@@ -7311,7 +7311,7 @@
     "name": "Procgen Maze",
     "folders": {
       "AP_1": {
-        "seed": 8,
+        "seed": 1,
         "games": [
           {
             "player": 1,

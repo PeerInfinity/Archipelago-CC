@@ -34,6 +34,7 @@ import { prepareRunFromState, runPresetHeadless } from './presetRun.js';
 import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { CONCEPTS } from '../procgenCore/concepts.js';
 import { RECORDED_CONTENT_KEY, documentContentOf } from './worldContent.js';
+import { findRulesFileFromGameSeed } from '../../app/mode/modeDataLoader.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
@@ -124,6 +125,20 @@ describe('R3 — the committed meta_trial preset IS this world', async () => {
         const preserved = readFileSync(join(ROOT, 'scripts/release/preserved-dev-presets.txt'), 'utf8')
             .split('\n').map((l) => l.trim().split(/\s+/)[0]);
         expect(preserved).toContain('meta_trial');
+    });
+
+    /**
+     * ⛔ `?game=<id>&seed=1` (the spoiler test's URL, the play gate's, a link) resolves by the index row's `seed`
+     * field, NOT the folder name: a row reading the rules' `generation_seed` (8 here) leaves `seed=1` unmatched and
+     * the app loads the DEFAULT preset, so a spoiler run on it false-PASSES. concept_trial's row says 1; so must this.
+     */
+    it('?game=meta_trial&seed=1 resolves to its own rules (as concept_trial does), never to the default', () => {
+        const index = readJson('frontend/presets/preset_files.json');
+        const quiet = { warn() {}, info() {}, debug() {} };
+        for (const game of ['concept_trial', 'meta_trial']) {
+            expect(findRulesFileFromGameSeed(index, game, '1', null, quiet), game)
+                .toBe(`./presets/${game}/AP_1/AP_1_rules.json`);
+        }
     });
 });
 
