@@ -1,0 +1,14 @@
+===  EASTBOUND offline-seed1 #10 vs connected-s2 #8
+  staging.save.seal_parts: []  ->  [0, 1]
+  staging.seam.items.canSwim: false  ->  true
+===  connected-s2 EAST #8 vs WEST #26
+  live.row.x: 40  ->  216
+  live.row.y: 24  ->  40
+  live_digest.s.x: 40  ->  216
+  live_digest.s.y: 24  ->  40
+  solverGoal.exit.x: 224  ->  32
+  solverGoal.exit.y: 32  ->  0
+  staging.boot.x: 32  ->  208
+  staging.boot.y: 16  ->  32
+  staging.persistence: [{"level": 5, "tag": 0}]  ->  [{"level": 5, "tag": 0}, {"level": 8, "tag": 0}]
+  staging.save.seal_parts: [0, 1]  ->  [0, 1, 2]

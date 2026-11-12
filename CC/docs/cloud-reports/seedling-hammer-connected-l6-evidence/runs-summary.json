@@ -1,0 +1,2026 @@
+{
+ "conn_s2_nocap": {
+  "checked": 2,
+  "total": 48,
+  "ms": 384018,
+  "statusAtEnd": "error: level_6: the bot cannot walk to exit \"level_6 -> level_5__r1c5\" \u2014 the JS runtime's walk failed: not reached within 1800 ticks \u2014 stalled at (182.43364259823014, 24.234142802782962); the solver declined: solverBot(js-runtime-L6-exit) reach-exit (32,0)->L5 -> bait (bob@112,48) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (162.2,40.0) \u2014 chaser:bob@112,48 (inside leash 80 (d=6.4), box grown 0.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:",
+  "inventoryAtEnd": [
+   [
+    "Progressive Swim",
+    1
+   ],
+   [
+    "Seal",
+    3
+   ]
+  ],
+  "solveRequests": []
+ },
+ "conn_s2_dirtyroom": {
+  "checked": 3,
+  "total": 48,
+  "ms": 316866,
+  "statusAtEnd": "error: level_15__r1c5: the bot cannot walk to exit \"level_15__r1c5 -> level_15__r6c8\" \u2014 the logical link \"level_15__r1c5 -> level_15__r6c8\" (level_15__r1c5 \u2192 level_15__r6c8) was not credited: \"level_15__r1c5 -> level_15__r6c8\" is not a logical sub-region link of this preset",
+  "inventoryAtEnd": [
+   [
+    "Progressive Swim",
+    1
+   ],
+   [
+    "Seal",
+    3
+   ],
+   [
+    "Totem Shard",
+    1
+   ]
+  ],
+  "solveRequests": [
+   {
+    "n": 0,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 24,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 160,
+      "y": 272
+     }
+    }
+   },
+   {
+    "n": 1,
+    "name": "js-runtime-L86-location",
+    "level": 86,
+    "x": 56,
+    "y": 56,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 2,
+    "name": "js-runtime-L86-location",
+    "level": 86,
+    "x": 56,
+    "y": 56,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 3,
+    "name": "js-runtime-L86-exit",
+    "level": 86,
+    "x": 56,
+    "y": 26.050000000000008,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 4,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 168,
+    "y": 296,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 192
+     }
+    }
+   },
+   {
+    "n": 5,
+    "name": "js-runtime-L13-exit",
+    "level": 13,
+    "x": 72,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 6,
+    "name": "js-runtime-L14-exit",
+    "level": 14,
+    "x": 168,
+    "y": 72,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 7,
+    "name": "js-runtime-L14-exit",
+    "level": 14,
+    "x": 168,
+    "y": 72,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 64
+     }
+    }
+   }
+  ]
+ },
+ "conn_s2": {
+  "checked": 2,
+  "total": 48,
+  "ms": 378664,
+  "statusAtEnd": "error: level_6: the bot cannot walk to exit \"level_6 -> level_5__r1c5\" \u2014 the JS runtime's walk failed: not reached within 1800 ticks \u2014 stalled at (182.43364259823014, 24.234142802782962); the solver declined: solverBot(js-runtime-L6-exit) reach-exit (32,0)->L5 -> bait (bob@112,48) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (162.2,40.0) \u2014 chaser:bob@112,48 (inside leash 80 (d=6.4), box grown 0.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:",
+  "inventoryAtEnd": [
+   [
+    "Progressive Swim",
+    1
+   ],
+   [
+    "Seal",
+    3
+   ]
+  ],
+  "solveRequests": [
+   {
+    "n": 0,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 24,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 256,
+      "y": 272
+     }
+    }
+   },
+   {
+    "n": 1,
+    "name": "js-runtime-L2-exit",
+    "level": 2,
+    "x": 56,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 2,
+    "name": "js-runtime-L3-exit",
+    "level": 3,
+    "x": 72,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 128,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 3,
+    "name": "js-runtime-L3-exit",
+    "level": 3,
+    "x": 72,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 128,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 4,
+    "name": "js-runtime-L4-exit",
+    "level": 4,
+    "x": 24,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 5,
+    "name": "js-runtime-L4-exit",
+    "level": 4,
+    "x": 24,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 6,
+    "name": "js-runtime-L5-exit",
+    "level": 5,
+    "x": 88,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 112
+     }
+    }
+   },
+   {
+    "n": 7,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 40,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 224,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 8,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 40,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 224,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 9,
+    "name": "js-runtime-L7-exit",
+    "level": 7,
+    "x": 40,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 192,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 10,
+    "name": "js-runtime-L8-exit",
+    "level": 8,
+    "x": 152,
+    "y": 56,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 96,
+      "y": 192
+     }
+    }
+   },
+   {
+    "n": 11,
+    "name": "js-runtime-L8-exit",
+    "level": 8,
+    "x": 152,
+    "y": 56,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 96,
+      "y": 192
+     }
+    }
+   },
+   {
+    "n": 12,
+    "name": "js-runtime-L9-exit",
+    "level": 9,
+    "x": 152,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 13,
+    "name": "js-runtime-L10-location",
+    "level": 10,
+    "x": 56,
+    "y": 88,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 14,
+    "name": "js-runtime-L10-exit",
+    "level": 10,
+    "x": 56,
+    "y": 57.350000000000016,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 15,
+    "name": "js-runtime-L11-location",
+    "level": 11,
+    "x": 40,
+    "y": 72,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 32,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 16,
+    "name": "js-runtime-L11-location",
+    "level": 11,
+    "x": 40,
+    "y": 72,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 32,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 17,
+    "name": "js-runtime-L11-exit",
+    "level": 11,
+    "x": 40,
+    "y": 59.69999999999999,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 80
+     }
+    }
+   },
+   {
+    "n": 18,
+    "name": "js-runtime-L10-exit",
+    "level": 10,
+    "x": 56,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 19,
+    "name": "js-runtime-L9-exit",
+    "level": 9,
+    "x": 24,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 20,
+    "name": "js-runtime-L9-exit",
+    "level": 9,
+    "x": 24,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 21,
+    "name": "js-runtime-L8-exit",
+    "level": 8,
+    "x": 104,
+    "y": 184,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 22,
+    "name": "js-runtime-L8-exit",
+    "level": 8,
+    "x": 104,
+    "y": 184,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 23,
+    "name": "js-runtime-L7-exit",
+    "level": 7,
+    "x": 184,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 24,
+    "name": "js-runtime-L7-exit",
+    "level": 7,
+    "x": 184,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 25,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 216,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 26,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 216,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 27,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 216,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 28,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 216,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 29,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 216,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 0
+     }
+    }
+   }
+  ]
+ },
+ "offline_s1": {
+  "checked": 26,
+  "total": 48,
+  "ms": 603320,
+  "statusAtEnd": "Sphere 5.4 \u2192 walking to \"Level 012 - Chest\" (14/48)",
+  "inventoryAtEnd": [
+   [
+    "Fire",
+    1
+   ],
+   [
+    "Green Key",
+    1
+   ],
+   [
+    "Light",
+    1
+   ],
+   [
+    "Progressive Shield",
+    1
+   ],
+   [
+    "Progressive Sword",
+    1
+   ],
+   [
+    "Red Key",
+    1
+   ],
+   [
+    "Seal",
+    7
+   ],
+   [
+    "L0 flag 1: breakablerock@288,176 cleared",
+    1
+   ],
+   [
+    "L12 flag 5: bosslock@432,240 cleared",
+    1
+   ],
+   [
+    "L12 flag 10: shieldlocknorm@288,704 cleared",
+    1
+   ],
+   [
+    "L12 flag 3: bosslock@80,656 cleared",
+    1
+   ],
+   [
+    "L16 flag 0: rope@32,16 cleared",
+    1
+   ],
+   [
+    "L18 flag 0: lock@144,112 cleared",
+    1
+   ],
+   [
+    "L19 flag 1: bosslock@48,32 cleared",
+    1
+   ],
+   [
+    "L20 flag 0: shieldlocknorm@176,16 cleared",
+    1
+   ],
+   [
+    "L20 flag 4: lock@32,80 cleared",
+    1
+   ],
+   [
+    "L24 flag 0: burnabletree@32,128 cleared",
+    1
+   ],
+   [
+    "L30 flag 0: bosslock@64,32 cleared",
+    1
+   ],
+   [
+    "L30 flag 2: bosslock@224,208 cleared",
+    1
+   ],
+   [
+    "L31 flag 0: bosslock@192,432 cleared",
+    1
+   ]
+  ],
+  "solveRequests": [
+   {
+    "n": 0,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 88,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 256,
+      "y": 272
+     }
+    }
+   },
+   {
+    "n": 1,
+    "name": "js-runtime-L2-exit",
+    "level": 2,
+    "x": 56,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 2,
+    "name": "js-runtime-L2-exit",
+    "level": 2,
+    "x": 56,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 3,
+    "name": "js-runtime-L3-exit",
+    "level": 3,
+    "x": 72,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 128,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 4,
+    "name": "js-runtime-L3-exit",
+    "level": 3,
+    "x": 72,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 128,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 5,
+    "name": "js-runtime-L4-exit",
+    "level": 4,
+    "x": 24,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 6,
+    "name": "js-runtime-L4-exit",
+    "level": 4,
+    "x": 24,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 7,
+    "name": "js-runtime-L5-exit",
+    "level": 5,
+    "x": 88,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 112
+     }
+    }
+   },
+   {
+    "n": 8,
+    "name": "js-runtime-L5-exit",
+    "level": 5,
+    "x": 88,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 112
+     }
+    }
+   },
+   {
+    "n": 9,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 40,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 224,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 10,
+    "name": "js-runtime-L6-exit",
+    "level": 6,
+    "x": 40,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 224,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 11,
+    "name": "js-runtime-L7-exit",
+    "level": 7,
+    "x": 40,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 192,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 12,
+    "name": "js-runtime-L7-exit",
+    "level": 7,
+    "x": 40,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 192,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 13,
+    "name": "js-runtime-L8-exit",
+    "level": 8,
+    "x": 152,
+    "y": 56,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 96,
+      "y": 192
+     }
+    }
+   },
+   {
+    "n": 14,
+    "name": "js-runtime-L9-exit",
+    "level": 9,
+    "x": 152,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 15,
+    "name": "js-runtime-L9-exit",
+    "level": 9,
+    "x": 152,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 16,
+    "name": "js-runtime-L10-location",
+    "level": 10,
+    "x": 56,
+    "y": 88,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 17,
+    "name": "js-runtime-L10-location",
+    "level": 10,
+    "x": 56,
+    "y": 88,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 18,
+    "name": "js-runtime-L10-exit",
+    "level": 10,
+    "x": 56,
+    "y": 59.00000000000002,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 19,
+    "name": "js-runtime-L11-location",
+    "level": 11,
+    "x": 40,
+    "y": 72,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 32,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 20,
+    "name": "js-runtime-L11-exit",
+    "level": 11,
+    "x": 40,
+    "y": 59.00000000000003,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 21,
+    "name": "js-runtime-L3-exit",
+    "level": 3,
+    "x": 104,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 22,
+    "name": "js-runtime-L2-exit",
+    "level": 2,
+    "x": 56,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 23,
+    "name": "js-runtime-L2-exit",
+    "level": 2,
+    "x": 56,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 24,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 264,
+    "y": 264,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 160,
+      "y": 272
+     }
+    }
+   },
+   {
+    "n": 25,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 264,
+    "y": 264,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 160,
+      "y": 272
+     }
+    }
+   },
+   {
+    "n": 26,
+    "name": "js-runtime-L86-location",
+    "level": 86,
+    "x": 56,
+    "y": 56,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 27,
+    "name": "js-runtime-L86-location",
+    "level": 86,
+    "x": 56,
+    "y": 56,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 48,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 28,
+    "name": "js-runtime-L86-exit",
+    "level": 86,
+    "x": 56,
+    "y": 26.249999999999993,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 29,
+    "name": "js-runtime-L86-exit",
+    "level": 86,
+    "x": 56,
+    "y": 26.249999999999993,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 48,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 30,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 168,
+    "y": 296,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 304,
+      "y": 176
+     }
+    }
+   },
+   {
+    "n": 31,
+    "name": "js-runtime-L12-exit",
+    "level": 12,
+    "x": 24,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 168,
+      "y": 368
+     }
+    }
+   },
+   {
+    "n": 32,
+    "name": "js-runtime-L12-exit",
+    "level": 12,
+    "x": 24,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 168,
+      "y": 368
+     }
+    }
+   },
+   {
+    "n": 33,
+    "name": "js-runtime-L36-location",
+    "level": 36,
+    "x": 40,
+    "y": 120,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 64,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 34,
+    "name": "js-runtime-L36-location",
+    "level": 36,
+    "x": 40,
+    "y": 120,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 64,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 35,
+    "name": "js-runtime-L36-exit",
+    "level": 36,
+    "x": 71.7,
+    "y": 55.6000000000001,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 128
+     }
+    }
+   },
+   {
+    "n": 36,
+    "name": "js-runtime-L12-exit",
+    "level": 12,
+    "x": 168,
+    "y": 392,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 0,
+      "y": 80
+     }
+    }
+   },
+   {
+    "n": 37,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 296,
+    "y": 184,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 192
+     }
+    }
+   },
+   {
+    "n": 38,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 296,
+    "y": 184,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 192
+     }
+    }
+   },
+   {
+    "n": 39,
+    "name": "js-runtime-L13-exit",
+    "level": 13,
+    "x": 72,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 40,
+    "name": "js-runtime-L13-exit",
+    "level": 13,
+    "x": 72,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 41,
+    "name": "js-runtime-L14-exit",
+    "level": 14,
+    "x": 168,
+    "y": 72,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 42,
+    "name": "js-runtime-L14-exit",
+    "level": 14,
+    "x": 168,
+    "y": 72,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 43,
+    "name": "js-runtime-L15-exit",
+    "level": 15,
+    "x": 56,
+    "y": 72,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 44,
+    "name": "js-runtime-L16-location",
+    "level": 16,
+    "x": 40,
+    "y": 72,
+    "goal": {
+     "kind": "clear-tag",
+     "tag": {
+      "level": 16,
+      "tag": 0
+     },
+     "at": {
+      "x": 32,
+      "y": 16
+     },
+     "obstacle": "rope@32,16"
+    }
+   },
+   {
+    "n": 45,
+    "name": "js-runtime-L16-location",
+    "level": 16,
+    "x": 40,
+    "y": 72,
+    "goal": {
+     "kind": "clear-tag",
+     "tag": {
+      "level": 16,
+      "tag": 0
+     },
+     "at": {
+      "x": 32,
+      "y": 16
+     },
+     "obstacle": "rope@32,16"
+    }
+   },
+   {
+    "n": 46,
+    "name": "js-runtime-L16-exit",
+    "level": 16,
+    "x": 88.19999999999997,
+    "y": 42.549999999999855,
+    "goal": {
+     "kind": "reach-pit",
+     "pit": {
+      "tx": 12,
+      "ty": 3,
+      "x": 192,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 47,
+    "name": "js-runtime-L17-location",
+    "level": 17,
+    "x": 120,
+    "y": -43,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 128,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 48,
+    "name": "js-runtime-L17-location",
+    "level": 17,
+    "x": 120,
+    "y": 40,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 128,
+      "y": 16
+     }
+    }
+   },
+   {
+    "n": 49,
+    "name": "js-runtime-L17-exit",
+    "level": 17,
+    "x": 132.3355339059328,
+    "y": 27.664466094067286,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 50,
+    "name": "js-runtime-L16-exit",
+    "level": 16,
+    "x": 120,
+    "y": 56,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 352,
+      "y": 80
+     }
+    }
+   },
+   {
+    "n": 51,
+    "name": "js-runtime-L18-exit",
+    "level": 18,
+    "x": 24,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 176,
+      "y": 112
+     }
+    }
+   },
+   {
+    "n": 52,
+    "name": "js-runtime-L19-location",
+    "level": 19,
+    "x": 24,
+    "y": 152,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 96,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 53,
+    "name": "js-runtime-L19-location",
+    "level": 19,
+    "x": 24,
+    "y": 152,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 96,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 54,
+    "name": "js-runtime-L19-location",
+    "level": 19,
+    "x": 103.4015736936134,
+    "y": 90.04399770337372,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 96,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 55,
+    "name": "js-runtime-L19-exit",
+    "level": 19,
+    "x": 103.4015736936134,
+    "y": 71.19399770337378,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 56,
+    "name": "js-runtime-L20-location",
+    "level": 20,
+    "x": 200,
+    "y": 72,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 112,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 57,
+    "name": "js-runtime-L20-location",
+    "level": 20,
+    "x": 123.04999999999991,
+    "y": 56.649999999999906,
+    "goal": {
+     "kind": "clear-tag",
+     "tag": {
+      "level": 20,
+      "tag": 4
+     },
+     "at": {
+      "x": 32,
+      "y": 80
+     },
+     "obstacle": "lock@32,80"
+    }
+   },
+   {
+    "n": 58,
+    "name": "js-runtime-L20-exit",
+    "level": 20,
+    "x": 200.93649926132633,
+    "y": 23,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 59,
+    "name": "js-runtime-L20-exit",
+    "level": 20,
+    "x": 108.44854743428793,
+    "y": 55.014669545869616,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 16,
+      "y": 48
+     }
+    }
+   },
+   {
+    "n": 60,
+    "name": "js-runtime-L13-exit",
+    "level": 13,
+    "x": 104,
+    "y": 56,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 144
+     }
+    }
+   },
+   {
+    "n": 61,
+    "name": "js-runtime-L13-exit",
+    "level": 13,
+    "x": 104,
+    "y": 56,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 144
+     }
+    }
+   },
+   {
+    "n": 62,
+    "name": "js-runtime-L0-exit",
+    "level": 0,
+    "x": 56,
+    "y": 200,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 304,
+      "y": 176
+     }
+    }
+   },
+   {
+    "n": 63,
+    "name": "js-runtime-L12-exit",
+    "level": 12,
+    "x": 24,
+    "y": 88,
+    "goal": {
+     "kind": "reach-pit",
+     "pit": {
+      "tx": 36,
+      "ty": 43,
+      "x": 576,
+      "y": 688
+     }
+    }
+   },
+   {
+    "n": 64,
+    "name": "js-runtime-L21-exit",
+    "level": 21,
+    "x": 88,
+    "y": 5,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 80,
+      "y": 160
+     }
+    }
+   },
+   {
+    "n": 65,
+    "name": "js-runtime-L21-exit",
+    "level": 21,
+    "x": 88,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 80,
+      "y": 160
+     }
+    }
+   },
+   {
+    "n": 66,
+    "name": "js-runtime-L22-exit",
+    "level": 22,
+    "x": 104,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 0,
+      "y": 128
+     }
+    }
+   },
+   {
+    "n": 67,
+    "name": "js-runtime-L22-exit",
+    "level": 22,
+    "x": 104,
+    "y": 24,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 0,
+      "y": 128
+     }
+    }
+   },
+   {
+    "n": 68,
+    "name": "js-runtime-L25-location",
+    "level": 25,
+    "x": 136,
+    "y": 40,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 96,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 69,
+    "name": "js-runtime-L25-location",
+    "level": 25,
+    "x": 136,
+    "y": 40,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 96,
+      "y": 96
+     }
+    }
+   },
+   {
+    "n": 70,
+    "name": "js-runtime-L25-exit",
+    "level": 25,
+    "x": 104.77182540694795,
+    "y": 103.67817459305199,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 71,
+    "name": "js-runtime-L25-exit",
+    "level": 25,
+    "x": 104.77182540694795,
+    "y": 103.67817459305199,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 144,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 72,
+    "name": "js-runtime-L22-exit",
+    "level": 22,
+    "x": 24,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 192,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 73,
+    "name": "js-runtime-L22-exit",
+    "level": 22,
+    "x": 24,
+    "y": 136,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 192,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 74,
+    "name": "js-runtime-L29-location",
+    "level": 29,
+    "x": 24,
+    "y": 232,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 112,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 75,
+    "name": "js-runtime-L29-location",
+    "level": 29,
+    "x": 24,
+    "y": 232,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 112,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 76,
+    "name": "js-runtime-L29-exit",
+    "level": 29,
+    "x": 120.00192221088021,
+    "y": 69.54545436465268,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 112,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 77,
+    "name": "js-runtime-L31-exit",
+    "level": 31,
+    "x": 392,
+    "y": 120,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 160,
+      "y": 384
+     }
+    }
+   },
+   {
+    "n": 78,
+    "name": "js-runtime-L30-location",
+    "level": 30,
+    "x": 184,
+    "y": 56,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 64,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 79,
+    "name": "js-runtime-L30-location",
+    "level": 30,
+    "x": 184,
+    "y": 56,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 64,
+      "y": 64
+     }
+    }
+   },
+   {
+    "n": 80,
+    "name": "js-runtime-L30-exit",
+    "level": 30,
+    "x": 74.21785734247975,
+    "y": 74.71717205411588,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 224,
+      "y": 160
+     }
+    }
+   },
+   {
+    "n": 81,
+    "name": "js-runtime-L32-location",
+    "level": 32,
+    "x": 80,
+    "y": 128,
+    "goal": {
+     "kind": "encounter",
+     "at": {
+      "x": 80,
+      "y": 128
+     },
+     "drop": {
+      "item": "Fire"
+     },
+     "then": null
+    }
+   },
+   {
+    "n": 82,
+    "name": "js-runtime-L32-location",
+    "level": 32,
+    "x": 72,
+    "y": 120,
+    "goal": {
+     "kind": "encounter",
+     "at": {
+      "x": 80,
+      "y": 128
+     },
+     "drop": {
+      "item": "Fire"
+     },
+     "then": null
+    }
+   },
+   {
+    "n": 83,
+    "name": "js-runtime-L32-exit",
+    "level": 32,
+    "x": 80,
+    "y": 82.4,
+    "goal": {
+     "kind": "reach-pit",
+     "pit": {
+      "tx": 4,
+      "ty": 0,
+      "x": 64,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 84,
+    "name": "js-runtime-L30-exit",
+    "level": 30,
+    "x": 232,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 64,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 85,
+    "name": "js-runtime-L22-exit",
+    "level": 22,
+    "x": 104,
+    "y": 184,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 96,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 86,
+    "name": "js-runtime-L22-exit",
+    "level": 22,
+    "x": 104,
+    "y": 184,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 96,
+      "y": 0
+     }
+    }
+   },
+   {
+    "n": 87,
+    "name": "js-runtime-L21-exit",
+    "level": 21,
+    "x": 88,
+    "y": 152,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 0,
+      "y": 80
+     }
+    }
+   },
+   {
+    "n": 88,
+    "name": "js-runtime-L21-exit",
+    "level": 21,
+    "x": 88,
+    "y": 152,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 0,
+      "y": 80
+     }
+    }
+   },
+   {
+    "n": 89,
+    "name": "js-runtime-L23-exit",
+    "level": 23,
+    "x": 72,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 90,
+    "name": "js-runtime-L23-exit",
+    "level": 23,
+    "x": 72,
+    "y": 40,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 32
+     }
+    }
+   },
+   {
+    "n": 91,
+    "name": "js-runtime-L24-exit",
+    "level": 24,
+    "x": 104,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 144
+     }
+    }
+   },
+   {
+    "n": 92,
+    "name": "js-runtime-L24-exit",
+    "level": 24,
+    "x": 104,
+    "y": 88,
+    "goal": {
+     "kind": "reach-exit",
+     "exit": {
+      "x": 32,
+      "y": 144
+     }
+    }
+   },
+   {
+    "n": 93,
+    "name": "js-runtime-L12-location",
+    "level": 12,
+    "x": 40,
+    "y": 712,
+    "goal": {
+     "kind": "collect-placement",
+     "placement": {
+      "x": 320,
+      "y": 816
+     }
+    }
+   }
+  ]
+ }
+}
