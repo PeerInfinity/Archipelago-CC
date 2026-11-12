@@ -13,3 +13,4 @@
 45 L28 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +90f
 45 L28 Enemies/Drill.as:102 "Drill" 0 1.000 0.000
 45 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+45 L28 Puzzlements/Button.as:44 "Switch" -1 0.000 -0.448

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "meta",
+  "title": "Meta — a world that knows it is a generated game",
+  "licence": "MIT",
+  "credit": "Written for this repository by its authors (the Archipelago-CC project), under the repository's MIT licence (LICENSE). Hand-made for content sets R3 (concepts, text: the first theme a world can select) and R4 (art: the maze drawn from basic shapes, no image file).",
+  "layers": {
+    "concepts": "concepts/manifest.json",
+    "text": "text/manifest.json",
+    "art": "art/manifest.json"
+  }
+}

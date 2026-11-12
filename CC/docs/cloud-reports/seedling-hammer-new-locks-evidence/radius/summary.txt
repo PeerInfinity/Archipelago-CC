@@ -1,0 +1,51 @@
+75 requests over 65 legs
+new vs off {"none":74,"refusal->solved":1}
+all vs rew {"none":68,"plan->plan":2,"refusal->solved":4,"refusal->refusal(other text)":1}
+rew vs off {"none":70,"refusal->solved":3,"refusal->refusal(other text)":2}
+
+756/0 level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+   off: REFUSED 1ed88477afba work 643: solverBot(wasm-exit-98): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-98) reach-exit (112,112)->L99's corridor (attempt 1) — the segment's own work is bounded there, so the
+   new: REFUSED 1ed88477afba work 643: solverBot(wasm-exit-98): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-98) reach-exit (112,112)->L99's corridor (attempt 1) — the segment's own work is bounded there, so the
+   rew: SOLVED 562t b8dc566e4691 work 642 hits 2 [dodge,walk]
+   all: SOLVED 466t 659221757b38 work 186 hits 0 [dodge,walk]
+
+756/1 level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+   off: REFUSED cce3c0b9505c work 1567: solverBot(wasm-exit-98) reach-exit (112,112)->L99 -> kill -> chaser kill (jellyfish@176,72) by press: jellyfish@176,72 is still in the world after the whole 231-tick bound (0 guard step(s)); it stands at (146.1,70.0), 74.4 px from
+   new: REFUSED cce3c0b9505c work 1567: solverBot(wasm-exit-98) reach-exit (112,112)->L99 -> kill -> chaser kill (jellyfish@176,72) by press: jellyfish@176,72 is still in the world after the whole 231-tick bound (0 guard step(s)); it stands at (146.1,70.0), 74.4 px from
+   rew: SOLVED 562t b8dc566e4691 work 756 hits 2 [dodge,walk]
+   all: SOLVED 466t 659221757b38 work 186 hits 0 [dodge,walk]
+
+223/0 level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared
+   off: REFUSED e60764f9da17 work 32: solverBot(wasm-location-18) clear-tag {18,0} lock@144,112: 'kill' ran ({"verb":"kill","arm":"press","from":0,"ticks":420,"landings":[{"t":34,"id":"spinner@48,96","hits":1},{"t":128,"id":"spinner@48,96","hits":2},{"t":161,"id":"spi
+   new: SOLVED 421t e22dc9af5258 work 26 hits 0 [kill]
+   rew: REFUSED e60764f9da17 work 32: solverBot(wasm-location-18) clear-tag {18,0} lock@144,112: 'kill' ran ({"verb":"kill","arm":"press","from":0,"ticks":420,"landings":[{"t":34,"id":"spinner@48,96","hits":1},{"t":128,"id":"spinner@48,96","hits":2},{"t":161,"id":"spi
+   all: SOLVED 421t e22dc9af5258 work 26 hits 0 [kill]
+
+910/0 level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+   off: REFUSED 3b3af6105a70 work 644: solverBot(wasm-location-53): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site after 32 tick(s) of the segment's drive — the segment's own work is bounded there, so the solve stops here instead of overrun
+   new: REFUSED 3b3af6105a70 work 644: solverBot(wasm-location-53): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site after 32 tick(s) of the segment's drive — the segment's own work is bounded there, so the solve stops here instead of overrun
+   rew: REFUSED 3b3af6105a70 work 643: solverBot(wasm-location-53): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site after 32 tick(s) of the segment's drive — the segment's own work is bounded there, so the solve stops here instead of overrun
+   all: REFUSED bdd4b3354e4f work 643: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — puncher@136,96's bo
+
+910/1 level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+   off: REFUSED 9bbf3d32be62 work 2562: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (154.0,85.9), 48.1 px 
+   new: REFUSED 9bbf3d32be62 work 2562: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (154.0,85.9), 48.1 px 
+   rew: REFUSED 2d0691a9fd39 work 2561: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [puncher@136,96, jellyfish@184,160, jellyfish@152,168, jellyfish@144,192] and no stance kills one of them in 2 attempt(s), each rewou
+   all: SOLVED 799t 1a65d0116cca work 953 hits 0 [break,kill,walk]
+
+911/0 level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+   off: REFUSED 563bc5139bab work 642: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — deadline — the call
+   new: REFUSED 563bc5139bab work 642: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — deadline — the call
+   rew: REFUSED 563bc5139bab work 643: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — deadline — the call
+   all: SOLVED 606t 0af3161975c3 work 642 hits 0 [break,kill,walk]
+
+911/1 level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+   off: REFUSED 3966e1695259 work 2561: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — no stance derives f
+   new: REFUSED 3966e1695259 work 2561: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — no stance derives f
+   rew: REFUSED f79d86cc4644 work 2562: solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@184,160] and no stance kills one of them in 1 attempt(s), each rewound (KILLLOCK_CHASER_REWIND) — jellyfish@184,160 at (15
+   all: SOLVED 606t 0af3161975c3 work 745 hits 0 [break,kill,walk]
+off solved 59 refused 16 crash 0 with model hits: 753/1:1
+new solved 60 refused 15 crash 0 with model hits: 753/1:1
+rew solved 62 refused 13 crash 0 with model hits: 753/0:1 753/1:1 756/0:2 756/1:2
+all solved 66 refused 9 crash 0 with model hits: 753/0:1 753/1:1
+{"5":5,"18":3,"26":5,"39":3,"53":9,"60":2,"71":34,"78":2,"98":8,"99":2,"112":2}

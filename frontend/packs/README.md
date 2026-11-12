@@ -35,6 +35,24 @@ GitHub Pages serves only `frontend/`.
   item name, which is logic). HAND-MADE, under the repository's MIT licence (see `pack.json`). The same edit rule
   holds: `conceptTrialWorld.test.js` and `mazeRoom/mazeContent.test.js` hold the committed bytes.
 
+- `meta/` is the first THEME (content sets R3): a pack a world selects (`packs.json`'s `content` table, stack
+  `meta`; the pipeline panel's *Content set* row offers it), not a default. A world that knows it is a generated
+  game. It has a `concepts` and a `text` layer, and (content sets R4) an `art` layer of SHAPES ONLY, no image file:
+  one recipe for each of the maze's 14 tile-art keys (`mazeRoom/mazeTileArt.js` `MAZE_ART_KEYS`), drawn as a
+  diagram — a paper floor cell with a corner tick, a hatched slate wall, an orange marker for the player, one plain
+  mark per object — in a 20×20 box (the maze's `TILE_PX`, so a recipe draws 1:1 in play) with one stroke width. A
+  world that selects the theme draws its maze from them at play; `mazeRoom/mazeMetaArt.test.js` pins the recipes
+  (inside their box, states apart, every key through the draw seam) and the in-app row `meta-trial-maze-tile-art`
+  reads them off the canvas. The art is play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
+  `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
+  the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the
+  theme gives them no look, so the maze shows the default), and offers twelve `place` concepts for the text
+  adventure's rooms. It does NOT present water: water falls through to each substrate's default pack. ⛔ No line
+  may claim something untrue of the world: a place describes only what every generated room has. HAND-MADE, written
+  for this repository, MIT (see `pack.json`). `procgenPipeline/metaTrialWorld.test.js` and the committed
+  `frontend/presets/meta_trial/` hold its words; an edit here owes `make-seedling-spiral-room-preset.mjs
+  --state=meta-trial`.
+
 ⛔ **The seedling and archipelago packs are GENERATED. Do not edit them.** Regenerate with
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets
 are the `vendor/seedling` PNGs copied byte for byte, except the font sheet, which

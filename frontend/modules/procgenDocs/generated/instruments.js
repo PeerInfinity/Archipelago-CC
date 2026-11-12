@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 65,
-            "count": 104,
+            "count": 105,
             "id": "check"
         },
         {
@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 156,
-            "count": 206,
+            "browser": 157,
+            "count": 207,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 529,
-        "browser": 226,
-        "cited": 281,
-        "files": 547,
+        "blockStyle": 531,
+        "browser": 227,
+        "cited": 283,
+        "files": 549,
         "lineStyle": 18,
-        "withDocblock": 547,
-        "withFlags": 465
+        "withDocblock": 549,
+        "withFlags": 467
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2596,6 +2596,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-maze-world-map — **THE MAZE LAB'S SET ARM AS A 2D MAP, IN A REAL BROWSER** (maze world map, step A): `lab.html?source=set`, a region library and its overlay drawn by `mazeRoom/mazeSetMap.js` through the shared set view (`procgenCore/setEditorView.mountSetEditor`'s `overviewMap`).",
             "path": "scripts/procgen/check-maze-world-map.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-meta-trial-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "check-concept-trial-play.mjs",
+                    "name": "game"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Content sets R3: THE THEME WORLD, PLAYED. `check-concept-trial-play.mjs`, run on the committed `meta_trial` preset (`make-seedling-spiral-room-preset.mjs --state=meta-trial`, from `META_TRIAL_STATE`: the concept trial with `content: ['meta']`), under its own CI key, `gate: meta-trial-play`.",
+            "path": "scripts/procgen/check-meta-trial-play.mjs"
         },
         {
             "argvHelpers": [
@@ -17977,6 +18016,51 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rock-button.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "off"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rock-button — ⛓⛓⛓ seedling-fidelity-rockbutton (wave 41): A LANDED FALLROCK HOLDS A BUTTON DOWN (`CONTACT_FIDELITY.fallRockHoldsButton`), PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rock-button.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "check"
             ],
@@ -22173,6 +22257,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "seedling",
             "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md",
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],

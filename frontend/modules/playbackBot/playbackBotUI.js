@@ -25,6 +25,7 @@ import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { LoopModeRunner } from './loopModeRunner.js';
 import { DEFAULT_MANA_STRATEGY, MANA_STRATEGIES, MANA_STRATEGY_LABELS } from './loopDriver.js';
 import { WALK_ORDERS, WALK_ORDER_LABELS, chooseWalkTarget, frozenFindPath, hypotheticalFindPath, parseWalkOrder, rowMetaOf } from './walkOrder.js';
+import { routeEventsPlan } from './routeEvents.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -54,6 +55,9 @@ const TARGET_SOURCE_LABELS = Object.freeze({
 // ⛓ WALK ORDER (bot-route-chooser) — which sphere-log row the WALK loop goes to next (walkOrder.js): the listed order
 // (default — the walk loop's old code path, untouched), or the cheapest route by Restarts then region transitions.
 const LS_WALK_ORDER_KEY = 'playbackBot_walkOrder';
+// ⛓ ROUTE EVENTS (slice seedling-walk-route-events) — before a goal, walk to the game-state events the AP route collected
+// earlier that the goal's room reads (routeEvents.js). OFF by default ('true' = on): OFF, the walk is byte-identical.
+const LS_ROUTE_EVENTS_KEY = 'playbackBot_routeEvents';
 export { WALK_ORDERS };
 const COLLECT_NEVER = 'never';
 const COLLECT_ALWAYS = 'always';
@@ -190,7 +194,16 @@ export class PlaybackBotUI {
         isLoopModeActive = null,
         loopRunnerDeps = null,
         timer = null,
+        isConnected = null,
     } = {}) {
+        // ⛓ CONNECTED CHECKS (sdc-bot-connected-check) — `isConnected()` says the client is connected to a server. Then
+        // a check is marked locally only when the server's RoomUpdate echoes it (measured, upstream 0.6.9: the bot's
+        // flush answered 7 ms after the send, the echo arrived at +71 ms and the snapshot held it at +177 ms), so a
+        // check missing from the flushed snapshot is AWAITED (`_awaitingServerCheck`), not refused. Offline: as before.
+        this._isConnected = isConnected;
+        this._awaitingServerCheck = null;
+        // Checks whose flush has not answered (name → refused by the client meanwhile?).
+        this._checksInFlight = new Map();
         // ⛓ TARGET SOURCE 'reachable' — the bot drives the timer module's TimerLogic instead of the sphere queue:
         // `timer` is `{ begin, stop, quickCheck, isRunning, onRunningChanged(fn) → unsubscribe }` (the panel builds it
         // from the timer module's public functions). Play = Begin, Step = Quick Check, Instant = Play (the timer has
@@ -247,6 +260,13 @@ export class PlaybackBotUI {
         // ⛓ ROPE GOAL — the event location a goal-first BREAK step is walking to (`_takeBreakStep`), until a snapshot
         // holds it checked (`onSnapshotUpdated`) or the bot publishes another target. null = no break step pending.
         this._pendingBreak = null;
+        // ⛓ ROUTE EVENTS — the opt-in (LS), the slot's plan (goal → its route events; built with the queue), the
+        // (goal, event) pairs given up this run (no route / rule not held / the walk to it failed), and the steps taken.
+        this._routeEvents = loadRouteEventsFromLS();
+        this._routeEventPlan = null;
+        this._routeEventSkips = new Set();
+        this._routeEventSteps = [];
+        this._routeEventTarget = null;
         // The game-state event rows the queue left to the game (never walked eagerly), for readouts.
         this._leftToGame = [];
         this._getSphereData = getSphereData;
@@ -459,6 +479,12 @@ export class PlaybackBotUI {
         this._escapes = [];
         this._creditedEvents = new Set();
         this._pendingBreak = null;
+        this._awaitingServerCheck = null;
+        this._checksInFlight.clear();
+        this._routeEventPlan = null;
+        this._routeEventSkips = new Set();
+        this._routeEventSteps = [];
+        this._routeEventTarget = null;
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._cancelDirectTimer();
         this._directOnce = false;
@@ -746,9 +772,24 @@ export class PlaybackBotUI {
         // "8/23" with nothing checked). With a snapshot to ask, the check counts only once the snapshot holds it.
         const proxy = this._stateManagerProxy;
         if (proxy?.pingWorker && proxy?.getLatestStateSnapshot) {
+            // The client's connected refusal of THIS event (client:locationCheckRefused) comes after this call — its
+            // logic gate answers after an await — so it is noted against the in-flight check (onLocationCheckRefused).
+            this._checksInFlight.set(name, false);
             this._flushSnapshot().then(() => {
+                const refused = this._checksInFlight.get(name) === true;
+                this._checksInFlight.delete(name);
                 const checked = proxy.getLatestStateSnapshot()?.checkedLocations;
                 if (Array.isArray(checked) && !checked.includes(name)) {
+                    // ⛓ CONNECTED CHECKS — sent, not yet echoed: wait for the snapshot that holds it (onSnapshotUpdated)
+                    // unless the client refused it (then it never lands: blocked, as offline).
+                    if (this._connected() && !refused) {
+                        this._awaitingServerCheck = name;
+                        if (this._walking()) {
+                            this._setStatus(`waiting for the server to confirm the check of "${name}"`);
+                            this._render();
+                        }
+                        return;
+                    }
                     if (this._walking()) {
                         this._setStatus(`blocked: the check of "${name}" did not land`);
                         this._render();
@@ -762,7 +803,37 @@ export class PlaybackBotUI {
         this._acceptLocationCheck(name);
     }
 
+    /** ⛓ CONNECTED CHECKS — whether the client is connected to a server (false when no predicate is wired). */
+    _connected() {
+        try {
+            return !!this._isConnected?.();
+        } catch (_e) {
+            return false;
+        }
+    }
+
+    /**
+     * ⛓ CONNECTED CHECKS — `client:locationCheckRefused`: the connected logic gate refused a check, so nothing was
+     * sent and it never lands. An awaited check parks the bot as offline's refusal does; one whose flush has not
+     * answered yet is marked for it (onLocationCheck reads `_checksInFlight`). Any other refusal (a user click the
+     * bot never sent) is not the bot's.
+     */
+    onLocationCheckRefused(data) {
+        const name = data?.locationName;
+        if (!name) return;
+        if (this._awaitingServerCheck === name) {
+            this._awaitingServerCheck = null;
+            if (this._walking()) {
+                this._setStatus(`blocked: the check of "${name}" did not land`);
+                this._render();
+            }
+            return;
+        }
+        if (this._checksInFlight.has(name)) this._checksInFlight.set(name, true);
+    }
+
     _acceptLocationCheck(name) {
+        if (this._awaitingServerCheck === name) this._awaitingServerCheck = null;
         this._checkedSoFar.add(name);
         // If this matches the pending manual target, the route is
         // complete — clear it.
@@ -841,6 +912,7 @@ export class PlaybackBotUI {
         this._rowMeta = null;
         this._chosen = null;
         this._leftToGame = sphereData.flatMap((e) => (e?.locations ?? []).filter((n) => events.has(n)));
+        this._routeEventPlan = null;
         this._cursor = 0;
         this._lastPublishedTarget = null;
     }
@@ -900,6 +972,25 @@ export class PlaybackBotUI {
         saveWalkOrderToLS(order);
         if (this._walkOrderSelect) this._walkOrderSelect.value = order;
         this._render();
+    }
+
+    /** ⛓ ROUTE EVENTS — is the step on (the opt-in; OFF by default)? */
+    getRouteEvents() { return this._routeEvents; }
+
+    /**
+     * ⛓ ROUTE EVENTS — turn the step on or off (persisted). A running walk keeps going: the next re-plan reads it.
+     */
+    setRouteEvents(on) {
+        this._routeEvents = on === true;
+        saveRouteEventsToLS(this._routeEvents);
+        if (this._routeEventsCheckbox) this._routeEventsCheckbox.checked = this._routeEvents;
+        this._render();
+        return this._routeEvents;
+    }
+
+    /** ⛓ ROUTE EVENTS — the steps taken this run (`{goal, event, eventId, how}`) and the pairs given up (`goal|event`). */
+    getRouteEventState() {
+        return { on: this._routeEvents, steps: this._routeEventSteps.map((s) => ({ ...s })), skipped: [...this._routeEventSkips] };
     }
 
     /** The run's route metrics: Restarts taken, region transitions walked, legs (targets) begun. */
@@ -1205,6 +1296,7 @@ export class PlaybackBotUI {
         const t = data.target ?? {};
         const tail = t.kind === 'tile' ? `${t.x},${t.y}` : `${t.name}`;
         this._lastPublishedTarget = null;
+        if (this._giveUpRouteEventWalk(t, reason)) { this._render(); return; }
         if (data.escape && this._escapeInsideSolid(data.escape)) { this._render(); return; }
         this._setStatus(`error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${t.kind ?? 'target'} "${tail}" — ${reason}`
             + (data.escape ? ` — ${escapeStopWords(data.escape, this._currentRegion, this._escapeFlag())}` : ''));
@@ -1357,6 +1449,11 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        // ⛓ ROUTE EVENTS (opt-in) — the route cleared an event earlier that the goal's room reads: walk to it first.
+        if (this._routeEvents && this._takeRouteEventStep(head, progress, sphereTag)) {
+            this._render();
+            return;
+        }
         if (head.regionName === this._currentRegion) {
             this._setStatus(`${sphereTag}walking to "${head.locationName}" ${progress}`);
             this._publishWalkTo({ kind: 'location', name: head.locationName });
@@ -1479,6 +1576,109 @@ export class PlaybackBotUI {
     }
 
     /**
+     * ⛓ ROUTE EVENTS — the first of `head`'s route events (`routeEvents.routeEventsPlan`: collected by the AP route
+     * before it, read by its room) the walk does not hold yet: not in the snapshot's inventory or checked locations,
+     * not credited by the bot's own hops, not given up for this goal. null = none (the walk goes on as today).
+     */
+    _routeEventFor(head) {
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        if (!this._routeEventPlan) {
+            const events = gameStateEventsOf(rules, playerId);
+            this._routeEventPlan = events.length
+                ? routeEventsPlan({ rules, playerId, sphereData: this._getSphereData?.() ?? [], events })
+                : new Map();
+        }
+        const list = this._routeEventPlan.get(head.locationName);
+        if (!list?.length) return null;
+        const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
+        const inventory = snapshot?.inventory ?? {};
+        const checked = new Set(Array.isArray(snapshot?.checkedLocations) ? snapshot.checkedLocations : []);
+        return list.find((e) => Number(inventory[e.item] ?? 0) <= 0 && !checked.has(e.name) && !this._creditedEvents.has(e.item)
+            && !this._routeEventSkips.has(`${head.locationName}|${e.name}`)) ?? null;
+    }
+
+    /**
+     * ⛓ ROUTE EVENTS — one step toward `head`'s first unheld route event: in its region, a BREAK step (`_takeBreakStep`:
+     * walk to the event location, the snapshot that holds it checked re-plans); elsewhere the first move of the route
+     * there (`_planRoute`: an exit, a Restart, or a goal-first break the route itself needs). An event whose rule the
+     * walk does not hold, or with no route to it, is given up for this goal BY NAME (logged) and the next is tried;
+     * none left = false (the caller walks to the head as today).
+     */
+    _takeRouteEventStep(head, progress, sphereTag) {
+        for (let ev = this._routeEventFor(head); ev; ev = this._routeEventFor(head)) {
+            const skip = (why) => {
+                this._routeEventSkips.add(`${head.locationName}|${ev.name}`);
+                this._log.push(`route event "${ev.name}" before "${head.locationName}" given up: ${why}`);
+            };
+            const toward = `"${head.locationName}" ${progress} (the AP route cleared it first and that room reads it)`;
+            if (!this._eventRuleHolds(ev)) { skip('its rule does not hold'); continue; }
+            if (ev.region === this._currentRegion) {
+                this._noteRouteEventStep(head, ev, 'break');
+                this._routeEventTarget = { goal: head.locationName, name: ev.name };
+                this._takeBreakStep({ region: ev.region, exitUsed: null, event: ev }, toward, sphereTag);
+                return true;
+            }
+            const { route: path, why } = this._planRoute(this._currentRegion, ev.region);
+            if (!path) { skip(why ?? `no route from ${this._currentRegion} to ${ev.region}`); continue; }
+            const step = path.steps[1];
+            if (isRestartStep(step)) {
+                this._noteRouteEventStep(head, ev, 'restart');
+                const halt = () => { this._isActive = false; this._dispatch('stop'); };
+                if (!this._takeRestart(`${sphereTag}restarting (no walk from ${this._currentRegion}) → ${ev.region} for "${ev.name}"`, halt)) halt();
+                return true;
+            }
+            if (isBreakStep(step)) {
+                this._noteRouteEventStep(head, ev, 'route-break');
+                this._takeBreakStep(step, `${ev.region} for "${ev.name}", before ${toward}`, sphereTag);
+                return true;
+            }
+            if (!step?.exitUsed) { skip(`the route to ${ev.region} has a step without an exit`); continue; }
+            this._noteRouteEventStep(head, ev, 'route');
+            this._noteHopCredits(step);
+            this._setStatus(`${sphereTag}routing via "${step.exitUsed}" → ${ev.region} for ${ev.eventId ?? ev.name} first — before ${toward}`);
+            this._publishWalkTo({ kind: 'exit', name: step.exitUsed });
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * ⛓ ROUTE EVENTS — the walk to a route event's location was refused (synchronously, or later by `walkFailed`): the
+     * step is OPTIONAL (no rule names the event), so it is given up for that goal BY NAME and the walk re-plans — the
+     * goal is then walked as it is with the step off. false = not a route-event walk (the caller's named stop).
+     */
+    _giveUpRouteEventWalk(target, reason) {
+        const at = this._routeEventTarget;
+        if (!at || target?.kind !== 'location' || target.name !== at.name || !this._walking()) return false;
+        this._routeEventTarget = null;
+        this._pendingBreak = null;
+        this._lastPublishedTarget = null;
+        this._routeEventSkips.add(`${at.goal}|${at.name}`);
+        this._log.push(`route event "${at.name}" before "${at.goal}" given up: the walk to it failed — ${reason}`);
+        this._publishNextWalkTo();
+        return true;
+    }
+
+    /** ⛓ ROUTE EVENTS — does the event's own rule hold now (the snapshot, with the bot's credited events held)? */
+    _eventRuleHolds(ev) {
+        if (!ev.rule) return true;
+        const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
+        const staticData = this._getStaticData?.() ?? null;
+        if (!snapshot || !staticData) return false;
+        const inventory = { ...(snapshot.inventory ?? {}) };
+        for (const n of this._creditedEvents) inventory[n] = Math.max(1, Number(inventory[n] ?? 0));
+        try { return evaluateRule(ev.rule, createSnapshotInterface({ ...snapshot, inventory }, staticData)) === true; } catch { return false; }
+    }
+
+    /** ⛓ ROUTE EVENTS — record a step (one row per (goal, event, how), in order) for readouts and rows. */
+    _noteRouteEventStep(head, ev, how) {
+        const last = this._routeEventSteps[this._routeEventSteps.length - 1];
+        if (last && last.goal === head.locationName && last.event === ev.name && last.how === how) return;
+        this._routeEventSteps.push({ goal: head.locationName, event: ev.name, eventId: ev.eventId ?? null, how });
+    }
+
+    /**
      * ⛓ ROPE GOAL — `stateManager:snapshotUpdated`: the re-plan after a goal-first BREAK step. The game's flag collects
      * the event as a LOCAL check (`seedlingRegionGlue._eventCollect`), never a `user:locationCheck`, so neither of the
      * two events that advance the bot (`onLocationCheck`, `onRegionMove`) comes — the walk ended on the broken obstacle
@@ -1486,6 +1686,15 @@ export class PlaybackBotUI {
      * The snapshot that holds the event location checked is the signal; any other snapshot is a no-op.
      */
     onSnapshotUpdated() {
+        // ⛓ CONNECTED CHECKS — the server's echo marked the awaited check: it landed (once; _acceptLocationCheck clears it).
+        const awaited = this._awaitingServerCheck;
+        if (awaited) {
+            const held = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
+            if (Array.isArray(held) && held.includes(awaited)) {
+                this._log.push(`"${awaited}" confirmed by the server`);
+                this._acceptLocationCheck(awaited);
+            }
+        }
         const name = this._pendingBreak;
         if (!name || !this._walking()) return;
         const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
@@ -1610,6 +1819,7 @@ export class PlaybackBotUI {
     _publishWalkTo(target) {
         // ⛓ ROPE GOAL — any other target ends the pending BREAK step (the route moved on without it).
         if (this._pendingBreak !== null && !(target.kind === 'location' && target.name === this._pendingBreak)) this._pendingBreak = null;
+        if (this._routeEventTarget && !(target.kind === 'location' && target.name === this._routeEventTarget.name)) this._routeEventTarget = null;
         // De-dupe identical consecutive walkTo: an event mid-leg can
         // re-enter _publishNextWalkTo without changing the head, and
         // re-issuing the same walkTo would just have the controller
@@ -1665,6 +1875,7 @@ export class PlaybackBotUI {
             // so (`lastRefusal`): e.g. a generated Seedling room under the wasm
             // runtime, which has no feet. Without one, the router's case.
             const why = this._resolveController()?.lastRefusal;
+            if (this._giveUpRouteEventWalk(target, typeof why === 'string' && why ? why : 'the controller has no target for it')) return;
             this._setStatus(typeof why === 'string' && why
                 ? `error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${target.kind} "${tail}" — ${why}`
                 : `error: ${this._currentRegion ?? '?'} has no tile for `
@@ -1853,6 +2064,7 @@ export class PlaybackBotUI {
         // playbackBot/index.js via isInterceptEnabled().
         root.appendChild(this._mountTargetSource());
         root.appendChild(this._mountWalkOrder());
+        root.appendChild(this._mountRouteEvents());
         root.appendChild(this._mountInterceptToggle());
         root.appendChild(this._mountManaStrategy());
 
@@ -1975,6 +2187,23 @@ export class PlaybackBotUI {
         select.addEventListener('change', () => this.setManaStrategy(select.value));
         wrap.appendChild(select);
         this._manaStrategySelect = select;
+        return wrap;
+    }
+
+    /** ⛓ ROUTE EVENTS — the opt-in checkbox (OFF by default). */
+    _mountRouteEvents() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-route-events';
+        wrap.title = 'Before a location, walk to the game-state events the solution path cleared earlier that its room reads.';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = this._routeEvents;
+        cb.addEventListener('change', () => this.setRouteEvents(cb.checked));
+        wrap.appendChild(cb);
+        const text = document.createElement('span');
+        text.textContent = ' Clear the route\'s events first';
+        wrap.appendChild(text);
+        this._routeEventsCheckbox = cb;
         return wrap;
     }
 
@@ -2255,6 +2484,20 @@ function loadWalkOrderFromLS() {
     } catch (_e) {
         return WALK_ORDERS.inOrder;
     }
+}
+
+function loadRouteEventsFromLS() {
+    try {
+        return typeof localStorage !== 'undefined' && localStorage.getItem(LS_ROUTE_EVENTS_KEY) === 'true';
+    } catch (_e) {
+        return false;
+    }
+}
+
+function saveRouteEventsToLS(on) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_ROUTE_EVENTS_KEY, on ? 'true' : 'false');
+    } catch (_e) { /* storage unavailable */ }
 }
 
 function saveWalkOrderToLS(order) {

@@ -275,6 +275,87 @@ Around the panel:
 - The **editor** (`mazeRoomEditor.js`) edits a loaded region in place: floor/wall, entrance, items (with AP-canonical location names), obstacles, block, button (with its `buttonLib` entry and `door_A{n}` registration) and flag. Every brush produces a closed op (`applyEditOp`), so an edit list replays. Exits and logic gates are not in its palette.
 - The canvas draw is `mazeRoomRender.drawWorld`, shared with the lab page; see [its `view` contract](./maze-lab.md#drawworlds-view-contract).
 
+## Tile art from a content pack (`mazeTileArt.js`)
+
+A world's content stack can supply the maze's tiles. The art resolves by key at play time, so a theme changes how the maze looks and never its logic or its compiled document.
+
+**The key table** (`MAZE_ART_KEYS`) is the maze's declaration of what art it can show: one art key in the `maze` namespace per thing the plain painter draws in a `COLORS` colour.
+
+| Thing | Key | Drawn today as (the fallback) |
+|---|---|---|
+| `floor` | `maze:tile/floor` | the base layer's `COLORS.floor` fill |
+| `wall` | `maze:tile/wall` | the base layer's `COLORS.wall` fill |
+| `exit` | `maze:tile/exit` | an open exit's `COLORS.exit` fill (a closed one stays `exitBlocked`) |
+| `entrance` | `maze:tile/entrance` | a `COLORS.entrance` border |
+| `manaTile` | `maze:tile/mana` | a diamond labelled M, faded once collected (the art fades the same way) |
+| `player` | `maze:character/player` | a `COLORS.player` disc; the facing tick is drawn over either |
+| `trap` | `maze:object/trap` | an arrow trap's strip; its lane stays the armed/silent tint |
+| `block` / `blockStruck` / `blockDormant` | `maze:object/block`, `…/block-struck`, `…/block-dormant` | a pushable block by its kind's look |
+| `button` / `buttonDown` | `maze:object/button`, `…/button-down` | a ring, filled while down |
+| `pulser` | `maze:object/pulser` | a pulser's body; its ring stays the armed/silent signal |
+| `pull` | `maze:object/pull` | a pull's trap cell; its disc stays the live/inert tint |
+
+The other `COLORS` keys are state signals or edges and get no key: `exitBlocked`, `locationBlocked`, `grid`, `laneArmed`, `laneSilent`, `pullLive`, `pullInert`, `pullMouth`, `blockEdge`. Items, doors and concept gates are drawn from the world document (their row's colour and symbol), not from `COLORS`, and are not in the table. `mazeTileArt.test.js` holds the table against `COLORS`: a new colour must be a thing's or a stated signal.
+
+**The seam.** The painter asks `drawTileArt(ctx, tileArt, thing, …)` once per thing. If the art has the key and its sheet decoded, it draws the key's frame 0 scaled to the cell and the painter skips that thing's fill. Otherwise it draws nothing and the painter does exactly what it did before. "Not available" covers no art loaded, a key absent from the stack, and a sheet that did not decode, and none of them refuses or leaves a blank cell. `drawWorld` reads the art from the view's `tileArt` field; `null` is today's draw, op for op.
+
+**The play-time load.** On each render the panel works out the world's stack: `effectiveContentStack` over the maze entry's id and the loaded slot's `procgen_metadata[p].content`, the same substrate set the APWorld editor's region job uses. `loadMazeTileArt(stack, {base, readJson, decode})` loads only the `art` layer of each pack (`loadPackStack(ids, {only: ['art']})`), builds `createArtLibrary`, and decodes only the sheets the maze's keys draw from. It loads once per stack and re-renders when the art lands. A plain world's stack is the maze's own default pack (`frontend/packs/maze/`, declared as `defaultContentPack`). That pack carries no `art` layer, so its `pack.json` is read once, nothing is decoded and the maze draws as before. The same holds for an empty stack or any stack without a maze key. A later pack that overrides `maze:tile/wall` wins: this is the pack stack's own `mergeKeyed`, and there is no second merge.
+
+**Beside the Seedling skin.** On a Seedling-atlas world (`seedlingSkinFor` answers a level) the panel passes no tile art, with the "Seedling art" toggle on or off, and `drawWorld` ignores the field under a `seedlingSkin`.
+
+**A theme that reskins the maze** carries an `art` layer whose `sprites` use these keys, and the world names the pack in its content list:
+
+```jsonc
+// frontend/packs/<id>/art/manifest.json
+{ "schema_version": 1,
+  "sheets": { "tiles": { "file": "sheets/tiles.png", "w": 32, "h": 16 } },
+  "sprites": {
+    "maze:tile/floor": { "sheet": "tiles", "fw": 16, "fh": 16, "only": [0] },
+    "maze:tile/wall":  { "sheet": "tiles", "fw": 16, "fh": 16, "only": [1] } } }
+```
+
+A theme needs no image at all: the same keys may be **shapes** (rect, circle, line and polygon, each with a fill and/or stroke), rasterised once at load and drawn like a one-frame sprite. The format is in [the art library's README](../../../../frontend/modules/artLibrary/README.md#shapes-art-with-no-image-file).
+
+```jsonc
+// a theme with no image: the wall a dark slab, the player a blue disc with two eyes
+{ "schema_version": 1,
+  "shapes": {
+    "maze:tile/wall": { "w": 16, "h": 16, "draw": [ { "rect": [0, 0, 16, 16], "fill": "#30343c" } ] },
+    "maze:character/player": { "w": 16, "h": 16, "draw": [
+      { "circle": [8, 8, 6], "fill": "#4aa8ff" },
+      { "circle": [6, 7, 1], "fill": "#000000" }, { "circle": [10, 7, 1], "fill": "#000000" } ] } } }
+```
+
+**A worked example: the `meta` theme** ([`frontend/packs/meta/art/manifest.json`](../../../../frontend/packs/meta/art/manifest.json), content sets R4) is the manifest to copy. It carries all 14 keys as shapes and no image. Each recipe is a few primitives in a 20×20 box, which is `TILE_PX`, so the recipe draws 1:1 in play with no scaling blur. Every stroke is 2 wide, and a short `note` on each entry says what the recipe is meant to look like. Two of its entries:
+
+```jsonc
+"maze:tile/wall": { "w": 20, "h": 20, "note": "a slate block ruled with diagonal hatching …", "draw": [
+  { "rect": [0, 0, 20, 20], "fill": "#4c5464" },
+  { "line": [0, 10, 10, 0], "stroke": "#a0a8b8", "width": 2 },
+  { "line": [0, 20, 20, 0], "stroke": "#a0a8b8", "width": 2 },
+  { "line": [10, 20, 20, 10], "stroke": "#a0a8b8", "width": 2 } ] },
+"maze:object/button-down": { "w": 20, "h": 20, "note": "a button, DOWN: …", "draw": [
+  { "rect": [3, 3, 14, 14], "fill": "#ffd75f", "stroke": "#2e3440", "width": 2 },
+  { "circle": [10, 10, 1.5], "fill": "#2e3440" } ] }
+```
+
+What a theme author has to respect is what the painter draws **over or around** a keyed thing, because those are state signals and no theme replaces them. Read `drawWorld` and `drawLiveMarkers` for each key:
+
+| key | drawn over or around it, whatever the theme |
+|---|---|
+| `maze:tile/floor`, `maze:tile/wall` | the base layer, drawn first; the grid lines (`COLORS.grid`) go over every cell, so a floor or wall recipe should fill its whole box |
+| `maze:tile/exit` | only an OPEN exit is keyed; a closed one stays the `COLORS.exitBlocked` fill, so the open recipe must not use that red |
+| `maze:character/player` | the facing tick, a `COLORS.wall` (black) square on the side faced, about 0.3–0.46 of a cell from the centre, so the recipe's edge must not be black |
+| `maze:object/trap` | its lane's armed/silent tint |
+| `maze:object/pulser` | a ring of radius 0.42 cell stroked in the armed/silent colour; the body must sit inside it, and a backdrop under the ring keeps the grey (silent) ring readable on a wall |
+| `maze:object/pull` | the disc's live/inert tint on the cells around it |
+| `maze:object/button`, `button-down` | the player or block standing on a DOWN button, so its plate should show around them |
+| `maze:tile/mana` | the painter fades it to 0.25 alpha once collected |
+
+`mazeRoom/mazeMetaArt.test.js` is the test to copy for a new theme. It checks that the manifest parses, that its keys come from the table (with the omitted ones listed in one table, each with a reason), and that each recipe stays inside its box. It also checks that the block and button states stay apart, and that the real stack, with a stub rasteriser, draws every carried key from `"<pack>#<key>"` while the signals above stay unchanged. `CC/docs/cloud-reports/content-sets-r4/contact-sheet.html` draws each thing default beside themed, using the real painter, for review.
+
+A key the theme does not carry falls through to an earlier pack in the stack, or to `COLORS`. A later pack wins a key whichever kind either pack used. The module is presentation only and sits outside the maze engine's import closure (`seedlingDerivedRuleTable.js --print-engine-closure`); `mazeTileArt.test.js` asserts this. The in-app row `maze-tile-art-from-pack-stack` (`fast`) reads the canvas pixels under a fixture stack, and `meta-trial-maze-tile-art` (`fast`) reads them on the committed `meta_trial` world with no test seam.
+
 ## A real game's map as maze regions
 
 The maze can also be handed a world. The region atlas's **maze projection** (`procgenPipeline/regionAtlasMazeProjection.js`, plan [`region-atlas-plan.md`](../../../../CC/docs/plans/region-atlas-plan.md), preset `seedling_atlas_maze`) compiles a marked real-game region into one maze world per AP sub-region: zero-item-reachable cells are floor, the rest wall; a crossing between sub-regions is an exit tile carrying a `clear_set_type: 'rule'` obstacle with the atlas's access rule; a location is an item overlay with its AP name. Nothing in `mazeRoom/` knows about it — the output is ordinary sidecars.
