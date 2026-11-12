@@ -3156,7 +3156,7 @@ export function withSubwalkAncestorCrossing(enabled, fn) {
 }
 
 /** The signal a sub-walk throws to the enclosing crossing walk `frame` (never a refusal: only `frame` catches it). */
-class AncestorCrossing extends Error {
+export class AncestorCrossing extends Error {
     constructor(frame, transition) {
         super(`a sub-walk crossed to level ${transition.to_level}: ${frame.what}'s crossing`);
         this.frame = frame;
@@ -3183,7 +3183,7 @@ function withCrossingFrame(frames, opts, fn) {
  * `SUBWALK_ANCESTOR_CROSSING` ON: a walk's drive threw (`ownCrossTo` its own, `frames` the open crossing walks). When
  * the run crossed on this tick into the level an enclosing crossing walk names, throws `AncestorCrossing` to it.
  */
-function subwalkAncestorCrossing(run, perTick, frames, ownCrossTo, what) {
+export function subwalkAncestorCrossing(run, perTick, frames, ownCrossTo, what) {
     if (!SUBWALK_ANCESTOR_CROSSING.enabled || frames.length === 0) return;
     const tr = run.transitions.at(-1);
     if (!tr || tr.t !== perTick.length || run.level !== tr.to_level) return;

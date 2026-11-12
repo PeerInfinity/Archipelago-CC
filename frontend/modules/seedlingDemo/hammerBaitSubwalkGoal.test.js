@@ -7,8 +7,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { SUBWALK_ANCESTOR_CROSSING, SUBWALK_ANCESTOR_CROSSING_COUNTS, SUBWALK_ANCESTOR_CROSSING_DEFAULT,
-    withSubwalkAncestorCrossing } from './solverBot.js';
+import { AncestorCrossing, SUBWALK_ANCESTOR_CROSSING, SUBWALK_ANCESTOR_CROSSING_COUNTS,
+    SUBWALK_ANCESTOR_CROSSING_DEFAULT, subwalkAncestorCrossing, withSubwalkAncestorCrossing } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { generateSeedlingLevel, seedlingOracle } from './procgenSeedling.js';
 import { PRE_SWORD_PALETTE } from './procgenPalette.js';
@@ -46,4 +46,40 @@ describe('hammer-phase BAIT-SUBWALK-GOAL — `SUBWALK_ANCESTOR_CROSSING`', () =>
         expect(SUBWALK_ANCESTOR_CROSSING_COUNTS.handed).toEqual([]);
         expect(SUBWALK_ANCESTOR_CROSSING_COUNTS.unmatched).toEqual([]);
     }, 240000);
+
+    /**
+     * The CONTROL: a sub-walk's crossing that does not satisfy an enclosing walk is the refuted corridor it was (no
+     * throw; an `unmatched` row ON). No route-survey step has one (0 in 1254 step solves, vanilla and ER): doors are
+     * planner obstacles and only the goal's own pit is exempt, so the check is asked here on a stub run.
+     */
+    it('a crossing into a level no enclosing walk names, or by another door, is left to the walk; OFF asks nothing', () => {
+        const run = { transitions: [{ t: 10, from_level: 1, to_level: 2 }], level: 2, state: { x: 8, y: 8 } };
+        const perTick = new Array(10).fill([]);
+        const door = (level, x, y) => ({ crossTo: { level, arrival: { x, y } }, what: `exit->L${level}` });
+        const pit = (level) => ({ crossTo: { level, pit: { tx: 0, ty: 0 }, arrival: { x: 0, y: 0 } }, what: `pit->L${level}` });
+        withSubwalkAncestorCrossing(false, () => {
+            expect(() => subwalkAncestorCrossing(run, perTick, [door(2, 8, 8)], null, 'sub')).not.toThrow();
+        });
+        withSubwalkAncestorCrossing(true, () => {
+            SUBWALK_ANCESTOR_CROSSING_COUNTS.handed.length = 0;
+            SUBWALK_ANCESTOR_CROSSING_COUNTS.unmatched.length = 0;
+            // another level; the right level by another door; the crossing not on this tick; no enclosing walk
+            expect(() => subwalkAncestorCrossing(run, perTick, [door(3, 8, 8)], null, 'sub a')).not.toThrow();
+            expect(() => subwalkAncestorCrossing(run, perTick, [door(2, 16, 8)], null, 'sub b')).not.toThrow();
+            expect(() => subwalkAncestorCrossing(run, new Array(11).fill([]), [door(2, 8, 8)], null, 'sub c')).not.toThrow();
+            expect(() => subwalkAncestorCrossing(run, perTick, [], null, 'sub d')).not.toThrow();
+            // the walk's OWN crossing frame is `drive`'s question, not this one
+            expect(() => subwalkAncestorCrossing(run, perTick, [door(2, 8, 8)], door(2, 8, 8).crossTo, 'sub e')).not.toThrow();
+            expect(SUBWALK_ANCESTOR_CROSSING_COUNTS.unmatched.map((u) => u.sub)).toEqual(['sub a', 'sub b', 'sub e']);
+            expect(SUBWALK_ANCESTOR_CROSSING_COUNTS.handed).toEqual([]);
+            // the nearest enclosing walk that names the level: a door by its arrival, a pit by its level
+            const frames = [pit(2), door(5, 0, 0)];
+            let thrown = null;
+            try { subwalkAncestorCrossing(run, perTick, frames, null, 'sub f'); } catch (e) { thrown = e; }
+            expect(thrown).toBeInstanceOf(AncestorCrossing);
+            expect(thrown.frame).toBe(frames[0]);
+            expect(thrown.transition).toBe(run.transitions[0]);
+            expect(SUBWALK_ANCESTOR_CROSSING_COUNTS.handed).toMatchObject([{ t: 10, from: 1, to: 2, sub: 'sub f', depth: 2 }]);
+        });
+    });
 });
