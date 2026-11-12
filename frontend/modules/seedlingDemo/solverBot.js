@@ -5252,6 +5252,34 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
             }, ...derived.rejected, ...opener.rejected],
         };
     }
+    if (!derived.plan && derived.resting) {
+        // ⛓ hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF): the dwell arm above, with a resting Solid as the holder
+        // (`restingHolderOn`). No stance: the player waits out the fade wherever the walk left them.
+        const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+            `solverBot weigh/resting (${obstacle.id})`);
+        const hold = deriveHold(run, resolvedPresser, opener);
+        const r = derived.resting;
+        return {
+            strategy: 'weigh',
+            postCondition: 'press',
+            dwellOnly: true,
+            target: { x: presser.x, y: presser.y },
+            resting: { solid: r.solid, tag: r.tag, tile: { ...r.tile }, sinceTick: null },
+            dwell: {
+                ticks: hold.ticks,
+                until: hold.until,
+                why: `${r.solid} (a resting \`${r.tag}\`) holds ${presser.tag}@${presser.x},${presser.y} down and `
+                    + 'never moves again this visit — `Button.update` re-collides `["Player","Enemy","Solid"]` EVERY '
+                    + 'tick (`Button.as:27-39`). There is no lean to order and no cell to stand in, so this is the '
+                    + 'weigh MINUS its shove: the player waits out the fade wherever the walk left them.',
+            },
+            rejected: [{
+                option: 'hold',
+                why: `the parent's fallback would put the stance on ${presser.tag}@${presser.x},${presser.y}'s own `
+                    + `cell, which ${r.solid} occupies`,
+            }, ...derived.rejected, ...opener.rejected],
+        };
+    }
     if (!derived.plan && derived.corpse) {
         // ⛓ fidelity CORPSEBUMP D2: the corpse is the holder (`deriveCorpseWeigh`); `execWeigh`'s corpse arm walks.
         const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
@@ -5866,10 +5894,78 @@ function deriveWeighSource(run, onto, contacts, blocked = [], { liveBag = null }
     // ⛓ L40BK2 (`weighHypothesisChain`): `liveBag` is guard (iii)'s hypothesis bag (absent: the live world, as before).
     const derived = liveBag ? deriveWeigh(run, onto, contacts, blocked, { liveBag })
         : deriveWeigh(run, onto, contacts, blocked);
+    // ⛓ hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF): a resting Solid already holding the presser is a third holder.
+    if (RESTING_HOLDER.enabled && !derived.plan && !derived.parked) {
+        const resting = restingHolderOn(run, onto);
+        if (resting) return { ...derived, resting, rejected: [...derived.rejected, resting.rejected] };
+    }
     if (!CONTACT_FIDELITY.corpseBumpWeigh || derived.plan || derived.parked) return derived;
     const c = liveBag ? deriveCorpseWeigh(run, onto, blocked, { liveBag, contacts })
         : deriveCorpseWeigh(run, onto, blocked);
     return { ...derived, ...(c.plan ? { corpse: c.plan } : {}), rejected: [...derived.rejected, ...c.rejected] };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF) — **A PRESSER A RESTING SOLID ALREADY HOLDS IS
+ * DISCHARGED AFTER ITS FADE.** The game: `Button.update` collides `["Player","Enemy","Solid"]` every tick
+ * (`Button.as:16,29-39`), and a landed `FallRock`/`FallRockLarge` (or a set `Moonrock`) is `type = "Solid"` that never
+ * moves again for the visit. So a presser one rests on publishes its group from the first frame and for the rest of the
+ * visit, and the responder's fade (`Lock.activationStep`, `opensOnTick`) runs out with no input: there is no block to
+ * order and no stance to stand in (the rock occupies the presser's cell), only the WAIT. That is the dwell arm a
+ * pre-parked block already takes (`resolveWeighStrategy`), with the holder named as what it is.
+ *
+ * ⛔ THE MODEL DECIDES, NOT THIS READER. A holder is reported only when BOTH hold: a resting Solid of the run's
+ * `fallenRocks` bag (the per-visit family whose members never move once landed) overlaps the presser's rect by
+ * `Button`'s own overlap test, AND the live model reads the presser `down` (`run.activatorsNow`) while the player's own
+ * box is off it. The second clause is the model's answer to "does that Solid press it" (fidelity's
+ * `fallRockHoldsButton`): where the model does not count the rock, the solver does not either, so a plan never waits on
+ * a fade the replay will not run. Generic: no level, no id, no Seedling constant — the bag, the presser, the read.
+ */
+function restingHolderOn(run, onto) {
+    const presser = (run.world.pressers ?? []).find((p) => Math.floor(p.x / TILE_SIZE) === onto.tx
+        && Math.floor(p.y / TILE_SIZE) === onto.ty);
+    if (!presser?.rect) return null;
+    const id = `${presser.tag}@${presser.x},${presser.y}`;
+    const rocks = run.liveGeometryOpts().fallenRocks;
+    if (!rocks) return null;
+    const solid = [...rocks.values()].find((r) => r.rect && rectsOverlap(r.rect, presser.rect));
+    if (!solid) return null;
+    if (rectsOverlap(playerBoxAt(run.state.x, run.state.y), presser.rect)) return null;
+    const read = run.activatorsNow?.pressers?.find((p) => p.id === id);
+    if (!read?.down) return null;
+    return {
+        solid: solid.id,
+        tag: solid.tag,
+        presser: id,
+        tile: { ...onto },
+        rejected: {
+            option: `weigh with a block onto ${id}`,
+            why: `${solid.id} (a resting \`${solid.tag}\`, \`type = "Solid"\`) ALREADY holds ${id} — the model reads it `
+                + 'down with the player off it — so there is no press to order, only its fade to wait out',
+        },
+    };
+}
+
+/**
+ * The switch for `restingHolderOn` — OFF by default; `SEEDLING_RESTING_HOLDER=1` turns it on in a node process (and in
+ * the page's solve worker through `solverEnvChannel`), `withRestingHolder(enabled, fn)` for a test or a witness. OFF,
+ * nothing is read and every walk is byte-identical.
+ */
+export const RESTING_HOLDER = { enabled: globalThis.process?.env?.SEEDLING_RESTING_HOLDER === '1' };
+export const RESTING_HOLDER_DEFAULT = false;
+
+/**
+ * ⛓ READ-ONLY PROBE for `hammerRockHolderWait.test.js`: `restingHolderOn` for the presser at `at` (`{x, y}`) of `run`
+ * as it stands — `{solid, tag, presser, tile}` or null. It reads whatever the switch says: it asks the reader directly.
+ */
+export function restingHolderProbe(run, at) {
+    const r = restingHolderOn(run, { tx: Math.floor(at.x / TILE_SIZE), ty: Math.floor(at.y / TILE_SIZE) });
+    return r ? { solid: r.solid, tag: r.tag, presser: r.presser, tile: { ...r.tile } } : null;
+}
+
+/** Run `fn` with `RESTING_HOLDER` set to `enabled`, restoring the previous value. */
+export function withRestingHolder(enabled, fn) {
+    return withSwitch(RESTING_HOLDER, enabled, fn);
 }
 
 /**
@@ -10786,7 +10882,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
                 ty: Math.floor(opener.presser.y / TILE_SIZE),
             } : null;
             const derived = onto ? deriveWeighSource(run, onto, contacts, blocked) : null;
-            if (!derived || (!derived.plan && !derived.parked && !derived.corpse)) {
+            if (!derived || (!derived.plan && !derived.parked && !derived.corpse && !derived.resting)) {
                 // ⛓ L40BK2: a refused holder is ALSO asked again under the rest of the hypothesis (`chained`); the wall
                 // stands either way — the base hypothesis does not hold it.
                 if (chained && onto) chained.push({ a, opener, onto });
@@ -10884,7 +10980,7 @@ function chainWeighHypothesis(run, chained, out, contacts, blocked, extra) {
                 still.push(p);
                 continue;
             }
-            if (derived.plan || derived.parked || derived.corpse) {
+            if (derived.plan || derived.parked || derived.corpse || derived.resting) {
                 const corpse = derived.corpse && !derived.plan && !derived.parked ? derived.corpse.turret : null;
                 // ⛓ a corpse holder's turret is killed by its weigh: its volume rides out as the entry's exemption
                 extra.push({ id: p.a.id, kind: 'activator', tag: p.a.tag, strategy: 'weigh',
@@ -12131,6 +12227,8 @@ function execWeigh(run, perTick, resolved, ctx) {
             dwellOnly: true,
             presser: { ...resolved.target },
             parked: { ...resolved.parked },
+            // ⛓ ROCK-HOLDER-WAIT: the resting Solid that holds it (only ever set while `RESTING_HOLDER` is on)
+            ...(resolved.resting ? { resting: { ...resolved.resting } } : {}),
             dwell: only,
             ticks: only.ticks ?? 0,
         };
