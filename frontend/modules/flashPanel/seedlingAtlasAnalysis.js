@@ -20,9 +20,11 @@ import {
     poleKillsOf, poleThrustStances, poleSwingStances, POLE_LIGHT_ARM, POLE_GHOST_ARM, obstacleEventName, talkStances,
 } from './seedlingObstacleEvents.js';
 import { talkRangeOf } from '../seedlingDemo/endingChain.js';
-import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
+import { buildLevelWorld, combatCensusOf, rectsOverlap, ROLES } from '../seedlingDemo/levelWorld.js';
+import { plannerObstacleAt } from '../seedlingDemo/botDriverV2.js';
+import { rockFireSides, doorLandingTiles, FIRE_ROCK_TAG } from './seedlingRockBreakers.js';
 import { contactRect } from '../seedlingDemo/combat.js';
-import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
+import { spearHitRect, pressRectTouches, auditFire } from '../seedlingDemo/presses.js';
 import { swingHits } from '../seedlingDemo/combatVerbs.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
 import { lavaTrapPulls, LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
@@ -194,6 +196,19 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         if (!latchCache.has(level.level)) latchCache.set(level.level, layableLatches(level, events, grid));
         return latchCache.get(level.level);
     };
+    // ⛓⛓ FIRE BREAKS ROCKS (session tile-fire-breaks-rocks): each ordinary rock's flame stances, the rules' own census
+    // (`seedlingRockBreakers.rockFireSides`, the same physics model the rules producer injects), with every door of the
+    // map landing where it lands — so maze and rules read one stance set. Asked only by a level world.
+    let landings = null;
+    const rockFireCache = new Map();
+    const rockFireOf = (level) => {
+        if (!(level.entities ?? []).some((e) => e.type === FIRE_ROCK_TAG)) return null;
+        landings ??= doorLandingTiles(levels.values());
+        if (!rockFireCache.has(level.level)) {
+            rockFireCache.set(level.level, rockFireSides(level, ROCK_FIRE_MODEL, { arrivalTiles: landings.get(level.level) ?? [] }));
+        }
+        return rockFireCache.get(level.level);
+    };
     const gridFor = (region) => {
         const level = levels.get(levelKeyOf(region.map_ref));
         if (!level) return null;
@@ -231,7 +246,9 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         ...(levelWorlds ? {
             levelEntitiesFor: (region, grid) => {
                 const level = levels.get(levelKeyOf(region.map_ref));
-                return level ? seedlingLevelEntities(level, options.resolveCondition, { grid, latches: latchesOf(level, grid).laid }) : null;
+                return level ? seedlingLevelEntities(level, options.resolveCondition, {
+                    grid, latches: latchesOf(level, grid).laid, rockFire: rockFireOf(level),
+                }) : null;
             },
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
             // ⛓ BLOCK SINKS: a grid cell of the terrain a pushed block sinks into (water, lava, pit).
@@ -422,7 +439,7 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  * @param {{grid?: object}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it
  * @returns {Array<{kind:string, tiles:number[][], group?:string, strike?:object[], label:string}>}
  */
-export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [] } = {}) {
+export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [], rockFire = null } = {}) {
     const rows = [];
     const ropes = ropesOf({ levels: [level] }).map((r) => ({ ...r, verdict: ropeVerdict(r, level) }));
     const minted = ropes.filter((r) => !r.verdict.refuse);
@@ -502,11 +519,31 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null, la
                 throw new Error(`${label}: flag "${c.flag}" resolves to ${JSON.stringify(rule)}, not one Has or an And `
                     + 'of Has — a strike needs a set of items');
             });
+            // ⛓⛓ FIRE BREAKS ROCKS (session tile-fire-breaks-rocks): an ordinary rock with a clean flame stance is also
+            // struck by Fire (`Player.as:1032` → `genericHit` → `BreakableRock.hit`, rockType 0), from those stances
+            // only (`rockFire`, the rules' own `rockFireSides`): the flame hits all eight neighbours whatever the
+            // facing, so each stance tile stands for every facing. A rock with none (L40, L41) keeps the swing's.
+            const fire = kind === 'rock' && entity.type === FIRE_ROCK_TAG ? rockFire?.get(label) : null;
+            if (fire && fire.stances.length > 0) {
+                const rule = resolveCondition(ROCK_FIRE_ARM);
+                if (rule?.rule !== 'Has' || (rule.args?.count ?? 1) !== 1) {
+                    throw new Error(`${label}: the arm ${ROCK_FIRE_ARM.flag} resolves to ${JSON.stringify(rule)}, not one Has`);
+                }
+                const action = actionIdOfFlag(ROCK_FIRE_ARM.flag);
+                if (row.strike.some((st) => st.action === action)) throw new Error(`${label}: its condition already names ${action}`);
+                const stances = fire.stances.flatMap(({ tx, ty }) => ['N', 'E', 'S', 'W'].map((f) => [tx, ty, f]));
+                row.strike.push({ action, item: rule.args.item_name, footprint: weaponFootprint(action), stances });
+            }
         }
         rows.push(row);
     }
     return rows;
 }
+
+/** The flame's arm (`Player.fire`, under `hasFire || hasFireWand`: the rules' `ROCK_FIRE_CONDITION` names `hasFire`). */
+const ROCK_FIRE_ARM = Object.freeze({ flag: 'hasFire' });
+/** The model `rockFireSides` reads, injected as the rules producer does (`make-seedling-playthrough-rules.mjs`). */
+const ROCK_FIRE_MODEL = Object.freeze({ buildLevelWorld, ROLES, auditFire, plannerObstacleAt });
 
 /** The model the rules' pole functions read (`poleKillsOf`), injected as the rules producer does. */
 const POLE_MODEL = Object.freeze({ buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });

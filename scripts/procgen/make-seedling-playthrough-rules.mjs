@@ -80,7 +80,7 @@ const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf, rectsOverl
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
 const { auditFire } = await imp('frontend/modules/seedlingDemo/presses.js');
 const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriverV2.js');
-const { buildRockFireSides } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
+const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -196,7 +196,7 @@ export const playthroughKillLocks = KILL_LOCKS;
 let rockFireMemo = null;
 const rockFireSides = () => {
     rockFireMemo ??= buildRockFireSides(LEVELS, { buildLevelWorld, ROLES, auditFire, plannerObstacleAt }, {
-        arrivalTilesOf: (n) => gameLandings(MAP).filter((g) => g.level === n).map((g) => [Math.floor(g.x / TILE), Math.floor(g.y / TILE)]),
+        arrivalTilesOf: (n) => doorLandingTiles(MAP.levels).get(n) ?? [],
     });
     return rockFireMemo;
 };
