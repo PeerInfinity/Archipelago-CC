@@ -49,6 +49,7 @@ import { committedTick0, tick0ParseFields, despawnField, tick0Field }
 import { HEADLESS_WEBGPU_ARGS } from './headlessChromium.js';
 import { emitSegments, SEGMENTS_FLAG } from './producerSegments.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { driveProgressLine } from './driveProgressLine.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -262,8 +263,13 @@ async function latchOf(label, tapeObj) {
         // and ⚖ ruling 8's block was quoting an md5 that moved with machine
         // load (R9 slice 9 §18.11, fixed here in slice 9b). The line still
         // prints on the RECORD path, where it is progress rather than a claim.
-        console.log(`    drove ${label}: ${drained.ticks.length} observations, `
-            + `${status.dead_frames} dead${CHECK ? '' : `, ${((Date.now() - t0) / 1000).toFixed(0)}s`}`);
+        // ⛓ SEEDLING HAMMER ENDS-MEET-DIGEST — and the DEAD-FRAME COUNT is
+        // not printed under `--check` either: it is 37 or 38 with the page's
+        // boot phase (the digest's 4b4cacff/f1675cfc flip), see the helper.
+        console.log(driveProgressLine({
+            label, observations: drained.ticks.length, deadFrames: status.dead_frames,
+            ms: Date.now() - t0, check: CHECK,
+        }));
         return { seam, ticks: drained.ticks, status };
     } finally {
         await page.close();
