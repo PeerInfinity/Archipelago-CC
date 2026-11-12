@@ -199,6 +199,8 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
+// ⛓ hammer-phase SPEAR-ARM: a spear-only slot's strike policy (`spearStrikePolicyFor`; a family file).
+import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import {
@@ -6603,7 +6605,7 @@ export function strikePolicyFor(run, { dashPlan = null,
     axisAlong = false } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
-    if (!hasSword) return null;
+    if (!hasSword) return spearStrikePolicyFor(run, { dashPlan, axisAlong });
     /**
      * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
      * policy presses `primary`, which the game runs as `useItem(Main.primary)`: with Fire (or any non-blade) selected
@@ -6658,6 +6660,31 @@ export function strikePolicyFor(run, { dashPlan = null,
     });
     if (!axisAlong) return policy;
     if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
+    AXIS_STRIKE_COUNTS.policies += 1;
+    return axisAlongStrike(policy);
+}
+
+/**
+ * ⛓⛓ hammer-phase SPEAR-ARM (`SPEAR_ARM`, OFF: null, as before) — **THE BLADELESS RUN'S STRIKE, WHEN IT HOLDS A
+ * SPEAR.** `strikePolicyFor`'s policy with the thrust's geometry (`spearArm.spearStrikeGeometry`: `spearHitRect`, the
+ * model's reach gate, the swallow period), built only when the selected slot IS the spear (`useItem(Main.primary)`:
+ * any other selection's press is that item's, so no policy; the segment's walk selects it, `spearArmEquip`). No dash
+ * plan (the thrust has no dash arm), and the i-frame lapse is not asked (the spear tests at T+1/T+3/T+5, not on every
+ * tick of the sword's window, so the lapse arithmetic is the sword's and the pre-lapse question is the honest one).
+ */
+function spearStrikePolicyFor(run, { dashPlan = null, axisAlong = false } = {}) {
+    const slot = spearArmSlot(run.progress('inventory'), run.progress('inventorySlots'));
+    if (slot < 0 || dashPlan || run.progress('primary') !== slot) return null;
+    if ((run.entities('strikeBodies') ?? []).length === 0) return null;
+    SPEAR_ARM_COUNTS.policies += 1;
+    const policy = createStrikePolicy({
+        facingToward, facingKeys: FACING_KEYS, hasSword: true, allowDash: false,
+        talkCircles: run.entities('talkCircles') ?? [],
+        vetoBody: dropKillVetoFor(run),
+        iframeLapse: false,
+        geometry: spearStrikeGeometry(),
+    });
+    if (!axisAlong) return policy;
     AXIS_STRIKE_COUNTS.policies += 1;
     return axisAlongStrike(policy);
 }
@@ -32758,7 +32785,20 @@ function solveSegmentUnder({
             + ') — the drive took hits its corridor was certified without; a walk that died is refused, not re-planned '
             + 'from the respawn', { goal, obstacle: { kind: 'death', id: sources[sources.length - 1] ?? d.source ?? null } });
     }
+    /**
+     * ⛓ hammer-phase SPEAR-ARM (`SPEAR_ARM` ON only) — a bladeless run holding a spear selects the spear's slot before
+     * a walk through a room with strike bodies, so the walk's policy (`spearStrikePolicyFor`) presses a thrust and not
+     * another item. An equip is a `Main.primary` write (`solverEquips`), no tick; a later verb that needs another slot
+     * selects it itself, as every one does.
+     */
+    const spearArmEquip = () => {
+        const slot = spearArmSlot(run.progress('inventory'), run.progress('inventorySlots'));
+        if (slot < 0 || run.progress('primary') === slot || (run.entities('strikeBodies') ?? []).length === 0) return;
+        SPEAR_ARM_COUNTS.equips += 1;
+        equip(slot);
+    };
     const walkTo = (goal, aim, opts) => {
+        spearArmEquip();
         if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return walkToRun(goal, aim, opts);
         const d0 = deathsNow();
         let out;

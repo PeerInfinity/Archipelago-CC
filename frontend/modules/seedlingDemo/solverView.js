@@ -88,7 +88,7 @@ export {
 // combatVerbs.js — botDriverV2, solverBot, strikePolicy · seedling 11
 export {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD, SLASH_ANIM_TICKS, SLASH_DASH_FORCE,
-    SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
+    SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick, SPEAR_ANIM_TICKS,
 } from './combatVerbs.js';
 // ⛓ hammer-phase SLASHRECT: the ghost sword's rect throw, recognised by `pressNoFacing.refuseNoFacing`.
 export { CombatVerbError } from './combatVerbs.js';

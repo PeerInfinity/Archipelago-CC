@@ -154,6 +154,8 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the stood-down count (`slotIsBlade`; a family file).
 import { STRIKE_SLOT_COUNTS } from './strikeSlot.js';
+// ⛓ hammer-phase SPEAR-ARM: the swallowed-aim count (a geometry policy's; a family file).
+import { SPEAR_ARM_COUNTS } from './spearArm.js';
 import { chaseEnvelope } from './encounters.js';
 
 export class StrikePolicyError extends Error {
@@ -269,6 +271,11 @@ export function strikeCandidates(player, bodies, {
      * (`LAPSE_NARROW_RETRY`). OFF the switch, inert.
      */
     iframeLapse: lapseAllowed = true,
+    /**
+     * ⛓ hammer-phase SPEAR-ARM — the press's own geometry when it is not the sword's (`spearArm.spearStrikeGeometry`:
+     * `{rect(x, y, facing), touches(rect, box), reach}`). `null` (every sword caller): `slashRect` / `slashReachFor`.
+     */
+    geometry = null,
 }) {
     const lapseOn = CONTACT_FIDELITY.strikeIframeLapse && lapseAllowed !== false;
     /**
@@ -287,7 +294,7 @@ export function strikeCandidates(player, bodies, {
      * roster-wide default (⚖ ruling 42) — asks exactly the question it asked
      * before this parameter existed.
      */
-    const reachLimit = slashReachFor(scale);
+    const reachLimit = geometry ? geometry.reach : slashReachFor(scale);
     const chosen = [];
     const rejected = [];
     for (const b of bodies) {
@@ -306,9 +313,10 @@ export function strikeCandidates(player, bodies, {
         // body inside 16 px that the rect does not cover is not a candidate —
         // and at the corners the two disagree by up to the box's half-diagonal.
         const facing = direction ?? facingToward(player, b.rect);
-        if (!rectsOverlap(slashRect(player.x, player.y, facing, scale), b.rect)) {
+        if (geometry ? !geometry.touches(geometry.rect(player.x, player.y, facing), b.rect)
+            : !rectsOverlap(slashRect(player.x, player.y, facing, scale), b.rect)) {
             rejected.push({ id: b.id, why: `in reach (${reach.toFixed(3)}) but the `
-                + `slash rect facing ${facing} does not cover it` });
+                + `${geometry ? `${geometry.weapon} thrust` : 'slash'} rect facing ${facing} does not cover it` });
             continue;
         }
         // ⛓ fidelity L74LEG624 D3 (`STRIKE_IFRAME_LAPSE`): the gate is each TEST tick's, so a press whose window
@@ -341,7 +349,8 @@ export function strikeCandidates(player, bodies, {
             continue;
         }
         if (vetoBody) {
-            const v = vetoedInRect(player, bodies, facing, scale, vetoBody, { pressAhead, iframeLapse: lapseAllowed });
+            const v = vetoedInRect(player, bodies, facing, scale, vetoBody,
+                { pressAhead, iframeLapse: lapseAllowed, ...(geometry ? { geometry } : {}) });
             if (v) {
                 rejected.push({ id: b.id, why: `the swing facing ${facing} would kill ${v.id}: ${v.why}`, veto: v });
                 continue;
@@ -361,12 +370,13 @@ export function strikeCandidates(player, bodies, {
  * veto's reason; null when none. `Player.slash`'s own two gates (the rect, then the reach), and `Enemy.hit`'s
  * i-frame gate (a body inside its i-frame takes nothing, so its death is not this press's).
  */
-export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1, iframeLapse: lapseAllowed = true } = {}) {
+export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1, iframeLapse: lapseAllowed = true,
+    geometry = null } = {}) {
     if (!vetoBody) return null;
-    const r = slashRect(player.x, player.y, direction, scale);
-    const reachLimit = slashReachFor(scale);
+    const r = geometry ? geometry.rect(player.x, player.y, direction) : slashRect(player.x, player.y, direction, scale);
+    const reachLimit = geometry ? geometry.reach : slashReachFor(scale);
     for (const o of bodies) {
-        if (!rectsOverlap(r, o.rect)) continue;
+        if (geometry ? !geometry.touches(r, o.rect) : !rectsOverlap(r, o.rect)) continue;
         if (distanceRectPoint(player.x, player.y, o.rect) > reachLimit) continue;
         // ⛓ fidelity L74LEG624 D3: ON, a body whose i-frame lapses anywhere inside the window may take the hit, so it
         // is asked — with no spare test: the veto is the conservative reading, the opposite end of the admission's.
@@ -898,8 +908,15 @@ export function createStrikePolicy({
      * keeps its own keys, an owed aim is dropped). `null` (the default, and OFF): nothing is asked.
      */
     slotIsBlade = null,
+    /**
+     * ⛓ hammer-phase SPEAR-ARM (`spearArm.SPEAR_ARM`, ON only) — a non-sword press's geometry
+     * (`spearArm.spearStrikeGeometry`), handed to every scan and veto; its `period` replaces the swing period's
+     * would-dash guard with the thrust's swallow guard. A geometry policy never dashes. `null`: the sword's, unchanged.
+     */
+    geometry = null,
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
+    if (geometry && (allowDash || dashPlan)) fail('createStrikePolicy: a non-sword press geometry has no dash arm');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
     /**
      * ⛓⛓⛓ R9 SLICE 12c′ — **THE PLANNER'S SCHEDULE, AND IT IS WHAT
@@ -1074,7 +1091,7 @@ export function createStrikePolicy({
                  */
                 const vetoed = vetoBody
                     ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody,
-                        { pressAhead: 0, iframeLapse: lapseAllowed })
+                        { pressAhead: 0, iframeLapse: lapseAllowed, ...(geometry ? { geometry } : {}) })
                     : null;
                 if (vetoed) {
                     aimed = null;
@@ -1290,7 +1307,7 @@ export function createStrikePolicy({
             }
             const { chosen, rejected } = strikeCandidates(state, bodies,
                 { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL, vetoBody,
-                    iframeLapse: lapseAllowed });
+                    iframeLapse: lapseAllowed, ...(geometry ? { geometry } : {}) });
             /**
              * ⛔⛔⛔ R9 SLICE 12c′ — **THE OPPORTUNISTIC DASH IS RETIRED, AND
              * THE REFUSAL IS NOW THE SAME UNDER BOTH FLAG STATES.**
@@ -1326,6 +1343,16 @@ export function createStrikePolicy({
              * reached* — which is the right list for a refusal row to carry,
              * and is never a list anything acts on.
              */
+            /**
+             * ⛓ hammer-phase SPEAR-ARM — a thrust has no dash: a press while `spearing` is up is SWALLOWED (`set
+             * spearing`'s `!spearing && _s`), so the aim is refused for that reason and the walk keeps its keys.
+             */
+            if (geometry && chosen.length > 0 && lastPressAt !== null && (tick + 1) - lastPressAt <= geometry.period) {
+                SPEAR_ARM_COUNTS.swallowed += 1;
+                trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, rejected,
+                    swallowRefused: { lastPressAt, wouldPressAt: tick + 1, period: geometry.period } });
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
             const wouldDash = forecast
                 ? forecast.outcome === 'dash'
                 : (lastPressAt !== null && (tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD);
