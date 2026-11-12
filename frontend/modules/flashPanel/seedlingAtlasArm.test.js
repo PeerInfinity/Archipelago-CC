@@ -129,8 +129,7 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ tile-primitives-pixelmask-l86: 259 -> 261 — L0's house door (r6c5) and L93's door into L98 (r5c7) are their own
         //   sub-regions, a building's footprint being its Pixelmask.
         // ⛓ rules-l112-owl-rocklock: 261 -> 262 — L112 splits at its rock (r0c7 the L113 landing, r2c2 the arena).
-        // ⛓ rules-no-hit-directional: 262 -> 264 — L22 and L25 each split at their directional no-hit gate (the wallflyer
-        //   band: r0c6 / r8c0, r2c7 / r3c2; ⚖ the user 2026-11-11, a per-room table for now).
+        // ⛓ tile-rules-automation-r-a5: 262 -> 264 — L40 splits at its wand locks (r4c4 out of r0c53; the body r26c13).
         expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(264);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);

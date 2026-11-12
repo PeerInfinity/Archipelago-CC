@@ -593,27 +593,42 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_40__r0c53 -> level_40__r4c4", player),
+        HasAny('L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_40__r4c4 -> level_40__r0c53", player),
+        HasAny('L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_40__r23c29 -> level_40__r0c53", player),
         Has('Purple Key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_40__r23c29 -> level_40__r32c36", player),
+        multiworld.get_entrance("level_40__r26c13 -> level_40__r23c29", player),
+        Has('L40 flag 12: wandlock@480,560 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_40__r26c13 -> level_40__r32c36", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_40__r23c29 -> level_40__r36c35", player),
+        multiworld.get_entrance("level_40__r26c13 -> level_40__r36c35", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_40__r23c29 -> level_40__r48c54", player),
+        multiworld.get_entrance("level_40__r26c13 -> level_40__r48c54", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_40__r32c36 -> level_40__r23c29", player),
+        multiworld.get_entrance("level_40__r32c36 -> level_40__r26c13", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 
@@ -623,7 +638,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_40__r36c35 -> level_40__r23c29", player),
+        multiworld.get_entrance("level_40__r36c35 -> level_40__r26c13", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 
@@ -633,7 +648,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_40__r48c54 -> level_40__r23c29", player),
+        multiworld.get_entrance("level_40__r48c54 -> level_40__r26c13", player),
         And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 

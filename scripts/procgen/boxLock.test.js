@@ -551,7 +551,8 @@ describe('who takes the box', () => {
          * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
          * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
          * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`;
-         * rules-no-hit-l22 the no-hit crossings of the wallflyer rooms, per door pair and item arm, `probe-seedling-wallflyer-nohit.mjs`.)
+         * rules-no-hit-l22 the no-hit crossings of the wallflyer rooms, per door pair and item arm, `probe-seedling-wallflyer-nohit.mjs`;
+         * fidelity FIREBREAK the solver's Fire break (a run with Fire and no Sword, L0) on the game, `probe-seedling-fire-break.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -643,6 +644,8 @@ describe('who takes the box', () => {
             'probe-seedling-fire-spinner.mjs',
             // fidelity ROCKFIRE: a Fire press reaching a BreakableRock on the game (import door: `isEntryPoint` → main())
             'probe-seedling-rock-fire.mjs',
+            // fidelity FIREBREAK: the solver's Fire break on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-fire-break.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
@@ -677,7 +680,9 @@ describe('who takes the box', () => {
             // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
             'probe-seedling-bobiframe.mjs',
             // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-er-landings.mjs'];
+            'probe-seedling-er-landings.mjs',
+            // tile-rules-automation-r-a5: L40's flag-12 wand lock shut / open on the game and the model (import door: `isEntryPoint` → main())
+            'probe-seedling-l40-flag12-lock.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -444,11 +444,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-l60-l71-killlock (3e1ee485… -> e965075e): a kill-lock side that reaches its bodies only across a Solid pays
         //   the arms that pass one (L60's pocket row splits, L71's lock row re-spells; internal exits only; atlas id
         //   eff9e209 -> b06ae22d). No name, exit or location moves (the overlay fixture `--check`s byte-identical).
-        // ⛓ rules-no-hit-directional (e965075e… -> 29a294f1): L22 and L25 split at their directional no-hit gates (two
-        //   sub-regions each, one priced internal row each; atlas id b06ae22d -> 296d76b0). The chest's sub_region is
-        //   r2c7. No name, exit or location moves.
+        // ⛓ tile-rules-automation-r-a5 (e965075e… -> ada6b422): L40's wand locks cost their presses, so L40 gains r4c4 and
+        //   r26c13 (atlas id b06ae22d -> e3ae176e). The overlay fixture reads the VANILLA map: `--check`s byte-identical.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('29a294f1c81c27dcae64176b6fb37699');
+            .toBe('ada6b4223e6b63a093dc716b0eed390b');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

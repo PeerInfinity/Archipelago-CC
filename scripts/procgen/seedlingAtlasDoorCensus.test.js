@@ -56,7 +56,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('115 regions, 56 carry a subgraph: 205 sub-regions, 309 internal exits, 207 of them need Progressive Swim', () => {
+    it('115 regions, 54 carry a subgraph: 203 sub-regions, 308 internal exits, 207 of them need Progressive Swim', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
@@ -116,17 +116,20 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   ACROSS a Solid pays the arms that pass one (the Spear; game-witnessed). L60's L61 pocket return splits off its
         //   two-way row as Or(the lock's event, Ghost Spear) (304 -> 305 internal exits); L71's lock row re-spells in place
         //   (And(Ghost Spear, …), both ways). No door, sub-region or swim row moves.
-        // ⛓ rules-no-hit-directional — restamped (b06ae22d -> 296d76b0): L22 and L25 each split in two at their directional
-        //   no-hit gate (⚖ the user 2026-11-11, a per-room table for now): 54 -> 56 regions with a subgraph, 201 -> 205
-        //   sub-regions, 305 -> 309 internal exits (per room: the priced crossing and its free reverse). No door or swim row moves.
-        expect(c.atlasId).toBe('seedling-296d76b0');
+        // ⛓ tile-rules-automation-r-a5 — restamped (b06ae22d -> e3ae176e): a grouped lock whose only opener is one in-room
+        //   press costs it, so L40's wand locks gate: L40 gains r4c4 (out of r0c53) and r26c13 (its body; r23c29 keeps the
+        //   t2-button column).
+        expect(c.atlasId).toBe('seedling-e3ae176e');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
         // ⛓ rules-l26-rocklock-pocket: 301 -> 304 internal exits (L18/L26/L53's two-way rows split at their latch).
         // ⛓ rules-l60-l71-killlock: 304 -> 305 internal exits (L60's two-way row splits at its latch); swim 206 -> 207 (both
         // halves of that row carry Progressive Swim).
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 56, 205, 309, 207]);
+        // ⛓ tile-rules-automation-r-a5: L40 +2 sub-regions (r4c4, r26c13) and 305 -> 308 internal exits: + r0c53 <-> r4c4 (one
+        //   two-way row), + r26c13 -> r23c29 (flag 12) and r23c29 -> r26c13 (one-way each); the body's three rows re-key
+        //   r23c29 -> r26c13. Swim rows unmoved.
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 203, 308, 207]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },

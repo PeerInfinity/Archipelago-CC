@@ -109,6 +109,12 @@ export const WANDLOCK_IS_A_LOCK = Object.freeze({
  * passes) is neither.
  */
 const LOCK_FAMILY = new Set(['lock', 'wandlock', 'grasslock', 'rocklock']);
+/**
+ * ⛓ R-A5 — the classes a group publish OPENS: every `LOCK_FAMILY` member takes `activate` from its group and fades out
+ * (`Lock.as:64-98` for Lock/WandLock/GrassLock; `RockLock.as:40-46,56-66`: RockLock extends Activators, fades on activate and
+ * types itself ""). The in-room press rule and the rules producer's in-room effect both read this one predicate.
+ */
+export const isPublishOpenedLock = (type) => LOCK_FAMILY.has(type);
 
 /**
  * ⛓⛓ EVERY CROSS-LEVEL PERSISTENCE WRITE, as a set of `"<level>:<tag>"`.
@@ -156,8 +162,11 @@ export function buildCrossLevelOpeners(mapDoc) {
  * the far side meets it closed. `RockLock` is not in the set: its `check()`
  * honours the tag whatever its tSet (`RockLock.as:31-37`).
  *
- * Returns `"<level>:<tset>"` -> `{ latching, holders: [[tx, ty], ...] }`, the
- * holders as the tiles their buttons stand on.
+ * Returns `"<level>:<tset>"` -> `{ latching, holders: [[tx, ty], ...], latchers, opened }`, the
+ * holders as the tiles their buttons stand on; `latchers` the latching openers (with the tag a press
+ * clears); `opened` the group's `isPublishOpenedLock` members, in MAP ORDER (⛓ R-A5: a press mints
+ * ONE event, named after its first opening target in map order, `deriveButtonEvents`; every lock of the
+ * group names that one event — see `IN_ROOM_PRESS_LOCK`).
  */
 const RECLOSING_LOCK_CLASSES = new Set(['lock', 'wandlock', 'grasslock']);
 const LATCHING_OPENER = (e) => (e.type === 'buttonroom' && Number(e.attrs?.room) === -1) || e.type === 'rope';
@@ -168,22 +177,30 @@ export const isHoldingOpener = HOLDING_OPENER;
 
 export function buildGroupOpeners(mapDoc, tileSize = 16) {
     const out = new Map();
+    const opened = new Map();
     for (const level of mapDoc?.levels ?? []) {
         for (const e of level.entities ?? []) {
             const latching = LATCHING_OPENER(e);
-            if (!latching && !HOLDING_OPENER(e)) continue;
             const t = Number(e.attrs?.tset);
             if (!Number.isInteger(t) || t < 0) continue;
             const k = `${level.level}:${t}`;
-            if (!out.has(k)) out.set(k, { latching: false, holders: [], latchers: [] });
+            if (!latching && !HOLDING_OPENER(e)) {
+                if (isPublishOpenedLock(e.type)) {
+                    if (!opened.has(k)) opened.set(k, []);
+                    opened.get(k).push({ type: e.type, x: e.x, y: e.y });
+                }
+                continue;
+            }
+            if (!out.has(k)) out.set(k, { latching: false, holders: [], latchers: [], opened: [] });
             const row = out.get(k);
             if (latching) row.latching = true;
-            // ⛓ R-A4: the group's in-level latching openers, with the tag the press clears (`GROUPED_LOCK_EXCEPTIONS`'s
+            // ⛓ R-A4: the group's in-level latching openers, with the tag the press clears (`IN_ROOM_PRESS_LOCK`'s
             // press cost reads it; a rope is a latching opener with no press).
             if (latching) row.latchers.push({ type: e.type, x: e.x, y: e.y, tag: Number(e.attrs?.tag) });
             else row.holders.push([Math.floor(e.x / tileSize), Math.floor(e.y / tileSize)]);
         }
     }
+    for (const [k, row] of out) row.opened = opened.get(k) ?? [];
     return out;
 }
 
@@ -264,85 +281,94 @@ export const RECLOSING_LOCK = Object.freeze({
 });
 
 /**
- * ⛔⛔⛔ THE GROUPED-LOCK EXCEPTION — a lock whose PRESSER is item-gated.
+ * ⛔⛔⛔ A GROUPED LOCK WHOSE ONLY OPENER IS ONE IN-ROOM PRESS COSTS THAT PRESS (⛓ R-A5).
  *
  * The `tSet >= 0` arm below calls a grouped lock FREE because "its group's
  * Button/ButtonRoom is pressed by any body, which is choreography". That
- * premise is a claim about the PRESSER's reachability, and the general rule
- * never checks it. Where the presser sits behind an item gate, the premise is
- * false and the lock is exactly as strong as that gate.
+ * premise is a claim about the PRESSER's reachability, and the free ruling
+ * never checks it. Where the presser stands behind the lock, or behind an item
+ * gate, the premise is false and the lock is exactly as strong as reaching the
+ * press.
  *
- * ⛓ ONE SITE IN THE GAME, and it is on the SHIELD (R7 slice 6). L20's chain,
- * stated by R6 §13.8 from the other end and re-read here at the map:
+ * THE RULE, from the data (`buildGroupOpeners`), never a list: a grouped lock
+ * (`isPublishOpenedLock`: the lock family, RockLock included; `tSet >= 0`) whose in-level group has NO holding Button and
+ * exactly ONE latching opener, and that opener is a tagged `room == -1`
+ * ButtonRoom, is GATED on that press's AP event (`inRoomPressCondition`).
  *
- *   `shield@112,48` -> `hasShield` opens `shieldlocknorm@176,16` (tSet -2, so
- *   nothing else can) -> which un-walls `buttonroom@192,16` (tSet 0) -> whose
- *   press opens `lock@32,80` (tSet 0) -> which un-walls `stairsup@16,48`.
+ * The game, every writer of `Activators.activate` (vendor/seedling/src):
+ *   - `ButtonRoom` room -1: every Activators of its OWN level with `t == tset`
+ *     gets `activate = !flip`, then `setPersistence(tag, !activate)`
+ *     (`ButtonRoom.as:79-89,96`); its `check()` reads the slot back on every
+ *     build (`:43-44`) and the setter never publishes false (`:69`): it LATCHES;
+ *   - `ButtonRoom` room >= 0 writes persistence only (`:93`), which a tSet >= 0
+ *     lock ignores (`Lock.as:42`); `Button` publishes only while held
+ *     (`Button.as:46,50-58`); `RopeStart` its group on the cut (`:80-90`); the
+ *     `Wand` pickup its OWN room's tset-0 group (`Wand.as:23-24,58-68`, L43
+ *     only); `FinalBoss` group 0 (`FinalBoss.as:218`, L112 only);
+ *     `Lock.checkEnemies` itself, tSet -1 only (`Lock.as:109-115`).
+ *   - A lock handed `activate = true` fades and `turnOff()` types it "" (`Lock.as:64-98`);
+ *     a `WandLock` is a `Lock` with another sprite (`WandLock.as:8-16`, `WANDLOCK_IS_A_LOCK`).
+ * So such a lock opens when, and only when, its one press has happened, and stays open.
  *
- * So the lock's group has exactly one presser and that presser is behind the
- * shield. And the lock is not decoration: `stairsdown@96,32` in L13 drops the
- * player at (32,48), and tiles (0,3),(1,3),(2,3),(2,4) are a four-cell ALCOVE
- * whose only other exit is the lock at (2,5). Ruled OPEN, the analyzer folds
- * the alcove into the room, `level_13 -> level_20` is `True_`, and AP takes
- * **Level 020 - Shield at sphere 0.4 for free** — through a wall.
+ * The event is the one `deriveButtonEvents` mints for the press: ONE per press,
+ * named after its FIRST opening target in map order (`seedlingObstacleEvents.js`).
+ * So every lock of the group names `opened[0]` (`buildGroupOpeners`), never
+ * itself: naming the ruled lock wrote `Has` of an item that does not exist for
+ * every target after the first (measured on R-A5's predict arm, 3 such rules on
+ * L40, refused by no check — now pinned, and a Has-name guard holds AP_1).
  *
- * ⇒ GATED, not OPEN. Until R-A4 the gate was `hasShield` (the presser's reach,
- * [[feedback_worst_case_rule_gates_its_own_item]] read in the other direction).
+ * WHERE IT BITES (the census, `inRoomLatchButtonsOf`, 7 presses): L20's
+ * `lock@32,80` and L40's six wand locks. L38's and L107's presses publish to a
+ * Pulser (a hazard switched on, `Pulser.as:54`) or a Cover, not a lock.
  *
- * ⛓ R-A4 (session tile-rules-automation-r-a4, ⚖ Robert 2026-11-04 "Yes, in R-A4
- * (Recommended)"; rules-4's rewrite) — the lock costs ITS OWN PRESS, and nothing
- * else: the AP event of the group's one latching ButtonRoom (`pressOf`, read off
- * `ctx.groupOpeners`, so the row names WHICH lock and the map says what it costs).
- * The Shield term was REDUNDANT, not stricter: the press is only in r1c12, whose
- * one entrance is the ShieldLock, so holding the event means having held the
- * Shield (design-3's re-check, measured: 0 sphere moves). The ruling is now EXACT.
- * The row is still LOAD-BEARING: it keeps the cell GATED, so the alcove stays its
- * own sub-region (deleting it puts the Shield at sphere 0.3 again, measured).
- * ⛔ Why a keyed row and not the general rule "a lock whose group's only opener is
- * one in-room latching press costs that press": that rule also closes L40's six
- * wand locks (L40 splits, 58 AP_1 elements move, measured) — its own slice.
+ * ⛓ L20, the first site (R7 slice 6; R6 §13.8), kept here because it is why the
+ * rule must GATE and not merely price: `shield@112,48` -> `shieldlocknorm@176,16`
+ * (tSet -2) -> `buttonroom@192,16` (tSet 0) -> `lock@32,80` (tSet 0) ->
+ * `stairsup@16,48`. `stairsdown@96,32` in L13 drops the player into a four-cell
+ * ALCOVE (0,3),(1,3),(2,3),(2,4) whose only other exit is the lock at (2,5).
+ * Ruled OPEN, the analyzer folds the alcove into the room and AP takes **Level
+ * 020 - Shield at sphere 0.4 for free**, through a wall. Until R-A4 a keyed row
+ * charged `hasShield` (the presser's reach); R-A4 made it the press itself
+ * (⚖ Robert 2026-11-04 "Yes, in R-A4 (Recommended)"; the Shield term was
+ * redundant: the press room's one entrance is the ShieldLock). ⛓ R-A5 (⚖ Robert
+ * 2026-11-11 "A now, C after A lands (Recommended)") retires that keyed row,
+ * `GROUPED_LOCK_EXCEPTIONS['20:lock@32,80']`: this rule gives L20 the same
+ * condition, and every producer output is byte-identical without the row
+ * (measured). The alcove pins are `seedlingInRoomPressGate.test.js`.
  *
- * Keyed by `<level>:<type>@<x>,<y>` so it names ONE placement and cannot
- * quietly widen to a family.
- *
- * ⛓ RULES l20-button-latch — the Shield is the presser's REACH, not the press:
- * an arrival on the alcove side (ER v1 shuffles its two stairs doorways) held
- * the Shield and crossed without pressing. The rules layer now ANDs the press
- * itself onto both directions — the button's own flag `{20,4}` as an event at
- * the button (`make-seedling-playthrough-rules.mjs` `inRoomLatchAnalysis`,
- * through `deriveButtonEvents`, derived from `inRoomLatchButtonsOf`). This row
- * stays: it is what keeps the alcove its own sub-region for the event to gate.
+ * ⛓ L40 (R-A5): `wandlock@480,560` (t3) is opened only by `buttonroom@880,768`
+ * in `r48c54`, behind Fire and a weapon; ruled OPEN it merged L40's body with the
+ * t2-button column. Under this rule the body is `level_40__r26c13` and the
+ * column keeps `level_40__r23c29`; `r4c4` (the t1 press's room) splits from
+ * `r0c53`. The tile engine derives the same costs (`r26c13 > r23c29` agrees).
  */
-export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
-    '20:lock@32,80': Object.freeze({
-        costs: 'its press',
-        cite: 'Dungeon2/7.oel (`lock@32,80 {tset 0, tag 1}` is the ONLY tSet-0 responder '
-            + 'and `buttonroom@192,16` the ONLY presser) + Puzzlements/ShieldLock.as:33 '
-            + '(`shieldlocknorm@176,16` stands between them) + R6 kickoff §13.8',
-        why: 'a GROUPED lock whose group\'s only presser is behind a ShieldLock. The '
-            + 'general rule calls the press choreography; here the choreography is '
-            + 'behind the shield, and the lock seals the L13 arrival into a four-cell '
-            + 'alcove. Without this row AP takes the Shield at sphere 0.4 through it. '
-            + 'It costs exactly its press (R-A4): the press already implies the Shield.',
-    }),
+export const IN_ROOM_PRESS_LOCK = Object.freeze({
+    cite: 'Puzzlements/ButtonRoom.as:43-44,69,79-89,96 + Puzzlements/Lock.as:42,64-98 + Puzzlements/WandLock.as:8-16 '
+        + '+ the group census (`buildGroupOpeners`): no holder, one latching opener, a tagged room -1 ButtonRoom',
+    why: 'a GROUPED lock whose ONLY in-level opener is one in-room latching press: it opens when, and only '
+        + 'when, that press has happened (the press latches), so it costs the press\'s AP event. "Any body '
+        + 'presses it" is a claim about reaching the presser, which stands behind this lock or an item gate.',
 });
 
 /**
- * ⛓ R-A4 — the cost of a `GROUPED_LOCK_EXCEPTIONS` lock: the AP event of its group's ONE in-level latching press, named
- * as `deriveButtonEvents` mints it (`obstacleEventName` on the lock with the button's tag), as an `{event}` condition
- * (`resolveOverlayCondition` → `Has(<event>)`). Read off the caller's `groupOpeners` census, never listed. Refused by
- * name: no census, a group with a holding Button, or not exactly one latching opener that is a tagged room −1 ButtonRoom.
+ * ⛓ R-A5 — the group's ONE in-room press, or null: no holding Button, exactly one latching opener, and that opener a
+ * tagged `room == -1` ButtonRoom (`buildGroupOpeners` rows; a rope is latching but presses nothing).
  */
-function pressCondition(entity, tSet, ctx, site) {
-    if (!ctx?.groupOpeners) throw new Error(`GROUPED_LOCK_EXCEPTIONS ${site}: its cost is its group's press, which needs ctx.groupOpeners (buildGroupOpeners)`);
-    const group = ctx.groupOpeners.get(`${ctx.level}:${tSet}`);
-    const presses = (group?.latchers ?? []).filter((l) => l.type === 'buttonroom' && Number.isInteger(l.tag) && l.tag >= 0);
-    if (!group || group.holders.length > 0 || group.latchers.length !== 1 || presses.length !== 1) {
-        throw new Error(`GROUPED_LOCK_EXCEPTIONS ${site}: its group t${tSet} must have exactly one opener, a tagged latching `
-            + `ButtonRoom — it has ${group ? `${group.latchers.length} latching (${group.latchers.map((l) => `${l.type}@${l.x},${l.y}`).join(', ')}) `
-            + `and ${group.holders.length} holding` : 'no opener'}; read the map before ruling it`);
-    }
-    return { event: obstacleEventName({ level: ctx.level, tag: presses[0].tag, cls: entity.type, x: entity.x, y: entity.y }) };
+export function inRoomPressOf(group) {
+    if (!group || group.holders.length > 0 || group.latchers.length !== 1) return null;
+    const [l] = group.latchers;
+    return l.type === 'buttonroom' && Number.isInteger(l.tag) && l.tag >= 0 ? l : null;
+}
+
+/**
+ * ⛓ R-A5 — the cost of an `IN_ROOM_PRESS_LOCK`: the AP event its group's press mints, as an `{event}` condition
+ * (`resolveOverlayCondition` → `Has(<event>)`), named as `deriveButtonEvents` names it: the press's tag on the group's
+ * FIRST lock in map order (`group.opened[0]`). Throws by name when the group lists no lock (it was just ruled one).
+ */
+function inRoomPressCondition(level, group, press, site) {
+    const first = group.opened?.[0];
+    if (!first) throw new Error(`IN_ROOM_PRESS_LOCK ${site}: its group lists no lock (buildGroupOpeners.opened) — the press's event cannot be named`);
+    return { event: obstacleEventName({ level, tag: press.tag, cls: first.type, x: first.x, y: first.y }) };
 }
 
 /**
@@ -691,12 +717,14 @@ function lockRuling(entity, ctx) {
     }
     if (tSet >= 0) {
         // ⛔ THE PREMISE IS CHECKED BEFORE IT IS USED. See
-        // `GROUPED_LOCK_EXCEPTIONS`: "any body presses it" is a claim about
-        // the PRESSER's reachability, and at exactly one site in the game the
-        // presser is behind the item the lock's far side holds.
+        // `IN_ROOM_PRESS_LOCK`: "any body presses it" is a claim about the
+        // PRESSER's reachability; where the group's only opener is one in-room
+        // press, the lock costs that press (⛓ R-A5, from the census).
         const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
-        const ruled = GROUPED_LOCK_EXCEPTIONS[site];
-        if (ruled) return GATED(pressCondition(entity, tSet, ctx, site), ruled.cite, ruled.why);
+        const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
+        // Only the classes a group publish opens (`isPublishOpenedLock`: the whole lock family, RockLock included).
+        const press = isPublishOpenedLock(entity.type) ? inRoomPressOf(group) : null;
+        if (press) return GATED(inRoomPressCondition(ctx.level, group, press, site), IN_ROOM_PRESS_LOCK.cite, IN_ROOM_PRESS_LOCK.why);
         // ⛓ RULES l112-owl-rocklock — and the premise's OTHER half: the group
         // has an in-level opener at all. Checkable only where the caller
         // supplies the census (`buildGroupOpeners`); where the level holds
@@ -718,7 +746,6 @@ function lockRuling(entity, ctx) {
         // with no condition: free to cross, but `buildSeedlingRegionGrid`
         // (under `directionalLocks`) walls every ENTRY from a side that cannot
         // reach one of `opensFrom` freely.
-        const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
         if (RECLOSING_LOCK_CLASSES.has(entity.type) && group && !group.latching && group.holders.length > 0) {
             const heldBy = ctx?.blockHolders?.get(ctx.level);
             return {
@@ -1601,8 +1628,10 @@ export const REFUTATION_LOG = Object.freeze([
             + 'cross-check over the intended vocabulary is unchanged.',
         // ⛓ R-A4: the row is gated on its own PRESS since (the Shield term was redundant); the alcove stays its own
         // region. Kept out of `observed`, which AP_1 serializes: the history text is not re-recorded for a comment.
+        // ⛓ R-A5: this `cite` IS serialized (AP_1, seedling_er); it named the keyed row R-A5 retired and now names the general
+        // rule that replaced it (a text-only move of AP_1, ⚖ design-4).
         cite: 'Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as '
-            + '+ R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS',
+            + '+ R6 kickoff §13.8 + R7 kickoff §15 — see IN_ROOM_PRESS_LOCK',
     }),
     // ⛓ ENTRY 3 (SWIM T4, plan R-j) — entry 2's sign again: a rule too PERMISSIVE.
     // This time the analyzer SAW the wall. It then paid it in both directions,

@@ -1,0 +1,6 @@
+## r8-solve-18 — boot L18 (16,32), goals reach-exit
+## budget: 81 span(s), 7 KB
+FAIL: r8-solve-18 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+## r8-solve-18: 467 ticks, 0 hit(s), 0 death(s), 0 spinner contact(s); {18,0} at 419
+## there is NO hand answer for L18 — the differential is the entire gate.
+1 FAILURE(S)

@@ -4,7 +4,7 @@
   "seed": 1,
   "seed_name": "14089154938208861744",
   "locations": 48,
-  "spheres": 14,
+  "spheres": 15,
   "order": [
     {
       "sphere": "0.1",
@@ -164,39 +164,33 @@
     },
     {
       "sphere": "7.1",
-      "location": "Level 040 - Totem Part 64,144",
-      "item": "Totem Shard",
-      "level": 40
-    },
-    {
-      "sphere": "7.2",
       "location": "Level 041 - Totem Part 240,144",
       "item": "Totem Shard",
       "level": 41
     },
     {
-      "sphere": "7.3",
+      "sphere": "7.2",
       "location": "Level 042 - Totem Part 184,152",
       "item": "Totem Shard",
       "level": 42
     },
     {
-      "sphere": "7.4",
+      "sphere": "7.3",
       "location": "Level 057 - Tentacled Beast",
       "item": "Seal",
       "level": 57
     },
     {
-      "sphere": "7.5",
+      "sphere": "7.4",
       "location": "Level 064 - Ghostspear",
       "item": "Ghost Spear",
       "level": 64
     },
     {
       "sphere": "8.1",
-      "location": "Level 043 - Wand",
-      "item": "Wand",
-      "level": 43
+      "location": "Level 040 - Totem Part 64,144",
+      "item": "Totem Shard",
+      "level": 40
     },
     {
       "sphere": "8.2",
@@ -206,90 +200,96 @@
     },
     {
       "sphere": "9.1",
-      "location": "Level 012 - Witch",
-      "item": "Progressive Sword",
-      "level": 12
-    },
-    {
-      "sphere": "9.2",
-      "location": "Level 043 - Totem of Lacste",
-      "item": "Seal",
+      "location": "Level 043 - Wand",
+      "item": "Wand",
       "level": 43
     },
     {
-      "sphere": "9.3",
-      "location": "Level 068 - Health",
-      "item": "Health",
-      "level": 68
-    },
-    {
-      "sphere": "9.4",
+      "sphere": "9.2",
       "location": "Level 069 - Lights",
       "item": "Seal",
       "level": 69
     },
     {
-      "sphere": "9.5",
+      "sphere": "10.1",
+      "location": "Level 012 - Witch",
+      "item": "Progressive Sword",
+      "level": 12
+    },
+    {
+      "sphere": "10.2",
+      "location": "Level 043 - Totem of Lacste",
+      "item": "Seal",
+      "level": 43
+    },
+    {
+      "sphere": "10.3",
+      "location": "Level 068 - Health",
+      "item": "Health",
+      "level": 68
+    },
+    {
+      "sphere": "10.4",
       "location": "Level 071 - Chest",
       "item": "Seal",
       "level": 71
     },
     {
-      "sphere": "9.6",
+      "sphere": "10.5",
       "location": "Level 074 - Darkshield",
       "item": "Progressive Shield",
       "level": 74
     },
     {
-      "sphere": "10.1",
+      "sphere": "11.1",
       "location": "Level 079 - Darksuit",
       "item": "Dark Suit",
       "level": 79
     },
     {
-      "sphere": "11.1",
+      "sphere": "12.1",
       "location": "Level 063 - Chest",
       "item": "Seal",
       "level": 63
     },
     {
-      "sphere": "11.2",
+      "sphere": "12.2",
       "location": "Level 080 - Chest",
       "item": "Seal",
       "level": 80
     },
     {
-      "sphere": "11.3",
+      "sphere": "12.3",
       "location": "Level 082 - King of Fire",
       "item": "Seal",
       "level": 82
     },
     {
-      "sphere": "11.4",
+      "sphere": "12.4",
       "location": "Level 098 - Chest",
       "item": "Seal",
       "level": 98
     },
     {
-      "sphere": "11.5",
+      "sphere": "12.5",
       "location": "Level 106 - Ghostsword",
       "item": "Ghost Sword Fusion",
       "level": 106
     },
     {
-      "sphere": "12.1",
+      "sphere": "13.1",
       "location": "Level 109 - Firewand",
       "item": "Fire Wand Fusion",
       "level": 109
     },
     {
-      "sphere": "12.2",
+      "sphere": "13.2",
       "location": "Level 112 - Owl",
       "item": "Seal",
       "level": 112
     },
     {
-      "sphere": "13.1",
+      "sphere": "14.1",
       "location": "Level 115 - The Seed",
       "item": "The Seed",
       "level": 115

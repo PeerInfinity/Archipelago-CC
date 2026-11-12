@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 154,
-            "count": 204,
+            "browser": 156,
+            "count": 206,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 527,
-        "browser": 224,
-        "cited": 279,
-        "files": 545,
+        "blockStyle": 529,
+        "browser": 226,
+        "cited": 281,
+        "files": 547,
         "lineStyle": 18,
-        "withDocblock": 545,
-        "withFlags": 464
+        "withDocblock": 547,
+        "withFlags": 465
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2517,6 +2517,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
                 }
             ],
             "inheritedFlags": [
@@ -4666,7 +4672,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-lab-load-in-js.mjs",
@@ -4676,6 +4684,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
                 },
                 {
                     "how": [
@@ -13721,6 +13735,46 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-fire-break.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-fire-break — ⛓⛓⛓ seedling-fidelity-firebreak (wave 40): THE `break` VERB'S FIRE ARM (`CONTACT_FIDELITY.fireBreakArm`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-fire-break.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "check",
                 "onButton"
@@ -15478,6 +15532,28 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l39-shaft — ⛓⛓⛓ seedling-fidelity-l39shaft: L39'S THREE-BLOCK SHAFT, THE USER'S SOLUTION, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-l39-shaft.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40-flag12-lock.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40-flag12-lock — ⛓ R-A5's GAME WITNESS (⚖ design-4 2026-11-11: \"the rule is stricter than main, so it needs a game witness, not only static evidence\").",
+            "path": "scripts/procgen/probe-seedling-l40-flag12-lock.mjs"
         },
         {
             "argvHelpers": [

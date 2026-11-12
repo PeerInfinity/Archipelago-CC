@@ -33,6 +33,8 @@ import {
   syncStateFromSnapshot,
   ensureStateLoaded,
   dispatchLocationCheck,
+  isLogicUnreachable,
+  refusalNamesStep,
 } from '../proofShared/proofUIHelpers.js';
 import { renderMetamathExpression } from '../proofShared/metamathRender.js';
 import proofQueueState from './proofQueueStateSingleton.js';
@@ -318,6 +320,7 @@ export class ProofQueueUI {
     subscribe('stateManager:snapshotUpdated', this._handleSnapshotUpdated);
     subscribe('stateManager:inventoryChanged', this._handleInventoryChanged);
     subscribe('proofGraph:edgeDrawn', this._handleEdgeDrawn);
+    subscribe('client:locationCheckRefused', this._handleCheckRefused);
   }
 
   destroy() {
@@ -387,6 +390,21 @@ export class ProofQueueUI {
     syncStateFromSnapshot(proofQueueState);
     this._checkingStep = null;
     this.render();
+  }
+
+  /** The client refused our in-flight check (out of logic, connected): no snapshot follows, so clear the guard here. */
+  _handleCheckRefused(refusal) {
+    if (this._checkingStep === null || !proofQueueState) return;
+    if (!refusalNamesStep(proofQueueState.steps.get(this._checkingStep), refusal)) return;
+    log('info', `Check of "${refusal.locationName}" refused (${refusal.reason}); clearing the in-flight step`);
+    this._checkingStep = null;
+    this.render();
+  }
+
+  /** "Check next" / auto-check skip a step logic calls unreachable: it would only be refused (and re-picked). */
+  _nextCheckableStep() {
+    return proofQueueState.getNextCheckableStep(
+      (i) => isLogicUnreachable(proofQueueState.steps.get(i)?.locationName));
   }
 
   /**
@@ -1100,7 +1118,7 @@ export class ProofQueueUI {
     if (!proofQueueState || !_dispatcher) return;
     if (proofQueueState.isProofComplete()) return;
 
-    const nextStep = proofQueueState.getNextCheckableStep();
+    const nextStep = this._nextCheckableStep();
     if (nextStep === null) return;
 
     const step = proofQueueState.steps.get(nextStep);
@@ -1178,7 +1196,7 @@ export class ProofQueueUI {
       return;
     }
 
-    const nextStep = proofQueueState.getNextCheckableStep();
+    const nextStep = this._nextCheckableStep();
     if (nextStep === null) {
       log('info', 'No checkable step available');
       return;

@@ -2001,7 +2001,9 @@ function inRoomLatchAnalysis(doc) {
         return new Set((claimed.length ? claimed : [[Math.floor(t.x / TILE), Math.floor(t.y / TILE)]]).map(([x, y]) => `${x},${y}`));
     };
     return {
-        effect: (t) => (PERSISTENCE_RESPONSE[t.type] === 'lock-despawn' && t.publish === true
+        // ⛓ R-A5: the classes a group publish opens are `OV.isPublishOpenedLock` (RockLock too: `RockLock.as:40-46,56-66`), the
+        // same predicate the overlay's in-room press rule names its event by; `lock-despawn` alone missed RockLock.
+        effect: (t) => ((PERSISTENCE_RESPONSE[t.type] === 'lock-despawn' || OV.isPublishOpenedLock(t.type)) && t.publish === true
             ? { effect: 'opens', why: 'a Lock handed activate = true by its latching group (ButtonRoom.as:79-89, Lock.as:activationStep)' }
             : { effect: null, why: `${t.type}: not a Lock opened by the group's publish (response '${PERSISTENCE_RESPONSE[t.type]}', publish ${t.publish})` }),
         pricedByButton: (t) => {
@@ -2023,7 +2025,7 @@ function inRoomLatchAnalysis(doc) {
                 if (c.free || c.conditionSets.length === 0) continue;
                 if (!c.conditionSets.every((w) => w.tiles.some(([x, y]) => tiles.has(`${x},${y}`)))) continue;
                 // ⛓ R-A4 — a crossing whose EVERY way the grid already charges with this press's own event (the overlay
-                // prices L20's lock@32,80 as exactly its press, `GROUPED_LOCK_EXCEPTIONS`) already requires it: ANDing the
+                // prices such a lock as exactly its press, `IN_ROOM_PRESS_LOCK`, since R-A5 by rule) already requires it: ANDing the
                 // event again would only spell `And(e, e)`. A way without it keeps the gate (the producer's "not gated: the
                 // departure already requires" idiom, `ruleImplies`).
                 const press = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });

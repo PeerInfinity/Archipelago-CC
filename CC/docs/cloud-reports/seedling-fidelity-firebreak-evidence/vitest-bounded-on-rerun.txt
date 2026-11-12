@@ -1,0 +1,47 @@
+ ✓ frontend/modules/seedlingDemo/fidelityFireBreak.test.js (30 tests | 1 skipped) 5856ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Button.test.js (7 tests) 85595ms
+ ✓ frontend/modules/seedlingDemo/fidelityRopeStance.test.js (18 tests) 145295ms
+ ✓ frontend/modules/seedlingDemo/fidelityTimedPass.test.js (23 tests) 58486ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters.test.js (15 tests) 66376ms
+ ✓ frontend/modules/seedlingDemo/fidelityResidue.test.js (24 tests) 61746ms
+ ✓ frontend/modules/seedlingDemo/fidelityLightPole.test.js (14 tests) 33617ms
+ ✓ frontend/modules/seedlingDemo/fidelityL32Bob.test.js (11 tests) 41140ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 24245ms
+ ✓ frontend/modules/seedlingDemo/fidelityApBosses.test.js (22 tests) 22332ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (136 tests) 11581ms
+ ✓ frontend/modules/seedlingDemo/fidelityStagedHits.test.js (28 tests) 16824ms
+ ✓ frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js (7 tests) 7967ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 12017ms
+ ✓ frontend/modules/seedlingDemo/r5Totem.test.js (133 tests) 5499ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostRope.test.js (13 tests) 6980ms
+ ✓ frontend/modules/seedlingDemo/fidelityForcedHit.test.js (14 tests) 5638ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters2.test.js (9 tests) 5544ms
+ ✓ frontend/modules/seedlingDemo/fidelityLeash.test.js (10 tests) 4093ms
+ ✓ frontend/modules/seedlingDemo/procgenDoorElements.test.js (41 tests) 3245ms
+ ✓ frontend/modules/seedlingDemo/procgenPalette.test.js (87 tests) 2516ms
+ ✓ frontend/modules/seedlingDemo/fidelitySecondaryUse.test.js (19 tests) 3760ms
+ ✓ frontend/modules/seedlingDemo/iceTurret.test.js (45 tests) 1937ms
+ ✓ frontend/modules/seedlingDemo/fidelityClearTag.test.js (37 tests) 3711ms
+ ✓ frontend/modules/seedlingDemo/fidelityDrillKill.test.js (28 tests) 2761ms
+ ✓ frontend/modules/seedlingDemo/blockRoute.test.js (8 tests) 2128ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeVerbs.test.js (12 tests) 2156ms
+ ✓ frontend/modules/seedlingDemo/fidelityBurn.test.js (16 tests) 1298ms
+ ✓ frontend/modules/seedlingDemo/fidelityDrill.test.js (20 tests) 992ms
+ ✓ frontend/modules/seedlingDemo/levelWorld.test.js (127 tests) 566ms
+ ✓ frontend/modules/seedlingDemo/fidelityArrowLane.test.js (10 tests) 951ms
+ ✓ frontend/modules/seedlingDemo/fidelityInventoryMenu.test.js (18 tests) 205ms
+ ✓ frontend/modules/seedlingDemo/ghostSword.test.js (13 tests) 371ms
+ ✓ frontend/modules/seedlingDemo/spinner.test.js (48 tests) 195ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeSlot.test.js (5 tests) 245ms
+ ✓ frontend/modules/seedlingDemo/r5Shaft.test.js (28 tests) 168ms
+ ✓ frontend/modules/seedlingDemo/playerPhysicsV2.test.js (82 tests) 111ms
+ ✓ frontend/modules/seedlingDemo/burnableTree.test.js (19 tests) 40ms
+ ✓ frontend/modules/mazeRoom/mazeSeedlingSprites.test.js (14 tests) 145ms
+ ✓ frontend/modules/seedlingDemo/enemyDamage.test.js (47 tests) 23ms
+ ✓ frontend/modules/seedlingDemo/outOfBandLedger.test.js (18 tests) 11ms
+ ✓ frontend/modules/seedlingDemo/wandVerb.test.js (34 tests) 17ms
+ ✓ scripts/procgen/surveyFamily.test.js (11 tests) 11ms
+ ✓ frontend/modules/procgenCore/procgenRequireStrategy.test.js (4 tests) 11ms
+ Test Files  44 passed (44)
+      Tests  1417 passed | 1 skipped (1418)
+   Duration  351.99s (transform 9.55s, setup 2.85s, import 44.77s, tests 648.40s, environment 25ms)

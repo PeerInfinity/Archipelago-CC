@@ -1473,7 +1473,8 @@ describe('⛓ PANEL LAYOUT — the progress line under the game', () => {
             t.runFrames();
             expect(t.line.renders - lineRenders).toBe(1);
             expect(t.view.stats.renders).toBe(renders);
-            expect(t.line.text.textContent).toBe('solver: solving #3 · L4 · work 40 / 640 · best: none yet');
+            // ⛓ WATCHER VIEW — the line writes the Solver section's headline (was `solver: solving #3 · L4 · work 40 / 640 · best: none yet`)
+            expect(t.line.text.textContent).toBe('Planning a route on level 4 to its goal… · Looking for a route.');
             expect(t.line.fill.style.width).toBe('6.3%');
             // a dropped note (an older seq) is not heard
             t.emit({ solveId: 3, snapshot: snap(2), final: false });
@@ -1481,7 +1482,8 @@ describe('⛓ PANEL LAYOUT — the progress line under the game', () => {
             t.emit({ solveId: 3, snapshot: { ...snap(5, { outcome: 'solved' }), best: { ok: true, ticks: 99 },
                 budget: { spent: { shouldStop: 64 }, limit: { shouldStop: 640 } } }, final: true });
             t.runFrames();
-            expect(t.line.text.textContent).toBe('solver: solved (solve #3) · work 64 / 640 · best: ok · 99 ticks');
+            // was `solver: solved (solve #3) · work 64 / 640 · best: ok · 99 ticks`; the page clock stands still here (0 ms)
+            expect(t.line.text.textContent).toBe('✓ Solved in 0 ms · Found a 99-tick route (3.3 s of play).');
             expect(t.line.element.dataset).toMatchObject({ final: 'true', outcome: 'solved' });
             expect([t.view.isOpen, t.view.stats.renders]).toEqual([false, renders]);
         } finally { t.restore(); }

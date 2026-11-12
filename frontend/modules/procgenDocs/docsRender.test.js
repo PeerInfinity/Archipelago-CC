@@ -304,7 +304,11 @@ describe('⛓ the links the render emits', () => {
         //   `defaultContentPack` paragraph (2 doc).
         //   399 → 402: content sets R1 — concepts.md (role sentence) → text-adventure.md § Content roles, that §
         //   → concepts.md § Content roles (2 doc), and text-adventure.md's realisations → its own § (1 same-doc).
-        expect(checked).toBe(402);
+        //   402 → 404: content sets R2 — concepts.md (the maze's realisations) → maze.md § Content roles, that §
+        //   → concepts.md § Content roles (2 doc).
+        //   404 → 407: maze editor tools B2 — maze-lab.md § The edit tools ↔ editing-core.md (2 doc), and
+        //   maze-lab.md's `edit` row → that § (1 same-doc).
+        expect(checked).toBe(407);
     });
 
     it('tags each link with the kind that produced it', () => {
