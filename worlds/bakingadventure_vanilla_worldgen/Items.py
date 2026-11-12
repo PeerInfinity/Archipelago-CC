@@ -37,5 +37,5 @@ item_table: Dict[str, ItemData] = {
     "Cookie Dough": ItemData(300100013, ItemClassification.progression),
     "Shaped Cookies": ItemData(300100014, ItemClassification.progression),
     "Baked Cookies": ItemData(300100015, ItemClassification.progression),
-    "Victory": ItemData(None, ItemClassification.progression),
+    "Victory": ItemData(300100016, ItemClassification.progression),
 }

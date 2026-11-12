@@ -186,5 +186,5 @@ location_table: Dict[str, LocationData] = {
     "Quest - Play astronaut": LocationData("Kiiruberg", "Quest - Play astronaut", 154, False),
     "Quest - Snowball memories": LocationData("Kiiruberg", "Quest - Snowball memories", 159, False),
     "Quest - Yeti cuteness": LocationData("Kiiruberg", "Quest - Yeti cuteness", 151, False),
-    "TOEM Experienced": LocationData("Mountain Top", "TOEM Experienced", None, True),
+    "TOEM Experienced": LocationData("Mountain Top", "TOEM Experienced", 181, False, extra_attributes={"pinned": True}),
 }

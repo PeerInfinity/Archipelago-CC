@@ -297,5 +297,5 @@ location_table: Dict[str, LocationData] = {
     "Ganons Tower - Mini Helmasaur Key Drop": LocationData("Ganons Tower (Before Moldorm)", "Ganons Tower - Mini Helmasaur Key Drop", None, True, extra_attributes={"crystal": False, "player_address": 1310750, "shop_slot_disabled": False}),
     "Ganons Tower - Validation Chest": LocationData("Agahnim 2", "Ganons Tower - Validation Chest", 60166, False, extra_attributes={"crystal": False, "player_address": 1598170, "shop_slot_disabled": False}),
     "Agahnim 2": LocationData("Agahnim 2", "Agahnim 2", None, True, extra_attributes={"crystal": False, "shop_slot_disabled": False}),
-    "Ganon": LocationData("Pyramid", "Ganon", None, True, extra_attributes={"crystal": False, "shop_slot_disabled": False}),
+    "Ganon": LocationData("Pyramid", "Ganon", 1573219, False, extra_attributes={"crystal": False, "shop_slot_disabled": False, "pinned": True}),
 }
