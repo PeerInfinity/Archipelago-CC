@@ -3090,6 +3090,40 @@ export function withChaserPass(enabled, fn) {
 }
 
 /**
+ * ⛓ hammer-phase BAIT-REMOVED (`BAIT_TARGET_GONE`, OFF) — **A BAIT WHOSE BODY THE ROOM REMOVED DURING THE STANCE WALK IS
+ * DONE, NOT REFUSED.** The bait arm's whole purpose is that the body leaves the world (the room's own kill region
+ * removes it) so the corridor it blocked re-plans. The walk to the stance is an ordinary walk, and the body chases the
+ * player during it, so it can reach the kill region BEFORE the player reaches the stance. MEASURED (ER witnesses c3/c4):
+ * L99 east (96,112) → (48,96), Sword only — bait chosen at t169 (forecast: removed 26 ticks after arrival), removed at
+ * t317, stance reached at t327, 0 hits; L40 c3 with `CHASER_PASS` — the same shape on the corridor Bob. `runDwell` then
+ * refuses "ALREADY TRUE", because a dwell that waits for a condition already met proves nothing — right for the dwell,
+ * wrong for the arm: the obstacle is gone, and the walk that saw it go was the run's own (its hits already billed).
+ *
+ * ON: after the stance walk, when the bait's body is no longer in the run's roster, the arm records the bait as done
+ * (`{kind: 'bait-gone', ticks: 0}`, no dwell) and returns, so the ladder re-plans the corridor against the room as it now
+ * stands. Nothing reads a level, a coordinate or an enemy class. `runDwell`'s own refusal is untouched.
+ * OFF: never asked. `SEEDLING_BAIT_TARGET_GONE=1` / `withBaitTargetGone(enabled, fn)`. Worker thread (the solve).
+ */
+export const BAIT_TARGET_GONE = { enabled: globalThis.process?.env?.SEEDLING_BAIT_TARGET_GONE === '1' };
+export const BAIT_TARGET_GONE_DEFAULT = false;
+/** Per-run rows (ON only): one per bait whose body left during the stance walk, `{id, chosenAt, arrivedAt}`. */
+export const BAIT_TARGET_GONE_COUNTS = { gone: [] };
+
+/** Run `fn` with `BAIT_TARGET_GONE` set to `enabled`, restoring the previous value. */
+export function withBaitTargetGone(enabled, fn) {
+    return withSwitch(BAIT_TARGET_GONE, enabled, fn);
+}
+
+/** `BAIT_TARGET_GONE` ON: the bait's record when `bodyId` already left `run`'s roster after the stance walk, else null. */
+function baitTargetGoneRecord(run, bodyId, chosenAt, perTick, why) {
+    if (!BAIT_TARGET_GONE.enabled) return null;
+    if ((run.entities('chasers') ?? []).some((c) => c.id === bodyId)) return null;
+    BAIT_TARGET_GONE_COUNTS.gone.push({ id: bodyId, chosenAt, arrivedAt: perTick.length });
+    return { kind: 'bait-gone', at: { x: run.state.x, y: run.state.y }, ticks: 0, why,
+        until: `${bodyId} left the world during the stance walk (t${chosenAt}..t${perTick.length})`, strikes: 0 };
+}
+
+/**
  * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
  * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
  * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
@@ -30685,6 +30719,7 @@ function solveSegmentUnder({
                 : derived;
             if (bait.stance) {
                 rowFor('bait', refused, { stance: bait.stance, target: body.id });
+                const baitChosenAt = perTick.length;
                 baitingBodies.add(baitKey);
                 try {
                     walkTo(goal, bait.stance, {
@@ -30692,6 +30727,11 @@ function solveSegmentUnder({
                     });
                 } finally {
                     baitingBodies.delete(baitKey);
+                }
+                const gone = baitTargetGoneRecord(run, body.id, baitChosenAt, perTick, `${body.id}: ${bait.why}`);
+                if (gone) {
+                    records.push({ goal: goal.kind, strategy: 'bait', target: body.id, ...gone });
+                    return { escalations };
                 }
                 const record = runDwell(run, perTick, {
                     ticks: bait.ticks,
