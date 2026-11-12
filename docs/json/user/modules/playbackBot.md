@@ -48,6 +48,8 @@ Pick a region, type a cell's **x** and **y**, and press **Go**: the bot walks th
 
 If the bot cannot do something, the status says so — for example *blocked: the check of "…" did not land*, or *error: no path from …* when the next location cannot be reached.
 
+While connected to a server, a check counts once the server confirms it (its echo marks the location checked here a moment after the send), so the status can read *waiting for the server to confirm the check of "…"* for that moment. A check the client refused as out of logic still reads *did not land*.
+
 ## In Loop mode
 
 In a world built with **Enable loop mode** (see the [Loops](../../features/loops.md) feature), the bot does not move the player itself. Each loop, it writes the Loops panel's queue for you — the moves to its target, then the check, or an explore when the target is not discovered yet — runs it until the mana runs out, and plans the next loop. **⏯** then plays one whole loop, and **⏭** is the same as **▶**; the Loops panel's own speed settings apply instead of the bot's **Speed**. The status shows the loop number, the action and the mana left. If it says *waiting: Generate Costs first (Loops panel)*, do that in the Loops panel.
@@ -85,6 +87,10 @@ With **Check next** set to the sphere log, **Walk order** chooses which of its l
 - **Cheapest reachable, looking two locations ahead** — as **Cheapest reachable location**, but each location is judged by the cheapest pair of locations that starts with it: the route there, plus the cheapest route on to a second location from there, with the first location's item already in hand.
 
 The last four are optional; the default stays **Sphere log, in order**. All the cheapest orders keep the location that holds the goal for last. Measured on the Seedling playthrough of 2026-10-25 (returns to the menu / region changes): in order 4 / 383, **Cheapest reachable location** 0 / 299, looking two ahead **0 / 294** (the best there), **Cheapest in the current sphere** 0 / 367, and with grabbing on the way 0 / 313. Looking ahead is not always better: on Wargroove it walks 46 region changes where cheapest reachable walks 44, and on Coding Adventure it is 2–4 worse. Known gap, not yet explained: on Seedling's second dungeon the offline measure predicts a different visiting order for looking two ahead than the bot takes in the game. In the game it checks the same locations in the same order as the other cheapest orders: no returns to the menu and 39 region changes to the Shield. Avoiding pockets measured worse on Seedling too (0 / 318 on 2026-10-24). Seedling's level exits mostly lead one way, so most deep rooms cannot walk back to the start and are counted as pockets, and the order then detours around them. The line under the target shows the run's counts: restarts, region transitions and legs. Loop mode always follows the sphere order. Changing the walk order stops a running walk, and the panel remembers your choice.
+
+## Clear the route's events first
+
+**Clear the route's events first** (off by default; the panel remembers it) adds one step to a sphere-log walk. Some games remember an obstacle you cleared (a door opened, a rock broken), and a later location's room can depend on it even when no access rule says so. With this on, before walking to a location the bot first walks to each such event that the solution path cleared earlier in the same room set, in the solution path's order. It skips one it already holds, one whose own rule it cannot meet yet, and one it cannot reach, and it says which in its log. If the walk to one fails, the bot drops that event for that location and walks to the location as before. Only games whose world exports these events and which room set each region belongs to are affected (today, the Seedling presets); for any other game the option changes nothing.
 
 ## The mini view
 

@@ -45,8 +45,12 @@
  *            `CONCEPT_TRIAL_STATE`. Not a Seedling world: the recipe writes no
  *            `flash_panel` block of its own (a Seedling preset's comes from its
  *            substrates' compile), so it takes any state unchanged.
+ *   meta-trial → `meta_trial`: `concept-trial`'s world with the content set
+ *            `meta` selected (`content: ['meta']`, content sets R3): the same
+ *            logic, presented by the theme pack `frontend/packs/meta/`, from
+ *            `META_TRIAL_STATE`.
  *
- * ONE recipe, ten states: the same assembly, the same bytes rule, the same
+ * ONE recipe, eleven states: the same assembly, the same bytes rule, the same
  * `--check`.
  *
  * The preset is a FUNCTION of that committed state, never a hand edit: this
@@ -67,11 +71,11 @@
  * `check-seedling-generated-room-play.mjs`, `check-seedling-generated-leaf-play.mjs`,
  * `check-seedling-generated-host-play.mjs`, `check-seedling-generated-swim-play.mjs`,
  * the in-app row `seedling-wasm-generated-chestdoor-chest` (for `generated-chestdoor`),
- * `check-seedling-atlas-host-play.mjs`, `check-seedling-atlas-location-play.mjs` and
- * `check-concept-trial-play.mjs`.
+ * `check-seedling-atlas-host-play.mjs`, `check-seedling-atlas-location-play.mjs`,
+ * `check-concept-trial-play.mjs` and the in-app row `meta-trial-plays` (for `meta-trial`).
  *
  * Usage:
- *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|generated-chestdoor|atlas-host|atlas-location|concept-trial] [--check]
+ *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|generated-chestdoor|atlas-host|atlas-location|concept-trial|meta-trial] [--check]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -96,6 +100,7 @@ const PRESETS = Object.freeze({
     'atlas-location': Object.freeze({ stateExport: 'SEEDLING_ATLAS_LOCATION_STATE',
         gameId: 'seedling_atlas_location' }),
     'concept-trial': Object.freeze({ stateExport: 'CONCEPT_TRIAL_STATE', gameId: 'concept_trial' }),
+    'meta-trial': Object.freeze({ stateExport: 'META_TRIAL_STATE', gameId: 'meta_trial' }),
 });
 const imp = (rel) => import(pathToFileURL(path.join(repoRoot, rel)));
 

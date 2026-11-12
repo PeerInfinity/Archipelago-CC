@@ -30,12 +30,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             }
@@ -62,12 +56,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -139,53 +127,19 @@
             "name": "level_0__r6c5 -> level_0__r7c6",
             "connected_region": "level_0__r7c6",
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "L0 flag 4: breakablerock@80,112 cleared"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
                 }
               ]
             }
@@ -204,16 +158,6 @@
         "name": "level_0__r7c6",
         "exits": [
           {
-            "name": "level_0__r7c6 -> level_0__r14c0",
-            "connected_region": "level_0__r14c0",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Swim"
-              }
-            }
-          },
-          {
             "name": "level_0__r7c6 -> level_0__r11c19",
             "connected_region": "level_0__r11c19",
             "access_rule": {
@@ -230,11 +174,36 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_0__r7c6 -> level_0__r14c0",
+            "connected_region": "level_0__r14c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_0__r7c6 -> level_0__r6c5",
+            "connected_region": "level_0__r6c5",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fire"
+                    "item_name": "Ghost Spear"
                   }
                 }
               ]
@@ -260,33 +229,6 @@
                 "item_name": "Progressive Swim",
                 "count": 2
               }
-            }
-          },
-          {
-            "name": "level_0__r7c6 -> level_0__r6c5",
-            "connected_region": "level_0__r6c5",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                }
-              ]
             }
           },
           {
@@ -343,12 +285,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             },
@@ -395,12 +331,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             },
@@ -439,53 +369,19 @@
             "name": "level_0__r11c19 -> level_0__r7c6",
             "connected_region": "level_0__r7c6",
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "L0 flag 1: breakablerock@288,176 cleared"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
                 }
               ]
             }
@@ -572,12 +468,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             }
@@ -656,12 +546,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -1635,12 +1519,6 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Progressive Swim"
                   }
                 }
@@ -1698,12 +1576,6 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Ghost Spear"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fire"
                           }
                         }
                       ]
@@ -1944,6 +1816,12 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1959,12 +1837,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L16 flag 0: rope@32,16 cleared"
-                  }
                 }
               ]
             }
@@ -2051,6 +1923,12 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -2066,12 +1944,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L16 flag 0: rope@32,16 cleared"
-                  }
                 }
               ]
             }
@@ -2122,6 +1994,12 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -2137,12 +2015,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L16 flag 0: rope@32,16 cleared"
-                  }
                 }
               ]
             }
@@ -2154,6 +2026,12 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -2167,20 +2045,8 @@
                       "args": {
                         "item_name": "Ghost Spear"
                       }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire"
-                      }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L16 flag 0: rope@32,16 cleared"
-                  }
                 }
               ]
             }
@@ -2762,8 +2628,8 @@
             }
           },
           {
-            "name": "level_21 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_21 -> level_22__r0c6",
+            "connected_region": "level_22__r0c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -2778,33 +2644,73 @@
         ],
         "locations": []
       },
-      "level_22": {
-        "name": "level_22",
+      "level_22__r0c6": {
+        "name": "level_22__r0c6",
         "exits": [
           {
-            "name": "level_22 -> level_25",
-            "connected_region": "level_25",
+            "name": "level_22__r0c6 -> level_22__r8c0",
+            "connected_region": "level_22__r8c0",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_22 -> level_21",
+            "name": "level_22__r0c6 -> level_21",
             "connected_region": "level_21",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_22 -> level_30__r0c4",
-            "connected_region": "level_30__r0c4",
+            "name": "level_22__r0c6 -> level_29__r2c2",
+            "connected_region": "level_29__r2c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_22__r8c0": {
+        "name": "level_22__r8c0",
+        "exits": [
+          {
+            "name": "level_22__r8c0 -> level_22__r0c6",
+            "connected_region": "level_22__r0c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_22__r8c0 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_22 -> level_29__r2c2",
-            "connected_region": "level_29__r2c2",
+            "name": "level_22__r8c0 -> level_30__r0c4",
+            "connected_region": "level_30__r0c4",
             "access_rule": {
               "rule": "True_"
             }
@@ -2899,26 +2805,26 @@
           }
         ]
       },
-      "level_25": {
-        "name": "level_25",
+      "level_25__r2c7": {
+        "name": "level_25__r2c7",
         "exits": [
           {
-            "name": "level_25 -> level_26__r2c4",
-            "connected_region": "level_26__r2c4",
+            "name": "level_25__r2c7 -> level_25__r3c2",
+            "connected_region": "level_25__r3c2",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_25 -> level_28__r0c6",
+            "name": "level_25__r2c7 -> level_28__r0c6",
             "connected_region": "level_28__r0c6",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_25 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_25__r2c7 -> level_22__r8c0",
+            "connected_region": "level_22__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -2939,6 +2845,46 @@
             }
           }
         ]
+      },
+      "level_25__r3c2": {
+        "name": "level_25__r3c2",
+        "exits": [
+          {
+            "name": "level_25__r3c2 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_25__r3c2 -> level_26__r2c4",
+            "connected_region": "level_26__r2c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "level_26__r2c4": {
         "name": "level_26__r2c4",
@@ -2985,8 +2931,8 @@
             }
           },
           {
-            "name": "level_26__r2c4 -> level_25",
-            "connected_region": "level_25",
+            "name": "level_26__r2c4 -> level_25__r3c2",
+            "connected_region": "level_25__r3c2",
             "access_rule": {
               "rule": "True_"
             }
@@ -3143,8 +3089,8 @@
             }
           },
           {
-            "name": "level_28__r0c6 -> level_25",
-            "connected_region": "level_25",
+            "name": "level_28__r0c6 -> level_25__r2c7",
+            "connected_region": "level_25__r2c7",
             "access_rule": {
               "rule": "True_"
             }
@@ -3281,8 +3227,8 @@
             }
           },
           {
-            "name": "level_29__r2c2 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_29__r2c2 -> level_22__r0c6",
+            "connected_region": "level_22__r0c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -3395,8 +3341,8 @@
             }
           },
           {
-            "name": "level_30__r0c4 -> level_22",
-            "connected_region": "level_22",
+            "name": "level_30__r0c4 -> level_22__r8c0",
+            "connected_region": "level_22__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -3477,12 +3423,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -10375,10 +10315,32 @@
             "name": "level_71__r11c7 -> level_71__r13c7",
             "connected_region": "level_71__r13c7",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Ghost Spear"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -10391,10 +10353,32 @@
             "name": "level_71__r13c7 -> level_71__r11c7",
             "connected_region": "level_71__r11c7",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Ghost Spear"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -10511,12 +10495,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             }
@@ -10556,12 +10534,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -11885,12 +11857,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             }
@@ -11938,12 +11904,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             }
@@ -11964,12 +11924,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -12056,12 +12010,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -12496,12 +12444,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -14572,7 +14514,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-83dee47a",
+      "atlas_id": "seedling-834f2a2a",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -14694,7 +14636,7 @@
             {
               "x": 12,
               "y": 2,
-              "id": "rock_12_2"
+              "id": "rock_sword_spear"
             },
             {
               "x": 15,
@@ -14744,7 +14686,7 @@
             {
               "x": 5,
               "y": 7,
-              "id": "rock_5_7~L0 flag 4: breakablerock@80,112 cleared"
+              "id": "rock_sword_spear~L0 flag 4: breakablerock@80,112 cleared"
             },
             {
               "x": 9,
@@ -14809,7 +14751,7 @@
             {
               "x": 18,
               "y": 11,
-              "id": "rock_18_11~L0 flag 1: breakablerock@288,176 cleared"
+              "id": "rock_sword_spear~L0 flag 1: breakablerock@288,176 cleared"
             },
             {
               "x": 7,
@@ -15044,95 +14986,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_12_2": {
-              "id": "rock_12_2",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "11,1,N",
-                  "11,1,E",
-                  "11,1,S",
-                  "11,1,W",
-                  "11,2,N",
-                  "11,2,E",
-                  "11,2,S",
-                  "11,2,W",
-                  "13,2,N",
-                  "13,2,E",
-                  "13,2,S",
-                  "13,2,W",
-                  "11,3,N",
-                  "11,3,E",
-                  "11,3,S",
-                  "11,3,W",
-                  "13,3,N",
-                  "13,3,E",
-                  "13,3,S",
-                  "13,3,W"
-                ]
-              },
-              "at": "12,2",
-              "color": "#7a6a55"
-            },
-            "rock_18_11": {
-              "id": "rock_18_11",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "17,11,N",
-                  "17,11,E",
-                  "17,11,S",
-                  "17,11,W"
-                ]
-              },
-              "at": "18,11",
-              "color": "#7a6a55"
-            },
-            "rock_5_7": {
-              "id": "rock_5_7",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "6,7,N",
-                  "6,7,E",
-                  "6,7,S",
-                  "6,7,W",
-                  "4,8,N",
-                  "4,8,E",
-                  "4,8,S",
-                  "4,8,W",
-                  "5,8,N",
-                  "5,8,E",
-                  "5,8,S",
-                  "5,8,W",
-                  "6,8,N",
-                  "6,8,E",
-                  "6,8,S",
-                  "6,8,W"
-                ]
-              },
-              "at": "5,7",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -15150,9 +15012,9 @@
                 "mode": "tree"
               }
             },
-            "rock_18_11~L0 flag 1: breakablerock@288,176 cleared": {
-              "id": "rock_18_11~L0 flag 1: breakablerock@288,176 cleared",
-              "name": "rock (sword or spear or fire): L0 flag 1: breakablerock@288,176 cleared",
+            "rock_sword_spear~L0 flag 1: breakablerock@288,176 cleared": {
+              "id": "rock_sword_spear~L0 flag 1: breakablerock@288,176 cleared",
+              "name": "rock (sword or spear): L0 flag 1: breakablerock@288,176 cleared",
               "kind": "rock",
               "clear_set": [
                 [
@@ -15161,29 +15023,20 @@
               ],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "17,11,N",
-                  "17,11,E",
-                  "17,11,S",
-                  "17,11,W"
-                ]
-              },
-              "at": "18,11",
               "color": "#7a6a55",
               "events": [
                 {
                   "name": "L0 flag 1: breakablerock@288,176 cleared",
                   "side": "level_0__r7c6"
                 }
-              ]
+              ],
+              "at": "18,11"
             },
-            "rock_5_7~L0 flag 4: breakablerock@80,112 cleared": {
-              "id": "rock_5_7~L0 flag 4: breakablerock@80,112 cleared",
-              "name": "rock (sword or spear or fire): L0 flag 4: breakablerock@80,112 cleared",
+            "rock_sword_spear~L0 flag 4: breakablerock@80,112 cleared": {
+              "id": "rock_sword_spear~L0 flag 4: breakablerock@80,112 cleared",
+              "name": "rock (sword or spear): L0 flag 4: breakablerock@80,112 cleared",
               "kind": "rock",
               "clear_set": [
                 [
@@ -15192,37 +15045,16 @@
               ],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "6,7,N",
-                  "6,7,E",
-                  "6,7,S",
-                  "6,7,W",
-                  "4,8,N",
-                  "4,8,E",
-                  "4,8,S",
-                  "4,8,W",
-                  "5,8,N",
-                  "5,8,E",
-                  "5,8,S",
-                  "5,8,W",
-                  "6,8,N",
-                  "6,8,E",
-                  "6,8,S",
-                  "6,8,W"
-                ]
-              },
-              "at": "5,7",
               "color": "#7a6a55",
               "events": [
                 {
                   "name": "L0 flag 4: breakablerock@80,112 cleared",
                   "side": "level_0__r7c6"
                 }
-              ]
+              ],
+              "at": "5,7"
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
@@ -15385,150 +15217,6 @@
                   ]
                 ]
               }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ]
-              }
             }
           },
           "entry_gates": [
@@ -15622,6 +15310,7 @@
             },
             "links": {
               "level_0__r11c19>level_0__r7c6": "level_0__r11c19 -> level_0__r7c6",
+              "level_0__r7c6>level_0__r11c19": "level_0__r7c6 -> level_0__r11c19",
               "level_0__r14c0>level_0__r7c6": "level_0__r14c0 -> level_0__r7c6",
               "level_0__r7c6>level_0__r14c0": "level_0__r7c6 -> level_0__r14c0",
               "level_0__r1c6>level_0__r2c13": "level_0__r1c6 -> level_0__r2c13",
@@ -15631,10 +15320,9 @@
               "level_0__r2c13>level_0__r7c6": "level_0__r2c13 -> level_0__r7c6",
               "level_0__r4c16>level_0__r7c6": "level_0__r4c16 -> level_0__r7c6",
               "level_0__r6c5>level_0__r7c6": "level_0__r6c5 -> level_0__r7c6",
-              "level_0__r7c6>level_0__r11c19": "level_0__r7c6 -> level_0__r11c19",
+              "level_0__r7c6>level_0__r6c5": "level_0__r7c6 -> level_0__r6c5",
               "level_0__r7c6>level_0__r2c13": "level_0__r7c6 -> level_0__r2c13",
-              "level_0__r7c6>level_0__r4c16": "level_0__r7c6 -> level_0__r4c16",
-              "level_0__r7c6>level_0__r6c5": "level_0__r7c6 -> level_0__r6c5"
+              "level_0__r7c6>level_0__r4c16": "level_0__r7c6 -> level_0__r4c16"
             }
           },
           "atlas_region": "level_0",
@@ -15967,7 +15655,7 @@
             {
               "x": 6,
               "y": 7,
-              "id": "rock_6_7"
+              "id": "rock_sword_spear"
             },
             {
               "x": 7,
@@ -15977,33 +15665,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_6_7": {
-              "id": "rock_6_7",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "5,6,N",
-                  "5,6,E",
-                  "5,6,S",
-                  "5,6,W",
-                  "6,6,N",
-                  "6,6,E",
-                  "6,6,S",
-                  "6,6,W",
-                  "6,8,N",
-                  "6,8,E",
-                  "6,8,S",
-                  "6,8,W"
-                ]
-              },
-              "at": "6,7",
               "color": "#7a6a55"
             },
             "rock_ghostsword": {
@@ -16177,150 +15847,6 @@
                 ]
               }
             },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ]
-              }
-            },
             "ghostsword": {
               "rule": {
                 "rule": "And",
@@ -16347,7 +15873,7 @@
               },
               "primitive": "strike",
               "condition": "strikes",
-              "key": "v",
+              "key": "c",
               "footprint": {
                 "N": [
                   [
@@ -20762,7 +20288,7 @@
             {
               "x": 6,
               "y": 1,
-              "id": "rock_6_1"
+              "id": "rock_sword_spear"
             },
             {
               "x": 1,
@@ -20797,7 +20323,7 @@
             {
               "x": 6,
               "y": 5,
-              "id": "rock_6_5"
+              "id": "rock_sword_spear"
             },
             {
               "x": 7,
@@ -20879,70 +20405,15 @@
             }
           ],
           "obstacleLib": {
-            "rock_6_5": {
-              "id": "rock_6_5",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "5,4,N",
-                  "5,4,E",
-                  "5,4,S",
-                  "5,4,W",
-                  "6,4,N",
-                  "6,4,E",
-                  "6,4,S",
-                  "6,4,W",
-                  "5,5,N",
-                  "5,5,E",
-                  "5,5,S",
-                  "5,5,W"
-                ]
-              },
-              "at": "6,5",
-              "color": "#7a6a55"
-            },
-            "rock_6_1": {
-              "id": "rock_6_1",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "5,1,N",
-                  "5,1,E",
-                  "5,1,S",
-                  "5,1,W",
-                  "7,1,N",
-                  "7,1,E",
-                  "7,1,S",
-                  "7,1,W",
-                  "5,2,N",
-                  "5,2,E",
-                  "5,2,S",
-                  "5,2,W",
-                  "6,2,N",
-                  "6,2,E",
-                  "6,2,S",
-                  "6,2,W",
-                  "7,2,N",
-                  "7,2,E",
-                  "7,2,S",
-                  "7,2,W"
-                ]
-              },
-              "at": "6,1",
               "color": "#7a6a55"
             },
             "lock_0": {
@@ -21132,150 +20603,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -21591,7 +20918,7 @@
             {
               "x": 6,
               "y": 4,
-              "id": "rock_6_4"
+              "id": "rock_sword_spear"
             },
             {
               "x": 19,
@@ -21606,12 +20933,12 @@
             {
               "x": 6,
               "y": 5,
-              "id": "rock_6_5"
+              "id": "rock_sword_spear"
             },
             {
               "x": 7,
               "y": 5,
-              "id": "rock_7_5"
+              "id": "rock_sword_spear"
             },
             {
               "x": 4,
@@ -21626,75 +20953,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_7_5": {
-              "id": "rock_7_5",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "8,6,N",
-                  "8,6,E",
-                  "8,6,S",
-                  "8,6,W"
-                ]
-              },
-              "at": "7,5",
-              "color": "#7a6a55"
-            },
-            "rock_6_5": {
-              "id": "rock_6_5",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "5,6,N",
-                  "5,6,E",
-                  "5,6,S",
-                  "5,6,W"
-                ]
-              },
-              "at": "6,5",
-              "color": "#7a6a55"
-            },
-            "rock_6_4": {
-              "id": "rock_6_4",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "5,3,N",
-                  "5,3,E",
-                  "5,3,S",
-                  "5,3,W",
-                  "6,3,N",
-                  "6,3,E",
-                  "6,3,S",
-                  "6,3,W",
-                  "7,3,N",
-                  "7,3,E",
-                  "7,3,S",
-                  "7,3,W"
-                ]
-              },
-              "at": "6,4",
               "color": "#7a6a55"
             },
             "rope_2_1": {
@@ -21726,17 +20993,6 @@
                 ]
               ],
               "color": "#3a7"
-            },
-            "rock_sword_spear": {
-              "id": "rock_sword_spear",
-              "name": "rock (sword or spear)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear"
-              ],
-              "color": "#7a6a55"
             },
             "atlas_gate_0": {
               "id": "atlas_gate_0",
@@ -23142,12 +22398,12 @@
               "atlas_exit_id": "out_teleporter_0_80"
             },
             {
-              "exit_id": "level_21 -> level_22",
+              "exit_id": "level_21 -> level_22__r0c6",
               "x": 5,
               "y": 10,
               "side": null,
-              "exitName": "level_21 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_21 -> level_22__r0c6",
+              "targetRegion": "level_22__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_80_160"
@@ -23176,7 +22432,7 @@
           }
         }
       },
-      "level_22": {
+      "level_22__r0c6": {
         "substrate": "maze",
         "shared_world": "level_22",
         "playable_payload": {
@@ -23189,44 +22445,44 @@
           },
           "exits": [
             {
-              "exit_id": "level_22 -> level_25",
+              "exit_id": "level_22__r8c0 -> level_25__r2c7",
               "x": 0,
               "y": 8,
               "side": null,
-              "exitName": "level_22 -> level_25",
-              "targetRegion": "level_25",
+              "exitName": "level_22__r8c0 -> level_25__r2c7",
+              "targetRegion": "level_25__r2c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_128"
             },
             {
-              "exit_id": "level_22 -> level_21",
+              "exit_id": "level_22__r0c6 -> level_21",
               "x": 6,
               "y": 0,
               "side": null,
-              "exitName": "level_22 -> level_21",
+              "exitName": "level_22__r0c6 -> level_21",
               "targetRegion": "level_21",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_0"
             },
             {
-              "exit_id": "level_22 -> level_30__r0c4",
+              "exit_id": "level_22__r8c0 -> level_30__r0c4",
               "x": 6,
               "y": 12,
               "side": null,
-              "exitName": "level_22 -> level_30__r0c4",
+              "exitName": "level_22__r8c0 -> level_30__r0c4",
               "targetRegion": "level_30__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_192"
             },
             {
-              "exit_id": "level_22 -> level_29__r2c2",
+              "exit_id": "level_22__r0c6 -> level_29__r2c2",
               "x": 12,
               "y": 4,
               "side": null,
-              "exitName": "level_22 -> level_29__r2c2",
+              "exitName": "level_22__r0c6 -> level_29__r2c2",
               "targetRegion": "level_29__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
@@ -23235,17 +22491,131 @@
           ],
           "obstacles": [],
           "items": [],
-          "obstacleLib": {},
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
           "blocks": [
             {
               "x": 6,
               "y": 4
             }
           ],
+          "entry_gates": [
+            {
+              "x": 3,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            }
+          ],
           "shared_world": {
             "key": "level_22",
             "regions": [
-              "level_22"
+              "level_22__r0c6",
+              "level_22__r8c0"
             ],
             "rows": [
               "......A......",
@@ -23255,20 +22625,27 @@
               "..AAAAAAAAAAA",
               "..A.AAAAA....",
               "..AAAA.AAAA..",
-              "...AAAAAAA...",
-              "AAAAAAAAAAA..",
-              "..A.AAAAA.A..",
-              "..AAAAAAAAA..",
-              "......A......",
-              "......A......"
+              ".............",
+              "BBBBBBBBBBB..",
+              "..B.BBBBB.B..",
+              "..BBBBBBBBB..",
+              "......B......",
+              "......B......"
             ],
             "entrances": {
-              "level_22": {
+              "level_22__r0c6": {
                 "x": 6,
                 "y": 1
+              },
+              "level_22__r8c0": {
+                "x": 0,
+                "y": 8
               }
             },
-            "links": {}
+            "links": {
+              "level_22__r0c6>level_22__r8c0": "level_22__r0c6 -> level_22__r8c0",
+              "level_22__r8c0>level_22__r0c6": "level_22__r8c0 -> level_22__r0c6"
+            }
           },
           "atlas_region": "level_22",
           "level": 22,
@@ -23278,6 +22655,10 @@
             "y": 0
           }
         }
+      },
+      "level_22__r8c0": {
+        "substrate": "maze",
+        "shared_world": "level_22"
       },
       "level_23": {
         "substrate": "maze",
@@ -23451,7 +22832,7 @@
           }
         }
       },
-      "level_25": {
+      "level_25__r2c7": {
         "substrate": "maze",
         "shared_world": "level_25",
         "playable_payload": {
@@ -23464,34 +22845,34 @@
           },
           "exits": [
             {
-              "exit_id": "level_25 -> level_26__r2c4",
+              "exit_id": "level_25__r3c2 -> level_26__r2c4",
               "x": 0,
               "y": 6,
               "side": null,
-              "exitName": "level_25 -> level_26__r2c4",
+              "exitName": "level_25__r3c2 -> level_26__r2c4",
               "targetRegion": "level_26__r2c4",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_96"
             },
             {
-              "exit_id": "level_25 -> level_28__r0c6",
+              "exit_id": "level_25__r2c7 -> level_28__r0c6",
               "x": 6,
               "y": 8,
               "side": null,
-              "exitName": "level_25 -> level_28__r0c6",
+              "exitName": "level_25__r2c7 -> level_28__r0c6",
               "targetRegion": "level_28__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_128"
             },
             {
-              "exit_id": "level_25 -> level_22",
+              "exit_id": "level_25__r2c7 -> level_22__r8c0",
               "x": 9,
               "y": 2,
               "side": null,
-              "exitName": "level_25 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_25__r2c7 -> level_22__r8c0",
+              "targetRegion": "level_22__r8c0",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_32"
@@ -23506,36 +22887,133 @@
               "locationName": "Level 025 - Chest"
             }
           ],
-          "obstacleLib": {},
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear OR Progressive Shield)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
           "blocks": [
             {
               "x": 5,
               "y": 4
             }
           ],
+          "entry_gates": [
+            {
+              "x": 3,
+              "y": 3,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 5,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 5,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "dir": "E",
+              "gate": "atlas_gate_0"
+            }
+          ],
           "shared_world": {
             "key": "level_25",
             "regions": [
-              "level_25"
+              "level_25__r2c7",
+              "level_25__r3c2"
             ],
             "rows": [
               "..........",
               "..........",
               ".......AAA",
-              "..AAAA.A..",
-              "..AAAA.A..",
-              "..AAAAAA..",
-              "AAA...AA..",
+              "..B..A.A..",
+              "..B..A.A..",
+              "..B..AAA..",
+              "BBB...AA..",
               "......A...",
               "......A..."
             ],
             "entrances": {
-              "level_25": {
+              "level_25__r2c7": {
                 "x": 8,
                 "y": 2
+              },
+              "level_25__r3c2": {
+                "x": 0,
+                "y": 6
               }
             },
-            "links": {}
+            "links": {
+              "level_25__r2c7>level_25__r3c2": "level_25__r2c7 -> level_25__r3c2",
+              "level_25__r3c2>level_25__r2c7": "level_25__r3c2 -> level_25__r2c7"
+            }
           },
           "atlas_region": "level_25",
           "level": 25,
@@ -23545,6 +23023,10 @@
             "y": 0
           }
         }
+      },
+      "level_25__r3c2": {
+        "substrate": "maze",
+        "shared_world": "level_25"
       },
       "level_26__r2c4": {
         "substrate": "maze",
@@ -23570,12 +23052,12 @@
               "atlas_exit_id": "out_teleporter_64_304"
             },
             {
-              "exit_id": "level_26__r2c4 -> level_25",
+              "exit_id": "level_26__r2c4 -> level_25__r3c2",
               "x": 9,
               "y": 2,
               "side": null,
-              "exitName": "level_26__r2c4 -> level_25",
-              "targetRegion": "level_25",
+              "exitName": "level_26__r2c4 -> level_25__r3c2",
+              "targetRegion": "level_25__r3c2",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_144_32"
@@ -23840,12 +23322,12 @@
               "atlas_exit_id": "out_teleporter_0_96"
             },
             {
-              "exit_id": "level_28__r0c6 -> level_25",
+              "exit_id": "level_28__r0c6 -> level_25__r2c7",
               "x": 6,
               "y": 0,
               "side": null,
-              "exitName": "level_28__r0c6 -> level_25",
-              "targetRegion": "level_25",
+              "exitName": "level_28__r0c6 -> level_25__r2c7",
+              "targetRegion": "level_25__r2c7",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_96_0"
@@ -24573,12 +24055,12 @@
               "atlas_exit_id": "out_teleporter_0_80"
             },
             {
-              "exit_id": "level_29__r2c2 -> level_22",
+              "exit_id": "level_29__r2c2 -> level_22__r0c6",
               "x": 0,
               "y": 14,
               "side": null,
-              "exitName": "level_29__r2c2 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_29__r2c2 -> level_22__r0c6",
+              "targetRegion": "level_22__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_0_224"
@@ -24815,12 +24297,12 @@
               "atlas_exit_id": "out_teleporter_0_128"
             },
             {
-              "exit_id": "level_30__r0c4 -> level_22",
+              "exit_id": "level_30__r0c4 -> level_22__r8c0",
               "x": 4,
               "y": 0,
               "side": null,
-              "exitName": "level_30__r0c4 -> level_22",
-              "targetRegion": "level_22",
+              "exitName": "level_30__r0c4 -> level_22__r8c0",
+              "targetRegion": "level_22__r8c0",
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_64_0"
@@ -24873,7 +24355,7 @@
             {
               "x": 3,
               "y": 14,
-              "id": "rock_3_14"
+              "id": "rock_sword_spear"
             },
             {
               "x": 6,
@@ -24990,53 +24472,15 @@
             }
           ],
           "obstacleLib": {
-            "rock_3_14": {
-              "id": "rock_3_14",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "2,13,N",
-                  "2,13,E",
-                  "2,13,S",
-                  "2,13,W",
-                  "3,13,N",
-                  "3,13,E",
-                  "3,13,S",
-                  "3,13,W",
-                  "4,13,N",
-                  "4,13,E",
-                  "4,13,S",
-                  "4,13,W",
-                  "2,14,N",
-                  "2,14,E",
-                  "2,14,S",
-                  "2,14,W",
-                  "4,14,N",
-                  "4,14,E",
-                  "4,14,S",
-                  "4,14,W",
-                  "2,15,N",
-                  "2,15,E",
-                  "2,15,S",
-                  "2,15,W",
-                  "3,15,N",
-                  "3,15,E",
-                  "3,15,S",
-                  "3,15,W",
-                  "4,15,N",
-                  "4,15,E",
-                  "4,15,S",
-                  "4,15,W"
-                ]
-              },
-              "at": "3,14",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -25285,150 +24729,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -54321,7 +53621,7 @@
             {
               "x": 7,
               "y": 8,
-              "id": "rock_7_8"
+              "id": "rock_sword_spear"
             },
             {
               "x": 7,
@@ -54341,7 +53641,7 @@
             {
               "x": 8,
               "y": 10,
-              "id": "rock_8_10"
+              "id": "rock_sword_spear"
             },
             {
               "x": 1,
@@ -54396,62 +53696,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_7_8": {
-              "id": "rock_7_8",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "6,7,N",
-                  "6,7,E",
-                  "6,7,S",
-                  "6,7,W",
-                  "7,7,N",
-                  "7,7,E",
-                  "7,7,S",
-                  "7,7,W",
-                  "8,7,N",
-                  "8,7,E",
-                  "8,7,S",
-                  "8,7,W"
-                ]
-              },
-              "at": "7,8",
-              "color": "#7a6a55"
-            },
-            "rock_8_10": {
-              "id": "rock_8_10",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "9,10,N",
-                  "9,10,E",
-                  "9,10,S",
-                  "9,10,W",
-                  "8,11,N",
-                  "8,11,E",
-                  "8,11,S",
-                  "8,11,W",
-                  "9,11,N",
-                  "9,11,E",
-                  "9,11,S",
-                  "9,11,W"
-                ]
-              },
-              "at": "8,10",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -54713,150 +53966,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -63643,7 +62752,7 @@
             {
               "x": 4,
               "y": 3,
-              "id": "rock_4_3"
+              "id": "rock_sword_spear"
             },
             {
               "x": 9,
@@ -63733,41 +62842,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_4_3": {
-              "id": "rock_4_3",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "3,2,N",
-                  "3,2,E",
-                  "3,2,S",
-                  "3,2,W",
-                  "4,2,N",
-                  "4,2,E",
-                  "4,2,S",
-                  "4,2,W",
-                  "5,2,N",
-                  "5,2,E",
-                  "5,2,S",
-                  "5,2,W",
-                  "4,4,N",
-                  "4,4,E",
-                  "4,4,S",
-                  "4,4,W",
-                  "5,4,N",
-                  "5,4,E",
-                  "5,4,S",
-                  "5,4,W"
-                ]
-              },
-              "at": "4,3",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -63927,150 +63010,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -71898,7 +70837,7 @@
             {
               "x": 11,
               "y": 3,
-              "id": "rock_11_3"
+              "id": "rock_sword_spear"
             },
             {
               "x": 5,
@@ -71968,79 +70907,20 @@
             {
               "x": 16,
               "y": 7,
-              "id": "rock_16_7"
+              "id": "rock_sword_spear"
             }
           ],
           "items": [],
           "obstacleLib": {
-            "rock_11_3": {
-              "id": "rock_11_3",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "10,2,N",
-                  "10,2,E",
-                  "10,2,S",
-                  "10,2,W",
-                  "10,3,N",
-                  "10,3,E",
-                  "10,3,S",
-                  "10,3,W",
-                  "12,3,N",
-                  "12,3,E",
-                  "12,3,S",
-                  "12,3,W",
-                  "12,4,N",
-                  "12,4,E",
-                  "12,4,S",
-                  "12,4,W"
-                ]
-              },
-              "at": "11,3",
-              "color": "#7a6a55"
-            },
-            "rock_16_7": {
-              "id": "rock_16_7",
-              "name": "rock (sword or spear or fire)",
-              "kind": "rock",
-              "clear_set": [],
-              "struck_by": [
-                "sword",
-                "spear",
-                "fire"
-              ],
-              "struck_from": {
-                "fire": [
-                  "15,6,N",
-                  "15,6,E",
-                  "15,6,S",
-                  "15,6,W",
-                  "15,7,N",
-                  "15,7,E",
-                  "15,7,S",
-                  "15,7,W",
-                  "17,7,N",
-                  "17,7,E",
-                  "17,7,S",
-                  "17,7,W",
-                  "15,8,N",
-                  "15,8,E",
-                  "15,8,S",
-                  "15,8,W",
-                  "17,8,N",
-                  "17,8,E",
-                  "17,8,S",
-                  "17,8,W"
-                ]
-              },
-              "at": "16,7",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -72200,150 +71080,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -74231,7 +72967,7 @@
             {
               "x": 8,
               "y": 9,
-              "id": "rock_8_9"
+              "id": "rock_sword_spear"
             },
             {
               "x": 4,
@@ -74251,29 +72987,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_8_9": {
-              "id": "rock_8_9",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "9,8,N",
-                  "9,8,E",
-                  "9,8,S",
-                  "9,8,W",
-                  "9,9,N",
-                  "9,9,E",
-                  "9,9,S",
-                  "9,9,W"
-                ]
-              },
-              "at": "8,9",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -74449,150 +73171,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -77676,10 +76254,12 @@
             "level_19__r1c1",
             "level_20__r1c4",
             "level_21",
-            "level_22",
+            "level_22__r0c6",
+            "level_22__r8c0",
             "level_23",
             "level_24",
-            "level_25",
+            "level_25__r2c7",
+            "level_25__r3c2",
             "level_26__r13c8",
             "level_26__r2c4",
             "level_27",

@@ -60,7 +60,7 @@
 import { SOLVER_ENV_APPLIED, SOLVER_ENV_ERROR } from './solverEnvShim.js';
 import { stampSolverEnv } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { ANYTIME_PASSES, settleSolve, solveAnytime, upgradeWindowWork } from './jsRuntimeSolver.js';
+import { ANYTIME_PASSES, planDashTicks, settleSolve, solveAnytime, upgradeWindowWork } from './jsRuntimeSolver.js';
 import { walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
 import { normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
@@ -123,7 +123,8 @@ self.onmessage = (event) => {
         // ⛓ SOLVER LIMIT OFF — no window without a limit (0 = no work limit: `passShouldStop` installs none either).
         const windowAt = Number.isFinite(budgetWork) && budgetWork > 0
             ? upgradeWindowWork(budgetWork, tape.upgradeWindowWork ?? null) : null;
-        const tap = progress ? createProgressTap({ passes, clock, budgetWork, windowAt,
+        // ⛓ PANEL-ROUTE — `dashTicksOf`: the dash presses the solver's recorder kept beside each plan (hook-only).
+        const tap = progress ? createProgressTap({ passes, clock, budgetWork, windowAt, dashTicksOf: planDashTicks,
             minIntervalMs: progressIntervalMs(msg.progressIntervalMs),
             request: requestIdentity(tape, { passes, windowAt, attempt: msg.progressAttempt ?? null }),
             post: (snapshot, final) => self.postMessage({ type: SOLVE_PROGRESS_MESSAGE, id, snapshot, final }) }) : null;

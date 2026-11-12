@@ -1655,3 +1655,196 @@ registerTest({
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
+
+/**
+ * ⛓⛓ CONTENT SETS R3 — **THE THEME `meta` IN PLAY.**
+ *
+ * The world is the committed `meta_trial` preset (`META_TRIAL_STATE`: the
+ * concept trial with `content: ['meta']`), loaded as a document is loaded and
+ * never changed. Every expected word is read from the theme pack the document
+ * records (`procgen_metadata[slot].content`, ⚠ a per-player map), fetched from
+ * `packs/`, never spelled here. Asserts:
+ *   1. the START (a text-adventure room) shows a theme place: its title is a
+ *      `place` concept's name and the arrival line is its description;
+ *   2. the sword-gated exit is refused with the Gate's `blocked` line, and with
+ *      the sword granted it opens and moves the player with its `passedWith` line;
+ *   3. the maze's water gate (the theme presents no water) is drawn from the
+ *      maze's DEFAULT pack: its name, colour and symbol in the deserialized world
+ *      equal the maze pack's water concept and the concept_trial preset's row.
+ * ⚠ In this world the guardian is the text adventure's gate, so the Gate's MAZE
+ * look is not on screen here; `procgenPipeline/metaTrialWorld.test.js` pins it on
+ * a maze world. The sword is removed after.
+ */
+const META_TRIAL_PRESET_PATH = './presets/meta_trial/AP_1/AP_1_rules.json';
+
+async function packLayers(id) {
+    const pack = await (await fetch(`./packs/${id}/pack.json`, { cache: 'no-store' })).json();
+    const read = async (layer) => (pack.layers?.[layer]
+        ? (await fetch(`./packs/${id}/${pack.layers[layer]}`, { cache: 'no-store' })).json() : null);
+    return { concepts: (await read('concepts'))?.concepts ?? {}, strings: (await read('text'))?.strings ?? {} };
+}
+
+async function metaTrialPlays(testController) {
+    const doc = await (await fetch(META_TRIAL_PRESET_PATH, { cache: 'no-store' })).json();
+    const slot = '1';
+    const theme = doc.procgen_metadata?.[slot]?.content?.[0] ?? null;
+    testController.reportCondition(`⛓ premise: ${META_TRIAL_PRESET_PATH} records a content set for player ${slot} (${theme})`, !!theme);
+    if (!theme) return testController.getOverallResult();
+    const meta = await packLayers(theme);
+    const mazePack = await packLayers(substrateRegistry.get('maze').defaultContentPack);
+    const presenter = (layers, mechanic) => Object.values(layers.concepts).find((c) => c.presents === mechanic) ?? null;
+    const gateConcept = presenter(meta, 'guardian');
+    const places = Object.values(meta.concepts).filter((c) => c.kind === 'place');
+    testController.reportCondition(`⛓ premise: the pack "${theme}" presents the guardian with both lines, offers places, and presents no water`,
+        !!gateConcept?.text?.blocked && !!gateConcept?.text?.passedWith && places.length > 0 && !presenter(meta, 'water'));
+    if (!gateConcept || !places.length) return testController.getOverallResult();
+
+    const regions = doc.regions[slot];
+    const sidecars = doc.preset_sidecars?.[slot] ?? {};
+    const start = regions.Menu.exits[0].connected_region;
+    const room = sidecars[start]?.playable_payload;
+    const guarded = Object.keys(room?.prose?.exits ?? {})[0] ?? null;
+    const target = room?.exits?.find((e) => e.exit_id === guarded)?.targetRegion ?? null;
+    const rule = regions[start]?.exits?.find((x) => x.connected_region === target)?.access_rule ?? null;
+    const sword = itemsOfRule(rule)?.[0] ?? null;
+    const place = places.find((p) => p.name === room?.prose?.name) ?? null;
+    const waterRegion = Object.entries(sidecars).find(([, s]) => s.substrate === 'maze'
+        && Object.values(s.playable_payload?.obstacleLib ?? {}).some((d) => d.concept === 'water'))?.[0] ?? null;
+    const [waterId] = Object.entries(sidecars[waterRegion]?.playable_payload?.obstacleLib ?? {})
+        .find(([, d]) => d.concept === 'water') ?? [];
+    testController.reportCondition(`⛓ premise: START ${start} is a text-adventure room with a "${theme}" place and a gated exit `
+        + `${guarded} → ${target} on ${sword}; ${waterRegion} is a maze with the water gate ${waterId}`,
+    sidecars[start]?.substrate === 'text_adventure' && !!place && !!guarded && !!sword && !!waterId);
+    if (!place || !guarded || !sword || !waterId) return testController.getOverallResult();
+    const vars = { exitName: guarded, destinationRegion: target };
+    const wantBlocked = processMessageTemplate(meta.strings[gateConcept.text.blocked], vars);
+    const wantPassed = processMessageTemplate(meta.strings[gateConcept.text.passedWith], vars);
+    const wantArrival = processMessageTemplate(place.description, { regionName: start });
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+    let swordGranted = false;
+    let observer = null;
+    try {
+        const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 10000);
+        testController.eventBus.publish('files:jsonLoaded', {
+            jsonData: doc, selectedPlayerId: slot, sourceName: 'meta-trial-plays',
+        });
+        await rulesLoaded;
+        await testController.stateManager.pingWorker('after-rules-load', 3000);
+        // ⛔ IDENTITY (trap 1302): the warehouse is matched on game name and region set. ⚠ concept_trial has the
+        //   same game name and region set, and its maze payloads are this world's byte for byte (asserted below
+        //   from the two documents), so the maze half cannot tell the two apart; the text-adventure half (the
+        //   place's title and arrival line, the Gate's words) is what only THIS document carries.
+        const getWarehouse = () => window.centralRegistry?.getPublicFunction('procgenPlayer', 'getWarehouse')?.();
+        const ours = await testController.pollForCondition(() => {
+            const w = getWarehouse();
+            return testController.stateManager.getGameName?.() === doc.game_name
+                && !!w?.regions?.get(waterRegion)?.world?.obstacleLib?.[waterId]
+                && JSON.stringify(Object.keys(sidecars).sort()) === JSON.stringify([...(w.regions.keys())].sort());
+        }, `the loaded document is ${META_TRIAL_PRESET_PATH} and ${waterRegion}'s world holds ${waterId}`, 10000, 100);
+        testController.reportCondition(`the loaded document is ${META_TRIAL_PRESET_PATH} and ${waterRegion}'s world holds ${waterId}`, !!ours);
+        if (!ours) return testController.getOverallResult();
+
+        // (3) the fall-through: the water gate is the maze default pack's, and the concept trial's.
+        const def = getWarehouse()?.regions?.get(waterRegion)?.world?.obstacleLib?.[waterId] ?? {};
+        const mazeWater = presenter(mazePack, 'water');
+        testController.assertEqual(`${waterId} is drawn with the maze default pack's water (name, colour, symbol)`,
+            JSON.stringify({ name: mazeWater?.name, color: mazeWater?.look?.color, symbol: mazeWater?.look?.symbol }),
+            JSON.stringify({ name: def.name, color: def.color, symbol: def.symbol }));
+        const control = await (await fetch(CONCEPT_TRIAL_PRESET_PATH, { cache: 'no-store' })).json();
+        testController.assertEqual(`${waterId}'s row is the concept_trial preset's, byte for byte`,
+            JSON.stringify(control.preset_sidecars?.[slot]?.[waterRegion]?.playable_payload?.obstacleLib?.[waterId] ?? null),
+            JSON.stringify(sidecars[waterRegion].playable_payload.obstacleLib[waterId]));
+
+        // (1) the START shows its place.
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
+        const iframeDoc = () => document.querySelector('iframe.tasw-iframe')?.contentDocument ?? null;
+        const click = (el) => el.dispatchEvent(new el.ownerDocument.defaultView.MouseEvent('click',
+            { bubbles: true, cancelable: true }));
+        const linkFor = (id) => [...(iframeDoc()?.querySelectorAll('[data-exit-id]') ?? [])]
+            .find((l) => l.getAttribute('data-exit-id') === id) ?? null;
+        const messages = () => [...(iframeDoc()?.querySelectorAll('.tae-msg') ?? [])].map((m) => m.textContent);
+        const title = () => iframeDoc()?.querySelector('.tae-actions-title')?.textContent ?? null;
+        const inStart = await testController.pollForCondition(
+            () => gs.getCurrentRegion() === start && iframeDoc()?.querySelector('.tae-actions') !== null,
+            `the wrapper rendered ${start}`, 15000, 200);
+        testController.reportCondition(`the wrapper rendered ${start}`, !!inStart);
+        if (!inStart) return testController.getOverallResult();
+        const titled = await testController.pollForCondition(() => title() === place.name,
+            `${start}'s title is the place's name`, 5000, 100);
+        testController.reportCondition(`${start}'s title is the "${theme}" place's name "${place.name}" (it read "${title()}")`, !!titled);
+        const described = await testController.pollForCondition(() => messages().includes(wantArrival),
+            `${start}'s arrival line is the place's description`, 5000, 100);
+        testController.reportCondition(`${start}'s arrival line is the place's description`, !!described);
+        if (!described) testController.log(`messages: ${JSON.stringify(messages())}`, 'error');
+
+        // (2) the Gate, without and with the sword.
+        for (let i = 0; i < 20 && !linkFor(guarded); i++) {
+            const explore = iframeDoc()?.querySelector('[data-action="explore"]');
+            if (!explore) break;
+            click(explore);
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 200));
+        }
+        testController.reportCondition(`the wrapper rendered ${start}'s exit ${guarded}`, !!linkFor(guarded));
+        if (!linkFor(guarded)) return testController.getOverallResult();
+        const seen = [];
+        const take = (n) => {
+            if (n.nodeType !== 1) return;
+            if (n.matches?.('.tae-msg')) seen.push(n.textContent);
+            for (const m of n.querySelectorAll?.('.tae-msg') ?? []) seen.push(m.textContent);
+        };
+        observer = new (iframeDoc().defaultView.MutationObserver)((recs) => recs.forEach((r) => r.addedNodes.forEach(take)));
+        observer.observe(iframeDoc().body, { childList: true, subtree: true });
+        testController.reportCondition(`⛓ premise: ${sword} is not held`,
+            !((testController.stateManager.getSnapshot()?.inventory ?? {})[sword] > 0));
+        const before = seen.length;
+        click(linkFor(guarded));
+        const saidBlocked = await testController.pollForCondition(() => seen.slice(before).includes(wantBlocked),
+            `the engine displayed the Gate's blocked line for ${guarded}`, 5000, 100);
+        testController.reportCondition(`the engine displayed the Gate's blocked line for ${guarded}`, !!saidBlocked);
+        const until = Date.now() + GATE_SETTLE_MS;
+        let stayed = true;
+        while (Date.now() < until) {
+            if (gs.getCurrentRegion() !== start) { stayed = false; break; }
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 100));
+        }
+        testController.reportCondition(`the click on ${guarded} leaves the player in ${start} for ${GATE_SETTLE_MS} ms`, stayed);
+
+        await testController.stateManager.addItemToInventory(sword, 1);
+        swordGranted = true;
+        await testController.stateManager.pingWorker('after-sword', 3000);
+        const opened = await testController.pollForCondition(
+            () => linkFor(guarded)?.classList.contains('tae-link-accessible'),
+            `${guarded} becomes accessible once ${sword} is held`, 8000, 100);
+        testController.reportCondition(`${guarded} becomes tae-link-accessible once ${sword} is held`, !!opened);
+        if (!opened) return testController.getOverallResult();
+        const beforeMove = seen.length;
+        click(linkFor(guarded));
+        const moved = await testController.pollForCondition(() => gs.getCurrentRegion() === target,
+            `the click on ${guarded} moved the player to ${target}`, 8000, 50);
+        testController.reportCondition(`the click on ${guarded} moved the player to ${target}`, !!moved);
+        testController.reportCondition(`the engine displayed the Gate's passedWith line for ${guarded}`,
+            seen.slice(beforeMove).includes(wantPassed));
+        return testController.getOverallResult();
+    } finally {
+        observer?.disconnect();
+        if (swordGranted) await testController.stateManager.removeItemFromInventory(sword, 1);
+    }
+}
+
+registerTest({
+    id: 'meta-trial-plays',
+    name: 'Meta theme trial: the text adventure speaks the Gate and a meta place; the maze\'s water gate is the default\'s',
+    description: 'Loads the committed meta_trial preset (content sets R3: the concept trial with the theme pack meta); '
+               + 'reads the words from the pack the document records. Asserts the START\'s title and arrival line are a '
+               + 'meta place\'s, the sword-gated exit is refused with the Gate\'s blocked line and, with the sword granted, '
+               + 'opens with its passedWith line, and the maze\'s water gate (which the theme does not present) is the '
+               + 'maze default pack\'s and the concept_trial preset\'s row. The sword is removed after.',
+    testFunction: metaTrialPlays,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});

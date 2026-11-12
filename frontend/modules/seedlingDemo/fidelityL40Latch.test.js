@@ -22,10 +22,10 @@ import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelit
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
-import { ORBIT_KILL, ORBIT_KILL_CANDIDATES, orbitKillPolicy, strikePolicyFor } from './solverBot.js';
+import { ORBIT_KILL, ORBIT_KILL_CANDIDATES, orbitKillPolicy, strikePolicyFor, withLatchWeighFirst } from './solverBot.js';
 import { compareCorpseBumpWitness } from './fidelityCorpseBump.js';
 import { L40LATCH_D1_SWITCHES, L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchModelSamples, l40LatchOrbitChecks,
-    l40LatchSolve, l40LatchStandChecks, unpackL40LatchSample } from './fidelityL40Latch.js';
+    l40LatchOrbitShippedChecks, l40LatchSolve, l40LatchStandChecks, unpackL40LatchSample } from './fidelityL40Latch.js';
 
 const witness = (name) => JSON.parse(readFileSync(join(L40LATCH_WITNESS_DIR, `${name}.json`), 'utf8'));
 
@@ -74,6 +74,25 @@ describe('L40LATCH W0 — the still holder, on the game (`l40latch-stand`)', () 
         expect(out).toBeNull();
         expect(refusal.message).toContain('hold: hold tick 93 of 131 MOVED, from (888,776)');
     }), 120_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the row above is a BEFORE pin (`withL40Flip(false)`). At the SHIPPED
+    // defaults the solve never reaches the latch's hold: the flip's chain refuses before a tick at the iceturret approach
+    // staging, on the same body (bobsoldier@880,832's sword). The hold's MOVED refusal is NOT exercised at the defaults.
+    it('AFTER (the shipped defaults): no hold is stood — refused before a tick at the iceturret approach staging, on bobsoldier@880,832\'s sword', async () => {
+        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: false, chaserOrbitKill: false });
+        expect(out).toBeNull();
+        expect(refusal.message).not.toContain('MOVED');
+        expect(refusal.message).toContain('iceturret@472,400 approach staging (488,579): the combat ladder is EXHAUSTED. The '
+            + 'corridor passes through danger at (888.0,808.7) — chaser:bobsoldier@880,832');
+        expect(refusal.obstacle?.id).toBe('bobsoldier@880,832');
+        expect(refusal.perTick.length).toBe(0);
+    }, 120_000);
+
+    it('AFTER control: the shipped defaults MINUS `LATCH_WEIGH_FIRST` alone keep the BEFORE — hold tick 93 MOVED (measured: each of the twelve flip switches OFF alone; LATCH_WEIGH_FIRST or TURRET_APPROACH)', () => withLatchWeighFirst(false, async () => {
+        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: false, chaserOrbitKill: false });
+        expect(out).toBeNull();
+        expect(refusal.message).toContain('hold: hold tick 93 of 131 MOVED, from (888,776)');
+    }), 120_000);
 });
 
 describe('L40LATCH D1b — the orbit kill', () => {
@@ -98,6 +117,30 @@ describe('L40LATCH D1b — the orbit kill', () => {
         expect(t).toBe(184);
         expect(run.ledger('playerHits')).toEqual([]);
     });
+});
+
+describe('L40LATCH AFTER — the shipped defaults\' SOLVE from the latch, on the game (`l40latch-orbit-shipped`)', () => {
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): at the SHIPPED defaults (the L40 flip set ON) the latch solve with D1's
+    // switches SOLVES Boss Key 2 in 4144 t (the BEFORE, `l40latch-orbit-chain`, refused at 271 t). The plan, played on
+    // p4g (`probe-seedling-l40latch.mjs --only=l40latch-orbit-shipped --record`); the train tier pins it as the solve.
+    const w = witness('l40latch-orbit-shipped');
+    const game = w.samples.map(unpackL40LatchSample);
+
+    it('the recording: p4g, never hit, the BobSoldier gone from t184, the player ends on the key', () => {
+        expect(w.page).toBe('seedling_bot_ap_p4g');
+        expect(w.tape.tick_count).toBe(4144);
+        expect(game.length).toBeGreaterThan(4100);
+        const checks = l40LatchOrbitShippedChecks(game);
+        expect(checks.map((c) => [c.name, c.ok])).toEqual(checks.map((c) => [c.name, true]));
+        expect(game.find((g) => !(g.bodies ?? []).some((b) => b.cls === 'BobSoldier' && b.x > 800 && b.y > 700))?.t).toBe(184);
+    });
+
+    it('the model at the shipped defaults reproduces it at 0 px, never hit', async () => {
+        const model = await l40LatchModelSamples(w.tape, L40LATCH_D1_SWITCHES);
+        expect(model.error).toBeNull();
+        expect(compareCorpseBumpWitness(game, model.samples)).toEqual([]);
+        expect(model.hits).toEqual([]);
+    }, 180_000);
 });
 
 describe('L40LATCH D1 — the solver\'s chain from the latch, on the game (`l40latch-orbit-chain`)', () => {

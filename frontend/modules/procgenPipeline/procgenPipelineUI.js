@@ -84,7 +84,9 @@ import {
     sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
     buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun, worldContentStackOf,
 } from './presetRun.js';
-import { attachEnvelopeContent, browserPackIo, loadContentSet } from './worldContent.js';
+import {
+    attachEnvelopeContent, browserPackIo, loadContentSet, loadSelectableContentPacks, pickedContentList,
+} from './worldContent.js';
 import { getRegionEditor, openRoomEditor, roomEditorKindOf } from './regionEditors.js';
 import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
@@ -104,6 +106,8 @@ import { stampLibraryIdentity, REGION_LIBRARY_SCHEMA_VERSION } from './regionLib
 import { reportStorageWriteFailure } from '../../app/core/storageQuota.js';
 
 const LS_KEY = 'procgenPipeline_params';
+/** ⛓ CONTENT SETS R3 — the class of the Parameters section's content-set row (`_renderContentField`). */
+export const CONTENT_FIELD_CLASS = 'procgen-pipeline-field procgen-pipeline-content';
 // View preferences (toggle states etc.) live under a separate key so
 // they don't churn the saved scenario state on every render.
 const LS_VIEW_KEY = 'procgenPipeline_view';
@@ -303,6 +307,11 @@ export class ProcgenPipelineUI {
         this.regionLibraries = [];
         // ⛓ CONTENT SETS C3 — the world's loaded content set (`_loadWorldContent`); runtime only, never saved.
         this.contentSet = null;
+        // ⛓ CONTENT SETS R3 — the content picker's choices (`selectableContentPacks`, from packs.json). null = not
+        // yet fetched; `_renderContentField` kicks the fetch on first render and re-renders when it lands.
+        this._contentPackChoices = null;
+        this._contentPackError = null;
+        this._contentPackFetching = false;
         // Persisted `libraries` refs awaiting the async resolve kicked off by a
         // load/preset-apply. Held so a save during the (ms-long) fetch window
         // round-trips the untouched refs instead of clobbering them with an
@@ -2082,6 +2091,64 @@ export class ProcgenPipelineUI {
         return row;
     }
 
+    /**
+     * ⛓ CONTENT SETS R3 — the world's content set (`params.content`): one box per
+     * pack a world may ADD (`selectableContentPacks`: the packs `packs.json`'s
+     * `content` table names, never a substrate's default pack, which is always in
+     * the stack), in stack order. None ticked (the default) is the world as
+     * before. Persists with the params (C3 pinned the round trip).
+     */
+    _renderContentField() {
+        const row = document.createElement('div');
+        row.className = CONTENT_FIELD_CLASS;
+        const label = document.createElement('label');
+        label.textContent = 'Content set';
+        label.title = 'Themes added on top of each substrate\'s built-in content, in the order shown (a later one '
+            + 'wins where two present the same thing). A theme changes the names, words and looks, never the logic. '
+            + 'None ticked = the built-in content only.';
+        row.appendChild(label);
+        if (this._contentPackChoices == null) {
+            this._ensureContentPackChoices();
+            row.appendChild(document.createTextNode(this._contentPackError ? ` (unavailable: ${this._contentPackError})` : ' …'));
+            return row;
+        }
+        if (!this._contentPackChoices.length) {
+            row.appendChild(document.createTextNode(' (none available)'));
+            return row;
+        }
+        row.appendChild(document.createTextNode(' built-in →'));
+        const chosen = new Set(Array.isArray(this.params.content) ? this.params.content : []);
+        for (const { id, title } of this._contentPackChoices) {
+            const opt = document.createElement('label');
+            opt.title = title;
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.value = id;
+            box.checked = chosen.has(id);
+            box.addEventListener('change', () => {
+                const now = new Set(Array.isArray(this.params.content) ? this.params.content : []);
+                if (box.checked) now.add(id); else now.delete(id);
+                this.params.content = pickedContentList(this._contentPackChoices, now, this.params.content);
+                this._saveToLocalStorage();
+            });
+            opt.appendChild(box);
+            opt.appendChild(document.createTextNode(` ${id}`));
+            row.appendChild(opt);
+        }
+        return row;
+    }
+
+    // Lazily fetch the content picker's choices once; re-render when they land.
+    _ensureContentPackChoices() {
+        if (this._contentPackChoices != null || this._contentPackFetching) return;
+        if (typeof window === 'undefined' || typeof window.fetch !== 'function') return;
+        this._contentPackFetching = true;
+        loadSelectableContentPacks()
+            .then((choices) => { this._contentPackChoices = choices; this._contentPackError = null; })
+            .catch((e) => { this._contentPackChoices = []; this._contentPackError = e.message; })
+            .finally(() => { this._contentPackFetching = false; this.render(); });
+    }
+
     _renderParams() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-params';
@@ -2162,6 +2229,7 @@ export class ProcgenPipelineUI {
         section.appendChild(xpEffectRow);
 
         section.appendChild(this._renderConceptsField());
+        section.appendChild(this._renderContentField());
 
         // Stop-on-pool-empty toggle. When on, growMaze ends the
         // moment the item pool is exhausted; when off (default),

@@ -2223,6 +2223,45 @@ try {
     check(/found nothing to clear/.test(await b2Status()) && (await read()).edits === 3,
         '⛔ CLEAR over bare floor REFUSES by name — an empty group is not an edit', await b2Status());
 
+    /**
+     * ⛓⛓ editor-corner-reset — A CORNER BELONGS TO THE TOOL THAT SET IT. `l`, click B, `x`, click B+1 used
+     * to CLEAR the rectangle from FILL's corner (here: refused, nothing to clear). Now CLEAR's first click
+     * is its own corner 1, nothing is applied, and the switch stops drawing FILL's corner mark (`#ffd75f`
+     * on the view's overlay). MUTANT: base `editorView` — the status reads the CLEAR refusal and the mark
+     * is still drawn after `x`.
+     */
+    const b2MarkAt = (tx, ty) => page.evaluate(({ x, y, w, h }) => {
+        const o = document.querySelector('.editorViewOverlay');
+        const cw = o.width / w;
+        const ch = o.height / h;
+        const d = o.getContext('2d').getImageData(Math.floor(x * cw), Math.floor(y * ch),
+            Math.ceil(cw), Math.ceil(ch)).data;
+        let n = 0;
+        for (let i = 0; i < d.length; i += 4) {
+            if (d[i + 3] > 0 && d[i] > 230 && d[i + 1] > 195 && d[i + 1] < 235 && d[i + 2] < 130) n++;
+        }
+        return n;
+    }, { x: tx, y: ty, w: TW, h: TH });
+    await page.evaluate(() => document.activeElement?.blur?.());
+    await page.keyboard.press('l');
+    await tClick(QB.x, QB.y);
+    const b2FillSaid = await b2Status();
+    const b2FillInk = await b2MarkAt(QB.x, QB.y);
+    check(b2FillSaid.startsWith(`FILL corner 1 at (${QB.x},${QB.y})`) && b2FillInk > 0,
+        '⛓ (corner reset) FILL\'s first click is corner 1, and its mark is drawn',
+        `${b2FillSaid.slice(0, 50)} ink=${b2FillInk}`);
+    await page.keyboard.press('x');
+    const b2InkAfter = await b2MarkAt(QB.x, QB.y);
+    check(b2InkAfter === 0, '⛓⛓ (corner reset) switching to CLEAR stops drawing FILL\'s corner',
+        `ink=${b2InkAfter}`);
+    await tClick(QB.x + 1, QB.y + 1);
+    const b2ClearSaid = await b2Status();
+    check(b2ClearSaid.startsWith(`CLEAR corner 1 at (${QB.x + 1},${QB.y + 1})`) && (await read()).edits === 3,
+        '⛓⛓⛓ (corner reset) CLEAR\'s first click after FILL is ITS corner 1 — no CLEAR applied on FILL\'s corner',
+        `${b2ClearSaid.slice(0, 60)} edits=${(await read()).edits}`);
+    await b2Shot('3b-fill-then-clear');
+    await page.keyboard.press('Escape');
+
     /* ⛓⛓⛓ MOVE the walled square A → B: ONE edit, source floor, destination walls. */
     await b2Tool('rect');
     await tClick(QA.x, QA.y);

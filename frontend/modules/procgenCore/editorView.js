@@ -423,7 +423,11 @@ export function mountEditorView({
      * one-cell drag two code paths for one gesture.
      */
     let swallowClick = false;
-    /** ⛓ B1 — the first corner of a FILL/CLEAR rectangle, or `null`. */
+    /**
+     * ⛓ B1 — the first corner of a FILL/CLEAR rectangle, or `null`. Its `owner`
+     * is the tool that set it: a corner belongs to ONE tool, so a FILL corner is
+     * not CLEAR's (editor-corner-reset).
+     */
     let editCorner = null;
     /** ⛓ B1 — the clip a MOVE has already spent: a second MOVE of it would cut the wrong cells. */
     let spentClip = null;
@@ -622,12 +626,10 @@ export function mountEditorView({
     const repaint = () => overlay.paint(shapes());
 
     /**
-     * ⛓ EVERY `onChange` GOES THROUGH HERE. B1 — a FILL/CLEAR corner dies with
-     * its tool, as RECT's does, and at the moment the Seedling page dropped it:
-     * when the change is reported, before the page hears of it.
+     * ⛓ EVERY `onChange` GOES THROUGH HERE. (B1 dropped a FILL/CLEAR corner here;
+     * editor-corner-reset moved that into `setTool`, the one place the tool changes.)
      */
     const changed = (c) => {
-        if (editCorner && c.tool !== EDIT_TOOLS.FILL && c.tool !== EDIT_TOOLS.CLEAR) editCorner = null;
         if (onChange) onChange(c);
     };
 
@@ -812,7 +814,7 @@ export function mountEditorView({
     /** ⛓ A two-click rectangle, like RECT's, whose second click builds and applies ONE op. */
     const twoClick = (what, build) => (c) => {
         if (!editCorner) {
-            editCorner = { tx: c.tx, ty: c.ty };
+            editCorner = { tx: c.tx, ty: c.ty, owner: tool };
             say(`${what} corner 1 at (${c.tx},${c.ty}) — click the opposite corner`);
             repaint();
             return;
@@ -885,6 +887,12 @@ export function mountEditorView({
         tool = t;
         corner = null;
         stroke = null;
+        // ⛓ editor-corner-reset — a FILL/CLEAR corner dies with ITS OWN tool: any switch to another
+        //   tool (FILL↔CLEAR and Escape included) drops it; re-arming the same tool keeps it. B1 dropped
+        //   it in `changed()` unless the new tool was FILL or CLEAR, so `l`, click, `x`, click CLEARED
+        //   from FILL's corner. ⛔ Before the repaint, so the switch does not draw a corner the new tool
+        //   does not hold (B1 kept E1's order, which left it on screen until the next gesture).
+        if (editCorner && t !== editCorner.owner) editCorner = null;
         repaint();
         changed({ session, result: null, tool, clip });
     };

@@ -99,6 +99,40 @@ export async function l40Bk2PocketTape() {
             + '(probe-seedling-l40bk2.mjs)' };
 }
 
+/**
+ * ⛓ seedling-fidelity-afterrows (wave 41) — `l40bk2-pocket-shipped`: the AFTER of `l40bk2-pocket-chain`. The same
+ * pocket boot solved at the SHIPPED defaults (the L40 flip set ON, no `withL40Flip` wrap): the solve now SOLVES Boss
+ * Key 2, and the tape is its whole plan (with its `equips`) folded onto the boot's header. Built at record time.
+ */
+export async function l40Bk2PocketShippedTape() {
+    const { buildTape } = await import('./botDriverV1.js');
+    const boot = await l40Bk2PocketBoot();
+    const { out, refusal } = await l40Bk2Solve(boot, L40BK2_D1_SWITCHES);
+    if (!out) throw new Error(`l40Bk2PocketShippedTape: the pocket solve REFUSED at the defaults — re-derive (${refusal?.message?.slice(0, 200)})`);
+    const perTick = out.perTick.map((k) => new Set(k));
+    const folded = buildTape(perTick, boot.boot, 'l40bk2-pocket-shipped',
+        { noclip: false, noDamage: false, noHazards: [], grants: [] });
+    return { ...boot, name: 'l40bk2-pocket-shipped', equips: [...(boot.equips ?? []), ...(out.equips ?? [])],
+        tick_count: perTick.length, inputs: folded.inputs,
+        description: 'seedling-fidelity-afterrows: L40 from the pocket boot (prox-l40-turret-volley\'s header) — the '
+            + 'SOLVER\'s own plan for Boss Key 2 at the SHIPPED defaults (the L40 flip set ON): it solves, where the '
+            + 'pre-flip solve (l40bk2-pocket-chain) refused (probe-seedling-l40bk2.mjs)' };
+}
+
+/** The game-side checks of `l40bk2-pocket-shipped`: never hit, still in L40, the player ends at the key's cell. */
+export function l40Bk2PocketShippedChecks(samples) {
+    const end = samples.at(-1);
+    return [{
+        name: 'the game never hits the player',
+        ok: samples.every((g) => (g.hits ?? 0) === 0),
+        detail: `max hits ${Math.max(...samples.map((g) => g.hits ?? 0))}`,
+    }, {
+        name: 'the game\'s player ends in L40 within 16 px of bosskey@656,528 (the collect)',
+        ok: end !== undefined && end.level === 40 && Math.abs(end.x - 664) <= 16 && Math.abs(end.y - 536) <= 16,
+        detail: end ? `ends in L${end.level} at (${end.x}, ${end.y})` : 'no sample',
+    }];
+}
+
 /** The game poll's fold: `fidelityCorpseBump`'s (the player, every block, every chaser and turret) plus the hits. */
 export function l40Bk2SampleOf(s, m) {
     return { ...corpseBumpSampleOf(s, m), hits: s.hits ?? null };
@@ -153,4 +187,6 @@ export function l40Bk2PocketChecks(samples) {
 export const L40BK2_WITNESSES = Object.freeze({
     'l40bk2-pocket-chain': Object.freeze({ tape: l40Bk2PocketTape, switches: L40BK2_D1_SWITCHES,
         checks: l40Bk2PocketChecks }),
+    'l40bk2-pocket-shipped': Object.freeze({ tape: l40Bk2PocketShippedTape, switches: L40BK2_D1_SWITCHES,
+        checks: l40Bk2PocketShippedChecks }),
 });

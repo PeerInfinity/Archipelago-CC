@@ -59,7 +59,7 @@ import {
     openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
 } from './activators.js';
 import {
-    createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
+    FALL_ROCK, createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
 } from './fallRock.js';
 import { MOONROCK, createMoonrock, moonrockRect, stepMoonrock } from './moonrock.js';
 import {
@@ -1685,6 +1685,23 @@ export function createLevelRun({
         for (const t of ts.values()) {
             if (t.removed) continue;
             out.push({ id: t.id, rect: iceTurretRect(t) });
+        }
+        /**
+         * ⛓⛓⛓ fidelity ROCKBUTTON D1 (`CONTACT_FIDELITY.fallRockHoldsButton`; OFF this adds nothing): AND A LANDED
+         * ROCK. `FallRock` / `FallRockLarge` are `type = "Solid"` from the landing (and from the ctor of a visit that
+         * boots them fallen), so `Button.update`'s `["Player","Enemy","Solid"]` collide counts one resting on it — L28's
+         * `fallrock@112,240` lands on `button@112,240` and holds `grasslock@176,208`'s group published from then on
+         * (game-witnessed, `fixtures/rockbutton-witness/`). The rows are `fallenRocksNow()`'s own, so the solid a walk
+         * collides with and the solid a button counts are one list; its Moonrock family is left out (no button lies
+         * under one). A rock still overhead or mid-fall is `type = ""` and is not in that list.
+         */
+        if (CONTACT_FIDELITY.fallRockHoldsButton) {
+            const fallen = fallenRocksNow();
+            if (fallen) {
+                for (const r of fallen.values()) {
+                    if (r.tag === 'fallrock' || r.tag === 'fallrocklarge') out.push({ id: r.id, rect: r.rect });
+                }
+            }
         }
         return out;
     };
@@ -3874,6 +3891,42 @@ export function createLevelRun({
             stepDrillGraphicsFrozen();
         }
     };
+    /**
+     * ⛓⛓⛓ fidelity ROCKBUTTON D1 (`CONTACT_FIDELITY.fallRockHoldsButton`; OFF never called) — ONE FRAME OF THE
+     * ACTIVATORS INSIDE A ROCK'S FROZEN SPAN. `Button`, `Lock`, `Cover` and `Activators` carry no `Game.freezeObjects`
+     * gate (only `Mobile` and the enemies do), so through the 181 frames `dropRock` collapses into one tick every button
+     * keeps pressing and every lock keeps fading. The rocks in flight (`inSpan`, `{id, state}`) are not in
+     * `fallRockStates` yet, so each one that is a Solid this frame (from its landing frame on — `addUpdate` prepends and
+     * `Game.loadlevel` adds a `FallRock` after every `Button` (`Game.as:2341,2353`), so the rock's own update, which
+     * lands it, runs before the button's that frame) joins `movingSolidsNow()` here. Game-witnessed: L28's rope cut in play
+     * (`fixtures/rockbutton-witness/rockbutton-l28-livefall.json`) — the rock lands on `button@112,240` at span frame 90
+     * and `grasslock@176,208` writes {28,2} ten live ticks after the cut, not 101.
+     * ⚠ A press inside the span that would DROP another rock (a third freeze nested in this one) is refused by name, as
+     * the other frozen frames refuse it.
+     * ⚠ ONLY `dropRock` (a rope's pull) calls it. `dropRocksTogether` (a button's or the wand's drop, resolved at a
+     * different point of the tick) still steps no activator through its span: unwitnessed, and no rock those paths drop
+     * lands on a button or a lock (the slice's census) — named, not modelled.
+     */
+    const spanActivatorFrameNow = (inSpan) => {
+        if (noclip) return;
+        const solids = movingSolidsNow();
+        for (const e of inSpan) {
+            if (e.state.type === FALL_ROCK.landedType) solids.push({ id: e.id, rect: fallRockRect(e.state) });
+        }
+        const box = playerBoxAt(state.x, state.y);
+        applyLockEvents(stepActivators(activatorStateFor(level), worldFor(level), box,
+            { inventory, keys, movingSolids: solids }));
+        const rocks = fallRockStateFor(level);
+        const spanIds = new Set(inSpan.map((e) => e.id));
+        const armed = fallRocksArmedBy(worldFor(level), box, solids)
+            .filter((r) => rocks.has(r.id) && !rocks.get(r.id).landed && !rocks.get(r.id).active
+                && !spanIds.has(r.id) && !buttonFallsInFlight.has(r.id));
+        if (armed.length > 0) {
+            throw new Error(`levelRun: a button is pressed DURING a falling rock's frozen span at tick ${ticksCompleted} `
+                + `in level ${level} and drops [${armed.map((r) => r.id).join(', ')}]. A fall inside another freeze is `
+                + 'not modelled.');
+        }
+    };
     const dropRock = (rockState, id) => {
         const pub = publishActivate(rockState, true);
         if (!pub.fell) return { state: rockState, fell: false };
@@ -3889,6 +3942,10 @@ export function createLevelRun({
             s = r.state;
             frames = i;
             if (spanOn) fallRockFrozenFrame(r, i);
+            // ⛓ fidelity ROCKBUTTON D1: the span's activator frames — all but the RELEASE frame, whose activator update
+            // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
+            // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
+            if (CONTACT_FIDELITY.fallRockHoldsButton && !r.unfroze) spanActivatorFrameNow([{ id, state: s }]);
             // ⛔ THE SNAP. `FallRock.update`'s first arm writes the player's
             // `y` on every tick from the landing, and the player cannot move
             // out from under it — the whole span is frozen. So the LAST snap

@@ -104,7 +104,8 @@ describe('FENCEPOST D1 — `spinnerRemoveRead` (OFF)', () => {
         'ships OFF and LAST; its env name is a known worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.spinnerRemoveRead).toBe(false);
             expect(CONTACT_FIDELITY.spinnerRemoveRead).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('spinnerRemoveRead');
+            // ⛓ wave 41: ROCKBUTTON `fallRockHoldsButton` landed after it.
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('spinnerRemoveRead') + 1)).toEqual(['fallRockHoldsButton']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_SPINNER_REMOVE_READ');
         });
 

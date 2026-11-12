@@ -56,7 +56,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('115 regions, 54 carry a subgraph: 203 sub-regions, 308 internal exits, 207 of them need Progressive Swim', () => {
+    it('115 regions, 56 carry a subgraph: 207 sub-regions, 312 internal exits, 207 of them need Progressive Swim', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
@@ -119,10 +119,12 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ tile-rules-automation-r-a5 — restamped (b06ae22d -> e3ae176e): a grouped lock whose only opener is one in-room
         //   press costs it, so L40's wand locks gate: L40 gains r4c4 (out of r0c53) and r26c13 (its body; r23c29 keeps the
         //   t2-button column).
+        // ⛓ rules-no-hit-directional — restamped (e3ae176e -> 3a6a7579): L22 and L25 each split in two at their directional
+        //   no-hit gate (⚖ the user 2026-11-11, a per-room table for now). No door or swim row moves.
         // ⛓ tile-fire-breaks-rocks — restamped (e3ae176e -> 32298df9): an ordinary rock also breaks to Fire from a side with a
         //   clean flame stance (rules-6's rule), so four two-way internal rows split into one-way pairs (L0 r6c5<->r7c6 and
         //   r11c19<->r7c6, L100 r2c3<->r4c10, L16 r3c7<->r6c8: one side keeps the swing). No door or sub-region moves.
-        expect(c.atlasId).toBe('seedling-32298df9');
+        expect(c.atlasId).toBe('seedling-3a6a7579');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -132,8 +134,10 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ tile-rules-automation-r-a5: L40 +2 sub-regions (r4c4, r26c13) and 305 -> 308 internal exits: + r0c53 <-> r4c4 (one
         //   two-way row), + r26c13 -> r23c29 (flag 12) and r23c29 -> r26c13 (one-way each); the body's three rows re-key
         //   r23c29 -> r26c13. Swim rows unmoved.
+        // ⛓ rules-no-hit-directional: 54 -> 56 regions with a subgraph, 203 -> 207 sub-regions, 308 -> 312 internal exits
+        //   (per room, L22 and L25: the priced crossing and its free reverse). Swim rows unmoved.
         // ⛓ tile-fire-breaks-rocks: 308 -> 312 internal exits (four two-way rock rows split into one-way pairs).
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 203, 312, 207]);
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 56, 207, 312, 207]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },
