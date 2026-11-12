@@ -1,0 +1,8 @@
+{"run":0,"statusDead":37,"latchDead":37,"latchTick":61,"gameTime":4916,"laterDead":37,"laterGameTime":4947,"polls":[1,14,17,17,17,17,22,37,37]}
+{"run":1,"statusDead":38,"latchDead":38,"latchTick":61,"gameTime":4916,"laterDead":38,"laterGameTime":4947,"polls":[0,14,18,18,18,18,23,38,38]}
+{"run":2,"statusDead":37,"latchDead":37,"latchTick":61,"gameTime":4916,"laterDead":37,"laterGameTime":4945,"polls":[1,14,17,17,17,17,23,37,37]}
+{"run":3,"statusDead":37,"latchDead":37,"latchTick":61,"gameTime":4903,"laterDead":37,"laterGameTime":4933,"polls":[0,13,17,17,17,17,25,37]}
+{"run":4,"statusDead":38,"latchDead":38,"latchTick":61,"gameTime":4911,"laterDead":38,"laterGameTime":4941,"polls":[1,14,18,18,18,18,19,33,38]}
+{"run":5,"statusDead":38,"latchDead":38,"latchTick":61,"gameTime":4915,"laterDead":38,"laterGameTime":4945,"polls":[1,14,18,18,18,18,23,36,38]}
+{"run":6,"statusDead":38,"latchDead":38,"latchTick":61,"gameTime":4903,"laterDead":38,"laterGameTime":4933,"polls":[1,14,18,18,18,18,26,38]}
+{"run":7,"statusDead":37,"latchDead":37,"latchTick":61,"gameTime":4915,"laterDead":37,"laterGameTime":4945,"polls":[0,12,17,17,17,17,21,36,37]}
