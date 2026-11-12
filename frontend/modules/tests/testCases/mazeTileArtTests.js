@@ -12,6 +12,22 @@
  *   Then it restores the browser's load.
  *
  * The draw-op pins (no art → today's ops, the fallbacks) are in node: `mazeRoom/mazeTileArt.test.js`.
+ *
+ * ⛓ CONTENT SETS R4 — a second row, on a COMMITTED theme and a committed world, with no test seam:
+ *
+ *   meta-trial-maze-tile-art — loads the committed `meta_trial` preset (its slot records `content: ['meta']`, ⚠ a
+ *   per-player map), stands in its maze region with the water gate, and lets the panel's own play-time load read the
+ *   world's stack from the document. Every expectation is read from the data (the document, the theme pack's art
+ *   manifest, the maze default pack's water concept), never spelled here:
+ *     · the stack is the maze default pack then the theme, and every maze thing the theme's manifest carries is keyed
+ *       by the theme (the rest by nobody);
+ *     · a repaint draws the floor, wall and player from the theme's own sheets (`"<theme>#<key>"`: each shape is
+ *       rasterised once into a sheet of its own), read off the canvas's `drawImage` calls;
+ *     · a floor cell's centre pixel is the floor recipe's paper colour;
+ *     · the water gate (the theme presents no water) keeps the maze default pack's look: its definition is that
+ *       concept's name, colour and symbol, and its cell's fill pixel is that colour.
+ *   Pins of the recipes themselves (inside their box, states apart, every carried key through the seam) are in node:
+ *   `mazeRoom/mazeMetaArt.test.js`.
  */
 import { registerTest } from '../testRegistry.js';
 import { getPanelInstance } from '../../mazeRoom/index.js';
@@ -19,6 +35,7 @@ import { COLORS, TILE_PX } from '../../mazeRoom/mazeRoomRender.js';
 import { MAZE_ART_KEYS } from '../../mazeRoom/mazeTileArt.js';
 import { browserRasteriser } from '../../artLibrary/artLibrary.js';
 import { browserPackIo } from '../../procgenPipeline/worldContent.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 
 const PRESET = './presets/procgen_maze/AP_1/AP_1_rules.json';
 const FIX_BASE = 'https://fixture.invalid/packs/';
@@ -169,6 +186,140 @@ registerTest({
         + 'the wall is the later pack\'s sprite, the floor the later pack\'s shape, the player the earlier pack\'s '
         + 'sprite, the un-keyed exit COLORS.exit.',
     testFunction: tileArtFromPackStack,
+    category: 'Maze tile art',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── CONTENT SETS R4: the committed meta theme on the committed meta_trial world ──────────────────────────────────
+const META_TRIAL_PRESET = './presets/meta_trial/AP_1/AP_1_rules.json';
+const readPack = async (id) => {
+    const pack = await (await fetch(`./packs/${id}/pack.json`, { cache: 'no-store' })).json();
+    const layer = async (name) => (pack.layers?.[name]
+        ? (await fetch(`./packs/${id}/${pack.layers[name]}`, { cache: 'no-store' })).json() : null);
+    return { art: await layer('art'), concepts: (await layer('concepts'))?.concepts ?? {} };
+};
+
+async function metaTrialMazeTileArt(testController) {
+    const doc = await (await fetch(META_TRIAL_PRESET, { cache: 'no-store' })).json();
+    const slot = '1';
+    const theme = doc.procgen_metadata?.[slot]?.content?.[0] ?? null;
+    const mazePackId = substrateRegistry.get('maze')?.defaultContentPack ?? null;
+    testController.reportCondition(`⛓ premise: ${META_TRIAL_PRESET} records a content set for player ${slot} (${theme}); the maze's default pack is ${mazePackId}`,
+        !!theme && !!mazePackId);
+    if (!theme || !mazePackId) return testController.getOverallResult();
+    const themePack = await readPack(theme);
+    const shapes = themePack.art?.shapes ?? {};
+    const carried = Object.keys(MAZE_ART_KEYS).filter((t) => MAZE_ART_KEYS[t].key in shapes);
+    testController.reportCondition(`⛓ premise: the pack "${theme}" has an art layer of shapes keying the floor, wall and player (${carried.length} of the maze's things)`,
+        ['floor', 'wall', 'player'].every((t) => carried.includes(t)));
+    const mazeWater = Object.values((await readPack(mazePackId)).concepts).find((c) => c.presents === 'water') ?? null;
+    const sidecars = doc.preset_sidecars?.[slot] ?? {};
+    const waterRegion = Object.entries(sidecars).find(([, sc]) => sc.substrate === 'maze'
+        && Object.values(sc.playable_payload?.obstacleLib ?? {}).some((d) => d.concept === 'water'))?.[0] ?? null;
+    const [waterId] = Object.entries(sidecars[waterRegion]?.playable_payload?.obstacleLib ?? {})
+        .find(([, d]) => d.concept === 'water') ?? [];
+    testController.reportCondition(`⛓ premise: ${waterRegion} is a maze with the water gate ${waterId}; the theme presents no water; the maze pack does`,
+        !!waterId && !!mazeWater && !Object.values(themePack.concepts).some((c) => c.presents === 'water'));
+    if (!waterId || !mazeWater || !carried.includes('floor')) return testController.getOverallResult();
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+    const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 10000);
+    testController.eventBus.publish('files:jsonLoaded', { jsonData: doc, selectedPlayerId: slot, sourceName: 'meta-trial-maze-tile-art' });
+    await rulesLoaded;
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+    window.eventDispatcher?.publish('meta-trial-maze-tile-art', 'user:regionMove',
+        { sourceRegion: gs.getCurrentRegion?.() ?? null, targetRegion: waterRegion, exitName: null }, { initialTarget: 'bottom' });
+    // ⛔ IDENTITY (trap 1302): the panel must hold THIS document's water region, and the art load must be for this
+    //   document's stack — concept_trial has the same maze payloads, so the stack is what tells them apart.
+    const panel = await testController.pollForValue(() => {
+        const p = getPanelInstance();
+        return (p?.currentRegionId === waterRegion && p.world?.obstacleLib?.[waterId] && p.state) ? p : null;
+    }, `the maze panel stands in ${waterRegion} with ${waterId}`, 20000, 250);
+    testController.reportCondition(`the maze panel stands in ${waterRegion} with ${waterId}`, !!panel);
+    if (!panel) return testController.getOverallResult();
+    testController.reportCondition('a plain maze world (no Seedling skin)', panel._seedlingSkin() === null);
+
+    const fogWas = panel.fogEnabled;
+    panel.fogEnabled = false;
+    const realDrawImage = CanvasRenderingContext2D.prototype.drawImage;
+    try {
+        panel.render();
+        const status = await testController.pollForValue(() => {
+            const st = getPanelInstance()?.getTileArtStatus?.();
+            return (st && st.stack.includes(theme) && (st.status === 'ready' || st.status === 'failed')) ? st : null;
+        }, `the tile art of the world's stack loaded (${mazePackId}, ${theme})`, 15000, 100);
+        testController.log(`tile art: ${JSON.stringify(status)}`);
+        testController.reportCondition('the tile art loaded', status?.status === 'ready' && status.failedSheets === 0);
+        testController.assertEqual('the stack is the maze default pack, then the theme the document records',
+            JSON.stringify([mazePackId, theme]), JSON.stringify(status?.stack ?? null));
+        testController.assertEqual(`every maze thing the "${theme}" manifest carries is keyed by "${theme}", and nothing else is keyed`,
+            JSON.stringify(Object.fromEntries(carried.map((t) => [t, theme]))), JSON.stringify(status?.keyed ?? null));
+
+        // Which sheets a repaint draws from: the panel's decoded images, by identity, off the canvas's drawImage calls.
+        const images = panel._tileArt?.tileArt?.images ?? new Map();
+        const sheetOf = new Map([...images].map(([ref, img]) => [img, ref]));
+        const drawn = new Set();
+        CanvasRenderingContext2D.prototype.drawImage = function drawImageSpy(img, ...rest) {
+            if (sheetOf.has(img)) drawn.add(sheetOf.get(img));
+            return realDrawImage.call(this, img, ...rest);
+        };
+        panel.render();
+        CanvasRenderingContext2D.prototype.drawImage = realDrawImage;
+        testController.log(`sheets drawn: ${JSON.stringify([...drawn].sort())}`);
+        for (const thing of ['floor', 'wall', 'player']) {
+            const ref = `${theme}#${MAZE_ART_KEYS[thing].key}`;
+            testController.reportCondition(`the ${thing} was drawn from the "${theme}" pack's sheet ${ref}`, drawn.has(ref));
+        }
+
+        const canvas = panel.rootElement?.querySelector('.maze-room-canvas');
+        testController.reportCondition('the canvas is drawn', !!canvas);
+        if (!canvas) return testController.getOverallResult();
+        const ctx = canvas.getContext('2d');
+        const px = canvas.width / panel.world.width;
+        testController.reportCondition('a cell is TILE_PX wide (no Seedling scale)', px === TILE_PX);
+        const pixel = (x, y) => [...ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data.slice(0, 3)];
+        const isWall = (x, y) => panel.world.tiles[y * panel.world.width + x] !== 0;
+        const floor = cellWhere(panel, (x, y) => !isWall(x, y));
+        const paper = shapes[MAZE_ART_KEYS.floor.key].draw[0].fill;
+        testController.reportCondition('the world has a free floor cell to read', !!floor);
+        if (floor) {
+            testController.assertEqual(`a floor cell's centre is the "${theme}" floor recipe's fill ${paper}`,
+                JSON.stringify(hexRgb(paper)), JSON.stringify(pixel(floor.x * px + px / 2, floor.y * px + px / 2)));
+        }
+
+        // The water gate keeps the maze default pack's look.
+        const def = panel.world.obstacleLib[waterId];
+        testController.assertEqual(`${waterId} is the maze default pack's water (name, colour, symbol)`,
+            JSON.stringify({ name: mazeWater.name, color: mazeWater.look?.color, symbol: mazeWater.look?.symbol }),
+            JSON.stringify({ name: def.name, color: def.color, symbol: def.symbol }));
+        const gateKey = [...panel.world.obstacles].find(([, id]) => id === waterId)?.[0] ?? null;
+        testController.reportCondition(`${waterId} stands in the world`, !!gateKey);
+        if (gateKey) {
+            const [gx, gy] = gateKey.split(',').map(Number);
+            // inside the gate's fill (x0+2 … x0+px-2), clear of its symbol in the middle and of the grid line
+            testController.assertEqual(`${waterId}'s cell is filled in its own colour ${def.color}, drawn by the maze, not the theme`,
+                JSON.stringify(hexRgb(def.color)), JSON.stringify(pixel(gx * px + 4, gy * px + 4)));
+        }
+    } finally {
+        CanvasRenderingContext2D.prototype.drawImage = realDrawImage;
+        panel.fogEnabled = fogWas;
+        panel.render();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'meta-trial-maze-tile-art',
+    name: 'Meta theme trial: the maze is drawn from the theme\'s shapes; the water gate keeps the default look',
+    description: 'Loads the committed meta_trial preset (content sets R4), stands in its maze region with the water gate, '
+        + 'and lets the panel load the art of the stack the document records. Asserts the stack is the maze default pack '
+        + 'then the theme, every thing the theme\'s art manifest carries is keyed by it, a repaint draws the floor, wall '
+        + 'and player from "<theme>#<key>" sheets, a floor pixel is the recipe\'s paper colour, and the water gate is the '
+        + 'maze default pack\'s water in name, colour, symbol and pixel.',
+    testFunction: metaTrialMazeTileArt,
     category: 'Maze tile art',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

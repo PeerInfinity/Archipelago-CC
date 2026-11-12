@@ -37,7 +37,13 @@ GitHub Pages serves only `frontend/`.
 
 - `meta/` is the first THEME (content sets R3): a pack a world selects (`packs.json`'s `content` table, stack
   `meta`; the pipeline panel's *Content set* row offers it), not a default. A world that knows it is a generated
-  game. It has a `concepts` and a `text` layer, and no image. It presents the guardian as **the Gate** (a `look`,
+  game. It has a `concepts` and a `text` layer, and (content sets R4) an `art` layer of SHAPES ONLY, no image file:
+  one recipe for each of the maze's 14 tile-art keys (`mazeRoom/mazeTileArt.js` `MAZE_ART_KEYS`), drawn as a
+  diagram — a paper floor cell with a corner tick, a hatched slate wall, an orange marker for the player, one plain
+  mark per object — in a 20×20 box (the maze's `TILE_PX`, so a recipe draws 1:1 in play) with one stroke width. A
+  world that selects the theme draws its maze from them at play; `mazeRoom/mazeMetaArt.test.js` pins the recipes
+  (inside their box, states apart, every key through the draw seam) and the in-app row `meta-trial-maze-tile-art`
+  reads them off the canvas. The art is play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the
   theme gives them no look, so the maze shows the default), and offers twelve `place` concepts for the text
