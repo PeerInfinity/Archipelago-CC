@@ -46,9 +46,27 @@ const ORPHAN = () => solve(withoutEntity(ATLAS, 29, 'fallrock', 112, 112), 29, {
     { kind: 'reach-exit', exit: { x: 112, y: 32 } });
 
 describe('housekeep D1: a named throw leaves solveSegment as a SolverRefusal', () => {
-    it('declares the three kinds and the one code', () => {
-        expect(REFUSAL_BY_NAME.kinds).toEqual(['unmodelled-frozen-press', 'unmodelled-pit-teleporter', 'orphan-presser']);
-        expect(REFUSAL_BY_NAME.codes).toEqual({ FROZEN_TICK_PRESS: 'unmodelled-frozen-press' });
+    it('declares the four kinds and the two codes', () => {
+        expect(REFUSAL_BY_NAME.kinds).toEqual(['unmodelled-frozen-press', 'unmodelled-pit-teleporter', 'orphan-presser',
+            'unmodelled-ghost-swing']);
+        expect(REFUSAL_BY_NAME.codes).toEqual({ FROZEN_TICK_PRESS: 'unmodelled-frozen-press',
+            GHOST_SWING_NO_SWORD: 'unmodelled-ghost-swing' });
+    });
+
+    // ⛓ hammer GHOST-STRIKE-GATE hand-over (parked by ⚖ the user 2026-11-12): a hand-staged Ghost-Sword-only run (no AP
+    // route delivers one) used to crash on levelRun's ghostsword press; it now leaves the solve as a NAMED refusal.
+    it('a Ghost-Sword-only run (L6 from the L7 door, hand-staged): the ghostsword press at t0 is a named refusal', () => {
+        const e = thrown(() => {
+            const run = createRunForStaging(arrivalStaging({ level: 6, x: 16, y: 32 }, { items: ['hasGhostSword'] }),
+                levelSourceFromAtlas(ATLAS));
+            return solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 32, y: 0 } }], name: 'housekeep-ghost-L6',
+                boot: { level: 6, x: 16, y: 32 }, dashMode: 'all' });
+        });
+        expect(e instanceof SolverRefusal).toBe(true);
+        expect(e.obstacle).toEqual({ kind: 'unmodelled-ghost-swing', code: 'GHOST_SWING_NO_SWORD' });
+        expect(e.cause.code).toBe('GHOST_SWING_NO_SWORD');
+        expect(e.message).toMatch(/^levelRun: the ghostsword press at tick 0 in level 6: the run holds the GHOST SWORD and not the sword/);
+        expect(progressKind(e)).toBe('unmodelled');
     });
 
     it('sweep leg 631 (L74 on the L73 door\'s button): the frozen-tick press', () => {
