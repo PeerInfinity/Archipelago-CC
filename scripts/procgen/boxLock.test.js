@@ -552,6 +552,7 @@ describe('who takes the box', () => {
          * rules-er-c1-c3-witness three shuffled-world landings the solver refuses (L12's chest, L22 swordless, L40's pit), `probe-seedling-er-landings.mjs`;
          * fidelity FIRESPINNER a Fire press reaching a spinner (L39) on the game, `probe-seedling-fire-spinner.mjs`;
          * fidelity ROCKFIRE a Fire press reaching a BreakableRock (L40, L101) on the game, `probe-seedling-rock-fire.mjs`;
+         * rules-no-hit-l22 the no-hit crossings of the wallflyer rooms, per door pair and item arm, `probe-seedling-wallflyer-nohit.mjs`;
          * fidelity FIREBREAK the solver's Fire break (a run with Fire and no Sword, L0) on the game, `probe-seedling-fire-break.mjs`;
          * fidelity ROCKBUTTON L28's landed rock on its button (the walk, its control, the live fall) on the game, `probe-seedling-rock-button.mjs`.)
          */
@@ -678,6 +679,8 @@ describe('who takes the box', () => {
             'probe-seedling-chest-incidental.mjs',
             // fidelity DRILLWATER: the drill-drowns-in-water witnesses (import door: `isEntryPoint` → main())
             'probe-seedling-drill-water.mjs',
+            // rules-no-hit-l22: the wallflyer rooms' no-hit crossings on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-wallflyer-nohit.mjs',
             // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
             'probe-seedling-bobiframe.mjs',
             // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
