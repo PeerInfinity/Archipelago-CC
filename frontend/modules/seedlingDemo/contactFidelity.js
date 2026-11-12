@@ -2025,7 +2025,7 @@ export const CONTACT_FIDELITY = {
      * unwitnessed, and none of their rocks lands on an activator. OFF: byte-identical.
      * `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`.
      */
-    fallRockHoldsButton: false,
+    fallRockHoldsButton: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
