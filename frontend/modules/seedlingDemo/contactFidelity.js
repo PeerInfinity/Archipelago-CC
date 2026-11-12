@@ -1962,6 +1962,48 @@ export const CONTACT_FIDELITY = {
      * and without it). OFF: byte-identical (the throw). `SEEDLING_FIRE_ROCK_ARM=0|1`. ON since the ROCKFIRE flip (⚖ user 2026-11-11).
      */
     fireRockArm: true,
+    /**
+     * fidelity FIREBREAK D1 (wave 40) — THE SOLVER'S `break` VERB TAKES FIRE WHEN THE RUN HOLDS NO SWORD. The game
+     * breaks an ordinary rock (rockType 0) under a Fire press with or without the Ghost Sword (`fireRockArm`, ROCKFIRE:
+     * `genericHit` → `BreakableRock.hit(hasGhostSword ? 1 : 0)`, witnessed), and `solverBot.resolveBreakStrategy`
+     * refused every run whose selected slot was not the Sword or a modelled Ghost Sword. ON (and `fireRockArm` ON, the
+     * model's arm): a run that HOLDS Fire (an inventory read, never a grant) and holds neither the Sword nor the Ghost
+     * Sword is resolved to a Fire break — `rockBreaksUnder` first (a ghost rock without the Ghost Sword stays refused by name), then a stance
+     * whose flame reaches the rock and NOTHING ELSE (`presses.auditFire`: the 32x32 rect, the 16 px radius cut; the
+     * burn verb's candidates and lean; a rock already broken this visit is not there to reach), reachable by
+     * `stanceReaches`. `execBreak` settles, leans, re-asks the audit where the walk stopped, selects the Fire's slot
+     * (`equip`, restored after), presses once and waits for the run's own `brokenRocks` plus the leg's wait: the
+     * sword's `WAIT_AFTER_PRESS_TICKS` moved by the flame's later first test (`FIRE_WINDOW.firstHitTick` 4 against a
+     * swing's 1; ROCKFIRE's witness: press + 4 hit, flag `goneAt + 1`, cell `goneAt + 2`). `rockHypothesis` admits a
+     * rock for such a run on the same two guards and where some cell's flame reaches it alone (L40's three and L41's
+     * two have none, and stay walls). A run that holds the Sword keeps the sword's path whatever slot is
+     * selected. Game witness: `fidelityFireBreak.js` (p4g, 0 px, hitless). OFF: byte-identical (the refusal that
+     * names the sword). `SEEDLING_FIRE_BREAK_ARM=0|1`. ON since the FIREBREAK flip (⚖ user 2026-11-11).
+     */
+    fireBreakArm: true,
+    /**
+     * fidelity FENCEPOST D1 (wave 40) — A SPINNER WHOSE FADE REACHED ZERO LEAVES THE ROSTER ON THE READ THE GAME'S WORLD
+     * HAS DROPPED IT BY. `Mobile.death` (`Mobile.as:60-71`) calls `FP.world.remove` on the alpha-zero update, and
+     * `Engine.update` (`net/flashpunk/Engine.as:70-78`) is `FP._world.update(); FP._world.updateLists();`: the entity is
+     * out of the world, and `Spinner.removed()` has run, at the END of that update, so no read between frames lists it.
+     * On that update itself it is still in every type list (`Spinner.update` swings the hammer below `super.update()`
+     * with no `destroy` test, `Enemies/Spinner.as:66-76`; a block's sweep still collides with it). `spinner.stepSpinner`
+     * sets `removePending` on the alpha-zero step and `removed` at the top of the NEXT step, so every between-ticks read
+     * (`run.entities('spinnerBodies')` and its consumers — `dangerMap.spinnerDanger`'s live arm at horizon 0, the
+     * solver's kill-end test, the skins —, the press and fire censuses, `spinnerDeaths`) listed the corpse for one
+     * observation the game does not (L39PHANTOM D0, `fidelityL39Phantom.isRemovePendingFencepost`: the game's last
+     * listed read is t1277, the model's t1278). ON: `levelRun.advance` settles a pending removal at the END of the tick
+     * that stepped it (`settleSpinnerRemovalsNow`: `removed: true, removePending: false`), below everything that
+     * tick's update reads, so the alpha-zero tick's contact and block sweep still see the body, and runs the removal's
+     * own write loop there (`spinnerWrites`, the banked clear, `assertSpinnerRemovalIsDeclared`'s kill-lock
+     * declaration) with the values it stamped a tick later — one clock, not two: no read has the body gone and its
+     * ledger empty (`solverBot`'s kill verb ends on the roster and then asks `spinnerKillLockOpens`). Nothing stepped
+     * changes: every committed tape's observation stream is byte-identical ON and OFF. What moves is a PLAN: a kill
+     * verb ends one tick sooner per spinner death. `spinner.js` is not changed (the hammer arc's forecasts step their own copies with it). Game witness: the D0
+     * recording `fixtures/l39shaft-witness/l39phantom-pulser-kill.json` (p4g), zero fencepost ticks ON. OFF:
+     * byte-identical. `SEEDLING_SPINNER_REMOVE_READ=0|1`.
+     */
+    spinnerRemoveRead: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2353,6 +2395,12 @@ if (globalThis.process?.env?.SEEDLING_FIRE_SPINNER_ARM === '0') CONTACT_FIDELITY
 // ⛓ fidelity ROCKFIRE D1: `SEEDLING_FIRE_ROCK_ARM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '1') CONTACT_FIDELITY.fireRockArm = true;
 if (globalThis.process?.env?.SEEDLING_FIRE_ROCK_ARM === '0') CONTACT_FIDELITY.fireRockArm = false;
+// ⛓ fidelity FIREBREAK D1: `SEEDLING_FIRE_BREAK_ARM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_BREAK_ARM === '1') CONTACT_FIDELITY.fireBreakArm = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_BREAK_ARM === '0') CONTACT_FIDELITY.fireBreakArm = false;
+// ⛓ fidelity FENCEPOST D1: `SEEDLING_SPINNER_REMOVE_READ=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '1') CONTACT_FIDELITY.spinnerRemoveRead = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '0') CONTACT_FIDELITY.spinnerRemoveRead = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

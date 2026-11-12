@@ -84,6 +84,7 @@ import {
     SOLVE_PROGRESS_MODES, tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
+import { emptyWatch, headlineOf, observeWatch } from './seedlingSolveWatch.js';
 
 /** The show/hide transitions `lifecycle` keeps. */
 const LIFECYCLE_CAP = 64;
@@ -955,9 +956,11 @@ export class SolveProgressView {
 
 /**
  * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24: "right below the canvas: the solver's
- * progress line") — ONE line under the game: a work bar and `solver: ‹what› · work ‹spent› / ‹limit› · ‹eta› ·
- * ‹best›`, read from the same state the view holds (`SolveProgressView`'s `onState`), drawn whether the Solver section
- * is open or not. At most one render per animation frame (the view's `frame` idiom); the text is one clipped line
+ * progress line") — ONE line under the game: a work bar and, ⛓ WATCHER VIEW (slice `seedling-solver-panel-view`,
+ * ⚖ Robert 2026-11-11), the Solver section's HEADLINE sentence and its sub-line (`seedlingSolveWatch.headlineOf`:
+ * `Planning a route on level 12 to the exit… · A route is already in hand (561 ticks). …`, `✓ Solved in 1.4 s · …`,
+ * `✗ Gave up after 3.2 s · …`; `solver: no solve yet` before any), read from the same state the view holds
+ * (`SolveProgressView`'s `onState`), drawn whether the Solver section is open or not. At most one render per animation frame (the view's `frame` idiom); the text is one clipped line
  * (the whole of it in the tooltip), so its moving digits never change the panel's height. The element mirrors the
  * newest state as `data-*` (`solve-id`, `seq`, `final`, `outcome`, `updates`, `updated-at`) — what the feature check
  * `seedling-solve-progress-line` reads.
@@ -967,6 +970,8 @@ export class SolveProgressLine {
         this.now = now;
         this.scheduleRender = frame;
         this.state = null;
+        /** ⛓ WATCHER VIEW — the solve's memory (`observeWatch`): the plain walk's ticks, the elapsed time's fallback. */
+        this.memory = emptyWatch();
         this.updates = 0;
         this.renders = 0;
         this._pending = false;
@@ -987,6 +992,7 @@ export class SolveProgressLine {
     /** The view's state after an accepted note: kept at once (and mirrored), drawn at the next frame. */
     update(state) {
         this.state = state;
+        this.memory = observeWatch(this.memory, state, this.now());
         this.updates += 1;
         const d = this.element.dataset;
         d.solveId = String(state?.solveId ?? '');
@@ -1002,15 +1008,8 @@ export class SolveProgressLine {
 
     /** The line's text for the state now. */
     lineText() {
-        const s = this.state;
-        const snap = s?.snapshot;
-        if (!snap) return 'solver: no solve yet';
-        const seg = snap.segment ?? {};
-        const m = meterOf(snap);
-        const what = s.final ? `${seg.outcome ?? '?'} (solve #${s.solveId})`
-            : `solving #${s.solveId} · L${seg.level ?? '?'}${seg.pass ? ` ${seg.pass}` : ''}`;
-        const work = m.noLimit ? 'no work limit' : m.limit === null ? `work ${m.spent}` : `work ${m.spent} / ${m.limit}`;
-        return [`solver: ${what}`, work, s.final ? null : etaText(snap), bestText(snap.best)].filter(Boolean).join(' · ');
+        const h = headlineOf(this.state, this.memory);
+        return h.sub ? `${h.head} · ${h.sub}` : h.head;
     }
 
     render() {

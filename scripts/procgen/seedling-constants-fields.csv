@@ -236,7 +236,7 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crusherScans,physics,bo
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepperNow,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|previewStepperNow|h87e0089d|0|0,rule,bound,,i-frame timer gate (R4-swim D3: a preview started inside one carries it)
 frontend/modules/seedlingDemo/levelRun.js|previewStepperNow|h87e0089d|0|1,rule,sentinel,,directionFace >= 0 is a parked facing; -1 is unset
-frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|bankSpinnerRemovals|hd5e683f5|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h2bf0a6f8|0|0,rule,sentinel,,persistTag sign test: <0 means no tag

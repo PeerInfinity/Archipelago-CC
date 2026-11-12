@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Baking Adventure Vanilla WorldGen
-Location Count:                  15
+Location Count:                  16
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     
