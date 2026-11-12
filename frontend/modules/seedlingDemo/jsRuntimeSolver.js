@@ -62,7 +62,7 @@
 import { createRunForStaging } from './tapeRunner.js';
 import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
-    clearTagTalkArmOf, solveSegment,
+    ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
 } from './solverBot.js';
 import { pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -697,6 +697,24 @@ export function withTalkClearGoal(enabled, fn) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE ROCKLOCK-MAPPER — **THE MAPPER READS THE ROCKLOCK ROW THE WORKER WILL READ.** NEW-LOCKS'
+ * `solverBot.ROCKLOCK_KILL` (`SEEDLING_ROCKLOCK_KILL`, OFF) adds the switch-gated `solid:rocklock` row (`hold`, which
+ * the solver refines per instance: a kill-lock is `kill`). The page sets it through `?seedlingSolverEnv=`, which reaches
+ * the WORKER only; this mapper runs on the page's MAIN thread, where `ROCKLOCK_KILL` keeps its default, so it found no
+ * row and refused L26's rocklock events `no-verb` before any worker was asked.
+ *
+ * ⛓ NO NEW SWITCH: the same name, read page-side (`pageSolverEnvSwitchOn`, YETI-TALK's pattern). One URL entry then
+ * turns both sides on together; a separate mapper name could map a goal for a worker that refuses it `no-verb`. ON, the
+ * row is the solver's own (`withRockLockKill(true, …)` over `OBSTACLE_STRATEGIES`) — nothing typed here. Read only
+ * where the table has no row and the module's own switch is off (a node process / the worker already reads it).
+ * OFF (no param, `=0`, malformed, no `location`): byte-identical.
+ */
+function rowOfPageSwitch(key) {
+    if (ROCKLOCK_KILL.enabled || !pageSolverEnvSwitchOn('SEEDLING_ROCKLOCK_KILL')) return null;
+    return withRockLockKill(true, () => OBSTACLE_STRATEGIES[key]) ?? null;
+}
+
+/**
  * ⛓ EVENT GOALS — the verb the solver's `clear-tag` executor would select for an obstacle key, and whether it is
  * REGISTERED there: `OBSTACLE_STRATEGIES[key]`, refined by the wand rows `refineStrategy` asks first
  * (`WAND_VERB`: a `WAND_TARGET_TAGS` solid is the wand's; a `wandlock` is a `Lock`, so `hold`), looked up as
@@ -708,6 +726,8 @@ export function withTalkClearGoal(enabled, fn) {
 export function clearTagVerbOf(key) {
     const tag = key.slice(key.indexOf(':') + 1);
     let verb = OBSTACLE_STRATEGIES[key] ?? null;
+    // ⛓⛓ ROCKLOCK-MAPPER: the worker's switch-gated row, when the page URL turns its switch on (`rowOfPageSwitch`).
+    if (verb === null && key.startsWith('solid:')) verb = rowOfPageSwitch(key);
     // ⛓⛓ YETI-TALK (`TALK_CLEAR_GOAL`): a Solid whose clear-tag the solver's TALK ARM drives (`clearTagTalkArmOf`, the
     // arm's own answer) selects `talk`; OFF, or no arm for the class, the table's (none → `no-verb`, byte-identical).
     if (TALK_CLEAR_GOAL.enabled && key.startsWith('solid:') && verb === null && clearTagTalkArmOf(tag)) {
