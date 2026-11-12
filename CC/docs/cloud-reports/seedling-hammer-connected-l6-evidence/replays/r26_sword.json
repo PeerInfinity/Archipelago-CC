@@ -1,0 +1,33 @@
+{
+ "variant": "sword",
+ "records": "patched",
+ "ok": true,
+ "kind": null,
+ "ms": 1157,
+ "work": 103,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 220,
+   "work": 9
+  },
+  {
+   "pass": "full",
+   "ok": true,
+   "kind": null,
+   "ticks": 170,
+   "work": 94,
+   "deadline": "sword-dash",
+   "limit": "window"
+  }
+ ],
+ "ticks": 170,
+ "verbs": [
+  "walk"
+ ],
+ "level": 5,
+ "hits": [],
+ "deaths": 0
+}

@@ -1,0 +1,25 @@
+{
+ "variant": "budget-2560",
+ "records": "patched",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 28119,
+ "work": 560,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 560
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "message": "solverBot(js-runtime-L6-exit) reach-exit (32,0)->L5 -> bait (bob@112,48) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (162.2,40.0) — chaser:bob@112,48 (inside leash 80 (d=6.4), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 5 volume(s) forbidden — no walkable tile path in level 6 from tile (10,2) to (8,2). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, \n  time: the search returned a NEGATIVE, and it names its own bound: expansion budget exhausted (maxExpansions=40000, dwell=4).\n  bait: bob@112,48: the walk to its bait stance (136,40) is itself a corridor that needs bob@112,48 baited — the ladder re-entered the same bait at tick 192 with nothing spent between, so a second bait would be the first one again (BAIT_REENTRY).\n  kill: no presser in level 6 arms a trap whose lane covers bob@112,48 — the room has 0 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: this run holds no sword, so `set slashing`'s outer gate refuses every press — no stance could strike bob@112,48, and the stance scan was not run (SF3)\n  detour: no corridor bent through at most 2 via cell(s) of the 43 the walk can plan to probes clean: 169 candidate corridor(s) previewed with the bodies stepped against each, 40 prefix(es) dangerous before their last via, 169 preview(s) of the 300 bound spent and 250 leg(s) of the 500 planned.\n  forced-hit: no forced hit is proven from (168.8,40.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))"
+}
