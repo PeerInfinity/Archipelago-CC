@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 156,
-            "count": 206,
+            "browser": 157,
+            "count": 207,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 530,
-        "browser": 226,
-        "cited": 282,
-        "files": 548,
+        "blockStyle": 531,
+        "browser": 227,
+        "cited": 283,
+        "files": 549,
         "lineStyle": 18,
-        "withDocblock": 548,
-        "withFlags": 466
+        "withDocblock": 549,
+        "withFlags": 467
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -18013,6 +18013,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rock-button.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "off"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rock-button — ⛓⛓⛓ seedling-fidelity-rockbutton (wave 41): A LANDED FALLROCK HOLDS A BUTTON DOWN (`CONTACT_FIDELITY.fallRockHoldsButton`), PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rock-button.mjs"
         },
         {
             "argvHelpers": [

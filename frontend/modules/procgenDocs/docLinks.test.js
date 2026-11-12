@@ -346,20 +346,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              README § Shapes (`repo` 42 → 43).
          *   410 → 412  content sets R3 (2026-11-11): pipeline-presets.md → concepts.md § The theme trial world and
          *              § Selecting a content set (`doc` 307 → 309).
+         *   412 → 414  content sets R4 (2026-11-12, the meta theme's maze art): concepts.md § The theme trial world →
+         *              maze.md § Tile art from a content pack (`doc` 309 → 310), and that § → the `meta` pack's art
+         *              manifest, its worked example (`repo` 43 → 44).
+         *   412 → 413  hammer PANEL-ROUTE (2026-11-12): seedling-bot.md's solve-progress line →
+         *              seedling-solve-progress.md § 7 (the route stamp) (`doc` 309 → 310).
          */
         expect(by).toEqual({
             'same-doc': 38,
-            doc: 309,
+            doc: 311,
             external: 22,
-            repo: 43,
+            repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(412);
+        expect(CORPUS.length).toBe(415);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(309);
+        expect(docs).toHaveLength(311);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
@@ -368,7 +373,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(43);
+        expect(repo).toHaveLength(44);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();
