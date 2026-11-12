@@ -399,7 +399,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FIREBREAK D1 (wave 40): the solver's `break` verb takes Fire for a run with no Sword — ON since the FIREBREAK flip (⚖ user 2026-11-11).
             fireBreakArm: true,
             // ⛓ fidelity FENCEPOST D1 (wave 40): a faded-out spinner leaves the roster on the read the game's world has dropped it by — OFF.
-            spinnerRemoveRead: false });
+            spinnerRemoveRead: false,
+            // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — OFF.
+            fallRockHoldsButton: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

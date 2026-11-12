@@ -2004,6 +2004,28 @@ export const CONTACT_FIDELITY = {
      * byte-identical. `SEEDLING_SPINNER_REMOVE_READ=0|1`.
      */
     spinnerRemoveRead: false,
+    /**
+     * fidelity ROCKBUTTON D1 (wave 41) — A LANDED FALLROCK IS A SOLID, AND A SOLID HOLDS A BUTTON DOWN. `Button.update`
+     * collides `["Player","Enemy","Solid"]` and excludes only a `Cover` (`Puzzlements/Button.as:16,30-39`); a `FallRock`
+     * is `type = "Solid"` from the landing (`Scenery/FallRock.as:80`) and from the ctor of every later visit
+     * (`:42-47`), and a `FallRockLarge` the same (`Scenery/FallRockLarge.as:50-56,100`). `levelRun.movingSolidsNow()` —
+     * the one list `stepActivators` presses buttons with (`pressedGroups` / `presserDown`), holds a lock or cover open
+     * with (`occupied`), and `fallRocksArmedBy` / `activatorsNow` read — carried pushed blocks, crushers and ice turrets
+     * but no landed rock, so the model read `button@112,240` up under L28's fallen `fallrock@112,240` while the game holds
+     * it down and fades `grasslock@176,208` open (hammer ROCK-HOLDER's witness; this slice's D0,
+     * `fixtures/rockbutton-witness/`: the lock writes {28,2} at t102 and the walk crosses its tile, 0 hits). ON: every
+     * LANDED FallRock / FallRockLarge of the room (`fallenRocksNow()`'s `fallrock` / `fallrocklarge` rows: the per-visit
+     * rocks, L32's arena rock, L82's arena rock) joins the list. A Moonrock (`fallenRocksNow`'s third family) is NOT
+     * added here: no shipped button lies under one (census in the slice report). AND THE SPAN: `Button` / `Lock` /
+     * `Cover` have no `Game.freezeObjects` gate, so through a rope-dropped rock's 181-frame frozen span (which `dropRock`
+     * collapses into one tick) they keep updating — ON, `levelRun.spanActivatorFrameNow` steps them on every span frame
+     * but the release frame (the pull tick's own end-of-tick step is that one), the rock a Solid from its landing frame
+     * (`Game.as:2341,2353`: added after the `Button`, so it updates first). Game-witnessed: L28's rope cut in play opens
+     * the lock at t166 (the list alone, no span step: t257; OFF: never). The button- and wand-dropped spans (`dropRocksTogether`) are NOT stepped:
+     * unwitnessed, and none of their rocks lands on an activator. OFF: byte-identical.
+     * `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`.
+     */
+    fallRockHoldsButton: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2401,6 +2423,9 @@ if (globalThis.process?.env?.SEEDLING_FIRE_BREAK_ARM === '0') CONTACT_FIDELITY.f
 // ⛓ fidelity FENCEPOST D1: `SEEDLING_SPINNER_REMOVE_READ=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '1') CONTACT_FIDELITY.spinnerRemoveRead = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_REMOVE_READ === '0') CONTACT_FIDELITY.spinnerRemoveRead = false;
+// ⛓ fidelity ROCKBUTTON D1: `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '1') CONTACT_FIDELITY.fallRockHoldsButton = true;
+if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '0') CONTACT_FIDELITY.fallRockHoldsButton = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
