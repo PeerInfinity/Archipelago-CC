@@ -77,6 +77,8 @@ export const PUSHABLE_KINDS = Object.freeze({
     pushableblock: Object.freeze({ push: null, cite: 'Puzzlements/PushableBlock.as:35-58 (walked into)' }),
     pushableblockfire: Object.freeze({
         push: 'hasFire', cite: 'Puzzlements/PushableBlockFire.as:23,76-123 (hit by Fire/Pulse) + Player.as:1125-1127',
+        // ⛓ RULES rules-l40-bk2-witness: a non-relative hit sends it AWAY from the hitter (`hitAwayStances`).
+        hitAway: true,
     }),
     pushableblockspear: Object.freeze({
         push: 'hasSpear', cite: 'Puzzlements/PushableBlockSpear.as:14 (hit by Spear) + Player.as:1121-1123',
@@ -98,6 +100,25 @@ export function selfHoldTiles(holders, lockCells, width) {
         }
     }
     return out;
+}
+
+/**
+ * ⛓ RULES rules-l40-bk2-witness — **A HIT SENDS THE BLOCK AWAY FROM THE HITTER.** `PushableBlockFire.hit(p, t)` with a
+ * Fire hit (`Player.as:1125-1127`: `p` = the player's position, not relative) moves the block one tile along each axis
+ * whose share of `atan2(p.y - cy, p.x - cx)` passes the `bothRange` test (`PushableBlockFire.as:98-121`), and always
+ * AWAY from `p` (`cos a > 0` → west, `sin a > 0` → north). So a stance pushes `dir` only from the far side of that axis:
+ * a stance in the block's own row or column across the axis (directly beside it, for a N/S push) never does. Diagonal
+ * stances keep both axes (where in the cell the player stands picks one). Game-witnessed on L40: Fire from directly
+ * under `pushableblockfire@576,576`, at the corridor's centre and at both edges, never moved it sideways
+ * (`CC/docs/cloud-reports/rules-l40-bk2-witness-evidence/`).
+ *
+ * @param {Object<string, Array<[number,number]>>} stances `deriveWeaponFootprint`'s: per push direction, offsets
+ *   `[ox, oy]` with the stance at `(x - ox, y - oy)`
+ * @returns {Object<string, Array<[number,number]>>} the offsets a hit-away push can use
+ */
+export function hitAwayStances(stances) {
+    const away = { N: ([, oy]) => oy < 0, S: ([, oy]) => oy > 0, E: ([ox]) => ox > 0, W: ([ox]) => ox < 0 };
+    return Object.fromEntries(Object.entries(stances).map(([dir, list]) => [dir, (list ?? []).filter(away[dir] ?? (() => true))]));
 }
 
 /** The search's state bound; a room past it is refused by name, never guessed. */
@@ -395,12 +416,12 @@ export function blockHolderVerdict(grid, { heldBy, holders, lockCells, closedCel
  * @param {Set<number>} goal the far side's cells
  * @returns {{sets: string[][], states: number, refused: string|null}}
  */
-export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal) {
+export function blockCrossingCost(grid, { block, stances, stoppers = [], bodies = [], tileTypes, keyOf, held = [] }, start, goal) {
     const keys = [...new Set(stoppers.flatMap((s) => s.keys))].sort();
     if (keys.length > BLOCK_SEARCH_MAX_KEYS) return { sets: [], states: 0, refused: `${keys.length} stopper keys (bound ${BLOCK_SEARCH_MAX_KEYS})` };
     let states = 0;
     const crosses = (extra) => {
-        const r = blockPushSearch(grid, { block, stances, stoppers, tileTypes, keyOf, held: [...held, ...extra] }, start, goal);
+        const r = blockPushSearch(grid, { block, stances, stoppers, bodies, tileTypes, keyOf, held: [...held, ...extra] }, start, goal);
         states += r.states;
         return r.ok;
     };
@@ -429,7 +450,7 @@ export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTyp
  *
  * @returns {{ok:boolean, states:number, cells:Set<number>, fatal:Set<number>}}
  */
-export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal = null) {
+export function blockPushSearch(grid, { block, stances, stoppers = [], bodies = [], tileTypes, keyOf, held = [] }, start, goal = null) {
     const { width, height, cells } = grid;
     const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
     const blockAt = block.ty * width + block.tx;
@@ -439,6 +460,12 @@ export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes
         return i === blockAt && own !== null ? ks.filter((k) => k !== own) : ks;
     });
     const stopperAt = new Map(stoppers.map((s) => [s.ty * width + s.tx, s]));
+    // ⛓ RULES rules-l40-bk2-witness: the OTHER pushables (`bodies`, cell indices; none by default) are Solids
+    // (`PushableBlock.as:27`, `PushableBlockFire.as:30`) and `Mobile.solids` lists "Solid" (`Mobile.as:17`), so a
+    // struck block does not enter one's cell. The player's own walk-in pushes stay choreography (the overlay's
+    // `pushableblock` row): a body the player can REACH in a state is one it could walk out of the way, so it stops
+    // the block only where the player's region (that state's) does not hold its cell.
+    const bodyAt = new Set(bodies);
     const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
     const has = new Set(held);
     const covered = (ks) => ks.every((k) => has.has(k));
@@ -500,10 +527,118 @@ export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes
             if (BLOCK_FATAL_TILES.includes(tileTypes.get(target)) && !stopped(target)) {
                 fatal.add(target);
                 queue.push([-1, stance]);
-            } else if (blockOk(target) && stepOk(pos, target, dir)) {
+            } else if (blockOk(target) && stepOk(pos, target, dir) && !(bodyAt.has(target) && !region.has(target))) {
                 queue.push([target, stance]);
             }
         }
     }
     return { ok: false, states, cells: blockCells, fatal };
+}
+
+/**
+ * ⛓ RULES rules-l40-bk2-witness — **A PULSER'S SHOVE.** `Pulser.hit` (`Puzzlements/Pulser.as:87-117`) hands every
+ * `PushableBlockFire` whose rect lies within `radiusHit` (22 px, `:23`) of its centre a `hit(centre, "Pulse")`
+ * (`:100-103`), and `PushableBlockFire.hit` (`:76-123`, `moveTypes` `["Fire", "Pulse"]`, `:23`) sends it one tile AWAY
+ * from that point: `a = atan2(p.y - cy, p.x - cx)` (screen y down), a horizontal tile when `|sin a| - 0.1 < |cos a|`, a
+ * vertical one when `|sin a| > |cos a| - 0.1` (both near the diagonal). A Pulser pulses only while its group is active
+ * (`Pulser.as:54`: `activate`, set by its `tset`'s activators, `Button.activateAll`). Plain and spear blocks are not
+ * hit (`Pulser.as:100` names `PushableBlockFire` only).
+ *
+ * @param {{tx:number,ty:number,type:string}} block   a pushable's start tile and Ogmo type
+ * @param {{x:number,y:number}} pulser                the Pulser's Ogmo top-left (`Pulser.as:42`: centre = +8, +8)
+ * @param {number} [tile=16]
+ * @returns {{tx:number,ty:number}|{refused:string}|null} the tile the shove sends the block to; null when this pulse
+ *   never reaches it (or the block is not a fire block); `refused` for a diagonal shove (both axes), which this
+ *   model does not follow
+ */
+export function pulserShoveTarget(block, pulser, tile = 16) {
+    if (block.type !== 'pushableblockfire') return null;
+    const RADIUS_HIT = 22;
+    const px = pulser.x + tile / 2;
+    const py = pulser.y + tile / 2;
+    const reaches = (tx, ty) => {
+        const dx = Math.max(tx * tile - px, 0, px - (tx * tile + tile));
+        const dy = Math.max(ty * tile - py, 0, py - (ty * tile + tile));
+        return Math.hypot(dx, dy) <= RADIUS_HIT;
+    };
+    if (!reaches(block.tx, block.ty)) return null;
+    const a = Math.atan2(py - (block.ty * tile + tile / 2), px - (block.tx * tile + tile / 2));
+    const [s, c] = [Math.abs(Math.sin(a)), Math.abs(Math.cos(a))];
+    const horizontal = s - 0.1 < c;
+    const vertical = s > c - 0.1;
+    if (horizontal && vertical) return { refused: `a diagonal Pulse shove of ${block.type}@${block.tx},${block.ty}` };
+    const target = horizontal ? { tx: block.tx + (Math.cos(a) > 0 ? -1 : 1), ty: block.ty }
+        : { tx: block.tx, ty: block.ty + (Math.sin(a) > 0 ? -1 : 1) };
+    // The pulse keeps firing while the group is active: a block still within its reach would be shoved again.
+    if (reaches(target.tx, target.ty)) return { refused: `a Pulse shove of ${block.type}@${block.tx},${block.ty} that stays in reach` };
+    return target;
+}
+
+/**
+ * ⛓ RULES rules-l40-bk2-witness — **WHAT REACHING A GROUP'S ACTIVATOR COSTS IN EVENTS.** The Pareto-minimal sets of
+ * `latched` keys (each a lock's cells that stand Solid until its key — the event of the in-room press that latches
+ * it — is held) under which the player, starting at `start`, walks onto one of `activators` (cell indices). The walk
+ * is the push search's own (`blockPushSearch`'s gates; `held` the conditions it holds besides those keys); `occupied`
+ * cells (the struck block where it stands) are walls; a `reclosing` lock (`{cells, holders}`: a grouped lock a HELD
+ * button opens) stands shut until the walk reaches one of its holder cells (the grid's own directional pricing of it
+ * assumed the room's other doors as the grid rules them, which this walk does not).
+ *
+ * @returns {{sets:string[][], refused:string|null}}
+ */
+export function activatorReachCost(grid, { start, activators, latched = [], reclosing = [], occupied = [], keyOf, held = [] }) {
+    const keys = [...new Set(latched.map((l) => l.key))].sort();
+    if (keys.length > BLOCK_SEARCH_MAX_KEYS) return { sets: [], refused: `${keys.length} latched keys (bound ${BLOCK_SEARCH_MAX_KEYS})` };
+    const { width, height, cells } = grid;
+    const cellKeys = cells.map((cell) => (cell.conditions ?? []).map(keyOf));
+    const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
+    const blocked = new Set(occupied);
+    const reaches = (extra) => {
+        // A latched key is an EVENT name; the grid may also gate that lock's cell (or a door edge) on the same event as a
+        // condition (`{event}`, R-A5's in-room press rule), spelled by `keyOf` — holding the event covers both spellings.
+        const has = new Set([...held, ...extra, ...extra.map((k) => keyOf({ event: k }))]);
+        const covered = (ks) => ks.every((k) => has.has(k));
+        const shut = new Set(latched.filter((l) => !has.has(l.key)).flatMap((l) => l.cells));
+        const standable = (i) => !BLOCKING.has(cells[i].kind) && covered(cellKeys[i]) && !shut.has(i) && !blocked.has(i);
+        const stepOk = (i, n, dir) => [cells[i].faces?.[dir], cells[n].faces?.[OPP[dir]], cells[i].dirs?.[dir], cells[n].enter?.[dir]]
+            .map(gateKeys).every((g) => g !== null && covered(g));
+        if (!standable(start)) return false;
+        // A re-closing lock (a held button opens it) is passable once the walk reaches one of its holders — a body can be
+        // parked there — and not before: a fixpoint, since a lock passed can lead to another lock's holder.
+        const opened = new Set();
+        for (;;) {
+            const closed = new Set(reclosing.filter((r) => !opened.has(r)).flatMap((r) => r.cells));
+            const seen = new Set([start]);
+            const stack = [start];
+            while (stack.length) {
+                const i = stack.pop();
+                if (activators.includes(i)) return true;
+                const x = i % width;
+                const y = (i - x) / width;
+                for (const [dir, dx, dy] of STEPS) {
+                    if (x + dx < 0 || y + dy < 0 || x + dx >= width || y + dy >= height) continue;
+                    const n = (y + dy) * width + x + dx;
+                    if (seen.has(n) || closed.has(n) || !standable(n) || !stepOk(i, n, dir)) continue;
+                    seen.add(n);
+                    stack.push(n);
+                }
+            }
+            const more = reclosing.filter((r) => !opened.has(r) && r.holders.some((h) => seen.has(h)));
+            if (more.length === 0) return false;
+            for (const r of more) opened.add(r);
+        }
+    };
+    const sets = [];
+    for (let size = 0; size <= keys.length; size += 1) {
+        const combos = [];
+        const pick = (from, acc) => {
+            if (acc.length === size) { combos.push(acc); return; }
+            for (let i = from; i < keys.length; i += 1) pick(i + 1, [...acc, keys[i]]);
+        };
+        pick(0, []);
+        for (const set of combos) {
+            if (sets.some((f) => f.every((k) => set.includes(k)))) continue;
+            if (reaches(set)) sets.push(set);
+        }
+    }
+    return { sets, refused: null };
 }
