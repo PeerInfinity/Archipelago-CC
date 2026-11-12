@@ -21,6 +21,7 @@
     "lavaBossPolicy.js",
     "lightsVerb.js",
     "mover.js",
+    "oppFallbackHits.js",
     "oppPressFallback.js",
     "pressEscapeExact.js",
     "pressKillGuards.js",
@@ -861,9 +862,10 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
+        "oppFallbackHits.js": 1,
         "solverBot.js": 136
       },
-      "sites": 199,
+      "sites": 200,
       "seen": "both",
       "via": [
         "direct",
@@ -934,6 +936,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
+          "oppFallbackHits.js": 1,
           "solverBot.js": 77
         },
         "presses": {
