@@ -1,0 +1,59 @@
+M1 the clear-tag never reads the kill-lock write: RED (4 row(s))
+M2 the write is read from any scratch row of the flag (the lock id not asked): SURVIVED
+M3 no solid:rocklock row: RED (4 row(s))
+M4 the rocklock instance is never a kill-lock (refineStrategy / resolveKillStrategy get no row): RED (3 row(s))
+M5 a rocklock is read as gone at once (killLockStands has no solid arm): RED (1 row(s))
+M6 a pinned body is still asked the scan and waited for (chaserPinnedFromHere false): RED (3 row(s))
+M7 no line test (every leash cell is a line stance): RED (3 row(s))
+M8 line stances farthest from the player first: RED (4 row(s))
+M9 no standoff (cells inside the sword reach of the body are offered): RED (2 row(s))
+M10 one line stance a body (PER_BODY 1): RED (4 row(s))
+M11 no line-stance turn (the queue is never built): RED (3 row(s))
+M12 the point line, not the box sweep (the body is a point): RED (2 row(s))
+
+--- the red rows of each ---
+M1 the clear-tag never reads the kill-lock write: RED (4 row(s))
+         × ON: solved on the run's own kill-lock write (t360 = the last spinner's removal + the lock's fade), 0 hits 3523ms[
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 1202ms
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 3884
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 17968ms[3
+M2 the write is read from any scratch row of the flag (the lock id not asked): SURVIVED
+M3 no solid:rocklock row: RED (4 row(s))
+         × `solid:rocklock` is a row only while `ROCKLOCK_KILL` is on, `Lock`'s own (`hold`), and never enumerable 192ms
+         × `ROCKLOCK_KILL` alone: the kill work order takes it (its chaser arm asks about both punchers) and refuses there 3m
+         × with the rewind and no `KILLLOCK_CLEAR_WRITE`: both punchers die, the rocklock leaves the world, `not-written` 3ms
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 6ms
+M4 the rocklock instance is never a kill-lock (refineStrategy / resolveKillStrategy get no row): RED (3 row(s))
+         × `ROCKLOCK_KILL` alone: the kill work order takes it (its chaser arm asks about both punchers) and refuses there 9m
+         × with the rewind and no `KILLLOCK_CLEAR_WRITE`: both punchers die, the rocklock leaves the world, `not-written` 3ms
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 6ms
+M6 a pinned body is still asked the scan and waited for (chaserPinnedFromHere false): RED (3 row(s))
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 1607ms
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 2004
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 12037ms[3
+M7 no line test (every leash cell is a line stance): RED (3 row(s))
+         × the line stances are derived from the body's own Solids: from 911's arrival every jellyfish's cells lie in the arena it is walle
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 1954
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 8655ms[39
+M5 a rocklock is read as gone at once (killLockStands has no solid arm): RED (1 row(s))
+         × `ROCKLOCK_KILL` + the rewind: the frontier kills the punchers, the rocklock fades, the walk crosses to L28, 0 hits 613
+M8 line stances farthest from the player first: RED (4 row(s))
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 455ms
+         × the line stances are derived from the body's own Solids: from 911's arrival every jellyfish's cells lie in the arena it is walle
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 3861
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 12262ms[3
+M9 no standoff (cells inside the sword reach of the body are offered): RED (2 row(s))
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 3532
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 17207ms[3
+M10 one line stance a body (PER_BODY 1): RED (4 row(s))
+         × all three ship OFF (`SEEDLING_<NAME>=1` turns each on in node; the page channel knows the names) 11ms
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 733ms
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 3460
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 31531ms[3
+M11 no line-stance turn (the queue is never built): RED (3 row(s))
+         × ON (all four): both legs solved, 0 hits, the flag written by the run and the rocklock gone 14ms
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 980m
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 8671ms[39
+M12 the point line, not the box sweep (the body is a point): RED (2 row(s))
+         × 911 (from L51, the first ask): without the line stance the rewind refuses on a pinned body; ON solved, 0 hits 4021
+         × 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits 9990ms[39
