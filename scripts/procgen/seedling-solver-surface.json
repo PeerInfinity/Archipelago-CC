@@ -17,6 +17,7 @@
     "encounters.js",
     "forcedHit.js",
     "ghostRopeCut.js",
+    "ghostStrikeGate.js",
     "hazards.js",
     "lavaBossPolicy.js",
     "lightsVerb.js",
@@ -1169,10 +1170,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 167,
+        "solverBot.js": 166,
         "strikePolicy.js": 2
       },
-      "sites": 202,
+      "sites": 201,
       "seen": "both",
       "via": [
         "direct",
@@ -1206,7 +1207,7 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 59
+          "solverBot.js": 58
         },
         "inventorySlots": {
           "solverBot.js": 24
@@ -4967,9 +4968,10 @@
       "form": "function",
       "files": {
         "ghostRopeCut.js": 1,
+        "ghostStrikeGate.js": 1,
         "solverBot.js": 5
       },
-      "sites": 6,
+      "sites": 7,
       "seen": "static",
       "via": [
         "import"

@@ -36,7 +36,7 @@
  * `hasSword || hasGhostSword`, the expression every gated site read before (byte-identical).
  */
 
-import { ghostSwingRefusal } from './ghostSword.js';
+import { ghostSwingRefusal } from './solverView.js';
 
 export const GHOST_STRIKE_GATE = {
     enabled: globalThis.process?.env?.SEEDLING_GHOST_STRIKE_GATE === '1',
