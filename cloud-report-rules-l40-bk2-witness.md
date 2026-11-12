@@ -187,7 +187,7 @@ The derivation does not depend on R-A5's reshape. Its activator walk reads the d
 | producers `--check` on the branch | playthrough rules (atlas + AP_1) OK; partition OK; maze OK; `seedling_er` OK; sphere-order OK |
 | world package freshness (with the patch) | `seedling_playthrough` PASS, byte for byte |
 | Generate dirt | reverted (`git checkout -- frontend scripts worlds`, `output/` removed); `git status` shows only the evidence |
-| `NewDocs` | absent from every added file |
+| the banned docs-directory string (the brief's hard rule) | absent from every added file (checked with `rg -a`) |
 
 ## 9. Residue
 
