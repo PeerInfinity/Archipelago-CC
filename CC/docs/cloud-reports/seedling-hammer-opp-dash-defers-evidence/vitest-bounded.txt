@@ -1,0 +1,91 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/ulpDash.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 861[2mms[22m[39m
+[90mstderr[2m | frontend/modules/seedlingDemo/dashShape.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/seedlingDemo/dashShape.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstdout[2m | frontend/modules/seedlingDemo/dashShape.test.js[2m > [22m[2mthe hook, the settings and the page query[2m > [22m[2mthe switches default to the dash flip's shape (legPrecheck ON, noSwingPrefix OFF, keepPartial ON; no env here), read once at import; three settings, each default | on | off, schema default `default`
+[22m[39m[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 5802[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned [33m 754[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF [33m 512[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585) [33m 3577[2mms[22m[39m
+[90mstderr[2m | frontend/modules/seedlingDemo/dashOnlyWindow.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/seedlingDemo/dashOnlyWindow.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstdout[2m | frontend/modules/seedlingDemo/dashOnlyWindow.test.js[2m > [22m[2mthe switch, the setting and the page query[2m > [22m[2mthe default is ON (no env opt-out here), read once at import; the setting is default | on | off, schema default `default`
+[22m[39m[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ [32m✓[39m frontend/modules/seedlingDemo/dashOnlyWindow.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 2976[2mms[22m[39m
+     [33m[2m✓[22m[39m window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t [33m 984[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the smallest window that holds the full pass's dash asks is 39 (219 t); at 38 the full pass trips at `sword-dash` (never `walk`), keeping the partial schedule that dash scan returns [33m 757[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 at window 75 through a real worker: the posting instance OFF → the worker ships the dashless 255 t and stamps `dashOnlyWindow: false`; at the default (ON) it upgrades to 219 t, unstamped [33m 1211[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashWindow.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 17545[2mms[22m[39m
+     [33m[2m✓[22m[39m L4: the thresholds — ON 39 (38 keeps the partial 235 t), OFF 84 (83 ships the dashless 255 t) [33m 1524[2mms[22m[39m
+     [33m[2m✓[22m[39m THE MARGIN PIN: L4 ships its full 219 t at the window minus each arm's floor (ON 40, OFF 1) [33m 505[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 108 (L12) on the shipped arm: 328 t at 85 (the full pass, a kept partial), 343 t at 84 — the threshold IS the window [33m 2231[2mms[22m[39m
+     [33m[2m✓[22m[39m THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t [33m 1631[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF reproduces today: L20 in 560 t; both stand-tail corridors are planned window by window (no whole-chain ask) [33m 551[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony [33m 637[2mms[22m[39m
+     [33m[2m✓[22m[39m ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) [33m 593[2mms[22m[39m
+     [33m[2m✓[22m[39m ON dashes where it should: generated bushy post-feather seed 9 — the collect approach in a spinner room, 96 → 80 t, certified with its 7-tick stand; the level 102 → 86 t [33m 3162[2mms[22m[39m
+     [33m[2m✓[22m[39m ON is not monotone: generated winding post-feather seed 9 — the whole-certified press-blind chain is 204 t where OFF's is 199 t (the skeleton walk 205 → 210 t) [33m 4547[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with no stand tail = OFF: leg 108 (no corridor of it ends standing), key for key and unit for unit [33m 2158[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityDash.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 8282[2mms[22m[39m
+     [33m[2m✓[22m[39m canCross L16 → L17, dashMode all: the refuted plan behind the gate, the witnessed one past it [33m 2032[2mms[22m[39m
+     [33m[2m✓[22m[39m L16 all: the count is the run's own dashes, and the inner PULL walk's windows are in it [33m 2907[2mms[22m[39m
+     [33m[2m✓[22m[39m the committed plan replays with the same dashes (the count is the tape's, not the planner's) [33m 2819[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 2051[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env [33m 544[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 428[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 720[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOppDashDefers.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 515[2mms[22m[39m
+     [33m[2m✓[22m[39m the instrument counts OFF without refusing, and ON refuses exactly what it counted [33m 505[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashCert.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 8501[2mms[22m[39m
+     [33m[2m✓[22m[39m a corridor whose certificate meets no blocked line is OFF exactly: step 216 at the defaults (no fine walk) [33m 668[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: step 216 with fidelity's `fineStanceWalk` — certified on the walk the drive takes; OFF the drive is hit (UNBILLED DAMAGE) [33m 7649[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBodyGate.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 1163[2mms[22m[39m
+     [33m[2m✓[22m[39m the corner is a CORPSE's body: the press of t719 was the killing hit, and no key set meets a line [33m 492[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: every key set is a step out there (the body is not billed, the line misses) [33m 407[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOppPressFallback.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/dashShape.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 100216[2mms[22m[39m
+     [33m[2m✓[22m[39m in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work [33m 55948[2mms[22m[39m
+     [33m[2m✓[22m[39m through a real worker: the posting instance's shape rides on the request; the worker's plan moves as in process and is stamped with what it READ; at the defaults unstamped [33m 44229[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOpportunisticStrike.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 93034[2mms[22m[39m
+     [33m[2m✓[22m[39m step 67: OFF the kill passes bob@736,752 in reach without pressing and dies; ON it strikes the bob from t655, the hits land in the model and the bob dies, the keys are OFF's until the first aim, and the walk the kill certified struck the bob on the same ticks (preview = drive) [33m 93030[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m109 passed[39m[22m[90m (109)[39m
+[2m   Start at [22m 21:16:26
+[2m   Duration [22m 116.97s[2m (transform 7.28s, setup 1.09s, import 18.59s, tests 240.95s, environment 1ms)[22m
+

@@ -1,0 +1,6 @@
+ON=false ok work 189 ticks 989 sha f15368c64814 hits []
+   presses: 474(1.69->1.44) 501(0.17->0.00) 658(1.25->1.00) 685(0.90->0.65) 715(0.80->0.55) 735(0.80->0.55) 746DASH(0.80->2.55) 766(0.75->0.50)
+   in-window asks by caller: [["combatBefore solverBot.js:7091",1],["driveStepHeld botDriverV2.js:5622",1]]
+ON=true ok work 188 ticks 985 sha dce006b571f0 hits []
+   presses: 474(1.69->1.44) 501(0.17->0.00) 658(1.25->1.00) 685(0.90->0.65) 715(0.80->0.55) 735(0.80->0.55) 755(1.48->1.23)
+   in-window asks by caller: [["combatBefore solverBot.js:7091",9],["driveStepHeld botDriverV2.js:5622",9]]

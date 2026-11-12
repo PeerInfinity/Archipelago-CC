@@ -1,0 +1,33 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/placedTalk.test.js [2m([22m[2m19 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL74Leg624.test.js [2m([22m[2m13 tests[22m[2m)[22m[32m 178[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCeremonyExact.test.js [2m([22m[2m10 tests[22m[2m)[22m[32m 197[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBulbPlacement.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 1739[2mms[22m[39m
+     [33m[2m✓[22m[39m without needs the chaser arm kills the Bulb from the corridor's west end; WITH them every stance is refused by name [33m 1602[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityFrozenPress.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 543[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCeremony126.test.js [2m([22m[2m11 tests[22m[2m)[22m[32m 229[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStatueTalk.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 385[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBot.test.js [2m([22m[2m102 tests[22m[2m)[22m[33m 18416[2mms[22m[39m
+     [33m[2m✓[22m[39m ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more [33m 500[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ derives a stance for the body that CANNOT reach where the walk stands [33m 875[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why [33m 861[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ takes the BEST stance, not the first viable one — and carries the runners-up [33m 668[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the dwell bound is the forecast's own death tick, not a per-class constant [33m 2709[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L18 spends the fade WALKING, and the wait is the subtraction [33m 1190[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin [33m 3976[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room [33m 1166[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell [33m 336[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it [33m 2255[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLapseCost.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 41140[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t) [33m 21444[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t) [33m 615[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget [33m 1486[2mms[22m[39m
+     [33m[2m✓[22m[39m AFTER (the shipped defaults) of the MUTANT: still refused at 160 (the companion still solves it, 776 t) — but by the dashless pass's `bait` refusal at work 113, then the full pass's budget at `kill-chaser` [33m 17001[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m195 passed[39m[22m[90m (195)[39m
+[2m   Start at [22m 21:18:31
+[2m   Duration [22m 43.88s[2m (transform 4.94s, setup 790ms, import 11.83s, tests 62.91s, environment 1ms)[22m
+
