@@ -1895,6 +1895,18 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
  * The FINISH is the clear-tag's (`waitForWrite` on `earnedClears`). Every refusal is the clear-tag's own
  * (`refuseCT(reason, why)`).
  */
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE YETI-TALK — the clear-tag's TALK ARM, by obstacle class: `'talk'` for a Solid talker whose
+ * dialogue the clear-tag drives to its `doneTalking()` write, else null. Today exactly the Yeti row below (behind
+ * `CONTACT_FIDELITY.yetiTalk`; `execYetiTalk`). ONE answer for both sides: the clear-tag's arm asks it, and so does
+ * the page's goal mapper (`jsRuntimeSolver.clearTagVerbOf`, behind `TALK_CLEAR_GOAL`), so the two cannot drift.
+ * The key is the CLASS because the arm is: the model's "this talker's `doneTalking()` writes that flag" is the Yeti's
+ * own two-write arm in `levelRun` (`yetiDoneTalking`; `dialogue.PLACED_NPC_TALK.yeti`), not a per-talker datum.
+ */
+export function clearTagTalkArmOf(cls) {
+    return CONTACT_FIDELITY.yetiTalk && cls === 'yeti' ? 'talk' : null;
+}
+
 const YETI_STANCE_MARGIN = 2;
 const YETI_SETTLE_MAX = 60;
 const YETI_TALK_MAX = 1200;
@@ -33250,13 +33262,14 @@ function solveSegmentUnder({
          * `Yeti.doneTalking()` clears its own tag and tag 1 (`NPCs/Yeti.as:40-50`), so a clear-tag on either that names
          * the Yeti (`yeti@56,56`; `{58,1}` is L58's `teleporter@80,16` → L46, shut on a fresh room) is the dialogue,
          * driven by `execYetiTalk`. The Yeti IS a Solid (`NPC.as:59`), so OFF the generic arm below finds it and refuses
-         * `no-verb` (no `solid:yeti` row), byte-identical. ON its states, read off the run:
+         * `no-verb` (no `solid:yeti` row), byte-identical. The arm is `clearTagTalkArmOf(cls)` — the page's goal mapper
+         * asks the same function (YETI-TALK). ON its states, read off the run:
          *   · no Yeti in the live world: its own tag is cleared, so `NPC.check()` removed it at the build — the game's
          *     `already-clear` for both flags when the portal reads open too, else `cannot-act` (nothing else writes it);
          *   · a goal flag already off at the build (the portal live): `already-clear`.
          */
-        const yetiRow = CONTACT_FIDELITY.yetiTalk && cls === 'yeti'
-            ? { talker: (run.entities('talkCircles') ?? []).find((c) => c.id === id) ?? null } : null;
+        const yetiRow = clearTagTalkArmOf(cls) === 'talk'
+            ?{ talker: (run.entities('talkCircles') ?? []).find((c) => c.id === id) ?? null } : null;
         if (yetiRow) {
             const portalLive = (run.world.teleporters ?? []).some((tp) => tp.tag === YETI_PORTAL_TAG && !tp.deactivated);
             const flagOpenAtBuild = flag.tag === YETI_PORTAL_TAG ? portalLive : !solid;

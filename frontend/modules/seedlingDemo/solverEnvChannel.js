@@ -89,7 +89,7 @@ export const SOLVER_ENV_NAMES = Object.freeze([
     'SEEDLING_STANCE_ROCKS', 'SEEDLING_STATIC_SWORD_ARM',
     'SEEDLING_STATUE_TALK_RANGE', 'SEEDLING_STRATEGY_BOUND_DISTINCT', 'SEEDLING_STRATEGY_SWITCH',
     'SEEDLING_STRIKE_ETA_FLOOR', 'SEEDLING_STRIKE_IFRAME_LAPSE', 'SEEDLING_STRIKE_SCAN_COST', 'SEEDLING_STRIKE_SLOT',
-    'SEEDLING_STRING_PULL_FAST', 'SEEDLING_SWORD_GATE_TIMED', 'SEEDLING_TENTACLE_BEAST_FIGHT',
+    'SEEDLING_STRING_PULL_FAST', 'SEEDLING_SWORD_GATE_TIMED', 'SEEDLING_TALK_CLEAR_GOAL', 'SEEDLING_TENTACLE_BEAST_FIGHT',
     'SEEDLING_TENTACLE_HITLESS_FIRST', 'SEEDLING_TOTEM_BOSS_FIGHT', 'SEEDLING_TURRET_APPROACH',
     'SEEDLING_TURRET_APPROACH_VOLLEY_ORDER', 'SEEDLING_TURRET_CIRCLE_KILL', 'SEEDLING_TURRET_SNAP_PRICING',
     'SEEDLING_UNBILLED_DAMAGE_GATE',
@@ -142,7 +142,25 @@ export function solverEnvFromSearch(search) {
 }
 
 /**
- * The solve worker's URL for a page whose query is `search`: `base` itself (the SAME URL object) when the page sets
+ * ⛓⛓ SEEDLING HAMMER-PHASE YETI-TALK — a MAPPER switch's page-side read: `NAME=1` in the page URL's own
+ * `?seedlingSolverEnv=` (`scope.location.search`). The switch itself reads `process.env.NAME === '1' ||
+ * pageSolverEnvSwitchOn('NAME')`, so a node process and the worker (after `solverEnvShim.js`) read the env as every
+ * other switch does, and the page's MAIN thread reads the same spec off its own URL.
+ *
+ * ⚠ The ONE place this channel reaches the page's main thread, on purpose and only for a switch read through here: the
+ * goal MAPPER (`jsRuntimeSolver.solverGoalFor`) runs on the main thread (`wasmArrival.continuationSolveRequest`) before
+ * any worker is asked, so a mapper switch the channel set in the worker alone would map with OFF and send nothing for
+ * the worker's ON to answer. Every other switch keeps the channel's "WORKER only" rule. A malformed spec reads OFF here
+ * (the worker refuses it by name, `solveWorkerUrl`); no `location` (node) → OFF. No param → OFF: byte-identical.
+ */
+export function pageSolverEnvSwitchOn(name, scope = globalThis) {
+    let spec = null;
+    try { spec = solverEnvFromSearch(scope?.location?.search ?? ''); } catch { return false; }
+    return parseSolverEnv(spec)?.[name] === '1';
+}
+
+/**
+ * The solve worker's URL for a page whose query is `search`:`base` itself (the SAME URL object) when the page sets
  * no switch, else a copy carrying the spec in `SOLVER_ENV_PARAM` — canonical when it parses, and AS GIVEN when it does
  * not, so the worker refuses every solve naming the bad switch (`solverEnvShim.js`) rather than this page throwing
  * out of a worker factory.
