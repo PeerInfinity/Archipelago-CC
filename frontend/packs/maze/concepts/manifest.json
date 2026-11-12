@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "_comment": "The maze's DEFAULT content pack (content sets R2): one pack concept per mechanic concept the maze realises. Each presents that concept and carries the `look` (colour + symbol) the maze writes into a world's payload at generation. A gate (the `gate` role) also takes its `name`; an item (the `item` role) keeps its AP item name, which is logic, so only its look is written. What a gate or a pickup DOES is the substrate's code (mazeConcepts.js).",
+  "concepts": {
+    "maze:object/sword": {
+      "kind": "object",
+      "name": "Progressive Sword",
+      "description": "A blade keen enough to fell the guardian.",
+      "look": { "color": "#c0a040", "symbol": "star" },
+      "presents": "sword"
+    },
+    "maze:object/swim": {
+      "kind": "object",
+      "name": "Progressive Swim",
+      "description": "The knack of swimming, for crossing deep water.",
+      "look": { "color": "#40b0c0", "symbol": "star" },
+      "presents": "swim"
+    },
+    "maze:character/guardian": {
+      "kind": "character",
+      "name": "Guardian",
+      "description": "A guardian that bars a tile until it is fought with a sword.",
+      "look": { "color": "#8c5a2c", "symbol": "G" },
+      "presents": "guardian"
+    },
+    "maze:object/water": {
+      "kind": "object",
+      "name": "Water",
+      "description": "Deep water that floods a tile until it is crossed by swimming.",
+      "look": { "color": "#2f6fd0", "symbol": "~" },
+      "presents": "water"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "id": "maze",
+  "title": "Maze — the built-in looks",
+  "licence": "MIT",
+  "credit": "Made for this repository by its authors (the Archipelago-CC project), under the repository's MIT licence (LICENSE). Hand-made: the names, colours and symbols the maze substrate wrote from code until content sets R2.",
+  "source": "frontend/modules/mazeRoom/mazeConcepts.js (the gates' art, until content sets R2) and frontend/modules/procgenCore/concepts.js (the item concepts' rows), copied byte for byte",
+  "layers": {
+    "concepts": "concepts/manifest.json"
+  }
+}

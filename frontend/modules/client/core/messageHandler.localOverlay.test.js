@@ -16,6 +16,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildSelectedPlayerInfo } from '../../stateManager/selectedPlayerInfo.js';
 
 const connectionMock = vi.hoisted(() => ({
   isConnected: vi.fn(() => true),
@@ -231,6 +232,17 @@ describe('MessageHandler: local generated-world rules + server placements', () =
     const load = calls[0][1];
     expect(load.selectedPlayerId).toBe(2);
     expect(load.sourceName).toBe(`server:${SEED}:P2`);
+    // The slot travels with the name, and the stateManager's selectedPlayerInfo keeps it (slot 2+).
+    expect(load.playerInfo).toEqual({ playerId: '2', playerName: 'Berry' });
+    expect(buildSelectedPlayerInfo(load)).toEqual({ playerId: '2', playerName: 'Berry' });
+    // The "slot-2 field": with the slot kept, the server-built load reads back as a loaded
+    // generated world of the game (it was null when playerId was lost).
+    const rawBefore = stateManagerMock.rawPayload;
+    stateManagerMock.rawPayload = { source: load.sourceName, rawJsonData: load.jsonData, selectedPlayerInfo: buildSelectedPlayerInfo(load) };
+    expect(handler._loadedGeneratedWorld(GAME)).toMatchObject({ player: '2', source: load.sourceName });
+    stateManagerMock.rawPayload = { ...stateManagerMock.rawPayload, selectedPlayerInfo: { playerName: 'Berry' } };
+    expect(handler._loadedGeneratedWorld(GAME)).toBe(null); // the old, name-only shape
+    stateManagerMock.rawPayload = rawBefore;
     expect(load.jsonData.regions).toEqual(ROOM.regions);
     expect(load.jsonData.items).toEqual(ROOM.items);
     expect(load.jsonData.player_names).toEqual(ROOM.player_names);
@@ -448,6 +460,7 @@ describe('MessageHandler: the rules the server sends (worldgen_rules)', () => {
     expect(sent('Connect')[0]).toMatchObject({ game: GAME, name: 'Berry' });
     expect(calls.map(([kind]) => kind)).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'applyRuntimeStateData']);
     const doc = calls[0][1].jsonData;
+    expect(buildSelectedPlayerInfo(calls[0][1])).toEqual({ playerId: '2', playerName: 'Berry' });
     // The room's placements (= the exporter's file at this seed), from a document that carried none.
     for (const [name, region] of Object.entries(ROOM.regions['2'])) {
       expect(doc.regions['2'][name].locations.map((l) => [l.name, l.id, l.item?.name, l.item?.player]))

@@ -35,7 +35,7 @@ describe('KNOCKBACK376 — the switch', () => {
             expect(CONTACT_FIDELITY.rockGoneFencepost).toBe(true);
             // ⛓ wave 37e (DRILLWATER) `drillTerrainSwitch`, then wave 38 (L39PHANTOM `spinnerRosterGone`, FIRESPINNER `fireSpinnerArm`), then wave 39 (ROCKFIRE `fireRockArm`), landed after it.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf('rockGoneFencepost') + 1)).toEqual(['drillTerrainSwitch', 'spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm']);
+            expect(keys.slice(keys.indexOf('rockGoneFencepost') + 1)).toEqual(['drillTerrainSwitch', 'spinnerRosterGone', 'fireSpinnerArm', 'fireRockArm', 'fireBreakArm', 'spinnerRemoveRead']); // ⛓ wave 40: FIREBREAK `fireBreakArm`, FENCEPOST `spinnerRemoveRead`
         });
     it('the env name is a known worker env name', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_ROCK_GONE_FENCEPOST');

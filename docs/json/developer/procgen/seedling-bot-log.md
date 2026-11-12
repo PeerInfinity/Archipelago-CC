@@ -28145,3 +28145,81 @@ a route more (L40 flag 8 with the south door shut: 12 → 24 forks, the same `no
 pins both at the default and keeps the pre-flip values under `withTurretApproachVolleyOrder(false)`. The keylock arm asks
 `approachKillForCorpse` itself, so the order reaches it with `TURRET_APPROACH` off (the slice's "asked only under
 `TURRET_APPROACH`" was too narrow).
+
+### Seedling fidelity FIREBREAK — the `break` verb takes Fire for a run that holds no Sword (`fireBreakArm`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 40 (⚖ the user 2026-11-11, *"Fire break + fencepost now"*). Base
+`4bbf15fea9` (main, train 91: 131 keys, 121 default-ON). The report is
+`CC/docs/cloud-reports/seedling-fidelity-firebreak.md`.
+
+**W0.** ROCKFIRE left the run able to step a Fire press that breaks a rock (`fireRockArm`, ON) and the solver unable
+to plan one: `resolveBreakStrategy` refused every run whose selected slot was not the Sword or a modelled Ghost Sword,
+and every Fire stance planner treats a rock in the flame as a stray. Measured from tile centres, each shipped rock's
+3x3 ring reaches it; what differs is what else the flame reaches. L0's three, L3's `@96,112`, L15's two, L16's
+`@96,64`, `@96,80` and `@304,64`, L30's, L53's two, L73's, L92's two and L100's have a cell that reaches the rock
+alone; every cell beside L40's three and L41's two also reaches a second rock (and L40's, spinners), and L16's
+`@112,80` has one clean cell, on its far side. The rules name `HasAny(Ghost Spear, Progressive Sword)` on every
+rock-gated edge and on L0's two rock events; none names Fire. No leg of the divergence derivation (934) and no leg of
+the survey route (54) holds Fire without the Sword, so neither instrument can see this arm: the census is its own
+(`evidence/census-*.txt`).
+
+**D1** (`fireBreakArm`, OFF, last key, `SEEDLING_FIRE_BREAK_ARM`): `fireBreakAdmits` (the run holds Fire, not the Fire
+Wand, and neither the Sword nor the Ghost Sword), `resolveFireBreak` (the rock's own test, then a stance whose flame
+reaches that rock and nothing else, out of static danger volumes, reachable directly or under the hypothesis without
+this rock) and `execFireBreak` (settle, lean, re-ask the audit, certify the press and its wait hit-free on a fork,
+select the Fire's slot, press once, wait `FIRE_BREAK_WAIT_TICKS` = 23, restore the slot). The step-off's `break` takes
+a Fire order when the door is its stance. `rockHypothesis` admits a rock for such a run only where some cell's flame
+reaches it alone (`fireBreakStances`, the resolver's own scan): the bounded set ON found `fidelityL40Button`'s *"a run
+with no sword hypothesises no rock"* red while the guard was missing (L40's three rocks, which no flame reaches
+alone, were hypothesised for a run that held Fire). A Ghost Sword held without the Sword is NOT admitted: admitted, L0's west rock
+turned today's named refusal into `levelRun`'s throw at tick 0 (the walk's strike policy presses the ghost slot). The
+certificate came from the census: L73 from the L72 landing pressed at t101 and `bulb@80,80` hit the standing player at
+t115; with the certificate that order refuses naming the bulb. 30 rows, ten mutants red as predicted.
+
+**D2** (the game, p4g, headless): `probe-seedling-fire-break.mjs --record`, six solver plans in
+`fixtures/firebreak-witness/`, each 0 px on every sampled tick with the rock flag on the model's `goneAt + 1` and no
+hit: L0's east and west flagged rocks, the east rock with the Wand selected (the Fire slot selected for the press and
+the Wand's restored), L3's pocket (the rock broken from the latched door, then the crossing to L11), L30's rock on
+the pit (the fall to L31), and L92 from the L87 landing (both `tag = -1` rocks, out to L91, 466 ticks beside a
+spinner, a jellyfish and a bob). ON, a Fire-and-no-Sword run solves 60 census requests OFF refuses (37 of 89
+rock-by-arrival clear-tags, 7 of 20 edge crossings, 16 of 174 legs), every one hitless, the same 60 through
+`twoPassSolve`. The survey's 33 rock-room steps are byte-identical ON and OFF.
+
+**Trap candidates.** (1) A harness that calls `solveSegment` without `forkRun` runs every fork-certified verb
+uncertified: the census took a hit the page's solve would have refused. Pass `forkRun` wherever a result is quoted.
+(2) A request is its staging: L92's crossing solves from `arrivalStaging` and refuses under `r9-solve-16`'s seam clock
+(the spinner's phase). Name the staging beside a verdict. (3) An admission keyed on "holds no Sword" has to read
+`hasGhostSword` too: the strike policy presses that slot on a walk, and `levelRun` throws on it without the Sword.
+
+### Seedling fidelity FENCEPOST — a faded-out spinner leaves the roster on the game's read (`spinnerRemoveRead`, OFF); the flip moves kill plans and is not made
+
+Planner `seedling-fidelity-planning-19`, wave 40 (⚖ the user's GO 2026-11-11, *"Fire break + fencepost now"*). Base
+`4bbf15fea9`. The report is `CC/docs/cloud-reports/seedling-fidelity-fencepost.md`.
+
+**W0.** L39PHANTOM's residue 1 holds, and the cause is one line of FlashPunk: `Engine.update` is `World.update();
+World.updateLists();` (`net/flashpunk/Engine.as:70-78`), so a spinner whose `Mobile.death` reached `alpha <= 0` is out of
+the world, with `Spinner.removed()` run, at the END of that update. `stepSpinner` says `removePending` on that step and
+`removed` at the top of the next, so every between-ticks read keeps the corpse for one observation. Four levels hold a
+spinner (L18, L39, L40, L92). Of the 293 committed tapes, 14 cross a spinner death and hold 25 corpse reads
+(`evidence/tools/tape-death-census.mjs`). ⚠ Read on the way, not fixed: `dangerMap.spinnerDanger` pairs roster bodies
+with forecast rows BY INDEX, so on the corpse read (and on any read whose horizon holds a removal) every body listed
+after the corpse is priced at another body's forecast rect.
+
+**D1** (`spinnerRemoveRead`, OFF, last key, `SEEDLING_SPINNER_REMOVE_READ`): `levelRun.advance`'s body is one arrow and
+`settleSpinnerRemovalsNow` runs below it, the tick's own `updateLists()`: a `removePending` body of the state this tick
+stepped becomes `removed`, after the contact and the block sweep have read it. `spinner.js` is unchanged. ⚠ The first
+cut left the removal's write loop (`spinnerWrites`, the banked clear, the kill-lock declaration) on the next tick; with
+the key ON `solverBot`'s kill verb, which ends on the roster and then asks `spinnerKillLockOpens`, threw *"recorded
+NOTHING"* in L18. The loop is now one arrow with two callers (in place, as before; the settle, ON) and stamps the same
+values either way, so the roster and the ledger move together. ON, the L39PHANTOM game witness has ZERO fencepost
+ticks (the model's readout is the game's: destroy t1267, last listed t1277, gone t1278), and all 293 committed tapes
+replay to byte-identical streams with 0 corpse reads. Mutants M1, M2, M3, M5 red; M4's source-shape prediction was wrong
+(seven other rows caught it).
+
+**D2** (ON, measured; the flip is NOT made): nothing stepped moves, but a PLAN does — the kill verb ends one tick
+sooner per spinner death, and the hammer's 45-tick phase turns that tick into more in L18/L39/L40. Three producers
+drift (`r8-l18`, `r8-d2-chain`, `r9-campaign`: `r8-solve-18` three input rows one tick sooner at 467 ticks,
+`r9-solve-18` 390 → 440), the acceptance batch md5 moves (one row, 232 → 231), 26 bounded vitest rows and most of the
+L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 spinner-room steps keep their verdicts (9
+SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
+hammer arc's signature on its pins, so it waits for a licence.

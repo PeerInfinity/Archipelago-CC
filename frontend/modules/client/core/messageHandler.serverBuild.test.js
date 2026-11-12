@@ -15,6 +15,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
+import { buildSelectedPlayerInfo } from '../../stateManager/selectedPlayerInfo.js';
 
 const connectionMock = vi.hoisted(() => ({
   isConnected: vi.fn(() => true),
@@ -197,7 +198,7 @@ describe('MessageHandler: rules built from server data', () => {
     const load = calls[0][1];
     expect(load.selectedPlayerId).toBe(1);
     expect(load.sourceName).toBe(`server:${SEED}:P1`);
-    expect(load.playerInfo).toEqual({ playerName: 'Mathy' });
+    expect(load.playerInfo).toEqual({ playerId: '1', playerName: 'Mathy' });
     // The ONE load is the exporter-equivalent document
     expect(load.jsonData.regions).toEqual(FIXTURE.regions);
     expect(load.jsonData.items).toEqual(FIXTURE.items);
@@ -422,6 +423,63 @@ describe('MessageHandler: DepGraph rules built from server data', () => {
     expect(load.jsonData.items).toEqual(DG.items);
     expect(load.jsonData.starting_items).toEqual(DG.starting_items);
     expect(consoleLines(bus).some((m) => /Built DepGraph rules for tech_tree \(\d+ nodes, entrance mode 3\)/.test(m))).toBe(true);
+  });
+  it('a DepGraph build at SLOT 2 loads with selectedPlayerInfo.playerId 2 (the slot-2 defect)', async () => {
+    handler.chosenGame = 'DepGraph';
+    handler.processMessage({
+      cmd: 'RoomInfo',
+      games: ['Archipelago', 'APQuest', 'DepGraph'],
+      seed_name: DG.seed_name,
+      version: { major: 0, minor: 6, build: 8 },
+    });
+    handler.processMessage({
+      cmd: 'DataPackage',
+      data: {
+        games: {
+          DepGraph: {
+            item_name_to_id: dgItems,
+            location_name_to_id: Object.fromEntries(dgPlacements.map((l) => [l.name, l.id])),
+          },
+          APQuest: { item_name_to_id: questItems, location_name_to_id: {} },
+        },
+      },
+    });
+    await flush();
+    // The same room with the slots swapped: DG is player 2.
+    handler.processMessage({
+      cmd: 'Connected',
+      slot: 2,
+      team: 0,
+      players: [
+        { team: 0, slot: 1, alias: 'Quester', name: 'Quester' },
+        { team: 0, slot: 2, alias: 'DG', name: 'DG' },
+      ],
+      missing_locations: dgPlacements.map((l) => l.id),
+      checked_locations: [],
+      slot_data: DG.world['1'].slot_data,
+      slot_info: {
+        1: { name: 'Quester', game: 'APQuest', type: 1, group_members: [] },
+        2: { name: 'DG', game: 'DepGraph', type: 1, group_members: [] },
+      },
+    });
+    await flush();
+    handler.processMessage({
+      cmd: 'LocationInfo',
+      locations: dgPlacements.map((l) => ({
+        item: l.item.player === 1 ? dgItems[l.item.name] : questItems[l.item.name],
+        location: l.id,
+        player: l.item.player === 1 ? 2 : 1,
+        flags: { progression: 1, useful: 2, trap: 4 }[DG.items['1'][l.item.name].classification] ?? 0,
+      })),
+    });
+    await flush(10);
+
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.selectedPlayerId).toBe(2);
+    expect(load.sourceName).toBe(`server:${DG.seed_name}:P2`);
+    expect(load.playerInfo).toEqual({ playerId: '2', playerName: 'DG' });
+    expect(buildSelectedPlayerInfo(load)).toEqual({ playerId: '2', playerName: 'DG' });
+    expect(Object.keys(load.jsonData.regions)).toEqual(['2']);
   });
 });
 
