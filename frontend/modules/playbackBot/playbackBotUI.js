@@ -190,7 +190,16 @@ export class PlaybackBotUI {
         isLoopModeActive = null,
         loopRunnerDeps = null,
         timer = null,
+        isConnected = null,
     } = {}) {
+        // ⛓ CONNECTED CHECKS (sdc-bot-connected-check) — `isConnected()` says the client is connected to a server. Then
+        // a check is marked locally only when the server's RoomUpdate echoes it (measured, upstream 0.6.9: the bot's
+        // flush answered 7 ms after the send, the echo arrived at +71 ms and the snapshot held it at +177 ms), so a
+        // check missing from the flushed snapshot is AWAITED (`_awaitingServerCheck`), not refused. Offline: as before.
+        this._isConnected = isConnected;
+        this._awaitingServerCheck = null;
+        // Checks whose flush has not answered (name → refused by the client meanwhile?).
+        this._checksInFlight = new Map();
         // ⛓ TARGET SOURCE 'reachable' — the bot drives the timer module's TimerLogic instead of the sphere queue:
         // `timer` is `{ begin, stop, quickCheck, isRunning, onRunningChanged(fn) → unsubscribe }` (the panel builds it
         // from the timer module's public functions). Play = Begin, Step = Quick Check, Instant = Play (the timer has
@@ -459,6 +468,8 @@ export class PlaybackBotUI {
         this._escapes = [];
         this._creditedEvents = new Set();
         this._pendingBreak = null;
+        this._awaitingServerCheck = null;
+        this._checksInFlight.clear();
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._cancelDirectTimer();
         this._directOnce = false;
@@ -746,9 +757,24 @@ export class PlaybackBotUI {
         // "8/23" with nothing checked). With a snapshot to ask, the check counts only once the snapshot holds it.
         const proxy = this._stateManagerProxy;
         if (proxy?.pingWorker && proxy?.getLatestStateSnapshot) {
+            // The client's connected refusal of THIS event (client:locationCheckRefused) comes after this call — its
+            // logic gate answers after an await — so it is noted against the in-flight check (onLocationCheckRefused).
+            this._checksInFlight.set(name, false);
             this._flushSnapshot().then(() => {
+                const refused = this._checksInFlight.get(name) === true;
+                this._checksInFlight.delete(name);
                 const checked = proxy.getLatestStateSnapshot()?.checkedLocations;
                 if (Array.isArray(checked) && !checked.includes(name)) {
+                    // ⛓ CONNECTED CHECKS — sent, not yet echoed: wait for the snapshot that holds it (onSnapshotUpdated)
+                    // unless the client refused it (then it never lands: blocked, as offline).
+                    if (this._connected() && !refused) {
+                        this._awaitingServerCheck = name;
+                        if (this._walking()) {
+                            this._setStatus(`waiting for the server to confirm the check of "${name}"`);
+                            this._render();
+                        }
+                        return;
+                    }
                     if (this._walking()) {
                         this._setStatus(`blocked: the check of "${name}" did not land`);
                         this._render();
@@ -762,7 +788,37 @@ export class PlaybackBotUI {
         this._acceptLocationCheck(name);
     }
 
+    /** ⛓ CONNECTED CHECKS — whether the client is connected to a server (false when no predicate is wired). */
+    _connected() {
+        try {
+            return !!this._isConnected?.();
+        } catch (_e) {
+            return false;
+        }
+    }
+
+    /**
+     * ⛓ CONNECTED CHECKS — `client:locationCheckRefused`: the connected logic gate refused a check, so nothing was
+     * sent and it never lands. An awaited check parks the bot as offline's refusal does; one whose flush has not
+     * answered yet is marked for it (onLocationCheck reads `_checksInFlight`). Any other refusal (a user click the
+     * bot never sent) is not the bot's.
+     */
+    onLocationCheckRefused(data) {
+        const name = data?.locationName;
+        if (!name) return;
+        if (this._awaitingServerCheck === name) {
+            this._awaitingServerCheck = null;
+            if (this._walking()) {
+                this._setStatus(`blocked: the check of "${name}" did not land`);
+                this._render();
+            }
+            return;
+        }
+        if (this._checksInFlight.has(name)) this._checksInFlight.set(name, true);
+    }
+
     _acceptLocationCheck(name) {
+        if (this._awaitingServerCheck === name) this._awaitingServerCheck = null;
         this._checkedSoFar.add(name);
         // If this matches the pending manual target, the route is
         // complete — clear it.
@@ -1486,6 +1542,15 @@ export class PlaybackBotUI {
      * The snapshot that holds the event location checked is the signal; any other snapshot is a no-op.
      */
     onSnapshotUpdated() {
+        // ⛓ CONNECTED CHECKS — the server's echo marked the awaited check: it landed (once; _acceptLocationCheck clears it).
+        const awaited = this._awaitingServerCheck;
+        if (awaited) {
+            const held = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
+            if (Array.isArray(held) && held.includes(awaited)) {
+                this._log.push(`"${awaited}" confirmed by the server`);
+                this._acceptLocationCheck(awaited);
+            }
+        }
         const name = this._pendingBreak;
         if (!name || !this._walking()) return;
         const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
