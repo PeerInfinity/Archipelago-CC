@@ -1,0 +1,48 @@
+// scratch: stage exit legs with chosen items, classify the solve.
+// node ghostprobe.mjs <legs.jsonl> <from> <to> <mix> [keysfile]
+import { readFileSync } from 'node:fs';
+const REPO = '/home/user/Archipelago-CC';
+const M = (p) => import(`${REPO}/frontend/modules/${p}`);
+const { atlasLevelSource } = await M('seedlingDemo/levelSource.js');
+const { createRunForStaging } = await M('seedlingDemo/tapeRunner.js');
+const { arrivalStaging } = await M('seedlingDemo/fidelityArrival.js');
+const { arrivalSolverGoal } = await M('seedlingDemo/wasmArrival.js');
+const SB = await M('seedlingDemo/solverBot.js');
+const { solveSegment, SolverRefusal } = SB;
+const MIXES = {
+    ghost: ['hasGhostSword', 'hasSpear'],
+    ghostbare: ['hasGhostSword'],
+    both: ['hasSword', 'hasGhostSword', 'hasSpear'],
+    sword: ['hasSword'],
+};
+const [legsPath, from, to, mix, keysFile] = process.argv.slice(2);
+const items = MIXES[mix];
+const SRC = atlasLevelSource();
+let legs = readFileSync(legsPath, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+if (keysFile) { const ks = new Set(readFileSync(keysFile, 'utf8').split('\n').filter(Boolean)); legs = legs.filter((l) => ks.has(l.key)); }
+legs = legs.filter((l) => l.goal.kind === 'exit' && !l.skip).slice(Number(from), Number(to));
+for (const leg of legs) {
+    const boot = { level: leg.level, x: leg.arrive.x, y: leg.arrive.y };
+    const row = { key: leg.key, mix };
+    const t0 = Date.now();
+    let run;
+    try {
+        const staging = arrivalStaging(boot, { items });
+        const goal = { kind: 'exit', level: leg.level, tiles: leg.goal.tiles, name: leg.goal.name };
+        const mapped = arrivalSolverGoal(goal, { staging, levelSource: SRC, record: null });
+        if (!mapped.goal) { row.outcome = 'no-goal'; row.err = String(mapped.walker).slice(0, 120); console.log(JSON.stringify(row)); continue; }
+        run = createRunForStaging(staging, SRC);
+        row.bodies = (run.entities('strikeBodies') ?? []).length;
+        const out = solveSegment({ run, goals: [{ ...mapped.goal }], name: `gp-${leg.level}`, boot,
+            forkRun: () => createRunForStaging(arrivalStaging(boot, { items }), SRC) });
+        row.outcome = 'SOLVED';
+        row.ticks = out.perTick.length;
+        row.presses = out.perTick.filter((h) => [...h].includes('primary') || [...h].includes('x')).length;
+        row.hits = (run.ledger?.('playerHits') ?? []).length;
+    } catch (e) {
+        if (e instanceof SolverRefusal) { row.outcome = 'REFUSED'; row.err = String(e.message).slice(0, 200); }
+        else { row.outcome = "THROW"; row.err = String(e?.message ?? e).slice(0, 120); if (process.env.STACK) row.stack = String(e?.stack).split("\n").slice(1, 14).map((s) => s.trim().replace(/\(.*seedlingDemo\//, "(")); }
+    }
+    row.ms = Date.now() - t0;
+    console.log(JSON.stringify(row));
+}

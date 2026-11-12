@@ -1,0 +1,28 @@
+# Who holds the Ghost Sword without the Sword? (measured 2026-11-12 at fe98f37f22)
+
+## Divergence-sweep leg lists (scripts/procgen/seedling-divergence-legs.mjs --presets=<p>), the AP route's sphere inventory
+seedling_playthrough (seed 1, the sweep's list): 936 legs | holding Ghost Sword Fusion: 75 | Fusion without Progressive Sword: 0 | Fusion+Spear+Sword (the recipe): 75
+seedling_er:                                     936 legs | holding Ghost Sword Fusion: 61 | Fusion without Progressive Sword: 0 | the recipe: 61
+seedling_atlas:                                   13 legs | holding Ghost Sword Fusion: 0
+
+## Randomized seeds generated locally (Players/Templates/Seedling.yaml, Generate.py --multi 1 --seed N; NOT committed, removed)
+AP_14089154938208861744 (seed 1)  Fusion@3.13  Sword@2.5   Spear@0.3  | spheres holding Fusion without Sword:  0 | recipe-held spheres  9
+AP_84719271504320872445           Fusion@4.2   Sword@0.1   Spear@2.7  | 0 | 16
+AP_00679259829289197625 (seed 6)  Fusion@4.6   Sword@1.1   Spear@0.2  | 0 | 16
+AP_01043188731678011336           Fusion@3.7   Sword@1.1   Spear@3.3  | 0 | 14
+AP_05594871498841892311           Fusion@4.8   Sword@3.7   Spear@0.2  | 0 |  3
+AP_35931773795037525048           Fusion@1.11  Sword@2.11  Spear@1.8  | 12 | 14   <- the Fusion arrives BEFORE the Sword
+AP_96945849220684217413           Fusion@8.2   Sword@0.3   Spear@3.8  | 0 |  1
+(seeds 2..7; the seed->id pairing beyond seeds 1 and 6 was not recorded)
+
+## Delivery: what the game is handed (frontend/modules/flashPanel/games/seedling.json fusion_items)
+{"result": "ghostsword", "requires_flags": ["!ghostsword"], "requires_items": ["spear"], "requires_progressive": {"!sword": 1}}
+flashBridgeAdapter._inventoryToFlashItems pushes `ghostsword` only when the Fusion flag, `spear` AND one `!sword` copy are held,
+so in AP_3593...'s 12 spheres the GAME holds no Ghost Sword at all. Game-measured below (game-ghostsword-items.txt, the
+`delivery *` rows): ghost, ghost-sword, ghost-spear -> NOT written; ghost-spear-sword -> written with sword and spear.
+
+## Conclusion
+No AP-delivered inventory (randomized or ER) puts hasGhostSword up without hasSword. A Ghost-Sword-only run exists only where
+the flag is written directly: a staging's `seam.items` / `arrivalStaging(items)`, Bot.as `grantItem` (a probe), the cheat path
+(`Game.cheats` grants both), or a vanilla sequence break that takes the GhostSword pickup (Pickups/GhostSword.as: no Sword test)
+before the Sword.

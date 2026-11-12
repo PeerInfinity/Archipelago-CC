@@ -1,0 +1,26 @@
+ ✓ frontend/modules/seedlingDemo/fidelityFireBreak.test.js (30 tests) 3583ms
+     ✓ with the Sword selected alone, ON plans what OFF plans, tick for tick (a swing)  436ms
+     ✓ L53 from the L48 landing: `breakablerock@128,160`'s stance is behind `breakablerock@112,128`, so that rock is the prerequisite order (`rockHypothesis` admits a rock for a Fire run) — and its walk meets the room's puncher, which a run with no Sword cannot fight  2148ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostRope.test.js (13 tests) 5477ms
+     ✓ seed 1: OFF the PULL rung refuses naming the ghost sword; ON it cuts with it and the walk is driven  352ms
+     ✓ ON (pole at (3,13)): the cut stands 20 px off the rope — beyond the sword's reach — with the swing's swept rect off the pole, and the walk toggles no pole; OFF refuses  4013ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 8815ms
+     ✓ ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press)  383ms
+     ✓ OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press  550ms
+     ✓ ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach  2616ms
+     ✓ ON leaves the SWORD's solve byte-identical (the committed staging, 476 ticks; 518 with the strike floor OFF)  5028ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostStrikeGate.test.js (11 tests) 3393ms
+     ✓ OFF: the ghost-only witness dies at the press — levelRun throws on the t0 ghost swing (the BEFORE)  444ms
+     ✓ Sword-only: ON plans what OFF plans, tick for tick (its dash presses kept)  362ms
+     ✓ both-held: ON plans what OFF plans, tick for tick (its dash presses kept)  329ms
+     ✓ OFF: the ghost-only fight dies at its first strike (levelRun throws at t58)  509ms
+     ✓ both-held: ON refuses what OFF refuses, in the same words  1665ms
+ ✓ frontend/modules/seedlingDemo/solverEnvChannel.test.js (11 tests) 1919ms
+     ✓ nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env  486ms
+     ✓ the result records the switches set (and carries no stamp at the defaults)  456ms
+     ✓ an unknown switch refuses BY NAME in the worker too: every solve, nothing installed  657ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeSlot.test.js (5 tests) 164ms
+ ✓ frontend/modules/seedlingDemo/combatVerbs.test.js (57 tests) 60ms
+ ✓ frontend/modules/seedlingDemo/ghostMotion.test.js (10 tests) 49ms
+ Test Files  8 passed (8)
+      Tests  148 passed (148)

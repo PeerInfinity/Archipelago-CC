@@ -1,0 +1,39 @@
+PASS: delivery ghost: the bridge writes ghostsword NOT AT ALL (recipe incomplete) — []
+PASS: delivery ghost-sword: the bridge writes ghostsword NOT AT ALL (recipe incomplete) — ["sword"]
+PASS: delivery ghost-spear: the bridge writes ghostsword NOT AT ALL (recipe incomplete) — ["spear"]
+PASS: delivery ghost-spear-sword: the bridge writes ghostsword once the recipe holds — ["spear","sword","ghostsword"]
+PASS: delivery sword: the bridge writes ghostsword NOT AT ALL (recipe incomplete) — ["sword"]
+PASS: delivery spear: the bridge writes ghostsword NOT AT ALL (recipe incomplete) — ["spear"]
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"rock-ghost","scene":"rock","mix":"ghost","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":91,"grants":[{"level":3,"items":["conch","ghostsword"]}],"levels":[3],"slash":{"hits":0,"tests":0},"slots":[4],"items":{"hasSword":false,"hasSpear":false,"hasGhostSword":true},"rockBroken":false,"reachedL111":false}
+PASS: rock-ghost: the game ran the tape to its end on the delivered set — 91 obs, seedling-vanilla-record-5aeefc3c
+PASS: rock-ghost: the slots are [4] and hasSpear is untouched — {"slots":[4],"items":{"hasSword":false,"hasSpear":false,"hasGhostSword":true}}
+PASS: rock-ghost: hit tests NEVER run (slash() only under hasSword) — {"hits":0,"tests":0}
+PASS: rock-ghost: rockBroken = false — {"levels":[3]}
+PASS: rock-ghost: L111 reached = false (the teleporter is under the rock) — [3]
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"pole-ghost","scene":"pole","mix":"ghost","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":41,"grants":[{"level":63,"items":["ghostsword"]}],"levels":[63],"slash":{"hits":0,"tests":0},"slots":[4],"items":{"hasSword":false,"hasSpear":false,"hasGhostSword":true},"poleLit":false}
+PASS: pole-ghost: the game ran the tape to its end on the delivered set — 41 obs, seedling-vanilla-record-5aeefc3c
+PASS: pole-ghost: the slots are [4] and hasSpear is untouched — {"slots":[4],"items":{"hasSword":false,"hasSpear":false,"hasGhostSword":true}}
+PASS: pole-ghost: hit tests NEVER run (slash() only under hasSword) — {"hits":0,"tests":0}
+PASS: pole-ghost: poleLit = false — {"levels":[63]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"push-ghost","scene":"push","mix":"ghost","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":61,"grants":[{"level":63,"items":["ghostsword"]}],"levels":[63],"slash":{"hits":0,"tests":0},"slots":[4],"items":{"hasSword":false,"hasSpear":false,"hasGhostSword":true},"block":{"start":[112,96],"end":[112,96]},"blockMoved":false}
+PASS: push-ghost: the game ran the tape to its end on the delivered set — 61 obs, seedling-vanilla-record-5aeefc3c
+PASS: push-ghost: the slots are [4] and hasSpear is untouched — {"slots":[4],"items":{"hasSword":false,"hasSpear":false,"hasGhostSword":true}}
+PASS: push-ghost: hit tests NEVER run (slash() only under hasSword) — {"hits":0,"tests":0}
+PASS: push-ghost: blockMoved = false — {"start":[112,96],"end":[112,96]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"rock-ghost-sword","scene":"rock","mix":"ghost-sword","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":91,"grants":[{"level":3,"items":["conch","ghostsword","sword"]}],"levels":[3,111],"slash":{"hits":21,"tests":7},"slots":[4],"items":{"hasSword":true,"hasSpear":false,"hasGhostSword":true},"rockBroken":true,"reachedL111":true}
+PASS: rock-ghost-sword: the game ran the tape to its end on the delivered set — 91 obs, seedling-vanilla-record-5aeefc3c
+PASS: rock-ghost-sword: the slots are [4] and hasSpear is untouched — {"slots":[4],"items":{"hasSword":true,"hasSpear":false,"hasGhostSword":true}}
+PASS: rock-ghost-sword: hit tests run (slash() only under hasSword) — {"hits":21,"tests":7}
+PASS: rock-ghost-sword: rockBroken = true — {"levels":[3,111]}
+PASS: rock-ghost-sword: L111 reached = true (the teleporter is under the rock) — [3,111]
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"push-ghost-sword","scene":"push","mix":"ghost-sword","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":61,"grants":[{"level":63,"items":["ghostsword","sword"]}],"levels":[63],"slash":{"hits":28,"tests":7},"slots":[4],"items":{"hasSword":true,"hasSpear":false,"hasGhostSword":true},"block":{"start":[112,96],"end":null},"blockMoved":true}
+PASS: push-ghost-sword: the game ran the tape to its end on the delivered set — 61 obs, seedling-vanilla-record-5aeefc3c
+PASS: push-ghost-sword: the slots are [4] and hasSpear is untouched — {"slots":[4],"items":{"hasSword":true,"hasSpear":false,"hasGhostSword":true}}
+PASS: push-ghost-sword: hit tests run (slash() only under hasSword) — {"hits":28,"tests":7}
+PASS: push-ghost-sword: blockMoved = true — {"start":[112,96],"end":null}
+ALL CHECKS PASSED
