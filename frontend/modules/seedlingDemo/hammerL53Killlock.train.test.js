@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
-import { withKillLockChaserRewind } from './solverBot.js';
+import { withKillLockChaserRewind, withKillLockLineStance } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
@@ -25,7 +25,7 @@ function solveBothPasses(leg, on) {
     const req = restoreRequest(leg.requests[0].request);
     const { passes = ANYTIME_PASSES, source, ...tape } = req;
     const levelSource = levelSourceFromAtlas(source.records);
-    const answer = withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes }));
+    const answer = withKillLockLineStance(false, () => withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes })));
     if (!answer.ok) return { ok: false, message: String(answer.message ?? '') };
     const fresh = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
         levelSource, scratchPersistence: tape.scratchPersistence });

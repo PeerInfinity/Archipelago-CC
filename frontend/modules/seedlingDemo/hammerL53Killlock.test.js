@@ -26,7 +26,7 @@ import { gunzipSync } from 'node:zlib';
 
 import {
     KILLLOCK_CHASER_REWIND, KILLLOCK_CHASER_REWIND_COUNTS, KILLLOCK_CHASER_REWIND_DEFAULT, KILLLOCK_CHASER_REWIND_TRIES,
-    resetKillLockChaserRewindCounts, withKillLockChaserRewind,
+    resetKillLockChaserRewindCounts, withKillLockChaserRewind, withKillLockLineStance,
 } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -40,14 +40,15 @@ const LEG_9001 = FIX('leg9001-l51-l53-retry2560-request.json.gz');
 const LEG_9002 = FIX('leg9002-l48-l53-retry2560-request.json.gz');
 const LEG_482 = FIX('leg482-l54-l53-request.json.gz');
 
-/** A captured leg solved as the worker does, under the switch; the plan re-driven on a fresh run for its hits. */
+/** A captured leg solved as the worker does, under the switch; the plan re-driven on a fresh run for its hits.
+ *  `KILLLOCK_LINE_STANCE` is held OFF (since the kill-lock flip it ships ON): these rows pin REWIND alone. */
 function solveLeg(leg, { on, dashlessOnly = true }) {
     const req = restoreRequest(leg.requests[0].request);
     const { passes: asked = ANYTIME_PASSES, source, ...tape } = req;
     const passes = dashlessOnly ? asked.filter((p) => p.pass === 'dashless') : asked;
     const levelSource = levelSourceFromAtlas(source.records);
     resetKillLockChaserRewindCounts();
-    const answer = withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes }));
+    const answer = withKillLockLineStance(false, () => withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes })));
     const tries = KILLLOCK_CHASER_REWIND_COUNTS.tries.map(({ id, t, stance, verdict }) => ({ id, t, stance, verdict }));
     if (!answer.ok) return { ok: false, message: String(answer.message ?? ''), tries };
     const fresh = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
@@ -69,9 +70,9 @@ const J3 = 'jellyfish@184,160';
 const P = 'puncher@136,96';
 
 describe('hammer-phase L53-KILLLOCK — the L53 kill-lock\'s chaser arm (`KILLLOCK_CHASER_REWIND`)', () => {
-    it('the switch ships OFF (`SEEDLING_KILLLOCK_CHASER_REWIND=1` turns it on in node; the page channel knows it)', () => {
-        expect(KILLLOCK_CHASER_REWIND_DEFAULT).toBe(false);
-        expect(KILLLOCK_CHASER_REWIND.enabled).toBe(ENV.SEEDLING_KILLLOCK_CHASER_REWIND === '1');
+    it('the switch ships ON since the kill-lock flip (`SEEDLING_KILLLOCK_CHASER_REWIND=0` turns it off in node; the page channel knows it)', () => {
+        expect(KILLLOCK_CHASER_REWIND_DEFAULT).toBe(true);
+        expect(KILLLOCK_CHASER_REWIND.enabled).toBe(ENV.SEEDLING_KILLLOCK_CHASER_REWIND !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_KILLLOCK_CHASER_REWIND');
         expect(KILLLOCK_CHASER_REWIND_TRIES).toBe(6);
     });
@@ -142,9 +143,9 @@ describe('hammer-phase L53-KILLLOCK — the L53 kill-lock\'s chaser arm (`KILLLO
         const req = restoreRequest(LEG_9001.requests[0].request);
         const { passes: asked, source, ...tape } = req;
         resetKillLockChaserRewindCounts();
-        const answer = withKillLockChaserRewind(true, () => solveAnytime(
+        const answer = withKillLockLineStance(false, () => withKillLockChaserRewind(true, () => solveAnytime(
             { ...tape, budgetWork: 960, source, levelSource: levelSourceFromAtlas(source.records) },
-            { passes: asked.filter((p) => p.pass === 'dashless') }));
+            { passes: asked.filter((p) => p.pass === 'dashless') })));
         expect(answer.ok).toBe(false);
         expect(String(answer.message)).toMatch(/^solverBot\(wasm-exit-53\): the caller's anytime deadline \(`shouldStop`\) was reached at the `walk` site/);
         expect(String(answer.message)).not.toMatch(/each rewound/);

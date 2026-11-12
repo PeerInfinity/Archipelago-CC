@@ -19160,7 +19160,7 @@ function chaserKillCeiling(run, body) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L53-KILLLOCK — THE KILL-LOCK'S CHASER ARM PREVIEWS AT THE WALK'S TOLERANCE, AND A
- * REFUSED STANCE IS REWOUND AND THE NEXT ONE TRIED (`KILLLOCK_CHASER_REWIND`, OFF).
+ * REFUSED STANCE IS REWOUND AND THE NEXT ONE TRIED (`KILLLOCK_CHASER_REWIND`, ON since the kill-lock flip).
  *
  * ⚖ The user queued L53-KILLLOCK on 2026-11-07 (ROUTE-WALLS-CENSUS W1: BK3, the walk's L53 `r2c2 → r14c9` crossing).
  * `lock@144,208` opens on `totalEnemies() == 0`, and the arena holds three jellyfish and a puncher. MEASURED (the
@@ -19186,10 +19186,13 @@ function chaserKillCeiling(run, body) {
  * choice, so a turn the arm already wins is driven the same way. ⚖ 30(c): every attempt is driven on the run and the
  * one kept is the one the run did — a refused attempt leaves no tick in the tape. Without a rewind (no `forkRun`)
  * only (1) and (3) apply. OFF: nothing here is read; every derivation, walk and dwell is byte-identical.
- * `SEEDLING_KILLLOCK_CHASER_REWIND=1` / `withKillLockChaserRewind(enabled, fn)`.
+ * Page play (WALK-L53-PAGE, p4g): L53→L54 hitless, 0 divergences. `SEEDLING_KILLLOCK_CHASER_REWIND=0` opts out /
+ * `withKillLockChaserRewind(enabled, fn)`.
  */
-export const KILLLOCK_CHASER_REWIND = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CHASER_REWIND === '1' };
-export const KILLLOCK_CHASER_REWIND_DEFAULT = false;
+// ⚖ ON by default since the kill-lock flip (the user, 2026-11-11: *"Page play, then flip both"*; 2026-11-12 *"Stack all
+// three"*): `SEEDLING_KILLLOCK_CHASER_REWIND=0` opts out.
+export const KILLLOCK_CHASER_REWIND = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CHASER_REWIND !== '0' };
+export const KILLLOCK_CHASER_REWIND_DEFAULT = true;
 /** The attempts one turn of the arm may drive (the first included); measured: L53 needs at most two per body. */
 export const KILLLOCK_CHASER_REWIND_TRIES = 6;
 
@@ -19252,7 +19255,7 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE NEW-LOCKS — **A PINNED CHASER IS DRAWN FROM A CELL IT HAS A CLEAR STRAIGHT LINE TO**
- * (`KILLLOCK_LINE_STANCE`, OFF; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
+ * (`KILLLOCK_LINE_STANCE`, ON since the kill-lock flip; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
  * ⚖ The user, 2026-11-10: *"a stance that draws a pinned chaser along a clear straight line, built on
  * KILLLOCK_CHASER_REWIND"*.
  *
@@ -19281,10 +19284,11 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
  * cell — which opens what the room's verbs open on the way — then the guarded dwell), rewound when refused, up to
  * `KILLLOCK_LINE_STANCE_PER_BODY` cells a body and `KILLLOCK_LINE_STANCE_TRIES` in all. ⚖ 30(c): the attempt kept is
  * the one the run drove. Nothing reads a level or a coordinate. OFF: nothing here is read.
- * `SEEDLING_KILLLOCK_LINE_STANCE=1` / `withKillLockLineStance(enabled, fn)`.
+ * `SEEDLING_KILLLOCK_LINE_STANCE=0` opts out / `withKillLockLineStance(enabled, fn)`.
  */
-export const KILLLOCK_LINE_STANCE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_LINE_STANCE === '1' };
-export const KILLLOCK_LINE_STANCE_DEFAULT = false;
+// ⚖ ON by default since the kill-lock flip (with KILLLOCK_CHASER_REWIND): `SEEDLING_KILLLOCK_LINE_STANCE=0` opts out.
+export const KILLLOCK_LINE_STANCE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_LINE_STANCE !== '0' };
+export const KILLLOCK_LINE_STANCE_DEFAULT = true;
 /** The line-stance attempts one turn may drive, and the cells one body may offer. */
 export const KILLLOCK_LINE_STANCE_TRIES = 6;
 export const KILLLOCK_LINE_STANCE_PER_BODY = 3;

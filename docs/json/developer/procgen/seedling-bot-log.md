@@ -28257,3 +28257,13 @@ Six BEFORE properties are not covered at the defaults; four of them have no sing
 shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
 ⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
 Re-record a BEFORE witness only under `withL40Flip(false)`.
+
+### Seedling hammer-phase KILLLOCK-FLIP — `KILLLOCK_CHASER_REWIND` and `KILLLOCK_LINE_STANCE` ON by default
+
+⚖ The user, 2026-11-11: *"Page play, then flip both"* (the WALK-WALLS answer), and 2026-11-12: *"Stack all three"* (this
+flip rides one branch with the drill-exit flip and YETI-TALK, OFF). Both switches now read `SEEDLING_<NAME> !== '0'`,
+default `true`; `=0` opts out. The evidence is WALK-L53-PAGE's: with both on, L53's `r2c2 → r14c9` crossing (the
+whole-game walk's BK3 kill-lock) solves in 608 ticks and plays hitless on the game page (p4g, 0 divergences, arrives
+L54), and the whole-game walk passes entry 24 with the same plan digest. `KILLLOCK_LINE_STANCE` is read only with
+`KILLLOCK_CHASER_REWIND` on and a rewind, so the two flip together. `hammerL53Killlock.test.js` and
+`hammerNewLocks.test.js` pin each arm explicitly; their switch rows now pin the defaults ON.
