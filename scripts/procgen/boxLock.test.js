@@ -677,7 +677,9 @@ describe('who takes the box', () => {
             // fidelity BOBIFRAME: L40's bob under the Chest ← L39 plans, the spinner wall (import door: `isEntryPoint` → main())
             'probe-seedling-bobiframe.mjs',
             // rules-er-c1-c3-witness: three shuffled-world landings on the game (import door: `isEntryPoint` → main())
-            'probe-seedling-er-landings.mjs'];
+            'probe-seedling-er-landings.mjs',
+            // tile-rules-automation-r-a5: L40's flag-12 wand lock shut / open on the game and the model (import door: `isEntryPoint` → main())
+            'probe-seedling-l40-flag12-lock.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

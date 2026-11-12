@@ -252,11 +252,12 @@ export function inRoomPressEvents(level, events) {
 
 /**
  * The in-room presses of `level` a level world LAYS as latches, and the ones it keeps out, with why. A latch's door
- * replaces its targets' cells with a lock on its group's token, so a target whose cell the GRID charges (a hand ruling on
- * the lock: L20's `GROUPED_LOCK_EXCEPTIONS` prices lock@32,80 `hasShield`, the presser's reach, which the rules AND onto the
- * press) would lose that charge in the world and read LOOSER than the rules at the event without it. Such a press is not
- * laid (derived from the grid, not listed); its level keeps the press/target shape and its own reason. L40's six wand
- * locks are `open` cells (the overlay rules them free), so its three presses are laid. Session tile-lay-l40-latches.
+ * replaces its targets' cells with a lock on its group's token, so a target whose cell the GRID charges with anything
+ * else would lose that charge in the world and read LOOSER than the rules at the event without it. Such a press is not
+ * laid (derived from the grid, not listed); its level keeps the press/target shape and its own reason. A charge of the
+ * latch's OWN event is what the laid door costs (R-A4b), so it is not dropped. ⛓ R-A5: every lock whose group's only
+ * opener is one in-room press is GATED on exactly that event (`IN_ROOM_PRESS_LOCK`, the event named after the group's
+ * first lock, which is the name `ev.name` carries), so L20's and L40's presses lay. Session tile-lay-l40-latches.
  * @returns {{laid: object[], kept: {name: string, why: string}[]}}
  */
 export function layableLatches(level, events, grid) {
