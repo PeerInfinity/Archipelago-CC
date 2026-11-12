@@ -18,7 +18,7 @@ and a matching preset_files.json entry of the form:
         "name": "{game_name}",
         "folders": {
             "AP_{seed_id}": {
-                "seed": <generation_seed>,
+                "seed": <see row_seed(): the short id, or the generation seed>,
                 "games": [{"player": 1, "name": "{player_name}", "game": "{game}"}],
                 "files": ["AP_{seed_id}_rules.json"]
             }
@@ -152,6 +152,30 @@ def derive_seed_id(rules_path: Path, rules_data: dict, override: Optional[str]) 
     return str(seed)
 
 
+LONG_ARCHIPELAGO_ID = re.compile(r"\d{20}$")
+SHORT_DECIMAL_ID = re.compile(r"(0|[1-9]\d{0,18})$")
+
+
+def row_seed(seed_id: str, generation_seed):
+    """The `seed` value for the folder AP_<seed_id>'s preset_files.json row.
+
+    The page's `findRulesFileFromGameSeed` (frontend/app/mode/modeDataLoader.js)
+    selects a folder by `String(row.seed) === String(?seed=)`, so the row's seed
+    is what `?seed=` must carry to reach this folder:
+
+    - a 20-digit Archipelago id (AP_14089154938208861744) is derived from the
+      generation seed, so the row keeps the generation seed (`?seed=1`);
+    - a short decimal id (AP_1) is the seed the page is asked for, so the row
+      carries that id even when the rules were generated with another seed
+      (meta_trial: folder AP_1, generation seed 8 -> `seed: 1`);
+    - anything else keeps the old behaviour: the generation seed when it is an
+      int, else the id string.
+    """
+    if not LONG_ARCHIPELAGO_ID.match(seed_id) and SHORT_DECIMAL_ID.match(seed_id):
+        return int(seed_id)
+    return generation_seed if isinstance(generation_seed, int) else seed_id
+
+
 def derive_game_name(rules_data: dict, override: Optional[str]) -> str:
     if override:
         return override
@@ -213,7 +237,7 @@ def update_preset_files(
     folder_key = f"AP_{seed_id}"
     file_prefix = f"AP_{seed_id}"
     new_folder_entry = {
-        "seed": seed_int if seed_int is not None else seed_id,
+        "seed": row_seed(seed_id, seed_int),
         "games": [
             {"player": 1, "name": player_name, "game": game},
         ],
@@ -292,6 +316,12 @@ def main() -> int:
     print(f"  seed_id       = {seed_id}")
     print(f"  seed (int)    = {seed_int}")
     print(f"  destination   = {dest_file}")
+    row_seed_value = row_seed(seed_id, seed_int)
+    if seed_int is not None and row_seed_value != seed_int:
+        print(
+            f"  NOTE: seed field = {row_seed_value} (folder id); rules generation_seed = "
+            f"{seed_int} — ?seed={row_seed_value} selects this folder"
+        )
 
     stage_rules_file(
         rules_path, dest_file,
