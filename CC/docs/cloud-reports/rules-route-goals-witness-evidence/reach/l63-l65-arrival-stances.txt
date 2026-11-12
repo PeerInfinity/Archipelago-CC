@@ -1,0 +1,27 @@
+## w5,eq2,L4,w20,U1,w3,U1,w3,U1,w3,U1,w3,U1,w3,U1,w3,U1,w3
+w5 t5 63 136.00 296.00 dir 3 fall - hits 0 pole7 false dt4 [[false,false]]
+L4 t9 63 131.90 296.00 dir 2 fall - hits 0 pole7 false dt4 [[false,false]]
+w20 t29 63 130.85 296.00 dir 2 fall - hits 0 pole7 false dt4 [[false,false]]
+U1 t30 63 130.85 295.20 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+w3 t33 63 130.85 294.30 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+U1 t34 63 130.85 293.50 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+w3 t37 63 130.85 292.60 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+U1 t38 63 130.85 291.80 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+w3 t41 63 130.85 290.90 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+U1 t42 63 130.85 290.10 dir 1 fall - hits 0 pole7 false dt4 [[false,false]]
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:11888
+            throw new Error(`levelRun: the \`${source}\` hit (${id}) at tick `
+                  ^
+
+Error: levelRun: the `enemy` hit (darktrap@128,272) at tick 44 in level 63 — playerHit: `hasDarkSuit` retaliates INTO the attacker when the call passes `e` (`e.hit(darkSuitForce, …, "Suit")`) and not when it passes `null` — and this source has not declared which it is (`byEnemy`). Refused by name rather than guessed: the a
+
+Node.js v22.23.4
+## w5,eq2,L5,w1,w1,w1,w1,w1,w5
+w5 t5 63 136.00 296.00 dir 3 fall - hits 0 pole7 false dt4 [[false,false]]
+L5 t10 63 130.50 296.00 dir 2 fall - hits 0 pole7 false dt4 [[false,false]]
+w1 t11 63 129.35 296.00 dir 2 fall - hits 0 pole7 false dt4 [[false,false]]
+w1 t12 63 128.45 296.00 dir 2 fall - hits 0 pole7 false dt4 [[false,false]]
+w1 t13 63 127.80 296.00 dir 2 fall - hits 0 pole7 false dt4 [[false,false]]
+w1 t14 63 126.66 296.00 dir 2 fall out hits 0 pole7 false dt4 [[false,false]]
+w1 t15 63 125.86 296.00 dir 2 fall out hits 0 pole7 false dt4 [[false,false]]
+w5 t20 63 123.46 296.00 dir 2 fall out hits 0 pole7 false dt4 [[false,false]]

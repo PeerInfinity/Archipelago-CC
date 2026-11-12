@@ -1,0 +1,5 @@
+## /tmp/claude-0/-home-user-Archipelago-CC/7e9142f1-1073-56a3-8622-4920d503d20d/scratchpad/extra.jsonl
+207 | Level 017 - Chest | arr=112,32 | end=done | hits=0 | cleared=1 | s=2 | plays=17t/done[dashless:ok:2 full:ok:7] | end@137,24 | 
+363 | Level 038 - Chest | arr=144,288 | end=done | hits=0 | cleared=5 | s=13 | plays=324t/done[dashless:ok:35 full:ok:117] | end@151,121 | 
+221 | Level 017 - Chest | arr=48,48 | end=done | hits=0 | cleared=2 | s=3 | plays=42t/done[dashless:ok:6 full:ok:22] | end@137,24 | 
+367 | Level 038 - Chest | arr=144,16 | end=failed | hits=0 | cleared=1 | s=1 | plays=undefinedt/failed | end@152,24 | the solver declined Level 038 - Chest in level 38 (refusal): solverBot(wasm-location-38) apitem (144,112) contact -> pulse stance (cover@144,112) -> pulse stance (cover@144,112): STANCE_REENTRY — the walk to cover@144,112's `pulse` stance (152,136) is itself blocked by cover@144,112 at tick 90, with nothing spent between, and the 8 px lattice plans no corridor to it either. Applying `pulse` again 

@@ -1,0 +1,54 @@
+## L40 from the L39 arrival, door shut (leg 393's request)
+L40 from (480,896) tile 30,56 reaches 177 tiles; opened=[] swim=false
+not      apitem@64,144 (4,9) {"tag":"20","look":"totempart"}
+REACHED  apitem@880,816 (55,51) {"tag":"13","look":"chest"}
+REACHED  apitem@160,640 (10,40) {"tag":"25","look":"totempart"}
+not      apitem@656,528 (41,33) {"tag":"14","look":"bosskey2"}
+
+## the same, buttonroom@880,768's tile (55,48) also a wall: the chest is still reached without pressing flag 12
+L40 from (480,896) tile 30,56 reaches 175 tiles; opened=[] swim=false
+not      apitem@64,144 (4,9) {"tag":"20","look":"totempart"}
+REACHED  apitem@880,816 (55,51) {"tag":"13","look":"chest"}
+REACHED  apitem@160,640 (10,40) {"tag":"25","look":"totempart"}
+not      apitem@656,528 (41,33) {"tag":"14","look":"bosskey2"}
+
+## L40 from the L43 arrival, door shut (leg 409)
+L40 from (320,592) tile 20,37 reaches 177 tiles; opened=[] swim=false
+not      apitem@64,144 (4,9) {"tag":"20","look":"totempart"}
+REACHED  apitem@880,816 (55,51) {"tag":"13","look":"chest"}
+REACHED  apitem@160,640 (10,40) {"tag":"25","look":"totempart"}
+not      apitem@656,528 (41,33) {"tag":"14","look":"bosskey2"}
+
+## L40 from the L41 arrival (leg 868): flag 1 / flag 7's wandlocks open, flags 8 and 12 shut
+L40 from (928,96) tile 58,6 reaches 248 tiles; opened=[wandlock@176,80] swim=false
+REACHED  apitem@64,144 (4,9) {"tag":"20","look":"totempart"}
+not      apitem@880,816 (55,51) {"tag":"13","look":"chest"}
+not      apitem@160,640 (10,40) {"tag":"25","look":"totempart"}
+not      apitem@656,528 (41,33) {"tag":"14","look":"bosskey2"}
+L40 from (928,96) tile 58,6 reaches 250 tiles; opened=[wandlock@208,128 wandlock@208,144 wandlock@208,160] swim=false
+REACHED  apitem@64,144 (4,9) {"tag":"20","look":"totempart"}
+not      apitem@880,816 (55,51) {"tag":"13","look":"chest"}
+not      apitem@160,640 (10,40) {"tag":"25","look":"totempart"}
+not      apitem@656,528 (41,33) {"tag":"14","look":"bosskey2"}
+
+## L112 from the L111 arrival, rocklock@112,16 shut
+L112 from (32,208) tile 2,13 reaches 148 tiles; opened=[] swim=false
+  0 ####....#######
+  1 ###############
+  2 ##RRR#RRRRRRR##
+  3 #RRRRRRRRRRRRR#
+  4 #RRRRRRRRRRRRR#
+  5 #RRRRRRRRRRRRR#
+  6 RRRRRR###RRRR#R
+  7 RRRRR#####RRRRR
+  8 RRRRR#####RRRRR
+  9 RRRRRR###RRRRR#
+ 10 ##RRRRRRRRRRRR#
+ 11 #RRRRRRRRRRRRR#
+ 12 #RRRRRRRRRRRRR#
+ 13 R#RRRRRRR#RRR##
+ 14 RRRRR##RRR#####
+REACHED  finalboss@64,96 (4,6) {"tag":"0"}
+REACHED  rocklock@112,16 (7,1) {"tset":"0","tag":"1"}
+not      teleporter@112,0 (7,0) {"to":"113","playerx":"72","playery":"128","show":"0","tag":"-1","invert":"0"}
+REACHED  teleporter@32,224 (2,14) {"to":"111","playerx":"128","playery":"64","show":"0","tag":"-1","invert":"0"}

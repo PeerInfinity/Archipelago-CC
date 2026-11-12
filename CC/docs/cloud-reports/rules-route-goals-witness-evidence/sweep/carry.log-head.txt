@@ -1,0 +1,5 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 29678) — head fe98f37f2, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+ROUTE-CARRY: 85 leg(s) carry the flag(s) the route cleared before them (rows stamped carriedFlags; measurement only)
+LEG-BUDGET: 480000 ms per leg (--leg-budget-ms; default 90000); the leg hang bound 1590 s; the solver's own backstop 300 s per solve (a named failure)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)

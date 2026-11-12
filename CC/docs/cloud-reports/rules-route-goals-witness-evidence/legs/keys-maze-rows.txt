@@ -1,0 +1,1 @@
+level_17 <- in_pit_L16_7_2 -> location:Level 017 - Chest|level_17 <- in_L16_112_64 -> location:Level 017 - Chest|level_38 <- in_L37_288_0 -> location:Level 038 - Chest|level_38 <- in_L39_144_624 -> location:Level 038 - Chest

@@ -1,0 +1,24 @@
+## /tmp/claude-0/-home-user-Archipelago-CC/7e9142f1-1073-56a3-8622-4920d503d20d/scratchpad/carry.jsonl
+314 | Level 030 - Torchpickup | arr=16,128 | end=done | hits=0 | cleared=3 | s=3 | plays=63t/done[dashless:ok:6 full:ok:54] | end@71,72 | 
+320 | Level 030 - Torchpickup | arr=176,48 | end=done | hits=0 | cleared=3 | s=7 | plays=160t/done[dashless:ok:92 full:ok:96] | end@72,73 | 
+326 | Level 030 - Torchpickup | arr=224,80 | end=done | hits=0 | cleared=3 | s=9 | plays=202t/done[dashless:ok:151 full:ok:168] | end@71,71 | 
+332 | Level 030 - Torchpickup | arr=240,80 | end=done | hits=0 | cleared=3 | s=9 | plays=213t/done[dashless:ok:144 full:ok:157] | end@72,71 | 
+183 | Level 012 - Chest | arr=32,864 | end=done | hits=0 | cleared=7 | s=13 | plays=230t/done[dashless:ok:25 full:ok:106] | end@327,824 | 
+370 | Level 039 - Totem Part 72,40 | arr=144,16 | end=done | hits=0 | cleared=2 | s=5 | plays=75t/done[dashless:ok:8 full:ok:80] | end@80,48 | 
+392 | Level 040 - Totem Part 160,640 | arr=480,896 | end=done | hits=0 | cleared=3 | s=24 | plays=494t/done[dashless:ok:32 full:ok:33] | end@168,649 | 
+393 | Level 040 - Chest | arr=480,896 | end=failed | hits=0 | cleared=1 | s=19 | plays=undefinedt/failed | end@488,904 | the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@816,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (868.73,855.83) in level 40. There is no step out. The corner formed 7 tick(s) 
+408 | Level 040 - Totem Part 160,640 | arr=320,592 | end=done | hits=0 | cleared=3 | s=13 | plays=118t/done[dashless:ok:16 full:ok:57] | end@169,648 | 
+409 | Level 040 - Chest | arr=320,592 | end=done | hits=0 | cleared=4 | s=138 | plays=1686t/done[dashless:ok:734 full:ok:775] | end@889,825 | 
+868 | Level 040 - Totem Part 64,144 | arr=928,96 | end=failed | hits=0 | cleared=4 | s=8 | plays=undefinedt/failed | end@936,104 | the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (840.3,120.5) — chaser:puncher@816,128 (inside leash 80 (d=9.0), box grown 1 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:
+  avoid: the danger-forbidden corridor STILL probes dangerou
+870 | Level 040 - Totem Part 64,144 | arr=848,16 | end=done | hits=0 | cleared=11 | s=53 | plays=1239t/done[dashless:ok:77 full:ok:78] | end@72,152 | 
+104 | Level 012 - Witch | arr=16,80 | end=done | hits=0 | cleared=8 | s=29 | plays=527t/done[dashless:ok:37 full:ok:120] | end@408,391 | 
+115 | Level 012 - Witch | arr=432,368 | end=done | hits=0 | cleared=8 | s=15 | plays=92t/done[dashless:ok:2 full:ok:2] | end@440,376 | 
+126 | Level 012 - Witch | arr=112,112 | end=done | hits=0 | cleared=8 | s=23 | plays=348t/done[dashless:ok:29 full:ok:110] | end@409,392 | 
+137 | Level 012 - Witch | arr=160,384 | end=done | hits=0 | cleared=8 | s=20 | plays=254t/done[dashless:ok:21 full:ok:103] | end@407,392 | 
+148 | Level 012 - Witch | arr=304,16 | end=done | hits=0 | cleared=8 | s=25 | plays=376t/done[dashless:ok:33 full:ok:113] | end@423,375 | 
+159 | Level 012 - Witch | arr=16,352 | end=done | hits=0 | cleared=8 | s=26 | plays=450t/done[dashless:ok:31 full:ok:115] | end@408,392 | 
+170 | Level 012 - Witch | arr=16,368 | end=done | hits=0 | cleared=8 | s=27 | plays=437t/done[dashless:ok:31 full:ok:114] | end@408,392 | 
+921 | Level 068 - Health | arr=16,64 | end=done | hits=0 | cleared=3 | s=3 | plays=61t/done[dashless:ok:5 full:ok:9] | end@24,25 | 
+919 | Level 063 - Chest | arr=128,288 | end=done | hits=0 | cleared=8 | s=13 | plays=309t/done[dashless:ok:26 full:ok:110] | end@231,88 | 
+801 | Level 112 - Owl | arr=32,208 | end=unresolved | hits=undefined | cleared=undefined | s=NaN | plays= | end@ | "Level 112 - Owl" is a location the vanilla arm's map did NOT bind — "Level 112 - Owl" is a BOSS KILL (a finalboss in level 112, reported at {112,0}): its check is bound, but the vanilla arm does not rewrite it and the bot has no fight executor for it — there is no entity to walk onto
