@@ -337,20 +337,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              links kept).
          *   402 → 404  content sets R2 (2026-11-11): concepts.md (the maze's realisations) → maze.md § Content roles,
          *              that § → concepts.md § Content roles (`doc` 301 → 303).
+         *   404 → 405  hammer PANEL-ROUTE (2026-11-12): seedling-bot.md's solve-progress line →
+         *              seedling-solve-progress.md § 7 (the route stamp) (`doc` 303 → 304).
          */
         expect(by).toEqual({
             'same-doc': 37,
-            doc: 303,
+            doc: 304,
             external: 22,
             repo: 42,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(404);
+        expect(CORPUS.length).toBe(405);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(303);
+        expect(docs).toHaveLength(304);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

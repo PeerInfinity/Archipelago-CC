@@ -306,7 +306,8 @@ describe('⛓ the links the render emits', () => {
         //   → concepts.md § Content roles (2 doc), and text-adventure.md's realisations → its own § (1 same-doc).
         //   402 → 404: content sets R2 — concepts.md (the maze's realisations) → maze.md § Content roles, that §
         //   → concepts.md § Content roles (2 doc).
-        expect(checked).toBe(404);
+        //   404 → 405: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
+        expect(checked).toBe(405);
     });
 
     it('tags each link with the kind that produced it', () => {
