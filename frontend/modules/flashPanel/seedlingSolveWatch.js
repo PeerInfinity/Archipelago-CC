@@ -21,8 +21,9 @@
  *  - `whyOf(state, memory)` — the "why" box: a template per refusal KIND, only on a gave-up solve.
  *  - `goalTileOf(snapshot)` — the goal ✕ (the goal node's `(x,y)`, in tiles).
  *  - `roomOf(world)` — the room's tiles in the JS runtime page's own ink (`rectPalette.js`).
- *  - `routeOf(snapshot)` — ⛓ ROUTE HOOK: the plan in hand's tile path. The stream carries none yet (hammer-phase's
- *    follow-up), so it returns `null` and the view draws no route line.
+ *  - `routeOf(snapshot)` — the plan in hand's tile path, `best.route` (hammer-phase PANEL-ROUTE), or null.
+ *  - `mapRoutesOf(snapshot, level)` — what the map draws of it: the route and the other passes' routes
+ *    (`best.passRoutes`), each only when it is on the map's level (`tiles.level`).
  *
  * ⛓ Ticks vs seconds (the design's open point, this slice's call): plans are counted in TICKS (the solver's own unit,
  * what the developer view's `best` line says), and the solved sub-line adds the game time in brackets at the game's
@@ -333,14 +334,43 @@ export function goalTileOf(snapshot) {
 }
 
 /**
- * ⛓ ROUTE HOOK — the plan in hand's tile path, for the route line (design item 5). The stream does not carry it yet:
- * it is the hammer planner's follow-up (the readability design's "Who takes what" (a)). The
- * shape this view will read, once it does: `best.route = {level, cells: [[col, row], …], dashes: [[col, row], …]}`,
- * the waypoints of the plan `best` names, in order, in `tiles.cells`' grid. Until then: `null`, and no line is drawn.
+ * ⛓ THE ROUTE (slice `seedling-solver-panel-route`, design item 5) — the plan in hand's tile path: the tap's
+ * `best.route = {level, cells: [[col, row], …], dashes: [[col, row], …] | null, thinned?}` (hammer-phase PANEL-ROUTE,
+ * `seedling-solve-progress.md` §7 *The route*), present only while `best.ok`; null otherwise, or when `cells` is not
+ * an array. The cells are in `tiles.cells`' grid, cut at the plan's first level change.
  */
 export function routeOf(snapshot) {
-    void snapshot;
-    return null;
+    const route = snapshot?.best?.route ?? null;
+    return route && Array.isArray(route.cells) ? route : null;
+}
+
+/**
+ * ⛓ WHAT THE MAP DRAWS OF THE ROUTES — `{route, others}` for the map on `level` (the tile map's `tiles.level`):
+ *  - `route`: `routeOf(snapshot)` when its `level` is the map's, else null (a route on another level would land on
+ *    the wrong room), as `{level, cells, dashes, thinned}` with only well-formed cells kept (`dashes` `[]` when the
+ *    presses were not recorded, `thinned` null when the tap did not thin it);
+ *  - `others`: each other pass's route (`best.passRoutes`, never `best.pass`'s own) on the same level, as
+ *    `{pass, label, cells}`, in the stream's key order. The map draws them faint, under the route.
+ */
+export function mapRoutesOf(snapshot, level) {
+    const onMap = (r) => (r && Array.isArray(r.cells) && level !== null && level !== undefined && r.level === level
+        ? r.cells.filter(isCell).map((c) => [c[0], c[1]]) : null);
+    const own = routeOf(snapshot);
+    const cells = onMap(own);
+    const route = cells ? {
+        level, cells,
+        dashes: Array.isArray(own.dashes) ? own.dashes.filter(isCell).map((c) => [c[0], c[1]]) : [],
+        thinned: Number.isInteger(own.thinned) ? own.thinned : null,
+    } : null;
+    const best = snapshot?.best ?? null;
+    const routes = best?.passRoutes && typeof best.passRoutes === 'object' ? best.passRoutes : {};
+    const others = [];
+    for (const [pass, r] of Object.entries(routes)) {
+        if (pass === best.pass) continue;
+        const oc = onMap(r);
+        if (oc && oc.length >= 2) others.push({ pass, label: passLabel(pass), cells: oc });
+    }
+    return { route, others };
 }
 
 /**
