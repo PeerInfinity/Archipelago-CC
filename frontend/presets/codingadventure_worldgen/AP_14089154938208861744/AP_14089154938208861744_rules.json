@@ -1478,7 +1478,7 @@
         "locations": [
           {
             "name": "Production Deployment",
-            "id": null,
+            "id": 400000062,
             "access_rule": {
               "rule": "True_"
             },
@@ -1489,7 +1489,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "pinned": true
           }
         ]
       }
@@ -2018,13 +2018,12 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": null,
+        "id": 400100052,
         "groups": [
-          "Event"
+          "Everything"
         ],
         "classification": "progression",
-        "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }

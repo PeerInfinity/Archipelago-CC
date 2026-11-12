@@ -78,18 +78,22 @@ def build_apworld(
     canonical_seed: Optional[int] = None,
     player_id: str = "1",
     lossy: bool = False,
+    victory_location: bool = False,
 ) -> dict:
     """Generate a world from a rules file and pack it, entirely in a temp dir.
 
     Returns ``{"file_name", "game_name", "game_directory", "data",
     "lossy_placeholders"}`` where ``data`` is the .apworld's bytes,
     ``file_name`` is the only name AP will load it under, and
+    ``victory_location`` is the recipe field of the same name (the event goal
+    becomes a pinned, ID-bearing location: ``_victory_location.py``).
     ``lossy_placeholders`` is the lossy record (``{"<site>:<kind>": count}``,
     empty when strict or when nothing was replaced).
     """
     from .generator import WorldGenerator
 
-    probe = WorldGenerator(str(rules_path), game_name=game_name, player_id=player_id)
+    probe = WorldGenerator(str(rules_path), game_name=game_name, player_id=player_id,
+                           victory_location=victory_location)
     probe.load()
     assert probe.data is not None
     metadata = probe.data.metadata
@@ -107,6 +111,7 @@ def build_apworld(
                 canonical_seed=canonical_seed,
                 player_id=player_id,
                 lossy=lossy,
+                victory_location=victory_location,
             )
             generator.generate()
         buffer = io.BytesIO()

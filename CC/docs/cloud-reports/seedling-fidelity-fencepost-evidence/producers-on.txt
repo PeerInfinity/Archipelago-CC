@@ -1,0 +1,7 @@
+solve-seedling-r8-battery --check ON [exit 0]
+solve-seedling-r8-d2-chain --check ON [exit 1]
+solve-seedling-r8-l18 --check ON [exit 1]
+solve-seedling-r8-tail --check ON [exit 0]
+solve-seedling-r9-l3 --check ON [exit 0]
+solve-seedling-r9-campaign --check ON [exit 1]
+acceptance batch ON 8fb0586ea94605d4d9db7e2c43dd025a

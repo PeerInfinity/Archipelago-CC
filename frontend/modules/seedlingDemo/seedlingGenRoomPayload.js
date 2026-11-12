@@ -21,6 +21,7 @@ const cloneRule = (rule) => structuredClone(rule);
  * (which would register a second copy of it behind a computed specifier).
  */
 import { GOAL_CONTAINER_NOT_PLACED_REASONS } from '../procgenCore/goalContainer.js';
+import { roomPlayerOf } from './seedlingAtlasCheckTable.js';
 
 export const GEN_ROOM_SUBSTRATE_ID = 'flash_seedling_gen';
 
@@ -296,12 +297,15 @@ export function genRoomApLocationNames(payload) {
  * eligibility check `generated` and the assembler both read this one census.
  *
  * @param {object|null} rules  the rules.json (not the event wrapper)
+ * @param {string|number|null} [playerId]  the loaded slot whose sidecars are read (default `'1'`, the
+ *   slot every committed preset is keyed under; a room's server-built document is keyed under the room slot)
  * @returns {{rooms: string[], mixed: string[], gameIds: string[]}}  region ids, in sidecar order
  */
-export function generatedRoomCensus(rules) {
-    const sidecars = Object.entries(rules?.preset_sidecars?.['1'] ?? {});
+export function generatedRoomCensus(rules, playerId = null) {
+    const own = rules?.preset_sidecars?.[roomPlayerOf(playerId)] ?? {};
+    const sidecars = Object.entries(own);
     const rooms = sidecars.filter(([, s]) => s?.substrate === GEN_ROOM_SUBSTRATE_ID).map(([r]) => r);
-    const gameIds = [...new Set(rooms.map((r) => rules.preset_sidecars['1'][r]?.playable_payload?.gameId)
+    const gameIds = [...new Set(rooms.map((r) => own[r]?.playable_payload?.gameId)
         .filter((g) => typeof g === 'string'))];
     const mixed = sidecars.filter(([, s]) => s?.substrate !== GEN_ROOM_SUBSTRATE_ID
         && gameIds.includes(s?.playable_payload?.gameId)).map(([r]) => r);

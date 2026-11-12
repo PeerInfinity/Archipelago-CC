@@ -12,6 +12,8 @@ const VIEW = { ...FLASH, selector: '.flash-panel-solve-progress' };
 const ROOT = { ...FLASH, selector: '.flash-panel-container' };
 const LINE = { ...FLASH, selector: '.flash-panel-solve-progress-line' };
 const SOLVER = { ...FLASH, selector: '.flash-panel-section-solver' };
+// ⛓ WATCHER VIEW (slice `seedling-solver-panel-view`) — the Solver section's headline sentence; the line writes the same one
+const HEADLINE = { ...FLASH, selector: '.flash-panel-solve-headline' };
 // a click on the Solver section's title, only when it is in the state named (`optional`: already there, nothing to do)
 const OPEN_SOLVER = { ...FLASH, selector: '.flash-panel-section-solver:not([open]) > summary', optional: true };
 const CLOSE_SOLVER = { ...FLASH, selector: '.flash-panel-section-solver[open] > summary', optional: true };
@@ -104,12 +106,12 @@ export const CHECK_SEEDLING_SOLVE_PROGRESS_LINE = Object.freeze({
                 {
                     step: {
                         id: 'final',
-                        text: 'When the solve finishes, the line says so (*solved*, with the plan in hand); the view never showed.',
+                        text: 'When the solve finishes, the line says so (*✓ Solved in …*, with the route it found); the view never showed.',
                         done: (ctx) => {
                             const l = line(ctx);
                             const d = view(ctx);
                             return l.final === 'true' && l.outcome === 'solved' && d.final === 'true' && d.visible === 'false'
-                                && d.listening === 'true' && /^solver: solved /.test(ctx.text(LINE));
+                                && d.listening === 'true' && /^✓ Solved in /.test(ctx.text(LINE));
                         },
                         doneTimeoutMs: 90000,
                     },
@@ -117,11 +119,11 @@ export const CHECK_SEEDLING_SOLVE_PROGRESS_LINE = Object.freeze({
                 {
                     step: {
                         id: 'open',
-                        text: 'Open the **Solver** section: the whole view of that solve is there (its header, the work meter, the tree).',
+                        text: 'Open the **Solver** section: that solve is there in words (its headline, the passes, the search effort, the map), with the developer details one click away.',
                         actions: [{ click: OPEN_SOLVER }],
                         done: (ctx) => {
                             const d = view(ctx);
-                            return solverOpen(ctx) && d.visible === 'true' && d.mode === 'always' && /solved — final/.test(ctx.text(VIEW));
+                            return solverOpen(ctx) && d.visible === 'true' && d.mode === 'always' && /^✓ Solved in /.test(ctx.text(HEADLINE));
                         },
                         doneTimeoutMs: 10000,
                     },

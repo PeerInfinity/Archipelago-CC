@@ -52,6 +52,7 @@ import { buildLevelSet, apMappingInvalidation } from './levelSetExporter.js';
 import { validateLevelSet } from './levelSetValidator.js';
 import { emitDoorEntities } from './levelSetExits.js';
 import { AP_ITEM_TYPE, AP_LOOK, placementKey } from './apPlacementRewriter.js';
+import { roomPlayerOf } from './seedlingAtlasCheckTable.js';
 import {
     GEN_ROOM_TILE_SIZE, KEYGATE_SHARED_REFUSAL, genDoorId, genRoomRefusal, generatedRoomCensus,
 } from './seedlingGenRoomPayload.js';
@@ -178,15 +179,17 @@ export function placeApItems(record, locations, region = '?') {
  * @param {(name: string) => ({name: string, player: number}|null)} [options.locationItemOf]
  *        the caller's item join (the vanilla arm's `locationItemOf`); null for no join
  * @param {number|null} [options.selfPlayer]  this slot, stored on the table rows' readout
+ * @param {string|number|null} [options.playerId]  the loaded slot whose sidecars are read (default `'1'`)
  * @returns {{set: object, invalidation: object, table: Map<string, object>,
  *           levelOf: Map<string, number>, report: object}}
  */
-export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => null, selfPlayer = null } = {}) {
-    const census = generatedRoomCensus(rules);
+export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => null, selfPlayer = null,
+    playerId = null } = {}) {
+    const census = generatedRoomCensus(rules, playerId);
     if (census.rooms.length === 0) refuse(GENERATED_SET_REFUSALS.noRooms());
     if (census.mixed.length > 0) refuse(GENERATED_SET_REFUSALS.mixed(census.rooms, census.mixed));
 
-    const sidecars = rules.preset_sidecars['1'];
+    const sidecars = rules.preset_sidecars[roomPlayerOf(playerId)];
     const levelOf = new Map(census.rooms.map((r, i) => [r, i]));
     const parkingLevel = census.rooms.length;
     const payloads = census.rooms.map((region, ordinal) => {

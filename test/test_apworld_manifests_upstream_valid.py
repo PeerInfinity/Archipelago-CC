@@ -81,6 +81,7 @@ def test_packed_generated_package_passes_upstreams_manifest_check(directory):
 def test_built_generated_package_passes_upstreams_manifest_check(directory):
     recipe = RECIPES[directory]
     built = build_apworld(REPO / recipe['source'], game_name=recipe.get('game_name'),
-                          canonical_seed=recipe.get('canonical_seed'))
+                          canonical_seed=recipe.get('canonical_seed'),
+                          victory_location=recipe.get('victory_location', False))
     container = _read_upstream(BytesIO(built['data']))
     assert container.game == recipe['game_name']

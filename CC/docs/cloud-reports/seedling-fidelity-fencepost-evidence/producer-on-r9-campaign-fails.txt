@@ -1,0 +1,42 @@
+FAIL: ⛓ sum(segment ticks) === the COMMITTED tapes' own sum — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 103 + 456 + 655 + 440 + 746 + 560 + 48 + 313 + 2364 + 26 + 89 + 379 + 336 + 210 + 839 = 10622; recorded 10622 against committed 10572
+FAIL: ⛓ every RECORDED segment's solved length is its committed tape's own — 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,103,456,655,440,746,560,48,313,2364,26,89,379,336,210,839 against 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,103,456,655,390,746,560,48,313,2364,26,89,379,336,210,839
+## the chain: 10622 ticks over 30 rooms
+## PLAYTHROUGH_CHAINS.r9-campaign: cuts [183, 230, 475, 730, 1133, 1427, 1573, 2400, 2522, 2605, 2702, 2854, 2877, 3022, 3058, 3161, 3617, 4272, 4712, 5458, 6018, 6066, 6379, 8743, 8769, 8858, 9237, 9573, 9783], endsAt 10622
+FAIL: ⛓ the free oracle: r9-solve-19 declares seam.time 10322 — 9912 + 40 − LOAD_FADE_FRAMES + 440 = 10372
+## the clock column: r8-solve-1 -> r8-solve-2: UNASKED (no declared clock) r8-solve-3=5069 r8-solve-4=5334 r8-solve-5=5609 r8-solve-6=6032 r8-solve-7=6346 r8-solve-8=6512 r8-solve-9=7359 r8-solve-10=7501 r9-solve-11=7754 r9-solve-3=8202 r9-solve-2=8374 r9-solve-0=8417 r9-solve-13=8582 r9-solve-14=8638 r9-solve-15=8761 r9-solve-16=9237 r9-solve-18=9912 r9-solve-19=10322 r9-solve-20=11238 r9-solve-13-v2=11968 r9-solve-0-v3=12036 r9-solve-12=12820 r9-solve-21=15124 r9-solve-22=15170 r9-solve-29=15279 r9-solve-31=15828 r9-solve-30=16184 r9-solve-32=16414
+## r8-solve-1: PROMOTED, not re-authored — 183 ticks read from the committed tape
+## r8-solve-2: PROMOTED, not re-authored — 47 ticks read from the committed tape
+## r8-solve-3: PROMOTED, not re-authored — 245 ticks read from the committed tape
+## r8-solve-4: PROMOTED, not re-authored — 255 ticks read from the committed tape
+## r8-solve-5 budget: 17 span(s), 3 KB, 403 ticks
+## r8-solve-6 budget: 27 span(s), 3 KB, 294 ticks
+## r8-solve-7 budget: 14 span(s), 2 KB, 146 ticks
+## r8-solve-8 budget: 61 span(s), 5 KB, 827 ticks
+## r8-solve-9 budget: 6 span(s), 2 KB, 122 ticks
+## r8-solve-10 budget: 35 span(s), 4 KB, 83 ticks
+## r9-solve-11 budget: 9 span(s), 2 KB, 97 ticks
+## r9-solve-3 budget: 50 span(s), 5 KB, 152 ticks
+## r9-solve-2 budget: 7 span(s), 2 KB, 23 ticks
+## r9-solve-0 budget: 57 span(s), 5 KB, 145 ticks
+## r9-solve-13 budget: 22 span(s), 3 KB, 36 ticks
+## r9-solve-14 budget: 57 span(s), 5 KB, 103 ticks
+## r9-solve-15 budget: 78 span(s), 7 KB, 456 ticks
+## r9-solve-16 budget: 182 span(s), 14 KB, 655 ticks
+## r9-solve-18 budget: 139 span(s), 11 KB, 440 ticks
+FAIL: r9-solve-18 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-18 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+## r9-solve-19 budget: 116 span(s), 10 KB, 746 ticks
+## r9-solve-20 budget: 144 span(s), 12 KB, 560 ticks
+## r9-solve-13-v2 budget: 25 span(s), 4 KB, 48 ticks
+## r9-solve-0-v3 budget: 48 span(s), 5 KB, 313 ticks
+## r9-solve-12 budget: 214 span(s), 17 KB, 2364 ticks
+## r9-solve-21 budget: 9 span(s), 3 KB, 26 ticks
+## r9-solve-22 budget: 33 span(s), 5 KB, 89 ticks
+## r9-solve-29 budget: 78 span(s), 8 KB, 379 ticks
+## r9-solve-31 budget: 114 span(s), 10 KB, 336 ticks
+## r9-solve-30 budget: 60 span(s), 6 KB, 210 ticks
+## r9-solve-32 budget: 51 span(s), 6 KB, 839 ticks
+## r9-campaign: 10622t = r8-solve-1 183t + r8-solve-2 47t + r8-solve-3 245t + r8-solve-4 255t + r8-solve-5 403t + r8-solve-6 294t + r8-solve-7 146t + r8-solve-8 827t + r8-solve-9 122t + r8-solve-10 83t + r9-solve-11 97t + r9-solve-3 152t + r9-solve-2 23t + r9-solve-0 145t + r9-solve-13 36t + r9-solve-14 103t + r9-solve-15 456t + r9-solve-16 655t + r9-solve-18 440t + r9-solve-19 746t + r9-solve-20 560t + r9-solve-13-v2 48t + r9-solve-0-v3 313t + r9-solve-12 2364t + r9-solve-21 26t + r9-solve-22 89t + r9-solve-29 379t + r9-solve-31 336t + r9-solve-30 210t + r9-solve-32 839t, 29 internal seam(s)
+## goal ledger rows this chain CREDITS: sword@L10, chest@L11
+## there is NO hand answer for the four new legs — the differential is the gate.
+5 FAILURE(S)

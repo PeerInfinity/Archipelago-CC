@@ -337,22 +337,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              links kept).
          *   402 → 404  content sets R2 (2026-11-11): concepts.md (the maze's realisations) → maze.md § Content roles,
          *              that § → concepts.md § Content roles (`doc` 301 → 303).
-         *   404 → 406  content sets R3 (2026-11-11): pipeline-presets.md → concepts.md § The theme trial world and
-         *              § Selecting a content set (`doc` 303 → 305).
+         *   404 → 407  maze editor tools B2 (2026-11-11): maze-lab.md's `edit` row → its own § The edit tools
+         *              (`same-doc` 37 → 38), that § → editing-core.md, and editing-core.md's shared-tools
+         *              paragraph → maze-lab.md § The edit tools (`doc` 303 → 305).
+         *   407 → 409  content sets R3 (2026-11-11): pipeline-presets.md → concepts.md § The theme trial world and
+         *              § Selecting a content set (`doc` 305 → 307).
          */
         expect(by).toEqual({
-            'same-doc': 37,
-            doc: 305,
+            'same-doc': 38,
+            doc: 307,
             external: 22,
             repo: 42,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(406);
+        expect(CORPUS.length).toBe(409);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(305);
+        expect(docs).toHaveLength(307);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

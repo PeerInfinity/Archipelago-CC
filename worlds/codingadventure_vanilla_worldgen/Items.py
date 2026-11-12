@@ -74,5 +74,5 @@ item_table: Dict[str, ItemData] = {
     "Cloud Provider": ItemData(400100049, ItemClassification.progression, None),
     "Domain": ItemData(400100050, ItemClassification.progression, None),
     "Deployment Complete": ItemData(400100051, ItemClassification.progression, None),
-    "Victory": ItemData(None, ItemClassification.progression, None),
+    "Victory": ItemData(400100052, ItemClassification.progression, None),
 }
