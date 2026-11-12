@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1286,
+        "headings": 1287,
         "indexHeadings": 2,
-        "lines": 35931,
+        "lines": 35950,
         "pages": 4,
-        "words": 536819
+        "words": 537235
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -111,13 +111,14 @@ export const DOCS_INDEX = frz({
             "lines": 220,
             "links": [
                 "architecture.md",
+                "maze-lab.md",
                 "maze.md",
                 "seedling-editor.md",
                 "stepped-pipeline.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/editing-core.md",
-            "words": 4208
+            "words": 4224
         },
         {
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
@@ -225,17 +226,18 @@ export const DOCS_INDEX = frz({
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
-            "headings": 16,
-            "lines": 234,
+            "headings": 17,
+            "lines": 253,
             "links": [
                 "architecture.md",
+                "editing-core.md",
                 "flash.md",
                 "gotchas.md",
                 "loop-recording.md",
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 3249
+            "words": 3649
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
