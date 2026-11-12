@@ -604,12 +604,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_40__r26c13 -> level_40__r32c36", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
+        And(And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire')), Has('L40 flag 12: wandlock@480,560 cleared'))
     )
 
     world.set_rule(
         multiworld.get_entrance("level_40__r26c13 -> level_40__r36c35", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
+        And(And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire')), Has('L40 flag 12: wandlock@480,560 cleared'))
     )
 
     world.set_rule(
@@ -619,7 +619,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_40__r32c36 -> level_40__r26c13", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
+        And(And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire')), Has('L40 flag 12: wandlock@480,560 cleared'))
     )
 
     world.set_rule(
