@@ -1,0 +1,25 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 559,
+ "work": 15,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 15
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "message": "solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29: the player DIED at run tick 102 in level 22 (5 death(s) on the walk; the hits before the first: wallflyer@48,112 at t31, wallflyer@48,112 at t63, wallflyer@64,80 at t102) — the drive took hits its corridor was certified without; a walk that died is refused, not re-planned from the respawn"
+}
