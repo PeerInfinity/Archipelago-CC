@@ -6867,7 +6867,12 @@ export function createLevelRun({
         }
         if (ghost) {
             const why = ghostSwingRefusal(inventory);
-            if (why) throw new Error(`levelRun: the ghostsword press at tick ${pressTick} in level ${level}: ${why}`);
+            // ⛓ coded (hammer GHOST-STRIKE-GATE hand-over, parked by ⚖ the user 2026-11-12): `solverBot.REFUSAL_BY_NAME` names it
+            //   a solver can't-do instead of a crash. A Ghost-Sword-only run is no AP route's (0 legs), so this is robustness only.
+            if (why) {
+                throw Object.assign(new Error(`levelRun: the ghostsword press at tick ${pressTick} in level ${level}: ${why}`),
+                    { code: 'GHOST_SWING_NO_SWORD' });
+            }
         }
         const reachLimit = ghost ? GHOST_SWORD_REACH
             : (weapon === 'spear' ? SLASH_REACH : slashReachFor(scale));
