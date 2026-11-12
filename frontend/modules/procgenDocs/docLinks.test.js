@@ -349,20 +349,22 @@ describe('the corpus census — printed, then pinned', () => {
          *   412 → 414  content sets R4 (2026-11-12, the meta theme's maze art): concepts.md § The theme trial world →
          *              maze.md § Tile art from a content pack (`doc` 309 → 310), and that § → the `meta` pack's art
          *              manifest, its worked example (`repo` 43 → 44).
+         *   412 → 413  hammer PANEL-ROUTE (2026-11-12): seedling-bot.md's solve-progress line →
+         *              seedling-solve-progress.md § 7 (the route stamp) (`doc` 309 → 310).
          */
         expect(by).toEqual({
             'same-doc': 38,
-            doc: 310,
+            doc: 311,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(414);
+        expect(CORPUS.length).toBe(415);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(310);
+        expect(docs).toHaveLength(311);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
