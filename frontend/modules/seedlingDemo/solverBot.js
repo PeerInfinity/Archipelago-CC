@@ -7173,6 +7173,13 @@ export function previewWalk(run, wps, tolerance = 0,
                     DASH_CERT_SIGHT.counts.refused += 1;
                     continue;
                 }
+                // ⛓ hammer L28-BOBSOLDIER (`KILL_STANCE_SIGHT`, OFF): the chaser arm's stance scan asks the same line,
+                // with the ghost swing's waiver too. OFF the depth is 0 and nothing is asked.
+                if (killStanceSightDepth > 0 && dashCertSightDepth === 0 && CONTACT_FIDELITY.pixelMaskSightLines
+                    && b.tag !== 'flyer' && !gate.hasGhostSword && dashCertLineBlocked(run, state, b)) {
+                    KILL_STANCE_SIGHT.counts.refused += 1;
+                    continue;
+                }
                 /**
                  * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
                  * own five gates refuse an i-framed body, a dying one and a
@@ -7914,6 +7921,51 @@ export function withDashCertSight(enabled, fn) {
 
 /** ⛓ hammer DASHCERT — how many `spinnerDashWhole` asks are on the stack (counted with `DASH_CERT_SIGHT` ON only). */
 let dashCertSightDepth = 0;
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L28-BOBSOLDIER — **THE CHASER ARM'S STANCE SCAN SEES THE SWING'S LINE OF SIGHT**
+ * (`KILL_STANCE_SIGHT`, OFF).
+ *
+ * ⚖ The user approved the slice on 2026-11-12 (the hammer replan: *"L28 bobsoldier kill stance"*).
+ *  - The gap (measured, `seedling-hammer-l28-bobsoldier.md` §3): DASHCERT's gap, one caller over. `deriveKillByChaser`
+ *    prices each stance with `previewWalk`, whose chaser arm tests only the slash rect and the reach; the run's sword arm
+ *    also refuses a chaser whose line from the player meets a Solid (`slash()`'s `collideLine("Solid", …)`,
+ *    `Player.as:917`; fidelity MASKS D2, `CONTACT_FIDELITY.pixelMaskSightLines`, ON). On the witness (L28 from (136,296)
+ *    with the rock resting on the button, both of ROCK-HOLDER-WAIT's switches ON), the stance (216,200) was priced with
+ *    the t328 press landing on its first test. The run refused three tests on a `dungeonspire` mask and landed the
+ *    fourth, so the body's i-frame clock ran 3 ticks behind the preview's. The strike policy's re-approach then parted
+ *    from the forecast and stepped the player into the resting blade at t361. The game takes the same hit.
+ *  - ON: the stance scan's previews ask the run's own line test (`run.collideLineSolid`, masks included) before a swing
+ *    lands on a chaser, with the run arm's waivers (a Flyer, a ghost swing; the key OFF asks nothing). The stance priced
+ *    is then the fight the dwell drives (⚖ 30(c)). Every other preview is untouched.
+ *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
+ * `counts` hears each scan ask (`asks`) and each swing the line refused inside one (`refused`); it decides nothing.
+ * `SEEDLING_KILL_STANCE_SIGHT=1` in a node process or the page's solve worker (`solverEnvChannel`), or
+ * `withKillStanceSight(enabled, fn)` for a row. The decision runs in the solve WORKER (`solverBot`), not on the main thread.
+ */
+export const KILL_STANCE_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_SIGHT === '1',
+    counts: { asks: 0, refused: 0 } };
+export const KILL_STANCE_SIGHT_DEFAULT = false;
+
+/** Run `fn` with `KILL_STANCE_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withKillStanceSight(enabled, fn) {
+    return withSwitch(KILL_STANCE_SIGHT, enabled, fn);
+}
+
+/** ⛓ L28-BOBSOLDIER — how many stance-scan previews are on the stack (counted with `KILL_STANCE_SIGHT` ON only). */
+let killStanceSightDepth = 0;
+
+/** `fn` (a stance-scan preview) with the swing's line of sight asked ON; OFF it is `fn()`, nothing counted. */
+function killStanceSighted(fn) {
+    if (!KILL_STANCE_SIGHT.enabled) return fn();
+    KILL_STANCE_SIGHT.counts.asks += 1;
+    killStanceSightDepth += 1;
+    try {
+        return fn();
+    } finally {
+        killStanceSightDepth -= 1;
+    }
+}
 
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -25845,8 +25897,9 @@ export function deriveKillByChaser(run, body, contacts,
          */
         let walk;
         try {
-            walk = previewWalk(run, wps, tolerance,
-                { strike: strikeFor(), standFor: ceilingFor(c) });
+            // ⛓ L28-BOBSOLDIER (`KILL_STANCE_SIGHT`, OFF): ON, the swing's line of sight is asked in this preview
+            walk = killStanceSighted(() => previewWalk(run, wps, tolerance,
+                { strike: strikeFor(), standFor: ceilingFor(c) }));
         } catch (e) {
             if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
             rejected.push({ ...c, why: `the model REFUSES to price this candidate's own `
