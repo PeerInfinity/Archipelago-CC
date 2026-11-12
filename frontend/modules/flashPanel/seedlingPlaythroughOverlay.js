@@ -882,9 +882,33 @@ export const PIXEL_MASK_TAGS = Object.freeze([
  * transcription's. Signature matches `buildSeedlingRegionGrid`'s
  * `entityOverride` hook.
  */
+/**
+ * ⛓⛓ RULES rules-fire-breaks-rocks — AN ORDINARY ROCK'S BREAKERS, WITH THE FLAME'S SIDE. The transcription's
+ * `breakablerock` row is the swing's (`anyOf(hasSword, hasSpear)`); the game also breaks the rock under `Player.fire()`
+ * (`Player.as:1032` -> `genericHit` -> `BreakableRock.hit(hasGhostSword ? 1 : 0)`, `rockType` 0), but only from a stance
+ * whose flame reaches that rock and nothing else (`seedlingRockBreakers.rockFireSides`, the caller's `ctx.rockFire`:
+ * `L<level>:<rock id>` -> `{stances, fireDirs, swingDirs}`). A rock with a stance is occupied on
+ * `anyOf(hasSword, hasSpear, hasFire)` and every entry direction with no stance behind it is gated back to the swing
+ * (`enter`); a rock with none (L40, L41) keeps the transcription's row. No `ctx.rockFire`: the transcription's row.
+ */
+export const ROCK_FIRE_CONDITION = anyOf(flag('hasSword'), flag('hasSpear'), flag('hasFire'));
+function rockFireRuling(entity, base, ctx) {
+    const row = ctx?.rockFire?.get(`L${ctx.level}:${entity.type}@${entity.x},${entity.y}`);
+    if (!row || row.stances.length === 0) return null;
+    const swing = base.condition;
+    return {
+        ...base,
+        condition: ROCK_FIRE_CONDITION,
+        ...(row.swingDirs.length ? { enter: Object.fromEntries(row.swingDirs.map((d) => [d, swing])) } : {}),
+        fireStances: row.stances.map(({ x, y }) => [x, y]),
+        cite: 'Player.as:924,989,1032 -> genericHit -> BreakableRock.hit (BreakableRock.as:57-67)',
+    };
+}
+
 export function overlayEntitySemantics(entity, base, ctx = null) {
     const tag = entity?.type;
     if (tag === undefined) return null;
+    if (tag === 'breakablerock') return rockFireRuling(entity, base, ctx);
     if (LOCK_FAMILY.has(tag)) {
         const ruled = lockRuling(entity, ctx);
         return ruled ? { ...base, ...ruled } : null;

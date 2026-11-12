@@ -78,6 +78,9 @@ const {
 } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
+const { auditFire } = await imp('frontend/modules/seedlingDemo/presses.js');
+const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriverV2.js');
+const { buildRockFireSides } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -187,9 +190,22 @@ const KILL_LOCKS = OV.buildKillLockRulings(MAP);
 const BLOCK_HOLDERS = OV.buildBlockHolders(MAP);
 /** ⛓ RULES kill-locks — the census, for a reader that reports it. Additive. */
 export const playthroughKillLocks = KILL_LOCKS;
+// ⛓⛓ RULES rules-fire-breaks-rocks — each ordinary rock's flame stances and the entry sides that reach one
+// (`seedlingRockBreakers.rockFireSides`, asked of the physics model over the delivered rooms; a landing tile counts
+// where its occupant can only have arrived). The overlay credits Fire on those sides only (`rockFireRuling`).
+let rockFireMemo = null;
+const rockFireSides = () => {
+    rockFireMemo ??= buildRockFireSides(LEVELS, { buildLevelWorld, ROLES, auditFire, plannerObstacleAt }, {
+        arrivalTilesOf: (n) => gameLandings(MAP).filter((g) => g.level === n).map((g) => [Math.floor(g.x / TILE), Math.floor(g.y / TILE)]),
+    });
+    return rockFireMemo;
+};
+/** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides, for a reader that reports them. */
+export const playthroughRockFireSides = () => rockFireSides();
 const entityOverride = (entity, base, level) => {
     return OV.overlayEntitySemantics(entity, base, {
         level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
+        ...(entity?.type === 'breakablerock' ? { rockFire: rockFireSides() } : {}),
     });
 };
 /** The overlay's entity ruling as the grid builder applies it (a census reads a lock's `opensFrom`/`heldBy` off it). */
