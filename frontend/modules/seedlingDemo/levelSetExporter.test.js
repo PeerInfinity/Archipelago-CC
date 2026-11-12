@@ -903,7 +903,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ rules-l39: 54 -> 52 (a Pulser is a static Solid: L38's and L107's pulser pockets are gone).
         // ⛓ rules-l55-waterfall: 52 -> 53 (all-water L52 floored by its entry gate: three pools).
         // ⛓ rules-l112-owl-rocklock: 53 -> 54 (L112 splits at its rock, which costs the Owl's kill).
-        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(54);
+        // ⛓ rules-no-hit-directional: 54 -> 56 (L22 and L25 split at their directional no-hit gates).
+        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(56);
         // ⛓ SWIM T4 D4: 285 -> 286, L12's two-way Or(Swim, Red Key) row split by the one-sided locks.
         // ⛓ RULES (A): 286 -> 295, the nine return rows through the OPENED one-sided locks.
         // ⛓ RULES logical-links: 295 -> 289, five model-sealed True_ rows + one Swim row between two pruned pockets.
@@ -923,7 +924,9 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         //   cleared lock) splits its two-way row.
         // ⛓ tile-rules-automation-r-a5: 305 -> 308, L40's wand locks cost their presses: + r0c53 <-> r4c4 (one two-way row),
         //   + r26c13 -> r23c29 (flag 12) and r23c29 -> r26c13 (one-way each).
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(308);
+        // ⛓ rules-no-hit-directional: 308 -> 312, L22 and L25 each gain the priced crossing of their wallflyer band and
+        //   its free reverse.
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(312);
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -933,7 +936,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-e3ae176e');   // ⛓ tile-rules-automation-r-a5 (a grouped lock whose only opener is one in-room press costs it: L40 splits, +r4c4 +r26c13) + rules-l60-l71-killlock (L60's pocket and L71's lock pay the arms that pass a Solid) + rules-l26-rocklock-pocket (L18/L26/L53's pockets latch) + tile-l89-feather-swim (L89's Feather bound to its cheapest way, r1c10 by Swim) + tile-rules-automation-r-a4 (L20's lock@32,80 costs its own press, not the Shield) + tile-rules-automation-r-a3 (the derived-rule table re-spells L34's and L98's door rules) + rules-certifier-tail (a door costs what every way onto it pays) + RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps + location-crossing (L19 Boss Key 0 charged the Sword; L113 rules_source) + l55-waterfall (L52 floored by its entry gate: three pools) + l66-door (L66's D6 door charged the off-grid Yellow-Key lock) + pixelmask-l86 (building footprints from the Pixelmask) + waterfall-door (L89's door to L91 charged the Feather) + collider-mismatch (a pixel-mask wall seals its mask, not its rect) + l112-owl-rocklock (L112's rock costs the Owl's kill: L112 splits) + sided-openers (the ShieldLocks one-sided from the west, latching)
+        expect(committed.atlas_id).toBe('seedling-3a6a7579');   // ⛓ rules-no-hit-directional (L22 and L25 split at their directional no-hit gates: south to north / west to east across the wallflyer band costs Sword | Ghost Spear | Shield) + ⛓ tile-rules-automation-r-a5 (a grouped lock whose only opener is one in-room press costs it: L40 splits, +r4c4 +r26c13) + rules-l60-l71-killlock (L60's pocket and L71's lock pay the arms that pass a Solid) + rules-l26-rocklock-pocket (L18/L26/L53's pockets latch) + tile-l89-feather-swim (L89's Feather bound to its cheapest way, r1c10 by Swim) + tile-rules-automation-r-a4 (L20's lock@32,80 costs its own press, not the Shield) + tile-rules-automation-r-a3 (the derived-rule table re-spells L34's and L98's door rules) + rules-certifier-tail (a door costs what every way onto it pays) + RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps + location-crossing (L19 Boss Key 0 charged the Sword; L113 rules_source) + l55-waterfall (L52 floored by its entry gate: three pools) + l66-door (L66's D6 door charged the off-grid Yellow-Key lock) + pixelmask-l86 (building footprints from the Pixelmask) + waterfall-door (L89's door to L91 charged the Feather) + collider-mismatch (a pixel-mask wall seals its mask, not its rect) + l112-owl-rocklock (L112's rock costs the Owl's kill: L112 splits) + sided-openers (the ShieldLocks one-sided from the west, latching)
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

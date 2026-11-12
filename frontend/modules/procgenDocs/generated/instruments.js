@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 156,
-            "count": 206,
+            "browser": 157,
+            "count": 207,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 530,
-        "browser": 226,
-        "cited": 282,
-        "files": 548,
+        "blockStyle": 531,
+        "browser": 227,
+        "cited": 283,
+        "files": 549,
         "lineStyle": 18,
-        "withDocblock": 548,
-        "withFlags": 466
+        "withDocblock": 549,
+        "withFlags": 467
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -19606,6 +19606,88 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-wallflyer-mobiles — ⛓⛓⛓ seedling-fidelity-wallflyer: THE WALLFLYER'S OWN BODY, AND ITS DEATH, ASKED OF THE GAME TICK BY SAMPLED TICK (BOBSOLDIER's `probe-seedling-bobsoldier-mobiles.mjs`, one class over).",
             "path": "scripts/procgen/probe-seedling-wallflyer-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "sorted"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "max-nodes",
+                "only",
+                "repeat",
+                "search"
+            ],
+            "file": "probe-seedling-wallflyer-nohit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "chest"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "max-nodes"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "search"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Which item gives a NO-HIT line across a wallflyer's flight, PLAYED ON THE GAME (slice rules-no-hit-l22).",
+            "path": "scripts/procgen/probe-seedling-wallflyer-nohit.mjs"
         },
         {
             "argvHelpers": [
