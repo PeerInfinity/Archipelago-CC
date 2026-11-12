@@ -3064,6 +3064,32 @@ export function withUnheldLockNextDoor(enabled, fn) {
 }
 
 /**
+ * ⛓ hammer-phase ER-C3 (`CHASER_PASS`, OFF) — **A CORRIDOR THROUGH A CHASER'S LEASH IS WALKED ON A FORK, AND A HITLESS
+ * WALK IS ADMITTED.** The danger map prices a chaser as its leash (the box grown per tick), which is a bound, not a hit:
+ * a player who keeps moving can pass under a pocket the body never lands a blow in. MEASURED (rules-6's ER witness c3):
+ * L40 from the stairs to the pit with the Sword only, the game passes `puncher@128,624` with 0 hits, and every rung
+ * refuses (the kill arm's TIMING: the plain Sword outlives no ceiling there; the same boot with the Dark Sword kills it).
+ *
+ * ON: the ladder's LAST rung, asked only where it would refuse EXHAUSTED and only when every danger source of the hit is
+ * a chaser: the walk's own planned corridor is driven on a fork of the run (`fork`, the segment's replay), with the
+ * walk's strike policy, and admitted only when the fork takes NO hit, does not die, and arrives (or crosses, for a
+ * crossing walk). The keys are then replayed onto the run, which must bill no hit either (else `fail`: the fork is not
+ * this run). No fork → not asked. Nothing reads a level, a coordinate or an enemy class.
+ * OFF: never asked. `SEEDLING_CHASER_PASS=1` / `withChaserPass(enabled, fn)`.
+ */
+export const CHASER_PASS = { enabled: globalThis.process?.env?.SEEDLING_CHASER_PASS === '1',
+    /** The one-via candidates' radius around a body (px), and how many are fork-walked at most. */
+    viaRadius: 96, vias: 24 };
+export const CHASER_PASS_DEFAULT = false;
+/** Per-run rows (ON only): one per ask, `{t, what, ok, why, ticks}`. */
+export const CHASER_PASS_COUNTS = { tries: [] };
+
+/** Run `fn` with `CHASER_PASS` set to `enabled`, restoring the previous value. */
+export function withChaserPass(enabled, fn) {
+    return withSwitch(CHASER_PASS, enabled, fn);
+}
+
+/**
  * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
  * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
  * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
@@ -31857,6 +31883,81 @@ function solveSegmentUnder({
                 lastBound = undefined;
             }
         }
+        // ⛓ hammer-phase ER-C3 (`CHASER_PASS`, OFF): the last rung — the planned corridor walked past the chaser(s) on a fork.
+        if (CHASER_PASS.enabled && Array.isArray(corridor) && corridor.length > 0 && hit.sources.length > 0
+            && hit.sources.every((sx) => sx.kind === 'chaser')) {
+            /**
+             * The candidates, in order: the walk's own corridor, then ONE-VIA re-plans (start -> via -> aim) through the
+             * walkable tile centres within `CHASER_PASS.viaRadius` of a body, farthest from the bodies first, at most
+             * `CHASER_PASS.vias` of them — a pass under a pocket goes round the body's side the shortest line does not.
+             * The first hitless fork walk is admitted.
+             */
+            const bodies = (run.entities('chasers') ?? []).filter((c) => !c.destroy
+                && hit.sources.some((sx) => sx.id === c.id));
+            const candidates = [{ wps: corridor, via: null }];
+            const planOpts = solverPlanOpts(run, contacts, goalPlanExtra);
+            const leg = (from, to) => planWaypoints(run.world, { ...run.state, x: from.x, y: from.y }, to,
+                to === aim ? allowTeleporter : null, axisAligned ? { ...planOpts, manhattan: true } : planOpts);
+            const nearest = (p) => Math.min(...bodies.map((c) => Math.hypot(p.x - c.x, p.y - c.y)));
+            // every passed body (live, on the fork) beyond its own leash (`aggro.range`) of the fork's player
+            const clearOf = (f) => (f.entities('chasers') ?? []).filter((c) => bodies.some((b) => b.id === c.id))
+                .every((c) => c.destroy || Math.hypot(f.state.x - c.x, f.state.y - c.y)
+                    > (ENEMY_CLASSES[c.tag]?.aggro?.range ?? 0) + TILE_SIZE);
+            const vias = [];
+            for (const c of bodies) {
+                const R = CHASER_PASS.viaRadius;
+                for (let ty = Math.floor((c.y - R) / TILE_SIZE); ty <= Math.floor((c.y + R) / TILE_SIZE); ty += 1) {
+                    for (let tx = Math.floor((c.x - R) / TILE_SIZE); tx <= Math.floor((c.x + R) / TILE_SIZE); tx += 1) {
+                        const v = { x: tx * TILE_SIZE + TILE_SIZE / 2, y: ty * TILE_SIZE + TILE_SIZE / 2 };
+                        if (Math.hypot(v.x - c.x, v.y - c.y) > R || vias.some((u) => u.x === v.x && u.y === v.y)) continue;
+                        if (!isWalkableTile(run.world, tx, ty, null, planOpts)) continue;
+                        vias.push(v);
+                    }
+                }
+            }
+            vias.sort((a, b) => nearest(b) - nearest(a) || a.y - b.y || a.x - b.x);
+            for (const v of vias) {
+                if (candidates.length > CHASER_PASS.vias) break;
+                try {
+                    const first = leg(run.state, v);
+                    const wps = [...first, ...leg(v, aim)];
+                    if (wps.length > 0) candidates.push({ wps, via: v, cutAfter: Math.max(0, first.length - 1) });
+                } catch (e) {
+                    if (!(e instanceof BotDriverV2Error)) throw e;
+                }
+            }
+            let pass = { ok: false, why: 'no candidate corridor' };
+            const whys = [];
+            for (const cand of candidates) {
+                pass = chaserPassWalk(cand.wps, { what, crossTo, contacts, axisAligned,
+                    ...(cand.via ? { cutAfter: cand.cutAfter, clearOf } : {}) });
+                CHASER_PASS_COUNTS.tries.push({ t: perTick.length, what, via: cand.via, ok: pass.ok,
+                    why: pass.why ?? null, ticks: pass.ticks ?? null });
+                if (pass.ok) break;
+                whys.push(`${cand.via === null ? 'the walk\'s corridor' : `via (${cand.via.x},${cand.via.y})`}: ${pass.why}`);
+            }
+            if (!pass.ok) pass = { ok: false, why: `no candidate walks past hitless [${whys.join('; ')}]` };
+            if (pass.ok) {
+                rowFor('pass', { rung: lastOption, why: lastWhy }, { ticks: pass.ticks,
+                    chasers: hit.sources.map((sx) => sx.id ?? sx.kind) });
+                const h0 = (run.ledger('playerHits') ?? []).length;
+                let transition = null;
+                for (const k of pass.keys) {
+                    perTick.push(k);
+                    const o = run.advance(k);
+                    if (o.transition) transition = o.transition;
+                }
+                if ((run.ledger('playerHits') ?? []).length > h0 || (transition === null) !== (pass.transition === null)) {
+                    fail(`${what} -> pass: the live replay differs from the fork's hitless walk — the fork is not this run.`);
+                }
+                // a PREFIX past the bodies: the walk re-plans from here (an attempt that drove nothing of its own)
+                if (pass.prefix) return { escalations };
+                return { forced: { transition }, escalations };
+            }
+            rowFor('pass', { rung: lastOption, why: lastWhy });
+            lastWhy = pass.why;
+            lastOption = 'pass';
+        }
         refuse(`${what}: the combat ladder is EXHAUSTED. The corridor passes through `
             + `danger at (${hit.x.toFixed(1)},${hit.y.toFixed(1)}) — ${reasonsOf(hit)} — `
             + `and every rung of ⚖ §11.8a's order refused:\n`
@@ -31914,6 +32015,48 @@ function solveSegmentUnder({
      * must be an engaged trap's arrow, nothing may die, and the hits must fit `FORCED_HITS`' budget — else the walk
      * REFUSES by name (`obstacle: {kind: 'danger', id: <the lane>}`). Returns `{billed, ticks, laneWalk, at, from}`.
      */
+    /**
+     * ⛓ hammer-phase ER-C3 (`CHASER_PASS`, ON only): drive `wps` on a fork; `{ok, keys, ticks, transition}` when the fork
+     * takes no hit, does not die and arrives (crosses, for a crossing walk), else `{ok: false, why}`.
+     */
+    const chaserPassWalk = (wps, { what, crossTo, contacts, axisAligned, cutAfter = null, clearOf = null }) => {
+        if (fork === null) return { ok: false, why: 'the segment has no fork to walk the pass on' };
+        const f = fork();
+        if (f === null) return { ok: false, why: 'the caller\'s deadline tripped inside the pass\'s fork' };
+        const h0 = (f.ledger('playerHits') ?? []).length;
+        const d0 = (f.ledger('playerDeaths') ?? []).length;
+        const keys = [];
+        let transition = null;
+        try {
+            const strike = axisAligned ? axisStrikeFor(f, dashMode) : strikePolicyFor(f, { dashPlan: null, dashMode });
+            for (let wi = 0; wi < wps.length; wi += 1) {
+                const last = wi === wps.length - 1;
+                const t = drive(f, wps[wi], keys, {
+                    until: (last && crossTo) ? 'transition' : 'arrival', tolerance, maxTicks: maxTicksPerTarget,
+                    avoidVolumes: true, contacts, crossTo, grazes: [], strike, axisAligned, intermediate: !last,
+                    what: `${what} (chaser pass) waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
+                });
+                if (t && crossTo) { transition = t; break; }
+                if ((f.ledger('playerHits') ?? []).length > h0) break;
+                // the PREFIX: past the via, at a waypoint where every passed body is beyond its leash (the walk re-plans)
+                if (cutAfter !== null && wi >= cutAfter && !last && clearOf?.(f)) {
+                    const hits = (f.ledger('playerHits') ?? []).slice(h0);
+                    if (hits.length > 0 || (f.ledger('playerDeaths') ?? []).length > d0) break;
+                    return { ok: true, keys, ticks: keys.length, transition: null, prefix: true };
+                }
+            }
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return { ok: false, why: `the fork's drive is refuted — ${String(e.message).split('\n')[0].slice(0, 240)}` };
+        }
+        const hits = (f.ledger('playerHits') ?? []).slice(h0);
+        if (hits.length > 0) {
+            return { ok: false, why: `the fork's walk is hit at t${hits[0].t} by ${hits[0].source}:${hits[0].id}` };
+        }
+        if ((f.ledger('playerDeaths') ?? []).length > d0) return { ok: false, why: 'the fork\'s walk dies' };
+        if (crossTo && transition === null) return { ok: false, why: 'the fork reached the exit aim without a transition' };
+        return { ok: true, keys, ticks: keys.length, transition };
+    };
     const certifyLaneWalk = (wps, laneWalk, { what, goal, crossTo, contacts, axisAligned, narrow }) => {
         const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
         const no = (why) => {
@@ -32783,7 +32926,7 @@ function solveSegmentUnder({
                  * not in attempts — a frontier round (`continue` after an order) is an attempt that drove nothing, and
                  * OFF it spends the re-plan (L12 c1: two rerouted doors, then the chest stance's first drive refused).
                  */
-                if (UNHELD_LOCK_NEXT_DOOR.enabled ? (corridorsRefuted += 1) > 1 : attempt >= 1) {
+                if ((UNHELD_LOCK_NEXT_DOOR.enabled || CHASER_PASS.enabled) ? (corridorsRefuted += 1) > 1 : attempt >= 1) {
                     refuse(`${what}: the re-planned corridor failed too — ${e.message}`, {
                         goal,
                         considered: [
