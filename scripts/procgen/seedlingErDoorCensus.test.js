@@ -106,11 +106,16 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
     });
 
     it('(A) the producer\'s link readers are scanned, none unmeasured; the stairs-exposed ones are named', () => {
-        expect(c.scan.readers).toEqual(['arrivalSolidCensus', 'buildLevelWorld', 'censusFallsOntoDoors', 'deriveAtlas',
-            'gameLandings', 'poleKillsOf', 'returnSpawnTable']);
+        // ⛓ tile-fire-breaks-rocks: + `buildRockFireSides` / `doorLandingTiles` (the flame-stance census, `rockFireSides`).
+        expect(c.scan.readers).toEqual(['arrivalSolidCensus', 'buildLevelWorld', 'buildRockFireSides', 'censusFallsOntoDoors',
+            'deriveAtlas', 'doorLandingTiles', 'gameLandings', 'poleKillsOf', 'returnSpawnTable']);
         expect(c.exposure.unmeasured).toEqual([]);
         const exposed = c.exposure.rows.filter((r) => r.stairsLandings.length).map((r) => `${r.fn}:${r.reads}`);
+        // ⛓ tile-fire-breaks-rocks: `rockFireRaw` (the flame-stance census) reads every landing INTO a rock level (its isolated-landing arm: L3's L11
+        // pocket), 12 of them through stairs — ARRIVAL-side, named here for the ER arc (a shuffle that moved where a level is
+        // landed in would move a stance only where the landing tile is isolated).
         expect(exposed).toEqual([
+            'rockFireRaw:buildRockFireSides', 'rockFireRaw:doorLandingTiles', 'rockFireSides:buildRockFireSides', 'rockFireSides:buildRockFireSides',
             'doorTilesOf:gameLandings', 'doorwaysBesideLanding:returnSpawnTable', 'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
             'playthroughBlockStoppers:poleKillsOf', 'barrierAnalysis:poleKillsOf', 'barrierAnalysis:buildLevelWorld', 'barrierAnalysis:gameLandings',
             'playthroughRopeEvents:gameLandings', 'RETURN_SPAWNS:returnSpawnTable', 'arrivalSpawnFor:returnSpawnTable',

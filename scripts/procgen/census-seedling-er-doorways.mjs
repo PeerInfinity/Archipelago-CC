@@ -101,6 +101,7 @@ export async function loadCensusInputs({ producer = true } = {}) {
         ...O.inRoomPolesOf(MAP).map((p) => p.level),
     ]);
     const solidRows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP));
+    const rockLevels = new Set(MAP.levels.filter((L) => (L.entities ?? []).some((e) => e.type === 'breakablerock')).map((L) => L.level));
     const chainLevels = new Set(P.pitChains.map((c) => c.landing.level));
     const everyLevel = new Set(MAP.levels.map((L) => L.level));
     // `doorwaysBesideLanding`'s domain, measured by CALLING it: over every landing INTO a rope level (the widest set its
@@ -116,6 +117,15 @@ export async function loadCensusInputs({ producer = true } = {}) {
         playthroughRopeEvents: { what: 'landings INTO a minted rope\'s level inside its lane (exitGates)', landings: into(ropeLevels) },
         barrierAnalysis: { what: 'landings INTO a button-target / in-room-pole level (the "cut" pass: needs the vanilla departure -> region connection)', landings: into(barrierLevels) },
         playthroughObstacleEvents: { what: 'every game landing the arrival-solid census finds inside a persistence solid', landings: solidRows.map((r) => r.landing) },
+        // ⛓ tile-fire-breaks-rocks: the same census rows, memoized (`arrivalCensusRows`), and the obstacle-event NAMES the
+        // producer mints from them (`mintedObstacleEvents`, §4's credit set): the same domain as playthroughObstacleEvents.
+        arrivalCensusRows: { what: 'the arrival-solid census rows (playthroughObstacleEvents\' input, memoized)', landings: solidRows.map((r) => r.landing) },
+        mintedObstacleEvents: { what: 'the obstacle events minted from the arrival-solid census (names only)', landings: solidRows.map((r) => r.landing) },
+        // ⛓ tile-fire-breaks-rocks: the flame-stance census's isolated-landing arm reads every landing INTO a level with an
+        // ordinary rock (`doorLandingTiles`: a landing tile with no floor beside it counts as floor, L3's L11 pocket).
+        rockFireRaw: { what: 'landings INTO a level with an ordinary breakable rock (the flame-stance census: an isolated landing is floor)', landings: into(rockLevels) },
+        // …and `rockFireSides`, which reads it through `rockFireRaw` (the narrowed map: the same landings).
+        rockFireSides: { what: '(via rockFireRaw) landings INTO a level with an ordinary breakable rock (the flame-stance census: an isolated landing is floor)', landings: into(rockLevels) },
         doorwaysBesideLanding: { what: 'a rope level\'s OWN doors that a landing stands beside (the return-spawn pair of the landing\'s door; a TILE fact of the level: the gate rides the departure, whatever it connects to)', landings: besideDoors },
         RETURN_SPAWNS: { what: 'every door\'s return spawn (the reverse link\'s playerx/y)', landings: all },
         arrivalSpawnFor: { what: 'every arrival exit\'s return spawn', landings: all },

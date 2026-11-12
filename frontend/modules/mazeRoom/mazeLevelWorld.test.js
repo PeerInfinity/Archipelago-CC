@@ -41,7 +41,8 @@ describe('shared_world — the field and its readers', () => {
         expect(w.sharedWorld.regions).toEqual([R1C5, R1C9, R6C8]);
         expect(w.blocks.size).toBe(1);
         expect(w.buttons.size).toBe(1);
-        expect(Object.keys(w.actionLib)).toEqual(['sword', 'spear']);
+        // ⛓ tile-fire-breaks-rocks: L15's rocks also break to Fire from their flame stances (`struck_from`), so the world has a fire action.
+        expect(Object.keys(w.actionLib)).toEqual(['sword', 'spear', 'fire']);
     });
 
     it('owner lookups: an owned cell, a "no news" cell (water) and a crossing', () => {

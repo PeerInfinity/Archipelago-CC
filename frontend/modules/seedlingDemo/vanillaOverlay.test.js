@@ -446,8 +446,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   eff9e209 -> b06ae22d). No name, exit or location moves (the overlay fixture `--check`s byte-identical).
         // ⛓ tile-rules-automation-r-a5 (e965075e… -> ada6b422): L40's wand locks cost their presses, so L40 gains r4c4 and
         //   r26c13 (atlas id b06ae22d -> e3ae176e). The overlay fixture reads the VANILLA map: `--check`s byte-identical.
+        // ⛓ tile-fire-breaks-rocks (ada6b422… -> a6f17c8f): an ordinary rock also breaks to Fire from a flame-stance side
+        //   (atlas id e3ae176e -> 32298df9). The overlay fixture `--check`s byte-identical.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('ada6b4223e6b63a093dc716b0eed390b');
+            .toBe('a6f17c8faab47c4834865d0af6273173');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

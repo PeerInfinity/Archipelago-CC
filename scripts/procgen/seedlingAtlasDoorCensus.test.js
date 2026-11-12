@@ -119,7 +119,10 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ tile-rules-automation-r-a5 — restamped (b06ae22d -> e3ae176e): a grouped lock whose only opener is one in-room
         //   press costs it, so L40's wand locks gate: L40 gains r4c4 (out of r0c53) and r26c13 (its body; r23c29 keeps the
         //   t2-button column).
-        expect(c.atlasId).toBe('seedling-e3ae176e');
+        // ⛓ tile-fire-breaks-rocks — restamped (e3ae176e -> 32298df9): an ordinary rock also breaks to Fire from a side with a
+        //   clean flame stance (rules-6's rule), so four two-way internal rows split into one-way pairs (L0 r6c5<->r7c6 and
+        //   r11c19<->r7c6, L100 r2c3<->r4c10, L16 r3c7<->r6c8: one side keeps the swing). No door or sub-region moves.
+        expect(c.atlasId).toBe('seedling-32298df9');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -129,7 +132,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ tile-rules-automation-r-a5: L40 +2 sub-regions (r4c4, r26c13) and 305 -> 308 internal exits: + r0c53 <-> r4c4 (one
         //   two-way row), + r26c13 -> r23c29 (flag 12) and r23c29 -> r26c13 (one-way each); the body's three rows re-key
         //   r23c29 -> r26c13. Swim rows unmoved.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 203, 308, 207]);
+        // ⛓ tile-fire-breaks-rocks: 308 -> 312 internal exits (four two-way rock rows split into one-way pairs).
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 203, 312, 207]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },
