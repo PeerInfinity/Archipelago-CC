@@ -863,9 +863,9 @@
         "director.js": 4,
         "forcedHit.js": 2,
         "oppFallbackHits.js": 1,
-        "solverBot.js": 136
+        "solverBot.js": 137
       },
-      "sites": 200,
+      "sites": 201,
       "seen": "both",
       "via": [
         "direct",
@@ -937,7 +937,7 @@
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
           "oppFallbackHits.js": 1,
-          "solverBot.js": 77
+          "solverBot.js": 78
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -4420,10 +4420,10 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 152,
+        "solverBot.js": 153,
         "strikePolicy.js": 3
       },
-      "sites": 193,
+      "sites": 194,
       "seen": "static",
       "via": [
         "import"
