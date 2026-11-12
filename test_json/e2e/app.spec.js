@@ -85,6 +85,12 @@ test.describe('Application End-to-End Tests', () => {
   if (process.env.TEST_MEASURE_BOT_STALL_MS) {
     APP_URL += `&measureBotStallMs=${encodeURIComponent(process.env.TEST_MEASURE_BOT_STALL_MS)}`;
   }
+  // MEASUREMENT-ONLY (cloud slice seedling-hammer-walk-l53-page): TEST_MEASURE_SOLVER_ENV=<NAME=VALUE;…> puts the
+  // solver's OFF switches on the app page's `?seedlingSolverEnv=` (solverEnvChannel.js: the solve worker reads the
+  // page's own location.search). Unset → nothing appended.
+  if (process.env.TEST_MEASURE_SOLVER_ENV) {
+    APP_URL += `&seedlingSolverEnv=${encodeURIComponent(process.env.TEST_MEASURE_SOLVER_ENV)}`;
+  }
 
   test('run in-app tests and check results', async ({ page }) => {
     // Counted for the summary: a green run can hide a thrown handler, and the
