@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
-import { SolverRefusal, stanceHypothesisProbe } from './solverBot.js';
+import { SolverRefusal, stanceHypothesisProbe, withLatchWeighFirst } from './solverBot.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
@@ -107,6 +107,17 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
             expect(e.perTick.length).toBe(0);
         }
     }, 300_000);
+
+    // Measured (the defaults minus LATCH_WEIGH_FIRST, APPROACH_DOOR, TURRET_APPROACH, and LATCH_WEIGH_FIRST+APPROACH_DOOR):
+    // LATCH_WEIGH_FIRST OFF (or TURRET_APPROACH OFF) gives the OFF arm its STANCE_REENTRY back; NO measured set gives the
+    // ON arm its BEFORE end (the chest walk's press kill) — the ON arm refuses at the collect stance instead. The ON
+    // arm's property is not covered at or one switch from the defaults.
+    it('AFTER control: the shipped defaults MINUS `LATCH_WEIGH_FIRST` alone give the OFF arm its BEFORE — STANCE_REENTRY at the west door', () => withLatchWeighFirst(false, async () => {
+        const e = await withContactFidelity({ stanceReentryNextDoor: false }, solveStep93);
+        expect(e).toBeInstanceOf(SolverRefusal);
+        expect(e.message).toContain('-> hold stance (wandlock@448,432): STANCE_REENTRY — the walk to '
+            + 'wandlock@448,432\'s `hold` stance (488,392) is itself blocked by wandlock@448,432 at tick 0');
+    }), 300_000);
 });
 
 describe('L40RES D1 — leg 368 at seam time 5290: the game\'s t1222 hit is the model\'s too', () => {
