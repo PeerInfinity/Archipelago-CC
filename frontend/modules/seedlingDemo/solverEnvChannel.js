@@ -19,7 +19,7 @@
  * (byte-identical). ⛔ It is per page load and never persisted: a URL param (a probe's or sweep's input), never a
  * setting. ⛔ The WORKER only: the page's main-thread module copies keep their defaults (the game, not the page's
  * model, is the judge of a played plan) — ONE exception, a goal-MAPPER switch read through `pageSolverEnvSwitchOn`
- * (today `SEEDLING_TALK_CLEAR_GOAL`): the mapper runs on the main thread before any worker is asked. ⛔ A key whose module has its own request stamp (`contactFidelity`,
+ * (today `SEEDLING_TALK_CLEAR_GOAL`, and `SEEDLING_ROCKLOCK_KILL` for its mapper row — ROCKLOCK-MAPPER): the mapper runs on the main thread before any worker is asked. ⛔ A key whose module has its own request stamp (`contactFidelity`,
  * `killLockBodies`, `axeDodgeAskPerPreview`, `dashOnlyWindow`, `dashShape`) is overridden by that stamp when the
  * page sends one; at the panel's defaults it sends none.
  *
