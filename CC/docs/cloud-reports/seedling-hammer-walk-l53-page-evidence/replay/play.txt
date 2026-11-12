@@ -3,3 +3,4 @@ rewind-line: compared 608, game 609 rows (last t 608), levels [53,54], arrived {
 rewind: compared 768, game 769 rows (last t 768), levels [53,54], arrived {"level":54,"y":24,"x":152,"t":768}, hits load 0 end 0, rises [], firstDiff null, error ''
 rewind-line MUTANT expected[300].x+0.5: compared 301, game 609 rows (last t 608), levels [53,54], arrived {"level":54,"y":24,"x":152,"t":608}, hits load 0 end 0, rises [], firstDiff {"t":300,"expected":{"level":53,"x":127.0703518728257,"y":167.10817623498673},"got":{"level":53,"x":126.5703518728257,"y":167.10817623498673},"dx":-0.5,"dy":0}, error ''
 stand-400 (hit-sensitivity control): compared 0, game 401 rows (last t 400), levels [53], arrived null, hits load 0 end 0, rises [], firstDiff null, error ''
+walk114-rewind-line: compared 608, game 609 rows (last t 608), levels [53,54], arrived {"level":54,"y":24,"x":152,"t":608}, hits load 0 end 0, rises [], firstDiff null, error ''
