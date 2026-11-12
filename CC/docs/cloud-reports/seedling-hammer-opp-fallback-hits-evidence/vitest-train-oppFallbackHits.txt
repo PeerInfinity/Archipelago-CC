@@ -1,0 +1,7 @@
+ ✓ frontend/modules/seedlingDemo/hammerOppFallbackHits.train.test.js (3 tests) 161686ms
+     ✓ OFF (census instrument): the redo is ADOPTED with 2 hits, and the segment refuses later at work 885  40971ms
+     ✓ ON: the redo is REFUSED by name, undone, and the original HAMMER_SAFETY refusal stands (work 255)  35738ms
+     ✓ ON keeps the hitless redo: audited, not refused, and the plan is OFF's byte for byte  84974ms
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Duration  164.78s (transform 2.19s, setup 192ms, import 2.77s, tests 161.69s, environment 0ms)

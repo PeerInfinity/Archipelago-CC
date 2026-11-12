@@ -201,6 +201,7 @@ import {
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
+import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -19976,6 +19977,7 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
         const row = { t: t0, refused: e.code, refusedAt: perTick.length, bodies: resolved.plans.map((p) => p.id) };
         const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
         const { run: fresh, undo } = ctx.rewind.to(t0);
+        const clock0 = fresh.ticksCompleted; // ⛓ OPP-FALLBACK-HITS: the redo's first clock (read only)
         const was = OPPORTUNISTIC_STRIKE.enabled;
         OPPORTUNISTIC_STRIKE.enabled = false;
         try {
@@ -19984,14 +19986,18 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
             const record = execKillByPressFightFallback(fresh, perTick, again, ctx);
             row.verdict = 'solved';
             row.ticks = perTick.length - t0;
+            // ⛓ hammer-phase OPP-FALLBACK-HITS (`OPP_FALLBACK_HITS`, OFF ⇒ not read): a redo that took a hit is refused
+            if (oppFallbackHitsAudits()) oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo);
             OPP_PRESS_FALLBACK_COUNTS.solved += 1;
             ctx.rewind.note({ ...row, how: 'opp-plain' });
             return { ...record, oppPressFallback: row };
         } catch (e2) {
+            if (e2?.oppFallbackHitsRefused) throw e2; // ⛓ OPP-FALLBACK-HITS: already undone, the refusal stands
             if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
                 row.verdict = 'solved';
                 row.ticks = perTick.length - t0;
                 row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
+                if (oppFallbackHitsAudits()) oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo);
                 OPP_PRESS_FALLBACK_COUNTS.solved += 1;
                 ctx.rewind.note({ ...row, how: 'opp-plain' });
                 throw e2;
@@ -20010,6 +20016,33 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
             OPPORTUNISTIC_STRIKE.enabled = was;
         }
     }
+}
+
+/**
+ * ⛓ hammer-phase OPP-FALLBACK-HITS — `OPP_FALLBACK_HITS` (see `oppFallbackHits.js`). Asked only once the fallback's redo
+ * KILLED (`row.verdict === 'solved'`). The hits the model billed after the redo's first clock are read off the run the
+ * redo ended on: `fresh`, or — when `HAMMER_FIGHT_FALLBACK` may have rewound inside the redo and adopted a run of its
+ * own — the segment's keys replayed (`ctx.rewind.replay`). Recorded in the instrument; ON with any hit, the redo is
+ * UNDONE and the ORIGINAL refusal `e` is thrown plus one sentence (marked `oppFallbackHitsRefused`, so the fallback's
+ * own catch does not undo twice). Hitless, or OFF (the census instrument), it returns and the redo is adopted as before.
+ */
+function oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo) {
+    const live = HAMMER_FIGHT_FALLBACK.enabled ? ctx.rewind.replay(perTick.length) : fresh;
+    const hits = playerHitsSince(live, clock0);
+    if (!auditOppFallbackRedo(row, hits)) return;
+    undo();
+    row.verdict = 'refused';
+    row.retryRefused = 'OPP_FALLBACK_HITS';
+    row.why = `the redo killed in ${row.ticks} tick(s) with ${hits.length} player hit(s)`;
+    row.hits = hits;
+    delete row.raised;
+    OPP_PRESS_FALLBACK_COUNTS.refused += 1;
+    const out = new SolverBotError(`${e.message} ${oppFallbackHitsSentence(row, hits)}`,
+        { code: e.code, boundTicks: e.boundTicks });
+    if (e.fightFallback) out.fightFallback = e.fightFallback;
+    out.oppPressFallback = row;
+    out.oppFallbackHitsRefused = true;
+    throw out;
 }
 
 /** The press kill with `HAMMER_FIGHT_FALLBACK`'s retry (B3), unchanged — the body `execKillByPress` always had. */

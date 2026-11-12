@@ -1,0 +1,85 @@
+sweep_id	req	key	ok	kind	work	ticks	fb_asked	fb_adopted	redo_audited	redo_hit	ms	page_ok
+57	0	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_64_0	False	refusal	None	None	0	0	0	0	44	False
+58	0	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_128_48	False	refusal	None	None	0	0	0	0	53	False
+59	0	level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128	False	refusal	None	None	0	0	0	0	97	False
+59	1	level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128	False	refusal	None	None	0	0	0	0	84	False
+62	0	level_4 <- in_L5_80_16 -> exit:out_teleporter_0_16	False	refusal	None	None	0	0	0	0	55	False
+71	0	level_6 <- in_L7_16_32 -> exit:out_teleporter_32_0	False	refusal	None	None	0	0	0	0	319	False
+80	0	level_8 <- in_L9_144_0 -> exit:out_stairsup_144_32	False	refusal	None	None	0	0	0	0	18474	False
+223	0	level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared	False	refusal	None	None	0	0	0	0	2564	False
+333	0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared	False	refusal	None	None	0	0	0	0	836	False
+355	0	level_37__r0c18 <- in_L43_144_64 -> exit:out_teleporter_288_0	False	refusal	None	None	0	0	0	0	462	False
+366	0	level_38 <- in_L39_144_624 -> exit:out_teleporter_144_304	False	refusal	None	None	0	0	0	0	368	False
+367	0	level_38 <- in_L39_144_624 -> location:Level 038 - Chest	False	refusal	None	None	0	0	0	0	470	False
+374	0	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144	False	refusal	None	None	0	0	0	0	8553	False
+397	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	True	None	None	1124	0	0	0	0	61380	False
+398	0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared	True	None	None	695	0	0	0	0	55575	False
+414	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	False	refusal	None	None	0	0	0	0	104398	False
+414	1	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	False	refusal	None	None	0	0	0	0	103238	False
+465	0	level_49 <- in_L50_32_0 -> location:Level 049 - Conch	False	refusal	None	None	0	0	0	0	66	False
+514	0	level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared	False	refusal	None	None	0	0	0	0	1877	False
+514	1	level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared	False	refusal	None	None	0	0	0	0	1767	False
+517	0	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0	True	None	None	284	0	0	0	0	5035	False
+518	0	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96	True	None	None	296	0	0	0	0	3006	False
+522	0	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160	True	None	None	227	0	0	0	0	6890	False
+523	0	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0	True	None	None	91	0	0	0	0	4414	False
+536	0	level_62 <- in_L61_112_0 -> exit:out_teleporter_240_304	False	refusal	None	None	0	0	0	0	627	False
+546	0	level_62 <- in_L63_16_0 -> exit:out_teleporter_240_304	False	refusal	None	None	0	0	0	0	1044	False
+552	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304	False	refusal	None	None	0	0	0	0	674	False
+553	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_96_304	False	refusal	None	None	0	0	0	0	538	False
+555	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_192_304	False	refusal	None	None	0	0	0	0	624	False
+572	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48	False	refusal	None	None	0	0	0	0	502	False
+573	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96	False	refusal	None	None	0	0	0	0	888	False
+574	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0	False	refusal	None	None	0	0	0	0	360	False
+576	0	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared	False	refusal	None	None	0	0	0	0	354	False
+578	0	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared	False	refusal	None	None	0	0	0	0	182233	False
+582	0	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208	False	refusal	None	None	0	0	0	0	55150	False
+584	0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared	False	refusal	None	None	0	0	0	0	79672	False
+584	1	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared	False	refusal	None	None	0	0	0	0	40084	False
+603	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	False	refusal	None	None	0	0	0	0	11260	False
+603	1	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	False	refusal	None	None	0	0	0	0	10834	False
+604	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304	True	None	None	122	0	0	0	0	6707	False
+606	0	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest	True	None	None	181	0	0	0	0	9448	False
+607	0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared	True	None	None	176	0	0	0	0	5760	False
+625	0	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0	False	refusal	None	None	0	0	0	0	24128	False
+625	1	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0	False	refusal	None	None	0	0	0	0	23270	False
+626	0	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256	False	refusal	None	None	0	0	0	0	24216	False
+626	1	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256	False	refusal	None	None	0	0	0	0	23288	False
+636	0	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0	False	refusal	None	None	0	0	0	0	15655	False
+636	1	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0	False	refusal	None	None	0	0	0	0	15482	False
+639	0	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224	False	refusal	None	None	0	0	0	0	7828	False
+639	1	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224	False	refusal	None	None	0	0	0	0	7081	False
+645	0	level_77 <- in_L76_304_112 -> exit:out_teleporter_96_304	False	refusal	None	None	0	0	0	0	118	False
+646	0	level_77 <- in_L78_256_0 -> exit:out_teleporter_0_32	False	refusal	None	None	0	0	0	0	103	False
+708	0	level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304	False	refusal	None	None	0	0	0	0	1339	False
+708	1	level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304	False	refusal	None	None	0	0	0	0	1377	False
+717	0	level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_288_240	False	refusal	None	None	0	0	0	0	74	False
+723	0	level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48	False	refusal	None	None	0	0	0	0	639	True
+724	0	level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144	False	refusal	None	None	0	0	0	0	689	True
+754	0	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112	True	None	None	724	0	0	0	0	4014	False
+757	0	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112	False	refusal	None	None	0	0	0	0	4162	False
+757	1	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112	False	refusal	None	None	0	0	0	0	4254	False
+763	0	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96	True	None	None	287	0	0	0	0	9064	False
+764	0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared	True	None	None	281	0	0	0	0	17256	False
+776	0	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64	False	refusal	None	None	0	0	0	0	22141	False
+776	1	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64	False	refusal	None	None	0	0	0	0	22008	False
+779	0	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144	False	refusal	None	None	0	0	0	0	23027	False
+779	1	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144	False	refusal	None	None	0	0	0	0	22706	False
+792	0	level_107 <- in_L102_224_96 -> exit:out_teleporter_304_176	False	refusal	None	None	0	0	0	0	343	False
+860	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_3	False	refusal	None	None	0	0	0	0	7215	False
+869	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_4	False	refusal	None	None	0	0	0	0	3617	False
+874	0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	True	None	None	4491	0	0	0	0	100588	False
+875	0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	True	None	None	4527	0	0	0	0	48838	False
+876	0	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	True	None	None	1147	0	0	0	0	78082	False
+877	0	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	False	refusal	None	None	0	0	0	0	101968	False
+877	1	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	False	refusal	None	None	0	0	0	0	99764	False
+908	0	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> exit:out_pit_2_2	True	None	None	330	0	0	0	0	6578	False
+911	0	level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	None	None	0	0	0	0	4387	False
+911	1	level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	None	None	0	0	0	0	4480	False
+912	0	level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	None	None	0	0	0	0	6549	False
+912	1	level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	None	None	0	0	0	0	6685	False
+920	0	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17	False	refusal	None	None	0	0	0	0	109910	False
+920	1	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17	False	refusal	None	None	0	0	0	0	105674	False
+924	0	level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256	True	None	None	184	0	0	0	0	6984	False
+930	0	level_101__r0c6 <- in_L100_288_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24	False	refusal	None	None	0	0	0	0	138	False
+931	0	level_101__r0c6 <- in_L102_64_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24	False	refusal	None	None	0	0	0	0	186	False
