@@ -922,7 +922,12 @@ export const ROCK_FIRE_CONDITION = anyOf(flag('hasSword'), flag('hasSpear'), fla
 function rockFireRuling(entity, base, ctx) {
     const row = ctx?.rockFire?.get(`L${ctx.level}:${entity.type}@${entity.x},${entity.y}`);
     if (!row || row.stances.length === 0) return null;
-    const swing = base.condition;
+    // ⛓ PREDICT b2 (tile-fire-breaks-rocks): a TAGGED rock is gone once its flag is cleared (`BreakableRock.check`,
+    // `BreakableRock.as:47-54`), so its swing-only sides also open on its own cleared event.
+    const tag = Number(entity.attrs?.tag);
+    const swing = Number.isInteger(tag) && tag >= 0
+        ? anyOf(base.condition, { event: obstacleEventName({ level: ctx.level, tag, cls: entity.type, x: entity.x, y: entity.y }) })
+        : base.condition;
     return {
         ...base,
         condition: ROCK_FIRE_CONDITION,

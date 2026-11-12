@@ -59,7 +59,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_0__r6c5 -> level_0__r7c6", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L0 flag 4: breakablerock@80,112 cleared'))
     )
 
     world.set_rule(
@@ -89,7 +89,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_0__r11c19 -> level_0__r7c6", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L0 flag 1: breakablerock@288,176 cleared'))
     )
 
     world.set_rule(
@@ -269,7 +269,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_16__r1c9 -> level_16__r6c8", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L16 flag 4: breakablerock@96,80 cleared'), Has('L16 flag 0: rope@32,16 cleared'))
     )
 
     world.set_rule(
@@ -284,7 +284,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_16__r3c7 -> level_16__r6c8", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+        Or(And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L16 flag 4: breakablerock@96,80 cleared'), Has('L16 flag 0: rope@32,16 cleared')), And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L16 flag 5: breakablerock@112,80 cleared'), Has('L16 flag 0: rope@32,16 cleared')))
     )
 
     world.set_rule(
@@ -299,7 +299,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_16__r6c8 -> level_16__r1c9", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L16 flag 3: breakablerock@96,64 cleared'), Has('L16 flag 0: rope@32,16 cleared'))
     )
 
     world.set_rule(
@@ -1359,7 +1359,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_53__r2c2 -> level_53__r9c10", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Progressive Swim'))
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L53 flag 1: breakablerock@128,160 cleared'), Has('Progressive Swim'))
     )
 
     world.set_rule(
@@ -1368,13 +1368,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_53__r9c10 -> level_53__r2c2", player),
-        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Progressive Swim'))
+        multiworld.get_entrance("level_53__r9c10 -> level_53__r14c9", player),
+        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_53__r9c10 -> level_53__r14c9", player),
-        Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
+        multiworld.get_entrance("level_53__r9c10 -> level_53__r2c2", player),
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'Fire'), HasAny('Progressive Sword', 'Ghost Spear', 'L53 flag 0: breakablerock@112,128 cleared'), Has('Progressive Swim'))
     )
 
     world.set_rule(
@@ -2524,7 +2524,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_100__r2c3 -> level_100__r4c10", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear', 'L100 flag 0: breakablerock@128,144 cleared'), HasAny('Progressive Sword', 'Ghost Spear', 'Fire'))
     )
 
     world.set_rule(

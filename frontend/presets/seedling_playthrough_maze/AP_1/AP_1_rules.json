@@ -139,19 +139,53 @@
             "name": "level_0__r6c5 -> level_0__r7c6",
             "connected_region": "level_0__r7c6",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L0 flag 4: breakablerock@80,112 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -405,19 +439,53 @@
             "name": "level_0__r11c19 -> level_0__r7c6",
             "connected_region": "level_0__r7c6",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L0 flag 1: breakablerock@288,176 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -1895,6 +1963,12 @@
                       "args": {
                         "item_name": "Ghost Spear"
                       }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
                     }
                   ]
                 },
@@ -1903,6 +1977,29 @@
                   "args": {
                     "item_name": "L16 flag 0: rope@32,16 cleared"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L16 flag 4: breakablerock@96,80 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -1986,30 +2083,121 @@
             "name": "level_16__r3c7 -> level_16__r6c8",
             "connected_region": "level_16__r6c8",
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Fire"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Ghost Spear"
+                        "item_name": "L16 flag 0: rope@32,16 cleared"
                       }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "L16 flag 4: breakablerock@96,80 cleared"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L16 flag 0: rope@32,16 cleared"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Fire"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L16 flag 0: rope@32,16 cleared"
+                      }
+                    },
+                    {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "L16 flag 5: breakablerock@112,80 cleared"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -2073,6 +2261,12 @@
                       "args": {
                         "item_name": "Ghost Spear"
                       }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
                     }
                   ]
                 },
@@ -2081,6 +2275,29 @@
                   "args": {
                     "item_name": "L16 flag 0: rope@32,16 cleared"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L16 flag 3: breakablerock@96,64 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -7153,6 +7370,12 @@
                       "args": {
                         "item_name": "Ghost Spear"
                       }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
                     }
                   ]
                 },
@@ -7161,6 +7384,29 @@
                   "args": {
                     "item_name": "Progressive Swim"
                   }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L53 flag 1: breakablerock@128,160 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -7188,38 +7434,6 @@
       "level_53__r9c10": {
         "name": "level_53__r9c10",
         "exits": [
-          {
-            "name": "level_53__r9c10 -> level_53__r2c2",
-            "connected_region": "level_53__r2c2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Swim"
-                  }
-                }
-              ]
-            }
-          },
           {
             "name": "level_53__r9c10 -> level_53__r14c9",
             "connected_region": "level_53__r14c9",
@@ -7250,6 +7464,67 @@
                   "args": {
                     "item_name": "Wand"
                   }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_53__r9c10 -> level_53__r2c2",
+            "connected_region": "level_53__r2c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L53 flag 0: breakablerock@112,128 cleared"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -12388,19 +12663,53 @@
             "name": "level_100__r2c3 -> level_100__r4c10",
             "connected_region": "level_100__r4c10",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L100 flag 0: breakablerock@128,144 cleared"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Spear"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -14510,7 +14819,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-f1912bfb",
+      "atlas_id": "seedling-c7c485f1",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -22263,8 +22572,8 @@
               "level_16__r3c7>level_16__r1c9": "level_16__r3c7 -> level_16__r1c9",
               "level_16__r1c9>level_16__r4c21": "level_16__r1c9 -> level_16__r4c21",
               "level_16__r1c9>level_16__r6c8": "level_16__r1c9 -> level_16__r6c8",
-              "level_16__r6c8>level_16__r1c9": "level_16__r6c8 -> level_16__r1c9",
               "level_16__r3c7>level_16__r6c8": "level_16__r3c7 -> level_16__r6c8",
+              "level_16__r6c8>level_16__r1c9": "level_16__r6c8 -> level_16__r1c9",
               "level_16__r6c8>level_16__r3c7": "level_16__r6c8 -> level_16__r3c7"
             }
           },
@@ -54872,8 +55181,8 @@
             "links": {
               "level_53__r14c9>level_53__r9c10": "level_53__r14c9 -> level_53__r9c10",
               "level_53__r2c2>level_53__r9c10": "level_53__r2c2 -> level_53__r9c10",
-              "level_53__r9c10>level_53__r2c2": "level_53__r9c10 -> level_53__r2c2",
-              "level_53__r9c10>level_53__r14c9": "level_53__r9c10 -> level_53__r14c9"
+              "level_53__r9c10>level_53__r14c9": "level_53__r9c10 -> level_53__r14c9",
+              "level_53__r9c10>level_53__r2c2": "level_53__r9c10 -> level_53__r2c2"
             }
           },
           "atlas_region": "level_53",
