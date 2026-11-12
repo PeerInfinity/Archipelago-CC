@@ -1520,7 +1520,11 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         if (strikes.length === 0) {
             throw new Error(`atlas region "${regionId}": ${e.label ?? `a ${e.kind}`} names no item that strikes it`);
         }
-        const actions = strikes.map(actionFor);
+        // ⛓ A strike that carries `stances` (tile-fire-breaks-rocks) with none inside this region strikes nothing here.
+        const stancesHere = (strike) => strike.stances.map(([x, y, f]) => [...local([x, y]), f]).filter(([x, y]) => inGrid([x, y]))
+            .map(([x, y, f]) => `${x},${y},${f}`);
+        const strikesHere = strikes.filter((strike) => !Array.isArray(strike.stances) || stancesHere(strike).length > 0);
+        const actions = strikesHere.map(actionFor);
         if (e.kind === 'rope') {
             // ⛓ rules-l39 F1 (⚖ the user 2026-10-23, "(a) One obstacle"): an UNCUT rope is solid over its
             // whole RUN — `RopeStart`'s hitbox is `_xend - _x + 16` wide (`RopeStart.as:26`) — and the atlas
@@ -1557,13 +1561,22 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             ropeCells.push({ id, tiles: run, label: e.label ?? id });
             continue;
         }
-        const id = rockId(actions);
+        // ⛓⛓ PER-ACTION STANCES (session tile-fire-breaks-rocks): a strike that carries `stances` (an ordinary rock's
+        // Fire: the flame has no aim and hits every responder it reaches, so it breaks THIS rock only from a stance
+        // whose flame reaches it alone — the rules' own `rockFireSides`) strikes it only from them (`struck_from`); the
+        // others strike through its cells. Such a rock is its OWN entry (its stances are its own), recording its one
+        // strike at its first cell (`at`); a rock without one keeps the shared per-action-set entry, byte-identical.
+        const struckFrom = {};
+        for (const strike of strikesHere) if (Array.isArray(strike.stances)) struckFrom[actionFor(strike)] = stancesHere(strike);
+        const sided = Object.keys(struckFrom).length > 0;
+        const id = sided ? `rock_${tiles[0][0]}_${tiles[0][1]}` : rockId(actions);
         builder.obstacleLib[id] = {
             id,
             name: `rock (${actions.join(' or ')})`,
             kind: 'rock',
             clear_set: [],
             struck_by: actions,
+            ...(sided ? { struck_from: struckFrom, at: keyOf(...tiles[0]) } : {}),
             color: '#7a6a55',
         };
         for (const [x, y] of tiles) {
