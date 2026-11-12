@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 153,
-            "count": 203,
+            "browser": 154,
+            "count": 204,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 526,
-        "browser": 223,
-        "cited": 278,
-        "files": 544,
+        "blockStyle": 527,
+        "browser": 224,
+        "cited": 280,
+        "files": 545,
         "lineStyle": 18,
-        "withDocblock": 544,
-        "withFlags": 463
+        "withDocblock": 545,
+        "withFlags": 464
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4666,7 +4666,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-lab-load-in-js.mjs",
@@ -4676,6 +4678,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
                 },
                 {
                     "how": [
@@ -13718,6 +13726,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity F7 (D-A): **L16 RE-ENTERED WITH ITS ROPE PULLED, ASKED OF THE GAME — AND WITHOUT IT.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page:",
             "path": "scripts/procgen/probe-seedling-f7-reentry.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-fire-break.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-fire-break — ⛓⛓⛓ seedling-fidelity-firebreak (wave 40): THE `break` VERB'S FIRE ARM (`CONTACT_FIDELITY.fireBreakArm`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-fire-break.mjs"
         },
         {
             "argvHelpers": [

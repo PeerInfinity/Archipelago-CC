@@ -10921,13 +10921,17 @@ function rockHypothesis(run, wall) {
     const inventory = run.progress('inventory');
     const swings = weapon === 'sword'
         || (weapon === 'ghostsword' && GHOSTSWORD_PRESS.enabled && !ghostSwingRefusal(inventory));
-    if (!swings) return [];
+    // ⛓ fidelity FIREBREAK D1 (`fireBreakArm`, OFF): a run whose breaker is Fire admits a rock on the same two guards —
+    // and on a THIRD the swing does not need: the flame has no aim, so "this run can break it at all" also asks for a
+    // cell whose flame reaches the rock alone (`fireBreakStances`). L40's three and L41's two have none, and stay walls.
+    if (!swings && !fireBreakAdmits(run)) return [];
     const out = [];
     for (const s of (run.world.solids ?? [])) {
         if (!s.rockId || wall.has(s.rockId) || broken.has(s.rockId)) continue;
         const strategy = OBSTACLE_STRATEGIES[`solid:${s.tag}`] ?? null;
         if (strategy !== 'break' || !executorFor(strategy, 'rockHypothesis')) continue;
         if (!rockBreaksUnder(s.rockType, inventory)) continue;
+        if (!swings && fireBreakStances(run, s).viable.length === 0) continue;
         out.push({ id: s.rockId, kind: 'rock', tag: s.tag, strategy });
     }
     return out;
@@ -22141,6 +22145,9 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
      * particular body can be acted on" are different claims.
      */
     if (!rock) return null;
+    // ⛓ fidelity FIREBREAK D1 (`CONTACT_FIDELITY.fireBreakArm`, OFF): a run that holds Fire and no Sword breaks the rock
+    // with a Fire press (`resolveFireBreak`). OFF, or for any run that holds the Sword: the guards below, byte for byte.
+    if (fireBreakAdmits(run)) return resolveFireBreak(run, rock, obstacle, contacts, blocked);
     const weapon = run.progress('primaryWeapon');
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD: with `GHOSTSWORD_PRESS` on, `levelRun` models the ghost swing, so a
@@ -22230,6 +22237,285 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
                 + 'completion callback — is what calls `FP.world.remove`.',
         }, ...hypothesisRejection(discharged)],
     };
+}
+
+/**
+ * ⛓⛓⛓ fidelity FIREBREAK (wave 40, behind `CONTACT_FIDELITY.fireBreakArm`, OFF) — **FIRE IS THE GAME'S SECOND
+ * ROCK-BREAKER, AND A RUN WITH NO SWORD MAY PLAN IT.** `Player.fire()` dispatches `genericHit(e, "Fire", …)` at every
+ * hitable in its 32x32 rect inside the 16 px radius, and the rock arm is `(e as BreakableRock).hit(hasGhostSword ? 1 :
+ * 0)` whatever `t` is (`Player.as:1073-1092`): an ordinary rock (rockType 0) breaks with or without the Ghost Sword,
+ * a ghost rock only with it. The run steps it (`levelRun.applyFire`'s rock arm, `fireRockArm`; game-witnessed,
+ * `fixtures/rockfire-witness/`); this is the solver's half.
+ *
+ * WHO IS ADMITTED — an INVENTORY read, never a grant: the run HOLDS Fire (and not the Fire Wand fusion, whose press
+ * `levelRun.weaponForPress` refuses, the `burn` verb's own guard), and holds NEITHER the Sword NOR the Ghost Sword. A
+ * run with the Sword keeps the sword's path whatever slot is selected (the refusal that says "equip the sword"
+ * stands). ⛔ A Ghost Sword held WITHOUT the Sword is not admitted either, measured: its slot's press is a state
+ * `levelRun` refuses by throwing (`ghostSwingRefusal`: the swing plays and never tests), and a walk's strike policy
+ * reads `hasGhostSword` and presses it — admitted, L0's `breakablerock@80,112` turned today's named refusal into that
+ * throw at tick 0. So that run keeps `ghostSwingRefusal`'s words, and a ghost rock is never a Fire order here: the
+ * game's one Fire-breaks-a-ghost-rock case (Fire + Ghost Sword, `rockfire-l101-ghostrock-fire-ghost`) is the sword
+ * path's rock, or that unmodelled state.
+ */
+function fireBreakAdmits(run) {
+    if (!CONTACT_FIDELITY.fireBreakArm || !CONTACT_FIDELITY.fireRockArm) return false;
+    const inv = run.progress('inventory') ?? {};
+    return inv.hasFire === true && !inv.hasFireWand && !inv.hasSword && !inv.hasGhostSword;
+}
+
+/**
+ * The ticks a Fire break waits after its press before the leg walks on: the sword's `WAIT_AFTER_PRESS_TICKS` moved by
+ * the flame's later first test. A swing's first test is press + 1; the flame's first hit tick is press +
+ * `FIRE_WINDOW.firstHitTick` (4), `goneAt` is that + `HIT_TO_GONE_TICKS`, the flag is written on observation
+ * `goneAt + 1` and the cell opens on `goneAt + 2` (ROCKFIRE's witness: press 10, hit 14, `goneAt` 21, flag 22, cell
+ * 23; the Sword control 19 / 20). It also outlasts the fire window (`FIRE_WINDOW.endTick`), inside which a second
+ * press is a silent no-op.
+ */
+export const FIRE_BREAK_WAIT_TICKS = WAIT_AFTER_PRESS_TICKS + FIRE_WINDOW.firstHitTick - 1;
+
+/**
+ * What a Fire press from `at` does to the rock: `hit` (the flame reaches it), and every OTHER responder it would act
+ * on or refuse — `presses.auditFire`'s `modelled` and `refused` rows (another rock, a block, a rope, a tree, a turret,
+ * an enemy). ⛔ A rock already GONE this visit is not there to reach: the game's `collideRectInto` cannot return a
+ * removed entity (`rockfire-l40-fire-twice`: the second press's rect covers two gone rocks' cells and does nothing to
+ * them), while the press census still lists its placement — so the run's own `brokenRocks` is read here.
+ */
+function rockFireReach(run, at, rockId) {
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables'), turrets: run.entities('turrets') });
+    const gone = run.entities('brokenRocks') ?? new Set();
+    const there = (r) => !(r.as3 === 'BreakableRock' && gone.has(r.id));
+    const isRock = (r) => r.as3 === 'BreakableRock' && r.id === rockId;
+    return {
+        hit: audit.modelled.some((r) => isRock(r) && there(r)),
+        others: [...audit.modelled.filter((r) => !isRock(r) && there(r)), ...audit.refused]
+            .map((r) => r.id ?? `${r.tag}@${r.x},${r.y}`),
+    };
+}
+
+/**
+ * The Fire stances of a rock, before reachability: the `burn` verb's candidate cells (nearest the player first), each
+ * asked of `rockFireReach` from its centre and then from a lean against the rock, kept when the flame reaches the rock
+ * and nothing else and the cell (and the lean's rest) stands in no static danger volume. ONE scan for the resolver and
+ * for `rockHypothesis`, so "this run can break that rock" means the same thing in both.
+ * @returns `{candidates, viable: [{x, y, lean}], missed, crowded, unsafe}`
+ */
+function fireBreakStances(run, rock) {
+    const admit = pullStanceAdmit(run);
+    const candidates = burnStanceCandidates(run, rock, burnWindowTiles(rock));
+    let missed = 0;
+    let crowded = 0;
+    let unsafe = 0;
+    const viable = [];
+    for (const c of candidates) {
+        let reach = rockFireReach(run, c, rock.rockId);
+        let lean = null;
+        if (!reach.hit) {
+            const key = burnLeanKey(c, rock);
+            const leaned = key ? previewLean(run, c, key) : null;
+            const again = leaned ? rockFireReach(run, leaned, rock.rockId) : null;
+            if (!again || !again.hit) { missed += 1; continue; }
+            reach = again;
+            lean = { key, at: leaned };
+        }
+        if (reach.others.length > 0) { crowded += 1; continue; }
+        if (!admit(c) || (lean && !admit(lean.at))) { unsafe += 1; continue; }
+        viable.push({ x: c.x, y: c.y, lean });
+    }
+    return { candidates, viable, missed, crowded, unsafe };
+}
+
+/**
+ * RESOLVE a Fire break (`fireBreakAdmits` said yes): the `break` work order with `weapon: 'fire'`.
+ *   · THE ROCK'S OWN TEST FIRST (`rockBreaksUnder`, the sword path's second guard): a ghost rock without the Ghost
+ *     Sword is `held: false`, by name — the flame would land and do nothing (`rockfire-l101-ghostrock-fire`).
+ *   · THE STANCE IS ASKED OF THE AUDIT, the Fire planners' stray rule in reverse: the flame reaches THIS rock and
+ *     nothing else that acts (`rockFireReach`). The flame has no aim, so a cell that also reaches a second rock, a
+ *     block or an enemy is not a stance. Candidates are the `burn` verb's (`burnStanceCandidates` over the window
+ *     around the rock, nearest first; a centre the radius cuts is asked once more from a lean against the rock,
+ *     `burnLeanKey` / `previewLean`), out of every static danger volume (`pullStanceAdmit`: the press stands
+ *     `FIRE_BREAK_WAIT_TICKS`), the live position first when the run is at rest in one.
+ *   · REACHABILITY is `stanceReaches`, direct in the world as it is for every candidate and only then under the
+ *     hypothesis without this rock (`deriveSwingStance`'s L40BUTTON order).
+ */
+function resolveFireBreak(run, rock, obstacle, contacts, blocked = []) {
+    const inv = run.progress('inventory') ?? {};
+    if (!rockBreaksUnder(rock.rockType, inv)) {
+        return {
+            strategy: 'break',
+            held: false,
+            rock: obstacle.id,
+            rejected: [{
+                option: `break ${obstacle.id} with Fire`,
+                why: '`Player.genericHit` passes `hasGhostSword ? 1 : 0` to `BreakableRock.hit(_t)` for a Fire press '
+                    + `exactly as for a swing, and \`hit\` is \`if (rockType <= _t)\`; this rock is rockType `
+                    + `${rock.rockType ?? 0} and the run holds NO ghost sword. ⛔ The flame would LAND and do nothing `
+                    + '(game-witnessed: `rockfire-l101-ghostrock-fire`, forty ticks, no flag, no opening). ⇒ THE '
+                    + 'WORK ORDER IS THE GHOST SWORD: no stance, budget or second press substitutes for it.',
+            }],
+        };
+    }
+    const slot = run.progress('primaryWeapon') === 'fire' ? null
+        : (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.fire);
+    if (slot !== null && slot < 0) {
+        return {
+            strategy: 'break',
+            held: false,
+            rock: obstacle.id,
+            rejected: [{ option: `break ${obstacle.id} with Fire`, why: 'the inventory says `hasFire` and the run\'s '
+                + '`inventorySlots` holds no Fire slot to select, so no press of this run fires it.' }],
+        };
+    }
+    const order = (stance, pose, discharged) => ({
+        strategy: 'break',
+        postCondition: 'gone',
+        target: { x: rock.rect.x, y: rock.rect.y, ...rock.rect },
+        rock: obstacle.id,
+        weapon: 'fire',
+        slot,
+        stance,
+        at: pose.at,
+        lean: pose.lean,
+        discharged,
+        wait: FIRE_BREAK_WAIT_TICKS,
+        rejected: [{
+            option: 'a sword swing',
+            why: `this run holds NO Sword (\`slash()\` is \`if (hasSword)\`), and it holds Fire: \`Player.fire()\` `
+                + 'reaches `BreakableRock.hit` through the same `genericHit` arm, so the flame is its rock-breaker. '
+                + 'The press has no aim; the stance is one whose flame reaches this rock and nothing else.',
+        }, ...hypothesisRejection(discharged)],
+    });
+    const admit = pullStanceAdmit(run);
+    const here = { x: run.state.x, y: run.state.y };
+    if (run.state.vx === 0 && run.state.vy === 0 && admit(here)) {
+        const live = rockFireReach(run, here, rock.rockId);
+        if (live.hit && live.others.length === 0) return order(null, { at: here, lean: null }, []);
+    }
+    const { candidates, viable, missed, crowded, unsafe } = fireBreakStances(run, rock);
+    const pose = (c) => ({ at: c.lean ? { ...c.lean.at } : { x: c.x, y: c.y }, lean: c.lean ? c.lean.key : null });
+    for (const c of viable) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => []);
+        if (reached) return order({ x: c.x, y: c.y }, pose(c), reached.discharged);
+    }
+    const anyHypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let ownless = null;
+    const hypothesis = () => (ownless ??= anyHypothesis().filter((h) => h.kind !== 'rock' || h.id !== rock.rockId));
+    for (const c of viable) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) return order({ x: c.x, y: c.y }, pose(c), reached.discharged);
+    }
+    throw new SolverRefusal(`solverBot: no REACHABLE stance for a Fire press at ${rock.rockId} in level ${run.level} — `
+        + `${candidates.length} walkable cell(s) put \`fireRect\` on the rock; ${missed} were cut by the 16 px radius `
+        + `(from the cell centre and from a lean against the rock), ${crowded} also reached another fire responder (the `
+        + `flame has no aim: a second rock, a block or an enemy in it is acted on too), ${unsafe} stand inside a danger `
+        + `volume, and ${viable.length} plan no corridor from (${run.state.x},${run.state.y}). ⇒ this run holds Fire `
+        + 'and no Sword, and the room offers it nowhere to stand and break this rock alone.',
+    { obstacle: { kind: 'solid', id: rock.rockId } });
+}
+
+/**
+ * Executor: a Fire break (`resolveFireBreak`'s order) — SETTLE, LEAN, RE-ASK THE AUDIT, SELECT THE FIRE, PRESS ONCE,
+ * WAIT FOR THE WORLD, SELECT THE OLD SLOT AGAIN (the `burn` verb's shape; the slot is restored for its reason: a later
+ * walk's press must fire what the walk arrived with). The post-condition is the run's own `brokenRocks` and the leg's
+ * wait (`FIRE_BREAK_WAIT_TICKS`). Nothing is held for the wait: an armed strike would press `primary`, which is Fire.
+ */
+function execFireBreak(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.rock } });
+    };
+    if (resolved.slot !== null && typeof ctx.equip !== 'function') {
+        refuse(`${ctx.what}: breaking ${resolved.rock} with Fire needs its slot (${resolved.slot}) selected, and this `
+            + 'caller hands no `equip`.');
+    }
+    const NO_KEYS = new Set();
+    const from = perTick.length;
+    const tick = (held, what) => {
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) refuse(`${ctx.what}: the run crossed to level ${transition.to_level} ${what}.`);
+    };
+    const settle = (what) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > BURN_SETTLE_MAX) refuse(`${ctx.what}: ${what} never came to rest.`);
+            tick(NO_KEYS, `while settling after ${what}`);
+        }
+    };
+    settle('the walk to the Fire stance');
+    if (resolved.lean) {
+        const held = new Set([resolved.lean]);
+        for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
+            const before = { x: run.state.x, y: run.state.y };
+            tick(held, `on the lean toward ${resolved.rock}`);
+            if (run.state.x === before.x && run.state.y === before.y) break;
+        }
+        settle('the lean');
+    }
+    const gone = () => (run.entities('brokenRocks') ?? NO_KEYS).has(resolved.rock);
+    if (gone()) {
+        return { verb: 'break', target: resolved.rock, weapon: 'fire', from, ticks: perTick.length - from,
+            pressedAt: null, stance: resolved.stance, lean: resolved.lean ?? null, restoredSlot: null };
+    }
+    const reach = rockFireReach(run, run.state, resolved.rock);
+    if (!reach.hit || reach.others.length > 0) {
+        refuse(`${ctx.what}: the walk came to rest at (${run.state.x},${run.state.y}) and a Fire press from there `
+            + `${reach.hit ? 'reaches' : 'misses'} ${resolved.rock}${reach.others.length
+                ? ` and also reaches [${reach.others.join(', ')}]` : ''}. The stance this verb derived was `
+            + `${resolved.at ? `(${resolved.at.x},${resolved.at.y})` : 'the live position'}; a walk that ends `
+            + 'somewhere else is a corridor finding, not a rock one.');
+    }
+    /**
+     * ⛓ THE PRESS AND ITS WAIT ARE CERTIFIED HIT-FREE ON A FORK FIRST (`ctx.fork`, where the caller hands one). The verb
+     * stands still for `FIRE_BREAK_WAIT_TICKS` with nothing armed, and a body the model steps can walk onto it: MEASURED,
+     * L73 from the L72 landing — the press at (72,72) is t101 and `bulb@80,80` reaches the standing player at t115. A
+     * run with Fire and no Sword has no answer to that body, so the order is refused NAMING it and nothing is pressed
+     * on the live run. ⚠ INTERIM, named: the game does not need the player to stand (the flame's first hit tick is the
+     * whole effect); a wait that moves is the modelling this refusal queues.
+     */
+    if (typeof ctx.fork === 'function') {
+        const f = ctx.fork();
+        if (f) {
+            const hitsOn = (r) => (r.ledger('playerHits') ?? []).length;
+            const h0 = hitsOn(f);
+            if (resolved.slot !== null && f.progress('primary') !== resolved.slot) f.equipNow(resolved.slot);
+            const pressAt = f.ticksCompleted;
+            let transitioned = f.advance(new Set(['primary'])).transition;
+            for (let spent = 0; !transitioned && hitsOn(f) === h0 && spent <= resolved.wait + HOLD_SLACK; spent += 1) {
+                if ((f.entities('brokenRocks') ?? NO_KEYS).has(resolved.rock)
+                    && f.ticksCompleted >= pressAt + resolved.wait) break;
+                transitioned = f.advance(NO_KEYS).transition;
+            }
+            if (hitsOn(f) !== h0) {
+                const h = (f.ledger('playerHits') ?? []).at(-1);
+                refuse(`${ctx.what}: a Fire press at ${resolved.rock} from (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) at tick `
+                    + `${pressAt} stands ${resolved.wait} ticks for the break, and on a fork of this run the player is `
+                    + `HIT at tick ${h?.t ?? '?'} (source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) inside that `
+                    + 'wait. This run holds Fire and no Sword — nothing it presses stops that body — so the break is '
+                    + 'refused rather than played with a hit.');
+            }
+        }
+    }
+    const prior = run.progress('primary');
+    if (resolved.slot !== null && prior !== resolved.slot) ctx.equip(resolved.slot);
+    if (run.progress('primaryWeapon') !== 'fire') {
+        refuse(`${ctx.what}: the selected slot fires \`${run.progress('primaryWeapon')}\`, not Fire, after the equip.`);
+    }
+    const pressedAt = run.ticksCompleted;
+    tick(new Set(['primary']), `on the Fire press at ${resolved.rock}`);
+    const bound = resolved.wait + HOLD_SLACK;
+    let done = false;
+    for (let spent = 0; spent <= bound; spent += 1) {
+        if (gone() && run.ticksCompleted >= pressedAt + resolved.wait) { done = true; break; }
+        tick(NO_KEYS, `while waiting for ${resolved.rock} to break`);
+    }
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    if (!done) {
+        refuse(`${ctx.what}: Fire was pressed at ${resolved.rock} at tick ${pressedAt} from (${run.state.x},`
+            + `${run.state.y}) and the rock is NOT in the run's \`brokenRocks\` ${bound} ticks later. The flame's first `
+            + `hit tick is press + ${FIRE_WINDOW.firstHitTick} and the leg's wait covers the break animation, so a `
+            + 'rock still standing is a press that did not fire (a ceremony, an open fire window) or a reach the '
+            + 'audit and the run disagree on, never a budget.');
+    }
+    return { verb: 'break', target: resolved.rock, weapon: 'fire', from, ticks: perTick.length - from, pressedAt,
+        stance: resolved.stance, lean: resolved.lean ?? null, restoredSlot: prior };
 }
 
 /**
@@ -22513,6 +22799,8 @@ function execBreak(run, perTick, resolved, ctx) {
         return refuse(`${ctx.what}: ${resolved.rock} cannot be broken by this run — `
             + `${resolved.rejected[0].why}`);
     }
+    // ⛓ fidelity FIREBREAK D1: a Fire order (`resolveFireBreak`, only with `fireBreakArm` ON) is the flame's executor.
+    if (resolved.weapon === 'fire') return execFireBreak(run, perTick, resolved, ctx);
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
     const from = perTick.length;
@@ -32315,7 +32603,14 @@ function solveSegmentUnder({
                 const resolved = resolveBreakStrategy(run, { id: rock.rockId }, contacts);
                 if (!resolved) continue;
                 if (resolved.held === false) { rejected.push(...resolved.rejected); continue; }
-                if (!swingReaches(run.state, rock)) {
+                // ⛓ fidelity FIREBREAK D1: a Fire order breaks from the door only when the door IS its stance (`stance: null`).
+                if (resolved.weapon === 'fire' && resolved.stance !== null) {
+                    rejected.push({ option: `break ${rock.rockId}`, why: 'a Fire press from the door does not reach '
+                        + 'it alone (the 32x32 rect, the 16 px radius, nothing else in the flame), and the latched '
+                        + 'run has no other cell to press from' });
+                    continue;
+                }
+                if (resolved.weapon !== 'fire' && !swingReaches(run.state, rock)) {
                     rejected.push({ option: `break ${rock.rockId}`, why: 'a swing from the door does '
                         + `not reach it (SLASH_REACH ${SLASH_REACH} px), and the latched run has no `
                         + 'other cell to swing from' });
@@ -32336,8 +32631,10 @@ function solveSegmentUnder({
                     rejected: [...rejected],
                     keys: [],
                 });
+                // ⛓ FIREBREAK: a Fire order also gets the segment's `equip` and `fork` (its slot, its certificate)
                 const rec = STRATEGY_EXECUTORS.break(run, perTick, { ...resolved, stance: null },
-                    { what: `${whatExit} -> break ${rock.rockId} (step-off)` });
+                    { what: `${whatExit} -> break ${rock.rockId} (step-off)`,
+                        ...(resolved.weapon === 'fire' ? { equip, fork } : {}) });
                 records.push({ goal: goal.kind, strategy: 'break', ...rec });
                 brokeForStepOff = true;
                 return stepOffIfLatched(goal, index, teleporter, whatExit);

@@ -95,6 +95,11 @@ function memIo(files = FIXTURE) {
         },
     };
 }
+/**
+ * ⛓ CONTENT SETS R2 — a substrate id no registered entry carries, so it declares no default pack. Until R2 the
+ * channel tests used `maze` for "a region whose entry declares nothing"; the maze now declares its own pack.
+ */
+const NO_DEFAULT = 'no-default-substrate';
 /** A registry stand-in: `getAll()` by id, `get(id)`. */
 const fakeRegistry = (entries) => ({
     getAll: () => [...entries].sort((a, b) => (a.id < b.id ? -1 : 1)),
@@ -223,25 +228,25 @@ describe('loadContentSet — the load', () => {
 
 describe('the channel — assembleRegionParams and the region seam', () => {
     it('an empty stack adds no key (the set given or not)', () => {
-        const without = assembleRegionParams({ activeIds: ['maze'], params: { concepts: [] } });
-        const withEmpty = assembleRegionParams({ activeIds: ['maze'], params: { content: [] }, contentSet: EMPTY_CONTENT_SET });
+        const without = assembleRegionParams({ activeIds: [NO_DEFAULT], params: { concepts: [] } });
+        const withEmpty = assembleRegionParams({ activeIds: [NO_DEFAULT], params: { content: [] }, contentSet: EMPTY_CONTENT_SET });
         expect(without).toEqual(withEmpty);
         expect(RECORDED_CONTENT_KEY in withEmpty || CONTENT_SET_KEY in withEmpty).toBe(false);
     });
     it('a non-empty stack rides as content + contentSet; with no loaded set it is refused by name', async () => {
         const set = await loadContentSet(['trial'], memIo());
-        const out = contentRegionParams({ params: { content: ['trial'] }, contentSet: set, substrateIds: ['maze'] });
+        const out = contentRegionParams({ params: { content: ['trial'] }, contentSet: set, substrateIds: [NO_DEFAULT] });
         expect(out).toEqual({ [RECORDED_CONTENT_KEY]: ['trial'], [CONTENT_SET_KEY]: set });
-        expect(() => contentRegionParams({ params: { content: ['trial'] }, substrateIds: ['maze'] }))
+        expect(() => contentRegionParams({ params: { content: ['trial'] }, substrateIds: [NO_DEFAULT] }))
             .toThrow(WorldContentError);
         expect(() => contentRegionParams({ params: { content: ['trial', 'later'] }, contentSet: set }))
             .toThrow(/\[trial, later\] was not loaded/);
     });
     it('the region seam refuses a region whose packs no loaded set holds, and passes one that needs none', async () => {
-        expect(() => assertContentLoaded({}, 'maze')).not.toThrow();
-        expect(() => assertContentLoaded({ [RECORDED_CONTENT_KEY]: ['trial'] }, 'maze')).toThrow(/\[trial\]/);
+        expect(() => assertContentLoaded({}, NO_DEFAULT)).not.toThrow();
+        expect(() => assertContentLoaded({ [RECORDED_CONTENT_KEY]: ['trial'] }, NO_DEFAULT)).toThrow(/\[trial\]/);
         const set = await loadContentSet(['trial'], memIo());
-        expect(() => assertContentLoaded({ [RECORDED_CONTENT_KEY]: ['trial'], [CONTENT_SET_KEY]: set }, 'maze')).not.toThrow();
+        expect(() => assertContentLoaded({ [RECORDED_CONTENT_KEY]: ['trial'], [CONTENT_SET_KEY]: set }, NO_DEFAULT)).not.toThrow();
         const reg = fakeRegistry([{ id: 'own', [DEFAULT_CONTENT_PACK_FIELD]: 'own-pack' }]);
         // ⛓ C4 — a region needing only its default pack, handed no set, asks the preload cache: not preloaded ⇒ refused.
         expect(() => assertContentLoaded({}, 'own', reg)).toThrow(/\[own-pack\] were not preloaded.*preloadDefaultContent/);
@@ -273,7 +278,7 @@ describe('the record and the rebuild', () => {
     it('attachContentSet: an empty stack returns the same object without reading', async () => {
         const rp = { maxIterations: 0 };
         const io = memIo();
-        expect(await attachContentSet(rp, { substrateIds: ['maze'], ...io })).toBe(rp);
+        expect(await attachContentSet(rp, { substrateIds: [NO_DEFAULT], ...io })).toBe(rp);
         expect(io.read).toEqual([]);
     });
 });
@@ -378,7 +383,9 @@ describe('the append path — rebuild, attach, append', async () => {
     it('attachEnvelopeContent loads the set; the append then runs and keeps the record; its logic is the control\'s', async () => {
         const io = memIo();
         const env = await attachEnvelopeContent(rebuildEnvelopeFromRulesJson(structuredClone(world.rulesJson), OPTS), io);
-        expect(env.config.regionParams[CONTENT_SET_KEY].ids).toEqual(['trial']);
+        // ⛓ R2: the maze's default pack is in the stack, before the world's own list.
+        expect(env.config.regionParams[CONTENT_SET_KEY].ids)
+            .toEqual(effectiveContentStack({ substrateIds: ['maze'], content: ['trial'] }));
         expect(env.opts.regionParams).toBe(env.config.regionParams);
         await appendSphere(env, { items: ['Progressive Swim'] });
         expect(env.compile.rulesJson.procgen_metadata['1'][RECORDED_CONTENT_KEY]).toEqual(['trial']);
@@ -509,13 +516,26 @@ describe('⛓ C4 preloadDefaultContent — the process-level cache', () => {
     });
 });
 
-describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cache (fixture entries declare the pack)', () => {
+describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cache (a fixture entry declares the pack)', () => {
     const substrates = Object.keys(CONCEPT_TRIAL_STATE.substrateQuotas);
-    const PACK = 'trial';
     /**
-     * Run `fn` with the world's substrates declaring PACK (⛓ R1: those that declare none of their own — the text
-     * adventure keeps its real default pack), their placers recording the set they receive.
+     * ⛓ CONTENT SETS R2 — every substrate of the world now declares its own default pack (the maze since R2), so
+     * the fixture OVERRIDES one entry's: TARGET, the first that declares one, declares PACK instead. PACK is a copy
+     * of TARGET's own committed default pack under its own namespace (every key re-prefixed), so the world it
+     * builds is the committed one, and nothing of it is read from TARGET's real pack.
      */
+    const TARGET = substrates.find((id) => substrateRegistry.get(id)?.[DEFAULT_CONTENT_PACK_FIELD]);
+    const OWN = substrateRegistry.get(TARGET)[DEFAULT_CONTENT_PACK_FIELD];
+    const PACK = 'trial-copy';
+    const renamed = (json) => JSON.parse(JSON.stringify(json).replaceAll(`"${OWN}:`, `"${PACK}:`));
+    const ownPack = JSON.parse(readFileSync(join(ROOT, 'frontend/packs', OWN, 'pack.json'), 'utf8'));
+    const COPY = {
+        pack: { ...ownPack, id: PACK, title: PACK },
+        ...Object.fromEntries(Object.entries(ownPack.layers).map(([layer, path]) => [
+            layer, renamed(JSON.parse(readFileSync(join(ROOT, 'frontend/packs', OWN, path), 'utf8')))])),
+    };
+    const files = { ...FIXTURE, [PACK]: COPY };
+    /** Run `fn` with TARGET declaring PACK (the others keep their own), the placers recording the set they receive. */
     async function withDeclaringEntries(fn) {
         const received = [];
         const originals = new Map(substrates.map((id) => [id, substrateRegistry.get(id)]));
@@ -526,7 +546,7 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
             };
             substrateRegistry.entries.set(id, {
                 ...entry,
-                [DEFAULT_CONTENT_PACK_FIELD]: entry[DEFAULT_CONTENT_PACK_FIELD] ?? PACK,
+                [DEFAULT_CONTENT_PACK_FIELD]: id === TARGET ? PACK : entry[DEFAULT_CONTENT_PACK_FIELD],
                 generateRegionCore: wrap('generateRegionCore', (a) => a[0].params),
                 placeFromRules: wrap('placeFromRules', (a) => a[1].params),
             });
@@ -550,7 +570,7 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
 
     it('after the preload, buildRunFromState builds; every placer got the cached set; the document is the committed one', async () => {
         await withDeclaringEntries(async (received) => {
-            const io = memIo();
+            const io = memIo(files);
             await preloadDefaultContent(io);
             const read = io.read.length;
             const world = await runPresetHeadless(buildRunFromState(structuredClone(CONCEPT_TRIAL_STATE)));
@@ -560,20 +580,21 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
             const [set] = sets;
             expect(set).toBe(defaultContentSetOf(defaultStack()));
             expect(set.ids).toContain(PACK);
+            expect(set.ids).not.toContain(OWN);
             expect(new Set(received.map((r) => r.substrate))).toEqual(new Set(substrates));
-            // The world names no content and PACK presents nothing the text adventure can show whole (its Gate
-            // lacks a slot): the document is byte for byte the preset.
+            // The world names no content and PACK is TARGET's own pack under another name: the document is byte
+            // for byte the preset.
             expect(JSON.stringify(world.rulesJson, null, 2)).toBe(committed);
         });
     });
 
     it('the awaited path (prepareRunFromState) and the cache path give equal sets and equal documents', async () => {
         await withDeclaringEntries(async (received) => {
-            await preloadDefaultContent(memIo());
+            await preloadDefaultContent(memIo(files));
             const viaCache = await runPresetHeadless(buildRunFromState(structuredClone(CONCEPT_TRIAL_STATE)));
             const cacheSet = received.at(-1).set;
             received.length = 0;
-            const viaLoad = await runPresetHeadless(await prepareRunFromState(structuredClone(CONCEPT_TRIAL_STATE), { io: memIo() }));
+            const viaLoad = await runPresetHeadless(await prepareRunFromState(structuredClone(CONCEPT_TRIAL_STATE), { io: memIo(files) }));
             const loadSet = received.at(-1).set;
             expect(loadSet).not.toBe(cacheSet);
             expect(readerAnswers(loadSet)).toEqual(readerAnswers(cacheSet));
@@ -584,22 +605,22 @@ describe('⛓ C4 — a world of DEFAULT packs builds synchronously from the cach
     it('a region handed no set (a caller that never assembled one) takes its default pack from the cache at the seam', async () => {
         await withDeclaringEntries(async () => {
             const params = { maxIterations: 0 };
-            expect(() => assertContentLoaded(params, substrates[0])).toThrow(/preloadDefaultContent/);
-            await preloadDefaultContent(memIo());
-            const out = assertContentLoaded(params, substrates[0]);
+            expect(() => assertContentLoaded(params, TARGET)).toThrow(/preloadDefaultContent/);
+            await preloadDefaultContent(memIo(files));
+            const out = assertContentLoaded(params, TARGET);
             expect(out).not.toBe(params);
             expect(out).toEqual({ ...params, [CONTENT_SET_KEY]: defaultContentSetOf([PACK]) });
-            expect(assertContentLoaded(out, substrates[0])).toBe(out);
+            expect(assertContentLoaded(out, TARGET)).toBe(out);
         });
     });
 
     it('⛔ a stack naming params.content still needs the awaited load (C3\'s path, unchanged)', async () => {
         await withDeclaringEntries(async () => {
-            await preloadDefaultContent(memIo());
+            await preloadDefaultContent(memIo(files));
             const named = { ...CONCEPT_TRIAL_STATE, params: { ...CONCEPT_TRIAL_STATE.params, content: ['later'] } };
             const stack = defaultStack(['later']).join(', ');
             expect(() => buildRunFromState(structuredClone(named))).toThrow(`[${stack}] was not loaded`);
-            const world = await runPresetHeadless(await prepareRunFromState(structuredClone(named), { io: memIo() }));
+            const world = await runPresetHeadless(await prepareRunFromState(structuredClone(named), { io: memIo(files) }));
             expect(world.rulesJson.procgen_metadata['1'][RECORDED_CONTENT_KEY]).toEqual(['later']);
         });
     });

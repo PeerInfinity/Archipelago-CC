@@ -187,6 +187,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:printFormattedToConsole');
   registrationApi.registerEventBusPublisher('network:connectionRefused');
   registrationApi.registerEventBusPublisher('client:checksSentUpdated');
+  registrationApi.registerEventBusPublisher('client:locationCheckRefused');
   registrationApi.registerEventBusPublisher('inventory:clear');
   registrationApi.registerEventBusPublisher('locations:updated');
   // MainContentUI might still publish these, so keep registration for now

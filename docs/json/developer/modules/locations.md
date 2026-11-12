@@ -38,6 +38,7 @@ This module's primary output is dispatching an event.
 - `stateManager:rulesLoaded`: When a new `rules.json` is loaded, the `LocationUI` gets the new static list of all locations and their original order.
 - `stateManager:snapshotUpdated`: This is the most important event. On every state change, it receives the new snapshot and re-evaluates/re-renders the accessibility status of all locations.
 - `stateManager:locationCheckRejected`: Listens for this to clear the "pending" state on a location if the `StateManager` rejected the check (e.g., it became inaccessible before the command was processed).
+- `client:locationCheckRefused`: The same, while connected: the client's logic gate refused an out-of-logic click and sent nothing (the `StateManager` never sees a connected check).
 - `settings:changed`: Listens for changes to `colorblindMode` to update its display.
 
 #### Public Functions (`centralRegistry`)

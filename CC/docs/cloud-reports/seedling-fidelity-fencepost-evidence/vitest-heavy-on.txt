@@ -1,0 +1,83 @@
+ON  fidelityCorpseBump2.train.test.js |      Tests  2 failed | 1 passed (3) | 407s
+    ON   FAIL  frontend/modules/seedlingDemo/fidelityCorpseBump2.train.test.js > CORPSEBUMP2 on the latch chain (slow) > OFF: the walk's Fire press carries the corpse to (30,24) and runFire refuses bump 2 with no perTick
+    ON   FAIL  frontend/modules/seedlingDemo/fidelityCorpseBump2.train.test.js > CORPSEBUMP2 on the latch chain (slow) > ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560
+OFF fidelityCorpseBump2.train.test.js |      Tests  3 passed (3)
+ON  fidelityL40Bk2.train.test.js |      Tests  1 passed (1) | 285s
+ON  fidelityL40Latch.train.test.js |      Tests  1 failed | 1 passed (2) | 266s
+    ON   FAIL  frontend/modules/seedlingDemo/fidelityL40Latch.train.test.js > L40LATCH D1 — the latch solve under each arm > the pre-flip hammer defaults (withL40Flip(false)), both ON: the solve's refused prefix is the recorded tape
+OFF fidelityL40Latch.train.test.js |      Tests  2 passed (2)
+ON  hammerApproachOrder.train.test.js |      Tests  7 passed (7) | 391s
+ON  hammerBk2Combat.train.test.js |      Tests  3 failed | 1 passed (4) | 479s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js > hammer-phase BK2COMBAT on the latch boot, south of the door (slow) > pocket open, no OPP, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810, the staged hunt never asked
+    ON   FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js > hammer-phase BK2COMBAT on the latch boot, south of the door (slow) > pocket shut, OPP, OFF: the burn walk's combat ladder is EXHAUSTED on the BobSoldier in its notch
+    ON   FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.train.test.js > hammer-phase BK2COMBAT on the latch boot, south of the door (slow) > pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the
+OFF hammerBk2Combat.train.test.js |      Tests  4 passed (4)
+ON  hammerBombPhase.train.test.js |      Tests  2 failed | 1 passed (3) | 106s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerBombPhase.train.test.js > hammer-phase 376-BOMB — leg 376 at hammer phase 23 > OFF: the page's 640 trips at the forced-hit rung's forks (main's answer)
+    ON   FAIL  frontend/modules/seedlingDemo/hammerBombPhase.train.test.js > hammer-phase 376-BOMB — leg 376 at hammer phase 23 > ON: SOLVED hitless inside the page's 640, by a 4-tick still wait before the walk to the rock
+OFF hammerBombPhase.train.test.js |      Tests  3 passed (3)
+ON  hammerChooserPair.train.test.js |      Tests  1 failed | 5 passed (6) | 248s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerChooserPair.train.test.js > hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHOOSER_PAIR`) > 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the set bob@73
+OFF hammerChooserPair.train.test.js |      Tests  6 passed (6)
+ON  hammerClearTagChain.train.test.js |      Tests  2 failed (2) | 111s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js > hammer-phase CLEARTAG-CHAIN (train) — flag 12 SOLVED from a tree-unburnt save, 30(c) > leg 871 (from L39, (488,904)): the pre-wall plan (chaserSpinnerWalls OFF) SOLVES hitless and is th
+    ON   FAIL  frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js > hammer-phase CLEARTAG-CHAIN (train) — flag 12 SOLVED from a tree-unburnt save, 30(c) > leg 872 (from L43, (328,600)): OFF the set refuses at wall B; ON it SOLVES hitless — the tree bu
+OFF hammerClearTagChain.train.test.js |      Tests  2 passed (2)
+ON  hammerEscapeExact.train.test.js |      Tests  2 failed (2) | 573s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerEscapeExact.train.test.js > hammer-phase ESCAPE-EXACT — leg 860, A5, deadline 10240, seam 5950 > [needs fidelity's forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then the frozen-tick press ref
+    ON   FAIL  frontend/modules/seedlingDemo/hammerEscapeExact.train.test.js > hammer-phase ESCAPE-EXACT — leg 860, A5, deadline 10240, seam 5950 > [needs forecastShieldBump + frozenPressForecast] the same arm with the freeze forecast ON: no press lands on a frozen 
+OFF hammerEscapeExact.train.test.js |      Tests  2 passed (2)
+ON  hammerGhostKillRung.train.test.js |      Tests  1 failed | 6 passed (7) | 324s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js > hammer-g1-l40-ghostkill — the kill rung's ghost press kill, on the game (hammer-phase G1, D2) > ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witnes
+OFF hammerGhostKillRung.train.test.js |      Tests  7 passed (7)
+ON  hammerIceTurretStatic.train.test.js |      Tests  2 failed (2) | 590s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js > hammer-phase ICEST on the latch chain (slow) > ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte
+    ON   FAIL  frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js > hammer-phase ICEST on the latch chain (slow) > ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit
+OFF hammerIceTurretStatic.train.test.js |      Tests  2 passed (2)
+ON  hammerKeylockTurret.train.test.js |      Tests  1 passed (1) | 38s
+ON  hammerL53Killlock.train.test.js |      Tests  2 passed (2) | 29s
+ON  hammerLatchWeigh.train.test.js |      Tests  2 failed (2) | 515s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js > hammer-phase LWEIGH on the latch chain (slow) > OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271
+    ON   FAIL  frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js > hammer-phase LWEIGH on the latch chain (slow) > ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses b
+OFF hammerLatchWeigh.train.test.js |      Tests  2 passed (2)
+ON  hammerOppPressFallback.train.test.js |      Tests  4 failed (4) | 100s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerOppPressFallback.train.test.js > hammer-phase L40-FLIP-BUILD — leg 377 (L40 flag 1) at the arrival clock 5323 > the AFTER: the flip set ON with the fallback ON solves — the retry asked and adopted, the defaults' p
+    ON   FAIL  frontend/modules/seedlingDemo/hammerOppPressFallback.train.test.js > hammer-phase L40-FLIP-BUILD — leg 377 (L40 flag 1) at the arrival clock 5323 > the BEFORE: the flip set ON with the fallback OFF refuses inside the hold's rock prerequisite (OPP's pr
+    ON   FAIL  frontend/modules/seedlingDemo/hammerOppPressFallback.train.test.js > hammer-phase L40-FLIP-BUILD — leg 377 (L40 flag 1) at the arrival clock 5323 > the defaults before the flip (the set OFF): SOLVED `hold, kill, walk`, hitless
+    ON   FAIL  frontend/modules/seedlingDemo/hammerOppPressFallback.train.test.js > hammer-phase L40-FLIP-BUILD — leg 377 (L40 flag 1) at the arrival clock 5323 > …and OPP is the cause: the flip set ON with OPP alone OFF solves, the defaults' plan
+OFF hammerOppPressFallback.train.test.js |      Tests  4 passed (4)
+ON  hammerPitWest.train.test.js |      Tests  8 passed (8) | 183s
+ON  hammerPocketBurn.train.test.js |      Tests  1 failed | 3 passed (4) | 323s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js > hammer-phase POCKET-BURN on the latch boot, south of the door (slow) > pocket open, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810 on a fresh run
+OFF hammerPocketBurn.train.test.js |      Tests  4 passed (4)
+ON  hammerSouthDoor.train.test.js |      Tests  1 failed | 3 passed (4) | 441s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js > hammer-phase SOUTHDOOR on the latch boot (slow) > ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run
+OFF hammerSouthDoor.train.test.js |      Tests  4 passed (4)
+ON  hammerSpinnerPress.train.test.js |      Tests  2 passed (2) | 414s
+ON  hammerStagedHuntScanMemo.train.test.js |      Tests  1 failed (1) | 448s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerStagedHuntScanMemo.train.test.js > hammer-phase STAGED-HUNT-CHEAP on BK2COMBAT's pocket-shut chain (train) > memo ON answers CHASER_STAGED_HUNT's refusal byte for byte, staged at (856,856) after 15 still ticks, reusin
+OFF hammerStagedHuntScanMemo.train.test.js |      Tests  1 passed (1)
+ON  hammerTurretApproach.train.test.js |      Tests  1 failed | 2 passed (3) | 278s
+    ON   FAIL  frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js > hammer-phase APPROACH on the latch chain (slow) > OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast
+OFF hammerTurretApproach.train.test.js |      Tests  3 passed (3)
+ON  seedlingGenCapacity.train.test.js |      Tests  2 passed (2) | 544s
+ON  fidelityL32ArenaPrefix.slow.test.js |      Tests  5 passed (5) | 30s
+ON  fidelityLights.slow.test.js |      Tests  5 passed (5) | 78s
+ON  hammerDashShape.slow.test.js |      Tests  1 passed (1) | 54s
+ON  hammerEscapeGenerated.slow.test.js |      Tests  1 passed (1) | 74s
+ON  jsRuntimeSolverCalibration.slow.test.js |      Tests  5 passed (5) | 9s
+ON  jsRuntimeSolverForkRun.slow.test.js |      Tests  1 passed (1) | 5s
+ON  jsRuntimeTape.slow.test.js |      Tests  2 passed (2) | 43s
+ON  seedlingGenBiomes.slow.test.js |      Tests  27 passed (27) | 20s
+ON  seedlingGenGoalChestPipeline.slow.test.js |      Tests  42 passed (42) | 55s
+OFF seedlingGenGoalChestPipeline.slow.test.js |      Tests  42 passed (42)
+ON  seedlingGenGoalLootSweep.slow.test.js |      Tests  24 passed (24) | 49s
+OFF seedlingGenGoalLootSweep.slow.test.js |      Tests  24 passed (24)
+ON  seedlingGenKeyGateColours.slow.test.js |      Tests  6 passed (6) | 205s
+OFF seedlingGenKeyGateColours.slow.test.js |      Tests  6 passed (6)
+ON  seedlingGenNewBiomes.slow.test.js |      Tests  32 passed (32) | 20s
+ON  seedlingGenTerrains.slow.test.js |      Tests  10 passed (10) | 21s
+ON  strategySwitchApproach.slow.test.js |      Tests  1 passed (1) | 20s
+ON  strategySwitchEscape.slow.test.js |      Tests  2 passed (2) | 11s
+ON  strategySwitchGrade.slow.test.js |      Tests  11 passed (11) | 22s
+ON  strategySwitchTable.slow.test.js |      Tests  4 passed (4) | 13s

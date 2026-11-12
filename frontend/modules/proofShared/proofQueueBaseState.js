@@ -121,10 +121,10 @@ export class ProofQueueBaseState extends ProofBaseState {
    * Get the next checkable step in the queue (first valid unchecked step).
    * @returns {number|null} Step index, or null if none
    */
-  getNextCheckableStep() {
+  getNextCheckableStep(skip = null) {
     const validation = this.validateQueue();
     for (const entry of validation) {
-      if (entry.checkable) return entry.stepIndex;
+      if (entry.checkable && !(skip && skip(entry.stepIndex))) return entry.stepIndex;
     }
     return null;
   }

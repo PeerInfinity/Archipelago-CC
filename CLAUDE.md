@@ -242,6 +242,16 @@ by name (`-f batch=apworld`). Its `bundled` input (`-f bundled=true`) runs the p
 batch on the bundled boot and then takes ANY batch by name — the manual bundled
 `seedling-js`/`apworld` legs (⚖ user, 2026-10-24); only `fast` runs bundled on push.
 
+**Nightly + after hours (⚖ Robert 2026-11-11).** `test-substrates-nightly.yml` runs
+every manual batch at `main` once a night (cron `37 10 * * *` = 02:37 PST / 03:37 PDT)
+by calling `test-substrates-manual.yml` with `batch=all`. It is a drift SIGNAL, never
+landing evidence for any SHA. A red is a note to the owner, read off the run's summary
+and its `nightly-manual-summary` artifact (morning pickup one-liner:
+`.github/workflows/README.md` § *Substrate tests — nightly manual batches*). **B1:** by
+convention, bulk harvests and exploratory sweeps are dispatched 22:00–07:00 Pacific.
+Exempt: anything a landing train dispatches; gate runs at a slice tip (`train_only`,
+`full_matrix`, TT); a re-measure that a queued packet is waiting on.
+
 **Budget headroom.** After each CI batch, `node scripts/test/check-batch-headroom.js
 --mode=test-substrates --batch=<b>` grades the newest results file of that batch:
 it FAILS on NEVER STARTED / CUT OFF rows or a span over the budget, and WARNS when
