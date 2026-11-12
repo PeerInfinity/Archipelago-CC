@@ -4,7 +4,7 @@
  * block kinds and pulls intact, and save → load → save is a fixed point for EVERY room of the preset.
  *
  * Driven over the committed `seedling_playthrough_maze` preset (real sidecar data, no fixture). The counts are
- * the census's, measured: 264 sidecars, 116 carry a room, 148 are regions of a shared level world; 33 token
+ * the census's, measured: 266 sidecars (264 before no-hit), 116 carry a room, the rest are regions of a shared level world; 33 token
  * groups / 76 members / 13 dangling (a presser no maze responder names).
  */
 import { describe, expect, it } from 'vitest';
@@ -61,7 +61,9 @@ const census = (worlds) => {
 
 describe('maze converted load: which object is the level', () => {
     it('the preset sidecars split into rooms and regions of a shared level world, as measured', () => {
-        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([264, 116, 148]);
+        // 264/116/148 at fe98f37f22; train 102's no-hit (rules-7) split L22/L25 at their new gates: +2 sidecars, both
+        // room-less regions of their level's shared world (measured on main 7e99af41cc).
+        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([266, 116, 150]);
     });
     it('a sidecar envelope and its bare playable_payload load the same level', () => {
         const s = room('level_16');
@@ -181,7 +183,8 @@ describe('maze converted load: a payload without engine fields takes no new path
     });
     it('the preset room fields the new path adopts (counts of rooms carrying each)', () => {
         const count = (f) => ROOMS.filter(([, s]) => s.playable_payload[f] !== undefined).length;
+        // entry_gates 39 at fe98f37f22 → 41: train 102's no-hit (rules-7) gave L22/L25 their new entry gates.
         expect(Object.fromEntries(ENGINE_ENTITY_FIELDS.map((f) => [f, count(f)])))
-            .toEqual({ block_lib: 3, traps: 5, entry_gates: 39, block_sinks: 8, pulls: 4, pulsers: 0 });
+            .toEqual({ block_lib: 3, traps: 5, entry_gates: 41, block_sinks: 8, pulls: 4, pulsers: 0 });
     });
 });
