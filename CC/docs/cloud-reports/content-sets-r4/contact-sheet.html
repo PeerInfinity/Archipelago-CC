@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta Theme Contact Sheet</title>
+<!--
+  Content sets R4 — the `meta` theme's maze art, for the user's review.
+  Open it from a dev server at the repository root (it imports the real modules and reads the committed packs and
+  presets): python -m http.server 8130  →  http://localhost:8130/CC/docs/cloud-reports/content-sets-r4/contact-sheet.html
+  render-contact-sheet.mjs (beside this file) screenshots it to contact-sheet.png.
+  Every picture is drawn by the real painter (`mazeRoomRender.drawWorld`) on real committed maze payloads, once with no
+  art (today's default drawing) and once with the stack ['maze', 'meta'] loaded through `mazeTileArt.loadMazeTileArt`
+  with the browser rasteriser (`artLibrary.browserRasteriser` → `paintShape`), as play loads it. The third column is
+  the recipe alone, rasterised at its own size. Scenes that no committed payload holds (a mana tile, a pulser, a
+  dormant block, the player on a button) are staged on a deserialized world, as `mazeMetaArt.test.js` stages them.
+-->
+<style>
+  :root { --bg: #f4f5f7; --fg: #1d2129; --muted: #5d6573; --line: #d5d9e0; --card: #ffffff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #16181d; --fg: #e6e8ec; --muted: #9aa2b1; --line: #2c313a; --card: #1e2128; } }
+  :root[data-theme="dark"] { --bg: #16181d; --fg: #e6e8ec; --muted: #9aa2b1; --line: #2c313a; --card: #1e2128; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.sub { color: var(--muted); margin: 0 0 16px; max-width: 70ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  .card h2 { font: 600 13px/1.3 ui-monospace, monospace; margin: 0 0 2px; }
+  .card .what { color: var(--muted); font-size: 12px; margin: 0 0 8px; min-height: 2.6em; }
+  .pair { display: flex; gap: 8px; align-items: flex-end; }
+  .pair figure { margin: 0; text-align: center; font-size: 11px; color: var(--muted); }
+  canvas { image-rendering: pixelated; display: block; border: 1px solid var(--line); }
+  .rooms { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+  .rooms figure { margin: 0; font-size: 12px; color: var(--muted); }
+  #status { color: var(--muted); font-size: 12px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<h1>The <code>meta</code> theme — maze art from shapes</h1>
+<p class="sub">Each thing twice, in its real surroundings: <b>default</b> (no art, today's drawing) beside
+<b>meta</b> (the stack <code>maze, meta</code>), each a 3×3-cell crop at 3×, plus the meta recipe alone. Below them,
+one maze room of <code>meta_trial</code> drawn both ways.</p>
+<div class="grid" id="grid"></div>
+<div class="rooms" id="rooms"></div>
+<div id="status">drawing…</div>
+<script type="module">
+const F = '../../../../frontend/';
+const [{ drawWorld, plainView, TILE_PX, blockLook }, { createState, deserializeMazeWorld, getTile, TILE_WALL },
+    { MAZE_ART_KEYS, loadMazeTileArt }, { browserRasteriser, browserDecoder, paintShape }] = await Promise.all([
+    import(`${F}modules/mazeRoom/mazeRoomRender.js`), import(`${F}modules/mazeRoom/mazeRoomEngine.js`),
+    import(`${F}modules/mazeRoom/mazeTileArt.js`), import(`${F}modules/artLibrary/artLibrary.js`)]);
+const json = async (u) => (await fetch(u, { cache: 'no-store' })).json();
+const PACKS = new URL(`${F}packs/`, location.href).href;
+const loaded = await loadMazeTileArt(['maze', 'meta'], {
+    base: PACKS, readJson: json, decode: browserDecoder(), rasterise: browserRasteriser(),
+});
+const manifest = await json(`${F}packs/meta/art/manifest.json`);
+const tileArt = loaded.tileArt;
+
+// ── the staged scenes, from the committed Seedling playthrough payloads (read off the data) ──
+const play = await json(`${F}presets/seedling_playthrough_maze/AP_1/AP_1_rules.json`);
+const payloads = Object.values(play.preset_sidecars['1']).map((v) => v.playable_payload).filter(Boolean);
+const richOnes = payloads.filter((p) => p.blocks?.length && p.buttons?.length && p.traps?.length);
+const fresh = (p) => deserializeMazeWorld(JSON.parse(JSON.stringify(p)));
+const plain = fresh(richOnes.find((p) => !p.block_lib) ?? richOnes[0]);
+const kinds = fresh(richOnes.find((p) => p.block_lib) ?? richOnes[0]);
+const pulls = fresh(payloads.find((p) => p.pulls?.length));
+const stateOf = (w) => createState(w);
+const busyOf = (w, s) => new Set([...w.items.keys(), ...w.obstacles.keys(), ...w.blocks.keys(), ...w.buttons.keys(),
+    `${w.entrance.x},${w.entrance.y}`, `${s.player_pos.x},${s.player_pos.y}`,
+    ...[...w.exits.values()].map((e) => `${e.x},${e.y}`), ...(w.traps ?? []).map((t) => `${t.x},${t.y}`),
+    ...(w.pulls ?? []).map((p) => `${p.x},${p.y}`)]);
+/** A cell nothing else occupies, preferring one with fewer occupied neighbours (a wall cell: next to a floor). */
+function freeCell(w, busy, wall) {
+    let best = null;
+    for (let y = 0; y < w.height; y++) {
+        for (let x = 0; x < w.width; x++) {
+            if (busy.has(`${x},${y}`) || (getTile(w, x, y) === TILE_WALL) !== wall) continue;
+            let crowd = 0;
+            let floors = 0;
+            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+                if (busy.has(`${x + dx},${y + dy}`)) crowd++;
+                if (getTile(w, x + dx, y + dy) !== TILE_WALL) floors++;
+            }
+            if (wall && floors === 0) continue;
+            if (!best || crowd < best.crowd) best = { x, y, crowd };
+        }
+    }
+    if (!best) throw new Error('no free cell');
+    busy.add(`${best.x},${best.y}`);
+    return { x: best.x, y: best.y };
+}
+const ps = stateOf(plain);
+const busy = busyOf(plain, ps);
+const manaAt = freeCell(plain, busy, false);
+plain.manaTiles = new Map([[`${manaAt.x},${manaAt.y}`, 1]]);
+const pulserAt = freeCell(plain, busy, true);
+plain.pulsers = [...(plain.pulsers ?? []), { x: pulserAt.x, y: pulserAt.y, reach: [], token: 'staged' }];
+const dormantKind = 'staged-dormant';
+plain.blockLib = { ...(plain.blockLib ?? {}), [dormantKind]: { wake: true } };
+const blocks = [...plain.blocks.keys()];
+const buttons = [...plain.buttons.keys()];
+const at = (k) => { const [x, y] = k.split(',').map(Number); return { x, y }; };
+const floorAt = freeCell(plain, busy, false);
+const wallAt = freeCell(plain, busy, true);
+const notStart = (e) => !(e.x === ps.player_pos.x && e.y === ps.player_pos.y) && !(e.x === plain.entrance.x && e.y === plain.entrance.y);
+const openExit = [...plain.exits.values()].find((e) => !plain.obstacles.has(`${e.x},${e.y}`) && notStart(e))
+    ?? [...plain.exits.values()].find((e) => !plain.obstacles.has(`${e.x},${e.y}`));
+const ks = stateOf(kinds);
+const struckKey = [...kinds.blocks.keys()].find((k) => blockLook(kinds, kinds.blocks.get(k)) === 'struck');
+const pls = stateOf(pulls);
+const viewOf = (w, s, extra = {}) => ({ tilePx: TILE_PX, inventory: s.inventory, blocks: s.blocks ?? null, playerPos: s.player_pos, facing: 'E', ...extra });
+const base = viewOf(plain, ps, { blockKinds: { [blocks[blocks.length - 1]]: dormantKind } });
+const onButton = viewOf(plain, ps, { playerPos: at(buttons[0]) });
+
+const THINGS = {
+    floor: [plain, base, floorAt],
+    wall: [plain, base, wallAt],
+    exit: [plain, base, openExit],
+    entrance: [plain, onButton, plain.entrance],
+    manaTile: [plain, base, manaAt],
+    player: [plain, base, ps.player_pos],
+    trap: [plain, base, plain.traps[0]],
+    block: [plain, base, at(blocks[0])],
+    blockStruck: [kinds, viewOf(kinds, ks), struckKey ? at(struckKey) : null],
+    blockDormant: [plain, base, at(blocks[blocks.length - 1])],
+    button: [plain, base, at(buttons[buttons.length - 1])],
+    buttonDown: [plain, onButton, at(buttons[0])],
+    pulser: [plain, base, pulserAt],
+    pull: [pulls, viewOf(pulls, pls), pulls.pulls[0]],
+};
+
+const SCALE = 3;
+function render(world, view, art) {
+    const c = document.createElement('canvas');
+    c.width = world.width * TILE_PX;
+    c.height = world.height * TILE_PX;
+    drawWorld(c.getContext('2d'), world, plainView({ ...view, tileArt: art }));
+    return c;
+}
+function crop(full, cell) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 3 * TILE_PX * SCALE;
+    const g = c.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.fillStyle = '#000';
+    g.fillRect(0, 0, c.width, c.height);
+    g.drawImage(full, (cell.x - 1) * TILE_PX, (cell.y - 1) * TILE_PX, 3 * TILE_PX, 3 * TILE_PX, 0, 0, c.width, c.height);
+    return c;
+}
+function recipe(key) {
+    const sh = manifest.shapes[key];
+    const c = document.createElement('canvas');
+    c.width = sh.w * SCALE;
+    c.height = sh.h * SCALE;
+    const g = c.getContext('2d');
+    g.scale(SCALE, SCALE);
+    paintShape(g, sh);
+    c.style.background = 'repeating-conic-gradient(#8884 0 25%, #0000 0 50%) 0 0 / 16px 16px';
+    return c;
+}
+const fig = (canvas, label) => {
+    const f = document.createElement('figure');
+    f.append(canvas, Object.assign(document.createElement('figcaption'), { textContent: label }));
+    return f;
+};
+const cache = new Map();
+const full = (w, v, art) => {
+    const k = `${JSON.stringify(v)}|${!!art}|${w === plain ? 'p' : w === kinds ? 'k' : 'l'}`;
+    if (!cache.has(k)) cache.set(k, render(w, v, art));
+    return cache.get(k);
+};
+const grid = document.getElementById('grid');
+for (const [thing, [world, view, cell]] of Object.entries(THINGS)) {
+    const row = MAZE_ART_KEYS[thing];
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<h2>${row.key}</h2><p class="what"></p>`;
+    card.querySelector('.what').textContent = manifest.shapes[row.key]?.note ?? '(not in the theme: falls back)';
+    const pair = document.createElement('div');
+    pair.className = 'pair';
+    if (cell) {
+        pair.append(fig(crop(full(world, view, null), cell), 'default'), fig(crop(full(world, view, tileArt), cell), 'meta'));
+    }
+    if (manifest.shapes[row.key]) pair.append(fig(recipe(row.key), 'recipe'));
+    card.append(pair);
+    grid.append(card);
+}
+
+// ── one small maze room of meta_trial, both ways ──
+const trial = await json(`${F}presets/meta_trial/AP_1/AP_1_rules.json`);
+const slot = Object.keys(trial.procgen_metadata)[0];
+const [roomId, side] = Object.entries(trial.preset_sidecars[slot]).filter(([, s]) => s.substrate === 'maze')
+    .sort(([, a], [, b]) => (a.playable_payload.width * a.playable_payload.height) - (b.playable_payload.width * b.playable_payload.height))
+    .find(([, s]) => Object.values(s.playable_payload.obstacleLib ?? {}).some((d) => d.concept)) ?? [];
+const room = fresh(side.playable_payload);
+const rs = stateOf(room);
+const rv = viewOf(room, rs);
+const big = (c) => {
+    const o = document.createElement('canvas');
+    o.width = c.width * 2;
+    o.height = c.height * 2;
+    const g = o.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.drawImage(c, 0, 0, o.width, o.height);
+    return o;
+};
+const rooms = document.getElementById('rooms');
+rooms.append(fig(big(render(room, rv, null)), `meta_trial ${roomId} — default`),
+    fig(big(render(room, rv, tileArt)), `meta_trial ${roomId} — meta (its water gate stays the maze default's)`));
+document.getElementById('status').textContent = `drawn: ${Object.keys(loaded.keyed).length} keys from ${[...new Set(Object.values(loaded.keyed))].join(', ')}; failed sheets: ${loaded.failed.length}`;
+document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

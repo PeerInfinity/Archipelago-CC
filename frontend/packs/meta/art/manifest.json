@@ -107,8 +107,9 @@
     },
     "maze:object/pulser": {
       "w": 20, "h": 20,
-      "note": "a pulser's body: a small yellow square outlined in ink with an ink centre dot, kept inside the armed/silent ring the painter strokes round it",
+      "note": "a pulser's body: a small yellow square outlined in ink with an ink centre dot, on a paper disc so the armed/silent ring the painter strokes round it reads on a wall",
       "draw": [
+        { "circle": [10, 10, 9.5], "fill": "#c4c9d2" },
         { "rect": [6, 6, 8, 8], "fill": "#e0e070", "stroke": "#2e3440", "width": 2 },
         { "circle": [10, 10, 1.5], "fill": "#2e3440" }
       ]
