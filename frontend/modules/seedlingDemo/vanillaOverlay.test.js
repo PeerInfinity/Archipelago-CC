@@ -452,7 +452,8 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ tile-fire-breaks-rocks (ada6b422… -> a6f17c8f): an ordinary rock also breaks to Fire from a flame-stance side
         //   (atlas id e3ae176e -> 32298df9). The overlay fixture `--check`s byte-identical.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('cfd26871831f9881c850c65f356ed09d');
+            // merged rules-no-hit-directional + tile-fire-breaks-rocks: atlas id 88e3788c.
+            .toBe('e53ce5173114a245d96c7d6ce80b4af8');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
