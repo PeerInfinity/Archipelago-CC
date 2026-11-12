@@ -27816,6 +27816,48 @@ as a BEFORE pin with the set OFF, the AFTER values in the report). 13 fidelity r
 move too: listed for fidelity to sign, not edited. The report is
 `CC/docs/cloud-reports/seedling-hammer-l40-flip-build.md`.
 
+### Seedling hammer-phase NEW-LOCKS — the L18, L26 and L53 lock legs the 11-09 rules added: `KILLLOCK_CLEAR_WRITE`, `ROCKLOCK_KILL`, `KILLLOCK_LINE_STANCE` (all OFF)
+
+⚖ The user ruled it on 2026-11-10 (in the hammer planner's session, on the six divergence legs the rules arc's L26
+landing added): *"One slice, all three"*, every new switch OFF. Start `a66a450e70`. The report is
+`CC/docs/cloud-reports/seedling-hammer-new-locks.md`.
+
+- **L18 `{18,0}` (leg 223), measured.** The kill works: both spinners die, the model's kill-lock ledger opens
+  `lock@144,112` at the second removal (t259) and its scratch layer writes the flag at t360 (removal + the lock's 101-step
+  fade) and rebuilds the world without the lock. The clear-tag order then waits on `run.ledger('earnedClears')`, which has
+  no kill-lock arm, and refuses `not-written` 120 ticks later. Not an uncounted enemy, not the fade outlasting the check,
+  not a model gap: the write is in `run.scratchClears` and the solver read the other ledger. **`KILLLOCK_CLEAR_WRITE`**:
+  `execClearTag` finishes on the scratch row for that lock and flag (as a rope's finishes on its `ropePulls` row).
+- **L26 `{26,0}` (legs 286, 289).** `rocklock@112,208` is `tset -1`, tag 0, two punchers, no presser: a kill-lock
+  (`RockLock.as:52`). The model already bills it (`combat.KILL_LOCK_TAGS`); the solver had no row and read the lock's
+  instance from the activator roster, where a RockLock is not. **`ROCKLOCK_KILL`**: `solid:rocklock` is `Lock`'s row
+  (`hold`, switch-gated), `refineStrategy` asks the instance (in the level's kill-lock list → `kill`; any other rocklock,
+  i.e. L112's Final Boss lock, no verb and its named gate), `resolveKillStrategy` takes the row from that list, and the
+  kill arms read the rocklock's solid for "has it left the world". The punchers need `KILLLOCK_CHASER_REWIND` (the arm's
+  tolerance-0 previews never settle, L53-KILLLOCK's finding 1).
+- **L53 `{53,2}` (legs 910, 911).** From the L48 and L51 arrivals the player stands in the puncher's corridor; the three
+  jellyfish are behind the arena's Ice Wall and two breakable rocks. The arm's scan prices only cells reachable now, so
+  no stance derives, and the stand-here dwell waits for a body that cannot come. **`KILLLOCK_LINE_STANCE`** (on the
+  rewind): a body whose own box, swept along the straight line to the player, meets one of its own Solids is PINNED from
+  here; it is not asked the scan (3,193 of leg 910's 3,556 work units were scans of pinned bodies) nor waited for, and
+  each live body offers line stances — lattice cells in its leash, plannable, beyond the sword's reach of its box, with a
+  clear swept line — nearest the player first, each one rewound attempt (3 a body, 6 a turn). The ladder's walk to the
+  cell breaks the rocks on the way.
+- **Measured.** Node, the worker's passes at the page's budgets, 0 hits on a fresh run: 223 361 t; 286 629 t; 289 315 t;
+  911 606 t at the first ask (640); 910 799 t at the held retry (2560; its first ask is deadline-bound). The p4g page with
+  the four switches flipped in a scratch copy: all five **done, 0 room hits, the flag collected, 0 divergences**. The
+  walk's own L26 crossing (the L28 teleporter behind the rocklock) solves too (357 t into L28).
+  ⚠ The page's goal mapper (`jsRuntimeSolver.clearTagVerbOf`) runs on the main thread, which `?seedlingSolverEnv=` does
+  not reach: an ON sweep moves 223, 910 and 911 and leaves 286/289 `no-verb` until the default flips.
+- **ON radius** (the 71 legs of every level with a kill-lock or a rocklock; 75 captured requests over 65 legs, solved in
+  node under four arms). The three new switches alone: 1 mover (223). With the rewind, against the rewind alone: 223,
+  910, 911 (refusal → solved); 756 (L98 ← L99) plan → plan, 562 t with 2 model hits → 466 t with 0; L53-KILLLOCK's 9001 /
+  9002 plan → plan, shorter and cheaper (768 → 608 t, 959 → 744 t), 0 hits; L112's rocklock leg stays refused `no-verb`,
+  said by the solver, not the mapper.
+- Rows: `hammerNewLocks.test.js` (13), `hammerNewLocks.train.test.js` (1), `hammerNewLocksLegs.js`; fixtures
+  `fixtures/hammer-new-locks/` (the page's requests cut to the leg's level, ≤ 3.1 KB). Mutants: 11 of 12 red; asking the
+  scratch row by flag alone (not by lock id) is equivalent in these rooms.
+
 ### Seedling fidelity L25APITEM — a playthrough AP chest is the `apitem` the delivery ships (`apChestItem`, OFF)
 
 Planner `seedling-fidelity-planning-18`, wave 37d (⚖ the user's GO 2026-11-06). Base `ac62c3d17e`. The report is
@@ -28181,3 +28223,27 @@ drift (`r8-l18`, `r8-d2-chain`, `r9-campaign`: `r8-solve-18` three input rows on
 L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 spinner-room steps keep their verdicts (9
 SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
 hammer arc's signature on its pins, so it waits for a licence.
+
+### Seedling fidelity AFTERROWS — every `withL40Flip(false)` BEFORE pin in fidelity gets its AFTER at the shipped defaults
+
+Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user 2026-11-12, *"AFTER rows at L40 defaults"*). Base
+`737a451f50`. Rows and fixtures only; no model, solver, walker or rules source changed. The report is
+`CC/docs/cloud-reports/seedling-fidelity-afterrows.md`.
+
+**Census:** 16 wrapped rows in nine files. Each keeps its BEFORE row and gains an AFTER row at the shipped defaults.
+Where a single flip switch explains the move, it also gains a control (the defaults minus that switch) where the BEFORE
+property still holds. Five switches explain every attributed mover:
+- `CHASER_STAGED_HUNT`: L30KEYLOCK's both-OFF and WAIT-alone arms; L40BK2B's notch kill.
+- `BOMB_PHASE_WAIT`: leg 368's three D2 pins.
+- `LATCH_WEIGH_FIRST`: L40LATCH's three pins; L40RES's OFF arm.
+- `CHOOSER_CUT`: the pocket chain's refused prefix.
+
+**No row lost a solve, and no AFTER plan takes a hit.** Both L40 chains whose witness was a refused prefix now SOLVE
+Boss Key 2, as do L30 (240,80) and leg 368 ON at 5290. Leg 368 at 5290 is now hitless (1714 t; the t1222 hit is gone).
+Seven new game witnesses (p4g, 0 px, 0 hits): `l40bk2-pocket-shipped` (4692 t), `l40latch-orbit-shipped` (4144 t),
+`l40bk2b-{free,plain}-shipped`, `afterrows-l30-pit224-off`, `afterrows-l30-pit240-wait`, `afterrows-l40-368-s5290`.
+
+Six BEFORE properties are not covered at the defaults; four of them have no single-switch control. Leg 368's AFTER plan
+shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
+⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
+Re-record a BEFORE witness only under `withL40Flip(false)`.

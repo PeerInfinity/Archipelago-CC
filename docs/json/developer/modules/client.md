@@ -50,7 +50,7 @@ While most of its actions result in calls to the `StateManager` (which then publ
 -   `game:roomInfo`: Published when server room information is received.
 -   `game:locationsScouted`: Published when the server answers the connect-time scout. The payload is `{ locations }`, one entry per location: `{ locationId, locationName, itemId, itemName, player, playerName, game, flags, progression, useful, trap }`. `player`, `playerName` and `game` describe the slot that receives the item. `itemName` comes from that slot's game in the DataPackage, and is `null` if the DataPackage doesn't have it.
 -   `network:connectionRefused`: Published when the server refuses the connection attempt.
--   `client:locationCheckRefused`: Published when the connected logic gate refuses a check (see `user:locationCheck` below). The payload is `{ locationName, reason, originator }`. The Locations panel clears the card's pending state on it.
+-   `client:locationCheckRefused`: Published when the connected logic gate refuses a check (see `user:locationCheck` below). The payload is `{ locationName, reason, originator }`. The Locations panel clears the card's pending state on it. The Playback Bot parks a check it was waiting on (a connected check counts when the server's echo marks it, not at the send).
 -   `client:roomSpoilerData`: Published on `Connected` when the room's slot_data carries a `spoiler_data` record this client reads. The payload is `{ source, text, entries }`: `source` is `room:<seed>:P<slot>`, `text` the expanded incremental sphere log (JSONL). `sphereState` subscribes.
 
 #### Events Subscribed To

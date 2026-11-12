@@ -66,15 +66,21 @@ argvHelp(import.meta.url);
  */
 if (isEntryPoint(import.meta.url)) await main();
 
-async function main() {
+/**
+ * ⛓ EXPORTED for the theme world's arm: `check-meta-trial-play.mjs` calls it with
+ * `{ game: 'meta_trial' }` so CI runs that world under its own key
+ * (`gate: meta-trial-play`); a roster `@standing-variant` arm runs locally only.
+ * `game`/`host` override `--game=`/`--host=`.
+ */
+export async function main({ game, host } = {}) {
     takeBoxLockOrExit({ name: 'check-concept-trial-play.mjs', kind: 'browser' });
 
     const HERE = dirname(fileURLToPath(import.meta.url));
     const REPO = join(HERE, '..', '..');
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
         ?.slice(name.length + 3) ?? fallback);
-    const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
-    const GAME = arg('game', 'concept_trial');
+    const HOST = (host ?? arg('host', 'http://localhost:8000')).replace(/\/+$/, '');
+    const GAME = game ?? arg('game', 'concept_trial');
 
     // ── What the preset says ────────────────────────────────────────────────
     const M = (p) => import(join(REPO, 'frontend/modules', p));

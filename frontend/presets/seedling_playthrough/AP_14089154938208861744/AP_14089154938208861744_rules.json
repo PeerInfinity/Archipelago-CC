@@ -3973,9 +3973,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Fire"
+                    "item_names": [
+                      "Fire",
+                      "L40 flag 12: wandlock@480,560 cleared"
+                    ]
                   }
                 }
               ]
@@ -3997,9 +4000,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Fire"
+                    "item_names": [
+                      "Fire",
+                      "L40 flag 12: wandlock@480,560 cleared"
+                    ]
                   }
                 }
               ]
@@ -4178,9 +4184,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Fire"
+                    "item_names": [
+                      "Fire",
+                      "L40 flag 12: wandlock@480,560 cleared"
+                    ]
                   }
                 }
               ]

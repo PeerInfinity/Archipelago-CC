@@ -432,6 +432,7 @@ describe('who takes the box', () => {
          * location, `check-seedling-atlas-location-play.mjs`; swim T1 the
          * water-gated generated room, `check-seedling-generated-swim-play.mjs`;
          * concept library T4 the joined concept world, `check-concept-trial-play.mjs`;
+         * content sets R3 its theme-world arm, `check-meta-trial-play.mjs` (the same gate on `meta_trial`);
          * solver-walk W0 the wasm host-tape probe, `probe-seedling-wasm-host-tape.mjs`, and
          * W1 its arrival → staging → solve sibling, `probe-seedling-wasm-arrival-solve.mjs`;
          * W2 the wasm PlaybackController's witness, `probe-seedling-wasm-playback.mjs`;
@@ -562,7 +563,7 @@ describe('who takes the box', () => {
             'check-seedling-generated-room-play.mjs', 'check-seedling-generated-leaf-play.mjs',
             'check-seedling-generated-host-play.mjs', 'check-seedling-atlas-host-play.mjs',
             'check-seedling-atlas-location-play.mjs', 'check-seedling-generated-swim-play.mjs',
-            'check-concept-trial-play.mjs',
+            'check-concept-trial-play.mjs', 'check-meta-trial-play.mjs',
             'probe-seedling-wasm-host-tape.mjs', 'probe-seedling-wasm-arrival-solve.mjs',
             'probe-seedling-wasm-playback.mjs', 'probe-seedling-wasm-generated-playback.mjs',
             'probe-seedling-wasm-arrival-composites.mjs', 'probe-seedling-wasm-level0.mjs',

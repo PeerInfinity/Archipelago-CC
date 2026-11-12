@@ -353,6 +353,25 @@ export const CONCEPT_TRIAL_STATE = Object.freeze({
 });
 
 /**
+ * ⛓⛓ CONTENT SETS R3 — **THE FIRST WORLD THAT SELECTS A THEME, SPELLED ONCE:
+ * `CONCEPT_TRIAL_STATE` PLUS `content: ['meta']`.** The same seed, spheres,
+ * quotas, items and concept list, so the same regions, gates and items; the
+ * theme pack `frontend/packs/meta/` changes only what they are presented as.
+ * The text adventure's sword gate speaks as the meta Gate, the sword's check
+ * line is the theme's, each text-adventure room takes a meta place, and the
+ * maze's water gate is the maze default's byte for byte (the theme does not
+ * present water: it falls through). The compiled logic is the control's
+ * (`concept_trial`) apart from `procgen_metadata[slot].content`. Its readers:
+ * `procgenPipeline/metaTrialWorld.test.js`, the committed preset `meta_trial`
+ * (`make-seedling-spiral-room-preset.mjs --state=meta-trial`) and the in-app
+ * row `meta-trial-plays`.
+ */
+export const META_TRIAL_STATE = Object.freeze({
+    ...CONCEPT_TRIAL_STATE,
+    params: Object.freeze({ ...CONCEPT_TRIAL_STATE.params, content: Object.freeze(['meta']) }),
+});
+
+/**
  * ⛓⛓ SEEDLING GENERATED LEVELS G6 — **A REAL SEEDLING ROOM THAT HOSTS A CHILD
  * BEHIND AN AP GATE, SPELLED ONCE: T3's SPHERE-ROOM WORLD WITHOUT ITS KNOB.**
  * The same seed, spheres, filler and quotas as `SEEDLING_SPHERE_ROOM_STATE`; with
@@ -535,6 +554,18 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'compiled logic is the same as the same world without concepts. The same world is committed '
             + 'as the concept_trial preset.',
         state: CONCEPT_TRIAL_STATE,
+    },
+    {
+        id: 'shipped:meta-trial-demo',
+        label: 'Meta theme trial (maze + text adventure)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'The concept trial world with the content set "meta" picked (Content set, in Parameters): '
+            + 'the same regions, gates and items, presented by a theme that knows it is a generated game. Play the '
+            + 'text adventure: the sword-gated exit is the Gate, which says its rule; each room has a place name '
+            + 'and description; the sword\'s check says it is a check. The maze\'s water gate is unchanged (the '
+            + 'theme does not present water, so the maze\'s own look is used). The compiled logic is the concept '
+            + 'trial\'s. The same world is committed as the meta_trial preset.',
+        state: META_TRIAL_STATE,
     },
     {
         id: 'shipped:maze-bounce-sphere-mix',
