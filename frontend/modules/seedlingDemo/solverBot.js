@@ -11404,6 +11404,67 @@ export function withBombPhaseWait(enabled, fn) {
     return withSwitch(BOMB_PHASE_WAIT, enabled, fn);
 }
 
+/**
+ * ⛓⛓⛓ hammer-phase DYING-BODY-WAIT — **A CORRIDOR WHOSE ONLY DANGER IS A DYING BODY WAITS OUT ITS "DIE"**
+ * (`DYING_BODY_WAIT`, OFF — `SEEDLING_DYING_BODY_WAIT=1` or `withDyingBodyWait(true, …)`; a behaviour switch).
+ *
+ * A body that took its last hit is `dying`: its "die" plays, and until that ends (`destroy`) the danger map prices it
+ * like a live one (`dangerMap.chaserDanger`: "`dying` alone is NOT skipped"). OFF, the ladder has no rung that waits
+ * for that end: AVOID and DETOUR route round it, TIME is the mover's last mile, BAIT and KILL hand it to the chooser,
+ * which reads a doomed body as nothing it can remove; and a walk's start gate (`refuseDanger`) refuses outright.
+ * MEASURED (L40 flag 12 from L39, `chaserSpinnerWalls` ON, the train row's set): the first branch's state at t724 has
+ * `bob@736,752` dying since t700 at 6.8 px, and a walk begun there is refused by its gate naming that body; its "die"
+ * ends at t725 (`destroy`), the roster drops it at t736. ⚠ That is NOT the leg's lost solve: the leg's own refusal
+ * comes after `OPP_PRESS_FALLBACK` rewound that branch to t0, and names a LIVE bob (hammer DYING-BODY-WAIT report).
+ *
+ * ON, asked at two sites, each only where EVERY danger source is a chaser the live run has `dying` and not yet
+ * `destroy`ed, and with the rewind:
+ *   - the walk's start GATE (`refuseDanger`, at the player's own position): wait (1–2 below), then ask the gate again
+ *     from the waited state — clean, the walk goes on; else it refuses naming what is left (a row `arm: 'dying-body'`);
+ *   - the combat LADDER, an arm of the TIME rung after TIME and its bomb arm, on a corridor (1–3 below).
+ *   1. THE FORECAST — the run's own `chaserForecast()`, stepped with the player held still (the preview stepper, no
+ *      keys), names the tick each of those bodies leaves it (`dyingBodyLeavesAt`), within `maxTicks`;
+ *   2. THE WAIT — that many still ticks on the LIVE run (stopped at the first hit, death or crossing: the run's ledger
+ *      bills it); the run must then hold none of them undestroyed;
+ *   3. THE WALK — the SAME corridor re-probed: clean, it is walked (a `time` row, `arm: 'dying-body'`); not clean, the
+ *      walk re-plans from the waited state (the body is gone, the next climb is about what is left).
+ * Anything else is rewound (`rewind.to`) and the ladder goes on as OFF does, TIME's why carrying the arm's.
+ * Generic: any chaser class, the end read from the run (no class table, no tick constant). ⚖ 30(c): the waited keys
+ * are the tape's.
+ */
+export const DYING_BODY_WAIT = {
+    enabled: globalThis.process?.env?.SEEDLING_DYING_BODY_WAIT === '1',
+    /** the longest wait asked, in ticks: a search bound (the forecast is read this far and no farther). */
+    maxTicks: 60,
+};
+/** The instrument: climbs that asked the arm, the waits kept, the refusals (reset by the caller). */
+export const DYING_BODY_WAIT_COUNTS = { asked: 0, kept: [], refused: [] };
+
+/** Run `fn` with `DYING_BODY_WAIT` set to `enabled`, restoring the previous value. */
+export function withDyingBodyWait(enabled, fn) {
+    return withSwitch(DYING_BODY_WAIT, enabled, fn);
+}
+
+/**
+ * The forecast tick (1-based) at which every one of `ids` has left the run's own chaser forecast, the player held still
+ * on the preview stepper: `{k}`, or `{k: null, why}` (no forecast, the preview dies, or still there after `bound`).
+ */
+export function dyingBodyLeavesAt(run, ids, bound) {
+    const f = run.chaserForecast?.() ?? null;
+    if (f === null) return { k: null, why: 'the run steps no chaser forecast here' };
+    const step = previewOrDeath(run.previewStepper());
+    const NONE = new Set();
+    let st = { ...run.state };
+    for (let k = 1; k <= bound; k += 1) {
+        const proj = f.step(st, { slashing: false }) ?? [];
+        if (!ids.some((id) => proj.some((c) => c.id === id))) return { k };
+        const next = step(st, NONE);
+        if (next === null) return { k: null, why: `the still player's preview dies at forecast tick ${k}` };
+        st = next;
+    }
+    return { k: null, why: `[${ids.join(', ')}] still in the run's chaser forecast after ${bound} still tick(s)` };
+}
+
 /** The still wait's bomb, as `lobberHoldRefusal` asks it — `null` when the still wait is clean. */
 function stillWaitBomb(run, ticks) {
     if (!CONTACT_FIDELITY.bombPusherLive || !Number.isFinite(ticks) || ticks <= 0) return null;
@@ -27901,22 +27962,91 @@ function solveSegmentUnder({
         + 'bounded there, so the solve stops here instead of overrunning.');
 
     /**
+     * ⛓⛓ hammer-phase DYING-BODY-WAIT (`DYING_BODY_WAIT`, OFF) — the two sites' shared core (the doc at the switch).
+     * `dyingSourceIds`: the ids when EVERY danger source is a chaser the live run has `dying` and not yet `destroy`ed,
+     * else `null`. `waitOutDying`: the run's forecast end (`dyingBodyLeavesAt`), then that many still ticks on the LIVE
+     * run — `{ids, ticks, from}` with the run at the waited state, or `{why}` with the run rewound to where it was.
+     */
+    const dyingSourceIds = (sources) => {
+        if (!Array.isArray(sources) || sources.length === 0 || !sources.every((sx) => sx.kind === 'chaser')) return null;
+        const live = run.entities('chasers') ?? [];
+        const ids = [...new Set(sources.map((sx) => sx.id))];
+        return ids.every((id) => live.some((c) => c.id === id && c.dying === true && c.destroy !== true)) ? ids : null;
+    };
+    const waitOutDying = (ids) => {
+        const t0 = perTick.length;
+        const lv = dyingBodyLeavesAt(run, ids, DYING_BODY_WAIT.maxTicks);
+        if (lv.k === null) return { why: `${ids.join(', ')} dying, and ${lv.why}` };
+        const hits0 = run.ledger('playerHits').length;
+        const deaths0 = run.ledger('playerDeaths').length;
+        const back = () => { if (perTick.length > t0) rewind.to(t0); };
+        for (let d = 1; d <= lv.k; d += 1) {
+            if (fineDeadlineReached('time')) {
+                back();
+                return { why: `deadline — the caller's anytime deadline was reached after ${d - 1} of ${lv.k} still tick(s)` };
+            }
+            const held = new Set();
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            if (transition || run.ledger('playerHits').length > hits0 || run.ledger('playerDeaths').length > deaths0) {
+                back();
+                return { why: `the still wait for ${ids.join(', ')} (${lv.k} tick(s) by the forecast) is hit or leaves `
+                    + `the level at still tick ${d}` };
+            }
+        }
+        const left = (run.entities('chasers') ?? []).filter((c) => ids.includes(c.id) && c.destroy !== true);
+        if (left.length > 0) {
+            back();
+            return { why: `the forecast has ${ids.join(', ')} gone after ${lv.k} still tick(s) and the run still holds `
+                + `${left.map((c) => c.id).join(', ')} undestroyed` };
+        }
+        return { ids, ticks: lv.k, from: t0 };
+    };
+
+    /**
      * The danger gate at a decision point: slice 2 SENSES and REFUSES.
      * Dodge is slice 3's policy; a policy that walked on past a named
      * danger would be worse than one that stops and says why.
      */
     const refuseDanger = (x, y, goal, what, except = null, { timedSword = false, timedAxe = false } = {}) => {
-        const d = dangerNow(run, x, y, except, { timedSword, timedAxe });
+        let d = dangerNow(run, x, y, except, { timedSword, timedAxe });
         // ⛓ Recorded whichever way it answers: a gate that CLEARED is as much
         // of the walk's record as one that refused, and a layer that only
         // showed refusals would draw a bot that was never told it was safe.
         recordDanger('gate', x, y, d);
+        /**
+         * ⛓⛓ hammer-phase DYING-BODY-WAIT (`DYING_BODY_WAIT`, OFF: not asked, the refusal word for word) — a gate at
+         * the player's own position whose every source is a dying body waits out its "die" by the run's forecast and
+         * asks the gate again from the waited state; refused, the refusal carries the arm's why.
+         */
+        let dyingClause = '';
+        const dyingIds = d.danger && DYING_BODY_WAIT.enabled && rewind !== null && x === run.state.x && y === run.state.y
+            ? dyingSourceIds(d.sources) : null;
+        if (dyingIds !== null) {
+            DYING_BODY_WAIT_COUNTS.asked += 1;
+            const out = waitOutDying(dyingIds);
+            if (out.why) {
+                DYING_BODY_WAIT_COUNTS.refused.push({ what, site: 'gate', t: perTick.length, why: out.why });
+                dyingClause = ` The dying-body wait (DYING_BODY_WAIT): ${out.why}.`;
+            } else {
+                d = dangerNow(run, run.state.x, run.state.y, except, { timedSword, timedAxe });
+                recordDanger('gate', run.state.x, run.state.y, d);
+                DYING_BODY_WAIT_COUNTS.kept.push({ what, site: 'gate', ...out, clean: !d.danger });
+                seeRow({ tick: perTick.length, saw: saw(), goal: { kind: goal.kind },
+                    obstacle: { kind: 'danger', id: dyingIds[0] },
+                    strategy: { verb: 'time', arm: 'dying-body', site: 'gate', ...out, clean: !d.danger },
+                    rejected: [], keys: [] });
+                if (!d.danger) return;
+                x = run.state.x;
+                y = run.state.y;
+            }
+        }
         if (d.danger) {
             refuse(`${what}: the danger map forbids (${x},${y}) — `
                 + d.sources.map((s) => `${s.kind}:${s.id ?? '?'} (${s.why})`).join('; ')
                 + '. Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); '
                 + 'sensing and refusing loudly is the whole of this slice\'s danger '
-                + 'response.', {
+                + `response.${dyingClause}`, {
                 goal,
                 obstacle: { kind: 'danger', id: d.sources[0]?.id ?? null },
                 considered: [{ option: 'dodge', why: 'not a registered policy this slice' }],
@@ -29096,6 +29226,19 @@ function solveSegmentUnder({
             }
         }
         return { why: `${stillWhy}; ${pacedWhy}${firstWhy ? ` (first re-probe: ${firstWhy})` : ''}`, ...counts };
+    };
+    /**
+     * ⛓⛓ hammer-phase DYING-BODY-WAIT (`DYING_BODY_WAIT`, OFF) — the TIME rung's dying-body arm (the doc at the switch):
+     * `null` where it is not asked; `{wait}` (the run at the waited state, `clean` = this corridor re-probes clean) or
+     * `{why}` (the run back where it was).
+     */
+    const dyingBodyWait = (hit, corridor, except, { axisAligned, stand }) => {
+        const ids = dyingSourceIds(hit.sources);
+        if (ids === null) return null;
+        const out = waitOutDying(ids);
+        if (out.why) return out;
+        const again = probeCorridor(corridor, except, { axisAligned, ...(stand ? { stand } : {}) });
+        return { wait: { ...out, clean: again === null, ...(again ? { next: reasonsOf(again).slice(0, 160) } : {}) } };
     };
     const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
@@ -30440,6 +30583,27 @@ function solveSegmentUnder({
             BOMB_PHASE_WAIT_COUNTS.refused.push({ what, ...at, why: out.why });
             rowFor('time', refused, { arm: 'bomb-phase', still: out.still, paced: out.paced, probes: out.probes });
             refused = { rung: 'time', why: `${timeWhy} The bomb arm (BOMB_PHASE_WAIT): ${out.why}.` };
+        }
+        /**
+         * ⛓⛓ hammer-phase DYING-BODY-WAIT — TIME's DYING-BODY ARM (`DYING_BODY_WAIT`, OFF: absent, no row, the refusal
+         * word for word the BEFORE one): every source of the hit a chaser the run has dying → wait out its "die" by the
+         * run's forecast, then walk this corridor (clean) or re-plan. Refused, TIME's why carries the arm's.
+         */
+        if (DYING_BODY_WAIT.enabled && rewind !== null && Array.isArray(corridor) && corridor.length > 0
+            && hit.sources.length > 0 && !rungGate('time', 'time:dying-body')) {
+            const out = dyingBodyWait(hit, corridor, dangerExcept, { axisAligned, stand });
+            if (out !== null) {
+                if (activeProgress !== null) progressRung('time');
+                DYING_BODY_WAIT_COUNTS.asked += 1;
+                if (out.wait) {
+                    DYING_BODY_WAIT_COUNTS.kept.push({ what, site: 'ladder', ...out.wait });
+                    rowFor('time', refused, { arm: 'dying-body', ...out.wait });
+                    return out.wait.clean ? { wps: corridor, escalations } : { escalations };
+                }
+                DYING_BODY_WAIT_COUNTS.refused.push({ what, site: 'ladder', t: perTick.length, why: out.why });
+                rowFor('time', refused, { arm: 'dying-body', why: out.why.slice(0, 160) });
+                refused = { rung: 'time', why: `${refused.why} The dying-body arm (DYING_BODY_WAIT): ${out.why}.` };
+            }
         }
 
         /**
