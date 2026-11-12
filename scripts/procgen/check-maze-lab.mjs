@@ -1107,6 +1107,66 @@ try {
         check(json(refused.payload) === json(first.payload),
             '⛔ …and a room-less sidecar (a region of a shared level world) is REFUSED BY NAME on the status line, '
             + 'leaving the room on screen as it was');
+
+        /* ── CLAIM 24: a LINK opens a converted room (maze converted link, step 2) ── */
+        /**
+         * ⛓⛓ `?preset=<id>&region=<name>`: the page fetches the preset index and the rules, resolves the region and
+         * hands the sidecar to `loadPayload`. The room-less region is read off the same rules (the first one), and
+         * its room is the sidecar whose `playable_payload.shared_world.regions` lists it — computed here from the
+         * file, not asked of the page. Each wait names the REGION it expects, which no earlier state carries.
+         */
+        const PRESET = 'seedling_playthrough_maze';
+        const linkQuery = (region) => `source=edit&preset=${PRESET}&region=${encodeURIComponent(region)}`;
+        const opened = (r) => window.__mazeLab?.presetLink?.region === r;
+        const loadLink = async (region, why) => {
+            await page.goto(`${PAGE}?${linkQuery(region)}`, { waitUntil: 'domcontentloaded' });
+            await settled(opened, why, region);
+            return read();
+        };
+        const byLink = await loadLink(roomKey, `the link to ${roomKey}`);
+        check(!byLink.fatal && byLink.presetLink?.room === roomKey && byLink.level?.traps?.length === want
+            && json(byLink.level) === json(first.level),
+            `⛓⛓ CLAIM 24: \`?preset=${PRESET}&region=${roomKey}\` OPENS that room with its ${want} arrow trap(s) — the `
+            + 'same level the LOAD box gives its sidecar', `traps ${byLink.level?.traps?.length} · room ${byLink.presetLink?.room}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `1-link-trap-room-${roomKey}.png`), fullPage: true });
+        await page.evaluate(() => { window.__mazeLab = null; });
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await settled(opened, 'the reloaded link', roomKey);
+        const reopened = await read();
+        check(new URLSearchParams(reopened.url).get('region') === roomKey && json(reopened.level) === json(byLink.level),
+            '⛓ …and a RELOAD keeps the room: the bar still names it and the level is the same', reopened.url);
+
+        const sidecars = rules.preset_sidecars['1'];
+        const [roomless, { shared_world: world }] = Object.entries(sidecars).find(([, s]) => s.playable_payload === undefined);
+        const holder = Object.keys(sidecars)
+            .find((k) => sidecars[k].playable_payload?.shared_world?.regions?.includes(roomless));
+        const holderLevel = (await loadLink(holder, `the link to ${holder}`)).level;
+        const viaWorld = await loadLink(roomless, `the link to the room-less ${roomless}`);
+        check(!viaWorld.fatal && viaWorld.presetLink?.room === holder && json(viaWorld.level) === json(holderLevel),
+            `⛓⛓ …a ROOM-LESS region (${roomless}, of the shared level world ${world}) opens the room that lists it, `
+            + `${holder}`, `room ${viaWorld.presetLink?.room}`);
+        const roomlessStatus = await page.evaluate(() => document.getElementById('status').textContent);
+        check(roomlessStatus.includes(roomless) && roomlessStatus.includes(holder) && roomlessStatus.includes(world),
+            '⛓ …and the status line names the region, its world and the room it opened', roomlessStatus);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `2-link-roomless-${roomless}.png`), fullPage: true });
+
+        const unknown = await load(linkQuery('no_such_region'), () => window.__mazeLab?.fatal, 'the unknown-region refusal');
+        const unknownStatus = await page.evaluate(() => document.getElementById('status').textContent);
+        check(/has no region "no_such_region"/.test(unknown.fatal ?? '') && unknownStatus === unknown.fatal,
+            '⛔ …and an unknown region is REFUSED BY NAME on the status line, with no level drawn', unknown.fatal);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, '3-link-refused-unknown-region.png'), fullPage: true });
+
+        await load('seed=1&count=1&run=1&source=edit', () => window.__mazeLab?.step === 1, 'a generated level');
+        await page.fill('#labPresetName', PRESET);
+        await page.fill('#labPresetRegion', roomKey);
+        await page.click('#labPresetOpen');
+        await settled(opened, 'the LOAD area\'s open-a-preset-room line', roomKey);
+        const typed = await read();
+        const typedBar = new URLSearchParams(await page.evaluate(() => window.location.search));
+        check(json(typed.level) === json(byLink.level) && typedBar.get('preset') === PRESET
+            && typedBar.get('region') === roomKey,
+            '⛓ …and the LOAD area\'s "open a preset room" line takes the same route: the same level, and the bar '
+            + 'names the room', typedBar.toString());
     }
 
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */
