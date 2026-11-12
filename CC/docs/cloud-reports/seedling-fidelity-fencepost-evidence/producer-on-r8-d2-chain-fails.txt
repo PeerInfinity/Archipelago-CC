@@ -1,0 +1,10 @@
+FAIL: ⛓⛓⛓ the headline's first 467 ticks ARE r8-solve-18's walk, key for key — first difference at tick 173: r8-solve-18 holds [], the headline holds [right, up]
+## r8-d2 budget: 340 span(s), 25 KB, 1773 ticks
+FAIL: r8-d2 is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+## r8-solve-18: PROMOTED, not re-authored — 467 ticks read from the committed tape (solve-seedling-r8-l18.mjs owns it)
+## r8-d2-19 budget: 116 span(s), 9 KB, 746 ticks
+## r8-d2-20 budget: 144 span(s), 11 KB, 560 ticks
+## PLAYTHROUGH_CHAINS.r8-d2: cuts [467, 1213], endsAt 1773
+## r8-d2: headline 1773t = r8-solve-18 467t + r8-d2-19 746t + r8-d2-20 560t, 2 internal seam(s)
+## there is NO hand answer for L18, L19 or L20 westward — the differential is the gate.
+2 FAILURE(S)

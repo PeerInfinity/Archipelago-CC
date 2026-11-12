@@ -1,0 +1,3 @@
+BEFORE (base 4bbf15fea9, 115 files): 2755 passed, 0 failed
+OFF at D1 head (120 files): 2858 passed, 0 failed
+ON  (SEEDLING_SPINNER_REMOVE_READ=1, 120 files): 2831 passed, 26 failed, 1 skipped — see vitest-bounded-on-fails.txt

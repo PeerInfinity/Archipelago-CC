@@ -85,9 +85,29 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 **File:** `test-substrates-manual.yml` (was `test-substrates-bot-walks.yml`)
 
-**Triggers:** Manual only (`workflow_dispatch`; the user ruled the bot walks manual-only on 2026-09-27, and the noiz2sa and runner rows on 2026-10-09)
+**Triggers:** Manual (`workflow_dispatch`; the user ruled the bot walks manual-only on 2026-09-27, and the noiz2sa and runner rows on 2026-10-09), plus `workflow_call` from the nightly below. Never push or pull_request.
 
 **Purpose:** The MANUAL batches of `npm test -- --mode=test-substrates` (`manual: true` in `frontend/modules/tests/testBatches.js`), which `test-templates.yml` never runs. The `batch` input names one manual batch or a path-filtered on-push batch (`apworld`), or `all` (the default) runs every manual batch as parallel jobs; any other on-push batch name is refused. One smoke row per manual substrate still runs on push (its config `batch` field).
+
+### Substrate tests — nightly manual batches
+
+**File:** `test-substrates-nightly.yml`
+
+**Triggers:** `schedule` `37 10 * * *` (10:37 UTC = 02:37 PST; 03:37 Pacific during PDT, still inside the after-hours window, so the cron is not shifted for DST), and `workflow_dispatch` (at the ref dispatched on; only a run at `main` is the nightly).
+
+**Purpose:** ⚖ Robert 2026-11-11 (option C). One run a night of every manual batch at `main`, as a drift signal. It calls `test-substrates-manual.yml` with `batch=all` (`workflow_call`), so the batch list, setup and per-batch headroom check are that file's. Its own `Nightly summary` job writes the job summary (per batch: PASSED/total, failing rows, NEVER STARTED / CUT OFF, the headroom verdict, the job's conclusion) and uploads `nightly-manual-summary.json` (artifact `nightly-manual-summary`, 30 days: `{runId, sha, ref, red, redBatches, batches: {<batch>: {result, passed, total, failing, neverStarted, cutOff, headroom, job}}}`, written by `scripts/test/nightly-manual-summary.js`). The run is red when any batch is red. Its own concurrency group means a second nightly waits behind the first.
+
+**⛔ A SIGNAL, NEVER EVIDENCE.** A nightly result at `main` is never landing evidence for any SHA, `main`'s next head included. A red is a note to the owner of the batch (via js-17 or the planner that reads it in the morning). Nothing is posted outside CI.
+
+**Morning pickup** (the newest scheduled run, its verdict, then its JSON):
+
+```bash
+id=$(gh run list -R PeerInfinity/Archipelago-CC -w test-substrates-nightly.yml -b main -e schedule -L 1 --json databaseId -q '.[0].databaseId'); d=$(mktemp -d); gh run download "$id" -R PeerInfinity/Archipelago-CC -n nightly-manual-summary -D "$d" && jq '{runId, sha, red, redBatches, batches: (.batches | map_values({result, passed, total, failing}))}' "$d/nightly-manual-summary.json"
+```
+
+### After-hours bulk runs (B1, convention; ⚖ Robert 2026-11-11)
+
+Bulk harvests and exploratory sweeps (divergence-sweep harvests, multi-arm A/B sweeps, survey batches, wasm-probe fan-outs) are dispatched **22:00–07:00 Pacific**, so they do not hold the runners that push gates wait on during the day. **Exempt, run now:** (1) anything a landing train dispatches; (2) gate runs at a slice tip (`train_only`, `full_matrix`, TT); (3) a re-measure that a queued packet is waiting on. It is a convention, with no enforcement. The nightly above is in the window too, and is a signal, never evidence.
 
 ---
 

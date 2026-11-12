@@ -15406,7 +15406,7 @@
         "locations": [
           {
             "name": "Ganon",
-            "id": null,
+            "id": 1573219,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15446,9 +15446,9 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
             "crystal": false,
-            "shop_slot_disabled": false
+            "shop_slot_disabled": false,
+            "pinned": true
           }
         ],
         "is_dark_world": true,
@@ -17705,14 +17705,12 @@
         "name": "Triforce",
         "id": 106,
         "groups": [
-          "Event",
           "Everything",
           "Progression Items"
         ],
         "classification": "progression",
-        "type": "Event",
+        "type": null,
         "max_count": 1,
-        "event": true,
         "hint_text": "the Triforce"
       },
       "Power Star": {

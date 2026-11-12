@@ -468,7 +468,9 @@ async function main() {
             { waitUntil: 'domcontentloaded' });
         await page.waitForFunction(() => window.__mazeLab?.source === 'edit', null, { timeout: 120000 });
         const tools = await page.$$eval('#labTools button', (bs) => bs.map((b) => b.dataset.tool));
-        check(json(tools) === json(['brush', 'rect', 'paste', 'flood', 'escape']),
+        // ⛓ Maze editor tools (B2): the maze lab now names editorView's FILL / CLEAR / MOVE too
+        //   (`mazeRoom/mazeEditTools.js`); REDO still has its own button, not a row here.
+        check(json(tools) === json(['brush', 'rect', 'paste', 'flood', 'fill', 'clear', 'move', 'escape']),
             '⛓ the maze\'s #labTools still holds exactly the view\'s own rows (REDO is its own button)', json(tools));
         await page.click('#labPalette button[data-type="wall"]');
         const geo = await page.evaluate(() => {

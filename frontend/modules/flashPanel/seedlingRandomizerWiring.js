@@ -870,7 +870,7 @@ export async function loadSeedlingRandomizer({
     // real rooms, so its cheap call is asked about them (the wasm one is not:
     // its answer here is byte-for-byte the pre-J3 one).
     const atlasRooms = transport === JS_TRANSPORT
-        ? { atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) } } : {};
+        ? { atlas: { rooms: atlasRoomRegions(rawRules, playerId).map((r) => r.region) } } : {};
     const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, ...atlasRooms });
     if (cheap.verdict === 'ineligible') return refuse(cheap);
 
@@ -927,7 +927,7 @@ export async function loadSeedlingRandomizer({
         manifest,
         // ⛓ G7: the real rooms, so a world the ledger cannot name DIVERTS
         // (check `atlas`) instead of failing (iii).
-        atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) },
+        atlas: { rooms: atlasRoomRegions(rawRules, playerId).map((r) => r.region) },
         placement: { resolved: census.direct + census.viaApId, total: census.total,
             unresolved: census.unjoined },
         assets,
@@ -1097,7 +1097,7 @@ export async function loadSeedlingGenerated({
         ...extra,
     });
 
-    const generated = generatedRoomCensus(rawRules);
+    const generated = generatedRoomCensus(rawRules, playerId);
     const eligibility = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated });
     if (eligibility.verdict === 'ineligible') return refuse(eligibility);
     if (eligibility.arm !== RANDOMIZER_ARMS.GENERATED) {
@@ -1143,6 +1143,7 @@ export async function loadSeedlingGenerated({
     const { set, invalidation, table, levelOf, report } = assembler.assembleGeneratedSeedlingSet(rawRules, {
         locationItemOf: (name) => itemOfRecord(byName.get(name)),
         selfPlayer,
+        playerId,
     });
     const assembleMs = Date.now() - t0;
     if (report.unjoined.length > 0) {
@@ -1296,6 +1297,7 @@ export async function loadSeedlingAtlas({
         itemOfEntity: itemOfEntityFrom({ itemForTag: derivation.ITEM_FOR_TAG,
             itemForKey: derivation.ITEM_FOR_KEY, victoryItem: derivation.VICTORY_ITEM }),
         propertyLocationOf: propertyLocationOfFrom(gameConfig, derivation.ITEM_FOR_TAG),
+        playerId,
         ...tagging,
     });
     for (const r of refused) {

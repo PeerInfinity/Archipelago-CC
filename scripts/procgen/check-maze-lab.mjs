@@ -594,6 +594,11 @@ console.log(`node: ELEMENT subject = seed ${ELEMENT_SUBJECT.seed} -> `
  * ══════════════════════════════════════════════════════════════════════ */
 
 const host = arg('host', '');
+/**
+ * ⛓ Maze editor tools (B2) — `--shots=<dir>` writes a screenshot of each B2 tool
+ * claim there. Off by default: a gate run writes nothing.
+ */
+const shotsDir = arg('shots', '') || null;
 const server = host ? null : await serveRepoRoot();
 const base = host || `http://127.0.0.1:${server.address().port}`;
 const PAGE = `${base}/frontend/modules/mazeRoom/lab.html`;
@@ -1811,7 +1816,7 @@ try {
      * `switch` beside the table would show a button the keyboard cannot reach.
      */
     const toolIds = await page.$$eval('#labTools button', (bs) => bs.map((b) => b.dataset.tool));
-    check(json(toolIds) === json(['brush', 'rect', 'paste', 'flood', 'escape']),
+    check(json(toolIds) === json(['brush', 'rect', 'paste', 'flood', 'fill', 'clear', 'move', 'escape']),
         '⛓ the TOOL box holds exactly the view\'s own command rows, in its order', json(toolIds));
     /**
      * ⛔⛔ **AND THEY ARE NOT IN THE PALETTE BOX.** The browser row above
@@ -2040,6 +2045,230 @@ try {
     check(/ENTRANCE/.test(clipStatus),
         '⛔ …and in the status line too, which is where a reader is already looking',
         clipStatus.trim());
+
+    /* ── CLAIM 21: MAZE EDITOR TOOLS (step B2) — FILL / CLEAR / MOVE ON ── */
+    /**
+     * ⛓⛓⛓ **`editorView`'s SHARED FILL / CLEAR / MOVE, TURNED ON IN THE MAZE
+     * LAB** (`mazeRoom/mazeEditTools.js` has the census; the REPLACE paste is
+     * OFF there because on the maze it lands the same world as ADD). ⛔ A FRESH
+     * load, so this claim sets its own state; every subject cell is searched for
+     * on the level's own tiles, as claim 14's are, and every value is read off
+     * the serialized level — never off a status line alone.
+     */
+    const b2Web = await load(`seed=7&width=${TOOL_ROOM.width}`
+        + `&height=${TOOL_ROOM.height}&count=0&source=edit`,
+    () => window.__mazeLab?.source === 'edit' && window.__mazeLab?.edits === 0,
+    'a fresh EDIT arm for the B2 tool claims');
+    const b2Lvl = b2Web.level;
+    const b2Exits = b2Lvl.exits.map((e) => `${e.x},${e.y}`);
+    const b2Busy = new Set([
+        `${b2Lvl.entrance.x},${b2Lvl.entrance.y}`, ...b2Exits,
+        ...(b2Lvl.items ?? []).map((i) => `${i.x},${i.y}`),
+        ...(b2Lvl.obstacles ?? []).map((o) => `${o.x},${o.y}`),
+        ...(b2Lvl.blocks ?? []).map((b) => `${b.x},${b.y}`),
+        ...(b2Lvl.buttons ?? []).map((b) => `${b.x},${b.y}`),
+    ]);
+    const b2Free = (tx, ty) => tx >= 0 && ty >= 0 && tx < TW && ty < TH
+        && b2Lvl.tiles[ty * TW + tx] === 0 && !b2Busy.has(`${tx},${ty}`);
+    const SQ4 = [[0, 0], [1, 0], [0, 1], [1, 1]];
+    /** ⛓ Two DISJOINT free 2x2 squares (A: the FILL, B: where MOVE takes it). */
+    const free2x2 = [];
+    for (let ty = 0; ty + 1 < TH; ty += 1) {
+        for (let tx = 0; tx + 1 < TW; tx += 1) {
+            if (SQ4.every(([dx, dy]) => b2Free(tx + dx, ty + dy))
+                && free2x2.every((q) => Math.abs(q.x - tx) > 2 || Math.abs(q.y - ty) > 2)) {
+                free2x2.push({ x: tx, y: ty });
+            }
+        }
+    }
+    const [QA, QB] = free2x2;
+    const inQ = (q, x, y) => q && x >= q.x && x <= q.x + 1 && y >= q.y && y <= q.y + 1;
+    const NB4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    /** ⛓ The ITEM's cell is placed by this claim (a `count=0` room carries none): a free
+     *  cell outside both squares with a free neighbour outside them too. */
+    let b2Item = null;
+    for (let ty = 0; ty < TH && !b2Item; ty += 1) {
+        for (let tx = 0; tx < TW && !b2Item; tx += 1) {
+            const ok = (x, y) => b2Free(x, y) && !inQ(QA, x, y) && !inQ(QB, x, y);
+            if (ok(tx, ty) && NB4.some(([dx, dy]) => ok(tx + dx, ty + dy))) b2Item = { x: tx, y: ty };
+        }
+    }
+    if (free2x2.length < 2 || !b2Item || b2Exits.length === 0) {
+        throw new Error('check-maze-lab: the 9x9 B2 room has no two disjoint free 2x2 squares, no '
+            + 'free cell for the item, or no exit — the B2 tool claims have no subject.');
+    }
+    const b2ItemNb = NB4.map(([dx, dy]) => ({ x: b2Item.x + dx, y: b2Item.y + dy }))
+        .find((c) => b2Free(c.x, c.y) && !inQ(QA, c.x, c.y) && !inQ(QB, c.x, c.y));
+    const b2Status = async () => (await page.textContent('#status')).trim();
+    const b2Tool = (id) => page.click(`#labTools button[data-tool="${id}"]`);
+    const b2Shot = async (name) => {
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `${name}.png`), fullPage: false });
+    };
+    const itemAt = (lvl, x, y) => (lvl.items ?? []).some((i) => i.x === x && i.y === y);
+    const wallsAt = (lvl, q) => SQ4.map(([dx, dy]) => tileAt(lvl, q.x + dx, q.y + dy));
+
+    const b2Ids = await page.$$eval('#labTools button', (bs) => bs.map((b) => b.dataset.tool));
+    check(json(b2Ids) === json(['brush', 'rect', 'paste', 'flood', 'fill', 'clear', 'move', 'escape']),
+        '⛓⛓ B2 — FILL, CLEAR and MOVE are tool buttons, after the four and before Escape',
+        json(b2Ids));
+    const b2Keys = await page.$$eval('#labTools button', (bs) => bs.map((b) => b.textContent));
+    check(['(l)', '(x)', '(m)'].every((k, i) => b2Keys[4 + i].endsWith(k)),
+        '⛓ …each carrying its key from the command table (l, x, m)', json(b2Keys));
+    const clearOpts = await page.$$eval('#labClearWhat option', (os) => os.map((o) => o.value));
+    check(json(clearOpts) === json(['', 'tile', 'entity']),
+        '⛓ the CLEAR select offers every field, or the maze descriptor\'s own `tile` / `entity`',
+        json(clearOpts));
+    check((await page.$$('#genEditPasteMode, #labPasteMode')).length === 0,
+        '⛔ …and there is NO paste-mode select: REPLACE lands the same world as ADD on the maze');
+
+    /* ⛓ THE ITEM SUBJECT, placed by this claim with the BRUSH (edit 1). */
+    await page.click('#labPalette button[data-type="item"]');
+    await b2Tool('brush');
+    await tClick(b2Item.x, b2Item.y);
+    await settled(() => window.__mazeLab?.edits === 1, 'the BRUSH to place the B2 item');
+    check(itemAt((await read()).level, b2Item.x, b2Item.y),
+        `⛓ the B2 subject: an item brushed at (${b2Item.x},${b2Item.y})`);
+
+    /* ⛔ MOVE with nothing selected refuses BY NAME. */
+    await b2Tool('move');
+    await tClick(QA.x, QA.y);
+    check(/nothing to MOVE/.test(await b2Status()) && (await read()).edits === 1,
+        '⛔ MOVE with no RECT selection REFUSES by name — and records nothing', await b2Status());
+
+    /* ⛔ FILL with an ENTITY palette entry refuses with the maze's own sentence. */
+    await page.click('#labPalette button[data-type="item"]');
+    await b2Tool('fill');
+    await tClick(QA.x, QA.y);
+    await tClick(QA.x + 1, QA.y + 1);
+    check(/FILL paints a TILE/.test(await b2Status()) && (await read()).edits === 1,
+        '⛔ FILL with ITEM armed REFUSES with the maze\'s sentence (`MAZE_FILL_REFUSAL`)',
+        await b2Status());
+
+    /* ⛓⛓⛓ FILL a 2x2 with WALL: ONE edit, four walls; undo and redo. */
+    await page.click('#labPalette button[data-type="wall"]');
+    await b2Tool('fill');
+    await tClick(QA.x, QA.y);
+    await tClick(QA.x + 1, QA.y + 1);
+    await settled(() => window.__mazeLab?.edits === 2, 'the FILL to land as ONE edit');
+    const filled = await read();
+    check(wallsAt(filled.level, QA).every((t) => t === 1)
+        && filled.editOps[1].op === 'group' && filled.editOps[1].members === 4,
+    `⛓⛓⛓ **FILL WALL over (${QA.x},${QA.y})-(${QA.x + 1},${QA.y + 1}) is ONE edit of four walls**`,
+    `${json(wallsAt(filled.level, QA))} ${json(filled.editOps)}`);
+    await b2Shot('1-fill');
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.edits === 1, 'Ctrl+Z to undo the FILL');
+    check(wallsAt((await read()).level, QA).every((t) => t === 0),
+        '⛓ …Ctrl+Z takes all four back', json(wallsAt((await read()).level, QA)));
+    await page.keyboard.press('Control+Shift+Z');
+    await settled(() => window.__mazeLab?.edits === 2, 'Ctrl+Shift+Z to redo the FILL');
+    check(wallsAt((await read()).level, QA).every((t) => t === 1),
+        '⛓ …and Ctrl+Shift+Z puts all four back', json(wallsAt((await read()).level, QA)));
+
+    /* ⛔ FILL WALL over a cell holding an item: the maze's own `occupied`, refused WHOLE. */
+    await tClick(b2Item.x, b2Item.y);
+    await tClick(b2ItemNb.x, b2ItemNb.y);
+    const occ = await read();
+    check(/occupied/.test(await b2Status()) && occ.edits === 2
+        && tileAt(occ.level, b2ItemNb.x, b2ItemNb.y) === 0,
+    `⛔ FILL WALL over the item at (${b2Item.x},${b2Item.y}) REFUSES whole — the maze's own `
+        + '`occupied` — and its free neighbour is NOT walled', await b2Status());
+
+    /* ⛓⛓⛓ CLEAR, entity only: the item goes, the tile stays; undo, redo. */
+    await page.selectOption('#labClearWhat', 'entity');
+    await b2Tool('clear');
+    await tClick(b2Item.x, b2Item.y);
+    await tClick(b2Item.x, b2Item.y);
+    await settled(() => window.__mazeLab?.edits === 3, 'the entity CLEAR to land');
+    const clrE = await read();
+    check(!itemAt(clrE.level, b2Item.x, b2Item.y) && tileAt(clrE.level, b2Item.x, b2Item.y) === 0
+        && /clear entity 1x1/.test(clrE.editOps[2].label ?? ''),
+    `⛓⛓ CLEAR (entity only) removed the item at (${b2Item.x},${b2Item.y}) and left the floor`,
+    json(clrE.editOps[2]));
+    await b2Shot('2-clear-entity');
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.edits === 2, 'Ctrl+Z to undo the entity CLEAR');
+    check(itemAt((await read()).level, b2Item.x, b2Item.y), '⛓ …Ctrl+Z puts the item back');
+    await page.keyboard.press('Control+y');
+    await settled(() => window.__mazeLab?.edits === 3, 'Ctrl+Y to redo the entity CLEAR');
+    check(!itemAt((await read()).level, b2Item.x, b2Item.y), '⛓ …and Ctrl+Y clears it again');
+
+    /* ⛓⛓ CLEAR, tile only, over the filled square: the walls become floor. */
+    await page.selectOption('#labClearWhat', 'tile');
+    await tClick(QA.x, QA.y);
+    await tClick(QA.x + 1, QA.y + 1);
+    await settled(() => window.__mazeLab?.edits === 4, 'the tile CLEAR to land');
+    check(wallsAt((await read()).level, QA).every((t) => t === 0),
+        '⛓⛓ CLEAR (tile only) turned the four walls back to FLOOR — a maze cell\'s empty tile',
+        json(wallsAt((await read()).level, QA)));
+    await b2Shot('3-clear-tile');
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.edits === 3, 'Ctrl+Z to undo the tile CLEAR');
+    check(wallsAt((await read()).level, QA).every((t) => t === 1), '⛓ …Ctrl+Z puts the walls back');
+
+    /* ⛓⛓ CLEAR everything over the walled square. */
+    await page.selectOption('#labClearWhat', '');
+    await tClick(QA.x, QA.y);
+    await tClick(QA.x + 1, QA.y + 1);
+    await settled(() => window.__mazeLab?.edits === 4, 'the CLEAR (everything) to land');
+    check(wallsAt((await read()).level, QA).every((t) => t === 0),
+        '⛓⛓ CLEAR (everything in the cell) emptied the square too',
+        json(wallsAt((await read()).level, QA)));
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.edits === 3, 'Ctrl+Z to undo the CLEAR (everything)');
+
+    /* ⛔ CLEAR over bare floor refuses by name. */
+    await tClick(QB.x, QB.y);
+    await tClick(QB.x + 1, QB.y + 1);
+    check(/found nothing to clear/.test(await b2Status()) && (await read()).edits === 3,
+        '⛔ CLEAR over bare floor REFUSES by name — an empty group is not an edit', await b2Status());
+
+    /* ⛓⛓⛓ MOVE the walled square A → B: ONE edit, source floor, destination walls. */
+    await b2Tool('rect');
+    await tClick(QA.x, QA.y);
+    await tClick(QA.x + 1, QA.y + 1);
+    await settled(() => window.__mazeLab?.editClip?.w === 2, 'the 2x2 RECT selection');
+    await b2Tool('move');
+    await tClick(QA.x, QA.y);
+    check(/not a move/.test(await b2Status()) && (await read()).edits === 3,
+        '⛔ MOVE onto its own source REFUSES by name', await b2Status());
+    await tClick(QB.x, QB.y);
+    await settled(() => window.__mazeLab?.edits === 4, 'the MOVE to land as ONE edit');
+    const b2Moved = await read();
+    check(wallsAt(b2Moved.level, QA).every((t) => t === 0) && wallsAt(b2Moved.level, QB).every((t) => t === 1)
+        && b2Moved.editOps[3].op === 'group' && /^move /.test(b2Moved.editOps[3].label)
+        && b2Moved.editClipSpent === true,
+    `⛓⛓⛓ **MOVE (${QA.x},${QA.y})→(${QB.x},${QB.y}) is ONE edit**: the source is floor, the `
+        + 'destination walled, the selection spent',
+    `${json(wallsAt(b2Moved.level, QA))} ${json(wallsAt(b2Moved.level, QB))} ${json(b2Moved.editOps[3])}`);
+    await b2Shot('4-move');
+    await tClick(QA.x, QA.y);
+    check(/already MOVED/.test(await b2Status()) && (await read()).edits === 4,
+        '⛔ a second MOVE of the spent selection REFUSES by name', await b2Status());
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.edits === 3, 'Ctrl+Z to undo the MOVE');
+    const unmoved = await read();
+    check(wallsAt(unmoved.level, QA).every((t) => t === 1) && wallsAt(unmoved.level, QB).every((t) => t === 0),
+        '⛓⛓ …ONE Ctrl+Z puts the whole move back — the cut AND the paste',
+        `${json(wallsAt(unmoved.level, QA))} ${json(wallsAt(unmoved.level, QB))}`);
+    await page.keyboard.press('Control+Shift+Z');
+    await settled(() => window.__mazeLab?.edits === 4, 'Ctrl+Shift+Z to redo the MOVE');
+    check(wallsAt((await read()).level, QB).every((t) => t === 1), '⛓ …and redo moves it again');
+
+    /* ⛔ MOVE a wall onto the EXIT: the maze's own `protected-exit`, refused whole. */
+    const exit = b2Lvl.exits[0];
+    await b2Tool('rect');
+    await tClick(QB.x, QB.y);
+    await tClick(QB.x, QB.y);
+    await settled(() => window.__mazeLab?.editClip?.w === 1, 'a 1x1 wall selection');
+    await b2Tool('move');
+    await tClick(exit.x, exit.y);
+    const onExit = await read();
+    check(/exit/.test(await b2Status()) && onExit.edits === 4 && tileAt(onExit.level, exit.x, exit.y) === 0
+        && tileAt(onExit.level, QB.x, QB.y) === 1,
+    `⛔ MOVE of a wall onto the exit at (${exit.x},${exit.y}) REFUSES whole — the maze's own exit `
+        + 'rule — and the source wall stays', await b2Status());
+    await b2Shot('5-move-refused-exit');
 
     /**
      * ⛓⛓⛓ **CLAIM 7, EXTENDED: AN EDITED PAYLOAD WHOSE LIST CARRIES A `group`

@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            A Link to the Past WorldGen
-Location Count:                  249
+Location Count:                  250
 Progression Balancing:           50
 Accessibility:                   Items
 Local Items:                     

@@ -143,6 +143,48 @@ export function mazeWriteOps(desc, x, y) {
 }
 
 /**
+ * ⛓⛓ **THE OPS THAT EMPTY A MAZE CELL** — `editCore`'s optional `clearOps`
+ * (maze editor tools, step B2): what the maze lab's CLEAR and a MOVE's cut are
+ * made of.
+ *
+ * `fields` is a subset of the descriptor's `['tile', 'entity']` (`null`: both).
+ *
+ *  · **`entity` → one `clearEntity`**, and only when the cell holds a part
+ *    that op removes. ⛔ The ENTRANCE is not one of them (bound 4 above: it has
+ *    nowhere to go), so a cell whose only part is the entrance clears to
+ *    NOTHING — and a CLEAR over it says "nothing to clear" rather than
+ *    recording an op that changes no world.
+ *  · **`tile` → `setTile floor` on a WALL.** A maze cell always HAS a tile
+ *    (`readMazeCell` never answers `tile: null` for an in-bounds cell), so the
+ *    empty tile is FLOOR — the tile every other part stands on. A floor cell
+ *    has no tile to clear.
+ *
+ * ⛔ THE ORDER IS `mazeWriteOps`' ORDER, for the same refusal: entities first,
+ * then the tile. (A wall cannot hold an entity, so on a valid world the two
+ * never meet in one cell; the order is kept so a world that broke that rule
+ * still clears instead of refusing on its own leftovers.)
+ *
+ * ⚠ `incoming` (the descriptor a REPLACE paste is about to write) skips a
+ * field that paste will write anyway, as Seedling's does. The maze lab offers
+ * no REPLACE paste — `mazeWriteOps` already EMPTIES the entity field before it
+ * writes one (its `clearEntity`), and always writes the tile, so a REPLACE
+ * would land the same world as an ADD (pinned in `mazeEditTools.test.js`).
+ */
+export function mazeClearOps(record, x, y, { fields = null, incoming = null } = {}) {
+    const want = (f) => fields === null || fields.includes(f);
+    const cell = readMazeCell(record, x, y);
+    const out = [];
+    if (want('entity') && cell.entity
+        && Object.keys(cell.entity).some((k) => k !== 'entrance')) {
+        out.push({ op: 'clearEntity', x, y });
+    }
+    if (want('tile') && cell.tile === 'wall' && !incoming?.tile) {
+        out.push({ op: 'setTile', x, y, tile: 'floor' });
+    }
+    return out;
+}
+
+/**
  * ⛓ THE ADAPTER. `locationNameFormat` is the ONE page-level convention an op
  * does not carry (`applyEditOp`'s own note), so it is a construction parameter
  * here rather than a default this file invents.
@@ -177,6 +219,7 @@ export function createMazeEditAdapter({ locationNameFormat = undefined } = {}) {
         bounds: (record) => ({ w: record.width, h: record.height }),
         readCell: readMazeCell,
         writeOps: mazeWriteOps,
+        clearOps: mazeClearOps,
     });
 }
 
