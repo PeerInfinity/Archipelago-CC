@@ -1,0 +1,82 @@
+295	28	exit	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
+296	28	exit	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0
+297	28	location	level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
+298	28	exit	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96
+299	28	exit	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0
+300	28	location	level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
+301	28	exit	level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
+302	28	exit	level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304
+310	30	exit	level_30__r0c4 <- in_L22_96_192 -> exit:out_teleporter_64_0
+311	30	exit	level_30__r2c10 <- in_L28_304_16 -> exit:out_teleporter_0_128
+312	30	exit	level_30__r2c10 <- in_L28_304_16 -> exit:out_stairsdown_192_48
+313	30	exit	level_30__r2c10 <- in_L28_304_16 -> exit:out_pit_3_34
+314	30	location	level_30__r2c10 <- in_L28_304_16 -> location:Level 030 - Torchpickup
+315	30	location	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+316	30	location	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+317	30	exit	level_30__r2c10 <- in_L31_160_384 -> exit:out_teleporter_0_128
+318	30	exit	level_30__r2c10 <- in_L31_160_384 -> exit:out_stairsdown_192_48
+319	30	exit	level_30__r2c10 <- in_L31_160_384 -> exit:out_pit_3_34
+320	30	location	level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - Torchpickup
+321	30	location	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+322	30	location	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+323	30	exit	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128
+324	30	exit	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_stairsdown_192_48
+325	30	exit	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34
+326	30	location	level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+327	30	location	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+328	30	location	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+329	30	exit	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128
+330	30	exit	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48
+331	30	exit	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34
+332	30	location	level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+333	30	location	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+334	30	location	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+335	30	exit	level_30__r8c13 <- in_L32_72_136 -> exit:out_stairsup_224_160
+372	40	exit	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+373	40	exit	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+374	40	location	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+375	40	location	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared
+376	40	location	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+377	40	exit	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+378	40	exit	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+379	40	location	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+380	40	location	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared
+381	40	location	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+382	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+383	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+384	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+385	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+386	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+387	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+388	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+389	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+390	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+391	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+392	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+393	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+394	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+395	40	exit	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+396	40	location	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+397	40	location	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+398	40	location	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+399	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+400	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+401	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+402	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+403	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+404	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+405	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+406	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+407	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+408	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+409	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+410	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+411	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+412	40	exit	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+413	40	location	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+414	40	location	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+415	40	location	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+874	40	location	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+875	40	location	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+876	40	location	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared
+877	40	location	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared
