@@ -94,6 +94,7 @@ import {
     loadPayload, openEditSession, planFrames, projectSession, readLabParams,
     serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
+import { describePresetLink, openPresetRegion } from './mazeLabPreset.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE SHARED TOOL, MOUNTED.** ⛔ The canvas tool,
  * the stroke-is-one-group law, the command table and the key map are
@@ -727,6 +728,8 @@ export function main() {
         const search = writeLabParams(window.location.search, {
             source: params.source,
             ...labUrlFields(state),
+            /** ⛓ MAZE CONVERTED LINK — kept while the link's room is on screen, deleted once it is replaced. */
+            presetLink: state.presetLink?.asked ?? null,
         });
         window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     };
@@ -1837,10 +1840,64 @@ export function main() {
         say(`downloaded ${name}`);
     };
 
+    /**
+     * ⛓⛓ MAZE CONVERTED LINK (step 2 of 3) — **`?preset=` + `?region=` → ONE PRESET ROOM**, through
+     * `mazeLabPreset.openPresetRegion` (index → rules → sidecar, every refusal by name) and then `loadPayload`, the ONE
+     * loader. The state carries `presetLink` so the bar keeps naming the room while it is on screen (`writeUrl`), and
+     * a GENERATE press or a LOAD — a state without it — drops it. ⛔ No preset name here: the documents say it all.
+     */
+    const bootPresetRoom = async ({ preset, region }) => {
+        const link = await openPresetRegion({
+            preset,
+            region,
+            fetchJson: async (path) => {
+                const res = await fetch(frontendUrl(path));
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            },
+        });
+        const { sidecar: _sidecar, ...where } = link;
+        adopt(Object.freeze({
+            ...loadPayload(link.sidecar),
+            presetLink: Object.freeze({ ...where, asked: Object.freeze({ preset, region }) }),
+        }));
+        say(describePresetLink(link));
+    };
+
+    /** The LOAD area's "open a preset room" line: the same route as the URL, and the bar says so on success. */
+    const openPresetFromBox = async () => {
+        const q = new URLSearchParams(window.location.search);
+        q.set('preset', $('labPresetName').value.trim());
+        q.set('region', $('labPresetRegion').value.trim());
+        q.delete('gen');
+        try {
+            const asked = readLabParams(`?${q}`);
+            await bootPresetRoom(asked);
+            params = { ...params, preset: asked.preset, region: asked.region };
+        } catch (e) {
+            say(e.message, true);
+            render();
+            return;
+        }
+        editor = null;
+        lastSolve = null;
+        clearPlay();
+        payloadCheck = null;
+        window.history.replaceState(null, '', `${window.location.pathname}?${q}`);
+        render();
+    };
+
     const loadFromBox = () => {
         try {
             const payload = JSON.parse($('labText').value);
             adopt(loadPayload(payload));
+            /** ⛓ MAZE CONVERTED LINK — the box replaced the link's room, so the bar stops naming it. */
+            const bar = new URLSearchParams(window.location.search);
+            if (bar.has('preset') || bar.has('region')) {
+                bar.delete('preset');
+                bar.delete('region');
+                window.history.replaceState(null, '', `${window.location.pathname}?${bar}`);
+            }
             editor = null;
             lastSolve = null;
             clearPlay();
@@ -3270,6 +3327,9 @@ export function main() {
              * field is the one fact that separates the two.
              */
             loaded: Boolean(state.loaded),
+            /** ⛓ MAZE CONVERTED LINK — where a link-opened room came from (`null` for any other level). */
+            presetLink: state.presetLink
+                ? (({ asked: _a, ...where }) => where)(state.presetLink) : null,
             identity: $('identity').textContent,
             /**
              * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, PUBLISHED AS IT STANDS. ⚠ It was
@@ -4152,6 +4212,7 @@ export function main() {
         if ($('labRedo')) lt.on($('labRedo'), 'click', redoCommand.run);
         lt.on($('labDownload'), 'click', download);
         lt.on($('labLoad'), 'click', loadFromBox);
+        if ($('labPresetOpen')) lt.on($('labPresetOpen'), 'click', () => { openPresetFromBox(); });
         lt.on($('labUpload'), 'change', (e) => {
             const file = e.target.files?.[0];
             if (!file) return;
@@ -4491,6 +4552,10 @@ export function main() {
         } else if (params.library) {
             await ensureSetSchemas();
             await bootLibrary(params.library);
+        }
+        if (params.preset) {
+            await bootPresetRoom(params);
+            return;
         }
         if (params.gen) {
             /**

@@ -294,6 +294,32 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  */
 export { readRoomParam };
 
+/**
+ * ⛓⛓ MAZE CONVERTED LINK (step 2 of 3) — **`?preset=` + `?region=` OPEN ONE ROOM OF A COMMITTED PRESET.** `?preset=`
+ * is a key of `presets/preset_files.json` (`<id>`, or `<id>/<folder>` when it has several folders) and `?region=` a
+ * region of its `preset_sidecars`; `mazeLabPreset.openPresetRegion` resolves them (a room-less region of a shared level
+ * world opens the room that lists it) and the page hands the sidecar to `loadPayload`. ⛔ Both or neither, and never
+ * beside `?gen=`: two level sources on one bar would be a link that names two levels. A preset or region the documents
+ * do not have is refused at BOOT, by name, on the status line (the reader cannot see the documents).
+ * ⚠ COPIED FORWARD while the room on screen is the one the link opened, and DELETED by `writeLabParams` once a
+ * GENERATE press or a LOAD replaces it — so a reload re-opens the room, and never a room nobody is looking at.
+ */
+export function readPresetLinkParams(q) {
+    const preset = q.get('preset');
+    const region = q.get('region');
+    if ((preset === null) !== (region === null)) {
+        fail(`mazeLab: ?${preset === null ? 'region' : 'preset'}= without ?${preset === null ? 'preset' : 'region'}= — `
+            + 'a preset room is named by BOTH: `?preset=<preset id>&region=<region name>`');
+    }
+    if (preset !== null && (!preset || !region)) {
+        fail(`mazeLab: ?preset=${JSON.stringify(preset)}&region=${JSON.stringify(region)} — both must name something`);
+    }
+    if (preset !== null && q.get('gen') !== null) {
+        fail('mazeLab: ?preset= and ?gen= both name a level — a link opens ONE (drop one of them)');
+    }
+    return { preset, region };
+}
+
 export function readLabParams(search) {
     const q = new URLSearchParams(search);
     const source = (q.get('source') || SOURCES.GENERATE).toLowerCase();
@@ -389,6 +415,7 @@ export function readLabParams(search) {
          * a library and a world would make the one parameter mean two things. Copied forward, never written.
          */
         setView: q.get('setView') === 'map' ? 'map' : 'strip',
+        ...readPresetLinkParams(q),
         /** RUN-ALL on load. `?run=1` is also how the step encoding is read. */
         run: q.get('run') === '1',
     };
@@ -412,10 +439,21 @@ export function readLabParams(search) {
 export function writeLabParams(search, {
     source = SOURCES.GENERATE, seed, biome, width, height, bounds, budget, step,
     roster = null, payloadOwned = false, skeleton = DEFAULT_SKELETON,
-    areas = DEFAULT_AREAS, require = null, elements = DEFAULT_ELEMENTS,
+    areas = DEFAULT_AREAS, require = null, elements = DEFAULT_ELEMENTS, presetLink = null,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
+    /**
+     * ⛓⛓ MAZE CONVERTED LINK — `presetLink` is the `{preset, region}` the room ON SCREEN was opened by (see
+     * `readPresetLinkParams`): written back while it is, DELETED once a press or a LOAD has replaced that room.
+     */
+    if (presetLink) {
+        q.set('preset', String(presetLink.preset));
+        q.set('region', String(presetLink.region));
+    } else {
+        q.delete('preset');
+        q.delete('region');
+    }
     q.delete('gen');
     q.set('source', String(source));
     writeInt(q, 'seed', seed);

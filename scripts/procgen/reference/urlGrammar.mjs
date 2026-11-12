@@ -114,6 +114,8 @@ const PAGE_REGIONS = [
         regions: [
             { file: 'mazeLab', fn: 'readLabParams', role: 'read' },
             { file: 'mazeLab', fn: 'writeLabParams', role: 'write' },
+            /** ⛓ Maze converted link — `readLabParams` spreads it; the keys are read here. */
+            { file: 'mazeLab', fn: 'readPresetLinkParams', role: 'read' },
         ],
     },
 ];
@@ -191,6 +193,14 @@ const PARAM_NOTES = {
      * Seedling's own and stays what it is (⚖ Q4 put the world editor here).
      */
     world: { field: { watch: null, lab: 'world' }, codec: 'a path to a WORLD BUNDLE `.zip` (a level set + a region library + the `world.json` that names them)', terms: ['content-source', 'region'] },
+    /**
+     * ⛓⛓ MAZE CONVERTED LINK (step 2 of 3) — a COMMITTED PRESET's room, by name: `?preset=` is a key of
+     * `presets/preset_files.json` and `?region=` a region of its `preset_sidecars` (a room-less region of a shared
+     * level world opens the room that lists it). Both or neither; never beside `?gen=`. A name the documents do not
+     * have is refused at boot, by name. Copied forward while that room is on screen, deleted once it is replaced.
+     */
+    preset: { field: { watch: null, lab: 'preset' }, codec: 'a preset id of `presets/preset_files.json` (`<id>`, or `<id>/<folder>` when it has several) — `mazeLabPreset.presetRulesPath`', terms: ['content-source', 'region'] },
+    region: { field: { watch: null, lab: 'region' }, codec: 'a region name of that preset\'s `preset_sidecars` — `mazeLabPreset.resolvePresetRegion`', terms: ['region'] },
     room: { field: { watch: 'room', lab: 'room' }, codec: 'a non-negative integer INDEX into the held document\'s rooms — `urlParams.readRoomParam`, shared by both pages', terms: ['region'] },
     /** ⛓ Seedling editor E3 — which view the SET overview opens on. Watch-only: the maze lab has no map. */
     setView: { field: { watch: 'setView', lab: 'setView' }, codec: 'the SET overview: the one-row STRIP or the 2D MAP derived from the exits. `watch.html`: `strip` opens on the strip, anything else (or absent) the map. `lab.html`: `map` opens on the map, anything else (or absent) the strip, and a world session is always the strip', terms: ['region'] },
