@@ -4472,27 +4472,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Sword"
+                        "item_name": "Fire"
                       }
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                  }
                 }
               ]
             }
@@ -4504,27 +4515,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Sword"
+                        "item_name": "Fire"
                       }
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                  }
                 }
               ]
             }
@@ -4699,27 +4721,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Sword"
+                        "item_name": "Fire"
                       }
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                  }
                 }
               ]
             }

@@ -1,0 +1,4 @@
+ .../seedling_playthrough/AP_1/AP_1_rules.json      | 105 ++++++++++++++-------
+ worlds/seedling_playthrough/Rules.py               |   6 +-
+ worlds/seedling_playthrough/_worldgen_rules.json   |   2 +-
+ 3 files changed, 73 insertions(+), 40 deletions(-)
