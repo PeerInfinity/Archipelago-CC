@@ -109,7 +109,10 @@ const ks = stateOf(kinds);
 const struckKey = [...kinds.blocks.keys()].find((k) => blockLook(kinds, kinds.blocks.get(k)) === 'struck');
 const pls = stateOf(pulls);
 const viewOf = (w, s, extra = {}) => ({ tilePx: TILE_PX, inventory: s.inventory, blocks: s.blocks ?? null, playerPos: s.player_pos, facing: 'E', ...extra });
-const base = viewOf(plain, ps, { blockKinds: { [blocks[blocks.length - 1]]: dormantKind } });
+// The dormant kind is staged on a block in its OWN view: a payload may hold a single block, and the block card must
+// show that block as the walked crate it is.
+const base = viewOf(plain, ps);
+const dormantView = viewOf(plain, ps, { blockKinds: { [blocks[blocks.length - 1]]: dormantKind } });
 const onButton = viewOf(plain, ps, { playerPos: at(buttons[0]) });
 
 const THINGS = {
@@ -122,7 +125,7 @@ const THINGS = {
     trap: [plain, base, plain.traps[0]],
     block: [plain, base, at(blocks[0])],
     blockStruck: [kinds, viewOf(kinds, ks), struckKey ? at(struckKey) : null],
-    blockDormant: [plain, base, at(blocks[blocks.length - 1])],
+    blockDormant: [plain, dormantView, at(blocks[blocks.length - 1])],
     button: [plain, base, at(buttons[buttons.length - 1])],
     buttonDown: [plain, onButton, at(buttons[0])],
     pulser: [plain, base, pulserAt],
