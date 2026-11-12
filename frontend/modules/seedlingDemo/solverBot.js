@@ -199,6 +199,8 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
+// ⛓ hammer-phase GHOST-STRIKE-GATE: a Ghost-Sword-only run swings no blade the game ignores (a family file, OFF).
+import { bladeSwings, ghostOnlyWhy } from './ghostStrikeGate.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import {
@@ -6602,7 +6604,8 @@ export function strikePolicyFor(run, { dashPlan = null,
     // ⛓ hammer-phase AXIS — an axis-aligned walk's row (`axisStrikeFor`, `AXIS_STRIKE` ON only): see `axisAlongStrike`.
     axisAlong = false } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
-    const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
+    // ⛓ GHOST-STRIKE-GATE (OFF: `hasSword || hasGhostSword`, byte-identical): ON, `slash()` is `if (hasSword)`.
+    const hasSword = bladeSwings(run.progress('inventory'));
     if (!hasSword) return null;
     /**
      * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
@@ -8036,7 +8039,10 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
      * preview a whole corridor per candidate tick would be a scan whose answer
      * is known from one field.
      */
-    if (!(run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword)) {
+    if (!bladeSwings(run.progress('inventory'))) {
+        // ⛓ GHOST-STRIKE-GATE: ON, a Ghost-Sword-only run is refused in `ghostSwingRefusal`'s words (OFF: unreachable).
+        const ghostWhy = ghostOnlyWhy(run.progress('inventory'));
+        if (ghostWhy) return refuse(`no dash: ${ghostWhy}`);
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
     }
@@ -13274,7 +13280,10 @@ function deriveChaserKillOrder(run, bodies) {
         ids.push(id);
     }
     const inv = run.progress('inventory') ?? {};
-    if (!(inv.hasSword || inv.hasGhostSword)) {
+    if (!bladeSwings(inv)) {
+        // ⛓ GHOST-STRIKE-GATE: ON, a Ghost-Sword-only run is named in `ghostSwingRefusal`'s words (OFF: unreachable).
+        const ghostWhy = ghostOnlyWhy(inv);
+        if (ghostWhy) return { ok: false, why: `no press kill: ${ghostWhy}` };
         return { ok: false, why: 'this run holds no sword, so `set slashing`\'s outer gate refuses every press' };
     }
     return { ok: true, ids };
