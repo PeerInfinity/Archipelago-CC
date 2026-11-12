@@ -93,6 +93,20 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
             // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the death is t767 (t780 before).
             + '-> kill (spinner@880,848) by press: the player died at t767 (chaser bob@736,752)');
     }), 300_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the two rows above are BEFORE pins (`withL40Flip(false)`). At the SHIPPED
+    // defaults, as their comment says, this door-shut solve stops before a tick at `buttonroom@880,768`, in BOTH
+    // `stanceReentryNextDoor` arms — so neither STANCE_REENTRY nor its next-door pass is exercised from step 93's boot at
+    // the defaults (COVERAGE MOVED: the shipped chain is the pocket and latch boots' SOLVES, L40BK2's / L40LATCH's AFTER).
+    it('AFTER (the shipped defaults), both arms: step 93 refuses before a tick — no REACHABLE stance inside buttonroom@880,768', async () => {
+        for (const on of [false, true]) {
+            const e = await withContactFidelity({ stanceReentryNextDoor: on }, solveStep93);
+            expect(e).toBeInstanceOf(SolverRefusal);
+            expect(e.message.startsWith('solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40')).toBe(true);
+            expect(e.message).not.toContain('STANCE_REENTRY');
+            expect(e.perTick.length).toBe(0);
+        }
+    }, 300_000);
 });
 
 describe('L40RES D1 — leg 368 at seam time 5290: the game\'s t1222 hit is the model\'s too', () => {
