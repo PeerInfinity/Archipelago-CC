@@ -36,7 +36,7 @@ const GOAL_COLOUR = '#ffffff';
 const BLOCKER_COLOUR = '#ff8c1a';
 const WINDOW_COLOUR = '#f5c518';
 const ROUTE_COLOUR = '#ffffff';
-const OTHER_ROUTE_COLOUR = 'rgba(255,255,255,0.3)';
+const OTHER_ROUTE_COLOUR = 'rgba(255,255,255,0.4)';
 const DASH_COLOUR = '#f5c518';
 const SANS = 'font-family:system-ui,sans-serif;';
 
@@ -395,7 +395,7 @@ export class SolveWatchView {
         const route = routes.route;
         if (!route) return;
         line(route.cells, ROUTE_COLOUR, Math.max(1, Math.floor(px / 4)), phase === 'running' ? [4, 3] : []);
-        const h = Math.max(3, Math.ceil(px / 2));
+        const h = Math.max(2, Math.round(px * 0.4)); // small: a dashing route presses on most of its cells
         ctx.fillStyle = DASH_COLOUR;
         ctx.strokeStyle = MAP_BACKGROUND;
         ctx.lineWidth = 1;

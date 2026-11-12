@@ -364,13 +364,13 @@ describe('⛓ WATCHER — the view', () => {
             t.run();
             ops = lastDraw();
             expect(lineOps(ops)).toEqual([
-                ['setLineDash', [2, 2], 'rgba(255,255,255,0.3)'], ['stroke', 'rgba(255,255,255,0.3)'], ['setLineDash', [], 'rgba(255,255,255,0.3)'],
+                ['setLineDash', [2, 2], 'rgba(255,255,255,0.4)'], ['stroke', 'rgba(255,255,255,0.4)'], ['setLineDash', [], 'rgba(255,255,255,0.4)'],
                 ['setLineDash', [], '#ffffff'], ['stroke', '#ffffff'], ['setLineDash', [], '#ffffff'],
                 ['fill', '#f5c518'], ['stroke', '#0a0a0a'], ['fill', '#f5c518'], ['stroke', '#0a0a0a'],
                 ['stroke', '#ffffff'], // the goal ✕
             ]);
             const diamonds = ops.filter((o) => o[0] === 'moveTo').slice(2, 4).map((o) => o.slice(1, 3));
-            expect(diamonds).toEqual([[17.5, 34.5], [24.5, 41.5]]);
+            expect(diamonds).toEqual([[17.5, 35.5], [24.5, 42.5]]);
             expect(t.view.legend.textContent).toBe('red: where it searched · white line: the final route · gold ◆: a sword-dash'
                 + ' · faint: the plain walk pass\'s route · ✕ goal');
         } finally { t.restore(); }
