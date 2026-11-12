@@ -1,7 +1,7 @@
 // OPP-DASH-DEFERS — leg (key) `level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12:
 // wandlock@480,560 cleared` under the hammerClearTagChain.train row's set (dashless, uncapped, `withL40Flip(false)`).
 // Prints the verdict, work, ticks, plan sha, hits, the OPP_DASH_DEFERS counts and every in-window aim the policy saw.
-// Usage: node leg871.mjs [--defers=0|1] [--bodygate=0|1]
+// Usage: node leg871.mjs [--defers=0|1] [--bodygate=0|1] [--fixture=leg872-l43-l40-request.json.gz] (872: the control)
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
@@ -18,7 +18,7 @@ const { withL40Flip } = await import(M + 'l40FlipSet.js');
 const arg = (k, d) => process.argv.find((a) => a.startsWith(`--${k}=`))?.split('=')[1] ?? d;
 const defers = arg('defers', '0') === '1';
 const bodyGate = arg('bodygate', '0') === '1';
-const FIX = JSON.parse(gunzipSync(readFileSync(M + 'fixtures/hammer-cleartag-chain/leg871-l39-l40-request.json.gz')).toString('utf8'));
+const FIX = JSON.parse(gunzipSync(readFileSync(M + 'fixtures/hammer-cleartag-chain/' + arg('fixture', 'leg871-l39-l40-request.json.gz'))).toString('utf8'));
 const { passes, source, budgetWork, upgradeWindowWork, ...tape } = restoreRequest(FIX.requests[0].request);
 const levelSource = levelSourceFromAtlas(source.records);
 const withSet = (fn) => SB.withClearTagChain(true, () => SB.withStanceBurn(true, () => withOpportunisticStrike(true,

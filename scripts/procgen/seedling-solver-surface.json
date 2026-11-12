@@ -4337,9 +4337,9 @@
       "form": "forecast",
       "files": {
         "solverBot.js": 1,
-        "strikePolicy.js": 2
+        "strikePolicy.js": 3
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"

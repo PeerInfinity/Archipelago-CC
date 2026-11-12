@@ -3,6 +3,7 @@
 // work units (SPINNER-CORNER's census shape). One TSV row per fixture: verdict/work/ticks/sha OFF and ON, whether the
 // refusal says "no step out", the in-window aims the policy saw (all asks, previews included) and those the DRIVE took
 // OFF (`t:target`), and ON's `deferred` count. Usage: node census.mjs [cap=2560] [fixture-substring] [--shard=k/n]
+// --jsonl: the requests captured under CC/docs/cloud-reports/ (`*request*.jsonl.gz`, every line) instead of fixtures/.
 // Env: CENSUS_TRAIN=1 runs every request under the hammerClearTagChain.train row's set and `withL40Flip(false)` instead.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -31,8 +32,15 @@ const withSet = TRAIN
     : (fn) => fn();
 const files = [];
 const walk = (d) => { for (const f of readdirSync(d)) { const p = join(d, f); if (statSync(p).isDirectory()) walk(p); else if (/request.*\.json\.gz$/.test(f)) files.push(p); } };
-walk(M + 'fixtures');
-files.sort();
+// --jsonl: every line of every `*request*.jsonl.gz` captured under CC/docs/cloud-reports/ instead (the sweep captures)
+const JSONL = process.argv.includes('--jsonl');
+const R = new URL('../../', import.meta.url).pathname;
+if (JSONL) {
+    const wj = (d) => { for (const f of readdirSync(d)) { const p = join(d, f); if (statSync(p).isDirectory()) wj(p); else if (/request.*\.jsonl\.gz$/.test(f)) {
+        gunzipSync(readFileSync(p)).toString('utf8').trim().split('\n').forEach((line, i) => files.push({ p, i, line })); } } };
+    wj(R);
+} else walk(M + 'fixtures');
+files.sort((a, b) => (JSONL ? 0 : (a < b ? -1 : a > b ? 1 : 0)));
 const solve = (tape, levelSource) => {
     let work = 0;
     const ev = [];
@@ -57,16 +65,17 @@ const solve = (tape, levelSource) => {
         msg: String(a.message ?? '').split('\n')[0].slice(0, 140) };
 };
 console.log(['fixture', 'key', 'off', 'on', 'offNoStepOut', 'onNoStepOut', 'offInWindow', 'offDriveInWindow', 'onDeferred', 'offMsg', 'onMsg'].join('\t'));
-for (const f of files.filter((p, i) => p.includes(only) && i % n === k)) {
-    const FIX = JSON.parse(gunzipSync(readFileSync(f)).toString('utf8'));
+for (const e of files.filter((p, i) => (JSONL ? p.p : p).includes(only) && i % n === k)) {
+    const f = JSONL ? `${e.p}#${e.i}` : e;
+    const FIX = JSON.parse(JSONL ? e.line : gunzipSync(readFileSync(e)).toString('utf8'));
     const req = FIX.requests?.[0]?.request ?? FIX.request ?? FIX;
     let tape; let levelSource;
     try {
         const { passes, source, budgetWork, upgradeWindowWork, ...t } = restoreRequest(req);
         tape = t; levelSource = source?.records ? levelSourceFromAtlas(source.records) : atlasLevelSource();
-    } catch (e) { console.log(`${f.slice(M.length)}\tunreadable: ${String(e.message).slice(0, 80)}`); continue; }
+    } catch (e) { console.log(`${f}\tunreadable: ${String(e.message).slice(0, 80)}`); continue; }
     const off = SP.withOppDashDefers(false, () => solve(tape, levelSource));
     const on = SP.withOppDashDefers(true, () => solve(tape, levelSource));
-    console.log([f.slice(M.length + 'fixtures/'.length), FIX.key ?? '', off.v, on.v, off.step, on.step, off.C.inWindow,
+    console.log([JSONL ? f.slice(R.length) : f.slice(M.length + 'fixtures/'.length), FIX.key ?? '', off.v, on.v, off.step, on.step, off.C.inWindow,
         off.drive.join(' ') || '-', on.C.deferred, off.msg ?? '', on.msg ?? ''].join('\t'));
 }
