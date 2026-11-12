@@ -1,0 +1,11 @@
+ROCK-ON-BUTTON GEOMETRY: [{"level":28,"rock":"fallrock@112,240","rockGroup":1,"rockTag":1,"presser":"button@112,240","presserGroup":0}]
+
+L28 fallrock@112,240 (group 1, tag 1) on button@112,240 (group 0): 8 leg(s)
+  level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96 | sphere 2.3 | route holds [] | sweep stages []
+  level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0 | sphere 2.3 | route holds [] | sweep stages []
+  level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared | sphere 2.3 | route holds [] | sweep stages []
+  level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96 | sphere 2.3 | route holds [] | sweep stages []
+  level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0 | sphere 2.3 | route holds [] | sweep stages []
+  level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared | sphere 2.3 | route holds [] | sweep stages []
+  level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16 | sphere 3.5 | route holds ["L28 flag 0: rope@160,64 cleared"] | sweep stages []
+  level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304 | sphere 2.3 | route holds [] | sweep stages []

@@ -1,0 +1,2 @@
+{"planTicks":170,"ropePulls":[{"id":"rope@160,64","level":28,"t":155,"flag":{"level":28,"tag":0,"outOfBand":false}}]}
+{"t":470,"level":28,"rockFalls":[{"id":"fallrock@112,240","level":28,"t":155,"flag":{"level":28,"tag":1,"outOfBand":false},"deadFrames":181}],"activators":{"responders":[{"id":"grasslock@176,208","tag":"grasslock","alpha":1,"open":false,"held":0,"touched":false}],"pressers":[{"id":"button@112,240","tag":"button","down":false}]},"open":{}}
