@@ -3037,6 +3037,33 @@ export function strategyBoundReached(applied, next = null) {
 export const SEALED_LOCK_NEXT_ON_FRONTIER = true;
 
 /**
+ * ⛓ hammer-phase ER-C1 (`UNHELD_LOCK_NEXT_DOOR`, OFF) — **A DOOR THAT NEEDS AN ITEM THIS RUN DOES NOT HOLD IS A WALL FOR
+ * THE FRONTIER'S PICK, AND THE NEXT DOOR IS TRIED.** The frontier ranks its actionable doors by distance to the aim and
+ * hands the nearest back as the order even when its resolver answers `held: false` (the door's own arm reads an item
+ * flag the run lacks: `ShieldLock.update`'s `Player.hasShield`, a keylock's key); the verb then refuses *"the item is a
+ * SUB-ORDER the macro layer owes"* and the goal ends there, though another door on the same frontier (a lock whose key
+ * IS held, a tree the held Fire burns) is the way round. MEASURED (rules-6's ER witness c1): L12's chest from the L0
+ * door with the Sword, Fire and the Red Key refuses on `shieldlocknorm@288,704` in 0.27 s, and solves once handed the
+ * Red Key lock, the tree and the chest as three sub-goals.
+ *
+ * ON: when the frontier's chosen door resolves `held: false`, the rest of the actionable frontier is resolved in its own
+ * order (the L12KEYLINE shape, `nextPastSealedLock`); the first that binds (and is not `held: false` itself) is this
+ * round's order, with a `rejected` row naming the unheld door and its item. The loop then re-floods as it does after
+ * any order, so a chain of such doors is a chain of rounds, under the same `applied` bound. None binds → the `held:
+ * false` order stands unchanged (the same refusal, by name). Nothing reads a level, a coordinate or an item name.
+ * OFF: never asked. `SEEDLING_UNHELD_LOCK_NEXT_DOOR=1` / `withUnheldLockNextDoor(enabled, fn)`.
+ */
+export const UNHELD_LOCK_NEXT_DOOR = { enabled: globalThis.process?.env?.SEEDLING_UNHELD_LOCK_NEXT_DOOR === '1' };
+export const UNHELD_LOCK_NEXT_DOOR_DEFAULT = false;
+/** Per-run counts (ON only): `{asked, rerouted}`, for the rows. */
+export const UNHELD_LOCK_NEXT_DOOR_COUNTS = { asked: 0, rerouted: 0, tries: [] };
+
+/** Run `fn` with `UNHELD_LOCK_NEXT_DOOR` set to `enabled`, restoring the previous value. */
+export function withUnheldLockNextDoor(enabled, fn) {
+    return withSwitch(UNHELD_LOCK_NEXT_DOOR, enabled, fn);
+}
+
+/**
  * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
  * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
  * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
@@ -28082,6 +28109,47 @@ function solveSegmentUnder({
     };
 
     /**
+     * ⛓ hammer-phase ER-C1 (`UNHELD_LOCK_NEXT_DOOR`, ON only) — the frontier's chosen door resolved `held: false` (an item
+     * flag the run lacks): the next actionable door on the frontier whose resolution binds is this round's order. The
+     * L12KEYLINE shape; `null` when none binds, and the `held: false` order stands unchanged.
+     */
+    const nextPastUnheldLock = (unheld, unheldResolved, rest, contacts, aim, allowTeleporter) => {
+        const passed = [];
+        UNHELD_LOCK_NEXT_DOOR_COUNTS.asked += 1;
+        for (const alt of rest) {
+            const altKey = alt.tag ? `${alt.kind}:${alt.tag}` : alt.kind;
+            const altStrategy = refineStrategy(run,
+                OBSTACLE_STRATEGIES[altKey] ?? OBSTACLE_STRATEGIES[alt.kind] ?? null, alt);
+            if (!altStrategy || !frontierExecutor(altStrategy)) continue;
+            let resolved = null;
+            try {
+                resolved = resolveObstacleStrategy(run, altStrategy, alt, contacts,
+                    aim, allowTeleporter, [...refusedOrders]);
+            } catch (altError) {
+                if (!(altError instanceof SolverRefusal)) throw altError;
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: `refused: ${String(altError.message).slice(0, 200)}` });
+                continue;
+            }
+            if (!resolved || resolved.held === false) {
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: resolved?.rejected?.[0]?.why ?? 'did not bind against live state' });
+                continue;
+            }
+            const verb = resolved.strategy ?? altStrategy;
+            UNHELD_LOCK_NEXT_DOOR_COUNTS.rerouted += 1;
+            UNHELD_LOCK_NEXT_DOOR_COUNTS.tries.push({ t: perTick.length, unheld: unheld.id, order: `${verb}(${alt.id})` });
+            resolved.rejected = [{
+                option: `${unheldResolved.strategy ?? 'its verb'} ${unheld.id} (nearer the aim on the frontier)`,
+                why: `needs \`Player.${unheldResolved.need ?? '?'}\`, which this run does not hold, so from here it is `
+                    + `a wall. ⛓ ER-C1: the next door on the frontier, ${alt.id}, is this round's order.`,
+            }, ...passed, ...(resolved.rejected ?? [])];
+            return { obstacle: alt, strategy: verb, resolved, key: altKey };
+        }
+        return null;
+    };
+
+    /**
      * ⛓⛓⛓ fidelity L40BK2 D1 — **A FRONTIER ORDER THAT CANNOT BIND YET PASSES THE ROUND TO THE NEXT DOOR**, behind
      * `CONTACT_FIDELITY.weighHypothesisChain` (OFF).
      *
@@ -28331,6 +28399,11 @@ function solveSegmentUnder({
              * resolution rather than the guess that preceded it.
              */
             if (resolved) {
+                // ⛓ hammer-phase ER-C1 (`UNHELD_LOCK_NEXT_DOOR`, OFF): a door this run lacks the item for is a wall.
+                if (UNHELD_LOCK_NEXT_DOOR.enabled && resolved.held === false && actionable.length > 1) {
+                    const next = nextPastUnheldLock(obstacle, resolved, actionable.slice(1), contacts, aim, allowTeleporter);
+                    if (next) return next;
+                }
                 // ⛓ fidelity L40RES: the rest of the frontier rides out, for `walkTo`'s re-entry (ON only).
                 return { obstacle, strategy: resolved.strategy ?? strategy, resolved, key,
                     ...(CONTACT_FIDELITY.stanceReentryNextDoor ? { frontierRest: actionable.slice(1) } : {}) };
@@ -31994,6 +32067,8 @@ function solveSegmentUnder({
         // ⛓ 376-BOMB: the stop's bomb arm, once per walk — `{t0, rowsAt, attempt, wait}` while a kept wait is re-planned
         let bombArm = null;
         let rowsAtAttempt = 0;
+        // ⛓ hammer-phase ER-C1 (`UNHELD_LOCK_NEXT_DOOR`, ON only): the corridors this walk DROVE and lost (OFF: unread).
+        let corridorsRefuted = 0;
         attempts: for (let attempt = 0; ; attempt += 1) {
             if (BOMB_PHASE_WAIT.enabled) {
                 // a kept wait's re-plan certifies with the stop's tail (its probe, the ladder, every dash candidate)
@@ -32703,7 +32778,12 @@ function solveSegmentUnder({
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
                 refuseIfDrowned(deaths0, what, goal);
-                if (attempt >= 1) {
+                /**
+                 * ⛓ ER-C1 (`UNHELD_LOCK_NEXT_DOOR`, ON only): the one re-plan is counted in corridors DRIVEN and lost,
+                 * not in attempts — a frontier round (`continue` after an order) is an attempt that drove nothing, and
+                 * OFF it spends the re-plan (L12 c1: two rerouted doors, then the chest stance's first drive refused).
+                 */
+                if (UNHELD_LOCK_NEXT_DOOR.enabled ? (corridorsRefuted += 1) > 1 : attempt >= 1) {
                     refuse(`${what}: the re-planned corridor failed too — ${e.message}`, {
                         goal,
                         considered: [
