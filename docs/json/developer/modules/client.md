@@ -69,6 +69,13 @@ While most of its actions result in calls to the `StateManager` (which then publ
 Most interactions go through the `eventDispatcher`. Among the public functions:
 
 -   `getScoutedLocations()`: the entries from the last `game:locationsScouted` on this connection, or `[]` before the server has answered. They are cleared when the connection opens or closes.
+-   `connect(serverAddress, playerName)`: connects from a script, as `window.__apSpike.connect(url)` does. Both refuse a connect made before the module's `initialize()`; see below.
+
+#### Connecting from a script
+
+The ApClient publishes the server's RoomInfo on the module's event bus, and `initialize()` is what sets that bus. A connect made earlier would lose RoomInfo, and nothing would then send Connect: the websocket would stay open and logged out, with no message. So `apClient.connect()`, `apClient.requestConnect()` and the registry's `connect` refuse it before opening anything. They print a console error and throw `ClientNotReadyError` (`code: 'AP_CLIENT_NOT_READY'`; `connect()` returns a rejected Promise). Players never reach this: the connect form's listeners attach after `initialize()`, and `?autoConnect=true` connects from `postInitialize`.
+
+A script polls `window.__apSpike.isReady()`, which is synchronous, before it connects. Playwright probes use `waitForClientReady(page)` from `scripts/procgen/clientReady.js`. Do not wait with `page.waitForFunction(async () => …)`: Playwright treats the Promise an async predicate returns as truthy, so that wait resolves at once.
 
 #### Dependencies & Interactions
 
