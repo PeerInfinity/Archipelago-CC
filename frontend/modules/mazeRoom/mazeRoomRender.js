@@ -89,6 +89,11 @@
  *   latched               string[]|null  LATCHING BUTTONS (session tile-mechanisms-m4-latch): `state.latched`
  *                                  — the latching buttons pressed this visit, drawn DOWN with nothing
  *                                  on them (and so is one whose event `inventory` carries); null = none.
+ *   tileArt               {art, images}|null  CONTENT SETS R2b: the maze's tiles from a pack stack
+ *                                  (`mazeTileArt.loadMazeTileArt`) — each thing in `mazeTileArt.MAZE_ART_KEYS`
+ *                                  whose key the art carries (and whose sheet decoded) is drawn from it, every
+ *                                  other thing exactly as with null. Ignored under `seedlingSkin` (the Seedling
+ *                                  skin draws its level's own art). null = today's draw, op for op.
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -117,6 +122,7 @@ import {
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
 import { TILE_WALL, effectiveInventory, getTile, latchesDown } from './mazeRoomEngine.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
+import { drawTileArt, tileArtFrame, tileArtRefusal } from './mazeTileArt.js';
 
 export class MazeRenderError extends Error {
     constructor(message) {
@@ -193,7 +199,7 @@ export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
     'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin', 'blocks', 'blockKinds', 'livePulsers',
-    'latched',
+    'latched', 'tileArt',
 ]);
 
 /**
@@ -291,6 +297,8 @@ export function assertView(view) {
         fail('mazeRoomRender: view.latched must be null or an array of "x,y" position keys (`state.latched`), got '
             + `${JSON.stringify(view.latched)}.`);
     }
+    const tileArtWhy = tileArtRefusal(view.tileArt);
+    if (tileArtWhy) fail(`mazeRoomRender: view.${tileArtWhy}.`);
     if (view.livePulsers !== null && !Array.isArray(view.livePulsers)) {
         fail('mazeRoomRender: view.livePulsers must be null or one boolean per `world.pulsers` entry, got '
             + `${JSON.stringify(view.livePulsers)}.`);
@@ -315,7 +323,7 @@ export function assertView(view) {
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
     broken = null, facing = null, armedTraps = null, seedlingSkin = null, blocks = null, blockKinds = null,
-    livePulsers = null, latched = null,
+    livePulsers = null, latched = null, tileArt = null,
 } = {}) {
     return {
         tilePx,
@@ -338,6 +346,7 @@ export function plainView({
         blockKinds,
         livePulsers,
         latched,
+        tileArt,
     };
 }
 
@@ -383,8 +392,14 @@ export function blockLook(world, kind) {
  * whenever it owns every block of the world, so their markers then go whole; the disc tint stays (like a lane's).
  * A world with none of the three draws nothing, so every other draw log is unchanged.
  */
+/** A block look (`blockLook`) → its thing in `mazeTileArt.MAZE_ART_KEYS`. */
+const BLOCK_ART = Object.freeze({ walk: 'block', struck: 'blockStruck', dormant: 'blockDormant' });
+
 export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     const px = view.tilePx;
+    // ⛓ R2b: the seam (`mazeTileArt.drawTileArt`); null under the Seedling skin, and for a view built before R2b.
+    const tileArt = view.seedlingSkin ? null : (view.tileArt ?? null);
+    const art = (thing, x, y) => tileArt !== null && drawTileArt(ctx, tileArt, thing, x * px, y * px, px, px);
     const owned = (x, y) => spriteCells?.has(`${x},${y}`) ?? false;
     if (Array.isArray(w.pulsers) && w.pulsers.length > 0) {
         ctx.save();
@@ -400,9 +415,11 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
             ctx.fillStyle = COLORS.pulser;
             ctx.strokeStyle = view.livePulsers?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
             ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.25, 0, Math.PI * 2);
-            ctx.fill();
+            if (!art('pulser', p.x, p.y)) {
+                ctx.beginPath();
+                ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+            }
             ctx.beginPath();
             ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.42, 0, Math.PI * 2);
             ctx.stroke();
@@ -425,6 +442,7 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
             }
             ctx.globalAlpha = 1;
             if (owned(p.x, p.y)) continue;
+            if (art('pull', p.x, p.y)) continue;
             ctx.fillStyle = COLORS.pullTrap;
             ctx.beginPath();
             ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.32, 0, Math.PI * 2);
@@ -447,6 +465,7 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     for (const key of w.buttons?.keys() ?? []) {
         const [x, y] = key.split(',').map(Number);
         if (owned(x, y)) continue;
+        if (art(onCell.has(key) ? 'buttonDown' : 'button', x, y)) continue;
         ctx.beginPath();
         ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.28, 0, Math.PI * 2);
         if (onCell.has(key)) ctx.fill();
@@ -459,6 +478,7 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
         for (const key of live) {
             const [x, y] = key.split(',').map(Number);
             const look = w.blockLib ? blockLook(w, view.blockKinds?.[key] ?? w.blocks.get(key)) : 'walk';
+            if (art(BLOCK_ART[look], x, y)) continue;
             if (look === 'dormant') {
                 ctx.fillStyle = COLORS.blockDormant;
                 ctx.beginPath();
@@ -508,6 +528,10 @@ export function drawWorld(ctx, world, view) {
     // ⛓ S2: the live sprites, over the room and under the markers; a cell they own draws no marker.
     const sprites = skin?.sprites ?? null;
     const spriteCells = sprites?.cells ?? null;
+    // ⛓ CONTENT SETS R2b: the pack's tiles, beside the Seedling skin and never under it. Every use below is
+    // `tileArt !== null && drawTileArt(…)`, so a null (no art in the stack) runs exactly the ops it always ran.
+    const tileArt = skin ? null : view.tileArt;
+    const art = (thing, x, y) => tileArt !== null && drawTileArt(ctx, tileArt, thing, x * px, y * px, px, px);
     if (skin) {
         ctx.drawImage(skin.layer, 0, 0);
         if (sprites?.ops.length) sprites.paint(ctx, sprites.ops);
@@ -517,6 +541,7 @@ export function drawWorld(ctx, world, view) {
         for (let y = 0; y < w.height; y++) {
             for (let x = 0; x < w.width; x++) {
                 const tile = getTile(w, x, y);
+                if (art(tile === TILE_WALL ? 'wall' : 'floor', x, y)) continue;
                 ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
                 ctx.fillRect(x * px, y * px, px, px);
             }
@@ -587,7 +612,8 @@ export function drawWorld(ctx, world, view) {
             // §5 table is "follows the exit row" — this branch
             // covers it because we don't paint the entrance
             // border when isExit is true.)
-            if (isExit && exitVisible) {
+            // R2b: an OPEN exit is a thing (`maze:tile/exit`); a closed one is a state signal and stays red.
+            if (isExit && exitVisible && ((isLogicGate && gateClosed) || !art('exit', x, y))) {
                 ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
                 ctx.fillRect(x * px, y * px, px, px);
             }
@@ -663,8 +689,15 @@ export function drawWorld(ctx, world, view) {
             // AP locations, and these aren't any.
             const consumableHere = w.consumableTiles?.get(key);
             const manaHere = w.manaTiles?.get(key);
-            if (consumableHere || manaHere) {
-                const collected = view.isConsumableCollected?.(x, y);
+            const collectedHere = (consumableHere || manaHere) ? view.isConsumableCollected?.(x, y) : undefined;
+            if (manaHere && tileArtFrame(tileArt, 'manaTile')) {
+                // R2b: the mana tile's art, faded once collected exactly as the diamond is.
+                ctx.save();
+                if (collectedHere) ctx.globalAlpha = 0.25;
+                art('manaTile', x, y);
+                ctx.restore();
+            } else if (consumableHere || manaHere) {
+                const collected = collectedHere;
                 const cx = x * px + px / 2;
                 const cy = y * px + px / 2;
                 const r = px * 0.32;
@@ -726,7 +759,7 @@ export function drawWorld(ctx, world, view) {
             // Entrance border: 2px solid green, only when the
             // tile isn't also an exit (per the §5 "both = exit
             // row" rule).
-            if (isEntrance && !isExit) {
+            if (isEntrance && !isExit && !art('entrance', x, y)) {
                 ctx.strokeStyle = COLORS.entrance;
                 ctx.lineWidth = 2;
                 ctx.strokeRect(x * px + 1, y * px + 1, px - 2, px - 2);
@@ -773,6 +806,7 @@ export function drawWorld(ctx, world, view) {
             }
             ctx.globalAlpha = 1;
             if (spriteCells?.has(`${trap.x},${trap.y}`)) return;
+            if (art('trap', trap.x, trap.y)) return;
             ctx.fillStyle = COLORS.trap;
             ctx.fillRect(trap.x * px + 2, trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
         });
@@ -804,10 +838,12 @@ export function drawWorld(ctx, world, view) {
         sprites.paint(ctx, sprites.player);
     } else if (view.playerPos) {
         const { x, y } = view.playerPos;
-        ctx.fillStyle = COLORS.player;
-        ctx.beginPath();
-        ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.35, 0, Math.PI * 2);
-        ctx.fill();
+        if (!art('player', x, y)) {
+            ctx.fillStyle = COLORS.player;
+            ctx.beginPath();
+            ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+        }
         // ITEM ACTIONS: a tick on the side the player faces (the use target).
         const tick = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] }[view.facing];
         if (tick) {

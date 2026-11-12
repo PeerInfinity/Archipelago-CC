@@ -137,11 +137,16 @@ function surfaceOf(record) {
 const digestOf = (record) => createHash('sha256').update(JSON.stringify(surfaceOf(record))).digest('hex');
 const L = (n) => MAP.levels.find((l) => l.level === n);
 
-/** ⛓ Measured on origin/main 856d1aec89 before the move. */
+/**
+ * ⛓ Measured on origin/main 856d1aec89 before the move (L14 e0f2d347…, L38 8a4f47cd…, generated df4065ef…),
+ * then RE-PINNED by editor-corner-reset: a FILL/CLEAR corner is no longer drawn in the repaint of the tool switch
+ * that drops it. Two paint entries move, nothing else: `corner-then-rect` loses FILL's 1x1 at (1,1) on `r`, and
+ * `clear-escape` loses the second draw of CLEAR's 1x1 at (2,2) on Escape. Ops, record and commands are equal.
+ */
 const BEFORE_THE_MOVE = Object.freeze({
-    L14: 'e0f2d347283f9d88920372b06074151a6dbc5c70d85e8c051d6555a357826856',
-    L38: '8a4f47cd612d667d43ce2f3f105d8fec7d44fe957cabf9b9d059b48063af21cd',
-    generated: 'df4065efa08eced8295076a3017e94b8c33ed857fd4450f8091b42eb0b958156',
+    L14: 'aee925ab7654e3860be09794ee1fa0f2627c91d5b34ebaa6d0e0f7b5581ec597',
+    L38: '2cca25002896b122ea49a2241b72fe347d8f20933154e5f29c49b53b37aaf01a',
+    generated: '8ceef79e0b881f163b67ad332c72658f09d75c2e5e82029c79e3c4a4fdf1a5f3',
 });
 
 describe('the Seedling editor\'s tool surface across the move to procgenCore/editorView', () => {

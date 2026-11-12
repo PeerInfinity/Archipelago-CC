@@ -171,19 +171,25 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
         }
     });
 
-    it('the radius at this SHA: 87 legs carry; every carried flag is the leg\'s own level\'s (the one cross read covered by staging)', () => {
+    // ⛓ tile-rules-automation-r-a5: 87 -> 85 (L40's wand locks cost their presses; the flag-8 legs below stage flag 12 from
+    //   their own goal rule, and flag 1 is collected later in the route).
+    it('the radius at this SHA: 85 legs carry; every carried flag is the leg\'s own level\'s (the one cross read covered by staging)', () => {
         const carried = on.filter((l) => l.carriedFlags);
-        expect(carried).toHaveLength(87);
+        expect(carried).toHaveLength(85);
         expect(carried.every((l) => l.carriedFlags.every((f) => f.level === l.level))).toBe(true);
     });
 
-    it('L40: Boss Key 2 and the Chest carry the south door (flag 12); flag 8 carries 12 + 1 + 7; flag 12\'s own legs carry nothing', () => {
+    // ⛓ tile-rules-automation-r-a5: L40's body is r26c13. Its flag-8 legs (from L39/L43, via r26c13) now name flag 12 in their
+    //   GOAL rule (r26c13 -> r23c29 costs it), so they STAGE it and never carry it; flag 1 is collected after them (sphere 7.1).
+    //   Two new flag-8 legs (from L41/L42, via r0c53) carry nothing.
+    it('L40: Boss Key 2 and the Chest carry the south door (flag 12); flag 8 carries 7 (12 is staged by its goal rule); flag 12\'s own legs carry nothing', () => {
         const at = (needle) => on.filter((l) => l.level === 40 && l.key.endsWith(needle));
         const carry = (needle) => at(needle).map((l) => ids(l.carriedFlags ?? []));
         expect(carry('location:Level 040 - Boss Key 2')).toEqual([['flag:L40:12'], ['flag:L40:12']]);
         expect(carry('location:Level 040 - Chest')).toEqual([['flag:L40:12'], ['flag:L40:12']]);
-        expect(carry('location:L40 flag 8: bosslock@480,352 cleared')).toEqual([['flag:L40:12', 'flag:L40:1', 'flag:L40:7'],
-            ['flag:L40:12', 'flag:L40:1', 'flag:L40:7']]);
+        expect(carry('location:L40 flag 8: bosslock@480,352 cleared')).toEqual([[], [], ['flag:L40:7'], ['flag:L40:7']]);
+        expect(at('location:L40 flag 8: bosslock@480,352 cleared').filter((l) => l.key.includes('~> level_40__r26c13'))
+            .map((l) => ids(l.stagedEvents))).toEqual([['flag:L40:12', 'flag:L40:7'], ['flag:L40:12', 'flag:L40:7']]);
         expect(carry('location:L40 flag 12: wandlock@480,560 cleared')).toEqual([[], []]);
     });
 

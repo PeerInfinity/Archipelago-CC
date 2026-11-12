@@ -65,6 +65,8 @@ afterEach(() => { delete globalThis.document; });
 
 import { PlaybackBotUI, buildLocationIndex, buildSphereQueue, formatSphereTag } from './playbackBotUI.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { regionScopeOf, routeCollectionRows, routeEventsBefore, routeEventsPlan, scopeReads } from './routeEvents.js';
+import { gameStateEventsOf } from '../procgenCore/eventRoute.js';
 
 const SAMPLE_SPHERE_DATA = [
     { sphereIndex: 0, fractionalIndex: 0, locations: [], accessibleRegions: ['Menu'], accessibleLocations: ['Free Loc'] },
@@ -1943,6 +1945,184 @@ describe('PlaybackBotUI — obstacle events (break before first use)', () => {
         bot.onRegionMove({ targetRegion: 'Start' });
         await bot.play();
         expect(bot.getStatus()).toBe('error: no path from Start to Vault');
+    });
+});
+
+/**
+ * ⛓ ROUTE EVENTS (routeEvents.js; slice seedling-walk-route-events) — opt-in: before a goal, the walk goes to the
+ * game-state events the AP route COLLECTED before it that the goal's SCOPE reads (its own scope's events, plus another
+ * scope's event a rule of the scope names, except a door's far side). A generic world: scopes 'north' / 'south' named
+ * by the slot's own exports (an event's `obstacle.level`, a region's sidecar `playable_payload.level`).
+ * Mutants (each reds a row below by name): the route-order filter dropped (`< c` → any row) → "an event the route
+ * collects AFTER the goal"; the scope filter dropped → "another scope's event"; the far-side exception dropped →
+ * "scopeReads"; the held test dropped → "an event already held"; `_giveUpRouteEventWalk` returning false → "a refused
+ * walk to the event"; the opt-in ignored → "OFF (the default)".
+ */
+describe('PlaybackBotUI — route events (the route\'s events a goal\'s room reads)', () => {
+    const LEVER = 'north lever';        // scope north, in Annex, collected BEFORE the goal: walked
+    const LATE = 'north late lever';    // scope north, collected AFTER the goal: never walked
+    const SOUTH = 'south lever';        // scope south, collected before, not read by north: never walked
+    const GATED = 'north gated lever';  // scope north, collected before, its rule needs a Key the walk lacks
+    const has = (item) => ({ rule: 'Has', args: { item_name: item } });
+    const ev = (name, level, tag, region, rule = null) => ({ name, id: null, event: true, event_kind: 'game_state',
+        event_id: `flag:${level}:${tag}`, access_rule: rule ?? { rule: 'True_' }, item: { name },
+        obstacle: { level, tag, class: 'lever', x: tag, y: 0 }, action: { verb: 'press' }, side: region, across: [] });
+    const x = (name, to, rule = null) => ({ name, connected_region: to, ...(rule ? { access_rule: rule } : {}) });
+    function rulesOf({ gatedRule = has('Key'), sidecars = true } = {}) {
+        const regions = {
+            Menu: { exits: [x('GameStart', 'Start')], locations: [] },
+            Start: { exits: [x('Start -> Hall', 'Hall'), x('Start -> Annex', 'Annex'), x('Start -> South', 'South')], locations: [] },
+            Annex: { exits: [x('Annex -> Start', 'Start')], locations: [ev(LEVER, 'north', 1, 'Annex'), ev(LATE, 'north', 2, 'Annex'),
+                ev(GATED, 'north', 3, 'Annex', gatedRule)] },
+            Hall: { exits: [x('Hall -> Start', 'Start')], locations: [{ name: 'Prize', id: 1 }] },
+            South: { exits: [x('South -> Start', 'Start')], locations: [ev(SOUTH, 'south', 1, 'South'), { name: 'Loot', id: 2 }] },
+        };
+        const scope = { Start: 'north', Annex: 'north', Hall: 'north', South: 'south' };
+        return {
+            start_regions: { 1: ['Menu'] },
+            exporter: { 1: {} },
+            regions: { 1: regions },
+            ...(sidecars ? { preset_sidecars: { 1: Object.fromEntries(Object.entries(scope)
+                .map(([r, level]) => [r, { substrate: 'fake', playable_payload: { level } }])) } } : {}),
+        };
+    }
+    const SPHERE = [
+        { sphereIndex: 1, fractionalIndex: 0, locations: [LEVER, SOUTH, GATED, 'Loot'] },
+        { sphereIndex: 2, fractionalIndex: 0, locations: ['Prize', LATE] },
+    ];
+
+    function makeBot({ rules = rulesOf(), inventory = {}, on = true } = {}) {
+        const controller = makeFakeController();
+        const REGIONS = rules.regions[1];
+        const staticData = { regions: new Map(Object.entries(REGIONS)) };
+        const snapshot = { inventory: { ...inventory }, checkedLocations: [] };
+        const findPathWithExits = (from, to) => {
+            const seen = new Set([from]);
+            const queue = [[{ region: from, exitUsed: null }]];
+            while (queue.length) {
+                const path = queue.shift();
+                const here = path[path.length - 1].region;
+                if (here === to) return { steps: path, length: path.length - 1 };
+                for (const e of REGIONS[here]?.exits ?? []) {
+                    if (!seen.has(e.connected_region)) {
+                        seen.add(e.connected_region);
+                        queue.push([...path, { region: e.connected_region, exitUsed: e.name }]);
+                    }
+                }
+            }
+            return null;
+        };
+        const bot = new PlaybackBotUI({
+            getSphereData: () => SPHERE,
+            getStaticData: () => staticData,
+            getRulesJson: () => rules,
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            stateManagerProxy: { getLatestStateSnapshot: () => snapshot },
+        });
+        if (on) bot.setRouteEvents(true);
+        return { bot, controller, snapshot };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+    const flush = async () => { for (let i = 0; i < 5; i += 1) await Promise.resolve(); };
+    // drop 'Loot' (a south goal) so the head is Prize
+    const checkLoot = (bot) => bot._checkedSoFar.add('Loot');
+
+    it('scopeReads: a scope reads its own events and another scope\'s a rule of its regions names — never a door\'s far side', () => {
+        const rules = rulesOf();
+        const regions = rules.regions[1];
+        // Hall's location names the south lever (read); Start's exit into South names it too (the far side: not read by that rule)
+        regions.Hall.locations[0].access_rule = has(SOUTH);
+        const events = gameStateEventsOf(rules, '1');
+        const scopeOf = regionScopeOf(rules, '1');
+        expect([...scopeReads('north', { events, regions, scopeOf })].sort()).toEqual(['flag:north:1', 'flag:north:2', 'flag:north:3', 'flag:south:1']);
+        regions.Hall.locations[0].access_rule = null;
+        regions.Start.exits[2].access_rule = has(SOUTH);
+        expect([...scopeReads('north', { events, regions, scopeOf })].sort()).toEqual(['flag:north:1', 'flag:north:2', 'flag:north:3']);
+        expect(scopeReads(undefined, { events, regions, scopeOf }).size).toBe(0);
+    });
+
+    it('routeEventsBefore: the route\'s collection order, before the goal, read by its scope, never the goal itself', () => {
+        const rules = rulesOf();
+        const events = gameStateEventsOf(rules, '1');
+        const rows = routeCollectionRows(SPHERE);
+        const reads = scopeReads('north', { events, regions: rules.regions[1], scopeOf: regionScopeOf(rules, '1') });
+        expect(routeEventsBefore({ goal: 'Prize', rows, events, reads }).map((e) => e.name)).toEqual([LEVER, GATED]);
+        expect(routeEventsBefore({ goal: LATE, rows, events, reads }).map((e) => e.name)).toEqual([LEVER, GATED]);
+        expect(routeEventsBefore({ goal: 'Nowhere', rows, events, reads })).toEqual([]);
+        // the plan: one entry per goal with events (Loot's south scope reads none collected before it; events are no goals)
+        expect([...routeEventsPlan({ rules, sphereData: SPHERE, events }).keys()]).toEqual(['Prize']);
+        // no scope export → no route events
+        expect(routeEventsPlan({ rules: rulesOf({ sidecars: false }), sphereData: SPHERE, events }).size).toBe(0);
+    });
+
+    it('OFF (the default): the walk goes straight to the goal, as today', async () => {
+        const { bot, controller } = makeBot({ on: false });
+        expect(bot.getRouteEvents()).toBe(false);
+        bot.onRegionMove({ targetRegion: 'Start' });
+        checkLoot(bot);
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'exit', name: 'Start -> Hall' }]);
+        expect(bot.getRouteEventState().steps).toEqual([]);
+    });
+
+    it('ON: routes to the lever first, breaks it in its region, and the collected flag re-plans to the goal', async () => {
+        const { bot, controller, snapshot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'Start' });
+        checkLoot(bot);
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'exit', name: 'Start -> Annex' }]);
+        expect(bot.getStatus()).toMatch(/routing via "Start -> Annex" → Annex for flag:north:1 first — before "Prize"/);
+        bot.onRegionMove({ targetRegion: 'Annex', exitName: 'Start -> Annex' });
+        await flush();
+        expect(walkTos(controller).at(-1)).toEqual({ kind: 'location', name: LEVER });
+        expect(bot.getStatus()).toMatch(/breaking lever@1,0 first \(flag:north:1\) — the route to "Prize" .*that room reads it/);
+        snapshot.inventory[LEVER] = 1;
+        snapshot.checkedLocations = [LEVER];
+        bot.onSnapshotUpdated();
+        await flush();
+        // next in the route's order, the gated lever: its rule does not hold, so it is given up BY NAME, never walked
+        expect(bot.getLog()).toContain(`route event "${GATED}" before "Prize" given up: its rule does not hold`);
+        expect(walkTos(controller).at(-1)).toEqual({ kind: 'exit', name: 'Annex -> Start' });
+        expect(walkTos(controller).some((t) => t.name === SOUTH || t.name === LATE || t.name === GATED)).toBe(false);
+        expect(bot.getRouteEventState().steps.map((s) => s.how)).toEqual(['route', 'break']);
+    });
+
+    it('an event already held (collected, or credited by the bot\'s own hop) is never walked', async () => {
+        const { bot, controller } = makeBot({ inventory: { [LEVER]: 1, Key: 1 }, rules: rulesOf() });
+        bot._creditedEvents.add(GATED);
+        bot.onRegionMove({ targetRegion: 'Start' });
+        checkLoot(bot);
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'exit', name: 'Start -> Hall' }]);
+    });
+
+    it('a refused walk to the event (walkFailed) gives it up for that goal by name and walks to the goal', async () => {
+        const { bot, controller } = makeBot();
+        bot.onRegionMove({ targetRegion: 'Annex' });
+        checkLoot(bot);
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: LEVER }]);
+        bot.onWalkFailed({ reason: 'the solver refused', target: { kind: 'location', name: LEVER } });
+        await flush();
+        expect(walkTos(controller).at(-1)).toEqual({ kind: 'exit', name: 'Annex -> Start' });
+        expect(bot.getStatus()).not.toMatch(/^error/);
+        expect(bot.getLog()).toContain(`route event "${LEVER}" before "Prize" given up: the walk to it failed — the solver refused`);
+        expect(bot.getRouteEventState().skipped).toEqual([`Prize|${LEVER}`, `Prize|${GATED}`]);
+        // a refused walk to anything else is still the named stop
+        bot.onWalkFailed({ reason: 'stuck', target: { kind: 'exit', name: 'Annex -> Start' } });
+        expect(bot.getStatus()).toMatch(/^error: Annex: the bot cannot walk to exit "Annex -> Start" — stuck/);
+    });
+
+    it('the opt-in persists through setRouteEvents and reset drops the run\'s steps', async () => {
+        const { bot } = makeBot();
+        bot.onRegionMove({ targetRegion: 'Start' });
+        checkLoot(bot);
+        await bot.play();
+        expect(bot.getRouteEventState().steps).toHaveLength(1);
+        bot.reset();
+        expect(bot.getRouteEventState()).toEqual({ on: true, steps: [], skipped: [] });
+        expect(bot.setRouteEvents('yes')).toBe(false);
     });
 });
 

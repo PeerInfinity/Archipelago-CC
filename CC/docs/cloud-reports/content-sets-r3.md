@@ -197,12 +197,30 @@ new preset names a theme and `buildRunFromState` refuses a non-default stack by 
 4. **A theme cannot give the maze's items a clearly better look** while the maze draws an item's symbol as text
    (`star` → "star"). A drawn-symbol vocabulary (shapes) is a maze play-time change, R2b territory.
 5. **Generic across substrates is bounded by roles**: only the maze and the text adventure declare any (§5).
-6. `preset_files.json`'s `meta_trial` row records `"seed": 8` (the state's seed, read from the file by
-   `register-preset.py`); `concept_trial`'s says 1. Cosmetic; left as the tool wrote it.
+6. **The seed row was NOT cosmetic (corrected).** `register-preset.py` wrote the rules' `generation_seed` (8) into
+   `meta_trial`'s `preset_files.json` row. `findRulesFileFromGameSeed` (`app/mode/modeDataLoader.js`) matches `?seed=`
+   against that FIELD, not the folder name, so `?game=meta_trial&seed=1` returned null and the app loaded the DEFAULT
+   preset: a spoiler run or a play gate on it would false-PASS. `concept_trial` has the same `generation_seed`, but its
+   row was set to 1 when it was committed. The row now says 1; `metaTrialWorld.test.js` pins that both trials resolve
+   `?seed=1` to their own rules. The in-app row loads by path and was never affected.
+7. **The play gate runs on the theme world in CI: `gate: meta-trial-play`.** A `@standing-variant` arm runs in
+   `local` only (`gates.mjs` `armsIn`), and CI runs one arm per gate file, so `check-concept-trial-play.mjs` exports
+   `main({ game, host })` and `check-meta-trial-play.mjs` calls it on `meta_trial`. Every expectation is read off the
+   named preset; the gate's few literals (water on the maze gate, the sword/swim concepts, the item colours) are the
+   control's byte for byte. The wrapper takes the box under its own name and is in `boxLock.test.js`'s guarded list.
+   ⚠ The arm is UNPRICED in `ci-arm-costs.json`, so it lands alone in a browser shard until `ci-gates --write-costs`.
+8. **Consumer sweep** (a new committed preset enrols in derived rosters): IN, as `concept_trial` — the index, the
+   preserved list (not public), the drop-down, the substrates config (`fast`), the producer, the docs. OUT, correctly
+   — `check-worldgen-package-sidecars` (the package's game is `Procgen Maze WorldGen`, the trials' is `Procgen Maze`),
+   `apworldEditorTests`' largest-room and two-slot pickers (sidecars, single slot), the sphere-log fetch guard (the row
+   lists no `.jsonl`; the rules embed a 5-entry `sphere_log`), and the tests that use `concept_trial` as a fixture.
+   Spoiler test: none existed for `concept_trial` either; one authorised box run each, at the final tip, is quoted
+   in the REPORT BACK.
 
 ## 9. CI
 
-Quoted at the final tip in the REPORT BACK message (not in a further commit). A browser-batch dispatch
+Quoted at the final tip in the REPORT BACK message (not in a further commit), with the census after the train-99
+merge (`origin/main` `bb8047e812`: corpus 412, `doc` 309, measured by the two census tests). A browser-batch dispatch
 (`test-templates.yml`) ran at the code tip `ced9119357` to surface a red early.
 
 ## Next slice
