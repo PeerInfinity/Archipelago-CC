@@ -549,10 +549,11 @@ export const CONTACT_FIDELITY = {
      * legs 262, 265, 283, 302, 696, 698, 703; the game takes each hit at the model's tick). ON: `previewWalk` steps the
      * room's wallflyers and drills against the previewed player (`run.corridorBodyForecast`, the live steppers on
      * clones) and the corridor probe prices each sample's contact (`dangerMap.corridorBodyDanger`), so the walk
-     * executor's ladder routes round them or refuses by name. ⛔ OFF by default (no licence);
-     * `SEEDLING_CORRIDOR_BODY_PRICING=0|1` for a node measurement.
+     * executor's ladder routes round them or refuses by name. `SEEDLING_CORRIDOR_BODY_PRICING=0|1` for a node
+     * measurement. ⛓ CORRIDORFLIP D1 (wave 42): ON on the measurement branch ONLY — ⛔ NOT LICENSED; the planner takes
+     * the flip to the user with the slice report's mover table (`seedling-fidelity-corridorflip.md`).
      */
-    corridorBodyPricing: false,
+    corridorBodyPricing: true,
     /**
      * fidelity SEALDOOR D2 — THE FINAL DOOR OPENS ON APPROACH, AND THE SOLVER STEPS IT (`solverBot`'s `approach` verb).
      *

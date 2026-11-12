@@ -164,8 +164,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") — ON since the BOBIFRAME flip (⚖ user 2026-11-11).
             chaserSpinnerWalls: true,
 
-            // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
-            corridorBodyPricing: false,
+            // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) shipped OFF;
+            // ⛓ CORRIDORFLIP D1 (wave 42): ON on the measurement branch (not licensed).
+            corridorBodyPricing: true,
 
             // ⛓ fidelity SEALDOOR D2: `sealDoorApproach` (the solver steps the FinalDoor's open-on-approach) ships OFF.
             // ⛓ planning-9's flip (⚖ user "Build the flip", 2026-10-17) turns it ON.
