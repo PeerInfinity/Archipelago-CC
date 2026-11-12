@@ -60,7 +60,7 @@ const census = (worlds) => {
 };
 
 describe('maze converted load: which object is the level', () => {
-    it('the preset has 264 sidecars: 116 carry a room, 148 are regions of a shared level world', () => {
+    it('the preset sidecars split into rooms and regions of a shared level world, as measured', () => {
         expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([264, 116, 148]);
     });
     it('a sidecar envelope and its bare playable_payload load the same level', () => {
