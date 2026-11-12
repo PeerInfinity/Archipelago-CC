@@ -1349,12 +1349,13 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
             'the header\'s "last update N s ago" advanced', 5000, 100);
         tc.reportCondition('the age indicator advances while nothing arrives', !!aged);
         tc.assertEqual('the open Solver section never hid the view after the final note', true, view.isOpen);
-        // ⛓ PANEL LAYOUT — the progress line under the game read the same final state
+        // ⛓ PANEL LAYOUT — the progress line under the game read the same final state; ⛓ WATCHER VIEW (slice
+        // `seedling-solver-panel-view`): it writes the Solver section's headline (was `solver: solved (solve #N) · work …`)
         const line = panel._solveProgressLine;
-        await tc.pollForCondition(() => /^solver: solved \(solve #\d+\) · work \d+ \/ \d+ · best: /.test(line.text.textContent),
+        await tc.pollForCondition(() => /^✓ Solved in .+ · Found a \d+-tick route /.test(line.text.textContent),
             'the progress line drew the final state', 3000, 100);
-        tc.assertEqual('the progress line reads the final state (solved, work against the budget, best)', true,
-            /^solver: solved \(solve #\d+\) · work \d+ \/ \d+ · best: /.test(line.text.textContent));
+        tc.assertEqual('the progress line reads the final state (the solved headline and the route it found)', true,
+            /^✓ Solved in .+ · Found a \d+-tick route /.test(line.text.textContent));
         tc.assertEqual('the progress line mirrors the final note', 'true/solved', `${line.element.dataset.final}/${line.element.dataset.outcome}`);
 
         // ⛓ PANEL LAYOUT — closing the Solver section HIDES the view but keeps it LISTENING (the progress line needs

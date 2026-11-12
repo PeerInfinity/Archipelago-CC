@@ -1,0 +1,102 @@
+name: Substrate tests — nightly manual batches
+
+# ⛓ ONE NIGHTLY RUN OF EVERY MANUAL test-substrates BATCH, AT main.
+#
+# ⚖ Robert 2026-11-11 (option C, "nightly manual batches"): a drift detector
+# for the batches that never run on push (bot-walks, noiz2sa, cloudberry, the
+# tutorials*, feature-checks). It is a SIGNAL only — NEVER landing evidence for
+# any SHA, main's own next head included (.github/workflows/README.md § The
+# nightly manual batches). A red is read by the planners in the morning off this
+# run's summary and its `nightly-manual-summary` artifact; nothing is posted
+# outside CI (the repo is public).
+#
+# Mechanism: this file CALLS test-substrates-manual.yml (`workflow_call`,
+# batch=all), so the batch list, the setup, the per-batch headroom check and
+# the uploads are that file's, unchanged — one definition, no drift. Its own
+# job is only the summary. (Dispatching the manual workflow instead would make
+# a second run whose results this one would have to poll for.)
+#
+# Not here, on purpose (the brief's limits): no sweep, survey or train tier.
+
+on:
+  schedule:
+    # 10:37 UTC = 02:37 PST (winter, UTC−8). During PDT (UTC−7, mid-March to
+    # early November) the same cron fires at 03:37 Pacific — still inside the
+    # 22:00–07:00 after-hours window, so the cron is NOT shifted twice a year.
+    # Odd minute: GitHub delays crons most at :00.
+    - cron: '37 10 * * *'
+  # The same run on demand. A dispatch runs at the ref it is dispatched on
+  # (`gh workflow run` defaults to main); only a run at main is the nightly.
+  workflow_dispatch:
+
+# Its own group: a second nightly waits behind the first, never stacks on it.
+# (Not the manual workflow's runs — a dispatch there is a different group.)
+concurrency:
+  group: test-substrates-nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read   # the summary reads this run's job conclusions
+
+jobs:
+  manual:
+    name: manual
+    uses: ./.github/workflows/test-substrates-manual.yml
+    with:
+      batch: all
+      bundled: false
+
+  summary:
+    name: Nightly summary
+    needs: manual
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Download the batch results
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: test-results-*
+          path: nightly-artifacts
+
+      - name: Read the batch jobs' conclusions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          gh api "repos/$REPO/actions/runs/$RUN_ID/jobs?per_page=100" > jobs.json \
+            || { echo "::warning::could not read the job list; the summary grades the results files only"; rm -f jobs.json; }
+
+      - name: Summarize
+        id: summary
+        env:
+          RUN_ID: ${{ github.run_id }}
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref_name }}
+        run: |
+          batches=$(node scripts/test/list-test-batches.js --manual)
+          set +e
+          node scripts/test/nightly-manual-summary.js --artifacts=nightly-artifacts --batches="$batches" \
+            --jobs=jobs.json --run-id="$RUN_ID" --sha="$SHA" --ref="$REF" \
+            --out=nightly-manual-summary.json --md="$GITHUB_STEP_SUMMARY"
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Upload nightly-manual-summary.json
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: nightly-manual-summary
+          path: nightly-manual-summary.json
+          retention-days: 30
+
+      # Last, so the artifact is up before the run reads red.
+      - name: Red if any batch is red
+        if: ${{ steps.summary.outputs.rc != '0' }}
+        run: |
+          echo "::error::nightly manual batches RED — see the job summary / nightly-manual-summary.json"
+          exit 1
