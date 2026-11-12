@@ -28247,3 +28247,36 @@ Six BEFORE properties are not covered at the defaults; four of them have no sing
 shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
 ⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
 Re-record a BEFORE witness only under `withL40Flip(false)`.
+
+### Seedling fidelity ROCKBUTTON — a landed FallRock is a Solid that holds a Button down (`fallRockHoldsButton`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user's GO 2026-11-12, *"Launch it now"*). Base `add369e82f`.
+The report is `CC/docs/cloud-reports/seedling-fidelity-rockbutton.md`; it starts from hammer ROCK-HOLDER's witness.
+
+**W0.** `Button.update` collides `["Player","Enemy","Solid"]` and excludes only a `Cover` (`Button.as:16,30-39`); a
+landed `FallRock` / `FallRockLarge` is `type = "Solid"` (`FallRock.as:42-47,80`, `FallRockLarge.as:50-56,100`).
+`levelRun.movingSolidsNow()` carried blocks, crushers and ice turrets only. The census over all 116 atlas levels finds
+11 rock entities and exactly ONE rock-on-activator overlap: L28 `fallrock@112,240` on `button@112,240` (no FallRockLarge
+or Moonrock rests on any presser or activator cell). Hammer's walk/control reproduce on p4g at this base.
+⚠ **The frozen span is not inert.** `Button`, `Lock` and `Cover` have no `Game.freezeObjects` gate, so through the
+181-frame span `dropRock` collapses into one tick the button presses and the lock fades: a rope cut IN PLAY opens
+`grasslock@176,208` ten live ticks after the cut (game t166), not 101.
+
+**D0.** `probe-seedling-rock-button.mjs` records three p4g tapes (`fixtures/rockbutton-witness/`): the walk (rock
+booted fallen; the lock writes {28,2} at t102, the walk crosses to y 191.71, 0 hits), its control (stalls at 226.04),
+and the live fall (the solver's rope cut from the L25 arrival + 160 idle ticks). With the key ON all three reproduce at
+0 px (player, level, hits, L28 flags); OFF the walk differs on 96 ticks and the live fall on 164.
+
+**D1** (`fallRockHoldsButton`, OFF, last key, `SEEDLING_FALL_ROCK_HOLDS_BUTTON`): `movingSolidsNow()` adds
+`fallenRocksNow()`'s `fallrock` / `fallrocklarge` rows; `dropRock` steps the activators on every span frame but the
+release frame (`spanActivatorFrameNow`; the pull tick's own end-of-tick step is that one — measured: one more opens the
+lock a tick early), the rock a Solid from its landing frame (`Game.as:2341,2353`: the rock is added after the Button,
+so it updates first). `dropRocksTogether` (button / wand drops) is not stepped: unwitnessed, no rock of those paths
+lands on an activator. No new run state. OFF byte-identical (identity block = the published values). Four mutants red.
+
+**D2** (ON, measured; the flip is NOT made): all 293 committed tapes replay to identical streams; the four L39 survey
+steps (the other rope room) give identical rows; the bounded set (143 files) moves ONE pin besides the defaults row:
+`seedlingSoundCues` on `rope-witness/rope-l28-cut` gains the game's `Button.as:44` "Switch" cue at t45 (stamped without
+the span's `+90f`). **The solver still refuses** seed 2's L28 → L30 door from (136,296) with the key ON: the model opens
+the lock at t101 with no input, but `stanceHypothesis` → `deriveWeighSource` asks for a block and never reads the held
+presser — handed to hammer (the wait).
