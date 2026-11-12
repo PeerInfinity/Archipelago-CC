@@ -81,6 +81,7 @@ const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fideli
 const { auditFire } = await imp('frontend/modules/seedlingDemo/presses.js');
 const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriverV2.js');
 const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
+const HP = await imp('scripts/procgen/seedlingHolderParking.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -193,14 +194,71 @@ export const playthroughKillLocks = KILL_LOCKS;
 // ⛓⛓ RULES rules-fire-breaks-rocks — each ordinary rock's flame stances and the entry sides that reach one
 // (`seedlingRockBreakers.rockFireSides`, asked of the physics model over the delivered rooms; a landing tile counts
 // where its occupant can only have arrived). The overlay credits Fire on those sides only (`rockFireRuling`).
+let rockFireRawMemo = null;
+const rockFireRaw = () => (rockFireRawMemo ??= buildRockFireSides(LEVELS, { buildLevelWorld, ROLES, auditFire, plannerObstacleAt }, {
+    arrivalTilesOf: (n) => doorLandingTiles(MAP.levels).get(n) ?? [],
+}));
+/**
+ * ⛓⛓ tile-fire-breaks-rocks — THE FIRE ARM DOES NOT COUNT WHERE A PARKED HOLDER NEEDS A KILL. ⚖ Robert 2026-11-12, to
+ * rules-6: "Narrow it generally (Recommended)" (option text: "In the Fire slice, a rock's Fire arm doesn't count where the
+ * census says a parked holder needs a kill, derived from the census with no level literal. L16's crossing stays Spear |
+ * Sword; the other kept Fire rows are unchanged."). The flame does no damage (`Player.as:178` `fireDamage = 0`; an
+ * Enemy's `hit` only knocks back), so a body that SETTLES on a holder block's route stops the block for good unless it is
+ * killed, and Fire cannot kill it. The verdict is the block-stopper census's OWN (`seedlingHolderParking.holderParkVerdicts`:
+ * the lock prices with and without each killable body parked on the cells it meets): where a TIGHTER row's parked price
+ * LOSES `flag:hasFire`, the room's ordinary rocks whose Fire that entry's price came from (each rock re-prices the room with
+ * its own flame stances dropped; it is one when the entry's Fire goes) lose their flame stances, so the rock keeps the swing (as L40's and L41's do).
+ * The maze reads this same map (`playthroughRockFireSides`), so rules and maze drop Fire from one input.
+ */
 let rockFireMemo = null;
+let rockFireNarrowing = false;
+let rockFireForGrid = null;
+export const rockFireNarrowings = [];
+const hasFireTerm = (dnf) => Array.isArray(dnf) && dnf.some((t) => t.split(' & ').includes('flag:hasFire'));
+const losesFire = (row) => row.moved.filter((m) => hasFireTerm(m.price) && Array.isArray(m.parked) && !hasFireTerm(m.parked));
+function narrowRockFireByHolders(raw) {
+    const out = new Map(raw);
+    for (const level of LEVELS) {
+        const heldBy = BLOCK_HOLDERS.get(level.level);
+        if (!heldBy) continue;
+        const rocks = [...raw].filter(([, r]) => r.level === level.level && r.stances.length > 0);
+        if (rocks.length === 0) continue;
+        const grid = gridFor(level);
+        const tileTypes = HP.tileTypesOf(level, grid.width);
+        const bodies = HP.holderRoomBodies(level, grid, tileTypes);
+        const rows = HP.holderParkVerdicts(level, { grid, tileTypes, heldBy, bodies, entitySemantics: playthroughEntitySemantics }) ?? [];
+        const entries = new Map();
+        for (const row of rows.filter((r) => r.holderVerdict === 'TIGHTER')) {
+            for (const m of losesFire(row)) if (!entries.has(m.entry)) entries.set(m.entry, { row, m });
+        }
+        for (const [entry, { row }] of entries) {
+            for (const [key, rock] of rocks) {
+                // Is THIS rock where the entry's Fire comes from (the block's route, or the player's reach to its holder
+                // stances: the search prices both)? Re-price the room with its flame stances dropped.
+                rockFireForGrid = new Map(raw).set(key, { ...rock, stances: [] });
+                let without;
+                try {
+                    const g = gridFor(level);
+                    without = HP.holderPrices(level, g, HP.tileTypesOf(level, g.width), [], { entitySemantics: playthroughEntitySemantics });
+                } finally { rockFireForGrid = null; }
+                if (hasFireTerm(without[entry])) continue;
+                out.set(key, { ...rock, stances: [], fireDirs: [], swingDirs: [...rock.fireDirs, ...rock.swingDirs].sort(),
+                    narrowed: { entry, body: row.body, block: `${row.block.type}@${row.block.x},${row.block.y}` } });
+                rockFireNarrowings.push({ level: level.level, rock: key, entry, body: row.body });
+            }
+        }
+    }
+    return out;
+}
 const rockFireSides = () => {
-    rockFireMemo ??= buildRockFireSides(LEVELS, { buildLevelWorld, ROLES, auditFire, plannerObstacleAt }, {
-        arrivalTilesOf: (n) => doorLandingTiles(MAP.levels).get(n) ?? [],
-    });
+    if (rockFireForGrid) return rockFireForGrid;
+    if (rockFireMemo) return rockFireMemo;
+    if (rockFireNarrowing) return rockFireRaw();
+    rockFireNarrowing = true;
+    try { rockFireMemo = narrowRockFireByHolders(rockFireRaw()); } finally { rockFireNarrowing = false; }
     return rockFireMemo;
 };
-/** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides, for a reader that reports them. */
+/** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides (narrowed by the holder census), for the maze and the reports. */
 export const playthroughRockFireSides = () => rockFireSides();
 // The fidelity ARRIVAL census over THESE rooms (the obstacle events' rows), computed once: the event layer reads it after
 // the atlas is built, and the rock rulings read the names it will mint before (`mintedRockEvents`).

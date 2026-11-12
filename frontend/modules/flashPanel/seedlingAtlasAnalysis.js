@@ -20,11 +20,10 @@ import {
     poleKillsOf, poleThrustStances, poleSwingStances, POLE_LIGHT_ARM, POLE_GHOST_ARM, obstacleEventName, talkStances,
 } from './seedlingObstacleEvents.js';
 import { talkRangeOf } from '../seedlingDemo/endingChain.js';
-import { buildLevelWorld, combatCensusOf, rectsOverlap, ROLES } from '../seedlingDemo/levelWorld.js';
-import { plannerObstacleAt } from '../seedlingDemo/botDriverV2.js';
-import { rockFireSides, doorLandingTiles, FIRE_ROCK_TAG } from './seedlingRockBreakers.js';
+import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
+import { FIRE_ROCK_TAG } from './seedlingRockBreakers.js';
 import { contactRect } from '../seedlingDemo/combat.js';
-import { spearHitRect, pressRectTouches, auditFire } from '../seedlingDemo/presses.js';
+import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
 import { swingHits } from '../seedlingDemo/combatVerbs.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
 import { lavaTrapPulls, LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
@@ -183,7 +182,7 @@ export function analyzeSeedlingAtlas(atlas, deps) {
  * @param {{ mapDoc:object, gameConfig:object, levelWorlds?:object, analysis?:object }} deps
  * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
  */
-export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null }) {
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null, rockFire = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
     // ⛓ IN-ROOM LATCHES (session tile-lay-l40-latches): a level world lays each in-room press the rules minted as a
@@ -196,16 +195,18 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         if (!latchCache.has(level.level)) latchCache.set(level.level, layableLatches(level, events, grid));
         return latchCache.get(level.level);
     };
-    // ⛓⛓ FIRE BREAKS ROCKS (session tile-fire-breaks-rocks): each ordinary rock's flame stances, the rules' own census
-    // (`seedlingRockBreakers.rockFireSides`, the same physics model the rules producer injects), with every door of the
-    // map landing where it lands — so maze and rules read one stance set. Asked only by a level world.
-    let landings = null;
+    // ⛓⛓ FIRE BREAKS ROCKS (session tile-fire-breaks-rocks): each ordinary rock's flame stances, HANDED IN by the rules
+    // producer (`rockFire`: its `playthroughRockFireSides()`, `L<level>:<rock id>` -> {stances, …}, the census the overlay's
+    // `rockFireRuling` reads, narrowed where a parked holder needs a kill), so maze and rules read ONE map. A level-world
+    // compile without it is refused by name: a maze that silently lost Fire would be stricter than the rules.
+    if (levelWorlds && !rockFire) {
+        throw new Error('seedlingMazeProjectionDeps: a level-world compile needs `rockFire` (the rules producer\'s playthroughRockFireSides())');
+    }
     const rockFireCache = new Map();
     const rockFireOf = (level) => {
-        if (!(level.entities ?? []).some((e) => e.type === FIRE_ROCK_TAG)) return null;
-        landings ??= doorLandingTiles(levels.values());
         if (!rockFireCache.has(level.level)) {
-            rockFireCache.set(level.level, rockFireSides(level, ROCK_FIRE_MODEL, { arrivalTiles: landings.get(level.level) ?? [] }));
+            const prefix = `L${level.level}:`;
+            rockFireCache.set(level.level, new Map([...rockFire].filter(([k]) => k.startsWith(prefix)).map(([k, v]) => [k.slice(prefix.length), v])));
         }
         return rockFireCache.get(level.level);
     };
@@ -542,8 +543,6 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null, la
 
 /** The flame's arm (`Player.fire`, under `hasFire || hasFireWand`: the rules' `ROCK_FIRE_CONDITION` names `hasFire`). */
 const ROCK_FIRE_ARM = Object.freeze({ flag: 'hasFire' });
-/** The model `rockFireSides` reads, injected as the rules producer does (`make-seedling-playthrough-rules.mjs`). */
-const ROCK_FIRE_MODEL = Object.freeze({ buildLevelWorld, ROLES, auditFire, plannerObstacleAt });
 
 /** The model the rules' pole functions read (`poleKillsOf`), injected as the rules producer does. */
 const POLE_MODEL = Object.freeze({ buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });
