@@ -88,8 +88,8 @@ import { reach } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     TILE_FLOOR, TILE_WALL, bfsSolver, clearItem, clearObstacle, createState, createWorld,
-    checkActionLib, detectStepEvents, getItem, getObstacle, getTile, serializeMazeEntities, setBlock, setButton,
-    setItem, setObstacle, setTile, step,
+    checkActionLib, deserializeMazeWorld, detectStepEvents, getItem, getObstacle, getTile, serializeMazeEntities,
+    setBlock, setButton, setItem, setObstacle, setTile, step,
 } from './mazeRoomEngine.js';
 import { rngFor } from './procgenRng.js';
 
@@ -454,7 +454,38 @@ export function deserializeMazeLevel(payload) {
     // ⛓ ITEM ACTIONS — `serializeMazeEntities` writes `action_lib` only when the
     // world has one; the engine's one checker reads it back (absent → `{}`).
     world.actionLib = checkActionLib(payload.action_lib, 'deserializeMazeLevel');
+    adoptEngineEntities(world, payload);
     return world;
+}
+
+/**
+ * ⛓⛓ MAZE CONVERTED LOAD — **THE ENTITY FIELDS ONLY THE ENGINE READS, READ BY THE ENGINE.**
+ *
+ * `serializeMazeLevel` writes the engine's `serializeMazeEntities`, which emits these fields when a world has them
+ * (a Seedling-converted room does: arrow traps, entry gates, block sinks, block kinds, pulls, pulsers). The reader
+ * above used to read only the lab's own (blocks, buttons, buttonLib, action_lib) and DROPPED the rest, so a converted
+ * room lost its traps on LOAD and a save of it was not a fixed point.
+ *
+ * ⛔ No parallel copy of the engine's field logic: when a payload carries any of them, the engine's own reader
+ * (`deserializeMazeWorld`) reads the payload and its world's entity fields are adopted. A payload with none of them
+ * (every generator and lab payload) takes no new path, so it loads exactly as before. `obstacleLib` entries are not
+ * touched here: they ride through opaquely, as above, and the engine validates them in its own terms.
+ *
+ * `mazeConvertedLoad.test.js` holds the two readers to agree on `serializeMazeEntities` for every room of the
+ * Seedling-converted preset, so a field the engine learns later turns that row red instead of being dropped.
+ */
+export const ENGINE_ENTITY_FIELDS = Object.freeze(['block_lib', 'traps', 'entry_gates', 'block_sinks', 'pulls', 'pulsers']);
+const ENGINE_WORLD_FIELDS = ['blockLib', 'blocks', 'traps', 'trapLib', 'trapLanes', 'entryGates', 'blockSinks', 'pulls', 'pulsers'];
+
+function adoptEngineEntities(world, payload) {
+    if (!ENGINE_ENTITY_FIELDS.some((f) => payload[f] !== undefined)) return;
+    let engine;
+    try {
+        engine = deserializeMazeWorld(payload, { baseObstacleLib: DEFAULT_OBSTACLES, baseItemLib: DEFAULT_ITEMS });
+    } catch (e) {
+        fail(`procgenMaze: this is not a maze level payload — ${e.message}.`);
+    }
+    for (const f of ENGINE_WORLD_FIELDS) if (engine[f] !== undefined) world[f] = engine[f];
 }
 
 /* ══════════════════════════════════════════════════════════════════════
