@@ -326,7 +326,35 @@ A theme needs no image at all: the same keys may be **shapes** (rect, circle, li
       { "circle": [6, 7, 1], "fill": "#000000" }, { "circle": [10, 7, 1], "fill": "#000000" } ] } } }
 ```
 
-A key the theme does not carry falls through to an earlier pack in the stack, or to `COLORS`. A later pack wins a key whichever kind either pack used. The module is presentation only and sits outside the maze engine's import closure (`seedlingDerivedRuleTable.js --print-engine-closure`); `mazeTileArt.test.js` asserts this. The in-app row `maze-tile-art-from-pack-stack` (`fast`) reads the canvas pixels under a fixture stack.
+**A worked example: the `meta` theme** ([`frontend/packs/meta/art/manifest.json`](../../../../frontend/packs/meta/art/manifest.json), content sets R4) is the manifest to copy. It carries all 14 keys as shapes and no image. Each recipe is a few primitives in a 20×20 box, which is `TILE_PX`, so the recipe draws 1:1 in play with no scaling blur. Every stroke is 2 wide, and a short `note` on each entry says what the recipe is meant to look like. Two of its entries:
+
+```jsonc
+"maze:tile/wall": { "w": 20, "h": 20, "note": "a slate block ruled with diagonal hatching …", "draw": [
+  { "rect": [0, 0, 20, 20], "fill": "#4c5464" },
+  { "line": [0, 10, 10, 0], "stroke": "#a0a8b8", "width": 2 },
+  { "line": [0, 20, 20, 0], "stroke": "#a0a8b8", "width": 2 },
+  { "line": [10, 20, 20, 10], "stroke": "#a0a8b8", "width": 2 } ] },
+"maze:object/button-down": { "w": 20, "h": 20, "note": "a button, DOWN: …", "draw": [
+  { "rect": [3, 3, 14, 14], "fill": "#ffd75f", "stroke": "#2e3440", "width": 2 },
+  { "circle": [10, 10, 1.5], "fill": "#2e3440" } ] }
+```
+
+What a theme author has to respect is what the painter draws **over or around** a keyed thing, because those are state signals and no theme replaces them. Read `drawWorld` and `drawLiveMarkers` for each key:
+
+| key | drawn over or around it, whatever the theme |
+|---|---|
+| `maze:tile/floor`, `maze:tile/wall` | the base layer, drawn first; the grid lines (`COLORS.grid`) go over every cell, so a floor or wall recipe should fill its whole box |
+| `maze:tile/exit` | only an OPEN exit is keyed; a closed one stays the `COLORS.exitBlocked` fill, so the open recipe must not use that red |
+| `maze:character/player` | the facing tick, a `COLORS.wall` (black) square on the side faced, about 0.3–0.46 of a cell from the centre, so the recipe's edge must not be black |
+| `maze:object/trap` | its lane's armed/silent tint |
+| `maze:object/pulser` | a ring of radius 0.42 cell stroked in the armed/silent colour; the body must sit inside it, and a backdrop under the ring keeps the grey (silent) ring readable on a wall |
+| `maze:object/pull` | the disc's live/inert tint on the cells around it |
+| `maze:object/button`, `button-down` | the player or block standing on a DOWN button, so its plate should show around them |
+| `maze:tile/mana` | the painter fades it to 0.25 alpha once collected |
+
+`mazeRoom/mazeMetaArt.test.js` is the test to copy for a new theme. It checks that the manifest parses, that its keys come from the table (with the omitted ones listed in one table, each with a reason), and that each recipe stays inside its box. It also checks that the block and button states stay apart, and that the real stack, with a stub rasteriser, draws every carried key from `"<pack>#<key>"` while the signals above stay unchanged. `CC/docs/cloud-reports/content-sets-r4/contact-sheet.html` draws each thing default beside themed, using the real painter, for review.
+
+A key the theme does not carry falls through to an earlier pack in the stack, or to `COLORS`. A later pack wins a key whichever kind either pack used. The module is presentation only and sits outside the maze engine's import closure (`seedlingDerivedRuleTable.js --print-engine-closure`); `mazeTileArt.test.js` asserts this. The in-app row `maze-tile-art-from-pack-stack` (`fast`) reads the canvas pixels under a fixture stack, and `meta-trial-maze-tile-art` (`fast`) reads them on the committed `meta_trial` world with no test seam.
 
 ## A real game's map as maze regions
 
