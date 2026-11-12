@@ -11,6 +11,10 @@
  * The digests were measured on the base BEFORE the move (origin/main 856d1aec89) and re-measured after it: equal.
  * ⛔ A change to the maze editor's behaviour must re-measure them and say so.
  *
+ * ⛓ B2 (slice `maze-editor-tools`) turned FILL / CLEAR / MOVE ON in the maze lab. The first rows below still
+ * mount WITHOUT them and still match the B1 digests (so adding `mazeEditAdapter.clearOps` moved nothing the
+ * old mount does); the B2 rows mount as the page now does and carry their own digests.
+ *
  * ⚠ The palette, flood target, paste options and clip bounds are written out here because `mazeLabView.main()`
  * is a whole page and cannot be mounted in node; `check-maze-lab` is the browser row over the page itself.
  */
@@ -21,11 +25,14 @@ import { MazeRoomEditor, PALETTE_TYPES, generateStep } from './mazeLab.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 import { REDO_COMMAND_ID, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import { MAZE_EDIT_TOOLS, MAZE_FILL_REFUSAL } from './mazeEditTools.js';
 import { fakeDocument } from '../procgenCore/fakeEditorDom.testkit.js';
 import { createLifetime } from '../procgenCore/pageLifetime.js';
 
-function surfaceOf(room) {
+function surfaceOf(room, { b2 = false } = {}) {
     const doc = fakeDocument([]);
+    // ⛓ B2 — the page's CLEAR select (`#labClearWhat`), filled by `editorView`.
+    const clearWhat = b2 ? doc.createElement('select') : null;
     const parent = doc.createElement('div');
     const canvas = parent.appendChild(doc.createElement('canvas'));
     const session = createEditSession(mazeEditAdapter, generateStep(room).record);
@@ -59,6 +66,8 @@ function surfaceOf(room) {
             { id: UNDO_COMMAND_ID, label: 'UNDO one edit', key: 'u', run: () => { log.push(['undo', session.undo()]); } },
             { id: REDO_COMMAND_ID, label: 'REDO one edit', run: () => { log.push(['redo', session.redo()]); } },
         ],
+        // ⛓ B2 — the maze lab's opt-in, read off the SAME module the page imports.
+        ...(b2 ? { tools: MAZE_EDIT_TOOLS, editTools: { fillRefusal: MAZE_FILL_REFUSAL, clearWhat } } : {}),
         lifetime,
         say: (text, bad) => log.push(['say', Boolean(bad), text]),
         offRoom: () => 'outside the room',
@@ -75,6 +84,7 @@ function surfaceOf(room) {
     const out = {
         commands: view.commands.map((r) => [r.id, r.label, r.key ?? null]),
         keys: [...view.keys.keys()],
+        ...(b2 ? { clearWhat: clearWhat.options.map((o) => [o.value, o.textContent]) } : {}),
     };
     const W = session.record().width;
     const H = session.record().height;
@@ -119,5 +129,39 @@ describe('the maze lab\'s editor surface across the tools move', () => {
         expect(s.log.filter((e) => e[0] === 'change' && e[2]).length).toBeGreaterThanOrEqual(3);
         const digest = createHash('sha256').update(JSON.stringify(s)).digest('hex');
         expect(digest).toBe(BEFORE_THE_MOVE[name]);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **MAZE EDITOR TOOLS (B2) — THE PAGE'S MOUNT NOW NAMES FILL / CLEAR / MOVE**, and this is the
+ * surface it has. The SAME script as above; what differs from the B1 surface (measured, the slice's
+ * as-built quotes the diff): the command table gains `fill (l)`, `clear (x)`, `move (m)` between `flood`
+ * and `escape`, the key map gains `l`, `x`, `m`, the `clearWhat` options are `['', 'tile', 'entity']`, and
+ * the `unbound-keys` step's three presses now arm FILL (a corner), CLEAR (a corner) and MOVE (refused:
+ * the earlier RECT clip, a no-op tiles-only move). Re-pinned by slice `maze-editor-tools`; ⛔ a change here
+ * re-measures and says so.
+ *
+ * ⛓ Re-pinned by slice `editor-corner-reset` (a pending FILL/CLEAR corner belongs to the tool that set it; any
+ * switch drops it). Measured base (B2's mount on origin/main add369e82f) vs tip, both seeds: ONE entry moves, the
+ * `unbound-keys` CLEAR click's status — it used to complete a 1x1 rect on FILL's corner (refused, nothing to clear,
+ * `bad` true) and now starts CLEAR's own corner (`CLEAR corner 1 at (1,1) …`, `bad` false). Ops, `onChange`, overlay
+ * strokes, the command table and the world are byte-identical.
+ */
+const B2_PAGE_MOUNT = Object.freeze({
+    seed5: '64ae264f1f564d5f1986789e1181a883a70a30ac5b855c832a2e076c4129ea98',
+    seed7: '2b866415cc3ba721c35b513c77a0a773c1398f3ecb844a8550bfb99c388a93db',
+});
+
+describe('the maze lab\'s editor surface with B2\'s tools turned on', () => {
+    it.each([
+        ['seed5', { seed: 5, step: 3, width: 7, height: 7 }],
+        ['seed7', { seed: 7, step: 5, width: 9, height: 9 }],
+    ])('%s: FILL / CLEAR / MOVE after the four, and the pinned digest', (name, room) => {
+        const s = surfaceOf(room, { b2: true });
+        expect(s.commands.map((c) => c[0]))
+            .toEqual(['undo', 'redo', 'brush', 'rect', 'paste', 'flood', 'fill', 'clear', 'move', 'escape']);
+        expect(s.clearWhat.map((o) => o[0])).toEqual(['', 'tile', 'entity']);
+        const digest = createHash('sha256').update(JSON.stringify(s)).digest('hex');
+        expect(digest).toBe(B2_PAGE_MOUNT[name]);
     });
 });

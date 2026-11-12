@@ -24,7 +24,7 @@ import { ENTITY_CLASSES, entityRect, TILE_SIZE, buildLevelWorld, ROLES } from '.
 
 const REPO = join(import.meta.dirname ?? new URL('.', import.meta.url).pathname, '..', '..');
 const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
-// ⛓ tile-rules-automation-r-a4: a GROUPED_LOCK_EXCEPTIONS lock's cost is its group's press, read off this census.
+// ⛓ tile-rules-automation-r-a4/r-a5: an in-room press lock's cost is its group's press (`IN_ROOM_PRESS_LOCK`), read off this census.
 const GROUPS = buildGroupOpeners(MAP);
 const SCRIPTS = buildScriptOpeners(MAP);
 const ATLAS = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));

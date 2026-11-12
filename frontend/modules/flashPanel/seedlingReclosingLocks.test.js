@@ -44,14 +44,18 @@ const cellAt = (grid, x, y) => grid.cells[y * grid.width + x];
 
 describe('the group census — which grouped locks re-close', () => {
     it('a plain Button group HOLDS (L15 group 0: the button at (7,2), nothing latching)', () => {
-        expect(GROUPS.get('15:0')).toEqual({ latching: false, holders: [[7, 2]], latchers: [] }); // ⛓ R-A4: + `latchers`
+        // ⛓ R-A4: + `latchers`; ⛓ R-A5: + `opened` (the group's locks in map order, which name a press's one event)
+        expect(GROUPS.get('15:0')).toEqual({ latching: false, holders: [[7, 2]], latchers: [], opened: [{ type: 'lock', x: 128, y: 48 }] });
     });
 
-    it('a ButtonRoom with room -1 LATCHES its group (L20 group 0), so its lock is not re-closing', () => {
+    // ⛓ R-A5: such a lock is not re-closing, and when that press is its group's ONLY opener it costs the press
+    // (`IN_ROOM_PRESS_LOCK`), so it is GATED on the press's event, never `directional`.
+    it('a ButtonRoom with room -1 LATCHES its group (L20 group 0), so its lock is not re-closing: it costs the press', () => {
         expect(GROUPS.get('20:0').latching).toBe(true);
         const l40 = levelById(40).entities.find((e) => e.type === 'wandlock' && e.x === 208 && e.y === 128);
         const ruled = overlayEntitySemantics(l40, null, { level: 40, crossLevelOpeners: CROSS, groupOpeners: GROUPS });
-        expect(ruled.kind).toBe('open');
+        expect(ruled.kind).toBe('gated');
+        expect(ruled.condition).toEqual({ event: 'L40 flag 7: wandlock@208,128 cleared' });
         expect(ruled.opensFrom).toBeUndefined();
     });
 

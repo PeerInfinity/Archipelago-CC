@@ -40,7 +40,7 @@ from lib.test_utils import (
     load_template_exclude_list,
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
-from lib.worldgen_recipe import world_generator_command
+from lib.worldgen_recipe import load_recipes, world_generator_command
 
 # Global world mapping cache - built once and reused
 _world_mapping: Dict[str, Dict] = {}
@@ -285,12 +285,22 @@ def run_generation(
     return result
 
 
+def _recipe_victory_location(project_root: str, package: str) -> bool:
+    """The package recipe's ``victory_location`` (design-victory-location): the round trip builds the
+    package the way the committed one is built, and the comparison expects the transform's changes."""
+    try:
+        return bool(load_recipes(project_root).get(package, {}).get('victory_location', False))
+    except (OSError, ValueError):
+        return False
+
+
 def run_world_generator(
     rules_path: str,
     output_dir: str,
     game_name: str,
     project_root: str,
-    canonical_seed: Optional[int] = None
+    canonical_seed: Optional[int] = None,
+    victory_location: bool = False
 ) -> Dict:
     """Run the world generator to create a _worldgen world."""
     result = {
@@ -302,7 +312,7 @@ def run_world_generator(
 
     # The one recipe: the package freshness check runs the same command
     # (scripts/lib/worldgen_recipe.py, scripts/test/check-worldgen-package-freshness.py).
-    cmd = world_generator_command(rules_path, output_dir, game_name, canonical_seed)
+    cmd = world_generator_command(rules_path, output_dir, game_name, canonical_seed, victory_location)
 
     start_time = time.time()
     return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=120)
@@ -386,7 +396,8 @@ def run_rules_comparison(
     original_rules_path: str,
     worldgen_rules_path: str,
     project_root: str,
-    ignore_canonical: bool = False
+    ignore_canonical: bool = False,
+    victory_location: bool = False
 ) -> Dict:
     """
     Compare original and worldgen rules.json files.
@@ -420,6 +431,8 @@ def run_rules_comparison(
 
     if ignore_canonical:
         cmd.insert(3, '--ignore-canonical')
+    if victory_location:
+        cmd.insert(3, '--victory-location')
 
     start_time = time.time()
     return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=60)
@@ -553,7 +566,8 @@ def process_template(
 
     world_gen_result = run_world_generator(
         rules_path, test_world_dir, test_game_name, project_root,
-        canonical_seed=canonical_seed
+        canonical_seed=canonical_seed,
+        victory_location=_recipe_victory_location(project_root, f'{game_dir}_worldgen')
     )
     template_result['test_world']['world_generation'] = world_gen_result
 
@@ -632,7 +646,9 @@ def run_test_world_tests(
 
         comparison_result = run_rules_comparison(
             original_rules_path, worldgen_rules_path, project_root,
-            ignore_canonical=canonical_seed is not None
+            ignore_canonical=canonical_seed is not None,
+            victory_location=_recipe_victory_location(
+                project_root, os.path.basename(result['test_world'].get('world_dir', '')))
         )
         result['test_world']['rules_comparison'] = comparison_result
 

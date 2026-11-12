@@ -138,6 +138,13 @@ Examples:
     )
 
     parser.add_argument(
+        '--victory-location',
+        action='store_true',
+        help='Make an event goal a real, pinned, ID-bearing Victory location '
+             '(world_generator/_victory_location.py)'
+    )
+
+    parser.add_argument(
         '--apworld',
         type=str,
         default=None,
@@ -189,6 +196,7 @@ Examples:
             player_id=args.player_id,
             apply_name_substitutions=args.apply_name_substitutions,
             lossy=args.lossy,
+            victory_location=args.victory_location,
         )
 
         # Load and validate

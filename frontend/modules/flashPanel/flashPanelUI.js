@@ -8,6 +8,7 @@ import {
 } from './index.js';
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
+import { SolveWatchView } from './seedlingSolveWatchView.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -1073,7 +1074,17 @@ export class FlashPanelUI {
     this._solveProgressLine = new SolveProgressLine();
     this._solveProgressView = new SolveProgressView({
       getServices: () => this._solveServices(),
-      onState: (state) => this._solveProgressLine.update(state),
+      onState: (state) => { this._solveProgressLine.update(state); this._solveWatchView?.update(state); },
+    });
+    // ⛓ WATCHER VIEW (slice `seedling-solver-panel-view`, ⚖ Robert 2026-11-11) — the section's default view: plain
+    // sentences, the pass stepper, the effort bar and the map over the room's tiles (the JS runtime page's world on
+    // that level; none on the wasm path). The view above goes, unchanged, under its "Developer details".
+    this._solveWatchView = new SolveWatchView({
+      details: this._solveProgressView.element,
+      getRoom: (level) => {
+        const v = this.seedlingPlaybackSurface?.()?.jsRuntime?.view?.() ?? null;
+        return v && v.level === level ? v.world ?? null : null;
+      },
     });
     this.stageElement.after(this._solveProgressLine.element);
     // ⛓ SOLVER LIMIT OFF — the Solver section's first row: Stop (enabled only while a solve is in flight), "No work
@@ -1087,7 +1098,7 @@ export class FlashPanelUI {
       onWrite: (prop, value) => this._writeSetting(prop, value),
       onStop: () => this.stopSolve(),
     });
-    this.sections.solver.append(this._solverLimits.element, this._solveProgressView.element);
+    this.sections.solver.append(this._solverLimits.element, this._solveWatchView.element);
     if (typeof setInterval === 'function') {
       this._solverStopTimer = setInterval(() => this._renderSolverStop(), SOLVER_STOP_POLL_MS);
     }
@@ -1287,6 +1298,7 @@ export class FlashPanelUI {
       for (const id of PANEL_SECTIONS) this.sections[id].open = state[id] === true;
     } finally { this._applyingSections = false; }
     this._solveProgressView.setMode(this.sections.solver.open ? 'always' : 'listen');
+    this._solveWatchView.setVisible(this.sections.solver.open === true);
   }
 
   /** Which sections are open now: `{solver, settings, tools}`. */
@@ -1306,7 +1318,10 @@ export class FlashPanelUI {
 
   _onSectionToggle(id) {
     if (this._applyingSections) return;
-    if (id === 'solver') this._solveProgressView.setMode(this.sections.solver.open ? 'always' : 'listen');
+    if (id === 'solver') {
+      this._solveProgressView.setMode(this.sections.solver.open ? 'always' : 'listen');
+      this._solveWatchView.setVisible(this.sections.solver.open === true);
+    }
     const state = this.sectionState();
     const key = JSON.stringify(state);
     if (key === this._savedSections) return;
@@ -1867,10 +1882,12 @@ export class FlashPanelUI {
      * event wrapper (T4, trap 1405).
      */
     const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
-    const generated = generatedRoomCensus(rawRules);
+    // The loaded slot: a room's server-built rules key their sidecars under the ROOM slot, not '1'.
+    const generated = generatedRoomCensus(rawRules, staticData?.playerId);
     // ⛓ J3 — on the JS runtime the cheap call is also asked about real rooms:
     // their (atlas) arm is the runtime's too, and stays an open question here.
-    const atlas = transport === 'js' ? { atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) } } : {};
+    const atlas = transport === 'js'
+      ? { atlas: { rooms: atlasRoomRegions(rawRules, staticData?.playerId).map((r) => r.region) } } : {};
     const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated, ...atlas });
     if (cheap.verdict === 'ineligible') {
       // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
@@ -1939,7 +1956,7 @@ export class FlashPanelUI {
       // ⛓ J3 — the atlas arm's bound table and the rules' own real-room payloads; ⛓ VANILLA MAP — or the
       // vanilla arm's own table, each entity read off the set it DELIVERED (`realRoomPlaybackMap`) — on
       // either runtime (⛓ §5.18: the JS page takes the vanilla delivery too; the map is arm-keyed).
-      this._seedlingAtlas = realRoomPlaybackMap(loaded, rawRules);
+      this._seedlingAtlas = realRoomPlaybackMap(loaded, rawRules, { playerId: staticData?.playerId });
       // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
       // atlas arm's retag): the wasm playback engine stages these, not the map document.
       this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;

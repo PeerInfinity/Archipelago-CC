@@ -42,9 +42,10 @@ describe('the events the collector reads', () => {
         //   rules-l26-rocklock-pocket the three encounter locks a door pocket cannot clear (L18:0 in level_18__r1c1, L26:0 in
         //   level_26__r2c4, L53:2 in level_53__r9c10 — the room side that clears them)
         //   rules-l60-l71-killlock the encounter lock a door pocket clears only across it (L60:0 in level_60__r5c0, the room side)
+        //   tile-rules-automation-r-a5 L40:1 moves to level_40__r4c4 (its button's new sub-region), after r0c53's L40:7
         expect(EVENTS.map((e) => e.eventId)).toEqual(['flag:L0:1', 'flag:L0:4', 'flag:L12:4', 'flag:L12:5', 'flag:L12:10', 'flag:L12:11',
             'flag:L12:3', 'flag:L12:7', 'flag:L12:12', 'flag:L16:0', 'flag:L18:0', 'flag:L19:1', 'flag:L20:0', 'flag:L20:4', 'flag:L24:0', 'flag:L26:0', 'flag:L28:0', 'flag:L30:0', 'flag:L30:2', 'flag:L31:0',
-            'flag:L39:8', 'flag:L40:1', 'flag:L40:7', 'flag:L40:8', 'flag:L40:12', 'flag:L48:1', 'flag:L53:2', 'flag:L58:1', 'flag:L60:0', 'flag:L63:1', 'flag:L62:0', 'flag:L63:7', 'flag:L63:6', 'flag:L65:0',
+            'flag:L39:8', 'flag:L40:7', 'flag:L40:1', 'flag:L40:8', 'flag:L40:12', 'flag:L48:1', 'flag:L53:2', 'flag:L58:1', 'flag:L60:0', 'flag:L63:1', 'flag:L62:0', 'flag:L63:7', 'flag:L63:6', 'flag:L65:0',
             'flag:L68:0', 'flag:L71:2', 'flag:L101:0', 'flag:L112:1', 'flag:L113:0', 'flag:L114:0']);
         expect(ROCK).toMatchObject({ location: 'L0 flag 1: breakablerock@288,176 cleared', level: 0, tag: 1 });
     });
