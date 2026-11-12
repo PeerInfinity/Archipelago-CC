@@ -39,6 +39,7 @@ export const moduleInfo = {
         { key: 'playbackBot_manaStrategy', kind: STORAGE_KINDS.state, label: 'Playback Bot: loop-mode mana strategy' },
         { key: 'playbackBot_targetSource', kind: STORAGE_KINDS.state, label: 'Playback Bot: check next (sphere log / any reachable)' },
         { key: 'playbackBot_walkOrder', kind: STORAGE_KINDS.state, label: 'Playback Bot: walk order (in order / cheapest in sphere / cheapest reachable)' },
+        { key: 'playbackBot_routeEvents', kind: STORAGE_KINDS.state, label: 'Playback Bot: clear the route\'s events first (off by default)' },
     ],
 };
 

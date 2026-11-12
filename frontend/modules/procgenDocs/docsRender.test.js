@@ -308,7 +308,10 @@ describe('⛓ the links the render emits', () => {
         //   → concepts.md § Content roles (2 doc).
         //   404 → 407: maze editor tools B2 — maze-lab.md § The edit tools ↔ editing-core.md (2 doc), and
         //   maze-lab.md's `edit` row → that § (1 same-doc).
-        expect(checked).toBe(407);
+        //   407 → 409: content sets R2b — concepts.md § A world's content stack and maze-lab.md's `tileArt` row →
+        //   maze.md § Tile art from a content pack (2 doc).
+        //   409 → 410: content sets R2b part 2 — maze.md § Tile art → frontend/modules/artLibrary/README.md § Shapes (1 repo).
+        expect(checked).toBe(410);
     });
 
     it('tags each link with the kind that produced it', () => {

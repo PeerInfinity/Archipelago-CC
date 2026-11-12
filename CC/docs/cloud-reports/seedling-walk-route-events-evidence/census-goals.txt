@@ -1,0 +1,28 @@
+## seedling_playthrough/AP_14089154938208861744
+row 26 Level 030 - Torchpickup: flag:L30:0@23, flag:L30:2@24
+row 32 Level 012 - Chest: flag:L12:4@12, flag:L12:5@13, flag:L12:10@20, flag:L12:3@29
+row 41 Level 039 - Totem Part 72,40: flag:L39:8@31
+row 42 Level 040 - Boss Key 2: flag:L40:12@35
+row 43 Level 040 - Chest: flag:L40:12@35
+row 44 Level 040 - Totem Part 160,640: flag:L40:12@35
+row 55 Level 040 - Totem Part 64,144: flag:L40:12@35, flag:L40:1@50, flag:L40:7@51, flag:L40:8@52
+row 69 Level 012 - Witch: flag:L12:4@12, flag:L12:5@13, flag:L12:10@20, flag:L12:3@29, flag:L12:11@65, flag:L12:12@66, flag:L12:7@67
+row 71 Level 068 - Health: flag:L68:0@68
+row 78 Level 063 - Chest: flag:L63:1@39, flag:L63:6@60, flag:L63:7@61
+row 86 Level 112 - Owl: flag:L112:1@83
+## seedling_er/AP_1
+row 19 Level 030 - Torchpickup: flag:L30:0@13, flag:L30:2@14
+row 32 Level 012 - Chest: flag:L12:4@20, flag:L12:5@21, flag:L12:3@28
+row 34 Level 040 - Boss Key 2: flag:L40:12@31
+row 44 Level 040 - Totem Part 64,144: flag:L40:12@31, flag:L40:1@36, flag:L40:7@37, flag:L40:8@38
+row 65 Level 012 - Witch: flag:L12:4@20, flag:L12:5@21, flag:L12:3@28, flag:L12:10@51, flag:L12:7@58
+row 71 Level 068 - Health: flag:L68:0@70
+row 78 Level 063 - Chest: flag:L63:1@41, flag:L63:6@62, flag:L63:7@63
+row 86 Level 112 - Owl: flag:L112:1@84
+## seedling_playthrough_maze/AP_1
+row 9 Level 017 - Chest: flag:L16:0@6
+row 33 Level 038 - Chest: flag:L39:8@31
+row 41 Level 039 - Totem Part 72,40: flag:L39:8@31
+row 55 Level 040 - Totem Part 64,144: flag:L40:12@35, flag:L40:1@50, flag:L40:7@51, flag:L40:8@52
+row 69 Level 012 - Witch: flag:L0:1@4, flag:L12:4@12, flag:L12:5@13, flag:L12:10@20, flag:L12:3@29, flag:L12:11@65, flag:L12:12@66, flag:L12:7@67
+row 71 Level 068 - Health: flag:L68:0@68

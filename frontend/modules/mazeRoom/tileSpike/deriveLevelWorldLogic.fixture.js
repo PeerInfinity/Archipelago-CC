@@ -69,7 +69,8 @@ export const L40_LATCHES = Object.freeze({
 export const L20_LATCHES = Object.freeze({
     0: { button: [12, 1], locks: [[2, 5]] },
 });
-export const L40_REGIONS = ['level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36', 'level_40__r36c35', 'level_40__r48c54'];
+/** L40's AP regions, read off the committed atlas (⛓ R-A5: was a literal list of five; L40's wand locks now split it into seven). */
+export const L40_REGIONS = ATLAS.regions.find((r) => r.region_id === 'level_40').subgraph.sub_regions.map((c) => `level_40__${c}`);
 
 /**
  * The latches a payload LAYS, by group: `{<group>: {button: [x, y], locks: [[x, y]…], event}}` — each latching button

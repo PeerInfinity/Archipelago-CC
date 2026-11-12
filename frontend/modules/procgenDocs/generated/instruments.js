@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 154,
-            "count": 204,
+            "browser": 155,
+            "count": 205,
             "id": "probe"
         },
         {
@@ -234,12 +234,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 527,
-        "browser": 224,
+        "blockStyle": 528,
+        "browser": 225,
         "cited": 280,
-        "files": 545,
+        "files": 546,
         "lineStyle": 18,
-        "withDocblock": 545,
+        "withDocblock": 546,
         "withFlags": 464
     },
     "dir": "scripts/procgen",
@@ -15534,6 +15534,28 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-l39-shaft.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40-flag12-lock.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40-flag12-lock — ⛓ R-A5's GAME WITNESS (⚖ design-4 2026-11-11: \"the rule is stricter than main, so it needs a game witness, not only static evidence\").",
+            "path": "scripts/procgen/probe-seedling-l40-flag12-lock.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg",
                 "check"
@@ -22069,6 +22091,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "seedling",
             "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md",
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
