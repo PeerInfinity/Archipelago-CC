@@ -1,0 +1,8 @@
+ ✓ frontend/modules/seedlingDemo/hammerOppPressFallback.train.test.js (4 tests) 149980ms
+     ✓ the defaults before the flip (the set OFF): SOLVED `hold, kill, walk`, hitless  39225ms
+     ✓ the BEFORE: the flip set ON with the fallback OFF refuses inside the hold's rock prerequisite (OPP's press)  29553ms
+     ✓ …and OPP is the cause: the flip set ON with OPP alone OFF solves, the defaults' plan  38845ms
+     ✓ the AFTER: the flip set ON with the fallback ON solves — the retry asked and adopted, the defaults' plan, hitless  42354ms
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Duration  152.91s (transform 2.08s, setup 183ms, import 2.63s, tests 149.98s, environment 0ms)

@@ -1,0 +1,988 @@
+sweep_id	req	key	ok	kind	work	ticks	fb_asked	fb_adopted	redo_audited	redo_hit	ms	page_ok
+0	0	level_0__r2c13 <- in_L89_160_304 -> exit:out_teleporter_240_0	True	None	37	8	0	0	0	0	29	True
+1	0	level_0__r6c5 <- in_L1_64_112 -> exit:out_teleporter_80_96	True	None	9	5	0	0	0	0	19	True
+2	0	level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_128	True	None	14	223	0	0	0	0	189	True
+3	0	level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_144	True	None	14	222	0	0	0	0	53	True
+4	0	level_0__r7c6 <- in_L2_48_16 -> exit:out_stairsdown_32_192	True	None	16	237	0	0	0	0	44	True
+5	0	level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_160_272	True	None	10	159	0	0	0	0	132	True
+6	0	level_0__r7c6 <- in_L2_48_16 -> exit:out_stairsdown_256_272	True	None	2	6	0	0	0	0	10	True
+7	0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared	True	None	27	54	0	0	0	0	48	True
+8	0	level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared	True	None	83	121	0	0	0	0	179	True
+9	0	level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_0_128	True	None	10	133	0	0	0	0	25	True
+10	0	level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_0_144	True	None	8	117	0	0	0	0	72	True
+11	0	level_0__r7c6 <- in_L13_64_144 -> exit:out_stairsdown_32_192	True	None	2	7	0	0	0	0	109	True
+12	0	level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_160_272	True	None	18	281	0	0	0	0	134	True
+13	0	level_0__r7c6 <- in_L13_64_144 -> exit:out_stairsdown_256_272	True	None	14	207	0	0	0	0	40	True
+14	0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared	True	None	124	237	0	0	0	0	393	True
+15	0	level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared	True	None	80	75	0	0	0	0	72	True
+16	0	level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_128	True	None	20	294	0	0	0	0	209	True
+17	0	level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_144	True	None	20	294	0	0	0	0	43	True
+18	0	level_0__r7c6 <- in_L86_48_64 -> exit:out_stairsdown_32_192	True	None	20	305	0	0	0	0	36	True
+19	0	level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_160_272	True	None	2	7	0	0	0	0	11	True
+20	0	level_0__r7c6 <- in_L86_48_64 -> exit:out_stairsdown_256_272	True	None	8	109	0	0	0	0	26	True
+21	0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared	True	None	114	180	0	0	0	0	271	True
+22	0	level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared	True	None	119	181	0	0	0	0	306	True
+23	0	level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_128	True	None	2	7	0	0	0	0	11	True
+24	0	level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_144	True	None	4	33	0	0	0	0	16	True
+25	0	level_0__r7c6 <- in_L94_304_160 -> exit:out_stairsdown_32_192	True	None	8	119	0	0	0	0	111	True
+26	0	level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_160_272	True	None	20	314	0	0	0	0	130	True
+27	0	level_0__r7c6 <- in_L94_304_160 -> exit:out_stairsdown_256_272	True	None	16	247	0	0	0	0	43	True
+28	0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared	True	None	131	282	0	0	0	0	302	True
+29	0	level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared	True	None	27	54	0	0	0	0	118	True
+30	0	level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_0_128	True	None	4	33	0	0	0	0	24	True
+31	0	level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_0_144	True	None	2	7	0	0	0	0	30	True
+32	0	level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_32_192	True	None	8	106	0	0	0	0	22	True
+33	0	level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_160_272	True	None	20	314	0	0	0	0	103	True
+34	0	level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_256_272	True	None	16	248	0	0	0	0	71	True
+35	0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared	True	None	131	281	0	0	0	0	518	True
+36	0	level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared	True	None	39	59	0	0	0	0	47	True
+37	0	level_0__r7c6 <- start -> exit:out_teleporter_0_128	True	None	4	61	0	0	0	0	13	True
+38	0	level_0__r7c6 <- start -> exit:out_teleporter_0_144	True	None	4	60	0	0	0	0	22	True
+39	0	level_0__r7c6 <- start -> exit:out_stairsdown_32_192	True	None	6	81	0	0	0	0	90	True
+40	0	level_0__r7c6 <- start -> exit:out_teleporter_160_272	True	None	16	256	0	0	0	0	111	True
+41	0	level_0__r7c6 <- start -> exit:out_stairsdown_256_272	True	None	12	183	0	0	0	0	50	True
+42	0	level_0__r7c6 <- start -> location:L0 flag 1: breakablerock@288,176 cleared	True	None	122	238	0	0	0	0	230	True
+43	0	level_0__r7c6 <- start -> location:L0 flag 4: breakablerock@80,112 cleared	True	None	0	21	0	0	0	0	18	True
+44	0	level_0__r11c19 <- in_L12_0_80 -> exit:out_teleporter_304_176	True	None	9	5	0	0	0	0	48	True
+45	0	level_1 <- in_L0_80_96 -> exit:out_teleporter_64_112	True	None	9	4	0	0	0	0	8	True
+46	0	level_2 <- in_L0_256_272 -> exit:out_stairsup_48_16	True	None	2	7	0	0	0	0	9	True
+47	0	level_2 <- in_L0_256_272 -> exit:out_teleporter_48_96	True	None	4	47	0	0	0	0	16	True
+48	0	level_2 <- in_L3_64_0 -> exit:out_stairsup_48_16	True	None	4	47	0	0	0	0	20	True
+49	0	level_2 <- in_L3_64_0 -> exit:out_teleporter_48_96	True	None	2	6	0	0	0	0	16	True
+50	0	level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_0_64	True	None	81	82	0	0	0	0	60	True
+51	0	level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_64_0	True	None	2	7	0	0	0	0	22	True
+52	0	level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_128_48	True	None	16	245	0	0	0	0	30	True
+53	0	level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_0_64	True	None	117	181	0	0	0	0	107	True
+54	0	level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_64_0	True	None	16	235	0	0	0	0	79	True
+55	0	level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_128_48	True	None	2	7	0	0	0	0	26	True
+56	0	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_0_64	True	None	61	34	0	0	0	0	27	True
+57	0	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_64_0	False	refusal	1	None	0	0	0	0	26	False
+58	0	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_128_48	False	refusal	1	None	0	0	0	0	8	False
+59	0	level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128	False	refusal	0	None	0	0	0	0	46	False
+59	1	level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128	False	refusal	0	None	0	0	0	0	37	False
+60	0	level_4 <- in_L3_128_48 -> exit:out_teleporter_0_16	True	None	2	7	0	0	0	0	14	True
+61	0	level_4 <- in_L3_128_48 -> exit:out_stairsdown_64_16	True	None	23	255	0	0	0	0	64	True
+62	0	level_4 <- in_L5_80_16 -> exit:out_teleporter_0_16	False	refusal	1	None	0	0	0	0	65	False
+63	0	level_4 <- in_L5_80_16 -> exit:out_stairsdown_64_16	True	None	2	7	0	0	0	0	22	True
+64	0	level_5__r1c1 <- in_L12_96_240 -> exit:out_stairsup_16_16	True	None	37	8	0	0	0	0	32	True
+65	0	level_5__r1c5 <- in_L4_64_16 -> exit:out_teleporter_48_112	True	None	22	403	0	0	0	0	186	True
+66	0	level_5__r1c5 <- in_L4_64_16 -> exit:out_stairsup_80_16	True	None	2	7	0	0	0	0	25	True
+67	0	level_5__r1c5 <- in_L6_32_0 -> exit:out_teleporter_48_112	True	None	23	385	0	0	0	0	194	True
+68	0	level_5__r1c5 <- in_L6_32_0 -> exit:out_stairsup_80_16	True	None	4	61	0	0	0	0	27	True
+69	0	level_6 <- in_L5_48_112 -> exit:out_teleporter_32_0	True	None	2	7	0	0	0	0	26	True
+70	0	level_6 <- in_L5_48_112 -> exit:out_stairsup_224_32	True	None	15	294	0	0	0	0	97	True
+71	0	level_6 <- in_L7_16_32 -> exit:out_teleporter_32_0	False	refusal	20	None	0	0	0	0	77	False
+72	0	level_6 <- in_L7_16_32 -> exit:out_stairsup_224_32	True	None	2	7	0	0	0	0	22	True
+73	0	level_7 <- in_L6_224_32 -> exit:out_stairsdown_16_32	True	None	2	7	0	0	0	0	19	True
+74	0	level_7 <- in_L6_224_32 -> exit:out_stairsdown_192_32	True	None	10	146	0	0	0	0	35	True
+75	0	level_7 <- in_L8_144_32 -> exit:out_stairsdown_16_32	True	None	10	146	0	0	0	0	36	True
+76	0	level_7 <- in_L8_144_32 -> exit:out_stairsdown_192_32	True	None	2	7	0	0	0	0	17	True
+77	0	level_8 <- in_L7_192_32 -> exit:out_teleporter_96_192	True	None	64	827	0	0	0	0	370	True
+78	0	level_8 <- in_L7_192_32 -> exit:out_stairsup_144_32	True	None	2	7	0	0	0	0	15	True
+79	0	level_8 <- in_L9_144_0 -> exit:out_teleporter_96_192	True	None	2	6	0	0	0	0	17	True
+80	0	level_8 <- in_L9_144_0 -> exit:out_stairsup_144_32	False	refusal	170	None	0	0	0	0	21609	False
+81	0	level_9 <- in_L8_96_192 -> exit:out_teleporter_16_0	True	None	8	122	0	0	0	0	33	True
+82	0	level_9 <- in_L8_96_192 -> exit:out_teleporter_144_0	True	None	2	7	0	0	0	0	14	True
+83	0	level_9 <- in_L10_48_96 -> exit:out_teleporter_16_0	True	None	2	7	0	0	0	0	36	True
+84	0	level_9 <- in_L10_48_96 -> exit:out_teleporter_144_0	True	None	8	122	0	0	0	0	55	True
+85	0	level_10 <- in_L9_16_0 -> exit:out_stairsup_48_16	True	None	4	47	0	0	0	0	16	True
+85	1	level_10 <- in_L9_16_0 -> exit:out_stairsup_48_16	True	None	9	10	0	0	0	0	16	True
+86	0	level_10 <- in_L9_16_0 -> exit:out_teleporter_48_96	True	None	2	6	0	0	0	0	24	True
+87	0	level_10 <- in_L9_16_0 -> location:Level 010 - Sword	True	None	4	35	0	0	0	0	14	True
+88	0	level_10 <- in_L11_32_80 -> exit:out_stairsup_48_16	True	None	2	7	0	0	0	0	12	True
+89	0	level_10 <- in_L11_32_80 -> exit:out_teleporter_48_96	True	None	4	47	0	0	0	0	25	True
+89	1	level_10 <- in_L11_32_80 -> exit:out_teleporter_48_96	True	None	12	16	0	0	0	0	26	True
+90	0	level_10 <- in_L11_32_80 -> location:Level 010 - Sword	True	None	2	26	0	0	0	0	19	True
+91	0	level_11 <- in_L3_96_128 -> exit:out_teleporter_32_0	True	None	2	7	0	0	0	0	25	True
+92	0	level_11 <- in_L3_96_128 -> exit:out_stairsdown_32_80	True	None	4	47	0	0	0	0	25	True
+92	1	level_11 <- in_L3_96_128 -> exit:out_stairsdown_32_80	True	None	2	22	0	0	0	0	21	True
+93	0	level_11 <- in_L3_96_128 -> location:Level 011 - Chest	True	None	4	35	0	0	0	0	7	True
+94	0	level_11 <- in_L10_48_16 -> exit:out_teleporter_32_0	True	None	4	47	0	0	0	0	45	True
+94	1	level_11 <- in_L10_48_16 -> exit:out_teleporter_32_0	True	None	4	35	0	0	0	0	69	True
+95	0	level_11 <- in_L10_48_16 -> exit:out_stairsdown_32_80	True	None	2	6	0	0	0	0	21	True
+96	0	level_11 <- in_L10_48_16 -> location:Level 011 - Chest	True	None	2	26	0	0	0	0	18	True
+97	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80	True	None	9	5	0	0	0	0	32	True
+98	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352	True	None	141	291	0	0	0	0	1537	True
+99	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368	True	None	141	291	0	0	0	0	946	True
+100	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_112_96	True	None	67	93	0	0	0	0	340	True
+101	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368	True	None	152	475	0	0	0	0	888	True
+102	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0	True	None	125	232	0	0	0	0	1105	True
+103	0	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352	True	None	151	328	0	0	0	0	1185	True
+104	0	level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch	True	None	157	527	0	0	0	0	1087	True
+105	0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	395	771	0	0	0	0	3127	True
+106	0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	446	777	0	0	0	0	6446	True
+107	0	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	184	817	0	0	0	0	1498	True
+108	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80	True	None	154	515	0	0	0	0	776	True
+109	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352	True	None	150	483	0	0	0	0	1305	True
+110	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368	True	None	150	493	0	0	0	0	832	True
+111	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96	True	None	142	418	0	0	0	0	821	True
+112	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368	True	None	134	380	0	0	0	0	694	True
+113	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0	True	None	150	492	0	0	0	0	1048	True
+114	0	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_432_352	True	None	33	7	0	0	0	0	24	True
+115	0	level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch	True	None	4	92	0	0	0	0	59	True
+116	0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	377	836	0	0	0	0	4895	True
+117	0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	408	842	0	0	0	0	4615	True
+118	0	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	154	578	0	0	0	0	658	True
+119	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80	True	None	24	55	0	0	0	0	135	True
+120	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352	True	None	130	234	0	0	0	0	449	True
+121	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368	True	None	130	234	0	0	0	0	540	True
+122	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96	True	None	9	5	0	0	0	0	41	True
+123	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368	True	None	134	259	0	0	0	0	1580	True
+124	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0	True	None	106	141	0	0	0	0	589	True
+125	0	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352	True	None	138	290	0	0	0	0	1183	True
+126	0	level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch	True	None	139	348	0	0	0	0	816	True
+127	0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	150	494	0	0	0	0	1225	True
+128	0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	153	541	0	0	0	0	1047	True
+129	0	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	168	697	0	0	0	0	1241	True
+130	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80	True	None	149	371	0	0	0	0	806	True
+131	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352	True	None	82	95	0	0	0	0	226	True
+132	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368	True	None	82	94	0	0	0	0	219	True
+133	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96	True	None	137	277	0	0	0	0	1139	True
+134	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368	True	None	9	5	0	0	0	0	20	True
+135	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0	True	None	148	341	0	0	0	0	783	True
+136	0	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352	True	None	127	238	0	0	0	0	1030	True
+137	0	level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch	True	None	124	254	0	0	0	0	614	True
+138	0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	404	864	0	0	0	0	4623	True
+139	0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	460	872	0	0	0	0	8124	True
+140	0	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	134	421	0	0	0	0	522	True
+141	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80	True	None	127	239	0	0	0	0	643	True
+142	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352	True	None	119	208	0	0	0	0	885	True
+143	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368	True	None	123	209	0	0	0	0	803	True
+144	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96	True	None	115	147	0	0	0	0	666	True
+145	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368	True	None	138	247	0	0	0	0	983	True
+146	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0	True	None	9	5	0	0	0	0	22	True
+147	0	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352	True	None	144	317	0	0	0	0	1096	True
+148	0	level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch	True	None	146	376	0	0	0	0	1075	True
+149	0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	312	444	0	0	0	0	1232	True
+150	0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	348	447	0	0	0	0	3077	True
+151	0	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	172	734	0	0	0	0	947	True
+152	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80	True	None	167	451	0	0	0	0	701	True
+153	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352	True	None	9	5	0	0	0	0	22	True
+154	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368	True	None	12	19	0	0	0	0	48	True
+155	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96	True	None	130	256	0	0	0	0	661	True
+156	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368	True	None	112	133	0	0	0	0	305	True
+157	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0	True	None	141	405	0	0	0	0	979	True
+158	0	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352	True	None	142	331	0	0	0	0	1004	True
+159	0	level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch	True	None	146	450	0	0	0	0	677	True
+160	0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	166	632	0	0	0	0	1721	True
+161	0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	168	610	0	0	0	0	1983	True
+162	0	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	71	602	0	0	0	0	417	True
+163	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80	True	None	144	416	0	0	0	0	665	True
+164	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352	True	None	12	19	0	0	0	0	65	True
+165	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368	True	None	9	5	0	0	0	0	34	True
+166	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96	True	None	132	312	0	0	0	0	557	True
+167	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368	True	None	98	116	0	0	0	0	289	True
+168	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0	True	None	143	364	0	0	0	0	863	True
+169	0	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352	True	None	142	328	0	0	0	0	1259	True
+170	0	level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch	True	None	145	437	0	0	0	0	986	True
+171	0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared	True	None	170	672	0	0	0	0	1429	True
+172	0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared	True	None	171	675	0	0	0	0	1654	True
+173	0	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 10: shieldlocknorm@288,704 cleared	True	None	71	603	0	0	0	0	263	True
+174	0	level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0	True	None	165	415	0	0	0	0	1362	True
+175	0	level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5	True	None	119	258	0	0	0	0	783	True
+176	0	level_12__r0c37 <- in_L37_32_304 -> exit:out_teleporter_592_0	True	None	9	5	0	0	0	0	56	True
+177	0	level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5	True	None	167	571	0	0	0	0	1181	True
+178	0	level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240	True	None	9	4	0	0	0	0	17	True
+179	0	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared	True	None	15	102	0	0	0	0	53	True
+180	0	level_12__r40c4 <- in_L24_32_144 -> exit:out_teleporter_40_688	True	None	9	5	0	0	0	0	61	True
+181	0	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared	True	None	36	128	0	0	0	0	92	True
+182	0	level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848	True	None	9	5	0	0	0	0	25	True
+183	0	level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest	True	None	131	230	0	0	0	0	668	True
+186	0	level_12__r43c21 <- in_L34_32_144 -> exit:out_teleporter_336_688	True	None	9	5	0	0	0	0	20	True
+187	0	level_13 <- in_L0_32_192 -> exit:out_stairsdown_32_32	True	None	6	74	0	0	0	0	14	True
+188	0	level_13 <- in_L0_32_192 -> exit:out_stairsup_64_144	True	None	2	6	0	0	0	0	18	True
+189	0	level_13 <- in_L0_32_192 -> exit:out_stairsdown_96_32	True	None	6	74	0	0	0	0	41	True
+190	0	level_13 <- in_L14_176_64 -> exit:out_stairsdown_32_32	True	None	2	7	0	0	0	0	5	True
+191	0	level_13 <- in_L14_176_64 -> exit:out_stairsup_64_144	True	None	6	77	0	0	0	0	15	True
+192	0	level_13 <- in_L14_176_64 -> exit:out_stairsdown_96_32	True	None	4	60	0	0	0	0	37	True
+193	0	level_13 <- in_L20_16_48 -> exit:out_stairsdown_32_32	True	None	4	60	0	0	0	0	17	True
+194	0	level_13 <- in_L20_16_48 -> exit:out_stairsup_64_144	True	None	6	77	0	0	0	0	17	True
+195	0	level_13 <- in_L20_16_48 -> exit:out_stairsdown_96_32	True	None	2	7	0	0	0	0	24	True
+196	0	level_14 <- in_L13_32_32 -> exit:out_stairsdown_32_64	True	None	624	173	0	0	0	0	1030	True
+197	0	level_14 <- in_L13_32_32 -> exit:out_stairsup_176_64	True	None	2	7	0	0	0	0	21	True
+198	0	level_14 <- in_L15_32_64 -> exit:out_stairsdown_32_64	True	None	2	7	0	0	0	0	15	True
+199	0	level_14 <- in_L15_32_64 -> exit:out_stairsup_176_64	True	None	452	132	0	0	0	0	1054	True
+200	0	level_15__r1c5 <- in_L14_32_64 -> exit:out_stairsup_32_64	True	None	2	7	0	0	0	0	10	True
+201	0	level_15__r1c9 <- in_L16_16_64 -> exit:out_stairsdown_144_16	True	None	9	5	0	0	0	0	34	True
+202	0	level_16__r1c1 <- in_L15_144_16 -> exit:out_stairsup_16_64	True	None	9	5	0	0	0	0	92	True
+203	0	level_16__r1c1 <- in_L15_144_16 -> location:L16 flag 0: rope@32,16 cleared	True	None	63	112	0	0	0	0	1248	True
+204	0	level_16__r3c7 <- in_L17_32_48 -> exit:out_stairsdown_112_64	True	None	9	4	0	0	0	0	35	True
+205	0	level_16__r4c21 <- in_L18_16_16 -> exit:out_stairsup_352_80	True	None	9	5	0	0	0	0	17	True
+206	0	level_17 <- in_pit_L16_7_2 -> exit:out_stairsup_32_48	True	None	17	33	0	0	0	0	137	True
+207	0	level_17 <- in_pit_L16_7_2 -> location:Level 017 - Chest	True	None	9	17	0	0	0	0	30	True
+208	0	level_17 <- in_pit_L16_8_2 -> exit:out_stairsup_32_48	True	None	24	41	0	0	0	0	44	True
+209	0	level_17 <- in_pit_L16_8_2 -> location:Level 017 - Chest	True	None	9	12	0	0	0	0	37	True
+210	0	level_17 <- in_pit_L16_9_2 -> exit:out_stairsup_32_48	True	None	20	39	0	0	0	0	68	True
+211	0	level_17 <- in_pit_L16_9_2 -> location:Level 017 - Chest	True	None	9	17	0	0	0	0	18	True
+212	0	level_17 <- in_pit_L16_7_3 -> exit:out_stairsup_32_48	True	None	16	27	0	0	0	0	141	True
+213	0	level_17 <- in_pit_L16_7_3 -> location:Level 017 - Chest	True	None	25	24	0	0	0	0	37	True
+214	0	level_17 <- in_pit_L16_8_3 -> exit:out_stairsup_32_48	True	None	20	33	0	0	0	0	47	True
+215	0	level_17 <- in_pit_L16_8_3 -> location:Level 017 - Chest	True	None	24	23	0	0	0	0	39	True
+216	0	level_17 <- in_pit_L16_9_3 -> exit:out_stairsup_32_48	True	None	20	39	0	0	0	0	57	True
+217	0	level_17 <- in_pit_L16_9_3 -> location:Level 017 - Chest	True	None	25	24	0	0	0	0	49	True
+218	0	level_17 <- in_pit_L16_8_4 -> exit:out_stairsup_32_48	True	None	20	35	0	0	0	0	68	True
+219	0	level_17 <- in_pit_L16_8_4 -> location:Level 017 - Chest	True	None	40	27	0	0	0	0	50	True
+220	0	level_17 <- in_L16_112_64 -> exit:out_stairsup_32_48	True	None	9	5	0	0	0	0	20	True
+221	0	level_17 <- in_L16_112_64 -> location:Level 017 - Chest	True	None	28	42	0	0	0	0	169	True
+222	0	level_18__r1c1 <- in_L16_352_80 -> exit:out_stairsdown_16_16	True	None	9	5	0	0	0	0	25	True
+223	0	level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared	False	refusal	34	None	0	0	0	0	1863	False
+224	0	level_18__r7c10 <- in_L19_0_144 -> exit:out_teleporter_176_112	True	None	9	5	0	0	0	0	31	True
+225	0	level_19__r1c1 <- in_L20_192_48 -> exit:out_stairsup_16_96	True	None	9	4	0	0	0	0	11	True
+226	0	level_19__r5c5 <- in_L18_176_112 -> exit:out_teleporter_0_144	True	None	9	5	0	0	0	0	41	True
+227	0	level_19__r5c5 <- in_L18_176_112 -> location:Level 019 - Boss Key 0	True	None	133	508	0	0	0	0	268	True
+227	1	level_19__r5c5 <- in_L18_176_112 -> location:Level 019 - Boss Key 0	True	None	38	91	0	0	0	0	82	True
+228	0	level_20__r1c4 <- in_L19_16_96 -> exit:out_stairsdown_192_48	True	None	9	5	0	0	0	0	7	True
+229	0	level_20__r1c4 <- in_L19_16_96 -> location:Level 020 - Shield	True	None	43	99	0	0	0	0	59	True
+230	0	level_20__r1c4 <- in_L19_16_96 -> location:L20 flag 0: shieldlocknorm@176,16 cleared	True	None	46	200	0	0	0	0	94	True
+231	0	level_20__r3c1 <- in_L13_96_32 -> exit:out_stairsup_16_48	True	None	2	7	0	0	0	0	20	True
+232	0	level_21 <- in_pit_L12_5_5 -> exit:out_teleporter_0_80	True	None	16	27	0	0	0	0	44	True
+233	0	level_21 <- in_pit_L12_5_5 -> exit:out_teleporter_80_160	True	None	16	26	0	0	0	0	29	True
+234	0	level_21 <- in_pit_L12_5_5 -> exit:out_teleporter_160_80	True	None	16	27	0	0	0	0	15	True
+235	0	level_21 <- in_L22_96_0 -> exit:out_teleporter_0_80	True	None	16	31	0	0	0	0	27	True
+236	0	level_21 <- in_L22_96_0 -> exit:out_teleporter_80_160	True	None	9	4	0	0	0	0	16	True
+237	0	level_21 <- in_L22_96_0 -> exit:out_teleporter_160_80	True	None	16	31	0	0	0	0	56	True
+238	0	level_21 <- in_L23_80_32 -> exit:out_teleporter_0_80	True	None	9	5	0	0	0	0	13	True
+239	0	level_21 <- in_L23_80_32 -> exit:out_teleporter_80_160	True	None	16	31	0	0	0	0	56	True
+240	0	level_21 <- in_L23_80_32 -> exit:out_teleporter_160_80	True	None	27	45	0	0	0	0	39	True
+241	0	level_21 <- in_L29_0_80 -> exit:out_teleporter_0_80	True	None	27	45	0	0	0	0	85	True
+242	0	level_21 <- in_L29_0_80 -> exit:out_teleporter_80_160	True	None	16	31	0	0	0	0	52	True
+243	0	level_21 <- in_L29_0_80 -> exit:out_teleporter_160_80	True	None	9	5	0	0	0	0	18	True
+244	0	level_22 <- in_L21_80_160 -> exit:out_teleporter_0_128	True	None	63	113	0	0	0	0	579	True
+245	0	level_22 <- in_L21_80_160 -> exit:out_teleporter_96_0	True	None	9	5	0	0	0	0	18	True
+246	0	level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192	True	None	87	120	0	0	0	0	786	True
+247	0	level_22 <- in_L21_80_160 -> exit:out_teleporter_192_64	True	None	47	89	0	0	0	0	223	True
+248	0	level_22 <- in_L25_144_32 -> exit:out_teleporter_0_128	True	None	9	5	0	0	0	0	43	True
+249	0	level_22 <- in_L25_144_32 -> exit:out_teleporter_96_0	True	None	109	112	0	0	0	0	347	True
+250	0	level_22 <- in_L25_144_32 -> exit:out_teleporter_96_192	True	None	64	75	0	0	0	0	171	True
+251	0	level_22 <- in_L25_144_32 -> exit:out_teleporter_192_64	True	None	92	229	0	0	0	0	847	True
+252	0	level_22 <- in_L29_0_224 -> exit:out_teleporter_0_128	True	None	132	142	0	0	0	0	649	True
+253	0	level_22 <- in_L29_0_224 -> exit:out_teleporter_96_0	True	None	64	69	0	0	0	0	123	True
+254	0	level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192	True	None	107	116	0	0	0	0	736	True
+255	0	level_22 <- in_L29_0_224 -> exit:out_teleporter_192_64	True	None	9	5	0	0	0	0	23	True
+256	0	level_22 <- in_L30_64_0 -> exit:out_teleporter_0_128	True	None	23	56	0	0	0	0	247	True
+257	0	level_22 <- in_L30_64_0 -> exit:out_teleporter_96_0	True	None	67	116	0	0	0	0	519	True
+258	0	level_22 <- in_L30_64_0 -> exit:out_teleporter_96_192	True	None	9	4	0	0	0	0	21	True
+259	0	level_22 <- in_L30_64_0 -> exit:out_teleporter_192_64	True	None	91	108	0	0	0	0	239	True
+260	0	level_23 <- in_L21_0_80 -> exit:out_stairsup_32_32	True	None	9	11	0	0	0	0	8	True
+261	0	level_23 <- in_L21_0_80 -> exit:out_teleporter_80_32	True	None	9	5	0	0	0	0	8	True
+262	0	level_23 <- in_L24_96_96 -> exit:out_stairsup_32_32	True	None	9	5	0	0	0	0	14	True
+263	0	level_23 <- in_L24_96_96 -> exit:out_teleporter_80_32	True	None	9	11	0	0	0	0	12	True
+264	0	level_24 <- in_L12_40_688 -> exit:out_teleporter_32_144	True	None	9	18	0	0	0	0	24	True
+265	0	level_24 <- in_L12_40_688 -> exit:out_teleporter_48_144	True	None	9	4	0	0	0	0	20	True
+266	0	level_24 <- in_L12_40_688 -> exit:out_stairsdown_96_96	True	None	36	44	0	0	0	0	51	True
+268	0	level_24 <- in_L23_32_32 -> exit:out_teleporter_32_144	True	None	72	124	0	0	0	0	87	True
+269	0	level_24 <- in_L23_32_32 -> exit:out_teleporter_48_144	True	None	72	123	0	0	0	0	63	True
+270	0	level_24 <- in_L23_32_32 -> exit:out_stairsdown_96_96	True	None	9	4	0	0	0	0	10	True
+271	0	level_24 <- in_L23_32_32 -> location:L24 flag 0: burnabletree@32,128 cleared	True	None	60	115	0	0	0	0	45	True
+272	0	level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96	True	None	90	182	0	0	0	0	518	True
+273	0	level_25 <- in_L22_0_128 -> exit:out_teleporter_96_128	True	None	27	58	0	0	0	0	144	True
+273	1	level_25 <- in_L22_0_128 -> exit:out_teleporter_96_128	True	None	9	6	0	0	0	0	78	True
+274	0	level_25 <- in_L22_0_128 -> exit:out_teleporter_144_32	True	None	9	5	0	0	0	0	21	True
+275	0	level_25 <- in_L22_0_128 -> location:Level 025 - Chest	True	None	24	57	0	0	0	0	144	True
+276	0	level_25 <- in_L26_144_32 -> exit:out_teleporter_0_96	True	None	9	5	0	0	0	0	40	True
+277	0	level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128	True	None	96	106	0	0	0	0	274	True
+277	1	level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128	True	None	9	10	0	0	0	0	31	True
+278	0	level_25 <- in_L26_144_32 -> exit:out_teleporter_144_32	True	None	75	135	0	0	0	0	268	True
+279	0	level_25 <- in_L26_144_32 -> location:Level 025 - Chest	True	None	40	128	0	0	0	0	209	True
+280	0	level_25 <- in_L28_96_0 -> exit:out_teleporter_0_96	True	None	52	97	0	0	0	0	362	True
+280	1	level_25 <- in_L28_96_0 -> exit:out_teleporter_0_96	True	None	81	88	0	0	0	0	327	True
+281	0	level_25 <- in_L28_96_0 -> exit:out_teleporter_96_128	True	None	9	4	0	0	0	0	12	True
+282	0	level_25 <- in_L28_96_0 -> exit:out_teleporter_144_32	True	None	39	77	0	0	0	0	120	True
+282	1	level_25 <- in_L28_96_0 -> exit:out_teleporter_144_32	True	None	24	50	0	0	0	0	73	True
+283	0	level_25 <- in_L28_96_0 -> location:Level 025 - Chest	True	None	9	12	0	0	0	0	21	True
+284	0	level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304	True	None	122	286	0	0	0	0	430	True
+285	0	level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_144_32	True	None	9	5	0	0	0	0	11	True
+287	0	level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_64_304	True	None	9	4	0	0	0	0	28	True
+288	0	level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32	True	None	108	143	0	0	0	0	484	True
+290	0	level_26__r13c8 <- in_L28_0_96 -> exit:out_teleporter_144_208	True	None	9	5	0	0	0	0	45	True
+291	0	level_27 <- in_L26_64_304 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	32	True
+292	0	level_27 <- in_L26_64_304 -> exit:out_teleporter_168_16	True	None	59	74	0	0	0	0	105	True
+293	0	level_27 <- in_L28_128_304 -> exit:out_teleporter_32_0	True	None	64	126	0	0	0	0	199	True
+294	0	level_27 <- in_L28_128_304 -> exit:out_teleporter_168_16	True	None	9	5	0	0	0	0	8	True
+295	0	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96	True	None	27	58	0	0	0	0	100	True
+296	0	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0	True	None	9	5	0	0	0	0	15	True
+297	0	level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared	True	None	57	170	0	0	0	0	224	True
+298	0	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96	True	None	9	5	0	0	0	0	20	True
+299	0	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0	True	None	37	58	0	0	0	0	102	True
+300	0	level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared	True	None	102	303	0	0	0	0	130	True
+301	0	level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16	True	None	9	5	0	0	0	0	16	True
+302	0	level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304	True	None	9	4	0	0	0	0	22	True
+303	0	level_29__r2c2 <- in_L22_192_64 -> exit:out_teleporter_0_224	True	None	9	5	0	0	0	0	17	True
+304	0	level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32	True	None	108	251	0	0	0	0	529	True
+304	1	level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32	True	None	44	61	0	0	0	0	190	True
+305	0	level_29__r2c2 <- in_L22_192_64 -> location:Level 029 - Boss Key 1	True	None	100	128	0	0	0	0	200	True
+306	0	level_29__r2c2 <- in_L31_384_96 -> exit:out_teleporter_0_224	True	None	115	206	0	0	0	0	370	True
+307	0	level_29__r2c2 <- in_L31_384_96 -> exit:out_stairsdown_112_32	True	None	9	5	0	0	0	0	25	True
+308	0	level_29__r2c2 <- in_L31_384_96 -> location:Level 029 - Boss Key 1	True	None	24	59	0	0	0	0	74	True
+309	0	level_29__r5c0 <- in_L21_160_80 -> exit:out_teleporter_0_80	True	None	9	5	0	0	0	0	13	True
+310	0	level_30__r0c4 <- in_L22_96_192 -> exit:out_teleporter_64_0	True	None	9	5	0	0	0	0	34	True
+311	0	level_30__r2c10 <- in_L28_304_16 -> exit:out_teleporter_0_128	True	None	9	5	0	0	0	0	31	True
+312	0	level_30__r2c10 <- in_L28_304_16 -> exit:out_stairsdown_192_48	True	None	47	104	0	0	0	0	279	True
+313	0	level_30__r2c10 <- in_L28_304_16 -> exit:out_pit_3_34	True	None	55	170	0	0	0	0	279	True
+314	0	level_30__r2c10 <- in_L28_304_16 -> location:Level 030 - Torchpickup	True	None	60	63	0	0	0	0	177	True
+315	0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared	True	None	72	156	0	0	0	0	172	True
+315	1	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared	True	None	15	98	0	0	0	0	41	True
+316	0	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared	True	None	44	162	0	0	0	0	103	True
+317	0	level_30__r2c10 <- in_L31_160_384 -> exit:out_teleporter_0_128	True	None	30	57	0	0	0	0	82	True
+318	0	level_30__r2c10 <- in_L31_160_384 -> exit:out_stairsdown_192_48	True	None	9	5	0	0	0	0	28	True
+319	0	level_30__r2c10 <- in_L31_160_384 -> exit:out_pit_3_34	True	None	69	190	0	0	0	0	276	True
+320	0	level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - Torchpickup	True	None	188	160	0	0	0	0	894	True
+321	0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared	True	None	67	191	0	0	0	0	294	True
+322	0	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared	True	None	75	190	0	0	0	0	160	True
+323	0	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128	True	None	42	98	0	0	0	0	153	True
+324	0	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_stairsdown_192_48	True	None	9	12	0	0	0	0	15	True
+325	0	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34	True	None	74	249	0	0	0	0	262	True
+326	0	level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup	True	None	319	202	0	0	0	0	621	True
+327	0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared	True	None	345	298	0	0	0	0	1169	True
+327	1	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared	True	None	39	103	0	0	0	0	69	True
+328	0	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared	True	None	83	209	0	0	0	0	335	True
+329	0	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128	True	None	42	97	0	0	0	0	326	True
+330	0	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48	True	None	16	30	0	0	0	0	50	True
+331	0	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34	True	None	70	246	0	0	0	0	319	True
+332	0	level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup	True	None	301	213	0	0	0	0	747	True
+333	0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared	False	refusal	126	None	0	0	0	0	547	False
+334	0	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared	True	None	107	217	0	0	0	0	332	True
+335	0	level_30__r8c13 <- in_L32_72_136 -> exit:out_stairsup_224_160	True	None	9	5	0	0	0	0	52	True
+336	0	level_31__r5c24 <- in_L29_112_32 -> exit:out_stairsup_384_96	True	None	9	5	0	0	0	0	13	True
+337	0	level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,432 cleared	True	None	88	264	0	0	0	0	359	True
+338	0	level_31__r5c24 <- in_pit_L30_3_34 -> exit:out_stairsup_384_96	True	None	160	524	0	0	0	0	481	True
+339	0	level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@192,432 cleared	True	None	122	270	0	0	0	0	342	True
+340	0	level_31__r24c10 <- in_L30_192_48 -> exit:out_stairsup_160_384	True	None	9	5	0	0	0	0	27	True
+341	0	level_32 <- in_L30_224_160 -> exit:out_stairsdown_72_136	True	None	9	8	0	0	0	0	46	True
+342	0	level_32 <- in_L30_224_160 -> exit:out_pit_14_5	True	None	102	966	0	0	0	0	15258	True
+342	1	level_32 <- in_L30_224_160 -> exit:out_pit_14_5	True	None	70	215	0	0	0	0	73	True
+343	0	level_32 <- in_L30_224_160 -> exit:out_pit_15_5	True	None	126	967	0	0	0	0	14009	True
+343	1	level_32 <- in_L30_224_160 -> exit:out_pit_15_5	True	None	78	216	0	0	0	0	89	True
+344	0	level_32 <- in_L30_224_160 -> location:Level 032 - Bob Boss	True	None	50	818	0	0	0	0	16453	True
+346	0	level_33 <- in_L12_432_352 -> exit:out_teleporter_32_64	True	None	9	4	0	0	0	0	11	True
+347	0	level_34 <- in_L12_336_688 -> exit:out_teleporter_32_144	True	None	9	4	0	0	0	0	48	True
+348	0	level_34 <- in_L12_336_688 -> exit:out_teleporter_128_0	True	None	120	188	0	0	0	0	220	True
+349	0	level_35 <- in_L12_112_96 -> exit:out_teleporter_32_64	True	None	9	4	0	0	0	0	29	True
+350	0	level_36 <- in_L12_168_368 -> exit:out_teleporter_32_128	True	None	9	4	0	0	0	0	10	True
+351	0	level_36 <- in_L12_168_368 -> location:Level 036 - Chest	True	None	42	72	0	0	0	0	60	True
+352	0	level_36 <- in_light_boss_exit_L69_112_96 -> exit:out_teleporter_32_128	True	None	24	50	0	0	0	0	54	True
+353	0	level_36 <- in_light_boss_exit_L69_112_96 -> location:Level 036 - Chest	True	None	63	106	0	0	0	0	130	True
+354	0	level_37__r0c18 <- in_L38_144_304 -> exit:out_teleporter_288_0	True	None	9	5	0	0	0	0	29	True
+355	0	level_37__r0c18 <- in_L43_144_64 -> exit:out_teleporter_288_0	False	refusal	112	None	0	0	0	0	188	False
+356	0	level_37__r9c36 <- in_L97_32_16 -> exit:out_stairsdown_576_144	True	None	0	13	0	0	0	0	22	True
+357	0	level_37__r12c6 <- in_L12_592_0 -> exit:out_teleporter_0_256	True	None	17	36	0	0	0	0	43	True
+358	0	level_37__r12c6 <- in_L12_592_0 -> exit:out_teleporter_32_304	True	None	9	4	0	0	0	0	34	True
+359	0	level_37__r12c6 <- in_L44_144_128 -> exit:out_teleporter_0_256	True	None	9	5	0	0	0	0	34	True
+360	0	level_37__r12c6 <- in_L44_144_128 -> exit:out_teleporter_32_304	True	None	16	32	0	0	0	0	44	True
+361	0	level_38 <- in_L37_288_0 -> exit:out_teleporter_144_0	True	None	163	411	0	0	0	0	373	True
+361	1	level_38 <- in_L37_288_0 -> exit:out_teleporter_144_0	True	None	20	37	0	0	0	0	96	True
+362	0	level_38 <- in_L37_288_0 -> exit:out_teleporter_144_304	True	None	9	4	0	0	0	0	20	True
+363	0	level_38 <- in_L37_288_0 -> location:Level 038 - Chest	True	None	152	324	0	0	0	0	305	True
+364	0	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared	True	None	173	474	0	0	0	0	245	True
+364	1	level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared	True	None	95	95	0	0	0	0	128	True
+365	0	level_38 <- in_L39_144_624 -> exit:out_teleporter_144_0	True	None	9	5	0	0	0	0	20	True
+366	0	level_38 <- in_L39_144_624 -> exit:out_teleporter_144_304	False	refusal	51	None	0	0	0	0	173	False
+367	0	level_38 <- in_L39_144_624 -> location:Level 038 - Chest	False	refusal	51	None	0	0	0	0	280	False
+369	0	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0	True	None	9	5	0	0	0	0	35	True
+370	0	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40	True	None	88	75	0	0	0	0	657	True
+371	0	level_39__r25c9 <- in_L38_144_0 -> exit:out_teleporter_144_624	True	None	9	4	0	0	0	0	57	True
+372	0	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0	True	None	35	70	0	0	0	0	542	True
+373	0	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96	True	None	9	5	0	0	0	0	42	True
+374	0	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144	False	refusal	38	None	0	0	0	0	5956	False
+375	0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 1: wandlock@176,80 cleared	True	None	642	1315	0	0	0	0	16454	True
+376	0	level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared	True	None	641	1083	0	0	0	0	15048	True
+377	0	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0	True	None	9	5	0	0	0	0	82	True
+378	0	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96	True	None	35	70	0	0	0	0	474	True
+379	0	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144	True	None	155	1239	0	0	0	0	2082	True
+380	0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared	True	None	597	1450	0	0	0	0	38598	True
+381	0	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared	True	None	493	1012	0	0	0	0	10781	True
+382	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576	True	None	85	172	0	0	0	0	3740	True
+383	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912	True	None	9	4	0	0	0	0	89	True
+384	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20	True	None	105	861	0	0	0	0	1784	True
+385	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20	True	None	157	913	0	0	0	0	2100	True
+386	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20	True	None	175	1025	0	0	0	0	4112	True
+387	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20	True	None	181	1088	0	0	0	0	2234	True
+388	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21	True	None	103	844	0	0	0	0	957	True
+389	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21	True	None	425	955	0	0	0	0	23877	True
+390	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	True	None	482	1034	0	0	0	0	26424	True
+391	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	True	None	525	1156	0	0	0	0	21143	True
+392	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22	True	None	101	828	0	0	0	0	1451	True
+393	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22	True	None	420	938	0	0	0	0	21565	True
+394	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23	True	None	99	809	0	0	0	0	1364	True
+395	0	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23	True	None	388	909	0	0	0	0	20583	True
+396	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640	True	None	65	494	0	0	0	0	1046	True
+397	0	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	False	refusal	644	None	0	0	0	0	32674	False
+397	1	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	True	None	1500	1127	0	0	0	0	71671	True
+398	0	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared	False	refusal	642	None	0	0	0	0	13362	False
+398	1	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared	True	None	1444	718	0	0	0	0	26352	True
+399	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576	True	None	9	5	0	0	0	0	75	True
+400	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912	True	None	142	417	0	0	0	0	4531	True
+401	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20	True	None	153	416	0	0	0	0	5695	True
+402	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20	True	None	188	480	0	0	0	0	8984	True
+403	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20	True	None	208	642	0	0	0	0	9785	True
+404	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20	True	None	216	718	0	0	0	0	8941	True
+405	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21	True	None	153	482	0	0	0	0	8225	True
+406	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21	True	None	191	527	0	0	0	0	8921	True
+407	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21	True	None	206	598	0	0	0	0	12220	True
+408	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21	True	None	211	637	0	0	0	0	13532	True
+409	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22	True	None	147	340	0	0	0	0	7348	True
+410	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22	True	None	186	476	0	0	0	0	7159	True
+411	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23	True	None	148	433	0	0	0	0	5202	True
+412	0	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23	True	None	184	499	0	0	0	0	8332	True
+413	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640	True	None	73	118	0	0	0	0	1546	True
+414	0	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	False	refusal	643	None	0	0	0	0	48393	False
+414	1	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	False	refusal	2356	None	0	0	0	0	96025	False
+415	0	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared	True	None	278	559	0	0	0	0	5465	True
+416	0	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160	True	None	9	5	0	0	0	0	45	True
+417	0	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336	True	None	9	4	0	0	0	0	28	True
+418	0	level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152	True	None	433	1331	0	0	0	0	5817	True
+419	0	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464	True	None	9	4	0	0	0	0	45	True
+420	0	level_43__r13c7 <- in_L40_320_576 -> location:Level 043 - Wand	True	None	48	96	0	0	0	0	66	True
+421	0	level_43__r13c7 <- in_pit_L40_4_20 -> exit:out_stairsup_176_464	True	None	94	97	0	0	0	0	220	True
+422	0	level_43__r13c7 <- in_pit_L40_4_20 -> location:Level 043 - Wand	True	None	51	79	0	0	0	0	116	True
+423	0	level_43__r13c7 <- in_pit_L40_5_20 -> exit:out_stairsup_176_464	True	None	54	102	0	0	0	0	126	True
+424	0	level_43__r13c7 <- in_pit_L40_5_20 -> location:Level 043 - Wand	True	None	78	90	0	0	0	0	85	True
+425	0	level_43__r13c7 <- in_pit_L40_13_20 -> exit:out_stairsup_176_464	True	None	38	79	0	0	0	0	61	True
+426	0	level_43__r13c7 <- in_pit_L40_13_20 -> location:Level 043 - Wand	True	None	78	90	0	0	0	0	111	True
+427	0	level_43__r13c7 <- in_pit_L40_14_20 -> exit:out_stairsup_176_464	True	None	51	68	0	0	0	0	186	True
+428	0	level_43__r13c7 <- in_pit_L40_14_20 -> location:Level 043 - Wand	True	None	51	79	0	0	0	0	70	True
+429	0	level_43__r13c7 <- in_pit_L40_4_21 -> exit:out_stairsup_176_464	True	None	89	92	0	0	0	0	260	True
+430	0	level_43__r13c7 <- in_pit_L40_4_21 -> location:Level 043 - Wand	True	None	51	83	0	0	0	0	55	True
+431	0	level_43__r13c7 <- in_pit_L40_5_21 -> exit:out_stairsup_176_464	True	None	38	78	0	0	0	0	67	True
+432	0	level_43__r13c7 <- in_pit_L40_5_21 -> location:Level 043 - Wand	True	None	35	72	0	0	0	0	81	True
+433	0	level_43__r13c7 <- in_pit_L40_13_21 -> exit:out_stairsup_176_464	True	None	51	65	0	0	0	0	119	True
+434	0	level_43__r13c7 <- in_pit_L40_13_21 -> location:Level 043 - Wand	True	None	35	72	0	0	0	0	70	True
+435	0	level_43__r13c7 <- in_pit_L40_14_21 -> exit:out_stairsup_176_464	True	None	67	69	0	0	0	0	117	True
+436	0	level_43__r13c7 <- in_pit_L40_14_21 -> location:Level 043 - Wand	True	None	51	83	0	0	0	0	92	True
+437	0	level_43__r13c7 <- in_pit_L40_4_22 -> exit:out_stairsup_176_464	True	None	94	99	0	0	0	0	271	True
+438	0	level_43__r13c7 <- in_pit_L40_4_22 -> location:Level 043 - Wand	True	None	51	79	0	0	0	0	76	True
+439	0	level_43__r13c7 <- in_pit_L40_5_22 -> exit:out_stairsup_176_464	True	None	50	101	0	0	0	0	190	True
+440	0	level_43__r13c7 <- in_pit_L40_5_22 -> location:Level 043 - Wand	True	None	70	88	0	0	0	0	99	True
+441	0	level_43__r13c7 <- in_pit_L40_4_23 -> exit:out_stairsup_176_464	True	None	90	115	0	0	0	0	173	True
+442	0	level_43__r13c7 <- in_pit_L40_4_23 -> location:Level 043 - Wand	True	None	55	114	0	0	0	0	232	True
+443	0	level_43__r13c7 <- in_pit_L40_5_23 -> exit:out_stairsup_176_464	True	None	89	110	0	0	0	0	152	True
+444	0	level_43__r13c7 <- in_pit_L40_5_23 -> location:Level 043 - Wand	True	None	55	103	0	0	0	0	150	True
+445	0	level_44__r0c4 <- in_L45_112_304 -> exit:out_teleporter_64_0	True	None	9	5	0	0	0	0	11	True
+446	0	level_44__r4c2 <- in_L87_464_272 -> exit:out_teleporter_0_80	True	None	9	5	0	0	0	0	14	True
+447	0	level_44__r6c4 <- in_L37_0_256 -> exit:out_teleporter_144_128	True	None	9	5	0	0	0	0	19	True
+448	0	level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_0	True	None	125	273	0	0	0	0	940	True
+449	0	level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_304	True	None	9	4	0	0	0	0	32	True
+450	0	level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_0	True	None	9	5	0	0	0	0	14	True
+451	0	level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_304	True	None	121	249	0	0	0	0	435	True
+452	0	level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_176_0	True	None	132	222	0	0	0	0	254	True
+453	0	level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_240_464	True	None	9	4	0	0	0	0	56	True
+454	0	level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_176_0	True	None	25	5	0	0	0	0	42	True
+455	0	level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_240_464	True	None	134	354	0	0	0	0	441	True
+456	0	level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_216_112	True	None	128	266	0	0	0	0	713	True
+457	0	level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_240_464	True	None	9	4	0	0	0	0	21	True
+458	0	level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_216_112	True	None	9	5	0	0	0	0	33	True
+459	0	level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_240_464	True	None	123	204	0	0	0	0	515	True
+460	0	level_48__r7c0 <- in_L53_208_64 -> exit:out_teleporter_0_112	True	None	37	8	0	0	0	0	14	True
+461	0	level_48__r18c7 <- in_L47_216_112 -> exit:out_teleporter_112_304	True	None	9	4	0	0	0	0	27	True
+462	0	level_49 <- in_pit_L48_2_2 -> exit:out_teleporter_32_128	True	None	98	88	0	0	0	0	161	True
+462	1	level_49 <- in_pit_L48_2_2 -> exit:out_teleporter_32_128	True	None	94	59	0	0	0	0	101	True
+463	0	level_49 <- in_pit_L48_2_2 -> location:Level 049 - Conch	True	None	98	70	0	0	0	0	88	True
+464	0	level_49 <- in_L50_32_0 -> exit:out_teleporter_32_128	True	None	33	7	0	0	0	0	24	True
+465	0	level_49 <- in_L50_32_0 -> location:Level 049 - Conch	False	refusal	2	None	0	0	0	0	17	False
+466	0	level_50 <- in_L49_32_128 -> exit:out_teleporter_32_0	True	None	37	8	0	0	0	0	36	True
+467	0	level_50 <- in_L49_32_128 -> exit:out_teleporter_48_304	True	None	174	673	0	0	0	0	690	True
+468	0	level_50 <- in_L51_144_0 -> exit:out_teleporter_32_0	True	None	174	702	0	0	0	0	658	True
+469	0	level_50 <- in_L51_144_0 -> exit:out_teleporter_48_304	True	None	33	7	0	0	0	0	20	True
+470	0	level_51__r3c10 <- in_L50_48_304 -> exit:out_teleporter_144_0	True	None	37	8	0	0	0	0	13	True
+471	0	level_51__r3c10 <- in_L50_48_304 -> exit:out_stairsup_176_144	True	None	106	136	0	0	0	0	192	True
+472	0	level_51__r3c10 <- in_L53_32_144 -> exit:out_teleporter_144_0	True	None	109	142	0	0	0	0	169	True
+473	0	level_51__r3c10 <- in_L53_32_144 -> exit:out_stairsup_176_144	True	None	9	5	0	0	0	0	39	True
+474	0	level_51__r14c6 <- in_L52_0_112 -> exit:out_teleporter_256_256	True	None	37	8	0	0	0	0	16	True
+475	0	level_52__r0c7 <- in_L54_128_464 -> exit:out_teleporter_112_0	True	None	37	8	0	0	0	0	18	True
+476	0	level_52__r2c2 <- in_L55_80_48 -> exit:out_teleporter_0_48	True	None	37	8	0	0	0	0	49	True
+477	0	level_52__r5c10 <- in_L51_256_256 -> exit:out_teleporter_0_112	True	None	37	8	0	0	0	0	24	True
+478	0	level_52__r5c10 <- in_L51_256_256 -> exit:out_teleporter_224_112	True	None	134	381	0	0	0	0	353	True
+479	0	level_52__r5c10 <- in_L56_0_112 -> exit:out_teleporter_0_112	True	None	134	381	0	0	0	0	278	True
+480	0	level_52__r5c10 <- in_L56_0_112 -> exit:out_teleporter_224_112	True	None	37	8	0	0	0	0	9	True
+481	0	level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144	True	None	65	146	0	0	0	0	275	True
+482	0	level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64	True	None	9	5	0	0	0	0	9	True
+483	0	level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144	True	None	9	5	0	0	0	0	25	True
+484	0	level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64	True	None	93	138	0	0	0	0	725	True
+485	0	level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240	True	None	25	5	0	0	0	0	54	True
+486	0	level_54__r1c8 <- in_L53_144_240 -> exit:out_teleporter_144_0	True	None	37	8	0	0	0	0	30	True
+487	0	level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464	True	None	33	7	0	0	0	0	31	True
+488	0	level_55 <- in_L52_0_48 -> exit:out_teleporter_80_48	True	None	37	8	0	0	0	0	33	True
+489	0	level_55 <- in_L52_0_48 -> location:Level 055 - Boss Key 3	True	None	94	45	0	0	0	0	93	True
+490	0	level_56 <- in_L52_224_112 -> exit:out_teleporter_0_112	True	None	37	8	0	0	0	0	12	True
+491	0	level_56 <- in_L52_224_112 -> exit:out_pit_6_10	True	None	126	280	0	0	0	0	284	True
+492	0	level_57 <- in_pit_L56_6_10 -> exit:out_tentaclebeast_80_48	True	None	238	2177	0	0	0	0	2301	True
+492	1	level_57 <- in_pit_L56_6_10 -> exit:out_tentaclebeast_80_48	True	None	118	258	0	0	0	0	266	True
+493	0	level_57 <- in_pit_L56_6_10 -> location:Level 057 - Tentacled Beast	True	None	122	1977	0	0	0	0	1271	True
+494	0	level_57 <- in_L58_48_112 -> exit:out_tentaclebeast_80_48	True	None	176	1212	0	0	0	0	893	True
+494	1	level_57 <- in_L58_48_112 -> exit:out_tentaclebeast_80_48	True	None	130	371	0	0	0	0	185	True
+495	0	level_57 <- in_L58_48_112 -> location:Level 057 - Tentacled Beast	True	None	62	1008	0	0	0	0	1333	True
+496	0	level_58__r4c1 <- in_tentacle_beast_mouth_L57_56_96 -> exit:out_teleporter_48_112	True	None	33	7	0	0	0	0	26	True
+497	0	level_59 <- in_L60_0_80 -> exit:out_teleporter_0_128	True	None	76	155	0	0	0	0	447	True
+498	0	level_59 <- in_L60_0_80 -> exit:out_teleporter_144_304	True	None	104	150	0	0	0	0	300	True
+499	0	level_59 <- in_L60_0_80 -> exit:out_teleporter_160_304	True	None	64	131	0	0	0	0	339	True
+500	0	level_59 <- in_L60_0_80 -> exit:out_teleporter_304_128	True	None	9	5	0	0	0	0	20	True
+501	0	level_59 <- in_L67_224_112 -> exit:out_teleporter_0_128	True	None	9	5	0	0	0	0	12	True
+502	0	level_59 <- in_L67_224_112 -> exit:out_teleporter_144_304	True	None	64	131	0	0	0	0	241	True
+503	0	level_59 <- in_L67_224_112 -> exit:out_teleporter_160_304	True	None	105	176	0	0	0	0	414	True
+504	0	level_59 <- in_L67_224_112 -> exit:out_teleporter_304_128	True	None	96	151	0	0	0	0	194	True
+505	0	level_59 <- in_L95_32_0 -> exit:out_teleporter_0_128	True	None	84	143	0	0	0	0	227	True
+506	0	level_59 <- in_L95_32_0 -> exit:out_teleporter_144_304	True	None	9	4	0	0	0	0	33	True
+507	0	level_59 <- in_L95_32_0 -> exit:out_teleporter_160_304	True	None	9	18	0	0	0	0	53	True
+508	0	level_59 <- in_L95_32_0 -> exit:out_teleporter_304_128	True	None	92	150	0	0	0	0	191	True
+509	0	level_59 <- in_L95_48_0 -> exit:out_teleporter_0_128	True	None	108	151	0	0	0	0	509	True
+510	0	level_59 <- in_L95_48_0 -> exit:out_teleporter_144_304	True	None	9	18	0	0	0	0	39	True
+511	0	level_59 <- in_L95_48_0 -> exit:out_teleporter_160_304	True	None	9	4	0	0	0	0	21	True
+512	0	level_59 <- in_L95_48_0 -> exit:out_teleporter_304_128	True	None	80	147	0	0	0	0	322	True
+513	0	level_60__r5c0 <- in_L59_304_128 -> exit:out_teleporter_0_80	True	None	9	5	0	0	0	0	29	True
+514	0	level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared	False	refusal	644	None	0	0	0	0	722	False
+514	1	level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared	False	refusal	1906	None	0	0	0	0	1444	False
+515	0	level_60__r5c9 <- in_L61_0_160 -> exit:out_teleporter_160_80	True	None	9	5	0	0	0	0	12	True
+516	0	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_0_160	True	None	9	5	0	0	0	0	17	True
+517	0	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0	False	refusal	642	None	0	0	0	0	977	False
+517	1	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0	True	None	2562	448	0	0	0	0	2979	True
+518	0	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96	False	refusal	643	None	0	0	0	0	799	False
+518	1	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96	True	None	1583	423	0	0	0	0	1706	True
+519	0	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160	True	None	84	303	0	0	0	0	136	True
+520	0	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_112_0	True	None	9	5	0	0	0	0	23	True
+521	0	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_224_96	True	None	63	99	0	0	0	0	148	True
+522	0	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160	False	refusal	643	None	0	0	0	0	600	False
+522	1	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160	True	None	2326	227	0	0	0	0	2217	True
+523	0	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0	False	refusal	643	None	0	0	0	0	692	False
+523	1	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0	True	None	2033	91	0	0	0	0	1955	True
+524	0	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_224_96	True	None	9	5	0	0	0	0	16	True
+525	0	level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_160_0	True	None	9	5	0	0	0	0	34	True
+526	0	level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_224_48	True	None	40	49	0	0	0	0	63	True
+527	0	level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared	True	None	15	21	0	0	0	0	21	True
+528	0	level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_160_0	True	None	57	37	0	0	0	0	50	True
+529	0	level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_224_48	True	None	9	5	0	0	0	0	15	True
+530	0	level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared	True	None	27	24	0	0	0	0	66	True
+531	0	level_61__r13c12 <- in_L63_0_208 -> exit:out_teleporter_224_208	True	None	9	5	0	0	0	0	12	True
+532	0	level_62 <- in_L61_112_0 -> exit:out_teleporter_48_304	True	None	9	4	0	0	0	0	20	True
+533	0	level_62 <- in_L61_112_0 -> exit:out_teleporter_96_304	True	None	83	120	0	0	0	0	108	True
+534	0	level_62 <- in_L61_112_0 -> exit:out_teleporter_112_64	True	None	141	269	0	0	0	0	352	True
+535	0	level_62 <- in_L61_112_0 -> exit:out_teleporter_192_304	True	None	119	178	0	0	0	0	387	True
+536	0	level_62 <- in_L61_112_0 -> exit:out_teleporter_240_304	False	refusal	71	None	0	0	0	0	300	False
+537	0	level_62 <- in_L61_160_0 -> exit:out_teleporter_48_304	True	None	50	117	0	0	0	0	147	True
+538	0	level_62 <- in_L61_160_0 -> exit:out_teleporter_96_304	True	None	9	4	0	0	0	0	33	True
+539	0	level_62 <- in_L61_160_0 -> exit:out_teleporter_112_64	True	None	134	222	0	0	0	0	472	True
+540	0	level_62 <- in_L61_160_0 -> exit:out_teleporter_192_304	True	None	67	93	0	0	0	0	133	True
+541	0	level_62 <- in_L61_160_0 -> exit:out_teleporter_240_304	True	None	125	233	0	0	0	0	651	True
+542	0	level_62 <- in_L63_16_0 -> exit:out_teleporter_48_304	True	None	98	153	0	0	0	0	354	True
+543	0	level_62 <- in_L63_16_0 -> exit:out_teleporter_96_304	True	None	55	81	0	0	0	0	113	True
+544	0	level_62 <- in_L63_16_0 -> exit:out_teleporter_112_64	True	None	139	294	0	0	0	0	438	True
+545	0	level_62 <- in_L63_16_0 -> exit:out_teleporter_192_304	True	None	9	4	0	0	0	0	38	True
+546	0	level_62 <- in_L63_16_0 -> exit:out_teleporter_240_304	False	refusal	71	None	0	0	0	0	330	False
+547	0	level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304	True	None	88	209	0	0	0	0	196	True
+548	0	level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304	True	None	98	220	0	0	0	0	309	True
+549	0	level_62 <- in_L63_64_0 -> exit:out_teleporter_112_64	True	None	150	410	0	0	0	0	655	True
+550	0	level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304	True	None	124	252	0	0	0	0	306	True
+551	0	level_62 <- in_L63_64_0 -> exit:out_teleporter_240_304	True	None	9	4	0	0	0	0	22	True
+552	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304	False	refusal	16	None	0	0	0	0	597	False
+553	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_96_304	False	refusal	16	None	0	0	0	0	155	False
+554	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_112_64	True	None	53	12	0	0	0	0	24	True
+555	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_192_304	False	refusal	16	None	0	0	0	0	527	False
+556	0	level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304	True	None	152	423	0	0	0	0	677	True
+557	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48	True	None	39	79	0	0	0	0	90	True
+558	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96	True	None	9	5	0	0	0	0	30	True
+559	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0	True	None	63	98	0	0	0	0	197	True
+560	0	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0	True	None	87	162	0	0	0	0	408	True
+561	0	level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared	True	None	17	37	0	0	0	0	133	True
+562	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48	True	None	9	5	0	0	0	0	36	True
+563	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96	True	None	41	84	0	0	0	0	234	True
+564	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0	True	None	24	59	0	0	0	0	69	True
+565	0	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0	True	None	123	198	0	0	0	0	352	True
+566	0	level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared	True	None	17	35	0	0	0	0	69	True
+567	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48	True	None	24	50	0	0	0	0	205	True
+568	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96	True	None	44	89	0	0	0	0	298	True
+569	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0	True	None	9	5	0	0	0	0	20	True
+570	0	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0	True	None	113	203	0	0	0	0	579	True
+571	0	level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared	True	None	24	41	0	0	0	0	59	True
+572	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48	False	refusal	10	None	0	0	0	0	134	False
+573	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96	False	refusal	8	None	0	0	0	0	528	False
+574	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0	False	refusal	10	None	0	0	0	0	225	False
+575	0	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0	True	None	9	5	0	0	0	0	49	True
+576	0	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared	False	refusal	8	None	0	0	0	0	73	False
+577	0	level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304	True	None	9	4	0	0	0	0	16	True
+578	0	level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared	False	refusal	643	None	0	0	0	0	127034	False
+579	0	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208	True	None	9	5	0	0	0	0	16	True
+580	0	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304	True	None	96	89	0	0	0	0	250	True
+581	0	level_63__r10c2 <- in_L61_224_208 -> location:L63 flag 6: lightpole@48,272 cleared	True	None	24	65	0	0	0	0	188	True
+582	0	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208	False	refusal	190	None	0	0	0	0	41948	False
+583	0	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304	True	None	9	4	0	0	0	0	19	True
+584	0	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared	False	refusal	643	None	0	0	0	0	87862	False
+584	1	level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared	False	refusal	334	None	0	0	0	0	45070	False
+585	0	level_64 <- in_L62_112_64 -> exit:out_teleporter_32_96	True	None	9	4	0	0	0	0	34	True
+586	0	level_64 <- in_L62_112_64 -> location:Level 064 - Ghostspear	True	None	68	52	0	0	0	0	39	True
+587	0	level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_0_128	True	None	55	63	0	0	0	0	268	True
+588	0	level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	20	True
+589	0	level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_0_128	True	None	9	5	0	0	0	0	17	True
+590	0	level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_32_0	True	None	27	56	0	0	0	0	150	True
+591	0	level_65__r0c8 <- in_L63_128_304 -> exit:out_teleporter_128_0	True	None	9	5	0	0	0	0	17	True
+592	0	level_65__r0c8 <- in_L63_128_304 -> location:L65 flag 0: lightpole@128,168 cleared	True	None	63	58	0	0	0	0	291	True
+593	0	level_65__r4c11 <- in_L68_16_80 -> exit:out_teleporter_184_64	True	None	9	5	0	0	0	0	32	True
+594	0	level_66__r5c4 <- in_L70_32_64 -> exit:out_teleporter_72_64	True	None	116	87	0	0	0	0	173	True
+595	0	level_66__r9c8 <- in_L65_0_128 -> exit:out_teleporter_144_144	True	None	9	5	0	0	0	0	22	True
+596	0	level_67__r6c11 <- in_L59_0_128 -> exit:out_teleporter_224_112	True	None	9	5	0	0	0	0	12	True
+597	0	level_68__r3c1 <- in_L65_184_64 -> exit:out_teleporter_16_80	True	None	9	4	0	0	0	0	15	True
+598	0	level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared	True	None	15	98	0	0	0	0	36	True
+599	0	level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72	True	None	77	599	0	0	0	0	76781	True
+599	1	level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72	True	None	9	14	0	0	0	0	185	True
+600	0	level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights	True	None	60	534	0	0	0	0	28821	True
+601	0	level_70 <- in_L66_72_64 -> exit:out_teleporter_32_64	True	None	9	4	0	0	0	0	17	True
+602	0	level_70 <- in_L66_72_64 -> exit:out_pit_3_8	True	None	15	105	0	0	0	0	31	True
+603	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	False	refusal	645	None	0	0	0	0	2838	False
+603	1	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	False	refusal	2562	None	0	0	0	0	10448	False
+604	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304	False	refusal	645	None	0	0	0	0	1841	False
+604	1	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304	True	None	2027	122	0	0	0	0	4900	True
+605	0	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96	True	None	9	5	0	0	0	0	17	True
+606	0	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest	False	refusal	645	None	0	0	0	0	2244	False
+606	1	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest	True	None	2351	181	0	0	0	0	8216	True
+607	0	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared	False	refusal	645	None	0	0	0	0	1759	False
+607	1	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared	True	None	2260	176	0	0	0	0	5212	True
+608	0	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0	True	None	9	5	0	0	0	0	38	True
+609	0	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304	True	None	135	317	0	0	0	0	1433	True
+610	0	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96	True	None	97	352	0	0	0	0	642	True
+611	0	level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest	True	None	144	401	0	0	0	0	1138	True
+612	0	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared	True	None	133	319	0	0	0	0	1740	True
+613	0	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0	True	None	127	303	0	0	0	0	733	True
+614	0	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304	True	None	32	72	0	0	0	0	137	True
+615	0	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96	True	None	54	93	0	0	0	0	372	True
+616	0	level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest	True	None	104	134	0	0	0	0	528	True
+618	0	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0	True	None	132	344	0	0	0	0	1315	True
+619	0	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304	True	None	9	4	0	0	0	0	37	True
+620	0	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96	True	None	74	201	0	0	0	0	436	True
+621	0	level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest	True	None	43	63	0	0	0	0	118	True
+622	0	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared	True	None	32	149	0	0	0	0	177	True
+623	0	level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304	True	None	9	4	0	0	0	0	30	True
+624	0	level_72 <- in_L71_304_96 -> exit:out_teleporter_0_256	True	None	9	5	0	0	0	0	37	True
+625	0	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0	False	refusal	643	None	0	0	0	0	1276	False
+625	1	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0	False	refusal	2562	None	0	0	0	0	12231	False
+626	0	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256	False	refusal	643	None	0	0	0	0	1228	False
+626	1	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256	False	refusal	2564	None	0	0	0	0	6818	False
+627	0	level_72 <- in_L73_32_144 -> exit:out_teleporter_176_0	True	None	9	5	0	0	0	0	27	True
+628	0	level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0	True	None	566	4	0	0	0	0	2762	True
+629	0	level_73__r3c7 <- in_L72_176_0 -> exit:out_teleporter_32_144	True	None	9	4	0	0	0	0	25	True
+630	0	level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144	True	None	641	425	0	0	0	0	3504	True
+631	0	level_74 <- in_L73_64_0 -> exit:out_teleporter_288_144	True	None	9	4	0	0	0	0	55	True
+632	0	level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield	True	None	329	286	0	0	0	0	1173	True
+633	0	level_74 <- in_L75_64_0 -> exit:out_teleporter_16_144	True	None	9	4	0	0	0	0	24	True
+634	0	level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144	True	None	150	388	0	0	0	0	1570	True
+635	0	level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield	True	None	291	255	0	0	0	0	1319	True
+636	0	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0	False	refusal	644	None	0	0	0	0	2780	False
+636	1	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0	False	refusal	2563	None	0	0	0	0	10142	False
+637	0	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_224	True	None	9	4	0	0	0	0	31	True
+638	0	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_0	True	None	9	5	0	0	0	0	16	True
+639	0	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224	False	refusal	641	None	0	0	0	0	411	False
+639	1	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224	False	refusal	1953	None	0	0	0	0	6075	False
+640	0	level_76 <- in_L71_304_256 -> exit:out_teleporter_0_80	True	None	9	5	0	0	0	0	21	True
+641	0	level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112	True	None	412	714	0	0	0	0	812	True
+642	0	level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80	True	None	170	650	0	0	0	0	559	True
+643	0	level_76 <- in_L77_0_32 -> exit:out_teleporter_304_112	True	None	9	5	0	0	0	0	24	True
+644	0	level_77 <- in_L76_304_112 -> exit:out_teleporter_0_32	True	None	9	5	0	0	0	0	17	True
+645	0	level_77 <- in_L76_304_112 -> exit:out_teleporter_96_304	False	refusal	2	None	0	0	0	0	37	False
+646	0	level_77 <- in_L78_256_0 -> exit:out_teleporter_0_32	False	refusal	2	None	0	0	0	0	17	False
+647	0	level_77 <- in_L78_256_0 -> exit:out_teleporter_96_304	True	None	9	4	0	0	0	0	44	True
+648	0	level_78__r0c2 <- in_L79_64_224 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	23	True
+649	0	level_78__r0c16 <- in_L77_96_304 -> exit:out_teleporter_256_0	True	None	9	5	0	0	0	0	19	True
+650	0	level_79__r0c4 <- in_L80_32_304 -> exit:out_teleporter_64_0	True	None	9	5	0	0	0	0	15	True
+651	0	level_79__r8c4 <- in_L78_32_0 -> exit:out_teleporter_64_224	True	None	9	4	0	0	0	0	39	True
+652	0	level_79__r8c4 <- in_L78_32_0 -> location:Level 079 - Darksuit	True	None	40	43	0	0	0	0	75	True
+653	0	level_80__r0c2 <- in_L71_224_304 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	29	True
+654	0	level_80__r16c1 <- in_L79_64_0 -> exit:out_teleporter_32_304	True	None	9	4	0	0	0	0	24	True
+655	0	level_80__r16c1 <- in_L79_64_0 -> exit:out_teleporter_48_304	True	None	9	18	0	0	0	0	37	True
+656	0	level_82 <- in_pit_L71_10_17 -> exit:out_teleporter_144_0	True	None	174	1079	0	0	0	0	752	True
+657	0	level_82 <- in_pit_L71_10_17 -> location:Level 082 - King of Fire	True	None	63	870	0	0	0	0	743	True
+658	0	level_82 <- in_L96_32_64 -> exit:out_teleporter_144_0	True	None	174	1075	0	0	0	0	624	True
+659	0	level_82 <- in_L96_32_64 -> location:Level 082 - King of Fire	True	None	63	865	0	0	0	0	931	True
+660	0	level_83 <- in_L12_32_848 -> exit:out_teleporter_32_64	True	None	49	11	0	0	0	0	30	True
+661	0	level_83 <- in_L12_32_848 -> exit:out_pit_2_2	True	None	63	85	0	0	0	0	33	True
+662	0	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_4_3	True	None	6	100	0	0	0	0	14	True
+663	0	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_3_4	True	None	11	100	0	0	0	0	15	True
+664	0	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_4_4	True	None	6	100	0	0	0	0	30	True
+665	0	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_4_5	True	None	6	100	0	0	0	0	29	True
+666	0	level_85 <- in_L71_16_304 -> exit:out_teleporter_80_0	True	None	9	5	0	0	0	0	16	True
+667	0	level_85 <- in_pit_L84_2_3 -> exit:out_teleporter_80_0	True	None	57	37	0	0	0	0	46	True
+668	0	level_85 <- in_pit_L84_3_3 -> exit:out_teleporter_80_0	True	None	12	18	0	0	0	0	41	True
+669	0	level_85 <- in_pit_L84_2_4 -> exit:out_teleporter_80_0	True	None	16	27	0	0	0	0	41	True
+670	0	level_85 <- in_pit_L84_4_3 -> exit:out_teleporter_80_0	True	None	12	18	0	0	0	0	27	True
+671	0	level_85 <- in_pit_L84_3_4 -> exit:out_teleporter_80_0	True	None	16	25	0	0	0	0	70	True
+672	0	level_85 <- in_pit_L84_4_4 -> exit:out_teleporter_80_0	True	None	16	24	0	0	0	0	39	True
+673	0	level_85 <- in_pit_L84_4_5 -> exit:out_teleporter_80_0	True	None	16	31	0	0	0	0	35	True
+674	0	level_85 <- in_pit_L84_2_5 -> exit:out_teleporter_80_0	True	None	16	30	0	0	0	0	38	True
+675	0	level_85 <- in_pit_L84_3_5 -> exit:out_teleporter_80_0	True	None	16	31	0	0	0	0	70	True
+676	0	level_86 <- in_L0_160_272 -> exit:out_teleporter_48_64	True	None	2	6	0	0	0	0	11	True
+677	0	level_86 <- in_L0_160_272 -> location:Level 086 - Chest	True	None	4	35	0	0	0	0	11	True
+678	0	level_87__r0c23 <- in_L93_112_272 -> exit:out_teleporter_368_0	True	None	9	5	0	0	0	0	46	True
+679	0	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_0_144	True	None	138	243	0	0	0	0	361	True
+680	0	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_16_32	True	None	168	606	0	0	0	0	1070	True
+681	0	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_272_304	True	None	106	148	0	0	0	0	353	True
+682	0	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_432_304	True	None	16	27	0	0	0	0	36	True
+683	0	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_464_272	True	None	9	5	0	0	0	0	20	True
+684	0	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_0_144	True	None	106	163	0	0	0	0	217	True
+685	0	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_16_32	True	None	145	350	0	0	0	0	656	True
+686	0	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_272_304	True	None	9	4	0	0	0	0	14	True
+687	0	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_432_304	True	None	98	164	0	0	0	0	430	True
+688	0	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_464_272	True	None	98	150	0	0	0	0	328	True
+689	0	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_0_144	True	None	145	326	0	0	0	0	423	True
+690	0	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_16_32	True	None	173	668	0	0	0	0	1192	True
+691	0	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_272_304	True	None	119	191	0	0	0	0	251	True
+692	0	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_432_304	True	None	0	13	0	0	0	0	21	True
+693	0	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_464_272	True	None	17	36	0	0	0	0	34	True
+694	0	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_0_144	True	None	9	5	0	0	0	0	19	True
+695	0	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_16_32	True	None	124	233	0	0	0	0	298	True
+696	0	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_272_304	True	None	73	167	0	0	0	0	164	True
+697	0	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_432_304	True	None	144	301	0	0	0	0	915	True
+698	0	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_464_272	True	None	144	294	0	0	0	0	629	True
+699	0	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_0_144	True	None	120	211	0	0	0	0	285	True
+700	0	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_16_32	True	None	9	5	0	0	0	0	13	True
+701	0	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_272_304	True	None	148	427	0	0	0	0	914	True
+702	0	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_432_304	True	None	171	596	0	0	0	0	849	True
+703	0	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_464_272	True	None	171	598	0	0	0	0	688	True
+704	0	level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0	True	None	186	476	0	0	0	0	561	True
+705	0	level_88 <- in_L12_304_0 -> exit:out_teleporter_96_304	True	None	9	4	0	0	0	0	18	True
+706	0	level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0	True	None	121	379	0	0	0	0	383	True
+707	0	level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	37	True
+708	0	level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304	False	refusal	641	None	0	0	0	0	759	False
+708	1	level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304	False	refusal	594	None	0	0	0	0	568	False
+709	0	level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0	True	None	78	86	0	0	0	0	76	True
+710	0	level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0	True	None	35	76	0	0	0	0	124	True
+711	0	level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304	True	None	151	213	0	0	0	0	326	True
+712	0	level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0	True	None	9	5	0	0	0	0	13	True
+713	0	level_89__r1c10 <- in_L91_16_144 -> exit:out_teleporter_208_0	True	None	85	20	0	0	0	0	35	True
+714	0	level_89__r1c10 <- in_L91_16_144 -> location:Level 089 - Feather	True	None	110	163	0	0	0	0	130	True
+715	0	level_89__r1c15 <- in_L90_48_96 -> exit:out_teleporter_256_0	True	None	9	5	0	0	0	0	15	True
+716	0	level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_160_304	True	None	33	7	0	0	0	0	97	True
+717	0	level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_288_240	False	refusal	2	None	0	0	0	0	14	False
+718	0	level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_160_304	True	None	112	140	0	0	0	0	326	True
+719	0	level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_288_240	True	None	9	5	0	0	0	0	30	True
+720	0	level_90 <- in_L89_256_0 -> exit:out_teleporter_48_96	True	None	9	4	0	0	0	0	18	True
+721	0	level_90 <- in_L89_256_0 -> location:Level 090 - Chest	True	None	20	37	0	0	0	0	25	True
+722	0	level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144	True	None	33	7	0	0	0	0	21	True
+723	0	level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48	False	refusal	8	None	0	0	0	0	194	True
+724	0	level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144	False	refusal	20	None	0	0	0	0	548	True
+725	0	level_91 <- in_L92_32_144 -> exit:out_teleporter_240_48	True	None	9	5	0	0	0	0	25	True
+726	0	level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144	True	None	9	4	0	0	0	0	14	True
+727	0	level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144	True	None	49	11	0	0	0	0	97	True
+728	0	level_93__r5c7 <- in_L98_112_192 -> exit:out_teleporter_112_80	True	None	37	8	0	0	0	0	14	True
+729	0	level_93__r14c7 <- in_L87_368_0 -> exit:out_teleporter_112_272	True	None	9	4	0	0	0	0	30	True
+730	0	level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_160	True	None	2	7	0	0	0	0	40	True
+731	0	level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_176	True	None	4	33	0	0	0	0	28	True
+732	0	level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_160	True	None	4	33	0	0	0	0	36	True
+733	0	level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_176	True	None	2	7	0	0	0	0	12	True
+734	0	level_95 <- in_L12_0_352 -> exit:out_teleporter_32_0	True	None	162	588	0	0	0	0	906	True
+735	0	level_95 <- in_L12_0_352 -> exit:out_teleporter_48_0	True	None	162	587	0	0	0	0	605	True
+736	0	level_95 <- in_L12_0_352 -> exit:out_teleporter_624_64	True	None	9	5	0	0	0	0	10	True
+737	0	level_95 <- in_L12_0_352 -> exit:out_teleporter_624_80	True	None	12	19	0	0	0	0	24	True
+738	0	level_95 <- in_L12_0_368 -> exit:out_teleporter_32_0	True	None	162	597	0	0	0	0	482	True
+739	0	level_95 <- in_L12_0_368 -> exit:out_teleporter_48_0	True	None	162	595	0	0	0	0	568	True
+740	0	level_95 <- in_L12_0_368 -> exit:out_teleporter_624_64	True	None	12	19	0	0	0	0	35	True
+741	0	level_95 <- in_L12_0_368 -> exit:out_teleporter_624_80	True	None	9	5	0	0	0	0	29	True
+742	0	level_95 <- in_L59_144_304 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	8	True
+743	0	level_95 <- in_L59_144_304 -> exit:out_teleporter_48_0	True	None	12	19	0	0	0	0	24	True
+744	0	level_95 <- in_L59_144_304 -> exit:out_teleporter_624_64	True	None	162	601	0	0	0	0	763	True
+745	0	level_95 <- in_L59_144_304 -> exit:out_teleporter_624_80	True	None	162	578	0	0	0	0	689	True
+746	0	level_95 <- in_L59_160_304 -> exit:out_teleporter_32_0	True	None	12	19	0	0	0	0	18	True
+747	0	level_95 <- in_L59_160_304 -> exit:out_teleporter_48_0	True	None	9	5	0	0	0	0	23	True
+748	0	level_95 <- in_L59_160_304 -> exit:out_teleporter_624_64	True	None	162	598	0	0	0	0	536	True
+749	0	level_95 <- in_L59_160_304 -> exit:out_teleporter_624_80	True	None	158	574	0	0	0	0	585	True
+750	0	level_96 <- in_L82_144_0 -> exit:out_stairsup_32_32	True	None	9	5	0	0	0	0	11	True
+751	0	level_96 <- in_L82_144_0 -> exit:out_teleporter_32_64	True	None	9	4	0	0	0	0	13	True
+752	0	level_97 <- in_L37_576_144 -> exit:out_stairsup_32_16	True	None	9	5	0	0	0	0	16	True
+753	0	level_97 <- in_L37_576_144 -> exit:out_stairsdown_32_48	True	None	9	4	0	0	0	0	13	True
+754	0	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112	False	refusal	643	None	0	0	0	0	1421	False
+754	1	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112	True	None	1602	807	0	0	0	0	3394	True
+755	0	level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192	True	None	9	4	0	0	0	0	22	True
+756	0	level_98 <- in_L93_112_80 -> location:Level 098 - Chest	True	None	119	194	0	0	0	0	574	True
+757	0	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112	False	refusal	643	None	0	0	0	0	993	False
+757	1	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112	False	refusal	1567	None	0	0	0	0	2956	False
+758	0	level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192	True	None	20	40	0	0	0	0	173	True
+759	0	level_98 <- in_L99_112_112 -> location:Level 098 - Chest	True	None	236	194	0	0	0	0	1044	True
+760	0	level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96	True	None	9	5	0	0	0	0	28	True
+761	0	level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112	True	None	9	5	0	0	0	0	12	True
+762	0	level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96	True	None	9	5	0	0	0	0	17	True
+763	0	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96	False	refusal	645	None	0	0	0	0	1772	False
+763	1	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96	True	None	2564	354	0	0	0	0	10876	True
+764	0	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared	False	refusal	645	None	0	0	0	0	2379	False
+764	1	level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared	True	None	2563	709	0	0	0	0	12027	True
+765	0	level_101__r4c2 <- in_L102_64_96 -> exit:out_stairsup_48_96	True	None	9	5	0	0	0	0	27	True
+766	0	level_101__r4c2 <- in_L102_64_96 -> location:L101 flag 0: lightpole@144,64 cleared	True	None	120	252	0	0	0	0	768	True
+767	0	level_101__r4c9 <- in_L102_160_96 -> exit:out_stairsup_144_96	True	None	9	4	0	0	0	0	13	True
+768	0	level_102__r5c3 <- in_L101_48_96 -> exit:out_teleporter_0_96	True	None	12	16	0	0	0	0	43	True
+769	0	level_102__r5c3 <- in_L101_48_96 -> exit:out_stairsdown_64_96	True	None	9	5	0	0	0	0	12	True
+770	0	level_102__r5c3 <- in_L103_304_144 -> exit:out_teleporter_0_96	True	None	9	5	0	0	0	0	7	True
+771	0	level_102__r5c3 <- in_L103_304_144 -> exit:out_stairsdown_64_96	True	None	12	16	0	0	0	0	22	True
+772	0	level_102__r5c9 <- in_L101_144_96 -> exit:out_stairsdown_160_96	True	None	9	5	0	0	0	0	19	True
+773	0	level_102__r5c9 <- in_L101_144_96 -> exit:out_teleporter_224_96	True	None	12	20	0	0	0	0	17	True
+774	0	level_102__r5c9 <- in_L107_0_48 -> exit:out_stairsdown_160_96	True	None	36	26	0	0	0	0	22	True
+775	0	level_102__r5c9 <- in_L107_0_48 -> exit:out_teleporter_224_96	True	None	0	12	0	0	0	0	25	True
+776	0	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64	False	refusal	643	None	0	0	0	0	1223	False
+776	1	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64	False	refusal	2562	None	0	0	0	0	4047	False
+777	0	level_103 <- in_L102_0_96 -> exit:out_teleporter_304_144	True	None	9	5	0	0	0	0	20	True
+778	0	level_103 <- in_L104_144_128 -> exit:out_teleporter_0_64	True	None	9	5	0	0	0	0	14	True
+779	0	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144	False	refusal	644	None	0	0	0	0	3058	False
+779	1	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144	False	refusal	2563	None	0	0	0	0	20073	False
+780	0	level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16	True	None	324	259	0	0	0	0	610	True
+781	0	level_104 <- in_L103_0_64 -> exit:out_teleporter_144_128	True	None	9	5	0	0	0	0	12	True
+782	0	level_104 <- in_L105_224_64 -> exit:out_teleporter_0_16	True	None	9	5	0	0	0	0	19	True
+783	0	level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128	True	None	214	360	0	0	0	0	473	True
+784	0	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144	True	None	40	413	0	0	0	0	147	True
+785	0	level_105 <- in_L104_0_16 -> exit:out_teleporter_224_64	True	None	9	5	0	0	0	0	12	True
+786	0	level_105 <- in_L106_256_0 -> exit:out_teleporter_80_144	True	None	9	4	0	0	0	0	28	True
+787	0	level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64	True	None	38	387	0	0	0	0	212	True
+788	0	level_106 <- in_L105_80_144 -> exit:out_teleporter_64_48	True	None	68	123	0	0	0	0	183	True
+789	0	level_106 <- in_L105_80_144 -> exit:out_teleporter_256_0	True	None	9	5	0	0	0	0	17	True
+790	0	level_106 <- in_L105_80_144 -> location:Level 106 - Ghostsword	True	None	76	125	0	0	0	0	153	True
+791	0	level_107 <- in_L102_224_96 -> exit:out_teleporter_0_48	True	None	9	5	0	0	0	0	17	True
+792	0	level_107 <- in_L102_224_96 -> exit:out_teleporter_304_176	False	refusal	6	None	0	0	0	0	159	False
+793	0	level_107 <- in_L108_0_32 -> exit:out_teleporter_0_48	True	None	126	387	0	0	0	0	214	True
+794	0	level_107 <- in_L108_0_32 -> exit:out_teleporter_304_176	True	None	9	5	0	0	0	0	11	True
+795	0	level_108__r2c0 <- in_L107_304_176 -> exit:out_teleporter_0_32	True	None	9	5	0	0	0	0	21	True
+796	0	level_108__r11c8 <- in_L109_0_112 -> exit:out_teleporter_224_224	True	None	9	5	0	0	0	0	17	True
+797	0	level_109 <- in_L108_224_224 -> exit:out_teleporter_0_112	True	None	9	5	0	0	0	0	18	True
+798	0	level_109 <- in_L108_224_224 -> exit:out_teleporter_160_48	True	None	56	104	0	0	0	0	66	True
+798	1	level_109 <- in_L108_224_224 -> exit:out_teleporter_160_48	True	None	9	11	0	0	0	0	16	True
+799	0	level_109 <- in_L108_224_224 -> location:Level 109 - Firewand	True	None	105	101	0	0	0	0	163	True
+800	0	level_110 <- in_L101_104_24 -> exit:out_pit_3_2	True	None	83	173	0	0	0	0	142	True
+801	0	level_111 <- in_L3_0_64 -> exit:out_teleporter_128_48	True	None	68	112	0	0	0	0	86	True
+802	0	level_111 <- in_L3_0_64 -> exit:out_teleporter_304_176	True	None	9	5	0	0	0	0	36	True
+803	0	level_111 <- in_L112_32_224 -> exit:out_teleporter_128_48	True	None	9	5	0	0	0	0	9	True
+804	0	level_111 <- in_L112_32_224 -> exit:out_teleporter_304_176	True	None	76	131	0	0	0	0	180	True
+805	0	level_112__r0c7 <- in_L113_64_144 -> exit:out_teleporter_112_0	True	None	35	8	0	0	0	0	63	True
+806	0	level_112__r2c2 <- in_L111_128_48 -> exit:out_teleporter_32_224	True	None	35	7	0	0	0	0	25	True
+809	0	level_113 <- in_L112_112_0 -> exit:out_teleporter_16_0	True	None	87	88	0	0	0	0	264	True
+810	0	level_113 <- in_L112_112_0 -> exit:out_teleporter_32_0	True	None	75	90	0	0	0	0	111	True
+811	0	level_113 <- in_L112_112_0 -> exit:out_teleporter_64_144	True	None	9	4	0	0	0	0	14	True
+812	0	level_113 <- in_L112_112_0 -> exit:out_teleporter_80_144	True	None	9	18	0	0	0	0	19	True
+813	0	level_113 <- in_L112_112_0 -> exit:out_teleporter_112_0	True	None	97	138	0	0	0	0	91	True
+814	0	level_113 <- in_L112_112_0 -> exit:out_teleporter_128_0	True	None	97	139	0	0	0	0	68	True
+815	0	level_113 <- in_L112_112_0 -> location:L113 flag 0: finaldoor@112,0 cleared	True	None	84	123	0	0	0	0	98	True
+816	0	level_113 <- in_L114_64_144 -> exit:out_teleporter_16_0	True	None	9	5	0	0	0	0	10	True
+817	0	level_113 <- in_L114_64_144 -> exit:out_teleporter_32_0	True	None	12	19	0	0	0	0	40	True
+818	0	level_113 <- in_L114_64_144 -> exit:out_teleporter_64_144	True	None	44	77	0	0	0	0	56	True
+819	0	level_113 <- in_L114_64_144 -> exit:out_teleporter_80_144	True	None	44	76	0	0	0	0	43	True
+820	0	level_113 <- in_L114_64_144 -> exit:out_teleporter_112_0	True	None	65	166	0	0	0	0	116	True
+821	0	level_113 <- in_L114_64_144 -> exit:out_teleporter_128_0	True	None	65	165	0	0	0	0	91	True
+822	0	level_113 <- in_L114_64_144 -> location:L113 flag 0: finaldoor@112,0 cleared	True	None	52	153	0	0	0	0	78	True
+823	0	level_113 <- in_L114_80_144 -> exit:out_teleporter_16_0	True	None	12	19	0	0	0	0	24	True
+824	0	level_113 <- in_L114_80_144 -> exit:out_teleporter_32_0	True	None	9	5	0	0	0	0	19	True
+825	0	level_113 <- in_L114_80_144 -> exit:out_teleporter_64_144	True	None	48	78	0	0	0	0	91	True
+826	0	level_113 <- in_L114_80_144 -> exit:out_teleporter_80_144	True	None	48	77	0	0	0	0	57	True
+827	0	level_113 <- in_L114_80_144 -> exit:out_teleporter_112_0	True	None	115	187	0	0	0	0	147	True
+828	0	level_113 <- in_L114_80_144 -> exit:out_teleporter_128_0	True	None	115	188	0	0	0	0	139	True
+829	0	level_113 <- in_L114_80_144 -> location:L113 flag 0: finaldoor@112,0 cleared	True	None	109	168	0	0	0	0	93	True
+830	0	level_113 <- in_L115_64_144 -> exit:out_teleporter_16_0	True	None	64	114	0	0	0	0	129	True
+831	0	level_113 <- in_L115_64_144 -> exit:out_teleporter_32_0	True	None	64	112	0	0	0	0	72	True
+832	0	level_113 <- in_L115_64_144 -> exit:out_teleporter_64_144	True	None	48	77	0	0	0	0	94	True
+833	0	level_113 <- in_L115_64_144 -> exit:out_teleporter_80_144	True	None	48	78	0	0	0	0	57	True
+834	0	level_113 <- in_L115_64_144 -> exit:out_teleporter_112_0	True	None	9	5	0	0	0	0	26	True
+835	0	level_113 <- in_L115_64_144 -> exit:out_teleporter_128_0	True	None	12	19	0	0	0	0	16	True
+837	0	level_113 <- in_L115_80_144 -> exit:out_teleporter_16_0	True	None	64	115	0	0	0	0	129	True
+838	0	level_113 <- in_L115_80_144 -> exit:out_teleporter_32_0	True	None	64	115	0	0	0	0	81	True
+839	0	level_113 <- in_L115_80_144 -> exit:out_teleporter_64_144	True	None	44	76	0	0	0	0	61	True
+840	0	level_113 <- in_L115_80_144 -> exit:out_teleporter_80_144	True	None	44	77	0	0	0	0	136	True
+841	0	level_113 <- in_L115_80_144 -> exit:out_teleporter_112_0	True	None	12	19	0	0	0	0	20	True
+842	0	level_113 <- in_L115_80_144 -> exit:out_teleporter_128_0	True	None	9	5	0	0	0	0	7	True
+844	0	level_114 <- in_L113_16_0 -> exit:out_teleporter_64_144	True	None	9	4	0	0	0	0	25	True
+845	0	level_114 <- in_L113_16_0 -> exit:out_teleporter_80_144	True	None	9	18	0	0	0	0	21	True
+846	0	level_114 <- in_L113_16_0 -> location:L114 flag 0: watcher@72,72 cleared	True	None	32	384	0	0	0	0	27	True
+847	0	level_114 <- in_L113_32_0 -> exit:out_teleporter_64_144	True	None	9	18	0	0	0	0	24	True
+848	0	level_114 <- in_L113_32_0 -> exit:out_teleporter_80_144	True	None	9	4	0	0	0	0	15	True
+849	0	level_114 <- in_L113_32_0 -> location:L114 flag 0: watcher@72,72 cleared	True	None	32	384	0	0	0	0	29	True
+850	0	level_115__r9c4 <- in_L113_112_0 -> exit:out_teleporter_64_144	True	None	33	7	0	0	0	0	17	True
+851	0	level_115__r9c4 <- in_L113_112_0 -> exit:out_teleporter_80_144	True	None	48	29	0	0	0	0	36	True
+852	0	level_115__r9c4 <- in_L113_128_0 -> exit:out_teleporter_64_144	True	None	48	29	0	0	0	0	51	True
+853	0	level_115__r9c4 <- in_L113_128_0 -> exit:out_teleporter_80_144	True	None	33	7	0	0	0	0	12	True
+854	0	level_15__r6c8 <- in_L14_32_64 ~> level_15__r1c5 -> location:Level 015 - Chest	True	None	110	185	0	0	0	0	102	True
+855	0	level_15__r6c8 <- in_L16_16_64 ~> level_15__r1c9 -> location:Level 015 - Chest	True	None	98	73	0	0	0	0	114	True
+856	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_2	True	None	114	371	0	0	0	0	1000	True
+857	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_2	True	None	394	455	0	0	0	0	30172	True
+858	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_9_2	True	None	116	355	0	0	0	0	1530	True
+859	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_3	True	None	115	381	0	0	0	0	1095	True
+860	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_3	False	refusal	412	None	0	0	0	0	6219	False
+861	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_9_3	True	None	118	412	0	0	0	0	1713	True
+862	0	level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_4	True	None	119	436	0	0	0	0	2593	True
+863	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_2	True	None	30	149	0	0	0	0	186	True
+864	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_2	True	None	112	315	0	0	0	0	818	True
+865	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_9_2	True	None	107	195	0	0	0	0	617	True
+866	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_3	True	None	58	174	0	0	0	0	287	True
+867	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_3	True	None	112	233	0	0	0	0	902	True
+868	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_9_3	True	None	63	209	0	0	0	0	450	True
+869	0	level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_4	False	refusal	214	None	0	0	0	0	2154	False
+872	0	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared	True	None	148	647	0	0	0	0	212	True
+872	1	level_19__r3c3 <- in_L18_176_112 ~> level_19__r5c5 -> location:L19 flag 1: bosslock@48,32 cleared	True	None	50	212	0	0	0	0	100	True
+873	0	level_20__r1c12 <- in_L19_16_96 ~> level_20__r1c4 -> location:L20 flag 4: lock@32,80 cleared	True	None	47	117	0	0	0	0	71	True
+874	0	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	False	refusal	642	None	0	0	0	0	13715	False
+874	1	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	True	None	2561	4491	0	0	0	0	47385	True
+875	0	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	False	refusal	642	None	0	0	0	0	23512	False
+875	1	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	True	None	1706	4308	0	0	0	0	49692	True
+876	0	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	False	refusal	645	None	0	0	0	0	32604	False
+876	1	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	True	None	1882	1147	0	0	0	0	70240	True
+877	0	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	False	refusal	644	None	0	0	0	0	40505	False
+877	1	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared	False	refusal	2562	None	0	0	0	0	83272	False
+878	0	level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144	True	None	532	2271	0	0	0	0	4154	True
+879	0	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	199	1054	0	0	0	0	406	True
+879	1	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	66	389	0	0	0	0	70	True
+880	0	level_43__r3c8 <- in_pit_L40_4_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	195	1056	0	0	0	0	478	True
+880	1	level_43__r3c8 <- in_pit_L40_4_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	126	303	0	0	0	0	405	True
+881	0	level_43__r3c8 <- in_pit_L40_5_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	167	1054	0	0	0	0	406	True
+881	1	level_43__r3c8 <- in_pit_L40_5_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	76	319	0	0	0	0	189	True
+882	0	level_43__r3c8 <- in_pit_L40_13_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	159	1054	0	0	0	0	235	True
+882	1	level_43__r3c8 <- in_pit_L40_13_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	76	319	0	0	0	0	98	True
+883	0	level_43__r3c8 <- in_pit_L40_14_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	196	1057	0	0	0	0	934	True
+883	1	level_43__r3c8 <- in_pit_L40_14_20 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	126	303	0	0	0	0	365	True
+884	0	level_43__r3c8 <- in_pit_L40_4_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	183	1054	0	0	0	0	446	True
+884	1	level_43__r3c8 <- in_pit_L40_4_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	110	294	0	0	0	0	166	True
+885	0	level_43__r3c8 <- in_pit_L40_5_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	198	1060	0	0	0	0	207	True
+885	1	level_43__r3c8 <- in_pit_L40_5_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	126	292	0	0	0	0	104	True
+886	0	level_43__r3c8 <- in_pit_L40_13_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	196	1059	0	0	0	0	755	True
+886	1	level_43__r3c8 <- in_pit_L40_13_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	126	292	0	0	0	0	350	True
+887	0	level_43__r3c8 <- in_pit_L40_14_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	197	1056	0	0	0	0	320	True
+887	1	level_43__r3c8 <- in_pit_L40_14_21 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	110	294	0	0	0	0	275	True
+888	0	level_43__r3c8 <- in_pit_L40_4_22 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	187	1056	0	0	0	0	610	True
+888	1	level_43__r3c8 <- in_pit_L40_4_22 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	126	298	0	0	0	0	257	True
+889	0	level_43__r3c8 <- in_pit_L40_5_22 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	168	1057	0	0	0	0	239	True
+889	1	level_43__r3c8 <- in_pit_L40_5_22 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	84	319	0	0	0	0	238	True
+890	0	level_43__r3c8 <- in_pit_L40_4_23 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	202	1057	0	0	0	0	437	True
+890	1	level_43__r3c8 <- in_pit_L40_4_23 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	118	323	0	0	0	0	237	True
+891	0	level_43__r3c8 <- in_pit_L40_5_23 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	201	1056	0	0	0	0	273	True
+891	1	level_43__r3c8 <- in_pit_L40_5_23 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64	True	None	94	327	0	0	0	0	213	True
+892	0	level_43__r8c7 <- in_L40_320_576 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	131	808	0	0	0	0	289	True
+893	0	level_43__r8c7 <- in_pit_L40_4_20 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	116	808	0	0	0	0	146	True
+894	0	level_43__r8c7 <- in_pit_L40_5_20 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	96	808	0	0	0	0	142	True
+895	0	level_43__r8c7 <- in_pit_L40_13_20 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	96	808	0	0	0	0	336	True
+896	0	level_43__r8c7 <- in_pit_L40_14_20 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	128	808	0	0	0	0	174	True
+897	0	level_43__r8c7 <- in_pit_L40_4_21 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	112	808	0	0	0	0	152	True
+898	0	level_43__r8c7 <- in_pit_L40_5_21 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	124	808	0	0	0	0	358	True
+899	0	level_43__r8c7 <- in_pit_L40_13_21 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	116	808	0	0	0	0	352	True
+900	0	level_43__r8c7 <- in_pit_L40_14_21 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	132	808	0	0	0	0	494	True
+901	0	level_43__r8c7 <- in_pit_L40_4_22 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	108	808	0	0	0	0	312	True
+902	0	level_43__r8c7 <- in_pit_L40_5_22 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	96	808	0	0	0	0	230	True
+903	0	level_43__r8c7 <- in_pit_L40_4_23 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	156	808	0	0	0	0	259	True
+904	0	level_43__r8c7 <- in_pit_L40_5_23 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste	True	None	120	808	0	0	0	0	164	True
+905	0	level_46__r1c26 <- in_L45_112_0 ~> level_46__r0c11 -> location:Level 046 - Chest	True	None	142	417	0	0	0	0	620	True
+906	0	level_46__r1c26 <- in_L47_240_464 ~> level_46__r0c11 -> location:Level 046 - Chest	True	None	150	493	0	0	0	0	659	True
+907	0	level_46__r1c26 <- in_L58_80_16 ~> level_46__r6c24 -> location:Level 046 - Chest	True	None	120	119	0	0	0	0	205	True
+908	0	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> exit:out_pit_2_2	False	refusal	642	None	0	0	0	0	1762	False
+908	1	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> exit:out_pit_2_2	True	None	1384	430	0	0	0	0	3847	True
+909	0	level_48__r2c10 <- in_L47_216_112 ~> level_48__r18c7 -> location:L48 flag 1: bosslock@48,144 cleared	True	None	119	258	0	0	0	0	188	True
+910	0	level_48__r11c9 <- in_L47_216_112 ~> level_48__r18c7 ~> level_48__r2c10 -> location:Level 048 - Chest	True	None	115	136	0	0	0	0	142	True
+911	0	level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	644	None	0	0	0	0	739	False
+911	1	level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	2562	None	0	0	0	0	2867	False
+912	0	level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	642	None	0	0	0	0	1631	False
+912	1	level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared	False	refusal	2561	None	0	0	0	0	5660	False
+914	0	level_58__r1c4 <- in_tentacle_beast_mouth_L57_56_96 ~> level_58__r4c1 -> exit:out_teleporter_80_16	True	None	102	104	0	0	0	0	99	True
+916	0	level_58__r6c5 <- in_tentacle_beast_mouth_L57_56_96 ~> level_58__r4c1 -> exit:out_teleporter_64_112	True	None	56	29	0	0	0	0	36	True
+917	0	level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest	True	None	136	309	0	0	0	0	910	True
+918	0	level_67__r3c2 <- in_L59_0_128 ~> level_67__r6c11 -> location:Level 067 - Boss Key 4	True	None	233	801	0	0	0	0	455	True
+919	0	level_68__r1c1 <- in_L65_184_64 ~> level_68__r3c1 -> location:Level 068 - Health	True	None	14	61	0	0	0	0	36	True
+920	0	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17	False	refusal	645	None	0	0	0	0	2693	False
+920	1	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17	False	refusal	2563	None	0	0	0	0	8581	False
+921	0	level_71__r14c12 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_pit_10_17	True	None	148	514	0	0	0	0	1158	True
+922	0	level_71__r14c12 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_pit_10_17	True	None	111	195	0	0	0	0	296	True
+923	0	level_71__r14c12 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_pit_10_17	True	None	106	176	0	0	0	0	445	True
+924	0	level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256	False	refusal	645	None	0	0	0	0	3129	False
+924	1	level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256	True	None	2269	184	0	0	0	0	7729	True
+925	0	level_71__r16c19 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_teleporter_304_256	True	None	140	333	0	0	0	0	1086	True
+926	0	level_71__r16c19 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_teleporter_304_256	True	None	9	5	0	0	0	0	19	True
+927	0	level_71__r16c19 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_teleporter_304_256	True	None	43	157	0	0	0	0	143	True
+928	0	level_80__r8c1 <- in_L71_224_304 ~> level_80__r0c2 -> location:Level 080 - Chest	True	None	114	215	0	0	0	0	459	True
+929	0	level_100__r4c10 <- in_L99_48_96 ~> level_100__r2c3 -> exit:out_teleporter_288_96	True	None	149	436	0	0	0	0	1542	True
+930	0	level_101__r0c6 <- in_L100_288_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24	False	refusal	2	None	0	0	0	0	32	False
+931	0	level_101__r0c6 <- in_L102_64_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24	False	refusal	2	None	0	0	0	0	35	False
+932	0	level_115__r4c4 <- in_L113_112_0 ~> level_115__r9c4 -> location:Level 115 - The Seed	True	None	102	120	0	0	0	0	187	True
+933	0	level_115__r4c4 <- in_L113_128_0 ~> level_115__r9c4 -> location:Level 115 - The Seed	True	None	102	120	0	0	0	0	87	True
