@@ -77,6 +77,34 @@ export async function l40LatchOrbitTape() {
 }
 
 /**
+ * ⛓ seedling-fidelity-afterrows (wave 41) — `l40latch-orbit-shipped`: the AFTER of `l40latch-orbit-chain`. The same
+ * latch boot solved with D1's switches at the SHIPPED defaults (the L40 flip set ON, no `withL40Flip` wrap): the
+ * solve now SOLVES Boss Key 2, and the tape is its whole plan (with its `equips`). Built at record time.
+ */
+export async function l40LatchOrbitShippedTape() {
+    const boot = await l40LatchBoot();
+    const { out, refusal } = await l40LatchSolve(boot, L40LATCH_D1_SWITCHES);
+    if (!out) throw new Error(`l40LatchOrbitShippedTape: the latch solve REFUSED at the defaults — re-derive (${refusal?.message?.slice(0, 200)})`);
+    const tape = await l40LatchTape('l40latch-orbit-shipped', out.perTick.map((k) => [...k]), {
+        description: 'seedling-fidelity-afterrows: L40 on the latch of buttonroom@880,768 (the chest, the tree and '
+            + 'spinner@880,848 banked) — the SOLVER\'s own plan for Boss Key 2 with holdWaitPriced + chaserOrbitKill ON at '
+            + 'the SHIPPED defaults (the L40 flip set ON): it solves, where the pre-flip solve (l40latch-orbit-chain) '
+            + 'refused (probe-seedling-l40latch.mjs)',
+    });
+    return { ...tape, equips: [...(boot.equips ?? []), ...(out.equips ?? [])] };
+}
+
+/** The game-side checks of `l40latch-orbit-shipped`: `l40latch-orbit-chain`'s, and the player ends at the key's cell. */
+export function l40LatchOrbitShippedChecks(samples) {
+    const end = samples.at(-1);
+    return [...l40LatchOrbitChecks(samples), {
+        name: 'the game\'s player ends in L40 within 16 px of bosskey@656,528 (the collect)',
+        ok: end !== undefined && end.level === 40 && Math.abs(end.x - 664) <= 16 && Math.abs(end.y - 536) <= 16,
+        detail: end ? `ends in L${end.level} at (${end.x}, ${end.y})` : 'no sample',
+    }];
+}
+
+/**
  * `solveSegment` for the key from a tick-0 boot tape, under `over`: `{out, refusal}` (a `SolverRefusal` or an
  * executor's `BotDriverV2Error` is returned, anything else thrown). A fresh fork run per try, as the page solves.
  */
@@ -272,6 +300,8 @@ export const L40LATCH_WITNESSES = Object.freeze({
     'l40latch-stand': Object.freeze({ tape: l40LatchStandTape, switches: {}, checks: l40LatchStandChecks }),
     'l40latch-orbit-chain': Object.freeze({ tape: l40LatchOrbitTape, switches: L40LATCH_D1_SWITCHES,
         checks: l40LatchOrbitChecks }),
+    'l40latch-orbit-shipped': Object.freeze({ tape: l40LatchOrbitShippedTape, switches: L40LATCH_D1_SWITCHES,
+        checks: l40LatchOrbitShippedChecks }),
     'corpsebump2-walk-press': Object.freeze({ tape: corpseBump2WalkPressTape, switches: CORPSEBUMP2_SWITCHES,
         checks: corpseBump2Checks }),
 });
