@@ -4417,10 +4417,10 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 152,
+        "solverBot.js": 153,
         "strikePolicy.js": 3
       },
-      "sites": 193,
+      "sites": 194,
       "seen": "static",
       "via": [
         "import"
