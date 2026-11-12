@@ -198,6 +198,8 @@ To add a theme: make its pack under `frontend/packs/`, list it in `packs.json`'s
 
 **The compiled logic equals the control's.** `procgenPipeline/metaTrialWorld.test.js` builds the world beside `concept_trial` and pins that the document minus the text adventure's `prose` and `procgen_metadata[p].content` is the control's, that every maze payload (the water gate among them) is the control's byte for byte, and that the committed preset is a fresh build. The Gate's maze look (`#a0a8b8`, `#`) is not on screen in this world; the same test pins it on the maze-only concept world (seed 1, `startSubstrate: maze`, 3 spheres, no filler, quota maze 99, concepts `sword, guardian, swim, water`, items Progressive Sword, Progressive Swim and victory). Generate that world in the panel with `meta` ticked to see the Gate drawn in a maze. The in-app row `meta-trial-plays` plays `meta_trial`: a place's title and arrival line, the Gate's two lines, and the water gate equal to the maze default pack's.
 
+**It is played in CI.** `check-meta-trial-play.mjs` is `check-concept-trial-play.mjs` run on `meta_trial` under its own key, `gate: meta-trial-play`: every expectation is read off that preset, so the guardian's lines it waits for are the Gate's. A roster `@standing-variant` would not do, because a declared arm runs locally only.
+
 ## Behaviour
 
 A concept can also say how it **behaves**: what an item hits with, how an enemy answers a hit, what makes an obstacle give way, and what a substrate's realisation of it does. Every behaviour field is optional, and a concept without one is exactly the concept it was before.
