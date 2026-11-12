@@ -3124,6 +3124,85 @@ function baitTargetGoneRecord(run, bodyId, chosenAt, perTick, why) {
 }
 
 /**
+ * ⛓ hammer-phase BAIT-SUBWALK-GOAL (`SUBWALK_ANCESTOR_CROSSING`, OFF) — **A SUB-WALK THAT CROSSES INTO THE LEVEL AN
+ * ENCLOSING WALK IS CROSSING TO HAS REACHED THAT WALK'S GOAL.** A walk with `crossTo` (a goal's exit or pit walk) climbs
+ * the ladder when its corridor meets danger, and the rungs walk to stances with ordinary walks (no `crossTo`) — under
+ * the goal's own plan extras, so their corridors may cross the goal's own pit or exit. When the run then crosses there,
+ * `drive` throws "crossed … without being asked to" (it has no `crossTo` to accept it by), the sub-walk counts that as
+ * a refuted corridor, and re-plans in the NEXT level, aiming at a stance in the room it left. MEASURED (ER c3, L40 →
+ * reach-pit (14,27)->L43, `CHASER_PASS` + `BAIT_TARGET_GONE` ON): the outer bait's stance walk fell into L43 at t688
+ * hitless, then stalled 400 ticks in L43 aiming at (40,424) and refused.
+ *
+ * ON: when a sub-walk's drive throws and the run's last transition happened on the walk's last tick into the level the
+ * nearest enclosing crossing walk names — with that walk's identity (its door's arrival position; for a pit, a fall
+ * to the pit's level, every pit of a level falling to the same level) — the sub-walk hands the transition up and the
+ * enclosing walk returns it as its own crossing (the frames between unwind as after any throw; a bait or kill arm that
+ * walked does not dwell or strike, because its goal is reached). A crossing that matches no enclosing walk is the
+ * refuted corridor it was. Nothing reads a level id, a coordinate or a class. OFF: no frame is pushed and nothing is
+ * asked. `SEEDLING_SUBWALK_ANCESTOR_CROSSING=1` / `withSubwalkAncestorCrossing(enabled, fn)`. Worker thread (the solve).
+ */
+export const SUBWALK_ANCESTOR_CROSSING = { enabled: globalThis.process?.env?.SEEDLING_SUBWALK_ANCESTOR_CROSSING === '1' };
+export const SUBWALK_ANCESTOR_CROSSING_DEFAULT = false;
+/**
+ * Per-run rows (ON only): `handed` `{t, from, to, sub, ancestor, depth, at}` — a sub-walk's crossing handed to the
+ * enclosing walk `depth` frames up; `unmatched` `{t, from, to, sub, frames}` — a sub-walk crossed into a level no
+ * enclosing walk names (the refuted corridor, unchanged).
+ */
+export const SUBWALK_ANCESTOR_CROSSING_COUNTS = { handed: [], unmatched: [] };
+
+/** Run `fn` with `SUBWALK_ANCESTOR_CROSSING` set to `enabled`, restoring the previous value. */
+export function withSubwalkAncestorCrossing(enabled, fn) {
+    return withSwitch(SUBWALK_ANCESTOR_CROSSING, enabled, fn);
+}
+
+/** The signal a sub-walk throws to the enclosing crossing walk `frame` (never a refusal: only `frame` catches it). */
+class AncestorCrossing extends Error {
+    constructor(frame, transition) {
+        super(`a sub-walk crossed to level ${transition.to_level}: ${frame.what}'s crossing`);
+        this.frame = frame;
+        this.transition = transition;
+    }
+}
+
+/** `SUBWALK_ANCESTOR_CROSSING` ON, a walk with `crossTo`: `fn` runs as a crossing frame that a sub-walk may complete. */
+function withCrossingFrame(frames, opts, fn) {
+    if (!SUBWALK_ANCESTOR_CROSSING.enabled || !opts?.crossTo) return fn();
+    const frame = { crossTo: opts.crossTo, what: opts.what ?? 'walk' };
+    frames.push(frame);
+    try {
+        return fn();
+    } catch (e) {
+        if (e instanceof AncestorCrossing && e.frame === frame) return e.transition;
+        throw e;
+    } finally {
+        frames.splice(frames.indexOf(frame), 1);
+    }
+}
+
+/**
+ * `SUBWALK_ANCESTOR_CROSSING` ON: a walk's drive threw (`ownCrossTo` its own, `frames` the open crossing walks). When
+ * the run crossed on this tick into the level an enclosing crossing walk names, throws `AncestorCrossing` to it.
+ */
+function subwalkAncestorCrossing(run, perTick, frames, ownCrossTo, what) {
+    if (!SUBWALK_ANCESTOR_CROSSING.enabled || frames.length === 0) return;
+    const tr = run.transitions.at(-1);
+    if (!tr || tr.t !== perTick.length || run.level !== tr.to_level) return;
+    // the walk's own frame (when it has `crossTo`) was asked by `drive` itself
+    const open = ownCrossTo ? frames.slice(0, -1) : frames;
+    for (let i = open.length - 1; i >= 0; i -= 1) {
+        const { crossTo } = open[i];
+        if (crossTo.level !== tr.to_level) continue;
+        if (!crossTo.pit && !(run.state.x === crossTo.arrival.x && run.state.y === crossTo.arrival.y)) continue;
+        SUBWALK_ANCESTOR_CROSSING_COUNTS.handed.push({ t: tr.t, from: tr.from_level, to: tr.to_level, sub: what,
+            ancestor: open[i].what, depth: open.length - i, at: { x: run.state.x, y: run.state.y },
+            arrival: crossTo.arrival ?? null });
+        throw new AncestorCrossing(open[i], tr);
+    }
+    SUBWALK_ANCESTOR_CROSSING_COUNTS.unmatched.push({ t: tr.t, from: tr.from_level, to: tr.to_level, sub: what,
+        frames: open.map((f) => `${f.what}->L${f.crossTo.level}`) });
+}
+
+/**
  * ⛓ SEEDLING FIDELITY CLEARTAG — how long `clear-tag` waits, after its verb
  * returned, for the flag to land in the run's `earnedClears`. A POLICY bound:
  * the verbs finish on the world (a rock gone, a lock open) and a `Lock`'s
@@ -32192,6 +32271,8 @@ function solveSegmentUnder({
             refused: `FINE_STANCE (the stance an 8 px arm answered${axis ? '; off the 8 px grid, axis-aligned' : ''})` });
         return { wps, axis };
     };
+    // ⛓ BAIT-SUBWALK-GOAL (`SUBWALK_ANCESTOR_CROSSING`, ON only): the open walks with `crossTo`, outermost first.
+    const subwalkCrossFrames = [];
     const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
@@ -32960,6 +33041,7 @@ function solveSegmentUnder({
                 return null;
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
+                subwalkAncestorCrossing(run, perTick, subwalkCrossFrames, crossTo, what); // ⛓ BAIT-SUBWALK-GOAL (OFF)
                 refuseIfDrowned(deaths0, what, goal);
                 /**
                  * ⛓ ER-C1 (`UNHELD_LOCK_NEXT_DOOR`, ON only): the one re-plan is counted in corridors DRIVEN and lost,
@@ -32985,8 +33067,8 @@ function solveSegmentUnder({
      * ⛓ hammer-phase D1 — a walk is a progress node: its climbs, the frontier verbs it applies and the walks those
      * make nest under it. Every caller (the goals, the rungs, the executors handed `walkTo`) reaches this one.
      */
-    const walkToRun = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
-        : progressRun('walk', 'walk', 'walk', () => walkToUnder(goal, aim, opts)));
+    const walkToRun = (goal, aim, opts) => withCrossingFrame(subwalkCrossFrames, opts, () => (activeProgress === null
+        ? walkToUnder(goal, aim, opts) : progressRun('walk', 'walk', 'walk', () => walkToUnder(goal, aim, opts))));
     /**
      * ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown`) — the run's `playerDeaths` count, and a refusal BY NAME when a
      * whirlpool drowned the player since `d0` (`obstacle: {kind: 'whirlpool', id}`): a walk that died is not a walk that
