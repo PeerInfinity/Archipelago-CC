@@ -99,7 +99,7 @@
 
 // ⛓ VANILLA MAP — both import-free, so the controller still imports no model.
 import { RANDOMIZER_ARMS } from './seedlingRandomizerEligibility.js';
-import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+import { ATLAS_CHECK_PLAYER, atlasRoomRegions, roomPlayerOf } from '../seedlingDemo/seedlingAtlasCheckTable.js';
 // ⛓ WAVE-6 CONSUMER — import-free too (an arrival-inside-solid's way out, translated to AP exits).
 import { arrivalEscape } from './seedlingArrivalEscape.js';
 // ⛓ OBSTACLE EVENTS — import-free (the rules' game-state events, read off the raw rules).
@@ -466,9 +466,10 @@ export function rulesAtlasOf(rules, atlases = [SEEDLING_PLAYTHROUGH_ATLAS_DOC], 
  * @param {object} o.rules       the raw rules.json (for the links)
  * @param {object} [o.atlasDoc]  ⛓ ENCOUNTERS — the atlas the rules name (`rulesAtlasOf`): the encounters' anchors
  * @param {string} [o.atlasId]   the id the rules name (for the refusal's wording)
+ * @param {string|number|null} [o.playerId]  the loaded slot whose events are read (default `ATLAS_CHECK_PLAYER`)
  */
 export function vanillaArmPlaybackMap({ entries = [], encounters = [], reports = [], set = null, regions, rules = null,
-    atlasDoc = null, atlasId = null }) {
+    atlasDoc = null, atlasId = null, playerId = null }) {
     const rooms = new Map((set?.rooms ?? []).map((r) => [r.id, r]));
     const bound = [];
     const refused = reports.map((r) => ({ location: r.location, why: BOSS_REPORT_REFUSAL(r) }));
@@ -501,7 +502,7 @@ export function vanillaArmPlaybackMap({ entries = [], encounters = [], reports =
         }
         bound.push({ location: e.location, level: e.level, tag: e.tag, entityType: held.type });
     }
-    const ev = runtimeEventsOf(rules);
+    const ev = runtimeEventsOf(rules, roomPlayerOf(playerId));
     return { arm: RANDOMIZER_ARMS.VANILLA, entries: bound, refused: [...refused, ...ev.refused], events: ev.events, regions,
         links: realRoomLinks(rules, regions), ...(bosses.length ? { bosses } : {}) };
 }
@@ -518,13 +519,17 @@ export function vanillaArmPlaybackMap({ entries = [], encounters = [], reports =
  * @param {object} rawRules  the raw rules.json
  * @param {object} [o]
  * @param {object[]} [o.atlases]  ⛓ ENCOUNTERS — the atlases this page carries (the encounters' anchors)
+ * @param {string|number|null} [o.playerId]  the loaded slot (`staticData.playerId`): a room's server-built rules
+ *   are keyed under the ROOM slot, so its sidecars, regions, events and atlas are read there (default
+ *   `ATLAS_CHECK_PLAYER`, the slot every committed preset is keyed under)
  */
-export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAYTHROUGH_ATLAS_DOC] } = {}) {
+export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAYTHROUGH_ATLAS_DOC], playerId = null } = {}) {
     if (!loaded?.eligibility?.eligible || loaded.arm === RANDOMIZER_ARMS.GENERATED) return null;
-    const regions = new Map(atlasRoomRegions(rawRules).map(({ region }) => [region,
-        rawRules.preset_sidecars[ATLAS_CHECK_PLAYER][region].playable_payload]));
+    const player = roomPlayerOf(playerId);
+    const regions = new Map(atlasRoomRegions(rawRules, player).map(({ region }) => [region,
+        rawRules.preset_sidecars[player][region].playable_payload]));
     if (loaded.arm === RANDOMIZER_ARMS.ATLAS) {
-        const ev = runtimeEventsOf(rawRules);
+        const ev = runtimeEventsOf(rawRules, player);
         return { arm: RANDOMIZER_ARMS.ATLAS, entries: loaded.entries ?? [], refused: ev.refused.length ? [...(loaded.refused ?? []), ...ev.refused] : loaded.refused ?? [],
             events: ev.events, regions, links: realRoomLinks(rawRules, regions) };
     }
@@ -532,7 +537,8 @@ export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAY
     // whose load DELIVERED a rewritten set.
     if (!loaded.set) return null;
     return vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
-        reports: loaded.reports ?? [], set: loaded.set, regions, rules: rawRules, ...rulesAtlasOf(rawRules, atlases) });
+        reports: loaded.reports ?? [], set: loaded.set, regions, rules: rawRules, playerId: player,
+        ...rulesAtlasOf(rawRules, atlases, player) });
 }
 
 const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });

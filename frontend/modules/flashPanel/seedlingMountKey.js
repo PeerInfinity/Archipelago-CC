@@ -23,13 +23,10 @@
  * ⛔ Pure, and it never throws: a document it cannot read keys as `unkeyable: <why>`, which differs from every
  * readable one (so the next readable load re-mounts rather than keeping a mount nobody can account for).
  */
-import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+import { atlasRoomRegions, roomPlayerOf } from '../seedlingDemo/seedlingAtlasCheckTable.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 import { mapDocumentPath, regionAtlasOf } from './mapDocumentPath.js';
 import { realRoomLinks, runtimeEventsOf } from './seedlingPlaybackController.js';
-
-/** The sidecar slot both room readers use (`atlasRoomRegions`, `generatedRoomCensus`). */
-const ROOM_SIDECAR_PLAYER = '1';
 
 /** `[name, item, player]` per location holding an item, sorted by name. */
 function placementOf(locations) {
@@ -50,9 +47,12 @@ function placementOf(locations) {
 export function seedlingMountKey({ rules, playerId = null, locations = null } = {}) {
     try {
         const player = playerId === undefined || playerId === null ? null : String(playerId);
-        const sidecars = rules?.preset_sidecars?.[ROOM_SIDECAR_PLAYER] ?? {};
-        const atlasRooms = atlasRoomRegions(rules).map((r) => r.region);
-        const generatedRooms = generatedRoomCensus(rules).rooms;
+        // The slot the room readers read (`atlasRoomRegions`, `generatedRoomCensus`): the loaded one, `'1'` when
+        // none is named — every committed preset is keyed there, a room's server-built rules under the room slot.
+        const roomPlayer = roomPlayerOf(player);
+        const sidecars = rules?.preset_sidecars?.[roomPlayer] ?? {};
+        const atlasRooms = atlasRoomRegions(rules, roomPlayer).map((r) => r.region);
+        const generatedRooms = generatedRoomCensus(rules, roomPlayer).rooms;
         const payloads = new Map(atlasRooms.map((region) => [region, sidecars[region]?.playable_payload]));
         return JSON.stringify({
             player,
@@ -61,7 +61,7 @@ export function seedlingMountKey({ rules, playerId = null, locations = null } = 
             map: mapDocumentPath(rules, player).path,
             seed: [rules?.seed_name ?? null, rules?.generation_seed ?? null],
             links: realRoomLinks(rules, payloads),
-            events: runtimeEventsOf(rules).events, // the slot `realRoomPlaybackMap` reads (its default)
+            events: runtimeEventsOf(rules, roomPlayer).events, // the slot `realRoomPlaybackMap` reads
             placement: placementOf(locations),
         });
     } catch (err) {

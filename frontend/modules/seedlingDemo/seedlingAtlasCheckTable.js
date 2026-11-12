@@ -70,8 +70,18 @@
  * whatever imports this file.
  */
 
-/** The player whose sidecars and regions a rules.json keys under `'1'`. */
+/**
+ * The player a rules.json's sidecars and regions are read under when no loaded
+ * slot is named: `'1'`, the slot every committed preset is keyed under. A room's
+ * server-built document is keyed under the ROOM slot (`overlayServerData`), so a
+ * caller that knows the loaded player passes it (`roomPlayerOf`).
+ */
 export const ATLAS_CHECK_PLAYER = '1';
+
+/** The per-player key to read: the loaded slot as a string, or `ATLAS_CHECK_PLAYER` when none is named. */
+export function roomPlayerOf(playerId) {
+    return playerId === undefined || playerId === null || playerId === '' ? ATLAS_CHECK_PLAYER : String(playerId);
+}
 
 /** The sidecar substrate this table reads — the REAL-room one. */
 export const ATLAS_ROOM_SUBSTRATE_ID = 'flash_seedling';
@@ -134,9 +144,12 @@ export function propertyLocationOfFrom(gameConfig, itemForTag) {
 /**
  * The `flash_seedling` regions of `rules`, in the rules' own region order —
  * `{region, atlasRegion, level}` off each sidecar's payload.
+ *
+ * @param {object} rules
+ * @param {string|number|null} [playerId]  the loaded slot (default `ATLAS_CHECK_PLAYER`)
  */
-export function atlasRoomRegions(rules) {
-    const sidecars = rules?.preset_sidecars?.[ATLAS_CHECK_PLAYER] ?? {};
+export function atlasRoomRegions(rules, playerId = null) {
+    const sidecars = rules?.preset_sidecars?.[roomPlayerOf(playerId)] ?? {};
     return Object.entries(sidecars)
         .filter(([, s]) => s?.substrate === ATLAS_ROOM_SUBSTRATE_ID)
         .map(([region, s]) => ({
@@ -170,6 +183,8 @@ export function atlasRoomRegions(rules) {
  *   nothing reports.
  * @param {string[]} [args.optionalTagTypes] the classes whose ctor reads an
  *   optional `@tag` (`levelWorld.PICKUP_CLEARS_OPTIONAL_TAG`'s keys)
+ * @param {string|number|null} [args.playerId] the loaded slot whose sidecars and
+ *   regions are read (default `ATLAS_CHECK_PLAYER`)
  * @returns {{table: Map<string, object>, entries: object[],
  *   refused: {location: string, region: string, why: string}[], census: object,
  *   retags: {level: number, type: string, x: number, y: number, tag: number}[]}}
@@ -177,7 +192,7 @@ export function atlasRoomRegions(rules) {
 export function buildAtlasCheckTable({
     rules, atlasDoc, mapDoc, locationItemOf, selfPlayer = null,
     placementKey, tagOf, itemOfEntity, propertyLocationOf = () => null,
-    allocateTag = null, optionalTagTypes = [],
+    allocateTag = null, optionalTagTypes = [], playerId = null,
 } = {}) {
     for (const [name, fn] of [['locationItemOf', locationItemOf], ['placementKey', placementKey],
         ['tagOf', tagOf], ['itemOfEntity', itemOfEntity]]) {
@@ -193,7 +208,7 @@ export function buildAtlasCheckTable({
     }
     const atlasRegions = new Map((atlasDoc?.regions ?? []).map((r) => [r.region_id, r]));
     const levels = new Map((mapDoc?.levels ?? []).map((l) => [l.level, l]));
-    const rulesRegions = rules?.regions?.[ATLAS_CHECK_PLAYER] ?? {};
+    const rulesRegions = rules?.regions?.[roomPlayerOf(playerId)] ?? {};
 
     const table = new Map();
     const entries = [];
@@ -207,7 +222,7 @@ export function buildAtlasCheckTable({
         census.byEntity[type][field] += 1;
     };
 
-    for (const { region, atlasRegion, level } of atlasRoomRegions(rules)) {
+    for (const { region, atlasRegion, level } of atlasRoomRegions(rules, playerId)) {
         census.regions += 1;
         const locations = rulesRegions[region]?.locations ?? [];
         const atlasRegionDoc = atlasRegions.get(atlasRegion);
