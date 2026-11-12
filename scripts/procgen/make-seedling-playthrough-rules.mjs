@@ -2218,7 +2218,7 @@ export function playthroughPulserShoves(level, grid, minted = new Set()) {
  * ⛓ RULES rules-l40-bk2-witness — a case's near side that the player can only ever enter THROUGH the block's own cell:
  * it holds no location and no boundary exit, and every internal exit it has leads to another side of this same block.
  */
-function sealedBehindBlock(room, c) {
+export function sealedBehindBlock(room, c) {
     const sides = new Set(room.cases.filter((o) => o.entity === c.entity && o.from).map((o) => o.from));
     const r = room.region;
     if ((r.locations ?? []).some((l) => l.sub_region === c.from)) return false;
