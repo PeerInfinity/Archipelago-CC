@@ -71,7 +71,8 @@ def strip_placements(doc: Dict[str, Any]) -> Dict[str, Any]:
     and export keys. Returns ``doc``.
 
     The fields (research §1, measured clean after this strip by a placement leak scan):
-    ``regions[p][r].locations[].item``; top-level and ``world[p].canonical_placements``;
+    ``regions[p][r].locations[].item`` of every ID-bearing location (an ID-less event keeps its
+    fixed item: the world places it, not the seed); top-level and ``world[p].canonical_placements``;
     ``preset_sidecars[p][r].playable_payload.items[].id`` (a procgen pickup's item, beside its
     ``locationName``) and ``.locations[].item``. ``procgen_metadata.sphere_plan`` is KEPT (⚖ Robert
     2026-11-06): it names items per sphere, not per location.
@@ -85,7 +86,11 @@ def strip_placements(doc: Dict[str, Any]) -> Dict[str, Any]:
     for regions in (doc.get('regions') or {}).values():
         for region in (regions.values() if isinstance(regions, dict) else regions or []):
             for location in region.get('locations') or []:
-                if isinstance(location, dict):
+                # An ID-less (event) location's item is fixed by the world, not placed by the seed, and
+                # nothing else carries the pairing (an event item is often named apart from its location:
+                # 'Completed Node 1' -> 'Event: Command Line'). Without it, a connected client collects
+                # the location with no item (sdc-connected-events). Only ID-bearing items are stripped.
+                if isinstance(location, dict) and location.get('id') is not None:
                     location.pop('item', None)
     for sidecars in (doc.get('preset_sidecars') or {}).values():
         for sidecar in (sidecars.values() if isinstance(sidecars, dict) else []):

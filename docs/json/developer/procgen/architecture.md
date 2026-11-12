@@ -205,7 +205,7 @@ A procgen `rules.json` goes through the standard toolchain with its extra keys p
 
 The result has real multiworld item distribution and still plays as a procgen world.
 
-The package also ships `_worldgen_rules.json`, the source document with the built world's identity and no placement. The world sends it in slot_data as `worldgen_rules`, within the per-player cap `rules_in_slot_data_max_kb` (default 1024 KB), so a client with no local copy of the rules can still play the room. The exporter does not copy it into the export. `world_generator/README.md` describes the envelope and the cap.
+The package also ships `_worldgen_rules.json`, the source document with the built world's identity and no placement (an event location keeps its fixed event item). The world sends it in slot_data as `worldgen_rules`, within the per-player cap `rules_in_slot_data_max_kb` (default 1024 KB), so a client with no local copy of the rules can still play the room. The exporter does not copy it into the export. `world_generator/README.md` describes the envelope and the cap.
 
 A world package is one slot's world, so each package file holds one block: the generator writes the source's entry for that player (and no file if there is none), and the handler merges each package's block under its exporting player, `export_data[KEY][str(player)]`. All three keys are in the exporter's `PLAYER_SPECIFIC_KEYS`, so a per-player (`_P<n>`) export carries only its own slot's entry. `test/test_export_player_slicing.py` checks this against a committed fixture.
 

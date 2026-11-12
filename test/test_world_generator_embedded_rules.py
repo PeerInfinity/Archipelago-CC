@@ -57,6 +57,8 @@ def _placements(doc):
         for region in regions.values():
             for loc in region.get('locations') or []:
                 item = loc.get('item')
+                if loc.get('id') is None:
+                    continue  # an event's item is fixed by the world, not a placement: it is KEPT
                 if isinstance(item, dict) and item.get('name') and item['name'] != loc['name']:
                     out[loc['name']] = item['name']
     return out
@@ -122,13 +124,25 @@ def test_no_placement_survives_the_strip(package):
         'the strip must clean the export itself too (a source that IS an export)'
 
 
+@pytest.mark.parametrize('package', sorted(RECIPES))
+def test_every_event_location_keeps_its_item(package):
+    """An ID-less location in the shipped document names its event item (sdc-connected-events): the
+    connected client collects it from this document alone, and no other field pairs the two."""
+    env = _envelope(package)
+    bare = [loc['name'] for region in env['doc']['regions'][env['player']].values()
+            for loc in region.get('locations') or [] if loc.get('id') is None
+            and not (isinstance(loc.get('item'), dict) and loc['item'].get('name'))]
+    assert bare == [], f'{package}: {len(bare)} event location(s) with no item, e.g. {bare[:3]}'
+
+
 def test_the_strip_removes_every_listed_field():
     doc = {
         'canonical_placements': {}, 'is_canonical': True, 'generation_seed': 1, 'seed_name': 's',
         'player_names': {}, 'provenance': {}, 'sphere_log': [],
         'world': {'1': {'slot_data': {}, 'canonical_placements': {}, 'is_vanilla': True, 'preset_label': 'x',
                         'er_seed': 1, 'rom_name': 'r', 'options': {'a': 1}}},
-        'regions': {'1': {'R': {'locations': [{'name': 'L', 'item': {'name': 'I'}}]}}},
+        'regions': {'1': {'R': {'locations': [{'name': 'L', 'id': 7, 'item': {'name': 'I'}},
+                                              {'name': 'E', 'id': None, 'event': True, 'item': {'name': 'Ev'}}]}}},
         'preset_sidecars': {'1': {'R': {'playable_payload': {
             'items': [{'id': 'I', 'locationName': 'L'}], 'locations': [{'name': 'L', 'item': 'I'}]}}}},
         'procgen_metadata': {'1': {'sphere_plan': {'spheres': [{'items': ['I']}]}}},
@@ -136,7 +150,9 @@ def test_the_strip_removes_every_listed_field():
     out = strip_placements(doc)
     assert set(out) == {'world', 'regions', 'preset_sidecars', 'procgen_metadata'}
     assert out['world']['1'] == {'options': {'a': 1}}
-    assert out['regions']['1']['R']['locations'] == [{'name': 'L'}]
+    assert out['regions']['1']['R']['locations'] == [
+        {'name': 'L', 'id': 7}, {'name': 'E', 'id': None, 'event': True, 'item': {'name': 'Ev'}}], \
+        'an ID-bearing placement is stripped; an ID-less event keeps its fixed item'
     assert out['preset_sidecars']['1']['R']['playable_payload'] == {
         'items': [{'locationName': 'L'}], 'locations': [{'name': 'L'}]}
     assert out['procgen_metadata']['1']['sphere_plan']['spheres'][0]['items'] == ['I'], 'sphere_plan is KEPT'
