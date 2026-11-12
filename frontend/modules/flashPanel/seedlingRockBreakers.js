@@ -147,6 +147,25 @@ export function rockFireSides(level, model, { arrivalTiles = [] } = {}) {
     return out;
 }
 
+/**
+ * Every door's LANDING tile, by the level it lands in: `level -> [[tx, ty]…]`, read off each door entity's own `to`,
+ * `playerx`, `playery` (a door with no `to` or no `playerx` lands nowhere). The `arrivalTiles` `rockFireSides` takes.
+ * @param {Iterable<object>} levels map-document levels (every level whose doors may land in the asked one)
+ */
+export function doorLandingTiles(levels) {
+    const out = new Map();
+    for (const L of levels) {
+        for (const e of L.entities ?? []) {
+            const a = e.attrs ?? {};
+            if (!Number.isInteger(Number(a.to)) || a.playerx === undefined) continue;
+            const to = Number(a.to);
+            if (!out.has(to)) out.set(to, []);
+            out.get(to).push([Math.floor(Number(a.playerx) / TILE), Math.floor(Number(a.playery) / TILE)]);
+        }
+    }
+    return out;
+}
+
 /** `rockFireSides` over every level of `levels`, keyed `L<level>:<rock id>`; `arrivalTilesOf(level)` names its landings. */
 export function buildRockFireSides(levels, model, { arrivalTilesOf = () => [] } = {}) {
     const out = new Map();

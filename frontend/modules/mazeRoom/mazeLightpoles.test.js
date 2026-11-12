@@ -103,7 +103,7 @@ describe('a pole struck from its stances', () => {
         expect(bad({ struck_from: { sword: ['2,4,N'] } })).toThrow(/names "sword", which the entry is not struck_by/);
         expect(bad({ struck_from: { spear: ['2,4,Q'] } })).toThrow(/not an in-grid "x,y,F" stance/);
         expect(bad({ struck_from: { spear: ['9,4,N'] } })).toThrow(/not an in-grid "x,y,F" stance/);
-        expect(bad({ activates: undefined })).toThrow(/needs a rope-shaped entry/);
+        expect(bad({ at: undefined })).toThrow(/needs one canonical cell/);
     });
 });
 

@@ -133,8 +133,9 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         // ⛓ rules-l39: an obstacle's cut is recorded at its canonical cell (`at`, a rope's run), so that is where
         // this cell's `broken` is read — the native `strikeTargets` / `isOpen` agree.
         broken: broken?.includes(rope?.at ?? key) ?? false,
-        // ⛓ An entry struck from its stances (`struck_from`, session tile-primitives-lightpoles) is never struck through its cells.
-        struck: actionId !== null && obstacle !== null && world.obstacleLib?.[obstacle]?.struck_from === undefined
+        // ⛓ An action an entry is struck by from its stances (`struck_from`, session tile-primitives-lightpoles; per action
+        // since tile-fire-breaks-rocks) never strikes it through its cells.
+        struck: actionId !== null && obstacle !== null && world.obstacleLib?.[obstacle]?.struck_from?.[actionId] === undefined
             && (world.obstacleLib?.[obstacle]?.struck_by ?? []).includes(actionId),
         // ARROW TRAPS: the group tokens of the traps whose lane holds this cell, by how they fire.
         lane_unless: lanes.filter((e) => e.fires === 'unless_active').map((e) => e.active),

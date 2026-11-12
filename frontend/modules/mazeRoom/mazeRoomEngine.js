@@ -474,7 +474,7 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.block_sinks !== undefined) {
         world.blockSinks = checkBlockSinks(sidecar.block_sinks, width, height, 'deserializeMazeWorld');
     }
-    // ⛓ STRUCK FROM A STANCE: an obstacle entry without `struck_from` is struck through its cells, as before.
+    // ⛓ STRUCK FROM A STANCE: an action an obstacle entry does not name in `struck_from` strikes it through its cells, as before.
     checkStruckFrom(obstacleLib, world.actionLib, width, height, 'deserializeMazeWorld');
     // ⛓ PULLS: absent on every other sidecar, so `world.pulls` stays undefined and a move is never pulled.
     if (sidecar.pulls !== undefined) world.pulls = checkPulls(sidecar.pulls, world, 'deserializeMazeWorld');
@@ -619,20 +619,25 @@ function checkFootprint(fp, id, who) {
 }
 
 /**
- * ⛓⛓ STRUCK FROM A STANCE (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances"). A rope-shaped
- * obstacle entry (it `activates` a token, at one canonical cell `at`) may carry `struck_from: {<actionId>: ["x,y,F"…]}`:
- * the STANCES — a cell and a facing — from which a use of that action strikes it. Such an entry is struck ONLY from
- * them, never through its own cells: Seedling's LightPole is hit in its 10×16 bob box, which no 16×16 cell holds (L62's
- * straddles two columns), and its cells are the DarkTraps its light kills, whose `hit()` is empty (`DarkTrap.as:56-59`).
- * The stances are derived by the producer from the game's hit rect against the real box (`poleThrustStances`, the rules'
- * own), so maze and rules read one set. ⛔ An entry that is not rope-shaped, an action it is not `struck_by` or the world
- * lacks, a malformed stance or one off the grid is refused BY NAME.
+ * ⛓⛓ STRUCK FROM A STANCE (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances"). An obstacle entry
+ * with one canonical cell `at` (where its one broken state is recorded) may carry `struck_from: {<actionId>: ["x,y,F"…]}`:
+ * the STANCES — a cell and a facing — from which a use of that action strikes it. ⛓ PER ACTION (session
+ * tile-fire-breaks-rocks): an action the entry NAMES in `struck_from` strikes it only from those stances, never through
+ * its cells; an action it is `struck_by` but does not name strikes it through its cells, as an entry without
+ * `struck_from` is struck. Seedling's LightPole names every arm it is struck by (its bob box is not a cell, L62's
+ * straddles two columns, and its cells are the DarkTraps its light kills, whose `hit()` is empty, `DarkTrap.as:56-59`), so
+ * it is struck from stances only. An ordinary BreakableRock names Fire alone: the slash and the thrust hit it through its
+ * cell (`Player.as:924,989` → `genericHit`), the flame from the stances whose flame reaches that rock and no other
+ * responder (`Player.as:1015-1035`; the rules' own `seedlingRockBreakers.rockFireSides`). The stances are derived by the
+ * producer from the game's hit rects (`poleThrustStances`, `rockFireSides`, the rules' own), so maze and rules read one
+ * set. ⛔ An entry without `at`, an action it is not `struck_by` or the world lacks, a malformed stance or one off the
+ * grid is refused BY NAME.
  */
 function checkStruckFrom(lib, actionLib, width, height, who) {
     for (const [id, entry] of Object.entries(lib ?? {})) {
         if (entry?.struck_from === undefined) continue;
         const bad = (m) => new Error(`${who}: obstacleLib.${id}.struck_from ${m}`);
-        if (!entry.activates || typeof entry.at !== 'string') throw bad('needs a rope-shaped entry (`activates` + `at`)');
+        if (typeof entry.at !== 'string') throw bad('needs one canonical cell (`at`) to record its strike at');
         const sf = entry.struck_from;
         if (!sf || typeof sf !== 'object' || Array.isArray(sf) || Object.keys(sf).length === 0) {
             throw bad(`must be a non-empty object {actionId: ["x,y,F"…]}, got ${JSON.stringify(sf)}`);
@@ -657,11 +662,40 @@ function checkStruckFrom(lib, actionLib, width, height, who) {
  */
 export function stanceStrikes(world, state, actionId) {
     if (state?.facing === undefined) return [];
-    const stance = `${state.player_pos.x},${state.player_pos.y},${state.facing}`;
-    const out = new Set();
-    for (const { entry } of ropesOf(world)) if (entry.struck_from?.[actionId]?.includes(stance)) out.add(entry.at);
-    return [...out].sort();
+    const hit = stanceIndexOf(world).get(`${state.player_pos.x},${state.player_pos.y},${state.facing}`)?.get(actionId);
+    return hit === undefined ? [] : hit;
 }
+
+/**
+ * The world's `struck_from` stances INDEXED: "x,y,F" → actionId → the sorted canonical cells (`at`) struck from there.
+ * CACHED per (obstacle map, library) and rebuilt when either object or the obstacle count changes (an edit), as
+ * `ropesOf` is: `step` asks on every use of every search, so a stance is one lookup, never a walk of the obstacles.
+ */
+const STANCE_CACHE = new WeakMap();
+function stanceIndexOf(world) {
+    const lib = world.obstacleLib;
+    if (!lib || !world.obstacles) return EMPTY_STANCES;
+    const hit = STANCE_CACHE.get(world.obstacles);
+    if (hit && hit.lib === lib && hit.size === world.obstacles.size) return hit.index;
+    const sets = new Map();
+    for (const id of new Set(world.obstacles.values())) {
+        const entry = lib[id];
+        if (entry?.struck_from === undefined) continue;
+        for (const [actionId, stances] of Object.entries(entry.struck_from)) {
+            for (const stance of stances) {
+                if (!sets.has(stance)) sets.set(stance, new Map());
+                const byAction = sets.get(stance);
+                if (!byAction.has(actionId)) byAction.set(actionId, new Set());
+                byAction.get(actionId).add(entry.at);
+            }
+        }
+    }
+    const index = new Map([...sets].map(([stance, byAction]) => [stance,
+        new Map([...byAction].map(([actionId, ats]) => [actionId, Object.freeze([...ats].sort())]))]));
+    STANCE_CACHE.set(world.obstacles, { lib, size: world.obstacles.size, index });
+    return index;
+}
+const EMPTY_STANCES = new Map();
 
 /**
  * The cells a use of `actionId` hits from `state` (its stance + facing), in the grid: the entry's `footprint` for the
@@ -1603,8 +1637,8 @@ export function strikeTargets(world, state, actionId) {
         const obstacleId = getObstacle(world, cell.x, cell.y);
         if (!obstacleId) continue;
         const entry = world.obstacleLib?.[obstacleId];
-        // ⛓ An entry struck from its stances (`struck_from`) is never struck through its own cells.
-        if (entry?.struck_from !== undefined) continue;
+        // ⛓ An action an entry is struck by from its stances (`struck_from`) never strikes it through its own cells.
+        if (entry?.struck_from?.[actionId] !== undefined) continue;
         const struckBy = entry?.struck_by;
         if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) continue;
         const key = entry?.at ?? posKey(cell.x, cell.y);
