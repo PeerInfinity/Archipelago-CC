@@ -1,0 +1,30 @@
+hammer-376-bomb/leg376-l40-request.json.gz	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+hammer-axis-l12/leg149-l12-request.json.gz	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+hammer-axison/leg160-l12-request.json.gz	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+hammer-axison/leg775-l105-seam6224-request.json.gz	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+hammer-bk2-approach-order/leg398-l39-l40-flag8-request.json.gz	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+hammer-bk2-approach-order/leg873-l39-l40-bk2-request.json.gz	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+hammer-bk2-approach-order/leg874-l43-l40-bk2-request.json.gz	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+hammer-bx-371/leg371-l40-request.json.gz	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+hammer-cleartag-chain/leg871-l39-l40-request.json.gz	level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared
+hammer-cleartag-chain/leg872-l43-l40-request.json.gz	level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared
+hammer-cleartag-stand/leg105-l0-l12-request.json.gz	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+hammer-cleartag-stand/leg127-l35-l12-request.json.gz	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+hammer-cpair/leg356-l40-request.json.gz	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+hammer-cpair/leg367-l40-l43-request.json.gz	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+hammer-cpair/leg853-l40-request.json.gz	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+hammer-dashwin/leg108-l12-request.json.gz	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+hammer-l40-flip/leg377-l42-l40-request.json.gz	level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared
+hammer-l53-killlock/leg482-l54-l53-request.json.gz	level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240
+hammer-l53-killlock/leg9001-l51-l53-retry2560-request.json.gz	level_53__r14c9 <- in_L51_176_144 ~> level_53__r2c2 ~> level_53__r9c10 -> exit:out_teleporter_144_240
+hammer-l53-killlock/leg9002-l48-l53-retry2560-request.json.gz	level_53__r14c9 <- in_L48_0_112 ~> level_53__r2c2 ~> level_53__r9c10 -> exit:out_teleporter_144_240
+hammer-new-locks/leg223-l16-l18-request.json.gz	level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared
+hammer-new-locks/leg286-l25-l26-request.json.gz	level_26__r2c4 <- in_L25_0_96 -> location:L26 flag 0: rocklock@112,208 cleared
+hammer-new-locks/leg289-l27-l26-request.json.gz	level_26__r2c4 <- in_L27_32_0 -> location:L26 flag 0: rocklock@112,208 cleared
+hammer-new-locks/leg910-l48-l53-retry2560-request.json.gz	level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+hammer-new-locks/leg911-l51-l53-request.json.gz	level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+hammer-pit-west/leg387-l40-l43-request.json.gz	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+hammer-pit-west/leg388-l40-l43-request.json.gz	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+hammer-pit-west/leg403-l40-l43-request.json.gz	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+miscres/leg637-l76-request.json.gz	level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80
+spin-witness/leg860-request.json.gz	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2

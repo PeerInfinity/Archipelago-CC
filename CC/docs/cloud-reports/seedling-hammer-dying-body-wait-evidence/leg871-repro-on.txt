@@ -1,0 +1,32 @@
+switch DYING_BODY_WAIT true
+arm counts {"asked":0,"kept":[],"refused":[]}
+REFUSED work 885
+solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,790.5) — chaser:bob@736,752 (inside leash 80 (d=7.1), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o
+  time: the aim is 192 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: no stance within bobsoldier@880,832's leash (80) both pulls its straight line through a kill region and is itself danger-free: 15 cell(s) in leash, 5 of them crossing a region, none of those reachable. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.
+  kill: no presser in level 40 arms a trap whose lane covers bobsoldier@880,832 — the room has 6 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).
+         chaser arm: no stance derives for bobsoldier@880,832 on level 40: the player's box priced no stance, so the TARGET's box was scanned too (+7 reachable cell(s)): 76 cell(s) inside its 80 px leash, 7 of those reachable and with a corridor onward, and 7 of THOSE refused by the forecast [(824,856): the APPROACH is dangerous at tick 80 — chaser:bob@736,752; (840,856): the APPROACH is dangerous at tick 80 — chaser:bob@736,752; (888,824): the APPROACH is dangerous at tick 80 — chaser:bob@736,752; …]. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for bobsoldier@880,832 either — REACH: 7 lattice cell(s) within the sword's 16 px of its box, 3 of those with no corridor here or onward, +0 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where bobsoldier@880,832 outlives the ceiling or lands on the player first; LEASH: 7 candidate(s) where another body reaches the player — of 7 asked [(824,856) leash: the APPROACH is hit at tick 80 by chaser:bob@736,752; (840,856) leash: the APPROACH is hit at tick 80 by chaser:bob@736,752; (888,824) leash: the APPROACH is hit at tick 80 by chaser:bob@736,752; …].
+         orbit arm: no orbit kill of bobsoldier@880,832 is hitless (20 fork(s) of 20): r 22 ccw far 110°: hit at orbit tick 24 (chaser:bob@736,752) | r 22 ccw far 90°: hit at orbit tick 24 (chaser:bob@736,752) | r 22 cw far 110°: hit at orbit tick 24 (chaser:bob@736,752) | r 22 cw far 90°: hit at orbit tick 24 (chaser:bob@736,752)
+  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — chaser:bob@736,752 (inside leash 80 (d=6.7), box grown 0.5 px/tick x 0 + pad 0) at (743.9,790.5)
+  detour: COVERED GOAL (coveredGoalRefusal): the aim (888,824)'s own tile (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands
+  forced-hit: COVERED GOAL (coveredGoalRefusal): the aim (888,824)'s own tile (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands
+refusal keys (segment) 826 prefix 0
+at the refusal: segment tick 826 (model clock 826, start 0), player (743.9,697.6), hits so far 2
+  chaser {"id":"bob@320,112","x":328,"y":120,"hits":0,"hitsTimer":0,"dying":false,"d":711.7}
+  chaser {"id":"bob@288,112","x":296,"y":120,"hits":0,"hitsTimer":0,"dying":false,"d":730.9}
+  chaser {"id":"bob@288,80","x":296,"y":88,"hits":0,"hitsTimer":0,"dying":false,"d":756.4}
+  chaser {"id":"bob@304,144","x":312,"y":152,"hits":0,"hitsTimer":0,"dying":false,"d":695.8}
+  chaser {"id":"bob@272,112","x":280,"y":120,"hits":0,"hitsTimer":0,"dying":false,"d":740.8}
+  chaser {"id":"bobsoldier@880,832","x":888,"y":840,"hits":0,"hitsTimer":0,"dying":false,"d":202.6}
+  chaser {"id":"bob@736,752","x":744.2,"y":735.2,"hits":0,"hitsTimer":0,"dying":false,"d":37.6}
+  chaser {"id":"bob@736,800","x":743.7,"y":799,"hits":0,"hitsTimer":0,"dying":false,"d":101.4}
+  chaser {"id":"bob@192,480","x":200,"y":488,"hits":0,"hitsTimer":0,"dying":false,"d":582.8}
+  chaser {"id":"bob@352,448","x":360,"y":456,"hits":0,"hitsTimer":0,"dying":false,"d":453.6}
+  chaser {"id":"bob@352,416","x":360,"y":424,"hits":0,"hitsTimer":0,"dying":false,"d":471.4}
+  chaser {"id":"bob@208,448","x":216,"y":456,"hits":0,"hitsTimer":0,"dying":false,"d":580.5}
+  chaser {"id":"bob@224,496","x":232,"y":504,"hits":0,"hitsTimer":0,"dying":false,"d":547.2}
+  chaser {"id":"puncher@128,624","x":136,"y":632,"hits":0,"hitsTimer":0,"dying":false,"d":611.4}
+  chaser {"id":"puncher@816,128","x":824,"y":136,"hits":0,"hitsTimer":0,"dying":false,"d":567.3}
+after 60 still ticks: hits 0 []
+chaser ticks (segment): [{"id":"bob@320,112","lastSeen":886,"hits":0},{"id":"bob@288,112","lastSeen":886,"hits":0},{"id":"bob@288,80","lastSeen":886,"hits":0},{"id":"bob@304,144","lastSeen":886,"hits":0},{"id":"bob@272,112","lastSeen":886,"hits":0},{"id":"bobsoldier@880,832","lastSeen":886,"hits":0},{"id":"bob@736,752","lastSeen":886,"hits":0},{"id":"bob@736,800","lastSeen":886,"hits":0},{"id":"bob@192,480","lastSeen":886,"hits":0},{"id":"bob@352,448","lastSeen":886,"hits":0},{"id":"bob@352,416","lastSeen":886,"hits":0},{"id":"bob@208,448","lastSeen":886,"hits":0},{"id":"bob@224,496","lastSeen":886,"hits":0},{"id":"puncher@128,624","lastSeen":886,"hits":0},{"id":"puncher@816,128","lastSeen":886,"hits":0}]

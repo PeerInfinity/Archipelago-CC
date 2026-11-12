@@ -1,0 +1,6 @@
+switch DYING_BODY_WAIT false
+arm counts {"asked":0,"kept":[],"refused":[]}
+{"ok":true,"work":3823,"ticks":2385,"sha":"0c51cdb94854","rowMismatches":0,"hits":[],"deaths":0,"burned":["burnabletree@872,784"],"clears":["40:0","40:12"]}
+switch DYING_BODY_WAIT true
+arm counts {"asked":0,"kept":[],"refused":[]}
+{"ok":true,"work":3823,"ticks":2385,"sha":"0c51cdb94854","rowMismatches":0,"hits":[],"deaths":0,"burned":["burnabletree@872,784"],"clears":["40:0","40:12"]}

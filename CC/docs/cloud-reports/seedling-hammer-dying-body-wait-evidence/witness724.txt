@@ -1,0 +1,6 @@
+branch recorded: 724 keys, 0 equip(s), clock 724, player (743.9,799.0), bob@736,752 {"hits":3,"dying":true,"destroy":false}
+tape replays: clock 724 player (743.9,799.0) bob dying true hits 0
+OFF REFUSED work 193: solverBot(w724) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the danger map forbids (743.9387479985102,799.0456514925321) — chaser:bob@736,752 (inside leash 80 (d=6.8), box grown 0.5 px/tick x 0 + pad 0). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.
+    arm: {"asked":0,"kept":[],"refused":[]}
+ON  REFUSED work 194: solverBot(w724) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the danger map forbids (743.9387479985102,801.095651492532) — spinner:spinner@880,848 (a live Spinner BODY at (743.3,806.2) — `Enemy.hitPlayer`'s 7x7 `collide("Player", x, y)` at force 3). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.
+    arm: {"asked":1,"kept":[{"what":"solverBot(w724) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784)","site":"gate","ids":["bob@736,752"],"ticks":1,"from":724,"clean":false}],"refused":[]}

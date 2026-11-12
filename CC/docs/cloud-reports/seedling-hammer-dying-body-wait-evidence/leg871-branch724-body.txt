@@ -1,0 +1,24 @@
+walls=true REFUSED work=885 observed run left at clock 724 segment keys=826 hits=[]
+player where the observed run was left (743.9,799.0)
+   {"id":"bobsoldier@880,832","x":888,"y":840,"hits":0,"hitsTimer":0,"dying":false,"d":149.8}
+   {"id":"bob@736,752","x":747.6,"y":805.3,"hits":3,"hitsTimer":6,"dying":true,"d":7.2}
+   {"id":"bob@736,800","x":743.9,"y":821.3,"hits":2,"hitsTimer":28,"dying":false,"d":22.2}
+live dying body fields: {"id":"bob@736,752","tag":"bob","x":747.5535833962828,"y":805.2878267705726,"vx":0,"vy":0,"hits":3,"hitsTimer":6,"dying":true,"destroy":false,"alpha":1}
+player v (0,2.3) fall false direction 3
+forecast: bob@736,752 leaves the forecast at forecast tick 1 (run clock 725)
+paced wait 12: none [
+  'the wait begins at (743.9387479985102,799.0456514925321) still moving'
+]
+  still t725: dying true destroy true alpha 1 hitsTimer 5
+  still t726: dying true destroy true alpha 0.9 hitsTimer 5
+  still t727: dying true destroy true alpha 0.8 hitsTimer 5
+  still t728: dying true destroy true alpha 0.7000000000000001 hitsTimer 5
+  still t729: dying true destroy true alpha 0.6000000000000001 hitsTimer 5
+  still t730: dying true destroy true alpha 0.5000000000000001 hitsTimer 5
+  still t731: dying true destroy true alpha 0.40000000000000013 hitsTimer 5
+  still t732: dying true destroy true alpha 0.30000000000000016 hitsTimer 5
+  still t733: dying true destroy true alpha 0.20000000000000015 hitsTimer 5
+  still t734: dying true destroy true alpha 0.10000000000000014 hitsTimer 5
+  still t735: dying true destroy true alpha 1.3877787807814457e-16 hitsTimer 5
+still from there: hits [[728,"spinner-hammer","spinner@880,848"]] run clock 736 player 743.9 795.8
+life (run clock): [{"id":"bob@736,752","hitAt":[[1,0],[631,1],[661,2],[700,3]],"hits":3,"dying":700,"gone":736},{"id":"bob@736,800","hitAt":[[1,0],[680,1],[722,2]],"hits":2},{"id":"bobsoldier@880,832","hitAt":[[1,0]],"hits":0}]
