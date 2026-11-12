@@ -180,6 +180,27 @@ A world names the content packs it draws its characters, places, objects and tex
 
 A world that names no content compiles to the bytes it did before the param existed: its text-adventure prose comes from the default pack, which holds the strings the substrate wrote from code before. With a stack, it compiles to the same logic; what a later pack presents (a gate's prose, a room's place) is the only other difference. `procgenPipeline/worldContent.test.js` holds the first on the concept trial world, and `textAdventureSubstrateWrapper/textAdventureContent.test.js` the second.
 
+## Selecting a content set
+
+The Procgen Pipeline panel's Parameters section has a **Content set** row, after the concepts row. It shows one checkbox per theme a world may add: every pack that a stack in `packs.json`'s `content` table names, in the order the table first names it. A substrate's default pack is never offered, because it is always in the stack (`selectableContentPacks` in `worldContent.js`). The row reads *built-in →* and then the themes, which is the stack order: a later pack wins where two present the same thing. Ticking a box writes the ticked ids to `params.content` in that order (`pickedContentList`); a pack the world names but this page does not offer is kept, in front. With nothing ticked the world is built from the default packs only, as before. The list persists with the panel's other params and in a saved preset. Generate loads the stack before it builds, so a ticked theme's names and words are written into the world.
+
+To add a theme: make its pack under `frontend/packs/`, list it in `packs.json`'s `packs`, and name it in a `content` stack. The row offers it with no code change.
+
+## The theme trial world
+
+`meta_trial` (`frontend/presets/meta_trial/`, the state `META_TRIAL_STATE`, the drop-down's *Meta theme trial (maze + text adventure)*) is `concept_trial` with `content: ['meta']`. The pack `frontend/packs/meta/` is a theme in which the world knows it is a generated game. It presents the guardian as **the Gate**, which states its own rule, gives the sword's and the swim's checks a line that knows they are checks, and offers twelve `place` concepts for the text adventure's rooms. It does not present water.
+
+| what | text adventure | maze |
+|---|---|---|
+| the sword gate (`guardian`) | the Gate's *blocked* and *passed-with* lines | not in this world (the maze's gate here is water) |
+| the sword's check | the theme's check line | (no item look in the theme: the default) |
+| a room | a theme place's name (the room's title) and description (the arrival line) | (the maze has no `place` role) |
+| the swim gate (`water`) | — | the maze default pack's `Water`, `#2f6fd0`, `~`: the fall-through |
+
+**The compiled logic equals the control's.** `procgenPipeline/metaTrialWorld.test.js` builds the world beside `concept_trial` and pins that the document minus the text adventure's `prose` and `procgen_metadata[p].content` is the control's, that every maze payload (the water gate among them) is the control's byte for byte, and that the committed preset is a fresh build. The Gate's maze look (`#a0a8b8`, `#`) is not on screen in this world; the same test pins it on the maze-only concept world (seed 1, `startSubstrate: maze`, 3 spheres, no filler, quota maze 99, concepts `sword, guardian, swim, water`, items Progressive Sword, Progressive Swim and victory). Generate that world in the panel with `meta` ticked to see the Gate drawn in a maze. The in-app row `meta-trial-plays` plays `meta_trial`: a place's title and arrival line, the Gate's two lines, and the water gate equal to the maze default pack's.
+
+**It is played in CI.** `check-meta-trial-play.mjs` is `check-concept-trial-play.mjs` run on `meta_trial` under its own key, `gate: meta-trial-play`: every expectation is read off that preset, so the guardian's lines it waits for are the Gate's. A roster `@standing-variant` would not do, because a declared arm runs locally only.
+
 ## Behaviour
 
 A concept can also say how it **behaves**: what an item hits with, how an enemy answers a hit, what makes an obstacle give way, and what a substrate's realisation of it does. Every behaviour field is optional, and a concept without one is exactly the concept it was before.

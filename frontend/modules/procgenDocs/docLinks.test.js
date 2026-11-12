@@ -344,20 +344,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              § Tile art from a content pack, and maze-lab.md's `tileArt` view row → that § (`doc` 305 → 307).
          *   409 → 410  content sets R2b part 2 (shapes): maze.md § Tile art from a content pack → the art library's
          *              README § Shapes (`repo` 42 → 43).
+         *   410 → 412  content sets R3 (2026-11-11): pipeline-presets.md → concepts.md § The theme trial world and
+         *              § Selecting a content set (`doc` 307 → 309).
          */
         expect(by).toEqual({
             'same-doc': 38,
-            doc: 307,
+            doc: 309,
             external: 22,
             repo: 43,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(410);
+        expect(CORPUS.length).toBe(412);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(307);
+        expect(docs).toHaveLength(309);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

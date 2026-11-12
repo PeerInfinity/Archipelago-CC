@@ -8,7 +8,7 @@ The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuratio
 | `frontend/modules/procgenPipeline/presetRun.js` | Turns a preset into the run a mode's runner consumes (`buildRunFromState`) and runs it (`runPresetHeadless`). The panel's Generate and the headless test both call it. |
 | `procgenPipelineUI.js` | `_renderPresetBar` / `_applyPreset`: the drop-down. |
 | `presetDefs.test.js` | Shape, groups, and one pin per preset. |
-| `presetDefs.generate.slow.test.js` | The headless generation test (below). |
+| `presetDefs.generate.slow.test.js` | The headless generation test (below). It builds each preset with `prepareRunFromState`, which loads the preset's content set first. |
 | `scripts/procgen/check-procgen-presets.mjs` | Browser gate: applies and generates every shipped preset through the panel and requires the panel's world to equal the headless one. |
 
 ## The drop-down
@@ -29,6 +29,7 @@ Each preset's full description, with where to look in the panel, is its `descrip
 | `text-adventure-sphere-demo` | text_adventure | A sides-only substrate: compass exits instead of wall openings. |
 | `maze-ta-sphere-mix` | maze + text_adventure | Two procedural substrates in one world, with key gates crossing between them. |
 | `concept-trial-demo` | text_adventure + maze | The first world that names concepts: the text adventure's sword gate narrated as a guardian, the maze's swim gate painted as water. See [Concepts](./concepts.md#the-trial-world). |
+| `meta-trial-demo` | text_adventure + maze | `concept-trial-demo` with the content set `meta` ticked: the same logic, presented by a theme. See [Concepts](./concepts.md#the-theme-trial-world). |
 | `maze-bounce-sphere-mix` | maze + bounce | Maze keys gate bounce exits and bounce abilities gate maze regions. |
 | `maze-hazards-loop-demo` | maze, loop mode | Maze hazards and the `loop_costs` sidecar. |
 | `bounce-sphere-demo` | bounce | Bounce alone: the free-arrow start and gated exits. |
@@ -81,6 +82,8 @@ Each Seedling preset's state is a named constant in `presetDefs.js` (for example
 ### The committed concept preset
 
 `CONCEPT_TRIAL_STATE` is committed the same way, as `frontend/presets/concept_trial/`, through the same producer (`make-seedling-spiral-room-preset.mjs --state=concept-trial`: the recipe writes no Seedling block of its own, so any state goes through it). It is played by `scripts/procgen/check-concept-trial-play.mjs` and the in-app row `concept-trial-plays`. See [Concepts](./concepts.md#the-trial-world).
+
+`META_TRIAL_STATE` is committed as `frontend/presets/meta_trial/` by the same producer (`--state=meta-trial`) and played by the in-app row `meta-trial-plays`. A preset that names a theme (`params.content`) cannot be built synchronously: build it with `prepareRunFromState`, which loads its content set first, as the panel's Generate does. See [Concepts § Selecting a content set](./concepts.md#selecting-a-content-set).
 
 **Note on timings:** to time a preset, run it through `buildRunFromState` then `runPresetHeadless`, the headless test's own path. Most presets generate in well under a second.
 
