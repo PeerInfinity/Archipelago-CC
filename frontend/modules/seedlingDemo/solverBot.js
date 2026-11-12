@@ -14937,6 +14937,8 @@ function stepToward(run, aim, intended) {
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
     const step = previewOrDeath(run.previewStepper());
+    // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ `clearOfHammersAt`): a body the run would not bill is no wall
+    const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
     // they had, and the diagonals follow them.
     /**
@@ -14967,7 +14969,7 @@ function stepToward(run, aim, intended) {
         let best = depth;
         for (const keys of options) {
             const next = step({ ...st }, keys);
-            if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
             const d = survives(next, depth + 1);
             if (d > best) best = d;
             if (best >= STEP_LOOKAHEAD) return best;
@@ -14977,7 +14979,7 @@ function stepToward(run, aim, intended) {
     let best = null;
     for (const keys of options) {
         const next = step({ ...run.state }, keys);
-        if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
+        if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
         const depth = survives(next, 1);
         const d = Math.hypot(next.x - aim.x, next.y - aim.y);
         if (!best || depth > best.depth || (depth === best.depth && d < best.d)) {
@@ -14985,6 +14987,38 @@ function stepToward(run, aim, intended) {
         }
     }
     return best ? best.keys : intended;
+}
+
+/**
+ * ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, ON only) — **A TICK WITH NO AIM STILL LOOKS FOR A STEP OUT.** On a
+ * press-kill tick with nothing to walk to (no strike, no refuge: `stepToward`'s `!aim` early return), the walk stands and
+ * only `safeStep`'s one-tick test guards it. Measured on leg `… flag 12` (the report § 3): an opportunistic press DASHED
+ * the player at 2.55 px/tick toward a dying spinner, `safeStep` (gated) kept the stand at t724 and t725, and the slide
+ * put the box over the hammer's origin at t726, where every key set meets the line. ⇒ the stand is kept when it survives
+ * `stepToward`'s own lookahead (`STEP_LOOKAHEAD` ticks, the gated predicate); otherwise the tick is `stepToward` aimed at
+ * where the player stands — the phase stall's "safe holding step". A stand that survives is byte-identical.
+ */
+function holdStepOut(run, intended) {
+    if ((run.entities('spinnerBodies') ?? []).length === 0) return intended;
+    const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
+    if (!forecast.length) return intended;
+    const step = previewOrDeath(run.previewStepper());
+    const options = [new Set(), ...Object.values(FACING_KEYS).map((k) => new Set([k])),
+        ...DIAGONAL_KEYS.map((k) => new Set(k))];
+    const lasts = (st, depth) => {
+        if (depth >= STEP_LOOKAHEAD) return true;
+        return options.some((keys) => {
+            const next = step({ ...st }, keys);
+            return next && clearOfBilledHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)
+                && lasts(next, depth + 1);
+        });
+    };
+    const first = step({ ...run.state }, intended);
+    if (first && clearOfBilledHammersAt(run, playerBoxAt(first.x, first.y), forecast, 1) && lasts(first, 1)) {
+        return intended;
+    }
+    HAMMER_BODY_GATE_COUNTS.held += 1;
+    return stepToward(run, { x: run.state.x, y: run.state.y }, intended);
 }
 
 /**
@@ -15143,6 +15177,94 @@ function landsClearOfHammers(run, keys) {
     return clearOfHammersAt(
         { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
         playerBoxAt(next.x, next.y), [ahead], 0);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SPINNER-CORNER — **`safeStep` BILLS A BODY ONLY WHERE THE RUN BILLS IT** (`HAMMER_BODY_GATE`,
+ * OFF; `SEEDLING_HAMMER_BODY_GATE=1`, `withHammerBodyGate`).
+ *
+ * ⛔ MEASURED (`CC/docs/cloud-reports/seedling-hammer-spinner-corner.md` § 3): leg `level_40__r48c54 <- in_L39_144_0 ~>
+ * level_40__r26c13 -> … flag 12` refuses *"There is no step out."* at t724, and every key set there is blocked by the
+ * BODY of `spinner@880,848` alone (no line). That body took its killing third hit at t719 (`destroy`, parked, its
+ * i-frame at 30); an opportunistic press at t722 dashed the player onto it. The run's own contact
+ * (`levelRun` `Enemy.update`: `hitUpdate(); hitPlayer();`) bills a spinner's 7x7 rect only while `!destroy &&
+ * hitsTimer <= 0` (`HAMMER_BILLING.body.gate`); the 13 px line has no such gate (`dyingStillSwings`). `clearOfHammersAt`
+ * prices every rect, so the guard refused a step the run would not bill.
+ *
+ * ⇒ ON, `landsClearOfHammers`' one-tick question is asked with the body gated: a row's body counts only when its live
+ * body is not `destroy` and its `hitsTimer`, run down one per row (`stepSpinner`'s decrement; row 1 is two updates on),
+ * is spent. Every estimate is the billing's or EARLIER (a body the forecast destroys, sinks in a pit or re-hits stays
+ * billed), never later. Asked only of a real run (a preview's view carries the bodies of another tick) and only when
+ * the forecast row holds exactly the live bodies (a removal in between ⇒ today's test). The line is asked as before.
+ */
+export const HAMMER_BODY_GATE = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_BODY_GATE === '1' };
+
+/**
+ * The switch's instrument: `asked` rows tested with a body gated, `cleared` of them a gated body alone would have
+ * refused, `held` no-aim ticks whose stand did not last and that `holdStepOut` re-chose.
+ */
+export const HAMMER_BODY_GATE_COUNTS = { asked: 0, cleared: 0, held: 0 };
+
+/** Run `fn` with `HAMMER_BODY_GATE` set to `enabled`, restoring the previous value. */
+export function withHammerBodyGate(enabled, fn) {
+    const was = HAMMER_BODY_GATE.enabled;
+    HAMMER_BODY_GATE.enabled = enabled === true;
+    const restore = () => { HAMMER_BODY_GATE.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * ⛓ `HAMMER_BODY_GATE` — which of forecast row `i`'s rects bill their BODY, from the live bodies (`null` when the row
+ * does not hold exactly the live bodies, or the run is not a real one: the caller then asks today's test). Row `i` is
+ * `i + 1` spinner updates after the live state, so a live `hitsTimer` of `h` is spent there iff `h - (i + 1) <= 0`.
+ */
+export function hammerBodyBilled(run, row, i) {
+    if (typeof run?.advance !== 'function' || !Array.isArray(row)) return null;
+    const live = run.entities('spinnerBodies') ?? [];
+    if (live.length !== row.length) return null;
+    return live.map((b) => !b.destroy && b.hitsTimer - (i + 1) <= 0);
+}
+
+/**
+ * ⛓ `HAMMER_BODY_GATE` — `clearOfHammersAt(run, box, forecast, i)` with row `i`'s bodies gated (`hammerBodyBilled`),
+ * for a forecast taken on `run` at its own tick (row `i` = `i + 1` updates on, swinging at `run.gameTimeAt(i)`). OFF,
+ * or no gate derivable, or every body billed ⇒ exactly `clearOfHammersAt`.
+ */
+export function clearOfBilledHammersAt(run, box, forecast, i) {
+    const row = forecast[i];
+    const billed = HAMMER_BODY_GATE.enabled && row ? hammerBodyBilled(run, row, i) : null;
+    if (billed === null || billed.every(Boolean)) return clearOfHammersAt(run, box, forecast, i);
+    HAMMER_BODY_GATE_COUNTS.asked += 1;
+    const at = run.gameTimeAt(i);
+    let gatedHit = false;
+    for (let j = 0; j < row.length; j += 1) {
+        const r = row[j];
+        if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
+            if (billed[j]) return false;
+            gatedHit = true;
+        }
+        if (hammerHitsPlayer({ x: r.x + SPINNER.originX, y: r.y + SPINNER.originY }, at, box)) return false;
+    }
+    if (gatedHit) HAMMER_BODY_GATE_COUNTS.cleared += 1;
+    return true;
+}
+
+/** ⛓ `HAMMER_BODY_GATE` — `landsClearOfHammers` with the body gated (OFF ⇒ exactly it). */
+function landsClearOfBilledHammers(run, keys) {
+    if (!HAMMER_BODY_GATE.enabled) return landsClearOfHammers(run, keys);
+    const forecast = run.spinnerForecast(2);
+    if (!forecast[1]) return true;
+    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
+    if (!next) return false;
+    return clearOfBilledHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1);
 }
 
 /**
@@ -20374,6 +20496,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                  * is the only thing that can answer it.
                  */
                 if (late === null && charted === null) held = stepToward(run, aim, held);
+                // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ not reached): no aim (a stand, or the escape
+                // certificate's key) still looks for a step out
+                if (HAMMER_BODY_GATE.enabled && !aim && charted === null) held = holdStepOut(run, held);
                 /**
                  * ⛓⛓⛓ F1c — THE HAMMER-PHASE RUNG (`hammerPhaseRung`). Only on a
                  * STRIKE approach: a refuge wait re-derives a strike every tick
@@ -20464,7 +20589,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 const meant = held;
                 // ⛓ hammer-phase OPP: an opportunistic aim was offered only where it lands clear (no swap may drop it)
                 held = oppTook === STRIKE_AIM ? held : safeStep(run, held, alternativesNow(), ctx.what, plan.id,
-                    fightKeys !== null ? landsClearInFlight : landsClearOfHammers);
+                    fightKeys !== null ? landsClearInFlight : landsClearOfBilledHammers);
                 // ⛓ hammer-phase A — a certificate `safeStep` overrode no longer describes the walk: it ends.
                 if (escape && held !== meant
                     && escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) === meant) escape = null;
