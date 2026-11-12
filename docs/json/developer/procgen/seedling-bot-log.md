@@ -28181,3 +28181,27 @@ drift (`r8-l18`, `r8-d2-chain`, `r9-campaign`: `r8-solve-18` three input rows on
 L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 spinner-room steps keep their verdicts (9
 SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
 hammer arc's signature on its pins, so it waits for a licence.
+
+### Seedling fidelity AFTERROWS — every `withL40Flip(false)` BEFORE pin in fidelity gets its AFTER at the shipped defaults
+
+Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user 2026-11-12, *"AFTER rows at L40 defaults"*). Base
+`737a451f50`. Rows and fixtures only; no model, solver, walker or rules source changed. The report is
+`CC/docs/cloud-reports/seedling-fidelity-afterrows.md`.
+
+**Census:** 16 wrapped rows in nine files. Each keeps its BEFORE row and gains an AFTER row at the shipped defaults.
+Where a single flip switch explains the move, it also gains a control (the defaults minus that switch) where the BEFORE
+property still holds. Five switches explain every attributed mover:
+- `CHASER_STAGED_HUNT`: L30KEYLOCK's both-OFF and WAIT-alone arms; L40BK2B's notch kill.
+- `BOMB_PHASE_WAIT`: leg 368's three D2 pins.
+- `LATCH_WEIGH_FIRST`: L40LATCH's three pins; L40RES's OFF arm.
+- `CHOOSER_CUT`: the pocket chain's refused prefix.
+
+**No row lost a solve, and no AFTER plan takes a hit.** Both L40 chains whose witness was a refused prefix now SOLVE
+Boss Key 2, as do L30 (240,80) and leg 368 ON at 5290. Leg 368 at 5290 is now hitless (1714 t; the t1222 hit is gone).
+Seven new game witnesses (p4g, 0 px, 0 hits): `l40bk2-pocket-shipped` (4692 t), `l40latch-orbit-shipped` (4144 t),
+`l40bk2b-{free,plain}-shipped`, `afterrows-l30-pit224-off`, `afterrows-l30-pit240-wait`, `afterrows-l40-368-s5290`.
+
+Six BEFORE properties are not covered at the defaults; four of them have no single-switch control. Leg 368's AFTER plan
+shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
+⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
+Re-record a BEFORE witness only under `withL40Flip(false)`.
