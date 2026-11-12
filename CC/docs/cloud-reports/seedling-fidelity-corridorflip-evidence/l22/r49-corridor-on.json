@@ -1,0 +1,25 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 486,
+ "work": 3,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 3
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "message": "solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29: the combat ladder is EXHAUSTED. The corridor passes through danger at (64.2,127.7) — enemy:wallflyer@48,112 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (89.0,112.6) — chaser:wallflyer@48,112 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (83.0,120.0), forecast along the walk)). ⚠ The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the aim is 187 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: level 22 has NO region that kills a body — no armed trap lane, no lethal terrain, no pit. A bait needs somewhere for the line to cross.\n  kill: no presser in level 22 arms a trap whose lane covers bob@96,144 — the room has 0 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: this run holds no sword, so `set slashing`'s outer gate refuses every press — no stance could strike bob@96,144, and the stance scan was not run (SF3)\n  forced-hit: no forced hit is proven from (24.0,136.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (37 fork step(s))"
+}

@@ -1,0 +1,5 @@
+frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js ::       Tests  2 passed (2)
+frontend/modules/seedlingDemo/fidelityL32ArenaPrefix.slow.test.js ::       Tests  5 passed (5)
+frontend/modules/seedlingDemo/strategySwitchTable.slow.test.js ::       Tests  4 passed (4)
+frontend/modules/seedlingDemo/hammerNewLocks.train.test.js ::       Tests  1 passed (1)
+DONE
