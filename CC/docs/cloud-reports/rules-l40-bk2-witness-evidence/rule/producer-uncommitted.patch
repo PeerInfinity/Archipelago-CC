@@ -1,0 +1,378 @@
+diff --git a/frontend/modules/flashPanel/seedlingBlockPaths.js b/frontend/modules/flashPanel/seedlingBlockPaths.js
+index ab0ed1d5..9f4a6458 100644
+--- a/frontend/modules/flashPanel/seedlingBlockPaths.js
++++ b/frontend/modules/flashPanel/seedlingBlockPaths.js
+@@ -77,6 +77,8 @@ export const PUSHABLE_KINDS = Object.freeze({
+     pushableblock: Object.freeze({ push: null, cite: 'Puzzlements/PushableBlock.as:35-58 (walked into)' }),
+     pushableblockfire: Object.freeze({
+         push: 'hasFire', cite: 'Puzzlements/PushableBlockFire.as:23,76-123 (hit by Fire/Pulse) + Player.as:1125-1127',
++        // ⛓ RULES rules-l40-bk2-witness: a non-relative hit sends it AWAY from the hitter (`hitAwayStances`).
++        hitAway: true,
+     }),
+     pushableblockspear: Object.freeze({
+         push: 'hasSpear', cite: 'Puzzlements/PushableBlockSpear.as:14 (hit by Spear) + Player.as:1121-1123',
+@@ -100,6 +102,25 @@ export function selfHoldTiles(holders, lockCells, width) {
+     return out;
+ }
+ 
++/**
++ * ⛓ RULES rules-l40-bk2-witness — **A HIT SENDS THE BLOCK AWAY FROM THE HITTER.** `PushableBlockFire.hit(p, t)` with a
++ * Fire hit (`Player.as:1125-1127`: `p` = the player's position, not relative) moves the block one tile along each axis
++ * whose share of `atan2(p.y - cy, p.x - cx)` passes the `bothRange` test (`PushableBlockFire.as:98-121`), and always
++ * AWAY from `p` (`cos a > 0` → west, `sin a > 0` → north). So a stance pushes `dir` only from the far side of that axis:
++ * a stance in the block's own row or column across the axis (directly beside it, for a N/S push) never does. Diagonal
++ * stances keep both axes (where in the cell the player stands picks one). Game-witnessed on L40: Fire from directly
++ * under `pushableblockfire@576,576`, at the corridor's centre and at both edges, never moved it sideways
++ * (`CC/docs/cloud-reports/rules-l40-bk2-witness-evidence/`).
++ *
++ * @param {Object<string, Array<[number,number]>>} stances `deriveWeaponFootprint`'s: per push direction, offsets
++ *   `[ox, oy]` with the stance at `(x - ox, y - oy)`
++ * @returns {Object<string, Array<[number,number]>>} the offsets a hit-away push can use
++ */
++export function hitAwayStances(stances) {
++    const away = { N: ([, oy]) => oy < 0, S: ([, oy]) => oy > 0, E: ([ox]) => ox > 0, W: ([ox]) => ox < 0 };
++    return Object.fromEntries(Object.entries(stances).map(([dir, list]) => [dir, (list ?? []).filter(away[dir] ?? (() => true))]));
++}
++
+ /** The search's state bound; a room past it is refused by name, never guessed. */
+ export const BLOCK_SEARCH_MAX_STATES = 200000;
+ /** The condition universe bound (subsets are enumerated). */
+@@ -395,12 +416,12 @@ export function blockHolderVerdict(grid, { heldBy, holders, lockCells, closedCel
+  * @param {Set<number>} goal the far side's cells
+  * @returns {{sets: string[][], states: number, refused: string|null}}
+  */
+-export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal) {
++export function blockCrossingCost(grid, { block, stances, stoppers = [], bodies = [], tileTypes, keyOf, held = [] }, start, goal) {
+     const keys = [...new Set(stoppers.flatMap((s) => s.keys))].sort();
+     if (keys.length > BLOCK_SEARCH_MAX_KEYS) return { sets: [], states: 0, refused: `${keys.length} stopper keys (bound ${BLOCK_SEARCH_MAX_KEYS})` };
+     let states = 0;
+     const crosses = (extra) => {
+-        const r = blockPushSearch(grid, { block, stances, stoppers, tileTypes, keyOf, held: [...held, ...extra] }, start, goal);
++        const r = blockPushSearch(grid, { block, stances, stoppers, bodies, tileTypes, keyOf, held: [...held, ...extra] }, start, goal);
+         states += r.states;
+         return r.ok;
+     };
+@@ -429,7 +450,7 @@ export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTyp
+  *
+  * @returns {{ok:boolean, states:number, cells:Set<number>, fatal:Set<number>}}
+  */
+-export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal = null) {
++export function blockPushSearch(grid, { block, stances, stoppers = [], bodies = [], tileTypes, keyOf, held = [] }, start, goal = null) {
+     const { width, height, cells } = grid;
+     const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
+     const blockAt = block.ty * width + block.tx;
+@@ -439,6 +460,12 @@ export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes
+         return i === blockAt && own !== null ? ks.filter((k) => k !== own) : ks;
+     });
+     const stopperAt = new Map(stoppers.map((s) => [s.ty * width + s.tx, s]));
++    // ⛓ RULES rules-l40-bk2-witness: the OTHER pushables (`bodies`, cell indices; none by default) are Solids
++    // (`PushableBlock.as:27`, `PushableBlockFire.as:30`) and `Mobile.solids` lists "Solid" (`Mobile.as:17`), so a
++    // struck block does not enter one's cell. The player's own walk-in pushes stay choreography (the overlay's
++    // `pushableblock` row): a body the player can REACH in a state is one it could walk out of the way, so it stops
++    // the block only where the player's region (that state's) does not hold its cell.
++    const bodyAt = new Set(bodies);
+     const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
+     const has = new Set(held);
+     const covered = (ks) => ks.every((k) => has.has(k));
+@@ -500,10 +527,116 @@ export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes
+             if (BLOCK_FATAL_TILES.includes(tileTypes.get(target)) && !stopped(target)) {
+                 fatal.add(target);
+                 queue.push([-1, stance]);
+-            } else if (blockOk(target) && stepOk(pos, target, dir)) {
++            } else if (blockOk(target) && stepOk(pos, target, dir) && !(bodyAt.has(target) && !region.has(target))) {
+                 queue.push([target, stance]);
+             }
+         }
+     }
+     return { ok: false, states, cells: blockCells, fatal };
+ }
++
++/**
++ * ⛓ RULES rules-l40-bk2-witness — **A PULSER'S SHOVE.** `Pulser.hit` (`Puzzlements/Pulser.as:87-117`) hands every
++ * `PushableBlockFire` whose rect lies within `radiusHit` (22 px, `:23`) of its centre a `hit(centre, "Pulse")`
++ * (`:100-103`), and `PushableBlockFire.hit` (`:76-123`, `moveTypes` `["Fire", "Pulse"]`, `:23`) sends it one tile AWAY
++ * from that point: `a = atan2(p.y - cy, p.x - cx)` (screen y down), a horizontal tile when `|sin a| - 0.1 < |cos a|`, a
++ * vertical one when `|sin a| > |cos a| - 0.1` (both near the diagonal). A Pulser pulses only while its group is active
++ * (`Pulser.as:54`: `activate`, set by its `tset`'s activators, `Button.activateAll`). Plain and spear blocks are not
++ * hit (`Pulser.as:100` names `PushableBlockFire` only).
++ *
++ * @param {{tx:number,ty:number,type:string}} block   a pushable's start tile and Ogmo type
++ * @param {{x:number,y:number}} pulser                the Pulser's Ogmo top-left (`Pulser.as:42`: centre = +8, +8)
++ * @param {number} [tile=16]
++ * @returns {{tx:number,ty:number}|{refused:string}|null} the tile the shove sends the block to; null when this pulse
++ *   never reaches it (or the block is not a fire block); `refused` for a diagonal shove (both axes), which this
++ *   model does not follow
++ */
++export function pulserShoveTarget(block, pulser, tile = 16) {
++    if (block.type !== 'pushableblockfire') return null;
++    const RADIUS_HIT = 22;
++    const px = pulser.x + tile / 2;
++    const py = pulser.y + tile / 2;
++    const reaches = (tx, ty) => {
++        const dx = Math.max(tx * tile - px, 0, px - (tx * tile + tile));
++        const dy = Math.max(ty * tile - py, 0, py - (ty * tile + tile));
++        return Math.hypot(dx, dy) <= RADIUS_HIT;
++    };
++    if (!reaches(block.tx, block.ty)) return null;
++    const a = Math.atan2(py - (block.ty * tile + tile / 2), px - (block.tx * tile + tile / 2));
++    const [s, c] = [Math.abs(Math.sin(a)), Math.abs(Math.cos(a))];
++    const horizontal = s - 0.1 < c;
++    const vertical = s > c - 0.1;
++    if (horizontal && vertical) return { refused: `a diagonal Pulse shove of ${block.type}@${block.tx},${block.ty}` };
++    const target = horizontal ? { tx: block.tx + (Math.cos(a) > 0 ? -1 : 1), ty: block.ty }
++        : { tx: block.tx, ty: block.ty + (Math.sin(a) > 0 ? -1 : 1) };
++    // The pulse keeps firing while the group is active: a block still within its reach would be shoved again.
++    if (reaches(target.tx, target.ty)) return { refused: `a Pulse shove of ${block.type}@${block.tx},${block.ty} that stays in reach` };
++    return target;
++}
++
++/**
++ * ⛓ RULES rules-l40-bk2-witness — **WHAT REACHING A GROUP'S ACTIVATOR COSTS IN EVENTS.** The Pareto-minimal sets of
++ * `latched` keys (each a lock's cells that stand Solid until its key — the event of the in-room press that latches
++ * it — is held) under which the player, starting at `start`, walks onto one of `activators` (cell indices). The walk
++ * is the push search's own (`blockPushSearch`'s gates; `held` the conditions it holds besides those keys); `occupied`
++ * cells (the struck block where it stands) are walls; a `reclosing` lock (`{cells, holders}`: a grouped lock a HELD
++ * button opens) stands shut until the walk reaches one of its holder cells (the grid's own directional pricing of it
++ * assumed the room's other doors as the grid rules them, which this walk does not).
++ *
++ * @returns {{sets:string[][], refused:string|null}}
++ */
++export function activatorReachCost(grid, { start, activators, latched = [], reclosing = [], occupied = [], keyOf, held = [] }) {
++    const keys = [...new Set(latched.map((l) => l.key))].sort();
++    if (keys.length > BLOCK_SEARCH_MAX_KEYS) return { sets: [], refused: `${keys.length} latched keys (bound ${BLOCK_SEARCH_MAX_KEYS})` };
++    const { width, height, cells } = grid;
++    const cellKeys = cells.map((cell) => (cell.conditions ?? []).map(keyOf));
++    const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
++    const blocked = new Set(occupied);
++    const reaches = (extra) => {
++        const has = new Set([...held, ...extra]);
++        const covered = (ks) => ks.every((k) => has.has(k));
++        const shut = new Set(latched.filter((l) => !has.has(l.key)).flatMap((l) => l.cells));
++        const standable = (i) => !BLOCKING.has(cells[i].kind) && covered(cellKeys[i]) && !shut.has(i) && !blocked.has(i);
++        const stepOk = (i, n, dir) => [cells[i].faces?.[dir], cells[n].faces?.[OPP[dir]], cells[i].dirs?.[dir], cells[n].enter?.[dir]]
++            .map(gateKeys).every((g) => g !== null && covered(g));
++        if (!standable(start)) return false;
++        // A re-closing lock (a held button opens it) is passable once the walk reaches one of its holders — a body can be
++        // parked there — and not before: a fixpoint, since a lock passed can lead to another lock's holder.
++        const opened = new Set();
++        for (;;) {
++            const closed = new Set(reclosing.filter((r) => !opened.has(r)).flatMap((r) => r.cells));
++            const seen = new Set([start]);
++            const stack = [start];
++            while (stack.length) {
++                const i = stack.pop();
++                if (activators.includes(i)) return true;
++                const x = i % width;
++                const y = (i - x) / width;
++                for (const [dir, dx, dy] of STEPS) {
++                    if (x + dx < 0 || y + dy < 0 || x + dx >= width || y + dy >= height) continue;
++                    const n = (y + dy) * width + x + dx;
++                    if (seen.has(n) || closed.has(n) || !standable(n) || !stepOk(i, n, dir)) continue;
++                    seen.add(n);
++                    stack.push(n);
++                }
++            }
++            const more = reclosing.filter((r) => !opened.has(r) && r.holders.some((h) => seen.has(h)));
++            if (more.length === 0) return false;
++            for (const r of more) opened.add(r);
++        }
++    };
++    const sets = [];
++    for (let size = 0; size <= keys.length; size += 1) {
++        const combos = [];
++        const pick = (from, acc) => {
++            if (acc.length === size) { combos.push(acc); return; }
++            for (let i = from; i < keys.length; i += 1) pick(i + 1, [...acc, keys[i]]);
++        };
++        pick(0, []);
++        for (const set of combos) {
++            if (sets.some((f) => f.every((k) => set.includes(k)))) continue;
++            if (reaches(set)) sets.push(set);
++        }
++    }
++    return { sets, refused: null };
++}
+diff --git a/scripts/procgen/make-seedling-playthrough-rules.mjs b/scripts/procgen/make-seedling-playthrough-rules.mjs
+index 78d0dd48..56bf5b43 100644
+--- a/scripts/procgen/make-seedling-playthrough-rules.mjs
++++ b/scripts/procgen/make-seedling-playthrough-rules.mjs
+@@ -76,7 +76,7 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
+ const {
+     deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, labelFor, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
+ } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
+-const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
++const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, ACTIVATOR_PRESSERS, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
+ const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
+ const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
+ const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
+@@ -104,7 +104,7 @@ const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
+ const TBL = await import('./seedlingDerivedRuleTable.js');
+ const { apExitNamesByEndpoint } = await imp('frontend/modules/procgenPipeline/entranceRandomizationReach.js');
+ const DERIVED_TABLE = TBL.readDerivedRuleTable();
+-const { PUSHABLE_KINDS, blockCrossingCost } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
++const { PUSHABLE_KINDS, blockCrossingCost, pulserShoveTarget, activatorReachCost, hitAwayStances } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
+ const { deriveWeaponFootprint } = await imp('frontend/modules/flashPanel/seedlingWeaponFootprints.js');
+ 
+ /**
+@@ -2074,23 +2074,55 @@ export function playthroughBlockCrossings(doc, { events = [] } = {}) {
+     for (const room of playthroughBlockCrossingCases(doc)) {
+         const { level, grid, tileTypes, pushables } = room;
+         const stoppers = playthroughBlockStoppers(level, minted);
+-        // No stopper in the room: the transcription's claim is all a push could cost here (this derivation adds nothing).
+-        if (stoppers.length === 0) { notes.push(`L${level.level}: ${pushables.length} struck block(s), no stopper`); continue; }
++        // ⛓ RULES rules-l40-bk2-witness: the room's OTHER pushables are Solid bodies to a struck block (`blockPushSearch`'s
++        // `bodies`), and a Pulser can shove a fire block where the player's own push cannot (`playthroughPulserShoves`).
++        const allBlocks = (level.entities ?? []).filter((e) => PUSHABLE_KINDS[e.type]);
++        const shoves = playthroughPulserShoves(level, grid, minted);
++        // No stopper and no other body in the room: the transcription's claim is all a push could cost here (this
++        // derivation adds nothing).
++        if (stoppers.length === 0 && allBlocks.length < 2) { notes.push(`L${level.level}: ${pushables.length} struck block(s), no stopper`); continue; }
+         for (const c of room.cases) {
+             if (c.note) { notes.push(c.note); continue; }
+             const { label, from, to, row, pushRule } = c;
+             if (!row) { notes.push(`${label}: no internal exit ${from} -> ${to}`); continue; }
+-            if (JSON.stringify(row.access_rule) !== JSON.stringify(pushRule)) {
++            // A hand ruling may make the row STRICTLY STRONGER (`applyHandRulings`: an And that keeps the push item).
++            const rowRule = row.access_rule;
++            const keepsPush = JSON.stringify(rowRule) === JSON.stringify(pushRule)
++                || (rowRule?.rule === 'And' && rowRule.children.some((k) => JSON.stringify(k) === JSON.stringify(pushRule)));
++            if (!keepsPush) {
+                 throw new Error(`block crossings: ${label}'s crossing ${room.regionId} ${from} -> ${to} is priced `
+                     + `${JSON.stringify(row.access_rule)}, not its push item's ${JSON.stringify(pushRule)} — another crossing joins the sides`);
+             }
++            const bodies = allBlocks.filter((e) => e !== c.entity)
++                .map((e) => Math.floor(e.y / TILE) * grid.width + Math.floor(e.x / TILE));
+             const cost = blockCrossingCost(grid, {
+-                block: c.block, stances: c.stances, stoppers, tileTypes, keyOf: SEM.conditionKey, held: c.held,
++                block: c.block, stances: c.stances, stoppers, bodies, tileTypes, keyOf: SEM.conditionKey, held: c.held,
+             }, c.start, c.goal);
+             if (cost.refused) throw new Error(`block crossings: ${label} ${from} -> ${to}: ${cost.refused}`);
+             if (cost.sets.length === 0) {
+-                throw new Error(`block crossings: ${label} ${from} -> ${to}: no stopper set opens the crossing the analyzer `
+-                    + `prices ${JSON.stringify(pushRule)} — the push model and the analyzer disagree`);
++                // A near side the player only ever enters THROUGH this block's cell (no location, no door, no other way in):
++                // nobody stands there with the block at its start, so the case prices nothing (named, not refused).
++                if (sealedBehindBlock(room, c)) { notes.push(`${label}: ${from} -> ${to}: ${from} is entered only through the block's cell — nothing to price`); continue; }
++                // The player's own push cannot open it: a Pulser's shove may (priced by the events its activator walk needs).
++                const others = room.cases.filter((o) => o.entity === c.entity && o.from !== from && o.start !== undefined).map((o) => o.start);
++                const shove = pulserCrossing(grid, c, shoves, { stoppers, bodies, tileTypes, others });
++                if (shove.refused) throw new Error(`block crossings: ${label} ${from} -> ${to}: ${shove.refused}`);
++                if (shove.sets.length === 0) {
++                    throw new Error(`block crossings: ${label} ${from} -> ${to}: no stopper set and no Pulser shove opens the crossing `
++                        + `the analyzer prices ${JSON.stringify(pushRule)} — the push model and the analyzer disagree`);
++                }
++                if (shove.sets.some((set) => set.length === 0)) {
++                    notes.push(`${label}: ${from} -> ${to} free beyond the push item (${shove.by}'s shove)`);
++                    continue;
++                }
++                const ways = shove.sets.map((set) => simplifyRule(set.length === 1 ? { rule: 'Has', args: { item_name: set[0] } }
++                    : { rule: 'And', children: set.map((n) => ({ rule: 'Has', args: { item_name: n } })) }));
++                const rule = ways.length === 1 ? ways[0] : { rule: 'Or', children: ways };
++                const why = `${label}: no push of the player's from ${from} opens it (beside it: ${shove.stoppedBy}); only ${shove.by}'s shove does, and `
++                    + `its group's activator is walked to (from ${shove.walked}) only with ${shove.sets.map((set) => set.join(' + ')).join(' OR ')}`;
++                internalExitGates.push({ region_id: room.regionId, from, to, rule, why });
++                notes.push(why);
++                continue;
+             }
+             if (cost.sets.some((set) => set.length === 0)) { notes.push(`${label}: ${from} -> ${to} free beyond the push item`); continue; }
+             const ways = cost.sets.map((set) => simplifyRule(set.length === 1 ? { rule: 'Has', args: { item_name: set[0] } }
+@@ -2106,6 +2138,89 @@ export function playthroughBlockCrossings(doc, { events = [] } = {}) {
+     return { internalExitGates, notes };
+ }
+ 
++/**
++ * ⛓⛓ RULES rules-l40-bk2-witness — **A PULSER'S SHOVE, AND WHAT ITS ACTIVATOR COSTS.** Per Pulser of `level`: its
++ * group (`tset`), the cells of that group's activators (the level's `ACTIVATOR_PRESSERS` entities with that `tset`:
++ * `Button.activateAll`, `ButtonRoom`), and the LATCHED locks the walk to them may meet — every target of an in-room
++ * latching `ButtonRoom` (`inRoomLatchButtonsOf`) whose class the model opens by its group (`PERSISTENCE_RESPONSE`
++ * `lock-despawn`: `Lock.activationStep`) and whose press is a minted event; such a lock stands Solid until its event
++ * is held. ⛔ The rules' grid rules a grouped lock FREE (the puzzle policy: any body presses it), so its cell is open
++ * there; this walk alone puts it back, because the press is the one thing the walk cannot do from the struck block's
++ * near side without it (game-witnessed on L40: `rules-l40-bk2-witness`).
++ */
++export function playthroughPulserShoves(level, grid, minted = new Set()) {
++    const ents = level.entities ?? [];
++    const cellOf = (e) => Math.floor(e.y / TILE) * grid.width + Math.floor(e.x / TILE);
++    const latched = inRoomLatchButtonsOf({ levels: [level] }).flatMap((b) => b.targets
++        .filter((t) => PERSISTENCE_RESPONSE[t.type] === 'lock-despawn')
++        .map((t) => ({ key: obstacleEventName({ level: level.level, tag: b.write.tag, cls: t.type, x: t.x, y: t.y }), cells: [cellOf(t)] }))
++        .filter((l) => minted.has(l.key)));
++    // The re-closing grouped locks (a HELD button opens them: `OV.buildGroupOpeners`' non-latching groups with holders).
++    const reclosing = ents.filter((e) => PERSISTENCE_RESPONSE[e.type] === 'lock-despawn' && Number(e.attrs?.tset) >= 0)
++        .map((e) => ({ e, g: GROUP_OPENERS.get(`${level.level}:${Number(e.attrs.tset)}`) }))
++        .filter(({ g }) => g && !g.latching && g.holders.length > 0)
++        .map(({ e, g }) => ({ cells: [cellOf(e)], holders: g.holders.map(([x, y]) => y * grid.width + x) }));
++    return ents.filter((e) => e.type === 'pulser' && e.attrs?.tset !== undefined).map((p) => {
++        const t = Number(p.attrs.tset);
++        const activators = ents.filter((e) => ACTIVATOR_PRESSERS.has(e.type) && Number(e.attrs?.tset) === t).map(cellOf);
++        return { pulser: p, label: `${p.type}@${p.x},${p.y}`, tset: t, activators, latched, reclosing };
++    });
++}
++
++/**
++ * ⛓ RULES rules-l40-bk2-witness — a case's near side that the player can only ever enter THROUGH the block's own cell:
++ * it holds no location and no boundary exit, and every internal exit it has leads to another side of this same block.
++ */
++function sealedBehindBlock(room, c) {
++    const sides = new Set(room.cases.filter((o) => o.entity === c.entity && o.from).map((o) => o.from));
++    const r = room.region;
++    if ((r.locations ?? []).some((l) => l.sub_region === c.from)) return false;
++    if ((r.exits ?? []).some((e) => e.sub_region === c.from)) return false;
++    return (r.subgraph?.internal_exits ?? []).filter((e) => e.from === c.from || e.to === c.from)
++        .every((e) => sides.has(e.from === c.from ? e.to : e.from));
++}
++
++/**
++ * ⛓ RULES rules-l40-bk2-witness — a struck block's crossing by a PULSER's shove (`playthroughPulserShoves`): the block
++ * shoved one tile (`pulserShoveTarget`), then the push search from the near side with the block THERE must reach the
++ * far side; the cost is what the walk from the near side to the Pulser's group's activator needs in latched-lock events
++ * (`activatorReachCost`). Returns `{sets, by, stoppedBy, refused}`; no shove = no sets.
++ */
++function pulserCrossing(grid, c, shoves, { stoppers, bodies, tileTypes, others = [] }) {
++    const all = [];
++    let by = null;
++    let walkedFrom = null;
++    for (const sh of shoves) {
++        const target = pulserShoveTarget({ tx: c.block.tx, ty: c.block.ty, type: c.entity.type }, sh.pulser, TILE);
++        if (!target) continue;
++        if (target.refused) return { sets: [], by: sh.label, stoppedBy: null, refused: target.refused };
++        const ti = target.ty * grid.width + target.tx;
++        if (bodies.includes(ti) || ['wall', 'sink', 'manual'].includes(grid.cells[ti]?.kind)) continue;
++        const moved = { ...c.block, tx: target.tx, ty: target.ty };
++        const after = blockCrossingCost(grid, { block: moved, stances: c.stances, stoppers, bodies, tileTypes, keyOf: SEM.conditionKey, held: c.held },
++            c.start, c.goal);
++        if (after.refused) return { sets: [], by: sh.label, stoppedBy: null, refused: after.refused };
++        if (!after.sets.some((set) => set.length === 0)) continue;
++        // The activator is walked to from the near side; where the near side holds none in reach (a room entered only after
++        // the shove), from the block's other sides — the shove that let the player in was made from there.
++        let reach = { sets: [], refused: null };
++        for (const from of [c.start, ...others]) {
++            walkedFrom = from;
++            reach = activatorReachCost(grid, { start: from, activators: sh.activators, latched: sh.latched, reclosing: sh.reclosing,
++                occupied: [c.block.ty * grid.width + c.block.tx], keyOf: SEM.conditionKey, held: c.held });
++            if (reach.refused || reach.sets.length > 0) break;
++        }
++        if (reach.refused) return { sets: [], by: sh.label, stoppedBy: null, refused: reach.refused };
++        for (const set of reach.sets) if (!all.some((f) => f.every((k) => set.includes(k)))) all.push(set);
++        by = sh.label;
++    }
++    const W = grid.width;
++    const beside = (i) => Math.abs((i % W) - c.block.tx) + Math.abs(Math.floor(i / W) - c.block.ty) === 1;
++    const stoppedBy = bodies.filter(beside).map((i) => `the pushable at (${i % W},${Math.floor(i / W)})`).join(', ') || 'a wall';
++    const walked = walkedFrom === null ? null : `(${walkedFrom % W},${Math.floor(walkedFrom / W)})`;
++    return { sets: all, by, stoppedBy, walked, refused: null };
++}
++
+ /**
+  * ⛓ RULES rules-block-stoppers — the STOPPERS `playthroughBlockCrossings` hands the push search: static, unkillable
+  * bodies (the model's combat rows: `aggro.kind` static, `speed` 0, `kill` null — a DarkTrap), each removed by the
+@@ -2163,7 +2278,8 @@ export function playthroughBlockCrossingCases(doc) {
+             const label = `L${level.level} ${b.type}@${b.x},${b.y}`;
+             const pushFlag = PUSHABLE_KINDS[b.type].push;
+             const pushRule = analyzerOptions.resolveCondition(SEM.flag(pushFlag));
+-            const stances = deriveWeaponFootprint(pushFlag.replace(/^has/, '').toLowerCase(), 'block');
++            const footprint = deriveWeaponFootprint(pushFlag.replace(/^has/, '').toLowerCase(), 'block');
++            const stances = PUSHABLE_KINDS[b.type].hitAway ? hitAwayStances(footprint) : footprint;
+             const sides = new Map();
+             for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                 const [nx, ny] = [bx + dx, by + dy];
