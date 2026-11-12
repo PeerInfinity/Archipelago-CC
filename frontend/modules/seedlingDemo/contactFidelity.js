@@ -2023,9 +2023,9 @@ export const CONTACT_FIDELITY = {
      * (`Game.as:2341,2353`: added after the `Button`, so it updates first). Game-witnessed: L28's rope cut in play opens
      * the lock at t166 (the list alone, no span step: t257; OFF: never). The button- and wand-dropped spans (`dropRocksTogether`) are NOT stepped:
      * unwitnessed, and none of their rocks lands on an activator. OFF: byte-identical.
-     * `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`.
+     * `SEEDLING_FALL_ROCK_HOLDS_BUTTON=0|1`. ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
      */
-    fallRockHoldsButton: false,
+    fallRockHoldsButton: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

@@ -29,11 +29,11 @@ const lockT = (m) => m.ledger.writes.find((x) => x.tag === L28.lock.tag)?.t ?? n
 const bootRun = (cleared) => createRunForStaging(arrivalStaging({ level: 28, x: 128, y: 288 },
     { items: ['hasSword'], cleared }), atlasLevelSource());
 
-describe('ROCKBUTTON D1 — `fallRockHoldsButton` (OFF)', () => {
+describe('ROCKBUTTON D1 — `fallRockHoldsButton` (ON since the flip, ⚖ user 2026-11-12)', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FALL_ROCK_HOLDS_BUTTON)(
-        'ships OFF and LAST; its env name is a known worker env name', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.fallRockHoldsButton).toBe(false);
-            expect(CONTACT_FIDELITY.fallRockHoldsButton).toBe(false);
+        'ships ON (⚖ user 2026-11-12, the ROCKBUTTON flip) and LAST; its env name is a known worker env name', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.fallRockHoldsButton).toBe(true);
+            expect(CONTACT_FIDELITY.fallRockHoldsButton).toBe(true);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('fallRockHoldsButton');
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FALL_ROCK_HOLDS_BUTTON');
         });

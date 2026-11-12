@@ -400,8 +400,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             fireBreakArm: true,
             // ⛓ fidelity FENCEPOST D1 (wave 40): a faded-out spinner leaves the roster on the read the game's world has dropped it by — OFF.
             spinnerRemoveRead: false,
-            // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — OFF.
-            fallRockHoldsButton: false });
+            // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
+            fallRockHoldsButton: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
