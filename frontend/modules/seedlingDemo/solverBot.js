@@ -1595,6 +1595,12 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
             tick([]);
             continue;
         }
+        // ⛓ GHOST-STRIKE-GATE (ON only; OFF `ghostOnlyWhy` is null): a Ghost-Sword-only strike never tests — refused.
+        const ghostWhy = ghostOnlyWhy(run.progress('inventory'));
+        if (ghostWhy) {
+            refuse(`${what}: no strike on form ${boss.form}: ${ghostWhy}`, {
+                goal, obstacle: { kind: 'encounter', id: boss.id } });
+        }
         const plan = searchEncounterStrike(run);
         if (plan.none) {
             const rp = searchEncounterReposition(run);

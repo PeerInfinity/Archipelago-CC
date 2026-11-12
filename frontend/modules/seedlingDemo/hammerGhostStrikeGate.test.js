@@ -15,6 +15,8 @@
  *        -> the Sword-only / both-held rows red (their dash and strikes vanish).
  *   m4 `planSwordDash` keeps `hasSword || hasGhostSword` (the strike policy alone gated)
  *        -> "ON: the ghost-only witness walks" reds (the dash plan presses).
+ *   m6 `execBobBossEncounter` loses its gate
+ *        -> "ON: refused BY NAME before the strike" reds (levelRun throws at t58).
  *   m5 `ghostOnlyWhy` returns null ON
  *        -> "planSwordDash refuses BY NAME" reds.
  */
@@ -38,19 +40,25 @@ const WITNESS = Object.freeze({
     boot: Object.freeze({ level: 0, x: 256, y: 256 }),
     goal: Object.freeze({ kind: 'exit', level: 0, tiles: [[0, 8]], name: 'level_0__r7c6 -> level_94__r2c16' }),
 });
+/** The encounter witness: L32's arena, entered from L30, its pit (the BobBoss fight's own strike search presses). */
+const ARENA = Object.freeze({
+    key: 'level_32 <- in_L30_224_160 -> exit:out_pit_14_5',
+    boot: Object.freeze({ level: 32, x: 64, y: 112 }),
+    goal: Object.freeze({ kind: 'exit', level: 32, tiles: [[4, 0]], name: 'level_32 -> level_30__r2c10' }),
+});
 const BAGS = Object.freeze({
     ghostOnly: ['hasGhostSword', 'hasSpear'],
     swordOnly: ['hasSword'],
     both: ['hasSword', 'hasGhostSword', 'hasSpear'],
 });
 
-function solveWitness(items) {
-    const staging = arrivalStaging(WITNESS.boot, { items });
-    const mapped = arrivalSolverGoal({ ...WITNESS.goal }, { staging, levelSource: SRC, record: null });
+function solveWitness(items, leg = WITNESS) {
+    const staging = arrivalStaging(leg.boot, { items });
+    const mapped = arrivalSolverGoal({ ...leg.goal }, { staging, levelSource: SRC, record: null });
     const run = createRunForStaging(staging, SRC);
     try {
-        const out = solveSegment({ run, goals: [{ ...mapped.goal }], name: 'ghost-strike-gate', boot: WITNESS.boot,
-            forkRun: () => createRunForStaging(arrivalStaging(WITNESS.boot, { items }), SRC) });
+        const out = solveSegment({ run, goals: [{ ...mapped.goal }], name: 'ghost-strike-gate', boot: leg.boot,
+            forkRun: () => createRunForStaging(arrivalStaging(leg.boot, { items }), SRC) });
         return { verdict: 'SOLVED', keys: out.perTick.map((h) => [...h].sort().join('+')),
             presses: out.perTick.filter((h) => h.has('primary')).length, hits: (run.ledger('playerHits') ?? []).length };
     } catch (e) {
@@ -112,4 +120,22 @@ describe(`GHOST-STRIKE-GATE — the witness (${WITNESS.key})`, () => {
             expect(off.presses).toBeGreaterThan(0);
             expect(on.keys).toEqual(off.keys);
         });
+});
+
+describe(`GHOST-STRIKE-GATE — the BobBoss encounter (${ARENA.key})`, () => {
+    it('OFF: the ghost-only fight dies at its first strike (levelRun throws at t58)', () => {
+        const off = withGhostStrikeGate(false, () => solveWitness(BAGS.ghostOnly, ARENA));
+        expect(off.verdict).toBe('THREW');
+        expect(off.why).toMatch(/^levelRun: the ghostsword press at tick 58 in level 32: /);
+    });
+    it('ON: refused BY NAME before the strike, naming the encounter and `ghostSwingRefusal`\'s words', () => {
+        const on = withGhostStrikeGate(true, () => solveWitness(BAGS.ghostOnly, ARENA));
+        expect(on.verdict).toBe('REFUSED');
+        expect(on.why).toMatch(/arena \(72,8\): no strike on form 0: the run holds the GHOST SWORD and not the sword/);
+    });
+    it('both-held: ON refuses what OFF refuses, in the same words', () => {
+        const off = withGhostStrikeGate(false, () => solveWitness(BAGS.both, ARENA));
+        const on = withGhostStrikeGate(true, () => solveWitness(BAGS.both, ARENA));
+        expect(on).toEqual(off);
+    });
 });

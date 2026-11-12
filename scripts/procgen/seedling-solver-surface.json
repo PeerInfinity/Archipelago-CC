@@ -1170,10 +1170,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 166,
+        "solverBot.js": 167,
         "strikePolicy.js": 2
       },
-      "sites": 201,
+      "sites": 202,
       "seen": "both",
       "via": [
         "direct",
@@ -1207,7 +1207,7 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 58
+          "solverBot.js": 59
         },
         "inventorySlots": {
           "solverBot.js": 24
