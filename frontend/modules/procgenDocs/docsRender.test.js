@@ -313,7 +313,9 @@ describe('⛓ the links the render emits', () => {
         //   409 → 410: content sets R2b part 2 — maze.md § Tile art → frontend/modules/artLibrary/README.md § Shapes (1 repo).
         //   410 → 412: content sets R3 — pipeline-presets.md → concepts.md § The theme trial world and § Selecting a
         //   content set (2 doc).
-        expect(checked).toBe(412);
+        //   412 → 414: content sets R4 — concepts.md § The theme trial world → maze.md § Tile art (1 doc), and that §
+        //   → frontend/packs/meta/art/manifest.json, the worked example (1 repo).
+        expect(checked).toBe(414);
     });
 
     it('tags each link with the kind that produced it', () => {

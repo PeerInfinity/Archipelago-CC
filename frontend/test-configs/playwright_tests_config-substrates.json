@@ -558,6 +558,12 @@
             "_comment": "Content sets R2b: a plain maze world drawn from a FIXTURE pack stack (in-memory packs, sheets painted on an OffscreenCanvas): the wall pixel is the later pack's, the floor the earlier pack's, the un-keyed exit COLORS.exit. No batch claims this category, so it rides `fast`."
         },
         {
+            "id": "meta-trial-maze-tile-art",
+            "enabled": true,
+            "category": "Maze tile art",
+            "_comment": "Content sets R4: the committed meta_trial world's maze drawn from the meta theme's shape recipes through the panel's own play-time load (no test seam): the stack is [maze, meta], the floor, wall and player are drawn from \"meta#<key>\" sheets, and the water gate keeps the maze default pack's look. Rides `fast` like the R2b row."
+        },
+        {
             "id": "seedling-atlas-sphere-placed-region",
             "enabled": true,
             "category": "Seedling atlas maze",
