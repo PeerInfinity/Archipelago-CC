@@ -562,9 +562,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 238
+        "solverBot.js": 239
       },
-      "sites": 379,
+      "sites": 380,
       "seen": "both",
       "via": [
         "direct",
@@ -612,7 +612,7 @@
         },
         "bosses": {
           "botDriverV2.js": 1,
-          "solverBot.js": 2
+          "solverBot.js": 3
         },
         "brokenRocks": {
           "botDriverV2.js": 3,
@@ -861,9 +861,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 136
+        "solverBot.js": 137
       },
-      "sites": 199,
+      "sites": 200,
       "seen": "both",
       "via": [
         "direct",
@@ -934,7 +934,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 77
+          "solverBot.js": 78
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -1417,9 +1417,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 740
+        "solverBot.js": 741
       },
-      "sites": 881,
+      "sites": 882,
       "seen": "both",
       "via": [
         "direct",
@@ -1482,9 +1482,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 139
+        "solverBot.js": 140
       },
-      "sites": 162,
+      "sites": 163,
       "seen": "both",
       "via": [
         "direct",
@@ -2910,9 +2910,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 278
+        "solverBot.js": 281
       },
-      "sites": 348,
+      "sites": 351,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2946,9 +2946,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 282
+        "solverBot.js": 285
       },
-      "sites": 355,
+      "sites": 358,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4417,10 +4417,10 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 152,
+        "solverBot.js": 153,
         "strikePolicy.js": 3
       },
-      "sites": 193,
+      "sites": 194,
       "seen": "static",
       "via": [
         "import"

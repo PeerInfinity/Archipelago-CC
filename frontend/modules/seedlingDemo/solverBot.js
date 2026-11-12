@@ -11401,6 +11401,70 @@ export const WALK_DEATH_REFUSED = {
     refused: [],
 };
 
+/**
+ * ⛓ hammer-phase L43-BOSSTOTEM (`SEEDLING_AWAKE_BOSS_FIRST`, OFF) — **A WALK THAT AN AWAKE BOSS BARS FIGHTS THE BOSS
+ * FIRST.** A boss in the run's `bosses` family is a Solid only while it sleeps; once it wakes (`activated`) the corridor
+ * planner no longer sees it — its body is an Enemy whose contact the probe does not price, and its clamp is an
+ * ASSIGNMENT, not a collider (`bossTotem.js`). So a walk planned after the wake (a pickup's wake: the vanilla Wand room)
+ * aims straight through the body or past the clamp, takes its contact hits and dies, and re-plans from the respawn into
+ * the same wake. MEASURED (vanilla route survey step 150, level 43, the wand stance for `magicallock@144,112` after the
+ * Wand pickup): the walk aims at (152,184) from (150,234), through the woken body; three `bossBody` hits (t173, t213,
+ * t237) and a death, then the re-plan from the respawn stalls on the arrival wall — OFF's words.
+ *
+ * ON: before a walk, a live (activated, not removed, not destroyed) body of that family BARS the aim when the aim lies
+ * past its clamp (`clampY`) or the straight line from the player to the aim crosses its body rect. Then the walk first
+ * asks the body's own fight verb — the strategy table's row for `solid:<tag>` and its executor, the frontier's lookup —
+ * and walks after the kill; a body no verb is registered or held for refuses by name (`obstacle: solid`). OFF: not
+ * asked (byte-identical). `fought` collects one row per ask (measurement).
+ */
+export const AWAKE_BOSS_FIRST = {
+    enabled: globalThis.process?.env?.SEEDLING_AWAKE_BOSS_FIRST === '1',
+    fought: [],
+};
+
+/** Run `fn` with `AWAKE_BOSS_FIRST` set to `enabled`, restoring the previous value. */
+export function withAwakeBossFirst(enabled, fn) {
+    return withSwitch(AWAKE_BOSS_FIRST, enabled, fn);
+}
+
+/** Does the segment (a → b) cross the rect `r` ({x, y, w, h})? Slab clipping; touching an edge counts. */
+function segmentCrossesRect(a, b, r) {
+    let t0 = 0;
+    let t1 = 1;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    for (const [p, q] of [[-dx, a.x - r.x], [dx, r.x + r.w - a.x], [-dy, a.y - r.y], [dy, r.y + r.h - a.y]]) {
+        if (p === 0) {
+            if (q < 0) return false;
+            continue;
+        }
+        const t = q / p;
+        if (p < 0) t0 = Math.max(t0, t);
+        else t1 = Math.min(t1, t);
+        if (t0 > t1) return false;
+    }
+    return true;
+}
+
+/**
+ * ⛓ hammer-phase L43-BOSSTOTEM — the live boss in the run's `bosses` family that bars a walk from `from` to `aim`, or
+ * null. Read off the model's own view: `activated`, `removed`/`destroy`, `clampY` (the floor the clamp assigns) and
+ * `bodyRect` (the woken body's box). A sleeping body is a Solid the frontier already names, so it is not asked here.
+ */
+export function awakeBossBarring(run, from, aim) {
+    const bosses = run.entities('bosses');
+    if (!bosses || bosses.size === 0 || !aim) return null;
+    for (const [id, view] of bosses) {
+        if (!view?.activated || view.removed || view.destroy) continue;
+        const past = Number.isFinite(view.clampY) && aim.y < view.clampY;
+        const crosses = view.bodyRect ? segmentCrossesRect(from, aim, view.bodyRect) : false;
+        if (!past && !crosses) continue;
+        const at = id.indexOf('@');
+        return { id, tag: at > 0 ? id.slice(0, at) : id, past, crosses };
+    }
+    return null;
+}
+
 export const BOMB_PHASE_WAIT = {
     enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT !== '0',
     /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
@@ -32758,7 +32822,41 @@ function solveSegmentUnder({
             + ') — the drive took hits its corridor was certified without; a walk that died is refused, not re-planned '
             + 'from the respawn', { goal, obstacle: { kind: 'death', id: sources[sources.length - 1] ?? d.source ?? null } });
     }
+    /**
+     * ⛓ hammer-phase L43-BOSSTOTEM (`AWAKE_BOSS_FIRST`, OFF) — the awake boss that bars this walk is fought first, with
+     * its own verb (see the switch's docblock). `bossFirstActive` keeps the verb's own walks (its stance) from asking
+     * again.
+     */
+    let bossFirstActive = false;
+    const fightAwakeBossFirst = (goal, aim, opts) => {
+        const bar = awakeBossBarring(run, run.state, aim);
+        if (bar === null) return;
+        const what = `${opts?.what ?? 'walk'} -> awake boss first (${bar.id})`;
+        const obstacle = { kind: 'solid', id: bar.id, tag: bar.tag };
+        const strategy = OBSTACLE_STRATEGIES[`solid:${bar.tag}`] ?? null;
+        const exec = strategy ? frontierExecutor(strategy) : undefined;
+        const resolved = exec ? resolveObstacleStrategy(run, strategy, obstacle, null, aim, null) : null;
+        const row = { what, id: bar.id, past: bar.past, crosses: bar.crosses, strategy, t: run.ticksCompleted };
+        AWAKE_BOSS_FIRST.fought.push(row);
+        if (!exec || !resolved || resolved.held === false) {
+            row.refused = resolved?.rejected?.[0]?.why ?? (strategy ? `no executor for \`${strategy}\`` : 'no strategy row');
+            refuse(`${what}: ${bar.id} is awake and bars the walk to (${aim.x},${aim.y}) `
+                + `(${bar.past ? 'the aim lies past its clamp' : 'the line to the aim crosses its body'}), and it cannot be `
+                + `fought: ${row.refused}`, { goal, obstacle });
+        }
+        bossFirstActive = true;
+        try {
+            const record = exec(run, perTick, resolved, { maxTicksPerTarget, economies, dashMode, what, walkTo, goal,
+                equip, fork, rewind });
+            row.ticks = record?.ticks ?? null;
+            row.hits = record?.hits?.length ?? null;
+            records.push({ goal: goal?.kind, strategy, ...record });
+        } finally {
+            bossFirstActive = false;
+        }
+    };
     const walkTo = (goal, aim, opts) => {
+        if (AWAKE_BOSS_FIRST.enabled && !bossFirstActive) fightAwakeBossFirst(goal, aim, opts);
         if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return walkToRun(goal, aim, opts);
         const d0 = deathsNow();
         let out;
