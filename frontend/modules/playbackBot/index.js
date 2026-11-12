@@ -80,6 +80,8 @@ export function register(registrationApi) {
     // ⛓ ROPE GOAL: a goal-first BREAK step's event is collected by the game's flag (a local check, no
     // user:locationCheck) — the snapshot that holds it is the bot's signal (see onSnapshotUpdated).
     registrationApi.registerEventBusSubscriberIntent?.('stateManager:snapshotUpdated');
+    // ⛓ CONNECTED CHECKS: the connected logic gate's refusal (see onLocationCheckRefused).
+    registrationApi.registerEventBusSubscriberIntent?.('client:locationCheckRefused');
 
     // Dispatcher receivers — formerly in presets/index.js. Each one
     // propagates first (so stateManager + downstream handlers see the
@@ -247,11 +249,22 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     };
     _moduleEventBus?.subscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
 
+    // ⛓ CONNECTED CHECKS (sdc-bot-connected-check) — the connected logic gate's refusal: an awaited check never lands.
+    const onCheckRefused = (data) => {
+        try {
+            getActivePanel()?.getBot()?.onLocationCheckRefused?.(data);
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onLocationCheckRefused threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.('client:locationCheckRefused', onCheckRefused, 'playbackBot');
+
     return () => {
         _moduleEventBus?.unsubscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
         _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, onWalkFailed, 'playbackBot');
         _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
         _moduleEventBus?.unsubscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.('client:locationCheckRefused', onCheckRefused, 'playbackBot');
         _moduleEventBus = null;
         _moduleDispatcher = null;
     };

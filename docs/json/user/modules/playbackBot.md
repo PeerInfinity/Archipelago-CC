@@ -48,6 +48,8 @@ Pick a region, type a cell's **x** and **y**, and press **Go**: the bot walks th
 
 If the bot cannot do something, the status says so — for example *blocked: the check of "…" did not land*, or *error: no path from …* when the next location cannot be reached.
 
+While connected to a server, a check counts once the server confirms it (its echo marks the location checked here a moment after the send), so the status can read *waiting for the server to confirm the check of "…"* for that moment. A check the client refused as out of logic still reads *did not land*.
+
 ## In Loop mode
 
 In a world built with **Enable loop mode** (see the [Loops](../../features/loops.md) feature), the bot does not move the player itself. Each loop, it writes the Loops panel's queue for you — the moves to its target, then the check, or an explore when the target is not discovered yet — runs it until the mana runs out, and plans the next loop. **⏯** then plays one whole loop, and **⏭** is the same as **▶**; the Loops panel's own speed settings apply instead of the bot's **Speed**. The status shows the loop number, the action and the mana left. If it says *waiting: Generate Costs first (Loops panel)*, do that in the Loops panel.

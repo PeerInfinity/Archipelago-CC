@@ -2356,3 +2356,157 @@ describe('PlaybackBotUI — target source "any reachable location" drives the ti
         expect(timer.listener).toBeNull();
     });
 });
+
+describe('PlaybackBotUI — connected checks land on the server echo (sdc-bot-connected-check)', () => {
+    // Connected, the client SENDS a check and marks it locally only when the server's RoomUpdate echoes it.
+    // Measured on upstream 0.6.9 (slot 1, Seedling Playthrough): the bot's flush answered 7 ms after the send, the
+    // echo arrived at +71 ms and the snapshot held the check at +177 ms, so the bot parked with "did not land".
+    // This world plays that order: the check is marked `echoMs` after the flush answered, then
+    // stateManager:snapshotUpdated (onSnapshotUpdated) fires. `refuse` plays the client's connected logic gate
+    // (client:locationCheckRefused, 'before' or 'after' the bot's flush answers).
+    function makeConnectedWorld({ connected = true, echo = true, refuse = null, echoMs = 30 } = {}) {
+        const world = { here: 'region_a', checked: [], published: [], sent: [], snapshotsSeen: 0 };
+        const staticData = {
+            regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A', id: 1 }], exits: [{ name: 'A to B', connected_region: 'region_b' }] }],
+                ['region_b', { locations: [{ name: 'Loc B', id: 2 }], exits: [] }],
+            ]),
+        };
+        const sphereData = [
+            { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+            { sphereIndex: 1, fractionalIndex: 0, locations: ['Loc B'] },
+        ];
+        let bot;
+        const proxy = {
+            pingWorker: () => new Promise((r) => setTimeout(r, 1)),
+            getLatestStateSnapshot: () => ({ checkedLocations: world.checked.slice() }),
+        };
+        const pathFinder = {
+            findPathWithExits: (from, to) => (from === 'region_a' && to === 'region_b'
+                ? { steps: [{ region: 'region_a', exitUsed: null }, { region: 'region_b', exitUsed: 'A to B' }], length: 1 }
+                : null),
+        };
+        const publish = (eventName, payload) => {
+            world.published.push({ eventName, payload });
+            if (eventName === 'user:regionMove') {
+                world.here = payload.targetRegion;
+                bot.onRegionMove(payload);
+                return;
+            }
+            const name = payload.locationName;
+            if (refuse === 'stale') bot.onLocationCheckRefused({ locationName: name, reason: 'not_accessible' });
+            if (!refuse || refuse === 'stale') world.sent.push(name);
+            bot.onLocationCheck(payload);
+            // The client's gate answers after an await: after the bot's receiver ran, before its flush answered.
+            if (refuse === 'before') bot.onLocationCheckRefused({ locationName: name, reason: 'not_accessible' });
+            if (refuse === 'after') {
+                setTimeout(() => bot.onLocationCheckRefused({ locationName: name, reason: 'not_accessible' }), 5);
+                return;
+            }
+            if ((refuse && refuse !== 'stale') || !echo) return;
+            setTimeout(() => {
+                world.checked.push(name);
+                world.snapshotsSeen += 1;
+                bot.onSnapshotUpdated();
+            }, echoMs);
+        };
+        bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => null,
+            pathFinder,
+            stateManagerProxy: proxy,
+            publish,
+            getCurrentRegion: () => world.here,
+            isLoopModeActive: () => false,
+            isConnected: () => connected,
+        });
+        return { bot, world };
+    }
+    const checksOf = (world) => world.published.filter((p) => p.eventName === 'user:locationCheck').map((p) => p.payload.locationName);
+
+    it('connected: a check echoed AFTER the flush lands, and the bot plays to the end', async () => {
+        const { bot, world } = makeConnectedWorld();
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/), { timeout: 3000 });
+        expect(world.checked).toEqual(['Loc A', 'Loc B']);
+        expect(world.here).toBe('region_b');
+        // Each check sent once: no re-send while it waited for the echo.
+        expect(checksOf(world)).toEqual(['Loc A', 'Loc B']);
+        expect(bot.getLog()).toEqual(expect.arrayContaining([
+            'waiting for the server to confirm the check of "Loc A"',
+            '"Loc A" confirmed by the server',
+        ]));
+        expect(bot.getLog().some((l) => /did not land/.test(l))).toBe(false);
+    });
+
+    it('connected: waits (not blocked) between the flush and the echo', async () => {
+        const { bot, world } = makeConnectedWorld({ echoMs: 200 });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toBe('waiting for the server to confirm the check of "Loc A"'));
+        expect(bot.getCursor()).toBe(0);
+        expect(world.checked).toEqual([]);
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/), { timeout: 3000 });
+    });
+
+    it('connected: a later snapshot never counts the check twice', async () => {
+        const { bot, world } = makeConnectedWorld();
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/), { timeout: 3000 });
+        const cursor = bot.getCursor();
+        const published = world.published.length;
+        const logLength = bot.getLog().length;
+        bot.onSnapshotUpdated();
+        bot.onSnapshotUpdated();
+        expect(bot.getCursor()).toBe(cursor);
+        expect(world.published.length).toBe(published);
+        expect(bot.getLog().length).toBe(logLength);
+    });
+
+    it('connected: a check the server never echoes waits; nothing advances', async () => {
+        const { bot, world } = makeConnectedWorld({ echo: false });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toBe('waiting for the server to confirm the check of "Loc A"'));
+        await new Promise((r) => setTimeout(r, 60));
+        expect(bot.getCursor()).toBe(0);
+        expect(checksOf(world)).toEqual(['Loc A']);
+    });
+
+    for (const when of ['before', 'after']) {
+        it(`connected: a check the client REFUSED (${when} the flush answers) is blocked, as offline`, async () => {
+            const { bot, world } = makeConnectedWorld({ refuse: when });
+            await bot.instant();
+            await vi.waitFor(() => expect(bot.getStatus()).toBe('blocked: the check of "Loc A" did not land'));
+            expect(bot.getCursor()).toBe(0);
+            expect(world.sent).toEqual([]);
+            expect(world.checked).toEqual([]);
+        });
+    }
+
+    it('connected: a refusal from BEFORE the check was sent (not the bot\'s) is ignored', async () => {
+        const { bot, world } = makeConnectedWorld({ refuse: 'stale' });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/), { timeout: 3000 });
+        expect(world.checked).toEqual(['Loc A', 'Loc B']);
+    });
+
+    it('OFFLINE (no connection) a check missing after the flush is blocked at once, exactly as before', async () => {
+        const { bot } = makeConnectedWorld({ connected: false });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toBe('blocked: the check of "Loc A" did not land'));
+        // The late mark does not revive it: offline has no awaited check.
+        await new Promise((r) => setTimeout(r, 60));
+        expect(bot.getStatus()).toBe('blocked: the check of "Loc A" did not land');
+        expect(bot.getCursor()).toBe(0);
+    });
+
+    it('reset() drops an awaited check', async () => {
+        const { bot, world } = makeConnectedWorld({ echoMs: 100 });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toBe('waiting for the server to confirm the check of "Loc A"'));
+        bot.reset();
+        await new Promise((r) => setTimeout(r, 150));
+        expect(world.checked).toEqual(['Loc A']);
+        expect(bot.getLog()).toEqual([]);
+    });
+});
