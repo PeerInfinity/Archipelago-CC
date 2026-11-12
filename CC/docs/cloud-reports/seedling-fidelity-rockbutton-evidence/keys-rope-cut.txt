@@ -1,0 +1,1 @@
+level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared|level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
