@@ -104,6 +104,8 @@ import {
 import { REDO_COMMAND_ID, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { describeOps } from '../procgenCore/editCore.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
+// ⛓ Maze editor tools (step B2): the shared FILL / CLEAR / MOVE this page turns on.
+import { MAZE_EDIT_TOOLS, MAZE_FILL_REFUSAL } from './mazeEditTools.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 // ⛓ SLICE 7: the ONE normalizer for a skeleton spec — this form, the identity
 // line and the URL bar all spell a room the same way.
@@ -3297,6 +3299,10 @@ export function main() {
              *  outside the EDIT arm, where no tool is mounted. */
             editTool: tool?.tool ?? null,
             editClip: tool?.clip ? { w: tool.clip.w, h: tool.clip.h } : null,
+            /** ⛓ B2 — whether a MOVE has already spent the RECT selection. ⚠ A GETTER: the
+             *  view marks the clip spent AFTER the move's `onChange` render, so a value
+             *  captured at render time would still say `false`. */
+            get editClipSpent() { return tool ? tool.clipSpent : null; },
             /**
              * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM, AS A CHANNEL A ROW CAN READ.**
              *
@@ -4215,8 +4221,28 @@ export function main() {
                 pasteOptions,
                 clipWarnings,
                 commands: [undoCommand, redoCommand],
+                /**
+                 * ⛓⛓ MAZE EDITOR TOOLS (B2) — `editorView`'s shared FILL /
+                 * CLEAR / MOVE, named by id after the four (`mazeEditTools.js`
+                 * has the census, and why the REPLACE paste is not here). FILL
+                 * reads `floodTarget` (a tile); CLEAR's scope is `#labClearWhat`.
+                 */
+                tools: MAZE_EDIT_TOOLS,
+                editTools: { fillRefusal: MAZE_FILL_REFUSAL, clearWhat: $('labClearWhat') },
                 lifetime: lt,
-                say,
+                /**
+                 * ⛓ MAZE EDITOR TOOLS (B2) — **A SENTENCE IS PAINTED WHEN IT IS SAID**, as the
+                 * world map's is (step A). This page's `say` only stores the message and
+                 * `render()` paints it; an applied edit renders through `onChange`, but a
+                 * REFUSAL (a FILL with no tile armed, a CLEAR of nothing, a MOVE with no
+                 * selection, FLOOD with no target) reports no change, so its sentence waited
+                 * for the next hover. An applied edit's render repaints the same text.
+                 */
+                say: (text, bad = false) => {
+                    say(text, bad);
+                    $('status').textContent = message || '—';
+                    $('status').className = messageBad ? 'bad' : 'ok';
+                },
                 offRoom: () => 'that point is outside the room — the cell you name is the cell '
                     + 'that gets edited, so a click past the edge REFUSES rather than clamping '
                     + 'to the last one',

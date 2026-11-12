@@ -29,11 +29,13 @@ import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { buildStagedTape } from './botDriverV1.js';
-import { stanceHypothesisProbe } from './solverBot.js';
+import { stanceHypothesisProbe, withApproachDoor, withBombPhaseWait, withLatchWeighFirst } from './solverBot.js';
 import { compareCorpseBumpWitness, corpseBumpModelSamples } from './fidelityCorpseBump.js';
-import { L40BK2_D1_SWITCHES, L40BK2_D2_SWITCHES, L40BK2_WITNESS_DIR, l40Bk2PocketChecks, l40Bk2Solve,
+import { L40BK2_D1_SWITCHES, L40BK2_D2_SWITCHES, L40BK2_WITNESS_DIR, l40Bk2PocketChecks, l40Bk2PocketShippedChecks, l40Bk2Solve,
     l40Bk2Step67Boot, unpackL40Bk2Sample } from './fidelityL40Bk2.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
+import { afterWitness, afterWitnessReplay, sortedInputs } from './fidelityAfterRows.js';
+import { l40LatchModelSamples } from './fidelityL40Latch.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -94,6 +96,21 @@ describe('L40BK2 D1 — a weigh\'s holder derived under the rest of the stance h
             + '(chaser bob@736,752)');
         expect(refusal.message).toContain('PRESS_KILL_REBOOT_GUARD');
     }), 300_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the AFTER of the row above, at the SHIPPED defaults. As its comment says,
+    // the door-shut solve now stops before a tick at `buttonroom@880,768` (the south door's latch, tried first): the
+    // chain's links from the arrival are NOT walked here at the defaults (COVERAGE MOVED — the shipped chain is the
+    // pocket boot's SOLVE, `l40bk2-pocket-shipped` in the train tier, and the latch boot's, `l40latch-orbit-shipped`).
+    it('AFTER (the shipped defaults): the door-shut arrival refuses before a tick — no REACHABLE stance inside buttonroom@880,768, the three weigh locks walled', async () => {
+        const { out, refusal } = await l40Bk2Solve(await l40Bk2Step67Boot(), L40BK2_D1_SWITCHES);
+        expect(out).toBeNull();
+        expect(refusal.message.startsWith('solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) '
+            + 'land the player box in the button and none of them plans a corridor from (488,578.0000000000008).')).toBe(true);
+        for (const id of ['wandlock@448,432', 'wandlock@512,480', 'wandlock@800,400']) {
+            expect(refusal.message).toContain(`${id} — its group t=`);
+        }
+        expect(refusal.perTick.length).toBe(0);
+    }, 300_000);
 });
 
 describe('L40BK2 D1 — the solver\'s own chain from inside the lock room, on the game (p4g, 0 px)', () => {
@@ -118,6 +135,28 @@ describe('L40BK2 D1 — the solver\'s own chain from inside the lock room, on th
     it('the model at the shipped defaults (D1 OFF) reproduces it too: D1 is solver-only', async () => {
         const model = await corpseBumpModelSamples(w.tape, { weighHypothesisChain: false });
         expect(compareCorpseBumpWitness(game, model.samples).slice(0, 3)).toEqual([]);
+    }, 180_000);
+});
+
+describe('L40BK2 AFTER — the pocket boot\'s SOLVE at the shipped defaults, on the game (`l40bk2-pocket-shipped`)', () => {
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): at the SHIPPED defaults (the L40 flip set ON) the pocket solve SOLVES
+    // Boss Key 2 in 4692 t (the BEFORE, `l40bk2-pocket-chain`, refused at 2650 t). The plan, played on p4g
+    // (`probe-seedling-l40bk2.mjs --only=l40bk2-pocket-shipped --record`); the train tier pins it as the solve.
+    const w = JSON.parse(readFileSync(join(L40BK2_WITNESS_DIR, 'l40bk2-pocket-shipped.json'), 'utf8'));
+    const game = w.samples.map(unpackL40Bk2Sample);
+
+    it('the recording: p4g, never hit, the player ends on the key', () => {
+        expect(w.page).toBe('seedling_bot_ap_p4g');
+        expect(w.tape.tick_count).toBe(4692);
+        expect(game.length).toBeGreaterThan(4600);
+        for (const c of l40Bk2PocketShippedChecks(game)) expect(c.ok, `${c.name}: ${c.detail}`).toBe(true);
+    });
+
+    it('the model at the shipped defaults reproduces it at 0 px, never hit', async () => {
+        const model = await l40LatchModelSamples(w.tape, L40BK2_D1_SWITCHES);
+        expect(model.error).toBeNull();
+        expect(compareCorpseBumpWitness(game, model.samples)).toEqual([]);
+        expect(model.hits).toEqual([]);
     }, 180_000);
 });
 
@@ -162,4 +201,46 @@ describe('L40BK2 D2 — leg 368: a struck spinner priced where the walk\'s own s
         expect([off.ok, off.ticks, off.plan, off.hits]).toEqual([true, 1555, '2c4b20d9853c', []]);
         expect(on).toEqual(off);
     }), 240_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the three rows above are BEFORE pins (`withL40Flip(false)`). At the
+    // SHIPPED defaults leg 368 plans ONE hitless 1714 t plan at both seams and in both arms: the t1222 hammer hit is
+    // gone (so D2's refusal has nothing to refuse — that property is not exercised at the defaults), and the plan is a
+    // game witness (`afterrows-l40-368-s5290`, p4g, 0 px, 0 hits). A GAIN: the 1567 t BEFORE plan took a hit.
+    it('AFTER (the shipped defaults) of the three: seams 5290 and 5280, OFF and ON — one hitless 1714 t plan, `b142543aace2`', () => {
+        const want = { ok: true, ticks: 1714, plan: 'b142543aace2', hits: [] };
+        expect(solveAt(5290, { dashSpinnerForecast: false })).toEqual(want);
+        expect(solveAt(5290, L40BK2_D2_SWITCHES)).toEqual(want);
+        expect(solveAt(5280, { dashSpinnerForecast: false })).toEqual(want);
+        expect(solveAt(5280, L40BK2_D2_SWITCHES)).toEqual(want);
+    }, 300_000);
+
+    it('AFTER control: the shipped defaults MINUS `BOMB_PHASE_WAIT` alone keep all three BEFORE pins (measured: each of the twelve flip switches OFF alone; only it moves leg 368)', () => withBombPhaseWait(false, () => {
+        expect(solveAt(5290, { dashSpinnerForecast: false })).toEqual({ ok: true, ticks: 1567, plan: 'abf1e13c3bf7',
+            hits: [[1222, 'spinner-hammer', 'spinner@192,144']] });
+        const on = solveAt(5290, L40BK2_D2_SWITCHES);
+        expect(on.ok).toBe(false);
+        expect(on.message).toMatch(/-> hold: the hold stands still .* inside bombpusher@112,128's 256 px reach/);
+        const off80 = solveAt(5280, { dashSpinnerForecast: false });
+        expect([off80.ok, off80.ticks, off80.plan, off80.hits]).toEqual([true, 1555, '2c4b20d9853c', []]);
+        expect(solveAt(5280, L40BK2_D2_SWITCHES)).toEqual(off80);
+    }), 300_000);
+
+    it('AFTER: the 1714 t plan at seam 5290 is the game witness `afterrows-l40-368-s5290` (through t1702) — never hit, the model at 0 px', () => {
+        const w = afterWitness('afterrows-l40-368-s5290');
+        const c = line.requests[0].request;
+        const req = restoreRequest({ ...c, staging: { ...c.staging, seam: { ...c.staging.seam, time: 5290 } } });
+        const { passes = ANYTIME_PASSES, source, ...tape } = req;
+        const answer = solveAnytime({ ...tape, source, levelSource: levelSourceFromAtlas(source.records) }, { passes });
+        const st = buildStagedTape({ staging: { ...tape.staging, inventory_slots: undefined },
+            perTick: answer.plan.solution.map((k) => new Set(k)), name: w.tape.name });
+        expect(sortedInputs(st.inputs)).toEqual(sortedInputs(w.tape.inputs));
+        expect(w.page).toBe('seedling_bot_ap_p4g');
+        // ⚠ recorded through t1702: from t1703 the model's bombpusher@112,128 fires its last Bomb 3 ticks before the game's
+        // (the player and the hits still agree there) — a model gap named in the afterrows report, not pinned here.
+        expect(w.upto).toBe(1702);
+        expect(w.samples.length).toBeGreaterThan(1680);
+        expect(w.samples.every((s) => s.hits === 0)).toBe(true);
+        const m = afterWitnessReplay(w);
+        expect([m.parted, m.hits]).toEqual([[], []]);
+    }, 180_000);
 });

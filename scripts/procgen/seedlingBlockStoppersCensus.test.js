@@ -17,13 +17,16 @@ beforeAll(() => {
 }, 300_000);
 
 describe('the bodies on the pushed blocks\' cells', () => {
-    it('the counts: 19 blocks, 131 (use x body) rows that meet — 119 can\'t gate, 11 in holder rooms (all ok), 1 mobile, 0 kill-gates', () => {
+    // ⛓ tile-rules-automation-r-a5: 131 -> 125 rows, static 10 -> 4. L40's wand locks cost their presses, so the t2-button
+    //   column is its own sub-region (r23c29) and `iceturret@472,400` stands there, where no block crossing is: its 6 CAN'T-GATE
+    //   rows on the body's block crossings leave. Every other row is the same after the body's r23c29 -> r26c13 rename; no price moves.
+    it('the counts: 19 blocks, 125 (use x body) rows that meet — 113 can\'t gate, 11 in holder rooms (all ok), 1 mobile, 0 kill-gates', () => {
         expect(censusCounts(census)).toEqual({
             blocks: 19,
             uses: { none: 7, holder: 8, 'crossing+holder': 1, crossing: 3 },
-            rows: 131,
-            verdicts: { "CAN'T-GATE": 119, HOLDER: 11, MOBILE: 1 },
-            movement: { chase: 91, static: 10, 'wall-hug-launch': 6, none: 24 },
+            rows: 125,
+            verdicts: { "CAN'T-GATE": 113, HOLDER: 11, MOBILE: 1 },
+            movement: { chase: 91, static: 4, 'wall-hug-launch': 6, none: 24 },
             holder: { 'ok (parked same)': 5, 'ok (parked tighter, never settles)': 6 },
         });
     });

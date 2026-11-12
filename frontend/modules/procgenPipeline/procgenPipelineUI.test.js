@@ -13,8 +13,9 @@ import '../bounceDemo/bounceDemoLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 import {
-    groupLibraryByFeature, ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST,
+    groupLibraryByFeature, ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST, CONTENT_FIELD_CLASS,
 } from './procgenPipelineUI.js';
+import { selectableContentPacks } from './worldContent.js';
 import { sphereRebuildRefusal } from './procgenPipelineEngine.js';
 import { panelDefaultParams, buildRunFromState } from './presetRun.js';
 import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
@@ -584,6 +585,15 @@ function withoutConceptsRow(el) {
 }
 
 /**
+ * ⛓ CONTENT SETS R3 — the *Content set* row is NEW after the R1 capture: the
+ * same splice, and its own rows are the `content picker` suite.
+ */
+function withoutContentRow(el) {
+    el.children = el.children.filter((c) => c.className !== CONTENT_FIELD_CLASS);
+    return el;
+}
+
+/**
  * ⛓ DISCOVERY × LOOPS (2026-10-18) — the *Discovery mode* row is NEW after the
  * R1 capture: the same splice, and its own rows are the `Discovery mode` suite.
  */
@@ -604,7 +614,7 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
         ctx._saveToLocalStorage = () => {};
         ctx._handEditedGridKeys = new Set();
         withFakeDocument(() => {
-            for (const c of controls(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams()))))) { perturb(c); c.fire('change'); }
+            for (const c of controls(withoutDiscoveryRow(withoutArrivalRow(withoutContentRow(withoutConceptsRow(ctx._renderParams())))))) { perturb(c); c.fire('change'); }
         });
         expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
         // ⛓ F1: a changed grid control records its key as hand-edited (a
@@ -662,7 +672,7 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         ctx.params = { ...panelDefaultParams(), enableHazards: true };
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1 });
         ctx._saveToLocalStorage = () => {};
-        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams())))))));
+        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutDiscoveryRow(withoutArrivalRow(withoutContentRow(withoutConceptsRow(ctx._renderParams()))))))));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
     });
 
@@ -755,6 +765,72 @@ describe('CONCEPT LIBRARY T1 — the concept list (`params.concepts`) on the Par
             byId.water.checked = false; byId.water.fire('change');
             expect(ctx.params.concepts).toEqual(['sword']);
             expect(saves).toBe(3);
+        });
+    });
+});
+
+describe('CONTENT SETS R3 — the content picker (`params.content`) on the Parameters section', () => {
+    const PACKS_JSON = JSON.parse(readFileSync(new URL('../../packs/packs.json', import.meta.url), 'utf8'));
+    const CHOICES = selectableContentPacks(PACKS_JSON);
+    const contentRow = (section) => section.children.filter((c) => c.className === CONTENT_FIELD_CLASS);
+    const ctxOf = (mode, choices) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams() };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        ctx._contentPackChoices = choices;
+        ctx.saves = 0;
+        ctx._saveToLocalStorage = () => { ctx.saves += 1; };
+        return ctx;
+    };
+
+    it('the choices are the packs packs.json\'s content table names, less every declared default pack', () => {
+        const named = [...new Set(Object.values(PACKS_JSON.content ?? {}).flat())];
+        expect(CHOICES.length).toBeGreaterThan(0);
+        expect(CHOICES.map((c) => c.id)).toEqual(named.filter((id) => !substrateRegistry.getAll()
+            .some((e) => e.defaultContentPack === id)));
+        for (const c of CHOICES) expect(c.title).toBe(PACKS_JSON.packs.find((p) => p.id === c.id).title);
+    });
+
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: ONE row after the concepts row, a box per choice, none ticked; ticking writes the ids in the choices\' order', (mode) => {
+        const ctx = ctxOf(mode, CHOICES);
+        withFakeDocument(() => {
+            const section = ctx._renderParams();
+            const rows = contentRow(section);
+            expect(rows).toHaveLength(1);
+            const i = section.children.indexOf(rows[0]);
+            expect(section.children[i - 1].className).toBe('procgen-pipeline-field procgen-pipeline-concepts');
+            const boxes = controls(rows[0]);
+            expect(boxes.map((b) => b.value)).toEqual(CHOICES.map((c) => c.id));
+            expect(boxes.every((b) => b.checked === false)).toBe(true);
+            for (const b of [...boxes].reverse()) { b.checked = true; b.fire('change'); }
+            expect(ctx.params.content).toEqual(CHOICES.map((c) => c.id));
+            boxes[0].checked = false; boxes[0].fire('change');
+            expect(ctx.params.content).toEqual(CHOICES.slice(1).map((c) => c.id));
+            expect(ctx.saves).toBe(boxes.length + 1);
+        });
+    });
+
+    it('a pack the world names but the picker does not offer is kept, in front, through a pick', () => {
+        const ctx = ctxOf('sphereGrowth', CHOICES);
+        ctx.params.content = ['elsewhere'];
+        withFakeDocument(() => {
+            const [box] = controls(contentRow(ctx._renderParams())[0]);
+            box.checked = true; box.fire('change');
+        });
+        expect(ctx.params.content).toEqual(['elsewhere', CHOICES[0].id]);
+    });
+
+    it('before the choices load the row draws no box (and asks for them); with none it says so', () => {
+        withFakeDocument(() => {
+            const asked = [];
+            const pending = ctxOf('sphereGrowth', null);
+            pending._ensureContentPackChoices = () => asked.push(1);
+            expect(controls(contentRow(pending._renderParams())[0])).toEqual([]);
+            expect(asked).toHaveLength(1);
+            const none = contentRow(ctxOf('sphereGrowth', [])._renderParams())[0];
+            expect(controls(none)).toEqual([]);
+            expect(none.textContent).toMatch(/none available/);
         });
     });
 });

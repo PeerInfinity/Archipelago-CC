@@ -50,8 +50,10 @@ import {
     overlayTileSemantics,
     resolveOverlayCondition,
     buildGroupOpeners,
-    GROUPED_LOCK_EXCEPTIONS,
+    IN_ROOM_PRESS_LOCK,
+    inRoomPressOf,
 } from './seedlingPlaythroughOverlay.js';
+import * as OVERLAY from './seedlingPlaythroughOverlay.js';
 
 const lock = (tag, tset, persistTag = '3') => ({
     type: tag, x: 0, y: 0, attrs: { tset: String(tset), tag: persistTag },
@@ -527,36 +529,71 @@ describe('the charged doors and the completion condition', () => {
     });
 });
 
-// ⛓ tile-rules-automation-r-a4 (⚖ Robert 2026-11-04 "Yes, in R-A4 (Recommended)") — L20's lock@32,80 costs exactly its
-// group's ONE latching press, read off the map's group census, never listed; the row only names WHICH lock.
-describe('R-A4: a GROUPED_LOCK_EXCEPTIONS lock costs its own press, derived', () => {
+// ⛓ tile-rules-automation-r-a5 (⚖ Robert 2026-11-11 "A now, C after A lands (Recommended)") — a grouped lock whose group's ONLY
+// in-level opener is one in-room latching press costs that press, read off the group census, never listed. R-A4's keyed row
+// for L20 is retired: the rule gives it the same condition. (R-A4's pins, re-stated for the general rule.)
+describe('R-A5: a grouped lock whose only opener is one in-room press costs that press, derived', () => {
     const L20 = { type: 'lock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } };
-    const press = (x, y, tag) => ({ type: 'buttonroom', x, y, attrs: { tset: '0', tag: String(tag), room: '-1' } });
-    const ctxFor = (entities) => ({ level: 20, groupOpeners: buildGroupOpeners({ levels: [{ level: 20, entities: [L20, ...entities] }] }) });
+    const press = (x, y, tag, tset = '0') => ({ type: 'buttonroom', x, y, attrs: { tset, tag: String(tag), room: '-1' } });
+    const ctxFor = (entities, lockFirst = [L20]) => ({ level: 20, groupOpeners: buildGroupOpeners({ levels: [{ level: 20, entities: [...lockFirst, ...entities] }] }) });
+    const map = () => JSON.parse(readFileSync(fileURLToPath(new URL('./atlases/seedling-map.json', import.meta.url)), 'utf8'));
 
-    it('the row is item-free: it names its lock and carries no condition of its own', () => {
-        expect(Object.keys(GROUPED_LOCK_EXCEPTIONS)).toEqual(['20:lock@32,80']);
-        expect(GROUPED_LOCK_EXCEPTIONS['20:lock@32,80'].condition).toBeUndefined();
+    it('no keyed table: the rule is data-driven (R-A4\'s GROUPED_LOCK_EXCEPTIONS is gone), with its provenance', () => {
+        expect(OVERLAY.GROUPED_LOCK_EXCEPTIONS).toBeUndefined();
+        expect(IN_ROOM_PRESS_LOCK.cite).toContain('ButtonRoom.as');
+        expect(IN_ROOM_PRESS_LOCK.why).toContain('only');
     });
-    it('on the delivered map: GATED on L20 flag 4 (the ButtonRoom\'s tag, 4), which resolves to Has(that event)', () => {
-        const map = JSON.parse(readFileSync(fileURLToPath(new URL('./atlases/seedling-map.json', import.meta.url)), 'utf8'));
-        const entity = map.levels.find((l) => l.level === 20).entities.find((e) => e.type === 'lock' && e.x === 32 && e.y === 80);
-        const ruled = overlayEntitySemantics(entity, base('lock'), { level: 20, groupOpeners: buildGroupOpeners(map) });
+    it('on the delivered map: L20\'s lock@32,80 is GATED on L20 flag 4 (the ButtonRoom\'s tag), which resolves to Has(that event)', () => {
+        const m = map();
+        const entity = m.levels.find((l) => l.level === 20).entities.find((e) => e.type === 'lock' && e.x === 32 && e.y === 80);
+        const ruled = overlayEntitySemantics(entity, base('lock'), { level: 20, groupOpeners: buildGroupOpeners(m) });
         expect(ruled.kind).toBe('gated');
         expect(ruled.condition).toEqual({ event: 'L20 flag 4: lock@32,80 cleared' });
         expect(resolveOverlayCondition(ruled.condition)).toEqual({ rule: 'Has', args: { item_name: 'L20 flag 4: lock@32,80 cleared' } });
+    });
+    it('on the delivered map: L40\'s six wand locks, each GATED on ITS press\'s ONE event, named after the group\'s first lock', () => {
+        const m = map();
+        const ctx = { level: 40, groupOpeners: buildGroupOpeners(m) };
+        const ruled = m.levels.find((l) => l.level === 40).entities.filter((e) => e.type === 'wandlock')
+            .map((e) => [`${e.x},${e.y}`, overlayEntitySemantics(e, base('wandlock'), ctx)])
+            .filter(([, r]) => r?.kind === 'gated' && r.condition?.event).map(([at, r]) => [at, r.condition.event]).sort();
+        expect(ruled).toEqual([
+            ['176,208', 'L40 flag 1: wandlock@176,80 cleared'],
+            ['176,80', 'L40 flag 1: wandlock@176,80 cleared'],
+            ['208,128', 'L40 flag 7: wandlock@208,128 cleared'],
+            ['208,144', 'L40 flag 7: wandlock@208,128 cleared'],
+            ['208,160', 'L40 flag 7: wandlock@208,128 cleared'],
+            ['480,560', 'L40 flag 12: wandlock@480,560 cleared'],
+        ]);
+    });
+    it('a press with several locks: EVERY lock names the ONE event the press mints (its first lock in map order), never itself', () => {
+        const A = { type: 'lock', x: 16, y: 16, attrs: { tset: '0', tag: '5' } };
+        const B = { type: 'wandlock', x: 48, y: 16, attrs: { tset: '0', tag: '6' } };
+        const ctx = ctxFor([press(192, 16, 4)], [A, B]);
+        const names = [A, B].map((e) => overlayEntitySemantics(e, base(e.type), ctx).condition.event);
+        expect(names).toEqual(['L20 flag 4: lock@16,16 cleared', 'L20 flag 4: lock@16,16 cleared']);
+        // MUTANT (the predict arm's first spelling): naming the ruled lock gives B an event no press mints.
+        expect(names[1]).not.toBe('L20 flag 4: wandlock@48,16 cleared');
+        // the order is the MAP's: B first, B names itself
+        const flipped = ctxFor([press(192, 16, 4)], [B, A]);
+        expect(overlayEntitySemantics(A, base('lock'), flipped).condition.event).toBe('L20 flag 4: wandlock@48,16 cleared');
     });
     it('the tag is the PRESS\'s, not the lock\'s: a gadget press with tag 9 names flag 9', () => {
         expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 9)])).condition)
             .toEqual({ event: 'L20 flag 9: lock@32,80 cleared' });
     });
-    it('refused by name: no census, no press, two presses, a holding Button, a rope opener', () => {
-        expect(() => overlayEntitySemantics(L20, base('lock'), { level: 20 })).toThrow(/needs ctx.groupOpeners/);
-        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([]))).toThrow(/no opener/);
-        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), press(208, 16, 5)]))).toThrow(/exactly one opener/);
-        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), { type: 'button', x: 64, y: 64, attrs: { tset: '0' } }])))
-            .toThrow(/1 holding/);
-        expect(() => overlayEntitySemantics(L20, base('lock'), ctxFor([{ type: 'rope', x: 64, y: 64, attrs: { tset: '0', tag: '2' } }])))
-            .toThrow(/exactly one opener/);
+    it('does NOT apply (today\'s ruling stands) where the group is not one in-room press: no census, two presses, a holding Button, a rope', () => {
+        expect(overlayEntitySemantics(L20, base('lock'), { level: 20 }).kind).toBe('open');
+        expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), press(208, 16, 5)])).kind).toBe('open');
+        expect(overlayEntitySemantics(L20, base('lock'), ctxFor([press(192, 16, 4), { type: 'button', x: 64, y: 64, attrs: { tset: '0' } }])).kind)
+            .toBe('open');
+        expect(overlayEntitySemantics(L20, base('lock'), ctxFor([{ type: 'rope', x: 64, y: 64, attrs: { tset: '0', tag: '2' } }])).kind).toBe('open');
+        expect(inRoomPressOf(undefined)).toBeNull();
+    });
+    it('a RockLock IS publish-opened (it extends Activators and fades on `activate`, RockLock.as:40-46,56-66): the rule applies', () => {
+        const rock = { type: 'rocklock', x: 32, y: 80, attrs: { tset: '0', tag: '1' } };
+        expect(OVERLAY.isPublishOpenedLock('rocklock')).toBe(true);
+        expect(overlayEntitySemantics(rock, base('rocklock'), ctxFor([press(192, 16, 4)], [rock])).condition)
+            .toEqual({ event: 'L20 flag 4: rocklock@32,80 cleared' });
     });
 });

@@ -544,7 +544,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -774,7 +774,12 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(s
  * pole event. The verb (`resolvePoleThrustStrategy` / `execPoleThrust`) is ONE Spear thrust from a stance whose rect
  * lies on the pole's core. OFF no row: the clear-tag keeps *"no strategy row exists for solid:lightpole"*.
  */
-'solid:lightpole', () => (CONTACT_FIDELITY.inRoomPoleThrust ? 'pole' : undefined)));
+'solid:lightpole', () => (CONTACT_FIDELITY.inRoomPoleThrust ? 'pole' : undefined)),
+/**
+ * ⛓ hammer-phase NEW-LOCKS (`ROCKLOCK_KILL`, OFF): a `RockLock` is `Lock`'s row (`hold`), and `refineStrategy` asks the
+ * INSTANCE which opener it has, as it asks a `lock` (`rockLockKillRow`: `tset == -1` is `kill`). OFF: no row.
+ */
+'solid:rocklock', () => (ROCKLOCK_KILL.enabled ? 'hold' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -3074,6 +3079,74 @@ function clearTagLanded(run, row, id) {
 export const NESTED_OPENER_DEPTH = 2;
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE NEW-LOCKS — **A `RockLock` WITH `tset == -1` IS A KILL-LOCK, AND THE KILL WORK ORDER TAKES
+ * IT** (`ROCKLOCK_KILL`, OFF). ⚖ The user, 2026-11-10 (the rules arc's L26 landing): *"a rocklock row using the same
+ * opening rules as Lock, read from the rocklock's own activator setting"*.
+ *
+ *     RockLock.as:49-66   `if (tSet == -1 && totalEnemies() == 0) activate = true;` then, while `activate`, the alpha
+ *                         falls 0.01 an update and at 0 `type = ""` and `Game.setPersistence(tag, false)`
+ *     Lock.as:109-115     `checkEnemies()`: the same test, word for word
+ *
+ * The solver had no row for `solid:rocklock` (*"no-verb: no strategy row exists for solid:rocklock"*: L26's two event
+ * legs, and every L26 crossing behind `rocklock@112,208`), although the MODEL already bills it: `combat.KILL_LOCK_TAGS`
+ * names `rocklock`, so `killLocksIn` lists it, the kill-lock ledger opens it at the last counted removal and the
+ * scratch layer writes its flag and rebuilds the world without it. What was missing is the solver's reading of the
+ * instance: `refineStrategy` and `resolveKillStrategy` ask `world.activators`, and a `RockLock` is not in that roster
+ * (`activators.js`: its `set activate` only stores the flag).
+ *
+ * ON: (1) `OBSTACLE_STRATEGIES['solid:rocklock']` is `Lock`'s row (`hold`); (2) `refineStrategy` asks the instance:
+ * a rocklock the level's own kill-lock list holds (`world.combat.killLocks`, i.e. ITS `tset == -1`) is `kill`, and any
+ * other rocklock has NO verb here (its opener is its activation group, which the model does not step for this class:
+ * the answer stays `obstacleGateFor`'s named gate); (3) `resolveKillStrategy` takes the lock row from that list
+ * (`rockLockKillRow`) where the activator roster has none; (4) the kill arms' "has the lock left the world" reads the
+ * world's solids for it (`killLockStands`). Nothing reads the level number or a coordinate. OFF: none of it is read.
+ * `SEEDLING_ROCKLOCK_KILL=1` / `withRockLockKill(enabled, fn)`.
+ */
+export const ROCKLOCK_KILL = { enabled: globalThis.process?.env?.SEEDLING_ROCKLOCK_KILL === '1' };
+export const ROCKLOCK_KILL_DEFAULT = false;
+
+/** Run `fn` with `ROCKLOCK_KILL` set to `enabled`, restoring the previous value. */
+export function withRockLockKill(enabled, fn) {
+    return withSwitch(ROCKLOCK_KILL, enabled, fn);
+}
+
+/**
+ * ⛓ NEW-LOCKS (`ROCKLOCK_KILL`): the lock row of a `rocklock` KILL-LOCK that still stands, in the activator roster's
+ * shape (`{id, tag, t, rect, x, y, persistTag}`), from the level's own kill-lock list and the world's solid; null for
+ * anything else (and always while the switch is off).
+ */
+function rockLockKillRow(run, obstacle) {
+    if (!ROCKLOCK_KILL.enabled || typeof obstacle?.id !== 'string' || !obstacle.id.startsWith('rocklock@')) return null;
+    const k = (run.world.combat?.killLocks ?? []).find((l) => `${l.tag}@${l.x},${l.y}` === obstacle.id);
+    const solid = k ? (run.world.solids ?? []).find((s) => s.tag === k.tag && s.x === k.x && s.y === k.y) : null;
+    if (!solid) return null;
+    return { id: obstacle.id, tag: k.tag, t: KILL_LOCK_TSET, rect: solid.rect, x: k.x, y: k.y, persistTag: k.flag };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE NEW-LOCKS — **THE CLEAR-TAG ON A KILL-LOCK FINISHES ON THE RUN'S OWN KILL-LOCK WRITE**
+ * (`KILLLOCK_CLEAR_WRITE`, OFF). See `execClearTag`'s `killLockWritten`: the model writes a kill-lock's flag through
+ * its scratch layer (`run.scratchClears`), which `earnedClears` does not list, so every clear-tag whose verb is the
+ * kill work order refused `not-written` after a kill that worked (L18 `{18,0}`; the same finish L26's rocklock and
+ * L53's lock need). ON the order reads that row. OFF: `earnedClears` and the rope row alone, byte for byte.
+ * `SEEDLING_KILLLOCK_CLEAR_WRITE=1` / `withKillLockClearWrite(enabled, fn)`.
+ */
+export const KILLLOCK_CLEAR_WRITE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CLEAR_WRITE === '1' };
+export const KILLLOCK_CLEAR_WRITE_DEFAULT = false;
+
+/** Run `fn` with `KILLLOCK_CLEAR_WRITE` set to `enabled`, restoring the previous value. */
+export function withKillLockClearWrite(enabled, fn) {
+    return withSwitch(KILLLOCK_CLEAR_WRITE, enabled, fn);
+}
+
+/** Does the kill work order's lock still stand in the live world? (The activator roster; a rocklock's solid, ON.) */
+function killLockStands(run, lock) {
+    if ((run.world.activators ?? []).some((a) => a.id === lock.id)) return true;
+    return ROCKLOCK_KILL.enabled && lock.tag === 'rocklock'
+        && (run.world.solids ?? []).some((s) => s.tag === lock.tag && `${s.tag}@${s.x},${s.y}` === lock.id);
+}
+
+/**
  * ⛓⛓⛓ R8 SLICE 3b — THE TABLE NAMES A STRATEGY BY TAG; LIVE STATE REFINES IT.
  *
  * ⛔ A `lock` AND A KILL-LOCK ARE THE SAME TAG AND OPPOSITE PROBLEMS, and L5
@@ -3117,6 +3190,11 @@ function refineStrategy(run, strategy, obstacle) {
         if (strategy === 'wand' && obstacle?.tag === 'wandlock') strategy = 'hold';
     }
     if (strategy !== 'hold') return strategy;
+    // ⛓ hammer-phase NEW-LOCKS (`ROCKLOCK_KILL`, OFF: no `solid:rocklock` row, so this is never reached): the instance's
+    // own opener — a kill-lock is `kill`; a group rocklock has no verb here (`obstacleGateFor` names its gate).
+    if (ROCKLOCK_KILL.enabled && obstacle?.kind === 'solid' && obstacle.tag === 'rocklock') {
+        return rockLockKillRow(run, obstacle) ? 'kill' : null;
+    }
     /**
      * ⛓⛓ SEEDLING SWIM U1, D2 — THE TRAP PRESSER. Asked FIRST and only of a
      * `button` on the frontier: a group with no opener and a rock in it is a
@@ -13236,7 +13314,8 @@ const persistTagOf = (e) => {
  */
 export function resolveKillStrategy(run, obstacle, contacts) {
     const world = run.world;
-    const row = (world.activators ?? []).find((a) => a.id === obstacle.id);
+    // ⛓ hammer-phase NEW-LOCKS (`ROCKLOCK_KILL`, OFF: null): a rocklock kill-lock's row is the kill-lock list's.
+    const row = (world.activators ?? []).find((a) => a.id === obstacle.id) ?? rockLockKillRow(run, obstacle);
     if (!row || row.t !== KILL_LOCK_TSET) return null;
     const bodies = countedBodiesLeft(run);
     if (bodies.length === 0) return null;
@@ -18181,7 +18260,7 @@ function execKill(run, perTick, resolved, ctx) {
      * has been rebuilt without the lock — the executor returns and the loop
      * re-plans through a corridor that now exists.
      */
-    const stillThere = (run.world.activators ?? []).some((a) => a.id === resolved.lock.id);
+    const stillThere = killLockStands(run, resolved.lock);
     if (!stillThere) {
         phases.push(drainCeiling(run, perTick, weapon, ctx));
         return {
@@ -19160,6 +19239,161 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE NEW-LOCKS — **A PINNED CHASER IS DRAWN FROM A CELL IT HAS A CLEAR STRAIGHT LINE TO**
+ * (`KILLLOCK_LINE_STANCE`, OFF; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
+ * ⚖ The user, 2026-11-10: *"a stance that draws a pinned chaser along a clear straight line, built on
+ * KILLLOCK_CHASER_REWIND"*.
+ *
+ * A chaser's impulse is the straight line to the player (`chaseImpulse`: no path-finding), swept through its own
+ * solids list one axis at a time (`Mobile.moveX/moveY`). A counted body whose line to the player crosses a Solid stays
+ * on that Solid for as long as the player stands there (`guardedChaserDwell`'s own diagnosis: *"PINNED on the solid
+ * between them"*). The arm's stance scan (`deriveKillByChaser`) prices only cells the player can reach NOW, so a body
+ * behind a wall the room's own verbs open (a breakable rock, a lock) gets no stance, and the stand-here fallback waits
+ * for a body that cannot come. MEASURED (L53's two event legs, the arrivals from L48 and L51, REWIND ON): from the
+ * puncher's corridor the three jellyfish are behind the arena's Ice Wall and two breakable rocks; *"no stance derives"*
+ * for any, and the one stand-here dwell ends *"its straight chase line to the player is blocked by tile:Ice Wall"*.
+ *
+ * ⇒ ON: (1) a body PINNED from where the player stands — its own box, swept along the straight line to the player,
+ * meets one of its own Solids (`chaserPinnedFromHere`) — is not asked the arm's stance scan (the scan prices cells for
+ * a body that comes, and each cell of it is a forecast: 3,193 of leg 910's 3,556 work units were scans of pinned
+ * bodies) and is not waited for where the player stands; (2) when a turn's own stances are spent or it has none
+ * (`killLockChaserRewindTurn`'s queue, `execKillByChaser`'s no-stance refusal), each live counted body, nearest first,
+ * is asked for LINE STANCES (`chaserLineStances`): the lattice cells
+ *   · inside the body's own leash of where it stands now (`ENEMY_CLASSES[tag].aggro.range`, centre to centre),
+ *   · that are plannable floor for the player (`plannerObstacleAt` null under the walk's own bag),
+ *   · farther than the sword's reach from the body's box (`SLASH_REACH`: the body has to come; a cell already in
+ *     reach is the arm's own scan's),
+ *   · and to which the body's own box, swept along the straight line from where it stands, meets none of ITS Solids
+ *     (`world.solidBoxesForMover` for that body, sampled every `KILLLOCK_LINE_STANCE_SWEEP` px),
+ * nearest the player first. Each is one attempt of the arm's own (`killLockChaserAttempt`: the ladder's walk to the
+ * cell — which opens what the room's verbs open on the way — then the guarded dwell), rewound when refused, up to
+ * `KILLLOCK_LINE_STANCE_PER_BODY` cells a body and `KILLLOCK_LINE_STANCE_TRIES` in all. ⚖ 30(c): the attempt kept is
+ * the one the run drove. Nothing reads a level or a coordinate. OFF: nothing here is read.
+ * `SEEDLING_KILLLOCK_LINE_STANCE=1` / `withKillLockLineStance(enabled, fn)`.
+ */
+export const KILLLOCK_LINE_STANCE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_LINE_STANCE === '1' };
+export const KILLLOCK_LINE_STANCE_DEFAULT = false;
+/** The line-stance attempts one turn may drive, and the cells one body may offer. */
+export const KILLLOCK_LINE_STANCE_TRIES = 6;
+export const KILLLOCK_LINE_STANCE_PER_BODY = 3;
+/** The body's box is tested every this many px along its line. */
+export const KILLLOCK_LINE_STANCE_SWEEP = 1;
+
+/** Run `fn` with `KILLLOCK_LINE_STANCE` set to `enabled`, restoring the previous value. */
+export function withKillLockLineStance(enabled, fn) {
+    return withSwitch(KILLLOCK_LINE_STANCE, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: one row per line-stance attempt
+ * (`{id, t, stance, cells, verdict, why?}`; verdict `killed` | `refused` | `deadline`).
+ */
+export const KILLLOCK_LINE_STANCE_COUNTS = { rows: [] };
+export function resetKillLockLineStanceCounts() {
+    KILLLOCK_LINE_STANCE_COUNTS.rows = [];
+}
+
+/** ⛓ NEW-LOCKS: does `body`'s box, swept from where it stands straight to `to`, stay clear of `solids` (its own)? */
+function chaserLineClear(run, body, solids, to) {
+    const n = Math.max(1, Math.ceil(Math.hypot(to.x - body.x, to.y - body.y) / KILLLOCK_LINE_STANCE_SWEEP));
+    for (let i = 1; i <= n; i += 1) {
+        const box = chaserBoxAt(body.tag, body.x + (to.x - body.x) * (i / n), body.y + (to.y - body.y) * (i / n));
+        if (solids.some((b) => rectsOverlap(box, b.rect ?? b))) return false;
+    }
+    return true;
+}
+
+/**
+ * ⛓ NEW-LOCKS: the lattice cells a live chaser `body` has a clear straight line to (see `KILLLOCK_LINE_STANCE`),
+ * nearest the player first (then y, then x, so the order is total). Reads the live run only; spends no tick.
+ */
+export function chaserLineStances(run, body, contacts) {
+    const leash = ENEMY_CLASSES[body.tag]?.aggro?.range ?? null;
+    if (leash === null || !ENEMY_CLASSES[body.tag]?.hitbox) return [];
+    const opts = solverPlanOpts(run, contacts);
+    const solids = run.world.solidBoxesForMover(run.liveGeometryOpts(), body.id);
+    const cells = [];
+    const half = DEFAULT_LATTICE / 2;
+    for (let y = half; y < run.world.height * TILE_SIZE; y += DEFAULT_LATTICE) {
+        for (let x = half; x < run.world.width * TILE_SIZE; x += DEFAULT_LATTICE) {
+            if (Math.hypot(x - body.x, y - body.y) > leash) continue;
+            if (distanceRectPoint(x, y, body.rect) <= SLASH_REACH) continue;
+            if (plannerObstacleAt(run.world, x, y, null, opts) !== null) continue;
+            if (!chaserLineClear(run, body, solids, { x, y })) continue;
+            cells.push({ x, y, d: Math.hypot(x - run.state.x, y - run.state.y) });
+        }
+    }
+    cells.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    return cells.map(({ x, y }) => ({ x, y }));
+}
+
+const PINNED_WHY = (b) => `${b.id}'s box, swept along its straight line to the player, meets one of its own Solids: it `
+    + 'is PINNED from here, so the arm\'s own stance is not asked of it and it is a line stance\'s '
+    + '(KILLLOCK_LINE_STANCE)';
+
+/**
+ * ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE` with `KILLLOCK_CHASER_REWIND` and a rewind; false otherwise): is `body` PINNED
+ * from where the player stands — its box, swept along the straight line to the player, meets one of its own Solids?
+ * A pinned body is not asked the arm's stance scan (every cell of it costs a forecast, and the scan prices cells for a
+ * body that comes) nor waited for where the player stands; its turn is the line stances'.
+ */
+function chaserPinnedFromHere(run, body, ctx) {
+    if (!KILLLOCK_LINE_STANCE.enabled || !KILLLOCK_CHASER_REWIND.enabled || !ctx?.rewind) return false;
+    if (!ENEMY_CLASSES[body.tag]?.hitbox) return false;
+    return !chaserLineClear(run, body, run.world.solidBoxesForMover(run.liveGeometryOpts(), body.id), run.state);
+}
+
+/**
+ * ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE` ON, inside `killLockChaserRewindTurn`): the line-stance attempts of one turn,
+ * each rewound to the turn's first tick when refused. Returns `{run, phase, tries}` — `phase` null when none kills
+ * (its whys appended to `whys`); a refusal raised after the deadline tripped is passed on unrewound, as the turn's.
+ */
+function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
+    const contacts = resolved.contacts ?? new Set();
+    const t0 = perTick.length;
+    const queue = [];
+    for (const b of live) {
+        const cells = chaserLineStances(run, b, contacts);
+        if (cells.length === 0) whys.push(`${b.id}: no cell it has a clear straight line to (KILLLOCK_LINE_STANCE)`);
+        for (const s of cells.slice(0, KILLLOCK_LINE_STANCE_PER_BODY)) {
+            queue.push({ body: b, stance: s, cells: cells.length });
+        }
+    }
+    let tries = 0;
+    for (const { body, stance, cells } of queue) {
+        if (tries >= KILLLOCK_LINE_STANCE_TRIES) break;
+        const row = { id: body.id, t: t0, stance: { ...stance }, cells, verdict: null };
+        KILLLOCK_LINE_STANCE_COUNTS.rows.push(row);
+        if (deadlineReached('kill-chaser')) {
+            row.verdict = 'deadline';
+            whys.push('the caller\'s anytime deadline was reached');
+            break;
+        }
+        tries += 1;
+        try {
+            const phase = killLockChaserAttempt(run, perTick, resolved, ctx, body, {
+                stance: { ...stance }, ticks: chaserKillCeiling(run, body), clears: [body.id],
+                why: `${body.id} has a clear straight line to (${stance.x},${stance.y}), so it comes `
+                    + '(KILLLOCK_LINE_STANCE)',
+            });
+            row.verdict = 'killed';
+            return { run, phase: { ...phase, line: true, tries }, tries };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal) || e instanceof PendingDeclaration || e?.undeclaredKillLock) throw e;
+            if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
+                row.verdict = 'deadline';
+                throw e;
+            }
+            row.verdict = 'refused';
+            row.why = String(e.message).split('\n')[0].slice(-240);
+            whys.push(`${body.id} at line stance (${stance.x},${stance.y}): ${row.why}`);
+            run = ctx.rewind.to(t0).run;
+        }
+    }
+    return { run, phase: null, tries };
+}
+
+/**
  * ⛓ L53-KILLLOCK: one turn of the kill-lock chaser arm with the rewind (`KILLLOCK_CHASER_REWIND` ON and a
  * `ctx.rewind`): the arm's own choice first (`hunted`, `hunt`), then that body's other scored stances, then each other
  * live body's (nearest first). A refused attempt is rewound to the turn's first tick. Returns `{run, phase}` (`run`
@@ -19187,6 +19421,11 @@ function killLockChaserRewindTurn(run, perTick, resolved, ctx, { live, hunted, h
     for (let q = 0; tries < KILLLOCK_CHASER_REWIND_TRIES; q += 1) {
         while (q >= queue.length && others.length > 0) {
             const b = others.shift();
+            // ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE`, OFF: always false): a body PINNED from here is not asked the scan
+            if (chaserPinnedFromHere(run, b, ctx)) {
+                whys.push(`${b.id}: ${PINNED_WHY(b)}`);
+                continue;
+            }
             const h = deriveKillByChaser(run, b, contacts, { dashMode, tolerance: DEFAULT_TOLERANCE, allScored: true });
             if (h.stance) push(b, h);
             else whys.push(`${b.id}: ${String(h.why).slice(0, 160)}`);
@@ -19217,6 +19456,13 @@ function killLockChaserRewindTurn(run, perTick, resolved, ctx, { live, hunted, h
             whys.push(`${body.id} at (${h.stance.x},${h.stance.y}): ${row.why}`);
             run = ctx.rewind.to(t0).run;
         }
+    }
+    // ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE`, OFF): the arm's stances are spent — a cell each body has a clear line to
+    if (KILLLOCK_LINE_STANCE.enabled) {
+        const out = killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys });
+        run = out.run;
+        if (out.phase) return { run, phase: { ...out.phase, tries: tries + out.phase.tries } };
+        tries += out.tries;
     }
     throw new SolverRefusal(`${ctx.what}: the count is still waiting on [${live.map((b) => b.id).join(', ')}] and `
         + `no stance kills one of them in ${tries} attempt(s), each rewound (KILLLOCK_CHASER_REWIND) — `
@@ -19274,6 +19520,11 @@ function execKillByChaser(run, perTick, resolved, ctx) {
             }
         }
         for (const b of hunt ? [] : live) {
+            // ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE`, OFF: always false): a body PINNED from here is not asked the scan
+            if (chaserPinnedFromHere(run, b, ctx)) {
+                tried.push({ option: `kill ${b.id} by press`, why: PINNED_WHY(b) });
+                continue;
+            }
             const h = deriveKillByChaser(run, b, resolved.contacts ?? new Set(),
                 { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE,
                     // ⛓ L53-KILLLOCK (`KILLLOCK_CHASER_REWIND`, OFF): the walk's own tolerance, every scored stance
@@ -19287,7 +19538,8 @@ function execKillByChaser(run, perTick, resolved, ctx) {
          * Measured: after L60's first kill `deriveKillByChaser`'s previews never settle (*"the preview spent 400
          * tick(s) without arriving"*) from the cell the player already stands in.
          */
-        if (!hunt && live.length > 0) {
+        // ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE`, OFF: always false): a body PINNED from here does not come
+        if (!hunt && live.length > 0 && !chaserPinnedFromHere(run, live[0], ctx)) {
             const b = live[0];
             const leash = ENEMY_CLASSES[b.tag]?.aggro?.range ?? 0;
             if (Math.hypot(b.x - run.state.x, b.y - run.state.y) <= leash) {
@@ -19297,6 +19549,14 @@ function execKillByChaser(run, perTick, resolved, ctx) {
                         + `stance previewed (${tried.map((t) => t.why.slice(0, 80)).join(' | ')})` };
                 tried.push({ option: 'stand here', why: hunt.why });
             }
+        }
+        // ⛓ NEW-LOCKS (`KILLLOCK_LINE_STANCE`, OFF): no stance and no body in its leash of here — the line stances
+        if (!hunt && KILLLOCK_LINE_STANCE.enabled && KILLLOCK_CHASER_REWIND.enabled && ctx.rewind) {
+            const lineWhys = [];
+            const out = killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys: lineWhys });
+            run = out.run;
+            if (out.phase) { phases.push(out.phase); continue; }
+            for (const w of lineWhys) tried.push({ option: 'line stance', why: w });
         }
         if (!hunt) {
             throw new SolverRefusal(`${ctx.what}: the count is still waiting on [${[...ids].join(', ')}] and no `
@@ -19412,7 +19672,7 @@ function execKillByChaser(run, perTick, resolved, ctx) {
      */
     const waitBound = Math.max(0, clearTick - perTick.length) + HOLD_SLACK;
     for (let i = 0; i <= waitBound; i += 1) {
-        if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
+        if (!killLockStands(run, resolved.lock)) {
             return { kind: 'kill', verb: 'kill', arm: 'chaser', lock: resolved.lock.id, phases,
                 removedAt: last.t, fade: fadeTicks, openedAt: run.ticksCompleted,
                 from, ticks: perTick.length - from };
@@ -20407,7 +20667,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
         earlyWalk.waits = remaining;
     }
     for (let i = 0; i <= remaining + HOLD_SLACK; i += 1) {
-        if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
+        if (!killLockStands(run, resolved.lock)) {
             return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
                 landings, cycles, bodies: resolved.bodies,
                 ...(economies ? { earlyWalk } : {}),
@@ -33030,8 +33290,25 @@ function solveSegmentUnder({
             const p = (run.ledger('ropePulls') ?? []).find((r) => r.flag?.level === flag.level && r.flag?.tag === flag.tag);
             return p ? { level: flag.level, tag: flag.tag, by: p.id, t: p.t } : null;
         };
+        /**
+         * ⛓ hammer-phase NEW-LOCKS (`KILLLOCK_CLEAR_WRITE`, OFF) — **A KILL-LOCK'S WRITE IS NO `earnedClears` ROW
+         * EITHER.** The model opens a `tset == -1` lock from its kill-lock ledger: the last counted removal plus the
+         * lock's own fade is the tick `turnOff()` runs `setPersistence(tag, false)`, and on a scratch run (no tape
+         * owns the slot) the run writes it itself (`applyClearNow`) and names it in `run.scratchClears`
+         * (`{level, tag, at, lock, by}`). `levelRun.earnedClearsNow` has no kill-lock arm, so a clear-tag on a
+         * kill-lock ran its `kill`, the lock left the world, and the order still refused `not-written` (measured:
+         * L18's `{18,0}`, the scratch row at t360 and the ledger empty at t480). So a kill-lock's clear-tag finishes on
+         * the run's own scratch row for THIS lock and flag, stamped at the write (`at`), as a rope's finishes on its
+         * `ropePulls` row. A non-scratch run has no such row and is unchanged.
+         */
+        const killLockWritten = () => {
+            if (!KILLLOCK_CLEAR_WRITE.enabled) return null;
+            const p = (run.scratchClears ?? [])
+                .find((c) => c.level === flag.level && c.tag === flag.tag && c.lock === id);
+            return p ? { level: flag.level, tag: flag.tag, by: p.by, t: p.at } : null;
+        };
         const written = () => run.ledger('earnedClears')
-            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? ropeWritten() ?? null;
+            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? ropeWritten() ?? killLockWritten() ?? null;
         /** The game has written it (`clearTagLanded`). */
         const landed = () => clearTagLanded(run, written(), id);
         const done = (arm, extra = {}) => {

@@ -115,7 +115,7 @@ describe('the binding over AP_1', () => {
     });
     it('FINDING: one stair shares its AP exit with other links (E4b\'s compiler must split it)', () => {
         expect(binding.rows.filter((r) => !r.alone).map((r) => `${r.doorway.id} in ${r.apName}`))
-            .toEqual(['L40:out_stairsdown_320_576 in level_40__r23c29 -> level_43__r13c7']);
+            .toEqual(['L40:out_stairsdown_320_576 in level_40__r26c13 -> level_43__r13c7']); // ⛓ R-A5: L40's body is r26c13
     });
     it('vanilla through the binding reaches what the undisconnected document reaches', () => {
         const plain = makeRulesDocReach(rules, { shuffled: [] })([]);

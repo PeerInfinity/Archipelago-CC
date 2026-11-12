@@ -33,6 +33,25 @@ Edits go through `mazeEditAdapter.js`, which describes the maze in the terms the
 
 A loaded payload is taken as it stands: it is its own base with no edit list, since its `level` already has the edits applied.
 
+### The edit tools
+
+The `edit` mode's tool buttons are the view's command table, in its order. FILL, CLEAR and MOVE are the shared rectangle tools (see [Editing core](./editing-core.md)); the maze lab names them in `mazeRoom/mazeEditTools.js`.
+
+| Tool | Key | What it does on the maze |
+|---|---|---|
+| BRUSH | `b` | Applies the palette entry to the clicked cell; a drag is one grouped edit. |
+| RECT (copy) | `r` | Two clicks copy a rectangle to the clip. A copy is not an edit. |
+| PASTE | `p` | Writes the clip at the clicked cell as one group. The two checkboxes paste only the tiles or only the entities. |
+| FLOOD | `f` | Repaints the clicked cell's 4-connected component with the palette's tile (floor or wall). |
+| FILL a rectangle | `l` | Two clicks paint the rectangle with the palette's tile (floor or wall), as one group. Any other palette entry refuses: entities are placed one cell at a time with the brush. |
+| CLEAR a rectangle | `x` | Two clicks empty the rectangle, as one group. The CLEAR select picks everything, `tile` only or `entity` only. A cleared entity is removed with `clearEntity`; a cleared tile is a wall turned to floor, since every maze cell has a tile. The entrance stays: there must always be one. A rectangle with nothing to clear refuses. |
+| MOVE the selection | `m` | One click moves the RECT selection there as one group: the source is cleared and the clip pasted (with the paste checkboxes). The entrance moves with a selection that holds it. A second move of the same selection, or a move onto its own source, refuses. |
+| Escape | `Escape` | Clears the armed tool. |
+
+`Ctrl/Cmd+Z` undoes and `Ctrl/Cmd+Shift+Z` or `Ctrl/Cmd+Y` redoes; FILL, CLEAR and MOVE are each one undo. Each tool is refused as a whole by the maze's own rules: a wall over an occupied cell, a wall or an item on an exit, a wall on the entrance. The status line gives the refusal.
+
+The maze lab has no REPLACE paste mode. The maze's paste already empties a cell's entities before writing the clip's, and always writes the tile, so a REPLACE paste would give the same world as an ADD paste.
+
 ## The five modes
 
 `?source=` switches modes in place. Each switch starts a new page lifetime (`procgenCore/pageLifetime.js`), so the mode being left drops its listeners. The values are `mazeLab.SOURCES`; an unknown value refuses and lists them.
@@ -40,7 +59,7 @@ A loaded payload is taken as it stands: it is its own base with no edit list, si
 | Mode | What it does |
 |---|---|
 | `generate` (default) | Runs the procgen loop. STEP places one template and re-solves; RUN-ALL runs to the target or saturation. The pane shows every attempt's outcome (`KEPT` / `REVERTED` / `NO_ANCHOR` / `ILLEGAL_PLACEMENT`) and the oracle's refusal verbatim. Unticking a template family restricts the roster; ATTEMPT on a row runs one directed attempt. |
-| `edit` | The editor palette (floor, wall, entrance, item, obstacle, block, button, flag, erase) plus brush, rectangle copy, paste and flood from `procgenCore/editorView.js`. Every edit lands on a clone. |
+| `edit` | The editor palette (floor, wall, entrance, item, obstacle, block, button, flag, erase) plus brush, rectangle copy, paste, flood, fill, clear and move from `procgenCore/editorView.js`; see [The edit tools](#the-edit-tools). Every edit lands on a clone. |
 | `solve` | `mazeOracle` on the world on screen: `SOLVED` / `REFUSED` / `BUDGET_EXHAUSTED` with the reason. The plan can be stepped. |
 | `manual` | Drive the player by keyboard; see [The manual arm](#the-manual-arm-sourcemanual). |
 | `set` | Edit a region library or a world; see [The set arm](#the-set-arm-sourceset). |
@@ -97,6 +116,7 @@ The canvas draw is `drawWorld(ctx, world, view)` in `mazeRoom/mazeRoomRender.js`
 | `seenTiles` | `Set` of `"x,y"`, or `null` for full blackout |
 | `isExitVisible` / `isLocationVisible` | Discovery filters (playback only) |
 | `isConsumableCollected` | `(x,y) => boolean`, or `null` when nothing tracks them |
+| `tileArt` | `{art, images}` from a world's content stack: the things `mazeTileArt.MAZE_ART_KEYS` keys are drawn from the pack, the rest as with `null`. Ignored under `seedlingSkin`. See [Tile art from a content pack](./maze.md#tile-art-from-a-content-pack-mazetileartjs) |
 
 `plainView({tilePx})` turns every filter off. `mazeRoomRender.test.js` runs in node without a canvas, so it compares an ordered draw-op log recorded by `drawOpRecorder.js`, which throws on any member it does not model.
 

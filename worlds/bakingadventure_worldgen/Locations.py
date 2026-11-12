@@ -45,5 +45,5 @@ location_table: Dict[str, LocationData] = {
     "Fold in Chocolate Chips": LocationData("Combining", "Fold in Chocolate Chips", 300000013, False),
     "Scoop Dough onto Sheets": LocationData("Finishing", "Scoop Dough onto Sheets", 300000014, False),
     "Bake for 9-11 Minutes": LocationData("Baking", "Bake for 9-11 Minutes", 300000015, False),
-    "Cool on Wire Rack": LocationData("Baking", "Cool on Wire Rack", None, True),
+    "Cool on Wire Rack": LocationData("Baking", "Cool on Wire Rack", 300000016, False, extra_attributes={"pinned": True}),
 }

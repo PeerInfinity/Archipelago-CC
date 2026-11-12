@@ -104,12 +104,13 @@ describe('the census on the delivered set (seed 1)', () => {
         expect(census.variants.V3.notes).toContain('V3 level_63 pushableblockspear@112,96: r6c9 -> r5c5 needs L63 flag 1: lightpole@64,88 cleared');
     });
 
-    it('the baseline sweep reproduces the committed seed-1 sphere log; (b) as specified moves three locations a sphere later, (b) with side arms none', () => {
+    // ⛓ tile-rules-automation-r-a5: the baseline moved (L40's wand locks cost their presses: one extra event level before
+    //   L43's Wand, The Seed 13.2 -> 14.2 collected), and against it (b) moves ONE location, not three: L68's two were 9 -> 10
+    //   because (b) delayed them past the Wand's sphere; the baseline now collects them that late anyway.
+    it('the baseline sweep reproduces the committed seed-1 sphere log; (b) as specified moves one location a sphere later, (b) with side arms none', () => {
         expect(census.baselineVsLog).toEqual([]);
         const later = [
             { location: 'L65 flag 0: lightpole@128,168 cleared', before: 8, after: 9 },
-            { location: 'L68 flag 0: bosslock@16,32 cleared', before: 9, after: 10 },
-            { location: 'Level 068 - Health', before: 9, after: 10 },
         ];
         expect(census.variants.V1.moves).toEqual(later);
         expect(census.variants.V2.moves).toEqual(later);

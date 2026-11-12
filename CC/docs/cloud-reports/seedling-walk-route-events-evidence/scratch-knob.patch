@@ -1,0 +1,48 @@
+From 32582890c2a6a174a4e53294dc5f2bb4e305c82c Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 12 Nov 2026 01:51:04 +0000
+Subject: [PATCH] SCRATCH MEASUREMENT-ONLY: TEST_MEASURE_ROUTE_EVENTS knob +
+ route-event lines in the [MEASURE] sampler (not for landing)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_018CoDi6jzH2ngmgdoWTt8jA
+---
+ frontend/modules/tests/testCases/tutorialTests.js | 5 +++++
+ test_json/e2e/app.spec.js                         | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/frontend/modules/tests/testCases/tutorialTests.js b/frontend/modules/tests/testCases/tutorialTests.js
+index 6cdb0fa2..6b019a64 100644
+--- a/frontend/modules/tests/testCases/tutorialTests.js
++++ b/frontend/modules/tests/testCases/tutorialTests.js
+@@ -537,6 +537,11 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
+                 + ` wasmMemMB=${mem == null ? '?' : (mem / 1048576).toFixed(0)} jsHeapMB=${heap == null ? '?' : (heap / 1048576).toFixed(0)}`
+                 + ` status=${JSON.stringify(document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? null)}`;
+             console.log(line);
++            // MEASUREMENT-ONLY (scratch, seedling-walk-route-events): the route-event step's state at skips and the end.
++            if (tag !== 'tick' && bot?.getRouteEventState) {
++                console.log(`[MEASURE ${tag}] routeEvents=${JSON.stringify(bot.getRouteEventState())}`);
++                for (const l of (bot.getLog?.() ?? []).filter((x) => /route event|breaking|collected by the game/.test(x))) console.log(`[MEASURE ${tag}] botlog: ${l}`);
++            }
+         } catch (e) {
+             console.log(`[MEASURE ${tag}] sampler threw: ${e?.message ?? e}`);
+         }
+diff --git a/test_json/e2e/app.spec.js b/test_json/e2e/app.spec.js
+index 5f146ea6..34373679 100644
+--- a/test_json/e2e/app.spec.js
++++ b/test_json/e2e/app.spec.js
+@@ -137,6 +137,11 @@ test.describe('Application End-to-End Tests', () => {
+       }, process.env.TEST_MEASURE_CAPTURE_SOLVES);
+     }
+ 
++    // MEASUREMENT-ONLY (scratch, seedling-walk-route-events): TEST_MEASURE_ROUTE_EVENTS=1 turns the bot's opt-in on.
++    if (process.env.TEST_MEASURE_ROUTE_EVENTS === '1') {
++      await page.addInitScript(() => { try { localStorage.setItem('playbackBot_routeEvents', 'true'); } catch { /* */ } });
++    }
++
+     console.log(`PW DEBUG: Navigating to application with parameters:`);
+     console.log(`  - machine: ${loadSnapshot()}`);
+     console.log(`  - mode: ${testMode}`);
+-- 
+2.43.0
+

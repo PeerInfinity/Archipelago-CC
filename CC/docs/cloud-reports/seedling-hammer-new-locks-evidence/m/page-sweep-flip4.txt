@@ -1,0 +1,5 @@
+223 done roomHits=0 ms=18237 cleared=2 eventFlag={"level":18,"tag":0,"set":true,"collected":true} plans=ok:430:kill divs=0 env=null
+286 done roomHits=0 ms=23993 cleared=1 eventFlag={"level":26,"tag":0,"set":true,"collected":true} plans=ok:629:kill+walk divs=0 env=null
+910 done roomHits=0 ms=34022 cleared=3 eventFlag={"level":53,"tag":2,"set":true,"collected":true} plans=refusal::,ok:799:break+kill+walk divs=0 env=null
+289 done roomHits=0 ms=13801 cleared=1 eventFlag={"level":26,"tag":0,"set":true,"collected":true} plans=ok:315:kill divs=0 env=null
+911 done roomHits=0 ms=24878 cleared=3 eventFlag={"level":53,"tag":2,"set":true,"collected":true} plans=ok:606:break+kill+walk divs=0 env=null

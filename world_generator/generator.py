@@ -44,6 +44,7 @@ class WorldGenerator:
         player_id: str = '1',
         apply_name_substitutions: bool = False,
         lossy: bool = False,
+        victory_location: bool = False,
     ):
         """
         Initialize the generator.
@@ -67,6 +68,9 @@ class WorldGenerator:
         self.player_id = player_id
         self.apply_name_substitutions = apply_name_substitutions
         self.lossy = lossy
+        # design-victory-location: the event goal becomes a pinned, ID-bearing Victory location
+        self.victory_location = victory_location
+        self.victory_location_changes: List[str] = []
         # '<site>:<kind>' (or '<site>:helper <name>') -> count of always-true placeholders
         # emitted (lossy mode only)
         self.lossy_placeholders: Dict[str, int] = {}
@@ -101,6 +105,12 @@ class WorldGenerator:
         # Apply name substitutions if present (e.g. Metamath generic → meaningful names)
         if self.apply_name_substitutions:
             apply_name_substitutions(json_data, player_id=self.player_id)
+
+        if self.victory_location:
+            from ._victory_location import apply_victory_location
+            self.victory_location_changes = apply_victory_location(json_data, player_id=self.player_id)
+            for line in self.victory_location_changes:
+                logger.info(f"victory_location: {line}")
 
         # The source after name substitution: the base of the package's embedded rules document
         # (_embedded_rules.py; written by _generate once the rename below has fixed the identity).

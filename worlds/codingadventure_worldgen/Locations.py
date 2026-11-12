@@ -91,5 +91,5 @@ location_table: Dict[str, LocationData] = {
     "Cloud Provider": LocationData("DeploymentBranch", "Cloud Provider", 400000059, False),
     "Domain Setup": LocationData("DeploymentBranch", "Domain Setup", 400000060, False),
     "SSL Certificate": LocationData("DeploymentBranch", "SSL Certificate", 400000061, False),
-    "Production Deployment": LocationData("ProductionHub", "Production Deployment", None, True),
+    "Production Deployment": LocationData("ProductionHub", "Production Deployment", 400000062, False, extra_attributes={"pinned": True}),
 }

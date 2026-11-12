@@ -187,8 +187,9 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r3c12'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
-        const SPHERE53_WEAPON_GATED = ['level_39__r0c9', 'level_39__r2c11', 'level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36',
-            'level_40__r36c35', 'level_40__r48c54', 'level_43__r13c7', 'level_43__r3c8', 'level_43__r8c7'];
+        // ⛓ tile-rules-automation-r-a5: + L40's r4c4 and r26c13 (its wand locks split L40; every L40 region stays weapon-gated here).
+        const SPHERE53_WEAPON_GATED = ['level_39__r0c9', 'level_39__r2c11', 'level_40__r0c53', 'level_40__r23c29', 'level_40__r26c13',
+            'level_40__r32c36', 'level_40__r36c35', 'level_40__r48c54', 'level_40__r4c4', 'level_43__r13c7', 'level_43__r3c8', 'level_43__r8c7'];
         const SPHERE56_WEAPON_GATED = ['level_50', 'level_51__r14c6', 'level_51__r2c6', 'level_51__r3c10', 'level_51__r3c4', 'level_52__r0c7',
             'level_52__r2c2', 'level_52__r5c10', 'level_53__r14c9', 'level_53__r2c2', 'level_53__r9c10', 'level_54__r10c5', 'level_54__r13c9',
             'level_54__r16c8', 'level_54__r18c15', 'level_54__r18c19', 'level_54__r19c13', 'level_54__r1c8', 'level_54__r27c8', 'level_54__r8c11',

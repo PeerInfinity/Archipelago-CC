@@ -199,10 +199,12 @@ describe('rules l20-button-latch: an in-room latch\'s crossings cost its press e
     const gatedBy = (e) => Object.values(regions).flatMap((r) => r.exits.filter((x) => names(x.access_rule).includes(e.name))
         .map((x) => ({ from: r.name, to: x.connected_region, rule: x.access_rule })));
 
-    // ⛓ tile-lay-l40-latches: + L40's three, which gate nothing (zero-gate mints; their rows are the lay slice's pins).
-    it('the in-room press events: L20\'s button (the one that gates), and L40\'s three, each at its button in its own flag', () => {
-        expect(presses.map((e) => e.event_id)).toEqual(['flag:L20:4', 'flag:L40:1', 'flag:L40:7', 'flag:L40:12']);
-        expect(presses.filter((e) => gatedBy(e).length > 0).map((e) => e.event_id)).toEqual(['flag:L20:4']);
+    // ⛓ tile-lay-l40-latches: + L40's three, which gated nothing then (zero-gate mints).
+    // ⛓ tile-rules-automation-r-a5: L40's wand locks now cost their presses (`IN_ROOM_PRESS_LOCK`), so all three GATE; flag 1's
+    //   event sits in r4c4 (its button's new sub-region), which the region walk reaches after r0c53's flag 7.
+    it('the in-room press events: L20\'s button and L40\'s three, each at its button in its own flag, and every one gates', () => {
+        expect(presses.map((e) => e.event_id)).toEqual(['flag:L20:4', 'flag:L40:7', 'flag:L40:1', 'flag:L40:12']);
+        expect(presses.filter((e) => gatedBy(e).length > 0).map((e) => e.event_id)).toEqual(['flag:L20:4', 'flag:L40:7', 'flag:L40:1', 'flag:L40:12']);
         expect(presses[0]).toMatchObject({
             name: 'L20 flag 4: lock@32,80 cleared', region: 'level_20__r1c12', side: 'level_20__r1c12', across: [],
             obstacle: { level: 20, tag: 4, class: 'lock', x: 32, y: 80 },
