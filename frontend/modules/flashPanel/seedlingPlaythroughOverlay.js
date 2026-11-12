@@ -919,14 +919,33 @@ export const PIXEL_MASK_TAGS = Object.freeze([
  * (`enter`); a rock with none (L40, L41) keeps the transcription's row. No `ctx.rockFire`: the transcription's row.
  */
 export const ROCK_FIRE_CONDITION = anyOf(flag('hasSword'), flag('hasSpear'), flag('hasFire'));
+/**
+ * ⛓⛓ tile-fire-breaks-rocks §4 — A ROCK'S OWN CLEARED EVENT, WHERE IT IS MINTED. ⚖ Robert 2026-11-12, via the liaison:
+ * "Credit where created (Recommended)"; shape ruled by rules-6. A tagged rock is gone once its flag is cleared
+ * (`BreakableRock.check`, `BreakableRock.as:47-54`), so holding its event the rock is no obstacle from any side. Where
+ * the producer MINTS that event (`ctx.mintedEvents`, the names its own event layer makes: `obstacleEventNames`), every
+ * swing-only `enter` gate also opens on it. A rock whose event is not minted (L16, L53, L100's)
+ * is unchanged: crediting an event nothing grants would be a `Has` of no item.
+ */
+export function rockOwnEvent(entity, ctx) {
+    const tag = Number(entity.attrs?.tag);
+    if (!Number.isInteger(tag) || tag < 0 || !ctx?.mintedEvents) return null;
+    const name = obstacleEventName({ level: ctx.level, tag, cls: entity.type, x: entity.x, y: entity.y });
+    return ctx.mintedEvents.has(name) ? { event: name } : null;
+}
 function rockFireRuling(entity, base, ctx) {
     const row = ctx?.rockFire?.get(`L${ctx.level}:${entity.type}@${entity.x},${entity.y}`);
     if (!row || row.stances.length === 0) return null;
-    const swing = base.condition;
+    const own = rockOwnEvent(entity, ctx);
+    const swing = own ? anyOf(base.condition, own) : base.condition;
     return {
         ...base,
+        // ⚠ The occupancy is NOT credited with the event: it is also the event's own location rule (the producer prices
+        // the event at the obstacle's crossing cost), which would then name itself. Holding the event already implies
+        // Sword | Spear | Fire (its rule), so only the swing-only sides need it.
         condition: ROCK_FIRE_CONDITION,
         ...(row.swingDirs.length ? { enter: Object.fromEntries(row.swingDirs.map((d) => [d, swing])) } : {}),
+        ...(own ? { ownEvent: own.event } : {}),
         fireStances: row.stances.map(({ x, y }) => [x, y]),
         cite: 'Player.as:924,989,1032 -> genericHit -> BreakableRock.hit (BreakableRock.as:57-67)',
     };

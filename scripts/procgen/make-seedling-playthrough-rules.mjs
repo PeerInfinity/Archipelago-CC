@@ -89,7 +89,7 @@ const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules
 const { arrivalSolidCensus, gameLandings } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
 const {
-    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
+    deriveObstacleEvents, obstacleEventNames, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, encounterLockSides,
@@ -202,10 +202,44 @@ const rockFireSides = () => {
 };
 /** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides, for a reader that reports them. */
 export const playthroughRockFireSides = () => rockFireSides();
+// The fidelity ARRIVAL census over THESE rooms (the obstacle events' rows), computed once: the event layer reads it after
+// the atlas is built, and the rock rulings read the names it will mint before (`mintedRockEvents`).
+let censusMemo = null;
+const arrivalCensusRows = () => (censusMemo ??= arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)));
+/**
+ * ⛓ tile-fire-breaks-rocks §4 — the obstacle events this producer MINTS, by name: the same selection pass
+ * `playthroughObstacleEvents` makes its events from (`obstacleEventNames`), over the same census rows. The rock ruling
+ * credits a rock's own cleared event only when it is here (`seedlingPlaythroughOverlay.rockOwnEvent`).
+ */
+let mintedMemo = null;
+export const mintedObstacleEvents = () => (mintedMemo ??= new Set(obstacleEventNames(arrivalCensusRows())));
+/**
+ * ⛓ tile-fire-breaks-rocks §4 — the rock events the rock rulings CREDIT (a rock with a flame stance whose own cleared
+ * event is minted: `OV.rockOwnEvent`), by name.
+ */
+export function creditedRockEvents() {
+    const sides = rockFireSides();
+    const minted = mintedObstacleEvents();
+    const out = [];
+    for (const level of LEVELS) {
+        for (const e of level.entities ?? []) {
+            if (e.type !== 'breakablerock' || !(sides.get(`L${level.level}:${e.type}@${e.x},${e.y}`)?.stances.length > 0)) continue;
+            const own = OV.rockOwnEvent(e, { level: level.level, mintedEvents: minted });
+            if (own) out.push(own.event);
+        }
+    }
+    return out;
+}
+/** The credited rock events that are no event location of `eventNames`, each as a refusal naming it (empty: sound). */
+export function unmintedRockEvents(credited, eventNames) {
+    const made = new Set(eventNames);
+    return credited.filter((n) => !made.has(n))
+        .map((n) => `a rock ruling credits "${n}", which no event location of this run grants (an unminted event is a Has of no item)`);
+}
 const entityOverride = (entity, base, level) => {
     return OV.overlayEntitySemantics(entity, base, {
         level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
-        ...(entity?.type === 'breakablerock' ? { rockFire: rockFireSides() } : {}),
+        ...(entity?.type === 'breakablerock' ? { rockFire: rockFireSides(), mintedEvents: mintedObstacleEvents() } : {}),
     });
 };
 /** The overlay's entity ruling as the grid builder applies it (a census reads a lock's `opensFrom`/`heldBy` off it). */
@@ -1726,7 +1760,7 @@ const regionAnalyses = new Map();
  *     the event costs what crossing the obstacle costs; none (a rock-placement puzzle) = True_.
  * Run after `buildPlaythroughAtlas(…)` on the document it returned.
  */
-export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, levelSourceFromAtlas(MAP)), departures = departuresLandingAt } = {}) {
+export function playthroughObstacleEvents(doc, { rows = arrivalCensusRows(), departures = departuresLandingAt } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
     const entityOf = (level, { cls, x, y }) => {
         const e = (level.entities ?? []).find((en) => en.type === cls && en.x === x && en.y === y);
@@ -2856,8 +2890,10 @@ export function compilePlaythroughRules(doc, { table = DERIVED_TABLE, rekey = nu
     const mintedRopes = new Set(ropes.events.map((e) => e.name));
     const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
     const stray = named.filter((n) => !mintedRopes.has(n));
+    // ⛓ tile-fire-breaks-rocks §4: every rock event the rock rulings credit is an event location this run made.
+    const strayRockEvents = unmintedRockEvents(creditedRockEvents(), layer.events.map((e) => e.name));
 
-    return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText };
+    return { rules, report, layer, landingGates, ropes, override, disagrees, uncharged, stray, strayRockEvents, rulesText };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
@@ -2874,7 +2910,7 @@ function main() {
     if (!result.ok) process.exit(1);
 
     const compiled = compilePlaythroughRules(doc);
-    const { layer, landingGates, ropes, override, disagrees, uncharged, stray, rulesText, report } = compiled;
+    const { layer, landingGates, ropes, override, disagrees, uncharged, stray, strayRockEvents, rulesText, report } = compiled;
     const { obstacle, locks, buttons, poles, talks } = layer;
     if (disagrees.length) {
         for (const d of disagrees) console.error(`ERROR: ${TBL.composedDisagreeMessage(d)}`);
@@ -2890,6 +2926,10 @@ function main() {
     }
     if (stray.length) {
         console.error(`ERROR: the rules name rope event(s) never minted: ${stray.join(', ')}`);
+        process.exit(1);
+    }
+    if (strayRockEvents.length) {
+        console.error(`ERROR: ${strayRockEvents[0]}`);
         process.exit(1);
     }
 
