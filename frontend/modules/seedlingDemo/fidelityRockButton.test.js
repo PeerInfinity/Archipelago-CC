@@ -15,7 +15,7 @@ import { L28, ROCKBUTTON_WITNESS_DIR, compareRockButton, rockButtonModelSamples 
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
-import { solveSegment, SolverRefusal } from './solverBot.js';
+import { solveSegment, SolverRefusal, withRestingHolder } from './solverBot.js';
 
 const ON = { fallRockHoldsButton: true };
 const OFF = { fallRockHoldsButton: false };
@@ -109,17 +109,29 @@ describe('ROCKBUTTON D1 — `fallRockHoldsButton` (ON since the flip, ⚖ user 2
      * ⛓ HAND-OVER TO HAMMER (pinned so the move is seen, re-pinned by hammer): ON, the model opens the lock at t101 with
      * no input, but the solver still refuses at t0 — `stanceHypothesis` asks `deriveWeighSource` for a block onto the
      * button and never reads that a landed rock already holds it (the solver's wait; not this slice's region).
+     *
+     * ⛓ RE-PINNED by hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, `SEEDLING_RESTING_HOLDER`): the wait landed behind its
+     * own switch, OFF. Old: "ON, the solver still refuses … at the button's stance" (the switch did not exist). New:
+     * the same refusal with `RESTING_HOLDER` OFF; with it ON the button's refusal is gone — the solver waits out the
+     * fade and crosses the lock (t101), and stops at the room's next wall, the bobsoldier (`hammerRockHolderWait.test.js`).
      */
-    it('HAND-OVER: ON, the solver still refuses the L30 door from (136,296) at the button\'s stance', () => {
-        withContactFidelity(ON, () => {
+    it('HAND-OVER (re-pinned): ON, the solver refuses at the button\'s stance with `RESTING_HOLDER` OFF, waits ON', () => {
+        const solve = () => {
             const run = bootRun([0, 1]);
             let err = null;
             try {
                 solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 304, y: 16 } }], name: 'rockbutton-l28',
                     boot: { level: 28, x: 128, y: 288 } });
             } catch (e) { err = e; }
-            expect(err).toBeInstanceOf(SolverRefusal);
-            expect(err.obstacle).toEqual({ kind: 'proximity-hazard', id: L28.button.id });
+            return { err, run };
+        };
+        withContactFidelity(ON, () => {
+            const off = withRestingHolder(false, solve);
+            expect(off.err).toBeInstanceOf(SolverRefusal);
+            expect(off.err.obstacle).toEqual({ kind: 'proximity-hazard', id: L28.button.id });
+            const on = withRestingHolder(true, solve);
+            expect(on.err?.obstacle).not.toEqual({ kind: 'proximity-hazard', id: L28.button.id });
+            expect(on.run.lockWrites.map((w) => [w.id, w.t, w.value])).toEqual([[L28.lock.id, 101, false]]);
         });
     });
 });

@@ -1,0 +1,32 @@
+# box lock: TAKEN by play-wait-prefix.mjs (browser, pid 2298) — head 4216e79cb, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+{
+ "solve": {
+  "ok": false,
+  "at": 361,
+  "error": "BotDriverV2Error",
+  "message": "solverBot(rock-holder-wait) reach-exit (304,16)->L30 -> kill (bobsoldier@264,168) by press: the dwell was HIT at tick 74 (hits 0 -> 1, deaths 0 -> 0). The stance was derived to be outside every danger the map can name; the GAME says otherwise, which is the map being a heuristic and the run being the oracle."
+ },
+ "cut": 240,
+ "perTickTotal": 361,
+ "page": "seedling_bot_ap_p4g",
+ "idleLead": 101,
+ "game": {
+  "sampled": 240,
+  "lockAt": 102,
+  "minY": 183.31261797304325,
+  "maxHits": 0,
+  "end": {
+   "x": 194.57212458083185,
+   "y": 183.31261797304325,
+   "level": 28
+  }
+ },
+ "model": {
+  "lockWriteT": 101,
+  "minY": 183.31261797304325
+ },
+ "diverging": 0,
+ "firstDiverging": []
+}
+ALL CHECKS PASSED

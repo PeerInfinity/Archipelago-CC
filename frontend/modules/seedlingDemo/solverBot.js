@@ -5330,6 +5330,34 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
             }, ...derived.rejected, ...opener.rejected],
         };
     }
+    if (!derived.plan && derived.resting) {
+        // ⛓ hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF): the dwell arm above, with a resting Solid as the holder
+        // (`restingHolderOn`). No stance: the player waits out the fade wherever the walk left them.
+        const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+            `solverBot weigh/resting (${obstacle.id})`);
+        const hold = deriveHold(run, resolvedPresser, opener);
+        const r = derived.resting;
+        return {
+            strategy: 'weigh',
+            postCondition: 'press',
+            dwellOnly: true,
+            target: { x: presser.x, y: presser.y },
+            resting: { solid: r.solid, tag: r.tag, tile: { ...r.tile }, sinceTick: null },
+            dwell: {
+                ticks: hold.ticks,
+                until: hold.until,
+                why: `${r.solid} (a resting \`${r.tag}\`) holds ${presser.tag}@${presser.x},${presser.y} down and `
+                    + 'never moves again this visit — `Button.update` re-collides `["Player","Enemy","Solid"]` EVERY '
+                    + 'tick (`Button.as:27-39`). There is no lean to order and no cell to stand in, so this is the '
+                    + 'weigh MINUS its shove: the player waits out the fade wherever the walk left them.',
+            },
+            rejected: [{
+                option: 'hold',
+                why: `the parent's fallback would put the stance on ${presser.tag}@${presser.x},${presser.y}'s own `
+                    + `cell, which ${r.solid} occupies`,
+            }, ...derived.rejected, ...opener.rejected],
+        };
+    }
     if (!derived.plan && derived.corpse) {
         // ⛓ fidelity CORPSEBUMP D2: the corpse is the holder (`deriveCorpseWeigh`); `execWeigh`'s corpse arm walks.
         const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
@@ -5944,10 +5972,78 @@ function deriveWeighSource(run, onto, contacts, blocked = [], { liveBag = null }
     // ⛓ L40BK2 (`weighHypothesisChain`): `liveBag` is guard (iii)'s hypothesis bag (absent: the live world, as before).
     const derived = liveBag ? deriveWeigh(run, onto, contacts, blocked, { liveBag })
         : deriveWeigh(run, onto, contacts, blocked);
+    // ⛓ hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF): a resting Solid already holding the presser is a third holder.
+    if (RESTING_HOLDER.enabled && !derived.plan && !derived.parked) {
+        const resting = restingHolderOn(run, onto);
+        if (resting) return { ...derived, resting, rejected: [...derived.rejected, resting.rejected] };
+    }
     if (!CONTACT_FIDELITY.corpseBumpWeigh || derived.plan || derived.parked) return derived;
     const c = liveBag ? deriveCorpseWeigh(run, onto, blocked, { liveBag, contacts })
         : deriveCorpseWeigh(run, onto, blocked);
     return { ...derived, ...(c.plan ? { corpse: c.plan } : {}), rejected: [...derived.rejected, ...c.rejected] };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF) — **A PRESSER A RESTING SOLID ALREADY HOLDS IS
+ * DISCHARGED AFTER ITS FADE.** The game: `Button.update` collides `["Player","Enemy","Solid"]` every tick
+ * (`Button.as:16,29-39`), and a landed `FallRock`/`FallRockLarge` (or a set `Moonrock`) is `type = "Solid"` that never
+ * moves again for the visit. So a presser one rests on publishes its group from the first frame and for the rest of the
+ * visit, and the responder's fade (`Lock.activationStep`, `opensOnTick`) runs out with no input: there is no block to
+ * order and no stance to stand in (the rock occupies the presser's cell), only the WAIT. That is the dwell arm a
+ * pre-parked block already takes (`resolveWeighStrategy`), with the holder named as what it is.
+ *
+ * ⛔ THE MODEL DECIDES, NOT THIS READER. A holder is reported only when BOTH hold: a resting Solid of the run's
+ * `fallenRocks` bag (the per-visit family whose members never move once landed) overlaps the presser's rect by
+ * `Button`'s own overlap test, AND the live model reads the presser `down` (`run.activatorsNow`) while the player's own
+ * box is off it. The second clause is the model's answer to "does that Solid press it" (fidelity's
+ * `fallRockHoldsButton`): where the model does not count the rock, the solver does not either, so a plan never waits on
+ * a fade the replay will not run. Generic: no level, no id, no Seedling constant — the bag, the presser, the read.
+ */
+function restingHolderOn(run, onto) {
+    const presser = (run.world.pressers ?? []).find((p) => Math.floor(p.x / TILE_SIZE) === onto.tx
+        && Math.floor(p.y / TILE_SIZE) === onto.ty);
+    if (!presser?.rect) return null;
+    const id = `${presser.tag}@${presser.x},${presser.y}`;
+    const rocks = run.liveGeometryOpts().fallenRocks;
+    if (!rocks) return null;
+    const solid = [...rocks.values()].find((r) => r.rect && rectsOverlap(r.rect, presser.rect));
+    if (!solid) return null;
+    if (rectsOverlap(playerBoxAt(run.state.x, run.state.y), presser.rect)) return null;
+    const read = run.activatorsNow?.pressers?.find((p) => p.id === id);
+    if (!read?.down) return null;
+    return {
+        solid: solid.id,
+        tag: solid.tag,
+        presser: id,
+        tile: { ...onto },
+        rejected: {
+            option: `weigh with a block onto ${id}`,
+            why: `${solid.id} (a resting \`${solid.tag}\`, \`type = "Solid"\`) ALREADY holds ${id} — the model reads it `
+                + 'down with the player off it — so there is no press to order, only its fade to wait out',
+        },
+    };
+}
+
+/**
+ * The switch for `restingHolderOn` — OFF by default; `SEEDLING_RESTING_HOLDER=1` turns it on in a node process (and in
+ * the page's solve worker through `solverEnvChannel`), `withRestingHolder(enabled, fn)` for a test or a witness. OFF,
+ * nothing is read and every walk is byte-identical.
+ */
+export const RESTING_HOLDER = { enabled: globalThis.process?.env?.SEEDLING_RESTING_HOLDER === '1' };
+export const RESTING_HOLDER_DEFAULT = false;
+
+/**
+ * ⛓ READ-ONLY PROBE for `hammerRockHolderWait.test.js`: `restingHolderOn` for the presser at `at` (`{x, y}`) of `run`
+ * as it stands — `{solid, tag, presser, tile}` or null. It reads whatever the switch says: it asks the reader directly.
+ */
+export function restingHolderProbe(run, at) {
+    const r = restingHolderOn(run, { tx: Math.floor(at.x / TILE_SIZE), ty: Math.floor(at.y / TILE_SIZE) });
+    return r ? { solid: r.solid, tag: r.tag, presser: r.presser, tile: { ...r.tile } } : null;
+}
+
+/** Run `fn` with `RESTING_HOLDER` set to `enabled`, restoring the previous value. */
+export function withRestingHolder(enabled, fn) {
+    return withSwitch(RESTING_HOLDER, enabled, fn);
 }
 
 /**
@@ -7155,6 +7251,13 @@ export function previewWalk(run, wps, tolerance = 0,
                     DASH_CERT_SIGHT.counts.refused += 1;
                     continue;
                 }
+                // ⛓ hammer L28-BOBSOLDIER (`KILL_STANCE_SIGHT`, OFF): the chaser arm's stance scan asks the same line,
+                // with the ghost swing's waiver too. OFF the depth is 0 and nothing is asked.
+                if (killStanceSightDepth > 0 && dashCertSightDepth === 0 && CONTACT_FIDELITY.pixelMaskSightLines
+                    && b.tag !== 'flyer' && !gate.hasGhostSword && dashCertLineBlocked(run, state, b)) {
+                    KILL_STANCE_SIGHT.counts.refused += 1;
+                    continue;
+                }
                 /**
                  * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
                  * own five gates refuse an i-framed body, a dying one and a
@@ -7896,6 +7999,51 @@ export function withDashCertSight(enabled, fn) {
 
 /** ⛓ hammer DASHCERT — how many `spinnerDashWhole` asks are on the stack (counted with `DASH_CERT_SIGHT` ON only). */
 let dashCertSightDepth = 0;
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L28-BOBSOLDIER — **THE CHASER ARM'S STANCE SCAN SEES THE SWING'S LINE OF SIGHT**
+ * (`KILL_STANCE_SIGHT`, OFF).
+ *
+ * ⚖ The user approved the slice on 2026-11-12 (the hammer replan: *"L28 bobsoldier kill stance"*).
+ *  - The gap (measured, `seedling-hammer-l28-bobsoldier.md` §3): DASHCERT's gap, one caller over. `deriveKillByChaser`
+ *    prices each stance with `previewWalk`, whose chaser arm tests only the slash rect and the reach; the run's sword arm
+ *    also refuses a chaser whose line from the player meets a Solid (`slash()`'s `collideLine("Solid", …)`,
+ *    `Player.as:917`; fidelity MASKS D2, `CONTACT_FIDELITY.pixelMaskSightLines`, ON). On the witness (L28 from (136,296)
+ *    with the rock resting on the button, both of ROCK-HOLDER-WAIT's switches ON), the stance (216,200) was priced with
+ *    the t328 press landing on its first test. The run refused three tests on a `dungeonspire` mask and landed the
+ *    fourth, so the body's i-frame clock ran 3 ticks behind the preview's. The strike policy's re-approach then parted
+ *    from the forecast and stepped the player into the resting blade at t361. The game takes the same hit.
+ *  - ON: the stance scan's previews ask the run's own line test (`run.collideLineSolid`, masks included) before a swing
+ *    lands on a chaser, with the run arm's waivers (a Flyer, a ghost swing; the key OFF asks nothing). The stance priced
+ *    is then the fight the dwell drives (⚖ 30(c)). Every other preview is untouched.
+ *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
+ * `counts` hears each scan ask (`asks`) and each swing the line refused inside one (`refused`); it decides nothing.
+ * `SEEDLING_KILL_STANCE_SIGHT=1` in a node process or the page's solve worker (`solverEnvChannel`), or
+ * `withKillStanceSight(enabled, fn)` for a row. The decision runs in the solve WORKER (`solverBot`), not on the main thread.
+ */
+export const KILL_STANCE_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_SIGHT === '1',
+    counts: { asks: 0, refused: 0 } };
+export const KILL_STANCE_SIGHT_DEFAULT = false;
+
+/** Run `fn` with `KILL_STANCE_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withKillStanceSight(enabled, fn) {
+    return withSwitch(KILL_STANCE_SIGHT, enabled, fn);
+}
+
+/** ⛓ L28-BOBSOLDIER — how many stance-scan previews are on the stack (counted with `KILL_STANCE_SIGHT` ON only). */
+let killStanceSightDepth = 0;
+
+/** `fn` (a stance-scan preview) with the swing's line of sight asked ON; OFF it is `fn()`, nothing counted. */
+function killStanceSighted(fn) {
+    if (!KILL_STANCE_SIGHT.enabled) return fn();
+    KILL_STANCE_SIGHT.counts.asks += 1;
+    killStanceSightDepth += 1;
+    try {
+        return fn();
+    } finally {
+        killStanceSightDepth -= 1;
+    }
+}
 
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -10864,7 +11012,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
                 ty: Math.floor(opener.presser.y / TILE_SIZE),
             } : null;
             const derived = onto ? deriveWeighSource(run, onto, contacts, blocked) : null;
-            if (!derived || (!derived.plan && !derived.parked && !derived.corpse)) {
+            if (!derived || (!derived.plan && !derived.parked && !derived.corpse && !derived.resting)) {
                 // ⛓ L40BK2: a refused holder is ALSO asked again under the rest of the hypothesis (`chained`); the wall
                 // stands either way — the base hypothesis does not hold it.
                 if (chained && onto) chained.push({ a, opener, onto });
@@ -10962,7 +11110,7 @@ function chainWeighHypothesis(run, chained, out, contacts, blocked, extra) {
                 still.push(p);
                 continue;
             }
-            if (derived.plan || derived.parked || derived.corpse) {
+            if (derived.plan || derived.parked || derived.corpse || derived.resting) {
                 const corpse = derived.corpse && !derived.plan && !derived.parked ? derived.corpse.turret : null;
                 // ⛓ a corpse holder's turret is killed by its weigh: its volume rides out as the entry's exemption
                 extra.push({ id: p.a.id, kind: 'activator', tag: p.a.tag, strategy: 'weigh',
@@ -12209,6 +12357,8 @@ function execWeigh(run, perTick, resolved, ctx) {
             dwellOnly: true,
             presser: { ...resolved.target },
             parked: { ...resolved.parked },
+            // ⛓ ROCK-HOLDER-WAIT: the resting Solid that holds it (only ever set while `RESTING_HOLDER` is on)
+            ...(resolved.resting ? { resting: { ...resolved.resting } } : {}),
             dwell: only,
             ticks: only.ticks ?? 0,
         };
@@ -26007,8 +26157,9 @@ export function deriveKillByChaser(run, body, contacts,
          */
         let walk;
         try {
-            walk = previewWalk(run, wps, tolerance,
-                { strike: strikeFor(), standFor: ceilingFor(c) });
+            // ⛓ L28-BOBSOLDIER (`KILL_STANCE_SIGHT`, OFF): ON, the swing's line of sight is asked in this preview
+            walk = killStanceSighted(() => previewWalk(run, wps, tolerance,
+                { strike: strikeFor(), standFor: ceilingFor(c) }));
         } catch (e) {
             if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
             rejected.push({ ...c, why: `the model REFUSES to price this candidate's own `
