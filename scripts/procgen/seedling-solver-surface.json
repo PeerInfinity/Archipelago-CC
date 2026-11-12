@@ -28,6 +28,7 @@
     "solveProgress.js",
     "solverBot.js",
     "spaceTimeReach.js",
+    "spearArm.js",
     "stagedHuntScanMemo.js",
     "strategySwitch.js",
     "strikePolicy.js",
@@ -562,9 +563,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 238
+        "solverBot.js": 241
       },
-      "sites": 379,
+      "sites": 382,
       "seen": "both",
       "via": [
         "direct",
@@ -702,10 +703,10 @@
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 22
+          "solverBot.js": 24
         },
         "talkCircles": {
-          "solverBot.js": 4
+          "solverBot.js": 5
         },
         "tentacleBeastFight": {
           "dangerMap.js": 2,
@@ -861,9 +862,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 136
+        "solverBot.js": 137
       },
-      "sites": 199,
+      "sites": 200,
       "seen": "both",
       "via": [
         "direct",
@@ -934,7 +935,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 77
+          "solverBot.js": 78
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -1169,10 +1170,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 167,
+        "solverBot.js": 173,
         "strikePolicy.js": 2
       },
-      "sites": 202,
+      "sites": 208,
       "seen": "both",
       "via": [
         "direct",
@@ -1206,10 +1207,10 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 59
+          "solverBot.js": 61
         },
         "inventorySlots": {
-          "solverBot.js": 24
+          "solverBot.js": 26
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1217,7 +1218,7 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 27
+          "solverBot.js": 29
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
@@ -4403,6 +4404,24 @@
     },
     {
       "surface": "import",
+      "name": "SPEAR_ANIM_TICKS",
+      "module": "frontend/modules/seedlingDemo/combatVerbs.js",
+      "line": 287,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "spearArm.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Ticks until spearEnd clears spearing for the spear animation, after which a press starts a new thrust (the spear arm's swallow period)."
+    },
+    {
+      "surface": "import",
       "name": "CONTACT_FIDELITY",
       "module": "frontend/modules/seedlingDemo/contactFidelity.js",
       "line": 157,
@@ -4417,10 +4436,11 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 152,
+        "solverBot.js": 153,
+        "spearArm.js": 1,
         "strikePolicy.js": 3
       },
-      "sites": 193,
+      "sites": 195,
       "seen": "static",
       "via": [
         "import"
@@ -6330,9 +6350,10 @@
       "form": "geometry-query",
       "files": {
         "lightsVerb.js": 1,
-        "solverBot.js": 14
+        "solverBot.js": 14,
+        "spearArm.js": 1
       },
-      "sites": 15,
+      "sites": 16,
       "seen": "static",
       "via": [
         "import"
@@ -6389,9 +6410,10 @@
       "files": {
         "botDriverV2.js": 2,
         "ghostRopeCut.js": 1,
-        "solverBot.js": 13
+        "solverBot.js": 13,
+        "spearArm.js": 1
       },
-      "sites": 16,
+      "sites": 17,
       "seen": "static",
       "via": [
         "import"
@@ -6469,9 +6491,10 @@
       "form": "geometry-query",
       "files": {
         "lightsVerb.js": 1,
-        "solverBot.js": 13
+        "solverBot.js": 13,
+        "spearArm.js": 1
       },
-      "sites": 14,
+      "sites": 15,
       "seen": "static",
       "via": [
         "import"
@@ -6613,9 +6636,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 6
+        "solverBot.js": 7
       },
-      "sites": 6,
+      "sites": 7,
       "seen": "static",
       "via": [
         "import"
@@ -7444,9 +7467,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 37
+        "solverBot.js": 37,
+        "spearArm.js": 1
       },
-      "sites": 37,
+      "sites": 38,
       "seen": "static",
       "via": [
         "import"

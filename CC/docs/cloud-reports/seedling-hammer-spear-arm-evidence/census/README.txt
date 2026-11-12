@@ -1,0 +1,1 @@
+Recipe: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> at this branch head (936 legs), then a python filter on sphere.inventory: Ghost Spear held and Progressive Sword not held (Ghost Sword never appears before the sword on the route).

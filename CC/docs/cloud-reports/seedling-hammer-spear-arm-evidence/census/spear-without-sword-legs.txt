@@ -1,0 +1,3 @@
+legs 936 holding Ghost Spear 274 spear and no Progressive Sword 0
+levels []
+first sphere holding (index, label, position in inventory): {'Progressive Sword': (1, '0.1', 0), 'Progressive Shield': (17, '3.6', 16), 'Ghost Spear': (57, '7.8', 56)}
