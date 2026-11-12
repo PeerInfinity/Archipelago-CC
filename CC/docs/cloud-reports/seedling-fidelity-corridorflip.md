@@ -187,6 +187,16 @@ and **none is re-pinned here** (the flip is not licensed).
 | 10 hitless legs | done | done, +2–25 t | 0 → 0 | no | model | fidelity |
 | bounded reds (20 rows, 10 files) | green | red | — | none on a default arm | — | §above |
 
+## CI at the branch heads (`JavaScript Unit Tests`)
+
+- `7c3d5f86` (D2, the memo OFF): run 43311236045 **success**.
+- `f0638187` (D1, the flip ON): run 43314815867 **failure**, as predicted. Suite (unfiltered) **27,173 passed / 20 failed**;
+  slow battery 437 / 437. The 20 are **exactly** the bounded set's 20 (same 10 files, same row counts: fidelityDrill 1,
+  DrillKill 5, L100Lattice 1, LapseCost 1, TimedPass 3, UnbilledGate 3, hammerDashCert 1, hammerDrillExitPass 2,
+  seedlingCanCross 1, arrivalCompositesLegs 2). No CI red falls outside the bounded set.
+- `decb479a` and `3cf0e615` (docs, the report) are path-filtered: no JS run. The branch's code is `f0638187`'s.
+  `unittests` (Python) success at both.
+
 ## Dispatches for the planner (⚖ sweep economy: one per arm)
 
 Branch `claude/seedling-fidelity-wave-42-aa98bv` at the report's head.
