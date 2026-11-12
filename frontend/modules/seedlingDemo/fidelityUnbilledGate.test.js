@@ -77,7 +77,9 @@ describe('fidelity UNBILLEDGATE — a solve with damage no plan billed', () => {
         expect(rises).toEqual([[84, 0, 1]]);
     });
 
-    it('OFF: step 47 SOLVES with the unbilled hit (the census window sees it, decides nothing)', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('OFF: step 47 SOLVES with the unbilled hit (the census window sees it, decides nothing)', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         const seen = [];
         UNBILLED_DAMAGE_TRACE.sink = (row) => seen.push(row);
         let out;
@@ -92,9 +94,11 @@ describe('fidelity UNBILLEDGATE — a solve with damage no plan billed', () => {
         expect(seen[0]).toMatchObject({ name: 'survey-step-47', prefix: 0, ticks: 201, billed: 0, deaths: [], gate: false });
         expect(seen[0].unbilled).toEqual([{ t: 84, tick: 83, level: 22, source: 'wallflyer', id: 'wallflyer@64,80',
             hits: 1, died: false }]);
-    });
+    }));
 
-    it('ON: step 47 is REFUSED by name — obstacle.kind unbilled-damage, its tick, source and count', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('ON: step 47 is REFUSED by name — obstacle.kind unbilled-damage, its tick, source and count', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         let err = null;
         try {
             withGate(true, solveStep47);
@@ -107,9 +111,11 @@ describe('fidelity UNBILLEDGATE — a solve with damage no plan billed', () => {
             level: 22, source: 'wallflyer', hits: 1, deaths: 0, billed: 0 });
         expect(err.perTick).toHaveLength(201);
         expect(err.goal?.kind).toBe('reach-exit');
-    });
+    }));
 
-    it('ON: a hit inside a replayed PREFIX is the prefix\'s, not the segment\'s — the rest of step 47 solves', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('ON: a hit inside a replayed PREFIX is the prefix\'s, not the segment\'s — the rest of step 47 solves', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         const all = withGate(false, solveStep47).perTick;
         const staging = solveStaging(stagingFromTape(parseTape(JSON.stringify(WITNESS.tape))));
         const levelSource = levelSourceFromAtlas(patchedMapDocument(MAP));
@@ -121,7 +127,7 @@ describe('fidelity UNBILLEDGATE — a solve with damage no plan billed', () => {
             boot: staging.boot, prefix,
             forkRun: () => createRunForStaging(staging, levelSource) }));
         expect(out.perTick.length).toBeGreaterThan(100);
-    });
+    }));
 
     it('ON: a BILLED forced hit is not unbilled — leg 622 still solves (the control)', () => {
         const RECS = new Map(indexLevels(MAP));

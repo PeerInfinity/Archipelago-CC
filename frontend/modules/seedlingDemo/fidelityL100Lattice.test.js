@@ -62,7 +62,9 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
         expect(CONTACT_FIDELITY_DEFAULTS.fineStanceWalk).toBe(true);
     });
 
-    it('OFF: the break-stance walk is planned at 16 px, aims (124,140) past the pool node, and stalls on the mask', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('OFF: the break-stance walk is planned at 16 px, aims (124,140) past the pool node, and stalls on the mask', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         const { e } = solve216(false);
         expect(e?.name).toBe('SolverRefusal');
         expect(e.message).toContain('break stance (breakablerock@128,144): the re-planned corridor failed too');
@@ -71,7 +73,7 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
         const walk = e.rows.find((row) => row.strategy?.verb === 'walk');
         expect(walk.strategy.lattice).toBeUndefined();
         expect(walk.path.slice(-2)).toEqual([{ x: 104, y: 136 }, { x: 124, y: 140 }]);
-    }, 120_000);
+    }), 120_000);
 
     // ⛓ The L100LATTICE witness (731 t, one unbilled jellyfish hit) is the plan with DASH_CERT_SIGHT OFF — its control row.
     it('ON, DASH_CERT_SIGHT OFF: the walk is planned on FINE_LATTICE, the rock breaks, and the plan IS the game witness, key for key', () => {

@@ -2043,7 +2043,7 @@ export const CONTACT_FIDELITY = {
      * the timed pass's `drillPass`). OFF: byte-identical. ⛔ OFF by default (no licence);
      * `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1` for a node measurement.
      */
-    corridorForecastMemo: false,
+    corridorForecastMemo: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

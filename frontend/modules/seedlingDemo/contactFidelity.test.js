@@ -403,8 +403,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             spinnerRemoveRead: false,
             // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
             fallRockHoldsButton: true,
-            // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — OFF.
-            corridorForecastMemo: false });
+            // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — ON since the CORRIDORFLIP flip (⚖ user 2026-11-12).
+            corridorForecastMemo: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -108,7 +108,9 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
         expect(keysOf(on)).toEqual(keysOf(off));
     }, 60000);
 
-    it('ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         const req = leg265();
         const on = withContactFidelity({ strikeIframeLapse: true }, () => solve(req));
         LAPSE_NARROW_RETRY.enabled = false;
@@ -121,7 +123,7 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
         expect(on.ok).toBe(true);
         expect(on.plan.solution.length).toBe(116);
         expect(keysOf(on)).toEqual(keysOf(base));
-    }, 60000);
+    }), 60000);
 
     it('MUTANT (the companion off): ON, the same request is refused at the DETOUR rung\'s budget', () => withL40Flip(false, () => {
         const req = leg403();

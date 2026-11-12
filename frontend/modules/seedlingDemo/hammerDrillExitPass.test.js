@@ -115,12 +115,14 @@ describe('hammer-phase DRILL-EXIT-PASS: the switch', () => {
 });
 
 describe('hammer-phase DRILL-EXIT-PASS: L91, a sword held (legs 717–720)', () => {
-    it('OFF: 718 and 719 refuse EXHAUSTED on drill@64,80 (the census\'s W3)', () => OFF(() => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('OFF: 718 and 719 refuse EXHAUSTED on drill@64,80 (the census\'s W3)', () => OFF(() => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         for (const id of [718, 719]) {
             const r = solveLeg(id);
             expect(r.refusal?.message).toMatch(/reach-exit \(\d+,\d+\)->L\d+: the combat ladder is EXHAUSTED\. The corridor passes through danger at \([\d.]+,[\d.]+\) — enemy:drill@64,80/);
         }
-    }), 120000);
+    })), 120000);
 
     it('ON: 718 SOLVES — a certified timed pass of 190 t to the L92 crossing, hitless; replayed on a fresh run', () => ON(() => {
         DRILL_EXIT_PASS_COUNTS.armed.length = 0;
@@ -188,14 +190,16 @@ describe('hammer-phase DRILL-EXIT-PASS: L91, a sword held (legs 717–720)', () 
 });
 
 describe('hammer-phase DRILL-EXIT-PASS: a walk that refuses after spending ticks (L88)', () => {
-    it('ON = OFF on leg 704: the refusal is the walk\'s, word for word, and no pass is asked', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('ON = OFF on leg 704: the refusal is the walk\'s, word for word, and no pass is asked', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         const off = OFF(() => solveLeg(704));
         DRILL_EXIT_PASS_COUNTS.armed.length = 0;
         const on = ON(() => solveLeg(704));
         expect(off.refusal).not.toBeNull();
         expect(on.refusal?.message).toBe(off.refusal.message);
         expect(DRILL_EXIT_PASS_COUNTS.armed).toEqual([]);
-    }, 180000);
+    }), 180000);
 });
 
 describe('hammer-phase DRILL-EXIT-PASS: residue D-A\'s L28 Sword row, ON', () => {
