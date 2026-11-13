@@ -122,23 +122,31 @@ describe('composites probe X — L88 declines BY NAME beside the live drill (fid
         it(`${leg.name}: the solver refuses the corridor on the stepped drill (drillMixedRooms OFF: the re-planned corridor failed too); drillLive OFF plans it again`, () => {
             const { result } = serve(leg);
             expect(result.ok).toBe(false);
-            expect(String(result.message)).toMatch(/enemy:drill@128,160 \(a stepped drill/);
-            const legacy = withContactFidelity({ drillMixedRooms: false }, () => serve(leg).result);
+            // ⛓ CORRIDORFLIP (⚖ user 2026-11-12, `corridorBodyPricing` ON): the corridor now prices the drill's live contact
+            //   along the walk, so the decline names it as the forecast contact (was: a stepped drill's static box). Still a decline.
+            expect(String(result.message)).toMatch(/chaser:drill@128,160 \(the drill's contact/);
+            // ⛓ CORRIDORFLIP: the legacy arm and the drill-blind control name their pre-pricing world too.
+            const legacy = withContactFidelity({ drillMixedRooms: false, corridorBodyPricing: false, corridorForecastMemo: false },
+                () => serve(leg).result);
             expect(legacy.ok).toBe(false);
             expect(String(legacy.message)).toMatch(/the re-planned corridor failed too/);
             // the control: the drill-blind model (the BEFORE of TERRAIN W3) still finds the old plan out to L87
-            const off = withContactFidelity({ drillLive: false }, () => serve(leg).result);
+            const off = withContactFidelity({ drillLive: false, corridorBodyPricing: false, corridorForecastMemo: false },
+                () => serve(leg).result);
             expect(off.ok, off.message).toBe(true);
             expect(off.plan.expected.at(-1).level).toBe(87);
         });
     }
     const leg = DECLINED.find((l) => l.name === 'residue L88 a');
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): the live shape is CI seedling-probe 43326665248 (fidelity-flip/corridor a331ba7fba),
+    //   the decline naming the drill's forecast contact (was CI 39731170050 at 479ff5678c: a stepped drill's static box).
     const named = `the solver declined ${leg.goal.name} in level 88 (refusal): solverBot(wasm-exit-88) reach-exit (32,0)->L87: `
-        + 'the danger map forbids (104,205.69999999999985) — enemy:drill@128,160 (a stepped drill, priced as a static box where '
-        + 'it stands now (104,200) (`drillMixedRooms`: …';
+        + 'the combat ladder is EXHAUSTED. The corridor passes through danger at (104.0,184.2) — chaser:drill@128,160 (the '
+        + 'drill\'s contact: its `hitPlayer` gate fires against the player\'s start-of-tick box THIS tick (body at (104.0,184.0), '
+        + 'forecast along the walk)) — …';
     const base = { answer: { ok: true, action: 'force-re-arrival' }, end: 'failed', level: 88, failed: named, legs: [{ outcome: 'failed' }] };
     // ⛓ planning-10's DRILL flip: the live shape is CI seedling-probe 39731170050 (fidelity-harvest/drill 479ff5678c).
-    it('the verdict holds on the live run\'s shape (CI seedling-probe at 479ff5678c)', () => {
+    it('the verdict holds on the live run\'s shape (CI seedling-probe at a331ba7fba)', () => {
         expect(declinedHolds(leg, base)).toBe(true);
     });
     it('a silent success reds (crossed or done, a played plan, out of the level)', () => {

@@ -139,8 +139,9 @@ export const LEGS = {
             clause: 'no bait stance for jellyfish@224,176 survives the chaser forecast' },
         // ⛓ planning-10's DRILL flip: the danger map prices L88's drill as a STEPPED drill at its live box, so the decline
         //   names it (drillMixedRooms OFF: 'the re-planned corridor failed too').
-        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined', clause: 'enemy:drill@128,160 (a stepped drill' },
-        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined', clause: 'enemy:drill@128,160 (a stepped drill' },
+        // ⛓ CORRIDORFLIP (⚖ user 2026-11-12, `corridorBodyPricing` ON): the decline names the drill's FORECAST contact.
+        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined', clause: "chaser:drill@128,160 (the drill's contact" },
+        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined', clause: "chaser:drill@128,160 (the drill's contact" },
     ],
 };
 
