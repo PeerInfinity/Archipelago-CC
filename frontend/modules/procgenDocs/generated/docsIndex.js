@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1294,
+        "headings": 1295,
         "indexHeadings": 2,
-        "lines": 36207,
+        "lines": 36201,
         "pages": 4,
-        "words": 543150
+        "words": 543154
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -89,8 +89,8 @@ export const DOCS_INDEX = frz({
             "description": "Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it.",
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
-            "headings": 43,
-            "lines": 237,
+            "headings": 44,
+            "lines": 245,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -101,7 +101,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 4122
+            "words": 4346
         },
         {
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
@@ -226,8 +226,8 @@ export const DOCS_INDEX = frz({
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
-            "headings": 17,
-            "lines": 254,
+            "headings": 18,
+            "lines": 267,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -237,7 +237,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 3684
+            "words": 3905
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
@@ -349,7 +349,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 55351
+            "words": 55267
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -377,8 +377,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 780,
-            "lines": 28264,
+            "headings": 779,
+            "lines": 28237,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -386,7 +386,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 316333
+            "words": 315976
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
