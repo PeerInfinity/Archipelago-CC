@@ -1,0 +1,10 @@
+WALLFLYER LEVELS [22,25,27]
+L22: flyers wallflyer@64,80@(71,88) wallflyer@128,80@(137,88) wallflyer@48,112@(55,120) wallflyer@144,112@(153,120); sides [[21,29],[25,30]]
+  none       L22 [21,29] -> [25,30]: LINE (60682583 lanes, 16 configs, 419260 ms)
+     lane {"from":{"x":64,"y":76},"runway":null,"k1":"down+left","n1":18,"k2":"down+right","n2":22,"end":{"x":52.53,"y":105.95},"config":"71,88;71,88;55,120;153,120"}
+     lane {"from":{"x":106,"y":92},"runway":null,"k1":"down+left","n1":30,"k2":"up","n2":26,"end":{"x":65.9,"y":98.23},"config":"71,88;71,88;55,120;55,120"}
+     lane {"from":{"x":91,"y":91},"runway":null,"k1":"down+right","n1":34,"k2":"left","n2":15,"end":{"x":94.52,"y":136.57},"config":"71,88;71,88;153,120;153,120"}
+  sword      L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 171 ms) kills wallflyer@64,80@59,66d0 wallflyer@128,80@125,66d0 wallflyer@48,112@43,98d0 wallflyer@144,112@141,98d0
+  spear      L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 169 ms) kills wallflyer@64,80@63,48d3 wallflyer@128,80@130,48d3 wallflyer@48,112@47,98d3 wallflyer@144,112@145,98d3
+  darkshield L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 160 ms) kills wallflyer@64,80@59,75d3 wallflyer@128,80@125,75d3 wallflyer@48,112@43,107d3 wallflyer@144,112@141,107d3
+  wand       L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 177 ms) kills wallflyer@64,80@66,34d3 wallflyer@128,80@130,34d3 wallflyer@48,112@50,98d3 wallflyer@144,112@146,98d3

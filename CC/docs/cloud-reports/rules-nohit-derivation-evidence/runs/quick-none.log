@@ -1,0 +1,21 @@
+WALLFLYER LEVELS [22,25,27]
+L22: flyers wallflyer@64,80@(71,88) wallflyer@128,80@(137,88) wallflyer@48,112@(55,120) wallflyer@144,112@(153,120); sides [[21,29],[25,30]]
+  none       L22 [21,29] -> [25,30]: LINE (19515629 lanes, 15 configs, 142012 ms)
+     lane {"from":{"x":64,"y":76},"runway":null,"k1":"down+left","n1":18,"k2":"down+right","n2":22,"end":{"x":52.53,"y":105.95},"config":"71,88;71,88;55,120;153,120"}
+     lane {"from":{"x":106,"y":91},"runway":null,"k1":"down+left","n1":30,"k2":"up","n2":26,"end":{"x":65.9,"y":98.23},"config":"71,88;71,88;55,120;55,120"}
+     lane {"from":{"x":91,"y":91},"runway":null,"k1":"down+right","n1":34,"k2":"left","n2":15,"end":{"x":94.52,"y":136.57},"config":"71,88;71,88;153,120;153,120"}
+ROW {"level":22,"from":[21,29],"to":[25,30],"arms":{"none":true}}
+  none       L22 [25,30] -> [21,29]: NO LINE (223520 lanes, 2 configs, 1680 ms)
+ROW {"level":22,"from":[25,30],"to":[21,29],"arms":{"none":false}}
+L25: flyers wallflyer@48,48@(56,55) wallflyer@64,48@(72,55); sides [[22],[26],[28]]
+  none       L25 [22] -> [26]: LINE (144307 lanes, 3 configs, 821 ms)
+     lane {"from":{"x":76,"y":67},"runway":null,"k1":"down+right","n1":24,"k2":"down+left","n2":40,"end":{"x":45.06,"y":94.45},"config":"56,89;72,89"}
+ROW {"level":25,"from":[22],"to":[26],"arms":{"none":true}}
+  L25 [22] -> [28]: not connected even with no flyer (another solid separates them): no wallflyer question
+  none       L25 [26] -> [22]: NO LINE (370556 lanes, 2 configs, 1810 ms)
+ROW {"level":25,"from":[26],"to":[22],"arms":{"none":false}}
+  L25 [26] -> [28]: not connected even with no flyer (another solid separates them): no wallflyer question
+  L25 [28] -> [22]: not connected even with no flyer (another solid separates them): no wallflyer question
+  L25 [28] -> [26]: not connected even with no flyer (another solid separates them): no wallflyer question
+L27: flyers wallflyer@192,48@(201,56); sides [[26,28]]
+ROW {"level":27,"sides":[[26,28]],"verdict":"one side: no crossing to gate"}
