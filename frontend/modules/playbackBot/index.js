@@ -82,6 +82,8 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent?.('stateManager:snapshotUpdated');
     // ⛓ CONNECTED CHECKS: the connected logic gate's refusal (see onLocationCheckRefused).
     registrationApi.registerEventBusSubscriberIntent?.('client:locationCheckRefused');
+    // ⛓ CONNECTED EVENT CHECKS: a connected ID-less check is judged by the state manager (see onCheckRejected).
+    registrationApi.registerEventBusSubscriberIntent?.('stateManager:locationCheckRejected');
 
     // Dispatcher receivers — formerly in presets/index.js. Each one
     // propagates first (so stateManager + downstream handlers see the
@@ -238,8 +240,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     _moduleEventBus?.subscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
 
     // ⛓ ROPE GOAL: an obstacle EVENT is collected as a LOCAL check (`seedlingRegionGlue._eventCollect` →
-    // `collectEvent`, deliberately never user:locationCheck, whose connected path drops a location without a
-    // server id), so a bot that walked to break it first has no other signal that the gated walk now exists.
+    // `collectEvent`, deliberately never user:locationCheck: the game already broke it, so the check is forced),
+    // so a bot that walked to break it first has no other signal that the gated walk now exists.
     const onSnapshot = () => {
         try {
             getActivePanel()?.getBot()?.onSnapshotUpdated?.();
@@ -258,6 +260,15 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         }
     };
     _moduleEventBus?.subscribe?.('client:locationCheckRefused', onCheckRefused, 'playbackBot');
+    // ⛓ CONNECTED EVENT CHECKS (sdc-connected-events) — connected, a check with no server ID (an event) is applied
+    // locally, and the STATE MANAGER refuses it when logic says no: it never lands, so an awaited one must park
+    // like the client's refusal. Offline this changes nothing (the flush already answers "blocked"); a check the
+    // bot never sent is ignored by onLocationCheckRefused. 'already_checked' is not a refusal.
+    const onCheckRejected = (data) => {
+        if (data?.reason !== 'not_accessible' && data?.reason !== 'location_not_found') return;
+        onCheckRefused(data);
+    };
+    _moduleEventBus?.subscribe?.('stateManager:locationCheckRejected', onCheckRejected, 'playbackBot');
 
     return () => {
         _moduleEventBus?.unsubscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
@@ -265,6 +276,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
         _moduleEventBus?.unsubscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
         _moduleEventBus?.unsubscribe?.('client:locationCheckRefused', onCheckRefused, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.('stateManager:locationCheckRejected', onCheckRejected, 'playbackBot');
         _moduleEventBus = null;
         _moduleDispatcher = null;
     };
