@@ -204,6 +204,7 @@ async function serveLeg({ goal, budgetMs }) {
         try {
             const b = JSON.parse(g.botStatus());
             const row = { level: b.level, tick: b.tick, hits: b.hits, timer: b.hits_timer };
+            hitReads.n = (hitReads.n ?? 0) + 1; hitReads.last = row; if (row.level === goal.level) hitReads.lastIn = row;
             if (row.hits !== lastHits || (row.timer ?? 0) > 0) hitReads.push(row);
             lastHits = row.hits;
         } catch (e) { hitReads.push({ err: String(e) }); }
@@ -244,7 +245,7 @@ async function serveLeg({ goal, budgetMs }) {
         primary: st.primary, slots: st.inventory_slots ?? null, cleared: st.persistence_cleared ?? [],
         arrivedAt: arr ? { level: arr.status?.level, x: arr.state?.playerPositionX, y: arr.state?.playerPositionY } : null,
         forced: stats.forced, ships: stats.ships, level: st.level, armed: st.armed, held: st.held,
-        ms: Math.round(performance.now() - t0), hitReads: hitReads.slice(0, 200) };
+        ms: Math.round(performance.now() - t0), hitReads: hitReads.slice(0, 200), hitN: hitReads.n ?? 0, hitLast: hitReads.last ?? null, hitLastIn: hitReads.lastIn ?? null };
 }
 
 async function main() {
@@ -331,7 +332,7 @@ async function main() {
                     answer: r.answer, level: r.level, ms: r.ms, arrivedAt: r.arrivedAt, landed, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
                         ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
                         recovery: h.recovery, solvedMs: h.solvedMs })) })}`);
-                console.log(`GAMEHITS ${JSON.stringify({ name: leg.name, reads: r.hitReads })}`);
+                console.log(`GAMEHITS ${JSON.stringify({ name: leg.name, reads: r.hitReads, samples: r.hitN, lastInLevel: r.hitLastIn, last: r.hitLast })}`);
                 const dv = r.legs.map((h) => h.divergence).filter(Boolean);
                 check(`${SESSION} ${leg.name}: the engine staged the arrival at (${x}, ${y}) in L${level}`,
                     r.arrivedAt?.level === level && r.arrivedAt.x === x && r.arrivedAt.y === y, JSON.stringify({ landed, arrivedAt: r.arrivedAt }));
