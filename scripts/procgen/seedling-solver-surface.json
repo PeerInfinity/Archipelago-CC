@@ -29,6 +29,7 @@
     "solveProgress.js",
     "solverBot.js",
     "spaceTimeReach.js",
+    "spearArm.js",
     "stagedHuntScanMemo.js",
     "strategySwitch.js",
     "strikePolicy.js",
@@ -563,9 +564,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 240
+        "solverBot.js": 244
       },
-      "sites": 381,
+      "sites": 385,
       "seen": "both",
       "via": [
         "direct",
@@ -613,7 +614,7 @@
         },
         "bosses": {
           "botDriverV2.js": 1,
-          "solverBot.js": 2
+          "solverBot.js": 3
         },
         "brokenRocks": {
           "botDriverV2.js": 3,
@@ -703,10 +704,10 @@
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 22
+          "solverBot.js": 24
         },
         "talkCircles": {
-          "solverBot.js": 4
+          "solverBot.js": 5
         },
         "tentacleBeastFight": {
           "dangerMap.js": 2,
@@ -1172,10 +1173,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 167,
+        "solverBot.js": 173,
         "strikePolicy.js": 2
       },
-      "sites": 202,
+      "sites": 208,
       "seen": "both",
       "via": [
         "direct",
@@ -1209,10 +1210,10 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 59
+          "solverBot.js": 61
         },
         "inventorySlots": {
-          "solverBot.js": 24
+          "solverBot.js": 26
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1220,7 +1221,7 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 27
+          "solverBot.js": 29
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
@@ -1420,9 +1421,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 744
+        "solverBot.js": 745
       },
-      "sites": 885,
+      "sites": 886,
       "seen": "both",
       "via": [
         "direct",
@@ -1485,9 +1486,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 139
+        "solverBot.js": 140
       },
-      "sites": 162,
+      "sites": 163,
       "seen": "both",
       "via": [
         "direct",
@@ -2913,9 +2914,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 279
+        "solverBot.js": 282
       },
-      "sites": 349,
+      "sites": 352,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2949,9 +2950,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 283
+        "solverBot.js": 286
       },
-      "sites": 356,
+      "sites": 359,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4406,6 +4407,24 @@
     },
     {
       "surface": "import",
+      "name": "SPEAR_ANIM_TICKS",
+      "module": "frontend/modules/seedlingDemo/combatVerbs.js",
+      "line": 287,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "spearArm.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Ticks until spearEnd clears spearing for the spear animation, after which a press starts a new thrust (the spear arm's swallow period)."
+    },
+    {
+      "surface": "import",
       "name": "CONTACT_FIDELITY",
       "module": "frontend/modules/seedlingDemo/contactFidelity.js",
       "line": 157,
@@ -4421,9 +4440,10 @@
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
         "solverBot.js": 153,
+        "spearArm.js": 1,
         "strikePolicy.js": 3
       },
-      "sites": 194,
+      "sites": 195,
       "seen": "static",
       "via": [
         "import"
@@ -6333,9 +6353,10 @@
       "form": "geometry-query",
       "files": {
         "lightsVerb.js": 1,
-        "solverBot.js": 14
+        "solverBot.js": 14,
+        "spearArm.js": 1
       },
-      "sites": 15,
+      "sites": 16,
       "seen": "static",
       "via": [
         "import"
@@ -6392,9 +6413,10 @@
       "files": {
         "botDriverV2.js": 2,
         "ghostRopeCut.js": 1,
-        "solverBot.js": 13
+        "solverBot.js": 13,
+        "spearArm.js": 1
       },
-      "sites": 16,
+      "sites": 17,
       "seen": "static",
       "via": [
         "import"
@@ -6472,9 +6494,10 @@
       "form": "geometry-query",
       "files": {
         "lightsVerb.js": 1,
-        "solverBot.js": 13
+        "solverBot.js": 13,
+        "spearArm.js": 1
       },
-      "sites": 14,
+      "sites": 15,
       "seen": "static",
       "via": [
         "import"
@@ -6616,9 +6639,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 6
+        "solverBot.js": 7
       },
-      "sites": 6,
+      "sites": 7,
       "seen": "static",
       "via": [
         "import"
@@ -7447,9 +7470,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 37
+        "solverBot.js": 37,
+        "spearArm.js": 1
       },
-      "sites": 37,
+      "sites": 38,
       "seen": "static",
       "via": [
         "import"
