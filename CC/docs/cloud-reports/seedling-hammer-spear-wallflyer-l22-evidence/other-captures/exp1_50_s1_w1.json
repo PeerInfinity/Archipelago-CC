@@ -1,0 +1,80 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": true,
+ "kind": null,
+ "ms": 1746,
+ "work": 275,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 253,
+   "work": 275
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "ticks": 253,
+ "verbs": [
+  "bait",
+  "detour"
+ ],
+ "equipsAt": [
+  [
+   0,
+   1
+  ]
+ ],
+ "presses": [
+  23,
+  54,
+  85
+ ],
+ "primaryWeaponAtEnd": "spear",
+ "level": 29,
+ "hits": [
+  [
+   31,
+   "wallflyer",
+   "wallflyer@48,112"
+  ],
+  [
+   63,
+   "wallflyer",
+   "wallflyer@48,112"
+  ]
+ ],
+ "deaths": 0,
+ "bodyFamily": {
+  "asked": 2,
+  "kills": [
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 90,
+    "ticks": 80,
+    "forks": 7
+   }
+  ],
+  "refused": [
+   {
+    "t": 170,
+    "why": "body-family arm: no hitless kill (8 fork(s)) — wallflyer@128,80: (119,88): HIT at fork tick 21 (wallflyer wallflyer@128,80) on the walk to (119,88) | (121,88): HIT at fork tick 21 (wallflyer wallflyer@128,80) on the walk to (121,88) | (123,88): HIT at fork tick 21 (wallflyer wallflyer@128,80) on the walk to (123,88) | (127,78): HIT at fork tick 21 (wallflyer wallflyer@128,80) on the walk to (127,78) (+5 more)"
+   }
+  ]
+ },
+ "spearArm": {
+  "SPEAR_ARM_COUNTS": {
+   "policies": 297,
+   "equips": 1,
+   "swallowed": 0
+  }
+ }
+}

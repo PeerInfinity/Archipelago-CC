@@ -1,0 +1,26 @@
+--- /tmp/claude-0/-home-user-Archipelago-CC/d57782a0-f075-58fc-a533-3d3b9d9602b3/scratchpad/solverBot.js.orig	2026-11-14 19:15:14.548521158 +0000
++++ solverBot.js	2026-11-14 19:18:50.057931649 +0000
+@@ -25050,6 +25050,7 @@
+                 ? playWallFlyerKill(f, keys, equips, t.id, kw, stance, opts, allowTeleporter)
+                 : playDrillKill(f, keys, equips, t.id, kw, stance, opts, allowTeleporter, what);
+             const at = `(${stance.pre.x},${stance.pre.y})`;
++            if (globalThis.process?.env?.DBG_KR) process.getBuiltinModule('fs').appendFileSync(process.env.DBG_KR, '    fork '+forks+' '+t.id+' '+kw.weapon+'/slot'+kw.slot+' stance '+at+' r'+stance.r+' len'+stance.len.toFixed(1)+': '+(out.ok?('OK '+keys.length+'t presses '+out.presses+' at '+JSON.stringify(keys.map((k,i)=>k.has('primary')?i:-1).filter(i=>i>=0))+' equips '+JSON.stringify(equips)):out.why)+'\n');
+             if (!out.ok) { tried.push(`${at}: ${out.why}`); continue; }
+             // ── the live replay, key for key, the slot selections at the index they preceded ──
+             const from = perTick.length;
+@@ -31994,6 +31995,7 @@
+         }
+         // ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL (`WALLFLYER_KILL_ARM` / `DRILL_KILL_ARM`, OFF: not asked) — a live
+         // wallflyer or drill among the hit's sources, killed on a fork and replayed (`bodyFamilyKillOnLadder`).
++        if (globalThis.process?.env?.DBG_KR) process.getBuiltinModule('fs').appendFileSync(process.env.DBG_KR, ['KILLRUNG t'+perTick.length, JSON.stringify((hit?.sources??[]).map(x=>[x.id,x.kind??x.source??'']))+' at '+JSON.stringify(hit?.at??hit?.point??null), 'disable='+(ACTIVE_DISABLE?[...ACTIVE_DISABLE.rungs]:null), 'pos='+run.state.x.toFixed(1)+','+run.state.y.toFixed(1)].join(' ')+'\n');
+         if ((WALLFLYER_KILL_ARM.enabled || DRILL_KILL_ARM.enabled)
+             && !(ACTIVE_DISABLE !== null && ACTIVE_DISABLE.rungs.has('kill'))) {
+             const fam = bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allowTeleporter, what });
+@@ -32003,6 +32005,7 @@
+                 return { escalations };
+             }
+             if (fam?.why) killWhy = `${killWhy}\n         ${fam.why}`;
++            if (globalThis.process?.env?.DBG_KR) process.getBuiltinModule('fs').appendFileSync(process.env.DBG_KR, '  -> '+(fam===null?'null':fam.record?('KILL '+fam.record.target+' '+fam.record.ticks+'t stance '+JSON.stringify(fam.record.stance)):fam.why.slice(0,600))+'\n');
+         }
+         rowFor('kill', refused);
+         /**

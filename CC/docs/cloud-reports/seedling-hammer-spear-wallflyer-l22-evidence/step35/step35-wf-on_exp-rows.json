@@ -1,0 +1,140 @@
+[
+ {
+  "step": 35,
+  "level": 22,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L22@16,128 — R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 22,
+    "x": 16,
+    "y": 128
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0
+    ],
+    "items": [
+     "hasShield"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts ×1"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts ×2"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts ×3"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts ×4"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts ×5"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts ×6"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 6
+    },
+    "unpresentable": []
+   },
+   "stagedSave": {
+    "keys": [
+     0
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 192,
+     "y": 64
+    },
+    "why": "teleporter@192,64 → L29"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-35-boot.json",
+   "walk": ".cache/seedling-survey/through-end/views/step-35-walk.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 539,
+  "traceRows": 4,
+  "replans": 0,
+  "passes": [
+   {
+    "pass": 1,
+    "kind": "solve",
+    "ticks": 539
+   }
+  ],
+  "declarations": [],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 29,
+   "transitions": [
+    "undefined->undefined@539"
+   ],
+   "earnedClears": []
+  },
+  "ms": 23140,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 2,
+  "family": null
+ }
+]

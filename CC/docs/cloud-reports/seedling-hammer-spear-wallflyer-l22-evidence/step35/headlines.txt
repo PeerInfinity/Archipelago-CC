@@ -1,0 +1,2 @@
+s35_w1.out:== step 35 — L22 ... SOLVED 539 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 16617 ms
+s35_w1_exp.out:== step 35 — L22 ... SOLVED 539 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 23140 ms

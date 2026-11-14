@@ -1,0 +1,2 @@
+KILLRUNG t134 [["wallflyer@48,112","chaser"]] at null disable=null pos=103.1,183.5
+KILLRUNG t311 [["wallflyer@64,80","chaser"]] at null disable=null pos=66.3,132.4

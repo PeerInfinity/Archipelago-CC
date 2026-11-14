@@ -1,0 +1,10 @@
+--- /tmp/claude-0/-home-user-Archipelago-CC/d57782a0-f075-58fc-a533-3d3b9d9602b3/scratchpad/dangerMap.js.orig	2026-11-14 19:17:58.668882897 +0000
++++ dangerMap.js	2026-11-14 19:17:58.681928595 +0000
+@@ -1502,6 +1502,7 @@
+         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
+         const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
+         if (liveDrill?.removed) continue;
++        if (globalThis.process?.env?.EXP_WF_GONE && (run.wallFlyers?.bodies ?? []).some((b) => b.id === `${inst.tag}@${inst.x},${inst.y}` && b.removed)) continue;
+         // ⛓ fidelity DRILLWATER D1: a drowned/burnt or falling drill bills no contact — `destroy` gates `Enemy.hitPlayer`,
+         // and the pit's descent replaces it (`Enemy.as:96-111`). Its body fades out; nothing to price. (A sword-killed
+         // drill's "die"/fade pricing is DRILLKILL's and is left as it was: this reads the terrain verdict only.)

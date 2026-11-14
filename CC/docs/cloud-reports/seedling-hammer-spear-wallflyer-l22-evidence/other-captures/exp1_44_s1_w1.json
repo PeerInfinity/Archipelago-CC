@@ -1,0 +1,73 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": true,
+ "kind": null,
+ "ms": 656,
+ "work": 27,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 306,
+   "work": 27
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "ticks": 306,
+ "verbs": [
+  "bait",
+  "kill"
+ ],
+ "equipsAt": [
+  [
+   0,
+   1
+  ]
+ ],
+ "presses": [
+  97,
+  128,
+  186,
+  217,
+  246
+ ],
+ "primaryWeaponAtEnd": "spear",
+ "level": 25,
+ "hits": [],
+ "deaths": 0,
+ "bodyFamily": {
+  "asked": 2,
+  "kills": [
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 0,
+    "ticks": 154,
+    "forks": 3
+   },
+   {
+    "id": "wallflyer@48,112",
+    "family": "wallflyer",
+    "t": 154,
+    "ticks": 89,
+    "forks": 2
+   }
+  ],
+  "refused": []
+ },
+ "spearArm": {
+  "SPEAR_ARM_COUNTS": {
+   "policies": 6,
+   "equips": 1,
+   "swallowed": 0
+  }
+ }
+}

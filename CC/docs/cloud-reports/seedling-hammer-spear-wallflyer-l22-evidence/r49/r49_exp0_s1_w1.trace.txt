@@ -1,0 +1,5 @@
+KILLRUNG t0 [["wallflyer@48,112","enemy"]] at null disable=null pos=24.0,136.0
+    fork 1 wallflyer@48,112 spear/slotnull stance (43,133) r18 len19.2: 3 press(es) with the spear and 0 landed from (43,133)
+    fork 2 wallflyer@48,112 spear/slotnull stance (45,131) r16 len21.6: OK 85t presses 2 at [28,59] equips []
+KILLRUNG t85 [["wallflyer@48,112","enemy"]] at null disable=null pos=45.0,130.2
+  -> null

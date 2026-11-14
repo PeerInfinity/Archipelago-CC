@@ -1,0 +1,45 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 539,
+ "work": 9,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 9
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "message": "solverBot(js-runtime-L22-exit) reach-exit (0,128)->L25: the danger map forbids (80.48880079020428,78.27815983579603) — enemy:wallflyer@64,80 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+ "bodyFamily": {
+  "asked": 1,
+  "kills": [
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 0,
+    "ticks": 154,
+    "forks": 3
+   }
+  ],
+  "refused": []
+ },
+ "spearArm": {
+  "SPEAR_ARM_COUNTS": {
+   "policies": 2,
+   "equips": 1,
+   "swallowed": 0
+  }
+ }
+}

@@ -1,0 +1,1 @@
+KILLRUNG t0 [["wallflyer@48,112","enemy"]] at null disable=null pos=24.0,136.0

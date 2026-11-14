@@ -1,0 +1,15 @@
+KILLRUNG t0 [["wallflyer@48,112","enemy"]] at null disable=null pos=24.0,136.0
+    fork 1 wallflyer@48,112 spear/slot1 stance (43,133) r18 len19.2: 3 press(es) with the spear and 0 landed from (43,133)
+    fork 2 wallflyer@48,112 spear/slot1 stance (45,131) r16 len21.6: OK 85t presses 2 at [28,59] equips [{"i":28,"slot":1},{"i":85,"slot":0}]
+KILLRUNG t85 [["wallflyer@64,80","chaser"]] at null disable=null pos=45.0,130.2
+    fork 1 wallflyer@64,80 spear/slot1 stance (71,106) r18 len46.0: OK 116t presses 2 at [59,90] equips [{"i":59,"slot":1},{"i":116,"slot":0}]
+KILLRUNG t201 [["wallflyer@128,80","chaser"]] at null disable=null pos=71.3,104.8
+    fork 1 wallflyer@128,80 spear/slot1 stance (119,88) r18 len50.6: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (119,88)
+    fork 2 wallflyer@128,80 spear/slot1 stance (121,88) r16 len52.5: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (121,88)
+    fork 3 wallflyer@128,80 spear/slot1 stance (123,88) r14 len54.4: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (123,88)
+    fork 4 wallflyer@128,80 spear/slot1 stance (127,78) r14 len63.7: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (127,78)
+    fork 5 wallflyer@128,80 spear/slot1 stance (127,98) r14 len63.7: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (127,98)
+    fork 6 wallflyer@128,80 spear/slot1 stance (126,77) r16 len64.1: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (126,77)
+    fork 7 wallflyer@128,80 spear/slot1 stance (126,99) r16 len64.1: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (126,99)
+    fork 8 wallflyer@128,80 spear/slot1 stance (124,75) r18 len65.1: HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (124,75)
+  -> body-family arm: no hitless kill (8 fork(s)) — wallflyer@128,80: (119,88): HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (119,88) | (121,88): HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (121,88) | (123,88): HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (123,88) | (127,78): HIT at fork tick 24 (wallflyer wallflyer@128,80) on the walk to (127,78) (+5 more)
