@@ -83,6 +83,7 @@ export const moduleInfo = {
   requires: ['stateManager'],
   storage: [
     { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (a Ruffle SharedObject; the key starts with the host and SWF path)' },
+    { prefix: 'seedlingJsSave_', kind: STORAGE_KINDS.user, label: 'Seedling JS runtime save, one per room (the broken rocks, keys, seals, slot order)' },
     { key: 'flashPanel_sections', kind: STORAGE_KINDS.state, label: 'Flash panel: which sections are open (Solver, Settings, Tools)' },
   ],
 };
