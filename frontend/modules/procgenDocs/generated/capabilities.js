@@ -547,6 +547,11 @@ export const CAPABILITIES = frz({
                     "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …"
                 },
                 {
+                    "group": "play",
+                    "statement": "Themeable",
+                    "text": "gate, item"
+                },
+                {
                     "group": "loop",
                     "statement": "You can play it in loop mode",
                     "text": null
@@ -860,6 +865,11 @@ export const CAPABILITIES = frz({
                     "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), …"
                 },
                 {
+                    "group": "play",
+                    "statement": "Themeable",
+                    "text": "gate, item, place"
+                },
+                {
                     "group": "loop",
                     "statement": "You can play it in loop mode",
                     "text": null
@@ -982,9 +992,9 @@ export const CAPABILITIES = frz({
     ],
     "counts": {
         "fields": 102,
-        "fieldsRead": 39,
-        "fieldsUnread": 60,
-        "statements": 29,
+        "fieldsRead": 40,
+        "fieldsUnread": 59,
+        "statements": 30,
         "substrates": 9
     },
     "fieldsRead": [
@@ -994,6 +1004,7 @@ export const CAPABILITIES = frz({
         "captureLibraryEntry",
         "compositeMap.drawRegion",
         "conceptRealisations",
+        "contentRoles",
         "describeAction",
         "deserializeWorld",
         "exitSides",
@@ -1038,7 +1049,8 @@ export const CAPABILITIES = frz({
                 "P3",
                 "P4",
                 "P5",
-                "P6"
+                "P6",
+                "P7"
             ]
         },
         {
@@ -1860,6 +1872,115 @@ export const CAPABILITIES = frz({
             "group": "play",
             "id": "P6",
             "statement": "It can show the library's concepts in its own way"
+        },
+        {
+            "cells": [
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "yes",
+                    "text": "gate, item",
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "{gate, item}"
+                        }
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "yes",
+                    "text": "gate, item, place",
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "{gate, item, place}"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "contentRoles"
+            ],
+            "group": "play",
+            "id": "P7",
+            "statement": "Themeable"
         },
         {
             "cells": [
@@ -4953,7 +5074,6 @@ export const CAPABILITIES = frz({
         "buildRegionParams",
         "buildZoneSpecs",
         "canHostExitGatesBraid",
-        "contentRoles",
         "defaultContentPack",
         "defaultProcgenParams",
         "driftItems",

@@ -4012,7 +4012,8 @@ export class MazeRoomUI {
     _startTileArtLoad(stack, key) {
         this._tileArt = { status: 'loading', key, tileArt: null, keyed: {}, failed: [] };
         const io = this._tileArtIo ?? { ...browserPackIo(), decode: browserDecoder(), rasterise: browserRasteriser() };
-        loadMazeTileArt(stack, io).then((loaded) => {
+        // R5: the maze's roles, so the load also resolves each concept gate's and item's art key.
+        loadMazeTileArt(stack, { contentRoles: substrateRegistryEntry.contentRoles ?? null, ...io }).then((loaded) => {
             if (this._tileArt?.key !== key) return;
             if (loaded.failed.length) console.warn(`[mazeRoom] tile art: ${loaded.failed.length} sheet(s) failed (drawn in the maze's own colours): ${loaded.failed.join('; ')}`);
             this._tileArt = { status: 'ready', key, ...loaded };
@@ -4034,6 +4035,8 @@ export class MazeRoomUI {
             keyed: { ...(a?.keyed ?? {}) },
             sheets: a?.tileArt?.images?.size ?? 0,
             failedSheets: a?.failed?.length ?? 0,
+            // R5: role → mechanic → { key, concept, pack } — the art key a concept gate or item draws, if it resolves.
+            conceptArt: JSON.parse(JSON.stringify(a?.conceptArt ?? {})),
         };
     }
 

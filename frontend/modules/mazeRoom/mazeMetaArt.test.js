@@ -40,6 +40,9 @@ const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'
 const PACK = JSON.parse(readFileSync(join(PACK_DIR, 'pack.json'), 'utf8'));
 const MANIFEST = JSON.parse(readFileSync(join(PACK_DIR, PACK.layers.art), 'utf8'));
 const SHAPES = MANIFEST.shapes ?? {};
+const CONCEPTS = JSON.parse(readFileSync(join(PACK_DIR, PACK.layers.concepts), 'utf8')).concepts;
+/** R5: the art keys the pack's own concepts name (a concept gate's or item's picture, resolved at play). */
+const CONCEPT_ART = new Set(Object.values(CONCEPTS).map((c) => c.art).filter(Boolean));
 const META_TRIAL = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/meta_trial/AP_1/AP_1_rules.json'), 'utf8'));
 const PLAYTHROUGH = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json'), 'utf8'));
 
@@ -70,8 +73,9 @@ describe(`the "${PACK_ID}" art layer`, () => {
         expect(existsSync(join(PACK_DIR, 'art/sheets'))).toBe(false);
     });
 
-    it('carries only maze keys; every maze key is carried or in OMITTED with a reason, never both', () => {
-        expect(Object.keys(SHAPES).filter((k) => !thingOfKey.has(k))).toEqual([]);
+    it('carries only maze keys and the keys its own concepts name as art; every maze key is carried or in OMITTED with a reason, never both', () => {
+        expect(Object.keys(SHAPES).filter((k) => !thingOfKey.has(k) && !CONCEPT_ART.has(k))).toEqual([]);
+        expect([...CONCEPT_ART].filter((k) => !(k in SHAPES)), 'every art key a concept names is drawn here').toEqual([]);
         for (const [thing, why] of Object.entries(OMITTED)) {
             expect(MAZE_ART_THINGS, `OMITTED.${thing}`).toContain(thing);
             expect(why, `OMITTED.${thing} has a reason`).toMatch(/\w{8,}/);
