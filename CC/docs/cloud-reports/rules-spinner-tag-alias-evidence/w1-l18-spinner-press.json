@@ -1,0 +1,125 @@
+{
+ "tape": "r8-l18-spinner-press",
+ "build": "seedling_bot_ap_p4g",
+ "file": "frontend/modules/seedlingDemo/fixtures/tapes/r8-l18-spinner-press.json",
+ "configure": "ok",
+ "load": "ok",
+ "start": "ok",
+ "before": {
+  "level": 18,
+  "persistence_cleared": []
+ },
+ "after": {
+  "level": 18,
+  "persistence_cleared": [
+   {
+    "tag": 29,
+    "level": 17
+   },
+   {
+    "tag": 0,
+    "level": 18
+   }
+  ],
+  "finished": true,
+  "statusKeys": [
+   "input",
+   "seam",
+   "slash",
+   "menu_state",
+   "rng",
+   "save",
+   "pins",
+   "sound_pin",
+   "camera",
+   "game_time",
+   "frozen_timer",
+   "hits_timer",
+   "hits",
+   "drown_timer",
+   "equips",
+   "inventory_slots",
+   "secondary",
+   "primary",
+   "saw_auto_advance",
+   "persistence_cleared",
+   "persistence",
+   "grants",
+   "menu",
+   "cutscene",
+   "items",
+   "y",
+   "x",
+   "level",
+   "saw_input_refused",
+   "receive_input",
+   "noclip",
+   "dead_frames",
+   "buffered",
+   "tick_count",
+   "tick",
+   "error",
+   "frozen",
+   "held",
+   "finished",
+   "arm",
+   "armed",
+   "loaded"
+  ]
+ },
+ "pendingChecks": [
+  {
+   "pendingCheck": "",
+   "level": 18,
+   "tick": 0,
+   "game_time": 4804
+  },
+  {
+   "pendingCheck": "1|18|-1|0",
+   "level": 18,
+   "tick": 2197,
+   "game_time": 7022
+  },
+  {
+   "pendingCheck": "2|18|-1|0",
+   "level": 18,
+   "tick": 3277,
+   "game_time": 8102
+  },
+  {
+   "pendingCheck": "3|18|0|0",
+   "level": 18,
+   "tick": 3278,
+   "game_time": 8203
+  }
+ ],
+ "stateLog": [
+  {
+   "name": "pendingCheck",
+   "value": ""
+  },
+  {
+   "name": "pendingCheck",
+   "value": "1|18|-1|0"
+  },
+  {
+   "name": "pendingCheck",
+   "value": "2|18|-1|0"
+  },
+  {
+   "name": "pendingCheck",
+   "value": "3|18|0|0"
+  }
+ ],
+ "gained": [
+  {
+   "tag": 29,
+   "level": 17
+  },
+  {
+   "tag": 0,
+   "level": 18
+  }
+ ],
+ "errors": []
+}

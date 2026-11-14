@@ -1,0 +1,39 @@
+{
+ "tape": "r8-l18-spinner-press",
+ "ticks": 3279,
+ "finalLevel": null,
+ "spinnerWrites": [
+  {
+   "t": 2198,
+   "level": 18,
+   "id": "spinner@48,96",
+   "flag": {
+    "level": 17,
+    "tag": 29,
+    "value": false
+   },
+   "outOfBand": true,
+   "cause": "sword"
+  },
+  {
+   "t": 3278,
+   "level": 18,
+   "id": "spinner@112,48",
+   "flag": {
+    "level": 17,
+    "tag": 29,
+    "value": false
+   },
+   "outOfBand": true,
+   "cause": "sword"
+  }
+ ],
+ "earnedClears": [],
+ "bankedClears": [],
+ "liveClears": [
+  {
+   "level": 17,
+   "tag": 29
+  }
+ ]
+}
