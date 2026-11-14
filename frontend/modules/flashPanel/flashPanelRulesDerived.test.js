@@ -165,3 +165,44 @@ describe('the region data follows the loaded rules', () => {
         expect(linkNames(state.glue.binding.subRegions)).toEqual(expectedLinks(ATLAS));
     });
 });
+
+/**
+ * RE1 (reconnect events) — a rules load that re-mounts NOTHING rebuilt the state manager under a game that kept its
+ * flags: the panel tells the glue (`RULES_RELOADED_IN_PLACE_EVENT`), which re-derives the game-state events. A load
+ * that re-mounts tells it nothing: the new adapter's attach clears the records and its load read decides.
+ */
+describe('RE1 — the panel announces a rules load that re-mounted nothing', () => {
+    let RULES_RELOADED_IN_PLACE_EVENT;
+    beforeEach(async () => {
+        ({ RULES_RELOADED_IN_PLACE_EVENT } = await import('./seedlingRegionGlue.js'));
+        state.staticData = { flash_panel: ATLAS.flash_panel };
+        state.payload = payloadOf(ATLAS, 'atlas');
+    });
+    const panelWithBus = () => {
+        const published = [];
+        const panel = Object.create(FlashPanelUI.prototype);
+        Object.assign(panel, {
+            componentState: {}, adapter: null, isInitialized: true,
+            _lastFlashPanelKey: JSON.stringify(ATLAS.flash_panel), _panelLog: () => {},
+            _teardownForReinit: vi.fn(), _initializeAdapter: vi.fn(),
+        });
+        Object.defineProperty(panel, 'eventBus', { value: { publish: (name, data) => published.push({ name, data }) } });
+        return { panel, published };
+    };
+
+    it('same wiring, same rooms: published once per load', () => {
+        const { panel, published } = panelWithBus();
+        panel._onRulesLoaded();
+        panel._onRulesLoaded();
+        expect(published.map((p) => p.name)).toEqual([RULES_RELOADED_IN_PLACE_EVENT, RULES_RELOADED_IN_PLACE_EVENT]);
+        expect(panel._initializeAdapter).not.toHaveBeenCalled();
+    });
+
+    it('other wiring (a re-mount): not published', () => {
+        const { panel, published } = panelWithBus();
+        state.staticData = { flash_panel: { ...ATLAS.flash_panel, other: true } };
+        panel._onRulesLoaded();
+        expect(panel._initializeAdapter).toHaveBeenCalledTimes(1);
+        expect(published).toEqual([]);
+    });
+});

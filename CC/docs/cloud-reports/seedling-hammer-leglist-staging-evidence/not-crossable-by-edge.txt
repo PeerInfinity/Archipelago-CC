@@ -1,0 +1,110 @@
+1 | level_1 -> level_0__r6c5 needs L0 flag 4: breakablerock@80,112 cleared
+      level_0__r6c5 <- in_L1_64_112 -> exit:out_teleporter_80_96
+1 | level_12__r0c19 -> level_0__r11c19 needs L0 flag 1: breakablerock@288,176 cleared
+      level_0__r11c19 <- in_L12_0_80 -> exit:out_teleporter_304_176
+2 | level_111 -> level_3__r0c4 (source region level_111 unreached)
+      level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_64_0
+      level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_128_48
+2 | level_34 -> level_12__r0c37 (source region level_34 unreached)
+      level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+      level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+1 | level_83 -> level_12__r42c28 needs All(L12 flag 7: magicallock@32,864 cleared, L12 flag 12: bosslock@32,864 cleared)
+      level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848
+1 | level_83 -> level_12__r42c28 (source region level_83 unreached)
+      level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest
+2 | level_12__r40c4 -> level_24 needs L24 flag 0: burnabletree@32,128 cleared
+      level_24 <- in_L12_40_688 -> exit:out_teleporter_32_144
+      level_24 <- in_L12_40_688 -> exit:out_teleporter_48_144
+1 | level_12__r40c4 -> level_24 (source region level_12__r40c4 unreached)
+      level_24 <- in_L12_40_688 -> exit:out_stairsdown_96_96
+4 | level_32 -> level_30__r2c10 (source region level_32 unreached)
+      level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128
+      level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_stairsdown_192_48
+      level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34
+      level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+2 | level_32 -> level_30__r2c10 needs Fire
+      level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+      level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+4 | level_32 -> level_30__r2c10 #2 (source region level_32 unreached)
+      level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128
+      level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48
+      level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34
+      level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+2 | level_32 -> level_30__r2c10 #2 needs Fire
+      level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+      level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+1 | level_30__r2c10 -> level_31__r5c24 (source region level_30__r2c10 unreached)
+      level_31__r5c24 <- in_pit_L30_3_34 -> exit:out_stairsup_384_96
+2 | level_69 -> level_36 (source region level_69 unreached)
+      level_36 <- in_light_boss_exit_L69_112_96 -> exit:out_teleporter_32_128
+      level_36 <- in_light_boss_exit_L69_112_96 -> location:Level 036 - Chest
+1 | level_43__r3c8 -> level_37__r0c18 (source region level_43__r3c8 unreached)
+      level_37__r0c18 <- in_L43_144_64 -> exit:out_teleporter_288_0
+2 | level_39__r25c9 -> level_38 (source region level_39__r25c9 unreached)
+      level_38 <- in_L39_144_624 -> exit:out_teleporter_144_304
+      level_38 <- in_L39_144_624 -> location:Level 038 - Chest
+1 | level_50 -> level_49 (source region level_50 unreached)
+      level_49 <- in_L50_32_0 -> location:Level 049 - Conch
+4 | level_63__r0c1 -> level_62 #2 needs Any(L63 flag 1: lightpole@64,88 cleared, Ghost Spear)
+      level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304
+      level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304
+      level_62 <- in_L63_64_0 -> exit:out_teleporter_112_64
+      level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304
+3 | level_64 -> level_62 (source region level_64 unreached)
+      level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304
+      level_62 <- in_L64_32_96 -> exit:out_teleporter_96_304
+      level_62 <- in_L64_32_96 -> exit:out_teleporter_192_304
+4 | level_62 -> level_63__r0c1 #2 needs Any(L63 flag 1: lightpole@64,88 cleared, Ghost Spear)
+      level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48
+      level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96
+      level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0
+      level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared
+2 | level_65__r0c8 -> level_63__r6c9 needs All(Any(L63 flag 7: lightpole@112,272 cleared, All(Ghost Sword Fusion, Ghost Spear, Progressive Sword)), Any(L65 flag 0: lightpole@128,168 cleared, Ghost Spear))
+      level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304
+      level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared
+3 | level_65__r0c2 -> level_63__r10c2 needs Any(L63 flag 6: lightpole@48,272 cleared, All(Ghost Spear, Ghost Sword Fusion, Progressive Sword))
+      level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208
+      level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304
+      level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared
+4 | level_76 -> level_71__r0c6 (source region level_76 unreached)
+      level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+      level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304
+      level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96
+      level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest
+1 | level_84__r0c0 -> level_85 (source region level_84__r0c0 unreached)
+      level_85 <- in_pit_L84_2_3 -> exit:out_teleporter_80_0
+1 | level_84__r0c0 -> level_85 #2 (source region level_84__r0c0 unreached)
+      level_85 <- in_pit_L84_3_3 -> exit:out_teleporter_80_0
+1 | level_84__r0c0 -> level_85 #3 (source region level_84__r0c0 unreached)
+      level_85 <- in_pit_L84_2_4 -> exit:out_teleporter_80_0
+1 | level_84__r3c0 -> level_85 (source region level_84__r3c0 unreached)
+      level_85 <- in_pit_L84_2_5 -> exit:out_teleporter_80_0
+1 | level_84__r3c0 -> level_85 #2 (source region level_84__r3c0 unreached)
+      level_85 <- in_pit_L84_3_5 -> exit:out_teleporter_80_0
+1 | level_0__r2c13 -> level_89__r11c12 (source region level_0__r2c13 unreached)
+      level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_288_240
+2 | level_89__r1c10 -> level_91 needs Progressive Swim
+      level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144
+      level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48
+1 | level_113 -> level_112__r0c7 needs L112 flag 1: rocklock@112,16 cleared; level_113 -> level_112__r0c7 #2 needs L112 flag 1: rocklock@112,16 cleared
+      level_112__r0c7 <- in_L113_64_144 -> exit:out_teleporter_112_0
+4 | level_115__r9c4 -> level_113 (source region level_115__r9c4 unreached)
+      level_113 <- in_L115_64_144 -> exit:out_teleporter_16_0
+      level_113 <- in_L115_64_144 -> exit:out_teleporter_32_0
+      level_113 <- in_L115_64_144 -> exit:out_teleporter_64_144
+      level_113 <- in_L115_64_144 -> exit:out_teleporter_80_144
+2 | level_115__r9c4 -> level_113 needs L113 flag 0: finaldoor@112,0 cleared
+      level_113 <- in_L115_64_144 -> exit:out_teleporter_112_0
+      level_113 <- in_L115_64_144 -> exit:out_teleporter_128_0
+4 | level_115__r9c4 -> level_113 #2 (source region level_115__r9c4 unreached)
+      level_113 <- in_L115_80_144 -> exit:out_teleporter_16_0
+      level_113 <- in_L115_80_144 -> exit:out_teleporter_32_0
+      level_113 <- in_L115_80_144 -> exit:out_teleporter_64_144
+      level_113 <- in_L115_80_144 -> exit:out_teleporter_80_144
+2 | level_115__r9c4 -> level_113 #2 needs L113 flag 0: finaldoor@112,0 cleared
+      level_113 <- in_L115_80_144 -> exit:out_teleporter_112_0
+      level_113 <- in_L115_80_144 -> exit:out_teleporter_128_0
+1 | level_58__r1c4 -> level_46__r6c24 (source region level_58__r1c4 unreached)
+      level_46__r1c26 <- in_L58_80_16 ~> level_46__r6c24 -> location:Level 046 - Chest
+1 | level_76 -> level_71__r0c6 needs L71 flag 2: shieldlock@288,256 cleared
+      level_71__r16c19 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_teleporter_304_256

@@ -12,7 +12,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
 import { SeedlingEventCollector } from './seedlingEventCollector.js';
-import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { CONNECTED_STATE_APPLIED_EVENT, RULES_RELOADED_IN_PLACE_EVENT, SNAPSHOT_UPDATED_EVENT,
+    SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { runtimeEventsOf } from './seedlingPlaybackController.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 
@@ -193,5 +194,154 @@ describe('the region glue — the collector is the third reader of the reports',
         const glue = new SeedlingRegionGlue({ eventBus: { subscribe: () => () => {} }, loadRegionEvent: 'x' });
         expect(glue.eventCollector).toBeNull();
         expect(glue.syncEventsFromGame()).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓ RE1 — A RECONNECT RE-DERIVES THE GAME-STATE EVENTS (⚖ Robert 2026-11-14, "Yes, do RE1 (Recommended)";
+ * in short: the `Connected` reset replaces the state manager's checked set, the game keeps its flags,
+ * the panel does not re-mount, and the collector's memo blocked a re-collect — measured on upstream 0.6.9 at slots 1
+ * and 2). After the reset is APPLIED the glue re-applies the game's flags ∪ what it collected ∪ what the state
+ * manager had checked, through the same local event check, bypassing the memo; the state manager dedupes.
+ */
+describe('RE1 — re-derive after a reset', () => {
+    const BOSS = EVENTS.find((e) => e.eventId === 'flag:L12:4'); // a BossLock: restorable by the game
+    function re1Harness({ cleared = [], identity = 'server:S:P1|1' } = {}) {
+        const subs = new Map();
+        const eventBus = { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} };
+        const collected = [];
+        const ids = { identity };
+        const game = { cleared, botStatus: vi.fn(() => JSON.stringify({ level: 0, persistence_cleared: game.cleared })) };
+        const glue = new SeedlingRegionGlue({
+            eventBus,
+            getDispatcher: () => ({ publish: () => {} }),
+            loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+            getPanel: () => ({ _panelLog: () => {} }),
+            getEvents: () => EVENTS,
+            collectEvent: (location) => { collected.push(location); return Promise.resolve(true); },
+            getRulesIdentity: () => ids.identity,
+        });
+        glue.start();
+        const adapter = { teleport: vi.fn(() => true), onStateReport: null, _getFlash: () => game };
+        glue.attachAdapter(adapter);
+        return { glue, adapter, game, collected, ids, subs, emit: (name, payload) => subs.get(name)?.(payload) };
+    }
+    const snapshot = (checked) => ({ snapshot: { checkedLocations: checked } });
+
+    it('subscribes the applied-Connected, in-place-reload and snapshot events only when it has a collector', () => {
+        const h = re1Harness();
+        for (const name of [CONNECTED_STATE_APPLIED_EVENT, RULES_RELOADED_IN_PLACE_EVENT, SNAPSHOT_UPDATED_EVENT]) {
+            expect(h.subs.has(name), name).toBe(true);
+        }
+        h.glue.stop();
+        expect(h.subs.has(CONNECTED_STATE_APPLIED_EVENT)).toBe(false);
+        const subs = new Map();
+        const bare = new SeedlingRegionGlue({ eventBus: { subscribe: (n, fn) => { subs.set(n, fn); return () => {}; } }, loadRegionEvent: 'x' });
+        bare.start();
+        expect(subs.has(CONNECTED_STATE_APPLIED_EVENT)).toBe(false);
+        expect(bare.rederiveEvents()).toBeNull();
+    });
+
+    it('the measured loss: collected live, then the applied Connected re-collects it — the memo does not block it', () => {
+        const h = re1Harness();
+        h.adapter.onStateReport('pendingCheck', clear(1, 0, 1));
+        h.game.cleared = [{ level: 0, tag: 1 }];
+        expect(h.collected).toEqual([ROCK.location]);
+        // before RE1 the load read was the only re-read, and the memo said "already collected"
+        expect(h.glue.syncEventsFromGame()).toEqual([]);
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, { slot: 1, team: 0 });
+        expect(h.collected).toEqual([ROCK.location, ROCK.location]);
+        expect(h.glue.lastRederive).toEqual({ reason: 'connected', flags: 1, events: [ROCK.location] });
+        // a second reset re-applies it again (the state manager dedupes, `already_checked`)
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, { slot: 1, team: 0 });
+        expect(h.collected.filter((l) => l === ROCK.location)).toHaveLength(3);
+    });
+
+    it('a flag the game holds but nothing collected (a clear inside a host start\'s window) is re-applied too', () => {
+        const h = re1Harness({ cleared: [{ level: 0, tag: 4 }] });
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected).toEqual([WALL.location]);
+    });
+
+    it('⚖ Q4 — a RE-CLOSED lock still counts: the flag is gone (wasm/Flash live flag), the records keep it', () => {
+        const h = re1Harness();
+        h.adapter.onStateReport('pendingCheck', clear(1, 12, 4)); // collected live
+        h.adapter.onStateReport('pendingCheck', restore(2, 12, 4)); // the game writes the slot back
+        h.game.cleared = []; // the live table no longer has it
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected).toEqual([BOSS.location, BOSS.location]);
+        expect(h.glue.eventCollector.stats.restores).toBe(1);
+    });
+
+    it('the state manager\'s own record: an event it had checked (not via this collector) is re-applied; non-events are ignored', () => {
+        const h = re1Harness();
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([BOSS.location, 'Level 010 - Sword']));
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([])); // the reset's own snapshot: the record only grows
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected).toEqual([BOSS.location]);
+        expect([...h.glue.eventCollector.smChecked]).toEqual([BOSS.location]);
+    });
+
+    it('the union, deduped: flag + memo + state-manager record of one event is ONE collect per reset', () => {
+        const h = re1Harness();
+        h.adapter.onStateReport('pendingCheck', clear(1, 0, 1));
+        h.game.cleared = [{ level: 0, tag: 1 }, { level: 0, tag: 4 }];
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([ROCK.location, BOSS.location]));
+        h.collected.length = 0;
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected.sort()).toEqual([ROCK.location, WALL.location, BOSS.location].sort());
+    });
+
+    it('a rules reload that re-mounted nothing re-derives the same way', () => {
+        const h = re1Harness({ cleared: [{ level: 0, tag: 1 }] });
+        h.emit(RULES_RELOADED_IN_PLACE_EVENT, { pinned: false });
+        expect(h.collected).toEqual([ROCK.location]);
+        expect(h.glue.lastRederive.reason).toBe('rules-reload');
+    });
+
+    it('⛔ js-18 — the rules\' IDENTITY changed (same rooms, another slot): nothing carried over, only the game\'s flags', () => {
+        const h = re1Harness({ identity: 'server:S:P1|1' });
+        h.adapter.onStateReport('pendingCheck', clear(1, 12, 4)); // memo
+        h.adapter.onStateReport('pendingCheck', restore(2, 12, 4));
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([BOSS.location])); // state-manager record
+        h.game.cleared = [{ level: 0, tag: 1 }];
+        h.collected.length = 0;
+        h.ids.identity = 'server:S:P2|2';
+        h.emit(RULES_RELOADED_IN_PLACE_EVENT, {});
+        expect(h.collected).toEqual([ROCK.location]);
+        expect(h.glue.eventCollector.stats.forgets).toBe(1);
+        // a stale snapshot of the old state manager after the switch is still read under the NEW identity (no
+        // second forget), and the SAME identity's next reset keeps what was re-applied under it
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected).toEqual([ROCK.location, ROCK.location]);
+        expect(h.glue.eventCollector.stats.forgets).toBe(1);
+    });
+
+    it('the same document reloaded (same identity) keeps the records', () => {
+        const h = re1Harness();
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([BOSS.location]));
+        h.emit(RULES_RELOADED_IN_PLACE_EVENT, {});
+        expect(h.collected).toEqual([BOSS.location]);
+        expect(h.glue.eventCollector.stats.forgets).toBe(0);
+    });
+
+    it('a NEW adapter (a re-mount: a new game) drops both records; its load read decides', () => {
+        const h = re1Harness();
+        h.adapter.onStateReport('pendingCheck', clear(1, 0, 1));
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([BOSS.location]));
+        const game2 = { botStatus: () => JSON.stringify({ persistence_cleared: [] }) };
+        h.glue.attachAdapter({ teleport: vi.fn(() => true), onStateReport: null, _getFlash: () => game2 });
+        h.collected.length = 0;
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected).toEqual([]);
+    });
+
+    it('no game readout (no adapter): the records alone are re-applied; flags = null in the readout', () => {
+        const h = re1Harness();
+        h.emit(SNAPSHOT_UPDATED_EVENT, snapshot([BOSS.location]));
+        h.glue.detachAdapter();
+        h.emit(CONNECTED_STATE_APPLIED_EVENT, {});
+        expect(h.collected).toEqual([BOSS.location]);
+        expect(h.glue.lastRederive.flags).toBeNull();
     });
 });

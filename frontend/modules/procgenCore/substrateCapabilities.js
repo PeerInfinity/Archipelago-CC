@@ -40,6 +40,7 @@ import { declaredStartingNeeds } from './startingInventory.js';
 import { LOCATION_CAPACITY_KINDS, locationCapacityKind, locationCeiling } from './locationCapacity.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from './exitSides.js';
 import { CONCEPTS, conceptsRealisedBy } from './concepts.js';
+import { contentRolesOf } from './contentRoles.js';
 
 /** ⛓ The four groups, in reading order. */
 export const CAPABILITY_GROUPS = Object.freeze([
@@ -269,6 +270,19 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         statement: "It can show the library's concepts in its own way",
         fields: ['conceptRealisations'],
         answer: conceptsCell,
+    },
+    {
+        /* ⛓ CONTENT SETS R5 (⚖ the user, 2026-11-14: "Themeable: <roles>" — yes, that wording, derived per
+         * substrate, blank where an entry declares no roles). The roles an entry declares (`contentRoles`, the
+         * contract `contentRoles.js`), in its declared order, are the cell's text, so a card line reads
+         * *Play — Themeable: <roles>*. An entry that declares none answers ✗, which a card leaves out. */
+        id: 'P7', group: 'play',
+        statement: 'Themeable',
+        fields: ['contentRoles'],
+        answer: (e) => {
+            const roles = Object.keys(contentRolesOf(e));
+            return roles.length ? cell(CELL_KINDS.YES, roles.join(', ')) : cell(CELL_KINDS.NO);
+        },
     },
     {
         id: 'L1', group: 'loop', universal: true,

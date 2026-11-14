@@ -336,6 +336,26 @@ export function apItemsOf(record) {
 }
 
 /**
+ * ⛓⛓ RE2 — **THE JS SAVE, PER ROOM** (seedling-js-save-localstorage; ⚖ Robert 2026-11-14: "Save; resume where you
+ * were", then "Progress now, position next"; damage: "No, a fresh life"). `exportSave()` is the session's save as one
+ * plain object, `restoreSave(save)` puts one back. The core touches no storage: the HOST keeps it, one localStorage
+ * key per room (`flashPanel/seedlingJsSave.js`, keyed by the panel's `seedlingMountKey`), and is told of a change by
+ * `onSaveChange`. The fields, each the session state that already survives a boot (`stageSession`):
+ *   carried   [[level, tag]]  every persistence slot cleared and carried (`carried` ∪ the live run's bankable clears)
+ *   collected [[level, tag]]  the collected apitems (`collected`)
+ *   keys      [i]             `heldKeys` ∪ the live run's keys
+ *   seals     [id|-1] × 6     the seal log (`sealSlots`, slot → identity)
+ *   totems    [i]             `heldTotems`
+ *   slots     {slots, primary, secondary, firstUse} | null   the slot order (`carriedSlots`)
+ *   flags     {Main.* item: value}   the item flags, with what the run gained in play folded in
+ *   at        {level, x, y} | null   where the player stands, as constructor args — RECORDED, NOT USED YET (the AP
+ *                                    start is the host's; resuming there is the follow-up slice)
+ *   set       the mounted set's id, or null (a restore onto another set is refused by name)
+ * ⛔ NO PLAYER DAMAGE: a reload is a fresh life.
+ */
+export const JS_SAVE_VERSION = 1;
+
+/**
  * @param {object} [opts]
  * @param {(prop: string, value: any) => void} [opts.onStateChanged] the host's
  *   report hook — the page forwards it to `__swfBridge.onStateChanged`.
@@ -405,6 +425,17 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     /** "level:tag" apitems collected (their slot is cleared). */
     const collected = new Set();
     let deferredReboot = false;
+    /** ⛓ RE2 — a restored save's slot order, staged by the next non-tape boot (then null). */
+    let restoredSlots = null;
+    /** ⛓ RE2 — the restore's own reboot in place: a fresh life, so it carries no damage. */
+    let restoreBoot = false;
+    /** ⛓ RE2 — a restored save no boot has staged yet. */
+    let restorePending = false;
+    /** ⛓ RE2 — `fn(why)` whenever the save may have changed (the host debounces its write). */
+    const saveListeners = new Set();
+    const saveChanged = (why) => {
+        for (const fn of saveListeners) { try { fn(why); } catch (err) { log(`[js runtime] a save listener threw: ${err.message}`); } }
+    };
     /**
      * ⛓⛓ PHASE B — THE TAPE, as `Bot.as` holds it (`loaded`/`armed`/`finished`/`tick`/`tickCount`, the observation
      * buffer and its base). ⛔ `armed` is the ONE switch the no-tape path reads: while it is false every tick is the
@@ -507,25 +538,35 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      */
     function bankClears() {
         if (!session) return;
-        const run = session.run;
-        for (const c of [...(run.earnedClears ?? []), ...(run.ledger?.('bankedClears') ?? []),
-            ...(run.ledger?.('appliedTimedClears') ?? []), ...(run.scratchClears ?? [])]) {
-            if (Number.isInteger(c.tag) && c.tag >= 0) carried.set(`${c.level}:${c.tag}`, { level: c.level, tag: c.tag });
-        }
+        for (const c of bankableClears(session.run)) carried.set(`${c.level}:${c.tag}`, c);
+    }
+
+    /** The run's clears a boot carries (`bankClears`'s ledgers; tag ≥ 0). */
+    function bankableClears(run) {
+        return [...(run.earnedClears ?? []), ...(run.ledger?.('bankedClears') ?? []),
+            ...(run.ledger?.('appliedTimedClears') ?? []), ...(run.scratchClears ?? [])]
+            .filter((c) => Number.isInteger(c.tag) && c.tag >= 0).map((c) => ({ level: c.level, tag: c.tag }));
     }
 
     /** ⛓ J3 — fold what the run GAINED in play (a vanilla pickup) into the flags, before it is replaced. */
     function foldGainedItems() {
+        Object.assign(flags, foldedFlags());
+    }
+
+    /** The flags with what the run GAINED folded in (`foldGainedItems`'s rule), as a copy. */
+    function foldedFlags() {
+        const out = { ...flags };
         const inv = session?.run?.inventory ?? null;
-        if (!inv || !bootItems) return;
-        for (const prop of Object.keys(flags)) {
+        if (!inv || !bootItems) return out;
+        for (const prop of Object.keys(out)) {
             if (!(prop in inv)) continue;
-            if (typeof flags[prop] === 'number') {
-                if (Number(inv[prop]) > Number(bootItems[prop] ?? 0)) flags[prop] = Math.max(flags[prop], Number(inv[prop]));
+            if (typeof out[prop] === 'number') {
+                if (Number(inv[prop]) > Number(bootItems[prop] ?? 0)) out[prop] = Math.max(out[prop], Number(inv[prop]));
             } else if (inv[prop] === true && bootItems[prop] !== true) {
-                flags[prop] = true;
+                out[prop] = true;
             }
         }
+        return out;
     }
 
     /** ⛓ KEY DELIVERY — fold the keys the run holds (picked up in play included) into the session's. */
@@ -570,16 +611,22 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      * would keep it — an item REMOVED from the inventory, the one case where the two part). No previous run
      * (the first boot, a new mounted set) = a fresh game's, as before.
      */
-    function carriedSlots() {
+    function carriedSlots(withFlags = flags) {
         const run = session?.run ?? null;
         if (!run || !Array.isArray(run.inventorySlots)) return null;
+        // (`foldGainedItems` ran first: a weapon picked up in play is in the flags already.)
+        return slotsHeld({ slots: run.inventorySlots, primary: run.primary,
+            // ⛓ seedling-js-inventory-menu: `Main.secondary` / `Main.firstUse` are save data, and survive a boot too.
+            secondary: run.secondary, firstUse: run.firstUse }, withFlags);
+    }
+
+    /** A slot order with every slot whose item `withFlags` does not hold dropped (`carriedSlots`'s rule). */
+    function slotsHeld(src, withFlags) {
         const flagOf = Object.fromEntries(Object.entries(INVENTORY_ITEM_IDS)
             .map(([name, id]) => [id, ITEM_PROPERTIES[name].property]));
-        // (`foldGainedItems` ran first: a weapon picked up in play is in the flags already.)
-        const slots = run.inventorySlots.filter((id) => flags[flagOf[id]] === true);
-        return { slots, primary: Number.isInteger(run.primary) ? run.primary : 0,
-            // ⛓ seedling-js-inventory-menu: `Main.secondary` / `Main.firstUse` are save data, and survive a boot too.
-            secondary: Number.isInteger(run.secondary) ? run.secondary : 0, firstUse: run.firstUse === true };
+        const slots = (src.slots ?? []).filter((id) => withFlags[flagOf[id]] === true);
+        return { slots, primary: Number.isInteger(src.primary) ? src.primary : 0,
+            secondary: Number.isInteger(src.secondary) ? src.secondary : 0, firstUse: src.firstUse === true };
     }
 
     function boot({ level, x, y }, why, { playerDamage = null, declared = null } = {}) {
@@ -592,7 +639,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         bankClears();
         foldGainedItems();
         foldGainedKeys();
-        const slots = carriedSlots();
+        // ⛓ RE2 — the first non-tape boot after a restore stages the SAVED slot order (filtered against the flags,
+        // which the restore set in the same step), not the run it replaces.
+        const slots = restoredSlots && !declared ? slotsHeld(restoredSlots, flags) : carriedSlots();
+        if (!declared) { restoredSlots = null; restorePending = false; }
         // The constructor writes the statics before it builds anything (a room the model refuses included).
         lastCtor = { x, y };
         // ⛓ PHASE B — a TAPE's boot (`botStart`) stages the tape's own declaration and nothing of the session's: the
@@ -626,6 +676,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         halted = null;
         deferredReboot = false;
         note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
+        saveChanged('boot');
         return session;
     }
 
@@ -691,6 +742,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (!overlaps(a.rect, box)) continue;
             if (a.tag >= 0) collected.add(key);
             pendingCheck = `${++pendingCheckSeq}|${level}|${a.tag}|0`;
+            saveChanged('apitem');
             note({ type: 'check', level, tag: a.tag, message: `[js runtime] apitem collected — level ${level} tag ${a.tag}` });
             return a;
         }
@@ -754,6 +806,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         for (const w of writes) {
             try {
                 run.inventoryMenuWrite(w);
+                saveChanged('slots');
                 note({ type: 'inventory', write: w, message: `[js runtime] inventory: ${w.kind === 'primary' ? 'X' : 'C'} `
                     + `→ slot ${w.slot} (item ${run.inventorySlots[w.slot]})` });
             } catch (err) {
@@ -895,6 +948,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 crossing = { from: tr.from_level, to: tr.to_level, type: 'pit' };
             }
             arrival = { level: run.level, ...run.worldCtor };
+            saveChanged('crossing');
             note({ type: 'transition', from: tr.from_level, to: tr.to_level, teleporter: !!tp,
                 message: `[js runtime] level ${tr.from_level} → ${tr.to_level}${tp ? ` through the teleporter at (${tp.x}, ${tp.y})` : ' (no teleporter — a fall)'}` });
         } else if (!inCeremony0 && run.level === level0) {
@@ -1056,6 +1110,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             pendingCheck = `${++pendingCheckSeq}|${c.level}|${c.tag}|0`;
             note({ type: 'check', level: c.level, tag: c.tag, clear: true,
                 message: `[js runtime] persistence cleared — level ${c.level} tag ${c.tag}` });
+            saveChanged('clear');
             flush();
         }
     }
@@ -1096,8 +1151,98 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // The player's tick-0 state is the ctor args plus the half tile.
         const half = 8;
         const keep = arrival;
-        boot({ level: run.level, x: run.state.x - half, y: run.state.y - half }, why, { playerDamage: carriedDamage(run) });
+        // ⛓ RE2 — the restore's reboot is a fresh life (⚖ Robert: "No, a fresh life"): no damage carried.
+        const fresh = restoreBoot;
+        restoreBoot = false;
+        boot({ level: run.level, x: run.state.x - half, y: run.state.y - half }, why,
+            { playerDamage: fresh ? null : carriedDamage(run) });
         arrival = keep;
+    }
+
+    // ── ⛓⛓ RE2 — the save (`JS_SAVE_VERSION`'s head) ───────────────────────
+
+    const byLevelTag = (a, b) => a[0] - b[0] || a[1] - b[1];
+    const pairOf = (k) => k.split(':').map(Number);
+
+    /** The session's save, as `JS_SAVE_VERSION`'s head lists it. Reads only (the seal fold is idempotent). */
+    function exportSave() {
+        const run = session?.run ?? null;
+        foldGainedSaves();
+        const clears = new Map(carried);
+        for (const c of run ? bankableClears(run) : []) clears.set(`${c.level}:${c.tag}`, c);
+        const keys = new Set(heldKeys);
+        for (const k of run?.keys ?? []) if (Number.isInteger(k)) keys.add(k);
+        const effective = foldedFlags();
+        const slots = restoredSlots ? slotsHeld(restoredSlots, effective) : carriedSlots(effective);
+        return {
+            version: JS_SAVE_VERSION,
+            set: mounted?.set.set_id ?? null,
+            carried: [...clears.values()].map((c) => [c.level, c.tag]).sort(byLevelTag),
+            collected: [...collected].map(pairOf).sort(byLevelTag),
+            keys: [...keys].sort((a, b) => a - b),
+            seals: [...sealSlots],
+            totems: [...heldTotems].sort((a, b) => a - b),
+            slots: slots ? { slots: [...slots.slots], primary: slots.primary, secondary: slots.secondary, firstUse: slots.firstUse } : null,
+            flags: effective,
+            at: run ? { level: run.level, x: run.state.x - 8, y: run.state.y - 8 } : null,
+        };
+    }
+
+    /** Why `save` cannot be restored here, or null. */
+    function saveRefusal(save) {
+        if (!save || typeof save !== 'object') return 'the save is not an object';
+        if (save.version !== JS_SAVE_VERSION) return `the save is version ${save.version}, this runtime reads ${JS_SAVE_VERSION}`;
+        const here = mounted?.set.set_id ?? null;
+        if ((save.set ?? null) !== here) return `the save is for level set ${save.set ?? '(none)'}, and ${here ?? 'no set'} is mounted`;
+        const pairs = (v) => Array.isArray(v) && v.every((p) => Array.isArray(p) && p.length === 2 && p.every(Number.isInteger));
+        const ints = (v) => Array.isArray(v) && v.every(Number.isInteger);
+        if (!pairs(save.carried) || !pairs(save.collected)) return 'carried / collected must be [[level, tag]] lists';
+        if (!ints(save.keys) || !ints(save.totems)) return 'keys / totems must be integer lists';
+        if (!ints(save.seals) || save.seals.length !== SAVE_SLOTS.seal_parts) return `seals must be ${SAVE_SLOTS.seal_parts} integers`;
+        if (!save.flags || typeof save.flags !== 'object') return 'flags must be an object';
+        if (save.slots !== null && save.slots !== undefined && !ints(save.slots.slots)) return 'slots.slots must be an integer list';
+        return null;
+    }
+
+    /**
+     * Put a save back: the session state NOW (so `botStatus().persistence_cleared` reads it at once, for the host's
+     * event load read), the flags in the same step as the slot order (`carriedSlots` filters one by the other), and a
+     * reboot in place on the next tick that stages them, with no damage (a fresh life). The player stays where the
+     * host put them (the AP start); `at` is not read. With no run yet, the next boot stages it.
+     * @returns {{ok: true}|{ok: false, reason: string}}
+     */
+    function restoreSave(save) {
+        const reason = saveRefusal(save);
+        if (reason) {
+            note({ type: 'save', refused: reason, message: `[js runtime] save NOT restored — ${reason}` });
+            return { ok: false, reason };
+        }
+        // What the replaced run already earned is folded first, so it is not folded again over the restored log.
+        foldGainedSaves();
+        carried.clear();
+        for (const [level, tag] of save.carried) carried.set(`${level}:${tag}`, { level, tag });
+        collected.clear();
+        for (const [level, tag] of save.collected) collected.add(`${level}:${tag}`);
+        // Already reported, as in the session that cleared them (the walker reads them as collected, too).
+        for (const k of [...carried.keys(), ...collected]) reportedClears.add(k);
+        heldKeys.clear();
+        for (const k of save.keys) heldKeys.add(k);
+        save.seals.forEach((v, i) => { sealSlots[i] = v; });
+        heldTotems.clear();
+        for (const i of save.totems) heldTotems.add(i);
+        for (const prop of Object.keys(flags)) {
+            if (!(prop in save.flags)) continue;
+            flags[prop] = typeof ITEM_FLAGS[prop] === 'number' ? Number(save.flags[prop]) : Boolean(save.flags[prop]);
+        }
+        restoredSlots = save.slots ? { ...save.slots, slots: [...save.slots.slots] } : null;
+        restorePending = true;
+        if (session) {
+            restoreBoot = true;
+            deferredReboot = true;
+        }
+        note({ type: 'save', restored: true, message: `[js runtime] save restored — ${carried.size} clear(s), `
+            + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s)` });
+        return { ok: true };
     }
 
     // ── the host's verbs ───────────────────────────────────────────────────
@@ -1334,6 +1479,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         heldTotems.clear();
         collected.clear();
         reportedClears.clear();
+        restoredSlots = null;
+        restoreBoot = false;
+        restorePending = false;
         session = null;
         arrival = null;
         halted = null;
@@ -1600,6 +1748,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
          * (`jsRuntimePage.advance`); the run is not stepped, and the next tick's own drain finds what came after.
          */
         drainItems() { drainQueue(); },
+        /** ⛓ RE2 — the save (`JS_SAVE_VERSION`'s head): read it, put one back, hear when it may have changed. */
+        exportSave,
+        restoreSave,
+        onSaveChange(fn) { saveListeners.add(fn); return () => saveListeners.delete(fn); },
+        /** ⛓ RE2 — true until the restored save has been staged by a boot. */
+        get restorePending() { return restorePending; },
         tick,
         flush,
         setVanilla,

@@ -885,6 +885,10 @@ export class MessageHandler {
       // ID-bearing starting items arrive in ReceivedItems (location -2).
       startingItemsFromServer: true,
     });
+    // RE1 (reconnect): the Connected state is now APPLIED (queued to the state manager's worker, which runs its
+    // commands in order). `game:connected` above comes BEFORE the reset, so a module that must re-apply something
+    // the reset wiped (the Seedling glue's game-state events) listens here instead.
+    this.eventBus?.publish('client:connectedStateApplied', { slot: this.clientSlot, team: this.clientTeam });
 
     if (scout) {
       this._scoutAllLocations();

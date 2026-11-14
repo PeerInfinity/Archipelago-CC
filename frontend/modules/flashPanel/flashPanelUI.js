@@ -9,7 +9,7 @@ import {
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { SolveWatchView } from './seedlingSolveWatchView.js';
-import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, RULES_RELOADED_IN_PLACE_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
@@ -25,6 +25,8 @@ import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsV
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { seedlingMountKey } from './seedlingMountKey.js';
+// ⛓ RE2 — the JS runtime's save, one localStorage key per room (the mount key).
+import { bindJsSave } from './seedlingJsSave.js';
 // ⛓ SOLVER LIMIT OFF — import-free: the Solver section's limit controls and Stop.
 import { SOLVER_LIMIT_PROPS, anySolving, backstopMsOf, buildSolverLimitRow, stopSolves, wasmBudgetKnobOf } from './seedlingSolverLimitControls.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
@@ -468,6 +470,9 @@ export class FlashPanelUI {
     if (pinned || key === this._lastFlashPanelKey) {
       // ⛓ SAME WIRING, NEW RULES — no re-mount, but the region data the attach built is the OLD rules'.
       this._reloadRulesDerived();
+      // ⛓ RE1 — and the state manager was rebuilt under a game that kept its flags: the glue re-derives its
+      // game-state events (`SeedlingRegionGlue.rederiveEvents`).
+      this.eventBus?.publish?.(RULES_RELOADED_IN_PLACE_EVENT, { pinned });
       return;
     }
     this._lastFlashPanelKey = key;
@@ -961,6 +966,7 @@ export class FlashPanelUI {
 
   _teardownForReinit() {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
+    this._unbindJsSave();
     this._initRuntime = undefined;
     this._apLoadKey = undefined;
     this._apLoadRulesIgnored = false;
@@ -1989,6 +1995,8 @@ export class FlashPanelUI {
         overlay,
         log: (msg, cls) => this._panelLog(msg, cls),
       });
+      // ⛓ RE2 — the rooms are mounted (a mount clears the JS save) and the player is at the start: this room's save.
+      if (this.adapter === adapter && this.transport === 'js' && this._apLoadResult?.ok) this._bindJsSave(adapter, glue);
     } catch (err) {
       this._panelLog(`ap placement: ${err.message}`, 'error');
       this._apLoadRefusal = `the load threw: ${err.message}`;
@@ -2003,6 +2011,30 @@ export class FlashPanelUI {
       // up covers the game forever.
       overlay.detachSafetyNet();
     }
+  }
+
+  /**
+   * ⛓⛓ RE2 — BIND THE JS PAGE TO ITS ROOM'S SAVE (`seedlingJsSave.js`). The room is `_apLoadKey`, the mount key this
+   * load read. A stored save is restored into the page's core (the player stays at the start: ⚖ Robert, "Progress now,
+   * position next"), and the glue's event load read runs again at once, so the restored clears collect their events.
+   * The binding writes on every change the core announces, and is flushed and dropped with the adapter.
+   */
+  _bindJsSave(adapter, glue) {
+    this._unbindJsSave();
+    let runtime = null;
+    try { runtime = adapter._getWin?.()?.__seedlingJsRuntime ?? null; } catch { runtime = null; }
+    if (!runtime?.exportSave || typeof this._apLoadKey !== 'string') return;
+    this._jsSave = bindJsSave({ runtime, roomKey: this._apLoadKey, log: (msg, cls) => this._panelLog(msg, cls) });
+    if (this._jsSave.restored?.ok) glue?.syncEventsFromGame?.();
+    if (!this._jsSavePageHide && typeof window !== 'undefined') {
+      this._jsSavePageHide = () => this._jsSave?.flush();
+      window.addEventListener('pagehide', this._jsSavePageHide);
+    }
+  }
+
+  _unbindJsSave() {
+    this._jsSave?.dispose();
+    this._jsSave = null;
   }
 
   /**
@@ -2562,6 +2594,8 @@ export class FlashPanelUI {
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
     this._initEpoch = (this._initEpoch ?? 0) + 1;
+    this._unbindJsSave();
+    if (this._jsSavePageHide) { window.removeEventListener('pagehide', this._jsSavePageHide); this._jsSavePageHide = null; }
     this._unmountTouchControls();
     this._heldKeys?.uninstall();
     this._solveProgressView?.close();
