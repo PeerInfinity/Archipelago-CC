@@ -11,6 +11,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { canCross } from './seedlingCanCross.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { WALK_DEATH_REFUSED } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 
@@ -30,10 +31,14 @@ describe('hammer-phase CONNECTED-L22 — WALK_DEATH_REFUSED, the switch', () => 
     });
 });
 
-describe('hammer-phase CONNECTED-L22 — a walk that died, OFF and ON', () => {
+// ⛓ fidelity CORRIDOR FLIP (corridorBodyPricing + corridorForecastMemo ON): the corridor now prices the wallflyer's contact,
+//   so L22's walk no longer dies in a loop (the ladder refuses by name) — the switch's subject exists only in the
+//   pre-pricing world, so these rows name it (as fidelity's own pre-flip rows do).
+const PRE_PRICING = { corridorBodyPricing: false, corridorForecastMemo: false };
+describe('hammer-phase CONNECTED-L22 — a walk that died, OFF and ON (the pre-pricing world)', () => {
     it('OFF: the death loop reads as a stall short of (88,88), a `cannot`', () => {
         WALK_DEATH_REFUSED.enabled = false;
-        const r = canCross(ASK);
+        const r = withContactFidelity(PRE_PRICING, () => canCross(ASK));
         expect(r.verdict).toBe('cannot');
         expect(r.why).toMatch(/the re-planned corridor failed too — .* waypoint 0 \(88,88\): not reached within 400 ticks/);
         expect(WALK_DEATH_REFUSED.refused).toEqual([]);
@@ -41,7 +46,7 @@ describe('hammer-phase CONNECTED-L22 — a walk that died, OFF and ON', () => {
 
     it('ON: the same `cannot` names the death, its tick and the wallflyer hits before it', () => {
         WALK_DEATH_REFUSED.enabled = true;
-        const r = canCross(ASK);
+        const r = withContactFidelity(PRE_PRICING, () => canCross(ASK));
         expect(r.verdict).toBe('cannot');
         expect(r.why).toMatch(/: the player DIED at run tick \d+ in level 22 \(\d+ death\(s\) on the walk; the hits before the first: wallflyer@/);
         expect(r.why).toContain('a walk that died is refused, not re-planned from the respawn');

@@ -15,7 +15,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { levelSourceFromAtlas } from './atlasSource.js';
 import {
-    BODY_FAMILY_KILL_COUNTS, resetBodyFamilyKillCounts, withDrillKillArm, withWallFlyerKillArm,
+    BODY_FAMILY_KILL_COUNTS, resetBodyFamilyKillCounts, withDrillExitPass, withDrillKillArm, withWallFlyerKillArm,
 } from './solverBot.js';
 import { patchedMapDocument } from './seedlingSetPatches.js';
 import { parseTape } from './tapeFormat.js';
@@ -60,8 +60,19 @@ describe('hammer-phase WALLFLYER-DRILL-KILL — survey step 35 (L22 → L29), th
 });
 
 describe('hammer-phase WALLFLYER-DRILL-KILL — survey step 84 (L88 → L87), the corridor flip ON', () => {
-    it('OFF: EXHAUSTED at drill@128,160 ("not a body this run can watch die")', async () => {
-        await expect(both(false, STEP84)).rejects.toThrow(/combat ladder is EXHAUSTED[\s\S]*drill@128,160/);
+    // ⛓ hammer stack (DRILL_EXIT_PASS default ON + the corridor flip): the arms-OFF step now crosses by the drill exit
+    //   pass (246 t, no hit; measured planning-8), so the refusal the drill arm answers is the one DRILL_EXIT_PASS=0 gives.
+    it('OFF (DRILL_EXIT_PASS off): EXHAUSTED at drill@128,160 ("not a body this run can watch die")', async () => {
+        await expect(withDrillExitPass(false, () => both(false, STEP84)))
+            .rejects.toThrow(/combat ladder is EXHAUSTED[\s\S]*drill@128,160/);
+    });
+
+    it('OFF at the stack defaults (DRILL_EXIT_PASS on): L87 reached with no hit, and the drill arm is never asked', async () => {
+        const { run } = await both(false, STEP84);
+        expect(run.ledger('playerHits')).toEqual([]);
+        expect(run.ledger('playerDeaths')).toEqual([]);
+        expect(run.level).toBe(87);
+        expect(BODY_FAMILY_KILL_COUNTS.asked).toBe(0);
     });
 
     it('ON (the drill arm alone): drill@128,160 killed from its south pre-stance, L87 reached with no hit (354 t)', async () => {
