@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1299,
+        "headings": 1300,
         "indexHeadings": 2,
-        "lines": 36275,
+        "lines": 36288,
         "pages": 4,
-        "words": 545178
+        "words": 545534
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -124,8 +124,8 @@ export const DOCS_INDEX = frz({
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
             "file": "seedling-editor.md",
             "h1": "The Seedling Editor",
-            "headings": 17,
-            "lines": 290,
+            "headings": 18,
+            "lines": 301,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -133,7 +133,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7147
+            "words": 7476
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
@@ -227,7 +227,7 @@ export const DOCS_INDEX = frz({
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
             "headings": 20,
-            "lines": 301,
+            "lines": 303,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -237,7 +237,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 4546
+            "words": 4573
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
