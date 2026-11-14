@@ -1167,6 +1167,98 @@ try {
             && typedBar.get('region') === roomKey,
             '⛓ …and the LOAD area\'s "open a preset room" line takes the same route: the same level, and the bar '
             + 'names the room', typedBar.toString());
+
+        /* ── CLAIM 25: the room's token WIRES are drawn over it (maze link wires, step 3) ── */
+        /**
+         * ⛓⛓ Each subject is opened by its link (step 2) in the EDIT arm, where the editor tool's overlay lives. The
+         * expected groups are read off the committed preset here (the trap room's button and traps, the door room's
+         * button and door, the dangling room's buttons), never asked of the page; the page's `links` readout is checked
+         * against them, and the OVERLAY canvas's own pixels against the toggle. ⛔ The toggle writes nothing: the save
+         * box is the same text with the wires on and off.
+         */
+        const overlayInk = () => page.evaluate(() => {
+            const o = document.querySelector('.editorViewOverlay');
+            if (!o || !o.width) return { ink: 0, cyan: 0 };
+            const d = o.getContext('2d').getImageData(0, 0, o.width, o.height).data;
+            let ink = 0; let cyan = 0;
+            for (let i = 0; i < d.length; i += 4) {
+                if (d[i + 3] > 0) ink += 1;
+                if (d[i + 3] > 200 && d[i] === 0x7f && d[i + 1] === 0xe0 && d[i + 2] === 0xff) cyan += 1;
+            }
+            return { ink, cyan };
+        });
+        const wiresOf = (key) => {
+            const p = sidecars[key].playable_payload;
+            const btns = (p.buttons ?? []).map((b) => p.buttonLib[b.id]?.holds).filter(Boolean);
+            const trapsOn = (p.traps ?? []).map((t) => p.trapLib[t.id]?.active).filter((t) => btns.includes(t));
+            return { buttons: btns, traps: trapsOn.length };
+        };
+        const trapRoom = await loadLink(roomKey, `the wires of ${roomKey}`);
+        const trapWant = wiresOf(roomKey);
+        const trapInk = await overlayInk();
+        check(trapRoom.links?.shown === true && trapRoom.links.shapes === trapWant.traps * trapWant.buttons.length
+            && json(trapRoom.links.groups) === json([{ token: trapWant.buttons[0], pressers: 1, responders: trapWant.traps, missing: null }])
+            && trapInk.ink > 0 && trapInk.cyan === 0,
+            `⛓⛓ CLAIM 25: the trap room ${roomKey} draws its button's ${trapWant.traps} wire(s), one arrow per trap, `
+            + 'by default (the toggle starts ON, as the Seedling editor\'s), and nothing is marked dangling',
+            `${json(trapRoom.links)} · overlay ink ${trapInk.ink}, cyan ${trapInk.cyan}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `1-wires-trap-room-${roomKey}.png`), fullPage: true });
+
+        const DOOR_ROOM = Object.keys(sidecars).find((k) => {
+            const p = sidecars[k].playable_payload;
+            if (!p?.buttons?.length || p.traps) return false;
+            const toks = new Set(p.buttons.map((b) => p.buttonLib[b.id]?.holds));
+            return Object.values(p.obstacleLib ?? {}).some((e) => !e.activates
+                && (e.clear_set ?? []).some((set) => set.length === 1 && toks.has(set[0])));
+        });
+        const doorRoom = await loadLink(DOOR_ROOM, `the wires of the door room ${DOOR_ROOM}`);
+        const doorInk = await overlayInk();
+        check(doorRoom.links?.shown === true && doorRoom.links.shapes >= 1
+            && doorRoom.links.groups.some((g) => g.missing === null && g.responders >= 1) && doorInk.ink > 0,
+            `⛓ …a DOOR room (${DOOR_ROOM}, the first whose button token a one-item \`clear_set\` names) draws its `
+            + 'button → door wire', `${json(doorRoom.links)} · overlay ink ${doorInk.ink}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `2-wires-door-room-${DOOR_ROOM}.png`), fullPage: true });
+
+        const DANGLE_ROOM = 'level_39__r0c9';
+        const dangleWant = (() => {
+            const p = sidecars[DANGLE_ROOM].playable_payload;
+            return [...new Set(p.buttons.map((b) => p.buttonLib[b.id].holds))].sort();
+        })();
+        const dangle = await loadLink(DANGLE_ROOM, `the wires of the dangling room ${DANGLE_ROOM}`);
+        const dangleInk = await overlayInk();
+        const dangleNote = await page.evaluate(() => document.getElementById('labLinkNote').textContent);
+        check(json(dangle.links?.groups.filter((g) => g.missing === 'responder').map((g) => g.token)) === json(dangleWant)
+            && dangleInk.cyan > 0 && dangleWant.every((t) => dangleNote.includes(`${t}: drives nothing`)),
+            `⛓⛓ …a room whose buttons drive nothing in the maze (${DANGLE_ROOM}: ${dangleWant.join(', ')}) MARKS each `
+            + 'one on the canvas (the highlight colour) and the note under it NAMES every dangling token',
+            `cyan ${dangleInk.cyan} · ${dangleNote}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `3-wires-dangling-${DANGLE_ROOM}.png`), fullPage: true });
+
+        const savedOn = await page.inputValue('#labText');
+        await page.uncheck('#labShowLinks');
+        await settled(() => window.__mazeLab?.links?.shown === false, 'the links toggle OFF');
+        const off = await read();
+        const offInk = await overlayInk();
+        const savedOff = await page.inputValue('#labText');
+        check(off.links.shapes === 0 && offInk.ink === 0 && json(off.links.groups) === json(dangle.links.groups)
+            && savedOff === savedOn && json(off.level) === json(dangle.level),
+            '⛓ …toggle OFF: no wire and no mark on the overlay (0 ink), the groups still reported, and the save box '
+            + 'and the level UNCHANGED — the overlay writes nothing', `overlay ink ${offInk.ink}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `4-wires-off-${DANGLE_ROOM}.png`), fullPage: true });
+        await page.check('#labShowLinks');
+        await settled(() => window.__mazeLab?.links?.shown === true, 'the links toggle back ON');
+        const backOn = await read();
+        check(backOn.links.shapes === dangle.links.shapes && (await overlayInk()).cyan > 0,
+            '⛓ …and back ON draws the same shapes again', `${backOn.links.shapes} shapes`);
+
+        const plain = await load('seed=1&count=1&run=1&source=edit', () => window.__mazeLab?.step === 1, 'a plain generated maze');
+        const plainInk = await overlayInk();
+        const plainNote = await page.evaluate(() => document.getElementById('labLinkNote').textContent);
+        check(!plain.fatal && json(plain.links) === json({ shown: true, shapes: 0, groups: [] }) && plainInk.ink === 0
+            && /^no wired buttons/.test(plainNote),
+            '⛓ …and a PLAIN generated maze has no wires and no error: keys open doors by colour and any block presses '
+            + 'any button (rules, not wires), and the note says so', plainNote);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, '5-wires-plain-maze.png'), fullPage: true });
     }
 
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */

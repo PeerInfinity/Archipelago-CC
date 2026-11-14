@@ -190,6 +190,8 @@ import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { roomsOfSet } from '../seedlingDemo/seedlingSetAdapter.js';
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
+// ⛓ MAZE LINK WIRES (step 3): the room's token wires, as `editorView` shapes. Pure; reads the token fields only.
+import { describeLinkGroups, linkGroups, linkShapes } from './mazeLinks.js';
 
 // ⛓ ELEMENTS ARC 1 SLICE 3: the ONE area codec — the form, the identity line,
 // the URL bar and both CLIs spell a graph the same way.
@@ -776,6 +778,23 @@ export function main() {
         ? (setRoomSess ? setRoomSess.record() : null)
         : state?.record ?? null);
 
+    /**
+     * ⛓⛓ MAZE LINK WIRES (step 3, ⚖ Robert 2026-11-11 "Maze link overlay") — **THE WIRES OF THE ROOM ON THE CANVAS**,
+     * `null` while no editor tool is mounted (the overlay is the tool's; outside EDIT, or the SET arm with no room
+     * open, nothing draws them). Read off `canvasWorld()`, the same answer `draw` and `cellAt` use, so the wires and
+     * the room cannot disagree about which room it is. `#labShowLinks` (default ON, as E2's `#genEditShowLinks`)
+     * decides whether they are DRAWN; the groups are reported either way.
+     */
+    const linkView = () => {
+        if (!(params?.source === SOURCES.SET ? setRoomTool : tool)) return null;
+        const world = canvasWorld();
+        if (!world) return null;
+        const groups = linkGroups(world);
+        const shown = $('labShowLinks')?.checked !== false;
+        return { groups, shown, shapes: shown ? linkShapes(groups) : [] };
+    };
+    const linkOverlay = () => linkView()?.shapes ?? [];
+
     const draw = () => {
         const canvas = $('canvas');
         if (!state) return;
@@ -1093,6 +1112,22 @@ export function main() {
         $('labDirectivesNote').textContent = (state.directives ?? []).length
             ? `${state.directives.length} directive(s), in order`
             : 'none — press ATTEMPT on a catalogue row';
+    };
+
+    /**
+     * ⛓⛓ MAZE LINK WIRES (step 3) — the line under the canvas: the toggle and a sentence naming the groups and every
+     * DANGLING token (a button wired to nothing in this room), hidden while no tool is mounted. ⛔ And the overlay is
+     * REPAINTED here: a room that arrives without a gesture (a link, a LOAD, a step) would otherwise keep the last
+     * room's wires until the next click, the same trap `editorView.repaint` exists for.
+     */
+    const renderLinkLine = () => {
+        const line = $('labLinkLine');
+        if (!line) return;
+        const v = linkView();
+        line.hidden = v === null;
+        $('labLinkNote').textContent = v ? describeLinkGroups(v.groups) : '';
+        tool?.repaint();
+        setRoomTool?.repaint();
     };
 
     const renderEditPanel = () => {
@@ -2419,6 +2454,8 @@ export function main() {
                 + 'that gets edited, so a click past the edge REFUSES rather than clamping '
                 + 'to the last one',
             onChange: () => { setUi?.render(); render(); },
+            // ⛓ MAZE LINK WIRES (step 3) — the open room's token wires.
+            shapes: linkOverlay,
         });
         say(`OPENED room ${index} ("${entry?.entry_id}") — paint on the canvas, then press `
             + 'CLOSE to fold every edit into ONE `replace-room`');
@@ -3279,6 +3316,7 @@ export function main() {
         if (src === SOURCES.MANUAL) renderManualPanel();
         if (src === SOURCES.SOLVE || src === SOURCES.MANUAL) renderReplayPanel();
         refreshSaveBox();
+        renderLinkLine();
 
         /**
          * ⛓⛓⛓ S2b — **THE WITNESS CLAUSE, AND `certified` UNTOUCHED.** The
@@ -3363,6 +3401,21 @@ export function main() {
              *  view marks the clip spent AFTER the move's `onChange` render, so a value
              *  captured at render time would still say `false`. */
             get editClipSpent() { return tool ? tool.clipSpent : null; },
+            /**
+             * ⛓⛓ MAZE LINK WIRES (step 3) — the wires of the room on the canvas: `null` with no tool mounted; else
+             * whether they are drawn, the groups (token, member counts, what a dangling one misses) and the number of
+             * shapes handed to the overlay. ⚠ A GETTER: the toggle repaints without a state change.
+             */
+            get links() {
+                const v = linkView();
+                return v ? {
+                    shown: v.shown,
+                    shapes: v.shapes.length,
+                    groups: v.groups.map((g) => ({
+                        token: g.token, pressers: g.pressers.length, responders: g.responders.length, missing: g.missing,
+                    })),
+                } : null;
+            },
             /**
              * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM, AS A CHANNEL A ROW CAN READ.**
              *
@@ -4209,6 +4262,8 @@ export function main() {
             render();
         });
         lt.on($('labUndo'), 'click', undoCommand.run);
+        // ⛓ MAZE LINK WIRES (step 3): the toggle only redraws; it writes nothing.
+        if ($('labShowLinks')) lt.on($('labShowLinks'), 'change', () => render());
         if ($('labRedo')) lt.on($('labRedo'), 'click', redoCommand.run);
         lt.on($('labDownload'), 'click', download);
         lt.on($('labLoad'), 'click', loadFromBox);
@@ -4290,6 +4345,8 @@ export function main() {
                  */
                 tools: MAZE_EDIT_TOOLS,
                 editTools: { fillRefusal: MAZE_FILL_REFUSAL, clearWhat: $('labClearWhat') },
+                // ⛓ MAZE LINK WIRES (step 3) — the room's token wires (button → door/trap/pulser), see `linkView`.
+                shapes: linkOverlay,
                 lifetime: lt,
                 /**
                  * ⛓ MAZE EDITOR TOOLS (B2) — **A SENTENCE IS PAINTED WHEN IT IS SAID**, as the
