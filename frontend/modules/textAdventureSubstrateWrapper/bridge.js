@@ -165,6 +165,23 @@ function thingItemsOf(regionName) {
     }));
 }
 
+/**
+ * ⛓ CONTENT SETS R1 — a room's title is its place's name when its payload
+ * carries one, else its region id (as before). Applied to the engine's room
+ * when the world is built and whenever a region's payload arrives.
+ */
+function applyOwnPlaceToWorld(regionName) {
+    const room = _activeWorld?.rooms?.[regionName];
+    if (!room) return;
+    room.title = ownPlaceOf(regionName).name ?? regionName;
+}
+
+/** The prose document for one room: its payload prose laid over the per-game file. */
+function proseDocFor(regionName) {
+    const own = _regionProse.get(regionName);
+    return own ? composeProse(_customData, regionName, own.prose, own.exitNameOf) : _customData;
+}
+
 /** ⛓ S1 — re-label every exit of the built world by its target's place (a place may arrive after the build). */
 function applyExitLabelsToWorld() {
     for (const room of Object.values(_activeWorld?.rooms ?? {})) {
