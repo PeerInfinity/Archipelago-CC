@@ -10,7 +10,8 @@
  *  4. the EFFORT BAR, relabelled: effort in words, the dash window's caption, the elapsed time, the ETA while running;
  *  5. the MAP over the room's real tiles (the JS runtime page's world, in its own ink), the searched cells (gold: the
  *     ones that rose since the last drawn update), the stance, the goal ✕ and, on a gave-up solve, the blocker ⚠ —
- *     ⛓ ROUTE HOOK: `_drawRoute` draws the plan's line once `routeOf` returns one (the stream carries none yet);
+ *     the ROUTE in hand (`mapRoutesOf`: the tap's `best.route` on the map's level) as a white line, dashed while
+ *     running and solid when final, a gold ◆ at each sword-dash press, and the other pass's route faint under it;
  *  7. DEVELOPER DETAILS: a `<details>`, closed by default, holding the developer view's element
  *     (`SolveProgressView`) UNCHANGED — every line it drew before, byte for byte (its pins hold).
  *
@@ -20,7 +21,7 @@
  */
 
 import {
-    effortOf, emptyWatch, goalTileOf, headlineOf, observeWatch, passStepsOf, roomOf, routeOf, tryingNowOf,
+    effortOf, emptyWatch, goalTileOf, headlineOf, mapRoutesOf, observeWatch, passStepsOf, roomOf, tryingNowOf,
     watchPhase, whyOf,
 } from './seedlingSolveWatch.js';
 import { tileIndex, tileShade } from './seedlingSolveProgress.js';
@@ -34,6 +35,9 @@ const STANCE_COLOUR = '#4fc3f7';
 const GOAL_COLOUR = '#ffffff';
 const BLOCKER_COLOUR = '#ff8c1a';
 const WINDOW_COLOUR = '#f5c518';
+const ROUTE_COLOUR = '#ffffff';
+const OTHER_ROUTE_COLOUR = 'rgba(255,255,255,0.4)';
+const DASH_COLOUR = '#f5c518';
 const SANS = 'font-family:system-ui,sans-serif;';
 
 const el = (tag, css = '', text = null) => {
@@ -46,12 +50,21 @@ const el = (tag, css = '', text = null) => {
 const nextFrame = (fn) => (typeof globalThis.requestAnimationFrame === 'function'
     ? globalThis.requestAnimationFrame(fn) : setTimeout(fn, 16));
 
-/** The legend under the map, by phase (what the map draws then). */
-export function legendText(phase, { room, blocker }) {
+/**
+ * The legend under the map, by phase (what the map draws then). `routes` is `mapRoutesOf`'s answer (absent: none).
+ */
+export function legendText(phase, { room, blocker, routes = null }) {
     const parts = [];
     if (room) parts.push('room: the level\'s tiles');
     if (phase === 'running') parts.push('gold: searching here now', 'red: searched before');
     else parts.push('red: where it searched');
+    const route = routes?.route ?? null;
+    if (route && route.cells.length >= 2) {
+        const line = phase === 'running' ? 'white dashes: the route in hand' : 'white line: the final route';
+        parts.push(route.thinned ? `${line} (simplified from ${route.thinned} points)` : line);
+    }
+    if (route && route.dashes.length) parts.push('gold ◆: a sword-dash');
+    for (const o of routes?.others ?? []) parts.push(`faint: the ${o.label.toLowerCase()} pass's route`);
     if (phase === 'running') parts.push('cyan □: where it plans to stand');
     parts.push('✕ goal');
     if (blocker) parts.push('⚠ the blocker');
@@ -314,7 +327,8 @@ export class SolveWatchView {
         const goal = goalTileOf(snap);
         const why = whyOf(this.state, this.memory);
         const blocker = why?.fromDanger ? why.at : null;
-        this._text(this.legend, legendText(phase, { room: !!room, blocker: !!blocker }));
+        const routes = mapRoutesOf(snap, tiles?.level ?? null);
+        this._text(this.legend, legendText(phase, { room: !!room, blocker: !!blocker, routes }));
         if (!ctx) return;
         ctx.clearRect(0, 0, w, hgt);
         if (tiles) {
@@ -329,9 +343,9 @@ export class SolveWatchView {
                 ctx.fillRect(col * px, row * px, px, px);
             }
         }
-        this._drawRoute(ctx, routeOf(snap), px, phase);
-        ctx.lineWidth = Math.max(1, Math.floor(px / 6));
         const inside = (t) => t && t[0] >= 0 && t[1] >= 0 && t[0] < cols && t[1] < rows;
+        this._drawRoutes(ctx, routes, px, phase, inside);
+        ctx.lineWidth = Math.max(1, Math.floor(px / 6));
         const stance = phase === 'running' ? snap?.frame?.stance : null;
         if (inside(stance)) {
             ctx.strokeStyle = STANCE_COLOUR;
@@ -358,21 +372,45 @@ export class SolveWatchView {
     }
 
     /**
-     * ⛓ ROUTE HOOK — the plan in hand as a line (dashed while running, solid when final) with its dash points. `route`
-     * is `routeOf(snapshot)`: `null` until the stream carries the plan's tile path, so today this draws nothing.
+     * The routes (`mapRoutesOf`): each other pass's route faint and thin, then the route in hand as a white line
+     * (dashed while running, solid when final), then a gold ◆ (dark-edged, so it reads over the gold cells) on each
+     * dash press's tile inside the map.
      */
-    _drawRoute(ctx, route, px, phase) {
-        if (!route || !Array.isArray(route.cells) || route.cells.length < 2) return;
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = Math.max(1, Math.floor(px / 4));
-        ctx.setLineDash?.(phase === 'running' ? [4, 3] : []);
-        ctx.beginPath();
-        route.cells.forEach(([c, r], i) => {
-            const x = c * px + px / 2;
-            const y = r * px + px / 2;
-            if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
-        });
-        ctx.stroke();
-        ctx.setLineDash?.([]);
+    _drawRoutes(ctx, routes, px, phase, inside) {
+        const line = (cells, colour, width, dash) => {
+            if (cells.length < 2) return;
+            ctx.strokeStyle = colour;
+            ctx.lineWidth = width;
+            ctx.setLineDash?.(dash);
+            ctx.beginPath();
+            cells.forEach(([c, r], i) => {
+                const x = c * px + px / 2;
+                const y = r * px + px / 2;
+                if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+            });
+            ctx.stroke();
+            ctx.setLineDash?.([]);
+        };
+        for (const o of routes.others) line(o.cells, OTHER_ROUTE_COLOUR, 1, [2, 2]);
+        const route = routes.route;
+        if (!route) return;
+        line(route.cells, ROUTE_COLOUR, Math.max(1, Math.floor(px / 4)), phase === 'running' ? [4, 3] : []);
+        const h = Math.max(2, Math.round(px * 0.4)); // small: a dashing route presses on most of its cells
+        ctx.fillStyle = DASH_COLOUR;
+        ctx.strokeStyle = MAP_BACKGROUND;
+        ctx.lineWidth = 1;
+        for (const d of route.dashes) {
+            if (!inside(d)) continue;
+            const x = d[0] * px + px / 2;
+            const y = d[1] * px + px / 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y - h);
+            ctx.lineTo(x + h, y);
+            ctx.lineTo(x, y + h);
+            ctx.lineTo(x - h, y);
+            ctx.closePath?.();
+            ctx.fill();
+            ctx.stroke();
+        }
     }
 }
