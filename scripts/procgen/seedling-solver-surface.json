@@ -157,6 +157,24 @@
   "rows": [
     {
       "surface": "run",
+      "name": "activatorsNow",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 20467,
+      "class": "seedling",
+      "form": "live-state",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "direct"
+      ],
+      "dynamic": null,
+      "why": "hammer ROCK-HOLDER-WAIT: the stepped activator picture (each responder's alpha/open, each presser's `down` by `activators.presserDown` over the player's box and `movingSolidsNow()`), read-only under `reading`. `restingHolderOn` reads one presser's `down` so a resting Solid counts as a holder only where the model counts it (fidelity's `fallRockHoldsButton`); `Button.update`'s collide is a Seedling puzzle rule, not engine physics."
+    },
+    {
+      "surface": "run",
       "name": "advance",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
       "line": 21621,
@@ -1057,9 +1075,9 @@
       "files": {
         "botDriverV2.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 23
+        "solverBot.js": 24
       },
-      "sites": 26,
+      "sites": 27,
       "seen": "both",
       "via": [
         "direct"
@@ -1421,9 +1439,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 745
+        "solverBot.js": 747
       },
-      "sites": 886,
+      "sites": 888,
       "seen": "both",
       "via": [
         "direct",
@@ -1621,9 +1639,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 355
+        "solverBot.js": 357
       },
-      "sites": 428,
+      "sites": 430,
       "seen": "both",
       "via": [
         "direct",
@@ -2233,9 +2251,9 @@
         "botDriverV2.js": 2,
         "crusherBait.js": 1,
         "dangerMap.js": 1,
-        "solverBot.js": 24
+        "solverBot.js": 25
       },
-      "sites": 28,
+      "sites": 29,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2914,9 +2932,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 282
+        "solverBot.js": 283
       },
-      "sites": 352,
+      "sites": 353,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2950,9 +2968,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 286
+        "solverBot.js": 287
       },
-      "sites": 359,
+      "sites": 360,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4439,11 +4457,11 @@
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 153,
+        "solverBot.js": 154,
         "spearArm.js": 1,
         "strikePolicy.js": 3
       },
-      "sites": 195,
+      "sites": 196,
       "seen": "static",
       "via": [
         "import"
@@ -5486,10 +5504,10 @@
         "botDriverV2.js": 12,
         "dangerMap.js": 24,
         "forcedHit.js": 1,
-        "solverBot.js": 17,
+        "solverBot.js": 19,
         "strikePolicy.js": 2
       },
-      "sites": 58,
+      "sites": 60,
       "seen": "static",
       "via": [
         "import"
@@ -5526,9 +5544,9 @@
         "botDriverV2.js": 54,
         "bulbPlacement.js": 2,
         "crusherBait.js": 4,
-        "solverBot.js": 242
+        "solverBot.js": 246
       },
-      "sites": 302,
+      "sites": 306,
       "seen": "static",
       "via": [
         "import"
@@ -6127,10 +6145,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 77,
+        "solverBot.js": 78,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 98,
+      "sites": 99,
       "seen": "static",
       "via": [
         "import"
