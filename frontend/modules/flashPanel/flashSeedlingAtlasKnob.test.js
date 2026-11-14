@@ -142,7 +142,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   the L1 door) and L93's door into L98 (r5c7) are zones of their own, and L93's r10c7 loses its only doors to r5c7.
         // ⛓ rules-l112-owl-rocklock: 184 -> 185 — L112 splits at its rock (the Owl's kill): r0c7 (the L113 doors) and r2c2
         //   (the L111 door) each hold doors.
-        expect(entry.zoneCount).toBe(185);
+        // ⛓ rules-no-hit-directional: 185 -> 187 — the witnessed no-hit gates split L22 (r0c6 the L21/L29 doors, r8c0 the
+        //   L25/L30 doors) and L25 (r2c7 the L22/L28 doors, r3c2 the L26 door) at their wallflyer bands.
+        expect(entry.zoneCount).toBe(187);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

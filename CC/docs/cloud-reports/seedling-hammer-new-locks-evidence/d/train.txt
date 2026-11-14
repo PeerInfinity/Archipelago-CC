@@ -1,0 +1,26 @@
+ ✓ frontend/modules/seedlingDemo/hammerChooserPair.train.test.js (6 tests) 220048ms
+     ✓ 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to t
+     ✓ 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF  75080ms
+     ✓ 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF  33897ms
+     ✓ the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches t
+     ✓ the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed)  1918ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js (3 tests) 266660ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  116306ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  122703ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  27648ms
+ ✓ frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js (2 tests) 100343ms
+     ✓ leg 872 (from L43, (328,600)): OFF the set refuses at wall B; ON it SOLVES hitless — the tree burnt, {40,12} written  68238ms
+     ✓ leg 871 (from L39, (488,904)): ON it SOLVES hitless — the census's wall C does not stand on this head  32102ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js (2 tests) 607973ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  416973ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  190998ms
+ ✓ frontend/modules/seedlingDemo/hammerL53Killlock.train.test.js (2 tests) 27594ms
+     ✓ 9001 (L51 door): OFF refuses; ON answers the page's plan, 0 hits in the model, into L54  13108ms
+     ✓ 9002 (L48 door): OFF refuses; ON answers the page's plan, 0 hits in the model, into L54  14485ms
+ ✓ frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js (1 test) 36245ms
+     ✓ with the south door carried (tag 12): OFF "0 cell(s)"; ON SOLVED 718, hitless on a fresh run  36244ms
+ ✓ frontend/modules/seedlingDemo/hammerNewLocks.train.test.js (1 test) 12756ms
+     ✓ 910 (from L48, the held retry): OFF the puncher is pinned; rewind alone refuses; ON solved, 0 hits  12755ms
+ Test Files  7 passed (7)
+      Tests  17 passed (17)
+   Duration  1279.40s (transform 2.10s, setup 0ms, import 6.92s, tests 1271.62s, environment 1ms)

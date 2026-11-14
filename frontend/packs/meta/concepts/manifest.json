@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "_comment": "The `meta` theme (content sets R3): a world that knows it is a generated game. It presents the guardian as the Gate, which states its own rule; it gives the sword's and the swim's checks a line that knows they are checks (their names stay the AP item names, which are logic); and it offers places for a room. It does NOT present water, so water falls through to each substrate's default pack. No image: the Gate's `look` is a colour and a symbol. ⛔ No line may claim something untrue of the world: a place describes only what every generated room has.",
+  "concepts": {
+    "meta:object/gate": {
+      "kind": "object",
+      "name": "Gate",
+      "description": "A gate that opens for whoever holds Progressive Sword. It knows its rule and says it.",
+      "look": { "color": "#a0a8b8", "symbol": "#" },
+      "text": {
+        "blocked": "meta:concept/guardian/blocked",
+        "passedWith": "meta:concept/guardian/passedWith"
+      },
+      "presents": "guardian"
+    },
+    "meta:object/sword": {
+      "kind": "object",
+      "name": "Progressive Sword",
+      "description": "An item in the pool. A rule may ask for it.",
+      "text": {
+        "checkMessage": "meta:concept/sword/checkMessage"
+      },
+      "presents": "sword"
+    },
+    "meta:object/swim": {
+      "kind": "object",
+      "name": "Progressive Swim",
+      "description": "An item in the pool. A rule may ask for it.",
+      "text": {
+        "checkMessage": "meta:concept/swim/checkMessage"
+      },
+      "presents": "swim"
+    },
+    "meta:place/room": {
+      "kind": "place",
+      "name": "The Room",
+      "description": "A room in a generated world. It has at least one exit."
+    },
+    "meta:place/waypoint": {
+      "kind": "place",
+      "name": "The Waypoint",
+      "description": "One stop on the way through this world. The seed decided where it sits."
+    },
+    "meta:place/node": {
+      "kind": "place",
+      "name": "The Node",
+      "description": "On the map, this room is a node. Its exits are the edges."
+    },
+    "meta:place/seeded-room": {
+      "kind": "place",
+      "name": "The Seeded Room",
+      "description": "This room was laid out from a seed. The same seed lays it out the same way every time."
+    },
+    "meta:place/waiting-room": {
+      "kind": "place",
+      "name": "The Waiting Room",
+      "description": "Nothing here moves until you do."
+    },
+    "meta:place/region": {
+      "kind": "place",
+      "name": "The Region",
+      "description": "The rules call this a region. You may call it a room."
+    },
+    "meta:place/stopover": {
+      "kind": "place",
+      "name": "The Stopover",
+      "description": "Most rooms are on the way to somewhere else. This one may be too."
+    },
+    "meta:place/generated-room": {
+      "kind": "place",
+      "name": "The Generated Room",
+      "description": "Nobody drew this room. A generator made it from a seed and a set of rules."
+    },
+    "meta:place/room-with-exits": {
+      "kind": "place",
+      "name": "The Room With Exits",
+      "description": "Like every room here, this one has exits. Try them."
+    },
+    "meta:place/grid-cell": {
+      "kind": "place",
+      "name": "Grid Cell",
+      "description": "On the world's grid, this room takes up one cell."
+    },
+    "meta:place/known-room": {
+      "kind": "place",
+      "name": "The Known Room",
+      "description": "The logic already knows what it takes to reach this room. You got here, so you had it."
+    },
+    "meta:place/spot": {
+      "kind": "place",
+      "name": "The Spot",
+      "description": "The seed picked this spot for a room. It had to put one somewhere."
+    }
+  }
+}

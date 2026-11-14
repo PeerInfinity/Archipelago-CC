@@ -31,6 +31,19 @@
  *        -> 'best is the plan IN HAND …' reds
  *   b6 the ETA computed from the limit alone (not the units left)
  *        -> 'the rate and the ETA …' reds
+ *   ⛓ PANEL-ROUTE (`best.route`, `best.passRoutes`):
+ *   r1 consecutive duplicates kept (every row a cell)
+ *        -> 'planRoute: the rows' tiles in order …' reds
+ *   r2 the cells of a SECOND level kept (no cut at the first level change)
+ *        -> 'planRoute: a plan that changes level …' reds
+ *   r3 a dash's tile read from row `t` (after the press), not `t - 1`
+ *        -> 'planRoute: dashes …' reds
+ *   r4 thinning drops the last cell (the goal)
+ *        -> 'planRoute: a route over the cap is THINNED …' reds
+ *   r5 the route recomputed on every post (not once per plan)
+ *        -> 'onPass stamps best.route ONCE per plan …' reds
+ *   r6 `passRoutes` lists every landed pass, `best`'s own included (its filter dropped)
+ *        -> 'onPass stamps best.route ONCE per plan …' reds
  *
  * ⛓ S1 — the throttle rows run at EVERY listed rate (`SOLVE_PROGRESS_INTERVALS_MS`): nothing here assumes 1 s.
  */
@@ -41,9 +54,10 @@ import { fileURLToPath } from 'node:url';
 
 import { ANYTIME_PASSES } from './jsRuntimeSolver.js';
 import {
-    attemptLabel, createProgressTap, progressIntervalMs, requestIdentity, SOLVE_PROGRESS_INTERVAL_MS,
-    SOLVE_PROGRESS_INTERVALS_MS, SOLVE_PROGRESS_SWITCH_KEYS,
+    attemptLabel, createProgressTap, planRoute, progressIntervalMs, requestIdentity, ROUTE_MAX_CELLS, ROUTE_TILE,
+    SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS, SOLVE_PROGRESS_SWITCH_KEYS,
 } from './solveProgressTap.js';
+import { PROGRESS_TILE } from './solveProgress.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const EVIDENCE = 'CC/docs/cloud-reports/seedling-hammer-d1-evidence';
@@ -306,5 +320,108 @@ describe('⛓ S3 — the Tier B stamps (the tap\'s clock and what the worker hol
         const { spent, limit, wallBySite, rate, ...budget } = rest.budget;
         const { pass, ...segment } = rest.segment;
         expect(JSON.stringify({ ...rest, segment, budget })).toBe(before);
+    });
+});
+
+/** ⛓ PANEL-ROUTE — rows on the tile map's grid: `[col, row]` → the player's point at that tile's (3, 5) px offset. */
+const at = (col, row, level = 7) => ({ level, x: col * 16 + 3, y: row * 16 + 5, deaths: 0 });
+
+describe('⛓ PANEL-ROUTE — the plan in hand\'s tile path (`best.route`; `v` stays 2)', () => {
+    it('the route\'s grid is the tile map\'s (16 px)', () => {
+        expect(ROUTE_TILE).toBe(PROGRESS_TILE);
+        expect(ROUTE_MAX_CELLS).toBe(256);
+    });
+
+    it('planRoute: the rows\' tiles in order, consecutive duplicates dropped, the arrival first and the last row last', () => {
+        const rows = [at(2, 1), at(2, 1), at(3, 1), at(3, 1), at(3, 2), at(2, 1), at(2, 1)];
+        expect(planRoute({ expected: rows }, [])).toEqual({ level: 7, cells: [[2, 1], [3, 1], [3, 2], [2, 1]], dashes: [] });
+        expect(planRoute({ expected: [at(0, 0)] }, [])).toEqual({ level: 7, cells: [[0, 0]], dashes: [] });
+        expect(planRoute({ expected: [] }, [])).toBe(null);
+        expect(planRoute({}, [])).toBe(null);
+        expect(planRoute(null, [])).toBe(null);
+    });
+
+    it('planRoute: a plan that changes level keeps the cells BEFORE its first change (the arrival\'s level) only', () => {
+        const rows = [at(1, 1, 18), at(2, 1, 18), at(9, 9, 19), at(1, 1, 18), at(3, 3, 18)];
+        expect(planRoute({ expected: rows }, [1, 2, 4])).toEqual({ level: 18, cells: [[1, 1], [2, 1]], dashes: [[1, 1], [2, 1]] });
+    });
+
+    it('planRoute: dashes are the tiles the presses were made FROM (row t - 1), deduplicated in a row; [] for none; null when unrecorded', () => {
+        const rows = [at(1, 1), at(2, 1), at(3, 1), at(4, 1), at(4, 1)];
+        expect(planRoute({ expected: rows }, [1, 2, 3]).dashes).toEqual([[1, 1], [2, 1], [3, 1]]);
+        expect(planRoute({ expected: rows }, [3, 4]).dashes).toEqual([[3, 1], [4, 1]]);
+        expect(planRoute({ expected: rows }, [4, 5]).dashes).toEqual([[4, 1]]);
+        expect(planRoute({ expected: rows }, [5, 5]).dashes).toEqual([[4, 1]]);
+        expect(planRoute({ expected: rows }, [0, 6, 99]).dashes).toEqual([]);
+        expect(planRoute({ expected: rows }, []).dashes).toEqual([]);
+        expect(planRoute({ expected: rows }, null).dashes).toBe(null);
+    });
+
+    it('planRoute: a route over the cap is THINNED to ROUTE_MAX_CELLS evenly, the arrival and the goal kept, and says its count', () => {
+        const n = ROUTE_MAX_CELLS * 3 + 7;
+        const rows = Array.from({ length: n }, (_, i) => at(i % 200, Math.floor(i / 200)));
+        const r = planRoute({ expected: rows }, []);
+        expect(r.cells).toHaveLength(ROUTE_MAX_CELLS);
+        expect(r.thinned).toBe(n);
+        expect(r.cells[0]).toEqual([0, 0]);
+        expect(r.cells.at(-1)).toEqual([(n - 1) % 200, Math.floor((n - 1) / 200)]);
+        const exact = Array.from({ length: ROUTE_MAX_CELLS }, (_, i) => at(i, 0));
+        expect(planRoute({ expected: exact }, [])).not.toHaveProperty('thinned');
+    });
+
+    it('onPass stamps best.route ONCE per plan beside {ok, ticks, pass} (their keys first, in order); passRoutes = the OTHER landed passes', () => {
+        const asked = [];
+        const h = harness({ minIntervalMs: 0, dashTicksOf: (plan) => { asked.push(plan); return plan.dashTicks; } });
+        const dashless = { ok: true, pass: 'dashless', plan: { solution: new Array(4).fill([]), dashTicks: [],
+            expected: [at(1, 1), at(2, 1), at(3, 1), at(3, 2), at(4, 2)] } };
+        h.tap.onPass(dashless, dashless);
+        h.call('walk', snap({ seq: 1 }));
+        h.call('walk', snap({ seq: 2 }));
+        const one = h.posts[0].s.best;
+        expect(Object.keys(one)).toEqual(['ok', 'ticks', 'pass', 'route']);
+        expect(one).toEqual({ ok: true, ticks: 4, pass: 'dashless',
+            route: { level: 7, cells: [[1, 1], [2, 1], [3, 1], [3, 2], [4, 2]], dashes: [] } });
+        // each post's copy is its own: a reader that writes one never moves the next
+        one.route.cells.push([99, 99]);
+        h.call('walk', snap({ seq: 3 }));
+        expect(h.posts[2].s.best.route.cells).toHaveLength(5);
+        // the full pass lands a shorter plan with dashes: it becomes best, the dashless plan its passRoute
+        const full = { ok: true, pass: 'full', plan: { solution: new Array(2).fill([]), dashTicks: [1],
+            expected: [at(1, 1), at(3, 1), at(4, 2)] } };
+        h.tap.onPass(full, full);
+        h.call('walk', snap({ seq: 4, index: 1 }));
+        expect(h.posts.at(-1).s.best).toEqual({ ok: true, ticks: 2, pass: 'full',
+            route: { level: 7, cells: [[1, 1], [3, 1], [4, 2]], dashes: [[1, 1]] },
+            passRoutes: { dashless: { level: 7, cells: [[1, 1], [2, 1], [3, 1], [3, 2], [4, 2]], dashes: [] } } });
+        // a later pass that REFUSES changes nothing; and each plan was routed exactly once
+        h.tap.onPass({ ok: false, kind: 'refusal', pass: 'extra' }, full);
+        h.call('walk', snap({ seq: 5, index: 2 }));
+        expect(h.posts.at(-1).s.best).toEqual(h.posts.at(-2).s.best);
+        expect(asked).toEqual([dashless.plan, full.plan]);
+        expect(h.tap.stats.routes).toBe(2);
+    });
+
+    it('a plan in hand kept by a LATER pass that landed a longer plan: best.route stays the kept plan\'s; the longer one is a passRoute', () => {
+        const h = harness({ minIntervalMs: 0, dashTicksOf: () => [] });
+        const a = { ok: true, pass: 'dashless', plan: { solution: [[]], expected: [at(1, 1), at(2, 1)] } };
+        const b = { ok: true, pass: 'full', plan: { solution: [[], [], []], expected: [at(1, 1), at(1, 2), at(1, 3), at(2, 3)] } };
+        h.tap.onPass(a, a);
+        h.tap.onPass(b, a);
+        h.call('walk', snap({ seq: 1 }));
+        expect(h.posts[0].s.best.pass).toBe('dashless');
+        expect(h.posts[0].s.best.route.cells).toEqual([[1, 1], [2, 1]]);
+        expect(h.posts[0].s.best.passRoutes).toEqual({ full: { level: 7, cells: [[1, 1], [1, 2], [1, 3], [2, 3]], dashes: [] } });
+    });
+
+    it('no dashTicksOf (or one that throws): the route still rides, `dashes` null; a dashTicksOf that throws is not the solve\'s problem', () => {
+        const h = harness({ minIntervalMs: 0 });
+        const p = { ok: true, pass: 'dashless', plan: { solution: [[]], expected: [at(1, 1), at(2, 1)] } };
+        h.tap.onPass(p, p);
+        h.call('walk', snap({ seq: 1 }));
+        expect(h.posts[0].s.best.route).toEqual({ level: 7, cells: [[1, 1], [2, 1]], dashes: null });
+        const t = harness({ minIntervalMs: 0, dashTicksOf: () => { throw new Error('x'); } });
+        expect(() => t.tap.onPass(p, p)).not.toThrow();
+        t.call('walk', snap({ seq: 1 }));
+        expect(t.posts[0].s.best).toEqual({ ok: true, ticks: 1, pass: 'dashless' });
     });
 });

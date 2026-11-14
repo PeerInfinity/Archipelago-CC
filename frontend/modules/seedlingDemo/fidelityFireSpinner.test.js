@@ -45,7 +45,7 @@ describe('fidelity FIRESPINNER — the key', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.fireSpinnerArm).toBe(true);
         // ⛓ wave 39: ROCKFIRE `fireRockArm` landed after it.
         const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-        expect(keys.slice(keys.indexOf('fireSpinnerArm') + 1)).toEqual(['fireRockArm', 'fireBreakArm', 'spinnerRemoveRead']); // ⛓ wave 40: FIREBREAK `fireBreakArm`, FENCEPOST `spinnerRemoveRead`
+        expect(keys.slice(keys.indexOf('fireSpinnerArm') + 1)).toEqual(['fireRockArm', 'fireBreakArm', 'spinnerRemoveRead', 'fallRockHoldsButton']); // ⛓ wave 40: FIREBREAK `fireBreakArm`, FENCEPOST `spinnerRemoveRead`; wave 41: ROCKBUTTON `fallRockHoldsButton`
         expect(FIRE_ARM_POLICY.Spinner.policy).toBe('modelled');
     });
 

@@ -1,0 +1,7 @@
+     × takes conditionally exactly where a headless arm would have been queued 61ms
+     × the table is every SEEDLING_* name the solve worker's import closure reads (and only those), sorted 86ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/boxLock.test.js > who takes the box > takes conditionally exactly where a headless arm would have been queued
+ FAIL  frontend/modules/seedlingDemo/solverEnvChannel.test.js > solverEnvChannel — the one table > the table is every SEEDLING_* name the solve worker's import closure reads (and only those), sorted
+ Test Files  2 failed | 141 passed (143)
+      Tests  2 failed | 4502 passed (4504)

@@ -1,0 +1,13 @@
+L28 8 legs
+   level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96 | staged [] | skipped 
+   level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0 | staged [] | skipped 
+   level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared | staged [] | skipped 
+   level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96 | staged [] | skipped 
+   level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0 | staged [] | skipped 
+   level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared | staged [] | skipped 
+   level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16 | staged [] | skipped 
+   level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304 | staged [] | skipped 
+L39 3 legs
+   level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0 | staged [] | skipped 
+   level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40 | staged [] | skipped 
+   level_39__r25c9 <- in_L38_144_0 -> exit:out_teleporter_144_624 | staged ["flag:L39:8"] | skipped 

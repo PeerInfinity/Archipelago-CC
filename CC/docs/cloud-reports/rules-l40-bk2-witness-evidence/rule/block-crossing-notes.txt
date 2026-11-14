@@ -1,0 +1,16 @@
+L39 pushableblockfire@144,176: its cell borders 1 sub-region(s) — no crossing
+L39 pushableblockfire@208,80: its cell borders 1 sub-region(s) — no crossing
+L39 pushableblockfire@48,176: its cell borders 1 sub-region(s) — no crossing
+L40 pushableblockfire@480,480: its cell borders 1 sub-region(s) — no crossing
+L40 pushableblockfire@576,576: no push of the player's from r32c36 opens it (beside it: the pushable at (36,35)); only pulser@592,576's shove does, and its group's activator is walked to (from (36,37)) only with L40 flag 12: wandlock@480,560 cleared
+L40 pushableblockfire@576,576: r32c36 -> r36c35 free beyond the push item
+L40 pushableblockfire@576,576: no push of the player's from r23c29 opens it (beside it: the pushable at (36,35)); only pulser@592,576's shove does, and its group's activator is walked to (from (36,37)) only with L40 flag 12: wandlock@480,560 cleared
+L40 pushableblockfire@576,576: no push of the player's from r23c29 opens it (beside it: the pushable at (36,35)); only pulser@592,576's shove does, and its group's activator is walked to (from (36,37)) only with L40 flag 12: wandlock@480,560 cleared
+L40 pushableblockfire@576,576: r36c35 -> r32c36: r36c35 is entered only through the block's cell — nothing to price
+L40 pushableblockfire@576,576: r36c35 -> r23c29: r36c35 is entered only through the block's cell — nothing to price
+L41: 1 struck block(s), no stopper
+L63 pushableblockspear@112,96: pushed from r6c9 it stops at darktrap@64,96, darktrap@80,64 unless L63 flag 1: lightpole@64,88 cleared
+L63 pushableblockspear@112,96: r0c1 -> r6c9 free beyond the push item
+L65 pushableblockspear@176,128: r0c8 -> r4c11 free beyond the push item
+L65 pushableblockspear@176,128: r4c11 -> r0c8 free beyond the push item
+L67: 1 struck block(s), no stopper

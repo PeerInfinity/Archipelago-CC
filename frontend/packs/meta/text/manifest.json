@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "_comment": "The `meta` theme's text (content sets R3). Every line is true of every world the pack can be used in: it names only what every generated world has (rooms, exits, checks, items, rules, a seed). {placeholder} templates are filled at PLAY by the substrate that shows them (the text adventure's templating.js): {destinationRegion} in a gate's lines, {item} in a check's.",
+  "strings": {
+    "meta:concept/guardian/blocked": "The Gate stays shut. Its rule is one item, Progressive Sword, and you do not have it. Come back with it and the way to {destinationRegion} opens.",
+    "meta:concept/guardian/passedWith": "The Gate checks for Progressive Sword and finds it. That is its whole rule, so it opens. The way to {destinationRegion} is clear.",
+    "meta:concept/sword/checkMessage": "This location is a check. You checked it and received {item}. A rule that asks only for this item now passes.",
+    "meta:concept/swim/checkMessage": "This location is a check. You checked it and received {item}. A rule that asks only for this item now passes."
+  }
+}

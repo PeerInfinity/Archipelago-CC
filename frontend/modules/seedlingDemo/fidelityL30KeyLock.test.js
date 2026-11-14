@@ -20,14 +20,15 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { keyLineTouches } from './activators.js';
-import { DEFAULT_TOLERANCE } from './botDriverV1.js';
+import { DEFAULT_TOLERANCE, buildStagedTape } from './botDriverV1.js';
+import { afterWitness, afterWitnessReplay, sortedInputs } from './fidelityAfterRows.js';
 import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { parseTape } from './tapeFormat.js';
 import {
     KEYLOCK_WAIT_PRICED, KILL_STANCE_TARGET_RESCAN, deriveKillByChaser, previewWalk,
-    withKeylockWaitPriced, withKillStanceTargetRescan,
+    withChaserStagedHunt, withKeylockWaitPriced, withKillStanceTargetRescan,
 } from './solverBot.js';
 import {
     L30KEYLOCK_STEP52, l30keylockPlan, l30keylockStaging,
@@ -138,6 +139,61 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
     // ⛓ `chaserOrbitKill` named OFF (planning-14's wave-32 flip): ON, with no stance for the body, the orbit arm kills it
     // hitless (model-only; L40LATCH's evidence `l30-orbit.txt`, a game witness owed) — this row is the switch-by-switch control.
     it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', () => withL40Flip(false, () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
+        expect(verdict(await l30keylockPlan(224, { rescan: false, waitPriced: true })))
+            .toMatchObject({ solved: 309, hits: 0 });
+        const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: true }));
+        expect(v).toMatchObject({ solved: null, hits: 0 });
+        expect(v.refusal).toMatch(/keylock stance \(bosslock@64,32\): the combat ladder is EXHAUSTED/);
+    })), 120_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the two rows above that run under `withL40Flip(false)` are BEFORE pins
+    // of the pre-flip defaults. At the SHIPPED defaults (the L40 flip set ON) one flip switch moves both answers:
+    // `CHASER_STAGED_HUNT` (measured switch by switch — each of the twelve alone from the pre-flip set; only it solves).
+    // With it the kill rung's chaser arm finds bobsoldier@48,80's stance even with RESCAN OFF, so the both-OFF and the
+    // WAIT-alone arms plan the SAME hitless 318 t kill → lock → teleporter from (224,80), and (240,80) solves in 310 t.
+    // Both plans are game witnesses (p4g, `probe-seedling-bombpusher --record`, 0 px, 0 hits).
+    const afterPlan = async (x, waitPriced) => {
+        const p = await l30keylockPlan(x, { rescan: false, waitPriced });
+        const tape = p.solved ? buildStagedTape({ staging: p.staging, perTick: p.solved.out.perTick, name: 'x' }) : null;
+        return { p, v: verdict(p), inputs: tape?.inputs ?? null,
+            records: p.solved?.out.records.map((r) => [r.strategy ?? null, r.arm ?? null, r.target ?? null]) ?? null };
+    };
+
+    it('AFTER (the shipped defaults) of "both OFF, (224,80)": the survey\'s refusal is gone — CHASER_STAGED_HUNT kills first; the plan is the game witness `afterrows-l30-pit224-off`', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
+        const { v, inputs, records } = await afterPlan(224, false);
+        expect(v).toEqual({ solved: 318, hits: 0, refusal: null });
+        expect(records.slice(0, 2)).toEqual([['kill', 'chaser', BODY], ['keylock', null, LOCK]]);
+        const w = afterWitness('afterrows-l30-pit224-off');
+        expect(sortedInputs(inputs)).toEqual(sortedInputs(w.tape.inputs));
+        expect(w.samples.every((s) => s.hits === 0)).toBe(true);
+        const m = afterWitnessReplay(w);
+        expect([m.parted, m.hits]).toEqual([[], []]);
+    }), 120_000);
+
+    it('AFTER control: the shipped defaults MINUS `CHASER_STAGED_HUNT` alone keep the BEFORE — the refusal, two hits, the BEFORE witness\'s keys', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, () => withChaserStagedHunt(false, async () => {
+        const p = await l30keylockPlan(224, { rescan: false, waitPriced: false });
+        const v = verdict(p);
+        expect(v.solved).toBeNull();
+        expect(v.refusal).toMatch(/the danger map forbids \(71\.77\d*,50\.11\d*\) — chaser:bobsoldier@48,80 \(the BobSoldier's 8x8 body, bare, one forecast tick on/);
+        expect(v.hits).toBe(2);
+        expect(p.driven).toHaveLength(tape('l30keylock-pit224-before').tick_count);
+    })), 120_000);
+
+    it('AFTER (the shipped defaults) of "WAIT alone": (224,80) is the both-OFF plan key for key; (240,80) SOLVES (310 t, the game witness `afterrows-l30-pit240-wait`)', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
+        const a = await afterPlan(224, true);
+        expect(a.v).toEqual({ solved: 318, hits: 0, refusal: null });
+        expect(sortedInputs(a.inputs)).toEqual(sortedInputs(afterWitness('afterrows-l30-pit224-off').tape.inputs));
+        const b = await afterPlan(240, true);
+        expect(b.v).toEqual({ solved: 310, hits: 0, refusal: null });
+        expect(b.records.slice(0, 2)).toEqual([['kill', 'chaser', BODY], ['keylock', null, LOCK]]);
+        const w = afterWitness('afterrows-l30-pit240-wait');
+        expect(sortedInputs(b.inputs)).toEqual(sortedInputs(w.tape.inputs));
+        expect(w.samples.every((s) => s.hits === 0)).toBe(true);
+        const m = afterWitnessReplay(w);
+        expect([m.parted, m.hits]).toEqual([[], []]);
+    }), 120_000);
+
+    it('AFTER control: the shipped defaults MINUS `CHASER_STAGED_HUNT` alone keep the BEFORE — (224,80) 309 t hitless, (240,80) EXHAUSTED before a tick', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, () => withChaserStagedHunt(false, async () => {
         expect(verdict(await l30keylockPlan(224, { rescan: false, waitPriced: true })))
             .toMatchObject({ solved: 309, hits: 0 });
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: true }));

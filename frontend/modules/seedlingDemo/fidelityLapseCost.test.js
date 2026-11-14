@@ -134,6 +134,30 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
             LAPSE_NARROW_RETRY.enabled = true;
         }
     }), 60000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the row above is a BEFORE pin (`withL40Flip(false)`). At the SHIPPED
+    // defaults the mutant still refuses at budget 160 and the companion still solves the same request (776 t, as before
+    // the flip) — but the dashless pass now refuses on its own at work 113, at the `bait` rung (`runDwell`'s
+    // ALREADY-TRUE refusal: bob@208,448 has already left the world), not at the DETOUR rung's budget; the full pass then
+    // spends the rest at `kill-chaser`. No single flip switch taken out restores the DETOUR refusal (measured: each of
+    // the twelve OFF alone; CHOOSER_CUT OFF moves it to the ladder's EXHAUSTED at work 19, the rest keep the bait).
+    it('AFTER (the shipped defaults) of the MUTANT: still refused at 160 (the companion still solves it, 776 t) — but by the dashless pass\'s `bait` refusal at work 113, then the full pass\'s budget at `kill-chaser`', () => {
+        const req = leg403();
+        LAPSE_NARROW_RETRY.enabled = false;
+        let on;
+        try {
+            on = withContactFidelity({ strikeIframeLapse: true }, () => solve(req, { budgetWork: 160 }));
+        } finally {
+            LAPSE_NARROW_RETRY.enabled = true;
+        }
+        expect(on.ok).toBe(false);
+        expect(on.passes[0]).toMatchObject({ pass: 'dashless', ok: false, kind: 'refusal', work: 113 });
+        expect(on.passes[0].deadline).toBeUndefined();
+        expect(on.passes[1]).toMatchObject({ pass: 'full', ok: false, deadline: 'kill-chaser', limit: 'budget' });
+        expect(on.message).toContain('-> bait (bob@208,448): the dwell\'s condition (bob@208,448 has left the world');
+        const companion = withContactFidelity({ strikeIframeLapse: true }, () => solve(req, { budgetWork: 160 }));
+        expect([companion.ok, companion.plan.solution.length]).toEqual([true, 776]);
+    }, 60000);
 });
 
 const leg773 = () => {

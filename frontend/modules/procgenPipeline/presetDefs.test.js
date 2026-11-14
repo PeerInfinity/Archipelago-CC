@@ -7,6 +7,7 @@ import {
     SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE, SEEDLING_GENERATED_HOST_STATE,
     SEEDLING_GENERATED_SWIM_STATE, SEEDLING_GENERATED_CHESTDOOR_STATE,
     CONCEPT_TRIAL_STATE,
+    META_TRIAL_STATE,
     SEEDLING_ATLAS_HOST_STATE,
     SEEDLING_ATLAS_LOCATION_STATE,
     capturePresetState, applyPresetState, droppedSubstratesWarning, getPresetById, restoredActivePresetId, groupShippedPresets,
@@ -252,6 +253,17 @@ describe('SHIPPED_PRESETS', () => {
             concepts: ['sword', 'guardian', 'swim', 'water'] });
         expect(p.state.scenario.items).toEqual({ 'Progressive Sword': 1, 'Progressive Swim': 1, victory: 1 });
         expect(p.state.substrateQuotas).toEqual({ maze: 2, text_adventure: 2 });
+    });
+
+    it('meta trial demo IS the committed preset\'s state — the concept trial plus the theme meta (content sets R3)', () => {
+        const p = getPresetById('shipped:meta-trial-demo');
+        expect(p.state).toBe(META_TRIAL_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
+        // the concept trial's world, its ONE difference the content list
+        const { params, ...rest } = META_TRIAL_STATE;
+        const { params: baseParams, ...baseRest } = CONCEPT_TRIAL_STATE;
+        expect(rest).toEqual(baseRest);
+        expect(params).toEqual({ ...baseParams, content: ['meta'] });
     });
 
     it('seedling atlas location demo IS the committed preset\'s state — a REAL room\'s chest as a check (G7)', () => {

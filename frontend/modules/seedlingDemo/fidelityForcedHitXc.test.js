@@ -269,4 +269,38 @@ describe('FORCEDHITXC D3 — a crossing is the walk\'s only by the walk\'s OWN e
         expect(off.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 1]]);
         expect(on.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 37]]);
     }), 60000);
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the row above is a BEFORE pin (`withL40Flip(false)`). At the SHIPPED
+    // defaults ON still refuses exactly as OFF does — but the forced-hit rung is asked once, at 1 node, in BOTH arms, so
+    // the continuation (the hitless `up` that leaves by the arrival door) is never reached: the dashless pass refuses
+    // first, at the `bait` rung (bob@208,448 has already left the world). COVERAGE LOST at the defaults (no single flip
+    // switch taken out restores the BEFORE path — LAPSECOST's AFTER row measures the twelve).
+    it('AFTER (the shipped defaults) of leg 403: ON refuses as OFF does, byte for byte — at the dashless pass\'s `bait` rung; the forced-hit proof stops at 1 node in both arms (no continuation asked)', () => {
+        const line = JSON.parse(gunzipSync(readFileSync(join(HERE, '..', '..', '..', 'CC', 'docs', 'cloud-reports',
+            'seedling-fidelity-lapsecost-evidence', 'd1', 'leg-403-requests.jsonl.gz'))).toString('utf8').split('\n')[0]);
+        const req = restoreRequest(line.requests[0].request);
+        const { passes = PASSES, source, ...tape } = req;
+        const solve = (su) => {
+            const rows = [];
+            FORCED_HIT_TRACE.sink = (r) => rows.push(r);
+            LAPSE_NARROW_RETRY.enabled = false;
+            try {
+                const res = withContactFidelity({ strikeIframeLapse: true, secondaryUse: su }, () => solveAnytime(
+                    { ...tape, budgetWork: 160, source, levelSource: levelSourceFromAtlas(source.records) }, { passes }));
+                return { res, rows };
+            } finally {
+                LAPSE_NARROW_RETRY.enabled = true;
+                FORCED_HIT_TRACE.sink = null;
+            }
+        };
+        const off = solve(false);
+        const on = solve(true);
+        for (const { res } of [off, on]) {
+            expect(res.ok).toBe(false);
+            expect(res.passes[0]).toMatchObject({ pass: 'dashless', ok: false, kind: 'refusal', work: 113 });
+            expect(res.message).toContain('-> bait (bob@208,448): the dwell\'s condition (bob@208,448 has left the world');
+        }
+        expect(on.res.message).toBe(off.res.message);
+        expect(off.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 1]]);
+        expect(on.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 1]]);
+    }, 60000);
 });

@@ -308,7 +308,15 @@ describe('⛓ the links the render emits', () => {
         //   → concepts.md § Content roles (2 doc).
         //   404 → 407: maze editor tools B2 — maze-lab.md § The edit tools ↔ editing-core.md (2 doc), and
         //   maze-lab.md's `edit` row → that § (1 same-doc).
-        expect(checked).toBe(407);
+        //   407 → 409: content sets R2b — concepts.md § A world's content stack and maze-lab.md's `tileArt` row →
+        //   maze.md § Tile art from a content pack (2 doc).
+        //   409 → 410: content sets R2b part 2 — maze.md § Tile art → frontend/modules/artLibrary/README.md § Shapes (1 repo).
+        //   410 → 412: content sets R3 — pipeline-presets.md → concepts.md § The theme trial world and § Selecting a
+        //   content set (2 doc).
+        //   412 → 414: content sets R4 — concepts.md § The theme trial world → maze.md § Tile art (1 doc), and that §
+        //   → frontend/packs/meta/art/manifest.json, the worked example (1 repo).
+        //   412 → 413: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
+        expect(checked).toBe(415);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -1,0 +1,30 @@
+{
+  "$comment": "⚖ USER RULING 2026-11-11: \"Add the directional gates for now, but make a note to reexamine this later.\" A PER-ROOM TABLE, licensed for now in place of a general derivation; read by seedlingNoHitDirectionalGates.js (whose header carries the ruling and the direction to re-examine). Each gate names a wallflyer band by its flyers (the tiles come from seedlingWallFlyerBands.wallFlyerBands, never typed here), the compass direction of movement that costs an arm (y grows down, so N is south to north), the witnessed arm set as engine flags, and its witnesses in scripts/procgen/seedling-wallflyer-nohit-plans.json: `notFound` (the no-item searches of the blocked direction that ended without a plan), `arms` (one game-verified no-hit plan per arm, blocked direction) and `free` (game-verified no-item plans of the reverse direction). A witness id missing from the plans file refuses the gate by name.",
+  "reexamine": "TO BE RE-EXAMINED (the user, 2026-11-11). The general rule slice rules-no-hit-l22 suggested, not built: a band is passable with no item where the room offers a waiting spot off the ray at the far end of every flight. NOT FOUND is a search budget, never \"impossible\". The Wand is unwitnessed and Fire was not found; neither is an arm here.",
+  "gates": [
+    {
+      "level": 22,
+      "band": ["wallflyer@48,112", "wallflyer@144,112"],
+      "blocked": "N",
+      "says": "south to north: from the L25/L30 doors to the L21/L29 doors, across the lower flyer row",
+      "arms": ["hasSword", "hasSpear", "hasShield"],
+      "witness": {
+        "notFound": ["l22-25-29-none", "l22-25-21-none", "l22-30-21-none", "l22-30-29-none"],
+        "arms": { "hasSword": "l22-25-29-sword", "hasSpear": "l22-25-29-spear", "hasShield": "l22-25-29-shield" },
+        "free": ["l22-21-25-none", "l22-21-30-none", "l22-29-25-none", "l22-29-30-none"]
+      }
+    },
+    {
+      "level": 25,
+      "band": ["wallflyer@48,48", "wallflyer@64,48"],
+      "blocked": "E",
+      "says": "west to east: from the L26 door to the L22/L28 doors, across the two flyer columns",
+      "arms": ["hasSword", "hasSpear", "hasShield"],
+      "witness": {
+        "notFound": ["l25-26-22-none"],
+        "arms": { "hasSword": "l25-26-22-sword", "hasSpear": "l25-26-22-spear", "hasShield": "l25-26-22-shield" },
+        "free": ["l25-22-26-none", "l25-28-26-none"]
+      }
+    }
+  ]
+}

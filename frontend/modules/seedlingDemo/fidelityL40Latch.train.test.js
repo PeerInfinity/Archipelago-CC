@@ -11,8 +11,9 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchOrbitTape, l40LatchSolve } from './fidelityL40Latch.js';
+import { L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchOrbitShippedTape, l40LatchOrbitTape, l40LatchSolve } from './fidelityL40Latch.js';
 import { withL40Flip } from './l40FlipSet.js';
+import { withLatchWeighFirst } from './solverBot.js';
 
 describe('L40LATCH D1 — the latch solve under each arm', () => {
     it('the pre-flip hammer defaults (withL40Flip(false)), holdWaitPriced alone: the hold\'s wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier', async () => {
@@ -36,4 +37,49 @@ describe('L40LATCH D1 — the latch solve under each arm', () => {
         expect(tape.equips).toEqual(w.tape.equips);
         expect(tape.refused).toBe(w.tape.refused);
     }, 900_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the two rows above are BEFORE pins (`withL40Flip(false)`). At the
+    // SHIPPED defaults (the L40 flip set ON): the D1a arm alone refuses BEFORE A TICK, at the flip's iceturret approach
+    // staging (the latch's hold is never reached, so holdWaitPriced is inert: the text is byte-identical with it OFF),
+    // while its chaser arm still finds no still stance that survives bobsoldier@880,832 (the WAIT hit at tick 93); and
+    // both D1 switches ON now SOLVE Boss Key 2 from the latch — `l40latch-orbit-shipped`, played on p4g (0 px, 0 hits).
+    it('AFTER (the shipped defaults), holdWaitPriced alone: refused before a tick at the iceturret approach staging; still no still stance kills the BobSoldier (the WAIT hit at tick 93); holdWaitPriced is inert there', async () => {
+        const boot = await l40LatchBoot();
+        const { out, refusal } = await l40LatchSolve(boot, { holdWaitPriced: true, chaserOrbitKill: false });
+        expect(out).toBeNull();
+        expect(refusal.message).toContain('-> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach '
+            + 'staging (488,579): the combat ladder is EXHAUSTED. The corridor passes through danger at (888.0,808.7) — '
+            + 'chaser:bobsoldier@880,832');
+        expect(refusal.message).toContain('16 of THOSE refused by the forecast [(888,776): the WAIT is dangerous at tick 93 '
+            + '— chaser:bobsoldier@880,832');
+        expect(refusal.obstacle?.id).toBe('bobsoldier@880,832');
+        expect(refusal.perTick.length).toBe(0);
+        const off = await l40LatchSolve(boot, { holdWaitPriced: false, chaserOrbitKill: false });
+        expect(off.refusal.message).toBe(refusal.message);
+    }, 900_000);
+
+    it('AFTER (the shipped defaults), both ON: the latch solve SOLVES Boss Key 2, and its plan is the recorded tape `l40latch-orbit-shipped`', async () => {
+        const w = JSON.parse(readFileSync(join(L40LATCH_WITNESS_DIR, 'l40latch-orbit-shipped.json'), 'utf8'));
+        const tape = await l40LatchOrbitShippedTape();
+        expect(tape.tick_count).toBe(4144);
+        expect(tape.tick_count).toBe(w.tape.tick_count);
+        expect(tape.inputs).toEqual(w.tape.inputs);
+        expect(tape.equips).toEqual(w.tape.equips);
+    }, 900_000);
+
+    it('AFTER control: the shipped defaults MINUS `LATCH_WEIGH_FIRST` alone keep both BEFORE pins — D1a\'s EXHAUSTED hold with TIME\'s refusal, and the `l40latch-orbit-chain` prefix', () => withLatchWeighFirst(false, async () => {
+        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: true, chaserOrbitKill: false });
+        expect(out).toBeNull();
+        expect(refusal.message).toContain('hold stance (wandlock@480,560): the combat ladder is EXHAUSTED');
+        expect(refusal.message).toContain('TIME certifies the mover TO the aim against the danger timeline');
+        expect(refusal.message).toContain('the WAIT is dangerous at tick 93 — chaser:bobsoldier@880,832');
+        expect(refusal.obstacle?.id).toBe('bobsoldier@880,832');
+        expect(refusal.perTick.length).toBe(0);
+        const w = JSON.parse(readFileSync(join(L40LATCH_WITNESS_DIR, 'l40latch-orbit-chain.json'), 'utf8'));
+        const tape = await l40LatchOrbitTape();
+        expect(tape.tick_count).toBe(w.tape.tick_count);
+        expect(tape.inputs).toEqual(w.tape.inputs);
+        expect(tape.equips).toEqual(w.tape.equips);
+        expect(tape.refused).toBe(w.tape.refused);
+    }), 900_000);
 });

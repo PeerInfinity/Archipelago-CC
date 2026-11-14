@@ -1,0 +1,15 @@
+== rocklocks ==
+L26 rocklock@112,208 tset=-1 tag=0 counted=[puncher@32,208 puncher@80,168] pressers=[] finalboss=false
+L112 rocklock@112,16 tset=0 tag=1 counted=[finalboss@64,96] pressers=[] finalboss=true
+== kill-locks (tags lock, wandlock, rocklock, grasslock; tset -1) ==
+L5 lock@48,112 flag=0 bill=[bob@16,64 bob@16,80 bob@48,80]
+L18 lock@144,112 flag=0 bill=[spinner@48,96 spinner@112,48]
+L26 rocklock@112,208 flag=0 bill=[puncher@32,208 puncher@80,168]
+L39 wandlock@144,592 flag=8 bill=[spinner@112,88 spinner@224,112 spinner@224,208]
+L53 lock@144,208 flag=2 bill=[jellyfish@144,192 puncher@136,96 jellyfish@184,160 jellyfish@152,168]
+L60 lock@128,80 flag=0 bill=[jellyfish@120,112 jellyfish@56,64]
+L71 lock@112,192 flag=0 bill=[lavarunner@64,224 lavarunner@64,192 lavarunner@72,208 lavarunner@48,200 lavarunner@80,224]
+L78 lock@32,32 flag=0 bill=[lavarunner@192,144 lavarunner@144,72 lavarunner@96,32 lavarunner@56,120 lavarunner@112,136 grenade@232,72]
+L98 lock@112,112 flag=0 bill=[jellyfish@56,48 jellyfish@176,72 jellyfish@72,104 iceturret@104,24]
+L99 lock@80,96 flag=0 bill=[lavarunner@192,64 lavarunner@160,32 lavarunner@176,64]
+10 kill-lock(s)

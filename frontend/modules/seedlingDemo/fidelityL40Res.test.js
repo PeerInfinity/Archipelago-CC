@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
-import { SolverRefusal, stanceHypothesisProbe } from './solverBot.js';
+import { SolverRefusal, stanceHypothesisProbe, withLatchWeighFirst } from './solverBot.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
@@ -92,6 +92,31 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
             // timing, the end (the chest walk's press-kill death on bob@736,752) is the same — hammer's region.
             // ⛓ chaserSpinnerWalls ON (fidelity BOBIFRAME flip, ⚖ user 2026-11-11): spinner@816,848 walls bob@736,752's first step (t544), so the death is t767 (t780 before).
             + '-> kill (spinner@880,848) by press: the player died at t767 (chaser bob@736,752)');
+    }), 300_000);
+
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the two rows above are BEFORE pins (`withL40Flip(false)`). At the SHIPPED
+    // defaults, as their comment says, this door-shut solve stops before a tick at `buttonroom@880,768`, in BOTH
+    // `stanceReentryNextDoor` arms — so neither STANCE_REENTRY nor its next-door pass is exercised from step 93's boot at
+    // the defaults (COVERAGE MOVED: the shipped chain is the pocket and latch boots' SOLVES, L40BK2's / L40LATCH's AFTER).
+    it('AFTER (the shipped defaults), both arms: step 93 refuses before a tick — no REACHABLE stance inside buttonroom@880,768', async () => {
+        for (const on of [false, true]) {
+            const e = await withContactFidelity({ stanceReentryNextDoor: on }, solveStep93);
+            expect(e).toBeInstanceOf(SolverRefusal);
+            expect(e.message.startsWith('solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40')).toBe(true);
+            expect(e.message).not.toContain('STANCE_REENTRY');
+            expect(e.perTick.length).toBe(0);
+        }
+    }, 300_000);
+
+    // Measured (the defaults minus LATCH_WEIGH_FIRST, APPROACH_DOOR, TURRET_APPROACH, and LATCH_WEIGH_FIRST+APPROACH_DOOR):
+    // LATCH_WEIGH_FIRST OFF (or TURRET_APPROACH OFF) gives the OFF arm its STANCE_REENTRY back; NO measured set gives the
+    // ON arm its BEFORE end (the chest walk's press kill) — the ON arm refuses at the collect stance instead. The ON
+    // arm's property is not covered at or one switch from the defaults.
+    it('AFTER control: the shipped defaults MINUS `LATCH_WEIGH_FIRST` alone give the OFF arm its BEFORE — STANCE_REENTRY at the west door', () => withLatchWeighFirst(false, async () => {
+        const e = await withContactFidelity({ stanceReentryNextDoor: false }, solveStep93);
+        expect(e).toBeInstanceOf(SolverRefusal);
+        expect(e.message).toContain('-> hold stance (wandlock@448,432): STANCE_REENTRY — the walk to '
+            + 'wandlock@448,432\'s `hold` stance (488,392) is itself blocked by wandlock@448,432 at tick 0');
     }), 300_000);
 });
 

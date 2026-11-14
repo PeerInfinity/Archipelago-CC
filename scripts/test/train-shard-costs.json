@@ -1,5 +1,5 @@
 {
-  "_about": "Per-file cost of the train Vitest tier, in seconds: the median of the three runs below, read from each job's vitest per-file line (the train job for the train files, the slow job for the three files moved from the slow tier on 2026-11-08), except the rows named in measuredFrom.singleRun, each from the one job given there. scripts/test/trainShardPlan.js packs these longest-first into the train shards; a file with no row is still run (see that module). Only balance depends on these numbers.",
+  "_about": "Per-file cost of the train Vitest tier, in seconds: the median of the three runs below, read from each job's vitest per-file line (the train job for the train files, the slow job for the three files moved from the slow tier on 2026-11-08), except the rows named in measuredFrom.singleRun, each from the one job given there, and those in measuredFrom.local, each from the one local run named there. scripts/test/trainShardPlan.js packs these longest-first into the train shards; a file with no row is still run (see that module). Only balance depends on these numbers.",
   "measuredFrom": {
     "runs": [
       42453494775,
@@ -17,6 +17,12 @@
         "run": 42869375330,
         "job": 130016210205,
         "ms": 334247
+      }
+    },
+    "local": {
+      "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": {
+        "by": "seedling-hammer-new-locks, cloud box (4 cores, under a concurrent page sweep), 2026-11-10",
+        "ms": 14400
       }
     }
   },
@@ -43,6 +49,7 @@
     "frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js": 102,
     "frontend/modules/seedlingDemo/hammerBombPhase.train.test.js": 70,
     "frontend/modules/mazeRoom/tileSpike/learnLattice.train.test.js": 55,
-    "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35
+    "frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js": 35,
+    "frontend/modules/seedlingDemo/hammerNewLocks.train.test.js": 15
   }
 }

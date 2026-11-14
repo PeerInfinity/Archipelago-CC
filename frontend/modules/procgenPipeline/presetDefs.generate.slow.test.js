@@ -69,10 +69,11 @@ import {
     SHIPPED_PRESETS, PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
 } from './presetDefs.js';
 import {
-    buildRunFromState, runPresetHeadless, presetSubstrateIds, heavySubstrateIds, mergedItemLib,
+    prepareRunFromState, runPresetHeadless, presetSubstrateIds, heavySubstrateIds, mergedItemLib,
     sourceSizedParams, pinnedGridKeys,
 } from './presetRun.js';
 import { resolveLibrarySelection } from './regionLibraryLoader.js';
+import { nodePackIo } from '../contentPacks/nodePackIo.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const FRONTEND = join(ROOT, 'frontend');
@@ -158,8 +159,12 @@ describe('every shipped preset generates headless', () => {
                 + `region_library_files.json (${warnings.join('; ')})`).toEqual([]);
             const runs = [];
             for (let i = 0; i < 2; i += 1) {
-                // A fresh run per Generate, as the panel builds one per click.
-                const built = buildRunFromState(preset.state, buildCtxOf(preset, resolvedLibraries));
+                // A fresh run per Generate, as the panel builds one per click. ⛓ CONTENT SETS R3 — the
+                // world's content set is loaded first, as the panel's Generate does (`_loadWorldContent`):
+                // a preset that names a theme (`params.content`) cannot build synchronously.
+                // eslint-disable-next-line no-await-in-loop
+                const built = await prepareRunFromState(preset.state,
+                    { ...buildCtxOf(preset, resolvedLibraries), io: nodePackIo() });
                 // eslint-disable-next-line no-await-in-loop
                 runs.push({ mode: built.mode, ...(await runPresetHeadless(built)) });
             }

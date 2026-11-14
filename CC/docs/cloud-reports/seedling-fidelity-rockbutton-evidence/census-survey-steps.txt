@@ -1,0 +1,4 @@
+65  L39 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 039 - Totem Part 72,40 (sphere 6.2) → Totem Shard) then reach-exit(teleporter@144,0 → L40)
+95  L39 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L40)
+136  L39 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L40)
+149  L39 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L40)

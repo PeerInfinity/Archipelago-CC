@@ -66,6 +66,8 @@ import {
 } from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
+// ⛓ PANEL-ROUTE — read once per recorder: is a progress hook installed (the worker's tap)? Never written here.
+import { activeProgress } from './solveProgress.js';
 // ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
 import { lightsWorldRows } from './lightBossWorld.js';
 // ⛓ BOSS WIRING — the Tentacled Beast's ctor and mouth offsets (`TentacleBeast.as`), so its fight exit is the model's.
@@ -823,15 +825,23 @@ export function replayShadow(session, levelSource, {
  */
 function recordingRun(run, { skip = 0, expected = [] } = {}) {
     const rec = { expected, equipsAt: new Map(), equipItems: new Map() };
+    // ⛓ PANEL-ROUTE — with a progress hook installed (and only then), the ticks whose advance made a sword-dash press
+    // (`slashDashed` false → true across the advance: `solveSegment`'s own `dashesPressed` test), on the rows' index.
+    // A read of the run after the solver's own advance; the solver reads nothing of it (`planDashTicks`).
+    const dashSeen = activeProgress !== null && typeof run.progress === 'function';
+    const dashed = () => run.progress('slashInfo')?.state?.slashDashed === true;
+    if (dashSeen) rec.dashTicks = [];
     let advanced = 0;
     const recording = new Proxy(run, {
         get(target, prop) {
             const v = Reflect.get(target, prop);
             if (prop === 'advance') {
                 return (...args) => {
+                    const before = dashSeen && advanced >= skip ? dashed() : null;
                     const out = v.apply(target, args);
                     advanced += 1;
                     if (advanced > skip) rec.expected.push(rowOf(target));
+                    if (before === false && dashed()) rec.dashTicks.push(advanced - skip);
                     return out;
                 };
             }
@@ -927,12 +937,30 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     // ⛓⛓ FF-HARNESS — a fork's rows start past the prefix; its first row is the shadow's (both are the handed-over state)
     const expected = liveRec === shadowRec ? shadowRec.expected : [shadowRec.expected[0], ...liveRec.expected];
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
-    return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
+    const plan = { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
         ...(trailingEquip ? { trailingEquip } : {}),
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
         deadline: out.deadline ?? null,
         ...forcedHitFieldsOf(out) };
+    // ⛓ PANEL-ROUTE — beside the plan, never on it (the plan's bytes and its structured clone are unchanged).
+    if (liveRec.dashTicks) PLAN_DASH_TICKS.set(plan, Object.freeze([...liveRec.dashTicks]));
+    return plan;
 }
+
+/**
+ * ⛓ PANEL-ROUTE — the plan's sword-dash presses, recorded by `recordingRun` only while a progress hook was installed
+ * (the worker's tap): a WeakMap keyed by the plan object, so the plan itself (its fields, its JSON, the clone the
+ * worker posts) is byte-identical with progress on or off.
+ */
+const PLAN_DASH_TICKS = new WeakMap();
+
+/**
+ * ⛓ PANEL-ROUTE — the ticks of `plan` that pressed a sword-dash, on `plan.expected`'s index (tick `t` is the advance
+ * that made row `t`; the press was made from row `t - 1`), ascending; `null` when none were recorded (no progress hook,
+ * or a plan this module did not build). `[]` = recorded, and the plan presses no dash.
+ * @returns {?ReadonlyArray<number>}
+ */
+export const planDashTicks = (plan) => (plan && typeof plan === 'object' ? PLAN_DASH_TICKS.get(plan) ?? null : null);
 
 /**
  * ⛓ FORCED-HIT CONSUMER — `solveSegment`'s two optional FORCEDHIT fields, as a plan carries them (plain rows: the

@@ -207,7 +207,29 @@ export async function l40Bk2bLatchFreeTape() {
     return { ...tape, equips: [...(boot.equips ?? []), ...(refusal.equips ?? [])] };
 }
 
+/**
+ * ⛓ seedling-fidelity-afterrows (wave 41) — the AFTER of `l40bk2b-orbit-free` for one `orbitFreeAim` arm: the
+ * corridor solve at the SHIPPED defaults (the L40 flip set ON, no `withL40Flip` wrap), cut `L40BK2B_AFTER_REMOVAL`
+ * ticks after the BobSoldier's removal, as `l40Bk2bFreeTape` cuts. At the defaults BOTH arms remove it.
+ */
+export async function l40Bk2bShippedArmTape(name, orbitFreeAim) {
+    const { out, refusal } = await l40Bk2bSolve({ orbitFreeAim });
+    const perTick = (out?.perTick ?? refusal?.perTick ?? []).map((k) => [...k]);
+    const removedAt = await l40Bk2bRemovalTick(perTick);
+    if (removedAt === null) throw new Error(`l40Bk2bShippedArmTape(${name}): the BobSoldier was not removed — re-derive`);
+    return l40Bk2bTape(name, perTick.slice(0, removedAt + L40BK2B_AFTER_REMOVAL), {
+        description: 'seedling-fidelity-afterrows: L40\'s corridor west of bobsoldier@880,832\'s notch (both corridor '
+            + `spinners banked) — the SOLVER's own ticks for chest@880,816 with orbitFreeAim ${orbitFreeAim ? 'ON' : 'OFF'} `
+            + 'at the SHIPPED defaults (the L40 flip set ON): bobsoldier@880,832 is killed and '
+            + `removed at t${removedAt} (probe-seedling-l40bk2b.mjs)`,
+    });
+}
+
 export const L40BK2B_WITNESSES = Object.freeze({
+    'l40bk2b-free-shipped': Object.freeze({ tape: () => l40Bk2bShippedArmTape('l40bk2b-free-shipped', true),
+        switches: L40BK2B_D1_SWITCHES, checks: l40Bk2bFreeChecks }),
+    'l40bk2b-plain-shipped': Object.freeze({ tape: () => l40Bk2bShippedArmTape('l40bk2b-plain-shipped', false),
+        switches: { orbitFreeAim: false }, checks: l40Bk2bFreeChecks }),
     'l40bk2b-orbit-plain': Object.freeze({ tape: l40Bk2bPlainTape, switches: { orbitFreeAim: false },
         checks: l40Bk2bPlainChecks }),
     'l40bk2b-orbit-free': Object.freeze({ tape: l40Bk2bFreeTape, switches: L40BK2B_D1_SWITCHES,

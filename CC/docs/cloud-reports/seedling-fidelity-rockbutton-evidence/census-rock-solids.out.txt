@@ -1,0 +1,15 @@
+levels in the atlas: 116; rock entities: 11
+  L0 moonrock@240,256 tset null tag 0 dropped by []
+  L28 fallrock@112,240 tset 1 tag 1 dropped by [rope@160,64]
+  L29 fallrock@112,112 tset 0 tag 0 dropped by [button@112,128]
+  L32 fallrocklarge@64,128 tset 0 tag 1 bossrock thirdboss dropped by []
+  L37 fallrock@288,32 tset 0 tag 4 dropped by []
+  L39 fallrock@144,624 tset 6 tag 10 dropped by [rope@96,384]
+  L43 fallrock@96,336 tset 0 tag 2 dropped by []
+  L43 fallrock@192,336 tset 0 tag 1 dropped by []
+  L43 fallrock@176,384 tset 0 tag 3 dropped by []
+  L74 fallrock@288,144 tset 0 tag 2 dropped by [button@288,128]
+  L82 fallrocklarge@128,224 tset 0 tag 1 bossrock dropped by []
+
+OVERLAPS (1):
+  PRESSER  L28 fallrock@112,240 (tset 1) on button@112,240 (t 0)

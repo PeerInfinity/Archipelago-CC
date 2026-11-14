@@ -78,7 +78,7 @@ describe('fidelity FIREBREAK — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.fireBreakArm).toBe(true);
             expect(CONTACT_FIDELITY.fireBreakArm).toBe(true);
             // ⛓ wave 40: FENCEPOST `spinnerRemoveRead` landed after it.
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fireBreakArm') + 1)).toEqual(['spinnerRemoveRead']);
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fireBreakArm') + 1)).toEqual(['spinnerRemoveRead', 'fallRockHoldsButton']); // ⛓ wave 41: ROCKBUTTON
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FIRE_BREAK_ARM');
         });
     it('the clock: the sword\'s wait moved by the flame\'s later first test (press + 4 against press + 1)', () => {

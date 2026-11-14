@@ -42,7 +42,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { loadPackStack, packsBaseUrl, PACK_ID_PATTERN } from '../contentPacks/contentPacks.js';
+import { loadPackStack, packsBaseUrl, parseRegistry, PACK_ID_PATTERN } from '../contentPacks/contentPacks.js';
 import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { assertPresents } from '../procgenCore/contentRoles.js';
@@ -312,6 +312,48 @@ export async function attachEnvelopeContent(env, io = {}) {
     if (regionParams) regionParams[CONTENT_SET_KEY] = contentSet;
     else env.config.regionParams = { [CONTENT_SET_KEY]: contentSet };
     return env;
+}
+
+/* ── ⛓⛓ CONTENT SETS R3 — what a world may pick ───────────────────────── */
+
+/**
+ * ⛓ **THE PACKS A WORLD MAY ADD TO ITS STACK** (the pipeline panel's content
+ * picker): every pack a stack of `packs.json`'s `content` table names, in the
+ * order the table first names it, LESS every pack a registry entry declares as
+ * its default (a default pack is in every world's stack already, so it is never
+ * offered). `[{ id, title }]`; `registryJson` is `packs.json` as read, validated
+ * here (`parseRegistry`, refused by name).
+ */
+export function selectableContentPacks(registryJson, registry = substrateRegistry) {
+    const { contentStacks } = parseRegistry(registryJson);
+    const defaults = new Set(declaredDefaultContentPacks(registry));
+    const titles = new Map(registryJson.packs.map((p) => [p.id, p.title ?? p.id]));
+    const out = [];
+    for (const stack of Object.values(contentStacks)) {
+        for (const id of stack) {
+            if (!defaults.has(id) && !out.some((o) => o.id === id)) out.push(Object.freeze({ id, title: titles.get(id) }));
+        }
+    }
+    return Object.freeze(out);
+}
+
+/** `selectableContentPacks` over `packs.json` read through `io` (`{ base, readJson }`; the browser's by default). */
+export async function loadSelectableContentPacks(io = browserPackIo(), registry = substrateRegistry) {
+    const { base, readJson } = io.readJson ? io : browserPackIo();
+    return selectableContentPacks(await readJson(new URL('packs.json', base).href), registry);
+}
+
+/**
+ * ⛓ **A PICK, AS THE WORLD'S `content` LIST.** `picked` is the set of ticked
+ * ids; the list is in `choices` order (the order the picker shows, which is the
+ * stack order after the defaults: a later pack wins per key). An id in
+ * `current` that the picker does not offer (a saved world naming a pack this
+ * page does not list) is kept, in front, so a pick never drops it silently.
+ */
+export function pickedContentList(choices, picked, current = []) {
+    const offered = choices.map((c) => c.id);
+    const kept = (Array.isArray(current) ? current : []).filter((id) => !offered.includes(id));
+    return [...kept, ...offered.filter((id) => picked.has(id))];
 }
 
 /* ── ⛓⛓ CONTENT SETS C4 — the process-level cache of DEFAULT packs ─────── */

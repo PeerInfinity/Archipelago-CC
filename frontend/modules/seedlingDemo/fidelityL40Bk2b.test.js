@@ -23,7 +23,7 @@ import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelit
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
-import { ORBIT_FREE_AIM, strategyBoundReached } from './solverBot.js';
+import { ORBIT_FREE_AIM, strategyBoundReached, withChaserStagedHunt } from './solverBot.js';
 import { compareCorpseBumpWitness } from './fidelityCorpseBump.js';
 import { l40LatchOrbitChecks } from './fidelityL40Latch.js';
 import { L40BK2B_AFTER_REMOVAL, L40BK2B_D1_SWITCHES, L40BK2B_WITNESS_DIR, l40Bk2bBoot, l40Bk2bFreeChecks,
@@ -120,6 +120,50 @@ describe('L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)
         // the next refusal is the plain world's chest proximity (a staging artifact; the AP leg's chest is an apitem)
         expect(refusal.message).toContain('the route entered a proximity-hazard — chest at (880,816)');
     }), 180_000);
+    // ⛓⛓ seedling-fidelity-afterrows (wave 41): the row above and W0's last row are BEFORE pins (`withL40Flip(false)`).
+    // At the SHIPPED defaults `CHASER_STAGED_HUNT` (the L40 flip's; measured: each of the twelve flip switches OFF alone,
+    // only it moves this) kills bobsoldier@880,832 hitless in BOTH `orbitFreeAim` arms, removed at t112 — so neither
+    // BEFORE property is exercised at the defaults. Both kills are game witnesses (p4g, `probe-seedling-l40bk2b
+    // --record`): `l40bk2b-plain-shipped` (OFF) and `l40bk2b-free-shipped` (ON), each cut 6 ticks after the removal.
+    const keysOfTape = async (tapeJson) => {
+        const { createTapeStepper } = await import('./tapeRunner.js');
+        const keys = [];
+        const st = createTapeStepper(parseTape(JSON.stringify(tapeJson)), { levelSource: atlasLevelSource(),
+            onTick: (t, s, held) => { if (held) keys[t] = [...held].sort(); } });
+        for (let r = st.next(); !r.done; r = st.next());
+        return keys;
+    };
+    for (const [arm, over, name] of [['OFF', { orbitFreeAim: false }, 'l40bk2b-plain-shipped'],
+        ['ON', L40BK2B_D1_SWITCHES, 'l40bk2b-free-shipped']]) {
+        it(`AFTER (the shipped defaults), orbitFreeAim ${arm}: the BobSoldier is removed at t112, never hit — the solver's ticks are \`${name}\`'s, key for key`, async () => {
+            const { out, refusal } = await l40Bk2bSolve(over);
+            expect(out).toBeNull();
+            const perTick = refusal.perTick.map((k) => [...k].sort());
+            expect(await l40Bk2bRemovalTick(perTick)).toBe(112);
+            const w = witness(name);
+            expect(w.tape.tick_count).toBe(112 + L40BK2B_AFTER_REMOVAL);
+            expect(perTick.slice(0, w.tape.tick_count)).toEqual((await keysOfTape(w.tape)).slice(0, w.tape.tick_count));
+            const game = w.samples.map(unpackL40Bk2bSample);
+            const checks = l40Bk2bFreeChecks(game);
+            expect(checks.map((c) => [c.name, c.ok])).toEqual(checks.map((c) => [c.name, true]));
+            const model = await l40Bk2bModelSamples(w.tape, over);
+            expect(model.error).toBeNull();
+            expect(compareCorpseBumpWitness(game, model.samples)).toEqual([]);
+            expect(model.hits).toEqual([]);
+            expect(refusal.message).toContain('the route entered a proximity-hazard — chest at (880,816)');
+        }, 180_000);
+    }
+
+    it('AFTER control: the shipped defaults MINUS `CHASER_STAGED_HUNT` alone keep both BEFORE pins — OFF no hitless orbit candidate; ON the orbit arm\'s kill, `l40bk2b-orbit-free`\'s keys', () => withChaserStagedHunt(false, async () => {
+        const off = await l40Bk2bSolve({ orbitFreeAim: false });
+        expect(off.out).toBeNull();
+        expect(off.refusal.message).toContain('orbit arm: no orbit kill of bobsoldier@880,832 is hitless (20 fork(s) of 20)');
+        const { refusal } = await l40Bk2bSolve(L40BK2B_D1_SWITCHES);
+        const perTick = refusal.perTick.map((k) => [...k].sort());
+        expect(await l40Bk2bRemovalTick(perTick)).toBe(125);
+        const w = witness('l40bk2b-orbit-free');
+        expect(perTick.slice(0, w.tape.tick_count)).toEqual((await keysOfTape(w.tape)).slice(0, w.tape.tick_count));
+    }), 300_000);
 });
 
 describe('L40BK2B D1 — L40LATCH\'s latch chain with the projection, on the game (`l40bk2b-latch-free`)', () => {

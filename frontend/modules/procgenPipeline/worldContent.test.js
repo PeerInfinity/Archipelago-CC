@@ -31,6 +31,7 @@ import {
     effectiveContentStack, isContentSet, loadContentSet, recordedContentOf,
     declaredDefaultContentPacks, defaultContentPreloadCalls, defaultContentSetOf, documentContentOf, preloadDefaultContent,
     preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET, withoutContentSet,
+    pickedContentList, selectableContentPacks,
 } from './worldContent.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -104,6 +105,34 @@ const NO_DEFAULT = 'no-default-substrate';
 const fakeRegistry = (entries) => ({
     getAll: () => [...entries].sort((a, b) => (a.id < b.id ? -1 : 1)),
     get: (id) => entries.find((e) => e.id === id),
+});
+
+describe('⛓ CONTENT SETS R3 — what the picker offers (selectableContentPacks, pickedContentList)', () => {
+    const json = {
+        schema_version: 1,
+        packs: [{ id: 'base', title: 'Base' }, { id: 'one', title: 'One' }, { id: 'two', title: 'Two' }, { id: 'art', title: 'Art' }],
+        graphics: { art: ['art'] },
+        content: { first: ['two', 'base'], second: ['one', 'two'] },
+    };
+    const registry = fakeRegistry([{ id: 'sub', [DEFAULT_CONTENT_PACK_FIELD]: 'base' }]);
+
+    it('every pack a content stack names, first-named order, less the declared defaults; a graphics-only pack is not offered', () => {
+        expect(selectableContentPacks(json, registry)).toEqual([{ id: 'two', title: 'Two' }, { id: 'one', title: 'One' }]);
+    });
+    it('a malformed packs.json is refused by name', () => {
+        expect(() => selectableContentPacks({ ...json, content: { bad: ['nowhere'] } }, registry)).toThrow(ContentPackError);
+    });
+    it('the committed packs.json offers no default pack of the real registry', () => {
+        const real = JSON.parse(readFileSync(join(ROOT, 'frontend/packs/packs.json'), 'utf8'));
+        const offered = selectableContentPacks(real).map((c) => c.id);
+        expect(offered.filter((id) => declaredDefaultContentPacks().includes(id))).toEqual([]);
+    });
+    it('a pick is in the choices\' order; an id the picker does not offer is kept in front', () => {
+        const choices = selectableContentPacks(json, registry);
+        expect(pickedContentList(choices, new Set(['one', 'two']))).toEqual(['two', 'one']);
+        expect(pickedContentList(choices, new Set(['one']), ['gone', 'two'])).toEqual(['gone', 'one']);
+        expect(pickedContentList(choices, new Set(), undefined)).toEqual([]);
+    });
 });
 
 describe('params.content — the param', () => {

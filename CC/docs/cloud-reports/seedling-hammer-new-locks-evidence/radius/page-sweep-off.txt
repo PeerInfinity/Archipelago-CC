@@ -1,0 +1,81 @@
+65 done roomHits=0 ms=15887 cleared=1 eventFlag=null plans=ok:403:kill+walk divs=0 env=null
+66 done roomHits=0 ms=1269 cleared=0 eventFlag=null plans=ok:7:walk divs=0 env=null
+67 done roomHits=0 ms=15095 cleared=1 eventFlag=null plans=ok:385:kill+walk divs=0 env=null
+68 done roomHits=0 ms=2919 cleared=0 eventFlag=null plans=ok:61:walk divs=0 env=null
+513 done roomHits=0 ms=1101 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+222 done roomHits=0 ms=1077 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+224 done roomHits=0 ms=1245 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+284 done roomHits=0 ms=11297 cleared=0 eventFlag=null plans=ok:286:walk divs=0 env=null
+285 done roomHits=0 ms=1154 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+287 done roomHits=0 ms=1141 cleared=0 eventFlag=null plans=ok:4:walk divs=0 env=null
+288 done roomHits=0 ms=6239 cleared=0 eventFlag=null plans=ok:143:walk divs=0 env=null
+290 done roomHits=0 ms=1387 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+369 done roomHits=0 ms=4604 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+64 crossed roomHits=0 ms=4226 cleared=0 eventFlag=null plans=ok:8:walk divs=0 env=null
+481 done roomHits=0 ms=6295 cleared=0 eventFlag=null plans=ok:146:walk divs=0 env=null
+482 done roomHits=0 ms=1362 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+483 done roomHits=0 ms=1292 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+484 done roomHits=0 ms=6211 cleared=0 eventFlag=null plans=ok:138:walk divs=0 env=null
+485 done roomHits=0 ms=1347 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+514 done roomHits=0 ms=1270 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+602 failed roomHits=0 ms=6460 cleared=0 eventFlag=null plans=refusal::,refusal:: divs=0 env=null
+    FAILED: the solver declined level_71__r0c6 -> level_75 in level 71 (pass dashless): solverBot(wasm-exit-71) reach-exit (96,0)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (280.2,158.4) — hazard:spinningaxe@256,144 (a SpinningAxe's 32 px blade on its update 47 of this visit (rate 7, 329°) — the exact `collideLine`/`collideRect` at THIS tick, not the disc) — and every rung of 
+603 done roomHits=0 ms=8490 cleared=0 eventFlag=null plans=refusal::,ok:122:dodge+walk divs=0 env=null
+604 done roomHits=0 ms=1268 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+607 done roomHits=0 ms=1271 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+608 done roomHits=0 ms=12968 cleared=0 eventFlag=null plans=ok:317:walk divs=0 env=null
+609 done roomHits=0 ms=14612 cleared=0 eventFlag=null plans=ok:352:dodge+walk divs=0 env=null
+617 done roomHits=0 ms=14496 cleared=0 eventFlag=null plans=ok:344:dodge+walk divs=0 env=null
+618 done roomHits=0 ms=1283 cleared=0 eventFlag=null plans=ok:4:walk divs=0 env=null
+619 done roomHits=0 ms=8260 cleared=0 eventFlag=null plans=ok:201:dodge+walk divs=0 env=null
+622 done roomHits=0 ms=1122 cleared=0 eventFlag=null plans=ok:4:walk divs=0 env=null
+647 done roomHits=0 ms=1173 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+648 done roomHits=0 ms=1297 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+923 done roomHits=0 ms=10639 cleared=1 eventFlag=null plans=refusal::,ok:184:dodge+walk divs=0 env=null
+924 done roomHits=0 ms=13354 cleared=1 eventFlag=null plans=ok:333:touch+walk divs=0 env=null
+926 done roomHits=0 ms=6679 cleared=1 eventFlag=null plans=ok:157:touch+walk divs=0 env=null
+753 done roomHits=0 ms=32148 cleared=1 eventFlag=null plans=refusal::,ok:807:dodge+kill+walk divs=0 env=null
+754 done roomHits=0 ms=1287 cleared=0 eventFlag=null plans=ok:4:walk divs=0 env=null
+756 failed roomHits=0 ms=4173 cleared=0 eventFlag=null plans=refusal::,refusal:: divs=0 env=null
+    FAILED: the solver declined level_98 -> level_99__r2c7 in level 98 (refusal): solverBot(wasm-exit-98) reach-exit (112,112)->L99 -> kill -> chaser kill (jellyfish@176,72) by press: jellyfish@176,72 is still in the world after the whole 231-tick bound (0 guard step(s)); it stands at (146.1,70.0), 74.4 px from the player, and its straight chase line to the player is blocked by tile:Odd Tile (wall) — the body
+757 done roomHits=0 ms=2580 cleared=0 eventFlag=null plans=ok:40:walk divs=0 env=null
+759 done roomHits=0 ms=1256 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+760 done roomHits=0 ms=1308 cleared=0 eventFlag=null plans=ok:5:walk divs=0 env=null
+919 failed roomHits=0 ms=8076 cleared=0 eventFlag=null plans=refusal::,refusal:: divs=0 env=null
+    FAILED: the solver ran out of 640, then 2560 work units on its held retry on exit in level 71: solverBot(wasm-exit-71): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-71) reach-pit (12,13)->L82's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` trippe
+920 done roomHits=0 ms=16716 cleared=0 eventFlag=null plans=ok:514:walk divs=0 env=null
+922 done roomHits=0 ms=4876 cleared=0 eventFlag=null plans=ok:176:walk divs=0 env=null
+805 done roomHits=0 ms=1306 cleared=0 eventFlag=null plans=ok:7:walk divs=0 env=null
+223 failed roomHits=0 ms=3740 cleared=0 eventFlag={"level":18,"tag":0,"set":false,"collected":false} plans=refusal:: divs=0 env=null
+    FAILED: the solver declined L18 flag 0: lock@144,112 cleared in level 18 (refusal): solverBot(wasm-location-18) clear-tag {18,0} lock@144,112: 'kill' ran ({"verb":"kill","arm":"press","from":0,"ticks":420,"landings":[{"t":34,"id":"spinner@48,96","hits":1},{"t":128,"id":"spinner@48,96","hits":2},{"t":161,"id":"spin), and the run's `earnedClears` still does not hold {18,0} 120 ticks later — the way may be c
+286 failed roomHits=0 ms=1196 cleared=0 eventFlag={"level":26,"tag":0,"set":false,"collected":false} plans= divs=0 env=null
+    FAILED: the solver has no goal for L26 flag 0: rocklock@112,208 cleared: "L26 flag 0: rocklock@112,208 cleared" is a saved-obstacle EVENT (clear-tag {26,0} rocklock@112,208): the solver's clear-tag refuses it — no-verb: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it. Its check stays the game's persistence flag {26,0} turning set, which nothing but the game writes
+370 done roomHits=0 ms=4308 cleared=1 eventFlag=null plans=ok:75:apitem divs=0 env=null
+910 failed roomHits=0 ms=3360 cleared=0 eventFlag={"level":53,"tag":2,"set":false,"collected":false} plans=refusal::,refusal:: divs=0 env=null
+    FAILED: the solver declined L53 flag 2: lock@144,208 cleared in level 53 (pass dashless): solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (154.0,85.9), 48.1 px from the player, and its straight chase line to the player is blocked by tile:Ice Wall —
+605 done roomHits=0 ms=12989 cleared=1 eventFlag=null plans=refusal::,ok:181:dodge+walk divs=0 env=null
+606 done roomHits=0 ms=10358 cleared=1 eventFlag={"level":71,"tag":2,"set":true,"collected":true} plans=refusal::,ok:176:dodge+walk divs=0 env=null
+755 done roomHits=0 ms=9263 cleared=1 eventFlag=null plans=ok:194:brave divs=0 env=null
+806 unresolved roomHits=- ms=undefined cleared=null eventFlag=null plans= divs=0 env=null
+    FAILED: "Level 112 - Owl" is a location the vanilla arm's map did NOT bind — "Level 112 - Owl" is a BOSS KILL (a finalboss in level 112, reported at {112,0}): its check is bound, but the vanilla arm does not rewrite it and the bot has no fight executor for it — there is no entity to walk onto
+807 failed roomHits=0 ms=834 cleared=0 eventFlag={"level":112,"tag":1,"set":false,"collected":false} plans= divs=0 env=null
+    FAILED: the solver has no goal for L112 flag 1: rocklock@112,16 cleared: "L112 flag 1: rocklock@112,16 cleared" is a saved-obstacle EVENT (clear-tag {112,1} rocklock@112,16): the solver's clear-tag refuses it — no-verb: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it. Its check stays the game's persistence flag {112,1} turning set, which nothing but the game writes
+289 failed roomHits=0 ms=832 cleared=0 eventFlag={"level":26,"tag":0,"set":false,"collected":false} plans= divs=0 env=null
+    FAILED: the solver has no goal for L26 flag 0: rocklock@112,208 cleared: "L26 flag 0: rocklock@112,208 cleared" is a saved-obstacle EVENT (clear-tag {26,0} rocklock@112,208): the solver's clear-tag refuses it — no-verb: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it. Its check stays the game's persistence flag {26,0} turning set, which nothing but the game writes
+911 failed roomHits=0 ms=3959 cleared=0 eventFlag={"level":53,"tag":2,"set":false,"collected":false} plans=refusal::,refusal:: divs=0 env=null
+    FAILED: the solver declined L53 flag 2: lock@144,208 cleared in level 53 (pass dashless): solverBot(wasm-location-53) clear-tag {53,2} lock@144,208 -> kill: the count is still waiting on [jellyfish@144,192, puncher@136,96, jellyfish@184,160, jellyfish@152,168] and no stance derives for any of them — no stance derives for puncher@136,96 on level 53: the player's box priced no stance, so the TARGET's box wa
+610 done roomHits=0 ms=16940 cleared=1 eventFlag=null plans=ok:401:apitem divs=0 env=null
+611 done roomHits=0 ms=14445 cleared=1 eventFlag={"level":71,"tag":2,"set":true,"collected":true} plans=ok:319:touch divs=0 env=null
+758 done roomHits=0 ms=8408 cleared=1 eventFlag=null plans=ok:194:dodge+walk divs=0 env=null
+912 skipped roomHits=- ms=undefined cleared=null eventFlag=null plans= divs=0 env=null
+620 done roomHits=0 ms=4146 cleared=1 eventFlag=null plans=ok:63:apitem divs=0 env=null
+616 skipped roomHits=- ms=undefined cleared=null eventFlag=null plans= divs=0 env=null
+621 done roomHits=0 ms=6419 cleared=1 eventFlag={"level":71,"tag":2,"set":true,"collected":true} plans=ok:149:touch divs=0 env=null
+371 done roomHits=0 ms=1539 cleared=1 eventFlag=null plans=ok:4:walk divs=0 env=null
+612 done roomHits=0 ms=12977 cleared=1 eventFlag=null plans=ok:303:dodge+walk divs=0 env=null
+613 done roomHits=0 ms=3635 cleared=1 eventFlag=null plans=ok:72:walk divs=0 env=null
+614 done roomHits=0 ms=4472 cleared=1 eventFlag=null plans=ok:93:walk divs=0 env=null
+615 done roomHits=0 ms=6263 cleared=2 eventFlag=null plans=ok:134:apitem divs=0 env=null
+925 done roomHits=0 ms=1384 cleared=1 eventFlag=null plans=ok:5:walk divs=0 env=null
+921 done roomHits=0 ms=5300 cleared=1 eventFlag=null plans=ok:195:walk divs=0 env=null
+804 done roomHits=0 ms=1465 cleared=1 eventFlag=null plans=ok:8:walk divs=0 env=null

@@ -282,6 +282,8 @@ export class PlaybackBotPanel {
             isLoopModeActive: () => !!centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.(),
             loopRunnerDeps: this._loopRunnerDeps(),
             timer: this._timerDeps(),
+            // ⛓ CONNECTED CHECKS — a connected check lands on the server's echo, not at the flush.
+            isConnected: () => !!centralRegistry.getPublicFunction?.('client', 'isConnected')?.(),
         });
     }
 

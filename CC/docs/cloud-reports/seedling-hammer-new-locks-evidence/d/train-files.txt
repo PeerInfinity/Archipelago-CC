@@ -1,0 +1,7 @@
+frontend/modules/seedlingDemo/hammerNewLocks.train.test.js
+frontend/modules/seedlingDemo/hammerL53Killlock.train.test.js
+frontend/modules/seedlingDemo/hammerKeylockTurret.train.test.js
+frontend/modules/seedlingDemo/hammerClearTagChain.train.test.js
+frontend/modules/seedlingDemo/hammerChooserPair.train.test.js
+frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js
+frontend/modules/seedlingDemo/hammerIceTurretStatic.train.test.js

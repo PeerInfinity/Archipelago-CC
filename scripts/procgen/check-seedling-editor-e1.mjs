@@ -11,7 +11,8 @@
  *      terrain `<select>`; `?art=off` makes every chip its swatch (`data-fallback`).
  *   2. **REDO** — paint, UNDO, then `Ctrl+Shift+Z` brings the edit back and the record equals node's fold; `Ctrl+Y`
  *      after a second undo does the same; a NEW edit after an undo leaves nothing to redo (`#genEditRedo` disabled).
- *   3. **FILL** (`l`) — two corners; ONE edit, a group, and the record equals node's `rectFillOps`.
+ *   3. **FILL** (`l`) — two corners; ONE edit, a group, and the record equals node's `rectFillOps`. Then `l`,
+ *      click, `x`, click: CLEAR starts its own corner, applies nothing, and FILL's mark is gone (corner reset).
  *   4. **REPLACE paste** — a cell holding two bodies, pasted over in REPLACE mode with a one-body clip, holds one;
  *      the ADD mode still accumulates.
  *   5. **CLEAR** (`x`) — `entities only` empties the bodies of a rectangle and leaves its terrain.
@@ -202,6 +203,44 @@ async function main() {
         check(json(e3.editList[1].ops) === json(nodeFill.ops.map((o) => ({ op: 'paint', tx: o.tx, ty: o.ty, column: 3 }))),
             '⛓⛓ …and its writes are node\'s `rectFillOps` of the same rectangle and column');
         await shot('3-fill');
+        /**
+         * ⛓⛓ editor-corner-reset — A CORNER BELONGS TO THE TOOL THAT SET IT. `l`, click A, `x`, click B used to
+         * CLEAR the rectangle A–B from FILL's corner. Now CLEAR's first click is its own corner 1, nothing is
+         * applied, and the switch to CLEAR stops drawing FILL's corner mark (`#ffd75f` on the view's overlay).
+         * MUTANT: base (B1's drop in `changed()`, only when the new tool is neither FILL nor CLEAR) — CLEAR
+         * applies a 2x1 rectangle, edits 3, and A's mark is still drawn after `x` (3 red, measured).
+         */
+        const markAt = ({ tx, ty }) => page.evaluate(({ x, y }) => {
+            const o = document.querySelector('.editorViewOverlay');
+            const lv = window.__editorEdit.level;
+            const cw = o.width / lv.width;
+            const ch = o.height / lv.height;
+            const d = o.getContext('2d').getImageData(Math.floor(x * cw), Math.floor(y * ch),
+                Math.ceil(cw), Math.ceil(ch)).data;
+            let n = 0;
+            for (let i = 0; i < d.length; i += 4) {
+                if (d[i + 3] > 0 && d[i] > 230 && d[i + 1] > 195 && d[i + 1] < 235 && d[i + 2] < 130) n++;
+            }
+            return n;
+        }, { x: tx, y: ty });
+        const CA = { tx: 6, ty: 1 };
+        const CB = { tx: 7, ty: 1 };
+        await key('l');
+        await clickCell(CA);
+        const fillSaid = await page.textContent('#status');
+        const markFill = await markAt(CA);
+        check(fillSaid.startsWith(`FILL corner 1 at (${CA.tx},${CA.ty})`) && markFill > 0,
+            '⛓ (corner reset) FILL\'s first click is corner 1, and its mark is drawn', `${fillSaid.slice(0, 50)} ink=${markFill}`);
+        await key('x');
+        const markAfter = await markAt(CA);
+        check(markAfter === 0, '⛓⛓ (corner reset) switching to CLEAR stops drawing FILL\'s corner', `ink=${markAfter}`);
+        await clickCell(CB);
+        const clearSaid = await page.textContent('#status');
+        check(clearSaid.startsWith(`CLEAR corner 1 at (${CB.tx},${CB.ty})`) && (await edit()).edits === 2,
+            '⛓⛓⛓ (corner reset) CLEAR\'s first click after FILL is ITS corner 1 — no CLEAR applied on FILL\'s corner',
+            `${clearSaid.slice(0, 60)} edits=${(await edit()).edits}`);
+        await shot('3b-fill-then-clear');
+        await key('Escape');
         /**
          * ⛓ …and FLOOD with a terrain NAME selected (`wall`, the chip above): it used to THROW
          * (`columnOfSpec` was handed `{terrain}` instead of the name) and the arm's mode select reset

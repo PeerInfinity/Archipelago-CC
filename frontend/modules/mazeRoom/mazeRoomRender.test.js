@@ -254,6 +254,7 @@ describe('mazeRoomRender — the extraction is behaviour-preserving', () => {
                 blockKinds: null,
                 livePulsers: null,
                 latched: null,
+                tileArt: null,
             });
             expect(hashOf(ctx.__log), `${name}: direct drawWorld`).toBe(BEFORE[name].hash);
         });
@@ -281,7 +282,7 @@ describe('mazeRoomRender — the view is the WHOLE input', () => {
             'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations',
             'ruleEvaluator', 'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible',
             'isLocationVisible', 'isConsumableCollected', 'broken', 'facing', 'armedTraps',
-            'seedlingSkin', 'blocks', 'blockKinds', 'livePulsers', 'latched',
+            'seedlingSkin', 'blocks', 'blockKinds', 'livePulsers', 'latched', 'tileArt',
         ]);
     });
 
