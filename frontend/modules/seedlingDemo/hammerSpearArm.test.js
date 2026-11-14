@@ -72,11 +72,14 @@ describe('hammer-phase SPEAR-ARM — the scan asks with the thrust, not the swin
 });
 
 describe('hammer-phase SPEAR-ARM — L22 from L25\'s door to the L29 exit', () => {
-    it('OFF: a spear-only run walks strike-free into the death loop\'s stall', () => {
+    // ⛓ fidelity CORRIDOR FLIP (corridorBodyPricing ON): the OFF walk no longer stalls in the death loop — the corridor
+    //   prices the wallflyer's contact, so the ladder refuses by name; the strike-free OFF arm still builds no policy.
+    it('OFF: a spear-only run builds no strike policy; the ladder refuses on the wallflyer band (no sword arm)', () => {
         SPEAR_ARM.enabled = false;
         const r = canCross({ ...ASK, inventory: ['spear'] });
         expect(r.verdict).toBe('cannot');
-        expect(r.why).toMatch(/the re-planned corridor failed too — .* waypoint 0 \(88,88\): not reached within 400 ticks/);
+        expect(r.why).toMatch(/the combat ladder is EXHAUSTED\. The corridor passes through danger at .* enemy:wallflyer@/);
+        expect(r.why).toMatch(/chaser arm: this run holds no sword/);
         expect(SPEAR_ARM_COUNTS).toEqual({ policies: 0, equips: 0, swallowed: 0 });
     });
 
