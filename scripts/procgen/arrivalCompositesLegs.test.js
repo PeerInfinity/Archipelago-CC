@@ -43,6 +43,7 @@ import { shippedTape } from '../../frontend/modules/seedlingDemo/wasmPlayback.js
 import { indexLevels, levelSourceFromAtlas } from '../../frontend/modules/seedlingDemo/atlasSource.js';
 import { withContactFidelity } from '../../frontend/modules/seedlingDemo/contactFidelity.js';
 import { withKillLockBodies } from '../../frontend/modules/seedlingDemo/killLockBodies.js';
+import { withDrillExitPass } from '../../frontend/modules/seedlingDemo/solverBot.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
@@ -116,23 +117,27 @@ describe('composites probe X — L88 declines BY NAME beside the live drill (fid
             ['residue L88 a', 'declined'], ['residue L88 b', 'declined'],
         ]);
     });
+    // ⛓ hammer stack (DRILL_EXIT_PASS default ON × CORRIDORFLIP): at the stack defaults both L88 legs CROSS to L87 (verbs
+    //   ["forced-hit"], 246/258 t, a fresh-run replay bills no hit — measured hammer-planning-8). ⚖ Robert "witness first"
+    //   (via fidelity-20, 2026-11-14): until the wasm game answers that crossing, these decline rows name the drill-exit-OFF
+    //   world (withDrillExitPass(false)); the stack-default 'cross' row and the probe's LEGS.X re-pin wait on the witness.
     for (const leg of DECLINED.filter((l) => l.goal.level === 88)) {
         // ⛓ planning-10's DRILL flip (⚖ user, 2026-10-21): with `drillMixedRooms` ON the danger map prices L88's drill
         //   as a STEPPED drill at its live box, so the refusal names it there (still a decline; OFF: the corridor wording).
         it(`${leg.name}: the solver refuses the corridor on the stepped drill (drillMixedRooms OFF: the re-planned corridor failed too); drillLive OFF plans it again`, () => {
-            const { result } = serve(leg);
+            const { result } = withDrillExitPass(false, () => serve(leg));
             expect(result.ok).toBe(false);
             // ⛓ CORRIDORFLIP (⚖ user 2026-11-12, `corridorBodyPricing` ON): the corridor now prices the drill's live contact
             //   along the walk, so the decline names it as the forecast contact (was: a stepped drill's static box). Still a decline.
             expect(String(result.message)).toMatch(/chaser:drill@128,160 \(the drill's contact/);
             // ⛓ CORRIDORFLIP: the legacy arm and the drill-blind control name their pre-pricing world too.
             const legacy = withContactFidelity({ drillMixedRooms: false, corridorBodyPricing: false, corridorForecastMemo: false },
-                () => serve(leg).result);
+                () => withDrillExitPass(false, () => serve(leg).result));
             expect(legacy.ok).toBe(false);
             expect(String(legacy.message)).toMatch(/the re-planned corridor failed too/);
             // the control: the drill-blind model (the BEFORE of TERRAIN W3) still finds the old plan out to L87
             const off = withContactFidelity({ drillLive: false, corridorBodyPricing: false, corridorForecastMemo: false },
-                () => serve(leg).result);
+                () => withDrillExitPass(false, () => serve(leg).result));
             expect(off.ok, off.message).toBe(true);
             expect(off.plan.expected.at(-1).level).toBe(87);
         });
