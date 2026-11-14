@@ -668,7 +668,13 @@ async function main() {
             : null;
         // ⛓ S1 — every room's place and things (a standalone document has none).
         if ('roomExtras' in data) {
+            const thingIds = (extras) => JSON.stringify(Object.entries(extras ?? {})
+                .map(([r, e]) => [r, (e.things ?? []).map((t) => t.id)]).filter(([, ids]) => ids.length));
+            const before = thingIds(_roomExtras);
             _roomExtras = _procgenMode && data.roomExtras && typeof data.roomExtras === 'object' ? data.roomExtras : {};
+            // The engine makes item slots in loadWorld only: a world built before
+            // this table arrived (with other things) is rebuilt to show them.
+            if (world && thingIds(_roomExtras) !== before) rebuildWorld();
             if (world) {
                 for (const regionName of Object.keys(world.rooms)) applyOwnPlaceToWorld(regionName);
                 applyExitLabelsToWorld();
