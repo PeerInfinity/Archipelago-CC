@@ -46,10 +46,9 @@ import {
 } from '../procgenCore/sidecarFields.js';
 import { CONCEPTS, conceptOfItem } from '../procgenCore/concepts.js';
 import { selectRealisation } from '../procgenPipeline/conceptSelection.js';
-import { candidatesForRole } from '../procgenCore/contentRoles.js';
+import { resolveRole } from '../procgenCore/contentRoles.js';
 import {
     GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONCEPT_REALISATIONS, TEXT_ADVENTURE_CONTENT_ROLES,
-    TEXT_ADVENTURE_DEFAULT_CONTENT_PACK,
 } from './textAdventureConceptRealisations.js';
 
 /** The rule every ungated exit / location compiles to. */
@@ -73,10 +72,9 @@ export const TEXT_ADVENTURE_ROOM_REFUSALS = Object.freeze({
 
 /**
  * ⛓⛓ CONTENT SETS R1 — **A MECHANIC'S WORDS, FROM THE WORLD'S CONTENT SET.**
- * The pack concepts that fill `roleId` (`candidatesForRole`: right `presents`,
- * every text slot present — `roleRefusal`) and present `conceptId`, latest pack
- * in the stack first; the first whose every slot resolves in the set's text
- * layer gives `{<slot>: <template>}`. So a later pack that presents the mechanic
+ * The pack concepts that fill `roleId` and present `conceptId`, latest pack in
+ * the stack first; the first whose every slot resolves in the set's text layer
+ * gives `{<slot>: <template>}` (⛓ S1: the contract's `resolveRole` asks it). So a later pack that presents the mechanic
  * wins, and one that lacks a slot (or names a key its stack does not hold) falls
  * through to an earlier pack — in the end the default pack's. `null` when no
  * pack in the set presents it. The templates are returned VERBATIM: their
@@ -89,23 +87,7 @@ export const TEXT_ADVENTURE_ROOM_REFUSALS = Object.freeze({
  * @returns {Object<string,string>|null}
  */
 export function presentedProse(contentSet, roleId, conceptId) {
-    const { ids, concepts, text } = contentSet;
-    const slots = TEXT_ADVENTURE_CONTENT_ROLES[roleId].needs.text;
-    const rank = (key) => ids.indexOf(concepts.get(key).pack);
-    const keys = candidatesForRole(TEXT_ADVENTURE_CONTENT_ROLES, roleId, concepts)
-        .filter((key) => concepts.get(key).presents === conceptId)
-        .sort((a, b) => rank(b) - rank(a));
-    for (const key of keys) {
-        const ref = concepts.get(key).text;
-        const out = {};
-        for (const slot of slots) {
-            const template = text.string(ref[slot]);
-            if (template === null) break;
-            out[slot] = template;
-        }
-        if (Object.keys(out).length === slots.length) return out;
-    }
-    return null;
+    return resolveRole(TEXT_ADVENTURE_CONTENT_ROLES, roleId, contentSet, { presents: conceptId })[0]?.text ?? null;
 }
 
 /** `presentedProse`, refused by name when the set is absent or presents nothing. */
@@ -126,10 +108,12 @@ function hash32(str) {
 
 /**
  * ⛓⛓ CONTENT SETS R1 — **THE ROOM'S PLACE.** The candidates are the pack
- * concepts that fill the `place` role (kind `place`), less any from the DEFAULT
- * pack (a room keeps its region id unless a theme names it) and any that
- * `presents` a mechanic (that concept is the mechanic's look, not a room). None
- * ⇒ null, and nothing is read or drawn. Otherwise ONE pick, by
+ * concepts that fill the `place` role (kind `place`; ⛓ S1: through the
+ * contract's `resolveRole`, whose rule is that a concept presenting a mechanic
+ * fills no kind role — it is the mechanic's look, not a room). The default
+ * packs hold no place, so a room keeps its region id unless a theme names it:
+ * DATA says that now, where R1 had a private filter. None ⇒ null, and nothing
+ * is read or drawn. Otherwise ONE pick, by
  *
  *     hash32(`${rng state}:${region_id}`) mod (candidate count)
  *
@@ -140,15 +124,10 @@ function hash32(str) {
  */
 export function roomPlace(contentSet, regionId, rng) {
     if (!contentSet) return null;
-    const { concepts } = contentSet;
-    const keys = candidatesForRole(TEXT_ADVENTURE_CONTENT_ROLES, 'place', concepts)
-        .filter((key) => {
-            const c = concepts.get(key);
-            return c.pack !== TEXT_ADVENTURE_DEFAULT_CONTENT_PACK && !c.presents;
-        });
-    if (!keys.length) return null;
+    const candidates = resolveRole(TEXT_ADVENTURE_CONTENT_ROLES, 'place', contentSet);
+    if (!candidates.length) return null;
     const state = typeof rng?.getState === 'function' ? rng.getState() : 0;
-    const place = concepts.get(keys[hash32(`${state}:${regionId}`) % keys.length]);
+    const place = candidates[hash32(`${state}:${regionId}`) % candidates.length].concept;
     return { name: place.name, ...(place.description ? { description: place.description } : {}) };
 }
 
