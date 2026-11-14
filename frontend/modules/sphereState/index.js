@@ -324,10 +324,33 @@ function handleRulesLoaded(data, propagationOptions) {
   // sphere log as a sibling file).
   loadEmbeddedFirstThenFile(sphereState, sourceName, sphereLogPath,
     { gameDir, presetDir, fileName: `${seedId}_sphere_log.jsonl` }, generation).then(success => {
-    if (!success) {
-      log('warn', `Sphere log unavailable: neither embedded nor separate file usable (${sphereLogPath})`);
-    }
+    if (!success) reportUnusableFileLog(sphereState, sphereLogPath, generation);
   });
+}
+
+// The preset's log that was reported unusable while NO log was in use: {generation, path, reason}. If the
+// room's log then fills the gap (same rules), handleRoomSpoilerData says so, so the warning is not the last word.
+let unusableFileLog = null;
+
+/**
+ * The preset's own sphere log (embedded or the separate file) could not be used. Warn "Sphere log
+ * unavailable" ONLY when no log is in use: when the room's log (or any other) is loaded, say which one is
+ * used instead; when the rules it was started for were replaced, the load was just dropped.
+ */
+function reportUnusableFileLog(sphereState, path, generation) {
+  const failure = sphereState.lastLoadFailure;
+  const reason = failure?.path === path ? failure.reason : 'no embedded log, and the separate file is absent or unusable';
+  if (generation !== sphereState.generation) {
+    log('info', `Sphere log ${path} not used: the rules it was started for were replaced.`);
+    return;
+  }
+  if (sphereState.getSphereData().length > 0) {
+    const which = sphereState.logOrigin === 'room' ? "the room's sphere log" : 'the loaded sphere log';
+    log('info', `Using ${which} (${sphereState.sphereLogPath}); local file not used (${path}): ${reason}`);
+    return;
+  }
+  unusableFileLog = { generation, path, reason };
+  log('warn', `Sphere log unavailable: neither embedded nor separate file usable (${path})`);
 }
 
 let presetIndexPromise = null;
@@ -414,7 +437,13 @@ export async function handleRoomSpoilerData(data) {
   const sphereState = getSphereStateSingleton();
   if (!sphereState || typeof data?.text !== 'string') return false;
   const ok = await sphereState.loadSphereLog(data.source, data.text, { origin: 'room' });
-  if (ok) log('info', `Loaded the room's spoiler data as the sphere log (${data.source}, ${data.entries} entries).`);
+  if (ok) {
+    log('info', `Loaded the room's spoiler data as the sphere log (${data.source}, ${data.entries} entries).`);
+    if (unusableFileLog?.generation === sphereState.generation) {
+      log('info', `The room's sphere log is now in use: the earlier "Sphere log unavailable" for ${unusableFileLog.path} no longer applies (local file not used: ${unusableFileLog.reason}).`);
+    }
+    unusableFileLog = null;
+  }
   return ok;
 }
 
