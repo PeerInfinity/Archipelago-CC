@@ -13290,6 +13290,10 @@ export const INSTRUMENTS = frz({
                     "name": "presets"
                 },
                 {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "stage-edge-events"
+                },
+                {
                     "from": "boxLock.js",
                     "name": "wait-for-box"
                 }
@@ -22244,6 +22248,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "seedling-divergence-legs.mjs",
                     "name": "presets"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "stage-edge-events"
                 }
             ],
             "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE BARE PASS, in node: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) asked of the solver with NO inventory, from a JS-runtime arrival staged in the rooms the game plays (the vanilla arm's DELIVERED set, `--dump` of `probe-seedl…",
@@ -22303,6 +22311,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "presets"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "stage-edge-events"
                 }
             ],
             "inheritedFlags": [
