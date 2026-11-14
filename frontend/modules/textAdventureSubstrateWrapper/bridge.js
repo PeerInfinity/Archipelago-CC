@@ -685,13 +685,12 @@ async function main() {
             : null;
         // ⛓ S1 — every room's place and things (a standalone document has none).
         if ('roomExtras' in data) {
-            const thingIds = (extras) => JSON.stringify(Object.entries(extras ?? {})
-                .map(([r, e]) => [r, (e.things ?? []).map((t) => t.id)]).filter(([, ids]) => ids.length));
-            const before = thingIds(_roomExtras);
+            // ⛔ No rebuild here (the comment above): the table rides in with the
+            // document's initialState, which lands before its rulesLoaded, and
+            // that rebuild lays the things on the new world. A rebuild started
+            // here would read the PREVIOUS document's staticData and, in flight,
+            // make the rulesLoaded rebuild skip (rebuildInFlight).
             _roomExtras = _procgenMode && data.roomExtras && typeof data.roomExtras === 'object' ? data.roomExtras : {};
-            // The engine makes item slots in loadWorld only: a world built before
-            // this table arrived (with other things) is rebuilt to show them.
-            if (world && thingIds(_roomExtras) !== before) rebuildWorld();
             if (world) {
                 for (const regionName of Object.keys(world.rooms)) applyOwnPlaceToWorld(regionName);
                 applyExitLabelsToWorld();

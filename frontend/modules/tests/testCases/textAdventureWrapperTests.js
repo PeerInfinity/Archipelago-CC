@@ -2018,13 +2018,16 @@ async function exitLabelByPlace(testController) {
         `the wrapper rendered ${start}`, 15000, 300);
     testController.reportCondition(`the wrapper rendered ${start}`, !!mounted);
     if (!mounted) return testController.getOverallResult();
-    for (let i = 0; i < 20 && !linkFor(exit.name); i++) {
+    // The exit link of THIS document's world (a view left by an earlier row may still be on screen while the
+    // world rebuilds): wait for it, revealing it by explore when discovery hides it.
+    const shown = await testController.pollForCondition(() => {
+        if (linkFor(exit.name)) return true;
         const explore = iframeDoc()?.querySelector('[data-action="explore"]');
-        if (!explore) break;
-        click(explore);
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, 200));
-    }
+        if (explore) click(explore);
+        return false;
+    }, `the wrapper rendered ${start}'s exit ${exit.name}`, 15000, 250);
+    testController.reportCondition(`the wrapper rendered ${start}'s exit ${exit.name}`, !!shown);
+    if (!shown) return testController.getOverallResult();
     const labelled = await testController.pollForCondition(() => linkFor(exit.name)?.textContent.includes(wantLabel),
         `${start}'s exit ${exit.name} is labelled "${wantLabel}"`, 5000, 100);
     testController.reportCondition(`${start}'s exit is labelled "${wantLabel}" (it read "${linkFor(exit.name)?.textContent ?? '—'}")`, !!labelled);
