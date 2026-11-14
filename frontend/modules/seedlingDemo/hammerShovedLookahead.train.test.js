@@ -15,7 +15,8 @@
  * ⛓ SPINNER-SHOVED-FOLLOWUP (the same switch; report `seedling-hammer-spinner-shoved-followup.md`): leg
  * `level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest` at clock 5235, where L40-SPINNER-WALLS' ON returned a
  * plan billing two chaser contacts (`bob@736,752` t776, `bob@736,800` t832): the chaser-priced deep step removes the t832
- * contact, and the t776 one (billed on a tick no deep answer ran) is refused by name (`SHOVED_LOOKAHEAD_HIT`). OFF it
+ * contact, and the t776 one (billed on a tick no deep answer ran, after the corner escape's first OFF-divergent key
+ * at t649) is refused by name (`SHOVED_LOOKAHEAD_HIT`). OFF it
  * refuses at the approach corner, as before.
  */
 import { describe, expect, it } from 'vitest';
@@ -83,6 +84,6 @@ describe('SHOVED_BODY_LOOKAHEAD — L40 Chest from L43, clock 5235 (the follow-u
         expect(off.message).toMatch(/at \(739\.26,683\.90\) in level 40\. There is no step out\./);
         const on = solveAt('chest-L43-request.json.gz', 5235, true);
         expect(on.ok).toBe(false);
-        expect(on.message).toMatch(/the shoved lookahead \(`SHOVED_BODY_LOOKAHEAD`\) re-chose a key at t533, and the plan it led to takes 1 player hit\(s\) \(bob@736,752 at t776\)/);
+        expect(on.message).toMatch(/the shoved lookahead \(`SHOVED_BODY_LOOKAHEAD`\) chose a key OFF would not have at t649, and the plan it led to takes 1 player hit\(s\) \(bob@736,752 at t776\)/);
     }, 1_800_000);
 });

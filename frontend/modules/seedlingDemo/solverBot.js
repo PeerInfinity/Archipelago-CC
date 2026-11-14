@@ -15253,7 +15253,7 @@ function stepToward(run, aim, intended) {
     if (!forecast.length) return intended;
     const step = previewOrDeath(run.previewStepper());
     // ⛓ hammer-phase L40-SPINNER-WALLS (`SHOVED_BODY_LOOKAHEAD`, OFF ⇒ not reached): a shoved body deepens the survival horizon
-    if (SHOVED_BODY_LOOKAHEAD.enabled) { const deep = shovedStepToward(run, aim, intended, stepOptions(intended), forecast); if (deep !== null) return deep; }
+    if (SHOVED_BODY_LOOKAHEAD.enabled) { const deep = shovedWalkStep(run, aim, intended, forecast); if (deep !== null) return deep; }
     // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ `clearOfHammersAt`): a body the run would not bill is no wall
     const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
@@ -15454,7 +15454,8 @@ export function shovedHorizon(forecast) {
  *   (c) MEASURED here, the hits of (a) are not all the deep step's own: at L43 clock 5235 the chaser-priced deep step
  *       removed the t832 contact, but the t776 one is billed on a tick no deep answer ran — the deep step's corner escape
  *       (t649–t654) led the solve into a stretch OFF never reaches, where a later verb accepts a chaser contact. So a
- *       segment in which a deep answer re-chose a key and whose plan then takes a player hit is refused by name
+ *       segment in which a deep answer chose a key OFF would not have, and whose plan then takes a player hit, is
+ *       refused by name
  *       (`SHOVED_LOOKAHEAD_HIT`, `withShovedSolveBudget`): the switch may turn a refusal into a hitless plan, never into
  *       a hit-taking one.
  * `SHOVED_BODY_LOOKAHEAD_TUNING` lets a measurement ablate each part (`chasers`, `solveSteps`, `hitGate`); the switch
@@ -15478,8 +15479,8 @@ export const SHOVED_LOOKAHEAD_HIT = 'SHOVED_LOOKAHEAD_HIT';
 
 /**
  * Install one deep-step budget for `fn` (the segment `o` solves) unless one is active (a nested segment shares its
- * solve's), and (c) gate its outcome: when a deep answer re-chose a key against the one it was handed (`rechoseAt`, the
- * first such tick, a preview's included) and the run the segment ENDED on (`liveRun`, else `o.run`) carries a player hit
+ * solve's), and (c) gate its outcome: when a deep answer chose a key OFF would not have (`rechoseAt`, the first such
+ * tick, a preview's included) and the run the segment ENDED on (`liveRun`, else `o.run`) carries a player hit
  * at or after that tick, the segment is refused by name (`SHOVED_LOOKAHEAD_HIT`) — a deep step may move the walk out of
  * a spinner's corner, never into a plan that pays a hit. A segment with no re-choice is returned as it came.
  */
@@ -15504,14 +15505,14 @@ function withShovedSolveBudget(o, fn) {
 /** (c)'s refusal, by name. */
 function shovedHitRefusal(budget, hits) {
     SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.hitRefused += 1;
-    return fail(`${budget.name}: the shoved lookahead (\`SHOVED_BODY_LOOKAHEAD\`) re-chose a key at `
+    return fail(`${budget.name}: the shoved lookahead (\`SHOVED_BODY_LOOKAHEAD\`) chose a key OFF would not have at `
         + `t${budget.rechoseAt}, and the plan it led to takes ${hits.length} player hit(s) (`
         + `${hits.map((h) => `${h.id} at t${h.t}`).join(', ')}). A deep step may lead out of a spinner's corner, `
         + 'never into a plan that pays a hit — refused by name.', { code: SHOVED_LOOKAHEAD_HIT });
 }
 
 
-/** (c)'s mark: a deep answer chose `chosen` over the key it was handed, at the run's tick. */
+/** (c)'s mark: a deep answer chose a key OFF would not have (`shovedWalkStep`, `shovedHoldStepOut`), at the run's tick. */
 function shovedMarkRechosen(run) {
     if (shovedSolveBudget !== null) shovedSolveBudget.rechoseAt ??= run.ticksCompleted;
 }
@@ -15648,7 +15649,6 @@ function shovedStepToward(run, aim, intended, options, head = run.spinnerForecas
         SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, steps: search.steps(),
             intended: [...intended].join('+'), chosen: best ? [...best.keys].join('+') : null, depth: best?.depth ?? null,
             options: options.length });
-        if (best && best.keys !== intended) shovedMarkRechosen(run);
         return best ? best.keys : intended;
     } catch (e) {
         if (e !== SHOVED_LOOKAHEAD_SPENT) throw e;
@@ -15659,6 +15659,24 @@ function shovedStepToward(run, aim, intended, options, head = run.spinnerForecas
     }
 }
 const SHOVED_LOOKAHEAD_SPENT = Symbol('shoved lookahead step budget spent');
+
+/**
+ * (a) for the walk (`stepToward`'s one call site): the deep answer, or `null` (answer as OFF). When the deep key is not
+ * the one OFF's `stepToward` chooses on this very tick (asked with the switch held OFF for that one call), the tick is
+ * (c)'s re-choice. ⚠ MEASURED why OFF's choice and not the intended key: OFF's own step departs from the intended key
+ * whenever a spinner is near, so marking against `intended` refused `level_40__r48c54 <- in_L43_176_464 ~>
+ * level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared`'s fixture — a plan whose hit (t790) OFF's plan
+ * takes too, byte for byte. Marked against OFF, L43 clock 5235's first re-choice is t649 (the corner escape), and the
+ * fixture solves ON as OFF does (`de54d9e0ba72`).
+ */
+function shovedWalkStep(run, aim, intended, forecast) {
+    const deep = shovedStepToward(run, aim, intended, stepOptions(intended), forecast);
+    if (deep === null || shovedSolveBudget === null || shovedSolveBudget.rechoseAt !== null) return deep;
+    const off = withShovedBodyLookahead(false, () => stepToward(run, aim, intended));
+    const same = off.size === deep.size && [...off].every((k) => deep.has(k));
+    if (!same) shovedMarkRechosen(run);
+    return deep;
+}
 
 /** The option list `stepToward` scores (its own order: intended, the facings, the stand, the diagonals), de-duplicated. */
 function stepOptions(intended) {
@@ -15684,6 +15702,7 @@ function shovedHoldStepOut(run, intended, aim = null) {
     // a tie keeps the intended key (the certificate's, or the stand): only a deeper survival re-chooses
     if (shovedDepthOf(run, intended) >= shovedDepthOf(run, chosen)) return intended;
     SHOVED_BODY_LOOKAHEAD_COUNTS.rechosen += 1;
+    shovedMarkRechosen(run);
     return chosen;
 }
 
