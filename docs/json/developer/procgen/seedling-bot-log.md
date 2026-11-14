@@ -28280,3 +28280,30 @@ steps (the other rope room) give identical rows; the bounded set (143 files) mov
 the span's `+90f`). **The solver still refuses** seed 2's L28 → L30 door from (136,296) with the key ON: the model opens
 the lock at t101 with no input, but `stanceHypothesis` → `deriveWeighSource` asks for a block and never reads the held
 presser — handed to hammer (the wait).
+
+### Seedling fidelity CORRIDORFLIP — `corridorBodyPricing` measured for its flip; the forecast's cost cut (`corridorForecastMemo`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 42 (⚖ the user's GO 2026-11-12, *"corridorBodyPricing flip
+(Recommended)"*). Base `a3a5b8182e`. The report is `CC/docs/cloud-reports/seedling-fidelity-corridorflip.md`; it starts
+from fidelity CORRIDOR (wave 17) and hammer CONNECTED-L22.
+
+**W0 — the wave-17 debts at this base.** (a) *Solve cost*: the page's deadline is a WORK budget (640 units, window 85),
+deterministic; under it every one of 56 WallFlyer/Drill-room legs (node, the sweep row's inventory) answers exactly as
+unbudgeted, so no leg goes done → DEADLINE here. Wall time is the cost: 25 s → 219 s over the 56. (b) *Kill arms*: still
+none for a wallflyer or a drill in the ladder's KILL rung (step 35's chooser picks `bob@96,144`; step 84's drill "is not a
+body this run can watch die") — hammer's. (c) *Puncher*: the chaser forecast already times the punch (U10, RULESREF);
+the L12 bosslock UNBILLED-HIT rows at the defaults are game hits the model never bills, independent of this key.
+The L22 death loop reproduces (hammer's capture #49: OFF a stall after 85 grazes, work 33; ON *"combat ladder EXHAUSTED
+… wallflyer@48,112"*, work 3).
+
+**D2** (`corridorForecastMemo`, OFF, last key, `SEEDLING_CORRIDOR_FORECAST_MEMO`): the forecast's frozen context
+memoises `collides(rect)` and `tileTypeAt(x, y)` for the forecast's life, and the wallflyer trigger ray gets an exact
+bounding-box reject (`stepWallFlyer`'s optional `ctx.lineHits`). Profile-led (62 % of an ON L22 solve was the
+forecast's `step`). Exact: rows, previews and plans equal; the L22 legs take about half the wall time. Two mutants red.
+No new per-visit state.
+
+**D1** (the flip, measured; NOT licensed): survey `route=full through=end` OFF 215 / 29 → ON 214 / 30, the wave-17
+pattern by goal: 35 (L22) and 84 (L88) hit-taking solves → by-name refusals (their hits re-witnessed on p4g: t84; t48,
+t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t clean; 193 (L77) 475 t, 1 hit → 491 t clean —
+the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
+in every arm; the 293 committed tapes' streams identical.

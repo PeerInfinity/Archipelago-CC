@@ -75,11 +75,14 @@ describe('canCross — one real case per verdict', () => {
 
     // ⛓ LINEFLIP (W1 `collideLinePointsExact` ON): the wallflyer's untruncated ray re-plans the walk, and the refusal is
     // now the re-planned corridor's stall short of waypoint 0, not the wallflyer danger — still `cannot` (measured).
-    it('cannot: L22 from L25 toward L29, bare — the re-planned corridor stalls short of (88,88), a true refusal', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12, the CORRIDORFLIP flip): the corridor now prices the live wallflyer, so the refusal names it (was: the re-planned
+    // corridor's stall short of (88,88) within 400 ticks, `obstacle: null`). Still `cannot`, still a true refusal.
+    it('cannot: L22 from L25 toward L29, bare — the combat ladder is exhausted on wallflyer@48,112, a true refusal', () => {
         const r = canCross({ level: 22, exit: 29, arrival: { from: 25 }, dashMode: 'none', witness: false });
         expect(r.verdict).toBe('cannot');
-        expect(r.cause).toMatchObject({ kind: 'refusal', basis: 'field', name: 'SolverRefusal', obstacle: null });
-        expect(r.why).toMatch(/the re-planned corridor failed too — .* waypoint 0 \(88,88\): not reached within 400 ticks/);
+        expect(r.cause).toMatchObject({ kind: 'refusal', basis: 'field', name: 'SolverRefusal',
+            obstacle: { kind: 'danger', id: 'wallflyer@48,112' } });
+        expect(r.why).toMatch(/the combat ladder is EXHAUSTED[\s\S]*wallflyer@48,112/);
         expect(r.witness).toBeUndefined();
     });
 

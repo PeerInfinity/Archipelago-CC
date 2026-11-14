@@ -1,0 +1,57 @@
+  level_22 <- in_L21_80_160 -> exit:out_teleporter_0_128 | OFF done 113t hits=0 0.9s | ON done 113t hits=0 10.5s
+  level_22 <- in_L21_80_160 -> exit:out_teleporter_96_0 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+* level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192 | OFF done 120t hits=0 0.9s | ON done 134t hits=0 13.8s
+  level_22 <- in_L21_80_160 -> exit:out_teleporter_192_64 | OFF done 89t hits=0 0.4s | ON done 89t hits=0 0.5s
+  level_22 <- in_L25_144_32 -> exit:out_teleporter_0_128 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+* level_22 <- in_L25_144_32 -> exit:out_teleporter_96_0 | OFF done 112t hits=0 0.9s | ON done 132t hits=0 5.3s
+  level_22 <- in_L25_144_32 -> exit:out_teleporter_96_192 | OFF done 75t hits=0 0.5s | ON done 75t hits=0 0.7s
+* level_22 <- in_L25_144_32 -> exit:out_teleporter_192_64 | OFF done 229t hits=1 t58 wallflyer@128,80 1.0s | ON done 207t hits=0 16.6s
+  level_22 <- in_L29_0_224 -> exit:out_teleporter_0_128 | OFF done 142t hits=0 1.0s | ON done 142t hits=0 33.2s
+  level_22 <- in_L29_0_224 -> exit:out_teleporter_96_0 | OFF done 69t hits=0 0.4s | ON done 69t hits=0 0.8s
+* level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192 | OFF done 103t hits=0 1.0s | ON done 128t hits=0 13.7s
+  level_22 <- in_L29_0_224 -> exit:out_teleporter_192_64 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+  level_22 <- in_L30_64_0 -> exit:out_teleporter_0_128 | OFF done 56t hits=0 0.3s | ON done 56t hits=0 0.4s
+* level_22 <- in_L30_64_0 -> exit:out_teleporter_96_0 | OFF done 116t hits=0 1.1s | ON done 138t hits=0 3.9s
+  level_22 <- in_L30_64_0 -> exit:out_teleporter_96_192 | OFF done 4t hits=0 0.1s | ON done 4t hits=0 0.1s
+* level_22 <- in_L30_64_0 -> exit:out_teleporter_192_64 | OFF done 108t hits=0 1.5s | ON done 120t hits=0 3.7s
+* level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96 | OFF done 182t hits=1 t80 wallflyer@48,48 1.0s | ON done 156t hits=0 10.2s
+  level_25 <- in_L22_0_128 -> exit:out_teleporter_96_128 | OFF done 58t hits=0 0.3s | ON done 58t hits=0 0.2s
+  level_25 <- in_L22_0_128 -> exit:out_teleporter_144_32 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+  level_25 <- in_L22_0_128 -> location:Level 025 - Chest | OFF done 57t hits=0 0.3s | ON done 57t hits=0 0.3s
+  level_25 <- in_L26_144_32 -> exit:out_teleporter_0_96 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+* level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128 | OFF done 106t hits=0 1.0s | ON done 109t hits=0 4.8s
+* level_25 <- in_L26_144_32 -> exit:out_teleporter_144_32 | OFF done 135t hits=0 0.9s | ON done 150t hits=0 5.7s
+* level_25 <- in_L26_144_32 -> location:Level 025 - Chest | OFF done 128t hits=1 t60 wallflyer@64,48 0.6s | ON done 110t hits=0 4.3s
+* level_25 <- in_L28_96_0 -> exit:out_teleporter_0_96 | OFF done 97t hits=0 0.7s | ON done 99t hits=0 18.3s
+  level_25 <- in_L28_96_0 -> exit:out_teleporter_96_128 | OFF done 4t hits=0 0.1s | ON done 4t hits=0 0.1s
+  level_25 <- in_L28_96_0 -> exit:out_teleporter_144_32 | OFF done 77t hits=0 0.4s | ON done 77t hits=0 0.4s
+  level_25 <- in_L28_96_0 -> location:Level 025 - Chest | OFF done 12t hits=0 0.1s | ON done 12t hits=0 0.1s
+  level_27 <- in_L26_64_304 -> exit:out_teleporter_32_0 | OFF done 5t hits=0 0.0s | ON done 5t hits=0 0.0s
+* level_27 <- in_L26_64_304 -> exit:out_teleporter_168_16 | OFF done 74t hits=0 0.4s | ON done 82t hits=0 1.5s
+* level_27 <- in_L28_128_304 -> exit:out_teleporter_32_0 | OFF done 126t hits=1 t16 wallflyer@192,48 0.4s | ON REFUSED  4.7s
+  level_27 <- in_L28_128_304 -> exit:out_teleporter_168_16 | OFF done 5t hits=0 0.0s | ON done 5t hits=0 0.0s
+* level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96 | OFF done 58t hits=0 0.3s | ON done 65t hits=0 0.7s
+  level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0 | OFF done 5t hits=0 0.0s | ON done 5t hits=0 0.1s
+  level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared | OFF done 170t hits=0 0.5s | ON done 170t hits=0 0.2s
+  level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+  level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0 | OFF done 58t hits=0 0.3s | ON done 58t hits=0 1.6s
+  level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared | OFF done 303t hits=0 0.7s | ON done 303t hits=0 0.3s
+  level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+  level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304 | OFF done 4t hits=0 0.1s | ON done 4t hits=0 0.1s
+* level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0 | OFF done 476t hits=2 t48 drill@128,160,t110 drill@128,160 1.4s | ON REFUSED  14.6s
+  level_88 <- in_L12_304_0 -> exit:out_teleporter_96_304 | OFF done 4t hits=0 0.1s | ON done 4t hits=0 0.1s
+* level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0 | OFF done 379t hits=2 t48 drill@128,160,t114 drill@128,160 0.9s | ON REFUSED  12.2s
+  level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0 | OFF done 5t hits=0 0.0s | ON done 5t hits=0 0.1s
+* level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304 | OFF REFUSED  1.6s | ON done 192t hits=0 4.9s
+  level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0 | OFF done 86t hits=0 0.4s | ON done 86t hits=0 0.3s
+  level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0 | OFF done 76t hits=0 0.2s | ON done 76t hits=0 0.2s
+* level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304 | OFF done 213t hits=1 t53 drill@128,160 0.7s | ON done 142t hits=0 3.0s
+  level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0 | OFF done 5t hits=0 0.0s | ON done 5t hits=0 0.1s
+  level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144 | OFF done 7t hits=0 0.1s | ON done 7t hits=0 0.1s
+  level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48 | OFF REFUSED  0.6s | ON REFUSED  11.8s
+  level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144 | OFF REFUSED  0.7s | ON REFUSED  14.6s
+  level_91 <- in_L92_32_144 -> exit:out_teleporter_240_48 | OFF done 5t hits=0 0.1s | ON done 5t hits=0 0.1s
+  level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared | OFF REFUSED  0.0s | ON REFUSED  0.0s
+  level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared | OFF REFUSED  0.0s | ON REFUSED  0.0s
+  level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared | OFF REFUSED  0.0s | ON REFUSED  0.0s
+movers 18 of 56 ; total s OFF 25.361 ON 219.251
