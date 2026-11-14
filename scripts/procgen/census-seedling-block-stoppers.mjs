@@ -17,7 +17,8 @@
  * PER BLOCK, its USE in the rules:
  *   crossing  a struck block (fire/spear) whose start cell borders two sub-regions: one case per ordered side pair
  *             (the producer's own). The block's cells = the push search from the near side under the crossing's own
- *             held key (the push item), the modelled stoppers ABSENT (an upper bound);
+ *             held key (the push item), the modelled stoppers ABSENT (an upper bound) and the room's other
+ *             pushables Solid (the producer's own `bodies`, ⛓ rules-l40-bk2-witness);
  *   holder    a block in a room with a re-closing lock (`seedlingPlaythroughOverlay.buildBlockHolders`): a button
  *             holder for `blockHolderSearch`. Its cells = the push search from each of its four neighbours with every
  *             condition in the room held (an upper bound);
@@ -33,7 +34,10 @@
  *   CAN'T-GATE  `none` use; or a crossing still FREE beyond the push item with the body as an unremovable stopper on
  *               every one of its met cells (static), or on any ONE met cell (mobile: no cell it can stand on is
  *               critical) — the block has another route; or a `holder` room whose lock the search does not decide
- *               (`blockHolderVerdict` undecided keeps the player-reach price: no block path is priced);
+ *               (`blockHolderVerdict` undecided keeps the player-reach price: no block path is priced); or a crossing
+ *               that can gate nothing (`inert`, `crossingGatesNothing`: its far side a pocket sealed behind the block,
+ *               its near side entered only from one other side, which the pocket leads back to) — the row keeps
+ *               the `critical` cells it would have had, so what the census sees there stays readable;
  *   KILL-GATE   static, and the crossing needs it gone (`kill` = the verb, `sideWrite` = whether a kill sticks);
  *   MOBILE      it moves, and some cell it can enter is critical to the crossing (`killHeld`: the crossing's own held
  *               key is one of its kill verbs, `KILL_FLAGS`) — a probe's question: does it ever stand there?
@@ -66,7 +70,7 @@ import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 import {
     buildPlaythroughAtlas, setPlaythroughLandingAtlas, playthroughEventLayer, playthroughBlockCrossingCases,
-    playthroughBlockStoppers, playthroughGridFor, playthroughEntitySemantics, PLAYTHROUGH_MAP,
+    playthroughBlockStoppers, playthroughGridFor, playthroughEntitySemantics, sealedBehindBlock, PLAYTHROUGH_MAP,
 } from './make-seedling-playthrough-rules.mjs';
 import { combatCensusOf } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import { contactRect } from '../../frontend/modules/seedlingDemo/combat.js';
@@ -211,6 +215,27 @@ export function holderPrices(level, grid, tileTypes, stoppers = []) {
     return out;
 }
 
+/**
+ * ⛓ RULES rules-l40-bk2-fixup — **A CROSSING THAT CAN GATE NOTHING.** A crossing `from -> to` whose far side is a POCKET
+ * sealed behind the block (the producer's own `sealedBehindBlock`: no location, no boundary exit, every internal exit
+ * to another side of this block) and whose near side has no boundary exit and exactly ONE way in besides the pocket:
+ * whoever stands on the near side came from that one side, and the pocket leads only back to the near side or to it.
+ * The crossing adds no sub-region to any reach, so no price on it — and no body that stops it — can gate a location.
+ * Returns the one way in (its name), or null when the crossing can gate.
+ */
+export function crossingGatesNothing(room, c) {
+    const far = room.cases.find((o) => o.entity === c.entity && o.from === c.to);
+    if (!far || !sealedBehindBlock(room, far)) return null;
+    const r = room.region;
+    if ((r.exits ?? []).some((e) => e.sub_region === c.from)) return null;
+    const ie = r.subgraph?.internal_exits ?? [];
+    const into = (s) => new Set(ie.flatMap((e) => [e.to === s ? e.from : null, e.bidirectional && e.from === s ? e.to : null]).filter(Boolean));
+    const outOf = (s) => new Set(ie.flatMap((e) => [e.from === s ? e.to : null, e.bidirectional && e.to === s ? e.from : null]).filter(Boolean));
+    const ways = [...into(c.from)].filter((s) => s !== c.to);
+    if (ways.length !== 1) return null;
+    return [...outOf(c.to)].every((s) => s === c.from || s === ways[0]) ? ways[0] : null;
+}
+
 /** Whether a body comes to rest: no chase and moving is a wall-bouncer (`Spinner.as:124-171`), which never does. */
 export const settles = (e) => !(e.row?.aggro?.kind === 'none' && e.row?.speed > 0);
 
@@ -249,9 +274,12 @@ export function blockStopperCensus({ doc = null } = {}) {
             const cases = (room?.cases ?? []).filter((c) => !c.note && c.entity === b);
             const use = [cases.length ? 'crossing' : null, heldBy ? 'holder' : null].filter(Boolean).join('+') || 'none';
             const uses = [];
+            // The room's OTHER pushables are Solid bodies to the struck block, as the producer hands its push search them
+            // (`playthroughBlockCrossings`' `bodies`, ⛓ rules-l40-bk2-witness).
+            const bodyCells = pushables.filter((e) => e !== b).map((e) => Math.floor(e.y / T) * width + Math.floor(e.x / T));
             for (const c of cases) {
-                const r = blockPushSearch(grid, { block: c.block, stances: c.stances, tileTypes, keyOf: conditionKey, held: c.held }, c.start, null);
-                uses.push({ c, cells: new Set([...r.cells, ...r.fatal]) });
+                const r = blockPushSearch(grid, { block: c.block, stances: c.stances, bodies: bodyCells, tileTypes, keyOf: conditionKey, held: c.held }, c.start, null);
+                uses.push({ c, cells: new Set([...r.cells, ...r.fatal]), inert: room ? crossingGatesNothing(room, c) : null });
             }
             if (heldBy || cases.length === 0) {
                 // Every condition in the room held; the player starts on each standable neighbour.
@@ -267,7 +295,7 @@ export function blockStopperCensus({ doc = null } = {}) {
                 uses.push({ c: null, cells });
             }
             let met = 0;
-            for (const { c, cells } of uses) {
+            for (const { c, cells, inert } of uses) {
                 for (const body of bodies) {
                     const on = [...body.range].filter((i) => cells.has(i));
                     if (on.length === 0) continue;
@@ -306,7 +334,7 @@ export function blockStopperCensus({ doc = null } = {}) {
                         rows.push({ ...row, verdict, why });
                         continue;
                     }
-                    const base = { block: c.block, stances: c.stances, tileTypes, keyOf: conditionKey, held: c.held };
+                    const base = { block: c.block, stances: c.stances, bodies: bodyCells, tileTypes, keyOf: conditionKey, held: c.held };
                     const asStopper = (cellsOf) => blockCrossingCost(grid, {
                         ...base, stoppers: [...stoppers, ...cellsOf.map((i) => ({ tx: i % width, ty: (i - (i % width)) / width, keys: [], label: row.body }))],
                     }, c.start, c.goal);
@@ -314,13 +342,17 @@ export function blockStopperCensus({ doc = null } = {}) {
                     const same = (s) => JSON.stringify(s) === JSON.stringify(before);
                     if (!mobile) {
                         const sets = asStopper(on).sets;
-                        rows.push({ ...row, verdict: same(sets) ? "CAN'T-GATE" : 'KILL-GATE',
-                            why: same(sets) ? 'the crossing prices the same with the body parked for good' : `with it parked the crossing prices ${JSON.stringify(sets)}` });
+                        rows.push({ ...row, verdict: same(sets) || inert ? "CAN'T-GATE" : 'KILL-GATE', ...(inert ? { inert } : {}),
+                            why: same(sets) ? 'the crossing prices the same with the body parked for good' : `with it parked the crossing prices ${JSON.stringify(sets)}`
+                                + (inert && !same(sets) ? ` — but ${c.to} is a pocket sealed behind the block and ${c.from}'s one way in is ${inert}` : '') });
                     } else {
                         const critical = on.filter((i) => !same(asStopper([i]).sets));
-                        rows.push({ ...row, critical: critical.map((i) => xy(i, width)), verdict: critical.length ? 'MOBILE' : "CAN'T-GATE",
-                            why: critical.length ? `parked on ${critical.length} cell(s) it can enter, it changes the crossing's price`
-                                : 'no cell it can enter changes the crossing\'s price' });
+                        rows.push({ ...row, critical: critical.map((i) => xy(i, width)), verdict: critical.length && !inert ? 'MOBILE' : "CAN'T-GATE",
+                            ...(inert ? { inert } : {}),
+                            why: critical.length && inert ? `parked on ${critical.length} cell(s) it can enter, it changes the crossing's price — but ${c.to} is a `
+                                + `pocket sealed behind the block and ${c.from}'s one way in is ${inert}: the crossing reaches nothing that way in did not`
+                                : critical.length ? `parked on ${critical.length} cell(s) it can enter, it changes the crossing's price`
+                                    : 'no cell it can enter changes the crossing\'s price' });
                     }
                 }
             }

@@ -16,7 +16,9 @@ import { fileURLToPath } from 'node:url';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { collectionRows, levelReads, routeBefore, routeCarry, withRouteCarry } from './seedling-divergence-legs.mjs';
+import {
+    collectionRows, levelReads, otherEventsOf, routeBefore, routeCarry, stagedFlagOf, withRouteCarry,
+} from './seedling-divergence-legs.mjs';
 import { stamp } from './probe-seedling-divergence-sweep.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -143,6 +145,40 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
         off = offText.split('\n').filter(Boolean).map((l) => JSON.parse(l));
         on = readFileSync(join(dir, 'on.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
     }, 60000);
+
+    // ⛓ rules-l40-bk2-fixup — THE RADIUS, DERIVED (not typed: lintGateLabels): the route's collection rows off a sphere
+    // log generated from the committed AP_1, its mappable game_state flags, each level's reads, and `routeCarry` /
+    // `withRouteCarry` applied to the OFF list — the parts composed here, the producer's composition compared below.
+    let derived;
+    let unsubtracted;
+    beforeAll(async () => {
+        const M = (p) => import(join(REPO, 'frontend/modules', p));
+        const { atlasRoomRegions } = await M('seedlingDemo/seedlingAtlasCheckTable.js');
+        const { generateSphereLog } = await M('shared/procgen/forwardSimulator.js');
+        const { gameStateEventsOf } = await M('procgenCore/eventRoute.js');
+        const rules = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
+        const embedded = (rules.sphere_log ?? []).filter((e) => e.type === 'state_update');
+        const log = embedded.length ? embedded : generateSphereLog(rules).filter((e) => e.type === 'state_update');
+        const collected = collectionRows(log);
+        const flags = gameStateEventsOf(rules, '1').map((e) => ({ ...stagedFlagOf({ ...e, kind: 'game_state' }), name: e.name }))
+            .filter((f) => !f.why).map((f) => ({ ...f, row: collected.get(f.name) ?? null }));
+        const byItem = new Map([...otherEventsOf(rules, '1'), ...gameStateEventsOf(rules, '1').map((e) => ({ ...e, kind: 'game_state' }))]
+            .map((e) => [e.item, e]));
+        const regions = atlasRoomRegions(rules).map(({ region }) => [region, rules.preset_sidecars['1'][region].playable_payload]);
+        const levelByRegion = new Map(regions.map(([r, pl]) => [r, pl.level]));
+        const reads = new Map();
+        const readsOf = (level) => {
+            if (!reads.has(level)) {
+                reads.set(level, levelReads(level, { flags, rulesRegions: rules.regions['1'], byItem, levelOf: (r) => levelByRegion.get(r),
+                    roomsOfLevel: regions.filter(([, pl]) => pl.level === level).map(([r]) => r) }));
+            }
+            return reads.get(level);
+        };
+        const raw = off.map((l) => [l, routeCarry({ goal: l.goal, sphere: l.sphere, flags, collected, reads: readsOf(l.level) })]);
+        derived = raw.map(([l, c]) => withRouteCarry(l, c)).filter((l) => l.carriedFlags);
+        // the MUTANT below: every route flag a leg reads carried, its natural staging NOT subtracted
+        unsubtracted = raw.filter(([l, c]) => !l.skip && c.length > 0).map(([l]) => l.key);
+    }, 60000);
     afterAll(() => { if (dir) rmSync(dir, { recursive: true, force: true }); });
 
     it('OFF holds no carriedFlags anywhere; ON keeps every id and key, in order', () => {
@@ -173,19 +209,33 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
 
     // ⛓ tile-rules-automation-r-a5: 87 -> 85 (L40's wand locks cost their presses; the flag-8 legs below stage flag 12 from
     //   their own goal rule, and flag 1 is collected later in the route).
-    it('the radius at this SHA: 85 legs carry; every carried flag is the leg\'s own level\'s (the one cross read covered by staging)', () => {
+    // ⛓ rules-l40-bk2-fixup: 85 -> 83, and DERIVED (the typed 85 is gone). The L40 BK2 rule gates r26c13 -> r32c36 on
+    //   flag 12, so the two BK2 legs (via r26c13) now STAGE flag 12 from their own goal rule and carry nothing.
+    it('the radius at this SHA: the legs that carry are exactly the route carry composed from its parts; every carried flag is the leg\'s own level\'s', () => {
         const carried = on.filter((l) => l.carriedFlags);
-        expect(carried).toHaveLength(85);
+        expect(carried.length).toBeGreaterThan(0);
+        expect(carried.map((l) => [l.key, ids(l.carriedFlags)])).toEqual(derived.map((l) => [l.key, ids(l.carriedFlags)]));
         expect(carried.every((l) => l.carriedFlags.every((f) => f.level === l.level))).toBe(true);
+    });
+
+    it('⛓ MUTANT (radius, the staged flags not subtracted): Boss Key 2\'s legs would carry the flag 12 they already stage', () => {
+        const bk2 = (keys) => keys.filter((k) => k.endsWith('location:Level 040 - Boss Key 2'));
+        expect(bk2(unsubtracted)).toEqual(bk2(off.map((l) => l.key)));
+        expect(bk2(unsubtracted).length).toBeGreaterThan(0);
+        expect(unsubtracted.length).toBeGreaterThan(derived.length);
+        expect(bk2(on.filter((l) => l.carriedFlags).map((l) => l.key))).toEqual([]);
     });
 
     // ⛓ tile-rules-automation-r-a5: L40's body is r26c13. Its flag-8 legs (from L39/L43, via r26c13) now name flag 12 in their
     //   GOAL rule (r26c13 -> r23c29 costs it), so they STAGE it and never carry it; flag 1 is collected after them (sphere 7.1).
     //   Two new flag-8 legs (from L41/L42, via r0c53) carry nothing.
-    it('L40: Boss Key 2 and the Chest carry the south door (flag 12); flag 8 carries 7 (12 is staged by its goal rule); flag 12\'s own legs carry nothing', () => {
+    // ⛓ rules-l40-bk2-fixup: Boss Key 2's legs now STAGE flag 12 from their goal rule (the rule gates r26c13 -> r32c36 on it)
+    //   and carry nothing: [[flag 12], [flag 12]] -> [[], []]. The Chest (r26c13, no flag-12 gate) still carries it.
+    it('L40: the Chest carries the south door (flag 12); Boss Key 2 and flag 8 stage it by their goal rule (flag 8 carries 7); flag 12\'s own legs carry nothing', () => {
         const at = (needle) => on.filter((l) => l.level === 40 && l.key.endsWith(needle));
         const carry = (needle) => at(needle).map((l) => ids(l.carriedFlags ?? []));
-        expect(carry('location:Level 040 - Boss Key 2')).toEqual([['flag:L40:12'], ['flag:L40:12']]);
+        expect(carry('location:Level 040 - Boss Key 2')).toEqual([[], []]);
+        expect(at('location:Level 040 - Boss Key 2').map((l) => ids(l.stagedEvents))).toEqual([['flag:L40:12'], ['flag:L40:12']]);
         expect(carry('location:Level 040 - Chest')).toEqual([['flag:L40:12'], ['flag:L40:12']]);
         expect(carry('location:L40 flag 8: bosslock@480,352 cleared')).toEqual([[], [], ['flag:L40:7'], ['flag:L40:7']]);
         expect(at('location:L40 flag 8: bosslock@480,352 cleared').filter((l) => l.key.includes('~> level_40__r26c13'))
@@ -193,11 +243,13 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
         expect(carry('location:L40 flag 12: wandlock@480,560 cleared')).toEqual([[], []]);
     });
 
-    it('⛓ MUTANT (route order = accessibility): reading the leg\'s AP sphere instead of its collection row loses BK2\'s door', () => {
-        // the leg's own `sphere` is where its goal becomes ACCESSIBLE (5.3, row 29); flag 12 is collected at row 33
-        const bk2 = on.find((l) => l.key.endsWith('location:Level 040 - Boss Key 2'));
-        expect(bk2.sphere.label).toBe('5.3');
-        expect(bk2.sphere.inventory).not.toContain('L40 flag 12: wandlock@480,560 cleared');
-        expect(ids(bk2.carriedFlags)).toEqual(['flag:L40:12']);
+    // ⛓ rules-l40-bk2-fixup: the subject moves from Boss Key 2 (which no longer carries: its goal rule stages flag 12) to the
+    //   Chest, the L40 leg that still carries the same door for the same reason.
+    it('⛓ MUTANT (route order = accessibility): reading the leg\'s AP sphere instead of its collection row loses the Chest\'s door', () => {
+        // the leg's own `sphere` is where its goal becomes ACCESSIBLE (5.3); flag 12 is collected at a later row
+        const chest = on.find((l) => l.key.endsWith('location:Level 040 - Chest'));
+        expect(chest.sphere.label).toBe('5.3');
+        expect(chest.sphere.inventory).not.toContain('L40 flag 12: wandlock@480,560 cleared');
+        expect(ids(chest.carriedFlags)).toEqual(['flag:L40:12']);
     });
 });

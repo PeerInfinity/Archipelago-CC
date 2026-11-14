@@ -12,7 +12,9 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { blockCrossingCost, blockHolderSearch, blockHolderVerdict, blockPushSearch, selfHoldTiles } from './seedlingBlockPaths.js';
+import {
+    activatorReachCost, blockCrossingCost, blockHolderSearch, blockHolderVerdict, blockPushSearch, hitAwayStances, pulserShoveTarget, selfHoldTiles,
+} from './seedlingBlockPaths.js';
 import { anyOf, buildSeedlingRegionGrid, conditionKey, entitySemantics, flag } from './seedlingSemantics.js';
 import { ropeEventCondition } from './seedlingObstacleEvents.js';
 import {
@@ -404,5 +406,42 @@ describe('blockCrossingCost — the far side behind a pushed block', () => {
         const parked = search([{ tx: 2, ty: 1, keys: [], label: 'darktrap' }]);
         expect(tiles(parked.cells)).toEqual([[3, 1], [4, 1]]);
         expect(parked.fatal.size).toBe(0);
+    });
+});
+
+// ⛓ RULES rules-l40-bk2-witness / rules-l40-bk2-commit — the pulser path: a fire block is hit AWAY from the hitter, a
+// Pulser shoves it one tile away from its centre, and the walk to the Pulser group's activator is priced in the events of
+// the latched locks it must pass.
+describe('the pulser path (hit-away stances, the shove, the activator walk)', () => {
+    it('hitAwayStances: a push in a direction keeps only the stances on the far side of that axis', () => {
+        const stances = { N: [[0, -1], [0, 1], [-1, -1]], E: [[1, 0], [-1, 0], [1, 1]] };
+        expect(hitAwayStances(stances)).toEqual({ N: [[0, -1], [-1, -1]], E: [[1, 0], [1, 1]] });
+    });
+
+    it('pulserShoveTarget: the L40 geometry shoves the fire block one tile west; plain blocks and out-of-reach pulses are not shoved', () => {
+        // pushableblockfire@576,576 and pulser@592,576 (L40): centres (584,584) and (600,584), a = 0 → west.
+        expect(pulserShoveTarget({ tx: 36, ty: 36, type: 'pushableblockfire' }, { x: 592, y: 576 })).toEqual({ tx: 35, ty: 36 });
+        expect(pulserShoveTarget({ tx: 36, ty: 36, type: 'pushableblock' }, { x: 592, y: 576 })).toBe(null);
+        expect(pulserShoveTarget({ tx: 30, ty: 36, type: 'pushableblockfire' }, { x: 592, y: 576 })).toBe(null);
+    });
+
+    // A corridor: start (1,1), a latched door D at (3,1), the activator A at (5,1).
+    const corridor = () => room(['#######', '#.....#', '#######']);
+    const KEY = 'L9 flag 1: wandlock@48,16 cleared';
+    it('activatorReachCost: a latched door on the only way costs its event; a free corridor costs nothing', () => {
+        const r = corridor();
+        const args = { start: r.at(1, 1), activators: [r.at(5, 1)], keyOf: conditionKey };
+        expect(activatorReachCost(r.grid, { ...args, latched: [{ key: KEY, cells: [r.at(3, 1)] }] })).toEqual({ sets: [[KEY]], refused: null });
+        expect(activatorReachCost(r.grid, args)).toEqual({ sets: [[]], refused: null });
+    });
+
+    it('activatorReachCost: a cell the GRID gates on the same event ({event}, R-A5\'s in-room press rule) opens with that event', () => {
+        const r = corridor();
+        r.grid.cells[r.at(3, 1)] = { kind: 'gated', conditions: [{ event: KEY }], faces: {}, dirs: {}, manual: [], labels: [] };
+        const reach = activatorReachCost(r.grid, {
+            start: r.at(1, 1), activators: [r.at(5, 1)], keyOf: conditionKey, latched: [{ key: KEY, cells: [r.at(3, 1)] }],
+        });
+        // Mutant (the event held only by its bare name, not as the grid's `event:` key): no set opens it.
+        expect(reach).toEqual({ sets: [[KEY]], refused: null });
     });
 });

@@ -4472,27 +4472,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Sword"
+                        "item_name": "Fire"
                       }
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                  }
                 }
               ]
             }
@@ -4504,27 +4515,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Sword"
+                        "item_name": "Fire"
                       }
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                  }
                 }
               ]
             }
@@ -4699,27 +4721,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
-                },
-                {
-                  "rule": "Or",
+                  "rule": "And",
                   "children": [
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Sword"
+                        "item_name": "Fire"
                       }
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L40 flag 12: wandlock@480,560 cleared"
+                  }
                 }
               ]
             }
@@ -76756,7 +76789,6 @@
           "new_accessible_locations": [
             "L40 flag 12: wandlock@480,560 cleared",
             "Level 039 - Totem Part 72,40",
-            "Level 040 - Boss Key 2",
             "Level 040 - Chest",
             "Level 040 - Totem Part 160,640"
           ],
@@ -76765,8 +76797,6 @@
             "level_39__r25c9",
             "level_39__r2c11",
             "level_40__r26c13",
-            "level_40__r32c36",
-            "level_40__r36c35",
             "level_40__r48c54",
             "level_43__r13c7"
           ],
@@ -76934,9 +76964,13 @@
               "L40 flag 12: wandlock@480,560 cleared": 1
             }
           },
-          "new_accessible_locations": [],
+          "new_accessible_locations": [
+            "Level 040 - Boss Key 2"
+          ],
           "new_accessible_regions": [
-            "level_40__r23c29"
+            "level_40__r23c29",
+            "level_40__r32c36",
+            "level_40__r36c35"
           ],
           "sphere_locations": [
             "L40 flag 12: wandlock@480,560 cleared"
@@ -77081,38 +77115,6 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "Purple Key": 1
-            },
-            "resolved_items": {
-              "Purple Key": 1
-            }
-          },
-          "new_accessible_locations": [
-            "L40 flag 7: wandlock@208,128 cleared",
-            "L40 flag 8: bosslock@480,352 cleared",
-            "Level 041 - Totem Part 240,144",
-            "Level 042 - Totem Part 184,152"
-          ],
-          "new_accessible_regions": [
-            "level_40__r0c53",
-            "level_41__r4c15",
-            "level_41__r4c3",
-            "level_41__r7c15",
-            "level_42"
-          ],
-          "sphere_locations": [
-            "Level 040 - Boss Key 2"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "6.9",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
               "Seal": 1
             },
             "resolved_items": {
@@ -77129,7 +77131,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.10",
+      "sphere_index": "6.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77150,7 +77152,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.11",
+      "sphere_index": "6.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77171,7 +77173,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.12",
+      "sphere_index": "6.11",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77192,7 +77194,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.13",
+      "sphere_index": "6.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77226,7 +77228,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.14",
+      "sphere_index": "6.13",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77247,7 +77249,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.15",
+      "sphere_index": "6.14",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77273,53 +77275,6 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "L40 flag 7: wandlock@208,128 cleared": 1
-            },
-            "resolved_items": {
-              "L40 flag 7: wandlock@208,128 cleared": 1
-            }
-          },
-          "new_accessible_locations": [
-            "L40 flag 1: wandlock@176,80 cleared",
-            "Level 040 - Totem Part 64,144"
-          ],
-          "new_accessible_regions": [
-            "level_40__r4c4"
-          ],
-          "sphere_locations": [
-            "L40 flag 7: wandlock@208,128 cleared"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "7.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "L40 flag 8: bosslock@480,352 cleared": 1
-            },
-            "resolved_items": {
-              "L40 flag 8: bosslock@480,352 cleared": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "L40 flag 8: bosslock@480,352 cleared"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "7.3",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
               "L48 flag 1: bosslock@48,144 cleared": 1
             },
             "resolved_items": {
@@ -77336,7 +77291,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.4",
+      "sphere_index": "7.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77357,49 +77312,39 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.5",
+      "sphere_index": "7.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "Totem Shard": 1
+              "Purple Key": 1
             },
             "resolved_items": {
-              "Totem Shard": 1
+              "Purple Key": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Level 041 - Totem Part 240,144"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "7.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Totem Shard": 1
-            },
-            "resolved_items": {
-              "Totem Shard": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
+          "new_accessible_locations": [
+            "L40 flag 7: wandlock@208,128 cleared",
+            "L40 flag 8: bosslock@480,352 cleared",
+            "Level 041 - Totem Part 240,144",
             "Level 042 - Totem Part 184,152"
+          ],
+          "new_accessible_regions": [
+            "level_40__r0c53",
+            "level_41__r4c15",
+            "level_41__r4c3",
+            "level_41__r7c15",
+            "level_42"
+          ],
+          "sphere_locations": [
+            "Level 040 - Boss Key 2"
           ]
         }
       }
     },
     {
       "type": "state_update",
-      "sphere_index": "7.7",
+      "sphere_index": "7.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77420,7 +77365,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.8",
+      "sphere_index": "7.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77462,16 +77407,21 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "L40 flag 1: wandlock@176,80 cleared": 1
+              "L40 flag 7: wandlock@208,128 cleared": 1
             },
             "resolved_items": {
-              "L40 flag 1: wandlock@176,80 cleared": 1
+              "L40 flag 7: wandlock@208,128 cleared": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_locations": [
+            "L40 flag 1: wandlock@176,80 cleared",
+            "Level 040 - Totem Part 64,144"
+          ],
+          "new_accessible_regions": [
+            "level_40__r4c4"
+          ],
           "sphere_locations": [
-            "L40 flag 1: wandlock@176,80 cleared"
+            "L40 flag 7: wandlock@208,128 cleared"
           ]
         }
       }
@@ -77479,6 +77429,27 @@
     {
       "type": "state_update",
       "sphere_index": "8.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L40 flag 8: bosslock@480,352 cleared": 1
+            },
+            "resolved_items": {
+              "L40 flag 8: bosslock@480,352 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L40 flag 8: bosslock@480,352 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77499,7 +77470,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.3",
+      "sphere_index": "8.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77520,7 +77491,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.4",
+      "sphere_index": "8.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77541,7 +77512,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.5",
+      "sphere_index": "8.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77552,19 +77523,38 @@
               "Totem Shard": 1
             }
           },
-          "new_accessible_locations": [
-            "Level 043 - Wand"
-          ],
+          "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
-            "Level 040 - Totem Part 64,144"
+            "Level 041 - Totem Part 240,144"
           ]
         }
       }
     },
     {
       "type": "state_update",
-      "sphere_index": "8.6",
+      "sphere_index": "8.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Totem Shard": 1
+            },
+            "resolved_items": {
+              "Totem Shard": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 042 - Totem Part 184,152"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77639,6 +77629,71 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L40 flag 1: wandlock@176,80 cleared": 1
+            },
+            "resolved_items": {
+              "L40 flag 1: wandlock@176,80 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L40 flag 1: wandlock@176,80 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Totem Shard": 1
+            },
+            "resolved_items": {
+              "Totem Shard": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Level 043 - Wand"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 040 - Totem Part 64,144"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 069 - Lights"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Wand": 1
             },
             "resolved_items": {
@@ -77679,28 +77734,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.4",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Seal": 1
-            },
-            "resolved_items": {
-              "Seal": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Level 069 - Lights"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "10.1",
+      "sphere_index": "11.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77721,7 +77755,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.2",
+      "sphere_index": "11.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77742,7 +77776,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.3",
+      "sphere_index": "11.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77763,7 +77797,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.4",
+      "sphere_index": "11.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77784,7 +77818,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.5",
+      "sphere_index": "11.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77805,7 +77839,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.6",
+      "sphere_index": "11.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77826,7 +77860,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.7",
+      "sphere_index": "11.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77857,7 +77891,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.1",
+      "sphere_index": "12.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77878,7 +77912,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.2",
+      "sphere_index": "12.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77933,7 +77967,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.1",
+      "sphere_index": "13.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77954,7 +77988,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.2",
+      "sphere_index": "13.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77975,7 +78009,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.3",
+      "sphere_index": "13.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -77996,7 +78030,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.4",
+      "sphere_index": "13.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78017,7 +78051,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.5",
+      "sphere_index": "13.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78038,7 +78072,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "12.6",
+      "sphere_index": "13.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78078,7 +78112,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "13.1",
+      "sphere_index": "14.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78099,7 +78133,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "13.2",
+      "sphere_index": "14.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78131,7 +78165,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "13.3",
+      "sphere_index": "14.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78155,7 +78189,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "13.4",
+      "sphere_index": "14.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78176,7 +78210,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "14.1",
+      "sphere_index": "15.1",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -78197,7 +78231,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "14.2",
+      "sphere_index": "15.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
