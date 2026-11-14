@@ -113,6 +113,23 @@ export const LOOP_RESET_EVENT = 'loopState:loopReset';
 /** The `source` of the move the loop-reset fallback publishes (`handleLoopReset`). */
 export const LOOP_RESET_MOVE_SOURCE = 'flashSeedling-loopReset';
 
+/**
+ * ⛓ RE1 (reconnect) — the client APPLIED a `Connected` packet's state (`messageHandler._handleConnected`, published
+ * right after `applyRuntimeStateData`). ⛔ Not `game:connected`: that one is published BEFORE the reset, so a
+ * re-collect made on it would be wiped by the reset. The state manager's worker runs its commands in order, so a
+ * check sent on this event lands after the reset.
+ */
+export const CONNECTED_STATE_APPLIED_EVENT = 'client:connectedStateApplied';
+
+/**
+ * ⛓ RE1 — the loaded rules changed and the panel re-mounted NOTHING (`flashPanelUI._onRulesLoaded`'s same-wiring
+ * branch): the state manager was rebuilt from scratch under a game that kept its flags.
+ */
+export const RULES_RELOADED_IN_PLACE_EVENT = 'flashSeedling:rulesReloadedInPlace';
+
+/** ⛓ RE1 — the state manager's snapshot (its `checkedLocations` feed the collector's record). */
+export const SNAPSHOT_UPDATED_EVENT = 'stateManager:snapshotUpdated';
+
 export class SeedlingRegionGlue {
     /**
      * @param {object} deps
@@ -130,7 +147,7 @@ export class SeedlingRegionGlue {
      *   every door passes, today's behaviour
      */
     constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass, isBotWalking,
-        timers, getProcgen, stopBotWalks, expectBotArrivals, getEvents, collectEvent, getLoop } = {}) {
+        timers, getProcgen, stopBotWalks, expectBotArrivals, getEvents, collectEvent, getLoop, getRulesIdentity } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
@@ -154,6 +171,16 @@ export class SeedlingRegionGlue {
             : null;
         /** Whether this adapter's game has had its load-time read (`syncEventsFromGame`). */
         this._eventsSynced = false;
+        /**
+         * ⛓ RE1 — the loaded rules' identity (`stateManager:rawJsonDataLoaded`'s `source` + slot: a server build's
+         * source is `server:<seed>:P<slot>`). The collector's records are kept across a reset of the SAME rules and
+         * forgotten when it changes (`_checkRulesIdentity`). Absent = one identity forever.
+         */
+        this.getRulesIdentity = typeof getRulesIdentity === 'function' ? getRulesIdentity : () => null;
+        this._rulesIdentity = undefined;
+        this._connectedAppliedHandler = () => this.rederiveEvents('connected');
+        this._rulesReloadedHandler = () => this.rederiveEvents('rules-reload');
+        this._snapshotHandler = (payload) => this.noteSnapshot(payload?.snapshot);
         this._unsubs = [];
         this._handler = (payload) => this.handleLoadRegion(payload);
         this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
@@ -173,6 +200,8 @@ export class SeedlingRegionGlue {
         this.stopBotWalks = stopBotWalks ?? (() => 0);
         this.expectBotArrivals = expectBotArrivals ?? (() => 0);
         this.lastRestart = null;
+        /** ⛓ RE1 — the last re-derive: `{reason, flags (null = no game readout), events}`. */
+        this.lastRederive = null;
         /** ⛓ TELEPORT TOOL — the last Tools teleport's decision (`teleportTool`), and its spot awaiting the region load. */
         this.lastTeleport = null;
         this._toolSpot = null;
@@ -180,7 +209,7 @@ export class SeedlingRegionGlue {
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
             resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
-            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0, toolTeleports: 0,
+            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0, toolTeleports: 0, rederives: 0,
             // ⛓ WALK IDENTITY — a Restart's start-hop teleport pushed in the turn it was queued (`at`: the site)
             restartPushes: [] };
         /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
@@ -276,6 +305,12 @@ export class SeedlingRegionGlue {
         this._unsubs.push(this._subscribe(RESTARTED_EVENT, this._restartHandler));
         // ⛓ LOOP-MODE RESTART — the loops' reset (see handleLoopReset).
         this._unsubs.push(this._subscribe(LOOP_RESET_EVENT, this._loopResetHandler));
+        // ⛓ RE1 — the resets that empty the state manager's checked set while the game keeps its flags.
+        if (this.eventCollector) {
+            this._unsubs.push(this._subscribe(CONNECTED_STATE_APPLIED_EVENT, this._connectedAppliedHandler));
+            this._unsubs.push(this._subscribe(RULES_RELOADED_IN_PLACE_EVENT, this._rulesReloadedHandler));
+            this._unsubs.push(this._subscribe(SNAPSHOT_UPDATED_EVENT, this._snapshotHandler));
+        }
         this._startPositionWatch();
     }
 
@@ -357,6 +392,53 @@ export class SeedlingRegionGlue {
         if (!Array.isArray(st?.persistence_cleared)) return null;
         this._eventsSynced = true;
         const effects = this.eventCollector.onLoad(st.persistence_cleared);
+        this.apply(effects);
+        return effects;
+    }
+
+    /**
+     * ⛓ RE1 — the rules' identity moved (another document or slot over the same rooms): forget the records made
+     * under the old rules (js-18's review: re-collecting what the OLD state manager had checked would invent checks).
+     */
+    _checkRulesIdentity() {
+        let id = null;
+        try { id = this.getRulesIdentity() ?? null; } catch { id = null; }
+        if (this._rulesIdentity === undefined) { this._rulesIdentity = id; return; }
+        if (id === this._rulesIdentity) return;
+        this._rulesIdentity = id;
+        this.eventCollector?.forgetRecords();
+    }
+
+    /** ⛓ RE1 — a state-manager snapshot: its checked game-state events join the collector's record. */
+    noteSnapshot(snapshot) {
+        if (!this.eventCollector || !snapshot) return;
+        this._checkRulesIdentity();
+        this.eventCollector.noteStateManagerChecked(snapshot.checkedLocations);
+    }
+
+    /**
+     * ⛓⛓ RE1 — RE-DERIVE THE GAME-STATE EVENTS AFTER A RESET (⚖ Robert 2026-11-14; design-reconnect-events.md §5).
+     * Runs on `CONNECTED_STATE_APPLIED_EVENT` (a reconnect's `Connected` reset has been applied) and on
+     * `RULES_RELOADED_IN_PLACE_EVENT` (the state manager was rebuilt, the game was not). Re-applies the game's flags ∪
+     * what was collected ∪ what the state manager had checked (`SeedlingEventCollector.onRederive`), each through the
+     * SAME local event check as the live collect (`collectEvent`: forced, the location's event item). The state
+     * manager dedupes: one it still has is `already_checked`, nothing added. JS, wasm and Flash alike (`botStatus`).
+     * With no game readout, the records alone are re-applied. Returns the effects, or null with no collector.
+     */
+    rederiveEvents(reason = 'connected') {
+        if (!this.eventCollector) return null;
+        this._checkRulesIdentity();
+        let st = null;
+        if (this.adapter) {
+            try {
+                const raw = this.adapter._getFlash?.()?.botStatus?.();
+                st = typeof raw === 'string' ? JSON.parse(raw) : raw;
+            } catch { st = null; }
+        }
+        const cleared = Array.isArray(st?.persistence_cleared) ? st.persistence_cleared : null;
+        const effects = this.eventCollector.onRederive(cleared);
+        this.stats.rederives += 1;
+        this.lastRederive = { reason, flags: cleared ? cleared.length : null, events: effects.map((e) => e.location) };
         this.apply(effects);
         return effects;
     }
@@ -864,6 +946,11 @@ export class SeedlingRegionGlue {
             return;
         }
         this.stats.eventsCollected += 1;
+        if (at === 'rederive') {
+            this._log(`[obstacle event] re-applied after a reset (the game's flag {${level},${tag}} or this session's record) — `
+                + `"${location}" (${eventId ?? 'no event_id'})`);
+            return;
+        }
         this._log(`[obstacle event] the game's flag {${level},${tag}} is set (${at === 'load' ? 'at load' : 'live'}) — `
             + `collected "${location}" (${eventId ?? 'no event_id'})`);
     }

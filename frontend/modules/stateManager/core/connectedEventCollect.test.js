@@ -77,3 +77,57 @@ describe('Seedling: a connected event collect on the server-sent document', () =
     expect(sm.inventory[ROPE] ?? 0).toBe(0);
   });
 });
+
+/**
+ * RE1 (reconnect events, ⚖ Robert 2026-11-14): a reconnect's `Connected` reset drops a locally collected event
+ * (measured on upstream 0.6.9 at slots 1 and 2); the glue then re-applies it through the same forced local check
+ * (`client:connectedStateApplied`, after the reset). On the REAL state manager, at slot 1 AND slot 2 (the server
+ * document overlaid for the room's slot, as `messageHandler._overlayRulesForSlot` does): the event comes back with
+ * its item once, a re-apply of an event it still has is `already_checked`, and a /sync never doubles it.
+ */
+const ROCK = 'L0 flag 1: breakablerock@288,176 cleared';
+
+const slotDoc = async (slot) => {
+  const { doc, player } = serverDoc();
+  if (String(slot) === player) return { doc, player };
+  const { overlayServerData } = await import('../../client/core/localRulesOverlay.js');
+  const items = Object.keys(doc.items[player]);
+  const scouts = Object.values(doc.regions[player]).flatMap((r) => r.locations || []).filter((l) => l.id != null)
+    .map((l) => ({ locationId: l.id, itemName: l.item?.name ?? items[0], player: Number(slot), progression: true }));
+  return { doc: overlayServerData(doc, player, { slot, scouts }), player: String(slot) };
+};
+
+describe.each([1, 2])('RE1 — a reconnect re-applies a collected event (slot %i, real state manager)', (slot) => {
+  it('collect → Connected reset drops it → the re-apply brings it back once; /sync and a repeat never double it', async () => {
+    const sm = await load(await slotDoc(slot));
+    expect(String(sm.playerId)).toBe(String(slot));
+    expect(sm.locations.get(ROCK)?.item?.player).toBe(slot);
+    connected(sm);
+    index0(sm, []);
+    sm.checkLocation(ROCK, true, true); // the live collect
+    sm.checkLocation(ROPE, true, true);
+    expect(sm.inventory[ROCK]).toBe(1);
+
+    // the reconnect: Connected (the FULL reset) — the measured loss
+    connected(sm);
+    expect(sm.checkedLocations.has(ROCK)).toBe(false);
+    expect(sm.inventory[ROCK] ?? 0).toBe(0);
+
+    // client:connectedStateApplied → the glue's re-apply (the same forced local check), then the server's /sync
+    const rejected = [];
+    const publish = sm._publishEvent.bind(sm);
+    sm._publishEvent = (name, data) => { if (name === 'locationCheckRejected') rejected.push(data); return publish(name, data); };
+    sm.checkLocation(ROCK, true, true);
+    sm.checkLocation(ROPE, true, true);
+    index0(sm, []);
+    expect(sm.checkedLocations.has(ROCK)).toBe(true);
+    expect(sm.inventory[ROCK]).toBe(1);
+    expect(sm.inventory[ROPE]).toBe(1);
+
+    // a second trigger of the same reset (or an in-place reload of the same rules) — the state manager dedupes
+    sm.checkLocation(ROCK, true, true);
+    index0(sm, []);
+    expect(sm.inventory[ROCK]).toBe(1);
+    expect(rejected).toEqual([{ locationName: ROCK, reason: 'already_checked' }]);
+  });
+});

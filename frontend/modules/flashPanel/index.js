@@ -38,7 +38,8 @@ import {
 } from './seedlingPlaybackController.js';
 import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
-import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue, stopBotWalksOf } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, CONNECTED_STATE_APPLIED_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, RULES_RELOADED_IN_PLACE_EVENT,
+  SeedlingRegionGlue, stopBotWalksOf } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { PLAY_CLOCK_EVENT, PLAY_CLOCK_SAMPLE_EVENTS, SeedlingPlayClock } from './seedlingPlayClock.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
@@ -364,6 +365,11 @@ export function register(registrationApi) {
   // ⛓ Seedling generated G4 — a door the host refused. The same defect, found
   // again by the G4 box gate: published unregistered, the page dropped it.
   registrationApi.registerEventBusPublisher(DOOR_LOCKED_EVENT);
+  // ⛓ RE1 (reconnect) — the resets after which the glue re-derives the game-state events: the client's applied
+  // Connected state, and a rules reload that re-mounted nothing (published by this panel, heard by the glue).
+  registrationApi.registerEventBusSubscriberIntent(CONNECTED_STATE_APPLIED_EVENT);
+  registrationApi.registerEventBusPublisher(RULES_RELOADED_IN_PLACE_EVENT);
+  registrationApi.registerEventBusSubscriberIntent(RULES_RELOADED_IN_PLACE_EVENT);
 
   // Self-activation on a region load (see `activateOnLoadRegion`).
   registrationApi.registerEventBusPublisher('ui:activatePanel');
@@ -470,6 +476,16 @@ function eventsOfLoadedSlot() {
   return _eventsCache.events;
 }
 
+/**
+ * ⛓ RE1 — which rules are loaded: the raw payload's `source` (a server build's is `server:<seed>:P<slot>`) and slot.
+ * Null before any load.
+ */
+function rulesIdentityOfLoaded() {
+  const payload = getLastRawJsonData?.() ?? null;
+  if (!payload) return null;
+  return `${payload.source ?? ''}|${playerOfRawPayload(payload) ?? ''}`;
+}
+
 export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[FlashPanel Module] Initializing with priority ${priorityIndex}...`);
   moduleDispatcher = initializationApi.getDispatcher();
@@ -512,6 +528,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     // as a local event check (forced: the game is the truth, not the logic's reach), never a server check.
     getEvents: eventsOfLoadedSlot,
     collectEvent: (location) => stateManagerProxySingleton.checkLocation(location, true, true),
+    // ⛓ RE1 — the loaded rules' identity: the collector's records survive a reset of the SAME rules only.
+    getRulesIdentity: rulesIdentityOfLoaded,
     // ⛓ LOOP-MODE RESTART — the loops' reset warps the game only where the declared start is a Seedling room.
     getLoop: () => ({
       isLoopModeActive: () => initializationApi.getModuleFunction?.('loops', 'isLoopModeActive')?.() === true,
