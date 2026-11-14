@@ -84,7 +84,9 @@ function solve(arrival, items, { fork = true } = {}) {
     }
 }
 const ON = (fn) => withContactFidelity({ drillTimedPass: true }, fn);
-const OFF = (fn) => withContactFidelity({ drillTimedPass: false }, fn);
+// ⛓ CORRIDORFLIP (⚖ user 2026-11-12): these arms were measured before `corridorBodyPricing` shipped ON; they name that
+// pre-pricing world (the live drill forecast reroutes the L28 rope walk, and the spear then misses the rope).
+const OFF = (fn) => withContactFidelity({ drillTimedPass: false, corridorBodyPricing: false, corridorForecastMemo: false }, fn);
 const keys = (out) => out.perTick.map((h) => [...h].sort().join('+'));
 const pulled = (run) => (run.ledger('ropePulls') ?? []).some((p) => p.id === 'rope@160,64');
 
@@ -94,7 +96,8 @@ describe('fidelity TIMEDPASS — the switch', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.drillTimedPass).toBe(true);
         expect(CONTACT_FIDELITY.drillTimedPass).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS).toMatchObject({ drillLive: true, drillMixedRooms: true, drillKillFirst: true,
-            ropeCutAnyWeapon: true, corridorBodyPricing: false });
+            // ⛓ corridorBodyPricing ON since (⚖ user 2026-11-12, the CORRIDORFLIP flip).
+            ropeCutAnyWeapon: true, corridorBodyPricing: true });
     });
     it('the search asks a stand long enough for the fire cut (11 ticks from arrival to its end at L26)', () => {
         expect(DRILL_TIMED_PASS.tail).toBeGreaterThanOrEqual(11);
@@ -130,11 +133,12 @@ describe('fidelity TIMEDPASS — W0: the drill\'s hop cycle and the jump-over ba
 
 describe('fidelity TIMEDPASS — the drill forecast (`corridorBodyForecast`, asked with `drillPass`)', () => {
     const run0 = () => createRunForStaging(arrivalStaging(ARRIVALS.L26, { items: ['hasFire'] }), SRC);
-    it('is null with `corridorBodyPricing` OFF unless asked with `drillPass` (every other caller unchanged)', () => {
+    // ⛓ the key ships ON since (⚖ user 2026-11-12, the CORRIDORFLIP flip): this row names its OFF arm.
+    it('is null with `corridorBodyPricing` OFF unless asked with `drillPass` (every other caller unchanged)', () => withContactFidelity({ corridorBodyPricing: false }, () => {
         const run = run0();
         expect(run.corridorBodyForecast()).toBeNull();
         expect(run.corridorBodyForecast({ drillPass: true })).not.toBeNull();
-    });
+    }));
     it('`fork()` is independent: stepping the fork leaves the original where it was', () => {
         const run = run0();
         const fc = run.corridorBodyForecast({ drillPass: true });

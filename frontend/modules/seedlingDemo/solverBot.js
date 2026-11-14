@@ -24738,6 +24738,311 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL — THE KILL RUNG'S ARMS FOR A WALLFLYER AND A DRILL (`WALLFLYER_KILL_ARM`,
+ * `SEEDLING_WALLFLYER_KILL_ARM`; `DRILL_KILL_ARM`, `SEEDLING_DRILL_KILL_ARM`; both OFF: the rung's words and work are
+ * the BEFORE ones, no fork is made).
+ *
+ * With the corridor forecast pricing body contact (`corridorBodyPricing`), a walk that crosses a wallflyer's ray or a
+ * drill's run range is refused by the probe — but the kill rung's arms target chasers, spinners and statics only, so the
+ * ladder EXHAUSTED on a body it never tried to remove (CORRIDORFLIP's lost solves: L22 → L29 at `wallflyer@48,112`,
+ * L88 at `drill@128,160`). Each arm removes such a body with the model's own press rules, asked only for a body of its
+ * family that is a SOURCE of the probe's hit and still live:
+ *
+ *   · WALLFLYER (`wallFlyer.js`) — a resting flyer launches only when the player crosses its ray (`decideMotion` away
+ *     from its wall, `attackRange`), a struck one is knocked back by `v = -v` (nowhere, at rest), and `hitPlayer` needs
+ *     the boxes to overlap. So it is struck where it RESTS, from a stance on a ring round it (`BODY_FAMILY_KILL.radii`,
+ *     eight compass points, nearest planned walk first): walk there, settle, face it, press whenever its `hitsTimer`
+ *     runs out (`hitsMax` 3 at the weapon's damage), then wait out "die" and the fade. A stance in its ray launches it:
+ *     the fork says so (the arm refuses that stance on a launch before the kill), not a ray test of ours.
+ *   · DRILL — DRILLKILL's own executor (`drillKillStances` / `execDrillKill`: pre-stance, creep, fight, removal),
+ *     which until now ran only ahead of L28's rope cut.
+ *
+ * Both are TRIED ON FORKS (`orbitKillChaser`'s shape): each stance is played on a fork of the solve until the body is
+ * removed, refused at the first player hit or death, a crossing or the bound; the first clean one is replayed on the
+ * live run key for key (slot selections at the same index) and must remove the body there too. No tick is spent on a
+ * refusal: the arm answers `why` and the rung goes on (DETOUR, …) as before, the why one line longer.
+ * ⚠ The weapon is `drillKillWeapon`'s (the primary sword or spear, else a held one's slot): Fire kills neither body.
+ */
+export const WALLFLYER_KILL_ARM = {
+    enabled: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM === '1',
+};
+export const WALLFLYER_KILL_ARM_DEFAULT = false;
+/** Run `fn` with `WALLFLYER_KILL_ARM` set to `enabled`, restoring the previous value (also on a throw). */
+export function withWallFlyerKillArm(enabled, fn) {
+    return withSwitch(WALLFLYER_KILL_ARM, enabled, fn);
+}
+export const DRILL_KILL_ARM = {
+    enabled: globalThis.process?.env?.SEEDLING_DRILL_KILL_ARM === '1',
+};
+export const DRILL_KILL_ARM_DEFAULT = false;
+/** Run `fn` with `DRILL_KILL_ARM` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDrillKillArm(enabled, fn) {
+    return withSwitch(DRILL_KILL_ARM, enabled, fn);
+}
+
+export const BODY_FAMILY_KILL = Object.freeze({
+    /** The wallflyer stance ring's radii, centre to centre (its box is 14 px; the press reaches its rect). */
+    radii: Object.freeze([16, 18, 14]),
+    /** At most this many forks per asking (stances, both families). */
+    maxForks: 8,
+    /** The fork walk's bound to a stance, ticks. */
+    walkBound: 300,
+    /** The settle's bound at a stance, and after the face tap. */
+    settleBound: 40,
+    /** The fight's bound from the first press: three landings `hitsTimerMax` (30) apart and the slack. */
+    fightBound: 160,
+    /** Presses that did not land before the stance is refused. */
+    unanswered: 2,
+    /** The removal's bound once the body dies: "die" and the fade. */
+    removalBound: 80,
+});
+
+/** What the arms did, per asking (read by the slice's rows; reset by the caller). */
+export const BODY_FAMILY_KILL_COUNTS = { asked: 0, kills: [], refused: [] };
+export function resetBodyFamilyKillCounts() {
+    BODY_FAMILY_KILL_COUNTS.asked = 0;
+    BODY_FAMILY_KILL_COUNTS.kills = [];
+    BODY_FAMILY_KILL_COUNTS.refused = [];
+}
+
+/** A run's live, resting-or-flying wallflyer `id` (not dying, not removed), or null. */
+function liveWallFlyer(r, id) {
+    const w = (r.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+    return w && !w.removed && !w.destroy && !w.dieAnim ? w : null;
+}
+
+/**
+ * Walk a FORK `f` to `to` along the planner's waypoints (`chooseHeld` toward each, `hasArrived` advancing), pushing the
+ * keys onto `keys`. `{why}` on no plan, a crossing, a player hit or death, or the bound; `{}` on arrival.
+ */
+function forkWalkTo(f, keys, to, opts, allowTeleporter, hits0, deaths0) {
+    const wps = planWaypointsOrNull(f.world, f.state, to, allowTeleporter, opts);
+    if (wps === null) return { why: `no corridor plans to (${to.x},${to.y})` };
+    const aims = [...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
+    let i = 0;
+    for (let k = 0; k < BODY_FAMILY_KILL.walkBound; k += 1) {
+        while (i < aims.length - 1 && hasArrived(f.state, aims[i], DEFAULT_TOLERANCE)) i += 1;
+        if (i === aims.length - 1 && hasArrived(f.state, aims[i], DEFAULT_TOLERANCE)) return {};
+        const held = chooseHeld(f.state, aims[i], DEFAULT_TOLERANCE);
+        const why = forkStep(f, keys, held, hits0, deaths0);
+        if (why) return { why: `${why} on the walk to (${to.x},${to.y})` };
+    }
+    return { why: `the walk to (${to.x},${to.y}) did not arrive in ${BODY_FAMILY_KILL.walkBound} ticks` };
+}
+
+/** One fork tick: `why` on a crossing or a new player hit / death since `hits0` / `deaths0`, else null. */
+function forkStep(f, keys, held, hits0, deaths0) {
+    keys.push(held);
+    const { transition } = f.advance(held);
+    if (transition) return `crossed to level ${transition.to_level} at fork tick ${keys.length}`;
+    const h = (f.ledger('playerHits') ?? []).slice(hits0)[0];
+    if (h) return `HIT at fork tick ${keys.length} (${h.source ?? '?'}${h.id ? ` ${h.id}` : ''})`;
+    if ((f.ledger('playerDeaths') ?? []).length !== deaths0) return `a death at fork tick ${keys.length}`;
+    return null;
+}
+
+/** The wallflyer stances round `w`: free player boxes on the ring, nearest planned walk first. */
+function wallFlyerKillStances(run, w, opts, allowTeleporter) {
+    const geo = run.liveGeometryOpts();
+    const out = [];
+    const seen = new Set();
+    for (const r of BODY_FAMILY_KILL.radii) {
+        for (let a = 0; a < 8; a += 1) {
+            const ang = (a * Math.PI) / 4;
+            const p = { x: Math.round(w.x + r * Math.cos(ang)), y: Math.round(w.y + r * Math.sin(ang)) };
+            const k = `${p.x},${p.y}`;
+            if (seen.has(k)) continue;
+            seen.add(k);
+            if (run.world.collidesSolid(playerBoxAt(p.x, p.y), geo)) continue;
+            if (plannerObstacleAt(run.world, p.x, p.y, null, opts) !== null) continue;
+            const walk = plannedWalkSamples(run, run.state, p, opts, allowTeleporter);
+            if (walk === null) continue;
+            let len = 0;
+            for (let i = 1; i < walk.length; i += 1) len += Math.hypot(walk[i].x - walk[i - 1].x, walk[i].y - walk[i - 1].y);
+            out.push({ pre: p, r, len });
+        }
+    }
+    return out.sort((a, b) => a.len - b.len || a.r - b.r || a.pre.y - b.pre.y || a.pre.x - b.pre.x);
+}
+
+/**
+ * The wallflyer kill from `stance`, played on fork `f` (see `WALLFLYER_KILL_ARM`). `{ok, presses}` or `{why}`.
+ * `equips` collects `{i, slot}`: the slot selections, at the key index they precede.
+ */
+function playWallFlyerKill(f, keys, equips, id, kw, stance, opts, allowTeleporter) {
+    const hits0 = (f.ledger('playerHits') ?? []).length;
+    const deaths0 = (f.ledger('playerDeaths') ?? []).length;
+    const walked = forkWalkTo(f, keys, stance.pre, opts, allowTeleporter, hits0, deaths0);
+    if (walked.why) return walked;
+    const still = () => Math.abs(f.state.vx ?? 0) < 1e-9 && Math.abs(f.state.vy ?? 0) < 1e-9;
+    const NO_KEYS = new Set();
+    for (let k = 0; k < BODY_FAMILY_KILL.settleBound && !still(); k += 1) {
+        const why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        if (why) return { why: `${why} settling at the stance` };
+    }
+    const w0 = liveWallFlyer(f, id);
+    if (!w0) return { why: `${id} is not live when the stance is reached` };
+    if (w0.vx !== 0 || w0.vy !== 0) return { why: `${id} is in flight when the stance is reached` };
+    const dx = w0.x - f.state.x;
+    const dy = w0.y - f.state.y;
+    const key = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    const toward = { right: RIGHT, left: LEFT, up: UP, down: DOWN }[key];
+    if (f.state.direction !== toward) {
+        let why = forkStep(f, keys, new Set([key]), hits0, deaths0);
+        for (let k = 0; !why && k < BODY_FAMILY_KILL.settleBound && !still(); k += 1) {
+            why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        }
+        if (why) return { why: `${why} on the face tap` };
+        if (f.state.direction !== toward) return { why: `the face tap left the player facing ${f.state.direction}` };
+    }
+    const prior = f.progress('primary');
+    if (kw.slot !== null && prior !== kw.slot) {
+        f.equipNow(kw.slot);
+        equips.push({ i: keys.length, slot: kw.slot });
+    }
+    const PRESS = new Set(['primary']);
+    const slashTimer = () => f.progress('slashInfo')?.state?.slashTimer ?? 0;
+    let presses = 0;
+    let landed = 0;
+    let last = false;
+    let killed = false;
+    for (let k = 0; k < BODY_FAMILY_KILL.fightBound; k += 1) {
+        const w = liveWallFlyer(f, id);
+        if (!w) { killed = true; break; }
+        if (w.vx !== 0 || w.vy !== 0) return { why: `${id} launched at fork tick ${keys.length} (the stance is in its ray)` };
+        const ready = !last && slashTimer() <= 0 && (w.hitsTimer ?? 0) <= 1;
+        const hitsWas = w.hits ?? 0;
+        const why = forkStep(f, keys, ready ? PRESS : NO_KEYS, hits0, deaths0);
+        if (why) return { why: `${why} in the fight` };
+        if (ready) presses += 1;
+        last = ready;
+        const after = (f.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+        if (after && ((after.hits ?? 0) > hitsWas || after.dieAnim || after.destroy || after.removed)) landed += 1;
+        if (presses - landed > BODY_FAMILY_KILL.unanswered) {
+            return { why: `${presses} press(es) with the ${kw.weapon} and ${landed} landed from (${stance.pre.x},${stance.pre.y})` };
+        }
+    }
+    if (!killed && liveWallFlyer(f, id)) {
+        return { why: `${id} alive ${BODY_FAMILY_KILL.fightBound} ticks into the fight (${presses} press(es), ${landed} landed)` };
+    }
+    const gone = () => {
+        const b = (f.wallFlyers?.bodies ?? []).find((x) => x.id === id);
+        return !b || b.removed;
+    };
+    for (let k = 0; k < BODY_FAMILY_KILL.removalBound && !gone(); k += 1) {
+        const why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        if (why) return { why: `${why} waiting out the death` };
+    }
+    if (!gone()) return { why: `${id} died and is not removed ${BODY_FAMILY_KILL.removalBound} ticks on` };
+    if (kw.slot !== null && prior !== kw.slot) {
+        f.equipNow(prior);
+        equips.push({ i: keys.length, slot: prior });
+    }
+    return { ok: true, presses };
+}
+
+/**
+ * The drill kill from `stance`, played on fork `f` by DRILLKILL's executor (its walk the fork's own). `{ok, record}`
+ * or `{why}`.
+ */
+function playDrillKill(f, keys, equips, id, kw, stance, opts, allowTeleporter, what) {
+    const hits0 = (f.ledger('playerHits') ?? []).length;
+    const deaths0 = (f.ledger('playerDeaths') ?? []).length;
+    const ctx = {
+        what, goal: null,
+        walkTo: (_goal, to) => {
+            const walked = forkWalkTo(f, keys, to, opts, allowTeleporter, hits0, deaths0);
+            if (walked.why) throw new SolverRefusal(walked.why, {});
+        },
+        equip: (slot) => { f.equipNow(slot); equips.push({ i: keys.length, slot }); },
+    };
+    try {
+        const record = execDrillKill(f, keys, id, kw, stance, ctx);
+        if ((f.ledger('playerDeaths') ?? []).length !== deaths0) return { why: 'a death on the kill' };
+        return { ok: true, record };
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { why: String(e.message).split('\n')[0].replace(`${what} -> drill kill ${id}: `, '').slice(0, 240) };
+    }
+}
+
+/**
+ * THE ARMS, asked by the kill rung after its own arms refused (see `WALLFLYER_KILL_ARM`). Null when neither switch is
+ * on or no source of `hit` is a live body of an enabled family — the rung is then word for word the BEFORE one.
+ * Otherwise `{record}` (the body removed on the live run, its ticks on `perTick`) or `{why}` (no tick spent).
+ */
+function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allowTeleporter, what }) {
+    const targets = [];
+    for (const sx of hit?.sources ?? []) {
+        const id = sx.id;
+        if (!id || targets.some((t) => t.id === id)) continue;
+        if (WALLFLYER_KILL_ARM.enabled && liveWallFlyer(run, id)) targets.push({ id, family: 'wallflyer' });
+        else if (DRILL_KILL_ARM.enabled && liveDrills(run).some((d) => d.id === id)) targets.push({ id, family: 'drill' });
+    }
+    if (targets.length === 0) return null;
+    BODY_FAMILY_KILL_COUNTS.asked += 1;
+    const whys = [];
+    const kw = drillKillWeapon(run);
+    if (!kw) {
+        const why = `${targets.map((t) => t.id).join(', ')}: the run holds no sword or spear, and Fire kills neither a `
+            + 'wallflyer nor a drill';
+        BODY_FAMILY_KILL_COUNTS.refused.push({ t: perTick.length, why });
+        return { why: `body-family arm: ${why}` };
+    }
+    if (typeof fork !== 'function') return { why: 'body-family arm: no fork to try the kill on (the solve has no `forkRun`)' };
+    const opts = solverPlanOpts(run, contacts);
+    let forks = 0;
+    for (const t of targets) {
+        const body = t.family === 'wallflyer' ? liveWallFlyer(run, t.id) : liveDrills(run).find((d) => d.id === t.id);
+        if (t.family === 'wallflyer' && (body.vx !== 0 || body.vy !== 0)) { whys.push(`${t.id}: in flight now`); continue; }
+        const st = t.family === 'wallflyer' ? { ok: wallFlyerKillStances(run, body, opts, allowTeleporter), whys: [] }
+            : drillKillStances(run, body, opts);
+        if (st.ok.length === 0) {
+            whys.push(`${t.id}: no stance${st.whys.length ? ` — ${st.whys.join(' | ')}` : ' plans on its ring'}`);
+            continue;
+        }
+        const tried = [];
+        for (const stance of st.ok) {
+            if (forks >= BODY_FAMILY_KILL.maxForks) { tried.push(`the ${BODY_FAMILY_KILL.maxForks}-fork bound`); break; }
+            const f = fork();
+            forks += 1;
+            const keys = [];
+            const equips = [];
+            const out = t.family === 'wallflyer'
+                ? playWallFlyerKill(f, keys, equips, t.id, kw, stance, opts, allowTeleporter)
+                : playDrillKill(f, keys, equips, t.id, kw, stance, opts, allowTeleporter, what);
+            const at = `(${stance.pre.x},${stance.pre.y})`;
+            if (!out.ok) { tried.push(`${at}: ${out.why}`); continue; }
+            // ── the live replay, key for key, the slot selections at the index they preceded ──
+            const from = perTick.length;
+            const hits0 = (run.ledger('playerHits') ?? []).length;
+            let e = 0;
+            for (let i = 0; i < keys.length; i += 1) {
+                while (e < equips.length && equips[e].i === i) { equip(equips[e].slot); e += 1; }
+                perTick.push(keys[i]);
+                run.advance(keys[i]);
+            }
+            while (e < equips.length) { equip(equips[e].slot); e += 1; }
+            const removed = t.family === 'wallflyer' ? !liveWallFlyer(run, t.id)
+                : !(run.entities('drillBodies') ?? []).some((d) => d.id === t.id && !d.removed);
+            if (!removed || (run.ledger('playerHits') ?? []).length !== hits0) {
+                fail(`${what}: the fork's ${t.family} kill of ${t.id} from ${at} (${keys.length} t) did not replay on the `
+                    + `live run — ${removed ? 'a player hit' : 'the body stands'} (the fork is not this run).`);
+            }
+            const record = { kind: 'kill', arm: t.family, target: t.id, stance: { ...stance.pre }, from,
+                ticks: keys.length, forks, ...(out.presses !== undefined ? { presses: out.presses } : {}),
+                ...(out.record ? { drill: out.record } : {}) };
+            BODY_FAMILY_KILL_COUNTS.kills.push({ id: t.id, family: t.family, t: from, ticks: keys.length, forks });
+            return { record };
+        }
+        whys.push(`${t.id}: ${tried.slice(0, 4).join(' | ')}${tried.length > 4 ? ` (+${tried.length - 4} more)` : ''}`);
+    }
+    const why = `body-family arm: no hitless kill (${forks} fork(s)) — ${whys.join(' || ')}`;
+    BODY_FAMILY_KILL_COUNTS.refused.push({ t: perTick.length, why });
+    return { why };
+}
+
+/**
  * ⛓⛓ fidelity TIMEDPASS (wave 27) — A WALK PAST A HOPPING DRILL THE RUN CANNOT KILL (`CONTACT_FIDELITY.drillTimedPass`,
  * OFF).
  *
@@ -31645,6 +31950,18 @@ function solveSegmentUnder({
                 }
             }
             if (!killWhy) killWhy = kill.why;
+        }
+        // ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL (`WALLFLYER_KILL_ARM` / `DRILL_KILL_ARM`, OFF: not asked) — a live
+        // wallflyer or drill among the hit's sources, killed on a fork and replayed (`bodyFamilyKillOnLadder`).
+        if ((WALLFLYER_KILL_ARM.enabled || DRILL_KILL_ARM.enabled)
+            && !(ACTIVE_DISABLE !== null && ACTIVE_DISABLE.rungs.has('kill'))) {
+            const fam = bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allowTeleporter, what });
+            if (fam?.record) {
+                rowFor('kill', refused, { arm: fam.record.arm, target: fam.record.target, stance: fam.record.stance });
+                records.push({ goal: goal.kind, strategy: 'kill', ...fam.record });
+                return { escalations };
+            }
+            if (fam?.why) killWhy = `${killWhy}\n         ${fam.why}`;
         }
         rowFor('kill', refused);
         /**
