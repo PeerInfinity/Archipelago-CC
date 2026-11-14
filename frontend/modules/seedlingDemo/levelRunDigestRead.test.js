@@ -162,3 +162,35 @@ describe('fidelity DIGESTREAD D3 — the page\'s G3c read pattern, every tick fo
         expect(read.state).toEqual(quiet.state);
     });
 });
+
+/**
+ * ⛓ seedling-fidelity-wallflyerbodies — THE WALLFLYER ROOMS. `LEVELS` above holds none of L22/L25/L27, so the new
+ * `wallFlyerBodies` getter (read there only as an empty room) is read here in each room that holds the class.
+ * `wallFlyerStateFor` STORES its build on first read (it has no `keptUnlessReading`), as the `wallFlyers` getter's
+ * read always has; the map is `DIGEST_EXEMPT` (`levelRunStateDigest.test.js`), so the read moves no part — measured
+ * here alone on a fresh boot, before and after the first tick, for the getter, the query, and the debug getter.
+ */
+describe('fidelity DIGESTREAD — wallFlyerBodies in the rooms that hold wallflyers', () => {
+    for (const n of [22, 25, 27]) {
+        it(`L${n}: reading wallFlyerBodies (getter, query) or wallFlyers moves no part, before and after a tick`, () => {
+            const moved = {};
+            for (const ticks of [0, 1]) {
+                for (const g of ['wallFlyerBodies', 'wallFlyers']) {
+                    const run = boot(n);
+                    for (let i = 0; i < ticks; i += 1) run.advance(new Set());
+                    const m = digestMovesOnRead(run, [g]);
+                    if (Object.keys(m).length > 0) moved[`${ticks}:${g}`] = m[g];
+                }
+                const run = boot(n);
+                for (let i = 0; i < ticks; i += 1) run.advance(new Set());
+                const before = run.stateDigest({ parts: true });
+                const bodies = run.entities('wallFlyerBodies');
+                const after = run.stateDigest({ parts: true });
+                expect(bodies.length, `L${n} holds wallflyers`).toBeGreaterThan(0);
+                const parts = Object.keys(after.parts).filter((k) => after.parts[k] !== before.parts[k]);
+                if (parts.length > 0 || after.digest !== before.digest) moved[`${ticks}:entities`] = parts;
+            }
+            expect(moved).toEqual({});
+        });
+    }
+});
