@@ -1,0 +1,31 @@
+L38 from (144,16) tile 9,1 reaches 71 tiles; opened=[] swim=false
+  0 #########R#########
+  1 ###RRRRRRRRRRRRR###
+  2 #RRRR#RRRRRR#RRRRR#
+  3 #RRRRRRRRRRRRRRRRR#
+  4 #RRRRRRRRRRRRRRRRR#
+  5 #######RRRRR#######
+  6 ########RRR########
+  7 ###################
+  8 #########.#########
+  9 #########.#########
+ 10 #########.#########
+ 11 #########.#########
+ 12 #####.###.#########
+ 13 #########.#########
+ 14 #######......#.####
+ 15 ###.............###
+ 16 ###.............###
+ 17 ###.............###
+ 18 ####...........####
+ 19 #########.#########
+not      teleporter@144,304 (9,19) {"to":"37","playerx":"288","playery":"16","show":"0","tag":"-1","invert":"0","sign":"0"}
+REACHED  teleporter@144,0 (9,0) {"to":"39","playerx":"144","playery":"608","show":"0","tag":"-1","invert":"0","sign":"0"}
+REACHED  apitem@144,112 (9,7) {"tag":"1","look":"chest"}
+REACHED  cover@144,112 (9,7) {"tset":"0"}
+not      buttonroom@208,224 (13,14) {"tset":"1","tag":"3","flip":"0","room":"-1"}
+not      button@80,192 (5,12) {"tset":"0"}
+REACHED  buttonroom@32,48 (2,3) {"tset":"8","tag":"4","flip":"1","room":"39"}
+not      cover@208,224 (13,14) {"tset":"2"}
+not      buttonroom@144,128 (9,8) {"tset":"2","tag":"0","flip":"0","room":"-1"}
+not      buttonroom@144,288 (9,18) {"tset":"4","tag":"5","flip":"1","room":"37"}
