@@ -48,6 +48,9 @@
 import { RESTART_WARP } from '../procgenCore/restartWarp.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import {
+    drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLocationTiles,
+} from './seedlingCompositeMap.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { GENERATION_COST } from '../procgenCore/substratePredicates.js';
@@ -535,6 +538,21 @@ export const substrateRegistryEntry = Object.freeze({
     }),
 
     /** A generated room's exits are SIDES — labels; the door stands where the flood put it. */
+    /**
+     * ⛓⛓⛓ region-map step 1 — **THE COMPOSITE-MAP DECLARATION** (⚖ user 2026-09-04: *"each substrate declares
+     * whether it supports map rendering … I don't want to hardcode support for map rendering for specific
+     * substrates."*). `drawRegion` paints the region's level as the JS Seedling renderer draws it
+     * (`seedlingCompositeMap.js`: a cached bake; the generic box until it lands, then the host's `requestRedraw`).
+     * `artwork: true` puts it behind the renderer's "Substrate art" switch (`substrateArt: false` → the generic box).
+     * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3).
+     * ⛔ DATA: this file stays `loadable: true` in the generated matrix — nothing here touches a DOM at load.
+     */
+    compositeMap: Object.freeze({
+        drawRegion: drawSeedlingCompositeRegion,
+        artwork: true,
+        locationTiles: (region, ctx = {}) => seedlingLocationTiles(region, ctx),
+        displayRegionOf: seedlingDisplayRegionOf,
+    }),
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
     /**

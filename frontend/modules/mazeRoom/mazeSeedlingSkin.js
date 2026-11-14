@@ -18,23 +18,26 @@
  *
  * Split like the renderer: `seedlingSkinFor` / `staticOps` are pure and pinned in node (`mazeSeedlingSkin.test.js`);
  * `loadSeedlingArt` and `bakeSeedlingLayer` are the browser half.
+ *
+ * ⛓ region-map step 1 (D1): the LEVEL half — the record cache, the static draw list, the art load and the bake — now
+ * lives in `seedlingDemo/seedlingLevelBake.js`, which the composite map's Seedling cell reads too. What stays here is
+ * the MAZE half: the size check against the maze world, the census of what the maze draws itself (passed to the
+ * baker as `excluded`) and the edited tiles painted in the maze's own palette. `staticOps`, `levelWorldFor`,
+ * `loadSeedlingArt` and `bakeSeedlingLayer` keep their signatures and their output byte for byte.
  */
-import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
-import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
-import { buildLevelWorld } from '../seedlingDemo/levelWorld.js';
-import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
-import { TILE, paintOps, roomOps, shownTeleporters, teleporterArtFilter } from '../seedlingDemo/seedlingSkinRenderer.js';
-import { puzzleOps } from '../seedlingDemo/seedlingPuzzleSkin.js';
+import { TILE, paintOps } from '../seedlingDemo/seedlingSkinRenderer.js';
+import {
+    SEEDLING_BACKGROUND, SEEDLING_GRAPHICS_STACK, _resetSeedlingArtForTests, bakeLevel, levelRecordFor,
+    levelStaticOps, levelWorldFor as bakeLevelWorldFor, loadSeedlingArt,
+} from '../seedlingDemo/seedlingLevelBake.js';
 import { TILE_WALL, posKey } from './mazeRoomEngine.js';
 import { COLORS } from './mazeRoomRender.js';
 import { censusEntityIds, seedlingCensus } from './mazeSeedlingSprites.js';
 
-/** The `packs.json` graphics stack (⚖ ruling 1). */
-export const SEEDLING_GRAPHICS_STACK = 'graphics.seedling';
+/** The `packs.json` graphics stack (⚖ ruling 1) and the baked room's background — the baker's, re-exported. */
+export { SEEDLING_BACKGROUND, SEEDLING_GRAPHICS_STACK };
 /** ⚖ ruling 3: a cell is 32 px when the art is on (2× the 16 px tile, smoothing off). */
 export const SEEDLING_CELL_PX = 32;
-/** What the baked room is cleared to before the tiles (the JS page's own background). */
-export const SEEDLING_BACKGROUND = '#101014';
 
 /**
  * ⚖ RULING 1, PURE: `{ level }` when `world` is a Seedling-atlas maze world, else null. `regionAtlas` is the loaded
@@ -54,21 +57,14 @@ export function seedlingSkinFor(world, regionAtlas) {
  * — the ones the preset's grid was analysed on. Throws by name when the map has no such level, or when its size is
  * not the maze world's (a world whose cells are not the level's tiles must not be painted as if they were).
  */
-const levelWorlds = new WeakMap();
 export function levelWorldFor(mapDoc, level, mazeWorld = null) {
-    if (!levelWorlds.has(mapDoc)) {
-        const patched = patchedMapDocument(mapDoc);
-        levelWorlds.set(mapDoc, { byLevel: new Map((patched.levels ?? []).map((r) => [r.level, r])), worlds: new Map() });
-    }
-    const slot = levelWorlds.get(mapDoc);
-    const record = slot.byLevel.get(level);
-    if (!record) throw new Error(`mazeSeedlingSkin: the map has no level ${level} (it has ${slot.byLevel.size})`);
+    const { record, size } = levelRecordFor(mapDoc, level);
+    if (!record) throw new Error(`mazeSeedlingSkin: the map has no level ${level} (it has ${size})`);
     if (mazeWorld && (record.width !== mazeWorld.width || record.height !== mazeWorld.height)) {
         throw new Error(`mazeSeedlingSkin: level ${level} is ${record.width}×${record.height} tiles but the maze world `
             + `is ${mazeWorld.width}×${mazeWorld.height} cells — its cells are not the level's tiles`);
     }
-    if (!slot.worlds.has(level)) slot.worlds.set(level, buildLevelWorld(record));
-    return { record, world: slot.worlds.get(level) };
+    return bakeLevelWorldFor(mapDoc, level);
 }
 
 /** The cells the maze draws a marker of its own on (an object there is the maze's to show, not the room's). */
@@ -121,54 +117,14 @@ export function seedlingLayerKey(mazeWorld, level, baseTiles = null) {
  * `puzzleSkinView` reads them; no block, no trap: those are the maze's).
  */
 export function staticOps(levelWorld, art, { level, record, mazeWorld, census = seedlingCensus(mazeWorld, record) }) {
-    const drawn = censusEntityIds(census);
-    return roomOps(levelWorld, art, {
-        level,
-        tick: 0,
-        drawnPickups: () => true,
-        drawnTeleporters: teleporterArtFilter(record),
-        shownTeleporter: shownTeleporters(record),
-        drawnObjects: (o) => drawn.has(`${o.tag}@${o.x},${o.y}`),
-        entitySprites: stairsOps(record, art),
-    });
-}
-
-/** `seedlingPuzzleSkin`'s `STAIRS` and its view's stairs rows (`puzzleSkinView`), from the record alone. */
-const STAIRS = Object.freeze({ stairsup: true, stairsdown: false });
-function stairsOps(record, art) {
-    if (!art) return null;
-    const stairs = (record?.entities ?? []).filter((e) => e.type in STAIRS).map((e) => ({
-        x: Number(e.x), y: Number(e.y), up: STAIRS[e.type], flip: Boolean(Number(e.attrs?.flip ?? 0)),
-    }));
-    return puzzleOps({ stairs, blocks: [], traps: [], gameTime: 0 }, art, { skin: { bodies: new Map() } });
+    return levelStaticOps(levelWorld, art, { level, record, excluded: censusEntityIds(census) });
 }
 
 /**
- * ⛓ The art, loaded ONCE per page (a module-level promise; a failure is kept and re-thrown by name, never retried
- * in a loop). Recomposed from `contentPacks` + `artLibrary` — ⛔ not `jsRuntimePage.loadGraphicsStack`, which would
- * pull the whole JS page in. Resolves `{ art, images, failed }`.
+ * ⛓ The art, loaded ONCE per page — `seedlingDemo/seedlingLevelBake.loadSeedlingArt`, re-exported (D1 option 2: the
+ * loader moved beside the baker, so the composite map's painter shares this one load without importing `mazeRoom/`).
  */
-let artPromise = null;
-export function loadSeedlingArt({ win = globalThis, base = packsBaseUrl() } = {}) {
-    if (artPromise) return artPromise;
-    const readJson = async (url) => {
-        const r = await win.fetch(url, { cache: 'no-store' });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-    };
-    artPromise = (async () => {
-        const registry = parseRegistry(await readJson(new URL('packs.json', base).href));
-        const name = SEEDLING_GRAPHICS_STACK.slice('graphics.'.length);
-        const ids = registry.stacks[name];
-        if (!ids) throw new Error(`no graphics stack "${name}" in packs.json`);
-        const stack = await loadPackStack(ids, { base, readJson, only: ['art'] });
-        const art = createArtLibrary(stack);
-        const { images, failed } = await loadSheetImages(art, browserDecoder(win));
-        const credit = stack.map((l) => l.pack?.credit).filter(Boolean).join(' · ');
-        return { art, images, failed, credit };
-    })();
-    return artPromise;
-}
+export { loadSeedlingArt };
 
 /**
  * The live sprites' painter for a canvas of `mazeWorld` at `cellPx` per cell: `(ctx, ops) => counts`, the ops in
@@ -179,8 +135,8 @@ export function spritePainter({ canvas, mazeWorld, images, tinted = null }) {
     return (ctx, ops) => paintOps(ctx, ops, images, view, canvas, { tinted });
 }
 
-/** Test-only: forget the loaded art. */
-export function _resetSeedlingArtForTests() { artPromise = null; }
+/** Test-only: forget the loaded art (the baker's own reset, re-exported). */
+export { _resetSeedlingArtForTests };
 
 /**
  * Paint the static room once onto a canvas `newCanvas(w, h)` makes, `cellPx` per maze cell. Returns
@@ -192,17 +148,15 @@ export function bakeSeedlingLayer({
 }) {
     const { record, world } = levelWorldFor(mapDoc, level, mazeWorld);
     const census = seedlingCensus(mazeWorld, record);
-    const ops = staticOps(world, art, { level, record, mazeWorld, census });
-    const canvas = newCanvas(mazeWorld.width * cellPx, mazeWorld.height * cellPx);
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = SEEDLING_BACKGROUND;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const view = { x: 0, y: 0, w: world.world.width, h: world.world.height };
-    const counts = paintOps(ctx, ops, images, view, canvas);
+    // ⛓ the record's size IS the maze world's (`levelWorldFor` refused otherwise), so the baker's canvas is the
+    //   `mazeWorld.width * cellPx` one this function always made.
+    const { canvas, ctx, counts, ops } = bakeLevel({
+        newCanvas, record, world, level, art, images, cellPx, excluded: censusEntityIds(census),
+    });
     const edits = editedTiles(mazeWorld, baseTiles);
     for (const t of edits) {
         ctx.fillStyle = t.wall ? COLORS.wall : COLORS.floor;
         ctx.fillRect(t.x * cellPx, t.y * cellPx, cellPx, cellPx);
     }
-    return { canvas, counts, ops: ops.length, edits: edits.length, census };
+    return { canvas, counts, ops, edits: edits.length, census };
 }
