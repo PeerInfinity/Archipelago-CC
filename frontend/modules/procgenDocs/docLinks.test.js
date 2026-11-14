@@ -351,15 +351,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              manifest, its worked example (`repo` 43 → 44).
          *   412 → 413  hammer PANEL-ROUTE (2026-11-12): seedling-bot.md's solve-progress line →
          *              seedling-solve-progress.md § 7 (the route stamp) (`doc` 309 → 310).
+         *   415 → 416  content sets S1 (2026-11-14): text-adventure.md's payload `things` field → its own
+         *              § Things that are not AP checks (`same-doc` 38 → 39).
          */
         expect(by).toEqual({
-            'same-doc': 38,
+            'same-doc': 39,
             doc: 311,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(415);
+        expect(CORPUS.length).toBe(416);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
