@@ -93,6 +93,43 @@
       "kind": "place",
       "name": "The Spot",
       "description": "The seed picked this spot for a room. It had to put one somewhere."
+    },
+    "meta:character/narrator": {
+      "kind": "character",
+      "name": "Narrator",
+      "description": "The voice that tells you where you are. It reads its lines from the world document.",
+      "text": {
+        "says": "meta:character/narrator/says"
+      }
+    },
+    "meta:character/placeholder": {
+      "kind": "character",
+      "name": "Placeholder",
+      "description": "It stands in a spot the theme set aside for a character.",
+      "text": {
+        "says": "meta:character/placeholder/says"
+      }
+    },
+    "meta:info/checks": {
+      "kind": "info",
+      "name": "On checks",
+      "text": {
+        "body": "meta:info/checks/body"
+      }
+    },
+    "meta:info/exits": {
+      "kind": "info",
+      "name": "On exits",
+      "text": {
+        "body": "meta:info/exits/body"
+      }
+    },
+    "meta:info/rooms": {
+      "kind": "info",
+      "name": "On rooms",
+      "text": {
+        "body": "meta:info/rooms/body"
+      }
     }
   }
 }
