@@ -1,0 +1,4 @@
+{"reachableCentres":3472,"xMax":102,"xMin":34,"yMin":34,"yMax":125,"reachesLowerFloor":false}
+{"runner":"lavarunner@160,32","centre":[168,40],"nearest":[94,40],"distance":74,"wakes":true}
+{"runner":"lavarunner@176,64","centre":[184,72],"nearest":[102,82],"distance":82.61,"wakes":false}
+{"runner":"lavarunner@192,64","centre":[200,72],"nearest":[102,82],"distance":98.51,"wakes":false}
