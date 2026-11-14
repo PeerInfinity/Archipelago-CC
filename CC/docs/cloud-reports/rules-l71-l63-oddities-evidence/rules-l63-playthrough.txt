@@ -1,0 +1,26 @@
+== level_63__r0c1
+  exit -> level_63__r10c2 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+  exit -> level_63__r6c9 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+  exit -> level_61__r0c10 : {"rule":"True_"}
+  exit -> level_61__r0c7 : {"rule":"True_"}
+  exit -> level_62 : {"rule":"True_"}
+  exit -> level_62 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 1: lightpole@64,88 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  loc L62 flag 0: lightpole@120,200 cleared : {"rule":"True_"}
+== level_63__r5c14
+  exit -> level_63__r6c15 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  exit -> level_63__r6c9 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  loc Level 063 - Chest : {"rule":"True_"}
+== level_63__r6c9
+  exit -> level_63__r0c1 : {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"L63 flag 1: lightpole@64,88 cleared"}}]}
+  exit -> level_63__r5c14 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  exit -> level_63__r6c15 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  exit -> level_65__r0c8 : {"rule":"And","children":[{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 7: lightpole@112,272 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L65 flag 0: lightpole@128,168 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  loc L63 flag 7: lightpole@112,272 cleared : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+== level_63__r6c15
+  exit -> level_63__r5c14 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  exit -> level_63__r6c9 : {"rule":"Has","args":{"item_name":"Dark Suit"}}
+== level_63__r10c2
+  exit -> level_63__r0c1 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+  exit -> level_61__r13c12 : {"rule":"True_"}
+  exit -> level_65__r0c2 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 6: lightpole@48,272 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  loc L63 flag 6: lightpole@48,272 cleared : {"rule":"Has","args":{"item_name":"Ghost Spear"}}

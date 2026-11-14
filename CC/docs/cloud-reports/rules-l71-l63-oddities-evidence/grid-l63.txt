@@ -1,0 +1,50 @@
+L63 keys: level,class,path,width,height,layers,entities  size 20x20; layers tiles
+-- layer tiles (glyph = tile type in base36, . = none)
+    01234567890123456789
+  0 RQ66S666666666666666
+  1 RQQ6S666611111666666
+  2 RQQ6S666611111666666
+  3 QQQ6S6666RPPPR666666
+  4 R6Q6SS6RRRPPPR666666
+  5 66S6RQRRSR666RQ66666
+  6 SSS6QSSS6SSQQRHQ6666
+  7 66SQSRRS6SRQSHHQ6666
+  8 66S6666SSSRQQHQQ6666
+  9 66T666666RRSQRR66666
+ 10 66S6666666RQ6R666666
+ 11 66U6R666666S66666666
+ 12 66U6QQR6666U66666666
+ 13 SSS6QQR6666U66666666
+ 14 66S66666666S66666666
+ 15 66SS666SSSSS66666666
+ 16 66SS666SS66666666666
+ 17 66S66666S66666666666
+ 18 66S66666S66666666666
+ 19 66S66666S66666666666
+ent teleporter@0,48 cell 0,3 {"to":"61","playerx":"208","playery":"48","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent teleporter@0,96 cell 0,6 {"to":"61","playerx":"208","playery":"96","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent teleporter@16,0 cell 1,0 {"to":"62","playerx":"192","playery":"288","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent teleporter@64,0 cell 4,0 {"to":"62","playerx":"240","playery":"288","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent droplet@0,0 cell 0,0 {"heaviness":"100","startheight":"48","color":"0x882266","width":"-1","height":"-1"}
+ent lightalpha@0,16 cell 0,1 {"alpha":"0.05"}
+ent bonetorch2@16,32 cell 1,2 {"c":"0xFFCC00","flip":"0"}
+ent pushableblockspear@112,96 cell 7,6 {}
+ent spinningaxe@128,80 cell 8,5 {"rate":"5","colortype":"0"}
+ent planttorch@224,128 cell 14,8 {"c":"0xFFFF44","flip":"0","distance":"100"}
+ent jellyfish@160,64 cell 10,4 {}
+ent jellyfish@192,56 cell 12,3 {}
+ent grenade@128,128 cell 8,8 {}
+ent chest@224,80 cell 14,5 {"tag":"5"}
+ent darktrap@64,96 cell 4,6 {"tag":"8"}
+ent lightpole@64,88 cell 4,5 {"c":"0xFFFF44","tset":"-1","tag":"1","invert":"0"}
+ent orb@184,96 cell 11,6 {"c":"0x0000FF"}
+ent darktrap@80,64 cell 5,4 {"tag":"2"}
+ent darktrap@32,272 cell 2,17 {"tag":"3"}
+ent darktrap@128,272 cell 8,17 {"tag":"4"}
+ent lightpole@48,272 cell 3,17 {"c":"0xFFFF44","tset":"-1","tag":"6","invert":"0"}
+ent lightpole@112,272 cell 7,17 {"c":"0xFFFF44","tset":"-1","tag":"7","invert":"0"}
+ent teleporter@0,208 cell 0,13 {"to":"61","playerx":"208","playery":"208","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent planttorch@64,208 cell 4,13 {"c":"0xFFFF44","flip":"1","distance":"160"}
+ent teleporter@32,304 cell 2,19 {"to":"65","playerx":"32","playery":"16","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent teleporter@128,304 cell 8,19 {"to":"65","playerx":"128","playery":"16","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent buttonroom@32,64 cell 2,4 {"tset":"0","tag":"0","flip":"1","room":"62"}

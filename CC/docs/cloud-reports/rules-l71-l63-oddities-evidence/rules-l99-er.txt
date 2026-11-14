@@ -1,0 +1,6 @@
+== level_99__r2c4
+  exit -> level_99__r2c7 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  exit -> level_11 : {"rule":"True_"}
+== level_99__r2c7
+  exit -> level_99__r2c4 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  exit -> level_16__r1c1 : {"rule":"True_"}

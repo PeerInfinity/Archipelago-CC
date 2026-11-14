@@ -1,0 +1,44 @@
+CHANNEL: headless logic-only (no wasm: a node measurement of the maze certifier)
+BUILT: 115 levels, 267 regions, 1992544 B in 13691 ms
+PERMISSIVE: 1 — level_66/out_teleporter_72_64
+ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 16 accepted / 0 threw; 100 row(s) skip unadmitted landing points; clean 114/115 levels; 764 lines; wall 43845 ms
+  PROBLEM[new] level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+  ACCEPTED[new] {"label":"level_0__r2c13 → level_0__r1c6","source":"level_0__r2c13","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r0c9","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
+  ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r2c11","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
+  ACCEPTED[new] {"label":"level_57 @ Level 057 - Tentacled Beast","source":"level_57","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  PROBLEM[new] level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  SKIPPED[unadmitted][new] level_62 → level_63__r0c1 (landing 7,5): 8 of 32 points
+  SKIPPED[unadmitted][new] level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1): 24 of 768 points
+  SKIPPED[unadmitted][new] level_63__r0c1 → level_61__r0c10 (landing 4,1): 24 of 768 points
+  SKIPPED[unadmitted][new] level_63__r0c1 → level_61__r0c7 (landing 4,1): 24 of 768 points
+  SKIPPED[unadmitted][new] level_63__r0c1 → level_62 (landing 4,1): 24 of 768 points
+  SKIPPED[own event][new] level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r10c2 → level_61__r13c12 (landing 2,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r10c2 → level_65__r0c2 (landing 2,18): 192 of 768 points
+  SKIPPED[own event][new] level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18): 192 of 768 points
+  SKIPPED[unadmitted][new] level_63__r6c9 → level_65__r0c8 (landing 8,18): 192 of 768 points

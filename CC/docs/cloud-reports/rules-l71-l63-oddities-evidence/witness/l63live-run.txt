@@ -1,0 +1,30 @@
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+  A-spear-only t1 boot PushableBlockSpear(112,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) cleared[] @(152.0,104.0) L63
+  A-spear-only t53 thrust W from (9,6): PushableBlockSpear(96,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) @(150.3,104.0) L63
+  A-spear-only t100 at (7,8) @(120.4,140.8) L63
+  A-spear-only t128 north up column 7 (stops at the block or enters (7,6)) @(117.3,103.5) L63
+  A-spear-only t180 thrust W from column 7: PushableBlockSpear(80,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) @(115.3,101.7) L63
+  A-spear-only t191 west into (6,6) @(103.3,101.7) L63
+  A-spear-only t255 thrust W hugging north wall: PushableBlockSpear(80,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) cleared[] @(101.5,98.0) L63
+  A-spear-only t337 thrust W again: PushableBlockSpear(80,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) cleared[] @(99.8,98.0) L63
+  A-spear-only t431 thrust W hugging south wall: PushableBlockSpear(80,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) cleared[] @(98.1,109.0) L63
+  A-spear-only t911 west toward (4,6) @(98.1,109.0) L63
+  A-spear-only t1271 south toward (4,7) @(98.1,109.0) L63
+  A-spear-only t1751 west toward (3,7) = r0c1 @(98.1,109.0) L63
+  A-spear-only t1781 settle @(98.1,109.0) L63
+ROW {"arm":"A-spear-only","persistence":[],"noDamage":true,"ticks":1781,"end":{"level":63,"x":98.06,"y":108.96,"cell":[6,6]},"minX":98.06,"cleared":"","ents":"PushableBlockSpear(80,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104)"}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+  B-control-flag1 t1 boot PushableBlockSpear(112,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) cleared[63:1] @(152.0,104.0) L63
+  B-control-flag1 t53 thrust W from (9,6): PushableBlockSpear(96,96) DarkTrap(136,280) DarkTrap(40,280) DarkTrap(88,72) DarkTrap(72,104) @(150.3,104.0) L63
+  B-control-flag1 t102 at (7,8) @(119.3,138.9) L63
+  B-control-flag1 t131 north up column 7 (stops at the block or enters (7,6)) @(120.4,104.2) L63
+  B-control-flag1 t183 thrust W from column 7: PushableBlockSpear(80,96) DarkTrap(136,280) DarkTrap(40,280) @(118.6,104.9) L63
+  B-control-flag1 t193 west into (6,6) @(104.7,104.9) L63
+  B-control-flag1 t257 thrust W hugging north wall: PushableBlockSpear(64,96) DarkTrap(136,280) DarkTrap(40,280) cleared[63:1] @(97.9,98.0) L63
+  B-control-flag1 t339 thrust W again: DarkTrap(136,280) DarkTrap(40,280) cleared[63:1] @(96.2,98.0) L63
+  B-control-flag1 t433 thrust W hugging south wall: DarkTrap(136,280) DarkTrap(40,280) cleared[63:1] @(94.0,109.0) L63
+  B-control-flag1 t449 west toward (4,6) @(72.0,109.0) L63
+  B-control-flag1 t457 south toward (4,7) @(68.1,120.7) L63
+  B-control-flag1 t466 west toward (3,7) = r0c1 @(56.2,123.4) L63
+  B-control-flag1 t496 settle @(55.2,123.4) L63
+ROW {"arm":"B-control-flag1","persistence":[{"level":63,"tag":1}],"noDamage":true,"ticks":496,"end":{"level":63,"x":55.25,"y":123.37,"cell":[3,7]},"minX":55.25,"cleared":"63:1","ents":"DarkTrap(136,280) DarkTrap(40,280)"}

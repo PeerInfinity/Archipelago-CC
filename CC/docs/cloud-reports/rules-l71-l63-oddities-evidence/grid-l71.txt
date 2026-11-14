@@ -1,0 +1,45 @@
+L71 keys: level,class,path,width,height,layers,entities,tiles_outside_level  size 20x20; layers tiles
+-- layer tiles (glyph = tile type in base36, . = none)
+    01234567890123456789
+  0 HHHHHHGHHHHHHFHHHHHH
+  1 HHHHHHGGHHHHHFFHHHHH
+  2 HHHHHGGGGHHHFFHHHHHH
+  3 HHHHHGGHHHHHHFHHHHHH
+  4 HHHHGGGHHHHHHHHHHHHF
+  5 HHHGGFGGHHHHHHFHHHFF
+  6 HHFGFFGGGGHHGGFFGGGG
+  7 HHGGGGGGGGGGGGGFGGGF
+  8 FFG5GGGGFFGGGGGFFGGH
+  9 FGGGGFFGGGGGFFGFFGHH
+ 10 FFGFFFFGFGHHFFGFGGHH
+ 11 HFFFFFFGFHHHFFGGGGGH
+ 12 HFFGGGFGFFHFFFHGGGGH
+ 13 HFF5GGF5GFHF6FHHFGHH
+ 14 FFFGGGF5GFHFGGHHGGHH
+ 15 FGFFFFF55FHHHHHHGVFF
+ 16 FGGFFFGGFFGHHHHHGGGG
+ 17 FGGGGGGGFG5VVVHGVGFF
+ 18 FGFFFFGFFGGVVGGGGGHH
+ 19 FGFFHHFFFFHHHFGFFHHH
+ent lightalpha@0,0 cell 0,0 {"alpha":"0.1"}
+ent torch@80,176 cell 5,11 {"c":"0xFFCC00"}
+ent torch@64,240 cell 4,15 {"c":"0xFFCC00"}
+ent dungeonspire@48,128 cell 3,8 {}
+ent teleporter@16,304 cell 1,19 {"to":"85","playerx":"80","playery":"16","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent lavarunner@64,224 cell 4,14 {}
+ent lavarunner@64,192 cell 4,12 {}
+ent lavarunner@72,208 cell 4,13 {}
+ent lavarunner@48,200 cell 3,12 {}
+ent lavarunner@80,224 cell 5,14 {}
+ent lock@112,192 cell 7,12 {"tset":"-1","tag":"0"}
+ent chest@160,256 cell 10,16 {"tag":"1"}
+ent spinningaxe@256,144 cell 16,9 {"rate":"7","colortype":"1"}
+ent orb@264,152 cell 16,9 {"c":"0xFF8800"}
+ent teleporter@304,96 cell 19,6 {"to":"72","playerx":"16","playery":"256","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent teleporter@96,0 cell 6,0 {"to":"75","playerx":"64","playery":"208","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent teleporter@304,256 cell 19,16 {"to":"76","playerx":"16","playery":"80","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent shieldlock@288,256 cell 18,16 {"tag":"2"}
+ent teleporter@224,304 cell 14,19 {"to":"80","playerx":"32","playery":"16","show":"0","tag":"-1","invert":"0","sign":"0"}
+ent button@112,176 cell 7,11 {"tset":"0"}
+ent lock@112,160 cell 7,10 {"tset":"0","tag":"3"}
+ent control@192,208 cell 12,13 {"fallthrough":"82","xOff":"-160","yOff":"-272","sign":"0"}

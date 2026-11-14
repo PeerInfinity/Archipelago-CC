@@ -1,0 +1,10 @@
+== level_65__r0c2
+  exit -> level_66__r9c8 : {"rule":"True_"}
+  exit -> level_63__r10c2 : {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 6: lightpole@48,272 cleared"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+== level_65__r0c8
+  exit -> level_65__r4c11 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+  exit -> level_63__r6c9 : {"rule":"And","children":[{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 7: lightpole@112,272 cleared"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L65 flag 0: lightpole@128,168 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  loc L65 flag 0: lightpole@128,168 cleared : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+== level_65__r4c11
+  exit -> level_65__r0c8 : {"rule":"Has","args":{"item_name":"Ghost Spear"}}
+  exit -> level_68__r3c1 : {"rule":"True_"}

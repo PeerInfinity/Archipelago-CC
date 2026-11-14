@@ -1,0 +1,51 @@
+L99 keys: level,class,path,width,height,layers,entities,tiles_outside_level  size 15x13; layers tiles,cliffsides
+-- layer tiles (glyph = tile type in base36, . = none)
+    012345678901234
+  0 ..22222222222..
+  1 ..2YYYYFFFFF2..
+  2 222YXXYVHHHF222
+  3 2YY4XXYGGHHHFF2
+  4 2Y44X4YGGVVHHF2
+  5 2Y44444XGGVHHF2
+  6 2Y444A9YYXGHGF2
+  7 2Y444XX.YXXGGY2
+  8 2Y999XXXXXXXXY2
+  9 2YYXXXXXXXXXYY2
+ 10 222YXXXXXXXY222
+ 11 ..2YYYYYYYYY2..
+ 12 ..22222222222..
+-- layer cliffsides (glyph = tile type in base36, . = none)
+    012345678901234
+  0 ...............
+  1 ...............
+  2 ...............
+  3 ...............
+  4 ...............
+  5 ......0........
+  6 ....0..........
+  7 ....0..........
+  8 ...............
+  9 ...............
+ 10 ...............
+ 11 ...............
+ 12 ...............
+ent stairsdown@112,112 cell 7,7 {"flip":"0","to":"98","playerx":"96","playery":"112"}
+ent lightalpha@32,0 cell 2,0 {"alpha":"0.1"}
+ent stairsup@48,96 cell 3,6 {"flip":"1","to":"100","playerx":"32","playery":"96"}
+ent lock@80,96 cell 5,6 {"tset":"-1","tag":"0"}
+ent lavachain@80,64 cell 5,4 {"dir":"3"}
+ent lavarunner@192,64 cell 12,4 {}
+ent lavarunner@160,32 cell 10,2 {}
+ent lavarunner@176,64 cell 11,4 {}
+ent blur@32,32 cell 2,2 {}
+ent daynight@32,16 cell 2,1 {}
+ent shadow@16,16 cell 1,1 {"alpha":"0.6","color":"0xFFFFFF","width":"32","height":"32"}
+ent shadow@192,16 cell 12,1 {"alpha":"0.6","color":"0xFFFFFF","width":"32","height":"32"}
+ent shadow@192,160 cell 12,10 {"alpha":"0.6","color":"0xFFFFFF","width":"32","height":"32"}
+ent shadow@0,0 cell 0,0 {"alpha":"0.6","color":"0xFFFFFF","width":"240","height":"16"}
+ent shadow@0,192 cell 0,12 {"alpha":"0.6","color":"0xFFFFFF","width":"240","height":"16"}
+ent shadow@224,16 cell 14,1 {"alpha":"0.6","color":"0xFFFFFF","width":"16","height":"176"}
+ent shadow@0,16 cell 0,1 {"alpha":"0.6","color":"0xFFFFFF","width":"16","height":"176"}
+ent shadow@16,160 cell 1,10 {"alpha":"0.6","color":"0xFFFFFF","width":"32","height":"32"}
+ent torch@64,128 cell 4,8 {"c":"0xFFCC00"}
+ent orb@136,104 cell 8,6 {"c":"0xFF44CC"}

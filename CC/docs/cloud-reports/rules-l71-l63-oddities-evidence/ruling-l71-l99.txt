@@ -1,0 +1,27 @@
+=== L71 verdict=undecided condition=any(flag:hasSpear|flag:hasSword)
+locks: lock@112,192  hazards: {"tiles":[6,17],"hitters":[],"spawners":[]}
+tile census (type:count): {"5":7,"6":1,"15":107,"16":130,"17":148,"31":7}
+  body lavarunner@64,224 cell 4,14 stands-on tile 16 env=unmeasured:tile6 free=false
+  body lavarunner@64,192 cell 4,12 stands-on tile 16 env=unmeasured:tile6 free=false
+  body lavarunner@72,208 cell 5,13 stands-on tile 16 env=unmeasured:tile6 free=false
+  body lavarunner@48,200 cell 3,13 stands-on tile 5 env=unmeasured:tile6 free=false
+  body lavarunner@80,224 cell 5,14 stands-on tile 16 env=unmeasured:tile6 free=false
+  why: lavarunner@64,224: an environmental arm nothing measured (tile6)
+  why: lavarunner@64,192: an environmental arm nothing measured (tile6)
+  why: lavarunner@72,208: an environmental arm nothing measured (tile6)
+  why: lavarunner@48,200: an environmental arm nothing measured (tile6)
+  why: lavarunner@80,224: an environmental arm nothing measured (tile6)
+  tile6 cells: 12,13
+=== L99 verdict=undecided condition=any(flag:hasSpear|flag:hasSword)
+locks: lock@80,96  hazards: {"tiles":[17],"hitters":["lavachain@80,64"],"spawners":[]}
+tile census (type:count): {"2":52,"4":15,"9":4,"10":1,"15":11,"16":10,"17":11,"31":4,"33":35,"34":35}
+  body lavarunner@192,64 cell 12,4 stands-on tile 17 env=unmeasured:lavachain@80,64 free=false
+  body lavarunner@160,32 cell 10,2 stands-on tile 17 env=unmeasured:lavachain@80,64 free=false
+  body lavarunner@176,64 cell 11,4 stands-on tile 17 env=unmeasured:lavachain@80,64 free=false
+  why: lavarunner@192,64: stands on lava it survives (reach undecided)
+  why: lavarunner@160,32: stands on lava it survives (reach undecided)
+  why: lavarunner@176,64: stands on lava it survives (reach undecided)
+  why: lavarunner@192,64: an environmental arm nothing measured (lavachain@80,64)
+  why: lavarunner@160,32: an environmental arm nothing measured (lavachain@80,64)
+  why: lavarunner@176,64: an environmental arm nothing measured (lavachain@80,64)
+  tile6 cells: none
