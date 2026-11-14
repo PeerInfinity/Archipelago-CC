@@ -31,6 +31,9 @@ With the corridor flip ON, all **four lost solves** become **hitless SOLVED** wh
 **The census** covers all 53 seed-1 sweep legs in the six rooms that hold a wallflyer or a drill, plus 3 keylock
 controls: **3 move** (the three lost legs above), **53 are identical**, and **0 hitless legs become hit-taking**.
 
+**The full route survey** (250 steps): 219/31 → **221/29**. Only steps 35 and 84 move, and 247 rows are
+identical. The 3 hit-taking solves (steps 24, 202 and 220) are the same in both arms.
+
 **Acceptance md5** `391322d681b7aa0229d94b3f6906d024`: OFF and ON alike, equal to base main `39e8a29f7f`.
 
 **The one thing to know first:** neither arm needed a levelRun edit. The model already steps a press on a wallflyer
@@ -191,7 +194,17 @@ the arm's first fork kills, and DETOUR's previews are not asked.
 
 ### The full route survey, arms OFF vs ON
 
-(DRAFT: the 244-step survey is still running in both arms; this section is filled in by the final commit.)
+`survey-seedling-route.mjs --through=end --route=full`, both arms concurrently at `a39ab4c3`
+(`survey/survey-arms-{off,on}.jsonl`). It has **250 rows**: CORRIDORFLIP quoted 244 at its base, and this base
+carries hammer wave 2.
+
+| | arms OFF (= today, flip ON) | arms ON |
+|---|---|---|
+| SOLVED / REFUSED | 219 / 31 | **221 / 29** |
+| hit-taking solves | 3 (steps 24 L16, 202 L82, 220 L82) | the same 3, identical |
+| movers | — | **step 35** REFUSED → SOLVED 539 t, 0 hits, 0 deaths, L29 · **step 84** REFUSED → SOLVED 354 t, 0 hits, 0 deaths, L87 |
+| wording only | — | **step 87** (L91, `drill@64,80`): still REFUSED, its text gains one line, the arm's *"(120,88): the player was HIT waiting out the death … (source chaser bob@128,64)"* (§7's L91 wall) |
+| identical | — | **247 of 250** rows: verdict, ticks, hits, deaths, end level and refusal text |
 
 ## 8. What the brief got wrong (measured)
 
