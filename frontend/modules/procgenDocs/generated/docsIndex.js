@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1298,
+        "headings": 1299,
         "indexHeadings": 2,
-        "lines": 36250,
+        "lines": 36262,
         "pages": 4,
-        "words": 544328
+        "words": 544619
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -53,7 +53,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4685
+            "words": 4693
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -226,8 +226,8 @@ export const DOCS_INDEX = frz({
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
-            "headings": 18,
-            "lines": 267,
+            "headings": 19,
+            "lines": 279,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -237,7 +237,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 3905
+            "words": 4188
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
