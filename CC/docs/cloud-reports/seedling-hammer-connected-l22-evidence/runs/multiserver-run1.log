@@ -1,0 +1,52 @@
+Archipelago (0.6.9) logging initialized on Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.39 process 1546462 running Python 3.12.3
+Could not load world WorldSource(tww, is_zip=False, relative=True):
+Traceback (most recent call last):
+  File "/home/robert/CC/ap-upstream-seedling/worlds/__init__.py", line 63, in load
+    importlib.import_module(f".{self.name}", "worlds")
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/robert/CC/ap-upstream-seedling/worlds/tww/__init__.py", line 7, in <module>
+    from cryptography.hazmat.primitives import hashes, serialization
+ModuleNotFoundError: No module named 'cryptography'
+Traceback (most recent call last):
+  File "/home/robert/CC/ap-upstream-seedling/worlds/__init__.py", line 63, in load
+    importlib.import_module(f".{self.name}", "worlds")
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/robert/CC/ap-upstream-seedling/worlds/tww/__init__.py", line 7, in <module>
+    from cryptography.hazmat.primitives import hashes, serialization
+ModuleNotFoundError: No module named 'cryptography'
+Loading embedded data package for game APQuest
+Loading embedded data package for game Archipelago
+Loading embedded data package for game Seedling Playthrough
+Hosting game at <redacted-ip>:38470 (No password)
+server listening on [::]:38470
+server listening on 0.0.0.0:38470
+connection open
+connection open
+Notice (all): Questy (Team #1) playing APQuest has joined. Client(0.6.9), [].
+Notice (Player Questy in team 1): Now that you are connected, you can use !help to list commands to run via the server. If your client supports it, you may have additional local commands you can list with /help.
+(Team #1) Questy sent Fire to Sprout (Bottom Left Chest)
+(Team #1) Questy sent Seal to Sprout (Top Middle Chest)
+(Team #1) Questy sent Seal to Sprout (Bottom Right Room Left Chest)
+(Team #1) Questy sent Seal to Sprout (Bottom Right Room Right Chest)
+Notice (all): Questy (Team #1) has left the game. Client(0.6.9), [].
+connection closed
+connection closed
+server closing
+server closed
+ConsoleTask cancelled

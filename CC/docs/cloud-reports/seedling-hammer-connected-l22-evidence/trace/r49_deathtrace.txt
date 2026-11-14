@@ -1,0 +1,12 @@
+L22DBG WPS solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29 attempt 0 from 24.00 136.00 t 0 [[72,136],[88,88],[120,88],[120,72],[200,72]]
+L22DBG WPS solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29 attempt 1 from 89.05 123.35 t 443 [[88,88],[120,88],[120,72],[200,72]]
+death transitions 9
+  ('67', 1, [[84, 'wallflyer', 'wallflyer@128,80'], [104, 'wallflyer', 'wallflyer@128,80']], '6,"w":32,"h":32,"right":32,"bottom":128}')
+  ('148', 2, [[153, 'wallflyer', 'wallflyer@48,112'], [191, 'wallflyer', 'wallflyer@48,112']], 'ypoint 1 (88,88) right+up 24.00 136.00  ')
+  ('240', 3, [[240, 'wallflyer', 'wallflyer@48,112'], [278, 'wallflyer', 'wallflyer@48,112']], 'ypoint 1 (88,88) right+up 29.43 130.57  ')
+  ('328', 4, [[327, 'wallflyer', 'wallflyer@48,112'], [365, 'wallflyer', 'wallflyer@48,112']], '6,"w":32,"h":32,"right":32,"bottom":128}')
+  ('10', 5, [[414, 'wallflyer', 'wallflyer@48,112'], [452, 'wallflyer', 'wallflyer@48,112']], 'ypoint 0 (88,88) right+up 24.80 135.20  ')
+  ('100', 6, [[501, 'wallflyer', 'wallflyer@48,112'], [539, 'wallflyer', 'wallflyer@48,112']], 'ypoint 0 (88,88) right+up 28.54 131.46  ')
+  ('189', 7, [[588, 'wallflyer', 'wallflyer@48,112'], [626, 'wallflyer', 'wallflyer@48,112']], '6,"w":32,"h":32,"right":32,"bottom":128}')
+  ('270', 8, [[675, 'wallflyer', 'wallflyer@48,112'], [713, 'wallflyer', 'wallflyer@48,112']], 'ypoint 0 (88,88) right+up 24.00 136.00  ')
+  ('360', 9, [[762, 'wallflyer', 'wallflyer@48,112'], [800, 'wallflyer', 'wallflyer@48,112']], 'ypoint 0 (88,88) right+up 27.47 132.53  ')

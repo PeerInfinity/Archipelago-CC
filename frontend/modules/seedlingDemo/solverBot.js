@@ -199,8 +199,11 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
+// ⛓ hammer-phase SPEAR-ARM: a spear-only slot's strike policy (`spearStrikePolicyFor`; a family file).
+import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
+import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -6617,7 +6620,7 @@ export function strikePolicyFor(run, { dashPlan = null,
     axisAlong = false } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
-    if (!hasSword) return null;
+    if (!hasSword) return spearStrikePolicyFor(run, { dashPlan, axisAlong });
     /**
      * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
      * policy presses `primary`, which the game runs as `useItem(Main.primary)`: with Fire (or any non-blade) selected
@@ -6672,6 +6675,31 @@ export function strikePolicyFor(run, { dashPlan = null,
     });
     if (!axisAlong) return policy;
     if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
+    AXIS_STRIKE_COUNTS.policies += 1;
+    return axisAlongStrike(policy);
+}
+
+/**
+ * ⛓⛓ hammer-phase SPEAR-ARM (`SPEAR_ARM`, OFF: null, as before) — **THE BLADELESS RUN'S STRIKE, WHEN IT HOLDS A
+ * SPEAR.** `strikePolicyFor`'s policy with the thrust's geometry (`spearArm.spearStrikeGeometry`: `spearHitRect`, the
+ * model's reach gate, the swallow period), built only when the selected slot IS the spear (`useItem(Main.primary)`:
+ * any other selection's press is that item's, so no policy; the segment's walk selects it, `spearArmEquip`). No dash
+ * plan (the thrust has no dash arm), and the i-frame lapse is not asked (the spear tests at T+1/T+3/T+5, not on every
+ * tick of the sword's window, so the lapse arithmetic is the sword's and the pre-lapse question is the honest one).
+ */
+function spearStrikePolicyFor(run, { dashPlan = null, axisAlong = false } = {}) {
+    const slot = spearArmSlot(run.progress('inventory'), run.progress('inventorySlots'));
+    if (slot < 0 || dashPlan || run.progress('primary') !== slot) return null;
+    if ((run.entities('strikeBodies') ?? []).length === 0) return null;
+    SPEAR_ARM_COUNTS.policies += 1;
+    const policy = createStrikePolicy({
+        facingToward, facingKeys: FACING_KEYS, hasSword: true, allowDash: false,
+        talkCircles: run.entities('talkCircles') ?? [],
+        vetoBody: dropKillVetoFor(run),
+        iframeLapse: false,
+        geometry: spearStrikeGeometry(),
+    });
+    if (!axisAlong) return policy;
     AXIS_STRIKE_COUNTS.policies += 1;
     return axisAlongStrike(policy);
 }
@@ -11394,6 +11422,91 @@ export const PACE = Object.freeze({
  * ⚖ 30(c): the waited keys are the tape's; the corridor is certified from the state the walk starts in.
  */
 // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_BOMB_PHASE_WAIT=0` opts out.
+/**
+ * ⛓ hammer-phase CONNECTED-L22 (`SEEDLING_WALK_DEATH_REFUSED`, OFF) — **A WALK THAT DIED IS REFUSED BY NAME, WHATEVER
+ * KILLED IT.** `refuseIfDrowned` already refuses a walk a whirlpool drowned (seedling-fidelity-residue D-B); every
+ * other death was invisible to the solve: the drive's respawn put the player back at the room's arrival, it walked
+ * the same corridor into the same hits, and the attempt ended at `maxTicksPerTarget` as *"waypoint N: not reached
+ * within 400 ticks; stalled at … after grazing K solid(s)"* — a STALL, naming the arrival-side trees it grazed after
+ * each respawn, never the deaths. MEASURED (connected room f6, slot 2, L22 → L29 from L25's door, Ghost Spear and no
+ * sword; captured request #49 replayed in node): 9 deaths inside one solve, every one three `wallflyer` hits
+ * (`wallflyer@48,112`, `@128,80`) on the band the corridor crosses unpriced (`corridorBodyPricing` OFF).
+ *
+ * ON: the first death since the walk began refuses, naming the tick, the death count and the last `hitsNamed` hits
+ * before it (`obstacle: {kind: 'death', id}`). The answer stays a refusal, the same verdict: the switch changes its
+ * WORDS and stops the re-plan from the respawn, it does not make a crossing solvable. OFF: not asked (byte-identical).
+ * `refused` collects one row per refusal (measurement).
+ */
+export const WALK_DEATH_REFUSED = {
+    enabled: globalThis.process?.env?.SEEDLING_WALK_DEATH_REFUSED === '1',
+    hitsNamed: 3,
+    refused: [],
+};
+
+/**
+ * ⛓ hammer-phase L43-BOSSTOTEM (`SEEDLING_AWAKE_BOSS_FIRST`, OFF) — **A WALK THAT AN AWAKE BOSS BARS FIGHTS THE BOSS
+ * FIRST.** A boss in the run's `bosses` family is a Solid only while it sleeps; once it wakes (`activated`) the corridor
+ * planner no longer sees it — its body is an Enemy whose contact the probe does not price, and its clamp is an
+ * ASSIGNMENT, not a collider (`bossTotem.js`). So a walk planned after the wake (a pickup's wake: the vanilla Wand room)
+ * aims straight through the body or past the clamp, takes its contact hits and dies, and re-plans from the respawn into
+ * the same wake. MEASURED (vanilla route survey step 150, level 43, the wand stance for `magicallock@144,112` after the
+ * Wand pickup): the walk aims at (152,184) from (150,234), through the woken body; three `bossBody` hits (t173, t213,
+ * t237) and a death, then the re-plan from the respawn stalls on the arrival wall — OFF's words.
+ *
+ * ON: before a walk, a live (activated, not removed, not destroyed) body of that family BARS the aim when the aim lies
+ * past its clamp (`clampY`) or the straight line from the player to the aim crosses its body rect. Then the walk first
+ * asks the body's own fight verb — the strategy table's row for `solid:<tag>` and its executor, the frontier's lookup —
+ * and walks after the kill; a body no verb is registered or held for refuses by name (`obstacle: solid`). OFF: not
+ * asked (byte-identical). `fought` collects one row per ask (measurement).
+ */
+export const AWAKE_BOSS_FIRST = {
+    enabled: globalThis.process?.env?.SEEDLING_AWAKE_BOSS_FIRST === '1',
+    fought: [],
+};
+
+/** Run `fn` with `AWAKE_BOSS_FIRST` set to `enabled`, restoring the previous value. */
+export function withAwakeBossFirst(enabled, fn) {
+    return withSwitch(AWAKE_BOSS_FIRST, enabled, fn);
+}
+
+/** Does the segment (a → b) cross the rect `r` ({x, y, w, h})? Slab clipping; touching an edge counts. */
+function segmentCrossesRect(a, b, r) {
+    let t0 = 0;
+    let t1 = 1;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    for (const [p, q] of [[-dx, a.x - r.x], [dx, r.x + r.w - a.x], [-dy, a.y - r.y], [dy, r.y + r.h - a.y]]) {
+        if (p === 0) {
+            if (q < 0) return false;
+            continue;
+        }
+        const t = q / p;
+        if (p < 0) t0 = Math.max(t0, t);
+        else t1 = Math.min(t1, t);
+        if (t0 > t1) return false;
+    }
+    return true;
+}
+
+/**
+ * ⛓ hammer-phase L43-BOSSTOTEM — the live boss in the run's `bosses` family that bars a walk from `from` to `aim`, or
+ * null. Read off the model's own view: `activated`, `removed`/`destroy`, `clampY` (the floor the clamp assigns) and
+ * `bodyRect` (the woken body's box). A sleeping body is a Solid the frontier already names, so it is not asked here.
+ */
+export function awakeBossBarring(run, from, aim) {
+    const bosses = run.entities('bosses');
+    if (!bosses || bosses.size === 0 || !aim) return null;
+    for (const [id, view] of bosses) {
+        if (!view?.activated || view.removed || view.destroy) continue;
+        const past = Number.isFinite(view.clampY) && aim.y < view.clampY;
+        const crosses = view.bodyRect ? segmentCrossesRect(from, aim, view.bodyRect) : false;
+        if (!past && !crosses) continue;
+        const at = id.indexOf('@');
+        return { id, tag: at > 0 ? id.slice(0, at) : id, past, crosses };
+    }
+    return null;
+}
+
 export const BOMB_PHASE_WAIT = {
     enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT !== '0',
     /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
@@ -14951,6 +15064,8 @@ function stepToward(run, aim, intended) {
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
     const step = previewOrDeath(run.previewStepper());
+    // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ `clearOfHammersAt`): a body the run would not bill is no wall
+    const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
     // they had, and the diagonals follow them.
     /**
@@ -14981,7 +15096,7 @@ function stepToward(run, aim, intended) {
         let best = depth;
         for (const keys of options) {
             const next = step({ ...st }, keys);
-            if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
             const d = survives(next, depth + 1);
             if (d > best) best = d;
             if (best >= STEP_LOOKAHEAD) return best;
@@ -14991,7 +15106,7 @@ function stepToward(run, aim, intended) {
     let best = null;
     for (const keys of options) {
         const next = step({ ...run.state }, keys);
-        if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
+        if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
         const depth = survives(next, 1);
         const d = Math.hypot(next.x - aim.x, next.y - aim.y);
         if (!best || depth > best.depth || (depth === best.depth && d < best.d)) {
@@ -14999,6 +15114,38 @@ function stepToward(run, aim, intended) {
         }
     }
     return best ? best.keys : intended;
+}
+
+/**
+ * ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, ON only) — **A TICK WITH NO AIM STILL LOOKS FOR A STEP OUT.** On a
+ * press-kill tick with nothing to walk to (no strike, no refuge: `stepToward`'s `!aim` early return), the walk stands and
+ * only `safeStep`'s one-tick test guards it. Measured on leg `… flag 12` (the report § 3): an opportunistic press DASHED
+ * the player at 2.55 px/tick toward a dying spinner, `safeStep` (gated) kept the stand at t724 and t725, and the slide
+ * put the box over the hammer's origin at t726, where every key set meets the line. ⇒ the stand is kept when it survives
+ * `stepToward`'s own lookahead (`STEP_LOOKAHEAD` ticks, the gated predicate); otherwise the tick is `stepToward` aimed at
+ * where the player stands — the phase stall's "safe holding step". A stand that survives is byte-identical.
+ */
+function holdStepOut(run, intended) {
+    if ((run.entities('spinnerBodies') ?? []).length === 0) return intended;
+    const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
+    if (!forecast.length) return intended;
+    const step = previewOrDeath(run.previewStepper());
+    const options = [new Set(), ...Object.values(FACING_KEYS).map((k) => new Set([k])),
+        ...DIAGONAL_KEYS.map((k) => new Set(k))];
+    const lasts = (st, depth) => {
+        if (depth >= STEP_LOOKAHEAD) return true;
+        return options.some((keys) => {
+            const next = step({ ...st }, keys);
+            return next && clearOfBilledHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)
+                && lasts(next, depth + 1);
+        });
+    };
+    const first = step({ ...run.state }, intended);
+    if (first && clearOfBilledHammersAt(run, playerBoxAt(first.x, first.y), forecast, 1) && lasts(first, 1)) {
+        return intended;
+    }
+    HAMMER_BODY_GATE_COUNTS.held += 1;
+    return stepToward(run, { x: run.state.x, y: run.state.y }, intended);
 }
 
 /**
@@ -15157,6 +15304,94 @@ function landsClearOfHammers(run, keys) {
     return clearOfHammersAt(
         { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
         playerBoxAt(next.x, next.y), [ahead], 0);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SPINNER-CORNER — **`safeStep` BILLS A BODY ONLY WHERE THE RUN BILLS IT** (`HAMMER_BODY_GATE`,
+ * OFF; `SEEDLING_HAMMER_BODY_GATE=1`, `withHammerBodyGate`).
+ *
+ * ⛔ MEASURED (`CC/docs/cloud-reports/seedling-hammer-spinner-corner.md` § 3): leg `level_40__r48c54 <- in_L39_144_0 ~>
+ * level_40__r26c13 -> … flag 12` refuses *"There is no step out."* at t724, and every key set there is blocked by the
+ * BODY of `spinner@880,848` alone (no line). That body took its killing third hit at t719 (`destroy`, parked, its
+ * i-frame at 30); an opportunistic press at t722 dashed the player onto it. The run's own contact
+ * (`levelRun` `Enemy.update`: `hitUpdate(); hitPlayer();`) bills a spinner's 7x7 rect only while `!destroy &&
+ * hitsTimer <= 0` (`HAMMER_BILLING.body.gate`); the 13 px line has no such gate (`dyingStillSwings`). `clearOfHammersAt`
+ * prices every rect, so the guard refused a step the run would not bill.
+ *
+ * ⇒ ON, `landsClearOfHammers`' one-tick question is asked with the body gated: a row's body counts only when its live
+ * body is not `destroy` and its `hitsTimer`, run down one per row (`stepSpinner`'s decrement; row 1 is two updates on),
+ * is spent. Every estimate is the billing's or EARLIER (a body the forecast destroys, sinks in a pit or re-hits stays
+ * billed), never later. Asked only of a real run (a preview's view carries the bodies of another tick) and only when
+ * the forecast row holds exactly the live bodies (a removal in between ⇒ today's test). The line is asked as before.
+ */
+export const HAMMER_BODY_GATE = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_BODY_GATE === '1' };
+
+/**
+ * The switch's instrument: `asked` rows tested with a body gated, `cleared` of them a gated body alone would have
+ * refused, `held` no-aim ticks whose stand did not last and that `holdStepOut` re-chose.
+ */
+export const HAMMER_BODY_GATE_COUNTS = { asked: 0, cleared: 0, held: 0 };
+
+/** Run `fn` with `HAMMER_BODY_GATE` set to `enabled`, restoring the previous value. */
+export function withHammerBodyGate(enabled, fn) {
+    const was = HAMMER_BODY_GATE.enabled;
+    HAMMER_BODY_GATE.enabled = enabled === true;
+    const restore = () => { HAMMER_BODY_GATE.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * ⛓ `HAMMER_BODY_GATE` — which of forecast row `i`'s rects bill their BODY, from the live bodies (`null` when the row
+ * does not hold exactly the live bodies, or the run is not a real one: the caller then asks today's test). Row `i` is
+ * `i + 1` spinner updates after the live state, so a live `hitsTimer` of `h` is spent there iff `h - (i + 1) <= 0`.
+ */
+export function hammerBodyBilled(run, row, i) {
+    if (typeof run?.advance !== 'function' || !Array.isArray(row)) return null;
+    const live = run.entities('spinnerBodies') ?? [];
+    if (live.length !== row.length) return null;
+    return live.map((b) => !b.destroy && b.hitsTimer - (i + 1) <= 0);
+}
+
+/**
+ * ⛓ `HAMMER_BODY_GATE` — `clearOfHammersAt(run, box, forecast, i)` with row `i`'s bodies gated (`hammerBodyBilled`),
+ * for a forecast taken on `run` at its own tick (row `i` = `i + 1` updates on, swinging at `run.gameTimeAt(i)`). OFF,
+ * or no gate derivable, or every body billed ⇒ exactly `clearOfHammersAt`.
+ */
+export function clearOfBilledHammersAt(run, box, forecast, i) {
+    const row = forecast[i];
+    const billed = HAMMER_BODY_GATE.enabled && row ? hammerBodyBilled(run, row, i) : null;
+    if (billed === null || billed.every(Boolean)) return clearOfHammersAt(run, box, forecast, i);
+    HAMMER_BODY_GATE_COUNTS.asked += 1;
+    const at = run.gameTimeAt(i);
+    let gatedHit = false;
+    for (let j = 0; j < row.length; j += 1) {
+        const r = row[j];
+        if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
+            if (billed[j]) return false;
+            gatedHit = true;
+        }
+        if (hammerHitsPlayer({ x: r.x + SPINNER.originX, y: r.y + SPINNER.originY }, at, box)) return false;
+    }
+    if (gatedHit) HAMMER_BODY_GATE_COUNTS.cleared += 1;
+    return true;
+}
+
+/** ⛓ `HAMMER_BODY_GATE` — `landsClearOfHammers` with the body gated (OFF ⇒ exactly it). */
+function landsClearOfBilledHammers(run, keys) {
+    if (!HAMMER_BODY_GATE.enabled) return landsClearOfHammers(run, keys);
+    const forecast = run.spinnerForecast(2);
+    if (!forecast[1]) return true;
+    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
+    if (!next) return false;
+    return clearOfBilledHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1);
 }
 
 /**
@@ -19851,6 +20086,7 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
         const row = { t: t0, refused: e.code, refusedAt: perTick.length, bodies: resolved.plans.map((p) => p.id) };
         const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
         const { run: fresh, undo } = ctx.rewind.to(t0);
+        const clock0 = fresh.ticksCompleted; // ⛓ OPP-FALLBACK-HITS: the redo's first clock (read only)
         const was = OPPORTUNISTIC_STRIKE.enabled;
         OPPORTUNISTIC_STRIKE.enabled = false;
         try {
@@ -19859,14 +20095,18 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
             const record = execKillByPressFightFallback(fresh, perTick, again, ctx);
             row.verdict = 'solved';
             row.ticks = perTick.length - t0;
+            // ⛓ hammer-phase OPP-FALLBACK-HITS (`OPP_FALLBACK_HITS`, OFF ⇒ not read): a redo that took a hit is refused
+            if (oppFallbackHitsAudits()) oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo);
             OPP_PRESS_FALLBACK_COUNTS.solved += 1;
             ctx.rewind.note({ ...row, how: 'opp-plain' });
             return { ...record, oppPressFallback: row };
         } catch (e2) {
+            if (e2?.oppFallbackHitsRefused) throw e2; // ⛓ OPP-FALLBACK-HITS: already undone, the refusal stands
             if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
                 row.verdict = 'solved';
                 row.ticks = perTick.length - t0;
                 row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
+                if (oppFallbackHitsAudits()) oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo);
                 OPP_PRESS_FALLBACK_COUNTS.solved += 1;
                 ctx.rewind.note({ ...row, how: 'opp-plain' });
                 throw e2;
@@ -19885,6 +20125,33 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
             OPPORTUNISTIC_STRIKE.enabled = was;
         }
     }
+}
+
+/**
+ * ⛓ hammer-phase OPP-FALLBACK-HITS — `OPP_FALLBACK_HITS` (see `oppFallbackHits.js`). Asked only once the fallback's redo
+ * KILLED (`row.verdict === 'solved'`). The hits the model billed after the redo's first clock are read off the run the
+ * redo ended on: `fresh`, or — when `HAMMER_FIGHT_FALLBACK` may have rewound inside the redo and adopted a run of its
+ * own — the segment's keys replayed (`ctx.rewind.replay`). Recorded in the instrument; ON with any hit, the redo is
+ * UNDONE and the ORIGINAL refusal `e` is thrown plus one sentence (marked `oppFallbackHitsRefused`, so the fallback's
+ * own catch does not undo twice). Hitless, or OFF (the census instrument), it returns and the redo is adopted as before.
+ */
+function oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo) {
+    const live = HAMMER_FIGHT_FALLBACK.enabled ? ctx.rewind.replay(perTick.length) : fresh;
+    const hits = playerHitsSince(live, clock0);
+    if (!auditOppFallbackRedo(row, hits)) return;
+    undo();
+    row.verdict = 'refused';
+    row.retryRefused = 'OPP_FALLBACK_HITS';
+    row.why = `the redo killed in ${row.ticks} tick(s) with ${hits.length} player hit(s)`;
+    row.hits = hits;
+    delete row.raised;
+    OPP_PRESS_FALLBACK_COUNTS.refused += 1;
+    const out = new SolverBotError(`${e.message} ${oppFallbackHitsSentence(row, hits)}`,
+        { code: e.code, boundTicks: e.boundTicks });
+    if (e.fightFallback) out.fightFallback = e.fightFallback;
+    out.oppPressFallback = row;
+    out.oppFallbackHitsRefused = true;
+    throw out;
 }
 
 /** The press kill with `HAMMER_FIGHT_FALLBACK`'s retry (B3), unchanged — the body `execKillByPress` always had. */
@@ -20392,6 +20659,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                  * is the only thing that can answer it.
                  */
                 if (late === null && charted === null) held = stepToward(run, aim, held);
+                // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ not reached): no aim (a stand, or the escape
+                // certificate's key) still looks for a step out
+                if (HAMMER_BODY_GATE.enabled && !aim && charted === null) held = holdStepOut(run, held);
                 /**
                  * ⛓⛓⛓ F1c — THE HAMMER-PHASE RUNG (`hammerPhaseRung`). Only on a
                  * STRIKE approach: a refuge wait re-derives a strike every tick
@@ -20482,7 +20752,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 const meant = held;
                 // ⛓ hammer-phase OPP: an opportunistic aim was offered only where it lands clear (no swap may drop it)
                 held = oppTook === STRIKE_AIM ? held : safeStep(run, held, alternativesNow(), ctx.what, plan.id,
-                    fightKeys !== null ? landsClearInFlight : landsClearOfHammers);
+                    fightKeys !== null ? landsClearInFlight : landsClearOfBilledHammers);
                 // ⛓ hammer-phase A — a certificate `safeStep` overrode no longer describes the walk: it ends.
                 if (escape && held !== meant
                     && escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) === meant) escape = null;
@@ -32732,18 +33002,81 @@ function solveSegmentUnder({
      * arrived, whatever the drive did after the respawn. OFF: `deathsNow` is 0 and nothing is asked.
      */
     function deathsNow() {
-        return CONTACT_FIDELITY.whirlpoolDrown ? (run.ledger('playerDeaths') ?? []).length : 0;
+        return (CONTACT_FIDELITY.whirlpoolDrown || WALK_DEATH_REFUSED.enabled)
+            ? (run.ledger('playerDeaths') ?? []).length : 0;
     }
     function refuseIfDrowned(d0, what, goal) {
-        if (!CONTACT_FIDELITY.whirlpoolDrown) return;
-        const d = (run.ledger('playerDeaths') ?? []).slice(d0).find((x) => x.source === 'whirlpool');
-        if (!d) return;
-        refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
-            + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not re-planned '
-            + 'from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+        if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return;
+        const died = (run.ledger('playerDeaths') ?? []).slice(d0);
+        const d = CONTACT_FIDELITY.whirlpoolDrown ? died.find((x) => x.source === 'whirlpool') : undefined;
+        if (d) {
+            refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
+                + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not '
+                + 're-planned from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+        }
+        if (WALK_DEATH_REFUSED.enabled && died.length > 0) refuseWalkDeath(died, what, goal);
     }
+    /** ⛓ hammer-phase CONNECTED-L22 (`WALK_DEATH_REFUSED` ON only) — see the switch's own docblock. */
+    function refuseWalkDeath(died, what, goal) {
+        const d = died[0];
+        const hits = (run.ledger('playerHits') ?? []).filter((h) => h.t <= d.t && h.level === d.level)
+            .slice(-WALK_DEATH_REFUSED.hitsNamed);
+        const sources = [...new Set(hits.map((h) => h.id ?? h.source))];
+        WALK_DEATH_REFUSED.refused.push({ what, t: d.t, level: d.level, deaths: died.length, sources });
+        refuse(`${what}: the player DIED at run tick ${d.t} in level ${d.level} (${died.length} death(s) on the walk; `
+            + `the hits before the first: ${hits.map((h) => `${h.id ?? h.source} at t${h.t}`).join(', ') || 'none billed'}`
+            + ') — the drive took hits its corridor was certified without; a walk that died is refused, not re-planned '
+            + 'from the respawn', { goal, obstacle: { kind: 'death', id: sources[sources.length - 1] ?? d.source ?? null } });
+    }
+    /**
+     * ⛓ hammer-phase L43-BOSSTOTEM (`AWAKE_BOSS_FIRST`, OFF) — the awake boss that bars this walk is fought first, with
+     * its own verb (see the switch's docblock). `bossFirstActive` keeps the verb's own walks (its stance) from asking
+     * again.
+     */
+    let bossFirstActive = false;
+    const fightAwakeBossFirst = (goal, aim, opts) => {
+        const bar = awakeBossBarring(run, run.state, aim);
+        if (bar === null) return;
+        const what = `${opts?.what ?? 'walk'} -> awake boss first (${bar.id})`;
+        const obstacle = { kind: 'solid', id: bar.id, tag: bar.tag };
+        const strategy = OBSTACLE_STRATEGIES[`solid:${bar.tag}`] ?? null;
+        const exec = strategy ? frontierExecutor(strategy) : undefined;
+        const resolved = exec ? resolveObstacleStrategy(run, strategy, obstacle, null, aim, null) : null;
+        const row = { what, id: bar.id, past: bar.past, crosses: bar.crosses, strategy, t: run.ticksCompleted };
+        AWAKE_BOSS_FIRST.fought.push(row);
+        if (!exec || !resolved || resolved.held === false) {
+            row.refused = resolved?.rejected?.[0]?.why ?? (strategy ? `no executor for \`${strategy}\`` : 'no strategy row');
+            refuse(`${what}: ${bar.id} is awake and bars the walk to (${aim.x},${aim.y}) `
+                + `(${bar.past ? 'the aim lies past its clamp' : 'the line to the aim crosses its body'}), and it cannot be `
+                + `fought: ${row.refused}`, { goal, obstacle });
+        }
+        bossFirstActive = true;
+        try {
+            const record = exec(run, perTick, resolved, { maxTicksPerTarget, economies, dashMode, what, walkTo, goal,
+                equip, fork, rewind });
+            row.ticks = record?.ticks ?? null;
+            row.hits = record?.hits?.length ?? null;
+            records.push({ goal: goal?.kind, strategy, ...record });
+        } finally {
+            bossFirstActive = false;
+        }
+    };
+    /**
+     * ⛓ hammer-phase SPEAR-ARM (`SPEAR_ARM` ON only) — a bladeless run holding a spear selects the spear's slot before
+     * a walk through a room with strike bodies, so the walk's policy (`spearStrikePolicyFor`) presses a thrust and not
+     * another item. An equip is a `Main.primary` write (`solverEquips`), no tick; a later verb that needs another slot
+     * selects it itself, as every one does.
+     */
+    const spearArmEquip = () => {
+        const slot = spearArmSlot(run.progress('inventory'), run.progress('inventorySlots'));
+        if (slot < 0 || run.progress('primary') === slot || (run.entities('strikeBodies') ?? []).length === 0) return;
+        SPEAR_ARM_COUNTS.equips += 1;
+        equip(slot);
+    };
     const walkTo = (goal, aim, opts) => {
-        if (!CONTACT_FIDELITY.whirlpoolDrown) return walkToRun(goal, aim, opts);
+        spearArmEquip();
+        if (AWAKE_BOSS_FIRST.enabled && !bossFirstActive) fightAwakeBossFirst(goal, aim, opts);
+        if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return walkToRun(goal, aim, opts);
         const d0 = deathsNow();
         let out;
         try {

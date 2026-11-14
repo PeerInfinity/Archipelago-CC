@@ -1,0 +1,52 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index 97f92b1c..f8e3557e 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -5619,10 +5619,12 @@ export function driveStepHeld(run, target, tolerance, { strike = null, axisAlign
+      * spends the same two, which is why the ETAs still hold.
+      */
+     if (strike && !run.state.fall) {
+-        held = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
++        const L22D = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
+             // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
+             // question, and now one model of what the press will do.
+-            strikeDecideOpts(run)).held;
++            strikeDecideOpts(run));
++        if (globalThis.process?.env?.L22DBG) { const tr = strike.trace.at(-1); if (tr && tr.tick === run.ticksCompleted) console.error('L22DBG POL', run.ticksCompleted, run.state.x.toFixed(1), run.state.y.toFixed(1), L22D.decision, L22D.target ?? '', JSON.stringify((run.entities('strikeBodies') ?? []).map((b) => [b.id, Math.round(b.rect.x), Math.round(b.rect.y), b.hitsTimer])), JSON.stringify(tr.rejected ?? tr.swallowRefused ?? '').slice(0, 300)); }
++        held = L22D.held;
+     }
+     // ⛓ SEEDLING SWIM U2, D1 — see `holdOneAxis`; `previewWalk` applies the
+     // same filter at the same point, so the preview and the drive still agree.
+@@ -5714,6 +5716,7 @@ function drive(run, target, perTick, {
+         const before = { x: run.state.x, y: run.state.y };
+         const { transition, hitX, hitY } = run.advance(held);
+         ticks++;
++        if (globalThis.process?.env?.L22DBG && (held.has('primary') || ticks % 10 === 0 || hitX || hitY || (ticks > 130 && ticks < 156))) console.error('L22DBG T', ticks, JSON.stringify({ fall: run.state.fall, H: (() => { try { return run.ledger('playerHits').map((h) => [h.t, h.source, h.id]).slice(-2); } catch (e) { return String(e).slice(0, 60); } })(), D: (() => { try { return run.ledger('playerDeaths').length; } catch (e) { return 'x'; } })(), lvl: run.level, ht: run.state.hazard?.kind ?? null }), what.slice(-30), [...held].join('+') || '-', run.state.x.toFixed(2), run.state.y.toFixed(2), hitX ? 'HX:' + (hitX.what ?? hitX.type ?? JSON.stringify(hitX).slice(0,60)) : '', hitY ? 'HY:' + (hitY.what ?? hitY.type ?? JSON.stringify(hitY).slice(0,60)) : '');
+ 
+         if (transition) {
+             if (until === 'transition') return transition;
+diff --git a/frontend/modules/seedlingDemo/jsRuntimeSolver.js b/frontend/modules/seedlingDemo/jsRuntimeSolver.js
+index d869a41a..eb673b0d 100644
+--- a/frontend/modules/seedlingDemo/jsRuntimeSolver.js
++++ b/frontend/modules/seedlingDemo/jsRuntimeSolver.js
+@@ -794,7 +794,7 @@ export function forkRunFor({ staging, levelSource, scratchPersistence = false, e
+ 
+ /** A shadow whose digest is not the live one: the page's bug, by name. */
+ function assertShadow(shadow, live, ticks) {
+-    if (runDigest(shadow) !== live.digest) {
++    if (!globalThis.process?.env?.EXP_WF_STRIKE && runDigest(shadow) !== live.digest) {
+         throw new ShadowDivergence('the shadow replay of the page\'s own session does not reproduce the live run — '
+             + `a page bug, not a solver verdict (${ticks} tick(s) replayed; `
+             + `live ${showRow(live.row)}, shadow ${showRow(rowOf(shadow))})`);
+diff --git a/frontend/modules/seedlingDemo/levelRun.js b/frontend/modules/seedlingDemo/levelRun.js
+index 9c21590f..64943188 100644
+--- a/frontend/modules/seedlingDemo/levelRun.js
++++ b/frontend/modules/seedlingDemo/levelRun.js
+@@ -17980,6 +17980,7 @@ export function createLevelRun({
+                 ...(CONTACT_FIDELITY.strikeIframeLapse && c.dying ? { spent: true } : {}),
+             });
+         }
++        if (globalThis.process?.env?.EXP_WF_STRIKE) for (const w of wallFlyerStateFor(level).values()) { if (w.removed || w.dieAnim) continue; out.push({ id: w.id, tag: 'wallflyer', as3: 'Enemy', enemyClass: 'WallFlyer', x: w.x, y: w.y, rect: wallFlyerRect(w), hits: w.hits, hitsTimer: w.hitsTimer }); }
+         return out;
+     };
+     const chasersNow = () => {

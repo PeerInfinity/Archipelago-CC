@@ -1,0 +1,7 @@
+ ✓ frontend/modules/seedlingDemo/hammerOppFallbackHits.test.js (6 tests) 6ms
+ ✓ frontend/modules/seedlingDemo/hammerOppPressFallback.test.js (4 tests) 7ms
+ ✓ frontend/modules/seedlingDemo/solverEnvChannel.test.js (11 tests) 1691ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 32161ms
+ Test Files  4 passed (4)
+      Tests  57 passed (57)
+   Duration  34.47s (transform 3.54s, setup 1.01s, import 4.59s, tests 33.87s, environment 0ms)

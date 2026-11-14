@@ -1,0 +1,13 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerBodyGate.train.test.js (3 tests) 244423ms
+     ✓ OFF: refused at work 885 (today's refusal)  45738ms
+     ✓ ON: solved hitless — 1114 t, rows exact on a fresh run, flag 12 earned  39147ms
+     ✓ OFF = ON: 2385 t, sha 0c51cdb94854, hitless  159536ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  20:33:17
+   Duration  247.54s (transform 2.19s, setup 171ms, import 2.82s, tests 244.42s, environment 0ms)
+
