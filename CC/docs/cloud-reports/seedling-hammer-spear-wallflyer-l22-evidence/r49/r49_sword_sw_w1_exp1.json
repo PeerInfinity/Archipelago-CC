@@ -1,0 +1,93 @@
+{
+ "variant": "sword",
+ "records": "captured",
+ "ok": true,
+ "kind": null,
+ "ms": 2649,
+ "work": 408,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 482,
+   "work": 161
+  },
+  {
+   "pass": "full",
+   "ok": true,
+   "kind": null,
+   "ticks": 482,
+   "work": 247,
+   "deadline": "sword-dash",
+   "limit": "window"
+  }
+ ],
+ "ticks": 482,
+ "verbs": [
+  "bait",
+  "kill"
+ ],
+ "equipsAt": [
+  [
+   0,
+   2
+  ]
+ ],
+ "presses": [
+  47,
+  74,
+  115,
+  190,
+  221,
+  252,
+  312,
+  343,
+  374
+ ],
+ "primaryWeaponAtEnd": "sword",
+ "level": 29,
+ "hits": [],
+ "deaths": 0,
+ "bodyFamily": {
+  "asked": 4,
+  "kills": [
+   {
+    "id": "wallflyer@144,112",
+    "family": "wallflyer",
+    "t": 142,
+    "ticks": 136,
+    "forks": 2
+   },
+   {
+    "id": "wallflyer@128,80",
+    "family": "wallflyer",
+    "t": 278,
+    "ticks": 122,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@144,112",
+    "family": "wallflyer",
+    "t": 142,
+    "ticks": 136,
+    "forks": 2
+   },
+   {
+    "id": "wallflyer@128,80",
+    "family": "wallflyer",
+    "t": 278,
+    "ticks": 122,
+    "forks": 1
+   }
+  ],
+  "refused": []
+ },
+ "spearArm": {
+  "SPEAR_ARM_COUNTS": {
+   "policies": 0,
+   "equips": 0,
+   "swallowed": 0
+  }
+ }
+}

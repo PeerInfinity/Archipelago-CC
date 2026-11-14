@@ -1,0 +1,41 @@
+{
+ "variant": "sword",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 1865,
+ "work": 643,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 642,
+   "deadline": "detour",
+   "limit": "budget"
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 1,
+   "deadline": "walk",
+   "limit": "budget"
+  }
+ ],
+ "message": "solverBot(js-runtime-L22-exit): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.",
+ "bodyFamily": {
+  "asked": 0,
+  "kills": [],
+  "refused": []
+ },
+ "spearArm": {
+  "SPEAR_ARM_COUNTS": {
+   "policies": 0,
+   "equips": 0,
+   "swallowed": 0
+  }
+ }
+}
