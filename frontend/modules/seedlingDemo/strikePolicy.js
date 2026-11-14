@@ -173,6 +173,68 @@ export const CEREMONY_PRESS_COUNTS = { aim: 0, press: 0, planned: 0 };
 export const CEREMONY_EXACT_COUNTS = { stepped: 0, cleared: 0 };
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE OPP-DASH-DEFERS — **A BODY-GATED PRESS THAT WOULD DASH IS REFUSED BY THE RUN'S OWN SLASH
+ * STATE, WHOEVER PRESSED LAST** (`OPP_DASH_DEFERS`, OFF; `SEEDLING_OPP_DASH_DEFERS=1`, `withOppDashDefers`).
+ *
+ * ⛔ MEASURED (`CC/docs/cloud-reports/seedling-hammer-opp-dash-defers.md` § 3): with `allowDash` false (every dashless
+ * pass) `decide`'s dash refusal asks `lastPressAt` — THIS policy's own previous press — and nothing else, because
+ * `forecast` is built only under `allowDash`. A press of another verb (the press kill's own `PRESS`) is invisible to
+ * it, so the opportunistic aim after a kill's press is offered, and its press lands inside `set slashing`'s
+ * double-tap window and DASHES (`Player.as:779` has no `!slashing` term). Leg `level_40__r48c54 <- in_L39_144_0 ~>
+ * level_40__r26c13 -> … flag 12`: the kill pressed at t719, OPP aimed at t722 and pressed at t723 → vy 0.8 → 2.55.
+ * The policy's own docblock promises the opposite (*"at `allowDash: false` … the refusal below already forbids every
+ * press that could dash"*).
+ *
+ * ⇒ ON, when the caller supplied the slash state (the drive's `run.progress('slashInfo')`, the preview's own threaded
+ * state — ⚖ 30(c) holds because both already pass it), a candidate press is also asked of `slashPressForecast` at
+ * `tick + 1`, the same question the `allowDash: true` arm asks: an outcome of `dash` is refused, the walk keeps its
+ * keys. Only the REFUSAL reads it; the scan's rect stays the plain swing's (a refused press swings no rect).
+ */
+export const OPP_DASH_DEFERS = { enabled: globalThis.process?.env?.SEEDLING_OPP_DASH_DEFERS === '1' };
+/**
+ * The switch's instrument, counted OFF and ON: `asked` aims with a body chosen that the own-press rule let through
+ * with a slash state to ask, `inWindow` of them whose press would dash, `deferred` the ones refused (ON only).
+ */
+export const OPP_DASH_DEFERS_COUNTS = { asked: 0, inWindow: 0, deferred: 0 };
+/** `{tick, targets, enabled, why}` per in-window aim, for a census (inert while `null`). */
+export const OPP_DASH_DEFERS_TRACE = { sink: null };
+
+/** Run `fn` with `OPP_DASH_DEFERS` set to `enabled`, restoring the previous value. */
+export function withOppDashDefers(enabled, fn) {
+    const was = OPP_DASH_DEFERS.enabled;
+    OPP_DASH_DEFERS.enabled = enabled === true;
+    const restore = () => { OPP_DASH_DEFERS.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * OPP-DASH-DEFERS — would the press an aim at `tick` earns DASH, by the caller's slash state? `null` when it would
+ * not, when no slash state was supplied, or with the switch OFF (counted all the same); else `{why}`.
+ */
+function pressDashesByRunSlash(slash, state, tick, chosen) {
+    if (chosen.length === 0 || !slash?.state || !slash?.gate) return null;
+    OPP_DASH_DEFERS_COUNTS.asked += 1;
+    const f = slashPressForecast(slash, { tick, ticksAhead: 1, direction: state.direction ?? 0 });
+    if (f.outcome !== 'dash') return null;
+    OPP_DASH_DEFERS_COUNTS.inWindow += 1;
+    OPP_DASH_DEFERS_TRACE.sink?.({ tick, targets: chosen.map((c) => c.id), enabled: OPP_DASH_DEFERS.enabled,
+        why: f.why });
+    if (!OPP_DASH_DEFERS.enabled) return null;
+    OPP_DASH_DEFERS_COUNTS.deferred += 1;
+    return { why: `a press at tick ${f.at} WOULD DASH by the run's slash state (${f.why}) — a press of another `
+        + 'verb is inside the double-tap window, which this policy\'s own `lastPressAt` cannot see. `allowDash` is '
+        + 'false, so no press may dash at all and this one is refused (OPP_DASH_DEFERS).' };
+}
+
+/**
  * ⛓ fidelity FROZENPRESS D1 — **THE OPTIONS A RUN-SIDE `decide` IS ASKED WITH**: the run's slash state, and with
  * `CONTACT_FIDELITY.frozenPressForecast` ON the run's `freezeForecast` (`levelRun.freezeForecastNow`: will the next
  * tick's input be refused). OFF: `{ slash }`, the object every caller built before — byte-identical. The preview
@@ -1326,9 +1388,12 @@ export function createStrikePolicy({
              * reached* — which is the right list for a refusal row to carry,
              * and is never a list anything acts on.
              */
-            const wouldDash = forecast
+            const ownWouldDash = forecast
                 ? forecast.outcome === 'dash'
                 : (lastPressAt !== null && (tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD);
+            // ⛓ OPP-DASH-DEFERS: the run's slash state, asked only where the rule above had none to ask (OFF ⇒ `null`)
+            const anyVerb = forecast || ownWouldDash ? null : pressDashesByRunSlash(slash, state, tick, chosen);
+            const wouldDash = ownWouldDash || anyVerb !== null;
             if (chosen.length > 0 && wouldDash) {
                 trace.push({
                     tick,
@@ -1340,7 +1405,8 @@ export function createStrikePolicy({
                         wouldPressAt: forecast?.at ?? tick + 1,
                         inReach: chosen.map((c) => c.id),
                         opportunistic: true,
-                        why: forecast
+                        ...(anyVerb !== null ? { anyVerb: true } : {}),
+                        why: anyVerb !== null ? anyVerb.why : forecast
                             ? `a press at tick ${forecast.at} WOULD DASH (${forecast.why}) and `
                                 + 'it is an OPPORTUNISTIC one — chosen because a body is in '
                                 + 'reach, not for the displacement it buys along the route. '
