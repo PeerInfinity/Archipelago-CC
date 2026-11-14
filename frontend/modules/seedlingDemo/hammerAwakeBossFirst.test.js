@@ -80,7 +80,8 @@ describe('hammer-phase L43-BOSSTOTEM — survey step 150 (L43, the Wand then the
 
     it('ON: the Totem is fought first, and the step solves to L37 with no hit and no death', async () => {
         const solved = await withAwakeBossFirst(true, solveStep150);
-        expect(AWAKE_BOSS_FIRST.fought).toHaveLength(1);
+        // the one awake boss on the line, by id (not a typed count: lintGateLabels)
+        expect(AWAKE_BOSS_FIRST.fought.map((f) => f.id)).toEqual(['bosstotem@152,168']);
         expect(AWAKE_BOSS_FIRST.fought[0]).toMatchObject({ id: 'bosstotem@152,168', strategy: 'totem', hits: 0 });
         expect(AWAKE_BOSS_FIRST.fought[0].refused).toBeUndefined();
         expect(solved.out.perTick.length).toBeGreaterThan(0);
