@@ -170,6 +170,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('connection:reconnecting');
   registrationApi.registerEventBusPublisher('game:roomInfo');
   registrationApi.registerEventBusPublisher('game:connected');
+  // After _handleConnected's applyRuntimeStateData (game:connected comes before it): RE1, reconnect events.
+  registrationApi.registerEventBusPublisher('client:connectedStateApplied');
   registrationApi.registerEventBusPublisher('game:bounced');
   registrationApi.registerEventBusPublisher('game:bouncedMessage');
   registrationApi.registerEventBusPublisher('game:roomUpdate');

@@ -9,7 +9,7 @@ import {
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
 import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { SolveWatchView } from './seedlingSolveWatchView.js';
-import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, RULES_RELOADED_IN_PLACE_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, entranceShuffleRefusal, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
@@ -468,6 +468,9 @@ export class FlashPanelUI {
     if (pinned || key === this._lastFlashPanelKey) {
       // ⛓ SAME WIRING, NEW RULES — no re-mount, but the region data the attach built is the OLD rules'.
       this._reloadRulesDerived();
+      // ⛓ RE1 — and the state manager was rebuilt under a game that kept its flags: the glue re-derives its
+      // game-state events (`SeedlingRegionGlue.rederiveEvents`).
+      this.eventBus?.publish?.(RULES_RELOADED_IN_PLACE_EVENT, { pinned });
       return;
     }
     this._lastFlashPanelKey = key;
