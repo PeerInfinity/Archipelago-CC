@@ -19,6 +19,7 @@ import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
+import { roomExtrasOf } from './textAdventureRoom.js';
 import { TextAdventurePlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
@@ -176,6 +177,11 @@ async function loadSettings() {
 // out of the engine's world.
 let _procgenMode = false;
 let _procgenSidecarRegions = [];
+// ⛓ CONTENT SETS S1 — every text-adventure room's place and things, from the
+// whole document (`roomExtrasOf`): the bridge learns a payload only for the
+// region it enters, so this is how an exit names its target's place, and how a
+// room's things are known when the world is built.
+let _roomExtras = {};
 
 function _buildInitialStatePayload() {
     const settings = getDiscoverySettings();
@@ -202,6 +208,7 @@ function _buildInitialStatePayload() {
         discoveredExits,
         procgenMode: _procgenMode,
         procgenSidecarRegions: _procgenSidecarRegions,
+        roomExtras: _roomExtras,
         // Host settings pushed to the engine via setOption(). Bridge
         // applies them on receipt; runtime changes re-broadcast on
         // settings:changed.
@@ -289,6 +296,7 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
         const sidecars = rulesJson?.preset_sidecars?.[playerId];
         _procgenMode = !!sidecars;
         _procgenSidecarRegions = sidecars ? Object.keys(sidecars) : [];
+        _roomExtras = roomExtrasOf(sidecars);
         const url = pickAutoLoadCustomDataUrl(rulesJson, playerId, _settings.autoLoadCustomData);
         await fetchAndCacheCustomData(url);
         eventBus.publish(INITIAL_STATE_EVENT, _buildInitialStatePayload());

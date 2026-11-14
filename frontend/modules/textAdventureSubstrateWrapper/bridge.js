@@ -35,6 +35,8 @@ import {
     customExitInaccessibleMessage,
     composeProse,
     arrivalLine,
+    exitLabel,
+    thingLines,
 } from './templating.js';
 
 const statusEl = document.getElementById('status');
@@ -113,33 +115,63 @@ function captureRegionProse(regionName, world) {
     _regionProse.set(regionName, { prose, exitNameOf: (id) => names.get(id) ?? id });
 }
 
+// ⛓ CONTENT SETS S1 — EVERY room's extras, from the host (`roomExtrasOf` over the
+// whole document, delivered in initialState): `{<region>: {name?, description?,
+// things?}}`. The host holds every payload when the document loads; the bridge
+// otherwise learns a payload only for the region it enters. So an exit can name
+// its target's place before that room was ever entered.
+let _roomExtras = {};
+
 /**
  * ⛓ CONTENT SETS R1 — the room's own PLACE, from its payload prose: `{name?,
  * description?}` (a theme's `place` concept, baked at generation). Read off the
- * region's payload only — the per-game file's `regions.<name>.description` is
- * not a world document and stays unread.
+ * region's payload (the one `textAdventure:loadRegion` carried, else — ⛓ S1 —
+ * the host's table of every room) — the per-game file's
+ * `regions.<name>.description` is not a world document and stays unread.
  */
 function ownPlaceOf(regionName) {
     const prose = _regionProse.get(regionName)?.prose;
+    const extras = _roomExtras?.[regionName];
     const text = (v) => (typeof v === 'string' && v !== '' ? v : null);
-    return { name: text(prose?.name), description: text(prose?.description) };
+    return {
+        name: text(prose?.name) ?? text(extras?.name),
+        description: text(prose?.description) ?? text(extras?.description),
+    };
 }
+
+/** ⛓ S1 — the name a region is called by in an exit label or `{destinationRegion}`: its place, else its id. */
+function placeNameOf(regionName) {
+    return ownPlaceOf(regionName).name ?? regionName;
+}
+
+// ⛓ CONTENT SETS S1 — a room's THINGS (not AP checks) become engine items whose
+// id carries this prefix, so one can never be taken for an AP location name.
+const THING_ITEM_PREFIX = 'thing:';
+const isThingItemId = (id) => typeof id === 'string' && id.startsWith(THING_ITEM_PREFIX);
 
 /**
- * ⛓ CONTENT SETS R1 — a room's title is its place's name when its payload
- * carries one, else its region id (as before). Applied to the engine's room
- * when the world is built and whenever a region's payload arrives.
+ * ⛓ S1 — the engine items for a room's things (the host's table, which holds the
+ * whole document): never collected, no rule, discovered on entry. They are laid
+ * on the world when it is BUILT — the engine makes an item's state slots in
+ * `loadWorld`, so a thing added later would never render.
  */
-function applyOwnPlaceToWorld(regionName) {
-    const room = _activeWorld?.rooms?.[regionName];
-    if (!room) return;
-    room.title = ownPlaceOf(regionName).name ?? regionName;
+function thingItemsOf(regionName) {
+    const things = _roomExtras?.[regionName]?.things;
+    return (Array.isArray(things) ? things : []).map((t) => ({
+        id: `${THING_ITEM_PREFIX}${t.id}`,
+        label: t.name,
+        kind: t.kind,
+        thing: t,
+    }));
 }
 
-/** The prose document for one room: its payload prose laid over the per-game file. */
-function proseDocFor(regionName) {
-    const own = _regionProse.get(regionName);
-    return own ? composeProse(_customData, regionName, own.prose, own.exitNameOf) : _customData;
+/** ⛓ S1 — re-label every exit of the built world by its target's place (a place may arrive after the build). */
+function applyExitLabelsToWorld() {
+    for (const room of Object.values(_activeWorld?.rooms ?? {})) {
+        for (const exit of room.exits ?? []) {
+            if (exit.targetRoomId && exit.targetRoomId !== room.id) exit.label = exitLabel(exit.id, placeNameOf(exit.targetRoomId));
+        }
+    }
 }
 
 /**
@@ -220,12 +252,13 @@ function buildWorldFromStaticData(staticData, currentRegion) {
             description: `You are in ${regionName}.`,
             exits: (regionData.exits ?? []).map(e => ({
                 id: e.name,
+                // ⛓ S1: the target's place name when its payload names one, else its region id
                 label: e.connected_region
-                    ? `${e.name} (to ${e.connected_region})`
+                    ? exitLabel(e.name, placeNameOf(e.connected_region))
                     : e.name,
                 targetRoomId: e.connected_region ?? regionName,
             })),
-            items: (regionData.locations ?? []).map(loc => ({
+            items: [...(regionData.locations ?? []).map(loc => ({
                 id: loc.name,
                 label: loc.name,
                 // itemName is the AP item the location contains (e.g.
@@ -238,7 +271,7 @@ function buildWorldFromStaticData(staticData, currentRegion) {
                 description: loc.item?.name
                     ? `${loc.name} — checking sends '${loc.item.name}'.`
                     : loc.name,
-            })),
+            })), ...thingItemsOf(regionName)],
         };
         accessRules[regionName] = {
             exits: Object.fromEntries(
@@ -366,7 +399,7 @@ async function main() {
         // Push the exit's move prose (custom or generic) before
         // dispatching, so the message lands before the region change.
         const templated = customExitMoveMessage(proseDocFor(fromRoomId), exitId, {
-            destinationRegion: targetRoomId,
+            destinationRegion: placeNameOf(targetRoomId),
         });
         if (templated) {
             engine.displayMessage(templated, 'normal', { html: true });
@@ -383,6 +416,23 @@ async function main() {
 
     engine.on('command:examine', ({ roomId, itemId }) => {
         log('debug', 'engine command:examine', { roomId, itemId });
+        // ⛓ CONTENT SETS S1 — a THING is not an AP check: show its text and tell
+        // the app it was read (the clue seam), never publish user:locationCheck.
+        // Nothing is collected, so it can be examined again.
+        if (isThingItemId(itemId)) {
+            const thing = world?.rooms[roomId]?.items.find(i => i.id === itemId)?.thing;
+            if (!thing) return;
+            for (const line of thingLines(thing)) engine.displayMessage(line, 'normal', { html: true });
+            client.publishEventBus('content:thingExamined', {
+                region: roomId,
+                thing: thing.id,
+                kind: thing.kind,
+                concept: thing.concept,
+                info: thing.info?.concept ?? null,
+                originator: 'textAdventureSubstrateWrapper',
+            });
+            return;
+        }
         // Resolve the item the location contains (loc.item.name) vs.
         // the location name itself. Templates expect {item} = the
         // actual reward and {locationName} = the spot being searched;
@@ -444,7 +494,7 @@ async function main() {
         const exit = world?.rooms[fromRoomId]?.exits.find(e => e.id === exitId);
         const exitLabel = exit?.label ?? exitId;
         const t = customExitInaccessibleMessage(proseDocFor(fromRoomId), exitId, {
-            destinationRegion: targetRoomId,
+            destinationRegion: placeNameOf(targetRoomId),
         });
         engine.displayMessage(
             t ?? `You can't go that way: ${exitLabel}.`,
@@ -527,7 +577,8 @@ async function main() {
             // which case the overrides got cached but couldn't be
             // applied. Apply them now so the first compass render is
             // correct.
-            for (const regionName of _regionProse.keys()) applyOwnPlaceToWorld(regionName);
+            for (const regionName of Object.keys(w.rooms)) applyOwnPlaceToWorld(regionName);
+            applyExitLabelsToWorld();
             for (const regionName of _exitSideOverrides.keys()) {
                 applyExitSideOverridesToWorld(regionName);
             }
@@ -615,6 +666,14 @@ async function main() {
         _procgenSidecarRegions = Array.isArray(data.procgenSidecarRegions)
             ? new Set(data.procgenSidecarRegions)
             : null;
+        // ⛓ S1 — every room's place and things (a standalone document has none).
+        if ('roomExtras' in data) {
+            _roomExtras = _procgenMode && data.roomExtras && typeof data.roomExtras === 'object' ? data.roomExtras : {};
+            if (world) {
+                for (const regionName of Object.keys(world.rooms)) applyOwnPlaceToWorld(regionName);
+                applyExitLabelsToWorld();
+            }
+        }
         if (!world) return;
         engine.batchUpdate(() => {
             for (const regionName of data.discoveredRegions ?? []) {
@@ -710,6 +769,11 @@ async function main() {
                 { html: true },
             );
             engine.setCurrentRoom(newRegion);
+            // ⛓ S1 — a room's things are discovered when it is entered (the
+            // discovery module knows AP locations only, so nothing else would).
+            for (const item of world.rooms[newRegion].items) {
+                if (isThingItemId(item.id)) engine.setItemDiscovered(newRegion, item.id, true);
+            }
             evaluateAccessibilityForRoom(engine, client, world, newRegion);
         } else {
             log('warn', `${source} for unknown room`, newRegion);
@@ -732,6 +796,8 @@ async function main() {
         captureRegionProse(regionName, data?.world);
         applyExitSideOverridesToWorld(regionName);
         applyOwnPlaceToWorld(regionName);
+        // a newly loaded place renames every exit that leads here
+        applyExitLabelsToWorld();
         applyRegionChange(regionName, 'textAdventure:loadRegion');
     });
 

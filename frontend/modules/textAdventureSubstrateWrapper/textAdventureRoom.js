@@ -20,6 +20,8 @@
  *     manaEnabled?: true,   // deserialized worlds only, iff the payload's is `true`
  *     prose?: {enterMessage?, exits: {<exit_id>: {…}}, locations: {<id>: {…}}},
  *                           // concept library T2 — the region's own prose
+ *     things?: [{id, kind, concept, name, description?, says?, info?}],
+ *                           // content sets S1 — NOT AP checks (`roomThings`)
  *   }
  *
  * — no tiles, no entrance, no obstacles, and ⛔ **NO RNG DRAW anywhere**: a room
@@ -49,7 +51,8 @@ import { selectRealisation } from '../procgenPipeline/conceptSelection.js';
 import { resolveRole } from '../procgenCore/contentRoles.js';
 import { fillTemplate } from '../textLibrary/textLibrary.js';
 import {
-    GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONCEPT_REALISATIONS, TEXT_ADVENTURE_CONTENT_ROLES,
+    CHARACTER_TEXT_SLOTS, GATE_PROSE_SLOTS, INFO_TEXT_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONCEPT_REALISATIONS,
+    TEXT_ADVENTURE_CONTENT_ROLES,
 } from './textAdventureConceptRealisations.js';
 
 /** The rule every ungated exit / location compiles to. */
@@ -132,6 +135,65 @@ export function roomPlace(contentSet, regionId, rng) {
     return { name: place.name, ...(place.description ? { description: place.description } : {}) };
 }
 
+/** The HTML-escaped form of a value baked into an authored-markup template. */
+function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+}
+
+/** The kinds of thing a room may hold (a pack concept kind each). */
+export const THING_KINDS = Object.freeze(['character', 'object', 'info']);
+
+/**
+ * ⛓⛓ CONTENT SETS S1 — **THE ROOM'S THINGS** (not AP checks; ⚖ the user
+ * 2026-11-14: look-only in v0, one per room when the theme offers any, a
+ * character may stand in several rooms). The candidates come from the
+ * contract's `resolveRole`: one HOLDER from the `character` and `object` roles
+ * (characters first, then objects, each latest pack first) and one piece of
+ * INFORMATION from the `info` role. Each pick is by hash, as `roomPlace`:
+ *
+ *     hash32(`${rng state}:${region_id}:holder`) mod (holder count)
+ *     hash32(`${rng state}:${region_id}:info`)   mod (info count)
+ *
+ * — the rng's state is READ, never drawn from. With both, the holder carries
+ * the information; with only one, it stands alone (a thing of kind `info` when
+ * it is the information). None ⇒ `[]` and nothing is read. ⛔ No default pack
+ * offers a character, object or information that does not present a mechanic,
+ * so a world with no theme gets no `things` key.
+ *
+ * Text is BAKED (Q8): `says` and `body` resolved through the set's text
+ * library, with `{regionId}` and `{roomName}` (the room's place name, else its
+ * region id) filled here, HTML-escaped; any other placeholder is left as written.
+ */
+export function roomThings(contentSet, regionId, rng, { roomName = null } = {}) {
+    if (!contentSet) return [];
+    const roles = TEXT_ADVENTURE_CONTENT_ROLES;
+    const holders = [...resolveRole(roles, 'character', contentSet), ...resolveRole(roles, 'object', contentSet)];
+    const infos = resolveRole(roles, 'info', contentSet);
+    if (!holders.length && !infos.length) return [];
+    const state = typeof rng?.getState === 'function' ? rng.getState() : 0;
+    const pick = (list, what) => (list.length ? list[hash32(`${state}:${regionId}:${what}`) % list.length] : null);
+    const vars = { regionId: escapeHtml(regionId), roomName: escapeHtml(roomName ?? regionId) };
+    const bake = (t) => fillTemplate(t, vars);
+    const holder = pick(holders, 'holder');
+    const info = pick(infos, 'info');
+    const infoRecord = info ? {
+        concept: info.key, name: info.concept.name, [INFO_TEXT_SLOTS.body]: bake(info.text.body),
+    } : null;
+    if (!holder) return [{ id: 'thing_0', kind: 'info', concept: info.key, name: info.concept.name, info: infoRecord }];
+    const c = holder.concept;
+    return [{
+        id: 'thing_0',
+        kind: c.kind,
+        concept: holder.key,
+        name: c.name,
+        ...(c.description ? { description: c.description } : {}),
+        ...(c.kind === 'character' ? { [CHARACTER_TEXT_SLOTS.says]: bake(holder.text.says) } : {}),
+        ...(infoRecord ? { info: infoRecord } : {}),
+    }];
+}
+
 /**
  * The side a side-less exit takes. The layout driver leaves an exit without a
  * side when its target is not a grid neighbour (a teleporter); a room draws no
@@ -149,9 +211,9 @@ function sideAssigner(requested) {
  * `generateRegionCore` — the room: one exit record per requested exit, on its
  * requested side, no location yet. `entrances`, `size`, the libraries and
  * `biome` are accepted and IGNORED (nothing to lay out). ⛓ Content sets R1:
- * `params.contentSet` and `rng` are read for the room's PLACE only
+ * `params.contentSet` and `rng` are read for the room's PLACE
  * (`roomPlace`: a theme's `place` concept → `prose.name` / `prose.description`;
- * the rng's state is read, never drawn from).
+ * the rng's state is read, never drawn from) — ⛓ S1: and its THINGS (`roomThings`).
  *
  * The default exit id is the maze's (`exit` for a single exit, else `exit_<i>`)
  * so a region's exit names do not move with its substrate.
@@ -177,6 +239,8 @@ export function generateTextAdventureRoom(input = {}) {
     const world = { region_id, exits: roomExits, locations: [] };
     const place = roomPlace(input.params?.contentSet, region_id, input.rng);
     if (place) world.prose = { ...place, exits: {}, locations: {} };
+    const things = roomThings(input.params?.contentSet, region_id, input.rng, { roomName: place?.name ?? null });
+    if (things.length) world.things = things;
     return {
         world,
         exits_placed: [...roomExits.values()].map(({ exit_id, side }) => ({ exit_id, side })),
@@ -203,13 +267,6 @@ export function placeTextAdventureItems(world, input = {}) {
         placed_items.push({ item_id, location_id: id });
     }
     return { placed_items, placed_obstacles: [] };
-}
-
-/** The HTML-escaped form of a value baked into an authored-markup template. */
-function escapeHtml(s) {
-    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    }[c]));
 }
 
 /**
@@ -384,7 +441,8 @@ export function serializeTextAdventureRoom(world, extractedRules) {
     });
     const nameOf = new Map((world.locations ?? []).map((l, i) => [l.id, locations[i].name]));
     const prose = serializeProse(world.prose, nameOf);
-    return { exits, exitGates, locations, ...(prose ? { prose } : {}) };
+    const things = Array.isArray(world.things) && world.things.length ? structuredClone(world.things) : null;
+    return { exits, exitGates, locations, ...(prose ? { prose } : {}), ...(things ? { things } : {}) };
 }
 
 /** The message keys a region's `prose` may carry — the per-game file's own, per kind. */
@@ -473,7 +531,35 @@ export function deserializeTextAdventureRoom(payload) {
     const world = { exits, locations };
     if (payload.manaEnabled === true) world.manaEnabled = true;
     if (payload.prose) world.prose = structuredClone(payload.prose);
+    if (Array.isArray(payload.things) && payload.things.length) world.things = structuredClone(payload.things);
     return world;
+}
+
+/**
+ * ⛓⛓ CONTENT SETS S1 — **EVERY ROOM'S EXTRAS, FROM THE WHOLE DOCUMENT** (the
+ * host holds every payload when the document loads; the bridge learns a payload
+ * only for the region it enters). One player's `preset_sidecars` → `{<region>:
+ * {name?, description?, things?}}` for each text-adventure room that has any of
+ * them; a room with none, or a region of another substrate, is absent. The host
+ * hands it to the bridge in `initialState`, so an exit names its target's place
+ * before that room was ever entered. Clones: nothing aliases the document.
+ *
+ * @param {object|null|undefined} sidecars `rulesJson.preset_sidecars[player]`
+ * @returns {Object<string, {name?: string, description?: string, things?: object[]}>}
+ */
+export function roomExtrasOf(sidecars) {
+    const out = {};
+    for (const [region, sidecar] of Object.entries(sidecars ?? {})) {
+        if (sidecar?.substrate !== 'text_adventure') continue;
+        const p = sidecar.playable_payload;
+        const text = (v) => (typeof v === 'string' && v !== '' ? v : null);
+        const name = text(p?.prose?.name);
+        const description = text(p?.prose?.description);
+        const things = Array.isArray(p?.things) && p.things.length ? structuredClone(p.things) : null;
+        if (!name && !description && !things) continue;
+        out[region] = { ...(name ? { name } : {}), ...(description ? { description } : {}), ...(things ? { things } : {}) };
+    }
+    return out;
 }
 
 /** One Rule Builder rule tree, as far as a payload check can say: an object naming its `rule`. */
@@ -557,6 +643,40 @@ export const TEXT_ADVENTURE_SIDECAR_FIELDS = Object.freeze({
                 enterMessage: PROSE_MESSAGE,
                 exits: proseTable(PROSE_KEYS.exit),
                 locations: proseTable(PROSE_KEYS.location),
+            }),
+        }),
+    }),
+    things: Object.freeze({
+        type: 'array',
+        description: 'The room\'s THINGS (content sets S1): characters, objects and pieces of information that are '
+            + 'NOT AP checks — never in `regions[].locations`, never in a rule, no state; looked at, talked to or '
+            + 'read at play, any number of times (look-only in v0). `{id, kind: character|object|info, concept, name, '
+            + 'description?, says?, info?: {concept, name, body}}`, `concept` the pack concept key. Written by '
+            + '`serializeTextAdventureRoom` only when a theme offers one (`roomThings`: one holder and one piece of '
+            + 'information per room, by hash); the text is baked at generation (Q8).',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['id', 'kind', 'concept', 'name']),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    id: Object.freeze({ type: 'string', minLength: 1 }),
+                    kind: Object.freeze({ enum: THING_KINDS }),
+                    concept: Object.freeze({ type: 'string', minLength: 1 }),
+                    name: Object.freeze({ type: 'string', minLength: 1 }),
+                    description: PROSE_MESSAGE,
+                    says: PROSE_MESSAGE,
+                    info: Object.freeze({
+                        type: 'object',
+                        required: Object.freeze(['concept', 'name', 'body']),
+                        additionalProperties: false,
+                        properties: Object.freeze({
+                            concept: Object.freeze({ type: 'string', minLength: 1 }),
+                            name: Object.freeze({ type: 'string', minLength: 1 }),
+                            body: PROSE_MESSAGE,
+                        }),
+                    }),
+                }),
             }),
         }),
     }),
