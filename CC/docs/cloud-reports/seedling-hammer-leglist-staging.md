@@ -13,6 +13,8 @@
 
 ## 2. The answer first
 
+> ⛓ **Superseded in part by §10** (the planner's follow-up after rules-7's review). The with-events fallback is gone, and a non-crossable arrival now SKIPS by name instead of staging. ON now stages **3** legs and skips **73**; carry radius 83 → **71**. §§2–9 describe `dd55ff61`; §10 describes head.
+
 - **The switch:** `--stage-edge-events`, a producer flag of `scripts/procgen/seedling-divergence-legs.mjs`. It is opt-in, like `--carry-route-flags`.
   - It is not a `SOLVER_ENV_NAMES` switch. It changes a measurement list, not the solver, and nothing on the page or in a worker reads it.
   - The sweep only reads the jsonl it is given.
@@ -175,3 +177,128 @@ No other leg moves: it is byte-identical ON and OFF.
 - No solver, `solverEnvChannel`, fidelity, `botDriverV*`, `flashPanel/*`, rules, AS3, wasm or gitlink change.
 - No `standing-values --write`, pytest or unfiltered vitest.
 - Scratch copies of the producer (base copy, census instrument) were created and deleted under `scripts/procgen/`; `git status` was clean of them before the commit.
+
+## 10. Follow-up (planner `seedling-hammer-phase-planning-8`, after rules-7's review of `dd55ff61`)
+
+**What the follow-up asked, and what I did:**
+
+| | asked | done |
+|---|---|---|
+| 1 | drop the `holdsWithEvents` fallback | done |
+| 2 | in `arrivalEdgeEvents`, drop arrival paths whose edge does not hold at the sphere, and stage per the held paths that remain | done |
+| 3 | if NO path holds, don't stage; skip the leg by name | done: `arrival-not-crossable-at-sphere` |
+| 4 | re-run the census; name any leg the AP route reaches ONLY through a non-holding edge | done: there are none |
+| — | keep the "every path needs one ⇒ union" aggregation | kept (residue below) |
+
+rules-7 accepted the `Or` reading (`requiredEvents` ∪ the cheapest HELD branch); it is unchanged.
+
+**The change** (commit `727fbf4a26`):
+- `sphereEdgeEvents(rule, byItem, holds)` returns `null` when no branch holds at the sphere. It has no fallback.
+- A door path now carries `{rule, name, from}`. The call site treats a path as not crossable when its source region `from` is not in the sphere's reached set. It reports that as `(source region <r> unreached)`.
+- `arrivalEdgeEvents` returns one of two shapes:
+  - `{events}` over the held paths (a dropped path takes no part in the "every path needs one" test);
+  - `{blocked: [why]}` when none holds. A link path is blocked when its source arrival is.
+- `withEdgeEvents(leg, edge, sphereLabel)` skips a blocked leg with this reason, and stamps it `edgeEvents: []`:
+  `arrival-not-crossable-at-sphere: <edge> needs <rule> | <edge> (source region <r> unreached); … — no arrival path crossable at <sphere>`
+- The new helper `ruleText` renders a rule on one line for that reason.
+
+**md5s and counts** (all six presets, the default):
+
+| list | base `39e8a29f7f` | `dd55ff61` | head (`727fbf4a26`) |
+|---|---|---|---|
+| default (OFF) | `fc1c0431d22ef2263c2d655bec98abaa` | the same | **the same** |
+| `--carry-route-flags` (OFF) | `95ed7f6abafb8677566b21d055a6724e` | the same | **the same** |
+| `--stage-edge-events` | — | `a5e77560…` | `173cb968dc77424e1934dd8a2a08220f` |
+| both flags | — | `ed617426…` | `11171bf9ba6a66e85448b7123e3fc5b3` |
+| legs that stage an edge event | — | 17 | **3** |
+| legs skipped by the switch | — | 2 (`goal-is-a-staged-event`) | **73** (`arrival-not-crossable-at-sphere`), 0 other |
+| route-carry radius ON | — | 80 | **71** (OFF 83) |
+| acceptance md5 | `391322d681b7aa0229d94b3f6906d024` | the same | **the same** |
+
+**The 3 movers that stage.** Each staged event is in its sphere's inventory; a test row asserts it.
+- `level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304` stages `flag:L62:0` (6.5).
+- `level_64 <- in_L62_112_64 -> location:Level 064 - Ghostspear` stages `flag:L62:0` (6.4).
+- `level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest` stages `flag:L63:7` (12.2).
+
+**The 16 formerly-fallback legs** are now skipped as not crossable, each by its own edge:
+- `level_63__r0c1 -> level_62 #2` needs `Any(L63 flag 1, Ghost Spear)`:
+  - `level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304` (5.6)
+  - `level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304` (5.6)
+  - `level_62 <- in_L63_64_0 -> exit:out_teleporter_112_64` (6.4)
+  - `level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304` (5.6)
+- `level_64 -> level_62` (source region `level_64` unreached at 5.6):
+  - `level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304`
+  - `level_62 <- in_L64_32_96 -> exit:out_teleporter_96_304`
+  - `level_62 <- in_L64_32_96 -> exit:out_teleporter_192_304`
+- `level_62 -> level_63__r0c1 #2` needs `Any(L63 flag 1, Ghost Spear)` (5.6):
+  - `level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48`
+  - `level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96`
+  - `level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0`
+  - `level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared`
+- `level_65__r0c8 -> level_63__r6c9` needs `All(Any(L63 flag 7, All(Ghost Sword Fusion, …)), Any(L65 flag 0, Ghost Spear))` (7.5):
+  - `level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304`
+  - `level_63__r6c9 <- in_L65_128_0 -> location:L63 flag 7: lightpole@112,272 cleared`
+- `level_65__r0c2 -> level_63__r10c2` needs `Any(L63 flag 6, All(Ghost Spear, Ghost Sword Fusion, Progressive Sword))` (7.5):
+  - `level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208`
+  - `level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304`
+  - `level_63__r10c2 <- in_L65_32_0 -> location:L63 flag 6: lightpole@48,272 cleared`
+
+**The other 57 skipped legs: the switch is generic, and the planner should see these.** "No path holds" is not limited to event-naming edges. 57 more legs arrive only through a door or link that the AP route cannot cross at the leg's sphere:
+- an item it does not hold yet: Fire, Wand, Progressive Swim;
+- a static event the route has not collected yet: these legs already stage it OFF. Their edges name L12:7+12, L24:0, L39:8, L71:2, L112:1 and L113:0;
+- or a source region the route has not reached.
+
+That includes legs that the existing sweep and rules-7's witness ran:
+
+| leg (key) | sphere | why skipped |
+|---|---|---|
+| `level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest` | 4.8 | `level_83 → level_12__r42c28` needs `All(L12 flag 7, L12 flag 12)`, not held at 4.8 |
+| the L30 Torchpickup / bosslock legs from both L32 pits (8 exits/locations) | 3.5 / 3.8 | `level_32` unreached, or Fire not held |
+| `level_38 <- in_L39_144_624 -> location:Level 038 - Chest` | 4.8 | `level_39__r25c9` unreached |
+| L71 r0c6's four legs from L76 | 10.1 | `level_76` unreached |
+| L113's twelve legs from L115 | 13.6–14.2 | `level_115__r9c4` unreached, or L113 flag 0 not held |
+
+Full list by edge: `seedling-hammer-leglist-staging-evidence/not-crossable-by-edge.txt` (37 edge groups, 73 keys). Per-leg rows with the region's holding entrances: `not-crossable-legs.txt`, produced by `census-not-crossable.mjs`.
+
+An ON sweep therefore runs 73 fewer legs than OFF. If the planner wants the staging without the generic skip, the narrow form is to skip only when a dropped path's rule names an event. That would skip the 16 and keep the 57 running as today. I did not build it; it is a one-condition change in `withEdgeEvents`.
+
+**(4) Sphere-assignment question: none.** For every one of the 73, the leg's region IS reached at its sphere, through at least one rules entrance that holds there with its source reached. `census-not-crossable.mjs` checks every rules exit into the region, not only the sidecar doors. Examples:
+- L62 at 5.6: via `level_61__r0c7`, `level_61__r0c10`, and the free `level_63__r0c1 → level_62`;
+- L63 r6c9 at 7.5: via `level_63__r0c1 → level_63__r6c9`.
+
+So in each case the route enters the room another way, and the leg's own door is simply not that way. **0 legs are reached ONLY through a non-holding edge.**
+
+**Route carry (with `--carry-route-flags`), the rows that move ON:**
+- `level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304`: `[L62:0]` → none, because it now stages `L62:0`.
+- L63 Chest: `[L63:1, L63:6, L63:7]` → `[L63:1, L63:6]`.
+- 10 more lose their carry because they are now skipped:
+  - L12 r42c28 ×2: `[L12:4, :5, :10, :3(, :11)]`;
+  - L30 r2c10 ×4: `[L30:0(, :2)]`;
+  - the L65-door legs into L63 r6c9 ×2 and r10c2 ×3.
+
+  (The census row "L12 Chest via L83" and two of "L30 Torchpickup" leave the ON carry this way.)
+
+**Rows** (`seedlingDivergenceEdgeEvents.test.js`, now 22 tests):
+- `sphereEdgeEvents` returns `null` when no branch holds;
+- a MUTANT row shows the retired fallback would have staged flag 7 on an edge nobody can cross;
+- `arrivalEdgeEvents`:
+  - drops a non-crossable path;
+  - returns `{blocked}` by edge name and reason;
+  - a blocked source blocks the link path;
+- `withEdgeEvents` builds the exact skip text;
+- on the committed list:
+  - **the stagers are exactly those 3** (by key), each with its event held at its sphere;
+  - every other mover is a not-crossable skip;
+  - rules-7's L65 → r6c9 leg at 7.5 is skipped (it is not staged);
+  - the controls and L68 Health are unchanged.
+
+**Gates:**
+- Bounded vitest:
+  - the 3 leg-list files: **80 passed**;
+  - `frontend/modules/procgenDocs/`, `checkProcgenHelp`, `lintGateLabels`: **10 files, 515 passed**.
+- `generate-procgen-reference.mjs --check`, `census-seedling-solver-surface.mjs --check` and `generate-docs-index.mjs --check` are all current; the follow-up changed no flags.
+
+**Residue (follow-up):**
+- **The "every path needs one ⇒ union" aggregation is kept as you asked.** Over the held paths, an arrival whose held doors each need a different event stages the union of them. The real route needed only one door. It does not occur on this list: the 3 stagers each have one held path needing one event. But it is the same fail-closed over-staging the default `arrivalEventNeeds` has.
+- The narrow-skip alternative above is open for the planner.
+- No sweep was run on the ON list.
