@@ -15053,7 +15053,7 @@ function stepToward(run, aim, intended) {
     if (!forecast.length) return intended;
     const step = previewOrDeath(run.previewStepper());
     // ⛓ hammer-phase L40-SPINNER-WALLS (`SHOVED_BODY_LOOKAHEAD`, OFF ⇒ not reached): a shoved body deepens the survival horizon
-    if (SHOVED_BODY_LOOKAHEAD.enabled) { const deep = shovedStepToward(run, aim, intended, stepOptions(intended)); if (deep !== null) return deep; }
+    if (SHOVED_BODY_LOOKAHEAD.enabled) { const deep = shovedStepToward(run, aim, intended, stepOptions(intended), forecast); if (deep !== null) return deep; }
     // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ `clearOfHammersAt`): a body the run would not bill is no wall
     const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
@@ -15237,8 +15237,7 @@ export function shovedHorizon(forecast) {
  * (now up to the horizon) and distance to the aim second. `null` ⇒ answer as OFF: no shoved body in the forecast, or
  * the step budget ran out.
  */
-function shovedStepToward(run, aim, intended, options) {
-    const head = run.spinnerForecast(STEP_LOOKAHEAD + 2);
+function shovedStepToward(run, aim, intended, options, head = run.spinnerForecast(STEP_LOOKAHEAD + 2)) {
     const horizon = shovedHorizon(head);
     SHOVED_BODY_LOOKAHEAD_COUNTS.asked += 1;
     if (horizon <= STEP_LOOKAHEAD) return null;
