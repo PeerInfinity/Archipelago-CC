@@ -110,6 +110,8 @@ at its deadline in **both** arms at clocks 5207..5219, with identical pass rows 
 (`evidence/seam-census-871-872-shipped-defaults.tsv`). So on these two captured requests the wall moves no page
 verdict. ⚠ The captures are from `97739720dd`; a fresh sweep of the two keys is dispatch 2 of § 6.
 
+> ⚠ **Erratum (2026-11-12, measured by hammer's DYING-BODY-WAIT, `CC/docs/cloud-reports/seedling-hammer-dying-body-wait.md` §3/§8.1/§9 on its branch):** leg 871 (now 878) refuses at clock **826** against a **LIVE** `bob@736,752`. The "first decision ends at t724 … the danger the ladder names is that dying body" reading above is the branch `OPP_PRESS_FALLBACK` threw away, after its `spinner@880,848` press met `HAMMER_SAFETY` ("no step out") at t724. The conclusion stands: the old plan is hitless on the game, and the refusal is the search's (the spinner-press corner at t719–t724, hammer's).
+
 ### D2 — `hammerClearTagChain.train` leg 872 (PASS)
 
 Still solves hitless with the same chain (`kill, bait, kill, bait, kill, hold`): work **3467 → 3823**, **2389 → 2385 t**.

@@ -43,6 +43,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Worker as NodeWorker } from 'node:worker_threads';
+import { serialize } from 'node:v8';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
@@ -245,6 +246,72 @@ describe('solve progress — observation only, off unless subscribed', () => {
             for (let i = 1; i < seqs.length; i += 1) expect(seqs[i]).toBeGreaterThanOrEqual(seqs[i - 1]);
         }
     }, 120000);
+});
+
+/**
+ * ⛓ PANEL-ROUTE — `best.route` on REAL solves through the real worker: the plan in hand's tile path, read off the
+ * plan's own rows (`plan.expected`, the posted plan) and the dash presses recorded beside it. Pinned against the
+ * POSTED plan: the arrival's tile first, the last tile on the route's level last, no consecutive duplicate, the level
+ * the arrival's; `dashes` `[]` on a plan that dashes nowhere, and every dash tile a tile of the plan's rows.
+ */
+const tileOf = (r) => [Math.floor(r.x / 16), Math.floor(r.y / 16)];
+describe('⛓ PANEL-ROUTE — the plan in hand\'s tile path on the stream', () => {
+    for (const w of WITNESSES) {
+        it(`${w.name}: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber`, async () => {
+            const off = await solveWitness(w, { subscribe: false });
+            const on = await solveWitness(w, { subscribe: true });
+            // ⛔ OBSERVATION ONLY — the dash record rides beside the plan, never on it: the posted plans (and every
+            // pass's) serialise to the same bytes, wall-clock fields aside, with the recorder on and off
+            const wallFree = (x) => (Array.isArray(x) ? x.map(wallFree)
+                : x && Object.getPrototypeOf(x) === Object.prototype
+                    ? Object.fromEntries(Object.entries(x).filter(([k]) => !/^ms$|Ms$/.test(k)).map(([k, v]) => [k, wallFree(v)])) : x);
+            const bytesOf = (g) => serialize(wallFree(g.msg.plan ?? null)).toString('hex');
+            const passesOf = (run) => run.log.got.filter((g) => g.msg.type === 'pass').map((g) => g.msg.answer)
+                .map((a) => JSON.stringify(a, (k, v) => (/^ms$|Ms$/.test(k) ? undefined : v)));
+            expect(on.results.map(bytesOf)).toEqual(off.results.map(bytesOf));
+            expect(passesOf(on)).toEqual(passesOf(off));
+            expect(on.results.map((g) => g.msg.work)).toEqual(off.results.map((g) => g.msg.work));
+            expect(runDigest(on.rt.run)).toBe(runDigest(off.rt.run));
+            for (const solve of on.solves) {
+                const mine = on.log.got.filter((g) => g.msg.id === solve.id);
+                const result = mine.find((g) => g.msg.type === 'result').msg;
+                const posts = mine.filter((g) => g.msg.type === SOLVE_PROGRESS_MESSAGE).map((g) => g.msg.snapshot);
+                const fin = posts.at(-1);
+                if (!result.ok) { expect(fin.best?.route).toBeUndefined(); continue; }
+                const rows = result.plan.expected;
+                const route = fin.best.route;
+                const level = rows[0].level;
+                const end = rows.findIndex((r) => r.level !== level);
+                const onLevel = end < 0 ? rows : rows.slice(0, end);
+                expect(route.level).toBe(level);
+                expect(route.level).toBe(solve.request.staging.boot.level);
+                expect(route.cells[0]).toEqual(tileOf(rows[0]));
+                expect(route.cells.at(-1)).toEqual(tileOf(onLevel.at(-1)));
+                for (let i = 1; i < route.cells.length; i += 1) expect(route.cells[i]).not.toEqual(route.cells[i - 1]);
+                expect(route.thinned).toBeUndefined();
+                const tiles = new Set(onLevel.map((r) => tileOf(r).join(',')));
+                expect(route.cells.every((c) => tiles.has(c.join(',')))).toBe(true);
+                expect(Array.isArray(route.dashes)).toBe(true);
+                expect(route.dashes.every((c) => tiles.has(c.join(',')))).toBe(true);
+                if (result.plan.dashMode === 'none' || result.pass === 'dashless') expect(route.dashes).toEqual([]);
+                // the dash record agrees with the solver's own count (`dashesPressed`, the final segment's — the pass
+                // that found `best` is the last one to run on both legs)
+                expect(fin.segment.pass).toBe(result.pass);
+                expect(route.dashes.length > 0).toBe(fin.budget.work.dashesPressed > 0);
+                expect(route.dashes.length).toBeLessThanOrEqual(fin.budget.work.dashesPressed);
+                // the route is on the tile map's grid: inside its room when the map is on the route's level
+                if (fin.tiles?.level === route.level) {
+                    expect(route.cells.every(([c, r]) => c >= 0 && r >= 0 && c < fin.tiles.cols && r < fin.tiles.rows)).toBe(true);
+                }
+                // eslint-disable-next-line no-console
+                console.log(`[panel-route] ${w.name} solve ${solve.id}: pass ${result.pass} · ${result.plan.solution.length} ticks · `
+                    + `${route.cells.length} cells · ${route.dashes.length} dashes · ${JSON.stringify(route).length} B · `
+                    + `passRoutes ${Object.keys(fin.best.passRoutes ?? {}).join(',') || '-'} · posts ${posts.length}`
+                    + ` · with route ${posts.filter((p) => p.best?.route).length} · dashesPressed ${fin.budget.work.dashesPressed}`
+                    + ` · map ${fin.tiles?.level}:${fin.tiles?.cols}x${fin.tiles?.rows} · ${JSON.stringify(route).slice(0, 400)}`);
+            }
+        }, 180000);
+    }
 });
 
 describe('solve progress — the stale drop (scripted worker)', () => {

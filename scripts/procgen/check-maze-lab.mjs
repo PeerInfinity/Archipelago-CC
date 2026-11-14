@@ -1056,6 +1056,59 @@ try {
         + '`false`, which claimed an answer nobody gave)',
         json(reloaded.certified));
 
+    /* ── CLAIM 23: a Seedling-CONVERTED room loads with its traps (maze converted load) ── */
+    {
+        /**
+         * ⛓⛓ The LOAD box takes a `rules.json` preset sidecar as it stands (`{substrate, playable_payload}`), whose
+         * `level` is the Seedling level NUMBER. The room is read off the committed preset at run time (no fixture):
+         * the sidecar whose payload carries the most `traps`.
+         * ⛔ Each press clears `#status` first and waits for the page's own "loaded a …" line: `loaded === true` is
+         * already true before a second load, so it would be a wait a PRE-state satisfies.
+         */
+        const rules = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json'), 'utf8'));
+        const [roomKey, sidecar] = Object.entries(rules.preset_sidecars['1']).filter(([, s]) => s.playable_payload?.traps)
+            .reduce((a, b) => (b[1].playable_payload.traps.length > a[1].playable_payload.traps.length ? b : a));
+        const want = sidecar.playable_payload.traps.length;
+        const press = async (doc, line, why) => {
+            if (doc !== null) await page.fill('#labText', JSON.stringify(doc));
+            await page.evaluate(() => { document.getElementById('status').textContent = ''; });
+            await page.click('#labLoad');
+            await settled((re) => new RegExp(re).test(document.getElementById('status')?.textContent ?? ''), why, line.source);
+            return read();
+        };
+        const LOADED = /^loaded a /;
+        const trapPixel = (t) => page.evaluate(({ x, y }) => {
+            const c = document.getElementById('canvas');
+            const px = c.width / window.__mazeLab.level.width;
+            return [...c.getContext('2d').getImageData(Math.floor((x + 0.5) * px), Math.floor((y + 0.5) * px), 1, 1).data];
+        }, { x: 0, y: 0, ...t });
+        const conv = await press(sidecar, LOADED, `the converted room ${roomKey}`);
+        check(conv.loaded === true && conv.level?.traps?.length === want && conv.level.width === sidecar.playable_payload.width,
+            `⛓⛓ CLAIM 23: the LOAD box takes the preset sidecar ${roomKey} AS IT STANDS (its \`level\` is the Seedling `
+            + `level ${sidecar.playable_payload.level}), and the room keeps its ${want} arrow trap(s)`,
+            `traps ${conv.level?.traps?.length} · ${conv.level?.width}x${conv.level?.height}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `1-converted-trap-room-${roomKey}.png`), fullPage: true });
+        const traps = sidecar.playable_payload.traps.map(({ x, y }) => ({ x, y }));
+        const withTraps = await Promise.all(traps.map(trapPixel));
+        const bare = JSON.parse(JSON.stringify(sidecar.playable_payload));
+        delete bare.traps; delete bare.trapLib;
+        const stripped = await press({ substrate: 'maze', playable_payload: bare }, LOADED, 'the same room without its traps');
+        const without = await Promise.all(traps.map(trapPixel));
+        check(!stripped.level.traps && withTraps.every((p, i) => json(p) !== json(without[i])),
+            '⛓ …and the canvas SHOWS them: every trap cell paints differently from the same room loaded without its '
+            + '`traps` (the renderer draws a world that has them)', `${json(withTraps[0])} vs ${json(without[0])}`);
+        const first = await press(sidecar, LOADED, `the converted room ${roomKey} again`);
+        const again = await press(null, LOADED, 'the reload from the save box');
+        check(json(again.payload) === json(first.payload) && again.level.traps.length === want,
+            '⛓ …and SAVE → RELOAD → SAVE is a fixed point: the save box\'s payload loads back to the same payload, traps '
+            + 'included', `${json(first.payload).length} bytes`);
+        const refused = await press({ substrate: 'maze', shared_world: 'level_0' }, /shared level world/,
+            'the room-less sidecar refusal');
+        check(json(refused.payload) === json(first.payload),
+            '⛔ …and a room-less sidecar (a region of a shared level world) is REFUSED BY NAME on the status line, '
+            + 'leaving the room on screen as it was');
+    }
+
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */
     await load('seed=1&count=1&run=1', () => window.__mazeLab?.step === 1, 'the form subject');
     await page.fill('#labSeed', '9');

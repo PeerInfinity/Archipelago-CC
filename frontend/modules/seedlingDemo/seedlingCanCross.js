@@ -297,6 +297,9 @@ const DEFECTS = [TypeError, ReferenceError, RangeError, SyntaxError, EvalError, 
  * SEEDLING FIDELITY ROBUST, D1: the two bounds that used to reach a caller only
  * as prose now carry `bound`). Returns null for a defect (the caller rethrows).
  */
+/** Coded model throws that `REFUSAL_BY_NAME` turns into refusals but that stay `model-refused` here. */
+const MODEL_REFUSED_CODES = new Set(['GHOST_SWING_NO_SWORD']);
+
 export function classifyError(e) {
     if (DEFECTS.some((C) => e instanceof C)) return null;
     if (e instanceof SolverRefusal) {
@@ -322,6 +325,12 @@ export function classifyError(e) {
             return { verdict: 'undecided', cause: { kind: 'bound', basis: 'field', bound: detour.name,
                 hit: detour.hit, maxPreviews: detour.maxPreviews, previews: detour.previews,
                 planned: detour.planned, maxPlanned: detour.maxPlanned, unasked: detour.unasked } };
+        }
+        // ⛓ a by-name refusal of a code that was a plain MODEL throw before it was coded (the Ghost-Sword-only swing,
+        // `GHOST_SWING_NO_SWORD`, 2026-11-12) keeps its verdict: the model refusing the state, not the game.
+        if (MODEL_REFUSED_CODES.has(e.byName?.code)) {
+            return { verdict: 'model-refused', cause: { kind: 'model', basis: 'field', name: e.byName.name ?? 'Error',
+                code: e.byName.code } };
         }
         return { verdict: 'cannot', cause: { kind: 'refusal', basis: 'field', name: e.name,
             obstacle: e.obstacle ?? null } };

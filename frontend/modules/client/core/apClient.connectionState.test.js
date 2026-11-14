@@ -8,9 +8,9 @@
  * the reconnect loop.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import { ApClient } from './apClient.js';
+import { ApClient, ClientNotReadyError } from './apClient.js';
 
 /** Minimal eventBus double recording every publish in order. */
 function makeEventBus() {
@@ -176,5 +176,61 @@ describe('ApClient connection state', () => {
     await expect(attempt).resolves.toBe(false);
     expect(bus.events()).not.toContain('connection:open');
     expect(bus.events()).not.toContain('connection:message');
+  });
+});
+
+// A connect issued before the client module's initialize() used to open the
+// socket, publish RoomInfo to a null bus and stop there: logged out, no
+// message. It is now refused before anything is opened.
+describe('ApClient connect before initialize (no event bus)', () => {
+  let client;
+  let socketConnect;
+  let consoleError;
+
+  beforeEach(() => {
+    client = new ApClient(); // no setEventBus: the state before initialize()
+    socketConnect = vi.fn(() => Promise.resolve({ cmd: 'RoomInfo' }));
+    client.client = { socket: { ...makeSocket({ connected: false }), connect: socketConnect } };
+    consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleError.mockRestore();
+  });
+
+  it('reports not ready until the event bus is set', () => {
+    expect(client.isReady()).toBe(false);
+    client.setEventBus(makeEventBus());
+    expect(client.isReady()).toBe(true);
+  });
+
+  it('connect() rejects with the reason, opens no socket and says so on the console', async () => {
+    await expect(client.connect('ws://localhost:38281')).rejects.toBeInstanceOf(ClientNotReadyError);
+    await expect(client.connect('ws://localhost:38281')).rejects.toMatchObject({
+      code: 'AP_CLIENT_NOT_READY',
+      message: expect.stringContaining('isReady()'),
+    });
+    expect(socketConnect).not.toHaveBeenCalled();
+    expect(client.serverAddress).toBeNull();
+    expect(client._disconnectSubscriber).toBeNull();
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('connect() was refused'));
+  });
+
+  it('requestConnect() throws the same reason synchronously', () => {
+    expect(() => client.requestConnect('ws://localhost:38281')).toThrow(ClientNotReadyError);
+    expect(socketConnect).not.toHaveBeenCalled();
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('requestConnect() was refused'));
+  });
+
+  it('connects as before once the bus is set', async () => {
+    const bus = makeEventBus();
+    client.setEventBus(bus);
+
+    await expect(client.connect('ws://localhost:38281')).resolves.toBe(true);
+
+    expect(socketConnect).toHaveBeenCalledWith('ws://localhost:38281');
+    expect(bus.events()).toEqual(['connection:connecting', 'connection:open', 'connection:message']);
+    expect(bus.published[2].data).toEqual([{ cmd: 'RoomInfo' }]);
+    expect(consoleError).not.toHaveBeenCalled();
   });
 });

@@ -6,7 +6,7 @@ import storage from './core/storage.js';
 // (see CC/docs/plans/client-archipelago-js-migration.md). The hand-rolled
 // connection.js was removed in Phase 5 of the migration. Also exposes
 // window.__apSpike for manual browser-console testing.
-import connection from './core/apClient.js';
+import connection, { ClientNotReadyError } from './core/apClient.js';
 import { getServerLocationId } from './utils/idMapping.js';
 import messageHandler, {
   handleUserLocationCheckForClient,
@@ -201,8 +201,11 @@ export function register(registrationApi) {
   registrationApi.registerPublicFunction(moduleInfo.name, 'connect', (serverAddress, playerName) => {
     log('info', `[Client Module] Public connect function called with server: ${serverAddress}, player: ${playerName}`);
     if (!coreConnection) {
-      log('error', '[Client Module] Cannot connect: Core connection not initialized.');
-      return false;
+      // Registered before initialize(): a connect now would lose RoomInfo
+      // silently, so refuse loudly: a console error and a thrown reason.
+      const error = new ClientNotReadyError('client.connect');
+      console.error(`[Client Module] ${error.message}`);
+      throw error;
     }
     // Store player name if provided
     if (playerName) {

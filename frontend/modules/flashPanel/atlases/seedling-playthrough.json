@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-e3ae176e",
+  "atlas_id": "seedling-3a6a7579",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "e3ae176e" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "3a6a7579" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -1783,53 +1783,81 @@
           "exit_id": "in_L21_80_160",
           "kind": "teleporter",
           "exit_tiles": [[6,1]],
-          "entrance_tile": [6,1]
+          "entrance_tile": [6,1],
+          "sub_region": "r0c6"
         },
         {
           "exit_id": "out_teleporter_0_128",
           "kind": "teleporter",
           "exit_tiles": [[0,8]],
-          "entrance_tile": [0,8]
+          "entrance_tile": [0,8],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_96_0",
           "kind": "teleporter",
           "exit_tiles": [[6,0]],
-          "entrance_tile": [6,0]
+          "entrance_tile": [6,0],
+          "sub_region": "r0c6"
         },
         {
           "exit_id": "out_teleporter_96_192",
           "kind": "teleporter",
           "exit_tiles": [[6,12]],
-          "entrance_tile": [6,12]
+          "entrance_tile": [6,12],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_192_64",
           "kind": "teleporter",
           "exit_tiles": [[12,4]],
-          "entrance_tile": [12,4]
+          "entrance_tile": [12,4],
+          "sub_region": "r0c6"
         },
         {
           "exit_id": "in_L25_144_32",
           "kind": "teleporter",
           "exit_tiles": [[1,8]],
-          "entrance_tile": [1,8]
+          "entrance_tile": [1,8],
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "in_L29_0_224",
           "kind": "teleporter",
           "exit_tiles": [[11,4]],
-          "entrance_tile": [11,4]
+          "entrance_tile": [11,4],
+          "sub_region": "r0c6"
         },
         {
           "exit_id": "in_L30_64_0",
           "kind": "teleporter",
           "exit_tiles": [[6,11]],
-          "entrance_tile": [6,11]
+          "entrance_tile": [6,11],
+          "sub_region": "r8c0"
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r0c6","r8c0"],
+        "internal_exits": [
+          { "from": "r0c6", "to": "r8c0", "bidirectional": false, "source": "analyzer" },
+          {
+            "from": "r8c0",
+            "to": "r0c6",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_23",
@@ -1920,43 +1948,69 @@
           "exit_id": "in_L22_0_128",
           "kind": "teleporter",
           "exit_tiles": [[8,2]],
-          "entrance_tile": [8,2]
+          "entrance_tile": [8,2],
+          "sub_region": "r2c7"
         },
         {
           "exit_id": "out_teleporter_0_96",
           "kind": "teleporter",
           "exit_tiles": [[0,6]],
-          "entrance_tile": [0,6]
+          "entrance_tile": [0,6],
+          "sub_region": "r3c2"
         },
         {
           "exit_id": "out_teleporter_96_128",
           "kind": "teleporter",
           "exit_tiles": [[6,8]],
-          "entrance_tile": [6,8]
+          "entrance_tile": [6,8],
+          "sub_region": "r2c7"
         },
         {
           "exit_id": "out_teleporter_144_32",
           "kind": "teleporter",
           "exit_tiles": [[9,2]],
-          "entrance_tile": [9,2]
+          "entrance_tile": [9,2],
+          "sub_region": "r2c7"
         },
         {
           "exit_id": "in_L26_144_32",
           "kind": "teleporter",
           "exit_tiles": [[1,6]],
-          "entrance_tile": [1,6]
+          "entrance_tile": [1,6],
+          "sub_region": "r3c2"
         },
         {
           "exit_id": "in_L28_96_0",
           "kind": "teleporter",
           "exit_tiles": [[6,7]],
-          "entrance_tile": [6,7]
+          "entrance_tile": [6,7],
+          "sub_region": "r2c7"
         }
       ],
       "locations": [
-        { "name": "Level 025 - Chest", "tile": [6,6], "vanilla_item": "Seal" }
+        { "name": "Level 025 - Chest", "tile": [6,6], "vanilla_item": "Seal", "sub_region": "r2c7" }
       ],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r2c7","r3c2"],
+        "internal_exits": [
+          { "from": "r2c7", "to": "r3c2", "bidirectional": false, "source": "analyzer" },
+          {
+            "from": "r3c2",
+            "to": "r2c7",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_26",

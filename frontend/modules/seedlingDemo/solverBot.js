@@ -463,7 +463,9 @@ export class SolverRefusal extends Error {
  *   · `levelRun`'s press on a FROZEN tick (`code: 'FROZEN_TICK_PRESS'`: a press the game drops under
  *     `Game.freezeObjects` / `frozenTimer`) — the solver's presses are not scheduled around a freeze;
  *   · `botDriverV2.findExit`'s teleporter standing on a PIT tile — the goal is a door the model does not transcribe;
- *   · `botDriverV2.runHold`'s presser that NO responder answers — the hold verb does not apply to it.
+ *   · `botDriverV2.runHold`'s presser that NO responder answers — the hold verb does not apply to it;
+ *   · `levelRun`'s ghostsword press by a run holding the Ghost Sword and NOT the Sword (`code: 'GHOST_SWING_NO_SWORD'`:
+ *     `slash()` is `if (hasSword)`, and the game's frozen-`slashTimer` dash knockback is a state this model does not carry).
  * Each is NAMED where the solver first sees it (`nameRefusal`: the error gains `obstacle` and `refusalByName`, so a
  * progress frame it unwinds through reads the obstacle's kind), and becomes a `SolverRefusal` only at the OUTERMOST
  * `solveSegment` (`refusingByName`). ⛔ NOT INSIDE THE LADDER: a frozen-tick press throws mid-`advance`, after the
@@ -475,8 +477,8 @@ export class SolverRefusal extends Error {
  */
 export const REFUSAL_BY_NAME = Object.freeze({
     /** a thrown error's `code` → the obstacle kind it names (the model sets the code; the solver owns the kind) */
-    codes: Object.freeze({ FROZEN_TICK_PRESS: 'unmodelled-frozen-press' }),
-    kinds: Object.freeze(['unmodelled-frozen-press', 'unmodelled-pit-teleporter', 'orphan-presser']),
+    codes: Object.freeze({ FROZEN_TICK_PRESS: 'unmodelled-frozen-press', GHOST_SWING_NO_SWORD: 'unmodelled-ghost-swing' }),
+    kinds: Object.freeze(['unmodelled-frozen-press', 'unmodelled-pit-teleporter', 'orphan-presser', 'unmodelled-ghost-swing']),
 });
 
 /** Name `e` (a non-refusal thrown under a solve) as a solver can't-do: `obstacle` + `refusalByName`. Returns `e`. */
