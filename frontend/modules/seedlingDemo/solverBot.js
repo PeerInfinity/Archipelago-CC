@@ -11457,6 +11457,44 @@ export function withAwakeBossFirst(enabled, fn) {
     return withSwitch(AWAKE_BOSS_FIRST, enabled, fn);
 }
 
+/**
+ * ⛓ hammer-phase L41-PUNCHER-LADDER (`SEEDLING_KILL_HIT_BODY`, OFF) — **THE KILL RUNG TAKES THE HIT'S OWN BODY when the
+ * chooser's head is not on the hit.** `chooseBodyToRemove` admits a body when its removal admits a corridor, and orders
+ * the admitted set by distance from the AIM. Where AVOID's re-plan already admits a corridor with every danger volume
+ * standing (the probe's hit is a chaser's forecast on the walk, not a volume the map forbids), that question is TRUE OF
+ * EVERY BODY, so the list is the whole roster and its head is the body nearest the destination — which the corridor
+ * probe never met. The kill rung then reasons about that body (a spinner by the goal → the press arm) and the climb ends
+ * EXHAUSTED although the chaser arm (which already reads `interceptOrder`) was never asked about the body the walk hit.
+ * MEASURED (seed-1 sweep leg `level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part
+ * 64,144`, base `4c3afd9b32`): the hit is `puncher@816,128` at (840.3,120.5), 9 px from the arrival; the chooser's head
+ * is `spinner@192,128`, 650 px away by the goal; BAIT and KILL both refuse on the spinner.
+ *
+ * ON: where the chooser's head is not among `hit.sources` and the head of `interceptOrder(removable, hit)` is (a body the
+ * chooser itself admitted, met by this probe), the kill rung's target is that body. BAIT is unchanged. OFF: not asked
+ * (byte-identical). `retargets` collects one row per retarget (measurement).
+ */
+export const KILL_HIT_BODY = {
+    enabled: globalThis.process?.env?.SEEDLING_KILL_HIT_BODY === '1',
+    retargets: [],
+};
+
+/** Run `fn` with `KILL_HIT_BODY` set to `enabled`, restoring the previous value. */
+export function withKillHitBody(enabled, fn) {
+    return withSwitch(KILL_HIT_BODY, enabled, fn);
+}
+
+/**
+ * `KILL_HIT_BODY`'s choice: the body the hit names first among the chooser's admitted set, when the set's head is not
+ * on the hit; else `null` (the rung keeps the chooser's head). Pure: `removable` is the chooser's list, `hit` the probe's.
+ */
+export function killHitBodyOf(removable, hit) {
+    const head = removable[0] ?? null;
+    const met = new Set((hit?.sources ?? []).map((sx) => sx.id));
+    if (head === null || met.has(head.id)) return null;
+    const first = interceptOrder(removable, hit)[0];
+    return first && met.has(first.id) ? first : null;
+}
+
 /** Does the segment (a → b) cross the rect `r` ({x, y, w, h})? Slab clipping; touching an edge counts. */
 function segmentCrossesRect(a, b, r) {
     let t0 = 0;
@@ -30867,7 +30905,10 @@ function solveSegmentUnder({
         // ── rung 4: KILL — the room's own weapon, held until the count moves ─
         if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
-        const target = body ?? null;
+        // ⛓ hammer-phase L41-PUNCHER-LADDER (`KILL_HIT_BODY`, OFF): the hit's own body where the chooser's head is not on it
+        const hitBody = KILL_HIT_BODY.enabled ? killHitBodyOf(removable, hit) : null;
+        if (hitBody !== null) KILL_HIT_BODY.retargets.push({ t: perTick.length, from: body.id, to: hitBody.id });
+        const target = hitBody ?? body ?? null;
         // ⛓ strategy switch r1 — the KILL rung off gates every arm below (ice turret, static sword, press, chaser,
         // orbit, light): it is asked only where some arm would run — a target, or a live darktrap ON the corridor (the
         // light arm's own filter below); a room with no trap and no target counts nothing (p17 review A).
