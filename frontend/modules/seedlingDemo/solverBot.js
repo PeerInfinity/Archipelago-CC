@@ -15433,20 +15433,149 @@ export function shovedHorizon(forecast) {
 }
 
 /**
- * `stepToward`'s choice under the shoved horizon: the same options in the same order, scored survival depth first
- * (now up to the horizon) and distance to the aim second. `null` ⇒ answer as OFF: no shoved body in the forecast, or
- * the step budget ran out.
+ * ⛓⛓ SEEDLING HAMMER-PHASE SPINNER-SHOVED-FOLLOWUP — **THE DEEP STEP PRICES THE CHASERS, AND A SOLVE PAYS FOR IT ONCE**
+ * (the same switch, `SHOVED_BODY_LOOKAHEAD`; report `CC/docs/cloud-reports/seedling-hammer-spinner-shoved-followup.md`).
+ *
+ * L40-SPINNER-WALLS § 9.1 measured two defects of the deep step as it shipped there, on
+ * `level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest` at arrival clocks 5234 / 5235:
+ *   (a) it chose against the SPINNERS only (as `stepToward` does OFF), so a spinner-safe walk could enter a chaser's
+ *       reach — those clocks became plans the model bills two chaser contacts on;
+ *   (b) its cost had no ceiling per solve (a per-answer step budget only): 821–1,124 s against 150–170 s OFF.
+ * ⇒ (a) where the room has a chaser forecast (`run.chaserForecast()`), a deep node is clear only when it is clear of
+ *       the chasers too — the first tick exactly as PKC's `landsClearOfChasers` asks it (the run's own forecast stepped
+ *       once against the player as the tick starts, then against the stepped player; `chaserDanger`'s per-tick arm),
+ *       the deeper ticks against the same forecast stepped on with the player held where it stands (the deep search
+ *       does not branch the chasers: a heuristic depth, like the memo's, never a verdict). A forecast the shake band
+ *       cannot answer leaves that answer unpriced for chasers (`banded`, PKC's rule);
+ *   (b) every deep answer's preview and forecast steps are charged to ONE budget per `solveSegment`
+ *       (`SHOVED_SOLVE_STEPS`, installed by `withShovedSolveBudget`); once it is spent, every later tick of that solve
+ *       answers as OFF (`solveSpent`). A deep search asked outside a segment (a test's direct call) has the per-answer
+ *       budget only;
+ *   (c) MEASURED here, the hits of (a) are not all the deep step's own: at L43 clock 5235 the chaser-priced deep step
+ *       removed the t832 contact, but the t776 one is billed on a tick no deep answer ran — the deep step's corner escape
+ *       (t649–t654) led the solve into a stretch OFF never reaches, where a later verb accepts a chaser contact. So a
+ *       segment in which a deep answer re-chose a key and whose plan then takes a player hit is refused by name
+ *       (`SHOVED_LOOKAHEAD_HIT`, `withShovedSolveBudget`): the switch may turn a refusal into a hitless plan, never into
+ *       a hit-taking one.
+ * `SHOVED_BODY_LOOKAHEAD_TUNING` lets a measurement ablate each part (`chasers`, `solveSteps`, `hitGate`); the switch
+ * ships all three.
  */
-function shovedStepToward(run, aim, intended, options, head = run.spinnerForecast(STEP_LOOKAHEAD + 2)) {
-    const horizon = shovedHorizon(head);
-    SHOVED_BODY_LOOKAHEAD_COUNTS.asked += 1;
-    if (horizon <= STEP_LOOKAHEAD) return null;
-    SHOVED_BODY_LOOKAHEAD_COUNTS.deepened += 1;
+export const SHOVED_BODY_LOOKAHEAD_TUNING = { chasers: true, solveSteps: null, hitGate: true };
+/**
+ * Preview + forecast steps the deep step may spend in one `solveSegment`. Measured (report § 4): the clean ON solves
+ * spent at most ~1.1 M per pass; the over-budget L43 path spent its time elsewhere (the report's § 3.3).
+ */
+const SHOVED_SOLVE_STEPS = 2_000_000;
+/** The active solve's budget `{left}` (`null` ⇒ no segment installed one). */
+let shovedSolveBudget = null;
+/** The solve-scoped counts (`chaserCut` first keys a chaser refused, `banded` answers the shake band left unpriced,
+ * `solveSpent` ticks answered as OFF because the solve's budget was spent, `charged` steps charged, `hitRefused`
+ * segments (c) refused). */
+export const SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS = { chaserCut: 0, banded: 0, solveSpent: 0, charged: 0, hitRefused: 0 };
+
+/** The refusal code of (c): a solve whose deep step re-chose a key and whose run then took a player hit. */
+export const SHOVED_LOOKAHEAD_HIT = 'SHOVED_LOOKAHEAD_HIT';
+
+/**
+ * Install one deep-step budget for `fn` (the segment `o` solves) unless one is active (a nested segment shares its
+ * solve's), and (c) gate its outcome: when a deep answer re-chose a key against the one it was handed (`rechoseAt`, the
+ * first such tick, a preview's included) and the run the segment ENDED on (`liveRun`, else `o.run`) carries a player hit
+ * at or after that tick, the segment is refused by name (`SHOVED_LOOKAHEAD_HIT`) — a deep step may move the walk out of
+ * a spinner's corner, never into a plan that pays a hit. A segment with no re-choice is returned as it came.
+ */
+function withShovedSolveBudget(o, fn) {
+    if (shovedSolveBudget !== null) return fn();
+    const budget = { left: SHOVED_BODY_LOOKAHEAD_TUNING.solveSteps ?? SHOVED_SOLVE_STEPS, rechoseAt: null,
+        name: o?.name ?? 'solveSegment' };
+    shovedSolveBudget = budget;
+    let out;
+    try {
+        out = fn();
+    } finally {
+        shovedSolveBudget = null;
+    }
+    if (budget.rechoseAt === null || !SHOVED_BODY_LOOKAHEAD_TUNING.hitGate) return out;
+    const ended = out?.liveRun ?? o?.run ?? null;
+    const hits = (ended?.playerHits ?? []).filter((h) => h.t >= budget.rechoseAt);
+    if (hits.length === 0) return out;
+    return shovedHitRefusal(budget, hits);
+}
+
+/** (c)'s refusal, by name. */
+function shovedHitRefusal(budget, hits) {
+    SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.hitRefused += 1;
+    return fail(`${budget.name}: the shoved lookahead (\`SHOVED_BODY_LOOKAHEAD\`) re-chose a key at `
+        + `t${budget.rechoseAt}, and the plan it led to takes ${hits.length} player hit(s) (`
+        + `${hits.map((h) => `${h.id} at t${h.t}`).join(', ')}). A deep step may lead out of a spinner's corner, `
+        + 'never into a plan that pays a hit — refused by name.', { code: SHOVED_LOOKAHEAD_HIT });
+}
+
+
+/** (c)'s mark: a deep answer chose `chosen` over the key it was handed, at the run's tick. */
+function shovedMarkRechosen(run) {
+    if (shovedSolveBudget !== null) shovedSolveBudget.rechoseAt ??= run.ticksCompleted;
+}
+
+/**
+ * (a) The chaser half of a deep node's test, or `null` (the room has no chaser forecast, the tuning is off, or the shake
+ * band cannot answer: unpriced). `first(next)`: the first tick, exact (PKC's pairing). `at(box, depth)`, depth ≥ 2:
+ * the forecast stepped on with the player held at the tick's start. Each forecast step is charged to `charge`.
+ */
+function shovedChaserTest(run, horizon, charge) {
+    if (!SHOVED_BODY_LOOKAHEAD_TUNING.chasers) return null;
+    const live = run.chaserForecast?.() ?? null;
+    if (live === null) return null;
+    const rows = [];
+    try {
+        live.step(run.state);
+        charge(1);
+        // rows[d] = the bodies a box d steps on is tested against (`landsClearOfChasers`' second step's tick)
+        for (let d = 1; d <= horizon; d += 1) {
+            rows[d] = live.step(run.state);
+            charge(1);
+        }
+    } catch (e) {
+        if (!isShakeBandThrow(e)) throw e;
+        SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.banded += 1;
+        return null;
+    }
+    const clear = (box, bodies) => chaserDanger(run, box, 0, bodies, { perTick: true }).length === 0;
+    return {
+        first(next) {
+            const f = run.chaserForecast();
+            let r;
+            try {
+                f.step(run.state);
+                r = f.step(next);
+                charge(2);
+            } catch (e) {
+                if (!isShakeBandThrow(e)) throw e;
+                SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.banded += 1;
+                return true;
+            }
+            return clear(playerBoxAt(next.x, next.y), r);
+        },
+        at: (box, depth) => clear(box, rows[Math.min(depth, horizon)]),
+    };
+}
+
+/**
+ * The deep survival search one answer runs (`shovedStepToward`, `shovedDepthOf`): `depthOf(keys)` = how many ticks a
+ * clear continuation exists after `keys` (to `horizon`), `-1` when `keys` itself does not land clear. A node is clear of
+ * the spinners (`clearAt`, `stepToward`'s own test) and of the chasers (`shovedChaserTest`). Throws
+ * `SHOVED_LOOKAHEAD_SPENT` past `cap` steps; `steps()` is what it spent.
+ */
+function shovedSurvival(run, horizon, options, cap) {
+    let steps = 0;
+    const charge = (n) => {
+        steps += n;
+        if (steps > cap) throw SHOVED_LOOKAHEAD_SPENT;
+    };
     const forecast = run.spinnerForecast(horizon + 2);
     const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     const step = previewOrDeath(run.previewStepper());
+    const chasers = shovedChaserTest(run, horizon, charge);
     const memo = new Map();
-    let steps = 0;
     const survives = (st, depth) => {
         if (depth >= horizon) return depth;
         const key = shovedStateKey(depth, st);
@@ -15454,9 +15583,11 @@ function shovedStepToward(run, aim, intended, options, head = run.spinnerForecas
         if (seen !== undefined) return seen;
         let best = depth;
         for (const keys of options) {
-            if (++steps > SHOVED_LOOKAHEAD_STEPS) throw SHOVED_LOOKAHEAD_SPENT;
+            charge(1);
             const next = step({ ...st }, keys);
-            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            if (!next) continue;
+            const box = playerBoxAt(next.x, next.y);
+            if (!clearAt(run, box, forecast, depth + 1) || (chasers !== null && !chasers.at(box, depth + 1))) continue;
             const d = survives(next, depth + 1);
             if (d > best) best = d;
             if (best >= horizon) break;
@@ -15464,20 +15595,64 @@ function shovedStepToward(run, aim, intended, options, head = run.spinnerForecas
         memo.set(key, best);
         return best;
     };
+    const depthOf = (keys) => {
+        const next = step({ ...run.state }, keys);
+        if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, 1)) return { next, depth: -1 };
+        if (chasers !== null && !chasers.first(next)) {
+            SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.chaserCut += 1;
+            return { next, depth: -1 };
+        }
+        return { next, depth: survives(next, 1) };
+    };
+    return { depthOf, steps: () => steps };
+}
+
+/** The step cap one answer runs under: the per-answer budget, or what is left of the solve's when less. */
+function shovedAnswerCap() {
+    return shovedSolveBudget === null ? SHOVED_LOOKAHEAD_STEPS : Math.min(SHOVED_LOOKAHEAD_STEPS, shovedSolveBudget.left);
+}
+
+/** Charge an answer's steps to the solve's budget (none installed ⇒ nothing). */
+function shovedCharge(steps) {
+    SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.charged += steps;
+    if (shovedSolveBudget !== null) shovedSolveBudget.left -= steps;
+}
+
+/**
+ * `stepToward`'s choice under the shoved horizon: the same options in the same order, scored survival depth first
+ * (now up to the horizon, spinners and chasers) and distance to the aim second. `null` ⇒ answer as OFF: no shoved
+ * body in the forecast, the answer's step budget ran out, or the solve's is spent.
+ */
+function shovedStepToward(run, aim, intended, options, head = run.spinnerForecast(STEP_LOOKAHEAD + 2)) {
+    const horizon = shovedHorizon(head);
+    SHOVED_BODY_LOOKAHEAD_COUNTS.asked += 1;
+    if (horizon <= STEP_LOOKAHEAD) return null;
+    SHOVED_BODY_LOOKAHEAD_COUNTS.deepened += 1;
+    const cap = shovedAnswerCap();
+    if (cap <= 0) {
+        SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.solveSpent += 1;
+        SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, solveSpent: true });
+        return null;
+    }
+    let search = null;
     try {
+        search = shovedSurvival(run, horizon, options, cap);
         let best = null;
         for (const keys of options) {
-            const next = step({ ...run.state }, keys);
-            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
-            const depth = survives(next, 1);
+            const { next, depth } = search.depthOf(keys);
+            if (depth < 0) continue;
             const d = aim ? Math.hypot(next.x - aim.x, next.y - aim.y) : 0;
             if (!best || depth > best.depth || (depth === best.depth && d < best.d)) best = { keys, depth, d };
         }
-        SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, steps, intended: [...intended].join('+'),
-            chosen: best ? [...best.keys].join('+') : null, depth: best?.depth ?? null, options: options.length });
+        shovedCharge(search.steps());
+        SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, steps: search.steps(),
+            intended: [...intended].join('+'), chosen: best ? [...best.keys].join('+') : null, depth: best?.depth ?? null,
+            options: options.length });
+        if (best && best.keys !== intended) shovedMarkRechosen(run);
         return best ? best.keys : intended;
     } catch (e) {
         if (e !== SHOVED_LOOKAHEAD_SPENT) throw e;
+        shovedCharge(search?.steps() ?? cap);
         SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, spent: true, options: options.length });
         SHOVED_BODY_LOOKAHEAD_COUNTS.spent += 1;
         return null;
@@ -15512,33 +15687,28 @@ function shovedHoldStepOut(run, intended, aim = null) {
     return chosen;
 }
 
-/** The survival depth (to the shoved horizon) of ONE first key set; -1 when it does not land clear or the budget ran out. */
+/**
+ * The survival depth (to the shoved horizon) of ONE first key set; -1 when it does not land clear, or when a budget ran
+ * out (so `shovedHoldStepOut`'s comparison then keeps the intended key), its steps charged to the solve.
+ */
 function shovedDepthOf(run, keys) {
     const horizon = shovedHorizon(run.spinnerForecast(STEP_LOOKAHEAD + 2));
-    const forecast = run.spinnerForecast(horizon + 2);
-    const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
-    const step = previewOrDeath(run.previewStepper());
-    const options = stepOptions(keys);
-    const memo = new Map();
-    let steps = 0;
-    const survives = (st, depth) => {
-        if (depth >= horizon) return depth;
-        const key = shovedStateKey(depth, st);
-        if (memo.has(key)) return memo.get(key);
-        let best = depth;
-        for (const k of options) {
-            if (++steps > SHOVED_LOOKAHEAD_STEPS) return best;
-            const next = step({ ...st }, k);
-            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
-            best = Math.max(best, survives(next, depth + 1));
-            if (best >= horizon) break;
-        }
-        memo.set(key, best);
-        return best;
-    };
-    const first = step({ ...run.state }, keys);
-    if (!first || !clearAt(run, playerBoxAt(first.x, first.y), forecast, 1)) return -1;
-    return survives(first, 1);
+    const cap = shovedAnswerCap();
+    if (cap <= 0) {
+        SHOVED_BODY_LOOKAHEAD_SOLVE_COUNTS.solveSpent += 1;
+        return -1;
+    }
+    let search = null;
+    try {
+        search = shovedSurvival(run, horizon, stepOptions(keys), cap);
+        const { depth } = search.depthOf(keys);
+        shovedCharge(search.steps());
+        return depth;
+    } catch (e) {
+        if (e !== SHOVED_LOOKAHEAD_SPENT) throw e;
+        shovedCharge(search?.steps() ?? cap);
+        return -1;
+    }
 }
 
 /**
@@ -28209,6 +28379,8 @@ const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` trippe
  *   `deadline` is present only when the hook tripped.
  */
 export function solveSegment(o) {
+    // ⛓ hammer-phase SPINNER-SHOVED-FOLLOWUP (`SHOVED_BODY_LOOKAHEAD`, OFF ⇒ not reached): one deep-step budget per solve
+    if (SHOVED_BODY_LOOKAHEAD.enabled && shovedSolveBudget === null) return withShovedSolveBudget(o, () => solveSegment(o));
     // ⛓ SEEDLING STRATEGY SWITCH r1 — `disable` (absent: nothing installed, today's solve exactly)
     if (o?.disable !== undefined) {
         const { disable, ...rest } = o;

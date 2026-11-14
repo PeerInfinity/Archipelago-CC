@@ -9,7 +9,8 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { SHOVED_BODY_LOOKAHEAD, shovedHorizon, withShovedBodyLookahead } from './solverBot.js';
+import { SHOVED_BODY_LOOKAHEAD, SHOVED_BODY_LOOKAHEAD_TUNING, SHOVED_LOOKAHEAD_HIT, shovedHorizon, solveSegment,
+    withShovedBodyLookahead } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { SPINNER } from './spinner.js';
 
@@ -57,5 +58,28 @@ describe('shovedHorizon — the survival horizon a forecast asks for', () => {
         const s = rows(6, 1, 0);
         s[2] = [{ ...s[2][0], x: s[2][0].x + 5 }, s[2][1]]; // a shove between rows 1 and 2
         expect(shovedHorizon(s)).toBe(8);
+    });
+});
+
+/**
+ * ⛓⛓ SPINNER-SHOVED-FOLLOWUP — the same switch ships three more parts (report
+ * `CC/docs/cloud-reports/seedling-hammer-spinner-shoved-followup.md`): the deep step prices the chasers, a solve pays
+ * one deep-step budget, and a segment whose deep step re-chose a key may not end hit-taking (`SHOVED_LOOKAHEAD_HIT`).
+ * The solve rows are the train file's.
+ */
+describe('SHOVED_BODY_LOOKAHEAD — the follow-up\'s parts', () => {
+    it('ships every part on under the switch (the tuning is a measurement\'s ablation, not a second switch)', () => {
+        expect(SHOVED_BODY_LOOKAHEAD_TUNING).toEqual({ chasers: true, solveSteps: null, hitGate: true });
+        expect(SHOVED_LOOKAHEAD_HIT).toBe('SHOVED_LOOKAHEAD_HIT');
+    });
+
+    it('a segment\'s own refusal passes through the budget install unchanged, and the install does not leak', () => {
+        // a malformed segment refuses inside solveSegment; ON it runs inside the install and must surface as OFF does
+        const off = (() => { try { solveSegment({ shouldStop: 3 }); } catch (e) { return e.message; } return null; })();
+        const on = withShovedBodyLookahead(true, () => { try { solveSegment({ shouldStop: 3 }); } catch (e) { return e.message; } return null; });
+        expect(off).toMatch(/shouldStop must be a function/);
+        expect(on).toBe(off);
+        // a second ON call installs afresh (a leaked install would share the first's budget)
+        expect(withShovedBodyLookahead(true, () => { try { solveSegment({ shouldStop: 3 }); } catch (e) { return e.message; } return null; })).toBe(off);
     });
 });
