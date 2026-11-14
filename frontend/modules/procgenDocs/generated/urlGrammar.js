@@ -1156,6 +1156,8 @@ export const URL_GRAMMAR = frz({
                 "gen": null,
                 "height": 11,
                 "library": null,
+                "preset": null,
+                "region": null,
                 "require": null,
                 "room": null,
                 "roster": null,
@@ -1424,6 +1426,12 @@ export const URL_GRAMMAR = frz({
                         },
                         {
                             "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readPresetLinkParams",
+                            "how": "get",
+                            "role": "read"
+                        },
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
                             "fn": "writeLabParams",
                             "how": "delete",
                             "role": "write"
@@ -1504,6 +1512,61 @@ export const URL_GRAMMAR = frz({
                             "fn": "readLabParams",
                             "how": "get",
                             "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
+                    "atDefault": "DELETED at the default",
+                    "codec": "a preset id of `presets/preset_files.json` (`<id>`, or `<id>/<folder>` when it has several) — `mazeLabPreset.presetRulesPath`",
+                    "defaultField": "preset",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "preset",
+                    "retired": false,
+                    "terms": [
+                        "content-source",
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readPresetLinkParams",
+                            "how": "get",
+                            "role": "read"
+                        },
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "writeLabParams",
+                            "how": "delete+set",
+                            "role": "write"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
+                    "atDefault": "DELETED at the default",
+                    "codec": "a region name of that preset's `preset_sidecars` — `mazeLabPreset.resolvePresetRegion`",
+                    "defaultField": "region",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "region",
+                    "retired": false,
+                    "terms": [
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readPresetLinkParams",
+                            "how": "get",
+                            "role": "read"
+                        },
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "writeLabParams",
+                            "how": "delete+set",
+                            "role": "write"
                         }
                     ]
                 },
@@ -1802,7 +1865,13 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 297,
+                    "line": 323,
+                    "role": "read"
+                },
+                {
+                    "file": "frontend/modules/mazeRoom/mazeLab.js",
+                    "fn": "readPresetLinkParams",
+                    "line": 307,
                     "role": "read"
                 }
             ],
@@ -1811,7 +1880,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 412,
+                    "line": 439,
                     "role": "write"
                 }
             ],

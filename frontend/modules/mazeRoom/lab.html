@@ -927,6 +927,15 @@
         <button id="labLoad">Load from box</button>
         <label>Upload <input id="labUpload" type="file" accept=".json,application/json"></label>
       </div>
+      <!-- ⛓ MAZE CONVERTED LINK — the URL's own route (`?preset=` + `?region=`), typed: a committed preset's
+           maze room by name. A region of a shared level world opens the room that lists it. -->
+      <div class="line">
+        <label for="labPresetName">open a preset room: preset</label>
+        <input id="labPresetName" size="26" placeholder="preset id" spellcheck="false">
+        <label for="labPresetRegion">region</label>
+        <input id="labPresetRegion" size="18" placeholder="region name" spellcheck="false">
+        <button id="labPresetOpen">Open</button>
+      </div>
       <textarea id="labText" class="box" rows="10" spellcheck="false"></textarea>
     </details>
   </div>

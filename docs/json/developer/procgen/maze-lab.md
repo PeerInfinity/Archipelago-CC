@@ -46,6 +46,17 @@ A loaded payload is taken as it stands: it is its own base with no edit list, si
 
 A converted room keeps the entity fields only the engine reads (arrow traps, entry gates, block sinks, block kinds, pulls, pulsers). When a payload carries any of them, `procgenMaze.deserializeMazeLevel` reads them through the engine's own `deserializeMazeWorld`; a payload with none takes the old path unchanged. The save writes them back through `serializeMazeEntities`, so save → load → save is a fixed point for every room of `seedling_playthrough_maze` (`mazeConvertedLoad.test.js`). `obstacleLib` entries ride through as they are. The room draws with its traps; the lab draws no wires between a button and what it opens.
 
+### Opening a preset room
+
+`lab.html?source=edit&preset=<preset id>&region=<region name>` opens one room of a committed preset. `mazeLabPreset.openPresetRegion` fetches `presets/preset_files.json`, then the preset's rules file, picks `preset_sidecars[player][region]` and hands it to `loadPayload`, so the room arrives as LOAD would give it (traps included). The same route is in the save/load area: type a preset and a region and press **Open**.
+
+- `?preset=` is a key of `preset_files.json`. A preset with several folders is named `<id>/<folder>`. The folder's rules file is its one `*_rules.json`; a per-player `_P<n>_rules.json` slice is not it.
+- `?region=` is a region of exactly one player's `preset_sidecars`. A region with a room (`playable_payload`) opens that room.
+- A region with no room of its own (`{substrate: "maze", shared_world: "<level world>"}`) opens the one room whose `playable_payload.shared_world.regions` lists it, and the status line names the region, its world and the room. In `seedling_playthrough_maze` every one of those regions is listed by exactly one room.
+- Refused by name on the status line, with no level drawn: a preset or folder the index does not have, a folder without exactly one rules file, a preset with no `preset_sidecars`, an unknown region, a region in two players' sidecars, a sidecar of another substrate, a room-less region listed by no room or by several, and a fetch that fails (naming the document).
+
+The lab names no preset: everything is read off the two documents (`mazeConvertedLink.test.js`; `check-maze-lab` CLAIM 24).
+
 ### The edit tools
 
 The `edit` mode's tool buttons are the view's command table, in its order. FILL, CLEAR and MOVE are the shared rectangle tools (see [Editing core](./editing-core.md)); the maze lab names them in `mazeRoom/mazeEditTools.js`.
@@ -111,6 +122,7 @@ What the maze-specific parameters are for:
 | `?elements=` | The pass-1 element ([The first element](./maze.md#the-first-element)). Its writer keeps a named parameter even at its default, since named and drawn parameters are different runs. `?seed=2&width=15&height=15&skeleton=rooms&areas=1&elements=guard;len=2;turns=1&count=2&run=1` |
 | `?library=` / `?world=` | Open a region library or a world bundle in the set mode. |
 | `?room=<n>` | Open room *n* of the held library (navigation, not a load); copied forward so a reload re-opens it. |
+| `?preset=<id>&region=<name>` | Open one room of a committed preset (see *Opening a preset room* above). Both or neither, and never with `?gen=`. Kept on the bar while that room is on screen, so a reload re-opens it; deleted once a press or a LOAD replaces it. |
 
 ## `drawWorld`'s `view` contract
 

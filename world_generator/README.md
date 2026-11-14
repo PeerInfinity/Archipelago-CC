@@ -101,7 +101,10 @@ fork, on unmodified vanilla Archipelago source (0.6.7+), and on compiled
 Every package ships `_worldgen_rules.json`: the source rules.json after name
 substitution and the `--game-name` rename (so it carries the BUILT world's
 game, location and item IDs and region names), with every placement stripped
-(`world_generator/_embedded_rules.py` lists the fields). `fill_slot_data`
+(`world_generator/_embedded_rules.py` lists the fields). An ID-less (event)
+location KEEPS its item: the world fixes it, the seed does not place it, and
+the client collects an event from this pairing alone (an event item is often
+named apart from its location). `fill_slot_data`
 sends it as `slot_data["worldgen_rules"]`, so the web client can play the room
 without a local copy of the rules.
 

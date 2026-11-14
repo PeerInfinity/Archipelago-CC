@@ -1972,6 +1972,37 @@ Location was force-checked to maintain server sync.`;
       || team === this.clientTeam;
   }
 
+  /**
+   * The server's ID for a location name, or null when it has none (an event, or a location only this client
+   * knows): the room's DataPackage first, else the loaded rules. A rules ID of null reads as 0 through
+   * getServerLocationId, so 0 is "none" too, as the send filter has always treated it.
+   */
+  async _serverLocationIdFor(locationName) {
+    let id = null;
+    if (this.serverLocationNameToId?.has?.(locationName)) {
+      id = this.serverLocationNameToId.get(locationName);
+    } else {
+      id = await getServerLocationId(locationName, stateManagerProxySingleton);
+    }
+    return id === null || id === undefined || id === 0 || Number.isNaN(Number(id)) ? null : id;
+  }
+
+  /**
+   * Splits location names into the server IDs to send and the ID-less names (events) the server cannot take.
+   * @param {string[]} locationNames
+   * @returns {Promise<{ids: number[], idless: string[]}>}
+   */
+  async splitLocationChecks(locationNames) {
+    const ids = [];
+    const idless = [];
+    for (const name of locationNames || []) {
+      const id = await this._serverLocationIdFor(name);
+      if (id === null) idless.push(name);
+      else ids.push(id);
+    }
+    return { ids, idless };
+  }
+
   /** Option D: a server-checked id that logic calls unreachable is still no logic bug when we sent it, or after the goal. */
   _echoNeedsNoAlarm(id) {
     return this._sentLocationIds.has(id) || this._slotReleased;
@@ -2096,34 +2127,20 @@ export async function handleUserLocationCheckForClient(
           return;
         }
       }
-      log('info', '[MessageHandler] Getting server ID for location:', eventData.locationName);
-      
-      let serverId = null;
-      const locationName = eventData.locationName;
-      
-      // First try to get server ID from our server-based mapping (preferred)
-      if (messageHandlerSingleton.serverLocationNameToId && messageHandlerSingleton.serverLocationNameToId.has(locationName)) {
-        serverId = messageHandlerSingleton.serverLocationNameToId.get(locationName);
-        log('info', `[MessageHandler handleUserLocationCheck] Found server protocol ID ${serverId} for location: ${locationName} (via server mapping)`);
-      } else {
-        // Fallback to static data mapping (may not work with server)
-        serverId = await getServerLocationId(
-          eventData.locationName,
-          stateManagerProxySingleton
-        );
-        log('warn', `[MessageHandler handleUserLocationCheck] Using static data ID ${serverId} for location: ${locationName} (server mapping not available)`);
-      }
-      
+      const serverId = await messageHandlerSingleton._serverLocationIdFor(eventData.locationName);
       log('info', '[MessageHandler] Server ID result:', serverId);
       if (serverId !== null) {
-        log('info', '[MessageHandler] About to send location checks for ID:', serverId);
-        messageHandlerSingleton._internalSendLocationChecks([serverId]); // Use the internal method
-        log('info', '[MessageHandler] Location check command sent');
+        messageHandlerSingleton._internalSendLocationChecks([serverId]);
       } else {
-        log('warn', 
-          `[ClientModule/MessageHandler] Could not find server ID for location: ${eventData.locationName}`
-        );
-        // Event was processed (attempted), do not propagate by default unless specific need.
+        // No server ID: an event (or a local-only location). The server has nothing to check, so the check
+        // is applied LOCALLY, exactly as offline: passed up to the state manager, whose own logic guard
+        // judges it (sdc-connected-events). The server never echoes it, so nothing collects it twice.
+        log('info', `[MessageHandler] "${eventData.locationName}" has no server ID; checking it locally.`);
+        if (dispatcher) {
+          dispatcher.publishToNextModule(MODULE_NAME, eventName, eventData, { direction: 'up' });
+        } else {
+          log('error', '[ClientModule/MessageHandler] Dispatcher not available for a local (ID-less) check.');
+        }
       }
     } else {
       log('info', 
