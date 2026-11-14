@@ -197,6 +197,17 @@ async function serveLeg({ goal, budgetMs }) {
     const tapes = [];
     const h0 = engine.stats.history.length;
     const done0 = engine.stats.done;
+    // SCRATCH (hammer-8 L88 hits witness): the GAME's own {hits, hits_timer} sampled every 5 ms while the leg runs.
+    const hitReads = [];
+    let lastHits = null;
+    const sampler = setInterval(() => {
+        try {
+            const b = JSON.parse(g.botStatus());
+            const row = { level: b.level, tick: b.tick, hits: b.hits, timer: b.hits_timer };
+            if (row.hits !== lastHits || (row.timer ?? 0) > 0) hitReads.push(row);
+            lastHits = row.hits;
+        } catch (e) { hitReads.push({ err: String(e) }); }
+    }, 5);
     const answer = engine.walkTo(goal);
     const t0 = performance.now();
     let leftAt = null;
@@ -223,6 +234,7 @@ async function serveLeg({ goal, budgetMs }) {
     // ⛓ W7 — a LOCATION plan now ends HELD (the room stays the engine's between goals), and a held room blocks the
     // next leg's host jump (W0 i.11). This witness serves one leg at a time, so it pauses the engine after every
     // leg — the bot's ⏸ (`stop()` releases the hold).
+    clearInterval(sampler);
     if (end !== 'crossed') engine.stop();
     const stats = JSON.parse(JSON.stringify(engine.stats));
     const st = JSON.parse(s.wasm.getGame().botStatus());
@@ -232,7 +244,7 @@ async function serveLeg({ goal, budgetMs }) {
         primary: st.primary, slots: st.inventory_slots ?? null, cleared: st.persistence_cleared ?? [],
         arrivedAt: arr ? { level: arr.status?.level, x: arr.state?.playerPositionX, y: arr.state?.playerPositionY } : null,
         forced: stats.forced, ships: stats.ships, level: st.level, armed: st.armed, held: st.held,
-        ms: Math.round(performance.now() - t0) };
+        ms: Math.round(performance.now() - t0), hitReads: hitReads.slice(0, 200) };
 }
 
 async function main() {
@@ -319,6 +331,7 @@ async function main() {
                     answer: r.answer, level: r.level, ms: r.ms, arrivedAt: r.arrivedAt, landed, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
                         ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
                         recovery: h.recovery, solvedMs: h.solvedMs })) })}`);
+                console.log(`GAMEHITS ${JSON.stringify({ name: leg.name, reads: r.hitReads })}`);
                 const dv = r.legs.map((h) => h.divergence).filter(Boolean);
                 check(`${SESSION} ${leg.name}: the engine staged the arrival at (${x}, ${y}) in L${level}`,
                     r.arrivedAt?.level === level && r.arrivedAt.x === x && r.arrivedAt.y === y, JSON.stringify({ landed, arrivedAt: r.arrivedAt }));
