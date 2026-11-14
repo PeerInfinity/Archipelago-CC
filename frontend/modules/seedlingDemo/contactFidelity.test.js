@@ -91,7 +91,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_FLYER_LIVE
         || !!process.env.SEEDLING_BEAMTOWER_DRIFT || !!process.env.SEEDLING_BEAMTOWER_BEAM_HIT
         || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT || !!process.env.SEEDLING_PARTIAL_DODGE_REPROBE
-        || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING
+        || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING || !!process.env.SEEDLING_CORRIDOR_FORECAST_MEMO
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -164,8 +164,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40CONTACT D1: `chaserSpinnerWalls` (a live spinner walls a chaser whose list holds "Enemy") — ON since the BOBIFRAME flip (⚖ user 2026-11-11).
             chaserSpinnerWalls: true,
 
-            // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) ships OFF.
-            corridorBodyPricing: false,
+            // ⛓ fidelity CORRIDOR D2: `corridorBodyPricing` (the walk corridor prices the live wallflyers and drills) shipped OFF;
+            // ⛓ CORRIDORFLIP D1 (wave 42): ON on the measurement branch (not licensed).
+            corridorBodyPricing: true,
 
             // ⛓ fidelity SEALDOOR D2: `sealDoorApproach` (the solver steps the FinalDoor's open-on-approach) ships OFF.
             // ⛓ planning-9's flip (⚖ user "Build the flip", 2026-10-17) turns it ON.
@@ -401,7 +402,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity FENCEPOST D1 (wave 40): a faded-out spinner leaves the roster on the read the game's world has dropped it by — OFF.
             spinnerRemoveRead: false,
             // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
-            fallRockHoldsButton: true });
+            fallRockHoldsButton: true,
+            // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — ON since the CORRIDORFLIP flip (⚖ user 2026-11-12).
+            corridorForecastMemo: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -58,10 +58,13 @@ function solve(arrival, items) {
     }
 }
 const ON = (fn) => withContactFidelity({ drillKillFirst: true }, fn);
-const OFF = (fn) => withContactFidelity({ drillKillFirst: false }, fn);
+// ⛓ CORRIDORFLIP (⚖ user 2026-11-12): these arms were measured before `corridorBodyPricing` shipped ON; they name that
+// pre-pricing world (the live drill forecast reroutes the L28 rope walk, and the spear then misses the rope).
+const OFF = (fn) => withContactFidelity({ drillKillFirst: false, corridorBodyPricing: false, corridorForecastMemo: false }, fn);
 // ⛓ TIMEDPASS's flip (⚖ user "Harvest + flip ON", 2026-10-23): ON a Fire-only run PASSES the drills (Fire L26 SOLVES,
 // Fire L25 plans 70 t; `fidelityTimedPass.test.js`), so DRILLKILL's own Fire rows read the kill strategy alone.
-const ON_NO_PASS = (fn) => withContactFidelity({ drillKillFirst: true, drillTimedPass: false }, fn);
+const ON_NO_PASS = (fn) => withContactFidelity({ drillKillFirst: true, drillTimedPass: false, corridorBodyPricing: false,
+    corridorForecastMemo: false }, fn);
 const drills = (run) => Object.fromEntries(run.drills.bodies.map((d) => [d.id, { x: d.x, y: d.y, hits: d.hits,
     removed: d.removed }]));
 

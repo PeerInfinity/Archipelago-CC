@@ -166,13 +166,15 @@ describe('fidelity DRILL — D3: ROPESTANCE\'s interim retires behind the key', 
         const { refusal } = solve(['hasSpear']);
         expect(refusal.message).toMatch(/UNSTEPPED drill \(\[drill@80,96, drill@128,96\]/);
     }));
-    it('ON: the stance (136,72) is walked, and the cut refuses naming drill@128,96 at t59 (the game\'s tick)', () => both(true, () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('ON: the stance (136,72) is walked, and the cut refuses naming drill@128,96 at t59 (the game\'s tick)', () => both(true, () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         const { refusal } = solve(['hasSpear']);
         expect(refusal).not.toBeNull();
         expect(refusal.obstacle).toMatchObject({ kind: 'solid', id: 'rope@160,64', drill: 'drill@128,96' });
         expect(refusal.message).toMatch(/the stepped drill@128,96 hopped onto the player at run tick 59/);
         expect(refusal.message).not.toMatch(/UNSTEPPED/);
-    }), 120000);
+    })), 120000);
     it.each([['Fire', ['hasFire'], 89], ['the Sword', ['hasSword'], 52]])(
         'ON: %s from the L25 arrival plans what OFF plans', (_, items, ticks) => {
             const off = both(false, () => solve(items));
