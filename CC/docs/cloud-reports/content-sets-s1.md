@@ -14,6 +14,7 @@ Branch `content-s1`, based on `origin/main` `44beef6a1d` (contains R5 `1a7ea6e3d
 | `70ab8aa738` | 6. in-app rows `tasw-thing-examine-in-play`, `tasw-exit-label-by-place`; `meta-trial-plays` updated |
 | `a5d8cafe5b` | 7. docs (`text-adventure.md`, `concepts.md`), generated docs, link census 415 → 416 |
 | `a6e7a98ccc` | fix: restore two bridge functions part 3 had deleted (§11.8, found by the play gates) |
+| `d57d950804` | fix: no rebuild on `initialState`'s room table; the label row waits for its own world (§11.9, found by the TT) |
 
 Gitlinks moved: **1** (the engine submodule). `frontend/modules/shared/` untouched. No file in the maze engine's closure.
 
@@ -201,7 +202,7 @@ which the standing ruling forbids. If the user wants the Narrator to name a seed
   line name the place; the target never entered). `meta-trial-plays`: the Gate's expected lines take `{item}`; the
   START lists its thing with its kind's class. The rows' results are CI's (TT dispatch), quoted in the REPORT BACK.
 
-## 10. Box runs (local, at code tip `a6e7a98ccc`)
+## 10. Box runs (local, at code tip `d57d950804`)
 
 Each took the box lock (`--wait-for-box=3600`, queued behind another worktree's batch), against a dev server for
 this worktree on port 8132:
@@ -212,8 +213,8 @@ this worktree on port 8132:
 | `node scripts/procgen/check-meta-trial-play.mjs --host=http://localhost:8132` | ALL CHECKS PASSED (28 PASS) |
 | `npm test -- --port=8132 --mode=test-spoilers --game=meta_trial --seed=1` (the one authorised spoiler run) | `test_spoiler_full_run` PASSED; the page loaded `./presets/meta_trial/AP_1/AP_1_rules.json` (`source: urlOverride`), not the default preset |
 
-The first pass, at `a5d8cafe5b`, failed both play gates (4 checks each) on the defect of §11.8; the spoiler run passed
-there too. CI's runs at the final tip (push `unittests`, `JavaScript Unit Tests`, the train tier, the TT dispatch with
+The same three passed at `a6e7a98ccc` too. The first pass, at `a5d8cafe5b`, failed both play gates (4 checks each) on
+the defect of §11.8; the spoiler run passed there too. CI's runs at the final tip (push `unittests`, `JavaScript Unit Tests`, the train tier, the TT dispatch with
 the rows on both boots and the CI-GATE lines) are quoted in the REPORT BACK, not in a further commit.
 
 ## 11. What the code overturned or added
@@ -238,6 +239,14 @@ the rows on both boots and the CI-GATE lines) are quoted in the REPORT BACK, not
    `check-concept-trial-play` / `check-meta-trial-play` at `a5d8cafe5b` failed on it ("timeout waiting for: the
    wrapper renders region_2_2's exit"); fixed in `a6e7a98ccc`, and a scan of every bare call in `bridge.js`,
    `index.js` and the rows' file for an undeclared name found no other.
+9. **Defect the TT found** (dispatch 43648555489 at `3c045b64c8`: every job green but `fast` unbundled, where
+   `tasw-exit-label-by-place` FAILED — "it read —", no exit link; the bundled boot PASSED it). My part 3 bridge
+   rebuilt the world when `initialState`'s thing table changed. Coming from `meta_trial` (which has things) to AP_11,
+   that rebuild read the PREVIOUS document's staticData (log: "rebuildWorld: staticData arrived but has no
+   regions"), and while it was in flight the new document's `rulesLoaded` rebuild was skipped (`rebuildInFlight`) —
+   the hazard the comment in `applyInitialState` already names. `initialState` lands before `rulesLoaded`, so that
+   rebuild lays the things on the new world; the trigger is removed (`d57d950804`). The row also now waits up to
+   15 s for THIS document's exit link before reading its label.
 
 ## Next slice
 
