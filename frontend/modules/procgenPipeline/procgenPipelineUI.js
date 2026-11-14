@@ -57,7 +57,7 @@ import {
 // IMPORTS `mazeRoom/` AT ALL — the maze painter's `TILE_WALL`/`getTile` went
 // with it to `mazeRoom/mazeCompositeMap.js`.
 import {
-    TILE_PX, drawCompositeMap, resolveExitTilePositions,
+    TILE_PX, drawCompositeMap, resolveExitTilePositions, substrateArtToggle,
     canvasPointOf, cellAtPoint,
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
@@ -3678,6 +3678,12 @@ export class ProcgenPipelineUI {
         canvas.dataset.gridH = String(grid.height);
         canvas.dataset.cellW = String(regionSize.width * TILE_PX);
         canvas.dataset.cellH = String(regionSize.height * TILE_PX);
+        // ⛓ region-map step 1 (D4) — the old/new switch (in memory, per panel): off draws every region whose
+        //   painter declares `compositeMap.artwork` (Seedling) as the generic box, as before.
+        section.appendChild(substrateArtToggle(this._substrateArt !== false, 'procgen-pipeline-substrate-art', (on) => {
+            this._substrateArt = on;
+            this._drawGrid(canvas, grid, regionSize);
+        }));
         this._drawGrid(canvas, grid, regionSize);
         if (interactive) {
             canvas.style.cursor = 'pointer';
@@ -3986,7 +3992,31 @@ export class ProcgenPipelineUI {
         } else if (sel && this._mapMode === 'moveRegion') {
             selection = { kind: 'region', cell: sel.cell };
         }
-        drawCompositeMap(canvas, grid, regionSize, { selection });
+        // ⛓ region-map step 1 (D3) — an async painter (the Seedling cell's baked level) asks for a repaint through
+        //   `onCellArtReady` (coalesced to one per frame by the painter): repaint THIS canvas, with the selection as
+        //   it stands then; a canvas a later render replaced is left alone.
+        canvas.dataset.substrateArt = String(this._substrateArt !== false);
+        drawCompositeMap(canvas, grid, regionSize, {
+            selection,
+            substrateArt: this._substrateArt !== false,
+            source: this._mapSource(),
+            onCellArtReady: () => { if (canvas.isConnected) this._drawGrid(canvas, grid, regionSize); },
+        });
+    }
+
+    /**
+     * ⛓ region-map step 1 — the document the drawn map came from, for a painter that reads per-document content
+     * (the Seedling cell's `region_atlas[p].map_document`): the loaded preset when the loaded map is shown, else the
+     * last run's rules. The slot is the loaded map's own; a run's is its first `region_atlas` slot (none → the
+     * painter's default map document).
+     */
+    _mapSource() {
+        const loaded = this._showingLoadedMap && this.loadedMap;
+        const rules = loaded ? this.loadedRulesJson : (this.result?.rulesJson ?? null);
+        if (!rules) return null;
+        const playerId = (loaded ? this.loadedMap.playerId : null)
+            ?? Object.keys(rules.region_atlas ?? {})[0] ?? null;
+        return { rules, playerId };
     }
 
     // --- rules.json export ---

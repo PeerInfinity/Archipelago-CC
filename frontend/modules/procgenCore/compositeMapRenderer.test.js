@@ -4,8 +4,8 @@ import {
     TILE_PX, COLORS,
     resolveExitTilePositions, fitTextToWidth,
     canvasPointOf, cellAtPoint,
-    compositeMapIdOf, compositeMapPainterFor,
-    drawCompositeMap,
+    compositeMapIdOf, compositeMapPainterFor, compositeMapDrawsArtwork,
+    drawCompositeMap, substrateArtToggle,
 } from './compositeMapRenderer.js';
 import { getRegionExits } from '../procgenPipeline/procgenPipelineEngine.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -498,5 +498,79 @@ describe('⛓ the shipped declarers', () => {
         const lines = canvas.ops.filter((o) => o.op === 'stroke' && o.style === COLORS.connection);
         // ONE line for the pair, not two — the pair key dedupes both directions.
         expect(lines).toHaveLength(1);
+    });
+});
+
+/**
+ * ⛓ region-map step 1 — the two options the Seedling painter needed, pinned on
+ * toy painters: `substrateArt: false` skips exactly the painters that declare
+ * `compositeMap.artwork` (the old/new switch, D4), and `source` /
+ * `onCellArtReady` reach every painter as `geom.source` / `geom.requestRedraw`
+ * (the async-redraw hook, D3). Both default to the pre-slice behaviour.
+ */
+describe('⛓ region-map step 1: substrateArt, source, onCellArtReady', () => {
+    const payload = {};
+    let calls;
+    let registry;
+    beforeEach(() => {
+        calls = [];
+        const painter = (name) => (ctx, region, geom) => calls.push({ name, region_id: region.region_id, geom });
+        const entries = {
+            art: { compositeMap: { drawRegion: painter('art'), artwork: true } },
+            schematic: { compositeMap: { drawRegion: painter('schematic') } },
+        };
+        registry = { get: (id) => entries[id] };
+    });
+    const grid = () => makeGrid(2, 1, [
+        { cell: { gx: 0, gy: 0 }, region_id: 'a', substrate: 'art', playable_payload: payload },
+        { cell: { gx: 1, gy: 0 }, region_id: 's', substrate: 'schematic', playable_payload: payload },
+    ]);
+
+    it('by default every declared painter draws, artwork or not', () => {
+        drawCompositeMap(makeCanvas(4 * TILE_PX, 2 * TILE_PX), grid(), SIZE_2x2, { registry });
+        expect(calls.map((c) => c.name)).toEqual(['art', 'schematic']);
+    });
+
+    it('substrateArt: false — an ARTWORK painter is skipped for the generic box; a schematic one still draws', () => {
+        const canvas = makeCanvas(4 * TILE_PX, 2 * TILE_PX);
+        drawCompositeMap(canvas, grid(), SIZE_2x2, { registry, substrateArt: false });
+        expect(calls.map((c) => c.name)).toEqual(['schematic']);
+        expect(texts(canvas)).toContain('(art)');
+    });
+
+    it('compositeMapDrawsArtwork reads the declaration, through render_hint first', () => {
+        expect(compositeMapDrawsArtwork({ substrate: 'art' }, registry)).toBe(true);
+        expect(compositeMapDrawsArtwork({ substrate: 'schematic' }, registry)).toBe(false);
+        expect(compositeMapDrawsArtwork({ substrate: 'art', render_hint: 'schematic' }, registry)).toBe(false);
+        expect(compositeMapDrawsArtwork({}, registry)).toBe(false);
+    });
+
+    it('source and onCellArtReady reach every painter as geom.source / geom.requestRedraw (null when not given)', () => {
+        const source = { rules: {}, playerId: '1' };
+        const redraw = () => {};
+        drawCompositeMap(makeCanvas(4 * TILE_PX, 2 * TILE_PX), grid(), SIZE_2x2, { registry, source, onCellArtReady: redraw });
+        expect(calls.map((c) => [c.geom.source, c.geom.requestRedraw])).toEqual([[source, redraw], [source, redraw]]);
+        calls.length = 0;
+        drawCompositeMap(makeCanvas(4 * TILE_PX, 2 * TILE_PX), grid(), SIZE_2x2, { registry });
+        expect(calls.map((c) => [c.geom.source, c.geom.requestRedraw])).toEqual([[null, null], [null, null]]);
+    });
+
+    it('substrateArtToggle: one labelled checkbox, made at call time, reporting its state', () => {
+        const made = [];
+        const el = (tag) => {
+            const node = { tag, style: {}, children: [], listeners: {}, appendChild: (c) => node.children.push(c),
+                addEventListener: (ev, fn) => { node.listeners[ev] = fn; } };
+            made.push(node);
+            return node;
+        };
+        const doc = { createElement: el, createTextNode: (text) => ({ text }) };
+        const seen = [];
+        const label = substrateArtToggle(true, 'x-art', (on) => seen.push(on), doc);
+        expect(label.className).toBe('x-art');
+        const box = label.children[0];
+        expect([box.type, box.checked, label.children[1].text]).toEqual(['checkbox', true, 'Substrate art']);
+        box.checked = false;
+        box.listeners.change();
+        expect(seen).toEqual([false]);
     });
 });
