@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('../stateManager/index.js', () => ({
-  stateManagerProxySingleton: { getCurrentRulesSource: () => null, getStaticData: () => null },
+  // getLatestStateSnapshot: without it updateCurrentSphere throws AFTER a log loads, and loadSphereLog reports false.
+  stateManagerProxySingleton: { getCurrentRulesSource: () => null, getStaticData: () => null, getLatestStateSnapshot: () => null },
   getLastRawJsonData: () => null,
 }));
 
@@ -255,6 +256,131 @@ describe('sphereState: a file beats the room', () => {
       });
     });
   }
+});
+
+describe('sphereState: "Sphere log unavailable" is said only when no log is in use', () => {
+  let bus;
+  let state;
+  let warn;
+  let info;
+  beforeEach(async () => {
+    destroySphereStateSingleton();
+    bus = makeBus();
+    await initialize('sphereState', 0, { getEventBus: () => bus });
+    state = getSphereStateSingleton();
+    warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    info = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warn.mockRestore();
+    info.mockRestore();
+    vi.unstubAllGlobals();
+    destroySphereStateSingleton();
+  });
+  const said = (spy, text) => spy.mock.calls.map((args) => String(args[0])).filter((m) => m.includes(text));
+  const UNAVAILABLE = 'Sphere log unavailable';
+  /** fetch as stubFetch, but the .jsonl answers 404 once released. */
+  function stubFetch404() {
+    let release;
+    const held = new Promise((resolve) => { release = resolve; });
+    vi.stubGlobal('fetch', vi.fn(async (url) => {
+      if (url === PRESET) return { ok: true, json: async () => ({}) };
+      if (url === PRESET_LOG) await held;
+      return { ok: false, status: 404, statusText: 'Not Found', json: async () => null, text: async () => '' };
+    }));
+    return { release: () => release() };
+  }
+
+  it('the room\'s log is in use and the file (another seed) is refused after it: no warning; an info line names the room\'s log', async () => {
+    const { release } = stubFetch(withMetadata((m) => ({ ...m, seed_name: OTHER_SEED })));
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    bus.publish('client:roomSpoilerData', ROOM);
+    await settle();
+    release();
+    await settle();
+    expect(state.logOrigin).toBe('room');
+    expect(said(warn, UNAVAILABLE)).toEqual([]);
+    expect(said(info, "Using the room's sphere log")).toEqual([
+      `[sphereStateModule] Using the room's sphere log (${ROOM.source}); local file not used (${PRESET_LOG}): it is for seed ${OTHER_SEED}, and the room's data (seed ${SEED.seed_name}) is loaded.`,
+    ]);
+  });
+
+  it('the file for another seed finishes BEFORE Connected: it loads, the room replaces it, and nothing warns', async () => {
+    const { release } = stubFetch(withMetadata((m) => ({ ...m, seed_name: OTHER_SEED })));
+    release();
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    bus.publish('client:roomSpoilerData', ROOM);
+    await settle();
+    expect(state.logOrigin).toBe('room');
+    expect(said(warn, UNAVAILABLE)).toEqual([]);
+  });
+
+  it('the room\'s log is in use and the file is missing (404) after it: no warning', async () => {
+    const { release } = stubFetch404();
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    bus.publish('client:roomSpoilerData', ROOM);
+    await settle();
+    release();
+    await settle();
+    expect(state.logOrigin).toBe('room');
+    expect(said(warn, UNAVAILABLE)).toEqual([]);
+    expect(said(info, "Using the room's sphere log")).toEqual([expect.stringContaining('HTTP 404: Not Found')]);
+  });
+
+  it('the file is missing (404) BEFORE Connected: the warning is true then, and the room\'s log later says it fills the gap', async () => {
+    const { release } = stubFetch404();
+    release();
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    expect(said(warn, UNAVAILABLE)).toEqual([expect.stringContaining(PRESET_LOG)]);
+    bus.publish('client:roomSpoilerData', ROOM);
+    await settle();
+    expect(state.logOrigin).toBe('room');
+    expect(said(info, "The room's sphere log is now in use")).toEqual([
+      expect.stringContaining(`for ${PRESET_LOG} no longer applies (local file not used: HTTP 404: Not Found)`),
+    ]);
+  });
+
+  it('no log at all (file missing, no room data): the warning stays', async () => {
+    const { release } = stubFetch404();
+    release();
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    expect(state.getSphereData()).toEqual([]);
+    expect(said(warn, UNAVAILABLE)).toEqual([
+      `[sphereStateModule] Sphere log unavailable: neither embedded nor separate file usable (${PRESET_LOG})`,
+    ]);
+    expect(said(info, "The room's sphere log is now in use")).toEqual([]);
+  });
+
+  it('a 404 for EARLIER rules does not leave a correction line for the next rules\' room log', async () => {
+    const { release } = stubFetch404();
+    release();
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    bus.publish('stateManager:rulesLoaded', { source: `server:${SEED.seed_name}:P1`, playerId: '1' });
+    bus.publish('client:roomSpoilerData', ROOM);
+    await settle();
+    expect(state.logOrigin).toBe('room');
+    expect(said(info, "The room's sphere log is now in use")).toEqual([]);
+  });
+
+  it('a file fetch started for EARLIER rules and dropped: no warning (the rules were replaced)', async () => {
+    const { release } = stubFetch();
+    bus.publish('stateManager:rulesLoaded', { source: PRESET, playerId: '1' });
+    await settle();
+    bus.publish('stateManager:rulesLoaded', { source: `server:${SEED.seed_name}:P1`, playerId: '1' });
+    bus.publish('client:roomSpoilerData', ROOM);
+    await settle();
+    release();
+    await settle();
+    expect(state.logOrigin).toBe('room');
+    expect(said(warn, UNAVAILABLE)).toEqual([]);
+    expect(said(info, `Sphere log ${PRESET_LOG} not used: the rules it was started for were replaced.`)).toHaveLength(1);
+  });
 });
 
 describe('SphereState.peekSeedName', () => {
