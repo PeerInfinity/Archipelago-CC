@@ -199,7 +199,7 @@ describe('the region glue — the collector is the third reader of the reports',
 
 /**
  * ⛓⛓ RE1 — A RECONNECT RE-DERIVES THE GAME-STATE EVENTS (⚖ Robert 2026-11-14, "Yes, do RE1 (Recommended)";
- * `NewDocs`-free summary: the `Connected` reset replaces the state manager's checked set, the game keeps its flags,
+ * in short: the `Connected` reset replaces the state manager's checked set, the game keeps its flags,
  * the panel does not re-mount, and the collector's memo blocked a re-collect — measured on upstream 0.6.9 at slots 1
  * and 2). After the reset is APPLIED the glue re-applies the game's flags ∪ what it collected ∪ what the state
  * manager had checked, through the same local event check, bypassing the memo; the state manager dedupes.
