@@ -1,0 +1,8 @@
+# box lock: TAKEN by probe-seedling-wand-mobiles.mjs (browser, pid 19783) — head 1bcca2098, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      the player first differs at sampled t 100: game (136.09999999999994, 247.8999999999988) model (136.09999999999994, 246.54999999999882)
+FAIL: the sample clock is the model's — 1056 sampled tick(s) inside the tape of 1055; shifts that fit every player x: [] (must be exactly [0])
+PASS: every WandShot's position, anim and presence, and the boot level's cleared flags, are the model's at every sampled tick in L43 — 473 shot comparison(s) over 364 sample(s) with a shot in flight, 1055 sample(s) in all
+      subject flags: [43:4]
+      game at the end: player (151.64680402087117, 81.60113966665624), cleared in L43 [43:0,43:1,43:2,43:3,43:4,43:5], hits 0, level 37, tick 1055
+wrote /tmp/claude-0/-home-user-Archipelago-CC/6506516a-4ea4-5b70-8c26-f6a6d00a3ef7/scratchpad/witness150.json
