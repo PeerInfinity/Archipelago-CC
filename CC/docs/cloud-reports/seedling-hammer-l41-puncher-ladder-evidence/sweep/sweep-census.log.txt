@@ -1,0 +1,198 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 17036) — head 4c3afd9b3, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+LEG-BUDGET: 300000 ms per leg (--leg-budget-ms; default 90000); the leg hang bound 1410 s; the solver's own backstop 300 s per solve (a named failure) — NOT reachable by one solve inside this budget
+INFO: mode inv: 22 legs in 22 page(s) (of 923 legs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 1: setting default (model default on)
+UPGRADE-WINDOW: page 1: setting 85
+DASH_ONLY_WINDOW: page 1: setting default
+DASH_SHAPE: page 1: setting default
+SOLVER_ENV: page 1: default
+LEG 271 start (page 1, pageLeg 0)
+INFO: page 1: 2 page error(s), ~2 swaps
+RECYCLE: page 1: launch 77 ms, newPage 62 ms, pageClose 31 ms, browserClose 239 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 2: setting default (model default on)
+UPGRADE-WINDOW: page 2: setting 85
+DASH_ONLY_WINDOW: page 2: setting default
+DASH_SHAPE: page 2: setting default
+SOLVER_ENV: page 2: default
+LEG 272 start (page 2, pageLeg 0)
+INFO: page 2: 2 page error(s), ~2 swaps
+RECYCLE: page 2: launch 69 ms, newPage 68 ms, pageClose 17 ms, browserClose 158 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 3: setting default (model default on)
+UPGRADE-WINDOW: page 3: setting 85
+DASH_ONLY_WINDOW: page 3: setting default
+DASH_SHAPE: page 3: setting default
+SOLVER_ENV: page 3: default
+LEG 274 start (page 3, pageLeg 0)
+INFO: page 3: 2 page error(s), ~2 swaps
+RECYCLE: page 3: launch 79 ms, newPage 64 ms, pageClose 25 ms, browserClose 216 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 4: setting default (model default on)
+UPGRADE-WINDOW: page 4: setting 85
+DASH_ONLY_WINDOW: page 4: setting default
+DASH_SHAPE: page 4: setting default
+SOLVER_ENV: page 4: default
+LEG 275 start (page 4, pageLeg 0)
+INFO: page 4: 2 page error(s), ~2 swaps
+RECYCLE: page 4: launch 71 ms, newPage 78 ms, pageClose 20 ms, browserClose 161 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 5: setting default (model default on)
+UPGRADE-WINDOW: page 5: setting 85
+DASH_ONLY_WINDOW: page 5: setting default
+DASH_SHAPE: page 5: setting default
+SOLVER_ENV: page 5: default
+LEG 462 start (page 5, pageLeg 0)
+INFO: page 5: 2 page error(s), ~2 swaps
+RECYCLE: page 5: launch 62 ms, newPage 54 ms, pageClose 30 ms, browserClose 154 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 6: setting default (model default on)
+UPGRADE-WINDOW: page 6: setting 85
+DASH_ONLY_WINDOW: page 6: setting default
+DASH_SHAPE: page 6: setting default
+SOLVER_ENV: page 6: default
+LEG 463 start (page 6, pageLeg 0)
+INFO: page 6: 2 page error(s), ~2 swaps
+RECYCLE: page 6: launch 60 ms, newPage 52 ms, pageClose 23 ms, browserClose 214 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 7: setting default (model default on)
+UPGRADE-WINDOW: page 7: setting 85
+DASH_ONLY_WINDOW: page 7: setting default
+DASH_SHAPE: page 7: setting default
+SOLVER_ENV: page 7: default
+LEG 464 start (page 7, pageLeg 0)
+INFO: page 7: 2 page error(s), ~2 swaps
+RECYCLE: page 7: launch 61 ms, newPage 59 ms, pageClose 29 ms, browserClose 154 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 8: setting default (model default on)
+UPGRADE-WINDOW: page 8: setting 85
+DASH_ONLY_WINDOW: page 8: setting default
+DASH_SHAPE: page 8: setting default
+SOLVER_ENV: page 8: default
+LEG 465 start (page 8, pageLeg 0)
+INFO: page 8: 2 page error(s), ~2 swaps
+RECYCLE: page 8: launch 80 ms, newPage 46 ms, pageClose 24 ms, browserClose 206 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 9: setting default (model default on)
+UPGRADE-WINDOW: page 9: setting 85
+DASH_ONLY_WINDOW: page 9: setting default
+DASH_SHAPE: page 9: setting default
+SOLVER_ENV: page 9: default
+LEG 359 start (page 9, pageLeg 0)
+INFO: page 9: 2 page error(s), ~2 swaps
+RECYCLE: page 9: launch 76 ms, newPage 61 ms, pageClose 32 ms, browserClose 221 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 10: setting default (model default on)
+UPGRADE-WINDOW: page 10: setting 85
+DASH_ONLY_WINDOW: page 10: setting default
+DASH_SHAPE: page 10: setting default
+SOLVER_ENV: page 10: default
+LEG 360 start (page 10, pageLeg 0)
+INFO: page 10: 2 page error(s), ~2 swaps
+RECYCLE: page 10: launch 65 ms, newPage 46 ms, pageClose 33 ms, browserClose 156 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 11: setting default (model default on)
+UPGRADE-WINDOW: page 11: setting 85
+DASH_ONLY_WINDOW: page 11: setting default
+DASH_SHAPE: page 11: setting default
+SOLVER_ENV: page 11: default
+LEG 362 start (page 11, pageLeg 0)
+INFO: page 11: 2 page error(s), ~2 swaps
+RECYCLE: page 11: launch 56 ms, newPage 62 ms, pageClose 27 ms, browserClose 237 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 12: setting default (model default on)
+UPGRADE-WINDOW: page 12: setting 85
+DASH_ONLY_WINDOW: page 12: setting default
+DASH_SHAPE: page 12: setting default
+SOLVER_ENV: page 12: default
+LEG 363 start (page 12, pageLeg 0)
+INFO: page 12: 2 page error(s), ~2 swaps
+RECYCLE: page 12: launch 51 ms, newPage 46 ms, pageClose 28 ms, browserClose 199 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 13: setting default (model default on)
+UPGRADE-WINDOW: page 13: setting 85
+DASH_ONLY_WINDOW: page 13: setting default
+DASH_SHAPE: page 13: setting default
+SOLVER_ENV: page 13: default
+LEG 273 start (page 13, pageLeg 0)
+INFO: page 13: 2 page error(s), ~2 swaps
+RECYCLE: page 13: launch 91 ms, newPage 63 ms, pageClose 26 ms, browserClose 168 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 14: setting default (model default on)
+UPGRADE-WINDOW: page 14: setting 85
+DASH_ONLY_WINDOW: page 14: setting default
+DASH_SHAPE: page 14: setting default
+SOLVER_ENV: page 14: default
+LEG 900 start (page 14, pageLeg 0)
+INFO: page 14: 2 page error(s), ~2 swaps
+RECYCLE: page 14: launch 64 ms, newPage 43 ms, pageClose 25 ms, browserClose 183 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 15: setting default (model default on)
+UPGRADE-WINDOW: page 15: setting 85
+DASH_ONLY_WINDOW: page 15: setting default
+DASH_SHAPE: page 15: setting default
+SOLVER_ENV: page 15: default
+LEG 361 start (page 15, pageLeg 0)
+INFO: page 15: 2 page error(s), ~2 swaps
+RECYCLE: page 15: launch 64 ms, newPage 45 ms, pageClose 31 ms, browserClose 189 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 16: setting default (model default on)
+UPGRADE-WINDOW: page 16: setting 85
+DASH_ONLY_WINDOW: page 16: setting default
+DASH_SHAPE: page 16: setting default
+SOLVER_ENV: page 16: default
+INFO: page 16: 2 page error(s), ~0 swaps
+RECYCLE: page 16: launch 65 ms, newPage 54 ms, pageClose 19 ms, browserClose 557 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 17: setting default (model default on)
+UPGRADE-WINDOW: page 17: setting 85
+DASH_ONLY_WINDOW: page 17: setting default
+DASH_SHAPE: page 17: setting default
+SOLVER_ENV: page 17: default
+INFO: page 17: 2 page error(s), ~0 swaps
+RECYCLE: page 17: launch 55 ms, newPage 38 ms, pageClose 24 ms, browserClose 356 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 18: setting default (model default on)
+UPGRADE-WINDOW: page 18: setting 85
+DASH_ONLY_WINDOW: page 18: setting default
+DASH_SHAPE: page 18: setting default
+SOLVER_ENV: page 18: default
+LEG 276 start (page 18, pageLeg 0)
+INFO: page 18: 2 page error(s), ~2 swaps
+RECYCLE: page 18: launch 63 ms, newPage 50 ms, pageClose 29 ms, browserClose 226 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 19: setting default (model default on)
+UPGRADE-WINDOW: page 19: setting 85
+DASH_ONLY_WINDOW: page 19: setting default
+DASH_SHAPE: page 19: setting default
+SOLVER_ENV: page 19: default
+LEG 901 start (page 19, pageLeg 0)
+INFO: page 19: 2 page error(s), ~2 swaps
+RECYCLE: page 19: launch 67 ms, newPage 50 ms, pageClose 18 ms, browserClose 169 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 20: setting default (model default on)
+UPGRADE-WINDOW: page 20: setting 85
+DASH_ONLY_WINDOW: page 20: setting default
+DASH_SHAPE: page 20: setting default
+SOLVER_ENV: page 20: default
+LEG 364 start (page 20, pageLeg 0)
+INFO: page 20: 2 page error(s), ~2 swaps
+RECYCLE: page 20: launch 67 ms, newPage 49 ms, pageClose 21 ms, browserClose 171 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 21: setting default (model default on)
+UPGRADE-WINDOW: page 21: setting 85
+DASH_ONLY_WINDOW: page 21: setting default
+DASH_SHAPE: page 21: setting default
+SOLVER_ENV: page 21: default
+INFO: page 21: 2 page error(s), ~0 swaps
+RECYCLE: page 21: launch 77 ms, newPage 68 ms, pageClose 20 ms, browserClose 306 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+AXE_DODGE: page 22: setting default (model default on)
+UPGRADE-WINDOW: page 22: setting 85
+DASH_ONLY_WINDOW: page 22: setting default
+DASH_SHAPE: page 22: setting default
+SOLVER_ENV: page 22: default
+INFO: page 22: 2 page error(s), ~0 swaps
+RECYCLE: page 22: launch 55 ms, newPage 41 ms, pageClose 15 ms, browserClose 265 ms
+INFO: sweep done
