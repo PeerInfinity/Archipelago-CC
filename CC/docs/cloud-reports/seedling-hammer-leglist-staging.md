@@ -13,7 +13,9 @@
 
 ## 2. The answer first
 
-> ⛓ **Superseded in part by §10** (the planner's follow-up after rules-7's review). The with-events fallback is gone, and a non-crossable arrival now SKIPS by name instead of staging. ON now stages **3** legs and skips **73**; carry radius 83 → **71**. §§2–9 describe `dd55ff61`; §10 describes head.
+> ⛓ **Superseded in part by §10 and §11** (the planner's follow-ups after rules-7's review). The with-events fallback is gone (§10). A non-crossable arrival skips by name ONLY when a dropped door names a `game_state` event the leg does not stage; otherwise the leg keeps its OFF row (§11, the NARROW skip).
+> - **Head:** ON stages **3** legs and skips **16**. The carry radius goes 83 → **77**.
+> - **Which section describes which SHA:** §§2–9 describe `dd55ff61`, §10 describes `727fbf4a26` (the generic skip, kept in history) and §11 describes head.
 
 - **The switch:** `--stage-edge-events`, a producer flag of `scripts/procgen/seedling-divergence-legs.mjs`. It is opt-in, like `--carry-route-flags`.
   - It is not a `SOLVER_ENV_NAMES` switch. It changes a measurement list, not the solver, and nothing on the page or in a worker reads it.
@@ -302,3 +304,73 @@ So in each case the route enters the room another way, and the leg's own door is
 - **The "every path needs one ⇒ union" aggregation is kept as you asked.** Over the held paths, an arrival whose held doors each need a different event stages the union of them. The real route needed only one door. It does not occur on this list: the 3 stagers each have one held path needing one event. But it is the same fail-closed over-staging the default `arrivalEventNeeds` has.
 - The narrow-skip alternative above is open for the planner.
 - No sweep was run on the ON list.
+
+## 11. Follow-up 2 (planner `seedling-hammer-phase-planning-8`, rules-7's recommendation: the NARROW skip)
+
+**The ask.** Skip `arrival-not-crossable-at-sphere` ONLY when a dropped (non-holding) path's rule names a `game_state` event. A leg whose non-holding paths fail only on an item or an unreached source keeps its OFF row, byte for byte. Keep `727fbf4a26` in history. All of this is done; nothing was rewritten.
+
+**The change** (`529ae11386`):
+- `arrivalEdgeEvents` now also returns `droppedRules` with `{blocked}`.
+- A new helper, `namedGameStateEvents(rule, byItem)`, returns the event ids a rule names anywhere.
+- `withEdgeEvents(leg, edge, sphereLabel, namedOf)` skips a blocked leg only when some dropped rule names an event **the leg does not already stage**. Otherwise it returns the leg unchanged, as the same object.
+
+**One refinement beyond the literal ask, measured.** "Names a game_state event" alone skips **44** legs, not 16. I ran it as a temporary copy and then deleted it.
+- The 28 extra are 57-type legs whose door names an event the default list already STAGES: L83 → L12 r42c28 (L12:7+12), L12 r40c4 → L24 (L24:0), L76 → L71 r0c6 (L71:2), L115 → L113 (L113:0), L113 → L112 r0c7 (L112:1) and L39 r25c9 → L38 (L39:8).
+- For those legs the room's persistence is already what the event would make it, so rules-7's rationale (a missing persistence event changes the room) does not apply.
+- With "not already staged", the counts land exactly on the planner's expectation.
+
+**md5s and counts** (all six presets):
+
+| list | base | head `529ae11386` |
+|---|---|---|
+| default (OFF) | `fc1c0431d22ef2263c2d655bec98abaa` | **the same** |
+| `--carry-route-flags` (OFF) | `95ed7f6abafb8677566b21d055a6724e` | **the same** |
+| `--stage-edge-events` | — | `c85b1cea1e3b853eb8aecb5461dc348f` |
+| both flags | — | `fbc50ba333f8809c0fb676cceae89831` |
+
+| count | `727fbf4a26` (generic) | head (narrow) |
+|---|---|---|
+| legs that stage an edge event | 3 | **3** (unchanged: §10's three) |
+| `arrival-not-crossable-at-sphere` skips | 73 | **16**: exactly §10's formerly-fallback list, all Dungeon 6, by key there |
+| the other 57 generic-skipped legs | skipped | **byte-identical to OFF**, all 57 (compared row by row) |
+| route-carry radius ON (OFF 83) | 71 | **77** |
+| acceptance md5 | `391322d681b7aa0229d94b3f6906d024` | **the same as base** |
+
+**Route-carry rows that move ON:**
+- `level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304`: `[L62:0]` → none (staged).
+- L63 Chest: `[L63:1, L63:6, L63:7]` → `[L63:1, L63:6]`.
+- 5 skipped legs lose their carry:
+  - `level_63__r6c9 <- in_L65_128_0` ×2;
+  - `level_63__r10c2 <- in_L65_32_0` ×3.
+- rules-7's census legs **L12 Chest via L83 and L30 Torchpickup keep their OFF carry**.
+
+**Sphere-assignment question:** still none. The 16 are a subset of §10's 73, and all 73 regions are reached at their spheres through a holding entrance.
+
+**Rows** (`seedlingDivergenceEdgeEvents.test.js`, now 25 tests):
+- **The narrow skip.** These return the same object:
+  - a leg dropped only on an item (`Has Wand`);
+  - a leg dropped only on an unreached source with no rule;
+  - a leg dropped on an event it already stages.
+
+  An unreached source whose rule names an unstaged event still skips.
+- **A MUTANT row:** the generic `727fbf4a26` behaviour (every blocked leg skips) skips the item-only leg.
+- **On the list:**
+  - exactly **16** skips, all `arrival-not-crossable-at-sphere`;
+  - a **16-type skip**: `level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304` (`level_64` unreached at 5.6; the door names L62 flag 0);
+  - two **57-type controls**, byte-identical ON vs OFF:
+    - `level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest` (its door's events are already staged);
+    - `level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup` (Fire / unreached source).
+  - §10's rows are kept: the 3 stagers by key with their events held, and the controls.
+
+**Gates:**
+- Bounded vitest:
+  - the 3 leg-list files: **83 passed**;
+  - `frontend/modules/procgenDocs/`, `checkProcgenHelp`, `lintGateLabels`: **10 files, 515 passed**.
+- `generate-procgen-reference.mjs --check`, `census-seedling-solver-surface.mjs --check` and `generate-docs-index.mjs --check` are all current.
+
+**Residue (follow-up 2):**
+- **rules-7's point: a leg's sphere stamp is the GOAL's sphere** (`sphere` = where the goal becomes accessible), **not the sphere at which the leg's arrival edge becomes crossable.** Every "not crossable at sphere" verdict here reads the goal's sphere. A route-faithful mode would stamp each leg with the first sphere at which both its arrival path and its goal hold. It is a separate mode, not part of this fix, and it is not built.
+- The "every held path needs one ⇒ union" aggregation is unchanged (§10 residue).
+- The §10 evidence files (`not-crossable-by-edge.txt`, `not-crossable-legs.txt`) describe the generic form's 73. The narrow 16 are the formerly-fallback rows in them, keyed in §10.
+- No sweep was run on the ON list.
+- The cross-session reply to the planner after §10 was refused by the bridge (`elevated_session_untrusted_device`). This report is the channel.
