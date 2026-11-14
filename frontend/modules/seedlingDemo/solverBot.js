@@ -8087,6 +8087,86 @@ function killStanceSighted(fn) {
     }
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE SMALL-WALLS — **THE FRONTIER ASKS FIRST THE DOOR THAT STARTS THE FEWEST-DOORS ROUTE TO THE
+ * AIM** (`FRONTIER_DOOR_ROUTE`, OFF).
+ *
+ * ⚖ The user approved the slice on 2026-11-14 (the hammer replan: *"L63 / L38 / L12 small walls"*).
+ *  - The gap (measured, `seedling-hammer-small-walls.md` §3): when no corridor reaches the aim, `identifyAndSelect`
+ *    orders the frontier ACTIONABLE FIRST, THEN NEAREST TO THE AIM (R8 slice 7). Nearness is the door's own distance,
+ *    not what lies behind it: a door that opens onto a dead end beside the aim outranks the far door the aim is really
+ *    behind, and the walk spends a strategy (and the walk there and back) on it. The witness: L12's
+ *    `shieldlocknorm@288,704`, 20-odd px from the chest's corridor and leading nowhere the chest is, opened on every
+ *    r0c19 arrival before `bosslock@416,240` (rules-7 §4.2).
+ *  - ON: one flood over the same planner nodes, where a node blocked by an actionable obstacle (the frontier's own
+ *    test: an entity with a registered strategy) costs one DOOR to enter and a free node costs nothing (0-1 BFS, the
+ *    planner's opts, `DEFAULT_LATTICE`). If the aim's node is reached, the frontier entry that STARTS a fewest-doors
+ *    route is moved to the front; every other entry keeps its order. A route that crosses a door no strategy can
+ *    resolve is still a route here — the resolver refuses it exactly as it refuses that door today. No route, a
+ *    frontier with fewer than two actionable entries, or a first door already at the front: the order is unchanged.
+ *  - OFF: byte-identical (the flood is not asked).
+ * `counts` hears each flood (`asked`) and each reorder (`moved`); it decides nothing. `SEEDLING_FRONTIER_DOOR_ROUTE=1`
+ * in a node process or the page's solve worker (`solverEnvChannel`), or `withFrontierDoorRoute(enabled, fn)` for a
+ * row. The decision runs in the solve WORKER (`solverBot`), not on the main thread.
+ */
+export const FRONTIER_DOOR_ROUTE = { enabled: globalThis.process?.env?.SEEDLING_FRONTIER_DOOR_ROUTE === '1',
+    counts: { asked: 0, moved: 0 } };
+export const FRONTIER_DOOR_ROUTE_DEFAULT = false;
+
+/** Run `fn` with `FRONTIER_DOOR_ROUTE` set to `enabled`, restoring the previous value (also on a throw). */
+export function withFrontierDoorRoute(enabled, fn) {
+    return withSwitch(FRONTIER_DOOR_ROUTE, enabled, fn);
+}
+
+/**
+ * `FRONTIER_DOOR_ROUTE` ON: `actionable` (the frontier, already sorted) with the entry that starts a fewest-doors
+ * route from the player to `aim` moved to the front. `doorOf(x, y)` names the door blocking a node centre (`{id}` for
+ * an actionable obstacle, `null` for a free node, `false` for a wall); `isActionable(entry)` is the frontier's own
+ * test. Returns `actionable` itself when nothing moves.
+ */
+function frontierDoorRouted(world, from, aim, actionable, doorOf, isActionable) {
+    if (!FRONTIER_DOOR_ROUTE.enabled || actionable.filter(isActionable).length < 2) return actionable;
+    FRONTIER_DOOR_ROUTE.counts.asked += 1;
+    const pitch = DEFAULT_LATTICE;
+    const nx = world.width * TILE_SIZE / pitch;
+    const ny = world.height * TILE_SIZE / pitch;
+    const start = nodeAt(from.x, from.y, pitch);
+    const goal = nodeAt(aim.x, aim.y, pitch);
+    const key = (tx, ty) => ty * nx + tx;
+    // per node: doors crossed, the first door's id, the door this node is inside (a door spans several nodes)
+    const best = new Map([[key(start.tx, start.ty), { doors: 0, first: null, inside: null }]]);
+    const deque = [start];
+    let found = null;
+    while (deque.length) {
+        const cur = deque.shift();
+        const at = best.get(key(cur.tx, cur.ty));
+        if (cur.d !== undefined && cur.d !== at.doors) continue;   // a stale entry
+        if (cur.tx === goal.tx && cur.ty === goal.ty) { found = at; break; }
+        for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+            const tx = cur.tx + dx;
+            const ty = cur.ty + dy;
+            if (tx < 0 || ty < 0 || tx >= nx || ty >= ny) continue;
+            const c = nodeCentre(tx, ty, pitch);
+            const door = (tx === goal.tx && ty === goal.ty) ? null : doorOf(c.x, c.y);
+            if (door === false) continue;
+            const id = door?.id ?? null;
+            const step = id !== null && id !== at.inside ? 1 : 0;
+            const doors = at.doors + step;
+            const k = key(tx, ty);
+            const was = best.get(k);
+            if (was && was.doors <= doors) continue;
+            best.set(k, { doors, first: at.first ?? (step ? id : null), inside: id });
+            const node = { tx, ty, d: doors };
+            if (step) deque.push(node); else deque.unshift(node);
+        }
+    }
+    const first = found?.first ?? null;
+    const i = first === null ? -1 : actionable.findIndex((o) => o.id === first && isActionable(o));
+    if (i <= 0) return actionable;
+    FRONTIER_DOOR_ROUTE.counts.moved += 1;
+    return [actionable[i], ...actionable.slice(0, i), ...actionable.slice(i + 1)];
+}
+
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
 const GHOST_DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(GHOST_DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -29052,11 +29132,26 @@ function solveSegmentUnder({
         const strategyFor = (o) => refineStrategy(run,
             OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind]
                 ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o);
-        const actionable = [...frontier.values()].sort((a, b) => {
+        const sortedFrontier = [...frontier.values()].sort((a, b) => {
             const av = frontierExecutor(strategyFor(a)) ? 0 : 1;
             const bv = frontierExecutor(strategyFor(b)) ? 0 : 1;
             return av - bv || a.d - b.d;
         });
+        // ⛓ SMALL-WALLS (`FRONTIER_DOOR_ROUTE`, OFF: the sort above) — the door a fewest-doors route starts with, first.
+        const actionable = frontierDoorRouted(w, run.state, aim, sortedFrontier, (x, y) => {
+            const hit = plannerObstacleAt(w, x, y, null, opts);
+            if (hit === null) return null;
+            if (hit.kind === 'terrain' || hit.kind === 'pit' || hit.kind === 'lethal-terrain'
+                || hit.kind === 'teleporter') return false;
+            const b = hit.blocker;
+            if (CONTACT_FIDELITY.spearBridgeVerb && b.bridgeId && hit.kind === 'solid') {
+                return frontierExecutor(strategyFor({ kind: 'solid', tag: 'bridge' })) ? { id: `bridge@${b.bridgeId}` } : false;
+            }
+            const tag = b.tag ?? b.cls?.as3 ?? b.name ?? null;
+            if (typeof tag === 'string' && tag.startsWith('tile:')) return false;
+            const id = b.id ?? `${tag ?? '?'}@${b.x ?? '?'},${b.y ?? '?'}`;
+            return frontierExecutor(strategyFor({ kind: hit.kind, tag, id })) ? { id } : false;
+        }, (o) => frontierExecutor(strategyFor(o)));
         const obstacle = actionable[0] ?? { kind: 'no-corridor', tag: null, id: null };
         const key = obstacle.tag ? `${obstacle.kind}:${obstacle.tag}` : obstacle.kind;
         const strategy = refineStrategy(run,
