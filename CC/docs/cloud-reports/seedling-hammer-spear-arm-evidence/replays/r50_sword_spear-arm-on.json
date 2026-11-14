@@ -1,0 +1,25 @@
+{
+ "variant": "sword",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 745,
+ "work": 200,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 31
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 169
+  }
+ ],
+ "message": "solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29: the re-planned corridor failed too — solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29 waypoint 1 (88,88): not reached within 400 ticks; stalled at (57.37568056970543,132.60385297831334) v=(0,0) in level 22, aiming at (88,88), after grazing 74 solid(s): rock at (96,96) on the X axis, at (93.30544354526285,102.53823386873692) in level 22, aiming at (88,88); rock at (96,96) on the X axis, at (93.30544354526285,100.20351867119135) in level 22, aiming at (88,88); rock at (96,96) on the X axis, at (93.30544354526285,98.06596822899208) in level 22, aiming at (88,88)."
+}

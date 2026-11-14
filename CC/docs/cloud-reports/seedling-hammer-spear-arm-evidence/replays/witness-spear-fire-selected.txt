@@ -1,0 +1,1 @@
+{"id":"l22-25-29-spear","slots":[1,3],"spearSlot":1,"primaryWeapon":"fire","from":[null,null],"hits":[[68,"wallflyer@48,112"],[123,"wallflyer@64,80"],[144,"wallflyer@64,80"]],"deaths":1,"crossed":null,"at":["45.8","145.6"],"level":22,"lvl0":22}
