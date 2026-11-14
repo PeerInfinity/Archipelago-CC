@@ -31,6 +31,12 @@
  *     · `request` — WHO is being solved, ONCE per solve (the first post only): `requestIdentity()` — the tape name,
  *       the boot level, `seam.time`, the passes, the budget and window, the off-default switch stamps the request
  *       carries, and the held retry (`attempt`, the envelope's `progressAttempt`: the service's label `640 → 2560`).
+ *  - ⛓ PANEL-ROUTE (hammer-phase, ⚖ the user 2026-11-11: "Panel route data") — `best.route = {level, cells, dashes}`,
+ *    the plan in hand's tile path (`planRoute`), computed ONCE PER PASS in `onPass` from what the plan already holds
+ *    (`plan.expected`, its per-tick `{level, x, y}` rows) and the dash presses the worker's `dashTicksOf` names
+ *    (`jsRuntimeSolver.planDashTicks`, recorded beside the plan only while this hook is installed); and
+ *    `best.passRoutes = {<pass>: route}`, the other landed passes' plans (not the one `best` names). Copied onto each
+ *    post; `v` stays 2 (a tap stamp, like S3's — the schema doc's §7).
  *
  * The stamps go on the POSTED copy (a `peek()` is a fresh object): nothing is written back into the solver.
  */
@@ -94,6 +100,59 @@ export function requestIdentity(tape, { passes = null, windowAt = null, attempt 
     };
 }
 
+/**
+ * ⛓ PANEL-ROUTE — the route's cell cap. A route longer than this is THINNED to this many cells, evenly over its
+ * waypoints, the first (the arrival) and the last (the goal) always kept, and says so (`thinned`: the count before).
+ */
+export const ROUTE_MAX_CELLS = 256;
+
+/** ⛓ PANEL-ROUTE — the route grid's cell size in px: the tile map's (`solveProgress.PROGRESS_TILE`; import-free here). */
+export const ROUTE_TILE = 16;
+
+const cellOf = (row) => [Math.floor(row.x / ROUTE_TILE), Math.floor(row.y / ROUTE_TILE)];
+const sameCell = (a, b) => a !== undefined && a[0] === b[0] && a[1] === b[1];
+
+/**
+ * ⛓ PANEL-ROUTE — a plan's tile path, `{level, cells, dashes, thinned?}`, or null when the plan has no rows.
+ *  - `level`: the level of the plan's first row (the arrival). ⚖ A plan that CHANGES level keeps the cells before its
+ *    first change only: the tile map (`tiles.level`) is the level the segment searched, and the view draws a route
+ *    only on the map's level, so cells of a second level would be drawn on the wrong room.
+ *  - `cells`: `[col, row]` of each row's `(x, y)` (the player's point, `floor(/16)`, the tile map's grid), in order,
+ *    consecutive duplicates dropped: the arrival's tile first, the last tile on `level` last.
+ *  - `dashes`: the tile each dash press was made from (row `t - 1` for a press on tick `t`), on `level`, consecutive
+ *    duplicates dropped; `[]` for a plan that presses none; `null` when the presses were not recorded (`dashTicks`
+ *    null).
+ * @param {{expected?: ReadonlyArray<{level:number, x:number, y:number}>}} plan
+ * @param {?ReadonlyArray<number>} dashTicks
+ */
+export function planRoute(plan, dashTicks) {
+    const rows = plan?.expected;
+    if (!Array.isArray(rows) || rows.length === 0) return null;
+    const level = rows[0].level;
+    let end = rows.findIndex((r) => r.level !== level);
+    if (end < 0) end = rows.length;
+    let cells = [];
+    for (let i = 0; i < end; i += 1) {
+        const c = cellOf(rows[i]);
+        if (!sameCell(cells[cells.length - 1], c)) cells.push(c);
+    }
+    let dashes = null;
+    if (Array.isArray(dashTicks)) {
+        dashes = [];
+        for (const t of dashTicks) {
+            if (!(t >= 1 && t <= end)) continue;
+            const c = cellOf(rows[t - 1]);
+            if (!sameCell(dashes[dashes.length - 1], c)) dashes.push(c);
+        }
+    }
+    const all = cells.length;
+    if (all > ROUTE_MAX_CELLS) {
+        const step = (all - 1) / (ROUTE_MAX_CELLS - 1);
+        cells = Array.from({ length: ROUTE_MAX_CELLS }, (_, k) => cells[Math.round(k * step)]);
+    }
+    return { level, cells, dashes, ...(all > ROUTE_MAX_CELLS ? { thinned: all } : {}) };
+}
+
 /** The message type the worker posts (`{type, id, snapshot, final?}`). */
 export const SOLVE_PROGRESS_MESSAGE = 'solve-progress';
 
@@ -107,9 +166,11 @@ export const SOLVE_PROGRESS_MESSAGE = 'solve-progress';
  * @param {?number} [o.windowAt]  the RESOLVED upgrade window, work units from the attempt's start
  *   (`jsRuntimeSolver.upgradeWindowWork(budgetWork, request's window)` — the worker resolves it)
  * @param {?object} [o.request]  ⛓ S3 — the `request` stamp (`requestIdentity`), posted once, on the first post
+ * @param {?(plan: object) => ?ReadonlyArray<number>} [o.dashTicksOf]  ⛓ PANEL-ROUTE — a plan's dash presses
+ *   (`jsRuntimeSolver.planDashTicks`); absent: every route's `dashes` is null
  */
 export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_INTERVAL_MS, passes,
-    budgetWork = null, windowAt = null, request = null }) {
+    budgetWork = null, windowAt = null, request = null, dashTicksOf = null }) {
     // ⛓ S3 — the attempt's wall clock starts with the tap (the worker builds it just before the solve).
     const startedAt = clock();
     let lastCallAt = startedAt;
@@ -117,6 +178,20 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
     /** `'<from>→<to>'` -> wall ms (⛓ S3 `budget.wallBySite`). */
     const wallBySite = new Map();
     let bestStamp = null;
+    /** ⛓ PANEL-ROUTE — plan -> its route (one `planRoute` per plan, however many passes keep it as `best`). */
+    const routes = new WeakMap();
+    /** ⛓ PANEL-ROUTE — pass name -> the route of that pass's own plan (landed `ok`). */
+    const passRoutes = new Map();
+    const routeFor = (plan) => {
+        if (!plan || typeof plan !== 'object') return null;
+        if (!routes.has(plan)) {
+            let r = null;
+            try { r = planRoute(plan, dashTicksOf ? dashTicksOf(plan) : null); } catch { r = null; }
+            routes.set(plan, r);
+            stats.routes += 1;
+        }
+        return routes.get(plan);
+    };
     let requestSent = false;
     let lastPost = -Infinity;
     let lastPeek = null;
@@ -130,7 +205,7 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
      * last pass landed — still names its own pass, not the last one.
      */
     const ofSegment = new Map();
-    const stats = { calls: 0, peeks: 0, posts: 0 };
+    const stats = { calls: 0, peeks: 0, posts: 0, routes: 0 };
 
     const read = (peek) => { stats.peeks += 1; return peek(); };
 
@@ -176,7 +251,7 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
             const rate = rateOf(spent, snap.budget.limit, now);
             if (rate) snap.budget.rate = rate;
         }
-        if (bestStamp) snap.best = { ...bestStamp };
+        if (bestStamp) snap.best = structuredClone(bestStamp);
         if (request && !requestSent) {
             requestSent = true;
             snap.request = structuredClone(request);
@@ -210,9 +285,18 @@ export function createProgressTap({ post, clock, minIntervalMs = SOLVE_PROGRESS_
         onPass(answer, best) {
             landed += 1;
             planInHand = best?.ok === true;
+            // ⛓ PANEL-ROUTE — the pass's own plan, for `passRoutes` (one route per plan, read once here)
+            if (answer?.ok === true && answer.pass) {
+                const r = routeFor(answer.plan);
+                if (r) passRoutes.set(answer.pass, r);
+            }
             if (best && best.kind !== 'skipped') {
                 bestStamp = { ok: best.ok === true, ticks: best.ok === true ? best.plan?.solution?.length ?? null : null,
                     pass: best.pass ?? null };
+                const route = best.ok === true ? routeFor(best.plan) : null;
+                if (route) bestStamp.route = route;
+                const others = [...passRoutes].filter(([p, r]) => r !== route && p !== best.pass);
+                if (route && others.length > 0) bestStamp.passRoutes = Object.fromEntries(others);
             }
         },
         /** After the solve: post the FINAL snapshot (the finished state), if the solver ever reported one. */

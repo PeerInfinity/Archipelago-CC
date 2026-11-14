@@ -69,6 +69,14 @@ The libraries are `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `cloudberryLibra
 
 **Warning:** a substrate that is not registered is not an error. The pipeline skips regions that ask for it, so a script writes a world missing that substrate and exits 0. When you change such an import, assert the registry holds the id afterwards, and check the entry's shape, not just its presence.
 
+### A probe can connect before the client is ready, and `waitForFunction(async …)` does not wait
+
+A programmatic connect (`window.__apSpike.connect`, or the registry's `client.connect`) made before the client module's `initialize()` used to fail silently. RoomInfo was published to no event bus, Connect was never sent, and the socket stayed open and logged out. Such a connect is now refused: it prints a console error and throws `ClientNotReadyError`. Players are not affected, because the connect form and `?autoConnect=true` both run after initialisation.
+
+The probes hit this because of a Playwright trap. `page.waitForFunction(async () => …)` resolves on its first poll, because the predicate returns a Promise and Playwright counts any Promise as truthy. A plain arrow that returns a Promise (`() => import(…).then(…)`) has the same problem. On a quiet box the boot happened to finish inside the probes' fixed settle; on a loaded box it did not.
+
+**Fix:** wait with `waitForClientReady(page)` from `scripts/procgen/clientReady.js`, which polls the synchronous `window.__apSpike.isReady()` and fails with a clear message on timeout. For other waits, use its `waitForSyncFunction(page, predicate, arg, options)`: it refuses an async predicate and fails the wait if a predicate returns a Promise. A "never connected" result from a probe that used the async wait is suspect; a run that did connect is fine. The Client module's technical reference has the details, under "Connecting from a script".
+
 ### procgenPlayer has no panel
 
 `frontend/modules/procgenPlayer/` recognises a procgen `rules.json` and routes every region transition at play time, but never appears in the layout. It is a headless coordinator: it builds the region warehouse from `preset_sidecars` and publishes each substrate's `loadRegion` event. If play-time routing misbehaves, look here before the substrate panels.

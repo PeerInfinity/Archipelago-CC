@@ -16,12 +16,15 @@
  * `bob@736,752`'s first step, so the bob comes up the x≈744 corridor ~2 px behind and the first opportunistic strike
  * lands a tick or two later.
  *   - 872 still SOLVES hitless with the same chain (`kill, bait, kill, bait, kill, hold`): work 3467 → 3823, 2389 → 2385 t.
- *   - ⛔ 871 is a LOST SOLVE under the wall: the search REFUSES at t724 (`burn stance … the combat ladder is EXHAUSTED`,
- *     work 885), two ticks after its second bob takes hit 2. The pre-wall 1122-t plan is still a hitless walk: it replays
- *     row for row on the wall-ON model, and the GAME (p4g) played it with 0 hits, the model at 0 px on all 1122 ticks
+ *   - ⛔ 871 is a LOST SOLVE under the wall: the search REFUSES (`burn stance … the combat ladder is EXHAUSTED`, work
+ *     885). ⛓ Corrected (hammer DYING-BODY-WAIT, 2026-11-12): the refusal is at clock 826 against a LIVE bob@736,752.
+ *     The bob that dies at t700 lived in the branch OPP_PRESS_FALLBACK discarded, after its spinner@880,848 press met
+ *     HAMMER_SAFETY ("no step out") at t724; this header's earlier "t724 … the dying body" read that branch. The
+ *     pre-wall 1122-t plan is still a hitless walk: it replays row for row on the wall-ON model, and the GAME (p4g) played
+ *     it with 0 hits, the model at 0 px on all 1122 ticks
  *     (`CC/docs/cloud-reports/seedling-fidelity-wallsflip-evidence/leg871-offplan-game.log`). So the gap is the SEARCH's
- *     (the hammer arc's: the combat ladder at t724), not the model's. The row pins all three facts; when the search finds
- *     a plan again its last block goes red, and that is the re-pin to make.
+ *     (the hammer arc's: the spinner-press corner at t719–t724), not the model's. The row pins all three facts; when the
+ *     search finds a plan again its last block goes red, and that is the re-pin to make.
  */
 
 import { describe, expect, it } from 'vitest';

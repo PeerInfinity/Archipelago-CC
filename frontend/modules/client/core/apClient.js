@@ -27,6 +27,29 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * Thrown by `connect()` / `requestConnect()` when they are called before the
+ * client module's `initialize()` has handed the ApClient its event bus.
+ *
+ * Without the bus, the RoomInfo packet the server answers the websocket with
+ * would be published to nobody, nothing would ever send Connect, and the socket
+ * would sit open and logged out with no message anywhere. Players cannot reach
+ * this (the connect form and `?autoConnect=true` both run after initialize);
+ * scripts that drive `window.__apSpike.connect` or the registry's
+ * `client.connect` can. They must wait for `isReady()` first.
+ */
+export class ClientNotReadyError extends Error {
+  constructor(entry) {
+    super(
+      `The Archipelago client is not initialised yet, so ${entry}() was refused: ` +
+        'the server\'s RoomInfo would be lost and Connect never sent. ' +
+        'Wait until window.__apSpike.isReady() is true before connecting.'
+    );
+    this.name = 'ClientNotReadyError';
+    this.code = 'AP_CLIENT_NOT_READY';
+  }
+}
+
 export class ApClient {
   constructor() {
     this.client = null;
@@ -71,6 +94,28 @@ export class ApClient {
     }
   }
 
+  /**
+   * True once the client module's initialize() has set the event bus, i.e.
+   * once a connect can deliver RoomInfo to the messageHandler. Scripts poll
+   * this (synchronously) before calling connect().
+   */
+  isReady() {
+    return !!this.eventBus;
+  }
+
+  /**
+   * The early-connect guard: returns a ClientNotReadyError (already reported
+   * on the console) when the event bus is not set, or null when it is.
+   */
+  _notReadyError(entry) {
+    if (this.isReady()) return null;
+    const error = new ClientNotReadyError(entry);
+    // console.error, not log(): the logger may filter by level or not exist
+    // yet this early, and this refusal must never be silent.
+    console.error(`[apClient] ${error.message}`);
+    return error;
+  }
+
   initialize() {
     this.preventReconnect = false;
     this.reconnectAttempts = 0;
@@ -95,6 +140,9 @@ export class ApClient {
    */
   requestConnect(address, password) {
     log('info', 'requestConnect called', { address, hasPassword: !!password });
+
+    const notReady = this._notReadyError('requestConnect');
+    if (notReady) throw notReady;
 
     let effectiveAddress = address;
     let effectivePassword = password;
@@ -134,9 +182,15 @@ export class ApClient {
    * Open the websocket via archipelago.js, then bridge packets back to the
    * legacy eventBus. Returns true on success, false on failure. Fires
    * `connection:open` on success and `connection:error` on failure, matching
-   * connection.js payload shapes.
+   * connection.js payload shapes. Rejects with ClientNotReadyError, opening
+   * nothing, when called before the event bus is set.
    */
   async connect(address, password = null) {
+    // Refuse before touching the socket: an early connect must not leave a
+    // half-open websocket behind (see ClientNotReadyError).
+    const notReady = this._notReadyError('connect');
+    if (notReady) throw notReady;
+
     if (!address) return false;
 
     // Clean up any prior subscriptions / sockets.

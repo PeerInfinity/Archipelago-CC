@@ -315,7 +315,8 @@ describe('⛓ the links the render emits', () => {
         //   content set (2 doc).
         //   412 → 414: content sets R4 — concepts.md § The theme trial world → maze.md § Tile art (1 doc), and that §
         //   → frontend/packs/meta/art/manifest.json, the worked example (1 repo).
-        expect(checked).toBe(414);
+        //   412 → 413: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
+        expect(checked).toBe(415);
     });
 
     it('tags each link with the kind that produced it', () => {

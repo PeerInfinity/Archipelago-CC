@@ -17,6 +17,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import {
     buildPlaythroughAtlas, modelVerdicts, refuseUnboundMembers, modelFloodTiles, playthroughGridFor,
     playthroughAnalyzerOptions,
+    playthroughNoHitGates,
 } from './make-seedling-playthrough-rules.mjs';
 import { analyzeRegion } from '../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js';
 import { buildGroupOpeners } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
@@ -81,7 +82,20 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
         };
         expect(ruleless.filter((x) => !modelFree(x) && fall(x)).map((x) => `${x.region} ${x.row}`))
             .toEqual(['level_52 r0c7->r2c2', 'level_52 r0c7->r5c10', 'level_52 r2c2->r5c10']);
-        const rest = ruleless.filter((x) => !modelFree(x) && !fall(x));
+        // ⛓ RULES no-hit-directional: and the FREE direction of a directional no-hit gate (⚖ the user 2026-11-11, a
+        // per-room table for now: `seedlingNoHitDirectionalGates`) — one-way, its reverse the crossing of the wallflyer
+        // band that costs the gate's arm set. Read off the table through the producer, never typed.
+        const noHitGates = playthroughNoHitGates();
+        const noHitFree = (x) => {
+            const [from, to] = x.row.split('->');
+            const back = regionOf(x.region).subgraph.internal_exits.find((e) => e.from === to && e.to === from);
+            return x.oneWay && noHitGates.some((g) => `level_${g.gate.level}` === x.region
+                && JSON.stringify(back?.access_rule) === JSON.stringify(playthroughAnalyzerOptions.resolveCondition(g.condition)));
+        };
+        expect(noHitGates.length).toBeGreaterThan(0);
+        expect(ruleless.filter((x) => !modelFree(x) && !fall(x) && noHitFree(x)).map((x) => x.region).sort())
+            .toEqual(noHitGates.map((g) => `level_${g.gate.level}`).sort());
+        const rest = ruleless.filter((x) => !modelFree(x) && !fall(x) && !noHitFree(x));
         expect(rest.filter((x) => !reclosingLevels.has(x.region))).toEqual([]);
         expect(rest.every((x) => x.oneWay)).toBe(true);
     });
