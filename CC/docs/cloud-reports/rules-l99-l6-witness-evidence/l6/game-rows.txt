@@ -1,0 +1,6 @@
+ROW {"arm": "noswim-bait152-row1", "finished": true, "obs": 371, "tick_count": 370, "end": {"level": 5, "x": 56, "y": 104}, "hits": 0, "maxHits": 0, "levels": [6, 5], "firstTickInL5": 350, "bobsAliveLastL6": 0}
+ROW {"arm": "noswim-bait152-row3", "finished": true, "obs": 370, "tick_count": 369, "end": {"level": 5, "x": 56, "y": 104}, "hits": 0, "maxHits": 0, "levels": [6, 5], "firstTickInL5": 349, "bobsAliveLastL6": 0}
+ROW {"arm": "noswim-nobait-row1", "finished": true, "obs": 221, "tick_count": 220, "end": {"level": 6, "x": 167.45756144926716, "y": 36.95603386026407}, "hits": 1, "maxHits": 2, "levels": [6], "firstTickInL5": -1, "bobsAliveLastL6": 2}
+ROW {"arm": "swim-bait152-row1", "finished": true, "obs": 371, "tick_count": 370, "end": {"level": 5, "x": 56, "y": 104}, "hits": 0, "maxHits": 0, "levels": [6, 5], "firstTickInL5": 350, "bobsAliveLastL6": 0}
+ROW {"arm": "swim-bait152-row3", "finished": true, "obs": 370, "tick_count": 369, "end": {"level": 5, "x": 56, "y": 104}, "hits": 0, "maxHits": 0, "levels": [6, 5], "firstTickInL5": 349, "bobsAliveLastL6": 0}
+ROW {"arm": "swim-nobait-row1", "finished": true, "obs": 221, "tick_count": 220, "end": {"level": 6, "x": 167.45756144926716, "y": 36.95603386026407}, "hits": 1, "maxHits": 2, "levels": [6], "firstTickInL5": -1, "bobsAliveLastL6": 2}
