@@ -1659,13 +1659,42 @@ export function agreementWithPayload(payload, state) {
 }
 
 /**
+ * ⛓⛓ MAZE CONVERTED LOAD — **WHICH OBJECT IN A LOADED DOCUMENT IS THE LEVEL**, decided by SHAPE (no preset name):
+ * - a lab payload: its `level` is an object (`serializeMazeLevel`'s);
+ * - a preset SIDECAR envelope (`rules.json` → `preset_sidecars[player][region]`): `{substrate, playable_payload}`;
+ *   a non-maze substrate is refused by name;
+ * - a sidecar with NO room (`{substrate: 'maze', shared_world: '<level world>'}`: a region of a shared level world,
+ *   148 of the 264 in `seedling_playthrough_maze`) is refused by name, pointing at the sidecar that carries the room;
+ * - a sidecar's bare `playable_payload`, or a CLI `--json` level: the document itself. ⚠ A converted room's
+ *   `playable_payload.level` is its Seedling LEVEL NUMBER, so `payload.level ?? payload` read 16 as the level.
+ * `loadPayload` is the one caller; a link that opens a preset room hands it the sidecar.
+ */
+export function levelOfPayload(payload) {
+    if (payload && typeof payload === 'object' && payload.playable_payload !== undefined) {
+        if (payload.substrate !== 'maze') {
+            fail(`mazeLab: this is a ${JSON.stringify(payload.substrate)} sidecar — the maze lab loads a maze room `
+                + '(`substrate: "maze"`)');
+        }
+        return payload.playable_payload;
+    }
+    if (payload && typeof payload === 'object' && payload.substrate === 'maze' && typeof payload.shared_world === 'string'
+        && payload.tiles === undefined) {
+        fail(`mazeLab: this sidecar has no room of its own — it is a region of the shared level world `
+            + `${JSON.stringify(payload.shared_world)}, whose room is the sidecar that carries a \`playable_payload\` `
+            + 'for that level. Load that one');
+    }
+    if (payload?.level && typeof payload.level === 'object') return payload.level;
+    return payload;
+}
+
+/**
  * ⛓ LOAD a payload's level AS IT STANDS — the channel an EDITED level travels
  * on. The state that comes back is UNCERTIFIED whatever the payload claimed:
  * `certified: true` in a file is somebody else's assertion, and this page's
  * certification is its own oracle's answer or nothing.
  */
 export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
-    const world = deserializeMazeLevel(payload?.level ?? payload);
+    const world = deserializeMazeLevel(levelOfPayload(payload));
     const seed = Number.isInteger(payload?.seed) ? payload.seed : 1;
     const palette = paletteFor(payload?.biome ?? biome);
     /**

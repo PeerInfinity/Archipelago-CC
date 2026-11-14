@@ -1,0 +1,164 @@
+{
+ "A1-fire-below-centre": {
+  "ticks": 704,
+  "end": {
+   "x": 585.9575803666198,
+   "y": 594.0492519969016,
+   "level": 40
+  },
+  "hits": 0,
+  "pushables": {
+   "pushableblockfire@480,480": {
+    "x": 480,
+    "y": 480,
+    "removed": false
+   },
+   "pushableblockfire@576,576": {
+    "x": 576,
+    "y": 576,
+    "removed": false
+   },
+   "pushableblock@576,560": {
+    "x": 576,
+    "y": 560,
+    "removed": false
+   }
+  },
+  "clears": []
+ },
+ "A2-fire-below-west-edge": {
+  "ticks": 651,
+  "end": {
+   "x": 578.0251957411259,
+   "y": 594.1232537890384,
+   "level": 40
+  },
+  "hits": 0,
+  "pushables": {
+   "pushableblockfire@480,480": {
+    "x": 480,
+    "y": 480,
+    "removed": false
+   },
+   "pushableblockfire@576,576": {
+    "x": 576,
+    "y": 576,
+    "removed": false
+   },
+   "pushableblock@576,560": {
+    "x": 576,
+    "y": 560,
+    "removed": false
+   }
+  },
+  "clears": []
+ },
+ "A3-fire-below-east-edge": {
+  "ticks": 648,
+  "end": {
+   "x": 589.9867009398398,
+   "y": 594.096983326272,
+   "level": 40
+  },
+  "hits": 0,
+  "pushables": {
+   "pushableblockfire@480,480": {
+    "x": 480,
+    "y": 480,
+    "removed": false
+   },
+   "pushableblockfire@576,576": {
+    "x": 576,
+    "y": 576,
+    "removed": false
+   },
+   "pushableblock@576,560": {
+    "x": 576,
+    "y": 560,
+    "removed": false
+   }
+  },
+  "clears": []
+ },
+ "A4-door-shut": {
+  "ticks": 434,
+  "end": {
+   "x": 488,
+   "y": 578.0000000000008,
+   "level": 40
+  },
+  "hits": 0,
+  "pushables": {
+   "pushableblockfire@480,480": {
+    "x": 480,
+    "y": 480,
+    "removed": false
+   },
+   "pushableblockfire@576,576": {
+    "x": 576,
+    "y": 576,
+    "removed": false
+   },
+   "pushableblock@576,560": {
+    "x": 576,
+    "y": 560,
+    "removed": false
+   }
+  },
+  "clears": []
+ },
+ "B-control-flag12": {
+  "ticks": 4491,
+  "end": {
+   "x": 663.6997522983112,
+   "y": 535.0754150824034,
+   "level": 40
+  },
+  "hits": 0,
+  "pushables": {
+   "pushableblockfire@480,480": {
+    "x": 768,
+    "y": 400,
+    "removed": false
+   },
+   "pushableblockfire@576,576": {
+    "x": 560,
+    "y": 576,
+    "removed": false
+   },
+   "pushableblock@576,560": {
+    "x": 576,
+    "y": 512,
+    "removed": false
+   }
+  },
+  "clears": []
+ },
+ "B-control-inputs-door-shut": {
+  "ticks": 4491,
+  "end": {
+   "x": 467.43807616959776,
+   "y": 674.0003842910835,
+   "level": 40
+  },
+  "hits": 1,
+  "pushables": {
+   "pushableblockfire@480,480": {
+    "x": 480,
+    "y": 480,
+    "removed": false
+   },
+   "pushableblockfire@576,576": {
+    "x": 576,
+    "y": 576,
+    "removed": false
+   },
+   "pushableblock@576,560": {
+    "x": 576,
+    "y": 560,
+    "removed": false
+   }
+  },
+  "clears": []
+ }
+}

@@ -33,6 +33,19 @@ Edits go through `mazeEditAdapter.js`, which describes the maze in the terms the
 
 A loaded payload is taken as it stands: it is its own base with no edit list, since its `level` already has the edits applied.
 
+### What LOAD accepts
+
+`mazeLab.levelOfPayload` decides which object in a loaded document is the level, by its shape:
+
+| Document | The level |
+|---|---|
+| A lab payload (the save box, a download) | its `level` object |
+| A `rules.json` preset sidecar, `{substrate: "maze", playable_payload}` (a Seedling-converted room, for example) | its `playable_payload`. A sidecar of another substrate is refused by name. |
+| A sidecar's bare `playable_payload`, or a `generate-maze-level --json` level | the document itself. A converted room's `level` field is its Seedling level number, not a level object. |
+| A sidecar with no room, `{substrate: "maze", shared_world: "<level world>"}` | none: it is a region of a shared level world, and the refusal names the world whose sidecar carries the room. |
+
+A converted room keeps the entity fields only the engine reads (arrow traps, entry gates, block sinks, block kinds, pulls, pulsers). When a payload carries any of them, `procgenMaze.deserializeMazeLevel` reads them through the engine's own `deserializeMazeWorld`; a payload with none takes the old path unchanged. The save writes them back through `serializeMazeEntities`, so save → load → save is a fixed point for every room of `seedling_playthrough_maze` (`mazeConvertedLoad.test.js`). `obstacleLib` entries ride through as they are. The room draws with its traps; the lab draws no wires between a button and what it opens.
+
 ### The edit tools
 
 The `edit` mode's tool buttons are the view's command table, in its order. FILL, CLEAR and MOVE are the shared rectangle tools (see [Editing core](./editing-core.md)); the maze lab names them in `mazeRoom/mazeEditTools.js`.
