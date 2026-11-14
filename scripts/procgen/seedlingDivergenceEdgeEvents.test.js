@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    arrivalEdgeEvents, goalEventsHeld, linkArrivals, requiredEvents, sphereEdgeEvents, withEdgeEvents,
+    arrivalEdgeEvents, goalEventsHeld, linkArrivals, namedGameStateEvents, requiredEvents, sphereEdgeEvents, withEdgeEvents,
 } from './seedling-divergence-legs.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -89,7 +89,7 @@ describe('arrivalEdgeEvents — non-crossable paths dropped; every held path nee
         const a = {};
         const t = new Map([[a, [{ rule: false, name: 'X -> Y' }, { rule: false, name: 'Z -> Y' }]]]);
         const got = arrivalEdgeEvents(t, a, (r, p) => (p.name === 'Z -> Y' ? '(source region Z unreached)' : null));
-        expect(got).toEqual({ blocked: ['X -> Y needs True', 'Z -> Y (source region Z unreached)'] });
+        expect(got).toEqual({ blocked: ['X -> Y needs True', 'Z -> Y (source region Z unreached)'], droppedRules: [false, false] });
     });
 
     it('a link arrival needs its source arrival\'s events + the link\'s; a blocked source blocks the link path; unknown = none', () => {
@@ -129,7 +129,7 @@ describe('withEdgeEvents — added through the staging channel, stamped; skipped
         expect(withEdgeEvents(leg, { events: [] })).toBe(leg);
         const skipped = { ...leg, skip: 'x' };
         expect(withEdgeEvents(skipped, { events: [E1] })).toBe(skipped);
-        expect(withEdgeEvents(skipped, { blocked: ['X needs Y'] })).toBe(skipped);
+        expect(withEdgeEvents(skipped, { blocked: ['X needs Y'], droppedRules: [has(E1.item)] }, '1', (r) => namedGameStateEvents(r, byItem))).toBe(skipped);
     });
 
     it('a location goal that IS an added event, or an unmappable one, skips by name (no staging left on the row)', () => {
@@ -138,10 +138,27 @@ describe('withEdgeEvents — added through the staging channel, stamped; skipped
         expect(own.stagedEvents).toBeUndefined();
         const odd = withEdgeEvents(leg, { events: [{ kind: 'other', name: 'Boss', item: 'Boss', eventId: null }] });
         expect(odd.skip).toMatch(/^arrival-needs-unmappable-event: /);
-        const shut = withEdgeEvents(leg, { blocked: ['L65 -> L63 needs Any(flag 7, Fusion)'] }, '7.5');
+        const namedOf = (r) => namedGameStateEvents(r, byItem);
+        const shut = withEdgeEvents(leg, { blocked: ['L65 -> L63 needs Any(flag 7, Fusion)'], droppedRules: [or(has(E1.item), has('Fusion'))] }, '7.5', namedOf);
         expect(shut.skip).toBe('arrival-not-crossable-at-sphere: L65 -> L63 needs Any(flag 7, Fusion) — no arrival path crossable at 7.5');
         expect(shut.edgeEvents).toEqual([]);
         expect(shut.stagedEvents).toBeUndefined();
+    });
+
+    it('⚖ NARROW skip: dropped only on an item / unreached source, or on an event the leg already stages → the SAME object', () => {
+        const namedOf = (r) => namedGameStateEvents(r, byItem);
+        expect(withEdgeEvents(leg, { blocked: ['X needs Wand'], droppedRules: [has('Wand')] }, '2.3', namedOf)).toBe(leg);
+        expect(withEdgeEvents(leg, { blocked: ['X (source region X unreached)'], droppedRules: [null] }, '2.3', namedOf)).toBe(leg);
+        const staging63 = { ...leg, stagedEvents: [{ eventId: 'flag:L63:7', level: 63, tag: 7, otherLevel: false }] };
+        expect(withEdgeEvents(staging63, { blocked: ['X needs flag 7'], droppedRules: [has(E1.item)] }, '4.8', namedOf)).toBe(staging63);
+        // an unreached source whose rule names an unstaged event still skips (the room's persistence differs)
+        expect(withEdgeEvents(leg, { blocked: ['X (source region X unreached)'], droppedRules: [or(has(E2.item), has('Spear'))] }, '5.6', namedOf).skip)
+            .toMatch(/^arrival-not-crossable-at-sphere: /);
+    });
+
+    it('⛓ MUTANT (generic skip, 727fbf4a26): without namedOf every blocked leg skips, the item-only one too', () => {
+        expect(withEdgeEvents(leg, { blocked: ['X needs Wand'], droppedRules: [has('Wand')] }, '2.3', () => ['flag:any']).skip)
+            .toMatch(/^arrival-not-crossable-at-sphere: /);
     });
 });
 
@@ -224,6 +241,22 @@ describe('⛓ the committed playthrough\'s list: OFF byte-identical, ON adds exa
         // every other mover is a not-crossable skip
         for (const l of lists.on.filter((x) => x.edgeEvents && !(x.edgeEvents.length && !x.skip))) {
             expect(l.skip).toMatch(/^arrival-not-crossable-at-sphere: .* — no arrival path crossable at /);
+        }
+    });
+
+    it('⚖ NARROW skip on the list: exactly the 16 D6 legs whose dropped door names an unstaged event skip; a 57-type leg is its OFF row', () => {
+        const skipped = lists.on.filter((l) => l.edgeEvents && l.skip);
+        expect(skipped.length).toBe(16);
+        expect(skipped.every((l) => l.skip.startsWith('arrival-not-crossable-at-sphere: '))).toBe(true);
+        // 16-type: the source region is unreached at 5.6, but the door's rule names L62 flag 0, unstaged
+        expect(lists.on.find((l) => l.key === 'level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304').skip)
+            .toMatch(/level_64 -> level_62 \(source region level_64 unreached\)/);
+        // 57-type controls: a door event already staged (L12 Chest via L83 at 4.8); an item / unreached source (L30 pit)
+        for (const key of ['level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest',
+            'level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup']) {
+            const i = lists.off.findIndex((l) => l.key === key);
+            expect(i).toBeGreaterThanOrEqual(0);
+            expect(JSON.stringify(lists.on[i])).toBe(JSON.stringify(lists.off[i]));
         }
     });
 

@@ -74,8 +74,9 @@
  *              source's) is ALSO read at the leg's sphere (`sphereEdgeEvents`: the cheapest held branch, as `goal events`), so an
  *              event-free arm the sphere HOLDS still stages nothing. A path whose edge holds on no branch there (or whose
  *              source region is unreached) is DROPPED — not a way the AP route can take; the held paths aggregate as the
- *              doors / links do (every path needs one ⇒ the union: `arrivalEdgeEvents`); NO held path ⇒ the leg is skipped
- *              by name (`arrival-not-crossable-at-sphere`). The added flags join `stagedEvents` and the leg is STAMPED `edgeEvents`
+ *              doors / links do (every path needs one ⇒ the union: `arrivalEdgeEvents`); NO held path, and a dropped path's
+ *              rule names an event the leg does not stage ⇒ the leg is skipped by name (`arrival-not-crossable-at-sphere`);
+ *              dropped only on an item or an unreached source ⇒ the leg's OFF row, unchanged. The added flags join `stagedEvents` and the leg is STAMPED `edgeEvents`
  *              (`withEdgeEvents`; skipped by name as the events are). Applied before the route carry, so a staged flag is not
  *              carried. OFF (the default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the events.
  *
@@ -434,7 +435,7 @@ export function ruleText(rule) {
  * holds on no branch there, or a string saying why else it is not crossable (its source region unreached). A path HOLDS when its edge and its
  * source arrival (recursively) do; a path that does not hold is DROPPED (not a way the AP route can take). Over the held
  * paths: every one needs an event ⇒ the union, else none (`arrivalEventNeeds`' aggregation). Returns `{events}`, or
- * `{blocked: [why]}` when NO path holds (each dropped path, by edge name and rule). An arrival `trace` does not know
+ * `{blocked: [why], droppedRules}` when NO path holds (each dropped path, by edge name and rule; and their rules). An arrival `trace` does not know
  * needs none.
  */
 export function arrivalEdgeEvents(trace, arrival, eventsOf) {
@@ -442,30 +443,59 @@ export function arrivalEdgeEvents(trace, arrival, eventsOf) {
     const idOf = (e) => e.eventId ?? e.item ?? e.name;
     const held = [];
     const blocked = [];
+    const droppedRules = [];
     for (const p of trace.get(arrival)) {
         const src = p.src ? arrivalEdgeEvents(trace, p.src, eventsOf) : { events: [] };
-        if (src.blocked) { blocked.push(...src.blocked); continue; }
+        if (src.blocked) { blocked.push(...src.blocked); droppedRules.push(...src.droppedRules); continue; }
         const own = eventsOf(p.rule, p);
-        if (own === null || typeof own === 'string') { blocked.push(`${p.name ?? '?'} ${own ?? `needs ${ruleText(p.rule)}`}`); continue; }
+        if (own === null || typeof own === 'string') {
+            blocked.push(`${p.name ?? '?'} ${own ?? `needs ${ruleText(p.rule)}`}`);
+            droppedRules.push(p.rule);
+            continue;
+        }
         held.push([...new Map([...src.events, ...own].map((e) => [idOf(e), e])).values()]);
     }
-    if (!held.length) return { blocked: [...new Set(blocked)] };
+    if (!held.length) return { blocked: [...new Set(blocked)], droppedRules };
     const gated = held.every((n) => n.length > 0);
     return { events: gated ? [...new Map(held.flat().map((e) => [idOf(e), e])).values()] : [] };
+}
+
+/** The `game_state` event ids a rule NAMES anywhere (`Has` / `HasAll` of an event item), in rule order, deduplicated. */
+export function namedGameStateEvents(rule, byItem) {
+    const out = new Set();
+    const walk = (node) => {
+        if (Array.isArray(node)) { node.forEach(walk); return; }
+        if (!node || typeof node !== 'object') return;
+        for (const [k, v] of Object.entries(node)) {
+            const names = (k === 'item_name' || k === 'item') ? [v] : (k === 'item_names' || k === 'items') && Array.isArray(v) ? v : [];
+            for (const n of names) {
+                const e = typeof n === 'string' ? byItem.get(n) : null;
+                if (e?.kind === 'game_state' && e.eventId) out.add(e.eventId);
+            }
+            if (v && typeof v === 'object') walk(v);
+        }
+    };
+    walk(rule);
+    return [...out];
 }
 
 /**
  * A leg with its edge events applied (`edge` = `arrivalEdgeEvents`' result, `sphereLabel` = the leg's sphere): the
  * events its staging (`stagedEvents`) does not already hold are ADDED through the same channel (`otherLevel` as the leg
  * list writes it) and the leg is STAMPED `edgeEvents` (their ids). `{skip}` BY NAME: no arrival path crossable at the
- * sphere (`arrival-not-crossable-at-sphere`, stamped `edgeEvents: []`), an added event that maps to no flag
+ * sphere AND a dropped path's rule names a `game_state` event the leg does not already stage (`namedOf(rule)` = those
+ * ids: `arrival-not-crossable-at-sphere`, stamped `edgeEvents: []` — ⚖ follow-up 2, the NARROW skip: a leg asks a
+ * room-local question; a missing door item or an unreached source does not change the room's state, a missing
+ * persistence event does, so a leg whose dropped paths fail only on those keeps its OFF row, unchanged), an added event that maps to no flag
  * (`arrival-needs-unmappable-event`), or a location goal that IS an added event (`goal-is-a-staged-event`). A leg it
  * adds nothing to, and a `skip`ped leg, are returned UNCHANGED (the same object).
  */
-export function withEdgeEvents(leg, edge, sphereLabel = '?') {
+export function withEdgeEvents(leg, edge, sphereLabel = '?', namedOf = () => []) {
     if (leg.skip) return leg;
     const { stagedEvents: _s, goalEvents: _g, ...rest } = leg;
     if (edge?.blocked) {
+        const staged = new Set((leg.stagedEvents ?? []).map((e) => e.eventId));
+        if (!(edge.droppedRules ?? []).some((r) => namedOf(r).some((id) => !staged.has(id)))) return leg;
         return { ...rest, skip: `arrival-not-crossable-at-sphere: ${edge.blocked.join('; ')} — no arrival path crossable at ${sphereLabel}`, edgeEvents: [] };
     }
     const have = new Set((leg.stagedEvents ?? []).map((e) => e.eventId));
@@ -711,7 +741,8 @@ async function main() {
             const i = g.sphere?.index;
             const crossable = (rule, path) => (path.from && !spheres.rows[i].reached.has(path.from)
                 ? `(source region ${path.from} unreached)` : sphereEdgeEvents(rule, byItem, holdsAt(i)));
-            const staged = EDGE && Number.isInteger(i) ? withEdgeEvents(leg, arrivalEdgeEvents(trace, a, crossable), g.sphere.label) : leg;
+            const staged = EDGE && Number.isInteger(i) ? withEdgeEvents(leg, arrivalEdgeEvents(trace, a, crossable), g.sphere.label,
+                (rule) => namedGameStateEvents(rule, byItem)) : leg;
             // ⛓ ROUTE CARRY (opt-in; ⚖ test-harness staging only, as the events): the flags the route cleared before it
             const out = CARRY ? withRouteCarry(staged, routeCarry({ goal: g.goal, sphere: g.sphere, flags: carryFlags,
                 collected, reads: readsOf(pl.level) })) : staged;
