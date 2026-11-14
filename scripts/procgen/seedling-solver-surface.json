@@ -582,9 +582,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 245
+        "solverBot.js": 246
       },
-      "sites": 386,
+      "sites": 387,
       "seen": "both",
       "via": [
         "direct",
@@ -715,7 +715,7 @@
         },
         "spinnerBodies": {
           "dangerMap.js": 2,
-          "solverBot.js": 20
+          "solverBot.js": 21
         },
         "staticBodies": {
           "solverBot.js": 4
@@ -1164,9 +1164,9 @@
         "arrivalSolid.js": 1,
         "crusherBait.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 23
+        "solverBot.js": 25
       },
-      "sites": 26,
+      "sites": 28,
       "seen": "both",
       "via": [
         "direct"
@@ -1354,9 +1354,9 @@
       "files": {
         "botDriverV2.js": 1,
         "dangerMap.js": 1,
-        "solverBot.js": 13
+        "solverBot.js": 17
       },
-      "sites": 15,
+      "sites": 19,
       "seen": "both",
       "via": [
         "direct"
@@ -1439,9 +1439,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 748
+        "solverBot.js": 752
       },
-      "sites": 889,
+      "sites": 893,
       "seen": "both",
       "via": [
         "direct",
@@ -1504,9 +1504,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 140
+        "solverBot.js": 142
       },
-      "sites": 163,
+      "sites": 165,
       "seen": "both",
       "via": [
         "direct",
@@ -2950,9 +2950,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 283
+        "solverBot.js": 284
       },
-      "sites": 353,
+      "sites": 354,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2986,9 +2986,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 287
+        "solverBot.js": 288
       },
-      "sites": 360,
+      "sites": 361,
       "seen": "both",
       "via": [
         "const-alias",
@@ -6163,10 +6163,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 79,
+        "solverBot.js": 83,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 100,
+      "sites": 104,
       "seen": "static",
       "via": [
         "import"
@@ -7308,9 +7308,9 @@
       "form": "constant",
       "files": {
         "dangerMap.js": 13,
-        "solverBot.js": 42
+        "solverBot.js": 44
       },
-      "sites": 55,
+      "sites": 57,
       "seen": "static",
       "via": [
         "import"

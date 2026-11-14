@@ -15252,6 +15252,8 @@ function stepToward(run, aim, intended) {
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
     const step = previewOrDeath(run.previewStepper());
+    // ⛓ hammer-phase L40-SPINNER-WALLS (`SHOVED_BODY_LOOKAHEAD`, OFF ⇒ not reached): a shoved body deepens the survival horizon
+    if (SHOVED_BODY_LOOKAHEAD.enabled) { const deep = shovedStepToward(run, aim, intended, stepOptions(intended), forecast); if (deep !== null) return deep; }
     // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ `clearOfHammersAt`): a body the run would not bill is no wall
     const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
@@ -15347,6 +15349,197 @@ function holdStepOut(run, intended) {
  * shallower is what walked into the corner.
  */
 const STEP_LOOKAHEAD = 4;
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE L40-SPINNER-WALLS — **A SHOVED BODY OUTRUNS THE FOUR-TICK LOOKAHEAD** (`SHOVED_BODY_LOOKAHEAD`,
+ * OFF; `SEEDLING_SHOVED_BODY_LOOKAHEAD=1`, `withShovedBodyLookahead`).
+ *
+ * `STEP_LOOKAHEAD`'s own premise is a body at `SPINNER.moveSpeed` (`friction()`'s floor, "inert while |v| ==
+ * moveSpeed; live after a shove"). A shove breaks it: the player's shield (`Player.shieldBump`) or a landing's
+ * knockback sends a spinner off at 3-5 px/tick, it rebounds off the room's wall, and it closes on the player faster
+ * than four ticks can see. Measured on `level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest` (report
+ * § 3), with the run's own forecast (which carries the shoved velocity from the tick after the shove):
+ * - arrival clock 5225: the walk kept `down` for four ticks whose true survival depth was 7, 6, 5 while `up` / `right`
+ *   survived 12+. Capped at 4, `down` scored the maximum and won on progress. The corner formed at t654;
+ * - clock 5228: the same rebound, the walk took `left+down` (depth 4) at t649 where only `up`-ward sets survived;
+ * - clock 5241: OPP's landing at t1360 knocked the body back. The no-aim ticks STOOD (depth 6) where `up+left` /
+ *   `down+left` survived 12+.
+ *
+ * ⇒ ON, when the run's own forecast moves any body faster than `SPINNER.moveSpeed` between two rows, the survival
+ * horizon scales with that speed (`STEP_LOOKAHEAD × v / moveSpeed`, capped at `SHOVED_LOOKAHEAD_MAX` = 8). It is asked
+ * (a) by the walk (`stepToward`) and (b) on a no-aim tick (a stand or the escape certificate's key), which keeps its
+ * key only when that key survives the horizon. The deep search is a DFS memoised on a coarse player-state grid with a
+ * per-tick step budget. A tick that spends the budget, or a forecast with no shoved body, answers exactly as OFF.
+ */
+export const SHOVED_BODY_LOOKAHEAD = { enabled: globalThis.process?.env?.SEEDLING_SHOVED_BODY_LOOKAHEAD === '1' };
+
+/** The instrument: `asked` ticks it was asked on, `deepened` of them a shoved body made deep, `rechosen` deep answers
+ * that differ from the key OFF would have kept/chosen, `spent` ticks the step budget ran out (answered as OFF). */
+export const SHOVED_BODY_LOOKAHEAD_COUNTS = { asked: 0, deepened: 0, rechosen: 0, spent: 0 };
+
+/** Measurement sink (`null` ⇒ nothing built): one record per deep answer `{t, horizon, intended, chosen}` or `{t, spent}`. */
+export const SHOVED_BODY_LOOKAHEAD_TRACE = { sink: null };
+
+/** Run `fn` with `SHOVED_BODY_LOOKAHEAD` set to `enabled`, restoring the previous value. */
+export function withShovedBodyLookahead(enabled, fn) {
+    const was = SHOVED_BODY_LOOKAHEAD.enabled;
+    SHOVED_BODY_LOOKAHEAD.enabled = enabled === true;
+    const restore = () => { SHOVED_BODY_LOOKAHEAD.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The deepest the shoved horizon goes: two of `STEP_LOOKAHEAD`'s spans. Measured (report § 3): at every refused tick the
+ * doomed key's survival was 3-7 and the survivors' 12+, so 8 tells them apart, and a deeper exhaustive search spent its
+ * step budget on the doomed keys at the very ticks that matter (clock 5241, t1361-t1362, at a cap of 12).
+ */
+const SHOVED_LOOKAHEAD_MAX = 2 * STEP_LOOKAHEAD;
+/** Preview steps one deep answer may spend before the tick answers as OFF (a corner with no way out is exhaustive). */
+const SHOVED_LOOKAHEAD_STEPS = 20000;
+
+/**
+ * The deep search's memo key: the depth and the player's position / velocity on a 0.5 px / 0.1 px-per-tick grid (the
+ * grid the report's survival probe measured with). It merges near-identical previews, so a depth is a search
+ * heuristic's, never a verdict: the live tick is still adjudicated exactly by `safeStep`.
+ */
+function shovedStateKey(depth, st) {
+    return `${depth}|${Math.round(st.x * 2)},${Math.round(st.y * 2)},${Math.round(st.vx * 10)},${Math.round(st.vy * 10)}`;
+}
+
+/**
+ * The survival horizon a forecast asks for: `STEP_LOOKAHEAD` while every body moves at most `SPINNER.moveSpeed` per
+ * row (rows compared index by index while they hold the same bodies), else `STEP_LOOKAHEAD × vmax / moveSpeed`,
+ * rounded up and capped. Pure.
+ */
+export function shovedHorizon(forecast) {
+    let v = 0;
+    for (let i = 0; i + 1 < forecast.length; i += 1) {
+        const a = forecast[i];
+        const b = forecast[i + 1];
+        if (!a || !b || a.length !== b.length) break;
+        for (let j = 0; j < a.length; j += 1) v = Math.max(v, Math.hypot(b[j].x - a[j].x, b[j].y - a[j].y));
+    }
+    // ⚠ a body at moveSpeed reads 1 ± float noise (cos/sin of its heading): only a real shove deepens
+    if (!(v > SPINNER.moveSpeed * (1 + 1e-6))) return STEP_LOOKAHEAD;
+    return Math.min(SHOVED_LOOKAHEAD_MAX, Math.ceil(STEP_LOOKAHEAD * v / SPINNER.moveSpeed));
+}
+
+/**
+ * `stepToward`'s choice under the shoved horizon: the same options in the same order, scored survival depth first
+ * (now up to the horizon) and distance to the aim second. `null` ⇒ answer as OFF: no shoved body in the forecast, or
+ * the step budget ran out.
+ */
+function shovedStepToward(run, aim, intended, options, head = run.spinnerForecast(STEP_LOOKAHEAD + 2)) {
+    const horizon = shovedHorizon(head);
+    SHOVED_BODY_LOOKAHEAD_COUNTS.asked += 1;
+    if (horizon <= STEP_LOOKAHEAD) return null;
+    SHOVED_BODY_LOOKAHEAD_COUNTS.deepened += 1;
+    const forecast = run.spinnerForecast(horizon + 2);
+    const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
+    const step = previewOrDeath(run.previewStepper());
+    const memo = new Map();
+    let steps = 0;
+    const survives = (st, depth) => {
+        if (depth >= horizon) return depth;
+        const key = shovedStateKey(depth, st);
+        const seen = memo.get(key);
+        if (seen !== undefined) return seen;
+        let best = depth;
+        for (const keys of options) {
+            if (++steps > SHOVED_LOOKAHEAD_STEPS) throw SHOVED_LOOKAHEAD_SPENT;
+            const next = step({ ...st }, keys);
+            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            const d = survives(next, depth + 1);
+            if (d > best) best = d;
+            if (best >= horizon) break;
+        }
+        memo.set(key, best);
+        return best;
+    };
+    try {
+        let best = null;
+        for (const keys of options) {
+            const next = step({ ...run.state }, keys);
+            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
+            const depth = survives(next, 1);
+            const d = aim ? Math.hypot(next.x - aim.x, next.y - aim.y) : 0;
+            if (!best || depth > best.depth || (depth === best.depth && d < best.d)) best = { keys, depth, d };
+        }
+        SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, steps, intended: [...intended].join('+'),
+            chosen: best ? [...best.keys].join('+') : null, depth: best?.depth ?? null, options: options.length });
+        return best ? best.keys : intended;
+    } catch (e) {
+        if (e !== SHOVED_LOOKAHEAD_SPENT) throw e;
+        SHOVED_BODY_LOOKAHEAD_TRACE.sink?.({ t: run.ticksCompleted, horizon, spent: true, options: options.length });
+        SHOVED_BODY_LOOKAHEAD_COUNTS.spent += 1;
+        return null;
+    }
+}
+const SHOVED_LOOKAHEAD_SPENT = Symbol('shoved lookahead step budget spent');
+
+/** The option list `stepToward` scores (its own order: intended, the facings, the stand, the diagonals), de-duplicated. */
+function stepOptions(intended) {
+    const sameKeys = (a, b) => a.size === b.size && [...a].every((k) => b.has(k));
+    return [intended, ...Object.values(FACING_KEYS).map((k) => new Set([k])), new Set(), ...DIAGONAL_KEYS.map((k) => new Set(k))]
+        .filter((keys, j, all) => all.findIndex((o) => sameKeys(o, keys)) === j);
+}
+
+/**
+ * (b) a key no walk chose this tick (`SHOVED_BODY_LOOKAHEAD` ON): a no-aim tick's (a stand, or the escape certificate's
+ * key) or the approach certificate's (`charted`: derived before the shove, it is replayed while the player's state still
+ * matches it, so it never sees the rebound). The key is kept when, under the shoved horizon, nothing survives longer than
+ * it does; otherwise the shoved `stepToward`'s choice toward `aim` (no aim: where the player stands, the phase stall's
+ * "safe holding step"). No shoved body, or a spent budget ⇒ the key unchanged. A re-chosen charted key leaves the
+ * certificate's states, so `approachHeld` ends it on the next tick.
+ */
+function shovedHoldStepOut(run, intended, aim = null) {
+    if ((run.entities('spinnerBodies') ?? []).length === 0) return intended;
+    const here = aim ?? { x: run.state.x, y: run.state.y };
+    const options = stepOptions(intended);
+    const chosen = shovedStepToward(run, here, intended, options);
+    if (chosen === null || chosen === intended) return intended;
+    // a tie keeps the intended key (the certificate's, or the stand): only a deeper survival re-chooses
+    if (shovedDepthOf(run, intended) >= shovedDepthOf(run, chosen)) return intended;
+    SHOVED_BODY_LOOKAHEAD_COUNTS.rechosen += 1;
+    return chosen;
+}
+
+/** The survival depth (to the shoved horizon) of ONE first key set; -1 when it does not land clear or the budget ran out. */
+function shovedDepthOf(run, keys) {
+    const horizon = shovedHorizon(run.spinnerForecast(STEP_LOOKAHEAD + 2));
+    const forecast = run.spinnerForecast(horizon + 2);
+    const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
+    const step = previewOrDeath(run.previewStepper());
+    const options = stepOptions(keys);
+    const memo = new Map();
+    let steps = 0;
+    const survives = (st, depth) => {
+        if (depth >= horizon) return depth;
+        const key = shovedStateKey(depth, st);
+        if (memo.has(key)) return memo.get(key);
+        let best = depth;
+        for (const k of options) {
+            if (++steps > SHOVED_LOOKAHEAD_STEPS) return best;
+            const next = step({ ...st }, k);
+            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            best = Math.max(best, survives(next, depth + 1));
+            if (best >= horizon) break;
+        }
+        memo.set(key, best);
+        return best;
+    };
+    const first = step({ ...run.state }, keys);
+    if (!first || !clearAt(run, playerBoxAt(first.x, first.y), forecast, 1)) return -1;
+    return survives(first, 1);
+}
 
 /**
  * ⛓ HAMMER-PHASE A2 — **A PREVIEWED DEATH IS A STEP NOT TAKEN, NOT A CRASH.** `previewStepper` THROWS the run's
@@ -20850,6 +21043,8 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ not reached): no aim (a stand, or the escape
                 // certificate's key) still looks for a step out
                 if (HAMMER_BODY_GATE.enabled && !aim && charted === null) held = holdStepOut(run, held);
+                // ⛓ hammer-phase L40-SPINNER-WALLS (`SHOVED_BODY_LOOKAHEAD`, OFF ⇒ not reached): a no-aim or charted key must outlast a shoved body
+                if (SHOVED_BODY_LOOKAHEAD.enabled && (charted !== null || !aim)) held = shovedHoldStepOut(run, held, aim);
                 /**
                  * ⛓⛓⛓ F1c — THE HAMMER-PHASE RUNG (`hammerPhaseRung`). Only on a
                  * STRIKE approach: a refuge wait re-derives a strike every tick
