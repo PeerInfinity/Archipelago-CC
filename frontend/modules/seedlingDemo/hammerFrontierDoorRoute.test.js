@@ -50,6 +50,7 @@ function solveChest(boot, persistence, on) {
     run.advance = (...a) => { keys.push([...a[0]].sort().join('+')); return advance(...a); };
     FRONTIER_DOOR_ROUTE.counts.asked = 0;
     FRONTIER_DOOR_ROUTE.counts.moved = 0;
+    FRONTIER_DOOR_ROUTE.counts.fellBack = 0;
     let err = null;
     withFrontierDoorRoute(on, () => {
         try {
@@ -83,10 +84,11 @@ describe('SMALL-WALLS — `FRONTIER_DOOR_ROUTE` (OFF)', () => {
                 expect(Math.hypot(r.end.x - 328, r.end.y - 824)).toBeLessThan(4);
             }
             // OFF: the flood is never asked, and the walk opens the shield lock on its way
-            expect(off.counts).toEqual({ asked: 0, moved: 0 });
+            expect(off.counts).toEqual({ asked: 0, moved: 0, fellBack: 0 });
             expect(off.earned).toContain(SHIELD_LOCK_TAG);
             // ON: the flood moves the frontier's first door, the shield lock stays shut, and the plan is shorter
             expect(on.counts.moved).toBeGreaterThan(0);
+            expect(on.counts.fellBack).toBe(0);
             expect(on.earned).not.toContain(SHIELD_LOCK_TAG);
             expect(on.ticks).toBeLessThan(off.ticks - 400);
         }, 180_000);
@@ -96,7 +98,7 @@ describe('SMALL-WALLS — `FRONTIER_DOOR_ROUTE` (OFF)', () => {
         const off = solveChest({ x: 32, y: 864 }, flags, false);
         const on = solveChest({ x: 32, y: 864 }, flags, true);
         expect(off.err).toBeNull();
-        expect(on.counts).toEqual({ asked: 0, moved: 0 });
+        expect(on.counts).toEqual({ asked: 0, moved: 0, fellBack: 0 });
         expect(on.md5).toBe(off.md5);
         expect(on.ticks).toBe(off.ticks);
     }, 120_000);

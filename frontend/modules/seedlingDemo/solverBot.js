@@ -8102,15 +8102,18 @@ function killStanceSighted(fn) {
  *    test: an entity with a registered strategy) costs one DOOR to enter and a free node costs nothing (0-1 BFS, the
  *    planner's opts, `DEFAULT_LATTICE`). If the aim's node is reached, the frontier entry that STARTS a fewest-doors
  *    route is moved to the front; every other entry keeps its order. A route that crosses a door no strategy can
- *    resolve is still a route here — the resolver refuses it exactly as it refuses that door today. No route, a
- *    frontier with fewer than two actionable entries, or a first door already at the front: the order is unchanged.
+ *    resolve is still a route here; when the RESOLVER refuses the moved door, the identification is asked again with
+ *    the switch off (today's order, today's words: L40RES's survey step 93 rows read the same ON). A door that resolves
+ *    and then refuses in its executor is not handed back (seed-1's L101 legs refuse ON on the twin
+ *    `magicallockfire` of the one they refuse on OFF, the same wall). No route, a frontier with fewer than two
+ *    actionable entries, or a first door already at the front: the order is unchanged.
  *  - OFF: byte-identical (the flood is not asked).
- * `counts` hears each flood (`asked`) and each reorder (`moved`); it decides nothing. `SEEDLING_FRONTIER_DOOR_ROUTE=1`
+ * `counts` hears each flood (`asked`), each reorder (`moved`) and each refused reorder (`fellBack`); it decides nothing. `SEEDLING_FRONTIER_DOOR_ROUTE=1`
  * in a node process or the page's solve worker (`solverEnvChannel`), or `withFrontierDoorRoute(enabled, fn)` for a
  * row. The decision runs in the solve WORKER (`solverBot`), not on the main thread.
  */
 export const FRONTIER_DOOR_ROUTE = { enabled: globalThis.process?.env?.SEEDLING_FRONTIER_DOOR_ROUTE === '1',
-    counts: { asked: 0, moved: 0 } };
+    counts: { asked: 0, moved: 0, fellBack: 0 } };
 export const FRONTIER_DOOR_ROUTE_DEFAULT = false;
 
 /** Run `fn` with `FRONTIER_DOOR_ROUTE` set to `enabled`, restoring the previous value (also on a throw). */
@@ -29174,6 +29177,12 @@ function solveSegmentUnder({
                 resolved = resolveObstacleStrategy(run, strategy, obstacle, contacts,
                     aim, allowTeleporter, [...refusedOrders]);
             } catch (e) {
+                // ⛓ SMALL-WALLS (`FRONTIER_DOOR_ROUTE`): a MOVED door the resolver refuses hands back to today's order.
+                if (actionable !== sortedFrontier && e instanceof SolverRefusal) {
+                    FRONTIER_DOOR_ROUTE.counts.fellBack += 1;
+                    return withFrontierDoorRoute(false,
+                        () => identifyAndSelect(goal, aim, contacts, planError, allowTeleporter));
+                }
                 if (SEALED_LOCK_NEXT_ON_FRONTIER && e instanceof SolverRefusal && e.sealed?.self) {
                     nextDoorAfter.set(e, () => nextPastSealedLock(e, obstacle, actionable.slice(1),
                         contacts, aim, allowTeleporter));
