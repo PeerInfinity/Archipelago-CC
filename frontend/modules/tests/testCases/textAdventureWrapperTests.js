@@ -1716,7 +1716,8 @@ async function metaTrialPlays(testController) {
         + `${guarded} → ${target} on ${sword}; ${waterRegion} is a maze with the water gate ${waterId}`,
     sidecars[start]?.substrate === 'text_adventure' && !!place && !!guarded && !!sword && !!waterId);
     if (!place || !guarded || !sword || !waterId) return testController.getOverallResult();
-    const vars = { exitName: guarded, destinationRegion: target };
+    // ⛓ S1: the Gate's `{item}` was filled at GENERATION with the item its rule asks for (the rule's own item here)
+    const vars = { exitName: guarded, destinationRegion: target, item: sword };
     const wantBlocked = processMessageTemplate(meta.strings[gateConcept.text.blocked], vars);
     const wantPassed = processMessageTemplate(meta.strings[gateConcept.text.passedWith], vars);
     const wantArrival = processMessageTemplate(place.description, { regionName: start });

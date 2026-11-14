@@ -17,10 +17,10 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 import {
     TEXT_ADVENTURE_ROOM_REFUSALS, extractTextAdventureRules, generateTextAdventureRoom, placeTextAdventureRules,
-    presentedProse, roomPlace, serializeTextAdventureRoom,
+    gateItemText, presentedProse, roomPlace, serializeTextAdventureRoom,
 } from './textAdventureRoom.js';
 import {
-    GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONTENT_ROLES,
+    GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONCEPT_REALISATIONS, TEXT_ADVENTURE_CONTENT_ROLES,
 } from './textAdventureConceptRealisations.js';
 import { arrivalLine } from './templating.js';
 import { CONCEPTS } from '../procgenCore/concepts.js';
@@ -76,7 +76,7 @@ const FILES = {
         schema_version: 1,
         strings: {
             [`${THEME}:gate/blocked`]: 'The Gate to {destinationRegion} knows its rule, and you do not meet it.',
-            [`${THEME}:gate/passedWith`]: 'The Gate checks your sword and steps aside for {destinationRegion}.',
+            [`${THEME}:gate/passedWith`]: 'The Gate checks for {item} & steps aside for {destinationRegion}.',
             [`${THEME}:water/blocked`]: 'Half a message.',
         },
     },
@@ -128,6 +128,17 @@ describe('the declaration', () => {
     });
     it('the default pack offers no place: alone, it names no room', () => {
         expect(roomPlace(DEFAULT_SET, 'region_1_1', createRng(1))).toBeNull();
+    });
+});
+
+describe('⛓ S1 gateItemText — the item a gate\'s rule asks for', () => {
+    it('each need\'s AP item id, joined with " and "; no item ⇒ null', () => {
+        const R = TEXT_ADVENTURE_CONCEPT_REALISATIONS;
+        expect(gateItemText(R.guardian.placements.gate)).toBe(CONCEPTS.sword.item.id);
+        expect(gateItemText(R.water.placements.gate)).toBe(CONCEPTS.swim.item.id);
+        expect(gateItemText({ needs: ['sword', 'swim'] })).toBe(`${CONCEPTS.sword.item.id} and ${CONCEPTS.swim.item.id}`);
+        expect(gateItemText({ needs: [] })).toBeNull();
+        expect(gateItemText(null)).toBeNull();
     });
 });
 
@@ -249,7 +260,14 @@ describe('⛓ the concept trial world with a fixture theme: presentation moves, 
         const guarded = ta(world.rulesJson).flatMap(([, s]) => Object.values(s.playable_payload.prose?.exits ?? {}));
         expect(guarded.length).toBeGreaterThan(0);
         const g = presentedProse(set, 'gate', 'guardian');
-        for (const exit of guarded) expect(exit).toEqual({ inaccessibleMessage: g.blocked, moveMessage: g.passedWith });
+        // ⛓ S1: `{item}` is filled at generation with the item the realisation needs; `{destinationRegion}` is play's
+        const item = gateItemText(TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate);
+        expect(item).toBe(CONCEPTS.sword.item.id);
+        for (const exit of guarded) {
+            expect(exit).toEqual({ inaccessibleMessage: g.blocked, moveMessage: g.passedWith.split('{item}').join(item) });
+            expect(exit.moveMessage).toContain('{destinationRegion}');
+            expect(exit.moveMessage).toContain(' & ');   // the authored template is markup: not escaped
+        }
         expect(g.blocked).toBe(strings(`${THEME}:gate/blocked`));
     });
     it('every text-adventure room carries the fixture\'s place; the control\'s carry none', () => {

@@ -44,9 +44,10 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import {
     REQUIRED_ENVELOPE_FIELD, SIDECAR_FIELD_ERRORS, sidecarFieldsOf, sidecarPayloadErrors,
 } from '../procgenCore/sidecarFields.js';
-import { CONCEPTS, conceptOfItem } from '../procgenCore/concepts.js';
+import { CONCEPTS, conceptOfItem, itemIdOfNeed } from '../procgenCore/concepts.js';
 import { selectRealisation } from '../procgenPipeline/conceptSelection.js';
 import { resolveRole } from '../procgenCore/contentRoles.js';
+import { fillTemplate } from '../textLibrary/textLibrary.js';
 import {
     GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONCEPT_REALISATIONS, TEXT_ADVENTURE_CONTENT_ROLES,
 } from './textAdventureConceptRealisations.js';
@@ -204,6 +205,33 @@ export function placeTextAdventureItems(world, input = {}) {
     return { placed_items, placed_obstacles: [] };
 }
 
+/** The HTML-escaped form of a value baked into an authored-markup template. */
+function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+}
+
+/**
+ * ⛓⛓ CONTENT SETS S1 — **`{item}` IN A GATE'S WORDS, FILLED AT GENERATION.**
+ * The item a gate asks for is a fact of the rule the gate was placed for: the
+ * selected realisation's `needs`, each mapped to its concept's AP item id
+ * (`itemIdOfNeed`), joined with " and ". It is filled here, once (Q8: text is
+ * baked), HTML-escaped (the template is authored markup and the text library's
+ * `fill` escapes nothing). Every other placeholder (`{destinationRegion}`) is
+ * left for play. A gate whose needs name no item leaves `{item}` as written.
+ */
+export function gateItemText(chosen) {
+    const ids = (chosen?.needs ?? []).map((need) => itemIdOfNeed(need, CONCEPTS)).filter(Boolean);
+    return ids.length ? ids.join(' and ') : null;
+}
+
+function fillGateItem(prose, chosen) {
+    const item = gateItemText(chosen);
+    if (item === null) return prose;
+    return Object.fromEntries(Object.entries(prose).map(([slot, t]) => [slot, fillTemplate(t, { item: escapeHtml(item) })]));
+}
+
 /** `{<message>: template}` from a role's resolved slots, in the slot table's order. */
 const messagesOf = (prose, slotTable) => Object.fromEntries(
     Object.entries(slotTable).map(([slot, message]) => [message, prose[slot]]));
@@ -246,7 +274,9 @@ function realisedItemConcept(itemId, offered) {
  * (`params.contentSet`, `presentedProse`): the `gate` role's slots for a gate,
  * the `item` role's for a found item, written as the messages
  * `GATE_PROSE_SLOTS` / `ITEM_PROSE_SLOTS` say. A selected concept with no set,
- * or no pack presenting it, is refused by name.
+ * or no pack presenting it, is refused by name. ⛓ S1: a gate's `{item}` is
+ * filled here, from the realisation's needs (`gateItemText`); the rest of its
+ * placeholders are play's.
  */
 export function placeTextAdventureRules(world, input = {}) {
     const { exit_rules = {}, location_rules = {}, item_placements = [] } = input;
@@ -261,7 +291,7 @@ export function placeTextAdventureRules(world, input = {}) {
         exit.access_rule = cloneRule(rule);
         const chosen = selectRealisation(rule, TEXT_ADVENTURE_CONCEPT_REALISATIONS, { concepts: CONCEPTS, offered, rng: input.rng });
         if (!chosen) continue;
-        const prose = proseFor(input, world.region_id, 'gate', chosen.concept);
+        const prose = fillGateItem(proseFor(input, world.region_id, 'gate', chosen.concept), chosen);
         proseTableOf(world, 'exits')[exit_id] = messagesOf(prose, GATE_PROSE_SLOTS);
     }
     const itemByLocation = Object.fromEntries(item_placements.map((p) => [p.location_id, p.item_id]));

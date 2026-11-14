@@ -33,6 +33,8 @@ import { CONCEPT_TRIAL_STATE, META_TRIAL_STATE } from './presetDefs.js';
 import { prepareRunFromState, runPresetHeadless } from './presetRun.js';
 import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { CONCEPTS } from '../procgenCore/concepts.js';
+import { gateItemText } from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
 import { RECORDED_CONTENT_KEY, documentContentOf } from './worldContent.js';
 import { findRulesFileFromGameSeed } from '../../app/mode/modeDataLoader.js';
 
@@ -74,14 +76,19 @@ describe('R3 — the meta trial world beside its control (the concept trial)', a
         expect(Object.keys(world.rulesJson.procgen_metadata)).toEqual(Object.keys(ctrl.rulesJson.procgen_metadata));
     });
 
-    it('the guardian gate speaks the Gate\'s two lines', () => {
+    it('the guardian gate speaks the Gate\'s two lines, {item} filled at generation with the item its rule asks for', () => {
         const gate = presenterOf('guardian');
         const exits = sidecarsOf(world.rulesJson, 'text_adventure')
             .flatMap(([, s]) => Object.values(s.playable_payload.prose?.exits ?? {}));
+        // the item the text adventure's guardian realisation needs (its `needs` → AP item ids), not a literal
+        const item = gateItemText(TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate);
+        const baked = (key) => PACK_STRINGS[key].split('{item}').join(item);
+        for (const key of [gate.text.passedWith, gate.text.blocked]) expect(PACK_STRINGS[key]).toContain('{item}');
         expect(exits).toEqual([{
-            moveMessage: PACK_STRINGS[gate.text.passedWith],
-            inaccessibleMessage: PACK_STRINGS[gate.text.blocked],
+            moveMessage: baked(gate.text.passedWith),
+            inaccessibleMessage: baked(gate.text.blocked),
         }]);
+        expect(JSON.stringify(exits)).not.toContain('{item}');
     });
 
     it('the sword\'s check speaks the theme\'s line', () => {
