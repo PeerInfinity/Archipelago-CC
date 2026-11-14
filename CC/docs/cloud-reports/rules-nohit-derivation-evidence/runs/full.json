@@ -1,0 +1,848 @@
+{
+ "levels": [
+  22,
+  25,
+  27
+ ],
+ "rows": [
+  {
+   "level": 22,
+   "from": [
+    21,
+    29
+   ],
+   "to": [
+    25,
+    30
+   ],
+   "arms": {
+    "none": {
+     "line": true,
+     "reached": [
+      "L25",
+      "L30"
+     ],
+     "lanes": 60682583,
+     "configs": 16,
+     "ms": 414766,
+     "chain": [
+      {
+       "from": {
+        "x": 64,
+        "y": 76
+       },
+       "runway": null,
+       "k1": "down+left",
+       "n1": 18,
+       "k2": "down+right",
+       "n2": 22,
+       "end": {
+        "x": 52.53,
+        "y": 105.95
+       },
+       "config": "71,88;71,88;55,120;153,120"
+      },
+      {
+       "from": {
+        "x": 106,
+        "y": 92
+       },
+       "runway": null,
+       "k1": "down+left",
+       "n1": 30,
+       "k2": "up",
+       "n2": 26,
+       "end": {
+        "x": 65.9,
+        "y": 98.23
+       },
+       "config": "71,88;71,88;55,120;55,120"
+      },
+      {
+       "from": {
+        "x": 91,
+        "y": 91
+       },
+       "runway": null,
+       "k1": "down+right",
+       "n1": 34,
+       "k2": "left",
+       "n2": 15,
+       "end": {
+        "x": 94.52,
+        "y": 136.57
+       },
+       "config": "71,88;71,88;153,120;153,120"
+      }
+     ]
+    },
+    "sword": {
+     "line": true,
+     "reached": [
+      "L25",
+      "L30"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 59,
+        "y": 66,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 125,
+        "y": 66,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 43,
+        "y": 98,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 141,
+        "y": 98,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      }
+     ],
+     "ms": 169,
+     "chain": []
+    },
+    "spear": {
+     "line": true,
+     "reached": [
+      "L25",
+      "L30"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 63,
+        "y": 48,
+        "dir": 3
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 130,
+        "y": 48,
+        "dir": 3
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 47,
+        "y": 98,
+        "dir": 3
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 145,
+        "y": 98,
+        "dir": 3
+       },
+       "strikes": 2,
+       "minTicks": 31
+      }
+     ],
+     "ms": 144,
+     "chain": []
+    },
+    "darkshield": {
+     "line": true,
+     "reached": [
+      "L25",
+      "L30"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 59,
+        "y": 75,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 125,
+        "y": 75,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 43,
+        "y": 107,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 141,
+        "y": 107,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 146,
+     "chain": []
+    },
+    "wand": {
+     "line": true,
+     "reached": [
+      "L25",
+      "L30"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 66,
+        "y": 34,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 130,
+        "y": 34,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 50,
+        "y": 98,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 146,
+        "y": 98,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 167,
+     "chain": []
+    }
+   }
+  },
+  {
+   "level": 22,
+   "from": [
+    25,
+    30
+   ],
+   "to": [
+    21,
+    29
+   ],
+   "arms": {
+    "none": {
+     "line": false,
+     "reached": [],
+     "lanes": 573582,
+     "configs": 2,
+     "ms": 3486
+    },
+    "sword": {
+     "line": true,
+     "reached": [
+      "L21",
+      "L29"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 64,
+        "y": 123,
+        "dir": 1
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 131,
+        "y": 123,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 80,
+        "y": 91,
+        "dir": 1
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 115,
+        "y": 91,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      }
+     ],
+     "ms": 162,
+     "chain": []
+    },
+    "spear": {
+     "line": true,
+     "reached": [
+      "L21",
+      "L29"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 64,
+        "y": 123,
+        "dir": 1
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 126,
+        "y": 123,
+        "dir": 1
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 64,
+        "y": 123,
+        "dir": 2
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 115,
+        "y": 123,
+        "dir": 0
+       },
+       "strikes": 2,
+       "minTicks": 31
+      }
+     ],
+     "ms": 88,
+     "chain": []
+    },
+    "darkshield": {
+     "line": true,
+     "reached": [
+      "L21",
+      "L29"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 65,
+        "y": 123,
+        "dir": 2
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 141,
+        "y": 123,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 81,
+        "y": 91,
+        "dir": 2
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 125,
+        "y": 91,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 150,
+     "chain": []
+    },
+    "wand": {
+     "line": true,
+     "reached": [
+      "L21",
+      "L29"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,80",
+       "at": {
+        "x": 66,
+        "y": 123,
+        "dir": 1
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@128,80",
+       "at": {
+        "x": 130,
+        "y": 123,
+        "dir": 1
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@48,112",
+       "at": {
+        "x": 66,
+        "y": 123,
+        "dir": 2
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@144,112",
+       "at": {
+        "x": 82,
+        "y": 123,
+        "dir": 0
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 100,
+     "chain": []
+    }
+   }
+  },
+  {
+   "level": 25,
+   "from": [
+    22
+   ],
+   "to": [
+    26
+   ],
+   "arms": {
+    "none": {
+     "line": true,
+     "reached": [
+      "L26"
+     ],
+     "lanes": 384706,
+     "configs": 3,
+     "ms": 2334,
+     "chain": [
+      {
+       "from": {
+        "x": 76,
+        "y": 68
+       },
+       "runway": null,
+       "k1": "down+right",
+       "n1": 24,
+       "k2": "down+left",
+       "n2": 40,
+       "end": {
+        "x": 45.06,
+        "y": 94.36
+       },
+       "config": "56,89;72,89"
+      }
+     ]
+    },
+    "sword": {
+     "line": true,
+     "reached": [
+      "L26"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 74,
+        "y": 64,
+        "dir": 1
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 74,
+        "y": 64,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      }
+     ],
+     "ms": 22,
+     "chain": []
+    },
+    "spear": {
+     "line": true,
+     "reached": [
+      "L26"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 74,
+        "y": 64,
+        "dir": 1
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 65,
+        "y": 50,
+        "dir": 2
+       },
+       "strikes": 2,
+       "minTicks": 31
+      }
+     ],
+     "ms": 32,
+     "chain": []
+    },
+    "darkshield": {
+     "line": true,
+     "reached": [
+      "L26"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 74,
+        "y": 64,
+        "dir": 0
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 66,
+        "y": 50,
+        "dir": 2
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 34,
+     "chain": []
+    },
+    "wand": {
+     "line": true,
+     "reached": [
+      "L26"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 74,
+        "y": 66,
+        "dir": 1
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 65,
+        "y": 50,
+        "dir": 2
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 42,
+     "chain": []
+    }
+   }
+  },
+  {
+   "level": 25,
+   "from": [
+    26
+   ],
+   "to": [
+    22
+   ],
+   "arms": {
+    "none": {
+     "line": false,
+     "reached": [],
+     "lanes": 1083958,
+     "configs": 2,
+     "ms": 4606
+    },
+    "sword": {
+     "line": true,
+     "reached": [
+      "L22"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 34,
+        "y": 50,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      },
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 50,
+        "y": 64,
+        "dir": 0
+       },
+       "strikes": 3,
+       "minTicks": 62
+      }
+     ],
+     "ms": 25,
+     "chain": []
+    },
+    "spear": {
+     "line": true,
+     "reached": [
+      "L22"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 34,
+        "y": 50,
+        "dir": 0
+       },
+       "strikes": 2,
+       "minTicks": 31
+      },
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 34,
+        "y": 50,
+        "dir": 0
+       },
+       "strikes": 2,
+       "minTicks": 31
+      }
+     ],
+     "ms": 20,
+     "chain": []
+    },
+    "darkshield": {
+     "line": true,
+     "reached": [
+      "L22"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 44,
+        "y": 50,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 60,
+        "y": 50,
+        "dir": 3
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 33,
+     "chain": []
+    },
+    "wand": {
+     "line": true,
+     "reached": [
+      "L22"
+     ],
+     "lanes": 0,
+     "configs": 1,
+     "kills": [
+      {
+       "id": "wallflyer@48,48",
+       "at": {
+        "x": 34,
+        "y": 50,
+        "dir": 0
+       },
+       "strikes": 6,
+       "minTicks": 155
+      },
+      {
+       "id": "wallflyer@64,48",
+       "at": {
+        "x": 34,
+        "y": 50,
+        "dir": 0
+       },
+       "strikes": 6,
+       "minTicks": 155
+      }
+     ],
+     "ms": 20,
+     "chain": []
+    }
+   }
+  },
+  {
+   "level": 27,
+   "sides": [
+    [
+     26,
+     28
+    ]
+   ],
+   "verdict": "one side: no crossing to gate"
+  }
+ ]
+}

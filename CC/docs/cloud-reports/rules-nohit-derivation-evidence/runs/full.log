@@ -1,0 +1,37 @@
+WALLFLYER LEVELS [22,25,27]
+L22: flyers wallflyer@64,80@(71,88) wallflyer@128,80@(137,88) wallflyer@48,112@(55,120) wallflyer@144,112@(153,120); sides [[21,29],[25,30]]
+  none       L22 [21,29] -> [25,30]: LINE (60682583 lanes, 16 configs, 414767 ms)
+     lane {"from":{"x":64,"y":76},"runway":null,"k1":"down+left","n1":18,"k2":"down+right","n2":22,"end":{"x":52.53,"y":105.95},"config":"71,88;71,88;55,120;153,120"}
+     lane {"from":{"x":106,"y":92},"runway":null,"k1":"down+left","n1":30,"k2":"up","n2":26,"end":{"x":65.9,"y":98.23},"config":"71,88;71,88;55,120;55,120"}
+     lane {"from":{"x":91,"y":91},"runway":null,"k1":"down+right","n1":34,"k2":"left","n2":15,"end":{"x":94.52,"y":136.57},"config":"71,88;71,88;153,120;153,120"}
+  sword      L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 169 ms) kills wallflyer@64,80@59,66d0 wallflyer@128,80@125,66d0 wallflyer@48,112@43,98d0 wallflyer@144,112@141,98d0
+  spear      L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 144 ms) kills wallflyer@64,80@63,48d3 wallflyer@128,80@130,48d3 wallflyer@48,112@47,98d3 wallflyer@144,112@145,98d3
+  darkshield L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 146 ms) kills wallflyer@64,80@59,75d3 wallflyer@128,80@125,75d3 wallflyer@48,112@43,107d3 wallflyer@144,112@141,107d3
+  wand       L22 [21,29] -> [25,30]: LINE (0 lanes, 1 configs, 167 ms) kills wallflyer@64,80@66,34d3 wallflyer@128,80@130,34d3 wallflyer@48,112@50,98d3 wallflyer@144,112@146,98d3
+ROW {"level":22,"from":[21,29],"to":[25,30],"arms":{"none":true,"sword":true,"spear":true,"darkshield":true,"wand":true}}
+  none       L22 [25,30] -> [21,29]: NO LINE (573582 lanes, 2 configs, 3486 ms)
+  sword      L22 [25,30] -> [21,29]: LINE (0 lanes, 1 configs, 162 ms) kills wallflyer@48,112@64,123d1 wallflyer@144,112@131,123d0 wallflyer@64,80@80,91d1 wallflyer@128,80@115,91d0
+  spear      L22 [25,30] -> [21,29]: LINE (0 lanes, 1 configs, 88 ms) kills wallflyer@64,80@64,123d1 wallflyer@128,80@126,123d1 wallflyer@48,112@64,123d2 wallflyer@144,112@115,123d0
+  darkshield L22 [25,30] -> [21,29]: LINE (0 lanes, 1 configs, 150 ms) kills wallflyer@48,112@65,123d2 wallflyer@144,112@141,123d3 wallflyer@64,80@81,91d2 wallflyer@128,80@125,91d3
+  wand       L22 [25,30] -> [21,29]: LINE (0 lanes, 1 configs, 100 ms) kills wallflyer@64,80@66,123d1 wallflyer@128,80@130,123d1 wallflyer@48,112@66,123d2 wallflyer@144,112@82,123d0
+ROW {"level":22,"from":[25,30],"to":[21,29],"arms":{"none":false,"sword":true,"spear":true,"darkshield":true,"wand":true}}
+L25: flyers wallflyer@48,48@(56,55) wallflyer@64,48@(72,55); sides [[22],[26],[28]]
+  none       L25 [22] -> [26]: LINE (384706 lanes, 3 configs, 2334 ms)
+     lane {"from":{"x":76,"y":68},"runway":null,"k1":"down+right","n1":24,"k2":"down+left","n2":40,"end":{"x":45.06,"y":94.36},"config":"56,89;72,89"}
+  sword      L25 [22] -> [26]: LINE (0 lanes, 1 configs, 22 ms) kills wallflyer@48,48@74,64d1 wallflyer@64,48@74,64d0
+  spear      L25 [22] -> [26]: LINE (0 lanes, 1 configs, 32 ms) kills wallflyer@64,48@74,64d1 wallflyer@48,48@65,50d2
+  darkshield L25 [22] -> [26]: LINE (0 lanes, 1 configs, 34 ms) kills wallflyer@64,48@74,64d0 wallflyer@48,48@66,50d2
+  wand       L25 [22] -> [26]: LINE (0 lanes, 1 configs, 42 ms) kills wallflyer@64,48@74,66d1 wallflyer@48,48@65,50d2
+ROW {"level":25,"from":[22],"to":[26],"arms":{"none":true,"sword":true,"spear":true,"darkshield":true,"wand":true}}
+  L25 [22] -> [28]: not connected even with no flyer (another solid separates them): no wallflyer question
+  none       L25 [26] -> [22]: NO LINE (1083958 lanes, 2 configs, 4606 ms)
+  sword      L25 [26] -> [22]: LINE (0 lanes, 1 configs, 25 ms) kills wallflyer@48,48@34,50d0 wallflyer@64,48@50,64d0
+  spear      L25 [26] -> [22]: LINE (0 lanes, 1 configs, 20 ms) kills wallflyer@48,48@34,50d0 wallflyer@64,48@34,50d0
+  darkshield L25 [26] -> [22]: LINE (0 lanes, 1 configs, 34 ms) kills wallflyer@48,48@44,50d3 wallflyer@64,48@60,50d3
+  wand       L25 [26] -> [22]: LINE (0 lanes, 1 configs, 20 ms) kills wallflyer@48,48@34,50d0 wallflyer@64,48@34,50d0
+ROW {"level":25,"from":[26],"to":[22],"arms":{"none":false,"sword":true,"spear":true,"darkshield":true,"wand":true}}
+  L25 [26] -> [28]: not connected even with no flyer (another solid separates them): no wallflyer question
+  L25 [28] -> [22]: not connected even with no flyer (another solid separates them): no wallflyer question
+  L25 [28] -> [26]: not connected even with no flyer (another solid separates them): no wallflyer question
+L27: flyers wallflyer@192,48@(201,56); sides [[26,28]]
+ROW {"level":27,"sides":[[26,28]],"verdict":"one side: no crossing to gate"}

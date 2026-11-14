@@ -1,0 +1,21 @@
+WALLFLYER LEVELS [22,25,27]
+L22: flyers wallflyer@64,80@(71,88) wallflyer@128,80@(137,88) wallflyer@48,112@(55,120) wallflyer@144,112@(153,120); sides [[21,29],[25,30]]
+  shield     L22 [21,29] -> [25,30]: LINE (24935514 lanes, 112 configs, 186045 ms)
+     lane {"from":{"x":127,"y":81},"runway":"upx5","k1":"down","n1":16,"k2":"down+left","n2":38,"end":{"x":85.3,"y":143.65},"config":"137,88;137,88;55,120;93,119"}
+ROW {"level":22,"from":[21,29],"to":[25,30],"arms":{"shield":true}}
+  shield     L22 [25,30] -> [21,29]: LINE (31721155 lanes, 70 configs, 232455 ms)
+     lane {"from":{"x":95,"y":123},"runway":null,"k1":"up+left","n1":7,"k2":"up","n2":40,"end":{"x":80.8,"y":67.05},"config":"71,88;71,88;55,120;55,120"}
+ROW {"level":22,"from":[25,30],"to":[21,29],"arms":{"shield":true}}
+L25: flyers wallflyer@48,48@(56,55) wallflyer@64,48@(72,55); sides [[22],[26],[28]]
+  shield     L25 [22] -> [26]: LINE (1358618 lanes, 4 configs, 7535 ms)
+     lane {"from":{"x":74,"y":64},"runway":null,"k1":"left","n1":10,"k2":"down+left","n2":11,"end":{"x":49.08,"y":77.16},"config":"56,55;72,55"}
+ROW {"level":25,"from":[22],"to":[26],"arms":{"shield":true}}
+  L25 [22] -> [28]: not connected even with no flyer (another solid separates them): no wallflyer question
+  shield     L25 [26] -> [22]: LINE (1772070 lanes, 4 configs, 12515 ms)
+     lane {"from":{"x":45,"y":59},"runway":"down+leftx2","k1":"down+right","n1":25,"k2":"up","n2":11,"end":{"x":77.1,"y":76.39},"config":"56,55;72,55"}
+ROW {"level":25,"from":[26],"to":[22],"arms":{"shield":true}}
+  L25 [26] -> [28]: not connected even with no flyer (another solid separates them): no wallflyer question
+  L25 [28] -> [22]: not connected even with no flyer (another solid separates them): no wallflyer question
+  L25 [28] -> [26]: not connected even with no flyer (another solid separates them): no wallflyer question
+L27: flyers wallflyer@192,48@(201,56); sides [[26,28]]
+ROW {"level":27,"sides":[[26,28]],"verdict":"one side: no crossing to gate"}

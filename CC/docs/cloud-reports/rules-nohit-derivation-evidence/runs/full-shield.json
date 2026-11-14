@@ -1,0 +1,177 @@
+{
+ "levels": [
+  22,
+  25,
+  27
+ ],
+ "rows": [
+  {
+   "level": 22,
+   "from": [
+    21,
+    29
+   ],
+   "to": [
+    25,
+    30
+   ],
+   "arms": {
+    "shield": {
+     "line": true,
+     "reached": [
+      "L25",
+      "L30"
+     ],
+     "lanes": 24935514,
+     "configs": 112,
+     "ms": 186045,
+     "chain": [
+      {
+       "from": {
+        "x": 127,
+        "y": 81
+       },
+       "runway": "upx5",
+       "k1": "down",
+       "n1": 16,
+       "k2": "down+left",
+       "n2": 38,
+       "end": {
+        "x": 85.3,
+        "y": 143.65
+       },
+       "config": "137,88;137,88;55,120;93,119"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "level": 22,
+   "from": [
+    25,
+    30
+   ],
+   "to": [
+    21,
+    29
+   ],
+   "arms": {
+    "shield": {
+     "line": true,
+     "reached": [
+      "L21",
+      "L29"
+     ],
+     "lanes": 31721155,
+     "configs": 70,
+     "ms": 232455,
+     "chain": [
+      {
+       "from": {
+        "x": 95,
+        "y": 123
+       },
+       "runway": null,
+       "k1": "up+left",
+       "n1": 7,
+       "k2": "up",
+       "n2": 40,
+       "end": {
+        "x": 80.8,
+        "y": 67.05
+       },
+       "config": "71,88;71,88;55,120;55,120"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "level": 25,
+   "from": [
+    22
+   ],
+   "to": [
+    26
+   ],
+   "arms": {
+    "shield": {
+     "line": true,
+     "reached": [
+      "L26"
+     ],
+     "lanes": 1358618,
+     "configs": 4,
+     "ms": 7535,
+     "chain": [
+      {
+       "from": {
+        "x": 74,
+        "y": 64
+       },
+       "runway": null,
+       "k1": "left",
+       "n1": 10,
+       "k2": "down+left",
+       "n2": 11,
+       "end": {
+        "x": 49.08,
+        "y": 77.16
+       },
+       "config": "56,55;72,55"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "level": 25,
+   "from": [
+    26
+   ],
+   "to": [
+    22
+   ],
+   "arms": {
+    "shield": {
+     "line": true,
+     "reached": [
+      "L22"
+     ],
+     "lanes": 1772070,
+     "configs": 4,
+     "ms": 12515,
+     "chain": [
+      {
+       "from": {
+        "x": 45,
+        "y": 59
+       },
+       "runway": "down+leftx2",
+       "k1": "down+right",
+       "n1": 25,
+       "k2": "up",
+       "n2": 11,
+       "end": {
+        "x": 77.1,
+        "y": 76.39
+       },
+       "config": "56,55;72,55"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "level": 27,
+   "sides": [
+    [
+     26,
+     28
+    ]
+   ],
+   "verdict": "one side: no crossing to gate"
+  }
+ ]
+}
