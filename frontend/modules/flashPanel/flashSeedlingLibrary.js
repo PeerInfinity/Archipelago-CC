@@ -72,7 +72,7 @@ import SEEDLING_STARTER_ATLAS_DOC from './atlases/seedling.json' with { type: 'j
 import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json' with { type: 'json' };
 import { atlasIndexPath, atlasPathInIndex } from './mapDocumentPath.js';
 import {
-    drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLocationTiles,
+    drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLayoutGraph, seedlingLocationTiles,
 } from './seedlingCompositeMap.js';
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
@@ -856,7 +856,8 @@ export const substrateRegistryEntry = Object.freeze({
      * substrates."*). `drawRegion` paints the region's level as the JS Seedling renderer draws it
      * (`seedlingCompositeMap.js`: a cached bake; the generic box until it lands, then the host's `requestRedraw`).
      * `artwork: true` puts it behind the renderer's "Substrate art" switch (`substrateArt: false` → the generic box).
-     * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3).
+     * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3); `layoutGraph` is
+     * step 3a's Seedling adapter (`procgenCore/regionLayoutResolve.js`).
      * ⛔ DATA: this file stays `loadable: true` in the generated matrix — nothing here touches a DOM at load.
      */
     compositeMap: Object.freeze({
@@ -864,6 +865,7 @@ export const substrateRegistryEntry = Object.freeze({
         artwork: true,
         locationTiles: (region, ctx = {}) => seedlingLocationTiles(region, { ...ctx, atlases: KNOWN_ATLASES }),
         displayRegionOf: seedlingDisplayRegionOf,
+        layoutGraph: (ctx = {}) => seedlingLayoutGraph({ ...ctx, atlases: { ...KNOWN_ATLASES, ...(ctx.atlases ?? {}) } }),
     }),
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,

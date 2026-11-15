@@ -16,6 +16,10 @@
  *   node scripts/procgen/probe-seedling-fire-break.mjs                      # every witness: plan, play, compare
  *   node scripts/procgen/probe-seedling-fire-break.mjs --only=firebreak-l0-rock-west
  *   node scripts/procgen/probe-seedling-fire-break.mjs --record             # also write fixtures/firebreak-witness/<name>.json
+ *   node scripts/procgen/probe-seedling-fire-break.mjs --set=rules          # ⛓ RULES rules-fire-breaks-rocks: the rule's
+ *                                                                           # own witnesses (`FIREBREAK_RULES_WITNESSES`)
+ *   node scripts/procgen/probe-seedling-fire-break.mjs --set=rules-refused  # the rows the solver will not plan: each refusal
+ *                                                                           # printed (`FIREBREAK_RULES_REFUSED`), no page
  * Prints `PASS:`/`FAIL:` rows and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`. Takes the box lock.
  */
 import { chromium } from 'playwright';
@@ -26,7 +30,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan,
+import { FIREBREAK_RULES_REFUSED, FIREBREAK_RULES_WITNESSES, FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan,
     fireBreakSampleOf } from '../../frontend/modules/seedlingDemo/fidelityFireBreak.js';
 
 argvHelp(import.meta.url);
@@ -70,8 +74,16 @@ async function main() {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    for (const w of FIREBREAK_WITNESSES) {
+    const SET = arg('set') ?? 'fidelity';
+    const SETS = { fidelity: FIREBREAK_WITNESSES, rules: FIREBREAK_RULES_WITNESSES, 'rules-refused': FIREBREAK_RULES_REFUSED };
+    if (!SETS[SET]) throw new Error(`--set=${SET}: the sets are ${Object.keys(SETS).join(', ')}`);
+    for (const w of SETS[SET]) {
         if (only && !only.includes(w.name)) continue;
+        if (SET === 'rules-refused') {
+            const refusal = await fireBreakPlan(w).then(() => null, (e) => String(e.message).split('\n')[0].slice(0, 400));
+            check(`${w.name}: the solver refuses to plan it with ${w.items.join(' + ')}`, refusal !== null, refusal ?? 'it PLANNED: move it to FIREBREAK_RULES_WITNESSES and play it');
+            continue;
+        }
         const { solved, tape } = await fireBreakPlan(w);
         const breaks = solved.out.records.filter((r) => r.strategy === 'break' || r.verb === 'break');
         const wanted = w.breaks ?? w.rocks.map((r) => r.id);

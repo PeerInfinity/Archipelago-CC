@@ -13780,7 +13780,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
+                "arg",
+                "check"
             ],
             "browser": true,
             "category": "probe",
@@ -13803,6 +13804,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "set"
                 }
             ],
             "inheritedFlags": [

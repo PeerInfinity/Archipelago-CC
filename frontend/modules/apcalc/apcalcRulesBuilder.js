@@ -17,8 +17,9 @@
 // It does not share proofShared/proofGraphRulesBuilder.js: that core is one
 // region per node whose entrances need HasAll of the node's dependencies, from
 // a Menu region. APCalc's entrances need COUNTS of buttons along a full path
-// from Start, its items stack (max_count > 1), and it starts in "C" with a
-// Victory event. Only versionString is common.
+// from Start, its items stack (max_count > 1), and it starts in "C" with an
+// ID-bearing Victory location (an event from an apworld that predates its ID).
+// Only versionString is common.
 //
 // ⚠ path_costs cannot be derived from operation + operand_digits: the
 // generator adds the edge's own buttons to ONE of the source node's paths,
@@ -43,6 +44,9 @@ const regionName = (i) => `Region ${i}`;
 const locationName = (i) => `Check ${i}`;
 const eventName = (i) => `Checked ${i}`;
 const regionIndexOf = (name) => Number(/^Region (\d+)$/.exec(name)?.[1]);
+// An apworld that predates the Victory ID has none in its DataPackage: the goal is
+// then the old event, as that server built it.
+const idOf = (table, name) => (Object.prototype.hasOwnProperty.call(table, name) ? Number(table[name]) : null);
 const buttonItem = (label) => (label === TRASH_ITEM ? TRASH_ITEM : `Button: ${label}`);
 
 // Python's default str ordering (code points); the exporter sorts with it.
@@ -231,17 +235,22 @@ export function buildApcalcRules(slotData, scoutedLocations, playerContext) {
       event: true,
     });
   }
-  regions[START_REGION].locations.push({
+  // The goal: an ID-bearing location holding the ID-bearing Victory item, locked on
+  // every seed (worlds/apcalc create_regions). The APCalc panel checks it once every
+  // node is visited; the server then delivers Victory, which goalCheck.js reports.
+  const victoryId = idOf(locationNameToId, VICTORY);
+  const victoryLocation = {
     name: VICTORY,
-    id: null,
+    id: victoryId,
     access_rule: {
       rule: 'HasAll',
       args: { item_names: nodes.map((node) => eventName(node.gi)).sort(byCodePoint) },
     },
     item: { name: VICTORY, player: slot, advancement: true, type: 'None' },
     locked: true,
-    event: true,
-  });
+  };
+  if (victoryId === null) victoryLocation.event = true;
+  regions[START_REGION].locations.push(victoryLocation);
   if (missingScouts.length > 0) {
     log('warn', `No scouted item for ${missingScouts.length} location(s): ${missingScouts.join(', ')}`);
   }
@@ -271,7 +280,8 @@ export function buildApcalcRules(slotData, scoutedLocations, playerContext) {
       groups: ['Everything'],
       // the item table's classification reaches the export only through a
       // placement or a precollect; an item that has neither stays filler
-      classification: placed > 0 && name !== TRASH_ITEM ? 'progression' : 'filler',
+      // (Victory is always placed, at its own location)
+      classification: (placed > 0 && name !== TRASH_ITEM) || name === VICTORY ? 'progression' : 'filler',
       type: null,
       max_count: Math.max(1, placed),
     };
@@ -286,7 +296,7 @@ export function buildApcalcRules(slotData, scoutedLocations, playerContext) {
     max_count: 1,
   });
   for (const node of nodes) items[eventName(node.gi)] = event(eventName(node.gi));
-  items[VICTORY] = event(VICTORY);
+  if (victoryId === null || !(VICTORY in items)) items[VICTORY] = event(VICTORY);
 
   // Placed in our locations (our items or other games'), then precollected:
   // the exporter records hint_text and adds other games' items.

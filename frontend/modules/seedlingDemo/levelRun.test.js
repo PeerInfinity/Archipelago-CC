@@ -2710,7 +2710,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
             'darkTraps', 'bombPushers', 'bombs', 'igneousTiles', 'lightsFight', 'lavaBossFight', 'tentacleBeastFight',
-            'drillBodies',
+            'drillBodies', 'wallFlyerBodies',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2859,6 +2859,46 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         expect(bad).toEqual([]);
         expect(seen.has('drillBodies')).toBe(true);
         expect(run.entities('drillBodies').map((d) => d.id)).toEqual(['drill@128,160']);
+        for (const f of seen) witnessed.add(f);
+    });
+
+    it('L22\'s rest kill (`wallflyer-kill`; seedling-fidelity-wallflyerbodies): wallFlyerBodies, through the query — '
+        + 'a body is in the family live, stays while it dies, and leaves on the tick it is removed', () => {
+        const tape = loadTape('wallflyer-kill');
+        const run = createLevelRun({
+            levelSource, boot: { ...tape.boot }, noclip: tape.noclip,
+            noHazards: tape.noHazards, noDamage: tape.noDamage, grants: tape.grants,
+            persistence: tape.persistence, despawn: tape.despawn ?? [],
+            equips: tape.equips, pins: tape.pins, save: tape.save, rng: tape.rng,
+            seam: tape.seam, roles: ROLES,
+        });
+        const ID = 'wallflyer@64,80';
+        const rows = [];
+        const { bad, seen } = compareEveryTick(run, tape.tick_count, (t) => {
+            const b = run.entities('wallFlyerBodies').find((w) => w.id === ID);
+            rows[run.ticksCompleted] = b ? (b.dieAnim === null && !b.destroy ? 'live' : 'dying') : 'gone';
+            // the family IS the debug getter's unremoved bodies, field for field
+            const KEYS = ['id', 'x', 'y', 'vx', 'vy', 'hits', 'hitsTimer', 'dieAnim', 'destroy', 'removed'];
+            const fromGetter = run.wallFlyers.bodies.filter((w) => !w.removed)
+                .map((w) => Object.fromEntries(KEYS.map((k) => [k, w[k]])));
+            expect(run.entities('wallFlyerBodies')).toEqual(fromGetter);
+            return new Set(heldKeysAt(tape, t));
+        });
+        expect(bad).toEqual([]);
+        expect(seen.has('wallFlyerBodies')).toBe(true);
+        // the run's own events say when: killed 65, destroyed 79, removed 90 — and the body reads dying from 66, the
+        // press fencepost `fidelityWallFlyer.test.js` measures on the game ("the die anim's first update is the tick
+        // AFTER the blow (the Player updates last)")
+        const ev = Object.fromEntries(run.wallFlyers.events.filter((e) => e.id === ID && e.kind !== 'struck')
+            .map((e) => [e.kind, e.t]));
+        expect(ev).toEqual({ killed: 65, destroyed: 79, removed: 90 });
+        const first = (k) => rows.indexOf(k);
+        expect([first('live'), first('dying'), first('gone')]).toEqual([0, ev.killed + 1, ev.removed]);
+        expect(rows.slice(ev.killed + 1, ev.removed).every((r) => r === 'dying')).toBe(true);
+        expect(rows.slice(ev.removed).every((r) => r === 'gone')).toBe(true);
+        // removed is still in the getter's bodies, and not in the family
+        expect(run.wallFlyers.bodies.find((w) => w.id === ID)?.removed).toBe(true);
+        expect(run.entities('wallFlyerBodies').map((w) => w.id)).not.toContain(ID);
         for (const f of seen) witnessed.add(f);
     });
 

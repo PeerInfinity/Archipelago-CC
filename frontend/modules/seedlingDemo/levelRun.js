@@ -479,6 +479,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'tentacleBeastFight',
     // ⛓ fidelity DRILL D2: the drills this visit steps, live (the danger map's static row reads them).
     'drillBodies',
+    // ⛓ seedling-fidelity-wallflyerbodies: the wallflyers still in the world (dying ones too, by their fields).
+    'wallFlyerBodies',
 ]);
 
 /**
@@ -18190,6 +18192,21 @@ export function createLevelRun({
             hitsTimer: d.hitsTimer, destroy: d.destroy,
             // ⛓ fidelity DRILLWATER D1: the pit latch and its end (ON only; OFF the row is unchanged)
             ...(CONTACT_FIDELITY.drillTerrainSwitch ? { fallInPit: d.fallInPit === true, fell: d.fell === true, terrainDeath: d.terrainDeath ?? null } : {}) })));
+    /**
+     * ⛓ seedling-fidelity-wallflyerbodies: this level's wallflyers STILL IN THE WORLD, `{id, x, y, vx, vy, hits,
+     * hitsTimer, dieAnim, destroy, removed}` (`[]` under noclip) — the census-visible face of `run.wallFlyers.bodies`,
+     * which stays as it is (the debug getter: whole bodies, removed ones, and the events).
+     *
+     * A body leaves the list on the tick `removed` is set — `Mobile.death`'s fade ending (`wallFlyer.js:291-293`), the
+     * game's `FP.world.remove`. A DYING body stays and says so: the "die" anim on (`dieAnim !== null`, set by
+     * `hitWallFlyer`'s kill, `wallFlyer.js:358-361`), then `destroy` (the anim's `endAnim`, `wallFlyer.js:330-335`, or
+     * water/lava/pit, `:260-273`) while it fades. LIVE is `!destroy && dieAnim === null` — `stepWallFlyer`'s own tail
+     * gate (`wallFlyer.js:308`) and `hitWallFlyer`'s (`:347`). So `removed` reads false on every row; it is kept so a
+     * reader written against the getter's bodies reads the same field.
+     */
+    const wallFlyerBodiesNow = () => (noclip ? [] : [...wallFlyerStateFor(level).values()].filter((w) => !w.removed)
+        .map((w) => ({ id: w.id, x: w.x, y: w.y, vx: w.vx, vy: w.vy, hits: w.hits, hitsTimer: w.hitsTimer,
+            dieAnim: w.dieAnim && { ...w.dieAnim }, destroy: w.destroy, removed: w.removed })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -18226,6 +18243,7 @@ export function createLevelRun({
         lavaBossFight: lavaBossFightNow,
         tentacleBeastFight: tentacleBeastFightNow,
         drillBodies: drillBodiesNow,
+        wallFlyerBodies: wallFlyerBodiesNow,
     });
 
     /**
@@ -19188,6 +19206,8 @@ export function createLevelRun({
          */
         /** ⛓ fidelity DRILL D2: the entities fold's `drillBodies` (`run.entities('drillBodies')`). */
         get drillBodies() { return drillBodiesNow(); },
+        /** ⛓ seedling-fidelity-wallflyerbodies: the entities fold's `wallFlyerBodies` (`run.entities('wallFlyerBodies')`). */
+        get wallFlyerBodies() { return wallFlyerBodiesNow(); },
         /** ⛓ seedling-fidelity-terrain W3: the live drill(s) and their events (`hop`, `contact`, `struck`). */
         get drills() {
             return {

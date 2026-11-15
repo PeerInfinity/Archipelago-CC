@@ -10,6 +10,17 @@
  * returns to Start.
  */
 
+/** The goal location the game checks once every node has been visited (worlds/apcalc). */
+export const VICTORY_LOCATION = 'Victory';
+
+/** A node's location: location_name from slot_data (normal apworld), else from value/layer (worldgen version). */
+function locationNameOf(nodeInfo) {
+    return nodeInfo.location_name
+        || (nodeInfo.layer === 0
+            ? `Reach ${nodeInfo.value}`
+            : `Reach ${nodeInfo.value} L${nodeInfo.layer}`);
+}
+
 export class APCalcState {
     constructor() {
         /** @type {Object<string, NodeInfo>} region_name → {value, layer, sphere, item} */
@@ -54,6 +65,26 @@ export class APCalcState {
         this.onStateChanged = null;
         /** @type {Function|null} callback when an edge is discovered */
         this.onEdgeDiscovered = null;
+        /**
+         * @type {Function|null} callback, once per game, when this state has visited
+         * every node: the game reporting its finish. Not the logic: the Victory rule
+         * needs the `Checked N` events, which are True_ and so set when merely reachable.
+         */
+        this.onFinished = null;
+        /** @type {boolean} whether onFinished has been called for this game */
+        this.finished = false;
+    }
+
+    /** Whether every node's location has been checked by navigating to it. */
+    allNodesVisited() {
+        const infos = Object.values(this.nodes);
+        return infos.length > 0 && infos.every((info) => this.checkedLocations.has(locationNameOf(info)));
+    }
+
+    _reportFinishIfDone() {
+        if (this.finished || !this.allNodesVisited()) return;
+        this.finished = true;
+        if (this.onFinished) this.onFinished(VICTORY_LOCATION);
     }
 
     loadFromSlotData(slotData) {
@@ -214,15 +245,13 @@ export class APCalcState {
             if (nodeInfo) {
                 // Use location_name from slot_data if available (normal apworld),
                 // otherwise construct from value/layer (worldgen version)
-                const locationName = nodeInfo.location_name
-                    || (nodeInfo.layer === 0
-                        ? `Reach ${nodeInfo.value}`
-                        : `Reach ${nodeInfo.value} L${nodeInfo.layer}`);
+                const locationName = locationNameOf(nodeInfo);
                 if (!this.checkedLocations.has(locationName) && this.onLocationCheck) {
                     this.onLocationCheck(locationName, neighbor);
                     this.checkedLocations.add(locationName);
                 }
             }
+            this._reportFinishIfDone();
 
             this._notify();
             return { success: true, value: result, moved: true, node: neighbor };

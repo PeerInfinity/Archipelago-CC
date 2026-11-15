@@ -121,6 +121,7 @@ export const REGISTRY = frz({
                 "compositeMap.artwork",
                 "compositeMap.displayRegionOf",
                 "compositeMap.drawRegion",
+                "compositeMap.layoutGraph",
                 "compositeMap.locationTiles"
             ],
             "title": "Composite map"
@@ -1276,24 +1277,26 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
                         "artwork",
                         "displayRegionOf",
                         "drawRegion",
+                        "layoutGraph",
                         "locationTiles"
                     ]
                 },
                 {
                     "id": "flash_seedling_gen",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
                         "artwork",
                         "displayRegionOf",
                         "drawRegion",
+                        "layoutGraph",
                         "locationTiles"
                     ]
                 },
@@ -1564,6 +1567,80 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Composite map",
             "name": "compositeMap.drawRegion"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.layoutGraph"
         },
         {
             "carriedBy": [

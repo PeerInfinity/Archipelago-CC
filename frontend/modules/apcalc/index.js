@@ -177,6 +177,20 @@ function initializeGame(staticData) {
         }, { initialTarget: 'bottom' });
     };
 
+    // The game's finish: every node visited (APCalcState.onFinished, once per game).
+    // Victory is an ID-bearing location (worlds/apcalc), so the server records the
+    // check and delivers the Victory item, and goalCheck.js then reports the goal.
+    gameState.onFinished = (locationName) => {
+        if (!dispatcher) return;
+        dispatcher.publish('user:locationCheck', {
+            locationName,
+            regionName: 'C',
+            originator: 'APCalcCheck',
+            originalDOMEvent: true,
+            reportedByGame: true,
+        }, { initialTarget: 'bottom' });
+    };
+
     // Sync from current snapshot
     const currentSnapshot = stateManager.getLatestStateSnapshot();
     if (currentSnapshot) gameState.syncFromSnapshot(currentSnapshot);

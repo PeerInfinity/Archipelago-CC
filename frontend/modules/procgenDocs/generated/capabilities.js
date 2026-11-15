@@ -1001,9 +1001,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 105,
+        "fields": 106,
         "fieldsRead": 40,
-        "fieldsUnread": 62,
+        "fieldsUnread": 63,
         "statements": 30,
         "substrates": 9
     },
@@ -5086,6 +5086,7 @@ export const CAPABILITIES = frz({
         "canHostExitGatesBraid",
         "compositeMap.artwork",
         "compositeMap.displayRegionOf",
+        "compositeMap.layoutGraph",
         "compositeMap.locationTiles",
         "defaultContentPack",
         "defaultProcgenParams",

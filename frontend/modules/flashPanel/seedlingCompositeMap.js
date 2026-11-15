@@ -40,6 +40,7 @@ import {
     SEEDLING_BACKGROUND, bakeLevel, levelRecordFor, levelWorldFor, loadSeedlingArt, recordWorldOf,
 } from '../seedlingDemo/seedlingLevelBake.js';
 import { TILE } from '../seedlingDemo/seedlingSkinRenderer.js';
+import { dirOfExit } from '../seedlingDemo/seedlingDoorDirection.js';
 import SUBREGION_PARTITION from './atlases/seedling-subregion-partition.json' with { type: 'json' };
 
 /** The dim laid over a sub-region cell's tiles that belong to the rest of its level. */
@@ -166,6 +167,83 @@ export function unplacedSeedlingLocations(region, ctx = {}) {
     const placed = new Set(seedlingLocationTiles(region, ctx).map((t) => t.location));
     return rulesLocationsOf(ctx.rules, ctx.playerId, region?.region_id)
         .map((l) => l?.name).filter((n) => typeof n === 'string' && !placed.has(n));
+}
+
+/**
+ * ⛓ The layout KIND of a Seedling exit, off its `exit_id` prefix — the only stairs/pit signal a compiled sidecar
+ * carries (every exit's `kind` is `teleporter`). `out_stairsdown_*` and `out_pit_*` go DOWN, `out_stairsup_*` UP,
+ * every other exit (`out_teleporter_*`, the boss doors) is a `join`.
+ */
+export function seedlingExitLayoutKind(exitId) {
+    const id = String(exitId ?? '');
+    if (id.startsWith('out_stairsdown') || id.startsWith('out_pit')) return 'down';
+    if (id.startsWith('out_stairsup')) return 'up';
+    return 'join';
+}
+
+/**
+ * A display region's level size in PIXELS, `{w, h}`, or null: a generated room's embedded record (`width`/`height`
+ * in tiles), else the payload's atlas region `bounds` (tiles) from `atlases[atlas_ref]`. An atlas the caller does
+ * not hold (a CUSTOM set's derived atlas, unless handed in) gives null, and its links then carry no direction.
+ */
+function seedlingLevelPixelSize(payload, atlases) {
+    const ts = Number.isFinite(payload?.tile_size) ? payload.tile_size : TILE;
+    const rec = payload?.record;
+    if (rec && Number.isInteger(rec.width) && Number.isInteger(rec.height)) return { w: rec.width * ts, h: rec.height * ts };
+    const atlas = atlases?.[payload?.atlas_ref];
+    const region = atlas?.regions?.find?.((r) => r.region_id === payload?.atlas_region);
+    const b = region?.bounds;
+    return b && b.w > 0 && b.h > 0 ? { w: b.w * ts, h: b.h * ts } : null;
+}
+
+/**
+ * ⛓⛓ `compositeMap.layoutGraph(ctx)` — region-map step 3a's SEEDLING ADAPTER (`procgenCore/regionLayoutResolve.js`
+ * finds it through the registry). `ctx = {sidecars, displayRegionOf, atlases?}` → `{nodes, links}`:
+ *   · nodes = the DISPLAY regions (`level_N__rRcC` folds onto `level_N` by its payload), in sidecar order;
+ *   · links = every sidecar exit with a `targetRegion` in the sidecars, display-folded (a link inside one level is
+ *     dropped), `kind` by `seedlingExitLayoutKind`, and — for a `join` — `dir` by `dirOfExit` (`seedlingDemo/seedlingDoorDirection.js`, re-exported by `seedlingSetMap`) (the E3
+ *     door rule: the door's side of its level, else the arrival's side of the target, reversed). The door is the
+ *     exit's first `exit_tiles` cell (level tiles → pixels), the arrival its `target_spawn` (pixels). Stairs and pits
+ *     carry no `dir` (they are vertical), and an interior door gets `null` from `dirOfExit` itself.
+ * ⛔ Pure, and reads the PAYLOADS only — never a preset or region name.
+ */
+export function seedlingLayoutGraph({ sidecars = {}, displayRegionOf = seedlingDisplayRegionOf, atlases = null } = {}) {
+    const displayOf = (name) => displayRegionOf(name, sidecars[name]);
+    const nodes = [];
+    const seen = new Set();
+    const size = new Map();
+    for (const [name, sc] of Object.entries(sidecars)) {
+        const d = displayOf(name);
+        if (!seen.has(d)) {
+            seen.add(d);
+            nodes.push(d);
+        }
+        if (!size.has(d)) size.set(d, seedlingLevelPixelSize(sc?.playable_payload, atlases));
+    }
+    const links = [];
+    for (const [name, sc] of Object.entries(sidecars)) {
+        const payload = sc?.playable_payload;
+        const ts = Number.isFinite(payload?.tile_size) ? payload.tile_size : TILE;
+        for (const e of payload?.exits ?? []) {
+            const to = e?.targetRegion;
+            if (typeof to !== 'string' || !sidecars[to]) continue;
+            const from = displayOf(name);
+            const target = displayOf(to);
+            if (from === target) continue;
+            const kind = seedlingExitLayoutKind(e.exit_id);
+            let dir = null;
+            const tile = Array.isArray(e.exit_tiles) ? e.exit_tiles[0] : null;
+            if (kind === 'join' && Array.isArray(tile)) {
+                const door = {
+                    x: tile[0] * ts, y: tile[1] * ts,
+                    playerx: e.target_spawn?.x, playery: e.target_spawn?.y,
+                };
+                dir = dirOfExit(door, size.get(from), size.get(target), ts).dir;
+            }
+            links.push({ from, to: target, kind, dir });
+        }
+    }
+    return { nodes, links };
 }
 
 function rulesLocationsOf(rules, playerId, regionName) {
