@@ -517,8 +517,15 @@ function wasmMemoryBytes() {
 }
 
 function startMeasureSampler(tutorial, stepStarts, ui) {
-    if (!(MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0)) return null;
+    if (!(MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0)) return null; // (all runs here set the step knob)
     const t0 = performance.now();
+    // MEASUREMENT-ONLY (cloud slice seedling-hammer-wallflyer-flip-walk-check): ?measureNoWorkLimit=1 ticks the Flash
+    // panel's own "Seedling: solver — no work limit" for this page load (a session override, not persisted).
+    if (MEASURE_PARAMS.get('measureNoWorkLimit') === '1') {
+        settingsManager.updateSetting('moduleSettings.flashPanel.seedlingSolverNoWorkLimit', true, { persist: false })
+            .then(() => console.log('[MEASURE] no work limit: ON (session override)'))
+            .catch((e) => console.log(`[MEASURE] no work limit: FAILED ${e?.message ?? e}`));
+    }
     let regionChanges = 0;
     let lastRegion = null;
     const unsub = eventBus.subscribe('gameState:regionChanged', (d) => {
