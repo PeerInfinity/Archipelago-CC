@@ -56,6 +56,7 @@ export const README_ORDER = Object.freeze([
     'gotchas.md',
     'editing-core.md',
     'seedling-editor.md',
+    'region-layout.md',
     'bounce.md',
     'cloudberry.md',
     'playback-and-debugging.md',
