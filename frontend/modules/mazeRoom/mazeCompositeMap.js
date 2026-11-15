@@ -162,6 +162,12 @@ export function mazeCompositeArtStatus(stack) {
     };
 }
 
+/** The seam's `tileArt` a stack's load came to (`{ art, images, conceptArt, thingArt }`), or null — for the in-app row. */
+export function mazeCompositeTileArt(stack) {
+    const entry = artCache.get(stack.join(','));
+    return entry?.status === 'ready' ? entry.loaded.tileArt : null;
+}
+
 /** Resolves once the stack's load (if one started) has landed, either way. */
 export async function mazeCompositeArtSettled(stack) {
     for (let i = 0; i < 1000 && artCache.get(stack.join(','))?.status === 'loading'; i++) {
