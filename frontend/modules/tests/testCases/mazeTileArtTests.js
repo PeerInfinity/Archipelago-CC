@@ -108,6 +108,8 @@ function cellWhere(panel, pred) {
     const w = panel.world;
     const busy = new Set([...(w.items?.keys() ?? []), ...(w.obstacles?.keys() ?? []), `${w.entrance.x},${w.entrance.y}`]);
     for (const e of w.exits.values()) busy.add(`${e.x},${e.y}`);
+    // ⛓ content sets S2: a region's thing is drawn over its floor cell (mazeThingOverlay)
+    for (const t of w.things ?? []) busy.add(`${t.x},${t.y}`);
     const p = panel.state?.player_pos;
     if (p) busy.add(`${p.x},${p.y}`);
     for (let y = 0; y < w.height; y++) {
