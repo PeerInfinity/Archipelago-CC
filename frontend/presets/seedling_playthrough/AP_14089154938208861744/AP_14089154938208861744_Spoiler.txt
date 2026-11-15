@@ -105,6 +105,7 @@ Level 086 - Chest: Seal
 Level 089 - Feather: Progressive Swim
 Level 090 - Chest: Seal
 Level 098 - Chest: Seal
+L99 flag 0: lock@80,96 cleared: L99 flag 0: lock@80,96 cleared
 L101 flag 0: lightpole@144,64 cleared: L101 flag 0: lightpole@144,64 cleared
 Level 106 - Ghostsword: Ghost Sword Fusion
 Level 109 - Firewand: Fire Wand Fusion
@@ -223,6 +224,7 @@ Playthrough:
 }
 14: {
   L101 flag 0: lightpole@144,64 cleared: L101 flag 0: lightpole@144,64 cleared
+  L99 flag 0: lock@80,96 cleared: L99 flag 0: lock@80,96 cleared
   Level 063 - Chest: Seal
   Level 080 - Chest: Seal
   Level 082 - King of Fire: Seal
