@@ -358,15 +358,17 @@ describe('the corpus census — printed, then pinned', () => {
          *   416 → 419  region-map step 3a (2026-11-14): the new region-layout.md — its README index row, its link to
          *              substrate-registry.md § Entry contract, and that table's `compositeMap.layoutGraph` row → it
          *              (`doc` 311 → 314).
+         *   421 → 422  content packs PL-1 (2026-11-15): concepts.md § Content roles' `assertPresents` bullet → its
+         *              own § What exists, the numbers and the bindings (`same-doc` 39 → 40).
          */
         expect(by).toEqual({
-            'same-doc': 39,
+            'same-doc': 40,
             doc: 316,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(421);
+        expect(CORPUS.length).toBe(422);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

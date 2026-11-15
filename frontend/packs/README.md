@@ -3,6 +3,25 @@
 These are data directories loaded by `frontend/modules/contentPacks/`. They live under `frontend/` because
 GitHub Pages serves only `frontend/`.
 
+⚠ **Not every pack is MIT.** Each pack's `pack.json` names its own `licence`: `seedling` is the Unlicense (the
+original game's), and the others are MIT. A source in a layer's provenance block may name its own `licence` too.
+
+**Layers.** A pack provides one or more of: `art`, `sfx`, `music` (resolved at play, by key); `concepts`, `text`
+(the words: a world's content set); and, since content packs PL-1, `structure` (what exists: tasks, stats,
+resources, boons and places, as ids and links), `numbers` (magnitudes, one set per game; defaults) and `bindings`
+(per game, what only that game needs). The last three carry logic and are never read by a content set. No committed
+pack carries them yet. `frontend/modules/packStructure/` reads them; `fixtures/packs/` there holds examples.
+
+**Provenance.** Every layer manifest carries a `provenance` block naming where its entries came from:
+`sources` (each a `game`, `person`, `model`, `authored` or `derived` source, with that type's fields), a `default`
+source, optional `groups` (a key prefix → a source), and an optional `src` on an entry that differs. The loader
+refuses a layer whose entries do not all resolve, naming the pack, the layer and the key. A model source names the
+exact model id, taken from the commit trailer (`Co-Authored-By`) of the files it wrote, or `"unrecorded"` with its
+family; `approved` is recorded only where the user approved the entries. `node scripts/procgen/report-pack-provenance.mjs`
+counts the entries per source. When you add or change entries, name their source in the block, and add a source
+when it is new: an image a person contributed is a `person` source under the name they chose to be credited by.
+Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
+
 - `packs.json` is the hand-kept registry. It lists the packs and the named **stacks** a consumer loads, in
   override order (a later pack wins per key). For example, `graphics.seedling = ["seedling", "archipelago"]`
   is what the Seedling JS runtime page's `?graphics=seedling` loads.

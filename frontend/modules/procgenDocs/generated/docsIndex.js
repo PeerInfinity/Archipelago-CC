@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 29,
-        "headings": 1311,
+        "headings": 1313,
         "indexHeadings": 2,
-        "lines": 36441,
+        "lines": 36482,
         "pages": 4,
-        "words": 550319
+        "words": 551459
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -285,8 +285,8 @@ export const DOCS_INDEX = frz({
             "description": "A concept is a thing a world can be about — a sword, a guardian, water, a coloured door — declared once, in no substrate's words, so that the planner can ask every substrate the same question: *can you show this, and what does it do to reachability?* The concept library is how a substrate declares what it can enforce, how a planned rule selects one of those declarations, and what the substrate'…",
             "file": "concepts.md",
             "h1": "Concepts",
-            "headings": 22,
-            "lines": 268,
+            "headings": 24,
+            "lines": 309,
             "links": [
                 "gotchas.md",
                 "maze.md",
@@ -296,7 +296,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 5853
+            "words": 6993
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
