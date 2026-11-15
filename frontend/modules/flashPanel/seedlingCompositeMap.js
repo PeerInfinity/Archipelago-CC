@@ -266,7 +266,8 @@ export function seedlingRegionExtent(region, { atlases = null } = {}) {
  * ⛓ region-map step 3b — `compositeMap.remoteLocationTiles(region, ctx)` → `[{location, displayRegion, x, y, kind}]`:
  * the region's events whose object is in ANOTHER level (`obstacle.level` ≠ the payload's level — the residue
  * `seedlingLocationTiles` leaves out and `unplacedSeedlingLocations` names), placed in the display region of the
- * first sidecar whose payload shows that level. `ctx = {rules, playerId, sidecars, displayRegionOf}`. An event whose
+ * first sidecar whose payload shows that level, in that payload's tiles (its `tile_size`, as `seedlingRegionExtent`).
+ * `ctx = {rules, playerId, sidecars, displayRegionOf}`. An event whose
  * level no sidecar shows is left out (the panel lists it as "not on map").
  * ⛔ Pure, additive, reads the PAYLOADS and the rules' `obstacle` only.
  */
@@ -283,13 +284,18 @@ export function seedlingRemoteLocationTiles(region, {
         if (!byLevel) {
             byLevel = new Map();
             for (const [name, sc] of Object.entries(sidecars ?? {})) {
-                const lv = sc?.playable_payload?.level;
-                if (Number.isInteger(lv) && !byLevel.has(lv)) byLevel.set(lv, displayRegionOf(name, sc));
+                const p = sc?.playable_payload;
+                const lv = p?.level;
+                if (Number.isInteger(lv) && !byLevel.has(lv)) {
+                    byLevel.set(lv, { displayRegion: displayRegionOf(name, sc), ts: Number.isFinite(p.tile_size) ? p.tile_size : TILE });
+                }
             }
         }
-        const displayRegion = byLevel.get(o.level);
-        if (displayRegion == null) continue;
-        out.push({ location: l.name, displayRegion, x: Math.floor(o.x / TILE), y: Math.floor(o.y / TILE), kind: 'event' });
+        const host = byLevel.get(o.level);
+        if (host?.displayRegion == null) continue;
+        // ⛓ the obstacle's pixels are the HOST level's, so its tile size divides them (as `seedlingRegionExtent`
+        //   honours `tile_size`); every committed payload says 16 = TILE.
+        out.push({ location: l.name, displayRegion: host.displayRegion, x: Math.floor(o.x / host.ts), y: Math.floor(o.y / host.ts), kind: 'event' });
     }
     return out;
 }

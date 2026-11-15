@@ -4,6 +4,8 @@
  * `displayRegionOf` fold — whose keys are DISPLAY groups, not rules regions.
  */
 import { describe, it, expect, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 // A rule here is { ok: bool } or { throws: true }; the shared engine is replaced by that reading.
 vi.mock('../shared/ruleEngine.js', () => ({
@@ -220,6 +222,26 @@ describe('displayGroupsOf — the displayRegionOf fold', () => {
         const groups = vm.displayGroupsOf(names, { registry, sidecarOf: (n) => byObject.get(n) });
         expect([...groups.keys()]).toEqual(['Menu', 'level_0', 'level_1', 'room']);
         expect(vm.sidecarIndex({ preset_sidecars: { 1: null } }, 1).size).toBe(0);
+    });
+
+    it('sidecarIndex over a COMMITTED preset\'s real sidecar block (seedling_playthrough): 267 groups unfolded → 116 folded', () => {
+        const doc = JSON.parse(readFileSync(fileURLToPath(new URL(
+            '../../presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json', import.meta.url)), 'utf8'));
+        const block = doc.preset_sidecars['1'];
+        expect(Array.isArray(block)).toBe(false); // the committed shape: an object keyed by region name
+        const idx = vm.sidecarIndex(doc, '1');
+        expect([...idx.keys()]).toEqual(Object.keys(block));
+        const names = Object.keys(doc.regions['1']);
+        const fold = { get: (id) => (String(id).startsWith('flash_seedling')
+            ? { compositeMap: { displayRegionOf: (n, sc) => sc?.playable_payload?.atlas_region ?? n } } : undefined) };
+        const unfolded = vm.displayGroupsOf(names, { registry: fold, sidecarOf: () => null });
+        const folded = vm.displayGroupsOf(names, { registry: fold, sidecarOf: (n) => idx.get(n) });
+        const levels = new Set(Object.values(block).map((sc) => sc.playable_payload.atlas_region));
+        const unsidecared = names.filter((n) => !block[n]).length;
+        expect(unfolded.size).toBe(names.length);
+        expect(folded.size).toBe(levels.size + unsidecared);
+        // measured 2026-11-15 (logged, not pinned): before the fix 267 groups, after 116 (115 levels + Menu)
+        console.log(`seedling_playthrough display groups: unfolded ${unfolded.size}, folded ${folded.size}`);
     });
 
     it('⚠ a display key is NOT a rules region: level_0 is a key while no level_0 region exists', () => {
