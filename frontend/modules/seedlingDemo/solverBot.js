@@ -19680,7 +19680,7 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE NEW-LOCKS — **A PINNED CHASER IS DRAWN FROM A CELL IT HAS A CLEAR STRAIGHT LINE TO**
- * (`KILLLOCK_LINE_STANCE`, ON since the kill-lock flip; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
+ * (`KILLLOCK_LINE_STANCE`, OFF — ⚖ the user 2026-11-14 kept it out of the kill-lock flip: survey step 227 tanked 2 axe hits under it; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
  * ⚖ The user, 2026-11-10: *"a stance that draws a pinned chaser along a clear straight line, built on
  * KILLLOCK_CHASER_REWIND"*.
  *
@@ -19709,11 +19709,12 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
  * cell — which opens what the room's verbs open on the way — then the guarded dwell), rewound when refused, up to
  * `KILLLOCK_LINE_STANCE_PER_BODY` cells a body and `KILLLOCK_LINE_STANCE_TRIES` in all. ⚖ 30(c): the attempt kept is
  * the one the run drove. Nothing reads a level or a coordinate. OFF: nothing here is read.
- * `SEEDLING_KILLLOCK_LINE_STANCE=0` opts out / `withKillLockLineStance(enabled, fn)`.
+ * `SEEDLING_KILLLOCK_LINE_STANCE=1` / `withKillLockLineStance(enabled, fn)`.
  */
-// ⚖ ON by default since the kill-lock flip (with KILLLOCK_CHASER_REWIND): `SEEDLING_KILLLOCK_LINE_STANCE=0` opts out.
-export const KILLLOCK_LINE_STANCE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_LINE_STANCE !== '0' };
-export const KILLLOCK_LINE_STANCE_DEFAULT = true;
+// ⚖ OFF (the user 2026-11-14, "Land, LINE_STANCE OFF"): the kill-lock flip keeps KILLLOCK_CHASER_REWIND ON and this one OFF —
+//   under it the vanilla survey's step 227 (L98 Chest → L99) solved by taking 2 unbilled spinningaxe hits. `=1` turns it on.
+export const KILLLOCK_LINE_STANCE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_LINE_STANCE === '1' };
+export const KILLLOCK_LINE_STANCE_DEFAULT = false;
 /** The line-stance attempts one turn may drive, and the cells one body may offer. */
 export const KILLLOCK_LINE_STANCE_TRIES = 6;
 export const KILLLOCK_LINE_STANCE_PER_BODY = 3;

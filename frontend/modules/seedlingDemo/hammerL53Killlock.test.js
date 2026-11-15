@@ -41,7 +41,7 @@ const LEG_9002 = FIX('leg9002-l48-l53-retry2560-request.json.gz');
 const LEG_482 = FIX('leg482-l54-l53-request.json.gz');
 
 /** A captured leg solved as the worker does, under the switch; the plan re-driven on a fresh run for its hits.
- *  `KILLLOCK_LINE_STANCE` is held OFF (since the kill-lock flip it ships ON): these rows pin REWIND alone. */
+ *  `KILLLOCK_LINE_STANCE` is held OFF explicitly (it ships OFF; ⚖ the user 2026-11-14): these rows pin REWIND alone. */
 function solveLeg(leg, { on, dashlessOnly = true }) {
     const req = restoreRequest(leg.requests[0].request);
     const { passes: asked = ANYTIME_PASSES, source, ...tape } = req;

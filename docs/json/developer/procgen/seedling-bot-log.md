@@ -28268,6 +28268,16 @@ L54), and the whole-game walk passes entry 24 with the same plan digest. `KILLLO
 `KILLLOCK_CHASER_REWIND` on and a rewind, so the two flip together. `hammerL53Killlock.test.js` and
 `hammerNewLocks.test.js` pin each arm explicitly; their switch rows now pin the defaults ON.
 
+### Seedling hammer-phase KILLLOCK-FLIP, revised — `KILLLOCK_LINE_STANCE` back OFF (`KILLLOCK_CHASER_REWIND` stays ON)
+
+⚖ The user, 2026-11-14: *"Land, LINE_STANCE OFF"*. The hammer stack's route survey to the end measured `KILLLOCK_LINE_STANCE`
+making step 227 (L98 Chest → L99) solve by taking 2 hits it never billed: `spinningaxe@128,64` at t358 and t381, on a
+483-tick plan whose rows are brave, kill and walk (no forced-hit row). A plan that tanks a hit does not ship. With the
+switch off and the rewind on, the same step solves in 520 ticks with 0 hits. Step 228 (L99), which the line stance had
+reached, refuses again, on the shake-band question about whether a lavarunner is on screen. The game sweeps' L98 legs were
+hitless in every arm. The switch reads `SEEDLING_KILLLOCK_LINE_STANCE === '1'` again (default `false`), and
+`hammerNewLocks.test.js`'s switch row pins all three OFF.
+
 ### Seedling fidelity ROCKBUTTON — a landed FallRock is a Solid that holds a Button down (`fallRockHoldsButton`, OFF)
 
 Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user's GO 2026-11-12, *"Launch it now"*). Base `add369e82f`.

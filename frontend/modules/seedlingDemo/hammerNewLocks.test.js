@@ -28,11 +28,12 @@ import { ALL, LEG_223, LEG_286, LEG_289, LEG_911, NONE, solveLeg, staged } from 
 const ENV = globalThis.process?.env ?? {};
 
 describe('hammer-phase NEW-LOCKS — the switches', () => {
-    it('CLEAR_WRITE and ROCKLOCK_KILL ship OFF (`=1` turns each on); LINE_STANCE ships ON since the kill-lock flip (`=0` turns it off); the page channel knows the names', () => {
-        expect([KILLLOCK_CLEAR_WRITE_DEFAULT, ROCKLOCK_KILL_DEFAULT, KILLLOCK_LINE_STANCE_DEFAULT]).toEqual([false, false, true]);
+    // ⚖ the user 2026-11-14 ("Land, LINE_STANCE OFF"): LINE_STANCE left the kill-lock flip — under it survey step 227 tanked 2 axe hits
+    it('all three ship OFF (`SEEDLING_<NAME>=1` turns each on in node; the page channel knows the names)', () => {
+        expect([KILLLOCK_CLEAR_WRITE_DEFAULT, ROCKLOCK_KILL_DEFAULT, KILLLOCK_LINE_STANCE_DEFAULT]).toEqual([false, false, false]);
         expect(KILLLOCK_CLEAR_WRITE.enabled).toBe(ENV.SEEDLING_KILLLOCK_CLEAR_WRITE === '1');
         expect(ROCKLOCK_KILL.enabled).toBe(ENV.SEEDLING_ROCKLOCK_KILL === '1');
-        expect(KILLLOCK_LINE_STANCE.enabled).toBe(ENV.SEEDLING_KILLLOCK_LINE_STANCE !== '0');
+        expect(KILLLOCK_LINE_STANCE.enabled).toBe(ENV.SEEDLING_KILLLOCK_LINE_STANCE === '1');
         for (const n of ['SEEDLING_KILLLOCK_CLEAR_WRITE', 'SEEDLING_ROCKLOCK_KILL', 'SEEDLING_KILLLOCK_LINE_STANCE']) {
             expect(SOLVER_ENV_NAMES).toContain(n);
         }
