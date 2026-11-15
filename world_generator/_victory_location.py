@@ -16,9 +16,10 @@ Data-driven, no game names. For the slot:
 - each such goal item keeps an ID it already has (ALttP's Triforce is 106) or gets
   ``max(item ids of the slot) + 1``; ``event`` dropped, type None, the ``Event`` group removed.
 
-Idempotent: a document whose goal location already has an ID is returned unchanged, so a
-package regenerated from its own exported rules allocates nothing new, and the IDs a room
-holds stay valid across regenerations of the same source.
+Idempotent: a document whose goal location already has an ID allocates nothing (it only gains
+``pinned: true`` if it lacks it), so a package regenerated from its own exported rules
+allocates nothing new, and the IDs a room holds stay valid across regenerations of the same
+source.
 """
 
 from typing import Any, Dict, List, Set
@@ -55,12 +56,21 @@ def apply_victory_location(json_data: Dict[str, Any], player_id: str = '1') -> L
     if not targets:
         raise VictoryLocationError(f'P{p}: no location of the slot holds the goal item(s) {sorted(goals)}')
     pending = [loc for loc in targets if not isinstance(loc.get('id'), int)]
+    changes = []
+    # A goal location that already has an ID (a hand-written world that ships the shape
+    # itself, e.g. bakingadventure since sdc-goal-handwritten) allocates nothing, but still
+    # gets the pin: without it the generated package puts the goal item in the pool.
+    for loc in targets:
+        if isinstance(loc.get('id'), int) and loc.get('pinned') is not True:
+            loc.pop('event', None)
+            loc['locked'] = True
+            loc['pinned'] = True
+            changes.append(f'P{p}: location {loc["name"]!r} (id {loc["id"]}) pinned')
     if not pending:
-        return []
+        return changes
 
     next_loc = max([loc['id'] for loc in locs if isinstance(loc.get('id'), int)] or [0]) + 1
     next_item = max([v['id'] for v in items.values() if isinstance(v.get('id'), int)] or [0]) + 1
-    changes = []
     for name in sorted({loc['item']['name'] for loc in pending}):
         it = items.get(name)
         if it is None:
