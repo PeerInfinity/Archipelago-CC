@@ -14,6 +14,9 @@
 - `frontend/modules/regionGraph/layoutControlsManager.js` - Control panel and layout editor management
 - `frontend/modules/regionGraph/regionGraphLayoutEditor.js` - Graph layout editing functionality
 - `frontend/modules/regionGraph/pathfinder.js` - Pathfinding algorithm implementation
+- `frontend/modules/regionGraph/regionGraphOriginators.js` - The `source` / `originator` strings its dispatches carry
+
+**Where state and actions live (region map step 2).** The renderer-agnostic answers are in `frontend/modules/regionView/`: `regionViewModel.js` (reachability, location states and counts, the interior and colour states, exit traversability, the one discovery hide/placeholder decision, the `displayRegionOf` fold) and `regionActions.js` (moves, the restart step, path edits, location checks, select/show publishes). `graphDataManager.js` turns those answers into Cytoscape classes and labels; `navigationManager.js` and `graphInteractionManager.js` supply the Region Graph's own handles (its `moduleDispatcher`, its event bus) and show the results (the status bar, the "No path" flash). The Region Graph does not use `regionView/regionViewState.js`; its trigger wiring in `regionGraphUI.js` is unchanged. Equivalence instrument: `scripts/dev/region-graph-class-snapshot.mjs`.
 
 ## Responsibilities
 
@@ -65,7 +68,8 @@ This module does not register public functions in `centralRegistry`. It is prima
 - **`discoveryStateSingleton`:** Queries discovery state for regions, locations, and exits
 - **`gameState`:** Gets current player location and path data
 - **`Cytoscape.js`:** External graph visualization library (dynamically loaded)
-- **`ruleEngine`:** Evaluates location and exit access rules
+- **`ruleEngine`:** Evaluates location and exit access rules (through `regionView/regionViewModel.js`)
+- **`regionView`:** The shared view model and actions (see Key Files)
 - **`commonUI`:** Shared UI utilities
 
 ## Features
