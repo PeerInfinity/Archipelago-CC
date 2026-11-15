@@ -1,0 +1,1027 @@
+{
+  "schema_version": 3,
+  "game_name": "Action Nodes",
+  "game_directory": "action_nodes",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> start",
+            "connected_region": "start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "start": {
+        "name": "start",
+        "exits": [
+          {
+            "name": "start -> do-chores",
+            "connected_region": "do-chores",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "start -> train",
+            "connected_region": "train",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "start -> read-the-notice",
+            "connected_region": "read-the-notice",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "start -> eat-bread",
+            "connected_region": "eat-bread",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "do-chores": {
+        "name": "do-chores",
+        "exits": [
+          {
+            "name": "do-chores -> buy-bread",
+            "connected_region": "buy-bread",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "do-chores -> bribe-the-guard",
+            "connected_region": "bribe-the-guard",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "train": {
+        "name": "train",
+        "exits": [
+          {
+            "name": "train -> move-the-boulder",
+            "connected_region": "move-the-boulder",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "read-the-notice": {
+        "name": "read-the-notice",
+        "exits": [],
+        "locations": []
+      },
+      "eat-bread": {
+        "name": "eat-bread",
+        "exits": [],
+        "locations": []
+      },
+      "buy-bread": {
+        "name": "buy-bread",
+        "exits": [],
+        "locations": []
+      },
+      "bribe-the-guard": {
+        "name": "bribe-the-guard",
+        "exits": [
+          {
+            "name": "bribe-the-guard -> guards-locker",
+            "connected_region": "guards-locker",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "guards-locker": {
+        "name": "guards-locker",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Guard's Locker",
+            "id": 40000000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pocket Money",
+              "player": 1,
+              "advancement": false,
+              "type": "useful"
+            }
+          }
+        ]
+      },
+      "move-the-boulder": {
+        "name": "move-the-boulder",
+        "exits": [
+          {
+            "name": "move-the-boulder -> leave-the-village",
+            "connected_region": "leave-the-village",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Move the Boulder",
+            "id": 40000002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Strength Boost",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "leave-the-village": {
+        "name": "leave-the-village",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Leave the Village",
+            "id": 40000001,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Strength Boost"
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Strength Boost": {
+        "name": "Strength Boost",
+        "id": 40000001,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Pocket Money": {
+        "name": "Pocket Money",
+        "id": 40000000,
+        "groups": [],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 40000002,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": []
+  },
+  "itempool_counts": {
+    "1": {
+      "Strength Boost": 1,
+      "Pocket Money": 1,
+      "Victory": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Action Nodes",
+      "world_class_name": "ActionNodesWorld",
+      "options": {},
+      "world_directory": "action_nodes"
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {}
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "start": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "start",
+          "name": "Start",
+          "kind": "start",
+          "time": 0,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [],
+          "exits": [
+            {
+              "exit_id": "do-chores",
+              "exitName": "start -> do-chores",
+              "targetRegion": "do-chores"
+            },
+            {
+              "exit_id": "train",
+              "exitName": "start -> train",
+              "targetRegion": "train"
+            },
+            {
+              "exit_id": "read-the-notice",
+              "exitName": "start -> read-the-notice",
+              "targetRegion": "read-the-notice"
+            },
+            {
+              "exit_id": "eat-bread",
+              "exitName": "start -> eat-bread",
+              "targetRegion": "eat-bread"
+            }
+          ]
+        }
+      },
+      "do-chores": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "do-chores",
+          "name": "Do Chores",
+          "kind": "action",
+          "time": 5,
+          "limit": 2,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {
+              "gold": {
+                "name": "Gold",
+                "amount": 3
+              }
+            },
+            "mana": 0
+          },
+          "after": [
+            [
+              "start"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "buy-bread",
+              "exitName": "do-chores -> buy-bread",
+              "targetRegion": "buy-bread"
+            },
+            {
+              "exit_id": "bribe-the-guard",
+              "exitName": "do-chores -> bribe-the-guard",
+              "targetRegion": "bribe-the-guard"
+            }
+          ]
+        }
+      },
+      "train": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "train",
+          "name": "Train",
+          "kind": "action",
+          "time": 20,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {
+              "strength": {
+                "name": "Strength",
+                "amount": 1
+              }
+            },
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "start"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "move-the-boulder",
+              "exitName": "train -> move-the-boulder",
+              "targetRegion": "move-the-boulder"
+            }
+          ]
+        }
+      },
+      "read-the-notice": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "read-the-notice",
+          "name": "Read the Notice",
+          "kind": "action",
+          "time": 10,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {
+              "knowledge": {
+                "name": "Knowledge",
+                "amount": 1
+              }
+            },
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "start"
+            ]
+          ],
+          "exits": []
+        }
+      },
+      "eat-bread": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "eat-bread",
+          "name": "Eat Bread",
+          "kind": "use",
+          "time": 0,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {
+              "bread": {
+                "name": "Bread",
+                "amount": 1
+              }
+            }
+          },
+          "results": {
+            "stats": {},
+            "resources": {
+              "bread": {
+                "name": "Bread",
+                "amount": -1
+              }
+            },
+            "mana": 30
+          },
+          "after": [
+            [
+              "start"
+            ]
+          ],
+          "exits": []
+        }
+      },
+      "buy-bread": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "buy-bread",
+          "name": "Buy Bread",
+          "kind": "action",
+          "time": 5,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {
+              "gold": {
+                "name": "Gold",
+                "amount": 5
+              }
+            }
+          },
+          "results": {
+            "stats": {},
+            "resources": {
+              "gold": {
+                "name": "Gold",
+                "amount": -5
+              },
+              "bread": {
+                "name": "Bread",
+                "amount": 1
+              }
+            },
+            "mana": 0
+          },
+          "after": [
+            [
+              "do-chores"
+            ]
+          ],
+          "exits": []
+        }
+      },
+      "bribe-the-guard": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "bribe-the-guard",
+          "name": "Bribe the Guard",
+          "kind": "action",
+          "time": 5,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {
+              "gold": {
+                "name": "Gold",
+                "amount": 5
+              }
+            }
+          },
+          "results": {
+            "stats": {},
+            "resources": {
+              "gold": {
+                "name": "Gold",
+                "amount": -5
+              }
+            },
+            "mana": 0
+          },
+          "after": [
+            [
+              "do-chores"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "guards-locker",
+              "exitName": "bribe-the-guard -> guards-locker",
+              "targetRegion": "guards-locker"
+            }
+          ]
+        }
+      },
+      "guards-locker": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "guards-locker",
+          "name": "Guard's Locker",
+          "kind": "check",
+          "time": 30,
+          "limit": 1,
+          "requires": {
+            "stats": {},
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "bribe-the-guard"
+            ]
+          ],
+          "exits": [],
+          "location": "Guard's Locker"
+        }
+      },
+      "move-the-boulder": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "move-the-boulder",
+          "name": "Move the Boulder",
+          "kind": "check",
+          "time": 40,
+          "limit": 1,
+          "requires": {
+            "stats": {
+              "strength": {
+                "name": "Strength",
+                "amount": 1
+              }
+            },
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "train"
+            ]
+          ],
+          "exits": [
+            {
+              "exit_id": "leave-the-village",
+              "exitName": "move-the-boulder -> leave-the-village",
+              "targetRegion": "leave-the-village"
+            }
+          ],
+          "location": "Move the Boulder"
+        }
+      },
+      "leave-the-village": {
+        "substrate": "action_nodes",
+        "render_hint": "action_nodes",
+        "playable_payload": {
+          "node_id": "leave-the-village",
+          "name": "Leave the Village",
+          "kind": "goal",
+          "time": 40,
+          "limit": 1,
+          "requires": {
+            "stats": {
+              "strength": {
+                "name": "Strength",
+                "amount": 2
+              },
+              "knowledge": {
+                "name": "Knowledge",
+                "amount": 1
+              }
+            },
+            "resources": {}
+          },
+          "results": {
+            "stats": {},
+            "resources": {},
+            "mana": 0
+          },
+          "after": [
+            [
+              "move-the-boulder"
+            ]
+          ],
+          "exits": [],
+          "location": "Leave the Village"
+        }
+      }
+    }
+  },
+  "action_nodes": {
+    "1": {
+      "schema_version": 1,
+      "graph_id": "example-village",
+      "name": "The Village",
+      "loop": {
+        "mana": 100
+      },
+      "stats": {
+        "strength": {
+          "name": "Strength"
+        },
+        "knowledge": {
+          "name": "Knowledge"
+        }
+      },
+      "resources": {
+        "gold": {
+          "name": "Gold"
+        },
+        "bread": {
+          "name": "Bread"
+        }
+      },
+      "boosts": {
+        "Strength Boost": {
+          "boon_id": "strength-boost",
+          "stats": {
+            "strength": 1
+          },
+          "resources": {},
+          "mana": 0
+        },
+        "Pocket Money": {
+          "boon_id": "pocket-money",
+          "stats": {},
+          "resources": {
+            "gold": 5
+          },
+          "mana": 0
+        }
+      },
+      "mana_per_item_default": 10,
+      "start": "start",
+      "goal": "leave-the-village",
+      "action": "act",
+      "settings": {
+        "xpGainScale": 1,
+        "xpEffect": "cost"
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "Guard's Locker",
+            "Move the Boulder"
+          ],
+          "new_accessible_regions": [
+            "bribe-the-guard",
+            "buy-bread",
+            "do-chores",
+            "eat-bread",
+            "guards-locker",
+            "leave-the-village",
+            "Menu",
+            "move-the-boulder",
+            "read-the-notice",
+            "start",
+            "train"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Strength Boost": 1
+            },
+            "resolved_items": {
+              "Strength Boost": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Leave the Village"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Move the Boulder"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Leave the Village"
+          ]
+        }
+      }
+    }
+  ],
+  "procgen_metadata": {
+    "1": {
+      "driver": "action-graph-compiler",
+      "graph_id": "example-village",
+      "graph_path": "frontend/modules/actionNodes/graphs/example-village.json",
+      "region_count": 11,
+      "action_logic": {
+        "search": {
+          "item_combinations": 4,
+          "max_states_per_combination": 64,
+          "state_budget": 200000
+        },
+        "targets": {
+          "Guard's Locker": {
+            "node": "guards-locker",
+            "kind": "check",
+            "rule": "True",
+            "witnesses": [
+              {
+                "items": {},
+                "plan": "Do Chores ×2 → Bribe the Guard → Guard's Locker",
+                "steps": [
+                  "do-chores",
+                  "do-chores",
+                  "bribe-the-guard",
+                  "guards-locker"
+                ],
+                "mana_left": 55
+              }
+            ]
+          },
+          "Move the Boulder": {
+            "node": "move-the-boulder",
+            "kind": "check",
+            "rule": "True",
+            "witnesses": [
+              {
+                "items": {},
+                "plan": "Train → Move the Boulder",
+                "steps": [
+                  "train",
+                  "move-the-boulder"
+                ],
+                "mana_left": 40
+              }
+            ]
+          },
+          "Leave the Village": {
+            "node": "leave-the-village",
+            "kind": "goal",
+            "rule": "Has(Strength Boost)",
+            "witnesses": [
+              {
+                "items": {
+                  "Strength Boost": 1
+                },
+                "plan": "Do Chores ×2 → Train → Read the Notice → Buy Bread → Eat Bread → Move the Boulder → Leave the Village",
+                "steps": [
+                  "do-chores",
+                  "do-chores",
+                  "train",
+                  "read-the-notice",
+                  "buy-bread",
+                  "eat-bread",
+                  "move-the-boulder",
+                  "leave-the-village"
+                ],
+                "mana_left": 5
+              }
+            ]
+          }
+        },
+        "exits": {
+          "start -> do-chores": "True",
+          "start -> train": "True",
+          "start -> read-the-notice": "True",
+          "start -> eat-bread": "True",
+          "do-chores -> buy-bread": "True",
+          "do-chores -> bribe-the-guard": "True",
+          "bribe-the-guard -> guards-locker": "True",
+          "train -> move-the-boulder": "True",
+          "move-the-boulder -> leave-the-village": "True"
+        },
+        "placements": {
+          "Move the Boulder": "Strength Boost",
+          "Guard's Locker": "Pocket Money"
+        },
+        "progression_items": [
+          "Strength Boost"
+        ],
+        "a6": {
+          "every_check_earnable": true,
+          "sphere_log_reaches_goal": true,
+          "sphere_log_advancement_picks": [
+            "Move the Boulder",
+            "Leave the Village"
+          ],
+          "spheres": [
+            {
+              "sphere": 0,
+              "open_at_once": 2,
+              "checks": [
+                "Guard's Locker",
+                "Move the Boulder"
+              ]
+            },
+            {
+              "sphere": 1,
+              "open_at_once": 1,
+              "checks": [
+                "Leave the Village"
+              ]
+            }
+          ],
+          "statement": "A check is in logic exactly when a one-loop plan earns it with the items held; the fill places an unchecked in-logic check whenever the game is not waiting on another world, so every loop not waiting can earn one."
+        }
+      }
+    }
+  },
+  "provenance": {
+    "1": {
+      "generator": "frontend/modules/actionNodes/actionGraphCompiler.js",
+      "graph_id": "example-village",
+      "graph_provenance": {
+        "sources": {
+          "actionnodes-design": {
+            "type": "model",
+            "model": "claude-fable-5-2",
+            "date": "2026-11-15",
+            "session": "actionnodes-design",
+            "approved": {
+              "by": "Robert",
+              "date": "2026-11-15",
+              "ruling": "A14: accepted for initial testing, details adjustable"
+            }
+          },
+          "do-chores-change": {
+            "type": "model",
+            "model": "claude-fable-5-2",
+            "date": "2026-11-15",
+            "session": "actionnodes-design",
+            "note": "Do Chores made repeatable (5 mana, Gold +3, limit 2); the floated 'three times, +5 each' makes the goal impossible"
+          },
+          "an1-boost-mana": {
+            "type": "model",
+            "model": "claude-opus-5-5",
+            "date": "2026-11-15",
+            "session": "actionnodes-an1",
+            "note": "The boon's name and stat/gold amounts are actionnodes-design's; AN-1 set `gives.mana: 0` explicitly. Under the ruled default (+10 starting mana per item) the goal no longer needs the bread, which is the accepted example's puzzle"
+          }
+        },
+        "default": "actionnodes-design"
+      }
+    }
+  },
+  "loop_costs": {
+    "1": {
+      "version": "1.0",
+      "generatedFrom": "action-graph:example-village",
+      "regions": {
+        "Menu": {
+          "moveCost": 0,
+          "xpEffect": "cost"
+        },
+        "start": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 0
+          }
+        },
+        "do-chores": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 5
+          }
+        },
+        "train": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 20
+          }
+        },
+        "read-the-notice": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 10
+          }
+        },
+        "eat-bread": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 0
+          }
+        },
+        "buy-bread": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 5
+          }
+        },
+        "bribe-the-guard": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 5
+          }
+        },
+        "guards-locker": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 30
+          }
+        },
+        "move-the-boulder": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 40
+          }
+        },
+        "leave-the-village": {
+          "moveCost": 0,
+          "xpEffect": "cost",
+          "xpGainScale": 1,
+          "actions": {
+            "act": 40
+          }
+        }
+      },
+      "locations": {},
+      "defaultRegionCost": 0,
+      "defaultLocationCost": 10,
+      "defaultRegionXpEffect": "cost"
+    }
+  }
+}

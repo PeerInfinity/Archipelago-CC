@@ -36,4 +36,5 @@ export const SUBSTRATE_LIBRARIES = Object.freeze([
     'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
     'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
     'noiz2saSubstrate/noiz2saSubstrateLibrary.js',
+    'actionNodes/actionNodesLibrary.js',
 ]);
