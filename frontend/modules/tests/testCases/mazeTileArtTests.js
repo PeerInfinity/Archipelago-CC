@@ -38,6 +38,7 @@ import { MAZE_ART_KEYS } from '../../mazeRoom/mazeTileArt.js';
 import { browserRasteriser } from '../../artLibrary/artLibrary.js';
 import { browserPackIo } from '../../procgenPipeline/worldContent.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { withFixtureProvenance } from '../../contentPacks/testing/fixtureProvenance.js';
 
 const PRESET = './presets/procgen_maze/AP_1/AP_1_rules.json';
 const FIX_BASE = 'https://fixture.invalid/packs/';
@@ -80,7 +81,9 @@ const fixtureIo = () => ({
     base: FIX_BASE,
     // A path the fixture does not hold is a REAL pack the world's stack names ahead of the fixture (the maze's
     // own `defaultContentPack`), read from the served packs directory as play reads it.
-    readJson: async (url) => {
+    // ⛓ content packs PL-1 — the loader holds every layer to a provenance block; the fixture's layers name one
+    //   authored source (`withFixtureProvenance`), the served packs carry their own.
+    readJson: withFixtureProvenance(async (url) => {
         const rest = url.slice(FIX_BASE.length);
         const hit = FIXTURE[rest];
         if (!hit) {
@@ -88,7 +91,7 @@ const fixtureIo = () => ({
             return real.readJson(new URL(rest, real.base).href);
         }
         return JSON.parse(JSON.stringify(hit));
-    },
+    }),
     decode: async (url) => {
         const rgb = SHEET_COLOUR[url.slice(FIX_BASE.length)];
         if (!rgb) throw new Error(`no fixture sheet at ${url}`);
