@@ -125,7 +125,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   clean flame stance (rules-6's rule), so four two-way internal rows split into one-way pairs (L0 r6c5<->r7c6 and
         //   r11c19<->r7c6, L100 r2c3<->r4c10, L16 r3c7<->r6c8: one side keeps the swing). No door or sub-region moves.
         // ⛓ merged (rules-no-hit-directional + tile-fire-breaks-rocks): 308 -> 316 internal exits (no-hit's 4 + this slice's 4); atlas 88e3788c.
-        expect(c.atlasId).toBe('seedling-88e3788c');
+        // ⛓ rules-nohit-wand-crosscheck: the Wand joins L22 south-to-north's arms (game witness l22-25-21-wand); one internal
+        //   row's rule widens, no exit or door moves; atlas 88e3788c -> df2a42ee.
+        expect(c.atlasId).toBe('seedling-df2a42ee');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
