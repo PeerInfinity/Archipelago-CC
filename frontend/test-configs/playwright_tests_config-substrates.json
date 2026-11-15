@@ -1829,6 +1829,12 @@
             "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-apworld-editor: the generated-host world opened in the APWorld Editor; a generated region's Edit ▸ opens the Seedling lab; CLOSE returns one undoable op (↶ Undo enabled). Manual batch feature-checks."
         },
         {
+            "id": "feature-check-seedling-load-vanilla-after-handover",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "LOAD VANILLA AFTER A HANDOVER (slice seedling-load-vanilla-fix, ⚖ Robert 2026-11-15: 'Fix the LOAD VANILLA refusal'). The walk row of feature check seedling-load-vanilla-after-handover, listed right after region-edit-apworld-editor: it does its own handover (the generated-host world in the APWorld Editor; a generated region's Edit ▸; one harmless paint; CLOSE), then presses the Seedling lab's LOAD the VANILLA 116 and needs a set loaded (rooms count read off the page) with no refusal. Manual batch feature-checks."
+        },
+        {
             "id": "feature-check-seedling-set-map",
             "enabled": true,
             "category": "Feature checks",
