@@ -59,6 +59,15 @@ The lab names no preset: everything is read off the two documents (`mazeConverte
 
 The Seedling editor builds these links for the room it holds (*The maze lab link* in the Seedling editor page); nothing in the lab changes for them.
 
+**Back to the Seedling editor.** A room opened this way that was converted from a Seedling level shows, under the identity line, **open level N in the Seedling editor ↗**: a new-tab link to `seedlingDemo/watch.html?source=edit&level=N`, the Seedling editor's own launch URL. `mazeRoom/mazeSeedlingLink.js` decides it from the room's own documents and names no preset: the room's `playable_payload.level` is an integer, and its preset's `region_atlas[player].map_document` is the map the Seedling editor reads. The rules are the ones the link already fetched, so the link costs no request.
+
+- A room-less region opens its shared world's room, so the link names that room's level (the whole level), and the note says so.
+- A level split across several maze rooms (level 94 has 2 in `seedling_playthrough_maze`; level 0 has 6 in `seedling_atlas_maze`): every one links to the same level, and the note says how many share it.
+- An edited room still links, to the ORIGINAL level; the note says the maze edits are not carried over.
+- A pasted sidecar (LOAD) carries its level number but not its preset's rules, so it shows the reason instead of a link. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing.
+
+All 126 converted rooms link (116 in `seedling_playthrough_maze`, 10 in `seedling_atlas_maze`), and every level they name is a level of the Seedling map (`mazeSeedlingLink.test.js`; `check-maze-lab` CLAIM 26).
+
 ### The link wires
 
 In the `edit` mode (and on a room opened in the set mode) the editor overlay draws the room's token wires: an arrow from each presser to each responder of the same token. `mazeRoom/mazeLinks.js` reads them from the room, using the token fields and nothing else:
