@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { ContentPackError, loadPackStack, parseRegistry } from '../contentPacks/contentPacks.js';
 import { PACK_CONCEPT_FIELDS, PACK_CONCEPT_KINDS, createPackConcepts, parseConceptsManifest } from './packConcepts.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const PACKS_BASE = pathToFileURL(`${join(dirname(fileURLToPath(import.meta.url)), '../../packs')}/`).href;
 const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'));
@@ -28,7 +29,7 @@ const META = {
             art: 'meta:character/narrator',
             text: { greeting: 'meta:narrator/greeting' },
             presents: 'guardian',
-            // ⛓ PL-1 — the entry's provenance source (`src`; the loader checks it from part 3 on).
+            // ⛓ PL-1 — the entry's provenance source (`withFixtureProvenance` lists `fixture`).
             src: 'fixture',
         },
         'meta:place/lobby': { kind: 'place', name: 'The Lobby' },
@@ -54,10 +55,10 @@ const memReader = (files) => async (url) => {
 
 const stackOf = (manifests) => loadPackStack(Object.keys(manifests), {
     base: MEM,
-    readJson: memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
+    readJson: withFixtureProvenance(memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
         [`/${id}/pack.json`, packJson(id)],
         [`/${id}/concepts/manifest.json`, m],
-    ]))),
+    ])))),
 });
 
 describe('the manifest, read through loadPackStack', () => {

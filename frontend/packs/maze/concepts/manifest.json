@@ -1,6 +1,17 @@
 {
   "schema_version": 1,
   "_comment": "The maze's DEFAULT content pack (content sets R2): one pack concept per mechanic concept the maze realises. Each presents that concept and carries the `look` (colour + symbol) the maze writes into a world's payload at generation. A gate (the `gate` role) also takes its `name`; an item (the `item` role) keeps its AP item name, which is logic, so only its look is written. What a gate or a pickup DOES is the substrate's code (mazeConcepts.js).",
+  "provenance": {
+    "sources": {
+      "claude": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-11",
+        "note": "the names, colours and symbols were first written as code (frontend/modules/mazeRoom/mazeConcepts.js, 54032fb273, 2026-09-30, Co-Authored-By: Claude Opus 5.5) and moved here byte for byte by content sets R2 (3faae00e00, Co-Authored-By: Claude Opus 5.5), which wrote the descriptions. No approval of these words is recorded"
+      }
+    },
+    "default": "claude"
+  },
   "concepts": {
     "maze:object/sword": {
       "kind": "object",

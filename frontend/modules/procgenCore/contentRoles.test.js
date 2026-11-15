@@ -21,6 +21,7 @@ import {
 } from './contentRoles.js';
 import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { SUBSTRATE_LIBRARIES } from './substrateLibraries.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -67,10 +68,10 @@ const memReader = (files) => async (url) => {
 };
 const stackOf = (manifests) => loadPackStack(Object.keys(manifests), {
     base: MEM,
-    readJson: memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
+    readJson: withFixtureProvenance(memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
         [`/${id}/pack.json`, packJson(id)],
         [`/${id}/concepts/manifest.json`, m],
-    ]))),
+    ])))),
 });
 // The registered entries: every library, imported once (registration is the import's side effect).
 for (const lib of SUBSTRATE_LIBRARIES) {

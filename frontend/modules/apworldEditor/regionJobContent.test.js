@@ -28,6 +28,7 @@ import {
     INITIALISE_JOB, attachJobContent, runRegenerateJob, runRegenerateOnPage,
 } from './regionGenerationRun.js';
 import { initialiseKnobs } from './slotInitialise.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -72,7 +73,7 @@ function memIo() {
     return {
         reads,
         base: MEM,
-        readJson: async (url) => {
+        readJson: withFixtureProvenance(async (url) => {
             const hit = Object.keys(FILES).find((suffix) => url.endsWith(`/${suffix}`));
             if (!hit) {
                 const rel = url.slice(MEM.length);
@@ -82,7 +83,7 @@ function memIo() {
             }
             reads.push(url);
             return structuredClone(FILES[hit]);
-        },
+        }),
     };
 }
 /** The stack a TARGET region builds with when its document names `content` (its default pack first since R2). */

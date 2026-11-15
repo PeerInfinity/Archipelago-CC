@@ -32,6 +32,8 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { seedlingPinnedCommit, sfxProvenance } from './seedlingPackProvenance.js';
+
 export const SOUND = 'assets/sound';
 export const MUSIC_AS = 'src/Music.as';
 export const SFX_KEY_PREFIX = 'seedling:sfx/';
@@ -125,7 +127,7 @@ const clipIdOf = (embedName) => embedName.replace(/^snd/, '');
  * Every file the layer holds, as a `Map<path relative to the pack, Buffer|string>`,
  * plus the manifest object and the byte cost. Pure apart from the reads.
  */
-export function buildSfxLayer(source) {
+export function buildSfxLayer(source, { commit = seedlingPinnedCommit() } = {}) {
     const musicPath = join(source, MUSIC_AS);
     if (!existsSync(musicPath)) throw new Error(`${MUSIC_AS} is not in ${source}`);
     const { embeds, arrays, sets } = parseMusicAs(readFileSync(musicPath, 'utf8'));
@@ -169,6 +171,7 @@ export function buildSfxLayer(source) {
         schema_version: 1,
         generated_by: 'scripts/procgen/extract-seedling-sfx-pack.mjs — do not edit; regenerate and --check',
         source: `vendor/seedling/${MUSIC_AS} (the \`sounds\` table) + vendor/seedling/${SOUND}, copied byte for byte`,
+        provenance: sfxProvenance(commit),
         bytes,
         clips,
         sounds,

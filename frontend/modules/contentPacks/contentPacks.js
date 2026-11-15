@@ -27,8 +27,14 @@
  *
  * Pure and DOM-free: loading takes a `readJson(url)` the caller supplies
  * (`fetch` in a browser, `fs` in node), so node tests drive it with no server.
+ *
+ * ⛔ PROVENANCE (⛓ CONTENT SETS PL-1, Z.7): every layer `loadPackStack` reads is
+ * held to its `provenance` block (`provenance.js` `checkLayerProvenance`), so a
+ * layer whose entries do not all resolve to a listed source is refused by pack,
+ * layer and key, for every consumer at once.
  */
 import { ContentPackError } from './contentPackError.js';
+import { checkLayerProvenance } from './provenance.js';
 
 /**
  * The layers a pack may provide today. A new consumer adds its name here.
@@ -149,6 +155,8 @@ export function packsBaseUrl(moduleUrl = import.meta.url, pageHref = globalThis.
  * `only` (optional) names the layers to read: a graphics stack need not fetch
  * the sound manifest. A pack is still validated whole.
  *
+ * Every layer read is held to its provenance block (`checkLayerProvenance`).
+ *
  * @param {string[]} ids
  * @param {{ base: string, readJson: (url: string) => Promise<any>, only?: string[] }} io
  * @returns {Promise<Array<{ id, pack, base, layers: { [name]: any } }>>}
@@ -174,6 +182,7 @@ export async function loadPackStack(ids, { base, readJson, only = null }) {
             } catch (err) {
                 fail(`"${id}"`, `layer "${name}" (${path}) could not be read (${err.message})`);
             }
+            checkLayerProvenance(id, name, layers[name]);
         }
         out.push(Object.freeze({ id, pack, base: packBase, layers: Object.freeze(layers) }));
     }

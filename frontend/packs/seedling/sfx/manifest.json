@@ -2,6 +2,24 @@
   "schema_version": 1,
   "generated_by": "scripts/procgen/extract-seedling-sfx-pack.mjs — do not edit; regenerate and --check",
   "source": "vendor/seedling/src/Music.as (the `sounds` table) + vendor/seedling/assets/sound, copied byte for byte",
+  "provenance": {
+    "sources": {
+      "seedling": {
+        "type": "game",
+        "name": "Seedling",
+        "repo": "PeerInfinity/Seedling",
+        "commit": "ccdf189776471fa57be8c0568c6e881a2d5acc18",
+        "files": [
+          "src/Music.as",
+          "assets/sound"
+        ],
+        "credit": "sound effects by Rekcahdam (vendor/seedling/README)",
+        "licence": "Unlicense",
+        "extracted_by": "scripts/procgen/extract-seedling-sfx-pack.mjs --check"
+      }
+    },
+    "default": "seedling"
+  },
   "bytes": 457540,
   "clips": {
     "Sword1": {
