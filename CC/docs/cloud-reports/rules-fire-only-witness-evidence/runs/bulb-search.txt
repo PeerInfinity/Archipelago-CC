@@ -1,0 +1,12 @@
+KILL {"A":[56,88],"a":0,"B":[44,140],"b":60,"goneAt":168,"end":{"t":171,"level":73,"x":44.08,"y":139.99,"hits":0,"chasers":["lavarunner@72,24(72.7,41.9)"]}}
+KILL {"A":[56,88],"a":0,"B":[44,140],"b":160,"goneAt":168,"end":{"t":271,"level":73,"x":44.08,"y":139.99,"hits":0,"chasers":["lavarunner@72,24(72.7,41.9)"]}}
+KILL {"A":[56,104],"a":0,"B":[44,140],"b":160,"goneAt":148,"end":{"t":245,"level":73,"x":44.03,"y":140.21,"hits":0,"chasers":["lavarunner@72,24(77.1,41.9)"]}}
+KILL {"A":[72,120],"a":0,"B":[44,140],"b":160,"goneAt":144,"end":{"t":243,"level":73,"x":43.21,"y":140.97,"hits":0,"chasers":["lavarunner@72,24(80.0,32.0)"]}}
+KILL {"A":[72,120],"a":0,"B":[36,132],"b":160,"goneAt":144,"end":{"t":237,"level":73,"x":36.85,"y":136.09,"hits":0,"chasers":["lavarunner@72,24(80.0,32.0)"]}}
+KILL {"A":[72,120],"a":0,"B":[40,136],"b":160,"goneAt":144,"end":{"t":240,"level":73,"x":38.33,"y":139.49,"hits":0,"chasers":["lavarunner@72,24(80.0,32.0)"]}}
+KILL {"A":[88,120],"a":0,"B":[40,136],"b":60,"goneAt":153,"end":{"t":167,"level":73,"x":38.85,"y":139.89,"hits":0,"chasers":["lavarunner@72,24(80.0,32.0)"]}}
+KILL {"A":[88,120],"a":0,"B":[40,136],"b":160,"goneAt":153,"end":{"t":267,"level":73,"x":38.85,"y":139.89,"hits":0,"chasers":["lavarunner@72,24(80.0,32.0)"]}}
+KILL {"A":[120,72],"a":0,"B":[36,132],"b":160,"goneAt":313,"end":{"t":399,"level":73,"x":40.84,"y":134.48,"hits":0,"chasers":["lavarunner@72,24(79.4,41.9)"]}}
+KILL {"A":[120,72],"a":0,"B":[40,136],"b":160,"goneAt":313,"end":{"t":402,"level":73,"x":39.19,"y":138.75,"hits":0,"chasers":["lavarunner@72,24(79.4,41.9)"]}}
+KILL {"A":[120,72],"a":40,"B":[40,136],"b":160,"goneAt":354,"end":{"t":444,"level":73,"x":40.32,"y":137.88,"hits":0,"chasers":["lavarunner@72,24(79.4,41.9)"]}}
+TRIED 2600 {"hit/bulbAlive":2220,"hit/bulbGone":51,"clean/bulbAlive":318,"clean/bulbGone":11}

@@ -1,0 +1,2 @@
+TRIED 1872 TALLY {"73/hit/lavarunner@72,24":1800,"72/0/-":40,"72/hit/lavarunner@136,88":4,"73/hit/lavarunner@136,88":28}
+LATEST-FIRST-HIT {"label":"P40,152 w1=0 S72,73 w2=0","level":72,"hits":0,"firstHit":null,"rocks":[],"by":[]}
