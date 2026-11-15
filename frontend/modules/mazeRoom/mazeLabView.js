@@ -91,10 +91,11 @@ import {
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
     framesForActions, generateStep, generateWithDirectives, labCatalogue,
     labPayload, labReadoutIdentity, labUrlFields,
-    loadPayload, openEditSession, planFrames, projectSession, readLabParams,
+    levelOfPayload, loadPayload, openEditSession, planFrames, projectSession, readLabParams,
     serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
 import { describePresetLink, openPresetRegion } from './mazeLabPreset.js';
+import { seedlingLinkFor, seedlingOriginOf } from './mazeSeedlingLink.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE SHARED TOOL, MOUNTED.** ⛔ The canvas tool,
  * the stroke-is-one-group law, the command table and the key map are
@@ -1120,6 +1121,40 @@ export function main() {
      * REPAINTED here: a room that arrives without a gesture (a link, a LOAD, a step) would otherwise keep the last
      * room's wires until the next click, the same trap `editorView.repaint` exists for.
      */
+    /**
+     * ⛓⛓ MAZE SEEDLING LINK — **WHERE THE ROOM ON SCREEN CAME FROM**, keyed by its BASE record. Edits fold from the
+     * base (the base object stays), so an edited room keeps its origin; a GENERATE, a LOAD or another link brings a
+     * new base and so no origin (or its own). ⛔ Nothing here writes the state, the payload or the bar.
+     */
+    const seedlingOrigins = new WeakMap();
+    const noteSeedlingOrigin = (origin) => {
+        if (origin && state?.baseRecord) seedlingOrigins.set(state.baseRecord, origin);
+    };
+    const seedlingLinkView = () => seedlingLinkFor({
+        origin: (state?.baseRecord && seedlingOrigins.get(state.baseRecord)) ?? null,
+        edits: (state?.edits ?? []).length,
+        presetLink: state?.presetLink ?? null,
+    });
+    /** The line under the identity: the link (new tab) and its notes, or the reason a converted room cannot link. */
+    const renderSeedlingLink = () => {
+        const line = $('labSeedlingLine');
+        if (!line) return null;
+        const v = seedlingLinkView();
+        line.hidden = !v.shown;
+        const a = $('labSeedlingOpen');
+        a.hidden = !v.ok;
+        if (v.ok) {
+            a.href = frontendUrl(v.url);
+            a.textContent = v.label;
+        } else {
+            a.removeAttribute('href');
+            a.textContent = '';
+        }
+        $('labSeedlingNote').textContent = !v.shown ? '' : (v.ok ? v.notes.join(' · ') : v.reason);
+        $('labSeedlingNote').className = v.shown && !v.ok ? 'note bad' : 'note';
+        return v;
+    };
+
     const renderLinkLine = () => {
         const line = $('labLinkLine');
         if (!line) return;
@@ -1882,19 +1917,26 @@ export function main() {
      * a GENERATE press or a LOAD — a state without it — drops it. ⛔ No preset name here: the documents say it all.
      */
     const bootPresetRoom = async ({ preset, region }) => {
+        /** ⛓ MAZE SEEDLING LINK — the documents this route fetched, kept so the rules need no second request. */
+        const fetched = new Map();
         const link = await openPresetRegion({
             preset,
             region,
             fetchJson: async (path) => {
                 const res = await fetch(frontendUrl(path));
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
+                const doc = await res.json();
+                fetched.set(path, doc);
+                return doc;
             },
         });
         const { sidecar: _sidecar, ...where } = link;
         adopt(Object.freeze({
             ...loadPayload(link.sidecar),
             presetLink: Object.freeze({ ...where, asked: Object.freeze({ preset, region }) }),
+        }));
+        noteSeedlingOrigin(seedlingOriginOf({
+            payload: link.sidecar.playable_payload, rules: fetched.get(link.path) ?? null, player: link.player,
         }));
         say(describePresetLink(link));
     };
@@ -1926,6 +1968,8 @@ export function main() {
         try {
             const payload = JSON.parse($('labText').value);
             adopt(loadPayload(payload));
+            /** ⛓ MAZE SEEDLING LINK — a pasted room brings no rules, so a level number in it cannot link (it says so). */
+            noteSeedlingOrigin(seedlingOriginOf({ payload: levelOfPayload(payload) }));
             /** ⛓ MAZE CONVERTED LINK — the box replaced the link's room, so the bar stops naming it. */
             const bar = new URLSearchParams(window.location.search);
             if (bar.has('preset') || bar.has('region')) {
@@ -3327,6 +3371,7 @@ export function main() {
          */
         const witness = witnessOf(state, walkReport);
         $('identity').textContent = describeState(state, lastSolve, witness);
+        const seedlingLink = renderSeedlingLink();
         if (witness.seam) say(witness.seam, true);
         $('status').textContent = message || '—';
         $('status').className = messageBad ? 'bad' : 'ok';
@@ -3368,6 +3413,8 @@ export function main() {
             /** ⛓ MAZE CONVERTED LINK — where a link-opened room came from (`null` for any other level). */
             presetLink: state.presetLink
                 ? (({ asked: _a, ...where }) => where)(state.presetLink) : null,
+            /** ⛓ MAZE SEEDLING LINK — what the line under the identity shows (`{shown: false}` for a plain room). */
+            seedlingLink,
             identity: $('identity').textContent,
             /**
              * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, PUBLISHED AS IT STANDS. ⚠ It was
