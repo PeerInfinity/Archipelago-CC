@@ -678,18 +678,6 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Live demo"
     },
     {
-        "path": "docs/json/games/journey-to-ascension/README.md",
-        "title": "Journey to Ascension",
-        "section": "games/journey-to-ascension",
-        "summary": "Archipelago integration for Journey to Ascension by Meneth, an incremental/idle game (used with permission; see NOTICE.md). Progress through 27 zones by completing tasks, leveling skills, and…"
-    },
-    {
-        "path": "docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md",
-        "title": "JtA Cost Adjustment & Auto Queue Algorithms",
-        "section": "games/journey-to-ascension",
-        "summary": "This document describes two algorithms that simulate JtA gameplay for different purposes:"
-    },
-    {
         "path": "docs/json/games/loops/README.md",
         "title": "Loops",
         "section": "games/loops",
@@ -1333,15 +1321,6 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/games/depgraph/README.md"
                 ],
                 "single": true
-            },
-            {
-                "dir": "games/journey-to-ascension",
-                "label": "Journey to Ascension",
-                "docs": [
-                    "docs/json/games/journey-to-ascension/README.md",
-                    "docs/json/games/journey-to-ascension/cost-adjustment-algorithm.md"
-                ],
-                "single": false
             },
             {
                 "dir": "games/loops",

@@ -116,9 +116,6 @@ These panels are deliberately left out of the tutorials:
 
 | Panel | Why |
 |---|---|
-| JtA Action Queue | Part of the non-procgen Journey to Ascension, which is deprecated. |
-| JtA Game Data | Part of the non-procgen Journey to Ascension, which is deprecated. |
-| JtA Cost Debugger | Deprecated. |
 | Rule Converter | Deprecated. |
 | Tile Map Analyzer | Currently a failed experiment. |
 | Meta Game | Deprecated (an early draft of the procgen idea). |

@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 36373,
         "pages": 4,
-        "words": 548892
+        "words": 548881
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -201,7 +201,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 4882
+            "words": 4871
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
