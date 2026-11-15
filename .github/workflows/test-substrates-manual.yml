@@ -113,7 +113,7 @@ jobs:
     # in-app on the runner and the setup steps ~83 s — so a run at the full
     # budget still ends near 12 minutes, and 20 leaves the margin for a slow
     # cache-miss install.
-    timeout-minutes: 20
+    timeout-minutes: 120  # MEASUREMENT-ONLY (seedling-js-fallback-honesty): the JS whole-game walk
     strategy:
       fail-fast: false
       matrix:
@@ -165,6 +165,12 @@ jobs:
         env:
           BATCH: ${{ matrix.batch }}
           BUNDLED: ${{ inputs.bundled && '--bundled' || '' }}
+          # MEASUREMENT-ONLY (seedling-js-fallback-honesty phase 1): the JS-runtime whole-game walk, long limits.
+          TEST_MEASURE_FLASH_RUNTIME: js
+          TEST_AUTO_START_TIMEOUT_MS: '6000000'
+          TEST_TIMEOUT: '6300000'
+          TEST_MEASURE_STEP_TIMEOUT_MS: '6000000'
+          TEST_MEASURE_BOT_STALL_MS: '300000'
         run: |
           npm test -- --mode=test-substrates --batch="$BATCH" $BUNDLED
 

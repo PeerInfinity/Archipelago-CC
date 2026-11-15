@@ -282,6 +282,17 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     /** ⛓ S5 — the cell this walk steps off a latched goal teleporter to (per run), and how many times it did. */
     let stepOff = null;
     let stepOffs = 0;
+    // MEASUREMENT-ONLY (seedling-js-fallback-honesty phase 1): one record per goal that took the "walking instead" fallback.
+    let fbm = null;
+    let fbmPrevFallback = false;
+    let fbmLastHits = null;
+    const fbmClose = (outcome, why) => {
+        if (!fbm) return;
+        fbm.outcome = outcome;
+        fbm.outcomeWhy = why ? String(why).slice(0, 400) : null;
+        try { console.log(`[FALLBACK-MEASURE] ${JSON.stringify(fbm)}`); } catch { /* measurement only */ }
+        fbm = null;
+    };
 
     const emit = (type, message, extra = null) => {
         try { onEvent({ type, state, goal: goal ? { ...goal } : null, message, ...(extra ?? {}) }); } catch { /* a listener's bug is not the walk's */ }
@@ -292,6 +303,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         state = next;
         reason = why ?? null;
         waypoints = null;
+        if (next === WALK_STATES.DONE || next === WALK_STATES.FAILED) fbmClose(next, why);
         emit(next, why, extra);
     };
 
@@ -375,6 +387,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         get solverHolding() { return solverHolding; },
         /** Replace the goal. `null` clears it. */
         setGoal(next) {
+            fbmClose('replaced', null);
+            fbmPrevFallback = false;
             goal = next ? { ...next } : null;
             waypoints = null;
             sincePlan = Infinity;
@@ -405,6 +419,16 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         heldFor(run) {
             solverDriving = false;
             solverHolding = false;
+            {
+                const h = run?.damage?.hits ?? null;
+                if (fbm && fbmPrevFallback && h !== null && fbmLastHits !== null && h > fbmLastHits) {
+                    fbm.hits += h - fbmLastHits;
+                    fbm.hitLevels.push(run.level);
+                    try { console.log(`[FALLBACK-MEASURE hit] L${goal?.level} ${goal?.name ?? ''} hits ${fbmLastHits}->${h} at (${run.state?.x}, ${run.state?.y})`); } catch { /* */ }
+                }
+                fbmLastHits = h;
+                fbmPrevFallback = false;
+            }
             if (!goal || !run) return null;
             if (state === WALK_STATES.DONE || state === WALK_STATES.FAILED) return null;
             if (!playing && stepBudget === 0) return null;
@@ -471,6 +495,16 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     return null;
                 }
                 if (s?.declined) {
+                    {
+                        const ob = s.obstacle ?? solver?.stats?.lastDeclineObstacle ?? null;
+                        if (!fbm) {
+                            fbm = { level: goal.level, kind: goal.kind, name: goal.name ?? null, tag: goal.tag ?? null,
+                                declines: [], ticks: 0, hits: 0, hitLevels: [], deaths: 0, hits0: run?.damage?.hits ?? null };
+                        }
+                        fbm.declines.push({ first: String(s.declined).slice(0, 600), obstacle: ob ? { kind: ob.kind ?? null, id: ob.id ?? null } : null,
+                            textDanger: /passes through danger|EXHAUSTED|CORRIDOR/i.test(String(s.declined)), retries });
+                        try { console.log(`[FALLBACK-MEASURE open] L${goal.level} ${goal.kind} ${goal.name ?? ''} obstacle=${JSON.stringify(ob)} — ${String(s.declined).slice(0, 300)}`); } catch { /* */ }
+                    }
                     declined = s.declined;
                     sinceDecline = 0;
                     retryCause = null;
@@ -492,6 +526,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             driven += 1;
             walked += 1;
             if (declined !== null) sinceDecline += 1;
+            if (fbm && declined !== null) { fbm.ticks += 1; fbmPrevFallback = true; }
             if (waypoints === null || sincePlan >= replanEvery) {
                 try {
                     waypoints = planWaypoints(run.world, run.state, r.target, r.allowTeleporter,
@@ -522,6 +557,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 return;
             }
             if (crossing) { waypoints = null; if (declined !== null) retryCause = 'a crossing'; return; }
+            if (death && fbm && declined !== null) { fbm.deaths += 1; fbmLastHits = null; }
             if (death) { waypoints = null; sincePlan = Infinity; if (declined !== null) retryCause = 'a death'; }
         },
         /** Exposed for the page's status line. */
