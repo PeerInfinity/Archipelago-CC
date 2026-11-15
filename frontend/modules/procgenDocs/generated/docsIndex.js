@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 36441,
         "pages": 4,
-        "words": 550319
+        "words": 550322
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -371,7 +371,7 @@ export const DOCS_INDEX = frz({
                 "concepts.md"
             ],
             "path": "docs/json/developer/procgen/seedling-solver-surface.md",
-            "words": 4613
+            "words": 4616
         },
         {
             "description": "What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts.",

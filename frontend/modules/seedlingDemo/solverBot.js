@@ -24849,7 +24849,7 @@ export function resetBodyFamilyKillCounts() {
 
 /** A run's live, resting-or-flying wallflyer `id` (not dying, not removed), or null. */
 function liveWallFlyer(r, id) {
-    const w = (r.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+    const w = (r.entities('wallFlyerBodies') ?? []).find((b) => b.id === id);
     return w && !w.removed && !w.destroy && !w.dieAnim ? w : null;
 }
 
@@ -24958,7 +24958,7 @@ function playWallFlyerKill(f, keys, equips, id, kw, stance, opts, allowTeleporte
         if (why) return { why: `${why} in the fight` };
         if (ready) presses += 1;
         last = ready;
-        const after = (f.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+        const after = (f.entities('wallFlyerBodies') ?? []).find((b) => b.id === id);
         if (after && ((after.hits ?? 0) > hitsWas || after.dieAnim || after.destroy || after.removed)) landed += 1;
         if (presses - landed > BODY_FAMILY_KILL.unanswered) {
             return { why: `${presses} press(es) with the ${kw.weapon} and ${landed} landed from (${stance.pre.x},${stance.pre.y})` };
@@ -24968,7 +24968,7 @@ function playWallFlyerKill(f, keys, equips, id, kw, stance, opts, allowTeleporte
         return { why: `${id} alive ${BODY_FAMILY_KILL.fightBound} ticks into the fight (${presses} press(es), ${landed} landed)` };
     }
     const gone = () => {
-        const b = (f.wallFlyers?.bodies ?? []).find((x) => x.id === id);
+        const b = (f.entities('wallFlyerBodies') ?? []).find((x) => x.id === id);
         return !b || b.removed;
     };
     for (let k = 0; k < BODY_FAMILY_KILL.removalBound && !gone(); k += 1) {
