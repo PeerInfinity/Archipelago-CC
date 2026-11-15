@@ -92,6 +92,7 @@ import {
 } from '../flashPanel/mapDocumentPath.js';
 import { resolveMazeArrival } from './mazeArrival.js';
 import { loadMazeTileArt } from './mazeTileArt.js';
+import { drawMazeThings, mazeThingLines, thingAt } from './mazeThingOverlay.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
 /**
@@ -1685,6 +1686,7 @@ export class MazeRoomUI {
         this._invalidateRulesReadout();
         this.world = payload.world;
         this.state = createState(this.world);
+        this._thingReading = null;
         // ⛓ T2b F1 — `exit_id`, else the exit leading back to
         // `arrivedFrom.source_region` (a world with no reverse links, e.g. a
         // return from a placed Seedling room), else the entrance.
@@ -1867,6 +1869,8 @@ export class MazeRoomUI {
             ));
         }
         this.rootElement.appendChild(this._renderMaze());
+        const thingEl = this._renderThingReading();
+        if (thingEl) this.rootElement.appendChild(thingEl);
         if (this.genControlsVisible) {
             this.rootElement.appendChild(this._renderPlaybackLogSection());
             this.rootElement.appendChild(this._renderCollapsibleSection(
@@ -4080,6 +4084,73 @@ export class MazeRoomUI {
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);
+        // ⛓ CONTENT SETS S2 — the region's thing, beside drawWorld (`mazeThingOverlay.js`). Never on a Seedling-atlas
+        //   world (the Seedling skin draws there), as the tile art is not.
+        this._thingDraws = this._thingsShown()
+            ? drawMazeThings(ctx, this.world, {
+                tilePx: view.tilePx, playerPos: view.playerPos, fogEnabled: view.fogEnabled,
+                isTileVisible: view.isTileVisible, tileArt: view.tileArt,
+            })
+            : [];
+    }
+
+    /** ⛓ S2 — whether this world's things are drawn and read: it has some, and it is not a Seedling-atlas world. */
+    _thingsShown() {
+        return Array.isArray(this.world?.things) && this.world.things.length > 0 && !this._seedlingSkin();
+    }
+
+    /**
+     * ⛓⛓ CONTENT SETS S2 — **READ A THING BY STANDING ON ITS CELL.** Called after every move the panel executes: on a
+     * thing's cell its name and lines are shown in the panel and `content:thingExamined` is published (the text
+     * adventure's shape, S1); off one, the reading is cleared. It does not block, nothing is picked up, no location is
+     * checked, and walking back onto the cell reads it again. The autopather and the bots know nothing of it.
+     */
+    _readThingAt(pos) {
+        const thing = pos && this._thingsShown() ? thingAt(this.world, pos.x, pos.y) : null;
+        if (!thing) { this._thingReading = null; return; }
+        this._thingReading = { region: this.currentRegionId, thing, lines: mazeThingLines(thing) };
+        eventBus.publish('content:thingExamined', {
+            region: this.currentRegionId,
+            thing: thing.id,
+            kind: thing.kind,
+            concept: thing.concept,
+            info: thing.info?.concept ?? null,
+            originator: 'mazeRoom',
+        }, 'mazeRoom');
+    }
+
+    /** The reading under the canvas: the thing's name, then its lines. */
+    _renderThingReading() {
+        const r = this._thingReading;
+        if (!r) return null;
+        const section = document.createElement('div');
+        section.className = 'maze-room-thing';
+        section.dataset.thing = r.thing.id;
+        section.dataset.concept = r.thing.concept;
+        const title = document.createElement('div');
+        title.className = 'maze-room-thing-name';
+        title.textContent = r.thing.name;
+        section.appendChild(title);
+        for (const line of r.lines) {
+            const p = document.createElement('p');
+            p.className = 'maze-room-thing-line';
+            p.textContent = line;
+            section.appendChild(p);
+        }
+        return section;
+    }
+
+    /** What the in-app row reads: the world's things, how each was last drawn, and the reading shown. */
+    getThingStatus() {
+        return {
+            region: this.currentRegionId ?? null,
+            shown: this._thingsShown(),
+            things: JSON.parse(JSON.stringify(this.world?.things ?? [])),
+            drawn: [...(this._thingDraws ?? [])],
+            reading: this._thingReading
+                ? { region: this._thingReading.region, thing: this._thingReading.thing.id, lines: [...this._thingReading.lines] }
+                : null,
+        };
     }
 
     /**
@@ -4664,6 +4735,8 @@ export class MazeRoomUI {
                 if (isExit(this.world, this.state.player_pos.x, this.state.player_pos.y)) {
                     this.message = `Reached exit in ${this.state.turn} steps.`;
                 }
+                // ⛓ S2 — standing on a region's thing reads it (after the fog grew, so it is seen).
+                this._readThingAt(this.state.player_pos);
             }
         }
         // Whether the move executed or not, the turn passed — tick

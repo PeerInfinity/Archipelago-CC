@@ -95,6 +95,8 @@ export function register(registrationApi) {
 
     // Self-activation on maze:loadRegion publishes ui:activatePanel.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // ⛓ CONTENT SETS S2 — standing on a region's thing (not an AP check) reads it (`mazeRoomUI._readThingAt`).
+    registrationApi.registerEventBusPublisher('content:thingExamined');
 
     // Phase 3 visualizer publishes per-step playback snapshots so
     // opt-in subscribers (this panel itself, future bot consumers)
