@@ -54,12 +54,21 @@ export const TEXT_ADVENTURE_CONCEPT_REALISATIONS = Object.freeze({
 /** ⛓ CONTENT SETS R1 — the pack whose words a world gets when it names no theme (the entry's `defaultContentPack`). */
 export const TEXT_ADVENTURE_DEFAULT_CONTENT_PACK = 'text-adventure';
 
+/** ⛓ CONTENT SETS S1 — a character's text slot → the thing field it is baked as. */
+export const CHARACTER_TEXT_SLOTS = Object.freeze({ says: 'says' });
+/** ⛓ CONTENT SETS S1 — a piece of information's text slot → the thing field it is baked as. */
+export const INFO_TEXT_SLOTS = Object.freeze({ body: 'body' });
+
 /**
  * ⛓⛓ CONTENT SETS R1 — **WHAT THE TEXT ADVENTURE CAN SHOW FROM A PACK** (the
  * entry's `contentRoles`; contract `procgenCore/contentRoles.js`). The slots each
  * role needs are the keys of the slot tables above, so a role and the placer that
- * writes it cannot disagree. `character` and `info` are NOT declared: nothing
- * here shows them yet (step 3).
+ * writes it cannot disagree.
+ *
+ * ⛓ CONTENT SETS S1 — `character`, `object` and `info`: the room's THINGS, which
+ * are not AP checks (look-only in v0, ⚖ the user 2026-11-14). A room holds at
+ * most one holder (a character or an object) and one piece of information; with
+ * both, the holder carries it (`roomThings`, `textAdventureRoom.js`).
  */
 export const TEXT_ADVENTURE_CONTENT_ROLES = Object.freeze({
     gate: Object.freeze({
@@ -75,5 +84,19 @@ export const TEXT_ADVENTURE_CONTENT_ROLES = Object.freeze({
     place: Object.freeze({
         accepts: Object.freeze({ kinds: Object.freeze(['place']) }),
         why: 'A room takes a place\'s name and description in place of its region id.',
+    }),
+    character: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['character']) }),
+        needs: Object.freeze({ text: Object.freeze(Object.keys(CHARACTER_TEXT_SLOTS)) }),
+        why: 'Someone in a room the player can look at and talk to; it may hold a piece of information.',
+    }),
+    object: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['object']) }),
+        why: 'Something in a room the player can look at; it may hold a piece of information.',
+    }),
+    info: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['info']) }),
+        needs: Object.freeze({ text: Object.freeze(Object.keys(INFO_TEXT_SLOTS)) }),
+        why: 'A piece of information held in a room, read on its own or from the thing that holds it.',
     }),
 });

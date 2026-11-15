@@ -1,0 +1,97 @@
+{
+ "loadLineTimeout": true,
+ "consoleErrors": [
+  "[19:48:44.937] [ERROR] [stateManagerWorker] [stateManagerWorker onmessage] Error processing command: ping Error: Worker not initialized. Cannot process ping.\n    at handleMessage (http://localhost:8150/frontend/modules/stateManager/stateManagerWorker.js:621:17)\n    at executeCommand (http://localhos",
+  "[19:48:44.940] [ERROR] [stateManagerProxy] [StateManagerProxy] General worker error (from new handler): {type: workerError, command: ping, correlationId: 1, errorMessage: Worker not initialized. Cannot process ping., errorStack: Error: Worker not initialized. Cannot process ping\u2026odules/stateManager/",
+  "[19:48:44.942] [ERROR] [stateManagerProxy] [StateManagerProxy] Clearing queryId 1 due to worker error: Worker not initialized. Cannot process ping.",
+  "Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[19:52:00.898] [ERROR] [clientMessageHandler] [MessageHandler] Client slot not defined, cannot send location checks. Current value: null"
+ ],
+ "frames": [
+  {
+   "t": 1794512925002,
+   "dir": "<",
+   "cmd": "RoomInfo"
+  },
+  {
+   "t": 1794513111474,
+   "dir": "<",
+   "cmd": "RoomInfo"
+  },
+  {
+   "t": 1794513111474,
+   "dir": ">",
+   "cmd": "Connect",
+   "name": "Questy",
+   "game": "APQuest"
+  },
+  {
+   "t": 1794513111476,
+   "dir": "<",
+   "cmd": "Connected",
+   "slot": 1,
+   "keys": [],
+   "checked": 0,
+   "missing": 6
+  },
+  {
+   "t": 1794513111476,
+   "dir": "<",
+   "cmd": "PrintJSON",
+   "text": "Questy (Team #1) playing APQuest has joined. Client(0.6.9), []."
+  },
+  {
+   "t": 1794513111478,
+   "dir": "<",
+   "cmd": "PrintJSON",
+   "text": "Now that you are connected, you can use !help to list commands to run via the server. If your client supports it, you may have additional local commands you can list with /help."
+  },
+  {
+   "t": 1794513111478,
+   "dir": ">",
+   "cmd": "LocationChecks",
+   "locations": [
+    3,
+    5,
+    6,
+    2
+   ]
+  },
+  {
+   "t": 1794513111481,
+   "dir": "<",
+   "cmd": "PrintJSON",
+   "text": "1 sent 30000002 to 2 (3)"
+  },
+  {
+   "t": 1794513111481,
+   "dir": "<",
+   "cmd": "PrintJSON",
+   "text": "1 sent 30000014 to 2 (2)"
+  },
+  {
+   "t": 1794513111481,
+   "dir": "<",
+   "cmd": "PrintJSON",
+   "text": "1 sent 30000014 to 2 (5)"
+  },
+  {
+   "t": 1794513111481,
+   "dir": "<",
+   "cmd": "PrintJSON",
+   "text": "1 sent 30000014 to 2 (6)"
+  },
+  {
+   "t": 1794513111481,
+   "dir": "<",
+   "cmd": "RoomUpdate",
+   "checked_locations": [
+    2,
+    3,
+    5,
+    6
+   ]
+  }
+ ],
+ "tConnect": 1794512924946
+}

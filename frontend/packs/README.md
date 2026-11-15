@@ -43,10 +43,14 @@ GitHub Pages serves only `frontend/`.
   mark per object — in a 20×20 box (the maze's `TILE_PX`, so a recipe draws 1:1 in play) with one stroke width. A
   world that selects the theme draws its maze from them at play; `mazeRoom/mazeMetaArt.test.js` pins the recipes
   (inside their box, states apart, every key through the draw seam) and the in-app row `meta-trial-maze-tile-art`
-  reads them off the canvas. The art is play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
+  reads them off the canvas. (Content sets R5) three more recipes are named by the theme's own concepts as their
+  `art`: the Gate (a square with two dot eyes and a keyhole), Progressive Sword and Progressive Swim. A maze draws a
+  concept gate or item from the art key of the latest pack concept that presents its mechanic
+  (`mazeTileArt.conceptArtKeys`), else its baked colour and symbol (`mazeRoom/mazeConceptArt.test.js`). The art is
+  play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the
-  theme gives them no look, so the maze shows the default), and offers twelve `place` concepts for the text
+  theme gives them no look, so the baked colour and symbol stay the default; their art key draws the pickup), and offers twelve `place` concepts for the text
   adventure's rooms. It does NOT present water: water falls through to each substrate's default pack. ⛔ No line
   may claim something untrue of the world: a place describes only what every generated room has. HAND-MADE, written
   for this repository, MIT (see `pack.json`). `procgenPipeline/metaTrialWorld.test.js` and the committed

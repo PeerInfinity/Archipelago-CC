@@ -71,6 +71,9 @@ import SEEDLING_STARTER_ATLAS_DOC from './atlases/seedling.json' with { type: 'j
 // have no fetch, so a served-index fetch could not reach them.
 import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json' with { type: 'json' };
 import { atlasIndexPath, atlasPathInIndex } from './mapDocumentPath.js';
+import {
+    drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLocationTiles,
+} from './seedlingCompositeMap.js';
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
 
@@ -78,6 +81,12 @@ export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
 export const SEEDLING_STARTER_ATLAS = SEEDLING_STARTER_ATLAS_DOC;
 /** The whole-game playthrough atlas (113 levels), installable by the `seedlingAtlasId` knob. */
 export const SEEDLING_PLAYTHROUGH_ATLAS = SEEDLING_PLAYTHROUGH_ATLAS_DOC;
+
+/** ⛓ region-map step 1 — the atlas documents this library ships, by `atlas_id` (`compositeMap.locationTiles` reads
+ *  an item location's `tile` from the payload's own atlas). */
+const KNOWN_ATLASES = Object.freeze(Object.fromEntries(
+    [SEEDLING_STARTER_ATLAS_DOC, SEEDLING_PLAYTHROUGH_ATLAS_DOC].map((a) => [a.atlas_id, a]),
+));
 export const FLASH_SEEDLING_PANEL_COMPONENT_TYPE = 'flashPanel';
 export const FLASH_SEEDLING_LOAD_REGION_EVENT = 'flashSeedling:loadRegion';
 
@@ -841,6 +850,21 @@ export const substrateRegistryEntry = Object.freeze({
      * door it is bound to stays where the level put it — so the engine mints
      * no fictional tile for it, and its side is only a label.
      */
+    /**
+     * ⛓⛓⛓ region-map step 1 — **THE COMPOSITE-MAP DECLARATION** (⚖ user 2026-09-04: *"each substrate declares
+     * whether it supports map rendering … I don't want to hardcode support for map rendering for specific
+     * substrates."*). `drawRegion` paints the region's level as the JS Seedling renderer draws it
+     * (`seedlingCompositeMap.js`: a cached bake; the generic box until it lands, then the host's `requestRedraw`).
+     * `artwork: true` puts it behind the renderer's "Substrate art" switch (`substrateArt: false` → the generic box).
+     * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3).
+     * ⛔ DATA: this file stays `loadable: true` in the generated matrix — nothing here touches a DOM at load.
+     */
+    compositeMap: Object.freeze({
+        drawRegion: drawSeedlingCompositeRegion,
+        artwork: true,
+        locationTiles: (region, ctx = {}) => seedlingLocationTiles(region, { ...ctx, atlases: KNOWN_ATLASES }),
+        displayRegionOf: seedlingDisplayRegionOf,
+    }),
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
     /** Placeable rooms in the installed atlas — a getter, so the spiral's quota check sees the live document. */

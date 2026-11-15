@@ -1,0 +1,25 @@
+walls=default observed run left at t654; outcome REFUSED (solverBot(corner) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a b)
+spinnerPressHits on the branch: [{"t":531,"id":"spinner@880,848","landed":true,"hits":1},{"t":532,"id":"spinner@880,848","landed":false,"hits":1},{"t":533,"id":"spinner@880,848","landed":false,"hits":1}]
+player hits on the branch: []
+pressEscape calls from t606:
+OPP decisions from t606: [{"t":636,"kind":"strike","cell":{"x":744,"y":792},"pressAt":1343}]
+per-tick rows t646..t654 (the state AFTER the tick's keys):
+   {"t":646,"keys":"down","x":744.19,"y":675.34,"vx":0,"vy":0.95,"dir":3,"box":"[742.19,673.34..746.19,678.34]","gt":5892,"spin":[{"id":"spinner@816,848","rect":"[746.68,680.17..753.68,687.17]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(750.68,684.17)->(762.56,678.89)","d":10.96,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":647,"keys":"down","x":744.19,"y":676.84,"vx":0,"vy":1.5,"dir":3,"box":"[742.19,674.84..746.19,679.84]","gt":5893,"spin":[{"id":"spinner@816,848","rect":"[751.54,680.56..758.54,687.56]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(755.54,684.56)->(768.04,680.98)","d":13.73,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":648,"keys":"down","x":744.19,"y":678.09,"vx":0,"vy":1.25,"dir":3,"box":"[742.19,676.09..746.19,681.09]","gt":5894,"spin":[{"id":"spinner@816,848","rect":"[756.15,680.93..763.15,687.93]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(760.15,684.93)->(773.02,683.12)","d":17.37,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":649,"keys":"down","x":744.19,"y":679.09,"vx":0,"vy":1,"dir":3,"box":"[742.19,677.09..746.19,682.09]","gt":5895,"spin":[{"id":"spinner@816,848","rect":"[760.51,680.93..767.51,687.93]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(764.51,684.93)->(777.51,684.93)","d":21.15,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":650,"keys":"down","x":744.19,"y":680.64,"vx":0,"vy":1.55,"dir":3,"box":"[742.19,678.64..746.19,683.64]","gt":5896,"spin":[{"id":"spinner@816,848","rect":"[760.51,680.6..767.51,687.6]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(764.51,684.6)->(777.38,686.41)","d":20.71,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":651,"keys":"down","x":744.19,"y":681.94,"vx":0,"vy":1.3,"dir":3,"box":"[742.19,679.94..746.19,684.94]","gt":5897,"spin":[{"id":"spinner@816,848","rect":"[756.65,680.29..763.65,687.29]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(760.65,684.29)->(773.15,687.88)","d":16.63,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":652,"keys":"left","x":743.39,"y":682.99,"vx":-0.8,"vy":1.05,"dir":2,"box":"[741.39,680.99..745.39,685.99]","gt":5898,"spin":[{"id":"spinner@816,848","rect":"[753.04,680..760.04,687]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(757.04,684)->(768.91,689.29)","d":13.69,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":653,"keys":"down","x":742.74,"y":683.84,"vx":-0.65,"vy":0.85,"dir":2,"box":"[740.74,681.84..744.74,686.84]","gt":5899,"spin":[{"id":"spinner@816,848","rect":"[749.67,679.74..756.67,686.74]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(753.67,683.74)->(764.7,690.62)","d":10.93,"lineHitsBox":false}],"ch":[],"hits":0}
+   {"t":654,"keys":"left+down","x":741.44,"y":685.29,"vx":-1.3,"vy":1.45,"dir":2,"box":"[739.44,683.29..743.44,688.29]","gt":5900,"spin":[{"id":"spinner@816,848","rect":"[746.56,679.49..753.56,686.49]","hits":0,"hitsTimer":0,"destroy":false,"kb":null,"line":"(750.56,683.49)->(760.52,691.84)","d":9.29,"lineHitsBox":false}],"ch":[],"hits":0}
+at the corner t654: player (741.44,685.29) v (-1.3,1.45); forecast row 1 gameTime 5901: [{"rect":"[193.17,150.83..200.17,157.83]"},{"rect":"[193.17,134.83..200.17,141.83]"},{"rect":"[193.17,144.91..200.17,151.91]"},{"rect":"[741.08,679.05..748.08,686.05]"},{"rect":"[736.87,772.3..743.87,779.3]"}]
+    stand      -> (740.31,686.56) box [738.31,684.56..742.31,689.56] blocked ?:body
+    up         -> (740.31,685.76) box [738.31,683.76..742.31,688.76] blocked ?:body
+    down       -> (740.31,686.56) box [738.31,684.56..742.31,689.56] blocked ?:body
+    left       -> (740.31,686.56) box [738.31,684.56..742.31,689.56] blocked ?:body
+    right      -> (741.11,686.56) box [739.11,684.56..743.11,689.56] blocked ?:body
+    up+left    -> (740.31,685.76) box [738.31,683.76..742.31,688.76] blocked ?:body
+    up+right   -> (741.11,685.76) box [739.11,683.76..743.11,688.76] blocked ?:body
+    down+left  -> (740.31,686.56) box [738.31,684.56..742.31,689.56] blocked ?:body
+    down+right -> (741.11,686.56) box [739.11,684.56..743.11,689.56] blocked ?:body

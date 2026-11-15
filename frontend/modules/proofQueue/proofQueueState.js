@@ -17,12 +17,13 @@ export class ProofQueueState extends ProofQueueBaseState {
    * @param {Object} slotData - The slot_data object from rules.json
    * @param {Object} nameSubstitutions - The name_substitutions object from rules.json
    * @param {Object} [options] - World options (forwarded to _parseProofStructure)
+   * @param {Set<string>|null} [docLocationNames] - The loaded document's location names (forwarded)
    */
-  loadFromSlotData(slotData, nameSubstitutions, options) {
+  loadFromSlotData(slotData, nameSubstitutions, options, docLocationNames = null) {
     this.queue = [];
     this.availableSteps.clear();
 
-    const success = this._parseProofStructure(slotData, nameSubstitutions, options);
+    const success = this._parseProofStructure(slotData, nameSubstitutions, options, docLocationNames);
     if (!success) return false;
 
     // Steps with no dependencies are always available to place

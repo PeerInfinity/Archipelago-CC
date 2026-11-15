@@ -11,7 +11,11 @@
  * settings and the layout's active tabs as they were, and (the tour row) the
  * world that was loaded before it.
  */
-import { registerTest } from '../testRegistry.js';
+import { registerTest as registerRow } from '../testRegistry.js';
+// ⛓ RE2 — every row here starts with no Seedling JS save and leaves the saves as it found them (`jsSaveIsolation.js`).
+import { isolatesJsSaves } from '../jsSaveIsolation.js';
+
+const registerTest = (def) => registerRow({ ...def, testFunction: isolatesJsSaves(def.testFunction) });
 import { startAppBotTestSpeed } from '../botTestSpeed.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import eventBus from '../../../app/core/eventBus.js';

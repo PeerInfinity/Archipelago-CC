@@ -27,6 +27,7 @@ import { parsePack } from '../contentPacks/contentPacks.js';
 import { documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { recordingContext } from './drawOpRecorder.js';
+import { drawMazeThings } from './mazeThingOverlay.js';
 import { TILE_WALL, createState, deserializeMazeWorld, getTile } from './mazeRoomEngine.js';
 import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
 import { MAZE_ART_KEYS, MAZE_ART_THINGS, loadMazeTileArt } from './mazeTileArt.js';
@@ -40,6 +41,9 @@ const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'
 const PACK = JSON.parse(readFileSync(join(PACK_DIR, 'pack.json'), 'utf8'));
 const MANIFEST = JSON.parse(readFileSync(join(PACK_DIR, PACK.layers.art), 'utf8'));
 const SHAPES = MANIFEST.shapes ?? {};
+const CONCEPTS = JSON.parse(readFileSync(join(PACK_DIR, PACK.layers.concepts), 'utf8')).concepts;
+/** R5: the art keys the pack's own concepts name (a concept gate's or item's picture, resolved at play). */
+const CONCEPT_ART = new Set(Object.values(CONCEPTS).map((c) => c.art).filter(Boolean));
 const META_TRIAL = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/meta_trial/AP_1/AP_1_rules.json'), 'utf8'));
 const PLAYTHROUGH = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json'), 'utf8'));
 
@@ -70,8 +74,9 @@ describe(`the "${PACK_ID}" art layer`, () => {
         expect(existsSync(join(PACK_DIR, 'art/sheets'))).toBe(false);
     });
 
-    it('carries only maze keys; every maze key is carried or in OMITTED with a reason, never both', () => {
-        expect(Object.keys(SHAPES).filter((k) => !thingOfKey.has(k))).toEqual([]);
+    it('carries only maze keys and the keys its own concepts name as art; every maze key is carried or in OMITTED with a reason, never both', () => {
+        expect(Object.keys(SHAPES).filter((k) => !thingOfKey.has(k) && !CONCEPT_ART.has(k))).toEqual([]);
+        expect([...CONCEPT_ART].filter((k) => !(k in SHAPES)), 'every art key a concept names is drawn here').toEqual([]);
         for (const [thing, why] of Object.entries(OMITTED)) {
             expect(MAZE_ART_THINGS, `OMITTED.${thing}`).toContain(thing);
             expect(why, `OMITTED.${thing} has a reason`).toMatch(/\w{8,}/);
@@ -184,6 +189,10 @@ function stagedScenes() {
     world.manaTiles = new Map([[`${mana.x},${mana.y}`, 1]]);
     const pulser = free(true);
     world.pulsers = [...(world.pulsers ?? []), { x: pulser.x, y: pulser.y, reach: [], token: 'r4-staged-pulser' }];
+    // ⛓ S2 — a sign: a region's thing that is a piece of information no one holds (drawn by mazeThingOverlay).
+    const sign = free(false);
+    world.things = [{ id: 'thing_0', x: sign.x, y: sign.y, kind: 'info', concept: 's2-staged:info/sign', name: 'Staged',
+        info: { concept: 's2-staged:info/sign', name: 'Staged', body: 'Staged.' } }];
     const dormantKind = 'r4-staged-dormant';
     world.blockLib = { ...(world.blockLib ?? {}), [dormantKind]: { wake: true } };
     const [firstBlock] = world.blocks.keys();
@@ -225,6 +234,8 @@ describe('⛓ the seam draws the meta stack: every carried key from the pack, ev
         const logs = stagedScenes().map(({ world, view }) => {
             const ctx = recordingContext();
             drawWorld(ctx, world, plainView({ ...view, tileArt }));
+            // ⛓ S2 — and the region's things, beside drawWorld as the panel draws them.
+            drawMazeThings(ctx, world, { tilePx: TILE_PX, playerPos: view.playerPos ?? null, fogEnabled: false, isTileVisible: () => true, tileArt });
             for (const l of ctx.__log) if (blitOf(l)) drawn.add(blitOf(l));
             return ctx.__log;
         });

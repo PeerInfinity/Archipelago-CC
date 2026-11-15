@@ -25,6 +25,10 @@
  *      un-certifies; a goal-less room refuses by name and certifies nothing.
  *   9. **THE MAZE LAB's EDIT ARM** — `#labRedo` and `Ctrl+Shift+Z` bring an undone edit back; `#labTools` still
  *      holds exactly the view's own rows.
+ *  10. **THE SEEDLING → MAZE LINK** — opening a room fetches no preset document; `#editMazeFind` answers the room's
+ *      converted maze room(s) as node's `seedlingMazeLink` does, the link opens the maze lab in a new tab and its
+ *      status line names that room; after an edit the note says the maze room is the UNEDITED original; a level
+ *      with no maze room shows the reason and no link; a level with several offers them all.
  *
  * `--shots=<dir>` writes one screenshot per tool. Brings its own server (`serveRepoRoot`) unless `--host=`.
  *
@@ -493,6 +497,98 @@ async function main() {
         check((await page.evaluate(() => window.__mazeLab.edits)) === 1,
             '⛓ …and Ctrl+Shift+Z reaches it too (the view\'s REDO_COMMAND_ID row)');
         await shot('9-maze-redo');
+
+        /* ══ 10. THE SEEDLING → MAZE LINK ═════════════════════════════ */
+        /**
+         * ⛓⛓ The expected links are node's own answer (`findMazeCounterparts` over the committed documents from disk,
+         * `mazeLinkFor` over the same room), never the page's echo. Each subject is opened fresh by URL.
+         */
+        const { mapDocumentPath } = await M('flashPanel/mapDocumentPath.js');
+        const { findMazeCounterparts, mazeLinkFor } = await M('seedlingDemo/seedlingMazeLink.js');
+        const fromDisk = async (path) => JSON.parse(readFileSync(join(REPO, 'frontend', path), 'utf8'));
+        const counterparts = await findMazeCounterparts({
+            mapDoc: ATLAS, mapName: mapDocumentPath(null).name, fetchJson: fromDisk,
+        });
+        const nodeLink = (level, edits = 0) => mazeLinkFor({
+            baseRecord: resolveBase(adapter, { kind: 'atlas', set_id: VANILLA.set_id, level }),
+            baseKind: 'atlas', edits, mapDoc: ATLAS, counterparts,
+        });
+        const presetReqs = [];
+        const onReq = (r) => { if (/\/frontend\/presets\//.test(r.url())) presetReqs.push(r.url()); };
+        page.on('request', onReq);
+        const pressFind = async () => {
+            await page.click('#editMazeFind');
+            await page.waitForFunction(() => window.__editorEdit?.mazeLink, null, { timeout: 120000 });
+            return page.evaluate(() => ({
+                link: window.__editorEdit.mazeLink,
+                find: !document.getElementById('editMazeFind').hidden,
+                open: { hidden: document.getElementById('editMazeOpen').hidden,
+                    href: document.getElementById('editMazeOpen').getAttribute('href'),
+                    target: document.getElementById('editMazeOpen').target },
+                pick: { hidden: document.getElementById('editMazeRoom').hidden,
+                    values: [...document.getElementById('editMazeRoom').options].map((o) => o.value) },
+                note: document.getElementById('editMazeNote').textContent,
+            }));
+        };
+        const LINKED = 5;
+        await openLevel(LINKED);
+        check(presetReqs.length === 0 && (await page.evaluate(() => window.__editorEdit.mazeLink)) === null
+            && await page.evaluate(() => document.getElementById('editMazeOpen').hidden),
+            '⛔ opening a room fetches NO preset document and shows no link until the find button is pressed',
+            json(presetReqs.slice(0, 2)));
+        const want5 = nodeLink(LINKED);
+        const got5 = await pressFind();
+        check(got5.link.ok && got5.link.level === LINKED && json(got5.link.options) === json(want5.options)
+            && got5.link.options.length > 0,
+            `⛓⛓ the find button answers level ${LINKED}'s maze room(s) exactly as node does`,
+            json(got5.link.options.map((o) => o.region)));
+        check(!got5.open.hidden && got5.open.target === '_blank'
+            && got5.open.href === new URL(`frontend/${want5.options[0].url}`, `${origin}/`).href && !got5.find,
+            '⛓ …and the link opens the first of them in a new tab', got5.open.href);
+        await shot('10a-maze-link-level-5');
+        const lab = await browser.newPage({ viewport: { width: 1400, height: 1700 } });
+        await lab.goto(got5.open.href, { waitUntil: 'domcontentloaded' });
+        await lab.waitForFunction(() => window.__mazeLab?.presetLink || window.__mazeLab?.fatal, null,
+            { timeout: 120000 });
+        const labGot = await lab.evaluate(() => ({ link: window.__mazeLab.presetLink, fatal: window.__mazeLab.fatal ?? null,
+            status: document.getElementById('status').textContent }));
+        check(!labGot.fatal && labGot.link?.room === want5.options[0].region
+            && labGot.status.includes(`room ${want5.options[0].region}`),
+            '⛓⛓ the opened maze lab\'s status line names that room (not its FATAL path)', labGot.status);
+        if (SHOTS) await lab.screenshot({ path: join(SHOTS, '10b-maze-lab-opened.png'), fullPage: true });
+        await lab.close();
+        await mode('paint');
+        await clickCell({ tx: 3, ty: 3 });
+        await settled(1, 'the link\'s edited-room row');
+        const edited5 = await page.evaluate(() => ({ link: window.__editorEdit.mazeLink,
+            href: document.getElementById('editMazeOpen').getAttribute('href'),
+            note: document.getElementById('editMazeNote').textContent }));
+        check(edited5.link.ok && json(edited5.link.options) === json(nodeLink(LINKED, 1).options)
+            && edited5.href === got5.open.href && edited5.note.includes(`UNEDITED original of level ${LINKED}`),
+            '⛓ after an edit the link still opens the vanilla room, and the note says it is the UNEDITED original',
+            edited5.note);
+
+        const NONE = ATLAS.levels.map((l) => l.level).find((n) => !counterparts.byLevel.has(n));
+        await openLevel(NONE);
+        const gotNone = await pressFind();
+        const wantNone = nodeLink(NONE);
+        check(!wantNone.ok && !gotNone.link.ok && gotNone.link.reason === wantNone.reason
+            && gotNone.open.hidden && gotNone.open.href === null && gotNone.note.includes(wantNone.reason),
+            `⛔ level ${NONE} has no maze room: no link, and the reason is on the line`, gotNone.note);
+        await shot('10c-maze-link-none');
+
+        const MULTI = [...counterparts.byLevel.keys()].find((n) => counterparts.byLevel.get(n).length > 1);
+        await openLevel(MULTI);
+        const gotMulti = await pressFind();
+        const wantMulti = nodeLink(MULTI);
+        check(!gotMulti.pick.hidden && json(gotMulti.pick.values) === json(wantMulti.options.map((o) => o.url)),
+            `⛓ level ${MULTI} has several maze rooms: all of them are offered, in node's order`,
+            json(gotMulti.pick.values.length));
+        await page.selectOption('#editMazeRoom', wantMulti.options[1].url);
+        check((await page.evaluate(() => document.getElementById('editMazeOpen').getAttribute('href')))
+            === new URL(`frontend/${wantMulti.options[1].url}`, `${origin}/`).href,
+            '⛓ …and picking another one points the link at it');
+        page.off('request', onReq);
 
         check(errors.length === 0, '⛔ no page error in any of the above', json(errors.slice(0, 3)));
     } catch (e) {

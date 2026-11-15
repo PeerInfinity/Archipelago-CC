@@ -1,0 +1,30 @@
+{
+ "step150_switch0": {
+  "step": 150,
+  "level": 43,
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-150) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too \u2014 solverBot(survey-step-150) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112) waypoint 0 (168,184): not reached within 400 ticks; stalled at (178.5677669529664,423.6215908221288) v=(-0.8270292269908041,-0.8270292269908041) in level 43, aiming at (168,184), after grazing 82 solid(s): tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,449.0516504294495) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,447.7123106012293) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,446.5497474683058) in level 43, aiming at (168,184).",
+  "ms": 788
+ },
+ "step150_switch1": {
+  "step": 150,
+  "level": 43,
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-150) reach-exit (144,64)->L37: the player DIED at run tick 237 in level 43 (2 death(s) on the walk; the hits before the first: bosstotem@152,168 at t173, bosstotem@152,168 at t213, bosstotem@152,168 at t237) \u2014 the drive took hits its corridor was certified without; a walk that died is refused, not re-planned from the respawn",
+  "ms": 564
+ },
+ "step114_switch0": {
+  "step": 114,
+  "level": 58,
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-114) reach-exit (80,16)->L46: the re-planned corridor failed too \u2014 solverBot(survey-step-114) reach-exit (80,16)->L46 waypoint 1 (72,56): not reached within 400 ticks; stalled at (56.82857242301463,55.93354209545144) v=(1.0500000000000023,0) in level 58, aiming at (72,56), after grazing 400 solid(s): yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56).",
+  "ms": 478
+ },
+ "step114_switch1": {
+  "step": 114,
+  "level": 58,
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-114) reach-exit (80,16)->L46: the re-planned corridor failed too \u2014 solverBot(survey-step-114) reach-exit (80,16)->L46 waypoint 1 (72,56): not reached within 400 ticks; stalled at (56.82857242301463,55.93354209545144) v=(1.0500000000000023,0) in level 58, aiming at (72,56), after grazing 400 solid(s): yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56).",
+  "ms": 455
+ }
+}

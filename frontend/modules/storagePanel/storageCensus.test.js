@@ -24,6 +24,7 @@ export const CENSUS_KEYS = [
     'idleLoops1', 'idleLoopsChallenge', 'idleLoops_substrate', 'prestigeBackup',
     'updateRate', 'latestTheme', 'loadingText', 'loadPredictor', 'disabledMenus', 'actionListHeight',
     'localhost/frontend/modules/flashPanel/seedling.swf/shrumsave',
+    'seedlingJsSave_0123456789abcdef',
 ];
 
 /**

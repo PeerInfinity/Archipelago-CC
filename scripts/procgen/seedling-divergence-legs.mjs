@@ -66,8 +66,26 @@
  *              read as a natural one. OFF (the default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the
  *              events: the runtime's "flags flow game → AP only" is unchanged. L40: Boss Key 2 (collected 6.6) and flag
  *              8 (7.3) carry flag 12 (the south door, collected 6.1); the AP sphere they become accessible at is 5.3/6.6.
+ *   rope rock  ⛓ (`SEEDLING_CARRY_ROPE_ROCK=1`, OFF by default; hammer CARRY-ROPE-ROCK) a CARRIED rope flag also stages
+ *              the tag of every rock its pull drops (`ropeRockPairs`: a `RopeStart` and the `FallRock`s of its level
+ *              sharing its `tset`, off the atlas), stamped in `carriedFlags` with `ropeRock`. The game writes both on
+ *              the pull frame, and `levelRun` refuses a build that holds the rope's alone ("Declare both tags or
+ *              neither"). OFF the carry arm is byte-identical.
  *
- * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks] [--carry-route-flags]
+ *   edge events ⛓ (`--stage-edge-events`, OPT-IN, hammer LEG-LIST STAGING) the `events` above read each arrival edge's rule
+ *              WITHOUT an inventory (`requiredEvents`: an `Or` with any event-free arm needs nothing), so an arrival whose door
+ *              (or link) is `Or(<event>, <items the route does not hold yet>)` stages nothing although the route could only
+ *              have used it with the event. ON, every edge on the arrival's path (each door; each link walked, after its
+ *              source's) is ALSO read at the leg's sphere (`sphereEdgeEvents`: the cheapest held branch, as `goal events`), so an
+ *              event-free arm the sphere HOLDS still stages nothing. A path whose edge holds on no branch there (or whose
+ *              source region is unreached) is DROPPED — not a way the AP route can take; the held paths aggregate as the
+ *              doors / links do (every path needs one ⇒ the union: `arrivalEdgeEvents`); NO held path, and a dropped path's
+ *              rule names an event the leg does not stage ⇒ the leg is skipped by name (`arrival-not-crossable-at-sphere`);
+ *              dropped only on an item or an unreached source ⇒ the leg's OFF row, unchanged. The added flags join `stagedEvents` and the leg is STAMPED `edgeEvents`
+ *              (`withEdgeEvents`; skipped by name as the events are). Applied before the route carry, so a staged flag is not
+ *              carried. OFF (the default) the list is byte-identical. ⚖ TEST-HARNESS STAGING ONLY, as the events.
+ *
+ * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks] [--carry-route-flags] [--stage-edge-events]
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -245,7 +263,7 @@ export function goalEventStaging(events, arrive, level) {
  * `requiredEvents` (crossing it, the player broke it — the door edges' rule); the arrival needs them only when EVERY path
  * does (the union then). A room with no such arrival is absent from the map.
  */
-export function linkArrivals({ rooms, arrivalsOf, rulesRegions, byItem }) {
+export function linkArrivals({ rooms, arrivalsOf, rulesRegions, byItem, trace = null }) {
     const levelOf = new Map(rooms);
     const known = new Map([...arrivalsOf].filter(([, a]) => a.length));
     const out = new Map();
@@ -264,9 +282,12 @@ export function linkArrivals({ rooms, arrivalsOf, rulesRegions, byItem }) {
                     for (const a of known.get(s)) {
                         const needs = [...new Map([...(a.events ?? []), ...need].map((e) => [idOf(e), e])).values()];
                         const same = arr.find((c) => c.x === a.x && c.y === a.y);
-                        if (same) { same.needs.push(needs); continue; }
+                        // ⛓ EDGE EVENTS (opt-in): every path's (source arrival, link rule), for `arrivalEdgeEvents`
+                        const path = { src: a, rule: x.access_rule ?? null, name: x.name };
+                        if (same) { same.needs.push(needs); if (trace) trace.get(same).push(path); continue; }
                         arr.push({ x: a.x, y: a.y, exitId: a.exitId, landing: a.landing, via: `${a.via} ~> ${s}`, entry: 'link',
                             through: [...(a.through ?? []), s], links: [...(a.links ?? []), x.name], needs: [needs] });
+                        if (trace) trace.set(arr.at(-1), [path]);
                     }
                 }
             }
@@ -382,6 +403,201 @@ export function withRouteCarry(leg, carry) {
     return { ...leg, stagedEvents: [...have, ...staged], carriedFlags: add.map((f) => ({ ...f })) };
 }
 
+/**
+ * ⛓ CARRY-ROPE-ROCK (`SEEDLING_CARRY_ROPE_ROCK=1`, OFF by default; hammer CARRY-ROPE-ROCK) — the switch. ON, a carried
+ * rope flag stages the tags of the rocks its pull drops (`ropeRockPairs`, `withRopeRockCarry`). OFF the carry arm is
+ * byte-identical to before. `withCarryRopeRock(enabled, fn)` scopes it (a test row); the env var sets it for a run.
+ */
+let carryRopeRockOverride = null;
+export function carryRopeRockOn() {
+    return carryRopeRockOverride ?? (globalThis.process?.env?.SEEDLING_CARRY_ROPE_ROCK === '1');
+}
+export function withCarryRopeRock(enabled, fn) {
+    const prev = carryRopeRockOverride;
+    carryRopeRockOverride = Boolean(enabled);
+    try { return fn(); } finally { carryRopeRockOverride = prev; }
+}
+
+/**
+ * Every rope's flag → the flags of the rocks its PULL drops, read off the level data: a `RopeStart` (`classOf(type)`)
+ * publishes its `tset` group (`activators.ropePublish`), and every `FallRock`/`FallRockLarge` of the same level sharing
+ * that group falls on that frame, writing its own tag (`fallRock.dropRock`) — the pair `levelRun`'s build refuses to
+ * see half of ("Declare both tags or neither"). `levels` = the atlas's `levels` (`{level, entities}`); `ropeFlagOf` /
+ * `rockFlagOf` = (level, tag) → the `{level, tag}` the game writes (null = no write: a rock with tag < 0). Returns
+ * Map(`${level}:${tag}` of the rope's flag → [{eventId, level, tag, rock, rope}]), only ropes that drop a rock.
+ */
+export function ropeRockPairs(levels, { classOf, tSetOf, tagOf, ropeFlagOf, rockFlagOf }) {
+    const out = new Map();
+    for (const lv of levels) {
+        const ents = lv.entities ?? [];
+        const rocks = ents.filter((e) => /^FallRock/.test(classOf(e.type) ?? ''));
+        for (const rope of ents.filter((e) => classOf(e.type) === 'RopeStart')) {
+            const group = tSetOf(rope.type, rope.attrs);
+            if (!(group >= 0)) continue;
+            const rf = ropeFlagOf(lv.level, tagOf(rope.type, rope.attrs));
+            const drops = rocks.filter((r) => tSetOf(r.type, r.attrs) === group)
+                .map((r) => ({ r, f: rockFlagOf(lv.level, tagOf(r.type, r.attrs)) })).filter(({ f }) => f)
+                .map(({ r, f }) => ({ eventId: `flag:L${f.level}:${f.tag}`, level: f.level, tag: f.tag,
+                    rock: `${r.type}@${r.x},${r.y}`, rope: `${rope.type}@${rope.x},${rope.y}` }));
+            if (!rf || !drops.length) continue;
+            const k = `${rf.level}:${rf.tag}`;
+            out.set(k, [...(out.get(k) ?? []), ...drops]);
+        }
+    }
+    return out;
+}
+
+/**
+ * A carried leg (`withRouteCarry`'s output) with its carried ROPE flags completed: each rock a carried rope's pull drops
+ * (`pairs` = `ropeRockPairs`) that its staging does not already hold is ADDED to `stagedEvents` and stamped in
+ * `carriedFlags` (`ropeRock` = the rope it pairs with). A leg with no carried rope flag is returned UNCHANGED.
+ */
+export function withRopeRockCarry(leg, pairs) {
+    if (!leg.carriedFlags?.length) return leg;
+    const have = leg.stagedEvents ?? [];
+    const add = [];
+    const same = (a) => (b) => a.level === b.level && a.tag === b.tag;
+    for (const f of leg.carriedFlags) {
+        for (const r of pairs.get(`${f.level}:${f.tag}`) ?? []) {
+            if (!have.some(same(r)) && !add.some(same(r))) add.push({ eventId: r.eventId, level: r.level, tag: r.tag, ropeRock: r.rope });
+        }
+    }
+    if (!add.length) return leg;
+    return { ...leg, stagedEvents: [...have, ...add.map((f) => ({ ...f, otherLevel: f.level !== leg.level }))],
+        carriedFlags: [...leg.carriedFlags, ...add.map((f) => ({ ...f }))] };
+}
+
+/**
+ * `ropeRockPairs` over the atlas at `mapPath`, with the run's own readers: `levelWorld`'s class table / `tSetOf` /
+ * `tagOf`, and the flag the game writes — `outOfBandFlagFor` (a rope with tag < 0: `outOfBandFlagForWriter`, as
+ * `levelRun.pullRope`; a rock with tag < 0 writes nothing, as `fallRock.dropRock`). `M` = (module path) → import.
+ */
+export async function atlasRopeRockPairs(M, mapPath) {
+    const { ENTITY_CLASSES, tSetOf, tagOf } = await M('seedlingDemo/levelWorld.js');
+    const { outOfBandFlagFor } = await M('seedlingDemo/breakableRocks.js');
+    const { outOfBandFlagForWriter } = await M('seedlingDemo/outOfBandLedger.js');
+    const MAP = JSON.parse(readFileSync(mapPath, 'utf8'));
+    return ropeRockPairs(MAP.levels, { classOf: (t) => ENTITY_CLASSES[t]?.as3 ?? null, tSetOf, tagOf,
+        ropeFlagOf: (level, tag) => (tag < 0 ? outOfBandFlagForWriter({ as3: 'RopeStart', level, tag }) : outOfBandFlagFor(level, tag)),
+        rockFlagOf: (level, tag) => (tag < 0 ? null : outOfBandFlagFor(level, tag)) });
+}
+
+/**
+ * ⛓ EDGE EVENTS (`--stage-edge-events`, OPT-IN) — the `game_state` events an arrival-path edge's rule (a door, or a
+ * logical link walked) cannot be satisfied WITHOUT at the leg's sphere (`holds` = that sphere's AP inventory, as
+ * `goalEventsHeld`): the ones it needs whatever is held (`requiredEvents`), plus the cheapest held branch's. So an `Or`
+ * whose event-free arm is HELD there adds nothing, and an `Or` whose only held arm is the event's adds the event.
+ * `null` when NO branch holds at that sphere: the AP route cannot cross the edge there (⚖ planner follow-up, rules-7
+ * review: staging an event the route could not have used invents a state the route never produces). `null` rule (a
+ * start, an edge with no rules exit) = none.
+ */
+export function sphereEdgeEvents(rule, byItem, holds) {
+    if (!rule) return [];
+    const held = goalEventsHeld(rule, byItem, holds);
+    if (held === null) return null;
+    const all = [...requiredEvents(rule, byItem), ...held];
+    return [...new Map(all.map((e) => [e.item ?? e.eventId ?? e.name, e])).values()];
+}
+
+/** A rule as one short line, for a skip's reason: `Has` = the item, `HasAll` / `And` = `All(…)`, `Or` = `Any(…)`. */
+export function ruleText(rule) {
+    if (!rule || typeof rule !== 'object') return 'True';
+    switch (rule.rule) {
+        case 'Has': return String(rule.args?.item_name);
+        case 'HasAll': return `All(${(rule.args?.item_names ?? []).join(', ')})`;
+        case 'And': return `All(${(rule.children ?? []).map(ruleText).join(', ')})`;
+        case 'Or': return `Any(${(rule.children ?? []).map(ruleText).join(', ')})`;
+        case 'True_': return 'True';
+        default: return String(rule.rule ?? rule.type ?? '?');
+    }
+}
+
+/**
+ * An arrival's edge events at one sphere, off `trace` (arrival → its paths, `{src?, rule, name?, from?}`: one per door —
+ * `rule` = the door edge's, `from` = its source region, `null` rule for a start — and one per link walked, `src` = the
+ * arrival it walked from). `eventsOf(rule, path)` = `sphereEdgeEvents` at that sphere: `null` when the path's edge rule
+ * holds on no branch there, or a string saying why else it is not crossable (its source region unreached). A path HOLDS when its edge and its
+ * source arrival (recursively) do; a path that does not hold is DROPPED (not a way the AP route can take). Over the held
+ * paths: every one needs an event ⇒ the union, else none (`arrivalEventNeeds`' aggregation). Returns `{events}`, or
+ * `{blocked: [why], droppedRules}` when NO path holds (each dropped path, by edge name and rule; and their rules). An arrival `trace` does not know
+ * needs none.
+ */
+export function arrivalEdgeEvents(trace, arrival, eventsOf) {
+    if (!trace.has(arrival)) return { events: [] };
+    const idOf = (e) => e.eventId ?? e.item ?? e.name;
+    const held = [];
+    const blocked = [];
+    const droppedRules = [];
+    for (const p of trace.get(arrival)) {
+        const src = p.src ? arrivalEdgeEvents(trace, p.src, eventsOf) : { events: [] };
+        if (src.blocked) { blocked.push(...src.blocked); droppedRules.push(...src.droppedRules); continue; }
+        const own = eventsOf(p.rule, p);
+        if (own === null || typeof own === 'string') {
+            blocked.push(`${p.name ?? '?'} ${own ?? `needs ${ruleText(p.rule)}`}`);
+            droppedRules.push(p.rule);
+            continue;
+        }
+        held.push([...new Map([...src.events, ...own].map((e) => [idOf(e), e])).values()]);
+    }
+    if (!held.length) return { blocked: [...new Set(blocked)], droppedRules };
+    const gated = held.every((n) => n.length > 0);
+    return { events: gated ? [...new Map(held.flat().map((e) => [idOf(e), e])).values()] : [] };
+}
+
+/** The `game_state` event ids a rule NAMES anywhere (`Has` / `HasAll` of an event item), in rule order, deduplicated. */
+export function namedGameStateEvents(rule, byItem) {
+    const out = new Set();
+    const walk = (node) => {
+        if (Array.isArray(node)) { node.forEach(walk); return; }
+        if (!node || typeof node !== 'object') return;
+        for (const [k, v] of Object.entries(node)) {
+            const names = (k === 'item_name' || k === 'item') ? [v] : (k === 'item_names' || k === 'items') && Array.isArray(v) ? v : [];
+            for (const n of names) {
+                const e = typeof n === 'string' ? byItem.get(n) : null;
+                if (e?.kind === 'game_state' && e.eventId) out.add(e.eventId);
+            }
+            if (v && typeof v === 'object') walk(v);
+        }
+    };
+    walk(rule);
+    return [...out];
+}
+
+/**
+ * A leg with its edge events applied (`edge` = `arrivalEdgeEvents`' result, `sphereLabel` = the leg's sphere): the
+ * events its staging (`stagedEvents`) does not already hold are ADDED through the same channel (`otherLevel` as the leg
+ * list writes it) and the leg is STAMPED `edgeEvents` (their ids). `{skip}` BY NAME: no arrival path crossable at the
+ * sphere AND a dropped path's rule names a `game_state` event the leg does not already stage (`namedOf(rule)` = those
+ * ids: `arrival-not-crossable-at-sphere`, stamped `edgeEvents: []` — ⚖ follow-up 2, the NARROW skip: a leg asks a
+ * room-local question; a missing door item or an unreached source does not change the room's state, a missing
+ * persistence event does, so a leg whose dropped paths fail only on those keeps its OFF row, unchanged), an added event that maps to no flag
+ * (`arrival-needs-unmappable-event`), or a location goal that IS an added event (`goal-is-a-staged-event`). A leg it
+ * adds nothing to, and a `skip`ped leg, are returned UNCHANGED (the same object).
+ */
+export function withEdgeEvents(leg, edge, sphereLabel = '?', namedOf = () => []) {
+    if (leg.skip) return leg;
+    const { stagedEvents: _s, goalEvents: _g, ...rest } = leg;
+    if (edge?.blocked) {
+        const staged = new Set((leg.stagedEvents ?? []).map((e) => e.eventId));
+        if (!(edge.droppedRules ?? []).some((r) => namedOf(r).some((id) => !staged.has(id)))) return leg;
+        return { ...rest, skip: `arrival-not-crossable-at-sphere: ${edge.blocked.join('; ')} — no arrival path crossable at ${sphereLabel}`, edgeEvents: [] };
+    }
+    const have = new Set((leg.stagedEvents ?? []).map((e) => e.eventId));
+    const add = (edge?.events ?? []).filter((e) => !have.has(e.eventId ?? e.name));
+    if (!add.length) return leg;
+    const { staged, unmappable } = eventStaging(add, leg.level);
+    const ids = add.map((e) => e.eventId ?? e.name);
+    if (unmappable.length) {
+        return { ...rest, skip: `arrival-needs-unmappable-event: the arrival's edge rule needs ${ids.join(' / ')} at the leg's sphere — `
+            + `${unmappable.join('; ')} (no persistence flag to stage)`, edgeEvents: ids };
+    }
+    if (leg.goal?.kind === 'location' && add.some((e) => e.name === leg.goal.name)) {
+        return { ...rest, skip: `goal-is-a-staged-event: the arrival's edge rule needs ${leg.goal.name} at the leg's sphere, `
+            + 'the goal itself — staging its flag leaves nothing to clear', edgeEvents: ids };
+    }
+    return { ...leg, stagedEvents: [...(leg.stagedEvents ?? []), ...staged], edgeEvents: ids };
+}
+
 /** The leg's identity across SHAs: (region, the arrival's door — `start` for the no-"came from" one, goal). */
 export function legKey({ region, arrive, goal }) {
     const goalId = goal.kind === 'exit' ? `exit:${goal.exit_id}` : `location:${goal.name}`;
@@ -423,7 +639,11 @@ async function main() {
     const BLOCKS = process.argv.includes('--blocks');
     // ⛓ ROUTE CARRY — OPT-IN (off = today's list, byte-identical): see the head's `carry`
     const CARRY = process.argv.includes('--carry-route-flags');
+    // ⛓ CARRY-ROPE-ROCK (switch, OFF by default): a carried rope flag stages the rocks its pull drops
+    const ROPE_ROCK = CARRY && carryRopeRockOn() ? await atlasRopeRockPairs(M, join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json')) : null;
     const carryOf = new Map();
+    // ⛓ EDGE EVENTS — OPT-IN (off = today's list, byte-identical): see the head's `edge events`
+    const EDGE = process.argv.includes('--stage-edge-events');
     const { resolveArrivalSpawn, seedlingStartSpawn } = await M('flashPanel/seedlingRegionBinding.js');
     const { returnSpawnTable } = await M('flashPanel/seedlingReturnSpawns.js');
     const { atlasRoomRegions } = await M('seedlingDemo/seedlingAtlasCheckTable.js');
@@ -466,9 +686,12 @@ async function main() {
             }
         }
         // the goal rule's events the AP route holds at sphere `i` (the cheapest satisfied branch: `goalEventsHeld`)
-        const heldGoalEvents = (rule, i) => {
+        const holdsAt = (i) => {
             const row = spheres.rows[i];
-            const holds = (r) => evaluateRuleWithInventory(r, row.counts, '1', (x) => row.reached.has(x), pm) === true;
+            return (r) => evaluateRuleWithInventory(r, row.counts, '1', (x) => row.reached.has(x), pm) === true;
+        };
+        const heldGoalEvents = (rule, i) => {
+            const holds = holdsAt(i);
             return (goalEventsHeld(rule, byItem, holds) ?? []).map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind }));
         };
         // ⛓ ROUTE CARRY (opt-in): the route's collection rows, its mappable game_state flags, each level's reads
@@ -485,6 +708,20 @@ async function main() {
             return readsCache.get(level);
         };
         const starts = new Set(startTargets(rules));
+        // ⛓ EDGE EVENTS (opt-in): arrival → its paths (`arrivalEdgeEvents`); region → door id → the doors' edge rules
+        const trace = EDGE ? new Map() : null;
+        const intoRules = new Map();
+        if (EDGE) {
+            for (const [from, pl] of regions) {
+                for (const e of pl.exits ?? []) {
+                    if (!e.targetRegion || !e.targetExitId) continue;
+                    const doors = intoRules.get(e.targetRegion) ?? intoRules.set(e.targetRegion, new Map()).get(e.targetRegion);
+                    const edge = (rulesRegions[from]?.exits ?? []).find((x) => x.name === e.exitName) ?? null;
+                    (doors.get(e.targetExitId) ?? doors.set(e.targetExitId, []).get(e.targetExitId))
+                        .push({ rule: edge?.access_rule ?? null, name: edge?.name ?? e.exitName, from });
+                }
+            }
+        }
         const totalLocs = spheres.allLocations.size;
         const blocksCache = new Map();
         const doorArrivals = new Map();
@@ -508,6 +745,12 @@ async function main() {
             };
             for (const [id, needs] of into.get(region) ?? []) add(resolveArrivalSpawn(pl, { exit_id: id }, RETURNS), id, needs);
             if (starts.has(region)) add(seedlingStartSpawn({ world: pl, returnSpawns: RETURNS, partition: PARTITION }), 'start', [[]]);
+            if (EDGE) {
+                const pathTo = (sp) => (sp ? trace.get(arrivals.find((b) => b.x === sp.x && b.y === sp.y)) : null);
+                for (const a of arrivals) trace.set(a, []);
+                for (const [id, doors] of intoRules.get(region) ?? []) pathTo(resolveArrivalSpawn(pl, { exit_id: id }, RETURNS))?.push(...doors);
+                if (starts.has(region)) pathTo(seedlingStartSpawn({ world: pl, returnSpawns: RETURNS, partition: PARTITION }))?.push({ rule: null, name: 'start' });
+            }
             for (const a of arrivals) {
                 const events = arrivalEventNeeds(a.needs);
                 delete a.needs;
@@ -540,7 +783,7 @@ async function main() {
         // ⛓ DOOR-LESS SUB-REGIONS (§5.126) — after EVERY preset's door legs (`doorless` below), so no door leg moves
         doorlessPasses.push(() => {
             const rooms = regions.map(([r, p]) => [r, p.level]);
-            const viaLinks = linkArrivals({ rooms, arrivalsOf: doorArrivals, rulesRegions, byItem });
+            const viaLinks = linkArrivals({ rooms, arrivalsOf: doorArrivals, rulesRegions, byItem, trace });
             for (const [region, pl] of regions) {
                 if (doorArrivals.get(region).length) continue;
                 const goals = goalsOf.get(region);
@@ -580,9 +823,16 @@ async function main() {
             delete leg.goalEvents;
             // ⚖ TEST-HARNESS STAGING ONLY (see `events` / `goal events` above): production never stages a flag
             Object.assign(leg, eventGate({ arrive: a, level: pl.level, goal: g.goal, goalEvents: g.goalEvents }));
+            // ⛓ EDGE EVENTS (opt-in; ⚖ test-harness staging only, as the events): the arrival path's edge events at the leg's sphere
+            const i = g.sphere?.index;
+            const crossable = (rule, path) => (path.from && !spheres.rows[i].reached.has(path.from)
+                ? `(source region ${path.from} unreached)` : sphereEdgeEvents(rule, byItem, holdsAt(i)));
+            const staged = EDGE && Number.isInteger(i) ? withEdgeEvents(leg, arrivalEdgeEvents(trace, a, crossable), g.sphere.label,
+                (rule) => namedGameStateEvents(rule, byItem)) : leg;
             // ⛓ ROUTE CARRY (opt-in; ⚖ test-harness staging only, as the events): the flags the route cleared before it
-            const out = CARRY ? withRouteCarry(leg, routeCarry({ goal: g.goal, sphere: g.sphere, flags: carryFlags,
-                collected, reads: readsOf(pl.level) })) : leg;
+            const carriedLeg = CARRY ? withRouteCarry(staged, routeCarry({ goal: g.goal, sphere: g.sphere, flags: carryFlags,
+                collected, reads: readsOf(pl.level) })) : staged;
+            const out = ROPE_ROCK ? withRopeRockCarry(carriedLeg, ROPE_ROCK) : carriedLeg;
             seen.set(k, out);
             legs.push(out);
         }
@@ -605,10 +855,21 @@ async function main() {
     const goalStaged = legs.filter((l) => l.goalEvents);
     console.log(`INFO: ${goalStaged.length} leg(s) STAGE their GOAL rule's event flag(s) (the cheapest branch the AP route holds): `
         + JSON.stringify(by((l) => (l.goalEvents ? l.goalEvents.join('+') : 'none'))));
+    if (EDGE) {
+        const edged = legs.filter((l) => l.edgeEvents);
+        console.log(`INFO: EDGE EVENTS (--stage-edge-events, test-harness staging): ${edged.length} leg(s) stage an event their arrival `
+            + `path's edge rule cannot hold without at the leg's sphere, or skip (stamped edgeEvents): ${JSON.stringify(by((l) => (l.edgeEvents
+                ? (l.skip ? l.skip.split(':')[0] : l.edgeEvents.join('+')) : 'none')))}`);
+    }
     if (CARRY) {
         const carried = legs.filter((l) => l.carriedFlags);
         console.log(`INFO: ROUTE CARRY (--carry-route-flags, test-harness staging): ${carried.length} leg(s) carry the flag(s) the route `
             + `cleared before them (stamped carriedFlags): ${JSON.stringify(by((l) => (l.carriedFlags ? `L${l.level} +${l.carriedFlags.length}` : 'none')))}`);
+        if (ROPE_ROCK) {
+            const rr = legs.filter((l) => l.carriedFlags?.some((f) => f.ropeRock));
+            console.log(`INFO: CARRY-ROPE-ROCK (SEEDLING_CARRY_ROPE_ROCK=1): ${ROPE_ROCK.size} rope(s) drop a rock; ${rr.length} carried leg(s) `
+                + `stage the rock(s) with the rope: ${JSON.stringify(rr.map((l) => `${l.key} +${l.carriedFlags.filter((f) => f.ropeRock).map((f) => f.eventId).join('+')}`))}`);
+        }
     }
     const skipped = legs.filter((l) => l.skip);
     console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an event gate that maps to no flag, or the goal IS the gating event)`

@@ -1956,11 +1956,29 @@ I want that to be accessible directly from a tab in the APWorld editor."*
 The tab rebuilds a `Grid` from the **working copy's** `preset_sidecars` —
 `reconstructResultFromSidecars(record, {playerId})`, the same pure function the
 pipeline panel uses for a loaded preset — and hands it to
-`drawCompositeMap(canvas, grid, regionSize, {selection})`. The renderer names no
-substrate: each one declares its own painter in the registry's `compositeMap`
-slot ([substrate registry](../developer/procgen/substrate-registry.md) §
-*Composite map*), and a substrate that declares none gets a generic box
-**labelled with its id**.
+`drawCompositeMap(canvas, grid, regionSize, {selection, substrateArt, source,
+onCellArtReady})`. The renderer names no substrate: each one declares its own
+painter in the registry's `compositeMap` slot ([substrate
+registry](../developer/procgen/substrate-registry.md) § *Composite map*), and a
+substrate that declares none gets a generic box **labelled with its id**.
+
+**Seedling cells draw their level** (region-map step 1, 2026-11-14; ⚖ the user
+agreed to this visible change and asked for a way back to the old view).
+`flash_seedling` and `flash_seedling_gen` regions draw the level as the
+JavaScript Seedling renderer draws it, scaled to fit the cell, with the exit
+squares on top; a sub-region's cell dims the rest of its level. The level art
+loads asynchronously. A cell shows the generic box until its bake lands; the
+painter then calls the tab's `onCellArtReady`, which repaints **this canvas only**
+(no tab re-render), and a canvas that a later draw has replaced is left alone.
+- The **Substrate art** checkbox in the bar above the map
+  (`.apworld-map-substrate-art`) switches back to the old view. Unchecked, every
+  painter that declares `compositeMap.artwork` is skipped, and its cells draw
+  the generic box again. Maze and text-adventure cells are unaffected. Measured
+  on `seedling_spiral_room` and `seedling_generated_room`: unchecked is
+  pixel-identical to the map before this change.
+- The checkbox state is kept **in memory, per panel**, not as a setting. The
+  canvas carries it as `data-substrate-art`. The Procgen Pipeline panel's map
+  has the same checkbox (`.procgen-pipeline-substrate-art`).
 
 **A world has a map when its sidecars carry a `grid_cell`**, by ⚖ (*"show the
 composite grid only for presets that have grid data"*). That is a claim about the

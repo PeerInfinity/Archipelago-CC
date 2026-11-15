@@ -245,6 +245,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
+                    "statement": "It draws its own picture on the composite map (else a labelled box)",
+                    "text": null
+                },
+                {
+                    "group": "play",
                     "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
                 },
@@ -323,6 +328,11 @@ export const CAPABILITIES = frz({
                     "group": "play",
                     "statement": "The Playback Bot can walk it (replaying a world's solution)",
                     "text": "with the Flash Panel's JS runtime, or its wasm runtime"
+                },
+                {
+                    "group": "play",
+                    "statement": "It draws its own picture on the composite map (else a labelled box)",
+                    "text": null
                 },
                 {
                     "group": "play",
@@ -545,6 +555,11 @@ export const CAPABILITIES = frz({
                     "group": "play",
                     "statement": "It can show the library's concepts in its own way",
                     "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …"
+                },
+                {
+                    "group": "play",
+                    "statement": "Themeable",
+                    "text": "gate, item, character, object, info"
                 },
                 {
                     "group": "loop",
@@ -860,6 +875,11 @@ export const CAPABILITIES = frz({
                     "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), …"
                 },
                 {
+                    "group": "play",
+                    "statement": "Themeable",
+                    "text": "gate, item, place, character, object, info"
+                },
+                {
                     "group": "loop",
                     "statement": "You can play it in loop mode",
                     "text": null
@@ -981,10 +1001,10 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 102,
-        "fieldsRead": 39,
-        "fieldsUnread": 60,
-        "statements": 29,
+        "fields": 105,
+        "fieldsRead": 40,
+        "fieldsUnread": 62,
+        "statements": 30,
         "substrates": 9
     },
     "fieldsRead": [
@@ -994,6 +1014,7 @@ export const CAPABILITIES = frz({
         "captureLibraryEntry",
         "compositeMap.drawRegion",
         "conceptRealisations",
+        "contentRoles",
         "describeAction",
         "deserializeWorld",
         "exitSides",
@@ -1038,7 +1059,8 @@ export const CAPABILITIES = frz({
                 "P3",
                 "P4",
                 "P5",
-                "P6"
+                "P6",
+                "P7"
             ]
         },
         {
@@ -1402,23 +1424,23 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "compositeMap.drawRegion",
-                            "value": "—"
+                            "value": "fn"
                         }
                     ]
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "compositeMap.drawRegion",
-                            "value": "—"
+                            "value": "fn"
                         }
                     ]
                 },
@@ -1860,6 +1882,115 @@ export const CAPABILITIES = frz({
             "group": "play",
             "id": "P6",
             "statement": "It can show the library's concepts in its own way"
+        },
+        {
+            "cells": [
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "yes",
+                    "text": "gate, item, character, object, info",
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "{character, gate, info, item, object}"
+                        }
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "yes",
+                    "text": "gate, item, place, character, object, info",
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "{character, gate, info, item, object, place}"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "contentRoles"
+            ],
+            "group": "play",
+            "id": "P7",
+            "statement": "Themeable"
         },
         {
             "cells": [
@@ -4953,7 +5084,9 @@ export const CAPABILITIES = frz({
         "buildRegionParams",
         "buildZoneSpecs",
         "canHostExitGatesBraid",
-        "contentRoles",
+        "compositeMap.artwork",
+        "compositeMap.displayRegionOf",
+        "compositeMap.locationTiles",
         "defaultContentPack",
         "defaultProcgenParams",
         "driftItems",

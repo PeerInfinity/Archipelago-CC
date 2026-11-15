@@ -1,0 +1,10 @@
+PW DEBUG: URL: http://localhost:8123/frontend/?mode=test-substrates&testBatch=tutorials-seedling-whole-game&measureSkipRefusals=10&seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND%3D1%3BSEEDLING_KILLLOCK_LINE_STANCE%3D1%3BSEEDLING_TALK_CLEAR_GOAL%3D1
+[PROGRESS 1/1] tutorial-walk-seedling-whole-game FAILED 0.1s
+    condition: Unhandled error: Failed to fetch dynamically imported module: http://localhost:8123/frontend/modules/noiz2saSubstrate/index.js
+PW DEBUG: URL: http://localhost:8123/frontend/?mode=test-substrates&testBatch=tutorials-seedling-whole-game&measureSkipRefusals=10&seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND%3D1%3BSEEDLING_KILLLOCK_LINE_STANCE%3D1%3BSEEDLING_TALK_CLEAR_GOAL%3D1
+[PROGRESS 1/1] tutorial-walk-seedling-whole-game PASSED 190.9s
+PW DEBUG: URL: http://localhost:8123/frontend/?mode=test-substrates&testBatch=tutorials-seedling-whole-game&measureStepTimeoutMs=4000000&measureSkipRefusals=10&measureBotStallMs=900000&seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND%3D1%3BSEEDLING_KILLLOCK_LINE_STANCE%3D1%3BSEEDLING_TALK_CLEAR_GOAL%3D1
+  runner error: Auto-start timeout after 600 seconds
+PW DEBUG: URL: http://localhost:8123/frontend/?mode=test-substrates&testBatch=tutorials-seedling-whole-game&autoStartTimeoutMs=4200000&measureStepTimeoutMs=4000000&measureSkipRefusals=10&measureBotStallMs=900000&seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND%3D1%3BSEEDLING_KILLLOCK_LINE_STANCE%3D1%3BSEEDLING_TALK_CLEAR_GOAL%3D1
+    Test timeout of 900000ms exceeded.
+    Error: page.waitForFunction: Test timeout of 900000ms exceeded.

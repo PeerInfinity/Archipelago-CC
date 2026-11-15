@@ -28224,6 +28224,16 @@ L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 sp
 SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
 hammer arc's signature on its pins, so it waits for a licence.
 
+### Seedling hammer-phase DRILL-EXIT-FLIP — `DRILL_EXIT_PASS` ON by default
+
+⚖ The user, 2026-11-11: *"DRILL_EXIT_PASS flip"* (the hammer replan after the volley flip). The switch now reads
+`SEEDLING_DRILL_EXIT_PASS !== '0'`, default `true`; `=0` opts out. It was ready once fidelity's DRILL-WATER put the
+drill's hop into water in the model (`drillTerrainSwitch` ON): L91's two legs across `drill@64,80` both solve with the
+armed timed pass, 718 (L89 arrival → L92) in 190 ticks and 719 (the whole-game walk's L91 → L89) in 223, each certified
+on a fork and hitless. A walk that solves is never pre-empted and a walk that refuses after spending ticks keeps its
+refusal (L88's 704), so the flip moves only door legs whose walk refuses on a live drill before a tick is spent.
+`hammerDrillExitPass.test.js` pins both arms explicitly; its switch row now pins the default ON.
+
 ### Seedling fidelity AFTERROWS — every `withL40Flip(false)` BEFORE pin in fidelity gets its AFTER at the shipped defaults
 
 Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user 2026-11-12, *"AFTER rows at L40 defaults"*). Base
@@ -28247,6 +28257,26 @@ Six BEFORE properties are not covered at the defaults; four of them have no sing
 shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
 ⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
 Re-record a BEFORE witness only under `withL40Flip(false)`.
+
+### Seedling hammer-phase KILLLOCK-FLIP — `KILLLOCK_CHASER_REWIND` and `KILLLOCK_LINE_STANCE` ON by default
+
+⚖ The user, 2026-11-11: *"Page play, then flip both"* (the WALK-WALLS answer), and 2026-11-12: *"Stack all three"* (this
+flip rides one branch with the drill-exit flip and YETI-TALK, OFF). Both switches now read `SEEDLING_<NAME> !== '0'`,
+default `true`; `=0` opts out. The evidence is WALK-L53-PAGE's: with both on, L53's `r2c2 → r14c9` crossing (the
+whole-game walk's BK3 kill-lock) solves in 608 ticks and plays hitless on the game page (p4g, 0 divergences, arrives
+L54), and the whole-game walk passes entry 24 with the same plan digest. `KILLLOCK_LINE_STANCE` is read only with
+`KILLLOCK_CHASER_REWIND` on and a rewind, so the two flip together. `hammerL53Killlock.test.js` and
+`hammerNewLocks.test.js` pin each arm explicitly; their switch rows now pin the defaults ON.
+
+### Seedling hammer-phase KILLLOCK-FLIP, revised — `KILLLOCK_LINE_STANCE` back OFF (`KILLLOCK_CHASER_REWIND` stays ON)
+
+⚖ The user, 2026-11-14: *"Land, LINE_STANCE OFF"*. The hammer stack's route survey to the end measured `KILLLOCK_LINE_STANCE`
+making step 227 (L98 Chest → L99) solve by taking 2 hits it never billed: `spinningaxe@128,64` at t358 and t381, on a
+483-tick plan whose rows are brave, kill and walk (no forced-hit row). A plan that tanks a hit does not ship. With the
+switch off and the rewind on, the same step solves in 520 ticks with 0 hits. Step 228 (L99), which the line stance had
+reached, refuses again, on the shake-band question about whether a lavarunner is on screen. The game sweeps' L98 legs were
+hitless in every arm. The switch reads `SEEDLING_KILLLOCK_LINE_STANCE === '1'` again (default `false`), and
+`hammerNewLocks.test.js`'s switch row pins all three OFF.
 
 ### Seedling fidelity ROCKBUTTON — a landed FallRock is a Solid that holds a Button down (`fallRockHoldsButton`, OFF)
 

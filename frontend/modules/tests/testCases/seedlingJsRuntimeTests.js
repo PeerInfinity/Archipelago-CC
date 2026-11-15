@@ -22,7 +22,11 @@
  * SESSION override and restores the previous value however it ends.
  */
 
-import { registerTest } from '../testRegistry.js';
+import { registerTest as registerRow } from '../testRegistry.js';
+// ⛓ RE2 — every row here starts with no Seedling JS save and leaves the saves as it found them (`jsSaveIsolation.js`).
+import { isolatesJsSaves } from '../jsSaveIsolation.js';
+
+const registerTest = (def) => registerRow({ ...def, testFunction: isolatesJsSaves(def.testFunction) });
 import settingsManager from '../../../app/core/settingsManager.js';
 import { getActivePanelInstance, getSeedlingPlayClock, getSeedlingRegionGlue } from '../../flashPanel/index.js';
 import { PLAY_CLOCK_EVENT } from '../../flashPanel/seedlingPlayClock.js';

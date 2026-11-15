@@ -1,0 +1,7 @@
+      Tests  4 failed | 570 passed | 1 skipped (575)
+ FAIL  frontend/modules/seedlingDemo/hammerL53Killlock.test.js > hammer-phase L53-KILLLOCK — the L53 kill-lock's chaser arm (`KILLLOCK_CHASER_REWIND`) > 9001 (from the L51 door): OFF the stand-here dwell is hit by the jellyfish; ON the count reaches 0 (all four die to sword presses, J2/J1 after the arm's refused attempts on them), 0 hits
+ FAIL  frontend/modules/seedlingDemo/hammerL53Killlock.test.js > hammer-phase L53-KILLLOCK — the L53 kill-lock's chaser arm (`KILLLOCK_CHASER_REWIND`) > 9001 at budget 960: ON is deadline-bound and says so — the attempt the trip refused is raised as OFF raises it, not rewound
+ FAIL  frontend/modules/seedlingDemo/hammerL53Killlock.test.js > hammer-phase L53-KILLLOCK — the L53 kill-lock's chaser arm (`KILLLOCK_CHASER_REWIND`) > 9002 (from the L48 door): OFF the chaser kill runs out its bound; ON every body dies, 0 hits
+ FAIL  frontend/modules/seedlingDemo/hammerRockHolderWait.test.js > ROCK-HOLDER-WAIT — `RESTING_HOLDER` (OFF) > ON + the model counting the rock: the solver WAITS out the fade (t0–t101), crosses the open lock hitless, and stops at the next wall — `kill (bobsoldier@264,168)`, its dwell hit at t361 (the game agrees: report §6)
+ Test Files  2 failed | 30 passed (32)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯

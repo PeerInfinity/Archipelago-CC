@@ -1020,6 +1020,15 @@
     <div class="line">
       <span id="editBase" class="note"></span>
     </div>
+    <!-- ⛓ SEEDLING → MAZE LINK (⚖ Robert 2026-11-14): the open room's converted maze room, in the maze lab, in a
+         new tab. Fetches NOTHING until pressed (seedlingMazeLink.js finds the room by content; the reason shows
+         when there is none). -->
+    <div class="line">
+      <button id="editMazeFind" title="looks this room up in the converted maze presets (fetches them on first press)">find this room in the MAZE LAB</button>
+      <select id="editMazeRoom" hidden title="this level has several converted maze rooms"></select>
+      <a id="editMazeOpen" target="_blank" rel="noopener" hidden>open in the maze lab ↗</a>
+      <span id="editMazeNote" class="note"></span>
+    </div>
     <div class="line">
       <label for="editLoad">LOAD</label>
       <textarea id="editLoad" rows="3" style="width:44em"

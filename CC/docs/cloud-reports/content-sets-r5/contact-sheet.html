@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta Gates And Items</title>
+<!--
+  Content sets R5 — the `meta` theme's art for the maze's concept GATE and ITEMS, for the user's review.
+  Open it from a dev server at the repository root (it imports the real modules and reads the committed packs and
+  presets): python -m http.server 8140  →  http://localhost:8140/CC/docs/cloud-reports/content-sets-r5/contact-sheet.html
+  render-contact-sheet.mjs (beside this file) screenshots it to contact-sheet.png.
+  Every picture is drawn by the real painter (`mazeRoomRender.drawWorld`) on meta_trial's committed water room, once
+  with no art (the row's baked colour and symbol: what plays today) and once with the stack ['maze', 'meta'] loaded
+  through `mazeTileArt.loadMazeTileArt` with the maze's content roles, as play loads it. meta_trial holds no guardian
+  gate and no sword pickup, so those two are STAGED on the same room: its water gate re-labelled as a guardian (with the
+  look the meta theme bakes for it, the Gate's grey-blue and '#'), and its swim pickup re-labelled as the sword.
+-->
+<style>
+  :root { --bg: #f4f5f7; --fg: #1d2129; --muted: #5d6573; --line: #d5d9e0; --card: #ffffff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #16181d; --fg: #e6e8ec; --muted: #9aa2b1; --line: #2c313a; --card: #1e2128; } }
+  :root[data-theme="dark"] { --bg: #16181d; --fg: #e6e8ec; --muted: #9aa2b1; --line: #2c313a; --card: #1e2128; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.sub { color: var(--muted); margin: 0 0 16px; max-width: 70ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(560px, 100%), 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  .card h2 { font: 600 13px/1.3 ui-monospace, monospace; margin: 0 0 2px; }
+  .card .what { color: var(--muted); font-size: 12px; margin: 0 0 8px; min-height: 2.6em; }
+  .pair { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+  .pair figure { margin: 0; text-align: center; font-size: 11px; color: var(--muted); }
+  canvas { image-rendering: pixelated; display: block; border: 1px solid var(--line); max-width: 100%; }
+  .rooms { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+  .rooms figure { margin: 0; font-size: 12px; color: var(--muted); }
+  #status { color: var(--muted); font-size: 12px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<h1>The <code>meta</code> theme — the Gate and the items</h1>
+<p class="sub">Each in its room twice: <b>default</b> (no art: the colour and symbol baked into the world) beside
+<b>meta</b> (the stack <code>maze, meta</code>), each a 3×3-cell crop at 3×, plus the recipe alone. The water gate is
+not presented by the theme, so both columns draw it the same way. Below, the whole room both ways.</p>
+<div class="grid" id="grid"></div>
+<div class="rooms" id="rooms"></div>
+<div id="status">drawing…</div>
+<script type="module">
+const F = '../../../../frontend/';
+const [{ drawWorld, plainView, TILE_PX }, { createState, deserializeMazeWorld },
+    { loadMazeTileArt }, { browserRasteriser, browserDecoder, paintShape }, { substrateRegistryEntry }] = await Promise.all([
+    import(`${F}modules/mazeRoom/mazeRoomRender.js`), import(`${F}modules/mazeRoom/mazeRoomEngine.js`),
+    import(`${F}modules/mazeRoom/mazeTileArt.js`), import(`${F}modules/artLibrary/artLibrary.js`),
+    import(`${F}modules/mazeRoom/mazeRoomLibrary.js`)]);
+const json = async (u) => (await fetch(u, { cache: 'no-store' })).json();
+const PACKS = new URL(`${F}packs/`, location.href).href;
+const loaded = await loadMazeTileArt(['maze', 'meta'], {
+    base: PACKS, readJson: json, decode: browserDecoder(), rasterise: browserRasteriser(),
+    contentRoles: substrateRegistryEntry.contentRoles,
+});
+const tileArt = loaded.tileArt;
+const manifest = await json(`${F}packs/meta/art/manifest.json`);
+const metaConcepts = (await json(`${F}packs/meta/concepts/manifest.json`)).concepts;
+const presenter = (mechanic) => Object.values(metaConcepts).find((c) => c.presents === mechanic) ?? null;
+
+// ── meta_trial's water room (read off the data) ──
+const trial = await json(`${F}presets/meta_trial/AP_1/AP_1_rules.json`);
+const slot = Object.keys(trial.procgen_metadata)[0];
+const [roomId, side] = Object.entries(trial.preset_sidecars[slot]).find(([, s]) => s.substrate === 'maze'
+    && Object.values(s.playable_payload.obstacleLib ?? {}).some((d) => d.concept === 'water'));
+const payload = side.playable_payload;
+const [gateId, gateDef] = Object.entries(payload.obstacleLib).find(([, d]) => d.concept === 'water');
+const pickup = payload.items.find((it) => payload.itemLib[it.id]?.concept);
+const swordId = Object.keys(payload.itemLib).find((id) => payload.itemLib[id].concept === 'sword');
+
+/** The room, optionally staged: the gate as a guardian (the meta Gate's baked look), the pickup as the sword. */
+function room({ guardian = false, sword = false } = {}) {
+    const p = JSON.parse(JSON.stringify(payload));
+    if (guardian) {
+        const g = presenter('guardian');
+        Object.assign(p.obstacleLib[gateId], { concept: 'guardian', name: g.name, color: g.look.color, symbol: g.look.symbol });
+    }
+    if (sword) p.items = p.items.map((it) => (it === pickup || (it.x === pickup.x && it.y === pickup.y) ? { ...it, id: swordId } : it));
+    return deserializeMazeWorld(p);
+}
+const gateCell = (() => { const [k] = [...room().obstacles].find(([, id]) => id === gateId); const [x, y] = k.split(',').map(Number); return { x, y }; })();
+const viewOf = (w, extra = {}) => { const s = createState(w); return { tilePx: TILE_PX, inventory: s.inventory, playerPos: s.player_pos, facing: 'E', ...extra }; };
+const passed = (w) => viewOf(w, { inventory: new Set([...createState(w).inventory, gateDef.clear_rule.args.item_name]) });
+
+const SCALE = 3;
+function render(world, view, art) {
+    const c = document.createElement('canvas');
+    c.width = world.width * TILE_PX;
+    c.height = world.height * TILE_PX;
+    drawWorld(c.getContext('2d'), world, plainView({ ...view, tileArt: art }));
+    return c;
+}
+function crop(full, cell) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 3 * TILE_PX * SCALE;
+    const g = c.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.fillStyle = '#000';
+    g.fillRect(0, 0, c.width, c.height);
+    g.drawImage(full, (cell.x - 1) * TILE_PX, (cell.y - 1) * TILE_PX, 3 * TILE_PX, 3 * TILE_PX, 0, 0, c.width, c.height);
+    return c;
+}
+function recipe(key) {
+    const sh = manifest.shapes[key];
+    const c = document.createElement('canvas');
+    c.width = sh.w * SCALE;
+    c.height = sh.h * SCALE;
+    const g = c.getContext('2d');
+    g.scale(SCALE, SCALE);
+    paintShape(g, sh);
+    c.style.background = 'repeating-conic-gradient(#8884 0 25%, #0000 0 50%) 0 0 / 16px 16px';
+    return c;
+}
+const fig = (canvas, label) => {
+    const f = document.createElement('figure');
+    f.append(canvas, Object.assign(document.createElement('figcaption'), { textContent: label }));
+    return f;
+};
+
+const CARDS = [
+    { title: 'the Gate (guardian), closed', mechanic: 'guardian', world: room({ guardian: true }), view: viewOf, cell: gateCell, staged: true },
+    { title: 'the Gate (guardian), passed', mechanic: 'guardian', world: room({ guardian: true }), view: passed, cell: gateCell, staged: true },
+    { title: 'Progressive Sword (pickup)', mechanic: 'sword', world: room({ sword: true }), view: viewOf, cell: pickup, staged: true },
+    { title: 'Progressive Swim (pickup)', mechanic: 'swim', world: room(), view: viewOf, cell: pickup },
+    { title: 'Water (not presented by meta: falls through)', mechanic: 'water', world: room(), view: viewOf, cell: gateCell },
+];
+const grid = document.getElementById('grid');
+for (const c of CARDS) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const key = presenter(c.mechanic)?.art ?? null;
+    card.innerHTML = '<h2></h2><p class="what"></p>';
+    card.querySelector('h2').textContent = `${c.title}${key ? ` — ${key}` : ''}`;
+    card.querySelector('.what').textContent = `${(key && manifest.shapes[key]?.note) || 'no art key: drawn the default way in both'}${c.staged ? ' (staged on meta_trial\'s water room)' : ''}`;
+    const pair = document.createElement('div');
+    pair.className = 'pair';
+    const v = c.view(c.world);
+    pair.append(fig(crop(render(c.world, v, null), c.cell), 'default'), fig(crop(render(c.world, v, tileArt), c.cell), 'meta'));
+    if (key && manifest.shapes[key]) pair.append(fig(recipe(key), 'recipe'));
+    card.append(pair);
+    grid.append(card);
+}
+
+const big = (c) => {
+    const o = document.createElement('canvas');
+    o.width = c.width * 2;
+    o.height = c.height * 2;
+    const g = o.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.drawImage(c, 0, 0, o.width, o.height);
+    return o;
+};
+const whole = room();
+document.getElementById('rooms').append(fig(big(render(whole, viewOf(whole), null)), `meta_trial ${roomId} — default`),
+    fig(big(render(whole, viewOf(whole), tileArt)), `meta_trial ${roomId} — meta (the swim pickup from art; the water gate stays the maze default's)`));
+const resolved = Object.entries(loaded.conceptArt).flatMap(([role, m]) => Object.entries(m).map(([mech, e]) => `${role}/${mech} → ${e.key}`));
+document.getElementById('status').textContent = `concept art: ${resolved.join('; ')}; failed sheets: ${loaded.failed.length}`;
+document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

@@ -68,6 +68,7 @@ import { stampLibraryIdentity } from '../procgenPipeline/regionLibraryValidator.
 import { captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
 import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
+import { reseatThings } from './mazeThings.js';
 
 /** ⛓ The three deps the capture path takes — the maze's own, in one place. */
 const CAPTURE_DEPS = Object.freeze({
@@ -171,7 +172,10 @@ function save(saved, { regionId, payload }) {
             + `(\`library.entries[0].payload\`) for "${regionId}" — got `
             + `${JSON.stringify(saved && Object.keys(saved))}.`);
     }
-    const next = restamp(edited, payload);
+    // ⛓ CONTENT SETS S2 — the region's `things` (not a tile, so the lab never sees them): `restamp` carries the
+    //   document's back, and `reseatThings` keeps each on its cell while that is still free floor, moving one the
+    //   edit covered by the hash rule (none where no cell is free). A re-derive (an unedited save) moves nothing.
+    const next = reseatThings(restamp(edited, payload), regionId);
     const world = deserializeMazeWorld(next);
     const extracted = extractPathsAndObstacles(world, { regionId });
     const compiled = compileRegion(extracted, { obstacleLib: obstacleLibOf(next) });

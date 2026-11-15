@@ -139,6 +139,7 @@ import { routeDiffersLine } from './frontierReadout.js';
  * why a browser page may import them at all.
  */
 import { mapDocumentPath } from '../flashPanel/mapDocumentPath.js';
+import { findMazeCounterparts, mazeLinkFor } from './seedlingMazeLink.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { buildLevelSet } from './levelSetExporter.js';
 import {
@@ -9215,9 +9216,77 @@ async function runEditor(params, lifetime) {
         };
     };
 
+    /**
+     * ⛓⛓ SEEDLING → MAZE LINK (⚖ Robert 2026-11-14) — the open room's converted maze room(s), opened in the maze
+     * lab in a new tab. `seedlingMazeLink` does the finding; this is the control. ⛔ ON DEMAND: nothing is fetched
+     * until `#editMazeFind` is pressed (the index and the Seedling presets' rules, ~2 MB), so a row that never asks
+     * for the link sees no request and no time spent. After the first press the answer re-renders with the room
+     * (an edit, an undo, another room opened). A room with no counterpart shows the REASON and no link.
+     */
+    let mazeCounterparts = null;   // null = not asked; a Promise while looking; then the answer or {error}
+    let mazeLink = null;
+    const renderMazeLink = () => {
+        const open = $('editMazeOpen');
+        const pick = $('editMazeRoom');
+        const note = $('editMazeNote');
+        if (mazeCounterparts === null || mazeCounterparts instanceof Promise) {
+            mazeLink = null;
+            return;
+        }
+        $('editMazeFind').hidden = true;
+        mazeLink = mazeCounterparts.error
+            ? { ok: false, reason: `the maze presets could not be read — ${mazeCounterparts.error}` }
+            : mazeLinkFor({
+                baseRecord, baseKind: baseTag?.kind ?? null, edits: session ? session.ops().length : 0,
+                mapDoc: atlas, counterparts: mazeCounterparts,
+            });
+        if (!mazeLink.ok) {
+            pick.hidden = true;
+            open.hidden = true;
+            open.removeAttribute('href');
+            note.className = 'note bad';
+            note.textContent = `no maze lab link: ${mazeLink.reason}`;
+            return;
+        }
+        const keep = pick.value;
+        pick.replaceChildren(...mazeLink.options.map((o) => {
+            const opt = document.createElement('option');
+            opt.value = o.url;
+            opt.textContent = o.label;
+            return opt;
+        }));
+        if (mazeLink.options.some((o) => o.url === keep)) pick.value = keep;
+        pick.hidden = mazeLink.options.length < 2;
+        open.hidden = false;
+        open.href = repoUrl(`frontend/${pick.value}`);
+        note.className = 'note';
+        note.textContent = `level ${mazeLink.level}: ${mazeLink.options.length} maze room(s)`
+            + `${mazeLink.notes.length ? ` — ⚠ ${mazeLink.notes.join('; ')}` : ''}`;
+    };
+    lifetime.on($('editMazeRoom'), 'change', () => {
+        $('editMazeOpen').href = repoUrl(`frontend/${$('editMazeRoom').value}`);
+    });
+    lifetime.on($('editMazeFind'), 'click', () => {
+        if (mazeCounterparts !== null) return;
+        $('editMazeFind').disabled = true;
+        $('editMazeNote').className = 'note';
+        $('editMazeNote').textContent = 'looking for this room in the maze presets…';
+        mazeCounterparts = findMazeCounterparts({
+            mapDoc: atlas,
+            mapName: mapDocumentPath(null).name,
+            fetchJson: (path) => fetchJson(repoUrl(`frontend/${path}`), path),
+        }).catch((e) => ({ error: e.message }));
+        mazeCounterparts.then((answer) => {
+            if (!lifetime.alive()) return;
+            mazeCounterparts = answer;
+            render();
+        });
+    });
+
     let editorUi = null;
     const render = () => {
         const n = session.ops().length;
+        renderMazeLink();
         $('editBase').textContent = `${describeBase(baseTag)}${n ? `, then ${n} edit(s)` : ''}`
             + ' — ⛔ the URL carries NO edits (⚖ ruling 9); the PAYLOAD is the reproduction.';
         /**
@@ -9315,6 +9384,8 @@ async function runEditor(params, lifetime) {
             transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
             /** ⛓ E2 — what the room is wired to, and the issues the panel lists. */
             get links() { return editorUi?.links() ?? null; },
+            /** ⛓ The Seedling → maze link: null until `#editMazeFind` is pressed and answered. */
+            get mazeLink() { return mazeLink; },
             /**
              * ⛓ EDITOR v3 C2 — WHICH SET IS HELD and how many of its rooms this
              * page could open. ⛔ The set itself is NOT echoed here: it is up to

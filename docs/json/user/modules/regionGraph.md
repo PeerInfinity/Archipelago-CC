@@ -75,3 +75,7 @@ When discovery mode is active, a checkbox appears to show or hide undiscovered r
 ## Layout
 
 The graph uses the COSE (Compound Spring Embedder) layout algorithm to automatically position nodes. You can manually drag nodes to adjust positions after the layout runs. Use **Re-layout** to recalculate positions, or **Export Positions** to save your arrangement.
+
+## Where its state and actions live
+
+The Region Graph draws; it no longer decides. Whether a region is reachable, how many of its locations are checked or accessible, and whether discovery mode hides it or shows it as `???` all come from the shared region view model (`frontend/modules/regionView/regionViewModel.js`). What a click does — move one step, move directly, add to or overwrite the path, check a location — comes from the shared region actions (`frontend/modules/regionView/regionActions.js`). The Region Map panel uses the same two files, so a change to what a click does applies to both panels. See `frontend/modules/regionView/README.md`.

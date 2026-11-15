@@ -82,7 +82,13 @@ describe('the families — one NON-default fact each, that a neighbour\'s copy w
         const maze = substrateRegistry.get('maze');
         expect(ta.sidecarFields).not.toBe(maze.sidecarFields);
         const f = fieldsOf('text_adventure');
-        const tileKeys = Object.entries(fieldsOf('maze')).filter(([, d]) => d.owner === 'substrate').map(([k]) => k);
+        // ⛓ CONTENT SETS S2 — `things` is declared by both, each in its own shape (a maze thing has a cell, a
+        //   room's does not): it is not a tile key.
+        const shared = Object.keys(fieldsOf('maze')).filter((k) => k in f && fieldsOf('maze')[k].owner === 'substrate');
+        expect(shared).toEqual(['things']);
+        expect(f.things).not.toEqual(fieldsOf('maze').things);
+        const tileKeys = Object.entries(fieldsOf('maze'))
+            .filter(([k, d]) => d.owner === 'substrate' && !shared.includes(k)).map(([k]) => k);
         expect(tileKeys).toEqual(expect.arrayContaining(['tiles', 'width', 'height']));
         const payload = { exits: [], fogEnabled: true, exitGates: {}, locations: [] };
         expect(sidecarPayloadErrors(f, payload)).toEqual([]);

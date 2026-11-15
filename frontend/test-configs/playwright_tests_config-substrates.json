@@ -61,6 +61,16 @@
             "category": "textAdventureSubstrateWrapper"
         },
         {
+            "id": "tasw-thing-examine-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-exit-label-by-place",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
             "id": "tasw-playback-no-double-append",
             "enabled": true,
             "category": "TA block modes"
@@ -562,6 +572,12 @@
             "enabled": true,
             "category": "Maze tile art",
             "_comment": "Content sets R4: the committed meta_trial world's maze drawn from the meta theme's shape recipes through the panel's own play-time load (no test seam): the stack is [maze, meta], the floor, wall and player are drawn from \"meta#<key>\" sheets, and the water gate keeps the maze default pack's look. Rides `fast` like the R2b row."
+        },
+        {
+            "id": "maze-thing-shows-text",
+            "enabled": true,
+            "category": "Maze things",
+            "_comment": "Content sets S2: a maze region's thing (not an AP check) on the committed meta_trial world. Walked onto with key presses: its name and lines show under the canvas and content:thingExamined is published; the player walks on and back (read again); drawn only where seen and not under the player; no location checked. No batch claims the category, so it rides `fast`."
         },
         {
             "id": "seedling-atlas-sphere-placed-region",

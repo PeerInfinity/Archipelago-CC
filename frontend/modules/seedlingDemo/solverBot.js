@@ -199,8 +199,11 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
 import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
+// ⛓ hammer-phase SPEAR-ARM: a spear-only slot's strike policy (`spearStrikePolicyFor`; a family file).
+import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
+import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -1902,6 +1905,18 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
  * The FINISH is the clear-tag's (`waitForWrite` on `earnedClears`). Every refusal is the clear-tag's own
  * (`refuseCT(reason, why)`).
  */
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE YETI-TALK — the clear-tag's TALK ARM, by obstacle class: `'talk'` for a Solid talker whose
+ * dialogue the clear-tag drives to its `doneTalking()` write, else null. Today exactly the Yeti row below (behind
+ * `CONTACT_FIDELITY.yetiTalk`; `execYetiTalk`). ONE answer for both sides: the clear-tag's arm asks it, and so does
+ * the page's goal mapper (`jsRuntimeSolver.clearTagVerbOf`, behind `TALK_CLEAR_GOAL`), so the two cannot drift.
+ * The key is the CLASS because the arm is: the model's "this talker's `doneTalking()` writes that flag" is the Yeti's
+ * own two-write arm in `levelRun` (`yetiDoneTalking`; `dialogue.PLACED_NPC_TALK.yeti`), not a per-talker datum.
+ */
+export function clearTagTalkArmOf(cls) {
+    return CONTACT_FIDELITY.yetiTalk && cls === 'yeti' ? 'talk' : null;
+}
+
 const YETI_STANCE_MARGIN = 2;
 const YETI_SETTLE_MAX = 60;
 const YETI_TALK_MAX = 1200;
@@ -5332,6 +5347,34 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
             }, ...derived.rejected, ...opener.rejected],
         };
     }
+    if (!derived.plan && derived.resting) {
+        // ⛓ hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF): the dwell arm above, with a resting Solid as the holder
+        // (`restingHolderOn`). No stance: the player waits out the fade wherever the walk left them.
+        const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+            `solverBot weigh/resting (${obstacle.id})`);
+        const hold = deriveHold(run, resolvedPresser, opener);
+        const r = derived.resting;
+        return {
+            strategy: 'weigh',
+            postCondition: 'press',
+            dwellOnly: true,
+            target: { x: presser.x, y: presser.y },
+            resting: { solid: r.solid, tag: r.tag, tile: { ...r.tile }, sinceTick: null },
+            dwell: {
+                ticks: hold.ticks,
+                until: hold.until,
+                why: `${r.solid} (a resting \`${r.tag}\`) holds ${presser.tag}@${presser.x},${presser.y} down and `
+                    + 'never moves again this visit — `Button.update` re-collides `["Player","Enemy","Solid"]` EVERY '
+                    + 'tick (`Button.as:27-39`). There is no lean to order and no cell to stand in, so this is the '
+                    + 'weigh MINUS its shove: the player waits out the fade wherever the walk left them.',
+            },
+            rejected: [{
+                option: 'hold',
+                why: `the parent's fallback would put the stance on ${presser.tag}@${presser.x},${presser.y}'s own `
+                    + `cell, which ${r.solid} occupies`,
+            }, ...derived.rejected, ...opener.rejected],
+        };
+    }
     if (!derived.plan && derived.corpse) {
         // ⛓ fidelity CORPSEBUMP D2: the corpse is the holder (`deriveCorpseWeigh`); `execWeigh`'s corpse arm walks.
         const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
@@ -5946,10 +5989,78 @@ function deriveWeighSource(run, onto, contacts, blocked = [], { liveBag = null }
     // ⛓ L40BK2 (`weighHypothesisChain`): `liveBag` is guard (iii)'s hypothesis bag (absent: the live world, as before).
     const derived = liveBag ? deriveWeigh(run, onto, contacts, blocked, { liveBag })
         : deriveWeigh(run, onto, contacts, blocked);
+    // ⛓ hammer ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF): a resting Solid already holding the presser is a third holder.
+    if (RESTING_HOLDER.enabled && !derived.plan && !derived.parked) {
+        const resting = restingHolderOn(run, onto);
+        if (resting) return { ...derived, resting, rejected: [...derived.rejected, resting.rejected] };
+    }
     if (!CONTACT_FIDELITY.corpseBumpWeigh || derived.plan || derived.parked) return derived;
     const c = liveBag ? deriveCorpseWeigh(run, onto, blocked, { liveBag, contacts })
         : deriveCorpseWeigh(run, onto, blocked);
     return { ...derived, ...(c.plan ? { corpse: c.plan } : {}), rejected: [...derived.rejected, ...c.rejected] };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE ROCK-HOLDER-WAIT (`RESTING_HOLDER`, OFF) — **A PRESSER A RESTING SOLID ALREADY HOLDS IS
+ * DISCHARGED AFTER ITS FADE.** The game: `Button.update` collides `["Player","Enemy","Solid"]` every tick
+ * (`Button.as:16,29-39`), and a landed `FallRock`/`FallRockLarge` (or a set `Moonrock`) is `type = "Solid"` that never
+ * moves again for the visit. So a presser one rests on publishes its group from the first frame and for the rest of the
+ * visit, and the responder's fade (`Lock.activationStep`, `opensOnTick`) runs out with no input: there is no block to
+ * order and no stance to stand in (the rock occupies the presser's cell), only the WAIT. That is the dwell arm a
+ * pre-parked block already takes (`resolveWeighStrategy`), with the holder named as what it is.
+ *
+ * ⛔ THE MODEL DECIDES, NOT THIS READER. A holder is reported only when BOTH hold: a resting Solid of the run's
+ * `fallenRocks` bag (the per-visit family whose members never move once landed) overlaps the presser's rect by
+ * `Button`'s own overlap test, AND the live model reads the presser `down` (`run.activatorsNow`) while the player's own
+ * box is off it. The second clause is the model's answer to "does that Solid press it" (fidelity's
+ * `fallRockHoldsButton`): where the model does not count the rock, the solver does not either, so a plan never waits on
+ * a fade the replay will not run. Generic: no level, no id, no Seedling constant — the bag, the presser, the read.
+ */
+function restingHolderOn(run, onto) {
+    const presser = (run.world.pressers ?? []).find((p) => Math.floor(p.x / TILE_SIZE) === onto.tx
+        && Math.floor(p.y / TILE_SIZE) === onto.ty);
+    if (!presser?.rect) return null;
+    const id = `${presser.tag}@${presser.x},${presser.y}`;
+    const rocks = run.liveGeometryOpts().fallenRocks;
+    if (!rocks) return null;
+    const solid = [...rocks.values()].find((r) => r.rect && rectsOverlap(r.rect, presser.rect));
+    if (!solid) return null;
+    if (rectsOverlap(playerBoxAt(run.state.x, run.state.y), presser.rect)) return null;
+    const read = run.activatorsNow?.pressers?.find((p) => p.id === id);
+    if (!read?.down) return null;
+    return {
+        solid: solid.id,
+        tag: solid.tag,
+        presser: id,
+        tile: { ...onto },
+        rejected: {
+            option: `weigh with a block onto ${id}`,
+            why: `${solid.id} (a resting \`${solid.tag}\`, \`type = "Solid"\`) ALREADY holds ${id} — the model reads it `
+                + 'down with the player off it — so there is no press to order, only its fade to wait out',
+        },
+    };
+}
+
+/**
+ * The switch for `restingHolderOn` — OFF by default; `SEEDLING_RESTING_HOLDER=1` turns it on in a node process (and in
+ * the page's solve worker through `solverEnvChannel`), `withRestingHolder(enabled, fn)` for a test or a witness. OFF,
+ * nothing is read and every walk is byte-identical.
+ */
+export const RESTING_HOLDER = { enabled: globalThis.process?.env?.SEEDLING_RESTING_HOLDER === '1' };
+export const RESTING_HOLDER_DEFAULT = false;
+
+/**
+ * ⛓ READ-ONLY PROBE for `hammerRockHolderWait.test.js`: `restingHolderOn` for the presser at `at` (`{x, y}`) of `run`
+ * as it stands — `{solid, tag, presser, tile}` or null. It reads whatever the switch says: it asks the reader directly.
+ */
+export function restingHolderProbe(run, at) {
+    const r = restingHolderOn(run, { tx: Math.floor(at.x / TILE_SIZE), ty: Math.floor(at.y / TILE_SIZE) });
+    return r ? { solid: r.solid, tag: r.tag, presser: r.presser, tile: { ...r.tile } } : null;
+}
+
+/** Run `fn` with `RESTING_HOLDER` set to `enabled`, restoring the previous value. */
+export function withRestingHolder(enabled, fn) {
+    return withSwitch(RESTING_HOLDER, enabled, fn);
 }
 
 /**
@@ -6605,7 +6716,7 @@ export function strikePolicyFor(run, { dashPlan = null,
     axisAlong = false } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
-    if (!hasSword) return null;
+    if (!hasSword) return spearStrikePolicyFor(run, { dashPlan, axisAlong });
     /**
      * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
      * policy presses `primary`, which the game runs as `useItem(Main.primary)`: with Fire (or any non-blade) selected
@@ -6660,6 +6771,31 @@ export function strikePolicyFor(run, { dashPlan = null,
     });
     if (!axisAlong) return policy;
     if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
+    AXIS_STRIKE_COUNTS.policies += 1;
+    return axisAlongStrike(policy);
+}
+
+/**
+ * ⛓⛓ hammer-phase SPEAR-ARM (`SPEAR_ARM`, OFF: null, as before) — **THE BLADELESS RUN'S STRIKE, WHEN IT HOLDS A
+ * SPEAR.** `strikePolicyFor`'s policy with the thrust's geometry (`spearArm.spearStrikeGeometry`: `spearHitRect`, the
+ * model's reach gate, the swallow period), built only when the selected slot IS the spear (`useItem(Main.primary)`:
+ * any other selection's press is that item's, so no policy; the segment's walk selects it, `spearArmEquip`). No dash
+ * plan (the thrust has no dash arm), and the i-frame lapse is not asked (the spear tests at T+1/T+3/T+5, not on every
+ * tick of the sword's window, so the lapse arithmetic is the sword's and the pre-lapse question is the honest one).
+ */
+function spearStrikePolicyFor(run, { dashPlan = null, axisAlong = false } = {}) {
+    const slot = spearArmSlot(run.progress('inventory'), run.progress('inventorySlots'));
+    if (slot < 0 || dashPlan || run.progress('primary') !== slot) return null;
+    if ((run.entities('strikeBodies') ?? []).length === 0) return null;
+    SPEAR_ARM_COUNTS.policies += 1;
+    const policy = createStrikePolicy({
+        facingToward, facingKeys: FACING_KEYS, hasSword: true, allowDash: false,
+        talkCircles: run.entities('talkCircles') ?? [],
+        vetoBody: dropKillVetoFor(run),
+        iframeLapse: false,
+        geometry: spearStrikeGeometry(),
+    });
+    if (!axisAlong) return policy;
     AXIS_STRIKE_COUNTS.policies += 1;
     return axisAlongStrike(policy);
 }
@@ -7155,6 +7291,13 @@ export function previewWalk(run, wps, tolerance = 0,
                 if (dashCertSightDepth > 0 && CONTACT_FIDELITY.pixelMaskSightLines && b.tag !== 'flyer'
                     && dashCertLineBlocked(run, state, b)) {
                     DASH_CERT_SIGHT.counts.refused += 1;
+                    continue;
+                }
+                // ⛓ hammer L28-BOBSOLDIER (`KILL_STANCE_SIGHT`, OFF): the chaser arm's stance scan asks the same line,
+                // with the ghost swing's waiver too. OFF the depth is 0 and nothing is asked.
+                if (killStanceSightDepth > 0 && dashCertSightDepth === 0 && CONTACT_FIDELITY.pixelMaskSightLines
+                    && b.tag !== 'flyer' && !gate.hasGhostSword && dashCertLineBlocked(run, state, b)) {
+                    KILL_STANCE_SIGHT.counts.refused += 1;
                     continue;
                 }
                 /**
@@ -7898,6 +8041,51 @@ export function withDashCertSight(enabled, fn) {
 
 /** ⛓ hammer DASHCERT — how many `spinnerDashWhole` asks are on the stack (counted with `DASH_CERT_SIGHT` ON only). */
 let dashCertSightDepth = 0;
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L28-BOBSOLDIER — **THE CHASER ARM'S STANCE SCAN SEES THE SWING'S LINE OF SIGHT**
+ * (`KILL_STANCE_SIGHT`, OFF).
+ *
+ * ⚖ The user approved the slice on 2026-11-12 (the hammer replan: *"L28 bobsoldier kill stance"*).
+ *  - The gap (measured, `seedling-hammer-l28-bobsoldier.md` §3): DASHCERT's gap, one caller over. `deriveKillByChaser`
+ *    prices each stance with `previewWalk`, whose chaser arm tests only the slash rect and the reach; the run's sword arm
+ *    also refuses a chaser whose line from the player meets a Solid (`slash()`'s `collideLine("Solid", …)`,
+ *    `Player.as:917`; fidelity MASKS D2, `CONTACT_FIDELITY.pixelMaskSightLines`, ON). On the witness (L28 from (136,296)
+ *    with the rock resting on the button, both of ROCK-HOLDER-WAIT's switches ON), the stance (216,200) was priced with
+ *    the t328 press landing on its first test. The run refused three tests on a `dungeonspire` mask and landed the
+ *    fourth, so the body's i-frame clock ran 3 ticks behind the preview's. The strike policy's re-approach then parted
+ *    from the forecast and stepped the player into the resting blade at t361. The game takes the same hit.
+ *  - ON: the stance scan's previews ask the run's own line test (`run.collideLineSolid`, masks included) before a swing
+ *    lands on a chaser, with the run arm's waivers (a Flyer, a ghost swing; the key OFF asks nothing). The stance priced
+ *    is then the fight the dwell drives (⚖ 30(c)). Every other preview is untouched.
+ *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
+ * `counts` hears each scan ask (`asks`) and each swing the line refused inside one (`refused`); it decides nothing.
+ * `SEEDLING_KILL_STANCE_SIGHT=1` in a node process or the page's solve worker (`solverEnvChannel`), or
+ * `withKillStanceSight(enabled, fn)` for a row. The decision runs in the solve WORKER (`solverBot`), not on the main thread.
+ */
+export const KILL_STANCE_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_KILL_STANCE_SIGHT === '1',
+    counts: { asks: 0, refused: 0 } };
+export const KILL_STANCE_SIGHT_DEFAULT = false;
+
+/** Run `fn` with `KILL_STANCE_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withKillStanceSight(enabled, fn) {
+    return withSwitch(KILL_STANCE_SIGHT, enabled, fn);
+}
+
+/** ⛓ L28-BOBSOLDIER — how many stance-scan previews are on the stack (counted with `KILL_STANCE_SIGHT` ON only). */
+let killStanceSightDepth = 0;
+
+/** `fn` (a stance-scan preview) with the swing's line of sight asked ON; OFF it is `fn()`, nothing counted. */
+function killStanceSighted(fn) {
+    if (!KILL_STANCE_SIGHT.enabled) return fn();
+    KILL_STANCE_SIGHT.counts.asks += 1;
+    killStanceSightDepth += 1;
+    try {
+        return fn();
+    } finally {
+        killStanceSightDepth -= 1;
+    }
+}
 
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -10866,7 +11054,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
                 ty: Math.floor(opener.presser.y / TILE_SIZE),
             } : null;
             const derived = onto ? deriveWeighSource(run, onto, contacts, blocked) : null;
-            if (!derived || (!derived.plan && !derived.parked && !derived.corpse)) {
+            if (!derived || (!derived.plan && !derived.parked && !derived.corpse && !derived.resting)) {
                 // ⛓ L40BK2: a refused holder is ALSO asked again under the rest of the hypothesis (`chained`); the wall
                 // stands either way — the base hypothesis does not hold it.
                 if (chained && onto) chained.push({ a, opener, onto });
@@ -10964,7 +11152,7 @@ function chainWeighHypothesis(run, chained, out, contacts, blocked, extra) {
                 still.push(p);
                 continue;
             }
-            if (derived.plan || derived.parked || derived.corpse) {
+            if (derived.plan || derived.parked || derived.corpse || derived.resting) {
                 const corpse = derived.corpse && !derived.plan && !derived.parked ? derived.corpse.turret : null;
                 // ⛓ a corpse holder's turret is killed by its weigh: its volume rides out as the entry's exemption
                 extra.push({ id: p.a.id, kind: 'activator', tag: p.a.tag, strategy: 'weigh',
@@ -11382,6 +11570,129 @@ export const PACE = Object.freeze({
  * ⚖ 30(c): the waited keys are the tape's; the corridor is certified from the state the walk starts in.
  */
 // ⚖ ON in the L40 flip (hammer L40-FLIP-BUILD, for the planner's harvest): `SEEDLING_BOMB_PHASE_WAIT=0` opts out.
+/**
+ * ⛓ hammer-phase CONNECTED-L22 (`SEEDLING_WALK_DEATH_REFUSED`, OFF) — **A WALK THAT DIED IS REFUSED BY NAME, WHATEVER
+ * KILLED IT.** `refuseIfDrowned` already refuses a walk a whirlpool drowned (seedling-fidelity-residue D-B); every
+ * other death was invisible to the solve: the drive's respawn put the player back at the room's arrival, it walked
+ * the same corridor into the same hits, and the attempt ended at `maxTicksPerTarget` as *"waypoint N: not reached
+ * within 400 ticks; stalled at … after grazing K solid(s)"* — a STALL, naming the arrival-side trees it grazed after
+ * each respawn, never the deaths. MEASURED (connected room f6, slot 2, L22 → L29 from L25's door, Ghost Spear and no
+ * sword; captured request #49 replayed in node): 9 deaths inside one solve, every one three `wallflyer` hits
+ * (`wallflyer@48,112`, `@128,80`) on the band the corridor crosses unpriced (`corridorBodyPricing` OFF).
+ *
+ * ON: the first death since the walk began refuses, naming the tick, the death count and the last `hitsNamed` hits
+ * before it (`obstacle: {kind: 'death', id}`). The answer stays a refusal, the same verdict: the switch changes its
+ * WORDS and stops the re-plan from the respawn, it does not make a crossing solvable. OFF: not asked (byte-identical).
+ * `refused` collects one row per refusal (measurement).
+ */
+export const WALK_DEATH_REFUSED = {
+    enabled: globalThis.process?.env?.SEEDLING_WALK_DEATH_REFUSED === '1',
+    hitsNamed: 3,
+    refused: [],
+};
+
+/**
+ * ⛓ hammer-phase L43-BOSSTOTEM (`SEEDLING_AWAKE_BOSS_FIRST`, OFF) — **A WALK THAT AN AWAKE BOSS BARS FIGHTS THE BOSS
+ * FIRST.** A boss in the run's `bosses` family is a Solid only while it sleeps; once it wakes (`activated`) the corridor
+ * planner no longer sees it — its body is an Enemy whose contact the probe does not price, and its clamp is an
+ * ASSIGNMENT, not a collider (`bossTotem.js`). So a walk planned after the wake (a pickup's wake: the vanilla Wand room)
+ * aims straight through the body or past the clamp, takes its contact hits and dies, and re-plans from the respawn into
+ * the same wake. MEASURED (vanilla route survey step 150, level 43, the wand stance for `magicallock@144,112` after the
+ * Wand pickup): the walk aims at (152,184) from (150,234), through the woken body; three `bossBody` hits (t173, t213,
+ * t237) and a death, then the re-plan from the respawn stalls on the arrival wall — OFF's words.
+ *
+ * ON: before a walk, a live (activated, not removed, not destroyed) body of that family BARS the aim when the aim lies
+ * past its clamp (`clampY`) or the straight line from the player to the aim crosses its body rect. Then the walk first
+ * asks the body's own fight verb — the strategy table's row for `solid:<tag>` and its executor, the frontier's lookup —
+ * and walks after the kill; a body no verb is registered or held for refuses by name (`obstacle: solid`). OFF: not
+ * asked (byte-identical). `fought` collects one row per ask (measurement).
+ */
+export const AWAKE_BOSS_FIRST = {
+    enabled: globalThis.process?.env?.SEEDLING_AWAKE_BOSS_FIRST === '1',
+    fought: [],
+};
+
+/** Run `fn` with `AWAKE_BOSS_FIRST` set to `enabled`, restoring the previous value. */
+export function withAwakeBossFirst(enabled, fn) {
+    return withSwitch(AWAKE_BOSS_FIRST, enabled, fn);
+}
+
+/**
+ * ⛓ hammer-phase L41-PUNCHER-LADDER (`SEEDLING_KILL_HIT_BODY`, OFF) — **THE KILL RUNG TAKES THE HIT'S OWN BODY when the
+ * chooser's head is not on the hit.** `chooseBodyToRemove` admits a body when its removal admits a corridor, and orders
+ * the admitted set by distance from the AIM. Where AVOID's re-plan already admits a corridor with every danger volume
+ * standing (the probe's hit is a chaser's forecast on the walk, not a volume the map forbids), that question is TRUE OF
+ * EVERY BODY, so the list is the whole roster and its head is the body nearest the destination — which the corridor
+ * probe never met. The kill rung then reasons about that body (a spinner by the goal → the press arm) and the climb ends
+ * EXHAUSTED although the chaser arm (which already reads `interceptOrder`) was never asked about the body the walk hit.
+ * MEASURED (seed-1 sweep leg `level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part
+ * 64,144`, base `4c3afd9b32`): the hit is `puncher@816,128` at (840.3,120.5), 9 px from the arrival; the chooser's head
+ * is `spinner@192,128`, 650 px away by the goal; BAIT and KILL both refuse on the spinner.
+ *
+ * ON: where the chooser's head is not among `hit.sources` and the head of `interceptOrder(removable, hit)` is (a body the
+ * chooser itself admitted, met by this probe), the kill rung's target is that body. BAIT is unchanged. OFF: not asked
+ * (byte-identical). `retargets` collects one row per retarget (measurement).
+ */
+export const KILL_HIT_BODY = {
+    enabled: globalThis.process?.env?.SEEDLING_KILL_HIT_BODY === '1',
+    retargets: [],
+};
+
+/** Run `fn` with `KILL_HIT_BODY` set to `enabled`, restoring the previous value. */
+export function withKillHitBody(enabled, fn) {
+    return withSwitch(KILL_HIT_BODY, enabled, fn);
+}
+
+/**
+ * `KILL_HIT_BODY`'s choice: the body the hit names first among the chooser's admitted set, when the set's head is not
+ * on the hit; else `null` (the rung keeps the chooser's head). Pure: `removable` is the chooser's list, `hit` the probe's.
+ */
+export function killHitBodyOf(removable, hit) {
+    const head = removable[0] ?? null;
+    const met = new Set((hit?.sources ?? []).map((sx) => sx.id));
+    if (head === null || met.has(head.id)) return null;
+    const first = interceptOrder(removable, hit)[0];
+    return first && met.has(first.id) ? first : null;
+}
+
+/** Does the segment (a → b) cross the rect `r` ({x, y, w, h})? Slab clipping; touching an edge counts. */
+function segmentCrossesRect(a, b, r) {
+    let t0 = 0;
+    let t1 = 1;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    for (const [p, q] of [[-dx, a.x - r.x], [dx, r.x + r.w - a.x], [-dy, a.y - r.y], [dy, r.y + r.h - a.y]]) {
+        if (p === 0) {
+            if (q < 0) return false;
+            continue;
+        }
+        const t = q / p;
+        if (p < 0) t0 = Math.max(t0, t);
+        else t1 = Math.min(t1, t);
+        if (t0 > t1) return false;
+    }
+    return true;
+}
+
+/**
+ * ⛓ hammer-phase L43-BOSSTOTEM — the live boss in the run's `bosses` family that bars a walk from `from` to `aim`, or
+ * null. Read off the model's own view: `activated`, `removed`/`destroy`, `clampY` (the floor the clamp assigns) and
+ * `bodyRect` (the woken body's box). A sleeping body is a Solid the frontier already names, so it is not asked here.
+ */
+export function awakeBossBarring(run, from, aim) {
+    const bosses = run.entities('bosses');
+    if (!bosses || bosses.size === 0 || !aim) return null;
+    for (const [id, view] of bosses) {
+        if (!view?.activated || view.removed || view.destroy) continue;
+        const past = Number.isFinite(view.clampY) && aim.y < view.clampY;
+        const crosses = view.bodyRect ? segmentCrossesRect(from, aim, view.bodyRect) : false;
+        if (!past && !crosses) continue;
+        const at = id.indexOf('@');
+        return { id, tag: at > 0 ? id.slice(0, at) : id, past, crosses };
+    }
+    return null;
+}
+
 export const BOMB_PHASE_WAIT = {
     enabled: globalThis.process?.env?.SEEDLING_BOMB_PHASE_WAIT !== '0',
     /** still ticks asked, one probe each: one bomb period (`BombPusher`: a launch every 46 ticks). */
@@ -12211,6 +12522,8 @@ function execWeigh(run, perTick, resolved, ctx) {
             dwellOnly: true,
             presser: { ...resolved.target },
             parked: { ...resolved.parked },
+            // ⛓ ROCK-HOLDER-WAIT: the resting Solid that holds it (only ever set while `RESTING_HOLDER` is on)
+            ...(resolved.resting ? { resting: { ...resolved.resting } } : {}),
             dwell: only,
             ticks: only.ticks ?? 0,
         };
@@ -14939,6 +15252,8 @@ function stepToward(run, aim, intended) {
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
     const step = previewOrDeath(run.previewStepper());
+    // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ `clearOfHammersAt`): a body the run would not bill is no wall
+    const clearAt = HAMMER_BODY_GATE.enabled ? clearOfBilledHammersAt : clearOfHammersAt;
     // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
     // they had, and the diagonals follow them.
     /**
@@ -14969,7 +15284,7 @@ function stepToward(run, aim, intended) {
         let best = depth;
         for (const keys of options) {
             const next = step({ ...st }, keys);
-            if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
+            if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)) continue;
             const d = survives(next, depth + 1);
             if (d > best) best = d;
             if (best >= STEP_LOOKAHEAD) return best;
@@ -14979,7 +15294,7 @@ function stepToward(run, aim, intended) {
     let best = null;
     for (const keys of options) {
         const next = step({ ...run.state }, keys);
-        if (!next || !clearOfHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
+        if (!next || !clearAt(run, playerBoxAt(next.x, next.y), forecast, 1)) continue;
         const depth = survives(next, 1);
         const d = Math.hypot(next.x - aim.x, next.y - aim.y);
         if (!best || depth > best.depth || (depth === best.depth && d < best.d)) {
@@ -14987,6 +15302,38 @@ function stepToward(run, aim, intended) {
         }
     }
     return best ? best.keys : intended;
+}
+
+/**
+ * ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, ON only) — **A TICK WITH NO AIM STILL LOOKS FOR A STEP OUT.** On a
+ * press-kill tick with nothing to walk to (no strike, no refuge: `stepToward`'s `!aim` early return), the walk stands and
+ * only `safeStep`'s one-tick test guards it. Measured on leg `… flag 12` (the report § 3): an opportunistic press DASHED
+ * the player at 2.55 px/tick toward a dying spinner, `safeStep` (gated) kept the stand at t724 and t725, and the slide
+ * put the box over the hammer's origin at t726, where every key set meets the line. ⇒ the stand is kept when it survives
+ * `stepToward`'s own lookahead (`STEP_LOOKAHEAD` ticks, the gated predicate); otherwise the tick is `stepToward` aimed at
+ * where the player stands — the phase stall's "safe holding step". A stand that survives is byte-identical.
+ */
+function holdStepOut(run, intended) {
+    if ((run.entities('spinnerBodies') ?? []).length === 0) return intended;
+    const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
+    if (!forecast.length) return intended;
+    const step = previewOrDeath(run.previewStepper());
+    const options = [new Set(), ...Object.values(FACING_KEYS).map((k) => new Set([k])),
+        ...DIAGONAL_KEYS.map((k) => new Set(k))];
+    const lasts = (st, depth) => {
+        if (depth >= STEP_LOOKAHEAD) return true;
+        return options.some((keys) => {
+            const next = step({ ...st }, keys);
+            return next && clearOfBilledHammersAt(run, playerBoxAt(next.x, next.y), forecast, depth + 1)
+                && lasts(next, depth + 1);
+        });
+    };
+    const first = step({ ...run.state }, intended);
+    if (first && clearOfBilledHammersAt(run, playerBoxAt(first.x, first.y), forecast, 1) && lasts(first, 1)) {
+        return intended;
+    }
+    HAMMER_BODY_GATE_COUNTS.held += 1;
+    return stepToward(run, { x: run.state.x, y: run.state.y }, intended);
 }
 
 /**
@@ -15145,6 +15492,94 @@ function landsClearOfHammers(run, keys) {
     return clearOfHammersAt(
         { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
         playerBoxAt(next.x, next.y), [ahead], 0);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SPINNER-CORNER — **`safeStep` BILLS A BODY ONLY WHERE THE RUN BILLS IT** (`HAMMER_BODY_GATE`,
+ * OFF; `SEEDLING_HAMMER_BODY_GATE=1`, `withHammerBodyGate`).
+ *
+ * ⛔ MEASURED (`CC/docs/cloud-reports/seedling-hammer-spinner-corner.md` § 3): leg `level_40__r48c54 <- in_L39_144_0 ~>
+ * level_40__r26c13 -> … flag 12` refuses *"There is no step out."* at t724, and every key set there is blocked by the
+ * BODY of `spinner@880,848` alone (no line). That body took its killing third hit at t719 (`destroy`, parked, its
+ * i-frame at 30); an opportunistic press at t722 dashed the player onto it. The run's own contact
+ * (`levelRun` `Enemy.update`: `hitUpdate(); hitPlayer();`) bills a spinner's 7x7 rect only while `!destroy &&
+ * hitsTimer <= 0` (`HAMMER_BILLING.body.gate`); the 13 px line has no such gate (`dyingStillSwings`). `clearOfHammersAt`
+ * prices every rect, so the guard refused a step the run would not bill.
+ *
+ * ⇒ ON, `landsClearOfHammers`' one-tick question is asked with the body gated: a row's body counts only when its live
+ * body is not `destroy` and its `hitsTimer`, run down one per row (`stepSpinner`'s decrement; row 1 is two updates on),
+ * is spent. Every estimate is the billing's or EARLIER (a body the forecast destroys, sinks in a pit or re-hits stays
+ * billed), never later. Asked only of a real run (a preview's view carries the bodies of another tick) and only when
+ * the forecast row holds exactly the live bodies (a removal in between ⇒ today's test). The line is asked as before.
+ */
+export const HAMMER_BODY_GATE = { enabled: globalThis.process?.env?.SEEDLING_HAMMER_BODY_GATE === '1' };
+
+/**
+ * The switch's instrument: `asked` rows tested with a body gated, `cleared` of them a gated body alone would have
+ * refused, `held` no-aim ticks whose stand did not last and that `holdStepOut` re-chose.
+ */
+export const HAMMER_BODY_GATE_COUNTS = { asked: 0, cleared: 0, held: 0 };
+
+/** Run `fn` with `HAMMER_BODY_GATE` set to `enabled`, restoring the previous value. */
+export function withHammerBodyGate(enabled, fn) {
+    const was = HAMMER_BODY_GATE.enabled;
+    HAMMER_BODY_GATE.enabled = enabled === true;
+    const restore = () => { HAMMER_BODY_GATE.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * ⛓ `HAMMER_BODY_GATE` — which of forecast row `i`'s rects bill their BODY, from the live bodies (`null` when the row
+ * does not hold exactly the live bodies, or the run is not a real one: the caller then asks today's test). Row `i` is
+ * `i + 1` spinner updates after the live state, so a live `hitsTimer` of `h` is spent there iff `h - (i + 1) <= 0`.
+ */
+export function hammerBodyBilled(run, row, i) {
+    if (typeof run?.advance !== 'function' || !Array.isArray(row)) return null;
+    const live = run.entities('spinnerBodies') ?? [];
+    if (live.length !== row.length) return null;
+    return live.map((b) => !b.destroy && b.hitsTimer - (i + 1) <= 0);
+}
+
+/**
+ * ⛓ `HAMMER_BODY_GATE` — `clearOfHammersAt(run, box, forecast, i)` with row `i`'s bodies gated (`hammerBodyBilled`),
+ * for a forecast taken on `run` at its own tick (row `i` = `i + 1` updates on, swinging at `run.gameTimeAt(i)`). OFF,
+ * or no gate derivable, or every body billed ⇒ exactly `clearOfHammersAt`.
+ */
+export function clearOfBilledHammersAt(run, box, forecast, i) {
+    const row = forecast[i];
+    const billed = HAMMER_BODY_GATE.enabled && row ? hammerBodyBilled(run, row, i) : null;
+    if (billed === null || billed.every(Boolean)) return clearOfHammersAt(run, box, forecast, i);
+    HAMMER_BODY_GATE_COUNTS.asked += 1;
+    const at = run.gameTimeAt(i);
+    let gatedHit = false;
+    for (let j = 0; j < row.length; j += 1) {
+        const r = row[j];
+        if (box.right > r.x && box.x < r.right && box.bottom > r.y && box.y < r.bottom) {
+            if (billed[j]) return false;
+            gatedHit = true;
+        }
+        if (hammerHitsPlayer({ x: r.x + SPINNER.originX, y: r.y + SPINNER.originY }, at, box)) return false;
+    }
+    if (gatedHit) HAMMER_BODY_GATE_COUNTS.cleared += 1;
+    return true;
+}
+
+/** ⛓ `HAMMER_BODY_GATE` — `landsClearOfHammers` with the body gated (OFF ⇒ exactly it). */
+function landsClearOfBilledHammers(run, keys) {
+    if (!HAMMER_BODY_GATE.enabled) return landsClearOfHammers(run, keys);
+    const forecast = run.spinnerForecast(2);
+    if (!forecast[1]) return true;
+    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
+    if (!next) return false;
+    return clearOfBilledHammersAt(run, playerBoxAt(next.x, next.y), forecast, 1);
 }
 
 /**
@@ -19150,7 +19585,7 @@ function chaserKillCeiling(run, body) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE L53-KILLLOCK — THE KILL-LOCK'S CHASER ARM PREVIEWS AT THE WALK'S TOLERANCE, AND A
- * REFUSED STANCE IS REWOUND AND THE NEXT ONE TRIED (`KILLLOCK_CHASER_REWIND`, OFF).
+ * REFUSED STANCE IS REWOUND AND THE NEXT ONE TRIED (`KILLLOCK_CHASER_REWIND`, ON since the kill-lock flip).
  *
  * ⚖ The user queued L53-KILLLOCK on 2026-11-07 (ROUTE-WALLS-CENSUS W1: BK3, the walk's L53 `r2c2 → r14c9` crossing).
  * `lock@144,208` opens on `totalEnemies() == 0`, and the arena holds three jellyfish and a puncher. MEASURED (the
@@ -19176,10 +19611,13 @@ function chaserKillCeiling(run, body) {
  * choice, so a turn the arm already wins is driven the same way. ⚖ 30(c): every attempt is driven on the run and the
  * one kept is the one the run did — a refused attempt leaves no tick in the tape. Without a rewind (no `forkRun`)
  * only (1) and (3) apply. OFF: nothing here is read; every derivation, walk and dwell is byte-identical.
- * `SEEDLING_KILLLOCK_CHASER_REWIND=1` / `withKillLockChaserRewind(enabled, fn)`.
+ * Page play (WALK-L53-PAGE, p4g): L53→L54 hitless, 0 divergences. `SEEDLING_KILLLOCK_CHASER_REWIND=0` opts out /
+ * `withKillLockChaserRewind(enabled, fn)`.
  */
-export const KILLLOCK_CHASER_REWIND = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CHASER_REWIND === '1' };
-export const KILLLOCK_CHASER_REWIND_DEFAULT = false;
+// ⚖ ON by default since the kill-lock flip (the user, 2026-11-11: *"Page play, then flip both"*; 2026-11-12 *"Stack all
+// three"*): `SEEDLING_KILLLOCK_CHASER_REWIND=0` opts out.
+export const KILLLOCK_CHASER_REWIND = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_CHASER_REWIND !== '0' };
+export const KILLLOCK_CHASER_REWIND_DEFAULT = true;
 /** The attempts one turn of the arm may drive (the first included); measured: L53 needs at most two per body. */
 export const KILLLOCK_CHASER_REWIND_TRIES = 6;
 
@@ -19242,7 +19680,7 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
 
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE NEW-LOCKS — **A PINNED CHASER IS DRAWN FROM A CELL IT HAS A CLEAR STRAIGHT LINE TO**
- * (`KILLLOCK_LINE_STANCE`, OFF; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
+ * (`KILLLOCK_LINE_STANCE`, OFF — ⚖ the user 2026-11-14 kept it out of the kill-lock flip: survey step 227 tanked 2 axe hits under it; it rides `KILLLOCK_CHASER_REWIND`'s turn, so it needs that switch and a rewind).
  * ⚖ The user, 2026-11-10: *"a stance that draws a pinned chaser along a clear straight line, built on
  * KILLLOCK_CHASER_REWIND"*.
  *
@@ -19273,6 +19711,8 @@ function killLockChaserAttempt(run, perTick, resolved, ctx, hunted, first) {
  * the one the run drove. Nothing reads a level or a coordinate. OFF: nothing here is read.
  * `SEEDLING_KILLLOCK_LINE_STANCE=1` / `withKillLockLineStance(enabled, fn)`.
  */
+// ⚖ OFF (the user 2026-11-14, "Land, LINE_STANCE OFF"): the kill-lock flip keeps KILLLOCK_CHASER_REWIND ON and this one OFF —
+//   under it the vanilla survey's step 227 (L98 Chest → L99) solved by taking 2 unbilled spinningaxe hits. `=1` turns it on.
 export const KILLLOCK_LINE_STANCE = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_LINE_STANCE === '1' };
 export const KILLLOCK_LINE_STANCE_DEFAULT = false;
 /** The line-stance attempts one turn may drive, and the cells one body may offer. */
@@ -19835,6 +20275,7 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
         const row = { t: t0, refused: e.code, refusedAt: perTick.length, bodies: resolved.plans.map((p) => p.id) };
         const admission = PRESS_ADMISSIONS.get(resolved.plans) ?? null;
         const { run: fresh, undo } = ctx.rewind.to(t0);
+        const clock0 = fresh.ticksCompleted; // ⛓ OPP-FALLBACK-HITS: the redo's first clock (read only)
         const was = OPPORTUNISTIC_STRIKE.enabled;
         OPPORTUNISTIC_STRIKE.enabled = false;
         try {
@@ -19843,14 +20284,18 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
             const record = execKillByPressFightFallback(fresh, perTick, again, ctx);
             row.verdict = 'solved';
             row.ticks = perTick.length - t0;
+            // ⛓ hammer-phase OPP-FALLBACK-HITS (`OPP_FALLBACK_HITS`, OFF ⇒ not read): a redo that took a hit is refused
+            if (oppFallbackHitsAudits()) oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo);
             OPP_PRESS_FALLBACK_COUNTS.solved += 1;
             ctx.rewind.note({ ...row, how: 'opp-plain' });
             return { ...record, oppPressFallback: row };
         } catch (e2) {
+            if (e2?.oppFallbackHitsRefused) throw e2; // ⛓ OPP-FALLBACK-HITS: already undone, the refusal stands
             if (e2 instanceof PendingDeclaration || e2?.undeclaredKillLock) {
                 row.verdict = 'solved';
                 row.ticks = perTick.length - t0;
                 row.raised = e2?.undeclaredKillLock ? 'undeclaredKillLock' : e2.name;
+                if (oppFallbackHitsAudits()) oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo);
                 OPP_PRESS_FALLBACK_COUNTS.solved += 1;
                 ctx.rewind.note({ ...row, how: 'opp-plain' });
                 throw e2;
@@ -19869,6 +20314,33 @@ function execKillByPressOppFallback(run, perTick, resolved, ctx) {
             OPPORTUNISTIC_STRIKE.enabled = was;
         }
     }
+}
+
+/**
+ * ⛓ hammer-phase OPP-FALLBACK-HITS — `OPP_FALLBACK_HITS` (see `oppFallbackHits.js`). Asked only once the fallback's redo
+ * KILLED (`row.verdict === 'solved'`). The hits the model billed after the redo's first clock are read off the run the
+ * redo ended on: `fresh`, or — when `HAMMER_FIGHT_FALLBACK` may have rewound inside the redo and adopted a run of its
+ * own — the segment's keys replayed (`ctx.rewind.replay`). Recorded in the instrument; ON with any hit, the redo is
+ * UNDONE and the ORIGINAL refusal `e` is thrown plus one sentence (marked `oppFallbackHitsRefused`, so the fallback's
+ * own catch does not undo twice). Hitless, or OFF (the census instrument), it returns and the redo is adopted as before.
+ */
+function oppFallbackRedoAudit(e, row, fresh, clock0, perTick, ctx, undo) {
+    const live = HAMMER_FIGHT_FALLBACK.enabled ? ctx.rewind.replay(perTick.length) : fresh;
+    const hits = playerHitsSince(live, clock0);
+    if (!auditOppFallbackRedo(row, hits)) return;
+    undo();
+    row.verdict = 'refused';
+    row.retryRefused = 'OPP_FALLBACK_HITS';
+    row.why = `the redo killed in ${row.ticks} tick(s) with ${hits.length} player hit(s)`;
+    row.hits = hits;
+    delete row.raised;
+    OPP_PRESS_FALLBACK_COUNTS.refused += 1;
+    const out = new SolverBotError(`${e.message} ${oppFallbackHitsSentence(row, hits)}`,
+        { code: e.code, boundTicks: e.boundTicks });
+    if (e.fightFallback) out.fightFallback = e.fightFallback;
+    out.oppPressFallback = row;
+    out.oppFallbackHitsRefused = true;
+    throw out;
 }
 
 /** The press kill with `HAMMER_FIGHT_FALLBACK`'s retry (B3), unchanged — the body `execKillByPress` always had. */
@@ -20376,6 +20848,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                  * is the only thing that can answer it.
                  */
                 if (late === null && charted === null) held = stepToward(run, aim, held);
+                // ⛓ hammer-phase SPINNER-CORNER (`HAMMER_BODY_GATE`, OFF ⇒ not reached): no aim (a stand, or the escape
+                // certificate's key) still looks for a step out
+                if (HAMMER_BODY_GATE.enabled && !aim && charted === null) held = holdStepOut(run, held);
                 /**
                  * ⛓⛓⛓ F1c — THE HAMMER-PHASE RUNG (`hammerPhaseRung`). Only on a
                  * STRIKE approach: a refuge wait re-derives a strike every tick
@@ -20466,7 +20941,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 const meant = held;
                 // ⛓ hammer-phase OPP: an opportunistic aim was offered only where it lands clear (no swap may drop it)
                 held = oppTook === STRIKE_AIM ? held : safeStep(run, held, alternativesNow(), ctx.what, plan.id,
-                    fightKeys !== null ? landsClearInFlight : landsClearOfHammers);
+                    fightKeys !== null ? landsClearInFlight : landsClearOfBilledHammers);
                 // ⛓ hammer-phase A — a certificate `safeStep` overrode no longer describes the walk: it ends.
                 if (escape && held !== meant
                     && escapeHeld(escape, run.ticksCompleted, landings, plan.id, true) === meant) escape = null;
@@ -24302,6 +24777,311 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL — THE KILL RUNG'S ARMS FOR A WALLFLYER AND A DRILL (`WALLFLYER_KILL_ARM`,
+ * `SEEDLING_WALLFLYER_KILL_ARM`; `DRILL_KILL_ARM`, `SEEDLING_DRILL_KILL_ARM`; both OFF: the rung's words and work are
+ * the BEFORE ones, no fork is made).
+ *
+ * With the corridor forecast pricing body contact (`corridorBodyPricing`), a walk that crosses a wallflyer's ray or a
+ * drill's run range is refused by the probe — but the kill rung's arms target chasers, spinners and statics only, so the
+ * ladder EXHAUSTED on a body it never tried to remove (CORRIDORFLIP's lost solves: L22 → L29 at `wallflyer@48,112`,
+ * L88 at `drill@128,160`). Each arm removes such a body with the model's own press rules, asked only for a body of its
+ * family that is a SOURCE of the probe's hit and still live:
+ *
+ *   · WALLFLYER (`wallFlyer.js`) — a resting flyer launches only when the player crosses its ray (`decideMotion` away
+ *     from its wall, `attackRange`), a struck one is knocked back by `v = -v` (nowhere, at rest), and `hitPlayer` needs
+ *     the boxes to overlap. So it is struck where it RESTS, from a stance on a ring round it (`BODY_FAMILY_KILL.radii`,
+ *     eight compass points, nearest planned walk first): walk there, settle, face it, press whenever its `hitsTimer`
+ *     runs out (`hitsMax` 3 at the weapon's damage), then wait out "die" and the fade. A stance in its ray launches it:
+ *     the fork says so (the arm refuses that stance on a launch before the kill), not a ray test of ours.
+ *   · DRILL — DRILLKILL's own executor (`drillKillStances` / `execDrillKill`: pre-stance, creep, fight, removal),
+ *     which until now ran only ahead of L28's rope cut.
+ *
+ * Both are TRIED ON FORKS (`orbitKillChaser`'s shape): each stance is played on a fork of the solve until the body is
+ * removed, refused at the first player hit or death, a crossing or the bound; the first clean one is replayed on the
+ * live run key for key (slot selections at the same index) and must remove the body there too. No tick is spent on a
+ * refusal: the arm answers `why` and the rung goes on (DETOUR, …) as before, the why one line longer.
+ * ⚠ The weapon is `drillKillWeapon`'s (the primary sword or spear, else a held one's slot): Fire kills neither body.
+ */
+export const WALLFLYER_KILL_ARM = {
+    enabled: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM === '1',
+};
+export const WALLFLYER_KILL_ARM_DEFAULT = false;
+/** Run `fn` with `WALLFLYER_KILL_ARM` set to `enabled`, restoring the previous value (also on a throw). */
+export function withWallFlyerKillArm(enabled, fn) {
+    return withSwitch(WALLFLYER_KILL_ARM, enabled, fn);
+}
+export const DRILL_KILL_ARM = {
+    enabled: globalThis.process?.env?.SEEDLING_DRILL_KILL_ARM === '1',
+};
+export const DRILL_KILL_ARM_DEFAULT = false;
+/** Run `fn` with `DRILL_KILL_ARM` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDrillKillArm(enabled, fn) {
+    return withSwitch(DRILL_KILL_ARM, enabled, fn);
+}
+
+export const BODY_FAMILY_KILL = Object.freeze({
+    /** The wallflyer stance ring's radii, centre to centre (its box is 14 px; the press reaches its rect). */
+    radii: Object.freeze([16, 18, 14]),
+    /** At most this many forks per asking (stances, both families). */
+    maxForks: 8,
+    /** The fork walk's bound to a stance, ticks. */
+    walkBound: 300,
+    /** The settle's bound at a stance, and after the face tap. */
+    settleBound: 40,
+    /** The fight's bound from the first press: three landings `hitsTimerMax` (30) apart and the slack. */
+    fightBound: 160,
+    /** Presses that did not land before the stance is refused. */
+    unanswered: 2,
+    /** The removal's bound once the body dies: "die" and the fade. */
+    removalBound: 80,
+});
+
+/** What the arms did, per asking (read by the slice's rows; reset by the caller). */
+export const BODY_FAMILY_KILL_COUNTS = { asked: 0, kills: [], refused: [] };
+export function resetBodyFamilyKillCounts() {
+    BODY_FAMILY_KILL_COUNTS.asked = 0;
+    BODY_FAMILY_KILL_COUNTS.kills = [];
+    BODY_FAMILY_KILL_COUNTS.refused = [];
+}
+
+/** A run's live, resting-or-flying wallflyer `id` (not dying, not removed), or null. */
+function liveWallFlyer(r, id) {
+    const w = (r.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+    return w && !w.removed && !w.destroy && !w.dieAnim ? w : null;
+}
+
+/**
+ * Walk a FORK `f` to `to` along the planner's waypoints (`chooseHeld` toward each, `hasArrived` advancing), pushing the
+ * keys onto `keys`. `{why}` on no plan, a crossing, a player hit or death, or the bound; `{}` on arrival.
+ */
+function forkWalkTo(f, keys, to, opts, allowTeleporter, hits0, deaths0) {
+    const wps = planWaypointsOrNull(f.world, f.state, to, allowTeleporter, opts);
+    if (wps === null) return { why: `no corridor plans to (${to.x},${to.y})` };
+    const aims = [...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
+    let i = 0;
+    for (let k = 0; k < BODY_FAMILY_KILL.walkBound; k += 1) {
+        while (i < aims.length - 1 && hasArrived(f.state, aims[i], DEFAULT_TOLERANCE)) i += 1;
+        if (i === aims.length - 1 && hasArrived(f.state, aims[i], DEFAULT_TOLERANCE)) return {};
+        const held = chooseHeld(f.state, aims[i], DEFAULT_TOLERANCE);
+        const why = forkStep(f, keys, held, hits0, deaths0);
+        if (why) return { why: `${why} on the walk to (${to.x},${to.y})` };
+    }
+    return { why: `the walk to (${to.x},${to.y}) did not arrive in ${BODY_FAMILY_KILL.walkBound} ticks` };
+}
+
+/** One fork tick: `why` on a crossing or a new player hit / death since `hits0` / `deaths0`, else null. */
+function forkStep(f, keys, held, hits0, deaths0) {
+    keys.push(held);
+    const { transition } = f.advance(held);
+    if (transition) return `crossed to level ${transition.to_level} at fork tick ${keys.length}`;
+    const h = (f.ledger('playerHits') ?? []).slice(hits0)[0];
+    if (h) return `HIT at fork tick ${keys.length} (${h.source ?? '?'}${h.id ? ` ${h.id}` : ''})`;
+    if ((f.ledger('playerDeaths') ?? []).length !== deaths0) return `a death at fork tick ${keys.length}`;
+    return null;
+}
+
+/** The wallflyer stances round `w`: free player boxes on the ring, nearest planned walk first. */
+function wallFlyerKillStances(run, w, opts, allowTeleporter) {
+    const geo = run.liveGeometryOpts();
+    const out = [];
+    const seen = new Set();
+    for (const r of BODY_FAMILY_KILL.radii) {
+        for (let a = 0; a < 8; a += 1) {
+            const ang = (a * Math.PI) / 4;
+            const p = { x: Math.round(w.x + r * Math.cos(ang)), y: Math.round(w.y + r * Math.sin(ang)) };
+            const k = `${p.x},${p.y}`;
+            if (seen.has(k)) continue;
+            seen.add(k);
+            if (run.world.collidesSolid(playerBoxAt(p.x, p.y), geo)) continue;
+            if (plannerObstacleAt(run.world, p.x, p.y, null, opts) !== null) continue;
+            const walk = plannedWalkSamples(run, run.state, p, opts, allowTeleporter);
+            if (walk === null) continue;
+            let len = 0;
+            for (let i = 1; i < walk.length; i += 1) len += Math.hypot(walk[i].x - walk[i - 1].x, walk[i].y - walk[i - 1].y);
+            out.push({ pre: p, r, len });
+        }
+    }
+    return out.sort((a, b) => a.len - b.len || a.r - b.r || a.pre.y - b.pre.y || a.pre.x - b.pre.x);
+}
+
+/**
+ * The wallflyer kill from `stance`, played on fork `f` (see `WALLFLYER_KILL_ARM`). `{ok, presses}` or `{why}`.
+ * `equips` collects `{i, slot}`: the slot selections, at the key index they precede.
+ */
+function playWallFlyerKill(f, keys, equips, id, kw, stance, opts, allowTeleporter) {
+    const hits0 = (f.ledger('playerHits') ?? []).length;
+    const deaths0 = (f.ledger('playerDeaths') ?? []).length;
+    const walked = forkWalkTo(f, keys, stance.pre, opts, allowTeleporter, hits0, deaths0);
+    if (walked.why) return walked;
+    const still = () => Math.abs(f.state.vx ?? 0) < 1e-9 && Math.abs(f.state.vy ?? 0) < 1e-9;
+    const NO_KEYS = new Set();
+    for (let k = 0; k < BODY_FAMILY_KILL.settleBound && !still(); k += 1) {
+        const why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        if (why) return { why: `${why} settling at the stance` };
+    }
+    const w0 = liveWallFlyer(f, id);
+    if (!w0) return { why: `${id} is not live when the stance is reached` };
+    if (w0.vx !== 0 || w0.vy !== 0) return { why: `${id} is in flight when the stance is reached` };
+    const dx = w0.x - f.state.x;
+    const dy = w0.y - f.state.y;
+    const key = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    const toward = { right: RIGHT, left: LEFT, up: UP, down: DOWN }[key];
+    if (f.state.direction !== toward) {
+        let why = forkStep(f, keys, new Set([key]), hits0, deaths0);
+        for (let k = 0; !why && k < BODY_FAMILY_KILL.settleBound && !still(); k += 1) {
+            why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        }
+        if (why) return { why: `${why} on the face tap` };
+        if (f.state.direction !== toward) return { why: `the face tap left the player facing ${f.state.direction}` };
+    }
+    const prior = f.progress('primary');
+    if (kw.slot !== null && prior !== kw.slot) {
+        f.equipNow(kw.slot);
+        equips.push({ i: keys.length, slot: kw.slot });
+    }
+    const PRESS = new Set(['primary']);
+    const slashTimer = () => f.progress('slashInfo')?.state?.slashTimer ?? 0;
+    let presses = 0;
+    let landed = 0;
+    let last = false;
+    let killed = false;
+    for (let k = 0; k < BODY_FAMILY_KILL.fightBound; k += 1) {
+        const w = liveWallFlyer(f, id);
+        if (!w) { killed = true; break; }
+        if (w.vx !== 0 || w.vy !== 0) return { why: `${id} launched at fork tick ${keys.length} (the stance is in its ray)` };
+        const ready = !last && slashTimer() <= 0 && (w.hitsTimer ?? 0) <= 1;
+        const hitsWas = w.hits ?? 0;
+        const why = forkStep(f, keys, ready ? PRESS : NO_KEYS, hits0, deaths0);
+        if (why) return { why: `${why} in the fight` };
+        if (ready) presses += 1;
+        last = ready;
+        const after = (f.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+        if (after && ((after.hits ?? 0) > hitsWas || after.dieAnim || after.destroy || after.removed)) landed += 1;
+        if (presses - landed > BODY_FAMILY_KILL.unanswered) {
+            return { why: `${presses} press(es) with the ${kw.weapon} and ${landed} landed from (${stance.pre.x},${stance.pre.y})` };
+        }
+    }
+    if (!killed && liveWallFlyer(f, id)) {
+        return { why: `${id} alive ${BODY_FAMILY_KILL.fightBound} ticks into the fight (${presses} press(es), ${landed} landed)` };
+    }
+    const gone = () => {
+        const b = (f.wallFlyers?.bodies ?? []).find((x) => x.id === id);
+        return !b || b.removed;
+    };
+    for (let k = 0; k < BODY_FAMILY_KILL.removalBound && !gone(); k += 1) {
+        const why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        if (why) return { why: `${why} waiting out the death` };
+    }
+    if (!gone()) return { why: `${id} died and is not removed ${BODY_FAMILY_KILL.removalBound} ticks on` };
+    if (kw.slot !== null && prior !== kw.slot) {
+        f.equipNow(prior);
+        equips.push({ i: keys.length, slot: prior });
+    }
+    return { ok: true, presses };
+}
+
+/**
+ * The drill kill from `stance`, played on fork `f` by DRILLKILL's executor (its walk the fork's own). `{ok, record}`
+ * or `{why}`.
+ */
+function playDrillKill(f, keys, equips, id, kw, stance, opts, allowTeleporter, what) {
+    const hits0 = (f.ledger('playerHits') ?? []).length;
+    const deaths0 = (f.ledger('playerDeaths') ?? []).length;
+    const ctx = {
+        what, goal: null,
+        walkTo: (_goal, to) => {
+            const walked = forkWalkTo(f, keys, to, opts, allowTeleporter, hits0, deaths0);
+            if (walked.why) throw new SolverRefusal(walked.why, {});
+        },
+        equip: (slot) => { f.equipNow(slot); equips.push({ i: keys.length, slot }); },
+    };
+    try {
+        const record = execDrillKill(f, keys, id, kw, stance, ctx);
+        if ((f.ledger('playerDeaths') ?? []).length !== deaths0) return { why: 'a death on the kill' };
+        return { ok: true, record };
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { why: String(e.message).split('\n')[0].replace(`${what} -> drill kill ${id}: `, '').slice(0, 240) };
+    }
+}
+
+/**
+ * THE ARMS, asked by the kill rung after its own arms refused (see `WALLFLYER_KILL_ARM`). Null when neither switch is
+ * on or no source of `hit` is a live body of an enabled family — the rung is then word for word the BEFORE one.
+ * Otherwise `{record}` (the body removed on the live run, its ticks on `perTick`) or `{why}` (no tick spent).
+ */
+function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allowTeleporter, what }) {
+    const targets = [];
+    for (const sx of hit?.sources ?? []) {
+        const id = sx.id;
+        if (!id || targets.some((t) => t.id === id)) continue;
+        if (WALLFLYER_KILL_ARM.enabled && liveWallFlyer(run, id)) targets.push({ id, family: 'wallflyer' });
+        else if (DRILL_KILL_ARM.enabled && liveDrills(run).some((d) => d.id === id)) targets.push({ id, family: 'drill' });
+    }
+    if (targets.length === 0) return null;
+    BODY_FAMILY_KILL_COUNTS.asked += 1;
+    const whys = [];
+    const kw = drillKillWeapon(run);
+    if (!kw) {
+        const why = `${targets.map((t) => t.id).join(', ')}: the run holds no sword or spear, and Fire kills neither a `
+            + 'wallflyer nor a drill';
+        BODY_FAMILY_KILL_COUNTS.refused.push({ t: perTick.length, why });
+        return { why: `body-family arm: ${why}` };
+    }
+    if (typeof fork !== 'function') return { why: 'body-family arm: no fork to try the kill on (the solve has no `forkRun`)' };
+    const opts = solverPlanOpts(run, contacts);
+    let forks = 0;
+    for (const t of targets) {
+        const body = t.family === 'wallflyer' ? liveWallFlyer(run, t.id) : liveDrills(run).find((d) => d.id === t.id);
+        if (t.family === 'wallflyer' && (body.vx !== 0 || body.vy !== 0)) { whys.push(`${t.id}: in flight now`); continue; }
+        const st = t.family === 'wallflyer' ? { ok: wallFlyerKillStances(run, body, opts, allowTeleporter), whys: [] }
+            : drillKillStances(run, body, opts);
+        if (st.ok.length === 0) {
+            whys.push(`${t.id}: no stance${st.whys.length ? ` — ${st.whys.join(' | ')}` : ' plans on its ring'}`);
+            continue;
+        }
+        const tried = [];
+        for (const stance of st.ok) {
+            if (forks >= BODY_FAMILY_KILL.maxForks) { tried.push(`the ${BODY_FAMILY_KILL.maxForks}-fork bound`); break; }
+            const f = fork();
+            forks += 1;
+            const keys = [];
+            const equips = [];
+            const out = t.family === 'wallflyer'
+                ? playWallFlyerKill(f, keys, equips, t.id, kw, stance, opts, allowTeleporter)
+                : playDrillKill(f, keys, equips, t.id, kw, stance, opts, allowTeleporter, what);
+            const at = `(${stance.pre.x},${stance.pre.y})`;
+            if (!out.ok) { tried.push(`${at}: ${out.why}`); continue; }
+            // ── the live replay, key for key, the slot selections at the index they preceded ──
+            const from = perTick.length;
+            const hits0 = (run.ledger('playerHits') ?? []).length;
+            let e = 0;
+            for (let i = 0; i < keys.length; i += 1) {
+                while (e < equips.length && equips[e].i === i) { equip(equips[e].slot); e += 1; }
+                perTick.push(keys[i]);
+                run.advance(keys[i]);
+            }
+            while (e < equips.length) { equip(equips[e].slot); e += 1; }
+            const removed = t.family === 'wallflyer' ? !liveWallFlyer(run, t.id)
+                : !(run.entities('drillBodies') ?? []).some((d) => d.id === t.id && !d.removed);
+            if (!removed || (run.ledger('playerHits') ?? []).length !== hits0) {
+                fail(`${what}: the fork's ${t.family} kill of ${t.id} from ${at} (${keys.length} t) did not replay on the `
+                    + `live run — ${removed ? 'a player hit' : 'the body stands'} (the fork is not this run).`);
+            }
+            const record = { kind: 'kill', arm: t.family, target: t.id, stance: { ...stance.pre }, from,
+                ticks: keys.length, forks, ...(out.presses !== undefined ? { presses: out.presses } : {}),
+                ...(out.record ? { drill: out.record } : {}) };
+            BODY_FAMILY_KILL_COUNTS.kills.push({ id: t.id, family: t.family, t: from, ticks: keys.length, forks });
+            return { record };
+        }
+        whys.push(`${t.id}: ${tried.slice(0, 4).join(' | ')}${tried.length > 4 ? ` (+${tried.length - 4} more)` : ''}`);
+    }
+    const why = `body-family arm: no hitless kill (${forks} fork(s)) — ${whys.join(' || ')}`;
+    BODY_FAMILY_KILL_COUNTS.refused.push({ t: perTick.length, why });
+    return { why };
+}
+
+/**
  * ⛓⛓ fidelity TIMEDPASS (wave 27) — A WALK PAST A HOPPING DRILL THE RUN CANNOT KILL (`CONTACT_FIDELITY.drillTimedPass`,
  * OFF).
  *
@@ -24722,7 +25502,7 @@ function certifyExitPass(f, keys, cross) {
  *   · it returned at once when the run holds a drill-killing weapon (residue D-A was built for the Fire-alone L28 run);
  *   · its wake test ("does the walk to the door wake a drill?") planned the walk with no door allowed, so a walk to a
  *     door centre never planned and the straight-line fallback passed 80 px from the drill (wake range 48).
- * `DRILL_EXIT_PASS` (OFF) is a RUNG AFTER THE WALK: when the door's walk (`walkTo`) refuses with a live drill as its
+ * `DRILL_EXIT_PASS` (ON since the drill-exit flip, ⚖ the user 2026-11-11: *"DRILL_EXIT_PASS flip"*) is a RUNG AFTER THE WALK: when the door's walk (`walkTo`) refuses with a live drill as its
  * obstacle, before a tick is spent and with no deadline tripped (`drillExitPassAfterRefusal`), the timed pass is asked
  * ARMED — a held weapon does not skip it, and its wake test's walk is the planner's walk to the door
  * (`plannedWalkSamples`' `allowTeleporter` = the door). A walk that solves is never pre-empted (the census's shape, the
@@ -24732,11 +25512,14 @@ function certifyExitPass(f, keys, cross) {
  * arm finds no stance: "north/south/west not plannable floor, east wakes it").
  * Measured: 718 SOLVED 190 t hitless (node and the p4g page); 719 refuses by name on the drill's hop into water
  * (fidelity DRILL D2, `Enemy.update`'s terrain switch — fidelity's DRILL-WATER), raised on the certificate's fork; the
- * other 19 legs in a drill's room (L28, L88, L91) answer OFF's plan byte for byte. `SEEDLING_DRILL_EXIT_PASS=1` /
- * `withDrillExitPass(enabled, fn)`. OFF, nothing is read and the executor is byte-identical.
+ * other 19 legs in a drill's room (L28, L88, L91) answer OFF's plan byte for byte. Since fidelity's DRILL-WATER
+ * (`drillTerrainSwitch` ON) 719 SOLVES too (223 t, certified to L89 hitless). `SEEDLING_DRILL_EXIT_PASS=0` opts out /
+ * `withDrillExitPass(enabled, fn)`. OFF, nothing is read and the executor is the pre-flip one, byte-identical.
  */
-export const DRILL_EXIT_PASS = { enabled: globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS === '1' };
-export const DRILL_EXIT_PASS_DEFAULT = false;
+// ⚖ ON by default since the drill-exit flip (the user, 2026-11-11: *"DRILL_EXIT_PASS flip"*):
+// `SEEDLING_DRILL_EXIT_PASS=0` opts out.
+export const DRILL_EXIT_PASS = { enabled: globalThis.process?.env?.SEEDLING_DRILL_EXIT_PASS !== '0' };
+export const DRILL_EXIT_PASS_DEFAULT = true;
 
 /** Run `fn` with `DRILL_EXIT_PASS` set to `enabled`, restoring the previous value. */
 export function withDrillExitPass(enabled, fn) {
@@ -26009,8 +26792,9 @@ export function deriveKillByChaser(run, body, contacts,
          */
         let walk;
         try {
-            walk = previewWalk(run, wps, tolerance,
-                { strike: strikeFor(), standFor: ceilingFor(c) });
+            // ⛓ L28-BOBSOLDIER (`KILL_STANCE_SIGHT`, OFF): ON, the swing's line of sight is asked in this preview
+            walk = killStanceSighted(() => previewWalk(run, wps, tolerance,
+                { strike: strikeFor(), standFor: ceilingFor(c) }));
         } catch (e) {
             if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
             rejected.push({ ...c, why: `the model REFUSES to price this candidate's own `
@@ -30597,7 +31381,10 @@ function solveSegmentUnder({
         // ── rung 4: KILL — the room's own weapon, held until the count moves ─
         if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
-        const target = body ?? null;
+        // ⛓ hammer-phase L41-PUNCHER-LADDER (`KILL_HIT_BODY`, OFF): the hit's own body where the chooser's head is not on it
+        const hitBody = KILL_HIT_BODY.enabled ? killHitBodyOf(removable, hit) : null;
+        if (hitBody !== null) KILL_HIT_BODY.retargets.push({ t: perTick.length, from: body.id, to: hitBody.id });
+        const target = hitBody ?? body ?? null;
         // ⛓ strategy switch r1 — the KILL rung off gates every arm below (ice turret, static sword, press, chaser,
         // orbit, light): it is asked only where some arm would run — a target, or a live darktrap ON the corridor (the
         // light arm's own filter below); a room with no trap and no target counts nothing (p17 review A).
@@ -31205,6 +31992,18 @@ function solveSegmentUnder({
                 }
             }
             if (!killWhy) killWhy = kill.why;
+        }
+        // ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL (`WALLFLYER_KILL_ARM` / `DRILL_KILL_ARM`, OFF: not asked) — a live
+        // wallflyer or drill among the hit's sources, killed on a fork and replayed (`bodyFamilyKillOnLadder`).
+        if ((WALLFLYER_KILL_ARM.enabled || DRILL_KILL_ARM.enabled)
+            && !(ACTIVE_DISABLE !== null && ACTIVE_DISABLE.rungs.has('kill'))) {
+            const fam = bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allowTeleporter, what });
+            if (fam?.record) {
+                rowFor('kill', refused, { arm: fam.record.arm, target: fam.record.target, stance: fam.record.stance });
+                records.push({ goal: goal.kind, strategy: 'kill', ...fam.record });
+                return { escalations };
+            }
+            if (fam?.why) killWhy = `${killWhy}\n         ${fam.why}`;
         }
         rowFor('kill', refused);
         /**
@@ -32713,18 +33512,81 @@ function solveSegmentUnder({
      * arrived, whatever the drive did after the respawn. OFF: `deathsNow` is 0 and nothing is asked.
      */
     function deathsNow() {
-        return CONTACT_FIDELITY.whirlpoolDrown ? (run.ledger('playerDeaths') ?? []).length : 0;
+        return (CONTACT_FIDELITY.whirlpoolDrown || WALK_DEATH_REFUSED.enabled)
+            ? (run.ledger('playerDeaths') ?? []).length : 0;
     }
     function refuseIfDrowned(d0, what, goal) {
-        if (!CONTACT_FIDELITY.whirlpoolDrown) return;
-        const d = (run.ledger('playerDeaths') ?? []).slice(d0).find((x) => x.source === 'whirlpool');
-        if (!d) return;
-        refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
-            + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not re-planned '
-            + 'from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+        if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return;
+        const died = (run.ledger('playerDeaths') ?? []).slice(d0);
+        const d = CONTACT_FIDELITY.whirlpoolDrown ? died.find((x) => x.source === 'whirlpool') : undefined;
+        if (d) {
+            refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
+                + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not '
+                + 're-planned from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+        }
+        if (WALK_DEATH_REFUSED.enabled && died.length > 0) refuseWalkDeath(died, what, goal);
     }
+    /** ⛓ hammer-phase CONNECTED-L22 (`WALK_DEATH_REFUSED` ON only) — see the switch's own docblock. */
+    function refuseWalkDeath(died, what, goal) {
+        const d = died[0];
+        const hits = (run.ledger('playerHits') ?? []).filter((h) => h.t <= d.t && h.level === d.level)
+            .slice(-WALK_DEATH_REFUSED.hitsNamed);
+        const sources = [...new Set(hits.map((h) => h.id ?? h.source))];
+        WALK_DEATH_REFUSED.refused.push({ what, t: d.t, level: d.level, deaths: died.length, sources });
+        refuse(`${what}: the player DIED at run tick ${d.t} in level ${d.level} (${died.length} death(s) on the walk; `
+            + `the hits before the first: ${hits.map((h) => `${h.id ?? h.source} at t${h.t}`).join(', ') || 'none billed'}`
+            + ') — the drive took hits its corridor was certified without; a walk that died is refused, not re-planned '
+            + 'from the respawn', { goal, obstacle: { kind: 'death', id: sources[sources.length - 1] ?? d.source ?? null } });
+    }
+    /**
+     * ⛓ hammer-phase L43-BOSSTOTEM (`AWAKE_BOSS_FIRST`, OFF) — the awake boss that bars this walk is fought first, with
+     * its own verb (see the switch's docblock). `bossFirstActive` keeps the verb's own walks (its stance) from asking
+     * again.
+     */
+    let bossFirstActive = false;
+    const fightAwakeBossFirst = (goal, aim, opts) => {
+        const bar = awakeBossBarring(run, run.state, aim);
+        if (bar === null) return;
+        const what = `${opts?.what ?? 'walk'} -> awake boss first (${bar.id})`;
+        const obstacle = { kind: 'solid', id: bar.id, tag: bar.tag };
+        const strategy = OBSTACLE_STRATEGIES[`solid:${bar.tag}`] ?? null;
+        const exec = strategy ? frontierExecutor(strategy) : undefined;
+        const resolved = exec ? resolveObstacleStrategy(run, strategy, obstacle, null, aim, null) : null;
+        const row = { what, id: bar.id, past: bar.past, crosses: bar.crosses, strategy, t: run.ticksCompleted };
+        AWAKE_BOSS_FIRST.fought.push(row);
+        if (!exec || !resolved || resolved.held === false) {
+            row.refused = resolved?.rejected?.[0]?.why ?? (strategy ? `no executor for \`${strategy}\`` : 'no strategy row');
+            refuse(`${what}: ${bar.id} is awake and bars the walk to (${aim.x},${aim.y}) `
+                + `(${bar.past ? 'the aim lies past its clamp' : 'the line to the aim crosses its body'}), and it cannot be `
+                + `fought: ${row.refused}`, { goal, obstacle });
+        }
+        bossFirstActive = true;
+        try {
+            const record = exec(run, perTick, resolved, { maxTicksPerTarget, economies, dashMode, what, walkTo, goal,
+                equip, fork, rewind });
+            row.ticks = record?.ticks ?? null;
+            row.hits = record?.hits?.length ?? null;
+            records.push({ goal: goal?.kind, strategy, ...record });
+        } finally {
+            bossFirstActive = false;
+        }
+    };
+    /**
+     * ⛓ hammer-phase SPEAR-ARM (`SPEAR_ARM` ON only) — a bladeless run holding a spear selects the spear's slot before
+     * a walk through a room with strike bodies, so the walk's policy (`spearStrikePolicyFor`) presses a thrust and not
+     * another item. An equip is a `Main.primary` write (`solverEquips`), no tick; a later verb that needs another slot
+     * selects it itself, as every one does.
+     */
+    const spearArmEquip = () => {
+        const slot = spearArmSlot(run.progress('inventory'), run.progress('inventorySlots'));
+        if (slot < 0 || run.progress('primary') === slot || (run.entities('strikeBodies') ?? []).length === 0) return;
+        SPEAR_ARM_COUNTS.equips += 1;
+        equip(slot);
+    };
     const walkTo = (goal, aim, opts) => {
-        if (!CONTACT_FIDELITY.whirlpoolDrown) return walkToRun(goal, aim, opts);
+        spearArmEquip();
+        if (AWAKE_BOSS_FIRST.enabled && !bossFirstActive) fightAwakeBossFirst(goal, aim, opts);
+        if (!CONTACT_FIDELITY.whirlpoolDrown && !WALK_DEATH_REFUSED.enabled) return walkToRun(goal, aim, opts);
         const d0 = deathsNow();
         let out;
         try {
@@ -33529,13 +34391,14 @@ function solveSegmentUnder({
          * `Yeti.doneTalking()` clears its own tag and tag 1 (`NPCs/Yeti.as:40-50`), so a clear-tag on either that names
          * the Yeti (`yeti@56,56`; `{58,1}` is L58's `teleporter@80,16` → L46, shut on a fresh room) is the dialogue,
          * driven by `execYetiTalk`. The Yeti IS a Solid (`NPC.as:59`), so OFF the generic arm below finds it and refuses
-         * `no-verb` (no `solid:yeti` row), byte-identical. ON its states, read off the run:
+         * `no-verb` (no `solid:yeti` row), byte-identical. The arm is `clearTagTalkArmOf(cls)` — the page's goal mapper
+         * asks the same function (YETI-TALK). ON its states, read off the run:
          *   · no Yeti in the live world: its own tag is cleared, so `NPC.check()` removed it at the build — the game's
          *     `already-clear` for both flags when the portal reads open too, else `cannot-act` (nothing else writes it);
          *   · a goal flag already off at the build (the portal live): `already-clear`.
          */
-        const yetiRow = CONTACT_FIDELITY.yetiTalk && cls === 'yeti'
-            ? { talker: (run.entities('talkCircles') ?? []).find((c) => c.id === id) ?? null } : null;
+        const yetiRow = clearTagTalkArmOf(cls) === 'talk'
+            ?{ talker: (run.entities('talkCircles') ?? []).find((c) => c.id === id) ?? null } : null;
         if (yetiRow) {
             const portalLive = (run.world.teleporters ?? []).some((tp) => tp.tag === YETI_PORTAL_TAG && !tp.deactivated);
             const flagOpenAtBuild = flag.tag === YETI_PORTAL_TAG ? portalLive : !solid;

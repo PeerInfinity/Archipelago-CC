@@ -122,7 +122,7 @@ import {
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
 import { TILE_WALL, effectiveInventory, getTile, latchesDown } from './mazeRoomEngine.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
-import { drawTileArt, tileArtFrame, tileArtRefusal } from './mazeTileArt.js';
+import { conceptArtFrame, drawConceptArt, drawTileArt, tileArtFrame, tileArtRefusal } from './mazeTileArt.js';
 
 export class MazeRenderError extends Error {
     constructor(message) {
@@ -173,6 +173,9 @@ export const COLORS = {
     blockStruck: '#d05a3a',
     blockDormant: '#7ab8d8',
     pulser: '#e0e070',
+    // ⛓ CONTENT SETS S2: a region's sign (a piece of information no character or object holds), drawn beside
+    // `drawWorld` by `mazeThingOverlay.js` when the stack has no art for it.
+    sign: '#b89868',
 };
 
 /**
@@ -392,6 +395,12 @@ export function blockLook(world, kind) {
  * whenever it owns every block of the world, so their markers then go whole; the disc tint stays (like a lane's).
  * A world with none of the three draws nothing, so every other draw log is unchanged.
  */
+/**
+ * ⛓ CONTENT SETS R5 — a passed concept gate drawn from art is drawn at this alpha: the cleared skin's own
+ * (`mazeConcepts.paintConceptGate` strokes its dashed outline at 0.4), so "passed" reads the same either way.
+ */
+export const CONCEPT_ART_CLEARED_ALPHA = 0.4;
+
 /** A block look (`blockLook`) → its thing in `mazeTileArt.MAZE_ART_KEYS`. */
 const BLOCK_ART = Object.freeze({ walk: 'block', struck: 'blockStruck', dormant: 'blockDormant' });
 
@@ -649,8 +658,18 @@ export function drawWorld(ctx, world, view) {
             // the concept's SKIN: painted in its colour and symbol, dimmed
             // once cleared (`mazeConcepts.paintConceptGate`). A plain
             // logic_gate has no `concept` and is drawn exactly as above.
+            // ⛓ CONTENT SETS R5 — or the concept's ART, when the world's stack gives the mechanic an art key for the
+            // `gate` role (`mazeTileArt.conceptArtFrame`): drawn whole while the gate is closed, and at the skin's own
+            // cleared alpha once it is passed. What goes over it is unchanged (the red border of a blocked location).
             if (isConceptGate(obstacle)) {
-                paintConceptGate(ctx, { x0: x * px, y0: y * px, px, def: obstacle, cleared: !gateClosed });
+                if (conceptArtFrame(tileArt, 'gate', obstacle.concept)) {
+                    ctx.save();
+                    if (!gateClosed) ctx.globalAlpha = CONCEPT_ART_CLEARED_ALPHA;
+                    drawConceptArt(ctx, tileArt, 'gate', obstacle.concept, x * px, y * px, px, px);
+                    ctx.restore();
+                } else {
+                    paintConceptGate(ctx, { x0: x * px, y0: y * px, px, def: obstacle, cleared: !gateClosed });
+                }
             }
 
             // Items: a circle in the library's color. Skipped
@@ -659,7 +678,12 @@ export function drawWorld(ctx, world, view) {
             // (no library entry) get a hash-derived color and a
             // first-letter label so they're visually distinguishable
             // from each other and from known items.
-            if (itemHere && locationVisible && !artOwned) {
+            // ⛓ CONTENT SETS R5: an item row that names its mechanic (`concept`) draws the concept's ART when the world's
+            // stack gives one for the `item` role; otherwise the circle below. A collected item is not drawn either way.
+            const itemConcept = itemHere ? itemLib?.[itemId]?.concept : undefined;
+            const itemArt = typeof itemConcept === 'string' && locationVisible && !artOwned
+                && tileArt !== null && drawConceptArt(ctx, tileArt, 'item', itemConcept, x * px, y * px, px, px);
+            if (itemHere && locationVisible && !artOwned && !itemArt) {
                 const hints = getItemRenderHints(itemId, itemLib);
                 ctx.fillStyle = hints.color;
                 const cx = x * px + px / 2;
