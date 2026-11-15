@@ -1295,7 +1295,7 @@ export function createRuntimeSolver({
         }
         if (!r.ok) {
             if (r.kind === 'divergence') return { failed: r.message };
-            return decline(String(r.message).split('\n')[0], r.obstacle ?? null);
+            return decline(String(r.message), r.obstacle ?? null);
         }
         const plan0 = r.plan;
         stats.solves += 1;
