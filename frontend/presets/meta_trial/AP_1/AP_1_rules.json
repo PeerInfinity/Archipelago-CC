@@ -420,6 +420,25 @@
             }
           },
           "longestShortestPath": 7,
+          "things": [
+            {
+              "id": "thing_0",
+              "x": 1,
+              "y": 2,
+              "kind": "character",
+              "concept": "meta:character/narrator",
+              "name": "Narrator",
+              "color": "#7fa0c8",
+              "symbol": "N",
+              "description": "The voice that tells you where you are. It reads its lines from the world document.",
+              "says": "The rules know this room as region_2_3.",
+              "info": {
+                "concept": "meta:info/rooms",
+                "name": "On rooms",
+                "body": "Each room here is one region of the world's rules. An exit takes you to another region."
+              }
+            }
+          ],
           "fogEnabled": true
         },
         "biome": {
@@ -554,6 +573,25 @@
             }
           },
           "longestShortestPath": 1,
+          "things": [
+            {
+              "id": "thing_0",
+              "x": 1,
+              "y": 5,
+              "kind": "character",
+              "concept": "meta:character/narrator",
+              "name": "Narrator",
+              "color": "#7fa0c8",
+              "symbol": "N",
+              "description": "The voice that tells you where you are. It reads its lines from the world document.",
+              "says": "The rules know this room as region_1_3.",
+              "info": {
+                "concept": "meta:info/checks",
+                "name": "On checks",
+                "body": "A check is a location that sends an item. Reading this is not a check: nothing is sent."
+              }
+            }
+          ],
           "fogEnabled": true
         },
         "biome": {

@@ -27,6 +27,7 @@ import { parsePack } from '../contentPacks/contentPacks.js';
 import { documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { recordingContext } from './drawOpRecorder.js';
+import { drawMazeThings } from './mazeThingOverlay.js';
 import { TILE_WALL, createState, deserializeMazeWorld, getTile } from './mazeRoomEngine.js';
 import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
 import { MAZE_ART_KEYS, MAZE_ART_THINGS, loadMazeTileArt } from './mazeTileArt.js';
@@ -188,6 +189,10 @@ function stagedScenes() {
     world.manaTiles = new Map([[`${mana.x},${mana.y}`, 1]]);
     const pulser = free(true);
     world.pulsers = [...(world.pulsers ?? []), { x: pulser.x, y: pulser.y, reach: [], token: 'r4-staged-pulser' }];
+    // ⛓ S2 — a sign: a region's thing that is a piece of information no one holds (drawn by mazeThingOverlay).
+    const sign = free(false);
+    world.things = [{ id: 'thing_0', x: sign.x, y: sign.y, kind: 'info', concept: 's2-staged:info/sign', name: 'Staged',
+        info: { concept: 's2-staged:info/sign', name: 'Staged', body: 'Staged.' } }];
     const dormantKind = 'r4-staged-dormant';
     world.blockLib = { ...(world.blockLib ?? {}), [dormantKind]: { wake: true } };
     const [firstBlock] = world.blocks.keys();
@@ -229,6 +234,8 @@ describe('⛓ the seam draws the meta stack: every carried key from the pack, ev
         const logs = stagedScenes().map(({ world, view }) => {
             const ctx = recordingContext();
             drawWorld(ctx, world, plainView({ ...view, tileArt }));
+            // ⛓ S2 — and the region's things, beside drawWorld as the panel draws them.
+            drawMazeThings(ctx, world, { tilePx: TILE_PX, playerPos: view.playerPos ?? null, fogEnabled: false, isTileVisible: () => true, tileArt });
             for (const l of ctx.__log) if (blitOf(l)) drawn.add(blitOf(l));
             return ctx.__log;
         });
