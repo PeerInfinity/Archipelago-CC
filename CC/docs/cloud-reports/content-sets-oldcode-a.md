@@ -140,5 +140,12 @@ Local note: a clone that ran Python against `worlds/jta` keeps an ignored `world
 - pytest: `test_jta_substrate_test_preset.py` + `test_jta_mixed_test_preset.py` ✅ 3 passed (`jta_vanilla` →
   `jta_substrate_test` intact); `test/general` ✅ 359 passed, 20,659 subtests. The tree stayed clean (these runs
   generate no apquest seed).
+- **Found by CI at `3ff0b7f517` (slow tier), fixed in this slice:** `apworldEditor/locationCapacity.slow.test.js`
+  derives its population from every tracked `frontend/presets/**_rules.json` and pins the whole result in
+  `locationCapacity.slow.expected.json`. Deleting `presets/jta` moved it by exactly the 3 seeds: slots 178 → 175,
+  rooms 10,986 → 10,938, exact 10,969 → 10,921 (−48 rooms, all in the exact bucket; refused, grown, exit-grown and the
+  ±1/2 histogram buckets unchanged). Re-recorded from the failure's diff, as the file's docblock prescribes, and passed
+  locally (`npx vitest run --config vitest.slow.config.js <file>`). The survey's gate list missed it, because it only
+  named the tests that name an old unit. A deleted preset un-enrols from derived rosters, just as a new one enrols.
 - No browser batch was run locally. The CI results (push runs, train tier, test-templates on both boots, apworld,
   playback-bot) are quoted at the final tip in the report back to the planner.
