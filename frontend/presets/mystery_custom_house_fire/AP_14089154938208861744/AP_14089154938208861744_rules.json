@@ -929,7 +929,7 @@
       "slot_data": {
         "mystery": {
           "story": "custom-house-fire",
-          "version": "b3d353e88482",
+          "version": "dd0448338832",
           "goal": "q.who",
           "locations": {
             "Question 01": "q.set",
