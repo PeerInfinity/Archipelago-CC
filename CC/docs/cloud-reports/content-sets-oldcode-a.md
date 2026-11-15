@@ -107,10 +107,22 @@ hand-kept `file-annotations.json` input was edited. `scripts/output/*test-result
 
 ## Frozen
 
-`jta_vanilla` is in `scripts/release/preserved-dev-presets.txt` (dev-only, not `public`), with a comment. It is the
-source of the live `jta_substrate_test`, and nothing can regenerate it now. It is still in `preset_files.live.json`
-(unchanged here). The next Generate Presets run drops it from the live index, because it is not marked `public`. That
-matches `jta_substrate_test`, which is not live either. Mark it `public` if it should stay on the deployed site.
+`jta_vanilla` is in `scripts/release/preserved-dev-presets.txt` as **`jta_vanilla public`**, with a comment. It is the
+source of the live `jta_substrate_test`, and nothing can regenerate it now. **⚖ The user ruled (2026-11-15, relayed by
+the planner) that it stays PUBLIC on the deployed site.** Its `preset_files.live.json` entry is now the dev index's
+entry, which is exactly what `apply-post-preset-merge.sh` writes for a public preset (only `is_vanilla`'s position
+moved). So the next Generate Presets run keeps it live.
+
+## Re-merge
+
+`content-jta1` was paused, so the planner asked for one merge of `origin/main` at `62958fa474` without waiting for it.
+The merge brought in 31 files: no presets, no generator or train-tier files. The only conflicts were in generated docs
+(`procgen/README.md`'s generated region and `procgenDocs/generated/docsIndex.js`). I took `origin/main`'s side and
+regenerated with `generate-procgen-reference.mjs`. `quickLaunch` docsIndex and `tutorials.md` regenerated clean.
+Census re-measured by test on the merged tree: `procgenDocs/*` (`docLinks`, `docsRender`, `generated`), the quickLaunch
+pins, `outOfLogicGate`, `storageCensus`, `tutorials`, `tutorialPresetsLive`, `applyPostPresetMerge` and
+`jtaQueueEngine/*`: 18 files, 644 tests passed. `check-procgen-docs`: ALL CHECKS PASSED.
+`generate-procgen-reference.mjs --check`: all 7 generated modules and 5 markdown regions match.
 
 Local note: a clone that ran Python against `worlds/jta` keeps an ignored `worlds/jta/__pycache__/`, and AP then logs
 "excluding jta from world sources because it has no __init__.py". It is harmless; delete the directory to silence it.
