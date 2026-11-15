@@ -25,6 +25,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 2,
+            "id": "action"
+        },
+        {
+            "browser": 0,
+            "count": 2,
             "id": "attribute"
         },
         {
@@ -236,11 +241,11 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 531,
         "browser": 227,
-        "cited": 284,
-        "files": 549,
-        "lineStyle": 18,
-        "withDocblock": 549,
-        "withFlags": 467
+        "cited": 286,
+        "files": 551,
+        "lineStyle": 20,
+        "withDocblock": 551,
+        "withFlags": 469
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -259,6 +264,99 @@ export const INSTRUMENTS = frz({
         "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"
     },
     "rows": [
+        {
+            "argvHelpers": [
+                "has",
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "action",
+            "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "seed"
+            ],
+            "file": "action-nodes-compile.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "quiet"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "seed"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ActionNodes graph → rules.json compiler CLI (design `action-nodes.md`, slice AN-1).",
+            "path": "scripts/procgen/action-nodes-compile.mjs"
+        },
+        {
+            "argvHelpers": [
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "action",
+            "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "graph"
+            ],
+            "file": "action-nodes-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "graph"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quiet"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ActionNodes headless bot: plays a compiled world to its goal with the planner (A13, \"as early as possible\"; design `action-nodes.md` § The bot).",
+            "path": "scripts/procgen/action-nodes-play.mjs"
+        },
         {
             "argvHelpers": [],
             "browser": false,

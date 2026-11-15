@@ -303,7 +303,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 106 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 106 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -313,194 +313,194 @@ Groups are this document's own § headings, matched to a field by the section th
 
 **Identity**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `id` | bounce | cloudberry | flash_seedling | flash_seedling_gen | jta | maze | noiz2sa | omsi | text_adventure |
-| `label` | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `id` | action_nodes | bounce | cloudberry | flash_seedling | flash_seedling_gen | jta | maze | noiz2sa | omsi | text_adventure |
+| `label` | Action Nodes | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Text Adventure |
 
 **Runtime**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `apExitNamesOf` | fn | fn | — | fn | fn | fn | fn | fn | fn |
-| `apLocationNamesOf` | fn | fn | — | fn | fn | fn | fn | fn | fn |
-| `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
-| `iframeId` | bounceDemo | cloudberryDemo | — | — | jtaSubstrateWrapper | — | noiz2saSubstrate | omsiSubstrateWrapper | textAdventureSubstrateWrapper |
-| `loadRegionEvent` | bounce:loadRegion | cloudberry:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | maze:loadRegion | noiz2sa:loadRegion | omsi:loadRegion | textAdventure:loadRegion |
-| `panelComponentType` | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |
-| `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
-| `sharing` | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
-| `sidecarFields` | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 32 keys | 11 keys | 9 keys | 6 keys |
-| `supportedFeatures` | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `apExitNamesOf` | fn | fn | fn | — | fn | fn | fn | fn | fn | fn |
+| `apLocationNamesOf` | fn | fn | fn | — | fn | fn | fn | fn | fn | fn |
+| `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
+| `iframeId` | — | bounceDemo | cloudberryDemo | — | — | jtaSubstrateWrapper | — | noiz2saSubstrate | omsiSubstrateWrapper | textAdventureSubstrateWrapper |
+| `loadRegionEvent` | actionNodes:loadRegion | bounce:loadRegion | cloudberry:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | maze:loadRegion | noiz2sa:loadRegion | omsi:loadRegion | textAdventure:loadRegion |
+| `panelComponentType` | actionNodesPanel | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |
+| `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
+| `sharing` | — | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
+| `sidecarFields` | 11 keys | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 32 keys | 11 keys | 9 keys | 6 keys |
+| `supportedFeatures` | [] | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |
 
 **Playback**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `getPlaybackController` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
-| `playbackScope` | — | — | 54 chars | 54 chars | — | — | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `getPlaybackController` | — | fn | fn | fn | fn | fn | fn | fn | fn | fn |
+| `playbackScope` | — | — | — | 54 chars | 54 chars | — | — | — | — | — |
 
 **Action labelling**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `describeAction` | — | — | — | — | fn | fn | — | fn | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `describeAction` | — | — | — | — | — | fn | fn | — | fn | — |
 
 **Composite map**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `compositeMap` | — | — | 5 keys | 5 keys | — | {drawRegion} | — | — | {drawRegion} |
-| `compositeMap.artwork` | — | — | yes | yes | — | — | — | — | — |
-| `compositeMap.displayRegionOf` | — | — | fn | fn | — | — | — | — | — |
-| `compositeMap.drawRegion` | — | — | fn | fn | — | fn | — | — | fn |
-| `compositeMap.layoutGraph` | — | — | fn | fn | — | — | — | — | — |
-| `compositeMap.locationTiles` | — | — | fn | fn | — | — | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `compositeMap` | — | — | — | 5 keys | 5 keys | — | {drawRegion} | — | — | {drawRegion} |
+| `compositeMap.artwork` | — | — | — | yes | yes | — | — | — | — | — |
+| `compositeMap.displayRegionOf` | — | — | — | fn | fn | — | — | — | — | — |
+| `compositeMap.drawRegion` | — | — | — | fn | fn | — | fn | — | — | fn |
+| `compositeMap.layoutGraph` | — | — | — | fn | fn | — | — | — | — | — |
+| `compositeMap.locationTiles` | — | — | — | fn | fn | — | — | — | — | — |
 
 **Loop mode**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys |
-| `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | yes |
-| `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no |
-| `loopSupport.executeVia` | solver | solver | solver | solver | solver | — | solver | solver | solver |
-| `loopSupport.instant` | yes | yes | — | — | yes | yes | yes | yes | yes |
-| `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes |
-| `loopSupport.playClock` | — | yes | yes | yes | — | — | yes | — | — |
-| `loopSupport.playback` | yes | yes | — | — | yes | yes | yes | yes | yes |
-| `loopSupport.queueActions` | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
-| `loopSupport.record` | yes | yes | — | — | yes | yes | yes | yes | yes |
-| `loopSupport.requiresLoopMode` | — | — | — | — | yes | — | — | yes | — |
-| `loopSupport.summaryRecording` | yes | yes | — | — | — | — | yes | — | — |
-| `priceRegions` | — | — | — | — | — | — | fn | — | — |
-| `takeLastRecording` | — | — | — | — | fn | fn | — | fn | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `loopSupport` | — | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys |
+| `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | yes |
+| `loopSupport.customQueues` | — | no | no | no | no | no | yes | no | no | no |
+| `loopSupport.executeVia` | — | solver | solver | solver | solver | solver | — | solver | solver | solver |
+| `loopSupport.instant` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
+| `loopSupport.manual` | — | yes | yes | yes | yes | yes | yes | yes | yes | yes |
+| `loopSupport.playClock` | — | — | yes | yes | yes | — | — | yes | — | — |
+| `loopSupport.playback` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
+| `loopSupport.queueActions` | — | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
+| `loopSupport.record` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
+| `loopSupport.requiresLoopMode` | — | — | — | — | — | yes | — | — | yes | — |
+| `loopSupport.summaryRecording` | — | yes | yes | — | — | — | — | yes | — | — |
+| `priceRegions` | — | — | — | — | — | — | — | fn | — | — |
+| `takeLastRecording` | — | — | — | — | — | fn | fn | — | fn | — |
 
 **Cross-substrate sharing**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `sharing.items` | — | — | — | — | {getTypes} | — | — | {types} | — |
-| `sharing.mana` | — | — | — | — | {} | {loopActionDelegation} | — | {} | {} |
-| `sharing.mana.loopActionDelegation` | — | — | — | — | — | yes | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `sharing.items` | — | — | — | — | — | {getTypes} | — | — | {types} | — |
+| `sharing.mana` | — | — | — | — | — | {} | {loopActionDelegation} | — | {} | {} |
+| `sharing.mana.loopActionDelegation` | — | — | — | — | — | — | yes | — | — | — |
 
 **Editing**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `exitSides` | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | — | {keys, relabel} | {keys, relabel} | {keys, relabel} |
-| `regionEditStatus` | — | — | — | fn | — | — | — | — | — |
-| `regionRoundTrip` | {open, save} | — | {refused} | {open, save} | — | {open, save} | — | — | {open, rules, save} |
-| `roomEditor` | {kind, module, open} | — | {arm, kind, page} | {arm, kind, page} | — | {arm, kind, page} | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `exitSides` | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | — | {keys, relabel} | {keys, relabel} | {keys, relabel} |
+| `regionEditStatus` | — | — | — | — | fn | — | — | — | — | — |
+| `regionRoundTrip` | — | {open, save} | — | {refused} | {open, save} | — | {open, save} | — | — | {open, rules, save} |
+| `roomEditor` | — | {kind, module, open} | — | {arm, kind, page} | {arm, kind, page} | — | {arm, kind, page} | — | — | — |
 
 **Build-time — procedural substrates**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `applyContentModules` | — | — | — | — | — | fn | — | — | — |
-| `conceptRealisations` | — | — | — | — | — | {guardian, swim, sword, water} | — | — | {guardian, swim, sword, water} |
-| `contentRoles` | — | — | — | — | — | {character, gate, info, item, object} | — | — | {character, gate, info, item, object, place} |
-| `defaultContentPack` | — | — | — | — | — | maze | — | — | text-adventure |
-| `extractPathsAndObstacles` | — | — | — | fn | — | fn | — | — | fn |
-| `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |
-| `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |
-| `placeFromRules` | — | — | — | fn | — | fn | — | — | fn |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `applyContentModules` | — | — | — | — | — | — | fn | — | — | — |
+| `conceptRealisations` | — | — | — | — | — | — | {guardian, swim, sword, water} | — | — | {guardian, swim, sword, water} |
+| `contentRoles` | — | — | — | — | — | — | {character, gate, info, item, object} | — | — | {character, gate, info, item, object, place} |
+| `defaultContentPack` | — | — | — | — | — | — | maze | — | — | text-adventure |
+| `extractPathsAndObstacles` | — | — | — | — | fn | — | fn | — | — | fn |
+| `generateRegionCore` | — | — | — | — | fn | — | fn | — | — | fn |
+| `placeFromItems` | — | — | — | — | fn | — | fn | — | — | fn |
+| `placeFromRules` | — | — | — | — | fn | — | fn | — | — | fn |
 
 **Build-time — item introduction**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `itemIntroduction` | — | — | — | 3 keys | — | — | — | — | — |
-| `itemIntroduction.exhaustedRefusal` | — | — | — | fn | — | — | — | — | — |
-| `itemIntroduction.introducibleItems` | — | — | — | fn | — | — | — | — | — |
-| `itemIntroduction.replayableItems` | — | — | — | fn | — | — | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `itemIntroduction` | — | — | — | — | 3 keys | — | — | — | — | — |
+| `itemIntroduction.exhaustedRefusal` | — | — | — | — | fn | — | — | — | — | — |
+| `itemIntroduction.introducibleItems` | — | — | — | — | fn | — | — | — | — | — |
+| `itemIntroduction.replayableItems` | — | — | — | — | fn | — | — | — | — | — |
 
 **Build-time — goal containers**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `goalContainer` | — | — | — | {noteOf} | — | — | — | — | — |
-| `goalContainer.noteOf` | — | — | — | fn | — | — | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `goalContainer` | — | — | — | — | {noteOf} | — | — | — | — | — |
+| `goalContainer.noteOf` | — | — | — | — | fn | — | — | — | — | — |
 
 **Build-time — content sources (zone-based substrates)**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `applyPipelineConfig` | — | — | fn | — | fn | — | — | fn | — |
-| `emitsSpiralContent` | — | — | — | — | yes | — | — | — | — |
-| `entranceShuffle` | — | — | {atlasIds, loadHooks} | — | — | — | — | — | — |
-| `extractZoneRules` | fn | — | fn | — | fn | — | fn | fn | — |
-| `fillerItem` | — | — | — | — | — | — | Noiz2sa Star | — | — |
-| `getSpiralContent` | — | — | — | — | fn | — | — | — | — |
-| `onContentEdit` | — | — | — | — | fn | — | — | — | — |
-| `pipelineConfigFromParams` | — | — | fn | — | fn | — | — | — | — |
-| `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 7 items | — | — | 5 items | — |
-| `recordablePipelineConfig` | — | — | — | — | fn | — | — | fn | — |
-| `regionSourceDefault` | — | — | — | — | zone | — | — | — | — |
-| `restartWarp` | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — |
-| `rulesJsonBlocks` | — | — | fn | fn | — | — | — | — | — |
-| `spiralContentConfigKey` | — | — | — | — | datasetDoc | — | — | — | — |
-| `spiralItemCapacity` | — | — | — | — | fn | — | fn | — | — |
-| `victoryItem` | Victory | Victory | — | — | Victory | — | Victory | Victory | — |
-| `zoneConfigFromSlot` | — | — | fn | — | fn | — | — | — | — |
-| `zoneCount` | 5 | — | 4 | — | 30 | — | 3 | 1 | — |
-| `zoneOfPayload` | — | — | fn | — | fn | — | — | — | — |
-| `zoneSourceLabel` | — | — | Atlas room | — | — | — | Noiz2sa segment | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `applyPipelineConfig` | — | — | — | fn | — | fn | — | — | fn | — |
+| `emitsSpiralContent` | — | — | — | — | — | yes | — | — | — | — |
+| `entranceShuffle` | — | — | — | {atlasIds, loadHooks} | — | — | — | — | — | — |
+| `extractZoneRules` | — | fn | — | fn | — | fn | — | fn | fn | — |
+| `fillerItem` | — | — | — | — | — | — | — | Noiz2sa Star | — | — |
+| `getSpiralContent` | — | — | — | — | — | fn | — | — | — | — |
+| `onContentEdit` | — | — | — | — | — | fn | — | — | — | — |
+| `pipelineConfigFromParams` | — | — | — | fn | — | fn | — | — | — | — |
+| `pipelineConfigKeys` | — | — | — | atlasDoc, atlasId | — | 7 items | — | — | 5 items | — |
+| `recordablePipelineConfig` | — | — | — | — | — | fn | — | — | fn | — |
+| `regionSourceDefault` | — | — | — | — | — | zone | — | — | — | — |
+| `restartWarp` | — | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — |
+| `rulesJsonBlocks` | — | — | — | fn | fn | — | — | — | — | — |
+| `spiralContentConfigKey` | — | — | — | — | — | datasetDoc | — | — | — | — |
+| `spiralItemCapacity` | — | — | — | — | — | fn | — | fn | — | — |
+| `victoryItem` | — | Victory | Victory | — | — | Victory | — | Victory | Victory | — |
+| `zoneConfigFromSlot` | — | — | — | fn | — | fn | — | — | — | — |
+| `zoneCount` | — | 5 | — | 4 | — | 30 | — | 3 | 1 | — |
+| `zoneOfPayload` | — | — | — | fn | — | fn | — | — | — | — |
+| `zoneSourceLabel` | — | — | — | Atlas room | — | — | — | Noiz2sa segment | — | — |
 
 **Build-time — region geometry**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `regionGeometry` | sides | sides | sides | sides | sides | — | sides | sides | sides |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `regionGeometry` | sides | sides | sides | sides | sides | sides | — | sides | sides | sides |
 
 **Build-time — generation cost**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `generationCost` | — | heavy | — | light | — | — | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `generationCost` | — | — | heavy | — | light | — | — | — | — | — |
 
 **Build-time — location capacity**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `locationCapacity` | — | — | — | {capacityAt, kind} | — | {capacityAt, kind} | — | — | {kind} |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `locationCapacity` | — | — | — | — | {capacityAt, kind} | — | {capacityAt, kind} | — | — | {kind} |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `captureLibraryEntry` | fn | fn | — | — | — | fn | — | — | — |
-| `instantiateAtlasEntryForSpecs` | — | — | — | — | — | fn | — | — | — |
-| `instantiateLibraryEntry` | fn | fn | — | — | — | fn | — | — | — |
-| `instantiateLibraryEntryForSpecs` | fn | fn | — | — | — | fn | — | — | — |
-| `libraryEntryRefusal` | fn | fn | — | — | — | fn | — | — | — |
-| `validateLibraryEntry` | fn | fn | — | — | — | fn | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `captureLibraryEntry` | — | fn | fn | — | — | — | fn | — | — | — |
+| `instantiateAtlasEntryForSpecs` | — | — | — | — | — | — | fn | — | — | — |
+| `instantiateLibraryEntry` | — | fn | fn | — | — | — | fn | — | — | — |
+| `instantiateLibraryEntryForSpecs` | — | fn | fn | — | — | — | fn | — | — | — |
+| `libraryEntryRefusal` | — | fn | fn | — | — | — | fn | — | — | — |
+| `validateLibraryEntry` | — | fn | fn | — | — | — | fn | — | — | — |
 
 **Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)**
 
-| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
-|---|---|---|---|---|---|---|---|---|---|
-| `backPortalGated` | fn | fn | fn | fn | — | — | — | — | — |
-| `buildLibraryRegionParams` | — | — | — | — | — | fn | — | — | — |
-| `buildRegionContract` | fn | — | — | — | — | — | — | — | — |
-| `buildRegionParams` | fn | fn | fn | fn | — | — | — | — | — |
-| `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | — |
-| `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | — |
-| `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | 26 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
-| `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — |
-| `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | — |
-| `gateHostingHint` | fn | fn | — | — | — | — | — | — | — |
-| `gateableItems` | `null` | 11 items | — | — | — | — | — | — | — |
-| `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | — |
-| `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | — |
-| `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | — |
-| `libraryItems` | 7 keys | 13 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
-| `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — |
-| `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | — |
-| `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — |
-| `renderProcgenParams` | fn | fn | fn | fn | fn | fn | fn | — | — |
-| `startingInventory` | {needs} | — | — | — | — | — | — | — | — |
+| Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `backPortalGated` | — | fn | fn | fn | fn | — | — | — | — | — |
+| `buildLibraryRegionParams` | — | — | — | — | — | — | fn | — | — | — |
+| `buildRegionContract` | — | fn | — | — | — | — | — | — | — | — |
+| `buildRegionParams` | — | fn | fn | fn | fn | — | — | — | — | — |
+| `buildZoneSpecs` | — | fn | fn | fn | — | — | — | — | — | — |
+| `canHostExitGates` | — | fn | fn | fn | fn | — | — | — | — | — |
+| `canHostExitGatesBraid` | — | fn | — | — | — | — | — | — | — | — |
+| `defaultProcgenParams` | — | 10 keys | 26 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
+| `driftItems` | — | Left arrow, Right arrow | — | — | — | — | — | — | — | — |
+| `exitGateVeto` | — | fn | fn | fn | fn | — | — | — | — | — |
+| `gateHostingHint` | — | fn | fn | — | — | — | — | — | — | — |
+| `gateableItems` | — | `null` | 11 items | — | — | — | — | — | — | — |
+| `generateZoneForSpecs` | — | fn | fn | fn | — | fn | — | fn | — | — |
+| `generateZoneForSpecsGen` | — | fn | fn | — | — | — | — | — | — | — |
+| `hostsSurplusExitsNatively` | — | fn | fn | — | — | — | — | — | — | — |
+| `libraryItems` | — | 7 keys | 13 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `prepareSphereGrowth` | — | fn | — | fn | — | — | — | — | — | — |
+| `procgenParamsFromPayload` | — | fn | fn | — | fn | — | — | — | — | — |
+| `renderLibraryProcgenParams` | — | — | — | — | — | — | fn | — | — | — |
+| `renderProcgenParams` | — | fn | fn | fn | fn | fn | fn | fn | — | — |
+| `startingInventory` | — | {needs} | — | — | — | — | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
 
@@ -515,6 +515,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js` | `jta` | yes |
 | `frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js` | `omsi` | yes |
 | `frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js` | `noiz2sa` | yes |
+| `frontend/modules/actionNodes/actionNodesLibrary.js` | `action_nodes` | yes |
 
 <!-- GENERATED:substrate-capability-matrix END -->
 
@@ -534,6 +535,7 @@ What the declarations mean, which the generated table cannot show.
 | `jta` | Fine-grained; the Bot honours Instant. Zones are indices into one game build, so it cannot go into a region library. |
 | `omsi` | Fine-grained; the recording is the region's authored plan. Bot mode uses the omsi fork's planner; Instant runs the same ticks without waiting. `zoneCount` is the region-split or town count. |
 | `noiz2sa` | Summary capture like bounce and cloudberry, on flashSubstrate's iframe panel and bridge; no Bot yet, so no playback controller. `zoneCount` is its fixed zone table ([Noiz2sa Substrate](./noiz2sa.md)). |
+| `action_nodes` | Compiled, not generated: `actionNodes/actionGraphCompiler.js` writes its regions from a graph document, so it declares no realiser hook. Slice AN-1 registers the data half only; loop mode, sharing and the Bot arrive in slices 2 and 3 ([ActionNodes Substrate](./action-nodes.md)). |
 
 ## Adding a substrate
 
