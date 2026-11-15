@@ -163,6 +163,8 @@ goal.
 | `generate-procgen-reference.mjs --check` | ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH. |
 | `check-procgen-docs.mjs` | ALL CHECKS PASSED. |
 | `action-nodes-compile.mjs --check` | byte-identical. |
+| **Found by CI at the first push (`761167d041`)**: the headless gate `procgen-help` (`check-procgen-help.mjs`) | both new CLIs did their work at module scope, so a bare import compiled/played. Fixed: the body is a `main()` behind the direct-run guard; `--in-place --only=` PASS for both (HELP ok, IMPORT ok). |
+| **Found by CI**: `quickLaunch/generated.test.js` | a new procgen doc enrols in the Quick Launch help index too. Regenerated (`scripts/quicklaunch/generate-docs-index.mjs`); `quickLaunch/` + `procgenDocs/` 15 files, 609 tests pass. |
 
 Tests the slice moved, each with its reason in the file: `jsonSchemaCheck.test.js` (the region entry's property
 list gains `actions`, `xpGainScale`), `sidecarFieldsRegistry.test.js` (the sides law gains a fourth DERIVED
