@@ -19818,6 +19818,9 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
                 why: `${body.id} has a clear straight line to (${stance.x},${stance.y}), so it comes `
                     + '(KILLLOCK_LINE_STANCE)',
             });
+            // ⛓ L98-L99 (`KILLLOCK_STANDOUT_GUARD`, OFF: always null): the last kill's stand-out is the attempt's
+            const standOut = killLockStandOutRefusal(run, perTick, resolved, ctx);
+            if (standOut !== null) throw new SolverRefusal(standOut, { goal: ctx.goal, perTick: [...perTick] });
             row.verdict = 'killed';
             return { run, phase: { ...phase, line: true, tries }, tries };
         } catch (e) {
@@ -19833,6 +19836,78 @@ function killLockLineStanceTurn(run, perTick, resolved, ctx, { live, whys }) {
         }
     }
     return { run, phase: null, tries };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L98-L99 — **THE LAST KILL'S STAND-OUT IS PART OF THE ATTEMPT** (`KILLLOCK_STANDOUT_GUARD`,
+ * OFF — `SEEDLING_KILLLOCK_STANDOUT_GUARD=1` / `withKillLockStandOutGuard(enabled, fn)`).
+ *
+ * When the kill-lock chaser arm's last counted body dies, `execKillByChaser` STANDS (no keys) where the kill left the
+ * player: the corpses' fade, then the lock's own fade until it leaves the world. Those stands are not a walk or a
+ * dwell — nothing probes them and nothing bills what they meet — and the attempt that chose the stance was judged on
+ * its kill alone. MEASURED (the vanilla survey's step 227, `KILLLOCK_LINE_STANCE=1`): the line stance (184,72) for
+ * `jellyfish@56,48` kills both jellyfish by t334 with the player at (159.1,71.4), inside `spinningaxe@128,64`'s sweep;
+ * the fade stand takes the axe at t358 and the lock-fade stand at t381 — 2 hits no plan billed. OFF's own stances
+ * (KILLLOCK_CHASER_REWIND) end the kills at (167.1,87.4), out of its reach, and stand there hitless.
+ *
+ * ON (inside the arm's REWOUND turns only — `killLockChaserRewindTurn`, `killLockLineStanceTurn` — so a refused
+ * attempt is rewound and the next stance tried): when an attempt's kill leaves no live counted body, its stand-out is
+ * driven on a REPLAY of the run (`ctx.rewind.replay`, the live run untouched) — no keys, until the lock leaves the
+ * world or the arm's own stand bound (`killLockStandOutBound`) runs out — and a hit or a death there refuses the
+ * attempt by name. ⚖ No-hit logic: a kill whose stand-out tanks a hit is not a kill the plan may keep. Nothing reads a
+ * level or a coordinate. OFF: not asked (byte-identical).
+ */
+export const KILLLOCK_STANDOUT_GUARD = { enabled: globalThis.process?.env?.SEEDLING_KILLLOCK_STANDOUT_GUARD === '1' };
+export const KILLLOCK_STANDOUT_GUARD_DEFAULT = false;
+
+/** Run `fn` with `KILLLOCK_STANDOUT_GUARD` set to `enabled`, restoring the previous value. */
+export function withKillLockStandOutGuard(enabled, fn) {
+    return withSwitch(KILLLOCK_STANDOUT_GUARD, enabled, fn);
+}
+
+/** The switch's instrument (read by nothing that decides): one row per stand-out probed, `{t, ticks, verdict, why?}`. */
+export const KILLLOCK_STANDOUT_GUARD_COUNTS = { rows: [] };
+export function resetKillLockStandOutGuardCounts() {
+    KILLLOCK_STANDOUT_GUARD_COUNTS.rows = [];
+}
+
+/** The longest stand-out `execKillByChaser` can drive after its last kill: both corpse-fade stands, then the lock's fade. */
+function killLockStandOutBound(lock) {
+    const fade = opensOnTick(RESPONDERS[lock.tag]?.fade ?? RESPONDERS.lock.fade);
+    return 2 * (MOBILE_DEATH_FADE.ticks + HOLD_SLACK + 1) + fade + HOLD_SLACK + 1;
+}
+
+/**
+ * ⛓ L98-L99 (`KILLLOCK_STANDOUT_GUARD` ON, a rewind, and the kill left no live counted body; null otherwise): the
+ * refusal's words when the stand-out from here, driven on a replay with no keys, meets a hit or a death; null when it
+ * is clean. Spends no tick of the live run.
+ */
+function killLockStandOutRefusal(run, perTick, resolved, ctx) {
+    if (!KILLLOCK_STANDOUT_GUARD.enabled || !ctx?.rewind || !resolved?.lock) return null;
+    const dying = new Set((run.entities('chasers') ?? []).filter((c) => c.dying || c.destroy).map((c) => c.id));
+    if (countedBodiesLeft(run).some((b) => !dying.has(`${b.tag}@${b.x},${b.y}`))) return null;
+    const f = ctx.rewind.replay(perTick.length);
+    const h0 = (f.ledger('playerHits') ?? []).length;
+    const d0 = (f.ledger('playerDeaths') ?? []).length;
+    const bound = killLockStandOutBound(resolved.lock);
+    const row = { t: perTick.length, ticks: 0, verdict: 'clear' };
+    KILLLOCK_STANDOUT_GUARD_COUNTS.rows.push(row);
+    const NO = new Set();
+    for (let i = 0; i < bound && killLockStands(f, resolved.lock); i += 1) {
+        f.advance(NO);
+        row.ticks += 1;
+        const hit = (f.ledger('playerHits') ?? [])[h0];
+        const died = (f.ledger('playerDeaths') ?? [])[d0];
+        if (hit || died) {
+            const d = hit ?? died;
+            row.verdict = 'refused';
+            row.why = `${d.id ?? d.source} ${hit ? 'hits' : 'kills'} the player at run t${d.t} (${f.state.x.toFixed(1)},`
+                + `${f.state.y.toFixed(1)}), ${row.ticks} tick(s) into the stand-out`;
+            return `${ctx.what}: the last kill leaves the player where the stand-out (the corpses' fade, then `
+                + `${resolved.lock.id}'s) is not clear — ${row.why} (KILLLOCK_STANDOUT_GUARD)`;
+        }
+    }
+    return null;
 }
 
 /**
@@ -19884,6 +19959,9 @@ function killLockChaserRewindTurn(run, perTick, resolved, ctx, { live, hunted, h
         tries += 1;
         try {
             const phase = killLockChaserAttempt(run, perTick, resolved, ctx, body, h);
+            // ⛓ L98-L99 (`KILLLOCK_STANDOUT_GUARD`, OFF: always null): the last kill's stand-out is the attempt's
+            const standOut = killLockStandOutRefusal(run, perTick, resolved, ctx);
+            if (standOut !== null) throw new SolverRefusal(standOut, { goal: ctx.goal, perTick: [...perTick] });
             row.verdict = 'killed';
             return { run, phase: { ...phase, tries } };
         } catch (e) {
@@ -27934,6 +28012,56 @@ export function unbilledDamageOf(run, since, forcedHits = [], tapeOf = () => nul
     return { unbilled, deaths, billed: billed.size };
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE L98-L99 — **A DEATH ON THE SEGMENT'S OWN DRIVE REFUSES ON ITS TICK** (`DRIVE_DEATH_REFUSED`,
+ * OFF — `SEEDLING_DRIVE_DEATH_REFUSED=1` / `withDriveDeathRefused(enabled, fn)`).
+ *
+ * A death reboots the room (`Player.die()` → `restartLevel()`): every body is rebuilt, the player respawns at the
+ * arrival, and the killing hit's shake is carried into the new world's settle (`CONTACT_FIDELITY.rebootShake`, the
+ * band `camera.SHAKE_BAND_KEPT.rebootSettle` keeps on purpose). Every executor that drives the live run went on
+ * driving after one, so the solve's verdict was whatever the respawned world met next. MEASURED (the vanilla survey's
+ * step 228, L99 → L100, `KILLLOCK_LINE_STANCE` OFF): the exit walk takes `lavachain@80,64` at t394, t414 and t484 —
+ * the third kills — the drive walks on from the respawn, and at t496 the kept reboot band refuses an on-screen
+ * question about `lavarunner@176,64`, so the step's refusal names the camera, never the death.
+ *
+ * ON: the segment's view (`solveSegment`'s `advance`, the one every executor's live tick goes through; forks and
+ * replays are not views) refuses by name on the tick a `playerDeaths` row lands — the killing source, the hits before
+ * it, `obstacle: {kind: 'death', id}`. ⚖ No-hit logic: a death is never a plan. A caller that rewinds on a refusal (the
+ * kill-lock arm's turns) tries its next candidate; any other caller's refusal is the segment's, and it names the death.
+ * It never makes a crossing solvable on its own. OFF: not asked (byte-identical).
+ */
+export const DRIVE_DEATH_REFUSED = { enabled: globalThis.process?.env?.SEEDLING_DRIVE_DEATH_REFUSED === '1' };
+export const DRIVE_DEATH_REFUSED_DEFAULT = false;
+/** The hits before the death the refusal names. */
+const DRIVE_DEATH_HITS_NAMED = 3;
+
+/** Run `fn` with `DRIVE_DEATH_REFUSED` set to `enabled`, restoring the previous value. */
+export function withDriveDeathRefused(enabled, fn) {
+    return withSwitch(DRIVE_DEATH_REFUSED, enabled, fn);
+}
+
+/** The switch's instrument (read by nothing that decides): one row per refusal, `{name, t, level, source, id, hits}`. */
+export const DRIVE_DEATH_REFUSED_COUNTS = { rows: [] };
+export function resetDriveDeathRefusedCounts() {
+    DRIVE_DEATH_REFUSED_COUNTS.rows = [];
+}
+
+/** ⛓ L98-L99 (`DRIVE_DEATH_REFUSED` ON only): throw the death refusal when `inner` gained a death since `deaths0`. */
+function refuseDriveDeath(inner, deaths0, name, perTick) {
+    const deaths = inner.ledger('playerDeaths') ?? [];
+    if (deaths.length <= deaths0) return;
+    const d = deaths[deaths0];
+    const hits = (inner.ledger('playerHits') ?? []).filter((h) => h.t <= d.t && h.level === d.level)
+        .slice(-DRIVE_DEATH_HITS_NAMED);
+    const id = d.id ?? d.source ?? null;
+    DRIVE_DEATH_REFUSED_COUNTS.rows.push({ name, t: d.t, level: d.level, source: d.source ?? null, id,
+        hits: hits.map((h) => ({ t: h.t, id: h.id ?? h.source })) });
+    throw new SolverRefusal(`solverBot(${name}): the player DIED at run t${d.t} in level ${d.level} (${id}; the hits `
+        + `before it: ${hits.map((h) => `${h.id ?? h.source} at t${h.t}`).join(', ') || 'none'}) — a death reboots the `
+        + 'room, so the drive is refused on the tick of the death, not driven on from the respawn (DRIVE_DEATH_REFUSED)',
+    { obstacle: { kind: 'death', id }, perTick: [...perTick] });
+}
+
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
 
@@ -28367,6 +28495,7 @@ function solveSegmentUnder({
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
             }
+            const deaths0 = DRIVE_DEATH_REFUSED.enabled ? inner.ledger('playerDeaths').length : 0;
             const out = advanceNamingRefusals(inner, held); // ⛓ housekeep D1: a coded throw named on its way out
             if (activeProgress !== null) progressTick(inner.level);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
@@ -28388,6 +28517,8 @@ function solveSegmentUnder({
             }
             if (tapeAtClock !== null) tapeAtClock.set(inner.ticksCompleted, tapeTick);
             tapeTick += 1;
+            // ⛓ L98-L99 (`DRIVE_DEATH_REFUSED`, OFF: not asked): a death on the segment's own drive refuses on its tick
+            if (DRIVE_DEATH_REFUSED.enabled) refuseDriveDeath(inner, deaths0, name, perTick);
             return out;
         };
         return Object.create(inner, { advance: { value: advance } });
