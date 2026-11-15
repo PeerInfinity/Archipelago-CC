@@ -1767,11 +1767,14 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "{gate, item}",
+                    "short": "{character, gate, info, item, object}",
                     "type": "object",
                     "value": [
+                        "character",
                         "gate",
-                        "item"
+                        "info",
+                        "item",
+                        "object"
                     ]
                 },
                 {
@@ -7890,7 +7893,7 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "31 keys",
+                    "short": "32 keys",
                     "type": "object",
                     "value": [
                         "action_lib",
@@ -7919,6 +7922,7 @@ export const REGISTRY = frz({
                         "pulls",
                         "pulsers",
                         "shared_world",
+                        "things",
                         "tile_size",
                         "tiles",
                         "trapLib",

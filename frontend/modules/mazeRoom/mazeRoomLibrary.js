@@ -50,6 +50,7 @@ import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
 import {
     MAZE_CONTENT_ROLES, MAZE_DEFAULT_CONTENT_PACK, presentingPlaceFromRules, presentingRegionCore,
 } from './mazeContent.js';
+import { thingsDeserializer, thingsRegionCore, thingsSerializer } from './mazeThings.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -149,7 +150,9 @@ export const substrateRegistryEntry = Object.freeze({
         'arbitrary_location_rules',
         'arbitrary_exit_rules',
     ]),
-    deserializeWorld: tileGridDeserializer,
+    // ⛓ CONTENT SETS S2 — the engine's deserializer, then the region's `things` copied back (`mazeThings.js`):
+    // the engine copies named fields, so it would drop them.
+    deserializeWorld: thingsDeserializer(tileGridDeserializer),
 
     /**
      * ⛓⛓ CONCEPT LIBRARY T1 — **WHAT THE MAZE REALISES** (`mazeConcepts.js`;
@@ -279,11 +282,13 @@ export const substrateRegistryEntry = Object.freeze({
     // Build-time adapters
     // ⛓ CONTENT SETS R2 — the engine, then `mazeContent.js`'s presentation pass
     // (concept rows' looks from `params.contentSet`).
-    generateRegionCore: presentingRegionCore(spatialCore),
+    // ⛓ CONTENT SETS S2 — and the region's THING recorded on the world, with no position yet (`mazeThings.js`).
+    generateRegionCore: thingsRegionCore(presentingRegionCore(spatialCore)),
     placeFromItems: itemBasedPlacer,
     placeFromRules: presentingPlaceFromRules(ruleGatePlacer),
     extractPathsAndObstacles: tileGridPathExtractor,
-    serializeWorld: tileGridSerializer,
+    // ⛓ CONTENT SETS S2 — the engine's serializer, then each thing given a free floor cell and written as `things`.
+    serializeWorld: thingsSerializer(tileGridSerializer),
     // ⛓ PRESET SIDECARS D0 — what `serializeWorld` writes, declared beside the
     // serializer itself (`mazeSerializer.js`); `text_adventure` carries the
     // same object, and `check-sidecar-fields.mjs` holds the corpus to it.

@@ -22,7 +22,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✓ 13 items | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory, Noiz2sa Star | ✓ Victory | ✗ |
 | P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |
 | P6 | It can show the library's concepts in its own way | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), … | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), … |
-| P7 | Themeable | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ gate, item | ✗ | ✗ | ✓ gate, item, place, character, object, info |
+| P7 | Themeable | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ gate, item, character, object, info | ✗ | ✗ | ✓ gate, item, place, character, object, info |
 
 ## Loop mode
 
@@ -227,7 +227,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — It brings progression items of its own: Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key
 - *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
 - *Play* — It can show the library's concepts in its own way: 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …
-- *Play* — Themeable: gate, item
+- *Play* — Themeable: gate, item, character, object, info
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it

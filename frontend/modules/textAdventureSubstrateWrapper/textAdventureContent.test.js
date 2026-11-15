@@ -316,10 +316,12 @@ describe('arrivalLine — what the bridge shows on arrival', () => {
 
 // ── the whole world: the concept trial world with the fixture theme added to its stack ──
 const ta = (rulesJson) => Object.entries(rulesJson.preset_sidecars['1']).filter(([, s]) => s.substrate === 'text_adventure');
-/** The document minus every text-adventure payload's `prose` and the recorded content list: what a theme may not move. */
+/** The document minus every text-adventure payload's `prose`, every region's things and the recorded content list: what a theme may not move. */
 const withoutPresentation = (rulesJson) => {
     const out = structuredClone(rulesJson);
     for (const [, s] of ta(out)) { delete s.playable_payload.prose; delete s.playable_payload.things; }
+    // ⛓ content sets S2 — a maze region's thing (the fixture theme's information stands on a sign there)
+    for (const s of Object.values(out.preset_sidecars['1'])) if (s.substrate === 'maze') delete s.playable_payload.things;
     for (const block of Object.values(out.procgen_metadata ?? {})) delete block[RECORDED_CONTENT_KEY];
     return out;
 };

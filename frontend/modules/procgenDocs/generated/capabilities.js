@@ -559,7 +559,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "Themeable",
-                    "text": "gate, item"
+                    "text": "gate, item, character, object, info"
                 },
                 {
                     "group": "loop",
@@ -1943,11 +1943,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "maze",
                     "kind": "yes",
-                    "text": "gate, item",
+                    "text": "gate, item, character, object, info",
                     "why": [
                         {
                             "field": "contentRoles",
-                            "value": "{gate, item}"
+                            "value": "{character, gate, info, item, object}"
                         }
                     ]
                 },

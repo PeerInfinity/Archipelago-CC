@@ -170,7 +170,7 @@ describe('no art available → exactly today\'s draw', () => {
 
     it('an empty stack reads nothing', async () => {
         const io = { base: FIX_BASE, readJson: async () => { throw new Error('read'); }, decode: async () => { throw new Error('decode'); } };
-        expect(await loadMazeTileArt([], io)).toEqual({ ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {} });
+        expect(await loadMazeTileArt([], io)).toEqual({ ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {}, thingArt: {} });
     });
 });
 

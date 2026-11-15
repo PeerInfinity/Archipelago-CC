@@ -317,7 +317,8 @@ describe('⛓ the links the render emits', () => {
         //   → frontend/packs/meta/art/manifest.json, the worked example (1 repo).
         //   412 → 413: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
         //   415 → 416: content sets S1 — text-adventure.md's `things` field → its own § Things that are not AP checks (1 same-doc).
-        expect(checked).toBe(416);
+        //   416 → 418: content sets S2 — maze.md § Things ⇄ concepts.md § Content roles (2 doc).
+        expect(checked).toBe(418);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_comment": "The `meta` theme's maze art (content sets R4): SHAPES ONLY, no image file. A world that knows it is a generated game draws itself as a diagram: a floor is a paper cell with a corner tick, a wall a hatched block, the player a marker, each object one plain mark. One style: a 20x20 box (the maze's TILE_PX, so a recipe draws 1:1 in play), stroke width 2 everywhere, a small flat palette — paper #c4c9d2, ink #2e3440, slate #4c5464, the Gate's grey-blue #a0a8b8, and the maze's own meaning colours (exit green #3aa85a, mana cyan #5ac8e8, trap yellow #e0c040, block tan #c8a06a, struck #d05a3a, dormant #7ab8d8, button #ffd75f, pulser #e0e070, pull #a8401a) plus one accent for the player, #e8743a. Every key of the maze's key table (mazeRoom/mazeTileArt.js MAZE_ART_KEYS) is drawn, and three `meta:` keys that this pack's own concepts name as their `art` (content sets R5): the Gate (a square with two dot eyes and a keyhole), Progressive Sword and Progressive Swim, drawn by a maze gate or item of that mechanic at play; what the painter draws over a thing (the facing tick, a lane tint, a pulser's ring, a pull's disc, a collected tile's fade, the grid) is unchanged and stays readable on these marks. Art is presentation only: nothing here changes what the world is.",
+  "_comment": "The `meta` theme's maze art (content sets R4): SHAPES ONLY, no image file. A world that knows it is a generated game draws itself as a diagram: a floor is a paper cell with a corner tick, a wall a hatched block, the player a marker, each object one plain mark. One style: a 20x20 box (the maze's TILE_PX, so a recipe draws 1:1 in play), stroke width 2 everywhere, a small flat palette — paper #c4c9d2, ink #2e3440, slate #4c5464, the Gate's grey-blue #a0a8b8, and the maze's own meaning colours (exit green #3aa85a, mana cyan #5ac8e8, trap yellow #e0c040, block tan #c8a06a, struck #d05a3a, dormant #7ab8d8, button #ffd75f, pulser #e0e070, pull #a8401a) plus one accent for the player, #e8743a. Every key of the maze's key table (mazeRoom/mazeTileArt.js MAZE_ART_KEYS) is drawn, and the `meta:` keys that this pack's own concepts name as their `art` (content sets R5: three; S2: two more): the Gate (a square with two dot eyes and a keyhole), Progressive Sword and Progressive Swim, drawn by a maze gate or item of that mechanic at play; what the painter draws over a thing (the facing tick, a lane tint, a pulser's ring, a pull's disc, a collected tile's fade, the grid) is unchanged and stays readable on these marks. Content sets S2 adds the maze's sign (`maze:object/sign`: a board on a post) and the two characters' own keys, `meta:character/narrator` (a circle with a speech tail) and `meta:character/placeholder` (a circle with a cross), drawn by a maze region's thing at play. Art is presentation only: nothing here changes what the world is.",
   "shapes": {
     "maze:tile/floor": {
       "w": 20, "h": 20,
@@ -156,6 +156,35 @@
         { "line": [6, 15, 10, 17], "stroke": "#40b0c0", "width": 2 },
         { "line": [10, 17, 14, 15], "stroke": "#40b0c0", "width": 2 },
         { "line": [14, 15, 18, 17], "stroke": "#40b0c0", "width": 2 }
+      ]
+    },
+    "maze:object/sign": {
+      "w": 20, "h": 20,
+      "note": "a sign (a piece of information no character or object holds): a paper board outlined in ink on an ink post, two ink lines of writing on it",
+      "draw": [
+        { "line": [10, 12, 10, 18], "stroke": "#2e3440", "width": 2 },
+        { "rect": [3, 3, 14, 9], "fill": "#c4c9d2", "stroke": "#2e3440", "width": 2 },
+        { "line": [6, 6.5, 14, 6.5], "stroke": "#2e3440", "width": 2 },
+        { "line": [6, 9, 12, 9], "stroke": "#2e3440", "width": 2 }
+      ]
+    },
+    "meta:character/narrator": {
+      "w": 20, "h": 20,
+      "note": "the Narrator: a pale-blue circle ringed in ink with a speech tail at its lower left, and two ink lines of speech inside",
+      "draw": [
+        { "polygon": [[4, 13], [3, 18], [9, 15]], "fill": "#7fa0c8", "stroke": "#2e3440", "width": 2 },
+        { "circle": [10.5, 9, 6.5], "fill": "#7fa0c8", "stroke": "#2e3440", "width": 2 },
+        { "line": [7.5, 7.5, 13.5, 7.5], "stroke": "#2e3440", "width": 2 },
+        { "line": [7.5, 10.5, 12, 10.5], "stroke": "#2e3440", "width": 2 }
+      ]
+    },
+    "meta:character/placeholder": {
+      "w": 20, "h": 20,
+      "note": "the Placeholder: a paper circle ringed in ink with a cross through it, the mark that stands where a picture is still to come",
+      "draw": [
+        { "circle": [10, 10, 7], "fill": "#c4c9d2", "stroke": "#2e3440", "width": 2 },
+        { "line": [5.5, 5.5, 14.5, 14.5], "stroke": "#2e3440", "width": 2 },
+        { "line": [14.5, 5.5, 5.5, 14.5], "stroke": "#2e3440", "width": 2 }
       ]
     }
   }

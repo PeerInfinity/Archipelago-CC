@@ -173,6 +173,9 @@ export const COLORS = {
     blockStruck: '#d05a3a',
     blockDormant: '#7ab8d8',
     pulser: '#e0e070',
+    // ⛓ CONTENT SETS S2: a region's sign (a piece of information no character or object holds), drawn beside
+    // `drawWorld` by `mazeThingOverlay.js` when the stack has no art for it.
+    sign: '#b89868',
 };
 
 /**

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_comment": "The `meta` theme (content sets R3): a world that knows it is a generated game. It presents the guardian as the Gate, which states its own rule; it gives the sword's and the swim's checks a line that knows they are checks (their names stay the AP item names, which are logic); and it offers places for a room. It does NOT present water, so water falls through to each substrate's default pack. No image: the Gate's `look` is a colour and a symbol, and its `art` (content sets R5) a shape recipe in this pack's art layer, as are the sword's and the swim's. Art is resolved at PLAY (never baked): a maze draws a gate or item from the art key of the latest pack concept presenting its mechanic, and the sword and swim, which carry no `look`, still take their baked colour and symbol from the maze pack. ⛔ No line may claim something untrue of the world: a place describes only what every generated room has.",
+  "_comment": "The `meta` theme (content sets R3): a world that knows it is a generated game. It presents the guardian as the Gate, which states its own rule; it gives the sword's and the swim's checks a line that knows they are checks (their names stay the AP item names, which are logic); and it offers places for a room. It does NOT present water, so water falls through to each substrate's default pack. No image: the Gate's `look` is a colour and a symbol, and its `art` (content sets R5) a shape recipe in this pack's art layer, as are the sword's and the swim's. Art is resolved at PLAY (never baked): a maze draws a gate or item from the art key of the latest pack concept presenting its mechanic, and the sword and swim, which carry no `look`, still take their baked colour and symbol from the maze pack. ⛔ No line may claim something untrue of the world: a place describes only what every generated room has. Characters (content sets S1/S2): the Narrator and the Placeholder carry a `look` (the colour and symbol a maze draws them in without art) and an `art` key (a shape recipe in this pack's art layer). A maze region's thing reads its text with the variant `maze`: a `<key>/maze` line in the text layer, where there is one, replaces `<key>` there (a maze region has no place name).",
   "concepts": {
     "meta:object/gate": {
       "kind": "object",
@@ -98,6 +98,8 @@
       "kind": "character",
       "name": "Narrator",
       "description": "The voice that tells you where you are. It reads its lines from the world document.",
+      "look": { "color": "#7fa0c8", "symbol": "N" },
+      "art": "meta:character/narrator",
       "text": {
         "says": "meta:character/narrator/says"
       }
@@ -106,6 +108,8 @@
       "kind": "character",
       "name": "Placeholder",
       "description": "It stands in a spot the theme set aside for a character.",
+      "look": { "color": "#c4c9d2", "symbol": "P" },
+      "art": "meta:character/placeholder",
       "text": {
         "says": "meta:character/placeholder/says"
       }
