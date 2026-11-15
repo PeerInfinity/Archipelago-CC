@@ -45,7 +45,7 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { FIRE_BREAK_WAIT_TICKS, solveSegment, SolverRefusal, stanceHypothesisProbe } from './solverBot.js';
 import { WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
 import { FIRE_WINDOW } from './fireVerb.js';
-import { FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan }
+import { FIREBREAK_RULES_WITNESSES, FIREBREAK_WITNESS_DIR, FIREBREAK_WITNESSES, compareFireBreak, fireBreakModelSamples, fireBreakPlan }
     from './fidelityFireBreak.js';
 
 const SRC = atlasLevelSource();
@@ -227,7 +227,9 @@ describe('fidelity FIREBREAK — D1: the `break` verb with Fire and no Sword (th
 });
 
 describe('fidelity FIREBREAK — D2: the solver\'s plans, played on the game (p4g), are the model at 0 px', () => {
-    const recorded = FIREBREAK_WITNESSES.map((w) => [w.name, w, join(FIREBREAK_WITNESS_DIR, `${w.name}.json`)]);
+    // ⛓ RULES rules-fire-breaks-rocks: the rule's own witnesses (`--set=rules`) are recorded and replayed the same way.
+    const recorded = [...FIREBREAK_WITNESSES, ...FIREBREAK_RULES_WITNESSES]
+        .map((w) => [w.name, w, join(FIREBREAK_WITNESS_DIR, `${w.name}.json`)]);
     it('every witness has its recording', () => {
         expect(recorded.filter(([, , path]) => !existsSync(path)).map(([name]) => name)).toEqual([]);
     });
