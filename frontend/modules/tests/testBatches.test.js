@@ -77,6 +77,12 @@ describe('testBatches', () => {
         expect(listOnPushBatches()).toContain('seedling-js');
     });
 
+    it('the Region Map: its Seedling rows in playback-bot (on push), its one classic-world smoke row in fast (js-19 e2)', () => {
+        expect(categoryInBatch('Region Map: Seedling', 'playback-bot')).toBe(true);
+        expect(categoryInBatch('Region Map: Seedling', 'fast')).toBe(false);
+        expect(categoryInBatch('Region Map', 'fast')).toBe(true);
+    });
+
     it('seedling-wasm claims the Seedling wasm runtime rows, on push (split from seedling-js, 2026-10-28)', () => {
         expect(categoryInBatch('Seedling wasm runtime', 'seedling-wasm')).toBe(true);
         expect(categoryInBatch('Seedling wasm runtime', 'seedling-js')).toBe(false);
