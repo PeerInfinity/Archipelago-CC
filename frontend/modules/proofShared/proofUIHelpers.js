@@ -12,6 +12,7 @@
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
+import { getDocLocationNames } from './proofModuleHelpers.js';
 
 /**
  * Create an event bus getter with fallback to global eventBus.
@@ -205,6 +206,8 @@ export function ensureStateLoaded(state) {
   const slotData = playerWorld?.slot_data;
   if (!slotData?.proof_structure && !slotData?.graph_structure) return false;
 
-  state.loadFromSlotData(slotData, playerWorld.name_substitutions, playerWorld.options);
+  state.loadFromSlotData(
+    slotData, playerWorld.name_substitutions, playerWorld.options, getDocLocationNames(staticData)
+  );
   return state.isLoaded;
 }

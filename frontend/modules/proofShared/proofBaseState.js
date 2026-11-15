@@ -28,6 +28,9 @@
 // structure (worlds/metamath/Options.py, worlds/depgraph/Options.py).
 const DEFAULT_ENTRANCE_RULE_MODE = 1;
 
+// worlds/depgraph/Locations.py node_location_name's max_length.
+const NODE_LOCATION_NAME_MAX = 50;
+
 export class ProofBaseState {
   constructor() {
     /** @type {Map<number, ProofStep>} All proof steps keyed by index */
@@ -48,8 +51,17 @@ export class ProofBaseState {
     /** @type {number|null} The final goal step index */
     this.goalStepIndex = null;
 
+    /**
+     * Steps whose location matched no single name in the loaded document (_resolveLocationNames).
+     * @type {Array<{index: number, locationName: string, matches: string[]}>}
+     */
+    this.unresolvedLocationSteps = [];
+
     /** @type {boolean} Whether proof structure data has been loaded */
     this.isLoaded = false;
+
+    /** @type {Object|null} The slot_data object the structure was parsed from */
+    this.loadedSlotData = null;
 
     /** @type {'proof'|'graph'|null} Structure type: 'proof' for MetaMath, 'graph' for DepGraph */
     this.structureType = null;
@@ -73,10 +85,14 @@ export class ProofBaseState {
    * @param {Object} slotData - The slot_data object from rules.json
    * @param {Object} [nameSubstitutions] - The name_substitutions object from rules.json
    * @param {Object} [options] - World options (contains entrance_rule_mode; slot_data's wins)
+   * @param {Set<string>|null} [docLocationNames] - The loaded document's location names; when
+   *   given, each step's location name is resolved against it (see _resolveLocationNames)
    * @returns {boolean} Whether parsing succeeded
    * @protected
    */
-  _parseProofStructure(slotData, nameSubstitutions, options) {
+  _parseProofStructure(slotData, nameSubstitutions, options, docLocationNames = null) {
+    // The slot_data object this state was parsed from (initializeProofState: same document or a new one).
+    this.loadedSlotData = slotData ?? null;
     this.steps.clear();
     this.receivedItems.clear();
     this.checkedLocations.clear();
@@ -175,7 +191,91 @@ export class ProofBaseState {
       }
     }
 
+    this._resolveLocationNames(
+      docLocationNames, isGraphStructure, new Set(Array.isArray(startingIndices) ? startingIndices : [])
+    );
+
     return true;
+  }
+
+  /**
+   * Match each step's location to the loaded document's own location names.
+   *
+   * The names above are the hand-written worlds' (generic "Complete Node N",
+   * with name_substitutions for display). A world_generator package of the
+   * same game names its locations as the hand-written world displays them
+   * (DepGraph WorldGen: "Production Deployment", the node's expression via
+   * node_location_name) and carries no name_substitutions. So a step keeps
+   * its name when the document has it (the hand-written worlds, unchanged);
+   * otherwise it takes the ONE document location among the step's other
+   * names: its display substitution, its expression, and (DepGraph) the
+   * expression cut as node_location_name cuts it.
+   *
+   * A step that matches none, or more than one, or a name another step also
+   * matched, keeps its unmatched name: no checked location carries it, so
+   * that step never counts as checked and the goal is never reported off a
+   * guess. Each is logged.
+   *
+   * Starting steps are skipped: they are given, not checked, and a
+   * world may have no location for them (MetaMath's hypotheses).
+   *
+   * @param {Set<string>|null} docLocationNames - null: no document to match (names stay as parsed)
+   * @param {boolean} isGraphStructure
+   * @param {Set<number>} startingIndices
+   * @protected
+   */
+  _resolveLocationNames(docLocationNames, isGraphStructure, startingIndices) {
+    this.unresolvedLocationSteps = [];
+    if (!(docLocationNames instanceof Set) || docLocationNames.size === 0) return;
+
+    const chosen = new Map(); // stepIndex -> name
+    for (const [index, step] of this.steps) {
+      if (startingIndices.has(index)) continue;
+      if (docLocationNames.has(step.locationName)) {
+        chosen.set(index, step.locationName);
+        continue;
+      }
+      const candidates = new Set();
+      const substituted = this.nameSubstitutions.get(step.locationName);
+      if (substituted) candidates.add(substituted);
+      if (step.expression) {
+        candidates.add(step.expression);
+        if (isGraphStructure && step.expression.length > NODE_LOCATION_NAME_MAX) {
+          candidates.add(step.expression.slice(0, NODE_LOCATION_NAME_MAX - 3) + '...');
+        }
+      }
+      const found = [...candidates].filter((name) => docLocationNames.has(name));
+      if (found.length === 1) chosen.set(index, found[0]);
+      else this.unresolvedLocationSteps.push({ index, locationName: step.locationName, matches: found });
+    }
+
+    const claims = new Map(); // name -> step indices
+    for (const [index, name] of chosen) {
+      if (!claims.has(name)) claims.set(name, []);
+      claims.get(name).push(index);
+    }
+    for (const [name, indices] of claims) {
+      if (indices.length > 1) {
+        for (const index of indices) {
+          chosen.delete(index);
+          this.unresolvedLocationSteps.push({
+            index, locationName: this.steps.get(index).locationName, matches: [name],
+          });
+        }
+      }
+    }
+    for (const [index, name] of chosen) this.steps.get(index).locationName = name;
+
+    if (this.unresolvedLocationSteps.length > 0) {
+      const goalUnresolved = this.unresolvedLocationSteps.some((u) => u.index === this.goalStepIndex);
+      const sample = this.unresolvedLocationSteps.slice(0, 5)
+        .map((u) => `${u.index} (${u.matches.length === 0 ? 'no match' : `ambiguous: ${u.matches.join(' | ')}`})`)
+        .join(', ');
+      console.warn(
+        `[proofState] ${this.unresolvedLocationSteps.length} step(s) have no single location in the loaded rules` +
+          `${goalUnresolved ? ', the goal step among them: the goal will not be reported' : ''}: ${sample}`
+      );
+    }
   }
 
   /**
