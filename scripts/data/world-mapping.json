@@ -179,7 +179,7 @@
     "exporter_path": "exporter/games/official/bomb_rush_cyberfunk.py",
     "exporter_size": 1469,
     "game_logic_path": "frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bomb_rush_cyberfunkLogic.js",
-    "game_logic_size": 41274,
+    "game_logic_size": 41594,
     "game_name": "Bomb Rush Cyberfunk",
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
@@ -559,17 +559,6 @@
     "has_custom_game_logic": true,
     "template_file": "Jak and Daxter The Precursor Legacy.yaml",
     "world_directory": "jakanddaxter"
-  },
-  "Journey to Ascension": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Journey to Ascension",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Journey to Ascension.yaml",
-    "world_directory": "jta"
   },
   "Kingdom Hearts": {
     "exporter_path": null,

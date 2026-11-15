@@ -38,18 +38,6 @@ python Generate.py --weights_file_path Templates/APCalc.yaml --multi 1 --seed 1
 python Generate.py --weights_file_path Templates/APCalc.yaml --multi 1 --seed 2
 python Generate.py --weights_file_path Templates/APCalc.yaml --multi 1 --seed 3
 mkdir -p "Players/Templates"
-cat > "Players/Templates/Journey to Ascension Vanilla.yaml" << 'YAMLEOF'
-name: Player{number}
-game: "Journey to Ascension"
-Journey to Ascension:
-  vanilla_placement: true
-YAMLEOF
-python Generate.py --weights_file_path "Templates/Journey to Ascension Vanilla.yaml" --multi 1 --seed 1
-rm -f "Players/Templates/Journey to Ascension Vanilla.yaml"
-python Generate.py --weights_file_path "Templates/Journey to Ascension.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Journey to Ascension.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/Journey to Ascension.yaml" --multi 1 --seed 3
-mkdir -p "Players/Templates"
 cat > "Players/Templates/Baking Adventure Vanilla.yaml" << 'YAMLEOF'
 name: Player{number}
 game: "Baking Adventure"

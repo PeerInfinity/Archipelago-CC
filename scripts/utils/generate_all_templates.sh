@@ -386,7 +386,6 @@ EXTRA_SEED_TEMPLATES=(
   "A Short Hike"
   "A Hat in Time"
   "APCalc"
-  "Journey to Ascension"
   "Baking Adventure"
   "Coding Adventure"
 )
@@ -403,7 +402,6 @@ MULTIWORLD_TEMPLATES=(
 # ALTTP uses special scripts in scripts/vanilla-alttp/; others use generate_vanilla_seed
 declare -A VANILLA_PRESET_DIR
 VANILLA_PRESET_DIR["A Link to the Past"]="alttp"
-VANILLA_PRESET_DIR["Journey to Ascension"]="jta"
 VANILLA_PRESET_DIR["Baking Adventure"]="bakingadventure"
 VANILLA_PRESET_DIR["Coding Adventure"]="codingadventure"
 # Note: Metamath vanilla is handled in its own dedicated section (theorem variants)

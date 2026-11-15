@@ -34,6 +34,10 @@ cloudberry_sphere_worldgen public
 cloudberry_maze_mix_worldgen
 jta_mixed_test
 jta_substrate_test
+# FROZEN (content sets, old-code slice A, 2026-11-15): worlds/jta, the only thing that could regenerate it,
+# was deleted. It stays as the source of jta_substrate_test (scripts/test/generate-jta-substrate-test-preset.py,
+# byte-checked by test/test_jta_substrate_test_preset.py).
+jta_vanilla
 robotkitty_tilemap
 jta_dataset_test
 jta_locations_test
