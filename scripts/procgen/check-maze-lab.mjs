@@ -1259,6 +1259,136 @@ try {
             '⛓ …and a PLAIN generated maze has no wires and no error: keys open doors by colour and any block presses '
             + 'any button (rules, not wires), and the note says so', plainNote);
         if (shotsDir) await page.screenshot({ path: join(shotsDir, '5-wires-plain-maze.png'), fullPage: true });
+
+        /* ── CLAIM 26: a converted room links BACK to its Seedling level (maze seedling link) ── */
+        /**
+         * ⛓⛓ The expected level of each subject is read off the committed preset here (its room's
+         * `playable_payload.level`), never asked of the page; the href is compared with the Seedling editor's own URL
+         * grammar (`?source=edit&level=N`) and FOLLOWED in a second tab, whose editor must open that level as an
+         * `atlas` base. ⛔ The link costs no request: the link boot fetches the index and the rules once each (the room
+         * needs both), and a plain maze boot fetches no preset document at all.
+         */
+        const RULES_REL = 'presets/seedling_playthrough_maze/AP_1/AP_1_rules.json';
+        const seedlingHref = (level) => `${base}/frontend/modules/seedlingDemo/watch.html?source=edit&level=${level}`;
+        const lineOf = () => page.evaluate(() => ({
+            hidden: document.getElementById('labSeedlingLine').hidden,
+            open: { hidden: document.getElementById('labSeedlingOpen').hidden,
+                href: document.getElementById('labSeedlingOpen').getAttribute('href'),
+                target: document.getElementById('labSeedlingOpen').target,
+                text: document.getElementById('labSeedlingOpen').textContent },
+            note: document.getElementById('labSeedlingNote').textContent,
+        }));
+        const presetReqs = [];
+        const onReq = (r) => { if (r.url().includes('/frontend/presets/')) presetReqs.push(r.url()); };
+        page.on('request', onReq);
+        const level5 = sidecars[roomKey].playable_payload.level;
+        presetReqs.length = 0;
+        const conv5 = await loadLink(roomKey, `the seedling link of ${roomKey}`);
+        const line5 = await lineOf();
+        const bootReqs = presetReqs.map((u) => u.slice(u.indexOf('/frontend/presets/') + '/frontend/'.length));
+        check(conv5.seedlingLink?.shown === true && conv5.seedlingLink.ok === true && conv5.seedlingLink.level === level5
+            && !line5.hidden && !line5.open.hidden && line5.open.href === seedlingHref(level5)
+            && line5.open.target === '_blank' && line5.open.text.includes(`level ${level5}`),
+            `⛓⛓ CLAIM 26: the converted room ${roomKey} shows "open level ${level5} in the Seedling editor", a NEW-TAB link `
+            + `to watch.html?source=edit&level=${level5} (its own \`playable_payload.level\`)`, json(line5));
+        check(json([...bootReqs].sort()) === json(['presets/preset_files.json', RULES_REL].sort()),
+            '⛓ …and it costs NO extra request: the link boot fetched the preset index and the rules file once each, the '
+            + 'same two documents the room itself needs', json(bootReqs));
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `1-maze-link-to-seedling-${roomKey}.png`), fullPage: true });
+
+        const tab = await browser.newPage();
+        const tabErrors = [];
+        tab.on('pageerror', (e) => tabErrors.push(e.message));
+        /** ⛔ No href = nothing to follow: the row reports it as a FAIL rather than crashing the rest of the run. */
+        let seedEditor = { base: null, baseLine: 'no link to follow' };
+        if (typeof line5.open.href === 'string') {
+            await tab.goto(line5.open.href, { waitUntil: 'domcontentloaded' });
+            await tab.waitForFunction(() => window.__editorEdit?.base, null, { timeout: 120000 })
+                .catch((e) => { throw new Error(`STUCK waiting for the Seedling editor the link opened: ${e.message}`); });
+            seedEditor = await tab.evaluate(() => ({ base: window.__editorEdit.base,
+                baseLine: document.getElementById('editBase')?.textContent ?? '' }));
+        }
+        check(seedEditor.base?.kind === 'atlas' && seedEditor.base.level === level5 && tabErrors.length === 0
+            && new RegExp(`level ${level5}\\b`).test(seedEditor.baseLine),
+            `⛓⛓ …FOLLOWED, the link opens the Seedling editor on vanilla level ${level5} (an \`atlas\` base), and the `
+            + 'editor\'s own base line names that level',
+            `${json(seedEditor.base)} · "${seedEditor.baseLine}" · ${tabErrors.join(' | ')}`);
+        if (shotsDir) await tab.screenshot({ path: join(shotsDir, `2-seedling-editor-level-${level5}.png`), fullPage: true });
+        await tab.close();
+
+        const roomlessLink = await loadLink(roomless, `the seedling link of the room-less ${roomless}`);
+        const roomlessLine = await lineOf();
+        const holderOf = sidecars[holder].playable_payload.level;
+        check(roomlessLink.seedlingLink?.ok === true && roomlessLink.seedlingLink.level === holderOf
+            && roomlessLine.open.href === seedlingHref(holderOf) && roomlessLine.note.includes('has no room of its own')
+            && roomlessLine.note.includes(holder),
+            `⛓ …a ROOM-LESS region (${roomless}) links to its shared world's room ${holder}'s level, ${holderOf}, and `
+            + 'the note says it opens the whole level', roomlessLine.note);
+
+        const byLevel = new Map();
+        for (const [k, s] of Object.entries(sidecars)) {
+            const lv = s.playable_payload?.level;
+            if (Number.isInteger(lv)) byLevel.set(lv, [...(byLevel.get(lv) ?? []), k]);
+        }
+        const [splitLevel, splitRooms] = [...byLevel].find(([, ks]) => ks.length > 1);
+        const splitLines = [];
+        for (const k of splitRooms) {
+            await loadLink(k, `the seedling link of ${k}, one of level ${splitLevel}'s rooms`);
+            splitLines.push(await lineOf());
+        }
+        check(splitLines.every((l) => l.open.href === seedlingHref(splitLevel)
+            && l.note.includes(`split across ${splitRooms.length} maze rooms`)),
+            `⛓ …a level split across several maze rooms (${splitLevel}: ${splitRooms.join(', ')}) — EVERY one links to `
+            + `level ${splitLevel}, and says how many share it`, splitLines.map((l) => l.note).join(' | '));
+
+        await loadLink(roomKey, `the seedling link of ${roomKey}, to edit`);
+        const savedBefore = await page.inputValue('#labText');
+        const floor = conv5.level.tiles.map((t, i) => (t === 0 ? i : -1)).filter((i) => i >= 0);
+        await page.click('#labPalette button[data-type="wall"]');
+        for (const i of floor) {
+            const b = await page.$eval('#canvas', (c) => {
+                const r = c.getBoundingClientRect();
+                return { x: r.x, y: r.y, w: r.width, h: r.height };
+            });
+            const tx = i % conv5.level.width;
+            const ty = Math.floor(i / conv5.level.width);
+            await page.mouse.click(b.x + Math.floor(((tx + 0.5) * b.w) / conv5.level.width),
+                b.y + Math.floor(((ty + 0.5) * b.h) / conv5.level.height));
+            if ((await read()).edits >= 1) break;
+        }
+        await settled(() => window.__mazeLab?.edits === 1, 'one maze edit on the converted room');
+        const edited5 = await read();
+        const editedLine = await lineOf();
+        check(edited5.seedlingLink?.ok === true && editedLine.open.href === seedlingHref(level5)
+            && editedLine.note.includes(`opens the ORIGINAL level ${level5}`) && editedLine.note.includes('1 maze edit(s)')
+            && (await page.inputValue('#labText')) !== savedBefore,
+            `⛓⛓ …an EDITED converted room still links to level ${level5}, and the note says the editor opens the `
+            + 'ORIGINAL and the maze edit is not carried over', editedLine.note);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `3-edited-room-note-${roomKey}.png`), fullPage: true });
+
+        await page.fill('#labText', JSON.stringify(sidecars[roomKey]));
+        await page.evaluate(() => { document.getElementById('status').textContent = ''; });
+        await page.click('#labLoad');
+        await settled(() => /^loaded a /.test(document.getElementById('status')?.textContent ?? ''), 'the pasted sidecar');
+        const pasted = await read();
+        const pastedLine = await lineOf();
+        check(pasted.seedlingLink?.shown === true && pasted.seedlingLink.ok === false && !pastedLine.hidden
+            && pastedLine.open.hidden && pastedLine.open.href === null && pastedLine.note.includes(`level number ${level5}`)
+            && pastedLine.note.includes('open it by preset link'),
+            '⛔ …a PASTED converted sidecar shows NO link (a paste brings no rules, so the number names no map) and the '
+            + 'line says why', pastedLine.note);
+
+        presetReqs.length = 0;
+        const errorsBefore = errors.length;
+        const plainBoot = await load('seed=1&count=1&run=1&source=edit', () => window.__mazeLab?.step === 1,
+            'a plain generated maze, for the seedling link');
+        const plainLine = await lineOf();
+        page.off('request', onReq);
+        check(!plainBoot.fatal && json(plainBoot.seedlingLink) === json({ shown: false }) && plainLine.hidden
+            && presetReqs.length === 0 && errors.length === errorsBefore,
+            '⛔ …and a PLAIN generated maze (seed 1) has no link line, no error, and its boot fetched no preset document',
+            `${json(plainBoot.seedlingLink)} · ${presetReqs.length} preset request(s)`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, '4-plain-maze-no-link.png'), fullPage: true });
     }
 
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */
