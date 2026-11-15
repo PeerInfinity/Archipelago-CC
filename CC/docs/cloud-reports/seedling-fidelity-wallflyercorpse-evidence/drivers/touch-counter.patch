@@ -1,0 +1,13 @@
+diff --git a/frontend/modules/seedlingDemo/dangerMap.js b/frontend/modules/seedlingDemo/dangerMap.js
+index 9b001b6d..e7849ce3 100644
+--- a/frontend/modules/seedlingDemo/dangerMap.js
++++ b/frontend/modules/seedlingDemo/dangerMap.js
+@@ -1512,7 +1512,7 @@ export function staticEnemyDanger(run, box) {
+         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
+         const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
+         if (liveDrill?.removed) continue;
+-        if (liveWallFlyers && inst.tag === 'wallflyer' && !liveWallFlyers.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
++        if (liveWallFlyers && inst.tag === 'wallflyer' && !liveWallFlyers.has(`${inst.tag}@${inst.x},${inst.y}`)) { globalThis.__WFC_TOUCH = (globalThis.__WFC_TOUCH ?? 0) + (rectsOverlap(box, contactRect(inst)) ? 1 : 0); globalThis.__WFC_SEEN = (globalThis.__WFC_SEEN ?? 0) + 1; continue; }
+         // ⛓ fidelity DRILLWATER D1: a drowned/burnt or falling drill bills no contact — `destroy` gates `Enemy.hitPlayer`,
+         // and the pit's descent replaces it (`Enemy.as:96-111`). Its body fades out; nothing to price. (A sword-killed
+         // drill's "die"/fade pricing is DRILLKILL's and is left as it was: this reads the terrain verdict only.)
