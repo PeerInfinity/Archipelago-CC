@@ -24,6 +24,7 @@ import {
   createSphereLogDownloadUrl,
   generateSphereLogFilename,
 } from '../utils/debugSphereLogger.js';
+import { APCALC_GAME } from '../../apcalc/apcalcRulesBuilder.js';
 import { sharedClientState } from './sharedState.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../../stateManager/index.js';
 import {
@@ -36,7 +37,34 @@ import {
 } from './localRulesOverlay.js';
 import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
-import { needsLogicGate, logicRefusal, refusalMessage } from './checkGate.js';
+import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
+
+/** "gameKey/folder, …" for a few preset candidates (the console names them). */
+function describePresetFolders(presets, max = 3) {
+  const names = [...new Set(presets.map((p) => `${p.gameKey}/${p.folderName}`))];
+  return names.length > max ? `${names.slice(0, max).join(', ')}, …` : names.join(', ');
+}
+
+/**
+ * The console line when a logged-in slot has no rules (_awaitLocalRules). A
+ * game with presets only at other seeds needs this room's own preset file;
+ * the APCalc Generator is named only for APCalc, the one game it makes.
+ */
+export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null) {
+  const tail = "; the client is logged in, sends no checks until then, and applies the server's data when they load.";
+  if (presetsAtOtherSeeds?.length > 0) {
+    return (
+      `This ${game} room needs its own preset file (seed ${seedName ?? 'unknown'}), and the server did not send ` +
+      `its rules. The ${game} presets here are for other seeds. Load this room's rules.json (the Files panel)` +
+      tail
+    );
+  }
+  const where = game === APCALC_GAME ? 'APCalc Generator → Load in Frontend, or the Files panel' : 'the Files panel';
+  return `No rules for ${game} are loaded, and the server did not send them. Load its rules.json (${where})${tail}`;
+}
+
+/** client:locationCheckRefused reason while a slot's rules are pending (not a checkGate REFUSAL). */
+export const RULES_PENDING = 'rules_pending';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
@@ -119,6 +147,11 @@ export class MessageHandler {
     // A build of rules from server data in progress (see _beginServerBuild):
     // { game, connected, held, timer }. Null when none.
     this._serverBuild = null;
+    // Checks a GAME made (reportedByGame, or system:) while this slot's rules
+    // were pending: { eventData, eventName, seedName }. Replayed through the
+    // normal path once a Connected is applied (_replayHeldGameChecks); a game
+    // pickup can't be made again, so they are never silently dropped.
+    this._heldGameChecks = [];
 
     // Use the imported stateManagerProxySingleton directly
     this.stateManager = stateManagerProxySingleton;
@@ -183,6 +216,8 @@ export class MessageHandler {
     });
     this.eventBus.subscribe('connection:close', (data) => {
       if (data?.requested) this._invalidGameRetried = false;
+      // The player ended the session: the held game checks have no room to go to.
+      if (data?.requested) this._dropHeldGameChecks('the player disconnected first');
       // The session is over: stop reporting a slot, or isHandshakeComplete()
       // keeps claiming the client is logged in after a disconnect.
       this.clientSlot = null;
@@ -342,6 +377,7 @@ export class MessageHandler {
     }
 
     this.roomInfo = data;
+    this._dropHeldGameChecks('the server is another room now', (held) => !isSameSeed(held.seedName, data.seed_name));
     this._cancelServerBuild();
     this._cancelRulesWait();
     const roomInfoSeq = ++this._roomInfoSeq;
@@ -481,16 +517,22 @@ export class MessageHandler {
           this._connectWithOverlay(game, local);
           return;
         }
-      } else if (candidates) {
-        // No rules for this game anywhere. A world_generator world sends its
-        // own (slot_data.worldgen_rules), and only Connected shows whether it
-        // did, so connect now; if the server sends none, the packets wait
-        // there until the player loads the rules (⚖ b1, Robert 2026-11-06).
-        this._connectWithOverlay(game, null);
-        return;
       }
-      log('info', `[MessageHandler] No usable rules; connecting as ${game}.`);
-      this._sendConnect(game);
+      // No rules for this game that fit the room: none anywhere, or only
+      // presets made at other seeds (a hand-written world's preset is only its
+      // own seed's room). The rules already loaded are never kept for the
+      // slot: they are another game's, or another player's. A world that
+      // sends its own rules (slot_data.worldgen_rules) is played with them;
+      // otherwise the packets wait, logged in, until the player loads this
+      // room's rules (⚖ b1, Robert 2026-11-06; sdc-no-preset-refusal, Robert
+      // 2026-11-15: "Yes, fix it").
+      // "Other seeds" only when none is this room's (several matching this
+      // seed were named by _findPresetForRoom: the player picks one).
+      const thisSeedFolder = roomInfo.seed_name ? `AP_${roomInfo.seed_name}` : null;
+      const otherSeeds =
+        candidates?.length > 0 && candidates.every((c) => c.folderName !== thisSeedFolder) ? candidates : null;
+      this._warnLoadedRulesNotUsed(game, roomInfo.seed_name);
+      this._connectWithOverlay(game, null, { presetsAtOtherSeeds: otherSeeds });
       return;
     }
 
@@ -620,16 +662,46 @@ export class MessageHandler {
    * are scouted, and the server's placements and slot_data are laid over the
    * local document before the ONE load (_completeServerBuild).
    */
-  _connectWithOverlay(game, local, { fromLoadedRules = false } = {}) {
-    this._serverBuild = { game, mode: 'overlay', local, connected: null, held: [], timer: null };
-    this._printToConsole(
-      local
-        ? `Using the local ${game} rules (${local.source}) unless the server sends its own; ` +
-            "the server's placements and slot data are applied after login…"
-        : `No ${game} rules are loaded; connecting to see whether the server sends them…`,
-      'info'
-    );
+  _connectWithOverlay(game, local, { fromLoadedRules = false, presetsAtOtherSeeds = null } = {}) {
+    this._serverBuild = {
+      game, mode: 'overlay', local, presetsAtOtherSeeds, connected: null, held: [], timer: null,
+    };
+    if (local) {
+      this._printToConsole(
+        `Using the local ${game} rules (${local.source}) unless the server sends its own; ` +
+          "the server's placements and slot data are applied after login…",
+        'info'
+      );
+    } else if (presetsAtOtherSeeds) {
+      const seed = this.roomInfo?.seed_name ?? 'unknown';
+      this._printToConsole(
+        `This ${game} room (seed ${seed}) has no preset here: the ${game} presets on hand are for other seeds ` +
+          `(${describePresetFolders(presetsAtOtherSeeds)}), and their placements are not this room's. ` +
+          'Connecting to see whether the server sends its rules…',
+        'warning'
+      );
+    } else {
+      this._printToConsole(`No ${game} rules are loaded; connecting to see whether the server sends them…`, 'info');
+    }
     this._sendConnect(game, { fromLoadedRules });
+  }
+
+  /**
+   * The loaded rules are `game`'s but did not fit this slot (another
+   * player's), and no preset fits either: say that they are not used, and
+   * name their seed when it is another (⚖ "seed_name mismatch → warning").
+   */
+  _warnLoadedRulesNotUsed(game, roomSeedName) {
+    if (this.getClientGameName() !== game) return;
+    const loadedSeed = stateManagerProxySingleton?.getStaticData?.()?.seed_name;
+    const seedPart =
+      loadedSeed && roomSeedName && String(loadedSeed) !== String(roomSeedName)
+        ? ` are for seed ${loadedSeed}, not this room's seed ${roomSeedName}, and`
+        : '';
+    const message =
+      `Warning: the loaded ${game} rules${seedPart} are not this slot's, so they are not used for it.`;
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
   }
 
   /**
@@ -643,12 +715,7 @@ export class MessageHandler {
   _awaitLocalRules(build) {
     this._cancelRulesWait();
     const { game } = build;
-    this._printToConsole(
-      `No rules for ${game} are loaded, and the server did not send them. Load its rules.json ` +
-        '(for example APCalc Generator → Load into frontend, or the Files panel); the client is logged in ' +
-        'and applies the server\'s data when they load.',
-      'warning'
-    );
+    this._printToConsole(rulesNeededMessage(game, this.roomInfo?.seed_name, build.presetsAtOtherSeeds), 'warning');
     this.eventBus?.publish('client:rulesNeeded', { game });
     const unsubscribe = this.eventBus?.subscribe('stateManager:rulesLoaded', () => {
       if (this._serverBuild !== build) {
@@ -663,7 +730,9 @@ export class MessageHandler {
         build.local = local;
         this._completeServerBuild();
       } else {
-        // A document of the game that is not a generated world's: used as loaded.
+        // A document of the game that is not a generated world's: used as
+        // loaded, the player's choice (⚖ "seed_name mismatch → warning, but allow it").
+        this._warnOnSeedMismatch(this.roomInfo?.seed_name);
         this._completeServerBuild(null, { useLoaded: true });
       }
     });
@@ -895,6 +964,39 @@ export class MessageHandler {
     } else if (this.scoutedLocations.size > 0) {
       this.eventBus?.publish('game:locationsScouted', { locations: this.getScoutedLocations() });
     }
+    await this._replayHeldGameChecks();
+  }
+
+  /**
+   * The game checks held while this slot's rules were pending, sent now
+   * through the normal path (handleUserLocationCheckForClient: the server's
+   * id, or the local ID-less check). Runs after every applied Connected; a
+   * check is held again if rules are somehow pending once more.
+   */
+  async _replayHeldGameChecks() {
+    if (this._heldGameChecks.length === 0 || this._serverBuild) return;
+    const held = this._heldGameChecks;
+    this._heldGameChecks = [];
+    this._printToConsole(
+      `Sending ${held.length} check(s) the game made while this room's rules were loading: ` +
+        `${held.map((h) => `"${h.eventData.locationName}"`).join(', ')}.`,
+      'info'
+    );
+    for (const { eventData, eventName } of held) {
+      await handleUserLocationCheckForClient(eventData, eventName);
+    }
+  }
+
+  /** Drop held game checks (those `which` selects), saying so: they were made but are never sent. */
+  _dropHeldGameChecks(why, which = () => true) {
+    const dropped = this._heldGameChecks.filter(which);
+    if (dropped.length === 0) return;
+    this._heldGameChecks = this._heldGameChecks.filter((h) => !which(h));
+    const message =
+      `Not sent: ${dropped.length} check(s) the game made while this room's rules were pending ` +
+      `(${dropped.map((h) => `"${h.eventData.locationName}"`).join(', ')}); ${why}.`;
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
   }
 
   /**
@@ -939,12 +1041,15 @@ export class MessageHandler {
     this.slotInfo = data.slot_info || {};
     this.missingLocationIds = data.missing_locations || [];
     this.checkedLocationIds = data.checked_locations || [];
-    this._printToConsole(
-      build.mode === 'overlay'
-        ? `Logged in; applying the server's placements to the ${build.game} rules…`
-        : `Logged in; building ${build.game} rules from the server's data…`,
-      'info'
-    );
+    let message;
+    if (build.mode !== 'overlay') {
+      message = `Logged in; building ${build.game} rules from the server's data…`;
+    } else if (build.local || data.slot_data?.[WORLDGEN_RULES_KEY] !== undefined) {
+      message = `Logged in; applying the server's placements to the ${build.game} rules…`;
+    } else {
+      message = `Logged in; the server sent no ${build.game} rules, and none for this room are loaded.`;
+    }
+    this._printToConsole(message, 'info');
     if (this.missingLocationIds.length + this.checkedLocationIds.length === 0) {
       // Nothing to scout: no LocationInfo will come.
       this.scoutedLocations = new Map();
@@ -2024,6 +2129,38 @@ Location was force-checked to maintain server sync.`;
     this._printToConsole(refusalMessage(locationName, reason), 'warning');
   }
 
+  /** A game's check while this slot's rules are pending: held for _replayHeldGameChecks. */
+  _holdGameCheck(eventData, eventName) {
+    this._heldGameChecks.push({ eventData, eventName, seedName: this.roomInfo?.seed_name ?? null });
+    log('info', `[MessageHandler] Holding the game's check "${eventData.locationName}" until the rules load.`);
+    this._printToConsole(
+      `Holding "${eventData.locationName}" (made by the game) until this room's ${this._serverBuild?.game ?? ''} ` +
+        'rules load; it is sent then.',
+      'info'
+    );
+  }
+
+  /** A check while this slot's rules are pending: refused, with a console line naming what is awaited. */
+  _refuseCheckWhileRulesPending(eventData) {
+    const locationName = eventData.locationName;
+    const game = this._serverBuild?.game ?? 'this slot';
+    const reason = RULES_PENDING;
+    log('info', `[MessageHandler] Refused location check "${locationName}" (${reason}); nothing sent.`,
+      { originator: eventData?.originator });
+    this.eventBus?.publish('client:locationCheckRefused', {
+      locationName,
+      reason,
+      originator: eventData?.originator ?? null,
+    });
+    this._printToConsole(
+      this.getAwaitedRulesGame()
+        ? `Not checked: "${locationName}". This room's ${game} rules are not loaded, so the loaded rules' ` +
+            'locations are not this slot\'s; nothing was sent.'
+        : `Not checked: "${locationName}". The ${game} rules for this room are still loading; nothing was sent.`,
+      'warning'
+    );
+  }
+
   // Actual method to send location checks, used by the exported handler
   _internalSendLocationChecks(locationIds) {
     log('info', '[MessageHandler] _internalSendLocationChecks called with IDs:', locationIds);
@@ -2121,6 +2258,20 @@ export async function handleUserLocationCheckForClient(
       '[ClientModule/MessageHandler] Handling user:locationCheck while connected.',
       eventData
     );
+    if (eventData.locationName && messageHandlerSingleton._serverBuild) {
+      // This slot's rules are not loaded yet (a build, an overlay, or the wait
+      // for the room's preset). A check the GAME made is held and sent once
+      // they load (it can't be made again). A click on the loaded rules'
+      // locations is refused: those rules are another game's or another
+      // player's. Nothing is sent now, and nothing is applied locally
+      // (sdc-no-preset-refusal).
+      if (eventName === 'system:locationCheck' || eventData[GAME_REPORTED_FIELD] === true) {
+        messageHandlerSingleton._holdGameCheck(eventData, eventName);
+      } else {
+        messageHandlerSingleton._refuseCheckWhileRulesPending(eventData);
+      }
+      return;
+    }
     if (eventData.locationName) {
       // The logic gate (checkGate.js): a check the game did not report is refused when the state manager says the
       // location is unreachable, the same as offline. Nothing is sent and the event is not passed on.
