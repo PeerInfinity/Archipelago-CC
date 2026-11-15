@@ -17,7 +17,7 @@ from . import _spoiler_hook_client
 
 from .Items import APCalcItem, item_table, item_name_to_id
 from .Locations import (
-    APCalcLocation, location_name_to_id, MAX_LOCATIONS,
+    APCalcLocation, location_name_to_id, MAX_LOCATIONS, VICTORY_LOCATION,
     generic_location_name, generic_region_name,
     meaningful_location_name, meaningful_region_name,
 )
@@ -192,20 +192,15 @@ class APCalcWorld(RuleWorldMixin, World):
                 f"{src_region.name} to {tgt_region.name}",
             )
 
-        # Victory event in Menu region
+        # Victory in the start region: an ID-bearing location holding the ID-bearing goal
+        # item, locked on every seed. The game checks it when every node is visited.
         victory_loc = APCalcLocation(
             self.player,
-            "Victory",
-            None,
+            VICTORY_LOCATION,
+            self.location_name_to_id[VICTORY_LOCATION],
             menu_region,
         )
-        victory_item = APCalcItem(
-            "Victory",
-            ItemClassification.progression,
-            None,
-            self.player,
-        )
-        victory_loc.place_locked_item(victory_item)
+        victory_loc.place_locked_item(self.create_item("Victory"))
         menu_region.locations.append(victory_loc)
 
         # Register all regions
@@ -313,7 +308,7 @@ class APCalcWorld(RuleWorldMixin, World):
         data = item_table.get(name)
         if data:
             return APCalcItem(name, data.classification, data.id, self.player)
-        # Event items (Checked N, Victory) have no ID
+        # Event items (Checked N) have no ID
         return APCalcItem(name, ItemClassification.progression, None, self.player)
 
     @classmethod
@@ -372,6 +367,10 @@ class APCalcWorld(RuleWorldMixin, World):
             "max_branches": self.options.max_branches.value,
             "randomize_items": bool(self.options.randomize_items.value),
             "goal": "all_locations",
+            # The client reports the goal (StatusUpdate 30) once the server has delivered
+            # Victory (frontend/modules/client/core/goalCheck.js). A hand-written world
+            # opts in by declaring it; world_generator worlds are admitted by their marker.
+            "reports_goal_by_server_item": True,
             **_spoiler_hook_client.slot_data(self),
         }
 

@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            APCalc
-Location Count:                  73
+Location Count:                  74
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     

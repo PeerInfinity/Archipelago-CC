@@ -50,8 +50,13 @@ def meaningful_region_name(value: int, layer: int) -> str:
     return f"Node {value} L{layer}"
 
 
+# The goal location, max+1 of the pre-allocated range. The APCalc panel checks it once its
+# own state has visited every node; the server then sends the Victory item back.
+VICTORY_LOCATION = "Victory"
+VICTORY_LOCATION_ID = BASE_LOCATION_ID + MAX_LOCATIONS + 1
+
 # Pre-allocated location name -> ID mapping (class-level constant)
 location_name_to_id: Dict[str, int] = {
-    generic_location_name(i): BASE_LOCATION_ID + i
-    for i in range(1, MAX_LOCATIONS + 1)
+    **{generic_location_name(i): BASE_LOCATION_ID + i for i in range(1, MAX_LOCATIONS + 1)},
+    VICTORY_LOCATION: VICTORY_LOCATION_ID,
 }
