@@ -17,7 +17,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { CONCEPTS, ConceptContractError, assertRealisations, realisationsOf } from './concepts.js';
 import {
     ACCEPTS_FORMS, NEED_FIELDS, ROLE_FIELDS,
-    assertContentRoles, assertPresents, candidatesForRole, contentRolesOf, resolveRole, roleRefusal, rolesFilledBy,
+    assertContentRoles, assertPresents, candidatesForRole, contentRolesOf, resolveRole, roleRefusal, rolesFilledBy, textVariantKey,
 } from './contentRoles.js';
 import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { SUBSTRATE_LIBRARIES } from './substrateLibraries.js';
@@ -308,6 +308,18 @@ describe('⛓ S1 resolveRole — the one shared resolver', () => {
         const both = await setOf({ base: BASE, theme: THEME }, STRINGS);
         expect(resolveRole(double(), 'gate', both, { presents: 'water' })).toEqual([]);
         expect(resolveRole(double(), 'gate', both, { presents: 'guardian' }).map((c) => c.key)).toEqual(['theme:character/the-gate']);
+    });
+    it('⛓ S2 `variant`: `<key>/<variant>` is asked first, then `<key>`; without a variant nothing changes', async () => {
+        const variantKey = textVariantKey('base:sign/body', 'maze');
+        expect(variantKey).toBe('base:sign/body/maze');
+        const set = await setOf({ base: BASE, theme: THEME }, { ...STRINGS, [variantKey]: 'The maze\'s own sign.' });
+        expect(resolveRole(double(), 'info', set, { variant: 'maze' })[0].text).toEqual({ body: 'The maze\'s own sign.' });
+        expect(resolveRole(double(), 'info', set)[0].text).toEqual({ body: STRINGS['base:sign/body'] });
+        // a variant nobody wrote falls back to the shared line
+        expect(resolveRole(double(), 'info', set, { variant: 'elsewhere' })[0].text).toEqual({ body: STRINGS['base:sign/body'] });
+        // the gate's two slots: one has a variant, the other falls back, per slot
+        const gateSet = await setOf({ base: BASE, theme: THEME }, { ...STRINGS, [textVariantKey('theme:gate/blocked', 'maze')]: 'Shut (maze).' });
+        expect(resolveRole(double(), 'gate', gateSet, { variant: 'maze' })[0].text).toEqual({ blocked: 'Shut (maze).', passedWith: 'Open.' });
     });
     it('no set ⇒ []; an undeclared role is refused by name', async () => {
         expect(resolveRole(double(), 'gate', null)).toEqual([]);

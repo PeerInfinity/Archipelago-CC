@@ -90,7 +90,7 @@ describe('the declaration', () => {
     it('every concept the entry realises is accepted by exactly one role, and the default pack fills it', () => {
         const roles = Object.entries(MAZE_CONTENT_ROLES);
         for (const cid of Object.keys(substrateRegistryEntry.conceptRealisations)) {
-            const accepting = roles.filter(([, r]) => r.accepts.presents.includes(cid));
+            const accepting = roles.filter(([, r]) => (r.accepts.presents ?? []).includes(cid));
             expect(accepting.length, cid).toBe(1);
             const look = presentedLook(DEFAULT_SET, accepting[0][0], cid);
             expect(look, cid).not.toBeNull();

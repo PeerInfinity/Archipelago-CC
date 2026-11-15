@@ -245,6 +245,9 @@ export function rolesFilledBy(entryOrRoles, packConcepts) {
     return Object.keys(roles).map((role) => ({ role, concepts: candidatesForRole(roles, role, packConcepts) }));
 }
 
+/** ⛓ S2 — the text key a substrate's own line lives at, beside the shared `key` (`resolveRole`'s `variant`). */
+export const textVariantKey = (key, variant) => `${key}/${variant}`;
+
 /**
  * ⛓⛓ CONTENT SETS S1 — **THE ONE SHARED RESOLVER.** The pack concepts of a
  * content set that fill `roleId`, each with every text slot the role needs
@@ -261,12 +264,21 @@ export function rolesFilledBy(entryOrRoles, packConcepts) {
  * question, asked once here so no substrate re-filters on its own. Templates
  * are returned verbatim: filling them is the consumer's.
  *
+ * ⛓⛓ CONTENT SETS S2 — **`variant`: ONE LINE PER SUBSTRATE WHERE THE SHARED ONE
+ * WOULD BE UNTRUE** (⚖ the user, 2026-11-14, option A). With a `variant` (the
+ * consumer's substrate id), each needed slot's key is first asked as
+ * `<key>/<variant>` (`textVariantKey`), then as `<key>`. So a pack writes one
+ * line for every substrate and, beside it, the line a substrate needs instead
+ * (the `meta` Narrator's line names a room's PLACE, which a substrate with no
+ * `place` role does not have). Without a variant nothing changes. (A key may not hold `@`: the pack
+ * layer's `KEY_PATTERN`.)
+ *
  * @param {object} entryOrRoles an entry or its `contentRoles` object
  * @param {string} roleId
  * @param {{ids: string[], concepts: object, text: object}} contentSet
- * @param {{presents?: string}} [opts]
+ * @param {{presents?: string, variant?: string}} [opts]
  */
-export function resolveRole(entryOrRoles, roleId, contentSet, { presents } = {}) {
+export function resolveRole(entryOrRoles, roleId, contentSet, { presents, variant } = {}) {
     const role = roleOf(entryOrRoles, roleId);
     const { ids = [], concepts, text } = contentSet ?? {};
     if (!concepts) return [];
@@ -282,7 +294,9 @@ export function resolveRole(entryOrRoles, roleId, contentSet, { presents } = {})
         const resolved = {};
         let whole = true;
         for (const slot of slots) {
-            const template = text?.string?.(concept.text[slot]) ?? null;
+            const key = concept.text[slot];
+            const template = (variant ? text?.string?.(textVariantKey(key, variant)) : null)
+                ?? text?.string?.(key) ?? null;
             if (template === null) { whole = false; break; }
             resolved[slot] = template;
         }
