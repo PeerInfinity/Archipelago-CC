@@ -736,15 +736,15 @@
     "template_file": "Muse Dash.yaml",
     "world_directory": "musedash"
   },
-  "Mystery: The Fire at the Custom House": {
+  "Mystery - The Fire at the Custom House": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "game_name": "Mystery: The Fire at the Custom House",
+    "game_name": "Mystery - The Fire at the Custom House",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Mystery The Fire at the Custom House.yaml",
+    "template_file": "Mystery - The Fire at the Custom House.yaml",
     "world_directory": "mystery_custom_house_fire"
   },
   "Noita": {

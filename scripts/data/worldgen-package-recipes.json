@@ -103,7 +103,7 @@
     },
     "mystery_custom_house_fire": {
       "source": "frontend/presets/mystery_custom_house_fire/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-      "game_name": "Mystery: The Fire at the Custom House",
+      "game_name": "Mystery - The Fire at the Custom House",
       "canonical_seed": 1,
       "victory_location": true
     }

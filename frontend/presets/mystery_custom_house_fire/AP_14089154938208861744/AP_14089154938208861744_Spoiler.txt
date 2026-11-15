@@ -3,7 +3,7 @@
 Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
-Game:                            Mystery: The Fire at the Custom House
+Game:                            Mystery - The Fire at the Custom House
 Location Count:                  25
 Progression Balancing:           50
 Accessibility:                   Full

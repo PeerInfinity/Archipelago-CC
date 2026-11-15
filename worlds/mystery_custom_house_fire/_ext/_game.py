@@ -2,4 +2,4 @@
 
 The game name the vendored _ext rule classes register under.
 """
-GAME_NAME = "Mystery: The Fire at the Custom House"
+GAME_NAME = "Mystery - The Fire at the Custom House"
