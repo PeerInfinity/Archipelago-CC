@@ -1961,6 +1961,30 @@
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
         },
         {
+            "id": "region-map-classic-world",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "REGION MAP step 3b (2026-11-15): the panel on a classic AP world (no grid_cell, no substrate hook): the generic layout and boxes. The category's ONE row on the fast batch (the smoke row); counts derived at run time. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-seedling-paints",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (>= minSquarePx at the minimum zoom), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
+        },
+        {
+            "id": "region-map-follow-player",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 3b (2026-11-15): follow player re-centres after a region move; a pan turns follow off. Batch playback-bot (on push)."
+        },
+        {
+            "id": "region-map-discovery",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 3b (2026-11-15): discovery mode hides and fogs as the view says; logs the discovery recompute cost. Batch playback-bot (on push)."
+        },
+        {
             "id": "test_region_graph_node_picker",
             "enabled": true,
             "category": "Region Graph",
