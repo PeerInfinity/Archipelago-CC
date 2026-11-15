@@ -71,3 +71,11 @@ def get_full_item_table() -> Dict[str, ItemData]:
 
 # Static table used for class-level registration (includes all possible items)
 item_table: Dict[str, ItemData] = get_full_item_table()
+
+# The goal: an ID-bearing item (max+1 of the static table), locked at the ID-bearing
+# "Reach Goal Zone" location on every seed (the SMW/Lufia shape,
+# world_generator/_victory_location.py), so the server delivers it when the player checks
+# that location. Never in the pool.
+VICTORY = "Victory"
+VICTORY_ITEM_ID = BASE_ITEM_ID + len(item_table)
+item_table[VICTORY] = ItemData(VICTORY_ITEM_ID, ItemClassification.progression)

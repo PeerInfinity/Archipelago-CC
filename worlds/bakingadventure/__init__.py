@@ -86,6 +86,10 @@ class BakingAdventureWorld(World):
         """Fill slot data for the client."""
         return {
             "vanilla_placement": self.options.vanilla_placement.value,
+            # The client reports the goal (StatusUpdate 30) once the server has delivered
+            # Victory (frontend/modules/client/core/goalCheck.js). A hand-written world
+            # opts in by declaring it; world_generator worlds are admitted by their marker.
+            "reports_goal_by_server_item": True,
         }
 
     def generate_early(self) -> None:
@@ -96,13 +100,14 @@ class BakingAdventureWorld(World):
     
     def generate_basic(self) -> None:
         """Generate basic elements including victory condition."""
-        # Place the Victory event at the Cool on Wire Rack location
+        # Place the ID-bearing Victory item at the ID-bearing Cool on Wire Rack location,
+        # locked on every seed: the player finishes by checking it, and the server sends
+        # Victory back.
         victory_location = self.multiworld.get_location("Cool on Wire Rack", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)
         if victory_location.item is None:
-            victory_item = BakingAdventureItem("Victory", item_table["Victory"].classification, None, self.player)
-            victory_location.place_locked_item(victory_item)
+            victory_location.place_locked_item(self.create_item("Victory"))
 
         # Set completion condition
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
