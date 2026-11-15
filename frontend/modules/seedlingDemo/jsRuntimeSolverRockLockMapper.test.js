@@ -110,7 +110,9 @@ describe('ROCKLOCK-MAPPER — the L26 legs, mapped as the page\'s main thread ma
     });
 
     it.each([
-        [LEG_286, 629, ['kill', 'walk']],
+        // KILLLOCK_LINE_STANCE (ships OFF, the user 2026-11-14): OFF the 286 leg is a 428-tick pure kill; `=1` restores the
+        //   629-tick kill+walk (main's value, kill-lock flips all OFF). Both are 0 hits with {26,0} written.
+        process.env.SEEDLING_KILLLOCK_LINE_STANCE === '1' ? [LEG_286, 629, ['kill', 'walk']] : [LEG_286, 428, ['kill']],
         [LEG_289, 315, ['kill']],
     ])('ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (%#)', (leg, ticks, verbs) => {
         const { mapped } = mapLeg(leg, ON_WITH_WRITE);
