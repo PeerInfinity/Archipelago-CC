@@ -247,6 +247,8 @@ The boot is the spawn the still frame drew the player at. A SOLVED verdict stamp
 - **An edited room** links to its unedited original, and the note says how many edits the maze lab will not show. A level that the delivered set patches names the patches.
 - **No link**, with the reason on the line, for a generated room, a room that matches no vanilla level by content, and a level that no preset converts (level 81, which no door reaches).
 
+The reverse link is on the maze lab page: a converted room opened there by preset link shows **open level N in the Seedling editor ↗**, which opens `watch.html?source=edit&level=N` (*Opening a preset room* in the maze lab page).
+
 Tests: `seedlingMazeLink.test.js` and `check-seedling-editor-e1.mjs` claim 10.
 
 ### The set editor on this page
