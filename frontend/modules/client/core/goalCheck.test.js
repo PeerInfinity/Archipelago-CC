@@ -3,7 +3,7 @@
  * be undone on the server, so each way of saying no has its own row.
  */
 import { describe, it, expect } from 'vitest';
-import { applyReceivedItems, goalMet } from './goalCheck.js';
+import { applyReceivedItems, goalMet, reportsGoalByServerItem, REPORTS_GOAL_KEY } from './goalCheck.js';
 import { GENERATED_WORLD_OPTION } from './localRulesOverlay.js';
 
 const GAME = 'Some Generated World';
@@ -44,9 +44,45 @@ describe('goalMet', () => {
     expect(goalMet(doc, 1, GAME, new Map([['Progressive Sword', 2]]))).toBe(true);
   });
 
-  describe('gate: only our generated worlds', () => {
+  describe('gate: only our generated worlds, or a world that declares it', () => {
+    const declaring = (value, slot = '1') => {
+      const doc = docWith(HAS_VICTORY, { generated: false, slot });
+      doc.world[slot].slot_data = { goal: 'all_locations', [REPORTS_GOAL_KEY]: value };
+      return doc;
+    };
+
     it('is false for an upstream document holding the goal item', () => {
       expect(goalMet(docWith(HAS_VICTORY, { generated: false }), 1, GAME, items('Victory'))).toBe(false);
+    });
+
+    it('is false for an undeclared hand-written world (slot_data without the key)', () => {
+      const doc = docWith(HAS_VICTORY, { generated: false });
+      doc.world['1'].slot_data = { goal: 'all_locations' };
+      expect(goalMet(doc, 1, GAME, items('Victory'))).toBe(false);
+    });
+
+    it('is true for a hand-written world whose slot_data declares it, once Victory is delivered', () => {
+      expect(goalMet(declaring(true), 1, GAME, items('Victory'))).toBe(true);
+      expect(goalMet(declaring(true), 1, GAME, items('Button: 1'))).toBe(false);
+      expect(goalMet(declaring(true, '2'), 2, GAME, items('Victory'))).toBe(true);
+    });
+
+    it('takes only a strict true (not "true", 1 or a missing slot_data)', () => {
+      for (const value of ['true', 1, null, {}]) {
+        expect(goalMet(declaring(value), 1, GAME, items('Victory'))).toBe(false);
+      }
+      expect(reportsGoalByServerItem(docWith(HAS_VICTORY, { generated: false }), 1)).toBe(false);
+    });
+
+    it('still admits a generated world, with or without the key', () => {
+      expect(reportsGoalByServerItem(docWith(HAS_VICTORY), 1)).toBe(true);
+      expect(goalMet(docWith(HAS_VICTORY), 1, GAME, items('Victory'))).toBe(true);
+    });
+
+    it('the declaration does not lift the other gates (a rule that holds with no items)', () => {
+      const doc = declaring(true);
+      doc.game_info['1'].completion_condition = { type: 'constant', value: true };
+      expect(goalMet(doc, 1, GAME, items('Victory'))).toBe(false);
     });
   });
 

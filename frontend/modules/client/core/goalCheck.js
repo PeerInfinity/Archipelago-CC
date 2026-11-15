@@ -26,9 +26,26 @@ export function applyReceivedItems(serverItems, index, itemNames) {
 }
 
 /**
+ * The slot_data key by which a hand-written world declares that this client may
+ * report its goal: its goal is an ID-bearing location holding an ID-bearing goal
+ * item, so the server delivers that item when the game reports its finish (APCalc).
+ * world_generator worlds are admitted by their marker instead.
+ */
+export const REPORTS_GOAL_KEY = 'reports_goal_by_server_item';
+
+/** Whether this client reports the goal for `player`: a generated world, or one that declares it. */
+export function reportsGoalByServerItem(doc, player) {
+  const p = String(player);
+  if (isGeneratedWorldDoc(doc, p)) return true;
+  const slotData = doc?.world?.[p]?.slot_data;
+  return slotData !== null && typeof slotData === 'object' && slotData[REPORTS_GOAL_KEY] === true;
+}
+
+/**
  * Whether the server-delivered items satisfy the slot's completion condition.
  * False for anything but a clear yes:
- * - not one of our generated worlds (other games' own clients report their goal);
+ * - neither one of our generated worlds nor a world whose slot_data declares
+ *   REPORTS_GOAL_KEY (other games' own clients report their goal);
  * - the loaded document is for another game, or has no such slot;
  * - the rule holds with no items (`constant true`, no rule), or an inventory
  *   cannot answer it (a helper or setting: `undefined`).
@@ -42,7 +59,7 @@ export function applyReceivedItems(serverItems, index, itemNames) {
 export function goalMet(doc, slot, game, serverItems) {
   const player = String(slot);
   if (!game || doc?.world?.[player]?.game !== game) return false;
-  if (!isGeneratedWorldDoc(doc, player)) return false;
+  if (!reportsGoalByServerItem(doc, player)) return false;
   const rule = doc.game_info?.[player]?.completion_condition;
   const progression = doc.progression_mapping?.[player] ?? null;
   const evaluate = (items) => evaluateRuleWithInventory(rule, items, player, null, progression);

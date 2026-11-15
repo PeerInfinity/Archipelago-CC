@@ -16,6 +16,10 @@
  * of an APCalc + APQuest room (APQuest items in its locations, its buttons in
  * APQuest's).
  *
+ * The fixtures were regenerated on 2026-11-14 (sdc-goal-apcalc) from the same seeds
+ * and options; the only change was the ID-bearing Victory location and item and the
+ * reports_goal_by_server_item slot_data key.
+ *
  * Every case carries the real slot_data the current apworld sends (per-edge
  * path_costs and sphere, and the generation options). The presets were
  * regenerated for it on 2026-11-05; before that this test patched those
@@ -254,6 +258,33 @@ describe('buildApcalcRules without the data it needs', () => {
     world.slot_data.edges = world.slot_data.edges.map(({ path_costs: _pathCosts, ...edge }) => edge);
     const { slotData, scouts, context } = serverDataFor(rules);
     expect(() => buildApcalcRules(slotData, scouts, context)).toThrow(/path_costs/);
+  });
+
+  it('builds the old Victory event when the DataPackage has no Victory IDs (an older apworld)', () => {
+    const rules = readRules(presetCases()[0].path);
+    const { slotData, scouts, context } = serverDataFor(rules);
+    delete context.itemNameToId.Victory;
+    delete context.locationNameToId.Victory;
+    const built = buildApcalcRules(slotData, scouts, context);
+    const p = String(context.slot);
+    const victory = built.regions[p].C.locations.find((l) => l.name === 'Victory');
+    expect(victory).toMatchObject({ id: null, event: true, locked: true });
+    expect(built.items[p].Victory).toMatchObject({ id: null, event: true, type: 'Event', groups: ['Event'] });
+  });
+});
+
+describe('the goal is an ID-bearing Victory location (sdc-goal-apcalc)', () => {
+  it.each(CASES)('$name: Victory 234810601 holds item 234810015, locked, no event; slot_data declares the opt-in', ({ path }) => {
+    const expected = readRules(path);
+    const p = playerOf(expected);
+    for (const rules of [expected, build(expected)]) {
+      const victory = rules.regions[p].C.locations.find((l) => l.name === 'Victory');
+      expect(victory).toMatchObject({ id: 234810601, locked: true, item: { name: 'Victory', player: Number(p) } });
+      expect(victory).not.toHaveProperty('event');
+      expect(rules.items[p].Victory).toMatchObject({ id: 234810015, classification: 'progression', type: null });
+      expect(rules.items[p].Victory).not.toHaveProperty('event');
+      expect(rules.world[p].slot_data.reports_goal_by_server_item).toBe(true);
+    }
   });
 });
 
