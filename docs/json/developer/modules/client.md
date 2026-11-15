@@ -34,6 +34,8 @@ For a game whose rules can be built from server data (Metamath, DepGraph, APCalc
 3. **A local document** of a generated world: the loaded rules or a committed preset of the game at another seed, overlaid the same way.
 4. **Wait.** With none of these, the client stays logged in but holds the Connected and runtime-state packets (no checks are sent), prints what it needs, publishes `client:rulesNeeded`, and continues once a document of that game loads.
 
+A hand-written world's committed preset is only its own seed's room, so presets at other seeds are not used for it: the room goes to steps 2 and 4, and the console warns that this room needs its own preset file, naming its seed. The rules already loaded are never kept for a slot they don't fit (another game's, such as the boot preset, or another player's); when they are the game's own at another seed, a warning names both seeds. Loading a document of the game during the wait is the player's choice: it is used as it is, with the seed-mismatch warning. Loaded rules that DO fit the slot (the slot's name, the room's game) connect as they are at any seed, with that warning.
+
 Because slot_data only arrives with `Connected`, a game with no exact-seed preset and no builder always connects first and decides after login. A server document is refused by name and the client falls back to a local document when its `format` is not the client's `WORLDGEN_RULES_FORMAT` (an older or newer generator), when it carries a retired rules.json shape, when it fails the ID check, or when it fails to load. A world whose document was over its `rules_in_slot_data_max_kb` sends `worldgen_rules_omitted` instead, and the console says so.
 
 #### The room's spoiler data
