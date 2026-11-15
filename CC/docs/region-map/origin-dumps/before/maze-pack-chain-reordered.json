@@ -1,0 +1,2122 @@
+{
+ "census": {
+  "adjacent": 4,
+  "cols": 5,
+  "consistent": 4,
+  "directed": 4,
+  "honoured": 4,
+  "links": 4,
+  "meanLength": 1,
+  "rows": 1
+ },
+ "doors": {
+  "links": [
+   {
+    "dir": "E",
+    "dirFrom": "side",
+    "exit_id": "exit_1",
+    "from": 0,
+    "index": 1,
+    "kind": "exit",
+    "link": 0,
+    "one_way": false,
+    "to": 1,
+    "toExit": "exit_3"
+   },
+   {
+    "dir": "E",
+    "dirFrom": "side",
+    "exit_id": "exit_1",
+    "from": 1,
+    "index": 1,
+    "kind": "exit",
+    "link": 1,
+    "one_way": false,
+    "to": 2,
+    "toExit": "exit_3"
+   },
+   {
+    "dir": "W",
+    "dirFrom": "side",
+    "exit_id": "exit_3",
+    "from": 1,
+    "index": 3,
+    "kind": "exit",
+    "link": 0,
+    "one_way": false,
+    "to": 0,
+    "toExit": "exit_1"
+   },
+   {
+    "dir": "W",
+    "dirFrom": "side",
+    "exit_id": "exit_3",
+    "from": 2,
+    "index": 3,
+    "kind": "exit",
+    "link": 1,
+    "one_way": false,
+    "to": 1,
+    "toExit": "exit_1"
+   }
+  ],
+  "sizes": [
+   {
+    "h": 11,
+    "w": 11
+   },
+   {
+    "h": 11,
+    "w": 11
+   },
+   {
+    "h": 11,
+    "w": 11
+   },
+   {
+    "h": 11,
+    "w": 11
+   }
+  ],
+  "unreadable": []
+ },
+ "frame@0.5": {
+  "cells": [
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 22,
+     "y": 22
+    },
+    "w": 44,
+    "x": 20,
+    "y": 20
+   },
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 88,
+     "y": 22
+    },
+    "w": 44,
+    "x": 86,
+    "y": 20
+   },
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 154,
+     "y": 22
+    },
+    "w": 44,
+    "x": 152,
+    "y": 20
+   },
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 286,
+     "y": 22
+    },
+    "w": 44,
+    "x": 284,
+    "y": 20
+   }
+  ],
+  "height": 84,
+  "width": 348,
+  "zoom": 0.5
+ },
+ "frame@1": {
+  "cells": [
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 22,
+     "y": 22
+    },
+    "w": 88,
+    "x": 20,
+    "y": 20
+   },
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 154,
+     "y": 22
+    },
+    "w": 88,
+    "x": 152,
+    "y": 20
+   },
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 286,
+     "y": 22
+    },
+    "w": 88,
+    "x": 284,
+    "y": 20
+   },
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 550,
+     "y": 22
+    },
+    "w": 88,
+    "x": 548,
+    "y": 20
+   }
+  ],
+  "height": 128,
+  "width": 656,
+  "zoom": 1
+ },
+ "frame@2": {
+  "cells": [
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 22,
+     "y": 22
+    },
+    "w": 176,
+    "x": 20,
+    "y": 20
+   },
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 286,
+     "y": 22
+    },
+    "w": 176,
+    "x": 284,
+    "y": 20
+   },
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 550,
+     "y": 22
+    },
+    "w": 176,
+    "x": 548,
+    "y": 20
+   },
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 1078,
+     "y": 22
+    },
+    "w": 176,
+    "x": 1076,
+    "y": 20
+   }
+  ],
+  "height": 216,
+  "width": 1272,
+  "zoom": 2
+ },
+ "graphKey": "4|0|0>1E,1>2E,1>0W,2>1W",
+ "provider": {
+  "frame": {
+   "cells": [
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 22,
+      "y": 22
+     },
+     "w": 88,
+     "x": 20,
+     "y": 20
+    },
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 154,
+      "y": 22
+     },
+     "w": 88,
+     "x": 152,
+     "y": 20
+    },
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 286,
+      "y": 22
+     },
+     "w": 88,
+     "x": 284,
+     "y": 20
+    },
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 550,
+      "y": 22
+     },
+     "w": 88,
+     "x": 548,
+     "y": 20
+    }
+   ],
+   "height": 128,
+   "width": 656,
+   "zoom": 1
+  },
+  "picks": [
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    {
+     "a": 1,
+     "b": 2,
+     "from": 1,
+     "kind": "exit",
+     "nearRoom": 2,
+     "to": 2
+    },
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    {
+     "a": 0,
+     "b": 1,
+     "from": 0,
+     "kind": "exit",
+     "nearRoom": 0,
+     "to": 1
+    },
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    {
+     "index": 1,
+     "room": 0,
+     "x": 102.18181818181819,
+     "y": 79.27272727272728
+    }
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    {
+     "a": 1,
+     "b": 2,
+     "from": 1,
+     "kind": "exit",
+     "nearRoom": 1,
+     "to": 2
+    },
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    {
+     "a": 0,
+     "b": 1,
+     "from": 0,
+     "kind": "exit",
+     "nearRoom": 1,
+     "to": 1
+    },
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    {
+     "index": 2,
+     "room": 0,
+     "x": 64,
+     "y": 102.18181818181819
+    }
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ]
+  ],
+  "shapes": [
+   {
+    "arrow": true,
+    "arrowBack": true,
+    "highlight": true,
+    "kind": "polyline",
+    "label": "L0 ↔ L1",
+    "link": {
+     "a": 0,
+     "b": 1,
+     "from": 0,
+     "kind": "exit",
+     "to": 1
+    },
+    "points": [
+     {
+      "x": 111,
+      "y": 64
+     },
+     {
+      "x": 149,
+      "y": 64
+     }
+    ]
+   },
+   {
+    "arrow": true,
+    "arrowBack": true,
+    "highlight": false,
+    "kind": "polyline",
+    "link": {
+     "a": 1,
+     "b": 2,
+     "from": 1,
+     "kind": "exit",
+     "to": 2
+    },
+    "points": [
+     {
+      "x": 243,
+      "y": 64
+     },
+     {
+      "x": 281,
+      "y": 64
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#0",
+    "marker": {
+     "index": 0,
+     "room": 0,
+     "x": 41.09090909090909,
+     "y": 25.81818181818182
+    },
+    "points": [
+     {
+      "x": 38.09090909090909,
+      "y": 25.81818181818182
+     },
+     {
+      "x": 44.09090909090909,
+      "y": 25.81818181818182
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#1",
+    "marker": {
+     "index": 1,
+     "room": 0,
+     "x": 102.18181818181819,
+     "y": 79.27272727272728
+    },
+    "points": [
+     {
+      "x": 99.18181818181819,
+      "y": 79.27272727272728
+     },
+     {
+      "x": 105.18181818181819,
+      "y": 79.27272727272728
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#2",
+    "marker": {
+     "index": 2,
+     "room": 0,
+     "x": 64,
+     "y": 102.18181818181819
+    },
+    "points": [
+     {
+      "x": 61,
+      "y": 102.18181818181819
+     },
+     {
+      "x": 67,
+      "y": 102.18181818181819
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#3",
+    "marker": {
+     "index": 3,
+     "room": 0,
+     "x": 25.81818181818182,
+     "y": 71.63636363636364
+    },
+    "points": [
+     {
+      "x": 22.81818181818182,
+      "y": 71.63636363636364
+     },
+     {
+      "x": 28.81818181818182,
+      "y": 71.63636363636364
+     }
+    ]
+   }
+  ],
+  "state0": {
+   "census": {
+    "adjacent": 4,
+    "cols": 5,
+    "consistent": 4,
+    "directed": 4,
+    "honoured": 4,
+    "links": 4,
+    "meanLength": 1,
+    "rows": 1
+   },
+   "links": [
+    {
+     "dir": "E",
+     "from": 0,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    },
+    {
+     "dir": "E",
+     "from": 1,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 2
+    },
+    {
+     "dir": "W",
+     "from": 1,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 0
+    },
+    {
+     "dir": "W",
+     "from": 2,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    }
+   ],
+   "moved": 4,
+   "positionCount": 4,
+   "relayouts": 0,
+   "rule": "canonical",
+   "unreadable": [],
+   "zoom": 1
+  },
+  "state2": {
+   "census": {
+    "adjacent": 2,
+    "cols": 3,
+    "consistent": 4,
+    "directed": 4,
+    "honoured": 2,
+    "links": 4,
+    "meanLength": 1.2071067811865475,
+    "rows": 2
+   },
+   "links": [
+    {
+     "dir": "W",
+     "from": 1,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 2
+    },
+    {
+     "dir": "E",
+     "from": 2,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    },
+    {
+     "dir": "W",
+     "from": 2,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 3
+    },
+    {
+     "dir": "E",
+     "from": 3,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 2
+    }
+   ],
+   "moved": 3,
+   "positionCount": 4,
+   "relayouts": 0,
+   "rule": "canonical",
+   "unreadable": [],
+   "zoom": 1
+  },
+  "stateBack": {
+   "census": {
+    "adjacent": 4,
+    "cols": 5,
+    "consistent": 4,
+    "directed": 4,
+    "honoured": 4,
+    "links": 4,
+    "meanLength": 1,
+    "rows": 1
+   },
+   "links": [
+    {
+     "dir": "E",
+     "from": 0,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    },
+    {
+     "dir": "E",
+     "from": 1,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 2
+    },
+    {
+     "dir": "W",
+     "from": 1,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 0
+    },
+    {
+     "dir": "W",
+     "from": 2,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    }
+   ],
+   "moved": 3,
+   "positionCount": 4,
+   "relayouts": 0,
+   "rule": "canonical",
+   "unreadable": [],
+   "zoom": 1
+  },
+  "stateReset": {
+   "census": {
+    "adjacent": 4,
+    "cols": 5,
+    "consistent": 4,
+    "directed": 4,
+    "honoured": 4,
+    "links": 4,
+    "meanLength": 1,
+    "rows": 1
+   },
+   "links": [
+    {
+     "dir": "E",
+     "from": 0,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    },
+    {
+     "dir": "E",
+     "from": 1,
+     "index": 1,
+     "key": null,
+     "kind": "exit",
+     "to": 2
+    },
+    {
+     "dir": "W",
+     "from": 1,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 0
+    },
+    {
+     "dir": "W",
+     "from": 2,
+     "index": 3,
+     "key": null,
+     "kind": "exit",
+     "to": 1
+    }
+   ],
+   "moved": 4,
+   "positionCount": 4,
+   "relayouts": 1,
+   "rule": "canonical",
+   "unreadable": [],
+   "zoom": 1
+  }
+ },
+ "shapes@0.5_sel0": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": true,
+   "kind": "polyline",
+   "label": "L0 ↔ L1",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 67,
+     "y": 42
+    },
+    {
+     "x": 83,
+     "y": 42
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 133,
+     "y": 42
+    },
+    {
+     "x": 149,
+     "y": 42
+    }
+   ]
+  }
+ ],
+ "shapes@0.5_sel3": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 67,
+     "y": 42
+    },
+    {
+     "x": 83,
+     "y": 42
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 133,
+     "y": 42
+    },
+    {
+     "x": 149,
+     "y": 42
+    }
+   ]
+  }
+ ],
+ "shapes@0.5_selnull": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 67,
+     "y": 42
+    },
+    {
+     "x": 83,
+     "y": 42
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 133,
+     "y": 42
+    },
+    {
+     "x": 149,
+     "y": 42
+    }
+   ]
+  }
+ ],
+ "shapes@1_sel0": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": true,
+   "kind": "polyline",
+   "label": "L0 ↔ L1",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 111,
+     "y": 64
+    },
+    {
+     "x": 149,
+     "y": 64
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 243,
+     "y": 64
+    },
+    {
+     "x": 281,
+     "y": 64
+    }
+   ]
+  }
+ ],
+ "shapes@1_sel3": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 111,
+     "y": 64
+    },
+    {
+     "x": 149,
+     "y": 64
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 243,
+     "y": 64
+    },
+    {
+     "x": 281,
+     "y": 64
+    }
+   ]
+  }
+ ],
+ "shapes@1_selnull": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 111,
+     "y": 64
+    },
+    {
+     "x": 149,
+     "y": 64
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 243,
+     "y": 64
+    },
+    {
+     "x": 281,
+     "y": 64
+    }
+   ]
+  }
+ ],
+ "shapes@2_sel0": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": true,
+   "kind": "polyline",
+   "label": "L0 ↔ L1",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 199,
+     "y": 108
+    },
+    {
+     "x": 281,
+     "y": 108
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 463,
+     "y": 108
+    },
+    {
+     "x": 545,
+     "y": 108
+    }
+   ]
+  }
+ ],
+ "shapes@2_sel3": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 199,
+     "y": 108
+    },
+    {
+     "x": 281,
+     "y": 108
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 463,
+     "y": 108
+    },
+    {
+     "x": 545,
+     "y": 108
+    }
+   ]
+  }
+ ],
+ "shapes@2_selnull": [
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 0,
+    "b": 1,
+    "from": 0,
+    "kind": "exit",
+    "to": 1
+   },
+   "points": [
+    {
+     "x": 199,
+     "y": 108
+    },
+    {
+     "x": 281,
+     "y": 108
+    }
+   ]
+  },
+  {
+   "arrow": true,
+   "arrowBack": true,
+   "highlight": false,
+   "kind": "polyline",
+   "link": {
+    "a": 1,
+    "b": 2,
+    "from": 1,
+    "kind": "exit",
+    "to": 2
+   },
+   "points": [
+    {
+     "x": 463,
+     "y": 108
+    },
+    {
+     "x": 545,
+     "y": 108
+    }
+   ]
+  }
+ ]
+}
