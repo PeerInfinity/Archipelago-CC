@@ -1,0 +1,40 @@
+off: 250 rows, 223 SOLVED, 5 hits in solved rows over 3 step(s) [24, 202, 220]
+L: 250 rows, 224 SOLVED, 7 hits in solved rows over 4 step(s) [24, 202, 220, 227]
+LSD: 250 rows, 224 SOLVED, 5 hits in solved rows over 3 step(s) [24, 202, 220]
+SD: 250 rows, 223 SOLVED, 5 hits in solved rows over 3 step(s) [24, 202, 220]
+
+== step 78 L53 — reach-exit:teleporter@144,240 → L54
+   off   ('SOLVED', 655, 0, 0, '')
+   L     ('SOLVED', 627, 0, 0, '')
+   LSD   ('SOLVED', 627, 0, 0, '')
+   SD    ('SOLVED', 655, 0, 0, '')
+== step 167 L43 — collect-placement:Level 043 - Wand (sphere 10.1) → Wand then reach-exit:teleporter@144,64 → L37
+   off   ('REFUSED', None, None, None, 'solverBot(survey-step-167) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too — solverBot(survey-step-1')
+   L     ('REFUSED', None, None, None, 'solverBot(survey-step-167) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too — solverBot(survey-step-1')
+   LSD   ('REFUSED', None, None, None, 'solverBot(survey-step-167): the player DIED at run t237 in level 43 (bosstotem@152,168; the hits before it: bosstotem@152,168 at t173, bosstotem@152,1')
+   SD    ('REFUSED', None, None, None, 'solverBot(survey-step-167): the player DIED at run t237 in level 43 (bosstotem@152,168; the hits before it: bosstotem@152,168 at t173, bosstotem@152,1')
+== step 189 L71 — collect-placement:Level 071 - Chest (sphere 11.4) → Seal then reach-exit:teleporter@96,0 → L75
+   off   ('REFUSED', None, None, None, 'solverBot(survey-step-189) apitem (160,256) contact -> kill: the count is still waiting on [lavarunner@64,224] and no stance kills one of them in 1 at')
+   L     ('REFUSED', None, None, None, 'solverBot(survey-step-189) apitem (160,256) contact -> kill: the count is still waiting on [lavarunner@64,224, lavarunner@64,192, lavarunner@72,208, l')
+   LSD   ('REFUSED', None, None, None, 'solverBot(survey-step-189) apitem (160,256) contact -> kill: the count is still waiting on [lavarunner@64,224, lavarunner@64,192, lavarunner@72,208, l')
+   SD    ('REFUSED', None, None, None, 'solverBot(survey-step-189) apitem (160,256) contact -> kill: the count is still waiting on [lavarunner@64,224] and no stance kills one of them in 1 at')
+== step 192 L75 — reach-exit:teleporter@64,224 → L71
+   off   ('REFUSED', None, None, None, 'solverBot(survey-step-192) reach-exit (64,224)->L71: the danger map forbids (78.24124278936391,35.24504871165134) — hazard:lavachain@96,32 (avoid (pha')
+   L     ('REFUSED', None, None, None, 'solverBot(survey-step-192) reach-exit (64,224)->L71: the danger map forbids (78.24124278936391,35.24504871165134) — hazard:lavachain@96,32 (avoid (pha')
+   LSD   ('REFUSED', None, None, None, 'solverBot(survey-step-192): the player DIED at run t193 in level 75 (lava@112,112; the hits before it: spinningaxe@80,144 at t160) — a death reboots t')
+   SD    ('REFUSED', None, None, None, 'solverBot(survey-step-192): the player DIED at run t193 in level 75 (lava@112,112; the hits before it: spinningaxe@80,144 at t160) — a death reboots t')
+== step 217 L71 — reach-exit:teleporter@224,304 → L80
+   off   ('REFUSED', None, None, None, 'solverBot(survey-step-217) reach-exit (224,304)->L80 -> kill: the count is still waiting on [lavarunner@64,224] and no stance kills one of them in 1 a')
+   L     ('REFUSED', None, None, None, 'solverBot(survey-step-217) reach-exit (224,304)->L80 -> kill: the count is still waiting on [lavarunner@64,224, lavarunner@64,192, lavarunner@72,208, ')
+   LSD   ('REFUSED', None, None, None, 'solverBot(survey-step-217) reach-exit (224,304)->L80 -> kill: the count is still waiting on [lavarunner@64,224, lavarunner@64,192, lavarunner@72,208, ')
+   SD    ('REFUSED', None, None, None, 'solverBot(survey-step-217) reach-exit (224,304)->L80 -> kill: the count is still waiting on [lavarunner@64,224] and no stance kills one of them in 1 a')
+== step 227 L98 — collect-placement:Level 098 - Chest (sphere 13.4) → Seal then reach-exit:stairsup@112,112 → L99
+   off   ('SOLVED', 520, 0, 0, '')
+   L     ('SOLVED', 483, 2, 0, '')
+   LSD   ('SOLVED', 576, 0, 0, '')
+   SD    ('SOLVED', 520, 0, 0, '')
+== step 228 L99 — reach-exit:stairsup@48,96 → L100
+   off   ('REFUSED', None, None, None, "levelRun: whether lavarunner lavarunner@176,64 is on screen at tick 496 depends on where inside `Game.shake`'s jiggle the camera landed, and the two d")
+   L     ('SOLVED', 477, 0, 0, '')
+   LSD   ('SOLVED', 477, 0, 0, '')
+   SD    ('REFUSED', None, None, None, 'solverBot(survey-step-228): the player DIED at run t484 in level 99 (lavachain@80,64; the hits before it: lavachain@80,64 at t394, lavachain@80,64 at ')
