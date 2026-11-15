@@ -574,6 +574,12 @@
             "_comment": "Content sets R4: the committed meta_trial world's maze drawn from the meta theme's shape recipes through the panel's own play-time load (no test seam): the stack is [maze, meta], the floor, wall and player are drawn from \"meta#<key>\" sheets, and the water gate keeps the maze default pack's look. Rides `fast` like the R2b row."
         },
         {
+            "id": "meta-trial-composite-map-art",
+            "enabled": true,
+            "category": "Maze tile art",
+            "_comment": "Content sets TIDY-1: the committed meta_trial world on the APWorld Editor's Map tab: the maze cell painter loads the recorded stack (browser io, no seam) and draws the concept item, the things and the floor from \"meta#<key>\" sheets; the water gate resolves no art; procgen_maze seed 1 (default stack) loads to no art and its map canvas draws no image. Rides `fast` like the R2b and R4 rows."
+        },
+        {
             "id": "maze-thing-shows-text",
             "enabled": true,
             "category": "Maze things",

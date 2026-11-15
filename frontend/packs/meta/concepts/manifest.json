@@ -5,7 +5,7 @@
     "meta:object/gate": {
       "kind": "object",
       "name": "Gate",
-      "description": "A gate that opens for whoever holds Progressive Sword. It knows its rule and says it.",
+      "description": "A gate that knows its own rule and says it.",
       "look": { "color": "#a0a8b8", "symbol": "#" },
       "art": "meta:object/gate",
       "text": {
