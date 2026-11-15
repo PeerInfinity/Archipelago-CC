@@ -97,6 +97,57 @@ beforeEach(() => {
   messageHandler._slotReleased = false;
   messageHandler._goalReported = false;
   messageHandler._syncedLocationIds = new Set();
+  messageHandler._serverBuild = null;
+  messageHandler._rulesWait = null;
+});
+
+/**
+ * sdc-no-preset-refusal: while this slot's rules are pending (a build, an overlay, or the wait for the room's
+ * preset), the loaded rules are another game's or another player's, so a check of THEIR location is refused,
+ * whoever sends it: no frame, nothing applied locally.
+ */
+describe('rules pending — every check refused', () => {
+  const pending = (wait) => {
+    messageHandler._serverBuild = { game: 'Baking Adventure', mode: 'overlay', local: null, connected: {}, held: [] };
+    messageHandler._rulesWait = wait ? { game: 'Baking Adventure', unsubscribe: () => {} } : null;
+  };
+
+  it.each([
+    ['a reachable Locations-card click', CARD('Preheat Oven'), 'user:locationCheck'],
+    ['a game-reported pickup', SEEDLING_PICKUP('Seedling Chest'), 'user:locationCheck'],
+    ['a system:locationCheck', { locationName: 'Preheat Oven', regionName: 'Kitchen' }, 'system:locationCheck'],
+    ['an ID-less location', CARD('Some Event'), 'user:locationCheck'],
+  ])('the wait for rules: %s is refused, nothing sent or passed on', async (_label, data, eventName) => {
+    pending(true);
+    await handleUserLocationCheckForClient(data, eventName);
+    expect(sentFrames()).toEqual([]);
+    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
+    expect(published('client:locationCheckRefused')).toEqual([
+      { locationName: data.locationName, reason: 'rules_pending', originator: data.originator ?? null },
+    ]);
+    const lines = published('ui:printToConsole');
+    expect(lines).toHaveLength(1);
+    expect(lines[0].type).toBe('warning');
+    expect(lines[0].message).toBe(
+      `Not checked: "${data.locationName}". This room's Baking Adventure rules are not loaded, so the loaded rules' ` +
+        "locations are not this slot's; nothing was sent."
+    );
+    expect(smState.pings).toBe(0); // the logic gate is not consulted: the loaded logic is not this slot's
+  });
+
+  it('a build still loading: refused with the loading line', async () => {
+    pending(false);
+    await handleUserLocationCheckForClient(CARD('Preheat Oven'), 'user:locationCheck');
+    expect(sentFrames()).toEqual([]);
+    expect(published('ui:printToConsole')[0].message).toBe(
+      'Not checked: "Preheat Oven". The Baking Adventure rules for this room are still loading; nothing was sent.'
+    );
+  });
+
+  it('once the rules are loaded (no build), the same click is sent', async () => {
+    await handleUserLocationCheckForClient(CARD('Preheat Oven'), 'user:locationCheck');
+    expect(sentFrames()).toEqual([{ cmd: 'LocationChecks', locations: [300000001] }]);
+  });
 });
 
 describe('B — the connected logic gate', () => {

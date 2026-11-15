@@ -63,6 +63,9 @@ export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null) {
   return `No rules for ${game} are loaded, and the server did not send them. Load its rules.json (${where})${tail}`;
 }
 
+/** client:locationCheckRefused reason while a slot's rules are pending (not a checkGate REFUSAL). */
+export const RULES_PENDING = 'rules_pending';
+
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
 
@@ -2085,6 +2088,27 @@ Location was force-checked to maintain server sync.`;
     this._printToConsole(refusalMessage(locationName, reason), 'warning');
   }
 
+  /** A check while this slot's rules are pending: refused, with a console line naming what is awaited. */
+  _refuseCheckWhileRulesPending(eventData) {
+    const locationName = eventData.locationName;
+    const game = this._serverBuild?.game ?? 'this slot';
+    const reason = RULES_PENDING;
+    log('info', `[MessageHandler] Refused location check "${locationName}" (${reason}); nothing sent.`,
+      { originator: eventData?.originator });
+    this.eventBus?.publish('client:locationCheckRefused', {
+      locationName,
+      reason,
+      originator: eventData?.originator ?? null,
+    });
+    this._printToConsole(
+      this.getAwaitedRulesGame()
+        ? `Not checked: "${locationName}". This room's ${game} rules are not loaded, so the loaded rules' ` +
+            'locations are not this slot\'s; nothing was sent.'
+        : `Not checked: "${locationName}". The ${game} rules for this room are still loading; nothing was sent.`,
+      'warning'
+    );
+  }
+
   // Actual method to send location checks, used by the exported handler
   _internalSendLocationChecks(locationIds) {
     log('info', '[MessageHandler] _internalSendLocationChecks called with IDs:', locationIds);
@@ -2182,6 +2206,14 @@ export async function handleUserLocationCheckForClient(
       '[ClientModule/MessageHandler] Handling user:locationCheck while connected.',
       eventData
     );
+    if (eventData.locationName && messageHandlerSingleton._serverBuild) {
+      // This slot's rules are not loaded yet (a build, an overlay, or the wait
+      // for the room's preset): the loaded rules are another game's or
+      // another player's, so their location is not this slot's. Nothing is
+      // sent, and nothing is applied locally (sdc-no-preset-refusal).
+      messageHandlerSingleton._refuseCheckWhileRulesPending(eventData);
+      return;
+    }
     if (eventData.locationName) {
       // The logic gate (checkGate.js): a check the game did not report is refused when the state manager says the
       // location is unreachable, the same as offline. Nothing is sent and the event is not passed on.
