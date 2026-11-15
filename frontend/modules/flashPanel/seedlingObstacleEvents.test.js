@@ -203,6 +203,43 @@ describe('encounter-lock sides (encounterLockSides) — RULES rocklock-pocket', 
         });
         expect(none.map((s) => [s.verdict, s.size])).toEqual([['clears', 2], ['clears', 1]]);
     });
+    // ⛓⛓ RULES l99-sided-killlock — `reachable`: a side is a component of the player's reachable CENTRES, and a body's
+    // distance is measured from them. A 2-row room, tile 16: the lock at (2,0); every cell passable by tile, so the tile
+    // flood is ONE side round row 1. The stub's "solid" fills column 2 (no centre in (2,1)): the points split the room in
+    // two, and (2,1), the cell under the lock, holds no player position, so it is no step into the lock.
+    describe('with `reachable` (the 1 px side flood)', () => {
+        const centresOf = (start, tiles) => {
+            if (start[0] === 2) return [];
+            const west = start[0] < 2;
+            const pts = [];
+            for (const k of tiles) {
+                const [tx, ty] = k.split(',').map(Number);
+                if (tx === 2 || (west ? tx > 2 : tx < 2)) continue;
+                for (let y = ty * 16 + 4; y < (ty + 1) * 16 - 4; y += 1) for (let x = tx * 16 + 4; x < (tx + 1) * 16 - 4; x += 1) pts.push([x, y]);
+            }
+            return pts;
+        };
+        const room = (body, runRange, reachable) => encounterLockSides({
+            width: 5, height: 2, tile: 16, passable: () => true, lockTiles: [[2, 0]], closed: new Set(['2,0']),
+            bodies: [{ at: 'runner@64,0', centre: body, runRange }], reach: 10, reachable,
+        });
+        it('without it the tile flood joins the two sides round the cut (the old reading)', () => {
+            expect(room([72, 8], 30).map((s) => s.verdict)).toEqual(['clears']);
+        });
+        it('with it the cut makes two sides, and each step names the side its start cell\'s points are in', () => {
+            const sides = room([72, 8], 30, centresOf);
+            expect(sides.map((s) => s.steps)).toEqual([[{ tile: [2, 0], dir: 'E' }], [{ tile: [2, 0], dir: 'W' }]]);
+            expect(sides.map((s) => s.size)).toEqual([4, 4]);
+        });
+        it('a chaser wakes on a reachable centre within its runRange, never on a tile corner no centre reaches', () => {
+            // the west side's nearest centre to (72,8) is (27,8): 45 px. A tile-corner reading would say 40 (x = 32).
+            const asleep = room([72, 8], 44, centresOf);
+            expect(asleep.map((s) => s.verdict)).toEqual(['cannot', 'clears']);
+            expect(asleep[0]).toMatchObject({ beyond: ['runner@64,0'], across: [], nearest: { 'runner@64,0': 45 } });
+            const awake = room([72, 8], 45, centresOf);
+            expect(awake.map((s) => s.verdict)).toEqual(['across', 'clears']);
+        });
+    });
 });
 
 describe('cross-room button events (deriveButtonEvents) — RULES l38-button-event', () => {

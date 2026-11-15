@@ -82,7 +82,7 @@ const { auditFire } = await imp('frontend/modules/seedlingDemo/presses.js');
 const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriverV2.js');
 const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
 const HP = await imp('scripts/procgen/seedlingHolderParking.js');
-const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
+const { seedlingModelOracles, modelFloodTiles, modelFloodPoints, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
 
@@ -603,6 +603,19 @@ const stampNoHitGates = (level, grid) => stampNoHitDirectionalGates(grid, playth
  *     latch from that side (`latchLocksOf` hands the analyzer both halves);
  *   - else the arms alone, as an `enter` gate (no side mints an event the side could wait for).
  * A cross-level lock is left alone, as before.
+ *
+ * ⛓⛓ RULES l99-sided-killlock — **A SIDE IS WHERE THE PLAYER CAN STAND, AND A CHASER WAKES ON A CENTRE.** (⚖ Robert
+ * 2026-11-15, "Rule + ER regen slice (Recommended)"; the game witness `rules-l99-l6-witness`.) The tile flood above walks
+ * every cell but wall and sink, so a tile a pixel mask covers in part (a `CliffSide`, `Scenery/CliffSide.as:33`) joins
+ * what the player's own box cannot: L99's west plateau (the L100 landing) and its lower floor were ONE side, and the room
+ * was priced `clears` from both. Each side is now refined by the model's 1 px flood of the player's box
+ * (`seedlingModelOracles.modelFloodPoints`), kept inside the side's tiles and run over the level WITHOUT its gated
+ * entities (the tile flood's permissive direction, kept), and a body's distance is measured from those reachable
+ * CENTRES (`Bob.as:58`: a chaser measures `runRange` to the player's position). From L99's pocket the nearest centres
+ * to its three lavarunners are 74, 82.6 and 98.5 px (the witness's own flood: the same three numbers), so two never
+ * wake (`runRange` 80, `Bob.as:21,59`), the pocket `cannot`, and the lock is a latch from it: the crossing needs
+ * `L99 flag 0`, earned on the lower floor. Every other kill-lock's sides, verdicts and across/beyond lists read the same
+ * (the census, before and after, in the slice's report). The maze reads the same rows (`playthroughEncounterLockOpeners`).
  */
 const THROUGH_SOLID_ARMS = Object.freeze({ hasSpear: 'hasSpear', hasSword: 'hasGhostSword' });
 const ENCOUNTER_CHASE_KINDS = new Set(['chase', 'chase-through-walls', 'teleport-hop']);
@@ -650,6 +663,18 @@ export function encounterLocksOf(level, grid = null) {
         };
     });
     const armsOf = new Map(bodies.map((b) => [b.at, b.arms]));
+    // ⛓⛓ RULES l99-sided-killlock — THE PIXEL FLOOD IS AS PERMISSIVE AS THE TILE FLOOD. The tile flood walks gated
+    // material (a rock an item breaks, a lock a key opens): "a side clears MORE rooms, the old rule's direction". So the
+    // model is asked over the level WITHOUT every entity that claims a cell the grid itself calls `gated` (the room's
+    // shut kill-locks among them: their tiles are never entered, `closed`). What stays solid is what no item removes:
+    // the tiles, the pixel masks (a CliffSide, `Scenery/CliffSide.as:33`; a Building) and every ungated entity. Read off
+    // the grid, never a class list. Without it, L53's jellyfish room is cut at `breakablerock@128,160`.
+    let permissiveMemo = null;
+    const permissive = () => (permissiveMemo ??= {
+        ...level,
+        entities: (level.entities ?? []).filter((e) => !((playthroughEntitySemantics(e, level) ?? SEM.entitySemantics(e)) && tilesOf(e)
+            .some(([x, y]) => g.cells[(y - oy) * g.width + (x - ox)]?.kind === 'gated'))),
+    });
     const out = lockEntities.map((e) => {
         const tag = Number(e.attrs?.tag);
         const lock = { level: level.level, tag, cls: e.type, x: e.x, y: e.y };
@@ -658,6 +683,9 @@ export function encounterLocksOf(level, grid = null) {
             width: g.width, height: g.height, tile: TILE,
             passable: (x, y) => !['wall', 'sink'].includes(g.cells[(y - oy) * g.width + (x - ox)]?.kind ?? 'wall'),
             lockTiles: tilesOf(e), closed, bodies,
+            // ⛓⛓ RULES l99-sided-killlock: a side is what the player's own box reaches with the lock shut (the model's
+            // 1 px flood, inside the side's tiles), and a chaser wakes on a reachable CENTRE within its runRange.
+            reachable: (start, tiles) => modelFloodPoints(permissive(), [start], (x, y) => tiles.has(`${x},${y}`)),
         });
         const crossLevel = CROSS_LEVEL_OPENERS.has(`${level.level}:${e.attrs?.tag}`);
         const clears = sides.some((s) => s.verdict === 'clears');
