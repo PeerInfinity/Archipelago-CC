@@ -82,6 +82,11 @@ test.describe('Application End-to-End Tests', () => {
   if (process.env.TEST_MEASURE_SKIP_REFUSALS) {
     APP_URL += `&measureSkipRefusals=${encodeURIComponent(process.env.TEST_MEASURE_SKIP_REFUSALS)}`;
   }
+  // MEASUREMENT-ONLY (cloud slice seedling-hammer-wallflyer-flip-walk-check): the solve worker's env channel,
+  // e.g. TEST_MEASURE_SOLVER_ENV=SEEDLING_WALLFLYER_KILL_ARM=0 for the pre-flip control.
+  if (process.env.TEST_MEASURE_SOLVER_ENV) {
+    APP_URL += `&seedlingSolverEnv=${encodeURIComponent(process.env.TEST_MEASURE_SOLVER_ENV)}`;
+  }
   if (process.env.TEST_MEASURE_BOT_STALL_MS) {
     APP_URL += `&measureBotStallMs=${encodeURIComponent(process.env.TEST_MEASURE_BOT_STALL_MS)}`;
   }
