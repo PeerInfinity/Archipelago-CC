@@ -436,7 +436,10 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
         bbox: Object.freeze({ ...box[gi] }),
         placedBy: placedBy[gi],
     }));
-    return { positions, groups, stats: groupedStats({ nodes, links }, positions, groups, groupOf) };
+    const stats = groupedStats({ nodes, links }, positions, groups, groupOf);
+    // ⛓ the vertical relation: links across groups, and how many a cycle made unhonourable (dropped back edges)
+    stats.vertical = { links: vertical.length, cycleDropped: kept.filter((k) => !k).length };
+    return { positions, groups, stats };
 }
 
 /**

@@ -71,6 +71,7 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | `compositeMap.artwork` | boolean (optional) | `true` when the painter draws a picture of the substrate's own content rather than a schematic. The maps' **Substrate art** checkbox (`drawCompositeMap`'s `substrateArt: false`) skips these painters, so their cells get the generic box. `flash_seedling` and `flash_seedling_gen` declare it; maze and text adventure do not, so the checkbox leaves them alone. |
 | `compositeMap.locationTiles` | `(region, { rules, playerId }) → [{ location, x, y, kind }]` (optional) | Where each of the region's locations sits, in the substrate's own tiles. `kind` is `'item'` or `'event'`. A pure data hook for the Region Map panel. Seedling reads an item's tile from the payload's atlas (`locations[].tile`), an event's from its rules `obstacle` (pixels ÷ 16, same level only), and a generated room's from its payload's `locations[].cell`. |
 | `compositeMap.displayRegionOf` | `(regionName, sidecar) → string` (optional) | The display key a whole-level view groups the region under. Seedling answers the payload's `atlas_region`, so `level_7__r0c3` folds onto `level_7` by data, not by name; a generated room answers its own name. The key need not be a region of the rules: a level split into sub-regions has no `level_N` region. |
+| `compositeMap.layoutGraph` | `({ rules, player, sidecars, displayRegionOf, start, ...hookCtx }) → { nodes, links, start? }` (optional) | The substrate's half of the Region Map layout ([region-layout.md](region-layout.md)): the world's DISPLAY regions as `nodes`, and its connections as `links` `{ from, to, dir?, kind? }` — `dir` one of `N`/`E`/`S`/`W` or null, `kind` `'join'` (default), `'down'` or `'up'`. `procgenCore/regionLayoutResolve.js` calls it when no stored `grid_cell` places the world and every sidecar's substrate declares the same hook. Seedling folds sub-regions onto their level, reads `kind` off the `exit_id` prefix (`out_stairsdown`/`out_pit` down, `out_stairsup` up) and `dir` from the door's side (`seedlingSetMap.dirOfExit`), given the level sizes of an atlas it holds (`hookCtx.atlases` adds more). |
 
 `drawCompositeMap(canvas, grid, regionSize, { selection, tilePx, colors, registry, substrateArt, source, onCellArtReady })` in `procgenCore/compositeMapRenderer.js` draws empty and stub cells, borders, connections and the selection, and resolves every other cell through `substrateRegistry.get(region.render_hint ?? region.substrate)?.compositeMap?.drawRegion`. `source` reaches every painter as `geom.source`, and `onCellArtReady` as `geom.requestRedraw`. With `substrateArt: false`, a painter declaring `artwork` is skipped for the generic box. The module also exports `resolveExitTilePositions`, `fitTextToWidth`, `canvasPointOf`, `cellAtPoint`, `compositeMapDrawsArtwork`, `substrateArtToggle` (the shared checkbox), `TILE_PX` and `COLORS`.
 
@@ -302,7 +303,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 105 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 106 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -349,10 +350,11 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
-| `compositeMap` | — | — | 4 keys | 4 keys | — | {drawRegion} | — | — | {drawRegion} |
+| `compositeMap` | — | — | 5 keys | 5 keys | — | {drawRegion} | — | — | {drawRegion} |
 | `compositeMap.artwork` | — | — | yes | yes | — | — | — | — | — |
 | `compositeMap.displayRegionOf` | — | — | fn | fn | — | — | — | — | — |
 | `compositeMap.drawRegion` | — | — | fn | fn | — | fn | — | — | fn |
+| `compositeMap.layoutGraph` | — | — | fn | fn | — | — | — | — | — |
 | `compositeMap.locationTiles` | — | — | fn | fn | — | — | — | — | — |
 
 **Loop mode**
