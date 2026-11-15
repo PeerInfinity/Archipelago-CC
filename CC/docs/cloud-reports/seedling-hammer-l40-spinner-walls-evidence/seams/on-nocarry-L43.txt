@@ -1,0 +1,12 @@
+== on-L43.jsonl
+5235 OK  1672 hits 2 dashless:1717@765 full:1672@735 b798d4d96374 
+5222 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.98,687.14)
+5224 REF None hits 0 dashless:refusal@56 full:refusal@56   at (737.47,684.94) NOPHASE
+5226 REF None hits 0 dashless:refusal@1374 full:refusal@1187  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5232 REF None hits 0 dashless:refusal@1197 full:refusal@1197  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5234 OK  1672 hits 2 dashless:1717@765 full:1672@735 b798d4d96374 
+5223 REF None hits 0 dashless:refusal@56 full:refusal@56   at (738.27,686.09)
+5225 ERR
+5236 REF None hits 0 dashless:refusal@1178 full:refusal@1178  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5219 REF None hits 0 dashless:refusal@2563 full:refusal@1  solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site befor
+5230 OK  1229 hits 0 dashless:1332@777 full:1229@748 c837ae4d6e6b 
