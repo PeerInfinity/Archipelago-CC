@@ -14,7 +14,8 @@ seedling-maze-link). Brief: the planner's step-3a brief (archipelago-cc-23). Rev
 | `52d887c699` | the report and the preview PNGs (first version) |
 | `5f0938ebd2` | CI fix: `dirOfExit` moved verbatim to `seedlingDemo/seedlingDoorDirection.js`, and the quickLaunch docs index regenerated |
 | `9fc3ff18fc` | the report, updated |
-| this commit | the report: drop a gitignored-tree path (`noNewDocsReferences.test.js`, the one red at `9fc3ff18fc`) |
+| `651c52a2d3` | the report: drop a gitignored-tree path (the tracked-files-cite-no-gitignored-plans test, `scripts/test/`) |
+| this commit | the same, for the row above (it named that test's file, which spells the tree) |
 
 - 0 gitlinks.
 - Closure ∩ diff = ∅.
