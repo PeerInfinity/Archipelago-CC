@@ -583,9 +583,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 245
+        "solverBot.js": 246
       },
-      "sites": 386,
+      "sites": 387,
       "seen": "both",
       "via": [
         "direct",
@@ -743,6 +743,9 @@
         },
         "turretsSettled": {
           "botDriverV2.js": 2,
+          "solverBot.js": 1
+        },
+        "wallFlyerBodies": {
           "solverBot.js": 1
         }
       }
@@ -1570,24 +1573,6 @@
         "sites": 2
       },
       "why": "Returns the `transitions` array of `{t, from_level, to_level}` records pushed on each level change — a generic level-transition ledger."
-    },
-    {
-      "surface": "run",
-      "name": "wallFlyers",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19219,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "solverBot.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "param"
-      ],
-      "dynamic": null,
-      "why": "Returns a copy of the visit's WallFlyer state (`Enemies/WallFlyer.as`: each body's position, velocity, hits, hitsTimer, die anim, destroy/removed) and its event list; the kill rung's wallflyer arm (hammer WALLFLYER-DRILL-KILL) reads whether a hit source is a live, resting flyer and whether a fork's presses landed and removed it."
     },
     {
       "surface": "run",

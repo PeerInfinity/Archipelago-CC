@@ -1,0 +1,74 @@
+{
+ "fixture": "frontend/modules/seedlingDemo/fixtures/wallflyer-drill-kill/survey-step-35-boot.json",
+ "exit": [
+  192,
+  64
+ ],
+ "ms": 13105,
+ "attempts": [
+  {
+   "budget": 640,
+   "ok": false,
+   "work": 641,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 640
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 1,
+     "deadline": "walk",
+     "limit": "budget"
+    }
+   ]
+  },
+  {
+   "budget": 2560,
+   "ok": false,
+   "work": 2562,
+   "passes": [
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 2562
+    }
+   ]
+  }
+ ],
+ "arm": {
+  "asked": 3,
+  "kills": [
+   {
+    "id": "wallflyer@48,112",
+    "family": "wallflyer",
+    "t": 134,
+    "ticks": 177,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 311,
+    "ticks": 121,
+    "forks": 1
+   }
+  ],
+  "refused": []
+ },
+ "refusal": {
+  "kind": "refusal",
+  "message": "Cannot read properties of null (reading 'ledger')"
+ }
+}

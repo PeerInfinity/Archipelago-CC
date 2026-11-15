@@ -1,0 +1,103 @@
+{
+ "fixture": "frontend/modules/seedlingDemo/fixtures/wallflyer-drill-kill/survey-step-35-boot.json",
+ "exit": [
+  192,
+  64
+ ],
+ "ms": 12220,
+ "attempts": [
+  {
+   "budget": 640,
+   "ok": false,
+   "work": 641,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 640
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 1,
+     "deadline": "walk",
+     "limit": "budget"
+    }
+   ],
+   "said": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "ticks": null,
+     "message": "solverBot(page-budget-step) reach-exit (192,64)->L29: the combat ladder is EXHAUSTED. The corridor passes through danger at (81.0,96.7) — enemy:wallflyer@64,80 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:"
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "ticks": null,
+     "message": "solverBot(page-budget-step): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(page-budget-step) reach-exit (192,64)->L29's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's."
+    }
+   ]
+  },
+  {
+   "budget": 2560,
+   "ok": false,
+   "work": 2563,
+   "passes": [
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 2563,
+     "deadline": "sword-dash",
+     "limit": "budget"
+    }
+   ],
+   "said": [
+    {
+     "pass": "full",
+     "ok": false,
+     "ticks": null,
+     "message": "solverBot(page-budget-step) reach-exit (192,64)->L29: the combat ladder is EXHAUSTED. The corridor passes through danger at (109.8,119.1) — chaser:wallflyer@48,112 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (103.0,120.0), forecast along the walk)) — and every rung of ⚖ §11.8a's order refused:"
+    }
+   ]
+  }
+ ],
+ "arm": {
+  "asked": 3,
+  "kills": [
+   {
+    "id": "wallflyer@48,112",
+    "family": "wallflyer",
+    "t": 134,
+    "ticks": 177,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 311,
+    "ticks": 121,
+    "forks": 1
+   }
+  ],
+  "refused": [
+   {
+    "t": 134,
+    "why": "body-family arm: no hitless kill (0 fork(s)) — wallflyer@48,112: the caller's deadline tripped inside the fork"
+   }
+  ]
+ },
+ "refusal": {
+  "kind": "refusal",
+  "message": "solverBot(page-budget-step) reach-exit (192,64)->L29: the combat ladder is EXHAUSTED. The corridor passes through danger at (109.8,119.1) — chaser:wallflyer@48,112 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (103.0,120.0), forecast along the walk)) — and every rung of ⚖ §11.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (109.8,119.1) — chaser:wallflyer@48,112 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (103.0,120.0), forecast along the walk)). ⚠ The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  dodge: no stall of 1..30 tick(s) at any walk-offset 65..0 (step 4) clears the corridor of chaser:wallflyer@48,112 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (103.0,120.0), forecast along the walk))\n  time: the aim is 148 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: level 22 has NO region that kills a body — no armed trap lane, no lethal terrain, no pit. A bait needs somewhere for the line to cross.\n  kill: no presser in level 22 a"
+ }
+}

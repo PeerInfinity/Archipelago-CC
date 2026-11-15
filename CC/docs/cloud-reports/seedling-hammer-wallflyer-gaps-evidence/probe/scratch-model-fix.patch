@@ -1,0 +1,4 @@
+# The SCRATCH model patch measured (never committed; dangerMap.js is fidelity's): in staticEnemyDanger, after the
+# `liveDrill?.removed` skip, a wallflyer the run no longer holds live (absent from `wallFlyerBodies`, or dying) is not
+# priced at its placement. Enabled only under `globalThis.__SCRATCH_WF` (node --import of a one-line module).
+        if (globalThis.__SCRATCH_WF && inst.tag === 'wallflyer') { const fam = run.entities('wallFlyerBodies'); if (Array.isArray(fam) && !fam.some((w) => w.id === `${inst.tag}@${inst.x},${inst.y}` && !w.destroy && !w.dieAnim)) continue; }

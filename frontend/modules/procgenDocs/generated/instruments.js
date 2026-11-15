@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 157,
-            "count": 207,
+            "count": 208,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 531,
+        "blockStyle": 532,
         "browser": 227,
         "cited": 284,
-        "files": 549,
+        "files": 550,
         "lineStyle": 18,
-        "withDocblock": 549,
-        "withFlags": 467
+        "withDocblock": 550,
+        "withFlags": 468
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -16782,6 +16782,68 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's ONE-WAY EVENT CENSUS, ON THE GAME (rules `rules-oneway-event-census`, measure only).",
             "path": "scripts/procgen/probe-seedling-oneway-census.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget",
+                "dump-plan",
+                "exit",
+                "fixture"
+            ],
+            "file": "probe-seedling-page-budget-step.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump-plan"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "exit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "work-sites"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only — SOLVE A COMMITTED BOOT FIXTURE UNDER THE PAGE'S WORK BUDGET, in node: the page's own `solveAnytime` request at `SOLVER_BUDGET_WORK` (640) with the upgrade window, then — when the answer is a refusal cut at its budget with a pass left unanswered (`wasmPlayback.expiryAction` = 'retry') — the ONE held re…",
+            "path": "scripts/procgen/probe-seedling-page-budget-step.mjs"
         },
         {
             "argvHelpers": [
