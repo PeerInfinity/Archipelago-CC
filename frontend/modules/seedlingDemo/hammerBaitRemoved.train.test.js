@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { BAIT_TARGET_GONE_COUNTS, withBaitTargetGone, withChaserPass } from './solverBot.js';
+import { BAIT_TARGET_GONE_COUNTS, withBaitTargetGone, withChaserPass, withKillLockLineStance } from './solverBot.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { replaySolved, solveCase } from './hammerErGapsLegs.js';
@@ -32,14 +32,17 @@ async function solveL99East() {
 const ALREADY_TRUE = (id) => new RegExp(`-> bait \\(${id}\\) stance -> bait \\(${id}\\): the dwell's condition `
     + `\\(${id} has left the world — the room's own kill region removed it\\) is ALREADY TRUE before a tick is spent`);
 
+// ⛓ The L99 east rows hold KILLLOCK_LINE_STANCE ON: the witness was measured at a base where it was ON, and the hammer
+// stack (train 112) ships it OFF (⚖ "Land, LINE_STANCE OFF"), where the leg refuses earlier at the kill count's stance,
+// before any bait. Measured 2026-11-15 at hammer-harvest-wave6 b400c9158e: default 1/3, SEEDLING_KILLLOCK_LINE_STANCE=1 3/3.
 describe('hammer-phase BAIT-REMOVED — the witnesses', () => {
-    it('L99 east → (48,96), Sword only: OFF refuses on the bait whose body is already gone', () => withBaitTargetGone(false, async () => {
+    it('L99 east → (48,96), Sword only: OFF refuses on the bait whose body is already gone', () => withKillLockLineStance(true, () => withBaitTargetGone(false, async () => {
         const { refusal } = await solveL99East();
         expect(String(refusal?.message)).toMatch(/reach-exit \(48,96\)->L100 -> kill -> chaser kill \(lavarunner@160,32\) stance/);
         expect(String(refusal?.message)).toMatch(ALREADY_TRUE('lavarunner@160,32'));
-    }), 600_000);
+    })), 600_000);
 
-    it('L99 east → (48,96), Sword only: ON solves hitless into L100 (649 t), the bait counted gone', () => withBaitTargetGone(true, async () => {
+    it('L99 east → (48,96), Sword only: ON solves hitless into L100 (649 t), the bait counted gone', () => withKillLockLineStance(true, () => withBaitTargetGone(true, async () => {
         BAIT_TARGET_GONE_COUNTS.gone.length = 0;
         const { staging, solved, refusal } = await solveL99East();
         expect(refusal).toBeUndefined();
@@ -53,7 +56,7 @@ describe('hammer-phase BAIT-REMOVED — the witnesses', () => {
         const r = replaySolved(staging, solved, 'bait-removed-l99-east');
         expect(r.playerHits).toEqual([]);
         expect(r.ticks.at(-1).level).toBe(100);
-    }), 600_000);
+    })), 600_000);
 
     it('ER c3 (L40 → pit, `CHASER_PASS`): ON goes past the bait — the next wall is the outer bait\'s stance walk in L43', () => withChaserPass(true, () => withBaitTargetGone(true, async () => {
         BAIT_TARGET_GONE_COUNTS.gone.length = 0;
