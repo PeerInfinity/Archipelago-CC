@@ -551,6 +551,9 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
     // whenever any of them changes, so a hit on a crossing is named with its level and the bot's status.
     let hitPrev = null;
     let hitLines = 0;
+    let statusPrev = null;
+    let statusLines = 0;
+    let flyersPrev = null;
     const hitTimer = setInterval(() => {
         try {
             const g = getActiveFlashPanel()?.adapter?._getFlash?.();
@@ -568,6 +571,29 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
                     + ` game_time=${st.game_time ?? '?'} status=${JSON.stringify(status.slice(0, 160))}`);
             }
             hitPrev = cur;
+            // the bot's status, the playing tick masked (so `playing tick _/539` names the plan's length), on change
+            const stNow = (document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? '')
+                .replace(/tick \d+\//, 'tick _/');
+            if (stNow !== statusPrev && statusLines < 3000) {
+                statusLines += 1;
+                statusPrev = stNow;
+                console.log(`[MEASURE status] t=${((performance.now() - t0) / 1000).toFixed(1)}s level=${cur.level} ${JSON.stringify(stNow.slice(0, 400))}`);
+            }
+            // the live wallflyers of levels 22 and 29 (wasm `botMobiles`), on any change of the set
+            if (cur.level === 22 || cur.level === 29) {
+                const mr = g?.botMobiles?.();
+                const mm = typeof mr === 'string' ? JSON.parse(mr) : mr;
+                const fl = (mm?.mobiles ?? []).filter((m) => /wall\s*flyer/i.test(String(m.cls ?? '')))
+                    .map((m) => `${String(m.cls).split('::').pop()}${m.destroy ? '(destroy)' : ''}`)
+                    .sort().join(',');
+                const key = `${cur.level}|${fl}`;
+                if (key !== flyersPrev) {
+                    flyersPrev = key;
+                    const pos = (mm?.mobiles ?? []).filter((m) => /wall\s*flyer/i.test(String(m.cls ?? '')))
+                        .map((m) => `(${Math.round(m.x)},${Math.round(m.y)}${m.destroy ? ' destroy' : ''})`).join(' ');
+                    console.log(`[MEASURE flyers] t=${((performance.now() - t0) / 1000).toFixed(1)}s level=${cur.level} count=${fl ? fl.split(',').length : 0} ${pos}`);
+                }
+            }
         } catch { /* torn down */ }
     }, 100);
     // The skip probe: on a bot error, log it, count the refused head as seen and play on from the next entry.
