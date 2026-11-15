@@ -84,7 +84,7 @@ describe('fidelity WALLFLYERCORPSE — the key', () => {
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('wallFlyerCorpseGone');
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WALLFLYER_CORPSE_GONE');
         });
-    it('the witness: L22\'s four wallflyers, the 539 t plan, hitless in L22 to t432', () => {
+    it(`the witness: L22's ${ALL.length} wallflyers, the ${PLAN.length} t plan, hitless in L22 to every read tick`, () => {
         expect(PLAN.length).toBe(539);
         expect(READ.flyers.map(idOf)).toEqual(ALL);
         for (const r of Object.values(READ.out)) {
