@@ -88,7 +88,7 @@ describe('quickLaunch generated HELP_SECTIONS', () => {
             if (child.single) expect(child.docs).toEqual([`docs/json/${child.dir}/README.md`]);
         }
         expect(games.children.filter((c) => !c.single).map((c) => c.dir))
-            .toEqual(['games/journey-to-ascension', 'games/vibe-coding-simulator']);
+            .toEqual(['games/vibe-coding-simulator']);
     });
 
     it('a section without sub-directories whose README lists its docs under ## headings is sub-grouped by them', () => {
