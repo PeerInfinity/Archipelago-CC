@@ -36,6 +36,7 @@
  *
  * ⛔ No substrate import here (`bindingContract.test.js` refuses one in `procgenCore/`).
  */
+import { CONSISTENT_RINGS, DIRS, OPPOSITE, RegionLayoutError, layoutRegions } from './regionLayout.js';
 
 export class SetMapLayoutError extends Error {
     constructor(message) {
@@ -63,13 +64,8 @@ export const MAP_GEOMETRY = Object.freeze({
     pickPx: 7,
 });
 
-export const DIRS = Object.freeze({
-    N: Object.freeze({ dx: 0, dy: -1 }),
-    S: Object.freeze({ dx: 0, dy: 1 }),
-    E: Object.freeze({ dx: 1, dy: 0 }),
-    W: Object.freeze({ dx: -1, dy: 0 }),
-});
-export const OPPOSITE = Object.freeze({ N: 'S', S: 'N', E: 'W', W: 'E' });
+/** ⛓ Moved to `regionLayout.js` (region-map step 3a); re-exported so every importer of this module is unchanged. */
+export { CONSISTENT_RINGS, DIRS, OPPOSITE };
 
 /**
  * Which edge a point lies on, or `null` for the interior.
@@ -99,27 +95,6 @@ export function roomFingerprintOf(names, sizes) {
     return names.map((name, i) => `${name}|${sizes[i] ? `${sizes[i].w}x${sizes[i].h}` : '?'}`).join('\n');
 }
 
-/** The ring of cells at Chebyshev distance `r`, in a fixed order: nearest (Manhattan) first, then E, S, W, N. */
-function ring(r) {
-    if (r === 0) return [{ dx: 0, dy: 0 }];
-    const out = [];
-    for (let dy = -r; dy <= r; dy += 1) {
-        for (let dx = -r; dx <= r; dx += 1) {
-            if (Math.max(Math.abs(dx), Math.abs(dy)) === r) out.push({ dx, dy });
-        }
-    }
-    const order = (c) => {
-        // ⛓ E, S, W, N quadrant order for ties: a deterministic sweep, not a meaning.
-        const a = Math.atan2(c.dy, c.dx);
-        return a < 0 ? a + 2 * Math.PI : a;
-    };
-    return out.sort((a, b) => (Math.abs(a.dx) + Math.abs(a.dy)) - (Math.abs(b.dx) + Math.abs(b.dy))
-        || order(a) - order(b));
-}
-/** How many rings around the wanted cell a directed placement searches before it gives up on the direction. */
-export const CONSISTENT_RINGS = 4;
-const RINGS = Array.from({ length: 40 }, (_, r) => ring(r));
-
 /**
  * ⛓⛓ THE CANONICAL LAYOUT — breadth-first from the start room. A room reached by a link WITH a direction is
  * placed one cell that way from the room that reached it; one reached without a direction, or whose wanted cell
@@ -133,78 +108,25 @@ const RINGS = Array.from({ length: 40 }, (_, r) => ring(r));
 export function canonicalLayout(graph, fail = defaultFail) {
     const { n, start } = graph;
     if (!Number.isInteger(n) || n < 0) fail(`setMapLayout: a layout needs a room count, got ${n}`);
-    const adj = Array.from({ length: n }, () => []);
-    for (const l of graph.links) {
-        if (l.from === l.to) continue;
-        adj[l.from].push({ to: l.to, d: l.dir ? DIRS[l.dir] : null });
-    }
-    // ⛓ Inbound links come after every outbound one, reversed, so a room reached only INTO still lands beside it.
-    for (const l of graph.links) {
-        if (l.from === l.to) continue;
-        const d = l.dir ? DIRS[OPPOSITE[l.dir]] : null;
-        adj[l.to].push({ to: l.from, d, inbound: true });
-    }
-    /**
-     * ⛓ Directed links first (outbound before inbound, each in link order), then the undirected ones: a door with
-     * no direction must not take the cell a directed door of the same room wants. MEASURED on the vanilla 116:
-     * link order alone honoured 35 of 253 directed links; this order is what the E3 census in the as-built quotes.
-     */
-    for (const list of adj) {
-        list.forEach((e, i) => { e.order = i; });
-        list.sort((a, b) => (a.d ? 0 : 1) - (b.d ? 0 : 1) || a.order - b.order);
-    }
-    const pos = new Array(n).fill(null);
-    const taken = new Set();
-    const k = (x, y) => `${x},${y}`;
-    /**
-     * Take the nearest free cell to `(x, y)`. With `toward` = `{u, d}` (the room that reached `v`, and the link's
-     * direction) a cell must also lie in that direction's quarter-plane from `u` — so a second door on the same side
-     * of a room still lands on that side — until `CONSISTENT_RINGS` rings have been tried; then any free cell.
-     */
-    const place = (v, x, y, toward = null) => {
-        const ok = (gx, gy) => {
-            if (!toward) return true;
-            const dx = gx - pos[toward.u].gx;
-            const dy = gy - pos[toward.u].gy;
-            const along = toward.d.dx * dx + toward.d.dy * dy;
-            return along > 0 && Math.abs(toward.d.dy * dx + toward.d.dx * dy) <= along;
-        };
-        for (let r = 0; ; r += 1) {
-            const cells = RINGS[r] ?? ring(r);
-            const strict = toward && r < CONSISTENT_RINGS;
-            for (const c of cells) {
-                const gx = x + c.dx;
-                const gy = y + c.dy;
-                if (!taken.has(k(gx, gy)) && (!strict || ok(gx, gy))) {
-                    pos[v] = { gx, gy };
-                    taken.add(k(gx, gy));
-                    return;
-                }
-            }
-        }
-    };
-    const bfs = (root) => {
-        const queue = [root];
-        while (queue.length) {
-            const u = queue.shift();
-            for (const { to, d } of adj[u]) {
-                if (pos[to] !== null) continue;
-                if (d) place(to, pos[u].gx + d.dx, pos[u].gy + d.dy, { u, d });
-                else place(to, pos[u].gx, pos[u].gy);
-                queue.push(to);
-            }
-        }
-    };
     if (n === 0) return [];
-    place(start, 0, 0);
-    bfs(start);
-    for (let v = 0; v < n; v += 1) {
-        if (pos[v] !== null) continue;
-        const maxX = Math.max(...pos.filter(Boolean).map((p) => p.gx));
-        const minY = Math.min(...pos.filter(Boolean).map((p) => p.gy));
-        place(v, maxX + 2, minY);
-        bfs(v);
+    /**
+     * ⛓⛓ region-map step 3a — **A THIN WRAPPER over `regionLayout.layoutRegions`**, the same algorithm keyed by id:
+     * room index `i` is the id `String(i)`, the `nodes` array is in index order (so the lowest index still starts
+     * each unreached group), and the signed, start-at-origin result is min-shifted back to this function's contract.
+     * Byte-identical: `seedlingSetMapLift.test.js`'s digests and `regionLayout.test.js`'s oracle.
+     */
+    const id = (i) => String(i);
+    const nodes = Array.from({ length: n }, (_, i) => id(i));
+    const links = graph.links.map((l) => ({ from: id(l.from), to: id(l.to), dir: l.dir ?? null }));
+    let at;
+    try {
+        at = layoutRegions({ nodes, start: id(start), links });
+    } catch (e) {
+        // ⛓ a refusal is thrown as the caller's own (`fail`), named as this module
+        if (e instanceof RegionLayoutError) fail(e.message.replace(/^regionLayout:/, 'setMapLayout:'));
+        throw e;
     }
+    const pos = nodes.map((v) => at.get(v));
     const mx = Math.min(...pos.map((p) => p.gx));
     const my = Math.min(...pos.map((p) => p.gy));
     return pos.map((p) => Object.freeze({ gx: p.gx - mx, gy: p.gy - my }));
