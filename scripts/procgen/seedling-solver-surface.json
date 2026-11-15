@@ -581,11 +581,11 @@
         "arrowLaneCrossing.js": 1,
         "botDriverV2.js": 104,
         "crusherBait.js": 8,
-        "dangerMap.js": 27,
+        "dangerMap.js": 28,
         "lightsVerb.js": 1,
         "solverBot.js": 245
       },
-      "sites": 386,
+      "sites": 387,
       "seen": "both",
       "via": [
         "direct",
@@ -744,6 +744,9 @@
         "turretsSettled": {
           "botDriverV2.js": 2,
           "solverBot.js": 1
+        },
+        "wallFlyerBodies": {
+          "dangerMap.js": 1
         }
       }
     },
@@ -4472,7 +4475,7 @@
         "axePricedCrossing.js": 4,
         "botDriverV2.js": 6,
         "crusherBait.js": 4,
-        "dangerMap.js": 9,
+        "dangerMap.js": 10,
         "forcedHit.js": 6,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
@@ -4480,7 +4483,7 @@
         "spearArm.js": 1,
         "strikePolicy.js": 3
       },
-      "sites": 196,
+      "sites": 197,
       "seen": "static",
       "via": [
         "import"
