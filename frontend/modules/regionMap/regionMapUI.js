@@ -656,6 +656,8 @@ export class RegionMapUI {
             return { x: f.x + f.w / 2, y: f.y + f.h / 2 };
         };
         ctx.lineWidth = 1.5;
+        // Half-transparent: a link between two far groups crosses other levels' art.
+        ctx.globalAlpha = 0.55;
         for (const l of this.model.links) {
             if (this._visibilityOf(l.from, view) === 'hidden' || this._visibilityOf(l.to, view) === 'hidden') continue;
             const a = pt(l.from, l.a);
@@ -679,6 +681,7 @@ export class RegionMapUI {
             ctx.fill();
             stats.links += 1;
         }
+        ctx.globalAlpha = 1;
     }
 
     _drawMarkers(ctx, view) {

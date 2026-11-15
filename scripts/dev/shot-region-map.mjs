@@ -51,16 +51,18 @@ async function boot(browser, game) {
         document.body.appendChild(host);
         host.appendChild(p.root);
         window.__rm = p;
+        window.__rmStats = (await import('/frontend/modules/flashPanel/seedlingCompositeMap.js')).seedlingCompositeMapStats;
     });
     await page.waitForFunction(() => window.__rm?.getDebugState()?.lastPaint?.cells > 0, null, { timeout: 30000, polling: 100 });
     return { page, errors };
 }
 
-const settle = (page) => page.waitForFunction(async () => {
-    const st = (await import('/frontend/modules/flashPanel/seedlingCompositeMap.js')).seedlingCompositeMapStats();
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    return st.pending === 0;
-}, null, { timeout: 120000, polling: 250 });
+// ⛔ A SYNCHRONOUS predicate: `waitForFunction` with an async one resolves at once (a Promise is truthy).
+const settle = async (page) => {
+    await page.waitForTimeout(200);
+    await page.waitForFunction(() => window.__rmStats().pending === 0, null, { timeout: 120000, polling: 250 });
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+};
 
 async function shot(page, name) {
     await settle(page);
@@ -75,8 +77,8 @@ const setSetting = (page, key, value) => page.evaluate(async ([k, v]) => {
     await new Promise((r) => setTimeout(r, 300));
 }, [key, value]);
 
-const record = (page, game) => page.evaluate(async () => {
-    const st = (await import('/frontend/modules/flashPanel/seedlingCompositeMap.js')).seedlingCompositeMapStats();
+const record = (page, game) => page.evaluate(() => {
+    const st = window.__rmStats();
     const d = window.__rm.getDebugState();
     return {
         cells: d.displayRegions.length, groups: d.groups, layout: d.layoutStats.source, panel: d.counters,
