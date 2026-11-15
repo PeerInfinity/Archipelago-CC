@@ -50,6 +50,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import {
     drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLayoutGraph, seedlingLocationTiles,
+    seedlingRegionExtent, seedlingRemoteLocationTiles,
 } from './seedlingCompositeMap.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
@@ -545,7 +546,9 @@ export const substrateRegistryEntry = Object.freeze({
      * (`seedlingCompositeMap.js`: a cached bake; the generic box until it lands, then the host's `requestRedraw`).
      * `artwork: true` puts it behind the renderer's "Substrate art" switch (`substrateArt: false` → the generic box).
      * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3); `layoutGraph` is
-     * step 3a's Seedling adapter (`procgenCore/regionLayoutResolve.js`).
+     * step 3a's Seedling adapter (`procgenCore/regionLayoutResolve.js`). Step 3b's Region Map panel adds
+     * `regionExtent` (a level's size in tiles, for cells sized by level) and `remoteLocationTiles` (an event whose
+     * object is in another level, placed there).
      * ⛔ DATA: this file stays `loadable: true` in the generated matrix — nothing here touches a DOM at load.
      */
     compositeMap: Object.freeze({
@@ -554,6 +557,8 @@ export const substrateRegistryEntry = Object.freeze({
         locationTiles: (region, ctx = {}) => seedlingLocationTiles(region, ctx),
         displayRegionOf: seedlingDisplayRegionOf,
         layoutGraph: (ctx = {}) => seedlingLayoutGraph(ctx),
+        regionExtent: (region, ctx = {}) => seedlingRegionExtent(region, ctx),
+        remoteLocationTiles: seedlingRemoteLocationTiles,
     }),
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,

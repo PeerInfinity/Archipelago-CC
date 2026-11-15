@@ -1001,9 +1001,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 106,
+        "fields": 108,
         "fieldsRead": 40,
-        "fieldsUnread": 63,
+        "fieldsUnread": 65,
         "statements": 30,
         "substrates": 9
     },
@@ -5088,6 +5088,8 @@ export const CAPABILITIES = frz({
         "compositeMap.displayRegionOf",
         "compositeMap.layoutGraph",
         "compositeMap.locationTiles",
+        "compositeMap.regionExtent",
+        "compositeMap.remoteLocationTiles",
         "defaultContentPack",
         "defaultProcgenParams",
         "driftItems",

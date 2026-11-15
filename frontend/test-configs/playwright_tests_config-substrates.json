@@ -574,6 +574,12 @@
             "_comment": "Content sets R4: the committed meta_trial world's maze drawn from the meta theme's shape recipes through the panel's own play-time load (no test seam): the stack is [maze, meta], the floor, wall and player are drawn from \"meta#<key>\" sheets, and the water gate keeps the maze default pack's look. Rides `fast` like the R2b row."
         },
         {
+            "id": "meta-trial-composite-map-art",
+            "enabled": true,
+            "category": "Maze tile art",
+            "_comment": "Content sets TIDY-1: the committed meta_trial world on the APWorld Editor's Map tab: the maze cell painter loads the recorded stack (browser io, no seam) and draws the concept item, the things and the floor from \"meta#<key>\" sheets; the water gate resolves no art; procgen_maze seed 1 (default stack) loads to no art and its map canvas draws no image. Rides `fast` like the R2b and R4 rows."
+        },
+        {
             "id": "maze-thing-shows-text",
             "enabled": true,
             "category": "Maze things",
@@ -1959,6 +1965,30 @@
             "enabled": true,
             "category": "Tutorial walks",
             "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "region-map-classic-world",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "REGION MAP step 3b (2026-11-15): the panel on a classic AP world (no grid_cell, no substrate hook): the generic layout and boxes. The category's ONE row on the fast batch (the smoke row); counts derived at run time. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-seedling-paints",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 3b (2026-11-15): seedling_playthrough — N cells = the layout's display regions, the art bakes, squares = the visible levels' tiles (>= minSquarePx at the minimum zoom), the cell-size toggle. Batch playback-bot (on push). Counts derived at run time."
+        },
+        {
+            "id": "region-map-follow-player",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 3b (2026-11-15): follow player re-centres after a region move; a pan turns follow off. Batch playback-bot (on push)."
+        },
+        {
+            "id": "region-map-discovery",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 3b (2026-11-15): discovery mode hides and fogs as the view says; logs the discovery recompute cost. Batch playback-bot (on push)."
         },
         {
             "id": "test_region_graph_node_picker",
