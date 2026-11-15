@@ -246,6 +246,54 @@ export function seedlingLayoutGraph({ sidecars = {}, displayRegionOf = seedlingD
     return { nodes, links };
 }
 
+/**
+ * ⛓ region-map step 3b — `compositeMap.regionExtent(region, ctx)` → `{w, h}` in LEVEL TILES, or null: how big the
+ * region's whole level is, so the Region Map can size its cells by level (⚖ user 2026-11-15, "sized by level" the
+ * default). A generated room's embedded `record` (`width`/`height`), else the payload's atlas region `bounds` from
+ * `ctx.atlases[atlas_ref]` — the same sizes `seedlingLayoutGraph` reads for door directions. A custom set's derived
+ * atlas answers only when the caller hands it in; null then, and the panel falls back to its uniform size.
+ * ⛔ Pure, additive, reads the PAYLOAD only.
+ */
+export function seedlingRegionExtent(region, { atlases = null } = {}) {
+    const payload = region?.playable_payload ?? null;
+    const px = seedlingLevelPixelSize(payload, atlases);
+    if (!px) return null;
+    const ts = Number.isFinite(payload?.tile_size) ? payload.tile_size : TILE;
+    return { w: Math.round(px.w / ts), h: Math.round(px.h / ts) };
+}
+
+/**
+ * ⛓ region-map step 3b — `compositeMap.remoteLocationTiles(region, ctx)` → `[{location, displayRegion, x, y, kind}]`:
+ * the region's events whose object is in ANOTHER level (`obstacle.level` ≠ the payload's level — the residue
+ * `seedlingLocationTiles` leaves out and `unplacedSeedlingLocations` names), placed in the display region of the
+ * first sidecar whose payload shows that level. `ctx = {rules, playerId, sidecars, displayRegionOf}`. An event whose
+ * level no sidecar shows is left out (the panel lists it as "not on map").
+ * ⛔ Pure, additive, reads the PAYLOADS and the rules' `obstacle` only.
+ */
+export function seedlingRemoteLocationTiles(region, {
+    rules = null, playerId = null, sidecars = null, displayRegionOf = seedlingDisplayRegionOf,
+} = {}) {
+    const payload = region?.playable_payload ?? null;
+    const out = [];
+    let byLevel = null;
+    for (const l of rulesLocationsOf(rules, playerId, region?.region_id)) {
+        const o = l?.obstacle;
+        if (!o || !Number.isFinite(o.x) || !Number.isFinite(o.y) || !Number.isInteger(o.level)) continue;
+        if (o.level === payload?.level) continue;
+        if (!byLevel) {
+            byLevel = new Map();
+            for (const [name, sc] of Object.entries(sidecars ?? {})) {
+                const lv = sc?.playable_payload?.level;
+                if (Number.isInteger(lv) && !byLevel.has(lv)) byLevel.set(lv, displayRegionOf(name, sc));
+            }
+        }
+        const displayRegion = byLevel.get(o.level);
+        if (displayRegion == null) continue;
+        out.push({ location: l.name, displayRegion, x: Math.floor(o.x / TILE), y: Math.floor(o.y / TILE), kind: 'event' });
+    }
+    return out;
+}
+
 function rulesLocationsOf(rules, playerId, regionName) {
     if (!rules || regionName == null) return [];
     const regions = rules.regions?.[String(playerId)] ?? null;
