@@ -1,7 +1,7 @@
 # Region Map step 3a — the shared region layout (report)
 
 Session `region-map-layout`, branch `region-map-layout`, base `9b99178fa75bb2fc818cd40435c00af0347b40de` (origin/main = train
-seedling-maze-link). Brief: `NewDocs/plans/region-map-step3a-layout-prompt.md`. Reviewer: seedling-js-planning-19.
+seedling-maze-link). Brief: the planner's step-3a brief (archipelago-cc-23). Reviewer: seedling-js-planning-19.
 
 ## What landed
 
@@ -13,7 +13,8 @@ seedling-maze-link). Brief: `NewDocs/plans/region-map-step3a-layout-prompt.md`. 
 | `fca6763585` | D4: `scripts/dev/preview-region-layout.mjs` |
 | `52d887c699` | the report and the preview PNGs (first version) |
 | `5f0938ebd2` | CI fix: `dirOfExit` moved verbatim to `seedlingDemo/seedlingDoorDirection.js`, and the quickLaunch docs index regenerated |
-| this commit | the report, updated |
+| `9fc3ff18fc` | the report, updated |
+| this commit | the report: drop a gitignored-tree path (`noNewDocsReferences.test.js`, the one red at `9fc3ff18fc`) |
 
 - 0 gitlinks.
 - Closure ∩ diff = ∅.
@@ -227,4 +228,4 @@ fixed in `5f0938ebd2`:
 **In-app:** `npm test -- --port=8131 --mode=test-substrates --batch=apworld` ran 142 rows: 142 passed, 0 failed.
 
 **CI:** the run ids at the exact tip are in the packet message to seedling-js-planning-19. JSUT's push filter skips a
-`CC/docs`-only commit, so its push run of record is at `5f0938ebd2`.
+`CC/docs`-only commit, so its push runs of record are at the latest code-carrying push.
