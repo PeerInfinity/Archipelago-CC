@@ -593,12 +593,20 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
                 const fl = (mm?.mobiles ?? []).filter((m) => /wall\s*flyer/i.test(String(m.cls ?? '')))
                     .map((m) => `${String(m.cls).split('::').pop()}${m.destroy ? '(destroy)' : ''}`)
                     .sort().join(',');
-                const key = `${cur.level}|${fl}`;
+                // and every other non-Player class, counted (a kill of a bob or another body shows as a drop)
+                const census = {};
+                for (const m of (mm?.mobiles ?? [])) {
+                    const c = String(m.cls ?? '?').split('::').pop();
+                    if (c === 'Player' || /wall\s*flyer/i.test(c)) continue;
+                    census[c] = (census[c] ?? 0) + (m.destroy ? 0 : 1);
+                }
+                const others = Object.entries(census).sort().map(([c, n]) => `${c}=${n}`).join(',');
+                const key = `${cur.level}|${fl}|${others}`;
                 if (key !== flyersPrev) {
                     flyersPrev = key;
                     const pos = (mm?.mobiles ?? []).filter((m) => /wall\s*flyer/i.test(String(m.cls ?? '')))
                         .map((m) => `(${Math.round(m.x)},${Math.round(m.y)}${m.destroy ? ' destroy' : ''})`).join(' ');
-                    console.log(`[MEASURE flyers] t=${((performance.now() - t0) / 1000).toFixed(1)}s level=${cur.level} count=${fl ? fl.split(',').length : 0} ${pos}`);
+                    console.log(`[MEASURE flyers] t=${((performance.now() - t0) / 1000).toFixed(1)}s level=${cur.level} count=${fl ? fl.split(',').length : 0} ${pos} others: ${others}`);
                 }
             }
         } catch { /* torn down */ }
