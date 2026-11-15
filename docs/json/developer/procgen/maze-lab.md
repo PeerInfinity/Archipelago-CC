@@ -57,6 +57,8 @@ A converted room keeps the entity fields only the engine reads (arrow traps, ent
 
 The lab names no preset: everything is read off the two documents (`mazeConvertedLink.test.js`; `check-maze-lab` CLAIM 24).
 
+The Seedling editor builds these links for the room it holds (*The maze lab link* in the Seedling editor page); nothing in the lab changes for them.
+
 ### The link wires
 
 In the `edit` mode (and on a room opened in the set mode) the editor overlay draws the room's token wires: an arrow from each presser to each responder of the same token. `mazeRoom/mazeLinks.js` reads them from the room, using the token fields and nothing else:
