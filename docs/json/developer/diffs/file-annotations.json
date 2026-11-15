@@ -85,9 +85,6 @@
         "iframe_games/": {
             "description": "Iframe-hosted game content for frontend integration modules."
         },
-        "worlds/jta/": {
-            "description": "Journey to Ascension: a demo world with cost-based progression and planner integration."
-        },
         "worlds/json_tools_installer/": {
             "description": "Utility APWorld (hidden) that downloads and installs JSON Tools components on vanilla Archipelago.",
             "links": [

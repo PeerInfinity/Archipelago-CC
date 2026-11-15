@@ -47,7 +47,7 @@ The file defines named presets. Each preset specifies a tree of rows, columns, a
 | Column | Width | Panels |
 |--------|-------|--------|
 | Left stack | 20% | Quick Launch, Tutorial, Inventory, JSON, Storage, Modules, Loop Stats, Spoiler Checklist, Tests, Events |
-| Middle stack | 35% | Console, Region Graph, Timer, Presets, Editor, Editor (CM6), Options, Path Analyzer, Spoiler Test, Game State, Iframe Manager, JtA Game Data, JtA Action Queue, JtA Cost Debugger, Window Manager, Rule Converter |
+| Middle stack | 35% | Console, Region Graph, Timer, Presets, Editor, Editor (CM6), Options, Path Analyzer, Spoiler Test, Game State, Iframe Manager, Window Manager, Rule Converter |
 | Right stack | 45% | Regions, Locations, Exits, Cost Debugger, Loops, Menu, Helpers, Dungeons, Iframe Panel, Window Panel, Proof Graph, Proof Queue, Flash Panel, Tile Map Analyzer, Region Marking Tool, APWorld Editor, Maze Room, Procgen Lab — maze, Procgen Lab — Seedling, Substrate Registry, Text Adventure Substrate, JtA Substrate, Idle Loops Substrate, Flash Substrate, Bounce Demo, Cloudberry Kingdom, Noiz2sa, Procgen Pipeline, Bounce Region Editor, Playback Bot |
 
 **`compact` preset** - 2-column layout:

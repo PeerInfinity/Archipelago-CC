@@ -262,7 +262,7 @@ Where the gate is consulted:
 
 Some substrates are loop games themselves: their native economy restarts from the beginning when a resource runs out, which is exactly the loop-mode reset teleport. They declare `loopSupport.requiresLoopMode` and are not supported outside loop mode; their coupling to the shared pool (energy or mana sync, reset propagation, the reset teleport) is part of the contract. jta and omsi declare it.
 
-`eventCoordinator._handleSetLoopMode` enforces it: a user-initiated loop-mode disable is refused while a loaded world contains such a substrate (found by walking `procgenPlayer.getWarehouse()`). The preset auto-disable carries `auto: true` and is exempt; it only fires for presets without `loop_costs`, which never contain such a substrate. jta can still be played standalone through the separate `?mode=jta` page.
+`eventCoordinator._handleSetLoopMode` enforces it: a user-initiated loop-mode disable is refused while a loaded world contains such a substrate (found by walking `procgenPlayer.getWarehouse()`). The preset auto-disable carries `auto: true` and is exempt; it only fires for presets without `loop_costs`, which never contain such a substrate.
 
 ## Gotchas
 

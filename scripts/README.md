@@ -638,50 +638,6 @@ The cross-layer rule-node kind census. See **[rule-kind-registry.md](../docs/jso
 
 Tools for placing items in their vanilla (original game) locations in A Link to the Past. See the **[Vanilla ALttP README](vanilla-alttp/README.md)** for full documentation.
 
-### Journey to Ascension Scripts (scripts/jta/)
-
-- **`jta/cost-adjust.js`** - Adjust costMult values in randomized JtA game data so perk tasks are completable within a target number of energy resets per sphere
-  ```bash
-  node scripts/jta/cost-adjust.js \
-    --gamedata frontend/presets/jta/AP_SEED/AP_SEED_P1_Player1_gamedata.json \
-    --spherelog frontend/presets/jta/AP_SEED/AP_SEED_sphere_log.jsonl \
-    --output frontend/presets/jta/AP_SEED/AP_SEED_P1_Player1_costs.json \
-    --resets-per-sphere 5
-  ```
-
-- **`jta/cost-plan.js`** - Generate cost data using simulated playthrough with binary search solver (more accurate than cost-adjust.js)
-  ```bash
-  node scripts/jta/cost-plan.js \
-    --gamedata path/to/gamedata.json \
-    --spherelog path/to/sphere_log.jsonl \
-    --output path/to/costs.json \
-    --two-pass --normal-attempts 2
-  ```
-
-- **`jta/cost-generate-game.js`** - Generate costs using real game engine via Playwright in a headless browser
-  ```bash
-  node scripts/jta/cost-generate-game.js \
-    -g path/to/gamedata.json \
-    -s path/to/sphere_log.jsonl \
-    --port 8000 --two-pass
-  ```
-
-- **`jta/cost-debugger.js`** - Generate costs via simulated playthrough and output a detailed step-by-step debug report
-  ```bash
-  node scripts/jta/cost-debugger.js \
-    --gamedata path/to/gamedata.json \
-    --spherelog path/to/sphere_log.jsonl \
-    --output jta_cost_debug_report.json
-  ```
-
-- **`jta/game-verify.js`** - Run cost debugger's planned steps through the actual game engine in a headless browser, comparing planned vs actual results
-  ```bash
-  node scripts/jta/game-verify.js \
-    -g path/to/gamedata.json \
-    -s path/to/sphere_log.jsonl \
-    --port 8000
-  ```
-
 ### Vibe Coding Simulator Scripts (scripts/vibe-coding-simulator/)
 
 Tooling for the Vibe Coding Simulator game (a DepGraph-backed world). See **[balance.md](vibe-coding-simulator/balance.md)** for the balance variables that tune a playthrough.

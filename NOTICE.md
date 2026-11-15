@@ -9,7 +9,7 @@ exceptions below. Parts with their own licence files (for example some directori
 [Journey to Ascension](https://meneth.github.io/journey-to-ascension/) is a game by
 Meneth. It has no open-source licence. Files in this repository that are derived from
 it are **not** covered by the MIT licence. That includes the `journey-to-ascension`
-submodule (a fork of the game) and the `jta*` modules, presets and world, which contain
+submodule (a fork of the game) and the `jta*` modules and presets, which contain
 code, formulas and data taken from the game.
 
 They are used with the author's permission, on these conditions:

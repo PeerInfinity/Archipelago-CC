@@ -107,7 +107,7 @@ This approach ensures your fork maintains a clean relationship with the upstream
 - Fuzzer based on [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong
 - APWorld Manager from [silasary/Archipelago](https://github.com/silasary/Archipelago)
 - APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)
-- APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth (used with permission, non-commercial; see [NOTICE.md](NOTICE.md))
+- The Journey to Ascension substrate runs [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth (used with permission, non-commercial; see [NOTICE.md](NOTICE.md))
 - [Seedling](https://github.com/PeerInfinity/Seedling) by Connor Ullmann, music and sound effects by Rekcahdam (released into the public domain), built with the FlashPunk library and the Ogmo Editor
 - Flash games recompiled to WebAssembly with SWFRecomp and SWFModernRuntime by LittleCube (MIT), via the [SWFRecomp-CC](https://github.com/PeerInfinity/SWFRecomp-CC) fork; the in-browser recompiler's bundled libraries are listed in [swfrecomp-browser](https://github.com/PeerInfinity/swfrecomp-browser)
 - The Noiz2sa substrate plays Kenta Cho's Noiz2sa (BSD) with a JavaScript port of shinichiro.h's libBulletML (BSD), via [bulletml-dodge](https://github.com/PeerInfinity/bulletml-dodge)

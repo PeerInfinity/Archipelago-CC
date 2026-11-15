@@ -270,8 +270,9 @@ Two other doors exist for hand-supplied data: `loadFromURL(url)` and
 
 ⚠ There is **no** standalone `AP_{seed_id}_costs.json` sidecar next to a preset
 any more — the loader for that path had no callers and was deleted 2026-09-06.
-(The tracked `frontend/presets/jta*/…_costs.json` files belong to Journey to
-Ascension's *own* cost system, read by `jtaGameDataPanelUI.js`, not by this one.)
+(The tracked `frontend/presets/jta_vanilla/…_costs.json` file is a leftover of
+Journey to Ascension's first-attempt cost system, whose readers were deleted
+2026-11-15; nothing reads it.)
 
 Format of the block:
 ```json
