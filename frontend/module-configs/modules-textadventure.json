@@ -180,14 +180,6 @@
       "path": "./modules/iframeManagerPanel/index.js",
       "enabled": false
     },
-    "jtaGameDataPanel": {
-      "path": "./modules/jtaGameDataPanel/index.js",
-      "enabled": false
-    },
-    "jtaCostDebugger": {
-      "path": "./modules/jtaCostDebugger/index.js",
-      "enabled": false
-    },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
       "enabled": false
@@ -214,14 +206,6 @@
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": false
-    },
-    "jtaActionQueue": {
-      "path": "./modules/jtaActionQueue/index.js",
-      "enabled": false
-    },
-    "jtaArchipelago": {
-      "path": "./modules/jtaArchipelago/index.js",
       "enabled": false
     },
     "vibeCodingSim": {
@@ -279,8 +263,6 @@
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
-    "jtaGameDataPanel",
-    "jtaCostDebugger",
     "windowAdapter",
     "windowPanel",
     "windowManagerPanel",
@@ -288,8 +270,6 @@
     "proofQueue",
     "proofGraph",
     "jtaQueueEngine",
-    "jtaActionQueue",
-    "jtaArchipelago",
     "vibeCodingSim",
     "apcalc"
   ]

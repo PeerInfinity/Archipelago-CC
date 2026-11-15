@@ -108,7 +108,6 @@
       "textAdventure-iframeTests": "WARN",
       "iframeClient": "WARN",
       "textAdventureStandalone": "WARN",
-      "jtaActionQueue": "WARN",
       "jtaQueueEngine": "WARN",
       "jtaQueueExecutor": "WARN"
     },

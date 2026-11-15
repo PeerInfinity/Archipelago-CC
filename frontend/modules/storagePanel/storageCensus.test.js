@@ -16,7 +16,7 @@ export const CENSUS_KEYS = [
     'playbackBot_intercept', 'playbackBot_mazeCollect',
     'archipelago_loop_state', 'loops:savedQueues:v1', 'hideDoubleMovementWarning', 'hideDoubleDestinationWarning',
     'archipelago_loop_settings',
-    'jta-aq-settings', 'jta-action-loadouts', 'jta-aq-collapsed',
+    'jta-aq-settings', 'jta-action-loadouts',
     'jtaBalance_patches_v1_1', 'jtaBalance_patches_v1_1__ds_synthetic-sunken-meridian-s1-z3-5febd71f',
     'vcs-config', 'bounceDjReal.player', 'externalModule.customUrlWarning.suppressed',
     'clientSettings', 'clientId', '__storage_test__', 'frontendProfiling',
@@ -31,12 +31,13 @@ export const CENSUS_KEYS = [
  * Keys that are Unknown ON PURPOSE: the orphans in the user's profile (§37.9),
  * the retired client cache (§37.7.1), and the games no module wraps (Cavernous is
  * served as a standalone page only; golden-layout's popout key is never reached;
- * A-Mazing-Idle's saves outlive its removal, 2026-10-11).
+ * A-Mazing-Idle's saves outlive its removal, 2026-10-11; the jtaActionQueue panel's
+ * collapse key outlives its deletion, 2026-11-15).
  */
 export const EXPECTED_UNKNOWN = [
     '__pathAnalysisResults__', '__pathAnalysis_Kings Grave__', '__playwrightTestResults__', '__spoilerTestResults__',
     'dataPackage', 'dataPackageVersion', 'saveGameII', 'saveGameIIBackup', 'gl-window-config-abc',
-    'a-mazing-idle', 'a-mazing-idle-disable-biome-check',
+    'a-mazing-idle', 'a-mazing-idle-disable-biome-check', 'jta-aq-collapsed',
 ];
 
 describe('storage census coverage', () => {

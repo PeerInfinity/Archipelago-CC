@@ -18,9 +18,6 @@
 
 /** Panels deliberately given no tutorial: componentType → { title (its tab), why } (⚖ the user, 2026-10-10). */
 export const NO_TUTORIAL = Object.freeze({
-    jtaActionQueue: { title: 'JtA Action Queue', why: 'Part of the non-procgen Journey to Ascension, which is deprecated.' },
-    jtaGameDataPanel: { title: 'JtA Game Data', why: 'Part of the non-procgen Journey to Ascension, which is deprecated.' },
-    jtaCostDebuggerPanel: { title: 'JtA Cost Debugger', why: 'Deprecated.' },
     ruleConverterPanel: { title: 'Rule Converter', why: 'Deprecated.' },
     tileMapAnalyzer: { title: 'Tile Map Analyzer', why: 'Currently a failed experiment.' },
     metaGamePanel: { title: 'Meta Game', why: 'Deprecated (an early draft of the procgen idea).' },

@@ -126,21 +126,6 @@
             },
             {
               "type": "component",
-              "componentType": "jtaGameDataPanel",
-              "title": "JtA Game Data"
-            },
-            {
-              "type": "component",
-              "componentType": "jtaActionQueue",
-              "title": "JtA Action Queue"
-            },
-            {
-              "type": "component",
-              "componentType": "jtaCostDebuggerPanel",
-              "title": "JtA Cost Debugger"
-            },
-            {
-              "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
             },

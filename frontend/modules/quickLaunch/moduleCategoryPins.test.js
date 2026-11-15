@@ -28,7 +28,7 @@ function panelModules() {
         if (start === -1) continue;
         const end = text.indexOf('\n};', start);
         const block = text.slice(start, end === -1 ? undefined : end);
-        // `componentType: null` (jtaArchipelago) is a module with no panel.
+        // `componentType: null` is a module with no panel (none today; jtaArchipelago was one).
         if (!/^\s*componentType\s*:\s*(?!null\b)\S/m.test(block)) continue;
         const m = block.match(/^\s*category\s*:\s*(['"])(.+?)\1/m);
         out.push({ dir: dir.name, category: m ? m[2] : null });

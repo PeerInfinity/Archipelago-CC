@@ -115,13 +115,9 @@ import * as windowAdapterModule from './modules/windowAdapter/index.js';
 import * as windowPanelModule from './modules/windowPanel/index.js';
 import * as windowManagerPanelModule from './modules/windowManagerPanel/index.js';
 import * as ruleConverterModule from './modules/ruleConverter/index.js';
-import * as jtaGameDataPanelModule from './modules/jtaGameDataPanel/index.js';
-import * as jtaCostDebuggerModule from './modules/jtaCostDebugger/index.js';
 import * as proofQueueModule from './modules/proofQueue/index.js';
 import * as proofGraphModule from './modules/proofGraph/index.js';
 import * as jtaQueueEngineModule from './modules/jtaQueueEngine/index.js';
-import * as jtaActionQueueModule from './modules/jtaActionQueue/index.js';
-import * as jtaArchipelagoModule from './modules/jtaArchipelago/index.js';
 import * as vibeCodingSimModule from './modules/vibeCodingSim/index.js';
 import * as apcalcModule from './modules/apcalc/index.js';
 import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
@@ -256,13 +252,9 @@ const BUNDLED_MODULES = {
   windowPanel: windowPanelModule,
   windowManagerPanel: windowManagerPanelModule,
   ruleConverter: ruleConverterModule,
-  jtaGameDataPanel: jtaGameDataPanelModule,
-  jtaCostDebugger: jtaCostDebuggerModule,
   proofQueue: proofQueueModule,
   proofGraph: proofGraphModule,
   jtaQueueEngine: jtaQueueEngineModule,
-  jtaActionQueue: jtaActionQueueModule,
-  jtaArchipelago: jtaArchipelagoModule,
   vibeCodingSim: vibeCodingSimModule,
   apcalc: apcalcModule,
   apcalcGenerator: apcalcGeneratorModule,
