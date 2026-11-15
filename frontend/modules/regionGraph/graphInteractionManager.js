@@ -1,10 +1,10 @@
 import { getModuleEventBus, getNodeLabelProvider } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { evaluateRule } from '../shared/ruleEngine.js';
-import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
+import * as actions from '../regionView/regionActions.js';
+import { REGION_GRAPH_ORIGINATORS, REGION_GRAPH_NODE_SELECTED } from './regionGraphOriginators.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -243,7 +243,7 @@ export class GraphInteractionManager {
     logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
 
     // Discovery mode: if location checks are disabled, skip the check
-    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
+    if (!actions.locationChecksAllowed({ active: this.ui.isDiscoveryModeActive, settings: this.ui.discoverySettings })) {
       logger.debug(`Location check disabled by discovery settings, skipping: ${locationName}`);
       return;
     }
@@ -277,8 +277,7 @@ export class GraphInteractionManager {
 
         // Then add the location check to the path
         import('../gameState/singleton.js').then(({ getGameStateSingleton }) => {
-          const gameState = getGameStateSingleton();
-          gameState.addLocationCheck(locationName, parentRegion);
+          actions.addLocationCheckToPath({ gameState: getGameStateSingleton() }, locationName, parentRegion);
           logger.debug(`Added location ${locationName} to player path`);
           // The path update will automatically trigger highlightPathEdges via the event system
         }).catch(error => {
@@ -297,18 +296,10 @@ export class GraphInteractionManager {
 
   dispatchLocationCheckEvent(locationName, parentRegion) {
     import('./index.js').then(({ moduleDispatcher }) => {
-      const payload = {
-        locationName: locationName,
-        regionName: parentRegion,
-        originator: 'RegionGraphCheck',
-        originalDOMEvent: true,
-      };
-
-      if (moduleDispatcher) {
-        moduleDispatcher.publish('user:locationCheck', payload, {
-          initialTarget: 'bottom',
-        });
-        logger.debug('Dispatched user:locationCheck', payload);
+      const r = actions.checkLocation({ dispatcher: moduleDispatcher },
+        { locationName, regionName: parentRegion, originator: REGION_GRAPH_ORIGINATORS.check });
+      if (r.ok) {
+        logger.debug('Dispatched user:locationCheck', { locationName, regionName: parentRegion });
       } else {
         logger.error('moduleDispatcher not available to handle location check.');
       }
@@ -329,10 +320,7 @@ export class GraphInteractionManager {
     node.addClass('selected');
 
     // Publish the custom regionGraph event for any other listeners
-    this.eventBus.publish('regionGraph:nodeSelected', {
-      nodeId: regionName,
-      data: node.data()
-    });
+    actions.publishNodeSelected({ eventBus: this.eventBus }, REGION_GRAPH_NODE_SELECTED, regionName, node.data());
 
     // Check which actions are enabled via checkboxes
     const movePlayerOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
@@ -365,13 +353,9 @@ export class GraphInteractionManager {
       const shouldShowAll = !(addToPathCheckbox?.checked || overwritePathCheckbox?.checked);
       this.ui.setShowAllRegions(shouldShowAll);
 
-      // Activate the regions panel
-      this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
-      logger.debug('Published ui:activatePanel for regionsPanel');
-
-      // Navigate to the region
-      this.eventBus.publish('ui:navigateToRegion', { regionName: regionName });
-      logger.debug(`Published ui:navigateToRegion for ${regionName}`);
+      // Activate the regions panel and navigate it to the region
+      actions.showRegionInRegionsPanel({ eventBus: this.eventBus }, regionName);
+      logger.debug(`Published ui:activatePanel + ui:navigateToRegion for ${regionName}`);
     }
 
     // Check all locations in region (if enabled)
@@ -383,56 +367,22 @@ export class GraphInteractionManager {
 
   checkAllLocationsInRegion(regionName) {
     // Discovery mode: if location checks are disabled, skip
-    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
+    if (!actions.locationChecksAllowed({ active: this.ui.isDiscoveryModeActive, settings: this.ui.discoverySettings })) {
       logger.debug(`Location checks disabled by discovery settings, skipping bulk check for: ${regionName}`);
       return;
     }
 
-    // Get locations in this region
+    // The state is read now; the candidates are evaluated once the dispatcher is in hand (as before).
     const staticData = stateManager.getStaticData();
     const regionData = staticData?.regions?.get(regionName);
-
     if (regionData && regionData.locations && regionData.locations.length > 0) {
-      // Get current state to check which locations are accessible
       const snapshot = stateManager.getLatestStateSnapshot();
-      const snapshotInterface = createSnapshotInterface(snapshot, staticData);
-      const checkedLocations = new Set(snapshot.checkedLocations || []);
-
-      // Check each location that is accessible and not already checked
       import('./index.js').then(({ moduleDispatcher }) => {
-        let locationsChecked = 0;
-
-        regionData.locations.forEach(location => {
-          // Skip if already checked
-          if (checkedLocations.has(location.name)) {
-            return;
-          }
-
-          // Check if location is accessible
-          const isAccessible = location.access_rule ?
-            evaluateRule(location.access_rule, snapshotInterface) : true;
-
-          if (isAccessible) {
-            // Dispatch location check event
-            const payload = {
-              locationName: location.name,
-              regionName: regionName,
-              originator: 'RegionGraphBulkCheck',
-              originalDOMEvent: true,
-            };
-
-            if (moduleDispatcher) {
-              moduleDispatcher.publish('user:locationCheck', payload, {
-                initialTarget: 'bottom',
-              });
-              locationsChecked++;
-              logger.debug('Dispatched user:locationCheck for bulk check', payload);
-            }
-          }
-        });
-
-        if (locationsChecked > 0) {
-          logger.debug(`Checked ${locationsChecked} accessible locations in ${regionName}`);
+        const { checked } = actions.checkAccessibleLocationsInRegion(
+          { dispatcher: moduleDispatcher, stateManager }, regionName,
+          { originator: REGION_GRAPH_ORIGINATORS.bulkCheck, snapshot, staticData });
+        if (checked > 0) {
+          logger.debug(`Checked ${checked} accessible locations in ${regionName}`);
         }
       }).catch(error => {
         logger.error('Error importing moduleDispatcher for bulk location check:', error);
