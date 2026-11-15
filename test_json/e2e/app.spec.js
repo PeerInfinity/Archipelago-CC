@@ -87,6 +87,9 @@ test.describe('Application End-to-End Tests', () => {
   if (process.env.TEST_MEASURE_SOLVER_ENV) {
     APP_URL += `&seedlingSolverEnv=${encodeURIComponent(process.env.TEST_MEASURE_SOLVER_ENV)}`;
   }
+  if (process.env.TEST_MEASURE_NO_WORK_LIMIT) {
+    APP_URL += `&measureNoWorkLimit=${encodeURIComponent(process.env.TEST_MEASURE_NO_WORK_LIMIT)}`;
+  }
   if (process.env.TEST_MEASURE_BOT_STALL_MS) {
     APP_URL += `&measureBotStallMs=${encodeURIComponent(process.env.TEST_MEASURE_BOT_STALL_MS)}`;
   }
