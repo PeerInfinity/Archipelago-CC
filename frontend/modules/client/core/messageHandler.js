@@ -37,7 +37,7 @@ import {
 } from './localRulesOverlay.js';
 import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
-import { needsLogicGate, logicRefusal, refusalMessage } from './checkGate.js';
+import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
 
 /** "gameKey/folder, …" for a few preset candidates (the console names them). */
 function describePresetFolders(presets, max = 3) {
@@ -147,6 +147,11 @@ export class MessageHandler {
     // A build of rules from server data in progress (see _beginServerBuild):
     // { game, connected, held, timer }. Null when none.
     this._serverBuild = null;
+    // Checks a GAME made (reportedByGame, or system:) while this slot's rules
+    // were pending: { eventData, eventName, seedName }. Replayed through the
+    // normal path once a Connected is applied (_replayHeldGameChecks); a game
+    // pickup can't be made again, so they are never silently dropped.
+    this._heldGameChecks = [];
 
     // Use the imported stateManagerProxySingleton directly
     this.stateManager = stateManagerProxySingleton;
@@ -211,6 +216,8 @@ export class MessageHandler {
     });
     this.eventBus.subscribe('connection:close', (data) => {
       if (data?.requested) this._invalidGameRetried = false;
+      // The player ended the session: the held game checks have no room to go to.
+      if (data?.requested) this._dropHeldGameChecks('the player disconnected first');
       // The session is over: stop reporting a slot, or isHandshakeComplete()
       // keeps claiming the client is logged in after a disconnect.
       this.clientSlot = null;
@@ -370,6 +377,7 @@ export class MessageHandler {
     }
 
     this.roomInfo = data;
+    this._dropHeldGameChecks('the server is another room now', (held) => !isSameSeed(held.seedName, data.seed_name));
     this._cancelServerBuild();
     this._cancelRulesWait();
     const roomInfoSeq = ++this._roomInfoSeq;
@@ -956,6 +964,39 @@ export class MessageHandler {
     } else if (this.scoutedLocations.size > 0) {
       this.eventBus?.publish('game:locationsScouted', { locations: this.getScoutedLocations() });
     }
+    await this._replayHeldGameChecks();
+  }
+
+  /**
+   * The game checks held while this slot's rules were pending, sent now
+   * through the normal path (handleUserLocationCheckForClient: the server's
+   * id, or the local ID-less check). Runs after every applied Connected; a
+   * check is held again if rules are somehow pending once more.
+   */
+  async _replayHeldGameChecks() {
+    if (this._heldGameChecks.length === 0 || this._serverBuild) return;
+    const held = this._heldGameChecks;
+    this._heldGameChecks = [];
+    this._printToConsole(
+      `Sending ${held.length} check(s) the game made while this room's rules were loading: ` +
+        `${held.map((h) => `"${h.eventData.locationName}"`).join(', ')}.`,
+      'info'
+    );
+    for (const { eventData, eventName } of held) {
+      await handleUserLocationCheckForClient(eventData, eventName);
+    }
+  }
+
+  /** Drop held game checks (those `which` selects), saying so: they were made but are never sent. */
+  _dropHeldGameChecks(why, which = () => true) {
+    const dropped = this._heldGameChecks.filter(which);
+    if (dropped.length === 0) return;
+    this._heldGameChecks = this._heldGameChecks.filter((h) => !which(h));
+    const message =
+      `Not sent: ${dropped.length} check(s) the game made while this room's rules were pending ` +
+      `(${dropped.map((h) => `"${h.eventData.locationName}"`).join(', ')}); ${why}.`;
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
   }
 
   /**
@@ -2088,6 +2129,17 @@ Location was force-checked to maintain server sync.`;
     this._printToConsole(refusalMessage(locationName, reason), 'warning');
   }
 
+  /** A game's check while this slot's rules are pending: held for _replayHeldGameChecks. */
+  _holdGameCheck(eventData, eventName) {
+    this._heldGameChecks.push({ eventData, eventName, seedName: this.roomInfo?.seed_name ?? null });
+    log('info', `[MessageHandler] Holding the game's check "${eventData.locationName}" until the rules load.`);
+    this._printToConsole(
+      `Holding "${eventData.locationName}" (made by the game) until this room's ${this._serverBuild?.game ?? ''} ` +
+        'rules load; it is sent then.',
+      'info'
+    );
+  }
+
   /** A check while this slot's rules are pending: refused, with a console line naming what is awaited. */
   _refuseCheckWhileRulesPending(eventData) {
     const locationName = eventData.locationName;
@@ -2208,10 +2260,16 @@ export async function handleUserLocationCheckForClient(
     );
     if (eventData.locationName && messageHandlerSingleton._serverBuild) {
       // This slot's rules are not loaded yet (a build, an overlay, or the wait
-      // for the room's preset): the loaded rules are another game's or
-      // another player's, so their location is not this slot's. Nothing is
-      // sent, and nothing is applied locally (sdc-no-preset-refusal).
-      messageHandlerSingleton._refuseCheckWhileRulesPending(eventData);
+      // for the room's preset). A check the GAME made is held and sent once
+      // they load (it can't be made again). A click on the loaded rules'
+      // locations is refused: those rules are another game's or another
+      // player's. Nothing is sent now, and nothing is applied locally
+      // (sdc-no-preset-refusal).
+      if (eventName === 'system:locationCheck' || eventData[GAME_REPORTED_FIELD] === true) {
+        messageHandlerSingleton._holdGameCheck(eventData, eventName);
+      } else {
+        messageHandlerSingleton._refuseCheckWhileRulesPending(eventData);
+      }
       return;
     }
     if (eventData.locationName) {

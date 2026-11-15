@@ -49,7 +49,11 @@ vi.mock('./storage.js', () => ({
   default: { getItem: () => null, setItem: () => {}, initialize: () => {} },
 }));
 
-import { MessageHandler, rulesNeededMessage } from './messageHandler.js';
+import messageHandlerSingleton, {
+  MessageHandler,
+  rulesNeededMessage,
+  handleUserLocationCheckForClient,
+} from './messageHandler.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FRONTEND = join(HERE, '..', '..', '..');
@@ -361,6 +365,61 @@ describe('MessageHandler: no preset for this room (sdc-no-preset-refusal)', () =
     expect(handler.getAwaitedRulesGame()).toBe(BAKING);
     expect(text().some((m) => m.includes('other seeds'))).toBe(false);
     expect(calls).toEqual([]);
+  });
+
+  describe('game checks made during the wait (planner condition (a))', () => {
+    it('held, then sent with the server id once the player loads the rules (the singleton, end to end)', async () => {
+      const h = messageHandlerSingleton;
+      h.setEventBus(bus);
+      h._requestDataPackage = vi.fn();
+      h._heldGameChecks = [];
+      h.dispatcher = { publishToNextModule: vi.fn() };
+      handler = h; // play() drives `handler`
+      const r = room();
+      await play(r, { chosen: BAKING });
+      expect(h.getAwaitedRulesGame()).toBe(BAKING);
+
+      await handleUserLocationCheckForClient({ locationName: 'B', originator: 'FlashPanel', reportedByGame: true });
+      expect(sent('LocationChecks')).toEqual([]);
+      expect(h._heldGameChecks).toHaveLength(1);
+
+      // The player loads this room's rules (a Baking doc naming A/B/C): used as loaded, then the replay.
+      const doc = { ...readPreset(BAKING_SEED1_PATH), seed_name: ROOM_SEED };
+      loadInApp(doc, '1', 'userLoadedFile');
+      bus.publish('stateManager:rulesLoaded', { source: 'userLoadedFile' });
+      await flush(12);
+      expect(h.getAwaitedRulesGame()).toBe(null);
+      expect(text().some((m) => m.startsWith('Sending 1 check(s) the game made while this room\'s rules were loading: "B"'))).toBe(true);
+      expect(sent('LocationChecks')).toEqual([{ cmd: 'LocationChecks', locations: [9002] }]);
+      expect(h._heldGameChecks).toEqual([]);
+      h._cancelServerBuild();
+      h._cancelRulesWait();
+    });
+
+    it('a player disconnect drops them with a warning; a socket drop keeps them for the reconnect', () => {
+      const held = { eventData: { locationName: 'B' }, eventName: 'user:locationCheck', seedName: ROOM_SEED };
+      handler._heldGameChecks = [held];
+      bus.publish('connection:close', { requested: false });
+      expect(handler._heldGameChecks).toEqual([held]);
+      bus.publish('connection:close', { requested: true });
+      expect(handler._heldGameChecks).toEqual([]);
+      expect(text().at(-1)).toBe(
+        'Not sent: 1 check(s) the game made while this room\'s rules were pending ("B"); the player disconnected first.'
+      );
+    });
+
+    it("a RoomInfo of the same seed keeps them; another seed's drops them", async () => {
+      const held = { eventData: { locationName: 'B' }, eventName: 'user:locationCheck', seedName: ROOM_SEED };
+      handler._heldGameChecks = [held];
+      handler.clientSlotName = 'Baker';
+      handler.processMessage(room().roomInfo);
+      await flush();
+      expect(handler._heldGameChecks).toEqual([held]);
+      handler.processMessage({ ...room().roomInfo, seed_name: '99999999999999999999' });
+      await flush();
+      expect(handler._heldGameChecks).toEqual([]);
+      expect(text().some((m) => m.endsWith('("B"); the server is another room now.'))).toBe(true);
+    });
   });
 
   describe('rulesNeededMessage, per game', () => {
