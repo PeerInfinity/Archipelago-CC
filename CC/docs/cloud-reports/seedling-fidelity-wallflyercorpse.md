@@ -230,7 +230,7 @@ page solves; that is where the key moves the first answer):
 | `census-seedling-solver-surface --check` | GREEN, 375 rows (after `--write`) |
 | `census-seedling-constants --check` | PASS (0 new, 0 vanished) |
 | CI `JavaScript Unit Tests` at `95208a0f` (run 43755696138) | suite 27891 passed / **1 failed** (`lintGateLabels`: my witness label's typed counts) / 0 skipped; slow 437/437. Fixed by `f224c898` (`lintGateLabels` + the row green locally) |
-| CI `JavaScript Unit Tests` at the last code head `f224c898` | **pending when this report was committed**; read it with `node scripts/procgen/ci-vitest-summary.mjs f224c898 --wait` |
+| CI `JavaScript Unit Tests` at the last code head `f224c898` | run 43759586877: suite **27892 passed / 0 failed / 0 skipped**; slow battery 437/437 |
 
 `hammerWallFlyerGaps*` do not exist at this base (hammer's branch); they were run at the scratch merge. No pytest, no
 unfiltered vitest, no `standing-values --write`.
