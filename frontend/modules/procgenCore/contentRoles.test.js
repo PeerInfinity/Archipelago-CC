@@ -17,8 +17,9 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { CONCEPTS, ConceptContractError, assertRealisations, realisationsOf } from './concepts.js';
 import {
     ACCEPTS_FORMS, NEED_FIELDS, ROLE_FIELDS,
-    assertContentRoles, assertPresents, candidatesForRole, contentRolesOf, roleRefusal, rolesFilledBy,
+    assertContentRoles, assertPresents, candidatesForRole, contentRolesOf, resolveRole, roleRefusal, rolesFilledBy, textVariantKey,
 } from './contentRoles.js';
+import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { SUBSTRATE_LIBRARIES } from './substrateLibraries.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -188,15 +189,20 @@ describe('contentRolesOf — normalises, as realisationsOf does', () => {
 
 describe('roleRefusal — null when the concept fills the role, else the FIRST thing missing', () => {
     const r = roles();
-    const fit = {
+    const fit = Object.freeze({
         key: 'p:character/fit', pack: 'p', kind: 'character', name: 'Fit',
         look: { color: '#000000', symbol: 'F' }, art: 'p:character/fit',
         text: { greeting: 'p:fit/greeting', blocked: 'p:fit/blocked', passedWith: 'p:fit/passed' },
         presents: 'guardian',
-    };
-    it('a concept with everything fills the character and gate roles', () => {
-        expect(roleRefusal(r.character, fit)).toBeNull();
+    });
+    it('a concept with everything fills the gate role; without `presents` it fills the character role', () => {
         expect(roleRefusal(r.gate, fit)).toBeNull();
+        expect(roleRefusal(r.character, { ...fit, presents: undefined })).toBeNull();
+    });
+    it('⛓ S1: a concept that presents a mechanic never fills a KIND role (it is that mechanic\'s look)', () => {
+        expect(roleRefusal(r.character, fit)).toBe('"p:character/fit" presents "guardian", so it is that mechanic\'s look and fills no kind role');
+        // the kind check comes first: a presenter of the wrong kind is refused for its kind
+        expect(roleRefusal(r.info, fit)).toMatch(/is a character; the role accepts info/);
     });
     it.each([
         ['no concept', r.character, null, /no such pack concept/],
@@ -204,8 +210,8 @@ describe('roleRefusal — null when the concept fills the role, else the FIRST t
         ['not presenting an accepted concept', r.gate, { ...fit, presents: 'sword' }, /"p:character\/fit" does not present any of "guardian", "water"/],
         ['presenting nothing', r.gate, { ...fit, presents: undefined }, /does not present any of/],
         ['no look', r.gate, { ...fit, look: undefined }, /"p:character\/fit" has no `look`/],
-        ['no art', { ...r.character, needs: { art: true } }, { ...fit, art: undefined }, /"p:character\/fit" has no `art`/],
-        ['no text at all', r.character, { ...fit, text: undefined }, /has no text slot "greeting"/],
+        ['no art', { ...r.character, needs: { art: true } }, { ...fit, presents: undefined, art: undefined }, /"p:character\/fit" has no `art`/],
+        ['no text at all', r.character, { ...fit, presents: undefined, text: undefined }, /has no text slot "greeting"/],
         ['a missing text slot, named', r.gate, { ...fit, text: { blocked: 'p:fit/blocked' } }, /has no text slot "passedWith"/],
     ])('refuses %s', (_label, role, concept, re) => {
         expect(roleRefusal(role, concept)).toMatch(re);
@@ -216,7 +222,7 @@ describe('roleRefusal — null when the concept fills the role, else the FIRST t
     });
     it('a false need asks for nothing', () => {
         expect(roleRefusal({ ...r.character, needs: { look: false, art: false, text: ['greeting'] } },
-            { ...fit, look: undefined, art: undefined })).toBeNull();
+            { ...fit, presents: undefined, look: undefined, art: undefined })).toBeNull();
     });
 });
 
@@ -228,7 +234,7 @@ describe('a two-pack stack: the later pack\'s guardian presenter fills the gate 
         expect(candidatesForRole(e, 'gate', pc)).toEqual(['theme:character/the-gate']);
         expect(roleRefusal(e.contentRoles.gate, pc.get('base:character/half-gate'))).toBe('"base:character/half-gate" has no text slot "passedWith"');
         // the character role: every character with a greeting, in keys() order (stack order, then declaration order)
-        const greeters = pc.keys().filter((k) => pc.get(k).kind === 'character' && pc.get(k).text?.greeting);
+        const greeters = pc.keys().filter((k) => pc.get(k).kind === 'character' && pc.get(k).text?.greeting && !pc.get(k).presents);
         expect(candidatesForRole(e, 'character', pc)).toEqual(greeters);
         expect(candidatesForRole(e.contentRoles, 'info', pc)).toEqual(pc.ofKind('info'));
     });
@@ -252,6 +258,73 @@ describe('a two-pack stack: the later pack\'s guardian presenter fills the gate 
         const pc = await conceptsOf({ base: BASE });
         throwsNaming(() => candidatesForRole(double(), 'villain', pc), /no role "villain" \(declared: gate, character, info\)/);
         throwsNaming(() => candidatesForRole({ id: 'bare' }, 'gate', pc), /no role "gate" \(the entry declares none\)/);
+    });
+});
+
+/** A content set in memory: the stack's concepts, and a text library holding `strings` (keys of either pack). */
+async function setOf(manifests, strings) {
+    const stack = await stackOf(manifests);
+    const ids = stack.map((l) => l.id);
+    const text = createTextLibrary(ids.map((id) => ({
+        id,
+        layers: { text: { schema_version: 1, strings: Object.fromEntries(Object.entries(strings).filter(([k]) => k.startsWith(`${id}:`))) } },
+    })));
+    return { ids, concepts: createPackConcepts(stack), text };
+}
+
+describe('⛓ S1 resolveRole — the one shared resolver', () => {
+    const STRINGS = {
+        'base:keeper/greeting': 'Hello from the base.',
+        'base:sign/body': 'The sign says what signs say.',
+        'base:half-gate/blocked': 'half',
+        'theme:gate/blocked': 'Shut.',
+        'theme:gate/passed': 'Open.',
+        'theme:gate/hello': 'Hi.',
+    };
+    it('each candidate with its needed slots RESOLVED, latest pack first', async () => {
+        const set = await setOf({ base: BASE, theme: THEME }, STRINGS);
+        const got = resolveRole(double(), 'gate', set);
+        expect(got.map((c) => c.key)).toEqual(['theme:character/the-gate']);
+        expect(got[0].text).toEqual({ blocked: 'Shut.', passedWith: 'Open.' });
+        expect(got[0].concept).toBe(set.concepts.get('theme:character/the-gate'));
+        expect(resolveRole(double(), 'info', set)).toEqual([{
+            key: 'base:info/sign', concept: set.concepts.get('base:info/sign'), text: { body: STRINGS['base:sign/body'] },
+        }]);
+    });
+    it('a presenter fills no kind role: the theme\'s Gate (which has a greeting) is not a character', async () => {
+        const set = await setOf({ base: BASE, theme: THEME }, STRINGS);
+        expect(resolveRole(double(), 'character', set).map((c) => c.key)).toEqual(['base:character/keeper']);
+    });
+    it('a candidate whose key does not resolve falls through; none resolving ⇒ []', async () => {
+        const { 'base:sign/body': _gone, ...rest } = STRINGS;
+        const set = await setOf({ base: BASE, theme: THEME }, rest);
+        expect(candidatesForRole(double(), 'info', set.concepts)).toEqual(['base:info/sign']);
+        expect(resolveRole(double(), 'info', set)).toEqual([]);
+    });
+    it('the stack order decides: two packs filling one role, the later first; `presents` narrows', async () => {
+        const LATER = { schema_version: 1, concepts: { 'later:character/keeper': { kind: 'character', name: 'Later', text: { greeting: 'later:greeting' } } } };
+        const set = await setOf({ base: BASE, later: LATER }, { ...STRINGS, 'later:greeting': 'Later hello.' });
+        expect(resolveRole(double(), 'character', set).map((c) => c.key)).toEqual(['later:character/keeper', 'base:character/keeper']);
+        const both = await setOf({ base: BASE, theme: THEME }, STRINGS);
+        expect(resolveRole(double(), 'gate', both, { presents: 'water' })).toEqual([]);
+        expect(resolveRole(double(), 'gate', both, { presents: 'guardian' }).map((c) => c.key)).toEqual(['theme:character/the-gate']);
+    });
+    it('⛓ S2 `variant`: `<key>/<variant>` is asked first, then `<key>`; without a variant nothing changes', async () => {
+        const variantKey = textVariantKey('base:sign/body', 'maze');
+        expect(variantKey).toBe('base:sign/body/maze');
+        const set = await setOf({ base: BASE, theme: THEME }, { ...STRINGS, [variantKey]: 'The maze\'s own sign.' });
+        expect(resolveRole(double(), 'info', set, { variant: 'maze' })[0].text).toEqual({ body: 'The maze\'s own sign.' });
+        expect(resolveRole(double(), 'info', set)[0].text).toEqual({ body: STRINGS['base:sign/body'] });
+        // a variant nobody wrote falls back to the shared line
+        expect(resolveRole(double(), 'info', set, { variant: 'elsewhere' })[0].text).toEqual({ body: STRINGS['base:sign/body'] });
+        // the gate's two slots: one has a variant, the other falls back, per slot
+        const gateSet = await setOf({ base: BASE, theme: THEME }, { ...STRINGS, [textVariantKey('theme:gate/blocked', 'maze')]: 'Shut (maze).' });
+        expect(resolveRole(double(), 'gate', gateSet, { variant: 'maze' })[0].text).toEqual({ blocked: 'Shut (maze).', passedWith: 'Open.' });
+    });
+    it('no set ⇒ []; an undeclared role is refused by name', async () => {
+        expect(resolveRole(double(), 'gate', null)).toEqual([]);
+        const set = await setOf({ base: BASE }, STRINGS);
+        throwsNaming(() => resolveRole(double(), 'villain', set), /no role "villain"/);
     });
 });
 

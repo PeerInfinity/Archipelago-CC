@@ -99,7 +99,7 @@ describe('L39PHANTOM D1 — `spinnerRosterGone` (ON since the wave-38 joint flip
             expect(CONTACT_FIDELITY.spinnerRosterGone).toBe(true);
             // ⛓ FIRESPINNER `fireSpinnerArm` (wave 38's sibling) follows it; then wave 39's ROCKFIRE `fireRockArm`.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf('spinnerRosterGone') + 1)).toEqual(['fireSpinnerArm', 'fireRockArm', 'fireBreakArm', 'spinnerRemoveRead', 'fallRockHoldsButton']); // ⛓ wave 40: FIREBREAK `fireBreakArm`, FENCEPOST `spinnerRemoveRead`; wave 41: ROCKBUTTON `fallRockHoldsButton`
+            expect(keys.slice(keys.indexOf('spinnerRosterGone') + 1)).toEqual(['fireSpinnerArm', 'fireRockArm', 'fireBreakArm', 'spinnerRemoveRead', 'fallRockHoldsButton', 'corridorForecastMemo']); // ⛓ wave 40: FIREBREAK `fireBreakArm`, FENCEPOST `spinnerRemoveRead`; wave 41: ROCKBUTTON `fallRockHoldsButton`
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_SPINNER_ROSTER_GONE');
         });
 

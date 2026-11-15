@@ -51,13 +51,14 @@ export class ProofGraphState extends ProofBaseState {
    * @param {Object} slotData
    * @param {Object} [nameSubstitutions]
    * @param {Object} [options] - World options (forwarded to _parseProofStructure)
+   * @param {Set<string>|null} [docLocationNames] - The loaded document's location names (forwarded)
    */
-  loadFromSlotData(slotData, nameSubstitutions, options) {
+  loadFromSlotData(slotData, nameSubstitutions, options, docLocationNames = null) {
     this.correctEdges.clear();
     this.drawnEdges.clear();
     this.incorrectAttempts = 0;
 
-    const success = this._parseProofStructure(slotData, nameSubstitutions, options);
+    const success = this._parseProofStructure(slotData, nameSubstitutions, options, docLocationNames);
     if (!success) return false;
 
     // Build correct edges from parsed step dependencies (one per slot)

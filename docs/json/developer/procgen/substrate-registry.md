@@ -67,9 +67,18 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | Field | Type | Meaning |
 |-------|------|---------|
 | `compositeMap` | object (optional) | Declares that this substrate paints its own cells. If absent, the region is a generic box labelled with the substrate id. |
-| `compositeMap.drawRegion` | `(ctx, region, { offX, offY, regionSize, tilePx, colors })` | The painter, called once per placed region with the cell's canvas origin. Kept in its own module (`mazeRoom/mazeCompositeMap.js`, `textAdventureSubstrateWrapper/textAdventureCompositeMap.js`) so the library stays node-importable. |
+| `compositeMap.drawRegion` | `(ctx, region, { offX, offY, regionSize, tilePx, colors, source, requestRedraw })` | The painter, called once per placed region with the cell's canvas origin. `source` is the `{rules, playerId}` the grid was rebuilt from (or null); `requestRedraw` is the host's repaint (or null), for a painter whose content loads asynchronously. Kept in its own module (`mazeRoom/mazeCompositeMap.js`, `textAdventureSubstrateWrapper/textAdventureCompositeMap.js`, `flashPanel/seedlingCompositeMap.js`) so the library stays node-importable. |
+| `compositeMap.artwork` | boolean (optional) | `true` when the painter draws a picture of the substrate's own content rather than a schematic. The maps' **Substrate art** checkbox (`drawCompositeMap`'s `substrateArt: false`) skips these painters, so their cells get the generic box. `flash_seedling` and `flash_seedling_gen` declare it; maze and text adventure do not, so the checkbox leaves them alone. |
+| `compositeMap.locationTiles` | `(region, { rules, playerId }) → [{ location, x, y, kind }]` (optional) | Where each of the region's locations sits, in the substrate's own tiles. `kind` is `'item'` or `'event'`. A pure data hook for the Region Map panel. Seedling reads an item's tile from the payload's atlas (`locations[].tile`), an event's from its rules `obstacle` (pixels ÷ 16, same level only), and a generated room's from its payload's `locations[].cell`. |
+| `compositeMap.displayRegionOf` | `(regionName, sidecar) → string` (optional) | The display key a whole-level view groups the region under. Seedling answers the payload's `atlas_region`, so `level_7__r0c3` folds onto `level_7` by data, not by name; a generated room answers its own name. The key need not be a region of the rules: a level split into sub-regions has no `level_N` region. |
 
-`drawCompositeMap(canvas, grid, regionSize, { selection, tilePx, colors, registry })` in `procgenCore/compositeMapRenderer.js` draws empty and stub cells, borders, connections and the selection, and resolves every other cell through `substrateRegistry.get(region.render_hint ?? region.substrate)?.compositeMap?.drawRegion`. It also exports `resolveExitTilePositions`, `fitTextToWidth`, `canvasPointOf`, `cellAtPoint`, `TILE_PX` and `COLORS`.
+`drawCompositeMap(canvas, grid, regionSize, { selection, tilePx, colors, registry, substrateArt, source, onCellArtReady })` in `procgenCore/compositeMapRenderer.js` draws empty and stub cells, borders, connections and the selection, and resolves every other cell through `substrateRegistry.get(region.render_hint ?? region.substrate)?.compositeMap?.drawRegion`. `source` reaches every painter as `geom.source`, and `onCellArtReady` as `geom.requestRedraw`. With `substrateArt: false`, a painter declaring `artwork` is skipped for the generic box. The module also exports `resolveExitTilePositions`, `fitTextToWidth`, `canvasPointOf`, `cellAtPoint`, `compositeMapDrawsArtwork`, `substrateArtToggle` (the shared checkbox), `TILE_PX` and `COLORS`.
+
+**The Seedling cell** (`flashPanel/seedlingCompositeMap.js`, region-map step 1) draws the region's level as the JavaScript Seedling renderer draws it. That is the static room at tick 0, baked by `seedlingDemo/seedlingLevelBake.js`, the level-only baker that the maze's Seedling skin also wraps. The level is scaled to fit the cell, keeps its aspect ratio and is centred, and the exit squares are drawn on top.
+- **Which level.** One resolver reads the payload only. An atlas region's `level` indexes the slot's map document (`region_atlas[p].map_document`, else `seedling-map.json`). A generated room's `record` is embedded in its payload.
+- **Sub-regions.** A sub-region cell (`atlas_sub_region`) draws its whole level, with the tiles outside the sub-region dimmed (`atlases/seedling-subregion-partition.json`). One bake serves every sub-region of a level.
+- **The draw is synchronous; the bake is not.** On a cache miss the cell draws the generic box and queues the bake. Bakes run lazily, at most two in flight, each in its own macrotask. When a bake lands, the painter calls `requestRedraw`, coalesced to one call per host callback per animation frame. Without a callback the cell stays generic. A failed bake keeps the generic box and is not retried; `seedlingCompositeMapStats()` names the failures.
+- **Measured** (headless, 2026-11-14): `seedling_spiral_room` and `seedling_generated_room` take 1.3–1.4 s from map open to the last redraw on either panel; that includes the first load of the art and the map document. All 266 `seedling_playthrough` regions on a synthetic grid take 115 bakes (one per level, 0 failures) and 6.2 s.
 
 ### Loop mode
 
@@ -293,7 +302,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 102 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 105 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -320,7 +329,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `panelComponentType` | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 | `sharing` | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
-| `sidecarFields` | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 31 keys | 11 keys | 9 keys | 5 keys |
+| `sidecarFields` | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 32 keys | 11 keys | 9 keys | 6 keys |
 | `supportedFeatures` | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |
 
 **Playback**
@@ -340,8 +349,11 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
-| `compositeMap` | — | — | — | — | — | {drawRegion} | — | — | {drawRegion} |
-| `compositeMap.drawRegion` | — | — | — | — | — | fn | — | — | fn |
+| `compositeMap` | — | — | 4 keys | 4 keys | — | {drawRegion} | — | — | {drawRegion} |
+| `compositeMap.artwork` | — | — | yes | yes | — | — | — | — | — |
+| `compositeMap.displayRegionOf` | — | — | fn | fn | — | — | — | — | — |
+| `compositeMap.drawRegion` | — | — | fn | fn | — | fn | — | — | fn |
+| `compositeMap.locationTiles` | — | — | fn | fn | — | — | — | — | — |
 
 **Loop mode**
 
@@ -385,7 +397,7 @@ Groups are this document's own § headings, matched to a field by the section th
 |---|---|---|---|---|---|---|---|---|---|
 | `applyContentModules` | — | — | — | — | — | fn | — | — | — |
 | `conceptRealisations` | — | — | — | — | — | {guardian, swim, sword, water} | — | — | {guardian, swim, sword, water} |
-| `contentRoles` | — | — | — | — | — | {gate, item} | — | — | {gate, item, place} |
+| `contentRoles` | — | — | — | — | — | {character, gate, info, item, object} | — | — | {character, gate, info, item, object, place} |
 | `defaultContentPack` | — | — | — | — | — | maze | — | — | text-adventure |
 | `extractPathsAndObstacles` | — | — | — | fn | — | fn | — | — | fn |
 | `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |

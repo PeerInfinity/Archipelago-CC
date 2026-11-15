@@ -238,6 +238,19 @@ The boot is the spawn the still frame drew the player at. A SOLVED verdict stamp
 
 **Resize.** Width, height and anchor build one `resize` op. `resizeWarnings` previews what would be lost, without blocking; a crop that would drop a tile or entity is refused by the op and the refusal is printed verbatim.
 
+### The maze lab link
+
+**find this room in the MAZE LAB** (`#editMazeFind`, in the identity section of the EDIT arm) looks up the open room's converted maze room and shows a link that opens it in the maze lab in a new tab (`mazeRoom/lab.html?source=edit&preset=<id>&region=<region>`, the maze lab's own preset link), so the two views can be compared side by side. Nothing is fetched until the button is pressed; the first press reads `presets/preset_files.json` and the Seedling presets' rules files (about 2 MB), and after that the link follows the room through edits and newly opened rooms. `seedlingDemo/seedlingMazeLink.js` does the finding; it names no preset and no level:
+
+- **Which vanilla level the room is** is decided by content: the room's base record (as opened, before this session's edits) has the same `width`, `height`, `layers` and `entities` as one level of the map document, or as one level of the randomizer's delivered (patched) set. This covers an atlas base, a room of a loaded vanilla set (whose records carry no level number) and a pasted OEL of a vanilla room.
+- **Which maze rooms convert it**: every preset folder in the index with `has_procgen_data` for the map document's `game`; in its rules, every player whose `region_atlas.map_document` is the map this page reads; every `substrate: "maze"` sidecar whose `playable_payload.level` is that level. Each is checked through `mazeLabPreset.resolvePresetRegion`, so an offered link is one the maze lab opens. When a level has several maze rooms, a list offers them all, the preset that converts the most levels first.
+- **An edited room** links to its unedited original, and the note says how many edits the maze lab will not show. A level that the delivered set patches names the patches.
+- **No link**, with the reason on the line, for a generated room, a room that matches no vanilla level by content, and a level that no preset converts (level 81, which no door reaches).
+
+The reverse link is on the maze lab page: a converted room opened there by preset link shows **open level N in the Seedling editor ↗**, which opens `watch.html?source=edit&level=N` (*Opening a preset room* in the maze lab page).
+
+Tests: `seedlingMazeLink.test.js` and `check-seedling-editor-e1.mjs` claim 10.
+
 ### The set editor on this page
 
 A level set loaded in the LOAD box, or `#editLoadVanilla` (which derives the vanilla rooms as a `record` set from the map extract and manifest the page already holds, fetching nothing), opens a set session through `seedlingDemo/watchSetEditor.js`, the Seedling binding of `mountSetEditor` ([Procgen Editing Core](./editing-core.md#the-set-editor)). The room adapter's `levelSetSource` is `setSessionRoomSource(session)`. An overlay pasted into the box is recognised by shape: its `rooms` is an object keyed by index, where a set's is an array.

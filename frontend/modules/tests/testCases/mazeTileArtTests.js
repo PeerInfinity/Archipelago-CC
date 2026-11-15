@@ -25,7 +25,9 @@
  *       rasterised once into a sheet of its own), read off the canvas's `drawImage` calls;
  *     · a floor cell's centre pixel is the floor recipe's paper colour;
  *     · the water gate (the theme presents no water) keeps the maze default pack's look: its definition is that
- *       concept's name, colour and symbol, and its cell's fill pixel is that colour.
+ *       concept's name, colour and symbol, and its cell's fill pixel is that colour;
+ *     · ⛓ R5: a concept item the theme gives art (its concept's `art` key) is resolved by the panel to that key, drawn
+ *       from `"<theme>#<key>"`, and its cell shows the recipe's first mark; the water gate resolves no art.
  *   Pins of the recipes themselves (inside their box, states apart, every carried key through the seam) are in node:
  *   `mazeRoom/mazeMetaArt.test.js`.
  */
@@ -106,6 +108,8 @@ function cellWhere(panel, pred) {
     const w = panel.world;
     const busy = new Set([...(w.items?.keys() ?? []), ...(w.obstacles?.keys() ?? []), `${w.entrance.x},${w.entrance.y}`]);
     for (const e of w.exits.values()) busy.add(`${e.x},${e.y}`);
+    // ⛓ content sets S2: a region's thing is drawn over its floor cell (mazeThingOverlay)
+    for (const t of w.things ?? []) busy.add(`${t.x},${t.y}`);
     const p = panel.state?.player_pos;
     if (p) busy.add(`${p.x},${p.y}`);
     for (let y = 0; y < w.height; y++) {
@@ -244,6 +248,9 @@ async function metaTrialMazeTileArt(testController) {
 
     const fogWas = panel.fogEnabled;
     panel.fogEnabled = false;
+    // R5: the concept item is read off the canvas, so discovery mode must not hide its location.
+    const discoveryWas = panel.discoveryModeActive;
+    panel.discoveryModeActive = false;
     const realDrawImage = CanvasRenderingContext2D.prototype.drawImage;
     try {
         panel.render();
@@ -274,6 +281,21 @@ async function metaTrialMazeTileArt(testController) {
             testController.reportCondition(`the ${thing} was drawn from the "${theme}" pack's sheet ${ref}`, drawn.has(ref));
         }
 
+        // ⛓ R5: a concept ITEM the theme gives art is drawn from the theme's sheet; the water gate (no art) is not.
+        const themeArtOf = (mechanic) => Object.values(themePack.concepts).find((c) => c.presents === mechanic && c.art)?.art ?? null;
+        const conceptItems = [...panel.world.items].map(([cell, id]) => ({ cell, id, concept: panel.world.itemLib?.[id]?.concept }))
+            .filter((it) => it.concept && themeArtOf(it.concept));
+        testController.reportCondition(`⛓ premise: ${waterRegion} holds a concept item the "${theme}" theme gives art (${conceptItems.map((it) => it.id).join(', ')})`,
+            conceptItems.length > 0);
+        for (const it of conceptItems) {
+            testController.assertEqual(`the panel resolved ${it.concept}'s item art to the theme's key`,
+                themeArtOf(it.concept), status?.conceptArt?.item?.[it.concept]?.key ?? null);
+            const ref = `${theme}#${themeArtOf(it.concept)}`;
+            testController.reportCondition(`the ${it.id} item was drawn from the "${theme}" pack's sheet ${ref}`, drawn.has(ref));
+        }
+        testController.reportCondition(`the water gate has no concept art (the "${theme}" theme presents no water)`,
+            !status?.conceptArt?.gate?.water);
+
         const canvas = panel.rootElement?.querySelector('.maze-room-canvas');
         testController.reportCondition('the canvas is drawn', !!canvas);
         if (!canvas) return testController.getOverallResult();
@@ -288,6 +310,14 @@ async function metaTrialMazeTileArt(testController) {
         if (floor) {
             testController.assertEqual(`a floor cell's centre is the "${theme}" floor recipe's fill ${paper}`,
                 JSON.stringify(hexRgb(paper)), JSON.stringify(pixel(floor.x * px + px / 2, floor.y * px + px / 2)));
+        }
+        // ⛓ R5: a concept item's cell shows its recipe's first mark (read off the recipe: a circle's centre, its fill).
+        for (const it of conceptItems) {
+            const first = shapes[themeArtOf(it.concept)]?.draw?.[0];
+            if (!first?.circle || !first.fill) continue;
+            const [ix, iy] = it.cell.split(',').map(Number);
+            testController.assertEqual(`${it.id}'s cell shows its "${theme}" recipe's ${first.fill} at the first mark's centre`,
+                JSON.stringify(hexRgb(first.fill)), JSON.stringify(pixel(ix * px + first.circle[0], iy * px + first.circle[1])));
         }
 
         // The water gate keeps the maze default pack's look.
@@ -306,6 +336,7 @@ async function metaTrialMazeTileArt(testController) {
     } finally {
         CanvasRenderingContext2D.prototype.drawImage = realDrawImage;
         panel.fogEnabled = fogWas;
+        panel.discoveryModeActive = discoveryWas;
         panel.render();
     }
     return testController.getOverallResult();
@@ -318,7 +349,8 @@ registerTest({
         + 'and lets the panel load the art of the stack the document records. Asserts the stack is the maze default pack '
         + 'then the theme, every thing the theme\'s art manifest carries is keyed by it, a repaint draws the floor, wall '
         + 'and player from "<theme>#<key>" sheets, a floor pixel is the recipe\'s paper colour, and the water gate is the '
-        + 'maze default pack\'s water in name, colour, symbol and pixel.',
+        + 'maze default pack\'s water in name, colour, symbol and pixel (R5: and a concept item the theme gives art is drawn from '
+        + 'its "<theme>#<key>" sheet, while the water gate resolves no art).',
     testFunction: metaTrialMazeTileArt,
     category: 'Maze tile art',
     enabled: false, // off by default — runs only in the test-substrates mode

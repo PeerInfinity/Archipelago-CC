@@ -439,12 +439,24 @@
   <!-- ⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK? See mazeLabView.stamp. -->
   <div id="sourceStamp" class="note"></div>
   <div id="identity"></div>
+  <!-- ⛓ MAZE SEEDLING LINK: a room converted from a Seedling level opens that level in the Seedling editor (new tab);
+       hidden for every other room, and a converted room that cannot link says why. See mazeSeedlingLink.js. -->
+  <div id="labSeedlingLine" hidden><a id="labSeedlingOpen" target="_blank" rel="noopener"></a>
+    <span id="labSeedlingNote" class="note"></span></div>
   <div id="status">loading…</div>
   <div id="detail"></div>
 </header>
 <main>
   <div id="stage">
     <canvas id="canvas" width="220" height="220"></canvas>
+    <!-- ⛓⛓ MAZE LINK WIRES (step 3): the room's button → door/trap/pulser wires, drawn over the room by the editor
+         tool's overlay (EDIT, or an open SET room). Default ON, as the Seedling editor's links toggle. A highlighted X
+         marks a DANGLING member (a button wired to nothing in this room); the note names each one. Viewing only: the
+         toggle writes nothing. Not drawn: block ↔ button and key ↔ door (rules, not wires). -->
+    <div id="labLinkLine" class="line" hidden>
+      <label title="draw each token wire (presser → responder) over the room"><input id="labShowLinks" type="checkbox" checked> links</label>
+      <span id="labLinkNote" class="note"></span>
+    </div>
     <!-- ⛓⛓⛓ WHERE THE LEVEL WOULD BE. A refused area graph — or a refused
          `requires` directive — prints the module's OWN reason here, VERBATIM,
          and a refused DIRECTIVE draws no level at all: a run that did not
@@ -926,6 +938,15 @@
         <button id="labDownload">Download</button>
         <button id="labLoad">Load from box</button>
         <label>Upload <input id="labUpload" type="file" accept=".json,application/json"></label>
+      </div>
+      <!-- ⛓ MAZE CONVERTED LINK — the URL's own route (`?preset=` + `?region=`), typed: a committed preset's
+           maze room by name. A region of a shared level world opens the room that lists it. -->
+      <div class="line">
+        <label for="labPresetName">open a preset room: preset</label>
+        <input id="labPresetName" size="26" placeholder="preset id" spellcheck="false">
+        <label for="labPresetRegion">region</label>
+        <input id="labPresetRegion" size="18" placeholder="region name" spellcheck="false">
+        <button id="labPresetOpen">Open</button>
       </div>
       <textarea id="labText" class="box" rows="10" spellcheck="false"></textarea>
     </details>

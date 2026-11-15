@@ -25,6 +25,8 @@ import {
     customExitMoveMessage,
     customExitInaccessibleMessage,
     composeProse,
+    exitLabel,
+    thingLines,
 } from './templating.js';
 
 describe('processMessageTemplate', () => {
@@ -237,5 +239,24 @@ describe('composeProse — payload prose, then the per-game file, then the gener
         expect(customRegionEnterMessage(doc, 'Hall')).toBe('PAYLOAD enter Hall');
         expect(file).toEqual(FILE);
         expect(prose.exits).toEqual({ exit_0: { moveMessage: 'P move' } });
+    });
+});
+
+// ⛓ CONTENT SETS S1
+describe('S1 exitLabel / thingLines', () => {
+    it('an exit is labelled by the target it is handed (a place name, else the region id)', () => {
+        expect(exitLabel('exit', 'The Stopover')).toBe('exit (to The Stopover)');
+        expect(exitLabel('exit', 'region_2_3')).toBe('exit (to region_2_3)');
+    });
+    it('a character: description, its line, its information', () => {
+        expect(thingLines({
+            kind: 'character', name: 'A <b>', description: 'Desc.', says: 'Hi.',
+            info: { concept: 'p:info/x', name: 'Note & co', body: 'Body.' },
+        })).toEqual(['Desc.', 'A &lt;b&gt; says: Hi.', 'Note &amp; co: Body.']);
+    });
+    it('an object says nothing of its own; information alone shows only itself; an empty thing is named', () => {
+        expect(thingLines({ kind: 'object', name: 'Ledger', description: 'A ledger.' })).toEqual(['A ledger.']);
+        expect(thingLines({ kind: 'info', name: 'Rule', description: 'ignored', info: { name: 'Rule', body: 'B.' } })).toEqual(['Rule: B.']);
+        expect(thingLines({ kind: 'object', name: 'Ledger' })).toEqual(['You see Ledger.']);
     });
 });

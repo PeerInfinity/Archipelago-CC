@@ -1,0 +1,103 @@
+memo answers differ on []
+ON total s 219.251 memo 189.411
+  level_22 <- in_L21_80_160 -> exit:out_teleporter_0_128 10455 -> 4658
+  level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192 13782 -> 7206
+  level_22 <- in_L25_144_32 -> exit:out_teleporter_96_0 5328 -> 3823
+  level_22 <- in_L25_144_32 -> exit:out_teleporter_192_64 16567 -> 9561
+  level_22 <- in_L29_0_224 -> exit:out_teleporter_0_128 33154 -> 15688
+  level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192 13715 -> 7138
+  level_22 <- in_L30_64_0 -> exit:out_teleporter_96_0 3899 -> 2323
+  level_22 <- in_L30_64_0 -> exit:out_teleporter_192_64 3668 -> 2939
+  level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96 10184 -> 9069
+  level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128 4765 -> 4379
+  level_25 <- in_L26_144_32 -> exit:out_teleporter_144_32 5735 -> 4415
+  level_25 <- in_L26_144_32 -> location:Level 025 - Chest 4291 -> 3756
+  level_25 <- in_L28_96_0 -> exit:out_teleporter_0_96 18341 -> 19300
+  level_27 <- in_L28_128_304 -> exit:out_teleporter_32_0 4718 -> 4524
+  level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0 14616 -> 16198
+  level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0 12214 -> 13812
+  level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304 4904 -> 7858
+  level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304 3009 -> 5242
+  level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48 11785 -> 14548
+  level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144 14562 -> 19713
+--- budgeted (640/85) OFF vs ON vs unbudgeted
+* level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192
+   OFF-b done 120t h0 d:ok/f:ok
+   ON-b  done 134t h0 d:refusal/f:ok
+   ON-u  done 134t h0 d:refusal/f:ok
+* level_22 <- in_L25_144_32 -> exit:out_teleporter_96_0
+   OFF-b done 112t h0 d:refusal/f:ok
+   ON-b  done 132t h0 d:refusal/f:ok
+   ON-u  done 132t h0 d:refusal/f:ok
+* level_22 <- in_L25_144_32 -> exit:out_teleporter_192_64
+   OFF-b done 229t h1 d:refusal/f:ok
+   ON-b  done 207t h0 d:refusal/f:ok
+   ON-u  done 207t h0 d:refusal/f:ok
+* level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192
+   OFF-b done 103t h0 d:ok/f:ok
+   ON-b  done 128t h0 d:refusal/f:ok
+   ON-u  done 128t h0 d:refusal/f:ok
+* level_22 <- in_L30_64_0 -> exit:out_teleporter_96_0
+   OFF-b done 116t h0 d:refusal/f:ok
+   ON-b  done 138t h0 d:refusal/f:ok
+   ON-u  done 138t h0 d:refusal/f:ok
+* level_22 <- in_L30_64_0 -> exit:out_teleporter_192_64
+   OFF-b done 108t h0 d:refusal/f:ok
+   ON-b  done 120t h0 d:refusal/f:ok
+   ON-u  done 120t h0 d:refusal/f:ok
+* level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96
+   OFF-b done 182t h1 d:ok/f:ok
+   ON-b  done 156t h0 d:refusal/f:ok
+   ON-u  done 156t h0 d:refusal/f:ok
+* level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128
+   OFF-b done 106t h0 d:ok/f:ok
+   ON-b  done 109t h0 d:refusal/f:ok
+   ON-u  done 109t h0 d:refusal/f:ok
+* level_25 <- in_L26_144_32 -> exit:out_teleporter_144_32
+   OFF-b done 135t h0 d:ok/f:ok
+   ON-b  done 150t h0 d:refusal/f:ok
+   ON-u  done 150t h0 d:refusal/f:ok
+* level_25 <- in_L26_144_32 -> location:Level 025 - Chest
+   OFF-b done 128t h1 d:ok/f:ok
+   ON-b  done 110t h0 d:refusal/f:ok
+   ON-u  done 110t h0 d:refusal/f:ok
+* level_25 <- in_L28_96_0 -> exit:out_teleporter_0_96
+   OFF-b done 97t h0 d:ok/f:ok
+   ON-b  done 99t h0 d:refusal/f:ok
+   ON-u  done 99t h0 d:refusal/f:ok
+* level_27 <- in_L26_64_304 -> exit:out_teleporter_168_16
+   OFF-b done 74t h0 d:refusal/f:ok
+   ON-b  done 82t h0 d:refusal/f:ok
+   ON-u  done 82t h0 d:refusal/f:ok
+* level_27 <- in_L28_128_304 -> exit:out_teleporter_32_0
+   OFF-b done 126t h1 d:ok/f:ok
+   ON-b  REF solverBot(wasm-arrival-solve) reach-exit (32,0)->L26: the combat ladde
+   ON-u  REF solverBot(wasm-arrival-solve) reach-exit (32,0)->L26: the combat ladde
+* level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
+   OFF-b done 58t h0 d:ok/f:ok
+   ON-b  done 65t h0 d:ok/f:ok
+   ON-u  done 65t h0 d:ok/f:ok
+* level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0
+   OFF-b done 476t h2 d:refusal/f:ok
+   ON-b  REF solverBot(wasm-arrival-solve) reach-exit (32,0)->L87: the combat ladde
+   ON-u  REF solverBot(wasm-arrival-solve) reach-exit (32,0)->L87: the combat ladde
+* level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0
+   OFF-b done 379t h2 d:refusal/f:ok
+   ON-b  REF solverBot(wasm-arrival-solve) reach-exit (192,0)->L87: the combat ladd
+   ON-u  REF solverBot(wasm-arrival-solve) reach-exit (192,0)->L87: the combat ladd
+* level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304
+   OFF-b REF solverBot(wasm-arrival-solve) reach-exit (96,304)->L12: the combat lad
+   ON-b  done 192t h0 d:refusal/f:ok
+   ON-u  done 192t h0 d:refusal/f:ok
+* level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304
+   OFF-b done 213t h1 d:refusal/f:ok
+   ON-b  done 142t h0 d:refusal/f:ok
+   ON-u  done 142t h0 d:refusal/f:ok
+* level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48
+   OFF-b REF solverBot(wasm-arrival-solve) reach-exit (240,48)->L92: the combat lad
+   ON-b  REF solverBot(wasm-arrival-solve) reach-exit (240,48)->L92: the combat lad
+   ON-u  REF solverBot(wasm-arrival-solve) reach-exit (240,48)->L92: the combat lad
+* level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144
+   OFF-b REF solverBot(wasm-arrival-solve) reach-exit (16,144)->L89: the combat lad
+   ON-b  REF solverBot(wasm-arrival-solve) reach-exit (16,144)->L89: the combat lad
+   ON-u  REF solverBot(wasm-arrival-solve) reach-exit (16,144)->L89: the combat lad

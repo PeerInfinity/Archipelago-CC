@@ -44,7 +44,51 @@ A loaded payload is taken as it stands: it is its own base with no edit list, si
 | A sidecar's bare `playable_payload`, or a `generate-maze-level --json` level | the document itself. A converted room's `level` field is its Seedling level number, not a level object. |
 | A sidecar with no room, `{substrate: "maze", shared_world: "<level world>"}` | none: it is a region of a shared level world, and the refusal names the world whose sidecar carries the room. |
 
-A converted room keeps the entity fields only the engine reads (arrow traps, entry gates, block sinks, block kinds, pulls, pulsers). When a payload carries any of them, `procgenMaze.deserializeMazeLevel` reads them through the engine's own `deserializeMazeWorld`; a payload with none takes the old path unchanged. The save writes them back through `serializeMazeEntities`, so save → load → save is a fixed point for every room of `seedling_playthrough_maze` (`mazeConvertedLoad.test.js`). `obstacleLib` entries ride through as they are. The room draws with its traps; the lab draws no wires between a button and what it opens.
+A converted room keeps the entity fields only the engine reads (arrow traps, entry gates, block sinks, block kinds, pulls, pulsers). When a payload carries any of them, `procgenMaze.deserializeMazeLevel` reads them through the engine's own `deserializeMazeWorld`; a payload with none takes the old path unchanged. The save writes them back through `serializeMazeEntities`, so save → load → save is a fixed point for every room of `seedling_playthrough_maze` (`mazeConvertedLoad.test.js`). `obstacleLib` entries ride through as they are. The room draws with its traps, and its wires are drawn over it (see The link wires, below).
+
+### Opening a preset room
+
+`lab.html?source=edit&preset=<preset id>&region=<region name>` opens one room of a committed preset. `mazeLabPreset.openPresetRegion` fetches `presets/preset_files.json`, then the preset's rules file, picks `preset_sidecars[player][region]` and hands it to `loadPayload`, so the room arrives as LOAD would give it (traps included). The same route is in the save/load area: type a preset and a region and press **Open**.
+
+- `?preset=` is a key of `preset_files.json`. A preset with several folders is named `<id>/<folder>`. The folder's rules file is its one `*_rules.json`; a per-player `_P<n>_rules.json` slice is not it.
+- `?region=` is a region of exactly one player's `preset_sidecars`. A region with a room (`playable_payload`) opens that room.
+- A region with no room of its own (`{substrate: "maze", shared_world: "<level world>"}`) opens the one room whose `playable_payload.shared_world.regions` lists it, and the status line names the region, its world and the room. In `seedling_playthrough_maze` every one of those regions is listed by exactly one room.
+- Refused by name on the status line, with no level drawn: a preset or folder the index does not have, a folder without exactly one rules file, a preset with no `preset_sidecars`, an unknown region, a region in two players' sidecars, a sidecar of another substrate, a room-less region listed by no room or by several, and a fetch that fails (naming the document).
+
+The lab names no preset: everything is read off the two documents (`mazeConvertedLink.test.js`; `check-maze-lab` CLAIM 24).
+
+The Seedling editor builds these links for the room it holds (*The maze lab link* in the Seedling editor page); nothing in the lab changes for them.
+
+**Back to the Seedling editor.** A room opened this way that was converted from a Seedling level shows, under the identity line, **open level N in the Seedling editor ↗**: a new-tab link to `seedlingDemo/watch.html?source=edit&level=N`, the Seedling editor's own launch URL. `mazeRoom/mazeSeedlingLink.js` decides it from the room's own documents and names no preset: the room's `playable_payload.level` is an integer, and its preset's `region_atlas[player].map_document` is the map the Seedling editor reads. The rules are the ones the link already fetched, so the link costs no request.
+
+- A room-less region opens its shared world's room, so the link names that room's level (the whole level), and the note says so.
+- A level split across several maze rooms (level 94 has 2 in `seedling_playthrough_maze`; level 0 has 6 in `seedling_atlas_maze`): every one links to the same level, and the note says how many share it.
+- An edited room still links, to the ORIGINAL level; the note says the maze edits are not carried over.
+- A pasted sidecar (LOAD) carries its level number but not its preset's rules, so it shows the reason instead of a link. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing.
+
+All 126 converted rooms link (116 in `seedling_playthrough_maze`, 10 in `seedling_atlas_maze`), and every level they name is a level of the Seedling map (`mazeSeedlingLink.test.js`; `check-maze-lab` CLAIM 26).
+
+### The link wires
+
+In the `edit` mode (and on a room opened in the set mode) the editor overlay draws the room's token wires: an arrow from each presser to each responder of the same token. `mazeRoom/mazeLinks.js` reads them from the room, using the token fields and nothing else:
+
+| Role | Entity | Field |
+|---|---|---|
+| Presser | a button (a latching button when its entry has `latch`) | `buttonLib[id].holds` |
+| Presser | a rope or light pole | `obstacleLib[id].activates` |
+| Responder | a door | a one-item `clear_set` naming the token, or a `clear_rule` that is exactly `Has(token)` |
+| Responder | an arrow trap | `trapLib[id].active` |
+| Responder | a pulser | `pulsers[].token` |
+
+A token is a group only when a presser, a trap or a pulser names it. A rope or pole is its own presser and responder, so it gets no arrow to itself. A dangling member has a highlighted X over its cell, labelled with its token: a presser whose token drives nothing in this room, or a responder nothing in this room presses. The line under the canvas counts the groups and names every dangling token. The **links** checkbox beside it (on by default, like the Seedling editor's) hides the wires. It writes nothing: the edit list and the save box are the same with the wires on or off.
+
+The overlay does not draw these, because they are rules, not wires:
+
+- block ↔ button: any block on any button presses it;
+- key ↔ door: a key opens every door of its colour;
+- cross-room events: a press in one room that opens something in another is an AP event item, not a wire.
+
+Only the Seedling-converted preset `seedling_playthrough_maze` has wires: 33 groups with 76 members over its 116 rooms, and 13 of those groups are dangling. Their tokens drive things the maze has no counterpart for. Generated and hand-made mazes have none, and their line says so. A room-less region opens its whole level world's room, so the overlay shows the wiring of every region in that world (`mazeLinks.test.js`; `check-maze-lab` CLAIM 25).
 
 ### The edit tools
 
@@ -111,6 +155,7 @@ What the maze-specific parameters are for:
 | `?elements=` | The pass-1 element ([The first element](./maze.md#the-first-element)). Its writer keeps a named parameter even at its default, since named and drawn parameters are different runs. `?seed=2&width=15&height=15&skeleton=rooms&areas=1&elements=guard;len=2;turns=1&count=2&run=1` |
 | `?library=` / `?world=` | Open a region library or a world bundle in the set mode. |
 | `?room=<n>` | Open room *n* of the held library (navigation, not a load); copied forward so a reload re-opens it. |
+| `?preset=<id>&region=<name>` | Open one room of a committed preset (see *Opening a preset room* above). Both or neither, and never with `?gen=`. Kept on the bar while that room is on screen, so a reload re-opens it; deleted once a press or a LOAD replaces it. |
 
 ## `drawWorld`'s `view` contract
 

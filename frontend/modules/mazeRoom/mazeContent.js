@@ -18,16 +18,26 @@
  * changes them. Which fields a role writes is behaviour (⚖ Q6) and is code: `ROLE_WRITES`.
  */
 
-import { candidatesForRole } from '../procgenCore/contentRoles.js';
+import { resolveRole } from '../procgenCore/contentRoles.js';
 import { isConceptGate } from './mazeConcepts.js';
 
 /** The pack whose looks a world gets when it names no theme (the entry's `defaultContentPack`). */
 export const MAZE_DEFAULT_CONTENT_PACK = 'maze';
 
+/** ⛓ CONTENT SETS S2 — a character's text slot, baked into a thing as the field of the same name. */
+export const MAZE_CHARACTER_TEXT_SLOTS = Object.freeze(['says']);
+/** ⛓ CONTENT SETS S2 — a piece of information's text slot, baked into a thing's `info` as the field of the same name. */
+export const MAZE_INFO_TEXT_SLOTS = Object.freeze(['body']);
+
 /**
  * **WHAT THE MAZE CAN SHOW FROM A PACK** (the entry's `contentRoles`; contract `procgenCore/contentRoles.js`). Two
  * roles, split by what the pass WRITES (`ROLE_WRITES`): a gate takes the concept's name and look; an item takes its
  * look only, because an item row's name is the AP item name, which is logic.
+ *
+ * ⛓ CONTENT SETS S2 — three more: `character`, `object` and `info`, a region's THING (`mazeThings.js`): not an AP
+ * check, look-only (⚖ the user, 2026-11-14), standing on a free floor cell. A holder (a character or an object) needs
+ * a `look`, the colour and symbol it is drawn in without art; a character also needs its `says` line, a piece of
+ * information its `body`. Text is resolved with the variant `maze` (`resolveRole`'s `variant`).
  */
 export const MAZE_CONTENT_ROLES = Object.freeze({
     gate: Object.freeze({
@@ -39,6 +49,21 @@ export const MAZE_CONTENT_ROLES = Object.freeze({
         accepts: Object.freeze({ presents: Object.freeze(['sword', 'swim']) }),
         needs: Object.freeze({ look: true }),
         why: 'An item concept the world names is drawn on its tile in the concept\'s colour and symbol.',
+    }),
+    character: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['character']) }),
+        needs: Object.freeze({ look: true, text: MAZE_CHARACTER_TEXT_SLOTS }),
+        why: 'Someone standing on a floor cell; walking onto it shows what they say, and the information they hold.',
+    }),
+    object: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['object']) }),
+        needs: Object.freeze({ look: true }),
+        why: 'Something on a floor cell; walking onto it shows its description, and the information it holds.',
+    }),
+    info: Object.freeze({
+        accepts: Object.freeze({ kinds: Object.freeze(['info']) }),
+        needs: Object.freeze({ text: MAZE_INFO_TEXT_SLOTS }),
+        why: 'A piece of information on a floor cell, carried by a character or an object, or on a sign of its own.',
     }),
 });
 
@@ -58,12 +83,12 @@ export const MAZE_CONTENT_REFUSALS = Object.freeze({
 });
 
 /**
- * **A MECHANIC'S LOOK, FROM THE WORLD'S CONTENT SET.** The pack concepts that fill `roleId` (`candidatesForRole`:
- * right `presents`, a `look`) and present `conceptId`, latest pack in the stack first; the first gives
- * `{name, color, symbol}`. So a later pack that presents the mechanic with a look wins, and one that presents it
- * WITHOUT a look (the text adventure's default pack does) falls through — in the end to the maze's own. ⚠ Not
- * `concepts.presenting(id)` alone: that returns the last presenter whether or not it fills the role. `null` when no
- * pack in the set fills the role for it.
+ * **A MECHANIC'S LOOK, FROM THE WORLD'S CONTENT SET.** The pack concepts that fill `roleId` (right `presents`, a
+ * `look`) and present `conceptId`, latest pack in the stack first — ⛓ S2: the contract's `resolveRole`, the one
+ * shared resolver; the first gives `{name, color, symbol}`. So a later pack that presents the mechanic with a look
+ * wins, and one that presents it WITHOUT a look (the text adventure's default pack does) falls through — in the end
+ * to the maze's own. ⚠ Not `concepts.presenting(id)` alone: that returns the last presenter whether or not it fills
+ * the role. `null` when no pack in the set fills the role for it.
  *
  * @param {{ids: string[], concepts: object}} contentSet
  * @param {string} roleId a role of `MAZE_CONTENT_ROLES`
@@ -71,13 +96,9 @@ export const MAZE_CONTENT_REFUSALS = Object.freeze({
  * @returns {{name: string, color: string, symbol: string}|null}
  */
 export function presentedLook(contentSet, roleId, conceptId) {
-    const { ids, concepts } = contentSet;
-    const rank = (key) => ids.indexOf(concepts.get(key).pack);
-    const key = candidatesForRole(MAZE_CONTENT_ROLES, roleId, concepts)
-        .filter((k) => concepts.get(k).presents === conceptId)
-        .sort((a, b) => rank(b) - rank(a))[0];
-    if (!key) return null;
-    const c = concepts.get(key);
+    const best = resolveRole(MAZE_CONTENT_ROLES, roleId, contentSet, { presents: conceptId })[0];
+    if (!best) return null;
+    const c = best.concept;
     return { name: c.name, color: c.look.color, symbol: c.look.symbol };
 }
 

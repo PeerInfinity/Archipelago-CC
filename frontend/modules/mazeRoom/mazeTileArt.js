@@ -14,6 +14,11 @@
  *     available" is every case — no art loaded, the key absent from the stack, the sheet failed to decode — and none
  *     of them is a refusal or a blank tile (⚖ the user: "If an image isn't available, then it should fall back to
  *     the behavior if there is no library").
+ *   · `drawConceptArt` — A CONCEPT GATE'S OR ITEM'S ART (content sets R5, ⚖ the user 2026-11-14): a gate or item row
+ *     names the mechanic it realises (`"concept": "water"`); at play the stack's `concepts` layer says which pack
+ *     concept presents that mechanic for the row's role and carries an `art` key (`conceptArtKeys`), and the seam
+ *     draws that key — or nothing, and the painter draws the row's baked colour and symbol, as before. Nothing is
+ *     baked (⚖ Q8: art resolves by key at play), so no world document moves.
  *   · `loadMazeTileArt` — THE PLAY-TIME LOAD: the ART layer of a world's content stack (`loadPackStack(ids,
  *     { only: ['art'] })`, as `mazeSeedlingSkin.loadSeedlingArt` loads `graphics.seedling`), the library, the
  *     decoded sheets. A later pack in the stack overriding `maze:tile/wall` wins: that is `mergeKeyed`, the pack
@@ -32,6 +37,7 @@
  */
 import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
+import { createPackConcepts } from '../packConcepts/packConcepts.js';
 
 /** The art keys' namespace: the maze's own, like `seedling:*` is the Seedling pack's. */
 export const MAZE_ART_NAMESPACE = 'maze';
@@ -61,6 +67,9 @@ export const MAZE_ART_KEYS = Object.freeze({
     buttonDown: Object.freeze({ key: 'maze:object/button-down', colors: ['button'], what: 'a button, DOWN (held by the player, a block or a latch)' }),
     pulser: Object.freeze({ key: 'maze:object/pulser', colors: ['pulser'], what: 'a pulser\'s body on its wall cell (its ring stays the armed/silent signal)' }),
     pull: Object.freeze({ key: 'maze:object/pull', colors: ['pullTrap', 'pullMouth'], what: 'a pull\'s trap cell (its disc stays the live/inert tint)' }),
+    // ⛓ CONTENT SETS S2 — a region's thing (`mazeThings.js`) that is a piece of information no character or object
+    // holds; drawn by `mazeThingOverlay.js`, beside `drawWorld`.
+    sign: Object.freeze({ key: 'maze:object/sign', colors: ['sign'], what: 'a piece of information on a floor cell that no character or object holds (a sign)' }),
 });
 
 /** The thing names (`MAZE_ART_KEYS`' own keys) — what `drawTileArt` accepts. */
@@ -85,6 +94,12 @@ export function tileArtRefusal(tileArt) {
         return 'tileArt.art must be an art library (artLibrary.createArtLibrary)';
     }
     if (!(tileArt.images instanceof Map)) return 'tileArt.images must be a Map of sheetRef → decoded image (artLibrary.loadSheetImages)';
+    if (tileArt.conceptArt !== undefined && (!tileArt.conceptArt || typeof tileArt.conceptArt !== 'object' || Array.isArray(tileArt.conceptArt))) {
+        return 'tileArt.conceptArt must be { role: { mechanic: { key } } } (mazeTileArt.conceptArtKeys)';
+    }
+    if (tileArt.thingArt !== undefined && (!tileArt.thingArt || typeof tileArt.thingArt !== 'object' || Array.isArray(tileArt.thingArt))) {
+        return 'tileArt.thingArt must be { conceptKey: { key } } (mazeTileArt.thingArtKeys)';
+    }
     return null;
 }
 
@@ -125,28 +140,132 @@ export function keyedThings(art) {
 }
 
 /**
+ * ⛓ CONTENT SETS R5 — **WHICH ART KEY A CONCEPT GATE OR ITEM DRAWS, PER ROLE AND MECHANIC.** For each role of
+ * `contentRoles` (the maze entry's, `mazeContent.MAZE_CONTENT_ROLES`) and each mechanic it accepts (`accepts.presents`):
+ * the pack concepts that present that mechanic AND carry an `art` key, the LATEST pack in `ids` first — the same
+ * ranking `mazeContent.presentedLook` uses for the baked look. A role's `needs` are NOT asked: they say what a concept
+ * must carry to be BAKED (a `look`), and art is not baked, so a theme can give a mechanic a picture without a look of
+ * its own (its colour and symbol then still come from an earlier pack, as before).
+ *
+ * ⚠ The filter is written here, not `contentRoles.candidatesForRole`: that module imports `procgenCore/concepts.js`,
+ * which is in the engine closure, and this file must import nothing from it (`mazeTileArt.test.js`).
+ *
+ * Returns `{ role: { mechanic: { key, concept, pack } } }` (frozen): `key` the art key, `concept` the pack concept
+ * that named it, `pack` that concept's pack. A mechanic no pack gives art is absent. The key is NOT checked against
+ * the art library here: one the stack's art does not resolve draws the default way (`conceptArtFrame`).
+ */
+export function conceptArtKeys(contentRoles, packConcepts, ids) {
+    const out = {};
+    const all = packConcepts.keys().map((k) => packConcepts.get(k));
+    const rank = (c) => ids.indexOf(c.pack);
+    for (const [roleId, role] of Object.entries(contentRoles ?? {})) {
+        const byMechanic = {};
+        for (const mechanic of role?.accepts?.presents ?? []) {
+            const best = all.filter((c) => c.presents === mechanic && typeof c.art === 'string')
+                .sort((a, b) => rank(b) - rank(a))[0];
+            if (best) byMechanic[mechanic] = Object.freeze({ key: best.art, concept: best.key, pack: best.pack });
+        }
+        if (Object.keys(byMechanic).length) out[roleId] = Object.freeze(byMechanic);
+    }
+    return Object.freeze(out);
+}
+
+/**
+ * The frame a concept gate or item of mechanic `conceptId` draws in role `roleId`, or null when it draws the default
+ * way: no art loaded, no pack concept gives the mechanic an art key, or the stack's art does not resolve that key (or
+ * its sheet did not decode). `{ key, image, sx, sy, sw, sh, pack }`, `pack` the ART's pack.
+ */
+export function conceptArtFrame(tileArt, roleId, conceptId) {
+    const entry = tileArt?.conceptArt?.[roleId]?.[conceptId];
+    if (!entry || !tileArt.art.has(entry.key)) return null;
+    const r = tileArt.art.frameRect(entry.key, 0);
+    const image = r ? tileArt.images.get(r.sheetRef) : null;
+    if (!image) return null;
+    return { key: entry.key, image, sx: r.sx, sy: r.sy, sw: r.sw, sh: r.sh, pack: tileArt.art.packOf(entry.key) };
+}
+
+/** ⛓ THE SEAM for a concept gate or item: as `drawTileArt`, by role and mechanic instead of by thing. */
+export function drawConceptArt(ctx, tileArt, roleId, conceptId, dx, dy, dw, dh) {
+    const f = conceptArtFrame(tileArt, roleId, conceptId);
+    if (!f) return false;
+    ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, dx, dy, dw, dh);
+    return true;
+}
+
+/**
+ * ⛓ CONTENT SETS S2 — **WHICH ART KEY A REGION'S THING DRAWS, BY ITS PACK CONCEPT.** A thing names its pack concept
+ * (`concept`); for each role of `contentRoles` that accepts KINDS (the maze's `character`, `object`, `info`), every
+ * pack concept of an accepted kind that presents no mechanic (the contract's rule: a presenter fills no kind role) and
+ * carries an `art` key. Returns `{ conceptKey: { key, pack } }` (frozen). As `conceptArtKeys`, the role's `needs` are
+ * not asked and the key is not checked against the art library here (one that does not resolve draws the baked way).
+ * ⚠ Written here, not with `contentRoles`, for the same reason as `conceptArtKeys`.
+ */
+export function thingArtKeys(contentRoles, packConcepts) {
+    const kinds = new Set(Object.values(contentRoles ?? {}).flatMap((role) => role?.accepts?.kinds ?? []));
+    const out = {};
+    for (const key of packConcepts.keys()) {
+        const c = packConcepts.get(key);
+        if (kinds.has(c.kind) && (c.presents === undefined || c.presents === null) && typeof c.art === 'string') {
+            out[key] = Object.freeze({ key: c.art, pack: c.pack });
+        }
+    }
+    return Object.freeze(out);
+}
+
+/** The frame a thing of pack concept `conceptKey` draws, or null (draw it the baked way). As `conceptArtFrame`. */
+export function thingArtFrame(tileArt, conceptKey) {
+    const entry = tileArt?.thingArt?.[conceptKey];
+    if (!entry || !tileArt.art.has(entry.key)) return null;
+    const r = tileArt.art.frameRect(entry.key, 0);
+    const image = r ? tileArt.images.get(r.sheetRef) : null;
+    if (!image) return null;
+    return { key: entry.key, image, sx: r.sx, sy: r.sy, sw: r.sw, sh: r.sh, pack: tileArt.art.packOf(entry.key) };
+}
+
+/** ⛓ THE SEAM for a thing: as `drawTileArt`, by the thing's pack concept. */
+export function drawThingArt(ctx, tileArt, conceptKey, dx, dy, dw, dh) {
+    const f = thingArtFrame(tileArt, conceptKey);
+    if (!f) return false;
+    ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, dx, dy, dw, dh);
+    return true;
+}
+
+/**
  * ⛓ THE PLAY-TIME LOAD. `ids` is the world's effective content stack (`worldContent.effectiveContentStack`), in
  * override order; `io` is `{ base, readJson }` (`worldContent.browserPackIo()` in a browser); `decode(url)` turns a
  * sheet into an image (`artLibrary.browserDecoder()`) and `rasterise(shape)` a SHAPE entry
  * (`artLibrary.browserRasteriser()`; without one a shape key falls back, named in `failed`). A key is drawn the same
  * way whichever kind it is: a shape is rasterised once here into a one-frame sheet of its own.
  *
- * Resolves `{ ids, tileArt, failed, keyed }`: `tileArt` is the seam's `{ art, images }`, or null when no pack in
+ * `contentRoles` (optional; the maze entry's `contentRoles`) also loads the stack's `concepts` layer and resolves each
+ * concept gate's and item's art key (`conceptArtKeys`, R5). Without it only the `art` layer is read, as before.
+ *
+ * Resolves `{ ids, tileArt, failed, keyed, conceptArt, thingArt }` (`conceptArt` as `conceptArtKeys`, `thingArt` as
+ * `thingArtKeys` (S2), each `{}` without roles): `tileArt` is the seam's `{ art, images }`, or null when no pack in
  * the stack carries a key of the table (nothing is decoded then, and the maze draws as it always has); `failed`
  * lists the sheets that did not decode, by name (their keys fall back); `keyed` is `keyedThings`. An empty stack
  * reads nothing. A pack that cannot be read is refused by name (`ContentPackError`): the caller catches it and draws
  * without art.
  */
-export async function loadMazeTileArt(ids, { base, readJson, decode, rasterise = null }) {
-    if (!Array.isArray(ids) || ids.length === 0) return { ids: [], tileArt: null, failed: [], keyed: {} };
-    const stack = await loadPackStack(ids, { base, readJson, only: ['art'] });
+export async function loadMazeTileArt(ids, { base, readJson, decode, rasterise = null, contentRoles = null }) {
+    if (!Array.isArray(ids) || ids.length === 0) return { ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {}, thingArt: {} };
+    const stack = await loadPackStack(ids, { base, readJson, only: contentRoles ? ['art', 'concepts'] : ['art'] });
     const art = createArtLibrary(stack);
     const keyed = keyedThings(art);
-    if (Object.keys(keyed).length === 0) return { ids: [...ids], tileArt: null, failed: [], keyed };
+    const packConcepts = contentRoles ? createPackConcepts(stack) : null;
+    const conceptArt = contentRoles ? conceptArtKeys(contentRoles, packConcepts, ids) : Object.freeze({});
+    // ⛓ S2: and each region thing's art key, by its pack concept.
+    const thingArt = contentRoles ? thingArtKeys(contentRoles, packConcepts) : Object.freeze({});
+    const conceptKeys = [
+        ...Object.values(conceptArt).flatMap((m) => Object.values(m).map((e) => e.key)),
+        ...Object.values(thingArt).map((e) => e.key),
+    ].filter((k) => art.has(k));
+    if (Object.keys(keyed).length === 0 && conceptKeys.length === 0) return { ids: [...ids], tileArt: null, failed: [], keyed, conceptArt, thingArt };
     // Decode only the sheets the maze's keys draw from: a stack may also carry another substrate's art (the whole
     // Seedling pack), which the maze would never draw.
-    const wanted = new Set(Object.values(MAZE_ART_KEYS).filter((row) => art.has(row.key)).map((row) => art.resolve(row.key).sheetRef));
+    const wanted = new Set([...Object.values(MAZE_ART_KEYS).map((row) => row.key), ...conceptKeys]
+        .filter((key) => art.has(key)).map((key) => art.resolve(key).sheetRef));
     const sheets = art.sheetsInUse().filter((s) => wanted.has(s.sheetRef));
     const { images, failed } = await loadSheetImages({ sheetsInUse: () => sheets }, decode, rasterise);
-    return { ids: [...ids], tileArt: Object.freeze({ art, images }), failed, keyed };
+    return { ids: [...ids], tileArt: Object.freeze({ art, images, conceptArt, thingArt }), failed, keyed, conceptArt, thingArt };
 }

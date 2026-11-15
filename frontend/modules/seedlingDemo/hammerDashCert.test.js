@@ -72,7 +72,9 @@ describe('hammer DASHCERT — the whole-dash certificate sees the swing\'s line 
         expect([run.ticksCompleted, run.level]).toEqual([W216.gameEnd.tick, W216.gameEnd.level]);
     }, 60_000);
 
-    it('a corridor whose certificate meets no blocked line is OFF exactly: step 216 at the defaults (no fine walk)', () => {
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): measured before `corridorBodyPricing` shipped ON; this row names that pre-pricing
+    // world (the live wallflyer/drill forecast reroutes the walk). The shipped default's answer is in the CORRIDORFLIP report.
+    it('a corridor whose certificate meets no blocked line is OFF exactly: step 216 at the defaults (no fine walk)', () => withContactFidelity({ corridorBodyPricing: false, corridorForecastMemo: false }, () => {
         // ⚖ fidelity's key OFF (or absent): the 16 px break-stance walk; the certificate is asked and refuses nothing.
         const arm = (on) => withDashCertSight(on, () => (HAS_FINE_STANCE_WALK
             ? withContactFidelity({ fineStanceWalk: false }, solve216) : solve216()));
@@ -83,7 +85,7 @@ describe('hammer DASHCERT — the whole-dash certificate sees the swing\'s line 
         expect(DASH_CERT_SIGHT.counts.refused - before.refused).toBe(0);
         expect(on.error?.message ?? null).toBe(off.error?.message ?? null);
         expect(on.r ? keysOf(on.r.perTick) : null).toEqual(off.r ? keysOf(off.r.perTick) : null);
-    }, 120_000);
+    }), 120_000);
 
     it.skipIf(!HAS_FINE_STANCE_WALK)('ON: step 216 with fidelity\'s `fineStanceWalk` — certified on the walk the drive '
         + 'takes; OFF the drive is hit (UNBILLED DAMAGE)', () => {

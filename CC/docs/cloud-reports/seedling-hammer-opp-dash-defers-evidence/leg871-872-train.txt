@@ -1,0 +1,15 @@
+# tools/leg871.mjs under the hammerClearTagChain.train set (dashless, uncapped, withL40Flip(false)), at 55e4ecef
+# leg 871's key: level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+defers=0 bodygate=0 {"ok":false,"work":885,"counts":{"asked":2028,"inWindow":3,"deferred":0},"first":"solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,790.5) — chaser:bob@736,752 (inside leash 80 (d=7.1), box gro"}
+in-window aims (all asks): 3 of them taken at the drive (OFF): [{"t":721,"targets":["bob@736,800"],"took":"aim"}]
+defers=1 bodygate=0 {"ok":true,"work":2935,"ticks":1123,"sha":"6a59f4db8770","rowMismatches":0,"hits":[],"deaths":0,"clears":["40:0","40:12"],"counts":{"asked":2285,"inWindow":13,"deferred":13}}
+in-window aims (all asks): 13 of them taken at the drive (OFF): []
+defers=0 bodygate=1 {"ok":true,"work":2932,"ticks":1114,"sha":"b833d3f60baa","rowMismatches":0,"hits":[],"deaths":0,"clears":["40:0","40:12"],"counts":{"asked":2277,"inWindow":3,"deferred":0}}
+in-window aims (all asks): 3 of them taken at the drive (OFF): [{"t":721,"targets":["bob@736,800"],"took":"aim"}]
+defers=1 bodygate=1 {"ok":true,"work":2935,"ticks":1123,"sha":"6a59f4db8770","rowMismatches":0,"hits":[],"deaths":0,"clears":["40:0","40:12"],"counts":{"asked":2285,"inWindow":13,"deferred":13}}
+in-window aims (all asks): 13 of them taken at the drive (OFF): []
+# control, leg 872's key (… <- in_L43_176_464 ~> …), --fixture=leg872-l43-l40-request.json.gz
+defers=0 bodygate=0 {"ok":true,"work":3823,"ticks":2385,"sha":"0c51cdb94854","rowMismatches":0,"hits":[],"deaths":0,"clears":["40:0","40:12"],"counts":{"asked":6292,"inWindow":0,"deferred":0}}
+in-window aims (all asks): 0 of them taken at the drive (OFF): []
+defers=1 bodygate=0 {"ok":true,"work":3823,"ticks":2385,"sha":"0c51cdb94854","rowMismatches":0,"hits":[],"deaths":0,"clears":["40:0","40:12"],"counts":{"asked":6292,"inWindow":0,"deferred":0}}
+in-window aims (all asks): 0 of them taken at the drive (OFF): []

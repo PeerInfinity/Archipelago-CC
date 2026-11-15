@@ -193,6 +193,28 @@ export function cellAtPoint(grid, regionSize, point, tilePx = TILE_PX) {
     return { gx, gy, wx: point.cx - gx * cellW, wy: point.cy - gy * cellH };
 }
 
+/**
+ * ⛓ region-map step 1 (D4) — **THE "Substrate art" SWITCH**, one spelling for
+ * both maps (the APWorld Editor's Map tab and the Procgen Pipeline's map). A
+ * labelled checkbox; `onChange(checked)` is the host's repaint with
+ * `substrateArt: checked`. The DOM is made at CALL time from `doc`, so this
+ * module stays node-importable.
+ */
+export function substrateArtToggle(checked, className, onChange, doc = globalThis.document) {
+    const label = doc.createElement('label');
+    label.className = className;
+    label.title = 'Draw each region in its substrate\'s own art where it declares some '
+        + '(compositeMap.artwork — Seedling today); off draws those regions as the generic box';
+    Object.assign(label.style, { color: '#9ab', fontSize: '11px', display: 'inline-flex', alignItems: 'center', gap: '3px' });
+    const box = doc.createElement('input');
+    box.type = 'checkbox';
+    box.checked = !!checked;
+    box.addEventListener('change', () => onChange(box.checked));
+    label.appendChild(box);
+    label.appendChild(doc.createTextNode('Substrate art'));
+    return label;
+}
+
 /* ══════════════════════════════════════════════════════════════════════
  * THE SUBSTRATE-NEUTRAL PAINTERS
  * ══════════════════════════════════════════════════════════════════════ */
@@ -295,8 +317,21 @@ export function compositeMapPainterFor(region, registry = substrateRegistry) {
     return typeof draw === 'function' ? draw : null;
 }
 
+/**
+ * ⛓ region-map step 1 (D4) — does this region's painter draw ARTWORK (a
+ * picture of the substrate's own content, declared `compositeMap.artwork:
+ * true`), as opposed to a schematic? The "Substrate art" switch
+ * (`drawCompositeMap`'s `substrateArt: false`) skips exactly these painters, so
+ * their cells fall back to the generic box — the view they had before — while a
+ * schematic painter (maze, text adventure) is unaffected.
+ */
+export function compositeMapDrawsArtwork(region, registry = substrateRegistry) {
+    const id = compositeMapIdOf(region);
+    return !!id && registry?.get?.(id)?.compositeMap?.artwork === true;
+}
+
 /** One cell: stub, declared painter, or generic-by-name. */
-function drawRegionCell(ctx, region, geom, registry) {
+function drawRegionCell(ctx, region, geom, registry, substrateArt) {
     // Stub region: placed in 1 Layout (top-down) but not yet realised in 2,
     // so it has no playable_payload. Draw a labelled placeholder instead of
     // dispatching to a substrate painter (which assumes a payload).
@@ -305,7 +340,7 @@ function drawRegionCell(ctx, region, geom, registry) {
         return;
     }
     const painter = compositeMapPainterFor(region, registry);
-    if (painter) painter(ctx, region, geom);
+    if (painter && (substrateArt || !compositeMapDrawsArtwork(region, registry))) painter(ctx, region, geom);
     else drawGenericRegion(ctx, region, geom);
 }
 
@@ -374,9 +409,22 @@ function drawConnections(ctx, grid, regionSize, tilePx, colors) {
  * @param {number} [opts.tilePx]
  * @param {object} [opts.colors]
  * @param {{get:Function}} [opts.registry] test seam — the substrate registry.
+ * @param {boolean} [opts.substrateArt=true] ⛓ region-map D4 — false skips every
+ *   painter that declares `compositeMap.artwork: true` (its cells get the
+ *   generic box: the old view). Schematic painters are unaffected.
+ * @param {{rules:object, playerId:string|number|null}|null} [opts.source] the
+ *   document the grid was rebuilt from, passed to every painter as
+ *   `geom.source` (a painter that loads per-document content — the Seedling
+ *   cell's map document — reads its slot's block from it). Optional.
+ * @param {Function|null} [opts.onCellArtReady] ⛓ region-map D3 — passed to
+ *   every painter as `geom.requestRedraw`. A painter whose content loads
+ *   asynchronously draws a fallback, then calls it once the content is ready
+ *   (coalesced by the painter); the host repaints. Optional: without it a
+ *   pending cell keeps its fallback.
  */
 export function drawCompositeMap(canvas, grid, regionSize, {
     selection = null, tilePx = TILE_PX, colors = COLORS, registry = substrateRegistry,
+    substrateArt = true, source = null, onCellArtReady = null,
 } = {}) {
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = colors.emptyCell;
@@ -394,7 +442,9 @@ export function drawCompositeMap(canvas, grid, regionSize, {
                     regionSize.width * tilePx - 1, regionSize.height * tilePx - 1);
                 continue;
             }
-            drawRegionCell(ctx, region, { offX, offY, regionSize, tilePx, colors }, registry);
+            drawRegionCell(ctx, region, {
+                offX, offY, regionSize, tilePx, colors, source, requestRedraw: onCellArtReady,
+            }, registry, substrateArt);
         }
     }
 

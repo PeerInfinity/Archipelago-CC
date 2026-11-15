@@ -1,0 +1,2 @@
+{"step":35,"level":22,"goals":[{"kind":"reach-exit","exit":{"x":192,"y":64},"why":"teleporter@192,64 → L29"}],"verdict":"SOLVED","ticks":539,"replay":{"hits":0,"deaths":0,"endLevel":29,"transitions":["undefined->undefined@539"],"earnedClears":[]},"ms":17465,"refusal":null}
+{"step":84,"level":88,"goals":[{"kind":"reach-exit","exit":{"x":32,"y":0},"why":"teleporter@32,0 → L87"}],"verdict":"SOLVED","ticks":354,"replay":{"hits":0,"deaths":0,"endLevel":87,"transitions":["undefined->undefined@354"],"earnedClears":[]},"ms":11024,"refusal":null}

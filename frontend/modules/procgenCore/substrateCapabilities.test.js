@@ -28,6 +28,7 @@ import {
 } from '../../../scripts/procgen/reference/capabilities.mjs';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { declaredStartingNeeds } from './startingInventory.js';
+import { contentRolesOf } from './contentRoles.js';
 import {
     CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, FEATURE_WORDING,
     ITEM_NAME_LIMIT, LIST_PREVIEW, LIVE_ANSWERS, REQUIRES_LOOP_MODE_FIELD,
@@ -47,8 +48,8 @@ const NAMES = fieldNamesOf(ENTRIES, snapshotExpandable(REGISTRY));
 const rowOf = (id) => ROWS.find((r) => r.id === id);
 const cellOf = (rowId, entryId) => rowOf(rowId).cells.find((c) => c.id === entryId);
 
-/** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3; P6 added by concept library T0b), in group order — the vocabulary's shape. */
-const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
+/** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3; P6 added by concept library T0b; P7 by content sets R5), in group order — the vocabulary's shape. */
+const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
     'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'E1', 'E2', 'E3', 'E4'];
 
 describe('the vocabulary', () => {
@@ -328,6 +329,37 @@ describe('P6 — "It can show the library\'s concepts in its own way" (concept l
         expect(s.answer({ conceptRealisations: { water: { tier: 'skin', placements: {
             gate: { effect: 'requires', needs: ['swim'] } } } } }))
             .toEqual({ kind: CELL_KINDS.YES, text: '1 concept: water (skin)', list: ['water (skin)'] });
+    });
+});
+
+describe('P7 — "Themeable: <roles>" (content sets R5, ⚖ the user 2026-11-14)', () => {
+    it('the statement is the user\'s word, in the play group, reading contentRoles', () => {
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'P7');
+        expect(s).toMatchObject({ group: 'play', statement: 'Themeable', fields: ['contentRoles'] });
+        expect(s.universal).toBeUndefined();
+    });
+
+    it('an entry that declares roles answers ✓ with its role ids, in declared order, joined by ", " (derived)', () => {
+        const declaring = ENTRIES.filter((e) => Object.keys(contentRolesOf(e)).length);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const e of declaring) {
+            expect(cellOf('P7', e.id), e.id).toMatchObject({ kind: CELL_KINDS.YES, text: Object.keys(e.contentRoles).join(', ') });
+        }
+    });
+
+    it('every other entry answers ✗ with no text, and its card has no Themeable line', () => {
+        const others = ENTRIES.filter((e) => !Object.keys(contentRolesOf(e)).length);
+        expect(others.length).toBeGreaterThan(0);
+        for (const e of others) {
+            expect(cellOf('P7', e.id), e.id).toMatchObject({ kind: CELL_KINDS.NO, text: null });
+            expect(cardText(cardOf(e, ROWS)), e.id).not.toMatch(/Themeable/);
+        }
+    });
+
+    it('a card reads "Themeable: <roles>" after its group label', () => {
+        const e = ENTRIES.find((x) => Object.keys(contentRolesOf(x)).length);
+        const label = CAPABILITY_GROUPS.find((g) => g.id === 'play').label;
+        expect(cardText(cardOf(e, ROWS)).split('\n')).toContain(`${label} — Themeable: ${Object.keys(e.contentRoles).join(', ')}`);
     });
 });
 

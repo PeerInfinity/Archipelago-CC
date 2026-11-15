@@ -154,6 +154,8 @@ import {
 } from './solverView.js';
 // ⛓ hammer-phase STRIKE-SLOT: the stood-down count (`slotIsBlade`; a family file).
 import { STRIKE_SLOT_COUNTS } from './strikeSlot.js';
+// ⛓ hammer-phase SPEAR-ARM: the swallowed-aim count (a geometry policy's; a family file).
+import { SPEAR_ARM_COUNTS } from './spearArm.js';
 import { chaseEnvelope } from './encounters.js';
 
 export class StrikePolicyError extends Error {
@@ -171,6 +173,68 @@ export const FROZEN_PRESS_COUNTS = { stoodDown: 0, dropped: 0 };
 export const CEREMONY_PRESS_COUNTS = { aim: 0, press: 0, planned: 0 };
 /** ⛓ fidelity CEREMONYEXACT D1 — the exact guard's asks: `stepped` (a pickup within reach), `cleared` (no ceremony). */
 export const CEREMONY_EXACT_COUNTS = { stepped: 0, cleared: 0 };
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE OPP-DASH-DEFERS — **A BODY-GATED PRESS THAT WOULD DASH IS REFUSED BY THE RUN'S OWN SLASH
+ * STATE, WHOEVER PRESSED LAST** (`OPP_DASH_DEFERS`, OFF; `SEEDLING_OPP_DASH_DEFERS=1`, `withOppDashDefers`).
+ *
+ * ⛔ MEASURED (`CC/docs/cloud-reports/seedling-hammer-opp-dash-defers.md` § 3): with `allowDash` false (every dashless
+ * pass) `decide`'s dash refusal asks `lastPressAt` — THIS policy's own previous press — and nothing else, because
+ * `forecast` is built only under `allowDash`. A press of another verb (the press kill's own `PRESS`) is invisible to
+ * it, so the opportunistic aim after a kill's press is offered, and its press lands inside `set slashing`'s
+ * double-tap window and DASHES (`Player.as:779` has no `!slashing` term). Leg `level_40__r48c54 <- in_L39_144_0 ~>
+ * level_40__r26c13 -> … flag 12`: the kill pressed at t719, OPP aimed at t722 and pressed at t723 → vy 0.8 → 2.55.
+ * The policy's own docblock promises the opposite (*"at `allowDash: false` … the refusal below already forbids every
+ * press that could dash"*).
+ *
+ * ⇒ ON, when the caller supplied the slash state (the drive's `run.progress('slashInfo')`, the preview's own threaded
+ * state — ⚖ 30(c) holds because both already pass it), a candidate press is also asked of `slashPressForecast` at
+ * `tick + 1`, the same question the `allowDash: true` arm asks: an outcome of `dash` is refused, the walk keeps its
+ * keys. Only the REFUSAL reads it; the scan's rect stays the plain swing's (a refused press swings no rect).
+ */
+export const OPP_DASH_DEFERS = { enabled: globalThis.process?.env?.SEEDLING_OPP_DASH_DEFERS === '1' };
+/**
+ * The switch's instrument, counted OFF and ON: `asked` aims with a body chosen that the own-press rule let through
+ * with a slash state to ask, `inWindow` of them whose press would dash, `deferred` the ones refused (ON only).
+ */
+export const OPP_DASH_DEFERS_COUNTS = { asked: 0, inWindow: 0, deferred: 0 };
+/** `{tick, targets, enabled, why}` per in-window aim, for a census (inert while `null`). */
+export const OPP_DASH_DEFERS_TRACE = { sink: null };
+
+/** Run `fn` with `OPP_DASH_DEFERS` set to `enabled`, restoring the previous value. */
+export function withOppDashDefers(enabled, fn) {
+    const was = OPP_DASH_DEFERS.enabled;
+    OPP_DASH_DEFERS.enabled = enabled === true;
+    const restore = () => { OPP_DASH_DEFERS.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * OPP-DASH-DEFERS — would the press an aim at `tick` earns DASH, by the caller's slash state? `null` when it would
+ * not, when no slash state was supplied, or with the switch OFF (counted all the same); else `{why}`.
+ */
+function pressDashesByRunSlash(slash, state, tick, chosen) {
+    if (chosen.length === 0 || !slash?.state || !slash?.gate) return null;
+    OPP_DASH_DEFERS_COUNTS.asked += 1;
+    const f = slashPressForecast(slash, { tick, ticksAhead: 1, direction: state.direction ?? 0 });
+    if (f.outcome !== 'dash') return null;
+    OPP_DASH_DEFERS_COUNTS.inWindow += 1;
+    OPP_DASH_DEFERS_TRACE.sink?.({ tick, targets: chosen.map((c) => c.id), enabled: OPP_DASH_DEFERS.enabled,
+        why: f.why });
+    if (!OPP_DASH_DEFERS.enabled) return null;
+    OPP_DASH_DEFERS_COUNTS.deferred += 1;
+    return { why: `a press at tick ${f.at} WOULD DASH by the run's slash state (${f.why}) — a press of another `
+        + 'verb is inside the double-tap window, which this policy\'s own `lastPressAt` cannot see. `allowDash` is '
+        + 'false, so no press may dash at all and this one is refused (OPP_DASH_DEFERS).' };
+}
 
 /**
  * ⛓ fidelity FROZENPRESS D1 — **THE OPTIONS A RUN-SIDE `decide` IS ASKED WITH**: the run's slash state, and with
@@ -269,6 +333,11 @@ export function strikeCandidates(player, bodies, {
      * (`LAPSE_NARROW_RETRY`). OFF the switch, inert.
      */
     iframeLapse: lapseAllowed = true,
+    /**
+     * ⛓ hammer-phase SPEAR-ARM — the press's own geometry when it is not the sword's (`spearArm.spearStrikeGeometry`:
+     * `{rect(x, y, facing), touches(rect, box), reach}`). `null` (every sword caller): `slashRect` / `slashReachFor`.
+     */
+    geometry = null,
 }) {
     const lapseOn = CONTACT_FIDELITY.strikeIframeLapse && lapseAllowed !== false;
     /**
@@ -287,7 +356,7 @@ export function strikeCandidates(player, bodies, {
      * roster-wide default (⚖ ruling 42) — asks exactly the question it asked
      * before this parameter existed.
      */
-    const reachLimit = slashReachFor(scale);
+    const reachLimit = geometry ? geometry.reach : slashReachFor(scale);
     const chosen = [];
     const rejected = [];
     for (const b of bodies) {
@@ -306,9 +375,10 @@ export function strikeCandidates(player, bodies, {
         // body inside 16 px that the rect does not cover is not a candidate —
         // and at the corners the two disagree by up to the box's half-diagonal.
         const facing = direction ?? facingToward(player, b.rect);
-        if (!rectsOverlap(slashRect(player.x, player.y, facing, scale), b.rect)) {
+        if (geometry ? !geometry.touches(geometry.rect(player.x, player.y, facing), b.rect)
+            : !rectsOverlap(slashRect(player.x, player.y, facing, scale), b.rect)) {
             rejected.push({ id: b.id, why: `in reach (${reach.toFixed(3)}) but the `
-                + `slash rect facing ${facing} does not cover it` });
+                + `${geometry ? `${geometry.weapon} thrust` : 'slash'} rect facing ${facing} does not cover it` });
             continue;
         }
         // ⛓ fidelity L74LEG624 D3 (`STRIKE_IFRAME_LAPSE`): the gate is each TEST tick's, so a press whose window
@@ -341,7 +411,8 @@ export function strikeCandidates(player, bodies, {
             continue;
         }
         if (vetoBody) {
-            const v = vetoedInRect(player, bodies, facing, scale, vetoBody, { pressAhead, iframeLapse: lapseAllowed });
+            const v = vetoedInRect(player, bodies, facing, scale, vetoBody,
+                { pressAhead, iframeLapse: lapseAllowed, ...(geometry ? { geometry } : {}) });
             if (v) {
                 rejected.push({ id: b.id, why: `the swing facing ${facing} would kill ${v.id}: ${v.why}`, veto: v });
                 continue;
@@ -361,12 +432,13 @@ export function strikeCandidates(player, bodies, {
  * veto's reason; null when none. `Player.slash`'s own two gates (the rect, then the reach), and `Enemy.hit`'s
  * i-frame gate (a body inside its i-frame takes nothing, so its death is not this press's).
  */
-export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1, iframeLapse: lapseAllowed = true } = {}) {
+export function vetoedInRect(player, bodies, direction, scale, vetoBody, { pressAhead = 1, iframeLapse: lapseAllowed = true,
+    geometry = null } = {}) {
     if (!vetoBody) return null;
-    const r = slashRect(player.x, player.y, direction, scale);
-    const reachLimit = slashReachFor(scale);
+    const r = geometry ? geometry.rect(player.x, player.y, direction) : slashRect(player.x, player.y, direction, scale);
+    const reachLimit = geometry ? geometry.reach : slashReachFor(scale);
     for (const o of bodies) {
-        if (!rectsOverlap(r, o.rect)) continue;
+        if (geometry ? !geometry.touches(r, o.rect) : !rectsOverlap(r, o.rect)) continue;
         if (distanceRectPoint(player.x, player.y, o.rect) > reachLimit) continue;
         // ⛓ fidelity L74LEG624 D3: ON, a body whose i-frame lapses anywhere inside the window may take the hit, so it
         // is asked — with no spare test: the veto is the conservative reading, the opposite end of the admission's.
@@ -898,8 +970,15 @@ export function createStrikePolicy({
      * keeps its own keys, an owed aim is dropped). `null` (the default, and OFF): nothing is asked.
      */
     slotIsBlade = null,
+    /**
+     * ⛓ hammer-phase SPEAR-ARM (`spearArm.SPEAR_ARM`, ON only) — a non-sword press's geometry
+     * (`spearArm.spearStrikeGeometry`), handed to every scan and veto; its `period` replaces the swing period's
+     * would-dash guard with the thrust's swallow guard. A geometry policy never dashes. `null`: the sword's, unchanged.
+     */
+    geometry = null,
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
+    if (geometry && (allowDash || dashPlan)) fail('createStrikePolicy: a non-sword press geometry has no dash arm');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
     /**
      * ⛓⛓⛓ R9 SLICE 12c′ — **THE PLANNER'S SCHEDULE, AND IT IS WHAT
@@ -1074,7 +1153,7 @@ export function createStrikePolicy({
                  */
                 const vetoed = vetoBody
                     ? vetoedInRect(state, bodies, aimed.direction, SLASH_SCALE_NORMAL, vetoBody,
-                        { pressAhead: 0, iframeLapse: lapseAllowed })
+                        { pressAhead: 0, iframeLapse: lapseAllowed, ...(geometry ? { geometry } : {}) })
                     : null;
                 if (vetoed) {
                     aimed = null;
@@ -1290,7 +1369,7 @@ export function createStrikePolicy({
             }
             const { chosen, rejected } = strikeCandidates(state, bodies,
                 { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL, vetoBody,
-                    iframeLapse: lapseAllowed });
+                    iframeLapse: lapseAllowed, ...(geometry ? { geometry } : {}) });
             /**
              * ⛔⛔⛔ R9 SLICE 12c′ — **THE OPPORTUNISTIC DASH IS RETIRED, AND
              * THE REFUSAL IS NOW THE SAME UNDER BOTH FLAG STATES.**
@@ -1326,9 +1405,23 @@ export function createStrikePolicy({
              * reached* — which is the right list for a refusal row to carry,
              * and is never a list anything acts on.
              */
-            const wouldDash = forecast
+            /**
+             * ⛓ hammer-phase SPEAR-ARM — a thrust has no dash: a press while `spearing` is up is SWALLOWED (`set
+             * spearing`'s `!spearing && _s`), so the aim is refused for that reason and the walk keeps its keys.
+             */
+            if (geometry && chosen.length > 0 && lastPressAt !== null && (tick + 1) - lastPressAt <= geometry.period) {
+                SPEAR_ARM_COUNTS.swallowed += 1;
+                trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, rejected,
+                    swallowRefused: { lastPressAt, wouldPressAt: tick + 1, period: geometry.period } });
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
+            const ownWouldDash = forecast
                 ? forecast.outcome === 'dash'
                 : (lastPressAt !== null && (tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD);
+            // ⛓ OPP-DASH-DEFERS: the run's slash state, asked only where the rule above had none to ask (OFF ⇒ `null`)
+            // (harvest merge: a geometry policy — SPEAR_ARM's thrust — has no dash arm, so it never asks)
+            const anyVerb = forecast || ownWouldDash || geometry ? null : pressDashesByRunSlash(slash, state, tick, chosen);
+            const wouldDash = ownWouldDash || anyVerb !== null;
             if (chosen.length > 0 && wouldDash) {
                 trace.push({
                     tick,
@@ -1340,7 +1433,8 @@ export function createStrikePolicy({
                         wouldPressAt: forecast?.at ?? tick + 1,
                         inReach: chosen.map((c) => c.id),
                         opportunistic: true,
-                        why: forecast
+                        ...(anyVerb !== null ? { anyVerb: true } : {}),
+                        why: anyVerb !== null ? anyVerb.why : forecast
                             ? `a press at tick ${forecast.at} WOULD DASH (${forecast.why}) and `
                                 + 'it is an OPPORTUNISTIC one — chosen because a body is in '
                                 + 'reach, not for the displacement it buys along the route. '

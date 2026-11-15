@@ -43,6 +43,7 @@ import { shippedTape } from '../../frontend/modules/seedlingDemo/wasmPlayback.js
 import { indexLevels, levelSourceFromAtlas } from '../../frontend/modules/seedlingDemo/atlasSource.js';
 import { withContactFidelity } from '../../frontend/modules/seedlingDemo/contactFidelity.js';
 import { withKillLockBodies } from '../../frontend/modules/seedlingDemo/killLockBodies.js';
+import { withDrillExitPass } from '../../frontend/modules/seedlingDemo/solverBot.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
@@ -108,37 +109,70 @@ describe('composites probe D — L3\'s pocket with the Sword (STEPOFF2 D3: a bre
 });
 
 describe('composites probe X — L88 declines BY NAME beside the live drill (fidelity TERRAIN W3, wave 6)', () => {
-    const DECLINED = LEGS.X.filter((l) => l.expect === 'declined');
+    const L88 = LEGS.X.filter((l) => l.goal.level === 88);
     // ⛓ planning-10's DRILL flip (⚖ user licence 2026-10-22): L28 crosses with its drills stepped (was the exact repeat).
-    it('the X legs: L28 crosses (DRILL), L30 crosses (wave 8), L45 and the two L88 legs decline', () => {
+    // ⛓ L88 CROSS (⚖ Robert 2026-11-14, SHA-bound via fidelity-20): at the stack defaults the two L88 legs cross.
+    it('the X legs: L28 crosses (DRILL), L30 crosses (wave 8), L45 declines, the two L88 legs cross (DRILL_EXIT_PASS)', () => {
         expect(LEGS.X.map((l) => [l.name, l.expect])).toEqual([
             ['residue L28', 'cross'], ['L30 past the BobSoldier', 'cross'], ['residue L45', 'declined'],
-            ['residue L88 a', 'declined'], ['residue L88 b', 'declined'],
+            ['residue L88 a', 'cross'], ['residue L88 b', 'cross'],
         ]);
     });
-    for (const leg of DECLINED.filter((l) => l.goal.level === 88)) {
+    // ⛓ L88 CROSS: the stack default. Both legs cross to L87 on the solver's plan, pinned exactly (the probe holds the
+    //   same ticks ± PLAN_TICKS_TOLERANCE on the game, where 43631296213 / 43639535732 witnessed 0 divergences, 0 hits).
+    //   The plan bills no hit: no `forcedHits` row, and its own rows replayed on a fresh run take none.
+    for (const leg of L88) {
+        it(`${leg.name}: at the stack defaults the solver crosses to L87 in exactly ${leg.ticks} t, billing no hit; the replay takes none`, () => {
+            expect(leg).toMatchObject({ expect: 'cross', producer: 'solver' });
+            const { staging, result } = serve(leg);
+            expect(result.ok, result.message).toBe(true);
+            const { plan } = result;
+            expect(plan.solution.length).toBe(leg.ticks);
+            expect(plan.expected.at(-1)).toMatchObject({ level: 87, deaths: 0 });
+            expect(plan.forcedHits ?? []).toEqual([]);
+            const tape = shippedTape({ staging, keys: plan.solution, name: `composites-${leg.name.replace(/ /g, '-')}` });
+            const run = createRunForStaging(staging, SOURCE, { scratchPersistence: true });
+            for (let t = 0; t < tape.tick_count; t += 1) run.advance(new Set(heldKeysAt(tape, t)));
+            expect(run.level).toBe(87);
+            expect(run.playerHits).toEqual([]);
+        });
+    }
+    // ⛓ hammer stack (DRILL_EXIT_PASS default ON × CORRIDORFLIP): at the stack defaults both L88 legs CROSS to L87 (verbs
+    //   ["forced-hit"], 246/258 t, a fresh-run replay bills no hit — measured hammer-planning-8). ⚖ Robert "witness first"
+    //   (via fidelity-20, 2026-11-14): until the wasm game answers that crossing, these decline rows name the drill-exit-OFF
+    //   world (withDrillExitPass(false)). The witness answered 0 hits, so the stack default is the 'cross' rows above.
+    for (const leg of L88) {
         // ⛓ planning-10's DRILL flip (⚖ user, 2026-10-21): with `drillMixedRooms` ON the danger map prices L88's drill
         //   as a STEPPED drill at its live box, so the refusal names it there (still a decline; OFF: the corridor wording).
         it(`${leg.name}: the solver refuses the corridor on the stepped drill (drillMixedRooms OFF: the re-planned corridor failed too); drillLive OFF plans it again`, () => {
-            const { result } = serve(leg);
+            const { result } = withDrillExitPass(false, () => serve(leg));
             expect(result.ok).toBe(false);
-            expect(String(result.message)).toMatch(/enemy:drill@128,160 \(a stepped drill/);
-            const legacy = withContactFidelity({ drillMixedRooms: false }, () => serve(leg).result);
+            // ⛓ CORRIDORFLIP (⚖ user 2026-11-12, `corridorBodyPricing` ON): the corridor now prices the drill's live contact
+            //   along the walk, so the decline names it as the forecast contact (was: a stepped drill's static box). Still a decline.
+            expect(String(result.message)).toMatch(/chaser:drill@128,160 \(the drill's contact/);
+            // ⛓ CORRIDORFLIP: the legacy arm and the drill-blind control name their pre-pricing world too.
+            const legacy = withContactFidelity({ drillMixedRooms: false, corridorBodyPricing: false, corridorForecastMemo: false },
+                () => withDrillExitPass(false, () => serve(leg).result));
             expect(legacy.ok).toBe(false);
             expect(String(legacy.message)).toMatch(/the re-planned corridor failed too/);
             // the control: the drill-blind model (the BEFORE of TERRAIN W3) still finds the old plan out to L87
-            const off = withContactFidelity({ drillLive: false }, () => serve(leg).result);
+            const off = withContactFidelity({ drillLive: false, corridorBodyPricing: false, corridorForecastMemo: false },
+                () => withDrillExitPass(false, () => serve(leg).result));
             expect(off.ok, off.message).toBe(true);
             expect(off.plan.expected.at(-1).level).toBe(87);
         });
     }
-    const leg = DECLINED.find((l) => l.name === 'residue L88 a');
+    // ⛓ L88 CROSS: the probe's leg now expects a crossing; the verdict's own rows keep the DRILL_EXIT_PASS-OFF decline shape.
+    const leg = { ...LEGS.X.find((l) => l.name === 'residue L88 a'), expect: 'declined', clause: "chaser:drill@128,160 (the drill's contact" };
+    // ⛓ CORRIDORFLIP (⚖ user 2026-11-12): the live shape is CI seedling-probe 43326665248 (fidelity-flip/corridor a331ba7fba),
+    //   the decline naming the drill's forecast contact (was CI 39731170050 at 479ff5678c: a stepped drill's static box).
     const named = `the solver declined ${leg.goal.name} in level 88 (refusal): solverBot(wasm-exit-88) reach-exit (32,0)->L87: `
-        + 'the danger map forbids (104,205.69999999999985) — enemy:drill@128,160 (a stepped drill, priced as a static box where '
-        + 'it stands now (104,200) (`drillMixedRooms`: …';
+        + 'the combat ladder is EXHAUSTED. The corridor passes through danger at (104.0,184.2) — chaser:drill@128,160 (the '
+        + 'drill\'s contact: its `hitPlayer` gate fires against the player\'s start-of-tick box THIS tick (body at (104.0,184.0), '
+        + 'forecast along the walk)) — …';
     const base = { answer: { ok: true, action: 'force-re-arrival' }, end: 'failed', level: 88, failed: named, legs: [{ outcome: 'failed' }] };
     // ⛓ planning-10's DRILL flip: the live shape is CI seedling-probe 39731170050 (fidelity-harvest/drill 479ff5678c).
-    it('the verdict holds on the live run\'s shape (CI seedling-probe at 479ff5678c)', () => {
+    it('the verdict holds on the live run\'s shape (CI seedling-probe at a331ba7fba)', () => {
         expect(declinedHolds(leg, base)).toBe(true);
     });
     it('a silent success reds (crossed or done, a played plan, out of the level)', () => {

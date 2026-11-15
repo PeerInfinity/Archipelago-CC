@@ -28224,6 +28224,16 @@ L40 train-tier rows red (hammer-owned pins among them). The local survey's 11 sp
 SOLVED / 2 REFUSED), every solve hitless, the four L39 steps 184–228 ticks SHORTER ON. A flip owes re-records and the
 hammer arc's signature on its pins, so it waits for a licence.
 
+### Seedling hammer-phase DRILL-EXIT-FLIP — `DRILL_EXIT_PASS` ON by default
+
+⚖ The user, 2026-11-11: *"DRILL_EXIT_PASS flip"* (the hammer replan after the volley flip). The switch now reads
+`SEEDLING_DRILL_EXIT_PASS !== '0'`, default `true`; `=0` opts out. It was ready once fidelity's DRILL-WATER put the
+drill's hop into water in the model (`drillTerrainSwitch` ON): L91's two legs across `drill@64,80` both solve with the
+armed timed pass, 718 (L89 arrival → L92) in 190 ticks and 719 (the whole-game walk's L91 → L89) in 223, each certified
+on a fork and hitless. A walk that solves is never pre-empted and a walk that refuses after spending ticks keeps its
+refusal (L88's 704), so the flip moves only door legs whose walk refuses on a live drill before a tick is spent.
+`hammerDrillExitPass.test.js` pins both arms explicitly; its switch row now pins the default ON.
+
 ### Seedling fidelity AFTERROWS — every `withL40Flip(false)` BEFORE pin in fidelity gets its AFTER at the shipped defaults
 
 Planner `seedling-fidelity-planning-19`, wave 41 (⚖ the user 2026-11-12, *"AFTER rows at L40 defaults"*). Base
@@ -28247,6 +28257,26 @@ Six BEFORE properties are not covered at the defaults; four of them have no sing
 shows a model gap: the bombpusher's last shot is 3 ticks early from t1703, so the witness is recorded through t1702.
 ⚠ The BEFORE witness builders now run into the flip: `l40Bk2PocketTape` and `l40LatchOrbitTape` throw at the defaults.
 Re-record a BEFORE witness only under `withL40Flip(false)`.
+
+### Seedling hammer-phase KILLLOCK-FLIP — `KILLLOCK_CHASER_REWIND` and `KILLLOCK_LINE_STANCE` ON by default
+
+⚖ The user, 2026-11-11: *"Page play, then flip both"* (the WALK-WALLS answer), and 2026-11-12: *"Stack all three"* (this
+flip rides one branch with the drill-exit flip and YETI-TALK, OFF). Both switches now read `SEEDLING_<NAME> !== '0'`,
+default `true`; `=0` opts out. The evidence is WALK-L53-PAGE's: with both on, L53's `r2c2 → r14c9` crossing (the
+whole-game walk's BK3 kill-lock) solves in 608 ticks and plays hitless on the game page (p4g, 0 divergences, arrives
+L54), and the whole-game walk passes entry 24 with the same plan digest. `KILLLOCK_LINE_STANCE` is read only with
+`KILLLOCK_CHASER_REWIND` on and a rewind, so the two flip together. `hammerL53Killlock.test.js` and
+`hammerNewLocks.test.js` pin each arm explicitly; their switch rows now pin the defaults ON.
+
+### Seedling hammer-phase KILLLOCK-FLIP, revised — `KILLLOCK_LINE_STANCE` back OFF (`KILLLOCK_CHASER_REWIND` stays ON)
+
+⚖ The user, 2026-11-14: *"Land, LINE_STANCE OFF"*. The hammer stack's route survey to the end measured `KILLLOCK_LINE_STANCE`
+making step 227 (L98 Chest → L99) solve by taking 2 hits it never billed: `spinningaxe@128,64` at t358 and t381, on a
+483-tick plan whose rows are brave, kill and walk (no forced-hit row). A plan that tanks a hit does not ship. With the
+switch off and the rewind on, the same step solves in 520 ticks with 0 hits. Step 228 (L99), which the line stance had
+reached, refuses again, on the shake-band question about whether a lavarunner is on screen. The game sweeps' L98 legs were
+hitless in every arm. The switch reads `SEEDLING_KILLLOCK_LINE_STANCE === '1'` again (default `false`), and
+`hammerNewLocks.test.js`'s switch row pins all three OFF.
 
 ### Seedling fidelity ROCKBUTTON — a landed FallRock is a Solid that holds a Button down (`fallRockHoldsButton`, OFF)
 
@@ -28280,3 +28310,30 @@ steps (the other rope room) give identical rows; the bounded set (143 files) mov
 the span's `+90f`). **The solver still refuses** seed 2's L28 → L30 door from (136,296) with the key ON: the model opens
 the lock at t101 with no input, but `stanceHypothesis` → `deriveWeighSource` asks for a block and never reads the held
 presser — handed to hammer (the wait).
+
+### Seedling fidelity CORRIDORFLIP — `corridorBodyPricing` measured for its flip; the forecast's cost cut (`corridorForecastMemo`, OFF)
+
+Planner `seedling-fidelity-planning-19`, wave 42 (⚖ the user's GO 2026-11-12, *"corridorBodyPricing flip
+(Recommended)"*). Base `a3a5b8182e`. The report is `CC/docs/cloud-reports/seedling-fidelity-corridorflip.md`; it starts
+from fidelity CORRIDOR (wave 17) and hammer CONNECTED-L22.
+
+**W0 — the wave-17 debts at this base.** (a) *Solve cost*: the page's deadline is a WORK budget (640 units, window 85),
+deterministic; under it every one of 56 WallFlyer/Drill-room legs (node, the sweep row's inventory) answers exactly as
+unbudgeted, so no leg goes done → DEADLINE here. Wall time is the cost: 25 s → 219 s over the 56. (b) *Kill arms*: still
+none for a wallflyer or a drill in the ladder's KILL rung (step 35's chooser picks `bob@96,144`; step 84's drill "is not a
+body this run can watch die") — hammer's. (c) *Puncher*: the chaser forecast already times the punch (U10, RULESREF);
+the L12 bosslock UNBILLED-HIT rows at the defaults are game hits the model never bills, independent of this key.
+The L22 death loop reproduces (hammer's capture #49: OFF a stall after 85 grazes, work 33; ON *"combat ladder EXHAUSTED
+… wallflyer@48,112"*, work 3).
+
+**D2** (`corridorForecastMemo`, OFF, last key, `SEEDLING_CORRIDOR_FORECAST_MEMO`): the forecast's frozen context
+memoises `collides(rect)` and `tileTypeAt(x, y)` for the forecast's life, and the wallflyer trigger ray gets an exact
+bounding-box reject (`stepWallFlyer`'s optional `ctx.lineHits`). Profile-led (62 % of an ON L22 solve was the
+forecast's `step`). Exact: rows, previews and plans equal; the L22 legs take about half the wall time. Two mutants red.
+No new per-visit state.
+
+**D1** (the flip, measured; NOT licensed): survey `route=full through=end` OFF 215 / 29 → ON 214 / 30, the wave-17
+pattern by goal: 35 (L22) and 84 (L88) hit-taking solves → by-name refusals (their hits re-witnessed on p4g: t84; t48,
+t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t clean; 193 (L77) 475 t, 1 hit → 491 t clean —
+the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
+in every arm; the 293 committed tapes' streams identical.

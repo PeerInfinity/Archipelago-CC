@@ -91,9 +91,11 @@ import {
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
     framesForActions, generateStep, generateWithDirectives, labCatalogue,
     labPayload, labReadoutIdentity, labUrlFields,
-    loadPayload, openEditSession, planFrames, projectSession, readLabParams,
+    levelOfPayload, loadPayload, openEditSession, planFrames, projectSession, readLabParams,
     serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
+import { describePresetLink, openPresetRegion } from './mazeLabPreset.js';
+import { seedlingLinkFor, seedlingOriginOf } from './mazeSeedlingLink.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE SHARED TOOL, MOUNTED.** ⛔ The canvas tool,
  * the stroke-is-one-group law, the command table and the key map are
@@ -189,6 +191,8 @@ import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { roomsOfSet } from '../seedlingDemo/seedlingSetAdapter.js';
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
+// ⛓ MAZE LINK WIRES (step 3): the room's token wires, as `editorView` shapes. Pure; reads the token fields only.
+import { describeLinkGroups, linkGroups, linkShapes } from './mazeLinks.js';
 
 // ⛓ ELEMENTS ARC 1 SLICE 3: the ONE area codec — the form, the identity line,
 // the URL bar and both CLIs spell a graph the same way.
@@ -727,6 +731,8 @@ export function main() {
         const search = writeLabParams(window.location.search, {
             source: params.source,
             ...labUrlFields(state),
+            /** ⛓ MAZE CONVERTED LINK — kept while the link's room is on screen, deleted once it is replaced. */
+            presetLink: state.presetLink?.asked ?? null,
         });
         window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     };
@@ -772,6 +778,23 @@ export function main() {
     const canvasWorld = () => (params?.source === SOURCES.SET
         ? (setRoomSess ? setRoomSess.record() : null)
         : state?.record ?? null);
+
+    /**
+     * ⛓⛓ MAZE LINK WIRES (step 3, ⚖ Robert 2026-11-11 "Maze link overlay") — **THE WIRES OF THE ROOM ON THE CANVAS**,
+     * `null` while no editor tool is mounted (the overlay is the tool's; outside EDIT, or the SET arm with no room
+     * open, nothing draws them). Read off `canvasWorld()`, the same answer `draw` and `cellAt` use, so the wires and
+     * the room cannot disagree about which room it is. `#labShowLinks` (default ON, as E2's `#genEditShowLinks`)
+     * decides whether they are DRAWN; the groups are reported either way.
+     */
+    const linkView = () => {
+        if (!(params?.source === SOURCES.SET ? setRoomTool : tool)) return null;
+        const world = canvasWorld();
+        if (!world) return null;
+        const groups = linkGroups(world);
+        const shown = $('labShowLinks')?.checked !== false;
+        return { groups, shown, shapes: shown ? linkShapes(groups) : [] };
+    };
+    const linkOverlay = () => linkView()?.shapes ?? [];
 
     const draw = () => {
         const canvas = $('canvas');
@@ -1090,6 +1113,56 @@ export function main() {
         $('labDirectivesNote').textContent = (state.directives ?? []).length
             ? `${state.directives.length} directive(s), in order`
             : 'none — press ATTEMPT on a catalogue row';
+    };
+
+    /**
+     * ⛓⛓ MAZE LINK WIRES (step 3) — the line under the canvas: the toggle and a sentence naming the groups and every
+     * DANGLING token (a button wired to nothing in this room), hidden while no tool is mounted. ⛔ And the overlay is
+     * REPAINTED here: a room that arrives without a gesture (a link, a LOAD, a step) would otherwise keep the last
+     * room's wires until the next click, the same trap `editorView.repaint` exists for.
+     */
+    /**
+     * ⛓⛓ MAZE SEEDLING LINK — **WHERE THE ROOM ON SCREEN CAME FROM**, keyed by its BASE record. Edits fold from the
+     * base (the base object stays), so an edited room keeps its origin; a GENERATE, a LOAD or another link brings a
+     * new base and so no origin (or its own). ⛔ Nothing here writes the state, the payload or the bar.
+     */
+    const seedlingOrigins = new WeakMap();
+    const noteSeedlingOrigin = (origin) => {
+        if (origin && state?.baseRecord) seedlingOrigins.set(state.baseRecord, origin);
+    };
+    const seedlingLinkView = () => seedlingLinkFor({
+        origin: (state?.baseRecord && seedlingOrigins.get(state.baseRecord)) ?? null,
+        edits: (state?.edits ?? []).length,
+        presetLink: state?.presetLink ?? null,
+    });
+    /** The line under the identity: the link (new tab) and its notes, or the reason a converted room cannot link. */
+    const renderSeedlingLink = () => {
+        const line = $('labSeedlingLine');
+        if (!line) return null;
+        const v = seedlingLinkView();
+        line.hidden = !v.shown;
+        const a = $('labSeedlingOpen');
+        a.hidden = !v.ok;
+        if (v.ok) {
+            a.href = frontendUrl(v.url);
+            a.textContent = v.label;
+        } else {
+            a.removeAttribute('href');
+            a.textContent = '';
+        }
+        $('labSeedlingNote').textContent = !v.shown ? '' : (v.ok ? v.notes.join(' · ') : v.reason);
+        $('labSeedlingNote').className = v.shown && !v.ok ? 'note bad' : 'note';
+        return v;
+    };
+
+    const renderLinkLine = () => {
+        const line = $('labLinkLine');
+        if (!line) return;
+        const v = linkView();
+        line.hidden = v === null;
+        $('labLinkNote').textContent = v ? describeLinkGroups(v.groups) : '';
+        tool?.repaint();
+        setRoomTool?.repaint();
     };
 
     const renderEditPanel = () => {
@@ -1837,10 +1910,73 @@ export function main() {
         say(`downloaded ${name}`);
     };
 
+    /**
+     * ⛓⛓ MAZE CONVERTED LINK (step 2 of 3) — **`?preset=` + `?region=` → ONE PRESET ROOM**, through
+     * `mazeLabPreset.openPresetRegion` (index → rules → sidecar, every refusal by name) and then `loadPayload`, the ONE
+     * loader. The state carries `presetLink` so the bar keeps naming the room while it is on screen (`writeUrl`), and
+     * a GENERATE press or a LOAD — a state without it — drops it. ⛔ No preset name here: the documents say it all.
+     */
+    const bootPresetRoom = async ({ preset, region }) => {
+        /** ⛓ MAZE SEEDLING LINK — the documents this route fetched, kept so the rules need no second request. */
+        const fetched = new Map();
+        const link = await openPresetRegion({
+            preset,
+            region,
+            fetchJson: async (path) => {
+                const res = await fetch(frontendUrl(path));
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const doc = await res.json();
+                fetched.set(path, doc);
+                return doc;
+            },
+        });
+        const { sidecar: _sidecar, ...where } = link;
+        adopt(Object.freeze({
+            ...loadPayload(link.sidecar),
+            presetLink: Object.freeze({ ...where, asked: Object.freeze({ preset, region }) }),
+        }));
+        noteSeedlingOrigin(seedlingOriginOf({
+            payload: link.sidecar.playable_payload, rules: fetched.get(link.path) ?? null, player: link.player,
+        }));
+        say(describePresetLink(link));
+    };
+
+    /** The LOAD area's "open a preset room" line: the same route as the URL, and the bar says so on success. */
+    const openPresetFromBox = async () => {
+        const q = new URLSearchParams(window.location.search);
+        q.set('preset', $('labPresetName').value.trim());
+        q.set('region', $('labPresetRegion').value.trim());
+        q.delete('gen');
+        try {
+            const asked = readLabParams(`?${q}`);
+            await bootPresetRoom(asked);
+            params = { ...params, preset: asked.preset, region: asked.region };
+        } catch (e) {
+            say(e.message, true);
+            render();
+            return;
+        }
+        editor = null;
+        lastSolve = null;
+        clearPlay();
+        payloadCheck = null;
+        window.history.replaceState(null, '', `${window.location.pathname}?${q}`);
+        render();
+    };
+
     const loadFromBox = () => {
         try {
             const payload = JSON.parse($('labText').value);
             adopt(loadPayload(payload));
+            /** ⛓ MAZE SEEDLING LINK — a pasted room brings no rules, so a level number in it cannot link (it says so). */
+            noteSeedlingOrigin(seedlingOriginOf({ payload: levelOfPayload(payload) }));
+            /** ⛓ MAZE CONVERTED LINK — the box replaced the link's room, so the bar stops naming it. */
+            const bar = new URLSearchParams(window.location.search);
+            if (bar.has('preset') || bar.has('region')) {
+                bar.delete('preset');
+                bar.delete('region');
+                window.history.replaceState(null, '', `${window.location.pathname}?${bar}`);
+            }
             editor = null;
             lastSolve = null;
             clearPlay();
@@ -2362,6 +2498,8 @@ export function main() {
                 + 'that gets edited, so a click past the edge REFUSES rather than clamping '
                 + 'to the last one',
             onChange: () => { setUi?.render(); render(); },
+            // ⛓ MAZE LINK WIRES (step 3) — the open room's token wires.
+            shapes: linkOverlay,
         });
         say(`OPENED room ${index} ("${entry?.entry_id}") — paint on the canvas, then press `
             + 'CLOSE to fold every edit into ONE `replace-room`');
@@ -3222,6 +3360,7 @@ export function main() {
         if (src === SOURCES.MANUAL) renderManualPanel();
         if (src === SOURCES.SOLVE || src === SOURCES.MANUAL) renderReplayPanel();
         refreshSaveBox();
+        renderLinkLine();
 
         /**
          * ⛓⛓⛓ S2b — **THE WITNESS CLAUSE, AND `certified` UNTOUCHED.** The
@@ -3232,6 +3371,7 @@ export function main() {
          */
         const witness = witnessOf(state, walkReport);
         $('identity').textContent = describeState(state, lastSolve, witness);
+        const seedlingLink = renderSeedlingLink();
         if (witness.seam) say(witness.seam, true);
         $('status').textContent = message || '—';
         $('status').className = messageBad ? 'bad' : 'ok';
@@ -3270,6 +3410,11 @@ export function main() {
              * field is the one fact that separates the two.
              */
             loaded: Boolean(state.loaded),
+            /** ⛓ MAZE CONVERTED LINK — where a link-opened room came from (`null` for any other level). */
+            presetLink: state.presetLink
+                ? (({ asked: _a, ...where }) => where)(state.presetLink) : null,
+            /** ⛓ MAZE SEEDLING LINK — what the line under the identity shows (`{shown: false}` for a plain room). */
+            seedlingLink,
             identity: $('identity').textContent,
             /**
              * ⛓⛓⛓ SLICE 12 — THE TRI-STATE, PUBLISHED AS IT STANDS. ⚠ It was
@@ -3303,6 +3448,21 @@ export function main() {
              *  view marks the clip spent AFTER the move's `onChange` render, so a value
              *  captured at render time would still say `false`. */
             get editClipSpent() { return tool ? tool.clipSpent : null; },
+            /**
+             * ⛓⛓ MAZE LINK WIRES (step 3) — the wires of the room on the canvas: `null` with no tool mounted; else
+             * whether they are drawn, the groups (token, member counts, what a dangling one misses) and the number of
+             * shapes handed to the overlay. ⚠ A GETTER: the toggle repaints without a state change.
+             */
+            get links() {
+                const v = linkView();
+                return v ? {
+                    shown: v.shown,
+                    shapes: v.shapes.length,
+                    groups: v.groups.map((g) => ({
+                        token: g.token, pressers: g.pressers.length, responders: g.responders.length, missing: g.missing,
+                    })),
+                } : null;
+            },
             /**
              * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM, AS A CHANNEL A ROW CAN READ.**
              *
@@ -4149,9 +4309,12 @@ export function main() {
             render();
         });
         lt.on($('labUndo'), 'click', undoCommand.run);
+        // ⛓ MAZE LINK WIRES (step 3): the toggle only redraws; it writes nothing.
+        if ($('labShowLinks')) lt.on($('labShowLinks'), 'change', () => render());
         if ($('labRedo')) lt.on($('labRedo'), 'click', redoCommand.run);
         lt.on($('labDownload'), 'click', download);
         lt.on($('labLoad'), 'click', loadFromBox);
+        if ($('labPresetOpen')) lt.on($('labPresetOpen'), 'click', () => { openPresetFromBox(); });
         lt.on($('labUpload'), 'change', (e) => {
             const file = e.target.files?.[0];
             if (!file) return;
@@ -4229,6 +4392,8 @@ export function main() {
                  */
                 tools: MAZE_EDIT_TOOLS,
                 editTools: { fillRefusal: MAZE_FILL_REFUSAL, clearWhat: $('labClearWhat') },
+                // ⛓ MAZE LINK WIRES (step 3) — the room's token wires (button → door/trap/pulser), see `linkView`.
+                shapes: linkOverlay,
                 lifetime: lt,
                 /**
                  * ⛓ MAZE EDITOR TOOLS (B2) — **A SENTENCE IS PAINTED WHEN IT IS SAID**, as the
@@ -4491,6 +4656,10 @@ export function main() {
         } else if (params.library) {
             await ensureSetSchemas();
             await bootLibrary(params.library);
+        }
+        if (params.preset) {
+            await bootPresetRoom(params);
+            return;
         }
         if (params.gen) {
             /**

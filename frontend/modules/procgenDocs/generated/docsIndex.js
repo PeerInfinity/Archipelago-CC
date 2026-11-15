@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1295,
+        "headings": 1305,
         "indexHeadings": 2,
-        "lines": 36202,
+        "lines": 36373,
         "pages": 4,
-        "words": 543546
+        "words": 548892
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -53,14 +53,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4685
+            "words": 4693
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 26,
-            "lines": 335,
+            "lines": 344,
             "links": [
                 "architecture.md",
                 "cloudberry.md",
@@ -73,7 +73,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 7685
+            "words": 8184
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -124,8 +124,8 @@ export const DOCS_INDEX = frz({
             "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
             "file": "seedling-editor.md",
             "h1": "The Seedling Editor",
-            "headings": 17,
-            "lines": 290,
+            "headings": 18,
+            "lines": 303,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -133,7 +133,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7147
+            "words": 7514
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
@@ -181,7 +181,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 4877
+            "words": 5015
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -207,8 +207,8 @@ export const DOCS_INDEX = frz({
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
             "file": "maze.md",
             "h1": "Maze Substrate",
-            "headings": 30,
-            "lines": 473,
+            "headings": 31,
+            "lines": 487,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -220,14 +220,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 21470
+            "words": 22039
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
-            "headings": 18,
-            "lines": 267,
+            "headings": 20,
+            "lines": 312,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -237,7 +237,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 3905
+            "words": 4803
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
@@ -276,7 +276,7 @@ export const DOCS_INDEX = frz({
             "file": "concepts.md",
             "h1": "Concepts",
             "headings": 22,
-            "lines": 264,
+            "lines": 268,
             "links": [
                 "gotchas.md",
                 "maze.md",
@@ -286,7 +286,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 5364
+            "words": 5853
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
@@ -321,8 +321,8 @@ export const DOCS_INDEX = frz({
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
             "file": "text-adventure.md",
             "h1": "Text Adventure Substrate",
-            "headings": 11,
-            "lines": 118,
+            "headings": 12,
+            "lines": 132,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -332,14 +332,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/text-adventure.md",
-            "words": 1915
+            "words": 2542
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 38,
-            "lines": 864,
+            "lines": 866,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -349,7 +349,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 55267
+            "words": 55647
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -377,8 +377,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 779,
-            "lines": 28237,
+            "headings": 783,
+            "lines": 28294,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -386,7 +386,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 315976
+            "words": 316739
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
@@ -412,8 +412,8 @@ export const DOCS_INDEX = frz({
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the shared iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 34,
-            "lines": 845,
+            "headings": 35,
+            "lines": 858,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -426,7 +426,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 33398
+            "words": 34006
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",

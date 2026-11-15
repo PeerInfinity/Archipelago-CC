@@ -1,0 +1,61 @@
+{
+ "variant": "sword",
+ "records": "captured",
+ "ok": true,
+ "kind": null,
+ "ms": 439,
+ "work": 63,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 236,
+   "work": 11
+  },
+  {
+   "pass": "full",
+   "ok": true,
+   "kind": null,
+   "ticks": 113,
+   "work": 52
+  }
+ ],
+ "ticks": 113,
+ "verbs": [
+  "walk"
+ ],
+ "equipsAt": [
+  [
+   0,
+   2
+  ]
+ ],
+ "presses": [
+  0,
+  2,
+  8,
+  14,
+  20,
+  22,
+  28,
+  40,
+  42,
+  48,
+  54,
+  61,
+  63,
+  69,
+  75,
+  85,
+  87,
+  93,
+  99,
+  105,
+  107
+ ],
+ "primaryWeaponAtEnd": "sword",
+ "level": 25,
+ "hits": [],
+ "deaths": 0
+}

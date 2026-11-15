@@ -1,0 +1,17 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index 97f92b1c..308b4713 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -5714,6 +5714,7 @@ function drive(run, target, perTick, {
+         const before = { x: run.state.x, y: run.state.y };
+         const { transition, hitX, hitY } = run.advance(held);
+         ticks++;
++        if (globalThis.process?.env?.L43DBG && run.level === 43) { const b = (() => { try { const m = run.entities('bosses'); return m ? [...m.values()].map((v) => ({ x: v.x, y: v.y, st: v.state, act: v.activated, fa: v.fullyActivated, w: v.walking, cy: v.clampY, rm: v.removed })) : null; } catch (e) { return String(e).slice(0, 50); } })(); const H = (() => { try { return run.ledger('playerHits').slice(-1).map((h) => [h.t, h.source, h.id]); } catch (e) { return 'x'; } })(); const D = (() => { try { return run.ledger('playerDeaths').length; } catch (e) { return 'x'; } })(); console.error('L43DBG T', run.ticksCompleted, ticks, [...held].join('+') || '-', run.state.x.toFixed(1), run.state.y.toFixed(1), 'D', D, 'H', JSON.stringify(H), 'B', JSON.stringify(b), what.slice(-40)); }
+ 
+         if (transition) {
+             if (until === 'transition') return transition;
++}
++
+@@ -32672,0 +32737 @@ function solveSegmentUnder({
++            if (globalThis.process?.env?.L43DBG) console.error('L43DBG WPS', what, 'attempt', attempt, 'from', run.state.x.toFixed(2), run.state.y.toFixed(2), 't', perTick.length, JSON.stringify(wps.map((w) => [w.x, w.y])));
+@@ -32760,0 +32826,33 @@ function solveSegmentUnder({
