@@ -28,6 +28,8 @@ const META = {
             art: 'meta:character/narrator',
             text: { greeting: 'meta:narrator/greeting' },
             presents: 'guardian',
+            // ⛓ PL-1 — the entry's provenance source (`src`; the loader checks it from part 3 on).
+            src: 'fixture',
         },
         'meta:place/lobby': { kind: 'place', name: 'The Lobby' },
         'meta:object/save-crystal': { kind: 'object', name: 'A Save Crystal', look: { color: '#40a0c0', symbol: '*' } },
@@ -85,9 +87,9 @@ describe('the manifest, read through loadPackStack', () => {
         expect(Object.isFrozen(e) && Object.isFrozen(e.look) && Object.isFrozen(e.text)).toBe(true);
     });
 
-    it('PACK_CONCEPT_KINDS is frozen and carries the four kinds of Q2', () => {
+    it('PACK_CONCEPT_KINDS is frozen and carries the four kinds of Q2 and the four of S6 (⛓ PL-1)', () => {
         expect(Object.isFrozen(PACK_CONCEPT_KINDS)).toBe(true);
-        expect([...PACK_CONCEPT_KINDS].sort()).toEqual(['character', 'info', 'object', 'place']);
+        expect([...PACK_CONCEPT_KINDS].sort()).toEqual(['boon', 'character', 'info', 'object', 'place', 'resource', 'stat', 'task']);
     });
 });
 
@@ -131,6 +133,21 @@ describe('⛔ REFUSAL BY NAME', () => {
         expect(err.message).toMatch(pattern);
     };
     const one = (over) => ({ 'bad:character/x': { ...NARRATOR, ...over } });
+
+    // ⛓ PL-1 — `presents` takes two forms (Z.1): a bare mechanic id, or a namespaced structure id.
+    const task = (presents, kind = 'task') => ({ 'bad:task/x': { kind, name: 'X', presents } });
+    it('a namespaced presents that is not <pack>:<kind>/<slug>', () => refuse(task('bad:quest/x'), /presents "bad:quest\/x" is not a structure id/));
+    it('a namespaced presents of another kind than the concept\'s own', () => refuse(task('bad:stat/x'), /presents the stat "bad:stat\/x", but its own kind is task/));
+    it('two entries of ONE pack presenting the same structure id', () => refuse(
+        { 'bad:task/a': { kind: 'task', name: 'A', presents: 'g:task/x' }, 'bad:task/b': { kind: 'task', name: 'B', presents: 'g:task/x' } },
+        /concepts "bad:task\/a" and "bad:task\/b" both present "g:task\/x"/,
+    ));
+    it('a src that is not a string', () => refuse(one({ src: 3 }), /src must be a provenance source id/));
+    it('a namespaced presents of the right form and kind parses (each structure kind)', () => {
+        for (const kind of ['task', 'stat', 'resource', 'boon', 'place']) {
+            expect(() => createPackConcepts([{ id: 'ok', layers: { concepts: { schema_version: 1, concepts: { [`ok:${kind}/x`]: { kind, name: 'X', presents: `g:${kind}/x` } } } } }])).not.toThrow();
+        }
+    });
 
     it('an unknown schema version', () => {
         let err;

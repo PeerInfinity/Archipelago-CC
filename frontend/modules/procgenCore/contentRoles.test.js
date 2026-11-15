@@ -329,6 +329,14 @@ describe('⛓ S1 resolveRole — the one shared resolver', () => {
 });
 
 describe('assertPresents — every presents in the stack names a concept in the table', () => {
+    it('⛓ PL-1 — a NAMESPACED presents names a structure entry, so it is not looked up in the concept table', async () => {
+        const pc = await conceptsOf({
+            base: BASE,
+            game: { schema_version: 1, concepts: { 'game:task/pick-locks': { kind: 'task', name: 'Pick Locks', presents: 'game:task/pick-locks' } } },
+        });
+        expect(() => assertPresents(pc, CONCEPTS)).not.toThrow();
+        expect(pc.presenting('game:task/pick-locks').name).toBe('Pick Locks');
+    });
     it('refuses an unknown id by pack, key and id', async () => {
         const pc = await conceptsOf({
             base: BASE,
