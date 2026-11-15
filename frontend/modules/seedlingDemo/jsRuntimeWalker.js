@@ -72,6 +72,13 @@ import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js
 
 /** ⛓ WAVE-6 CONSUMER — fidelity ARRIVAL's `SolverRefusal.obstacle.kind` for a box arrived inside a solid. */
 export const ARRIVAL_INSIDE_SOLID = 'arrival-inside-solid';
+/**
+ * ⛓ FALLBACK HONESTY (R1, ⚖ Robert 2026-11-15) — the `SolverRefusal.obstacle.kind` of a refusal that names a PRICED
+ * DANGER (the solver's `dangerObstacleOf` and its CORRIDOR refusals). Logic never expects tanking a hit (⚖ the no-hit
+ * rule), so walking instead through a danger the solver priced is a failure in itself: such a decline FAILS the goal at
+ * once, by the solver's own reason. Every other decline (no obstacle, a budget or deadline, `proximity-hazard`) walks.
+ */
+export const PRICED_DANGER = 'danger';
 /** Re-plan cadence, in ticks (J0(b)'s demo: 8 reached both targets from a live state). */
 export const REPLAN_EVERY = 8;
 /** Arrival tolerance at a waypoint (botDriverV1's default). */
@@ -486,6 +493,12 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     settle(WALK_STATES.FAILED, `the solver declined — ${s.declined}`, { obstacle: s.obstacle });
                     return null;
                 }
+                if (s?.declined && s.obstacle?.kind === PRICED_DANGER) {
+                    // ⛓ FALLBACK HONESTY (R1) — the refusal names a danger the solver priced: the plain walk has no
+                    // model of it and would tank it (measured: L22's wallflyers, 2–35 hits per walk). FAIL, never walk.
+                    settle(WALK_STATES.FAILED, `the solver declined — ${s.declined}`, { obstacle: s.obstacle });
+                    return null;
+                }
                 // ⛓ ENCOUNTER LEGS — the same for an encounter: only the solver's executor fights it, so a walk clears nothing.
                 if (s?.declined && (goal.event || goal.encounter)) {
                     // ⛓ EVENT GOALS — only the solver's `clear-tag` can set the game's flag: "walking instead" walks to
@@ -560,13 +573,19 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             if (death && fbm && declined !== null) { fbm.deaths += 1; fbmLastHits = null; }
             if (death) { waypoints = null; sincePlan = Infinity; if (declined !== null) retryCause = 'a death'; }
         },
-        /** Exposed for the page's status line. */
+        /**
+         * Exposed for the page's status line. ⛔ ONE LINE BY DESIGN: a solver refusal can run to many lines (the
+         * ladder's per-rung reasons); this label shows the reason's first line and says how many it left out. The
+         * whole text is `reason` (and a FAILED settle's message), which the host's bot status carries.
+         */
         describe() {
             if (!goal) return 'bot: idle';
             const what = goal.kind === 'location' ? (goal.event ? `event flag {${goal.event.tag?.level},${goal.event.tag?.tag}}`
                 : goal.encounter ? `the ${goal.encounter.drop?.item} encounter` : `apitem tag ${goal.tag}`)
                 : goal.kind === 'exit' ? `door (${goalTiles(goal).map((t) => t.join(', ')).join(' | ')})` : `tile (${goal.tile.join(', ')})`;
-            return `bot: ${state} → ${goal.name ?? what} in level ${goal.level}${reason ? ` — ${reason}` : ''}`
+            const lines = reason ? String(reason).split('\n') : [];
+            const label = lines.length > 1 ? `${lines[0]} (+${lines.length - 1} more line(s))` : (lines[0] ?? null);
+            return `bot: ${state} → ${goal.name ?? what} in level ${goal.level}${label ? ` — ${label}` : ''}`
                 + `${playing ? '' : ' (paused)'}`;
         },
     };

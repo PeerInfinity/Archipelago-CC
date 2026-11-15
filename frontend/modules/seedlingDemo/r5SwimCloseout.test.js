@@ -85,7 +85,7 @@ describe('R5-swim D1: the bait walk may not re-enter itself (the mid-room stack 
         const s = rt.playback.solverStats;
         expect(s).toMatchObject({ solves: 0, declines: 1 });
         expect(s.lastDecline).not.toMatch(/Maximum call stack/);
-        // The page keeps the refusal's first line; the climb (with BAIT_REENTRY) is the row above.
+        // The page keeps the WHOLE refusal (fallback honesty); its first line is the ladder's, the climb (with BAIT_REENTRY) is the row above.
         expect(s.lastDecline).toMatch(/^solverBot\(js-runtime-L6-exit\) reach-exit \(224,32\)->L7 -> bait \(bob@96,16\) stance: the combat ladder is EXHAUSTED/);
     }, 60_000);
 });
