@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1299,
+        "headings": 1300,
         "indexHeadings": 2,
-        "lines": 36284,
+        "lines": 36301,
         "pages": 4,
-        "words": 545677
+        "words": 546578
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -276,7 +276,7 @@ export const DOCS_INDEX = frz({
             "file": "concepts.md",
             "h1": "Concepts",
             "headings": 22,
-            "lines": 264,
+            "lines": 267,
             "links": [
                 "gotchas.md",
                 "maze.md",
@@ -286,7 +286,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 5364
+            "words": 5638
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
@@ -321,8 +321,8 @@ export const DOCS_INDEX = frz({
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
             "file": "text-adventure.md",
             "h1": "Text Adventure Substrate",
-            "headings": 11,
-            "lines": 118,
+            "headings": 12,
+            "lines": 132,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -332,7 +332,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/text-adventure.md",
-            "words": 1915
+            "words": 2542
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",

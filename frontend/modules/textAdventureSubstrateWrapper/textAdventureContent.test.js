@@ -17,10 +17,11 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
 import {
     TEXT_ADVENTURE_ROOM_REFUSALS, extractTextAdventureRules, generateTextAdventureRoom, placeTextAdventureRules,
-    presentedProse, roomPlace, serializeTextAdventureRoom,
+    deserializeTextAdventureRoom, gateItemText, presentedProse, roomExtrasOf, roomPlace, roomThings,
+    serializeTextAdventureRoom,
 } from './textAdventureRoom.js';
 import {
-    GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONTENT_ROLES,
+    GATE_PROSE_SLOTS, ITEM_PROSE_SLOTS, TEXT_ADVENTURE_CONCEPT_REALISATIONS, TEXT_ADVENTURE_CONTENT_ROLES,
 } from './textAdventureConceptRealisations.js';
 import { arrivalLine } from './templating.js';
 import { CONCEPTS } from '../procgenCore/concepts.js';
@@ -70,14 +71,24 @@ const FILES = {
             [`${THEME}:place/the-armoury`]: {
                 kind: 'place', name: 'The Armoury', presents: 'sword',
             },
+            // ⛓ S1 — things: a character, an object, a piece of information, and a character whose line does not resolve
+            [`${THEME}:character/clerk`]: {
+                kind: 'character', name: 'The Clerk', description: 'A clerk with a ledger.',
+                text: { says: `${THEME}:clerk/says` },
+            },
+            [`${THEME}:object/ledger`]: { kind: 'object', name: 'A Ledger' },
+            [`${THEME}:info/rule`]: { kind: 'info', name: 'A rule', text: { body: `${THEME}:rule/body` } },
+            [`${THEME}:character/mute`]: { kind: 'character', name: 'Mute', text: { says: `${THEME}:mute/missing` } },
         },
     },
     [`${THEME}/text/manifest.json`]: {
         schema_version: 1,
         strings: {
             [`${THEME}:gate/blocked`]: 'The Gate to {destinationRegion} knows its rule, and you do not meet it.',
-            [`${THEME}:gate/passedWith`]: 'The Gate checks your sword and steps aside for {destinationRegion}.',
+            [`${THEME}:gate/passedWith`]: 'The Gate checks for {item} & steps aside for {destinationRegion}.',
             [`${THEME}:water/blocked`]: 'Half a message.',
+            [`${THEME}:clerk/says`]: 'You are in {roomName} ({regionId}) & I keep {unknown}.',
+            [`${THEME}:rule/body`]: 'Every room in {regionId} has a rule.',
         },
     },
 };
@@ -128,6 +139,91 @@ describe('the declaration', () => {
     });
     it('the default pack offers no place: alone, it names no room', () => {
         expect(roomPlace(DEFAULT_SET, 'region_1_1', createRng(1))).toBeNull();
+    });
+});
+
+describe('⛓ S1 gateItemText — the item a gate\'s rule asks for', () => {
+    it('each need\'s AP item id, joined with " and "; no item ⇒ null', () => {
+        const R = TEXT_ADVENTURE_CONCEPT_REALISATIONS;
+        expect(gateItemText(R.guardian.placements.gate)).toBe(CONCEPTS.sword.item.id);
+        expect(gateItemText(R.water.placements.gate)).toBe(CONCEPTS.swim.item.id);
+        expect(gateItemText({ needs: ['sword', 'swim'] })).toBe(`${CONCEPTS.sword.item.id} and ${CONCEPTS.swim.item.id}`);
+        expect(gateItemText({ needs: [] })).toBeNull();
+        expect(gateItemText(null)).toBeNull();
+    });
+});
+
+describe('⛓ S1 roomThings — one holder and one piece of information per room, by hash', () => {
+    const CON = FILES[`${THEME}/concepts/manifest.json`].concepts;
+    it('the default pack alone offers none: no read, no draw, no thing', () => {
+        const rng = { getState: () => { throw new Error('read'); }, next: () => { throw new Error('drew'); } };
+        expect(roomThings(DEFAULT_SET, 'Keep', rng)).toEqual([]);
+        expect(roomThings(null, 'Keep', rng)).toEqual([]);
+    });
+    it('the holder carries the information; text baked with {regionId}/{roomName} (escaped), other placeholders kept', async () => {
+        const set = await themeSet();
+        const [t, ...rest] = roomThings(set, 'Keep', noDrawRng(), { roomName: 'The Lobby' });
+        expect(rest).toEqual([]);
+        expect(t.id).toBe('thing_0');
+        // presenters (the Gate, the swim, the armoury) never hold; the mute character's line does not resolve
+        const holders = [`${THEME}:character/clerk`, `${THEME}:object/ledger`];
+        expect(holders).toContain(t.concept);
+        expect(t.kind).toBe(CON[t.concept].kind);
+        expect(t.name).toBe(CON[t.concept].name);
+        expect(t.info).toEqual({
+            concept: `${THEME}:info/rule`, name: CON[`${THEME}:info/rule`].name,
+            body: strings(`${THEME}:rule/body`).replace('{regionId}', 'Keep'),
+        });
+        if (t.kind === 'character') {
+            expect(t.says).toBe('You are in The Lobby (Keep) &amp; I keep {unknown}.');
+            expect(t.description).toBe(CON[t.concept].description);
+        } else {
+            expect(t).not.toHaveProperty('says');
+        }
+    });
+    it('every holder candidate is reached by some region; the pick is a function of state and region id', async () => {
+        const set = await themeSet();
+        const seen = new Set();
+        for (let i = 0; i < 64; i++) seen.add(roomThings(set, `region_${i}`, noDrawRng())[0].concept);
+        expect([...seen].sort()).toEqual([`${THEME}:character/clerk`, `${THEME}:object/ledger`].sort());
+        expect(roomThings(set, 'Keep', noDrawRng(3))).toEqual(roomThings(set, 'Keep', noDrawRng(3)));
+    });
+    it('information with no holder is a thing of kind info', async () => {
+        const set = await themeSet();
+        const onlyInfo = { ...set, concepts: { ...set.concepts, keys: () => set.concepts.keys().filter((k) => !/character|object/.test(k) || set.concepts.get(k).presents) } };
+        const [t] = roomThings(onlyInfo, 'Keep', noDrawRng());
+        expect(t).toEqual({
+            id: 'thing_0', kind: 'info', concept: `${THEME}:info/rule`, name: CON[`${THEME}:info/rule`].name,
+            info: { concept: `${THEME}:info/rule`, name: CON[`${THEME}:info/rule`].name, body: 'Every room in Keep has a rule.' },
+        });
+    });
+    it('the room core writes them; serialize → deserialize → serialize carries them unchanged; none ⇒ no key', async () => {
+        const set = await themeSet();
+        const build = (params) => {
+            const { world } = generateTextAdventureRoom({ region_id: 'Keep', exits: [{ exit_id: 'Gate', side: 'N' }], params, rng: noDrawRng() });
+            return serializeTextAdventureRoom(world, extractTextAdventureRules(world, { regionId: 'Keep' }));
+        };
+        const payload = build({ contentSet: set });
+        expect(payload.things).toEqual(roomThings(set, 'Keep', noDrawRng(), { roomName: payload.prose.name }));
+        const again = deserializeTextAdventureRoom(payload);
+        expect(serializeTextAdventureRoom(again, extractTextAdventureRules(again, { regionId: 'Keep' }))).toEqual(payload);
+        expect(build({ contentSet: DEFAULT_SET })).not.toHaveProperty('things');
+    });
+});
+
+describe('⛓ S1 roomExtrasOf — every room\'s place and things, from the whole document', () => {
+    it('text-adventure rooms with a name, description or things; every other region absent; clones', () => {
+        const things = [{ id: 'thing_0', kind: 'object', concept: 'p:object/x', name: 'X' }];
+        const sidecars = {
+            a: { substrate: 'text_adventure', playable_payload: { prose: { name: 'The A', description: 'Desc.', exits: {}, locations: {} }, things } },
+            b: { substrate: 'text_adventure', playable_payload: { prose: { exits: { e: { moveMessage: 'm' } }, locations: {} } } },
+            c: { substrate: 'maze', playable_payload: { prose: { name: 'not a room' } } },
+            d: { substrate: 'text_adventure', playable_payload: { things } },
+        };
+        const out = roomExtrasOf(sidecars);
+        expect(out).toEqual({ a: { name: 'The A', description: 'Desc.', things }, d: { things } });
+        expect(out.a.things).not.toBe(things);
+        expect(roomExtrasOf(null)).toEqual({});
     });
 });
 
@@ -223,7 +319,7 @@ const ta = (rulesJson) => Object.entries(rulesJson.preset_sidecars['1']).filter(
 /** The document minus every text-adventure payload's `prose` and the recorded content list: what a theme may not move. */
 const withoutPresentation = (rulesJson) => {
     const out = structuredClone(rulesJson);
-    for (const [, s] of ta(out)) delete s.playable_payload.prose;
+    for (const [, s] of ta(out)) { delete s.playable_payload.prose; delete s.playable_payload.things; }
     for (const block of Object.values(out.procgen_metadata ?? {})) delete block[RECORDED_CONTENT_KEY];
     return out;
 };
@@ -249,7 +345,14 @@ describe('⛓ the concept trial world with a fixture theme: presentation moves, 
         const guarded = ta(world.rulesJson).flatMap(([, s]) => Object.values(s.playable_payload.prose?.exits ?? {}));
         expect(guarded.length).toBeGreaterThan(0);
         const g = presentedProse(set, 'gate', 'guardian');
-        for (const exit of guarded) expect(exit).toEqual({ inaccessibleMessage: g.blocked, moveMessage: g.passedWith });
+        // ⛓ S1: `{item}` is filled at generation with the item the realisation needs; `{destinationRegion}` is play's
+        const item = gateItemText(TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate);
+        expect(item).toBe(CONCEPTS.sword.item.id);
+        for (const exit of guarded) {
+            expect(exit).toEqual({ inaccessibleMessage: g.blocked, moveMessage: g.passedWith.split('{item}').join(item) });
+            expect(exit.moveMessage).toContain('{destinationRegion}');
+            expect(exit.moveMessage).toContain(' & ');   // the authored template is markup: not escaped
+        }
         expect(g.blocked).toBe(strings(`${THEME}:gate/blocked`));
     });
     it('every text-adventure room carries the fixture\'s place; the control\'s carry none', () => {
