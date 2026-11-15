@@ -1,7 +1,7 @@
 # Region Map step 2: the shared region view model
 
 **Session:** `region-map-view-model` (Opus). **Branch:** `region-map-view-model`, cut at `9b99178fa75bb2fc818cd40435c00af0347b40de` (origin/main = train seedling-maze-link, which carries step 1).
-**Plan:** `NewDocs/plans/region-map-panel-plan.md` step 2 (⚖ GO, user, 2026-11-14). The Region Graph's rectangular-node redesign is cancelled. The user will soon rethink its click UI, so the actions now live in one place that both panels call.
+**Plan:** the Region Map panel plan (planner archipelago-cc-23), step 2 (⚖ GO, user, 2026-11-14). The Region Graph's rectangular-node redesign is cancelled. The user will soon rethink its click UI, so the actions now live in one place that both panels call.
 
 **Verdict.**
 - The renderer-agnostic view model, the view-state wrapper and the shared actions are in `frontend/modules/regionView/`.
@@ -217,7 +217,7 @@ In practice, `force-show` and `zoom` locations disappear after any rebuild. The 
 ## Packet facts (also sent to js-19)
 
 - **Gitlinks:** 0.
-- **Closure ∩ diff = ∅.** Compared against `NewDocs/plans/js-gate-tools/closure.txt`, the diff touches 18 files (plus 19 dump files):
+- **Closure ∩ diff = ∅.** Compared against the js derived-rule closure list (js-19's gate tools), the diff touches 18 files (plus 19 dump files):
   - `scripts/dev/region-graph-class-snapshot.mjs`;
   - `frontend/modules/regionView/{README.md, regionActions.js, regionActions.test.js, regionViewModel.js, regionViewModel.test.js, regionViewState.js, regionViewState.test.js}`;
   - `frontend/modules/regionGraph/{graphDataManager.js, graphInteractionManager.js, navigationManager.js, regionGraphDispatch.test.js, regionGraphOriginators.js}`;
