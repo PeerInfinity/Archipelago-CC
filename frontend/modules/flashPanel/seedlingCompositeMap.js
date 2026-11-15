@@ -40,7 +40,7 @@ import {
     SEEDLING_BACKGROUND, bakeLevel, levelRecordFor, levelWorldFor, loadSeedlingArt, recordWorldOf,
 } from '../seedlingDemo/seedlingLevelBake.js';
 import { TILE } from '../seedlingDemo/seedlingSkinRenderer.js';
-import { dirOfExit } from '../seedlingDemo/seedlingSetMap.js';
+import { dirOfExit } from '../seedlingDemo/seedlingDoorDirection.js';
 import SUBREGION_PARTITION from './atlases/seedling-subregion-partition.json' with { type: 'json' };
 
 /** The dim laid over a sub-region cell's tiles that belong to the rest of its level. */
@@ -201,7 +201,7 @@ function seedlingLevelPixelSize(payload, atlases) {
  * finds it through the registry). `ctx = {sidecars, displayRegionOf, atlases?}` → `{nodes, links}`:
  *   · nodes = the DISPLAY regions (`level_N__rRcC` folds onto `level_N` by its payload), in sidecar order;
  *   · links = every sidecar exit with a `targetRegion` in the sidecars, display-folded (a link inside one level is
- *     dropped), `kind` by `seedlingExitLayoutKind`, and — for a `join` — `dir` by `seedlingSetMap.dirOfExit` (the E3
+ *     dropped), `kind` by `seedlingExitLayoutKind`, and — for a `join` — `dir` by `dirOfExit` (`seedlingDemo/seedlingDoorDirection.js`, re-exported by `seedlingSetMap`) (the E3
  *     door rule: the door's side of its level, else the arrival's side of the target, reversed). The door is the
  *     exit's first `exit_tiles` cell (level tiles → pixels), the arrival its `target_spawn` (pixels). Stairs and pits
  *     carry no `dir` (they are vertical), and an interior door gets `null` from `dirOfExit` itself.
