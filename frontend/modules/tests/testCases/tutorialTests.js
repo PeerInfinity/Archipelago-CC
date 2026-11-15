@@ -546,6 +546,30 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
         }
     };
     const timer = setInterval(() => sample('tick'), 15000);
+    // MEASUREMENT-ONLY (cloud slice seedling-hammer-wallflyer-flip-walk-check): the GAME's own damage readout
+    // (`botStatus()`: `hits`, `hits_timer`, `level`, and `deaths` on the JS runtime), polled every 100 ms; a line
+    // whenever any of them changes, so a hit on a crossing is named with its level and the bot's status.
+    let hitPrev = null;
+    let hitLines = 0;
+    const hitTimer = setInterval(() => {
+        try {
+            const g = getActiveFlashPanel()?.adapter?._getFlash?.();
+            const raw = g?.botStatus?.();
+            const st = typeof raw === 'string' ? JSON.parse(raw) : raw;
+            if (!st || typeof st !== 'object') return;
+            const cur = { hits: st.hits ?? null, hitsTimer: (st.hits_timer ?? 0) > 0, level: st.level ?? null, deaths: st.deaths ?? null };
+            const changed = hitPrev === null || cur.hits !== hitPrev.hits || cur.hitsTimer !== hitPrev.hitsTimer
+                || cur.level !== hitPrev.level || cur.deaths !== hitPrev.deaths;
+            if (changed && hitLines < 2000) {
+                hitLines += 1;
+                const status = document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? '';
+                console.log(`[MEASURE hit] t=${((performance.now() - t0) / 1000).toFixed(1)}s level=${cur.level} hits=${cur.hits}`
+                    + ` hits_timer=${st.hits_timer ?? '?'} deaths=${cur.deaths ?? '?'} x=${st.x ?? '?'} y=${st.y ?? '?'}`
+                    + ` game_time=${st.game_time ?? '?'} status=${JSON.stringify(status.slice(0, 160))}`);
+            }
+            hitPrev = cur;
+        } catch { /* torn down */ }
+    }, 100);
     // The skip probe: on a bot error, log it, count the refused head as seen and play on from the next entry.
     // It FIXES nothing; an entry after a skipped item may refuse only because that item was never collected.
     let skips = 0;
@@ -573,7 +597,7 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
     }, 1000) : null;
     return {
         skipsLeft: () => MEASURE_SKIPS - skips,
-        stop: () => { clearInterval(timer); if (skipTimer) clearInterval(skipTimer); sample('end'); try { unsub?.(); } catch { /* */ } },
+        stop: () => { clearInterval(timer); clearInterval(hitTimer); if (skipTimer) clearInterval(skipTimer); sample('end'); try { unsub?.(); } catch { /* */ } },
     };
 }
 
