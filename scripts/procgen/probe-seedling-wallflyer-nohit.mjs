@@ -15,8 +15,12 @@
  * The model only chooses keys. The GAME is the judge: every check reads what the wasm did.
  * Staged: position, inventory and inputs. No flag, no removed body, no game value; `noDamage` and `noclip` are false.
  *
- * ⛔ NO WAND ROW. The model refuses a WandShot in a room that holds a wallflyer (`MODEL_REFUSES`), so there is no
- * search for it, and a tape built without the shots does not replay on the game (a cast moves the player). Unwitnessed.
+ * ⛓ THE WAND ROW IS A HAND PLAN (slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 "Wand L22 + CI cross-check").
+ * The model refuses a WandShot in a room that holds a wallflyer (`MODEL_REFUSES`), so there is no search for it. The
+ * plan `l22-25-21-wand` was authored by hand (its `hand` field says by what) and is played on the GAME only: its model
+ * leg is skipped and says so. Its CONTROL (the plans file's `controls`: the same keys with `primary` dropped, held with
+ * no item) is played too, and the game must NOT cross cleanly on it, so the Wand is what clears the line. L25 east's
+ * Wand stays unwitnessed (the gate table's `unwitnessed`).
  *
  * And the DERIVATION the rule would stand on (`BAND` rows): every wallflyer's flight band, from the class's own
  * transcription (`seedlingWallFlyerBands.wallFlyerBands`).
@@ -301,7 +305,34 @@ export function readChestRun(ticks, chest, centre = (o) => ({ x: o.x, y: o.y }))
         levels: [...new Set(ticks.map((o) => o.level))], final: ticks.at(-1) ?? null };
 }
 
-export const readPlans = (file = PLANS_FILE) => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : { plans: {}, notFound: {} });
+export const readPlans = (file = PLANS_FILE) => {
+    const p = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
+    return { ...p, plans: p.plans ?? {}, notFound: p.notFound ?? {}, controls: p.controls ?? {} };
+};
+
+/**
+ * A plan's control: the same keys with the control's `drop` keys removed (refused by name if the stored control is not
+ * exactly that), held with the control's arm. `null` for a plan with none.
+ */
+export function controlOf(plans, name) {
+    const ctl = plans.controls?.[name];
+    if (!ctl) return null;
+    const p = plans.plans[name];
+    if (!p) throw new Error(`probe-seedling-wallflyer-nohit: control ${name} has no plan`);
+    const want = p.inputs.filter((i) => !(ctl.drop ?? []).includes(i.key));
+    if (ctl.ticks !== p.ticks || JSON.stringify(ctl.inputs) !== JSON.stringify(want)) {
+        throw new Error(`probe-seedling-wallflyer-nohit: control ${name} is not the plan's keys without [${(ctl.drop ?? []).join(', ')}]`);
+    }
+    const c = parseCase(name);
+    return { name: caseName({ ...c, arm: ctl.arm }), case: { ...c, arm: ctl.arm }, perTick: perTickOf(ctl.inputs, ctl.ticks) };
+}
+/** Is the plan played on the game only (a hand plan of an arm the model refuses)? Refuses a refused arm with no `hand`. */
+export function gameOnly(plans, name) {
+    const { arm } = parseCase(name);
+    const p = plans.plans[name];
+    if (MODEL_REFUSES[arm] && !p?.hand) throw new Error(`probe-seedling-wallflyer-nohit: ${name} holds ${arm}, which the model refuses, and is not a hand plan`);
+    return !!(MODEL_REFUSES[arm] && p.hand);
+}
 
 /** A case's tape for the game: the staging, the keys, nothing disabled. */
 export async function caseTape(map, name, perTick) {
@@ -367,7 +398,7 @@ async function main() {
         }
         if (process.argv.includes('--write')) {
             const sorted = (o) => Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k]]));
-            writeFileSync(PLANS_FILE, `${JSON.stringify({ $comment: stored.$comment, plans: sorted(stored.plans), notFound: sorted(stored.notFound) })}\n`);
+            writeFileSync(PLANS_FILE, `${JSON.stringify({ $comment: stored.$comment, plans: sorted(stored.plans), notFound: sorted(stored.notFound), controls: sorted(stored.controls) })}\n`);
             console.log(`wrote ${PLANS_FILE}`);
         }
         return;
@@ -392,8 +423,12 @@ async function main() {
 
     const only = arg('only', null)?.split(',');
     const cases = [];
-    for (const [name, p] of Object.entries(stored.plans)) cases.push({ name, perTick: perTickOf(p.inputs, p.ticks) });
-    const picked = cases.filter((c) => !only || only.includes(c.name));
+    for (const [name, p] of Object.entries(stored.plans)) {
+        cases.push({ name, perTick: perTickOf(p.inputs, p.ticks), gameOnly: gameOnly(stored, name) });
+        const ctl = controlOf(stored, name);
+        if (ctl) cases.push({ name: ctl.name, perTick: ctl.perTick, controlOf: name });
+    }
+    const picked = cases.filter((c) => !only || only.includes(c.name) || (c.controlOf && only.includes(c.controlOf)));
 
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
     let failed = 0;
@@ -482,18 +517,26 @@ async function main() {
             await browser.close();
             process.exit(failed === 0 ? 0 : 1);
         }
-        for (const { name, perTick } of picked.flatMap((e) => Array(repeat).fill(e))) {
+        for (const { name, perTick, gameOnly: handOnly, controlOf: ctlOf } of picked.flatMap((e) => Array(repeat).fill(e))) {
             const c = parseCase(name);
-            const model = await replayOnModel(map, c, perTick);
+            // A hand plan of an arm the model refuses, and its control, are played on the game only.
+            const model = handOnly || ctlOf ? { skipped: handOnly ? MODEL_REFUSES[c.arm] : `control of ${ctlOf}` } : await replayOnModel(map, c, perTick);
             const tape = parseTape({ ...await caseTape(map, name, perTick), pins: [...PIN_NAMES] });
             const g = await play(tape);
             const read = readRun(g.ticks, { maxHits: g.maxHits });
-            console.log(`ROW ${JSON.stringify({ case: name, set_id: set.set_id, mounted: g.mounted?.active, observations: g.ticks.length,
-                boot: tape.boot, held: g.items, model, ...read })}`);
+            const label = ctlOf ? `${name} (control of ${ctlOf})` : name;
+            console.log(`ROW ${JSON.stringify({ case: name, ...(ctlOf ? { controlOf: ctlOf } : {}), ...(handOnly ? { hand: true } : {}), set_id: set.set_id,
+                mounted: g.mounted?.active, observations: g.ticks.length, boot: tape.boot, held: g.items, model, ...read })}`);
             if (process.argv.includes('--dump')) console.log(`TICKS ${g.ticks.filter((o) => o.t % 10 === 0).map((o) => `${o.t}:${o.level}:${o.x.toFixed(1)},${o.y.toFixed(1)}`).join(' ')}`);
-            check(`${name}: the game ran the tape to its end on the delivered set`,
+            check(`${label}: the game ran the tape to its end on the delivered set`,
                 g.ticks.length === tape.tick_count + 1 && g.mounted?.active === set.set_id, `${g.ticks.length} obs, ${g.mounted?.active}`);
-            check(`${name}: the model lands in L${c.to} with no hit`, model.level === c.to && model.hits.length === 0, JSON.stringify(model));
+            if (ctlOf) {
+                check(`${label}: the same keys holding [${ARMS[c.arm].join(', ') || 'no item'}] do NOT cross cleanly on the GAME (a hit is taken), so the arm is what clears the line`,
+                    !isNoHitCrossing(c, read) && read.maxHits > 0, JSON.stringify(read));
+                continue;
+            }
+            if (handOnly) console.log(`INFO ${JSON.stringify({ case: name, modelLeg: 'skipped', why: MODEL_REFUSES[c.arm] })}`);
+            else check(`${name}: the model lands in L${c.to} with no hit`, model.level === c.to && model.hits.length === 0, JSON.stringify(model));
             check(`${name}: the GAME lands in L${c.to} from L${c.from}'s door holding [${ARMS[c.arm].join(', ') || 'no item'}], with no hit taken`,
                 isNoHitCrossing(c, read), JSON.stringify(read));
         }
