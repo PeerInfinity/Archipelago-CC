@@ -25034,6 +25034,7 @@ function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allo
     if (typeof fork !== 'function') return { why: 'body-family arm: no fork to try the kill on (the solve has no `forkRun`)' };
     const opts = solverPlanOpts(run, contacts);
     let forks = 0;
+    let deadline = false;
     for (const t of targets) {
         const body = t.family === 'wallflyer' ? liveWallFlyer(run, t.id) : liveDrills(run).find((d) => d.id === t.id);
         if (t.family === 'wallflyer' && (body.vx !== 0 || body.vy !== 0)) { whys.push(`${t.id}: in flight now`); continue; }
@@ -25046,7 +25047,10 @@ function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allo
         const tried = [];
         for (const stance of st.ok) {
             if (forks >= BODY_FAMILY_KILL.maxForks) { tried.push(`the ${BODY_FAMILY_KILL.maxForks}-fork bound`); break; }
+            // ⛓ wallflyer-gaps G1: the segment's fork replays under the caller's deadline and is `null` once it trips —
+            // the arm then stops by name and the rung's own refusal (and the budget's) is what the solve says
             const f = fork();
+            if (f === null) { tried.push('the caller\'s deadline tripped inside the fork'); deadline = true; break; }
             forks += 1;
             const keys = [];
             const equips = [];
@@ -25078,6 +25082,7 @@ function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allo
             return { record };
         }
         whys.push(`${t.id}: ${tried.slice(0, 4).join(' | ')}${tried.length > 4 ? ` (+${tried.length - 4} more)` : ''}`);
+        if (deadline) break;
     }
     const why = `body-family arm: no hitless kill (${forks} fork(s)) — ${whys.join(' || ')}`;
     BODY_FAMILY_KILL_COUNTS.refused.push({ t: perTick.length, why });
@@ -29774,6 +29779,13 @@ function solveSegmentUnder({
                     why: `${hunted.id} died on the staging walk to ${at}`, staged: { cell: row.cell, wait: 0, from: t0 } };
             }
             const f = fork();
+            if (f === null) {
+                // ⛓ wallflyer-gaps G1: the fork's replay tripped the caller's deadline
+                rewind.to(t0);
+                row.verdict = 'deadline';
+                whys.push(`${at}: the caller's anytime deadline tripped inside the still wait's fork`);
+                break;
+            }
             const fh0 = f.ledger('playerHits').length;
             let found = null;
             for (let d = 0; d <= cell.ceiling; d += 1) {
