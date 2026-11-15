@@ -24778,8 +24778,8 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
 
 /**
  * ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL — THE KILL RUNG'S ARMS FOR A WALLFLYER AND A DRILL (`WALLFLYER_KILL_ARM`,
- * `SEEDLING_WALLFLYER_KILL_ARM`; `DRILL_KILL_ARM`, `SEEDLING_DRILL_KILL_ARM`; both OFF: the rung's words and work are
- * the BEFORE ones, no fork is made).
+ * `SEEDLING_WALLFLYER_KILL_ARM`, ON since the wallflyer-kill flip; `DRILL_KILL_ARM`, `SEEDLING_DRILL_KILL_ARM`, OFF; an
+ * arm OFF leaves the rung's words and work the BEFORE ones, no fork is made).
  *
  * With the corridor forecast pricing body contact (`corridorBodyPricing`), a walk that crosses a wallflyer's ray or a
  * drill's run range is refused by the probe — but the kill rung's arms target chasers, spinners and statics only, so the
@@ -24802,10 +24802,13 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
  * refusal: the arm answers `why` and the rung goes on (DETOUR, …) as before, the why one line longer.
  * ⚠ The weapon is `drillKillWeapon`'s (the primary sword or spear, else a held one's slot): Fire kills neither body.
  */
+// ⚖ ON by default since the wallflyer-kill flip (the user, 2026-11-15: *"Flip WALLFLYER_KILL_ARM alone (Recommended)"*,
+// after whole-game re-measure-3 found survey step 35, L22 → L29, the walk's first wall): `SEEDLING_WALLFLYER_KILL_ARM=0`
+// opts out. `DRILL_KILL_ARM` stays OFF.
 export const WALLFLYER_KILL_ARM = {
-    enabled: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM === '1',
+    enabled: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM !== '0',
 };
-export const WALLFLYER_KILL_ARM_DEFAULT = false;
+export const WALLFLYER_KILL_ARM_DEFAULT = true;
 /** Run `fn` with `WALLFLYER_KILL_ARM` set to `enabled`, restoring the previous value (also on a throw). */
 export function withWallFlyerKillArm(enabled, fn) {
     return withSwitch(WALLFLYER_KILL_ARM, enabled, fn);
