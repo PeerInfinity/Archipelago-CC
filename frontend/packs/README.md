@@ -46,13 +46,18 @@ GitHub Pages serves only `frontend/`.
   reads them off the canvas. (Content sets R5) three more recipes are named by the theme's own concepts as their
   `art`: the Gate (a square with two dot eyes and a keyhole), Progressive Sword and Progressive Swim. A maze draws a
   concept gate or item from the art key of the latest pack concept that presents its mechanic
-  (`mazeTileArt.conceptArtKeys`), else its baked colour and symbol (`mazeRoom/mazeConceptArt.test.js`). The art is
+  (`mazeTileArt.conceptArtKeys`), else its baked colour and symbol (`mazeRoom/mazeConceptArt.test.js`). (Content
+  sets TIDY-1) The composite map's maze cell (the APWorld Editor's Map tab, the pipeline's map) draws the same tiles,
+  gates, items and things through the same seams once the world's stack has loaded, and a world with no theme draws
+  as before (`mazeRoom/mazeCompositeArt.test.js`; the in-app row `meta-trial-composite-map-art`). The art is
   play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the
   theme gives them no look, so the baked colour and symbol stay the default; their art key draws the pickup), and offers twelve `place` concepts for the text
   adventure's rooms. It does NOT present water: water falls through to each substrate's default pack. ⛔ No line
-  may claim something untrue of the world: a place describes only what every generated room has. HAND-MADE, written
+  may claim something untrue of the world: a place describes only what every generated room has, and a
+  `description` is not a template, so it names no item or region (the Gate's says only that it knows its own rule;
+  the rule itself is in its `blocked` and `passedWith` lines, as `{item}`). HAND-MADE, written
   for this repository, MIT (see `pack.json`). `procgenPipeline/metaTrialWorld.test.js` and the committed
   `frontend/presets/meta_trial/` hold its words; an edit here owes `make-seedling-spiral-room-preset.mjs
   --state=meta-trial`.
