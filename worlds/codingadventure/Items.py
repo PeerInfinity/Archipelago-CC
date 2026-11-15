@@ -68,5 +68,7 @@ item_table: Dict[str, ItemData] = {
     "Cloud Provider": ItemData(400100049, ItemClassification.progression, "Cloud Provider"),
     "Domain": ItemData(400100050, ItemClassification.progression, "Domain"),
     "Deployment Complete": ItemData(400100051, ItemClassification.progression, "Deployment Complete"),
-    "Victory": ItemData(None, ItemClassification.progression, "Victory"),
+    # The goal: ID-bearing (max+1, the WorldGen twin's ID), locked at the ID-bearing
+    # "Production Deployment" location on every seed. Never in the pool.
+    "Victory": ItemData(400100052, ItemClassification.progression, "Victory"),
 }

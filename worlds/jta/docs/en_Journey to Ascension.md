@@ -14,7 +14,7 @@ A **post-generation cost adjustment** algorithm ensures every randomized seed is
 
 ## What is the goal?
 
-Reach the configured goal zone (default: zone 15). Once you reach it, your game is complete and any remaining items in your world become accessible to other players.
+Reach the configured goal zone (default: zone 15), then check its **Reach Goal Zone** location. The server then marks your game complete, and any remaining items in your world become accessible to other players.
 
 The scope of randomization scales with the goal: only perks on tasks in zones before the goal zone are shuffled. A goal of 15 randomizes roughly 25-30 perks; a goal of 27 (the full game) randomizes around 40.
 

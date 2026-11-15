@@ -923,7 +923,7 @@
         "locations": [
           {
             "name": "Reach Goal Zone",
-            "id": null,
+            "id": 590141,
             "access_rule": {
               "rule": "True_"
             },
@@ -933,8 +933,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
           }
         ]
       }
@@ -1512,13 +1511,12 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": null,
+        "id": 590056,
         "groups": [
-          "Event"
+          "Everything"
         ],
         "classification": "progression",
-        "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }
@@ -1771,7 +1769,8 @@
           "138": "The Worm",
           "144": "Reflections on the Journey",
           "155": "Energetic Memory"
-        }
+        },
+        "reports_goal_by_server_item": true
       },
       "web": {
         "theme": "ocean",
