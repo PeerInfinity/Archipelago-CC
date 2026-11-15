@@ -308,13 +308,16 @@ describe('MessageHandler: local generated-world rules + server placements', () =
     expect(loads(bus)[0].data.jsonData.regions).toEqual(ROOM.regions);
   });
 
-  it("an unmarked committed preset of the picked game: connects as before", async () => {
+  it("an unmarked committed preset of the picked game at another seed: the wait for rules, not the boot rules", async () => {
     stubFetch({ './presets/preset_files.json': PRESET_FILES, './presets/apquest/AP_14089154938208861744/AP_14089154938208861744_rules.json': readJson(ROOT, 'frontend', 'presets', 'apquest', 'AP_14089154938208861744', 'AP_14089154938208861744_rules.json') });
     handler.chosenGame = 'APQuest';
     handler.processMessage({ cmd: 'RoomInfo', games: ['APQuest', GAME], seed_name: SEED });
     await flush(10);
     expect(sent('Connect')[0]).toMatchObject({ game: 'APQuest' });
-    expect(handler._serverBuild).toBe(null);
+    // sdc-no-preset-refusal: overlay mode with no local doc (server doc or the wait).
+    expect(handler._serverBuild?.mode).toBe('overlay');
+    expect(handler._serverBuild?.local).toBe(null);
+    expect(handler._serverBuild?.presetsAtOtherSeeds).toHaveLength(1);
   });
 
   it('no rules for the game anywhere: connects, then waits LOGGED IN (packets held) until they load (⚖ b1)', async () => {

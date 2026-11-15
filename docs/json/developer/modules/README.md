@@ -60,6 +60,7 @@ The sections below are the module categories of the [module index](../../modules
 
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
 -   **[Region Graph](./regionGraph.md):** Interactive visualization of region connectivity using Cytoscape.js with real-time accessibility updates.
+-   **[Region Map](./regionMap.md):** The loaded world as a flat map of its rendered levels, in groups, with location squares coloured by accessibility (canvas, no graph library).
 
 ## Embedding and Windows
 

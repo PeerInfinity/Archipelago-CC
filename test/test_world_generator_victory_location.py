@@ -64,6 +64,24 @@ def test_idempotent():
     assert again == d
 
 
+def test_an_id_goal_that_is_unpinned_is_pinned_and_allocates_nothing():
+    # A hand-written world that ships the shape itself (bakingadventure since sdc-goal-handwritten):
+    # the goal location already has an ID, so nothing is allocated, but the pin is still set;
+    # without it the generated package puts the goal item in the pool.
+    d = _doc({'type': 'item_check', 'item': 'Victory'}, goal_item_id=11)
+    goal = d['regions']['1']['End']['locations'][0]
+    goal['id'] = 101
+    del goal['event']
+    changes = apply_victory_location(d)
+    assert (goal['id'], goal.get('pinned'), goal['locked'], 'event' in goal) == (101, True, True, False)
+    assert d['items']['1']['Victory']['id'] == 11
+    assert d['regions']['1']['Start']['locations'][0]['id'] == 100
+    assert changes == ["P1: location 'Goal' (id 101) pinned"]
+    again = copy.deepcopy(d)
+    assert apply_victory_location(again) == []
+    assert again == d
+
+
 @pytest.mark.parametrize('cc', [{'rule': 'And', 'children': []}, {'type': 'constant', 'value': True}, None])
 def test_a_goal_that_is_not_one_item_is_refused(cc):
     with pytest.raises(VictoryLocationError):
@@ -112,4 +130,7 @@ def test_compare_rules_json_cancels_exactly_the_expected_changes():
                               cwd=REPO, capture_output=True, text=True, timeout=120).stdout
     assert 'Files are identical' in run('--ignore-canonical', '--victory-location')
     without = run('--ignore-canonical')
-    assert 'Found 4 difference(s)' in without, without[-800:]
+    # Since sdc-goal-handwritten the hand-written world ships the ID-bearing goal itself, so the
+    # transform's only change left is the pin (it was 4: location id/event, item id/event).
+    assert 'Found 1 difference(s)' in without, without[-800:]
+    assert '.pinned:' in without, without[-800:]

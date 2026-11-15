@@ -32,6 +32,7 @@ export const TEST_CASE_FILES = [
   './testCases/exitPanelTests.js',
   './testCases/regionPanelTests.js',
   './testCases/regionGraphPanelTests.js',
+  './testCases/regionMapTests.js',
   './testCases/loopsPanelTests.js',
   './testCases/eventsPanelTests.js',
   './testCases/pathAnalyzerTests.js',

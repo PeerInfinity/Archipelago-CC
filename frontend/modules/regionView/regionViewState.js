@@ -41,7 +41,7 @@
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import {
     isRegionReachable, locationCounts, regionInteriorState, regionColorState, locationState,
-    discoveryContext, regionDiscovery, locationDiscovery, exitDiscovery, evaluateAccessRule,
+    discoveryContext, regionDiscovery, locationDiscovery, exitDiscovery, evaluateAccessRule, enteredFromDiscoveredIndex,
     displayGroupsOf, displayKeyIndex, sidecarIndex, aggregateCounts, aggregateVisibility,
 } from './regionViewModel.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
@@ -99,8 +99,11 @@ export function computeRegionView({ snapshot, staticData, discovery, discoverySt
     const empty = { regions, locations, exits, displayGroups: new Map(), currentRegion, currentDisplayRegion: currentRegion,
         path, discoveryActive: !!discoveryState.active, version };
     if (!snapshot || !rd) return deepFreeze(empty);
+    // ⛓ region-map step 3b: the inverse-entrance index, built once per recompute when discovery is on (the
+    // per-region scan made a seedling_playthrough recompute 7.3 ms; see CC/docs/region-map/step3b-panel.md).
     const ctx = discoveryContext({ active: discoveryState.active, settings: discoveryState.settings, discovery,
-        regions: rd, showUndiscovered, showAccessibility });
+        regions: rd, showUndiscovered, showAccessibility,
+        enteredFromDiscovered: discoveryState.active ? enteredFromDiscoveredIndex(rd, discovery) : null });
     const sidecars = sidecarIndex(rules, playerId);
     const groups = displayGroupsOf(rd.keys(), { registry, sidecarOf: (n) => sidecars.get(n) ?? null });
     const keyOf = displayKeyIndex(groups);

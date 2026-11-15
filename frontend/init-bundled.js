@@ -88,6 +88,7 @@ import * as regionsModule from './modules/regions/index.js';
 import * as helpersModule from './modules/helpers/index.js';
 import * as dungeonsModule from './modules/dungeons/index.js';
 import * as regionGraphModule from './modules/regionGraph/index.js';
+import * as regionMapModule from './modules/regionMap/index.js';
 import * as discoveryModule from './modules/discovery/index.js';
 import * as discoveryPanelModule from './modules/discoveryPanel/index.js';
 import * as gameStateModule from './modules/gameState/index.js';
@@ -154,6 +155,7 @@ import './modules/tests/testCases/locationPanelTests.js';
 import './modules/tests/testCases/exitPanelTests.js';
 import './modules/tests/testCases/regionPanelTests.js';
 import './modules/tests/testCases/regionGraphPanelTests.js';
+import './modules/tests/testCases/regionMapTests.js';
 import './modules/tests/testCases/loopsPanelTests.js';
 import './modules/tests/testCases/eventsPanelTests.js';
 import './modules/tests/testCases/pathAnalyzerTests.js';
@@ -229,6 +231,7 @@ const BUNDLED_MODULES = {
   helpers: helpersModule,
   dungeons: dungeonsModule,
   regionGraph: regionGraphModule,
+  regionMap: regionMapModule,
   discovery: discoveryModule,
   discoveryPanel: discoveryPanelModule,
   gameState: gameStateModule,
