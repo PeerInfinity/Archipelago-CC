@@ -11,7 +11,9 @@ seedling-maze-link). Brief: `NewDocs/plans/region-map-step3a-layout-prompt.md`. 
 | `0d16149150` | D3: `procgenCore/regionLayoutResolve.js`, the Seedling `compositeMap.layoutGraph` hook, the registry row + regenerated reference |
 | `ce01d5e10c` | D5: `docs/json/developer/procgen/region-layout.md`, the docs index, doc-link census 416 → 419 |
 | `fca6763585` | D4: `scripts/dev/preview-region-layout.mjs` |
-| this commit | the report and the preview PNGs |
+| `52d887c699` | the report and the preview PNGs (first version) |
+| `5f0938ebd2` | CI fix: `dirOfExit` moved verbatim to `seedlingDemo/seedlingDoorDirection.js`, and the quickLaunch docs index regenerated |
+| this commit | the report, updated |
 
 - 0 gitlinks.
 - Closure ∩ diff = ∅.
@@ -72,7 +74,7 @@ restated rather than imported from the engine, and a test pins it equal to `isVi
 - **nodes:** display regions, folded by `displayRegionOf`.
 - **links:** the sidecar exits with a `targetRegion`. Same-level links are dropped.
 - **`kind`:** `seedlingExitLayoutKind` (`:177`) reads the `exit_id` prefix.
-- **`dir`:** for joins, `seedlingSetMap.dirOfExit` is reused (not re-derived). The door is the first `exit_tiles` cell ×
+- **`dir`:** for joins, `dirOfExit` is reused (not re-derived). It MOVED verbatim to `seedlingDemo/seedlingDoorDirection.js`, and `seedlingSetMap` re-exports it with its export list and digests unchanged, so the flash panel's static closure does not reach `seedlingAtlasDerivation` (`seedlingRegionBinding.test.js`, F6). The door is the first `exit_tiles` cell ×
   `tile_size`, the arrival is `target_spawn`, and the sizes are the atlas region `bounds` (or a generated room's
   `record`) × `tile_size`. Stairs and pits get no dir. Interior doors get `null` from `dirOfExit` itself.
 - **The registry row** is in `docs/json/developer/procgen/substrate-registry.md` § Entry contract. The generated
@@ -207,15 +209,22 @@ the overworld by teleporters. (`seedling_playthrough` has 0 such cycles; it is a
 
 ## Gates
 
-**Local, at the code tip `fca6763585`:**
-- The bounded vitest set (gate list + new tests + `bindingContract` + `seedlingCompositeMap`) is green. That covers
+**CI found two reds at `fca6763585`** (JSUT run 43670366678: 27496 passed, 4 failed), both caused by this slice and
+fixed in `5f0938ebd2`:
+- `seedlingRegionBinding.test.js` F6: the panel's static closure reached `seedlingAtlasDerivation` through
+  `seedlingCompositeMap` → `seedlingSetMap`. Fixed by moving `dirOfExit`, as above.
+- `quickLaunch/generated.test.js` (3 rows): the quickLaunch docs index needed the new page. Regenerated.
+
+**Local, at the code tip `5f0938ebd2`:**
+- The bounded vitest set (gate list + new tests + `bindingContract` + `seedlingCompositeMap` + `seedlingRegionBinding` +
+  `quickLaunch/`) is green: 39 files, 1456 tests. That covers
   `regionLayout.test.js` (13), `regionLayoutResolve.test.js` (13) and `procgenDocs/` (494).
-- `check-seedling-editor-e3.mjs`: identical BEFORE/AFTER.
+- `check-seedling-editor-e3.mjs`: identical BEFORE/AFTER, re-run after the move.
 - `check-procgen-docs.mjs`: ALL CHECKS PASSED.
 - `generate-procgen-reference.mjs --check`: 7 modules + 5 regions match.
 - `--print-engine-closure`: `engineMd5 3e333bfa0a7692f8120aeaa9a1591119 (42 files)`, the same as base. Closure ∩ diff = ∅.
 
 **In-app:** `npm test -- --port=8131 --mode=test-substrates --batch=apworld` ran 142 rows: 142 passed, 0 failed.
 
-**CI:** the run ids at the exact tip are in the packet message to seedling-js-planning-19. This commit (the report)
-adds only `CC/docs/`, so the code runs at `fca6763585` are quoted there too.
+**CI:** the run ids at the exact tip are in the packet message to seedling-js-planning-19. JSUT's push filter skips a
+`CC/docs`-only commit, so its push run of record is at `5f0938ebd2`.
