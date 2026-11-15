@@ -75,6 +75,11 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
  */
+/** ⛓ CONTENT SETS S2 — the kinds of thing a maze region may hold (`mazeThings.js`; each a maze content role). */
+export const MAZE_THING_KINDS = Object.freeze(['character', 'object', 'info']);
+
+const THING_TEXT = Object.freeze({ type: 'string', minLength: 1 });
+
 export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     exits: REQUIRED_ENVELOPE_FIELD,
     entrance: REQUIRED_ENVELOPE_FIELD,
@@ -162,6 +167,41 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
         description: 'Mana refill tiles `{x, y, amount}` (X1). `serializeMazeWorld` OMITS the key when '
             + 'there are none; no committed preset carries it.',
         schema: Object.freeze({ items: atXY({ amount: Object.freeze({ type: 'number' }) }, ['amount']) }),
+    }),
+    things: Object.freeze({
+        type: 'array', required: false,
+        description: 'The region\'s THING (content sets S2): a character, object or piece of information that is '
+            + 'NOT an AP check and not a tile — never in `regions[].locations`, never in a rule, no state; it stands '
+            + 'on a free floor cell and is read when the player walks onto that cell (look-only). `{id, x, y, kind: '
+            + 'character|object|info, concept, name, color?, symbol?, description?, says?, info?: {concept, name, '
+            + 'body}}`, `concept` the pack concept key, `color`/`symbol` the holder\'s baked look. Written by the '
+            + 'maze entry\'s `serializeWorld` wrapper (`mazeThings.js`) only when a theme offers one (one per region, '
+            + 'by hash); the cell is `hash32("<region id>:<concept key>")` over the free floor cells in row order. '
+            + 'Text is baked at generation (Q8).',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['id', 'x', 'y', 'kind', 'concept', 'name']),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    id: THING_TEXT,
+                    ...xy,
+                    kind: Object.freeze({ enum: MAZE_THING_KINDS }),
+                    concept: THING_TEXT,
+                    name: THING_TEXT,
+                    color: THING_TEXT,
+                    symbol: Object.freeze({ type: 'string' }),
+                    description: THING_TEXT,
+                    says: THING_TEXT,
+                    info: Object.freeze({
+                        type: 'object',
+                        required: Object.freeze(['concept', 'name', 'body']),
+                        additionalProperties: false,
+                        properties: Object.freeze({ concept: THING_TEXT, name: THING_TEXT, body: THING_TEXT }),
+                    }),
+                }),
+            }),
+        }),
     }),
     arrival: Object.freeze({
         type: 'string', required: false,
