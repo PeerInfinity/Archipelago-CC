@@ -44,13 +44,17 @@
 
 import { NAMED_ROOMS, TILE_PX, indexOfRoom, roomRecordOf } from './levelSetValidator.js';
 import { namedRoomArrivals } from './seedlingAtlasDerivation.js';
+import { dirOfExit } from './seedlingDoorDirection.js';
 import {
-    CONSISTENT_RINGS, DIRS, EDGE_FRACTION, MAP_GEOMETRY, OPPOSITE, canonicalLayout as layoutOfGraph, clampZoom,
+    CONSISTENT_RINGS, DIRS, EDGE_FRACTION, MAP_GEOMETRY, canonicalLayout as layoutOfGraph, clampZoom,
     createSetMapProvider, distToSegment, doorTickShapes, edgeOf, frameOf, layoutCensus, layoutGraph,
     mapLinkShapes as linkShapesOf, roomFingerprintOf,
 } from '../procgenCore/setMapLayout.js';
 
 export { CONSISTENT_RINGS, DIRS, EDGE_FRACTION, MAP_GEOMETRY, clampZoom, distToSegment, edgeOf, frameOf, layoutCensus };
+/** ⛓ `dirOfExit` MOVED to `seedlingDoorDirection.js` (region-map 3a: the composite-map hook reuses it without this
+ *  module's import of `seedlingAtlasDerivation`); re-exported, same function. */
+export { dirOfExit };
 
 export class SeedlingSetMapError extends Error {
     constructor(message) {
@@ -59,22 +63,6 @@ export class SeedlingSetMapError extends Error {
     }
 }
 const fail = (m) => { throw new SeedlingSetMapError(m); };
-
-/**
- * The direction a door leads in: from the source room's side, else from the arrival's side in the target
- * (reversed), else `null`.
- * @returns {{dir: 'N'|'S'|'E'|'W'|null, from: 'source'|'arrival'|null}}
- */
-export function dirOfExit(exit, sourceSize, targetSize, tileSize = TILE_PX) {
-    const half = tileSize / 2;
-    const src = edgeOf({ x: exit.x + half, y: exit.y + half }, sourceSize);
-    if (src) return { dir: src, from: 'source' };
-    if (Number.isFinite(exit.playerx) && Number.isFinite(exit.playery)) {
-        const arr = edgeOf({ x: exit.playerx, y: exit.playery }, targetSize);
-        if (arr) return { dir: OPPOSITE[arr], from: 'arrival' };
-    }
-    return { dir: null, from: null };
-}
 
 /**
  * Every link the map draws, in a stable order: each room's exits (by ordinal), then its pits, then the
