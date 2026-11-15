@@ -18,6 +18,9 @@
  * contact, and the t776 one (billed on a tick no deep answer ran, after the corner escape's first OFF-divergent key
  * at t649) is refused by name (`SHOVED_LOOKAHEAD_HIT`). OFF it
  * refuses at the approach corner, as before.
+ * ⚖ Robert 2026-11-14 (hammer replan): "Drop the L43 row" — that row cost 1,078 s, nearly all of it OFF's own
+ * approach search, so it is not carried; the evidence stays in the follow-up's report (L43 5235 OFF refused / ON
+ * refused by name, `SHOVED_LOOKAHEAD_HIT`).
  */
 import { describe, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
@@ -75,15 +78,4 @@ describe('SHOVED_BODY_LOOKAHEAD — control: the page\'s own clock 5233 is uncha
         expect(solveAt('chest-L39-request.json.gz', 5233, false)).toEqual(want);
         expect(solveAt('chest-L39-request.json.gz', 5233, true)).toEqual(want);
     }, 900_000);
-});
-
-describe('SHOVED_BODY_LOOKAHEAD — L40 Chest from L43, clock 5235 (the follow-up: no hit-taking plan)', () => {
-    it('OFF: refused at the approach corner; ON: refused by name, never a hit-taking plan', () => {
-        const off = solveAt('chest-L43-request.json.gz', 5235, false);
-        expect(off.ok).toBe(false);
-        expect(off.message).toMatch(/at \(739\.26,683\.90\) in level 40\. There is no step out\./);
-        const on = solveAt('chest-L43-request.json.gz', 5235, true);
-        expect(on.ok).toBe(false);
-        expect(on.message).toMatch(/the shoved lookahead \(`SHOVED_BODY_LOOKAHEAD`\) chose a key OFF would not have at t649, and the plan it led to takes 1 player hit\(s\) \(bob@736,752 at t776\)/);
-    }, 1_800_000);
 });
