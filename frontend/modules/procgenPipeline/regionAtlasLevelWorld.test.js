@@ -16,6 +16,7 @@ import {
 import {
     PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
 } from '../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
+import { playthroughRockFireSides } from '../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
 import { compileRegionAtlas } from './regionAtlasCompiler.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { nativeReachUnder } from '../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
@@ -27,6 +28,8 @@ const SPEAR_STRIKE = { action: 'spear', item: 'Ghost Spear', footprint: weaponFo
 const J = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const ATLAS = J('../flashPanel/atlases/seedling-playthrough.json');
 const MAP = J('../flashPanel/atlases/seedling-map.json');
+// ⛓ tile-fire-breaks-rocks: a level-world compile takes the rocks' flame stances from the rules producer (one map).
+const ROCK_FIRE = playthroughRockFireSides();
 const CONFIG = J('../flashPanel/games/seedling.json');
 const PARTITION = J('../flashPanel/atlases/seedling-subregion-partition.json').atlases[ATLAS.atlas_id];
 const L15 = ATLAS.regions.find((r) => r.region_id === 'level_15');
@@ -63,7 +66,7 @@ describe('Seedling level-world entity rows — from the semantics tables', () =>
 });
 
 describe('projectLevelWorld — L15', () => {
-    const deps = seedlingMazeProjectionDeps({ mapDoc: MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION } });
+    const deps = seedlingMazeProjectionDeps({ mapDoc: MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION }, rockFire: ROCK_FIRE });
     const grid = deps.gridFor(L15);
     const out = projectRegionToMaze(L15, grid, ctxFor(deps));
     const payload = out.sidecars.level_15__r1c5.playable_payload;
@@ -93,8 +96,15 @@ describe('projectLevelWorld — L15', () => {
 
     it('the rocks are strike obstacles and the lock is held by the button\'s token', () => {
         const idAt = (x, y) => payload.obstacles.find((p) => p.x === x && p.y === y)?.id;
-        expect(payload.obstacleLib[idAt(6, 5)]).toMatchObject({ clear_set: [], struck_by: ['sword', 'spear'] });
-        expect(idAt(6, 1)).toBe(idAt(6, 5));
+        // ⛓ tile-fire-breaks-rocks: each rock also breaks to Fire, from its OWN flame stances only (`struck_from.fire`; the
+        // swing still strikes through the cell), so each is its own entry at its own cell.
+        for (const [x, y] of [[6, 5], [6, 1]]) {
+            const rock = payload.obstacleLib[idAt(x, y)];
+            expect(rock).toMatchObject({ id: `rock_${x}_${y}`, clear_set: [], struck_by: ['sword', 'spear', 'fire'], at: `${x},${y}` });
+            expect(Object.keys(rock.struck_from)).toEqual(['fire']);
+            expect(rock.struck_from.fire.length > 0).toBe(true);
+        }
+        expect(idAt(6, 1)).not.toBe(idAt(6, 5));
         expect(payload.obstacleLib[idAt(8, 3)].clear_set).toEqual([['sw_0']]);
         expect(payload.buttonLib).toEqual({ button_0: { kind: 'button', holds: 'sw_0' } });
         expect(payload.action_lib.sword).toEqual({
@@ -141,7 +151,7 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         resolveCondition: playthroughAnalyzerOptions.resolveCondition,
     };
     const deps = seedlingMazeProjectionDeps({
-        mapDoc: PLAYTHROUGH_MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION }, analysis: ownGrid,
+        mapDoc: PLAYTHROUGH_MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION }, rockFire: ROCK_FIRE, analysis: ownGrid,
     });
     const compileAlone = (id) => compileRegionAtlas(restrictAtlas(ATLAS, [id]), {
         mapDoc: MAP, embedSphereLog: true, sidecarFlavor: 'maze', mazeProjection: deps,
@@ -248,7 +258,7 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
     });
 
     it('CONTROL: the raw transcription is refused for L12 (the overlay moves its chest, the Pixelmask its buildings)', () => {
-        const raw = seedlingMazeProjectionDeps({ mapDoc: MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION } });
+        const raw = seedlingMazeProjectionDeps({ mapDoc: MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION }, rockFire: ROCK_FIRE });
         const l12 = ATLAS.regions.find((r) => r.region_id === 'level_12');
         // ⛓ tile-primitives-pixelmask-l86: refused one check EARLIER than the partition's tile count (r42c29 226 vs 227):
         //   without the building footprints the raw grid's sub-regions are not the atlas's at all.

@@ -468,6 +468,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward…"
     },
     {
+        "path": "docs/json/developer/procgen/region-layout.md",
+        "title": "Region Layout",
+        "section": "developer/procgen",
+        "summary": "The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0). It is deterministic and uses no rng. It…"
+    },
+    {
         "path": "docs/json/developer/procgen/seedling-bot-log.md",
         "title": "Seedling Bot and Procgen Arcs: the Build Log",
         "section": "developer/procgen",
@@ -1647,6 +1653,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/paths-and-obstacles.md",
             "docs/json/developer/procgen/pipeline-presets.md",
             "docs/json/developer/procgen/playback-and-debugging.md",
+            "docs/json/developer/procgen/region-layout.md",
             "docs/json/developer/procgen/seedling-bot-log.md",
             "docs/json/developer/procgen/seedling-bot.md",
             "docs/json/developer/procgen/seedling-constants.md",

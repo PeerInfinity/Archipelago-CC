@@ -1141,8 +1141,10 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             const enterOf = directionalLocks && semantics.probe
                 ? Object.fromEntries(['N', 'E', 'S', 'W'].filter((d) => d !== STEP_FROM[semantics.probe]).map((d) => [d, null]))
                 : null;
+            // ⛓ RULES rules-fire-breaks-rocks — a row may also carry its own condition-valued `enter` gates (a rock's
+            // flame is credited only from a side with a stance: `seedlingPlaythroughOverlay.rockFireRuling`).
             for (const key of ['faces', 'dirs', 'enter']) {
-                const gates = key === 'enter' ? enterOf : semantics[key];
+                const gates = key === 'enter' ? (enterOf ?? semantics.enter ?? null) : semantics[key];
                 if (!gates) continue;
                 if (key === 'enter') {
                     cell.enter ??= {};

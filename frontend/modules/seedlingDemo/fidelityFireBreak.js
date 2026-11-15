@@ -65,6 +65,52 @@ export const FIREBREAK_WITNESSES = Object.freeze([
         rocks: [], breaks: ['breakablerock@256,112', 'breakablerock@176,48'], to: 91 }),
 ]);
 
+const exitGoal = (x, y) => Object.freeze({ kind: 'reach-exit', exit: Object.freeze({ x, y }) });
+const landing = (level, x, y) => Object.freeze({ level, x, y });
+
+/**
+ * ⛓⛓ RULES rules-fire-breaks-rocks — THE RULE'S WITNESSES: the rules rows the Fire half opens that fidelity FIREBREAK
+ * proved on the solver only, each the solver's plan with Fire and NO Sword from the game's own landing (`arrival: true`,
+ * `fidelityArrival.arrivalStaging`), played on the game by `probe-seedling-fire-break.mjs --set=rules` (the same staging,
+ * comparison and recording as `FIREBREAK_WITNESSES`, and replayed by the same test).
+ *   rules-l0-east-cross   L0 r7c6 -> r11c19 through `@288,176`, out to L12
+ *   rules-l0-west-cross   L0 r7c6 -> r6c5 through `@80,112`, out to L1
+ *   rules-l0-north-rock   L0 r2c13 -> r1c6: `@192,32` from the L89 landing, with swim (the rules charge Swim on every way
+ *                         into r2c13: the landing stands in water). r1c6 has no door, so the break is the reading.
+ */
+export const FIREBREAK_RULES_WITNESSES = Object.freeze([
+    Object.freeze({ name: 'rules-l0-east-cross', boot: landing(0, 256, 256), items: ['hasFire'], arrival: true, persistence: [],
+        goals: [exitGoal(304, 176)], rocks: [{ id: 'breakablerock@288,176', tag: 1 }], to: 12 }),
+    Object.freeze({ name: 'rules-l0-west-cross', boot: landing(0, 48, 192), items: ['hasFire'], arrival: true, persistence: [],
+        goals: [exitGoal(80, 96)], rocks: [{ id: 'breakablerock@80,112', tag: 4 }], to: 1 }),
+    Object.freeze({ name: 'rules-l0-north-rock', boot: landing(0, 240, 16), items: ['hasFire', 'canSwim'], arrival: true,
+        persistence: [], goals: [rockGoal(0, 3, 192, 32)], rocks: [{ id: 'breakablerock@192,32', tag: 3 }], to: 0 }),
+]);
+
+/**
+ * The rules rows the Fire half opens that the solver REFUSES to plan with Fire alone, so no game witness exists (the
+ * probe takes them with `--set=rules-refused` and prints each refusal). Not recorded, not replayed.
+ *   rules-l15-cross     L15 r1c5 -> r1c9: the block route (`pushableblock@64,64`); the solver's block-route break step
+ *                       takes a swing stance (fidelity FIREBREAK's residue)
+ *   rules-l16-east      L16 r1c9 -> r4c21 through `@304,64`: the block route of `lock@320,112` (`pushableblock@256,80`)
+ *   rules-l73-north     L73 r3c7 -> r0c4: the combat ladder (`lavarunner@72,24`)
+ *   rules-l73-south     L73 r0c4 -> r3c7: the same
+ *   rules-l92-reverse   L92 r4c2 -> ... -> r7c17: a hit inside the break's wait (`bob@224,112`)
+ */
+export const FIREBREAK_RULES_REFUSED = Object.freeze([
+    Object.freeze({ name: 'rules-l15-cross', boot: landing(15, 48, 64), items: ['hasFire'], arrival: true, persistence: [],
+        goals: [exitGoal(144, 16)], rocks: [], breaks: ['breakablerock@96,80'], to: 16 }),
+    Object.freeze({ name: 'rules-l16-east', boot: landing(16, 32, 64), items: ['hasFire'], arrival: true, persistence: [],
+        goals: [exitGoal(352, 80)], rocks: [{ id: 'breakablerock@304,64', tag: 6 }], to: 18 }),
+    Object.freeze({ name: 'rules-l73-north', boot: landing(73, 32, 128), items: ['hasFire'], arrival: true, persistence: [],
+        goals: [exitGoal(64, 0)], rocks: [{ id: 'breakablerock@64,48', tag: 0 }], to: 74 }),
+    Object.freeze({ name: 'rules-l73-south', boot: landing(73, 64, 16), items: ['hasFire'], arrival: true, persistence: [],
+        goals: [exitGoal(32, 144)], rocks: [{ id: 'breakablerock@64,48', tag: 0 }], to: 72 }),
+    Object.freeze({ name: 'rules-l92-reverse', boot: landing(92, 32, 128),
+        items: ['hasFire', 'canSwim', 'hasShield', 'hasTorch', 'hasFeather'], arrival: true, persistence: [],
+        goals: [exitGoal(272, 144)], rocks: [], breaks: ['breakablerock@176,48', 'breakablerock@256,112'], to: 87 }),
+]);
+
 /** A witness's staging: `ropeStaging`'s, with the named slot selected at t0 when the row says `select`. */
 export async function fireBreakStaging(w) {
     const { inventorySlotsFor, INVENTORY_ITEM_IDS } = await import('./tapeFormat.js');

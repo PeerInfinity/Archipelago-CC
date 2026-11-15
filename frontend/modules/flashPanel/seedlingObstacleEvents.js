@@ -94,20 +94,12 @@ export function rowVerdict(row) {
 }
 
 /**
- * Census rows → the compiler's `events` + `exitGates`.
- *
- * @param {object[]} rows `arrivalSolidCensus` rows
- * @param {object} ctx
- * @param {(landing:object) => {region_id:string, exit_id:string}|Array<{region_id:string, exit_id:string}>} ctx.departure
- *   the atlas endpoint(s) whose connection lands on the landing (⛓ ER E4a: under a shuffled layout, the doc's
- *   connections that end at its arrival exit — each gets the gate)
- * @param {(row:object, solid:{cls,x,y}) => {region_id:string, sub_region?:string, side:string, across?:string[]}} ctx.place
- *   where the event sits (the obstacle's open side); throws by name when it cannot say
- * @param {(row:object, solid:{cls,x,y}) => object|null} ctx.rule the obstacle's own crossing cost as a
- *   rules.json rule, null when the transcription prices none
- * @returns {{events:object[], exitGates:object[], skipped:string[], refused:string[]}}
+ * ⛓ The SELECTION pass of `deriveObstacleEvents` — which census rows become events (`rowVerdict`, one solid per flag),
+ * keyed by flag, and the landings they gate. It depends on the rows alone (no atlas), so a reader that needs only the
+ * NAMES the producer will mint (`obstacleEventNames`) asks the same pass the events are made from (session
+ * tile-fire-breaks-rocks: a rock's own cleared event is credited only where it is minted). Throws by name on a refusal.
  */
-export function deriveObstacleEvents(rows, ctx) {
+export function selectObstacleEvents(rows) {
     const byFlag = new Map();
     const byLanding = new Map();
     const skipped = [];
@@ -131,6 +123,31 @@ export function deriveObstacleEvents(rows, ctx) {
     if (refused.length > 0) {
         throw new Error(`obstacle events: ${refused.length} census row(s) refused —\n  ${refused.join('\n  ')}`);
     }
+    return { byFlag, byLanding, skipped, refused };
+}
+
+/** The names of the obstacle events `deriveObstacleEvents(rows, …)` mints, in its order. */
+export function obstacleEventNames(rows) {
+    return [...selectObstacleEvents(rows).byFlag].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))
+        .map(([, { row, solid }]) => obstacleEventName({ ...row.flag, ...solid }));
+}
+
+/**
+ * Census rows → the compiler's `events` + `exitGates`.
+ *
+ * @param {object[]} rows `arrivalSolidCensus` rows
+ * @param {object} ctx
+ * @param {(landing:object) => {region_id:string, exit_id:string}|Array<{region_id:string, exit_id:string}>} ctx.departure
+ *   the atlas endpoint(s) whose connection lands on the landing (⛓ ER E4a: under a shuffled layout, the doc's
+ *   connections that end at its arrival exit — each gets the gate)
+ * @param {(row:object, solid:{cls,x,y}) => {region_id:string, sub_region?:string, side:string, across?:string[]}} ctx.place
+ *   where the event sits (the obstacle's open side); throws by name when it cannot say
+ * @param {(row:object, solid:{cls,x,y}) => object|null} ctx.rule the obstacle's own crossing cost as a
+ *   rules.json rule, null when the transcription prices none
+ * @returns {{events:object[], exitGates:object[], skipped:string[], refused:string[]}}
+ */
+export function deriveObstacleEvents(rows, ctx) {
+    const { byFlag, byLanding, skipped, refused } = selectObstacleEvents(rows);
 
     const events = [];
     const nameOf = new Map();

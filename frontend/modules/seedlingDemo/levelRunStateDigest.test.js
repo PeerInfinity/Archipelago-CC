@@ -246,7 +246,7 @@ export const DIGEST_EXEMPT = Object.freeze({
     // siblings `tentacleStreams` (a Map) and `tentacleLevelsBuilt` (a Set) measured the same, but they sit outside the
     // guard's shapes (`freshVisitState` does not reset them), so a row for either would read `staleExempt`
     tentacleFights: 'UNREAD: member-reach — no escape member reaches it (bosskills harvest, 2026-10-21)',
-    wallFlyerStates: 'UNREAD: read via advance, corridorBodyForecast, wallFlyers',
+    wallFlyerStates: 'UNREAD: read via advance, corridorBodyForecast, entities, wallFlyerBodies, wallFlyers',
     wandShotStates: 'UNREAD: read via advance, wandShotsLive',
     watcherStates: 'UNREAD: read via advance, watchers',
     lightsExits: 'UNREAD: read via advance only (visitWorld, stepLightsNow); the exit reaches the escape only as the '

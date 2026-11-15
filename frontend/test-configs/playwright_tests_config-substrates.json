@@ -1829,6 +1829,12 @@
             "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-apworld-editor: the generated-host world opened in the APWorld Editor; a generated region's Edit ▸ opens the Seedling lab; CLOSE returns one undoable op (↶ Undo enabled). Manual batch feature-checks."
         },
         {
+            "id": "feature-check-seedling-set-map",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "SEEDLING SET MAP (the user 2026-11-14: 'How do I open the map in the Seedling lab? Can you add a tutorial to the feature check list in the Tutorials panel?'). The walk row of feature check seedling-set-map: the Procgen Lab — Seedling tab; its Source drop-down set to EDIT; LOAD the VANILLA 116 (the rooms list holds the set's count, read off the page); map view ticked, a cell per room; fit; a click on a door-neighbour's cell (read off the page's map at run time) selects it. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",

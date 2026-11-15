@@ -618,9 +618,54 @@ export function simplifyRule(node) {
         kept.push(child);
     }
 
-    if (kept.length === 0) return node;
-    if (kept.length === 1) return kept[0];
-    return { ...node, children: kept };
+    // ABSORPTION, And only: `A ∧ (A ∨ B) = A`. An `Or` of plain `Has` children that a SIBLING already implies (a `Has`
+    // it lists at no greater count, or an `Or` of `Has` all of which it lists) adds nothing to the And. ⛓ RULES
+    // rules-fire-breaks-rocks: a rock occupied on `Or(Sword, Spear, Fire)` and entered from a side with no flame
+    // stance on `Or(Sword, Spear)` reads `Or(Sword, Spear)` from that side.
+    const absorbed = op === 'And' ? absorbAnd(kept) : kept;
+    if (absorbed.length === 0) return node;
+    if (absorbed.length === 1) return absorbed[0];
+    return { ...node, children: absorbed };
+}
+
+/** The `Has` children of an `Or` made only of `Has`, as `name -> count`; null for anything else. */
+function plainHasOr(node) {
+    if (node?.rule !== 'Or' || !Array.isArray(node.children)) return null;
+    const out = new Map();
+    for (const c of node.children) {
+        const name = hasKeyOf(c);
+        if (name === null) return null;
+        out.set(name, c.args.count ?? 1);
+    }
+    return out;
+}
+
+function absorbAnd(children) {
+    const ors = children.map(plainHasOr);
+    // `d` implies the Or `c` when every way `d` is satisfied satisfies `c`.
+    const implies = (d, di, c) => {
+        const name = hasKeyOf(d);
+        if (name !== null) return c.has(name) && c.get(name) <= (d.args.count ?? 1);
+        const dOr = ors[di];
+        return dOr !== null && [...dOr].every(([n, k]) => c.has(n) && c.get(n) <= k);
+    };
+    const implier = new Map();
+    children.forEach((child, ci) => {
+        const c = ors[ci];
+        if (c === null) return;
+        const di = children.findIndex((d, i) => i !== ci && !implier.has(i) && implies(d, i, c));
+        if (di >= 0) implier.set(ci, di);
+    });
+    // The survivor takes the place of the first child it absorbed, so the And keeps the order it had.
+    const out = [];
+    const placed = new Set();
+    children.forEach((child, i) => {
+        const at = implier.has(i) ? implier.get(i) : i;
+        if (placed.has(at)) return;
+        placed.add(at);
+        out.push(children[at]);
+    });
+    return out;
 }
 
 // --- part 2b: crossings -> internal exits ------------------------------------

@@ -61,6 +61,10 @@ const walk = (world, ...inputs) => inputs.reduce((s, input) => {
     return next;
 }, createState(world));
 
+/** The world's rock that carries no event (L0's north rock): its id is data (`rock_<x>_<y>` since tile-fire-breaks-rocks). */
+const plainRock = (world) => Object.values(world.obstacleLib).find((e) => e?.kind === 'rock' && !e.events
+    && [...world.obstacles.values()].includes(e.id)).id;
+
 describe('1. ⚖ ruling 5 — the census: one entity per maze object, refused by name otherwise', () => {
     for (const preset of ['seedling_playthrough_maze', 'seedling_atlas_maze']) {
         it(`${preset}: zero refusals over every Seedling payload`, () => {
@@ -91,12 +95,14 @@ describe('1. ⚖ ruling 5 — the census: one entity per maze object, refused by
         world.obstacleLib = { ...world.obstacleLib,
             gate_far: { id: 'gate_far', clear_set_type: 'rule', clear_rule: { rule: 'True_' } },
             odd: { id: 'odd', kind: 'catapult', clear_set: [] } };
-        setObstacle(world, world.entrance.x, world.entrance.y, 'rock_sword_spear');
+        // ⛓ tile-fire-breaks-rocks: L0's rocks are per-rock entries now (`rock_<x>_<y>`, Fire from their stances); any rock entry will do.
+        const rockId = plainRock(world);
+        setObstacle(world, world.entrance.x, world.entrance.y, rockId);
         setObstacle(world, 1, 1, 'gate_far~x: breakablerock@288,176 cleared');
         world.obstacleLib['gate_far~x: breakablerock@288,176 cleared'] = world.obstacleLib.gate_far;
         setObstacle(world, 2, 1, 'odd');
         const { refusals } = seedlingCensus(world, RECORDS.get(0));
-        expect(refusals.join('\n')).toMatch(new RegExp(`rock rock_sword_spear at ${world.entrance.x},${world.entrance.y}: no entity of BreakableRock`));
+        expect(refusals.join('\n')).toMatch(new RegExp(`rock ${rockId} at ${world.entrance.x},${world.entrance.y}: no entity of BreakableRock`));
         expect(refusals.join('\n')).toMatch(/at 1,1: names breakablerock@288,176, whose footprint is not on the cell/);
         expect(refusals.join('\n')).toMatch(/odd at 2,1: kind "catapult" has no drawn class/);
     });
@@ -109,7 +115,7 @@ describe('2. golden live draw lists (frame CHOICE, at real states)', () => {
         'L0-rock-broken': () => {
             const w = regionWorld('level_0__r1c6');
             const s = createState(w);
-            const rock = [...w.obstacles].find(([, id]) => id === 'rock_sword_spear')[0];
+            const rock = [...w.obstacles].find(([, id]) => id === plainRock(w))[0];
             return [w, { ...s, broken: [rock] }];
         },
         'L4-on-button': () => { const w = L4(); return [w, walk(w, INPUT_S, INPUT_S, INPUT_S)]; },
@@ -136,7 +142,7 @@ describe('3. the maze state drives the picture', () => {
     it('a broken rock has no sprite but keeps its cell (no marker either)', () => {
         const w = regionWorld('level_0__r1c6');
         const s = createState(w);
-        const rock = [...w.obstacles].find(([, id]) => id === 'rock_sword_spear')[0];
+        const rock = [...w.obstacles].find(([, id]) => id === plainRock(w))[0];
         const before = spritesAt(w, s);
         const after = spritesAt(w, { ...s, broken: [rock] });
         expect(after.ops.length).toBe(before.ops.length - 1);

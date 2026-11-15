@@ -137,25 +137,28 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // ⛓ rules-l16-l17-trap-transition (⚖ user 2026-11-10: the L16 ↔ L17 stairs are closed in either direction until the
         // cut): L16's stairs down cost the cut, so L17's landing from them (3,3) is not admitted armed — its two rows (the
         // chest, the stairs back up) are compared at the cut only and skipped by name at the armed point (1/2 each). Two rows come.
+        // ⛓ tile-fire-breaks-rocks: the same 100 rows, RE-COUNTED: Fire joins the item axis of L0, L3 and L53 (their rocks are
+        // struck by Fire from their flame stances), doubling those rows' lattice (L0 48 → 96, L3 16 → 32, L53 96 → 192), and
+        // L12's entry pricing reads L0's landing rocks (`arrivalBlocked`), so its unadmitted points grow inside the same 131,072.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
-            'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
-            'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
-            'level_0__r11c19 → level_12__r0c19 (landing 18,11) | 21/48',
-            'level_3__r0c4 → level_111 (landing 1,4) | 8/16',
-            'level_3__r0c4 → level_2 (landing 1,4) | 8/16',
-            'level_3__r0c4 → level_4 (landing 1,4) | 8/16',
+            'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 29/96',
+            'level_0__r6c5 → level_1 (landing 5,7) | 45/96',
+            'level_0__r11c19 → level_12__r0c19 (landing 18,11) | 45/96',
+            'level_3__r0c4 → level_111 (landing 1,4) | 16/32',
+            'level_3__r0c4 → level_2 (landing 1,4) | 16/32',
+            'level_3__r0c4 → level_4 (landing 1,4) | 16/32',
             'level_5__r1c1 → level_12__r13c6 (landing 1,2) | 1/2',
-            'level_12__r0c37 → level_37__r12c6 (landing 27,35) | 2700/131072',
-            'level_12__r0c37 → level_21 (landing 27,35) | 2700/131072',
+            'level_12__r0c37 → level_37__r12c6 (landing 27,35) | 4500/131072',
+            'level_12__r0c37 → level_21 (landing 27,35) | 4500/131072',
             'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 2700/131072',
-            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 1800/131072 [own event]',
+            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 3600/131072 [own event]',
             'level_12__r40c4 → level_24 (landing 2,44) | 2700/131072',
-            'level_12__r42c28 @ Level 012 - Chest (landing 2,54) | 7020/131072',
-            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 7020/131072',
-            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
-            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 7020/131072',
-            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 1080/131072 [own event]',
-            'level_12__r42c28 → level_83 (landing 2,54) | 7020/131072',
+            'level_12__r42c28 @ Level 012 - Chest (landing 2,54) | 11700/131072',
+            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 11700/131072',
+            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 1800/131072 [own event]',
+            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 11700/131072',
+            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 1800/131072 [own event]',
+            'level_12__r42c28 → level_83 (landing 2,54) | 11700/131072',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
             'level_17 @ Level 017 - Chest (landing 3,3) | 1/2',
             'level_17 → level_16__r3c7 (landing 3,3) | 1/2',
@@ -181,7 +184,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_52__r0c7 → level_54__r27c8 (landing 7,1) | 1/3',
             'level_52__r2c2 → level_55 (landing 1,3) | 1/3',
             // ⛓ rules-l26-rocklock-pocket: 24/48 -> 46/96, `L53 flag 2` joins the pocket's subset universe (2x the subsets).
-            'level_53__r14c9 → level_54__r1c8 (landing 9,14) | 46/96',
+            'level_53__r14c9 → level_54__r1c8 (landing 9,14) | 92/192',
             'level_54__r1c8 → level_53__r14c9 (landing 9,1) | 1/3',
             'level_54__r27c8 → level_52__r0c7 (landing 8,28) | 1/3',
             'level_55 @ Level 055 - Boss Key 3 (landing 4,3) | 1/2',

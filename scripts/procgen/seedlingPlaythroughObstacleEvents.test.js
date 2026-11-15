@@ -13,7 +13,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
     buildPlaythroughAtlas, playthroughEncounterLocks, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged, doorwaysBesideLanding,
-    withEventGates,
+    withEventGates, creditedRockEvents,
 } from './make-seedling-playthrough-rules.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -128,7 +128,11 @@ describe('the playthrough\'s obstacle events', () => {
         // ⛓ RULES sided-openers: a LOCK RETURN that reuses an obstacle event (L71's shield lock, a landing inside
         // it AND a one-sided latch) asks that event too; those rows are the next test's, not a landing edge.
         const lockReturns = new Set(locks.internalExitRules.map((r) => `${r.region_id}__${r.from}->${r.region_id}__${r.to}`));
-        const gates = gatesOf(RULES, names).filter((g) => !lockReturns.has(`${g.from}->${g.to}`));
+        // ⛓ tile-fire-breaks-rocks §4: a rock's swing-only side inside its own level also opens on the rock's own minted
+        // event (`creditedRockEvents`: L0's in-rock landings' rocks); those internal rows are §4's, not a landing edge.
+        const credited = new Set(creditedRockEvents());
+        const rockCredit = (g) => levelOf(g.from) === levelOf(g.to) && g.items.every((i) => credited.has(i));
+        const gates = gatesOf(RULES, names).filter((g) => !lockReturns.has(`${g.from}->${g.to}`) && !rockCredit(g));
         const want = FIXTURE.edges.reduce((m, e) => {
             const k = `L${e.edge.from}->L${e.edge.to}|${e.edge.door}`;
             const name = derived.events.find((ev) => ev.fields.event_id === `flag:L${e.flag.level}:${e.flag.tag}`).name;
@@ -321,7 +325,10 @@ describe('the playthrough\'s obstacle events', () => {
         const R = RULES.regions['1'];
         const WEAPON = { rule: 'Or', children: [
             { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] };
-        expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_0__r6c5').access_rule).toEqual(WEAPON);
+        // ⛓ tile-fire-breaks-rocks: from r7c6 the rock also breaks to Fire (that side holds a clean flame stance; game-witnessed,
+        // fidelity FIREBREAK `L0 flag 4` and rules-6's `rules-l0-west-cross`).
+        expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_0__r6c5').access_rule)
+            .toEqual({ ...WEAPON, children: [...WEAPON.children, { rule: 'Has', args: { item_name: 'Fire' } }] });
         expect(R.level_0__r6c5.exits.find((e) => e.connected_region === 'level_1').access_rule).toEqual({ rule: 'True_' });
         expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_1')).toBeUndefined();
     });
@@ -399,8 +406,10 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
     it('L71: no side clears the room by walking, so each crossing pays the Spear and no event is minted', () => {
         for (const [from, to] of [['level_71__r13c7', 'level_71__r11c7'], ['level_71__r11c7', 'level_71__r13c7']]) {
             const rule = exitRule(from, to);
-            expect(rule.rule, `${from} -> ${to}`).toBe('And');
-            expect(rule.children).toContainEqual(has('Ghost Spear'));
+            // ⛓ rules-fire-breaks-rocks: the analyzer's absorption (`A ∧ (A ∨ B) = A`) spells And(Ghost Spear, Or(Sword,
+            // Ghost Spear)) as Ghost Spear alone: the same logic, and the crossing still pays the Spear.
+            const terms = rule.rule === 'And' ? rule.children : [rule];
+            expect(terms, `${from} -> ${to}`).toContainEqual(has('Ghost Spear'));
             expect(JSON.stringify(rule)).not.toContain('cleared');
         }
         expect(eventsOf(RULES).find((e) => e.name === 'L71 flag 0: lock@112,192 cleared')).toBeUndefined();
