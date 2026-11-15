@@ -74,6 +74,9 @@ export class SphereState {
     this.logOrigin = null;
     // Bumped by reset(), so a load started for earlier rules can be dropped.
     this.generation = 0;
+    // {path, reason} of the last loadSphereLog that returned false (stale, refused, or failed), for the
+    // module's "no log usable" report. null after reset().
+    this.lastLoadFailure = null;
   }
 
   /**
@@ -91,6 +94,7 @@ export class SphereState {
     this.logHeader = null;
     this.logMetadata = null;
     this.logOrigin = null;
+    this.lastLoadFailure = null;
     this.generation += 1;
     // Don't reset currentPlayerId as it comes from static data
 
@@ -114,9 +118,10 @@ export class SphereState {
     log('info', `Loading sphere log from: ${filePath}${preloadedContent ? ' (pre-loaded content)' : ''}`);
 
     const stale = () => generation !== undefined && generation !== this.generation;
+    const fail = (reason) => { this.lastLoadFailure = { path: filePath, reason }; return false; };
     if (stale()) {
       log('info', `Not loading ${filePath}: the rules it was started for were replaced.`);
-      return false;
+      return fail('the rules it was started for were replaced');
     }
 
     try {
@@ -135,12 +140,12 @@ export class SphereState {
 
       if (stale()) {
         log('info', `Dropping ${filePath}: the rules it was fetched for were replaced.`);
-        return false;
+        return fail('the rules it was fetched for were replaced');
       }
       const refusal = this._rivalDecision(origin, text);
       if (refusal) {
         log('info', `Not loading ${filePath}: ${refusal}`);
-        return false;
+        return fail(refusal);
       }
 
       this.parseSphereLog(text);
@@ -162,7 +167,7 @@ export class SphereState {
       return true;
     } catch (error) {
       log('error', `Failed to load sphere log from ${filePath}:`, error);
-      return false;
+      return fail(error?.message || String(error));
     }
   }
 

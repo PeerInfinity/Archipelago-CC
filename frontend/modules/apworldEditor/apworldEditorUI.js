@@ -204,7 +204,7 @@ import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
  * `Grid`. Neither import drags a panel in.
  */
 import {
-  TILE_PX, drawCompositeMap, canvasPointOf, cellAtPoint,
+  TILE_PX, drawCompositeMap, canvasPointOf, cellAtPoint, substrateArtToggle,
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
 import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor, showMenuOnMap } from './menuMarker.js';
@@ -4871,6 +4871,13 @@ class ApworldEditorUI {
       + mapCellNote(result);
     Object.assign(slot.style, { color: '#9ab', fontSize: '11px' });
     bar.appendChild(slot);
+    // ⛓ region-map step 1 (D4) — the old/new switch: off skips every painter that declares
+    //   `compositeMap.artwork` (Seedling) and draws the generic box it drew before. In memory, per panel.
+    const artToggle = substrateArtToggle(this._substrateArt !== false, 'apworld-map-substrate-art', (on) => {
+      this._substrateArt = on;
+      paint();
+    });
+    bar.appendChild(artToggle);
     graphBtn.style.marginLeft = 'auto';
     bar.appendChild(graphBtn);
     this.scrollContainer.appendChild(bar);
@@ -4901,7 +4908,22 @@ class ApworldEditorUI {
       const hit = grid.allRegions().find((r) => r.region_id === this._selectedRegion);
       if (hit?.cell) selection = { kind: 'region', cell: hit.cell };
     }
-    drawCompositeMap(canvas, grid, regionSize, { selection });
+    /**
+     * ⛓ region-map step 1 (D3) — a painter whose content loads asynchronously (the Seedling cell's baked level)
+     * draws its fallback, then asks for a repaint through `onCellArtReady` (coalesced to one per frame by the
+     * painter). The repaint is THIS canvas only — no tab re-render — and a canvas a later draw replaced is left.
+     */
+    const source = { rules: this.rulesDoc, playerId: result.playerId };
+    const paint = () => {
+      canvas.dataset.substrateArt = String(this._substrateArt !== false);
+      drawCompositeMap(canvas, grid, regionSize, {
+        selection,
+        substrateArt: this._substrateArt !== false,
+        source,
+        onCellArtReady: () => { if (canvas.isConnected) paint(); },
+      });
+    };
+    paint();
 
     /**
      * ⛓⛓ PRESET SIDECARS M1 — **TWO CLICKS, THE PIPELINE'S `edit` MODE'S SHAPE**

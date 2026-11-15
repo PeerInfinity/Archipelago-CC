@@ -36,13 +36,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/cloudberryDemo/cloudberryLibrary.js"
         },
         {
-            "fields": 34,
+            "fields": 35,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 36,
+            "fields": 37,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -118,7 +118,10 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "compositeMap",
-                "compositeMap.drawRegion"
+                "compositeMap.artwork",
+                "compositeMap.displayRegionOf",
+                "compositeMap.drawRegion",
+                "compositeMap.locationTiles"
             ],
             "title": "Composite map"
         },
@@ -1250,6 +1253,8 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen",
                 "maze",
                 "text_adventure"
             ],
@@ -1270,17 +1275,27 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "4 keys",
+                    "type": "object",
+                    "value": [
+                        "artwork",
+                        "displayRegionOf",
+                        "drawRegion",
+                        "locationTiles"
+                    ]
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "4 keys",
+                    "type": "object",
+                    "value": [
+                        "artwork",
+                        "displayRegionOf",
+                        "drawRegion",
+                        "locationTiles"
+                    ]
                 },
                 {
                     "id": "jta",
@@ -1328,6 +1343,156 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.artwork"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.displayRegionOf"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen",
                 "maze",
                 "text_adventure"
             ],
@@ -1348,16 +1513,16 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -1399,6 +1564,80 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Composite map",
             "name": "compositeMap.drawRegion"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Composite map",
+            "name": "compositeMap.locationTiles"
         },
         {
             "carriedBy": [
