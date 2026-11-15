@@ -1,0 +1,143 @@
+[
+ {
+  "preset": "seedling_playthrough",
+  "plan": {
+   "locations": [
+    "Level 010 - Sword",
+    "Level 011 - Chest",
+    "Level 086 - Chest"
+   ],
+   "target": "Menu",
+   "here": "level_0__r7c6",
+   "hover": "level_10"
+  },
+  "hasBox": true,
+  "states": [
+   {
+    "name": "S1",
+    "ok": true,
+    "elements": 677
+   },
+   {
+    "name": "S2",
+    "ok": true,
+    "elements": 680
+   },
+   {
+    "name": "S3",
+    "ok": true,
+    "elements": 678
+   },
+   {
+    "name": "S4",
+    "ok": true,
+    "elements": 678
+   },
+   {
+    "name": "S5",
+    "ok": true,
+    "elements": 678
+   },
+   {
+    "name": "S6",
+    "ok": true,
+    "elements": 678
+   }
+  ],
+  "errors": []
+ },
+ {
+  "preset": "alttp",
+  "plan": {
+   "locations": [
+    "Aginah's Cave",
+    "Blind's Hideout - Far Left",
+    "Blind's Hideout - Far Right"
+   ],
+   "target": "Aginahs Cave",
+   "here": "Menu",
+   "hover": "Aginahs Cave"
+  },
+  "hasBox": true,
+  "states": [
+   {
+    "name": "S1",
+    "ok": true,
+    "elements": 537
+   },
+   {
+    "name": "S2",
+    "ok": true,
+    "elements": 540
+   },
+   {
+    "name": "S3",
+    "ok": true,
+    "elements": 538
+   },
+   {
+    "name": "S4",
+    "ok": true,
+    "elements": 538
+   },
+   {
+    "name": "S5",
+    "ok": true,
+    "elements": 538
+   },
+   {
+    "name": "S6",
+    "ok": true,
+    "elements": 538
+   }
+  ],
+  "errors": []
+ },
+ {
+  "preset": "procgen_topdown=./presets/procgen_topdown/AP_1/AP_1_rules.json",
+  "plan": {
+   "locations": [
+    "Adjacent to Catacombs",
+    "Black Castle Gate",
+    "Blue Labyrinth 0"
+   ],
+   "target": "Menu",
+   "here": "Overworld",
+   "hover": "Overworld"
+  },
+  "hasBox": true,
+  "states": [
+   {
+    "name": "S1",
+    "ok": true,
+    "elements": 20
+   },
+   {
+    "name": "S2",
+    "ok": true,
+    "elements": 42
+   },
+   {
+    "name": "S3",
+    "ok": true,
+    "elements": 20
+   },
+   {
+    "name": "S4",
+    "ok": true,
+    "elements": 20
+   },
+   {
+    "name": "S5",
+    "ok": true,
+    "elements": 20
+   },
+   {
+    "name": "S6",
+    "ok": true,
+    "elements": 20
+   }
+  ],
+  "errors": []
+ }
+]
