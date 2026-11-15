@@ -1,0 +1,11 @@
+seam	off	on	ON gate counts
+5216	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}
+5218	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}
+5222	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}
+5224	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}
+5225	refused HAMMER_SAFETY no step out at (741.44,685.29) work 112	refused HAMMER_SAFETY no step out at (741.44,685.29) work 112	{"asked": 3928, "cleared": 0, "held": 0}
+5226	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}
+5241	refused HAMMER_SAFETY no step out at (868.73,855.83) work 340	refused HAMMER_SAFETY no step out at (867.94,850.52) work 340	{"asked": 11642, "cleared": 536, "held": 0}
+5242	refused HAMMER_SAFETY no step out at (868.73,855.83) work 340	refused HAMMER_SAFETY no step out at (867.34,850.39) work 340	{"asked": 13540, "cleared": 722, "held": 0}
+5247	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}
+5258	refused (anytime deadline, work 644)	refused (anytime deadline, work 644)	{"asked": 2280, "cleared": 0, "held": 0}

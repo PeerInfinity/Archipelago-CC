@@ -1,0 +1,231 @@
+# box lock: BUSY — sdc-no-preset-connect probe ui (pid 1546575, own-port) since 2026-11-12T19:48:22.168Z; queuing for up to 1800s
+# box lock: TAKEN by hammer-connected-l22 probe server (own-port, pid 1549097) — head 51ee582a1, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+{
+ "errors": [],
+ "loadLineTimeout": true,
+ "lines": [],
+ "stages": {
+  "0_boot": {
+   "spi": null,
+   "pid": null,
+   "rt": null,
+   "mana": null,
+   "loop": false,
+   "region": null
+  },
+  "2_after_connect": {
+   "source": "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+   "spi": {
+    "playerId": "1",
+    "playerName": "Player1"
+   },
+   "pid": "1",
+   "game": "Adventure",
+   "seed": "14089154938208861744",
+   "apLoad": null,
+   "refusal": null,
+   "self": null,
+   "n": 0,
+   "nDelivered": 0,
+   "setId": null,
+   "rt": null,
+   "inv": 0,
+   "mana": 100,
+   "loop": false,
+   "region": "Overworld"
+  },
+  "s_a_sphere_and_costs_loop_off": {
+   "source": "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+   "spi": {
+    "playerId": "1",
+    "playerName": "Player1"
+   },
+   "pid": "1",
+   "game": "Adventure",
+   "seed": "14089154938208861744",
+   "apLoad": null,
+   "refusal": null,
+   "self": null,
+   "n": 0,
+   "nDelivered": 0,
+   "setId": null,
+   "rt": null,
+   "inv": 0,
+   "mana": 100,
+   "loop": false,
+   "region": "Overworld"
+  },
+  "s_q_pre": {
+   "source": "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+   "spi": {
+    "playerId": "1",
+    "playerName": "Player1"
+   },
+   "pid": "1",
+   "game": "Adventure",
+   "seed": "14089154938208861744",
+   "apLoad": null,
+   "refusal": null,
+   "self": null,
+   "n": 0,
+   "nDelivered": 0,
+   "setId": null,
+   "rt": null,
+   "inv": 0,
+   "mana": 100,
+   "loop": false,
+   "region": "Overworld"
+  },
+  "s_a1_capture_install": {
+   "source": "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+   "spi": {
+    "playerId": "1",
+    "playerName": "Player1"
+   },
+   "pid": "1",
+   "game": "Adventure",
+   "seed": "14089154938208861744",
+   "apLoad": null,
+   "refusal": null,
+   "self": null,
+   "n": 0,
+   "nDelivered": 0,
+   "setId": null,
+   "rt": null,
+   "inv": 0,
+   "mana": 100,
+   "loop": false,
+   "region": "Overworld"
+  },
+  "s_g_full": {
+   "source": "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+   "spi": {
+    "playerId": "1",
+    "playerName": "Player1"
+   },
+   "pid": "1",
+   "game": "Adventure",
+   "seed": "14089154938208861744",
+   "apLoad": null,
+   "refusal": null,
+   "self": null,
+   "n": 0,
+   "nDelivered": 0,
+   "setId": null,
+   "rt": null,
+   "inv": 0,
+   "mana": 100,
+   "loop": false,
+   "region": "Overworld"
+  },
+  "s_h_capture_collect": {
+   "source": "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+   "spi": {
+    "playerId": "1",
+    "playerName": "Player1"
+   },
+   "pid": "1",
+   "game": "Adventure",
+   "seed": "14089154938208861744",
+   "apLoad": null,
+   "refusal": null,
+   "self": null,
+   "n": 0,
+   "nDelivered": 0,
+   "setId": null,
+   "rt": null,
+   "inv": 0,
+   "mana": 100,
+   "loop": false,
+   "region": "Overworld"
+  }
+ },
+ "steps": {
+  "step_a_sphere_and_costs_loop_off": {
+   "sphere": {
+    "origin": "file",
+    "header": null,
+    "spheres": 10,
+    "first": [
+     [],
+     [
+      "Black Castle Gate"
+     ],
+     [
+      "Catacombs"
+     ]
+    ]
+   },
+   "costs": {
+    "loaded": false,
+    "from": null,
+    "regions": null,
+    "locations": null,
+    "sampleLoc": null,
+    "status": {
+     "isLoaded": false,
+     "isLoading": false,
+     "loadedFrom": null,
+     "loadedAt": null,
+     "loadError": null,
+     "regionCount": 0,
+     "locationCount": 0
+    }
+   },
+   "loop": false
+  },
+  "step_q_pre": {
+   "otherClient": [
+    "RoomInfo",
+    "Connected",
+    "PrintJSON: Questy (Team #1) playing APQuest has joined. Client(0.6.9), [].",
+    "PrintJSON: Now that you are connected, you can use !help to list commands to run via the server. If your client supports it, you may have additional local commands you can list with /help.",
+    "DataPackage",
+    "ids [3,5,6,2]",
+    "PrintJSON: 1 sent 30000002 to 2 (3)",
+    "PrintJSON: 1 sent 30000014 to 2 (2)",
+    "PrintJSON: 1 sent 30000014 to 2 (5)",
+    "PrintJSON: 1 sent 30000014 to 2 (6)",
+    "RoomUpdate"
+   ]
+  },
+  "step_a1_capture_install": {
+   "error": "Error: page.evaluate: TypeError: Cannot read properties of null (reading 'playback')\n    at eval (eval at <anonymous> (eval at evaluate (:311:30)), <anonymous>:12:16)\n    at eval (eval at <anonymous> (eval at evaluate (:311:30)), <anonymous>:23:55)\n    at eval (eval at evaluate (:311:30), <anonymous>:4:20)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+  },
+  "step_g_full": {
+   "error": "Error: page.evaluate: TypeError: Cannot read properties of null (reading 'halted')\n    at eval (eval at <anonymous> (eval at evaluate (:311:30)), <anonymous>:39:128)\n    at async eval (eval at evaluate (:311:30), <anonymous>:4:14)\n    at async <anonymous>:337:30"
+  },
+  "step_h_capture_collect": {
+   "error": "Error: page.evaluate: TypeError: Cannot read properties of null (reading '__cap')\n    at eval (eval at <anonymous> (eval at evaluate (:311:30)), <anonymous>:4:15)\n    at eval (eval at <anonymous> (eval at evaluate (:311:30)), <anonymous>:7:330)\n    at eval (eval at evaluate (:311:30), <anonymous>:4:20)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+  }
+ },
+ "wire": [
+  {
+   "t": 1794513111474,
+   "dir": ">",
+   "cmd": "Connect",
+   "name": "Questy",
+   "game": "APQuest"
+  },
+  {
+   "t": 1794513111476,
+   "dir": "<",
+   "cmd": "Connected",
+   "slot": 1,
+   "keys": [],
+   "checked": 0,
+   "missing": 6
+  },
+  {
+   "t": 1794513111478,
+   "dir": ">",
+   "cmd": "LocationChecks",
+   "locations": [
+    3,
+    5,
+    6,
+    2
+   ]
+  }
+ ]
+}

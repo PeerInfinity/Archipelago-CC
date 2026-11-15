@@ -1,0 +1,25 @@
+{
+ "variant": "as-captured",
+ "records": "captured",
+ "ok": false,
+ "kind": "refusal",
+ "ms": 282,
+ "work": 33,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 33
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "skipped",
+   "ticks": null,
+   "work": 0
+  }
+ ],
+ "message": "solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29: the re-planned corridor failed too — solverBot(js-runtime-L22-exit) reach-exit (192,64)->L29 waypoint 0 (88,88): not reached within 400 ticks; stalled at (57.37568056970543,132.60385297831334) v=(0,0) in level 22, aiming at (88,88), after grazing 85 solid(s): tree at (0,96) on the Y axis, at (30.948349570550445,130.5677669529664) in level 22, aiming at (88,88); tree at (0,96) on the Y axis, at (32.287689398770624,130.5677669529664) in level 22, aiming at (88,88); tree at (0,96) on the Y axis, at (33.45025253169417,130.5677669529664) in level 22, aiming at (88,88)."
+}

@@ -1,0 +1,29 @@
+{
+ "variant": "sword",
+ "records": "captured",
+ "ok": true,
+ "kind": null,
+ "ms": 1426,
+ "work": 92,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "work": 33
+  },
+  {
+   "pass": "full",
+   "ok": true,
+   "kind": null,
+   "ticks": 229,
+   "work": 59
+  }
+ ],
+ "ticks": 229,
+ "verbs": [
+  "walk"
+ ],
+ "replayError": "levelRun: a fire press at tick 2 lands inside the window the press at tick 0 opened (`firing` is up through tick 10). `useItem`'s `if (!firing)` swallows it silently in the game. The cadence is 11."
+}

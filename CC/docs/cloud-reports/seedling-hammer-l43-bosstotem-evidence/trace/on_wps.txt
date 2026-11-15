@@ -1,0 +1,4 @@
+L43DBG WPS solverBot(survey-step-150) collect (144,224) stance attempt 0 from 184.00 456.00 t 0 [[184,248],[136,248],[136,232]]
+L43DBG WPS solverBot(survey-step-150) reach-exit (144,64)->L37 -> awake boss first (bosstotem@152,168) -> totem stance (bosstotem@152,168) attempt 0 from 150.08 233.92 t 160 [[131.5,265]]
+L43DBG WPS solverBot(survey-step-150) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112) attempt 0 from 131.30 336.70 t 782 [[136,184],[152,184]]
+L43DBG WPS solverBot(survey-step-150) reach-exit (144,64)->L37 attempt 1 from 151.65 134.10 t 1009 [[152,72]]

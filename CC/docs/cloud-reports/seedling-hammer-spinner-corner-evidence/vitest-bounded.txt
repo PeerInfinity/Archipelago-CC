@@ -1,0 +1,40 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/solverEnvChannel.test.js (11 tests) 2291ms
+     ✓ nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env  592ms
+     ✓ the result records the switches set (and carries no stamp at the defaults)  519ms
+     ✓ an unknown switch refuses BY NAME in the worker too: every solve, nothing installed  772ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.test.js (11 tests) 5286ms
+     ✓ ON = OFF on the bobsoldier2 L30 plan (no spinner on the press): the same keys, the switch never asked  4700ms
+ ✓ frontend/modules/seedlingDemo/hammerSlashRect.test.js (8 tests) 1579ms
+     ✓ always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base)  668ms
+     ✓ ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal  901ms
+ ✓ frontend/modules/seedlingDemo/hammerBodyGate.test.js (5 tests) 1190ms
+     ✓ the corner is a CORPSE's body: the press of t719 was the killing hit, and no key set meets a line  526ms
+     ✓ ON: every key set is a step out there (the body is not billed, the line misses)  388ms
+ ✓ frontend/modules/seedlingDemo/hammerOppPressFallback.test.js (4 tests) 8ms
+ ✓ frontend/modules/seedlingDemo/fidelityF1c.test.js (13 tests) 46942ms
+     ✓ ⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c)  3783ms
+     ✓ ⛓⛓⛓ the committed window IS at the chain's residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19  6594ms
+     ✓ ⛓⛓⛓ where a corner DOES form (the witness's residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19  12541ms
+     ✓ ⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness's) and 18 (the rebound's), no hit, the crossing to L19  5110ms
+     ✓ ⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing's rebound makes refuses with the landing in its words  2677ms
+     ✓ ⛓⛓ the witness walks the rung's solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock  11316ms
+     ✓ ⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game's spelling — its pending row is the ledger's removal + the v9 fade  4828ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (15 tests) 75040ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  4783ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  33232ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  2600ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  4809ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  13457ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  669ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  4928ms
+     ✓ ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row  5203ms
+     ✓ ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys  5304ms
+
+ Test Files  7 passed (7)
+      Tests  67 passed (67)
+   Start at  20:37:34
+   Duration  78.66s (transform 6.16s, setup 795ms, import 12.33s, tests 132.34s, environment 1ms)
+
