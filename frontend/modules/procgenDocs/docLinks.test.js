@@ -353,20 +353,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              seedling-solve-progress.md § 7 (the route stamp) (`doc` 309 → 310).
          *   415 → 416  content sets S1 (2026-11-14): text-adventure.md's payload `things` field → its own
          *              § Things that are not AP checks (`same-doc` 38 → 39).
+         *   416 → 419  region-map step 3a (2026-11-14): the new region-layout.md — its README index row, its link to
+         *              substrate-registry.md § Entry contract, and that table's `compositeMap.layoutGraph` row → it
+         *              (`doc` 311 → 314).
          */
         expect(by).toEqual({
             'same-doc': 39,
-            doc: 311,
+            doc: 314,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(416);
+        expect(CORPUS.length).toBe(419);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(311);
+        expect(docs).toHaveLength(314);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

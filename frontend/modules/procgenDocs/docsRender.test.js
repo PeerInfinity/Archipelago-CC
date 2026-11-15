@@ -317,7 +317,8 @@ describe('⛓ the links the render emits', () => {
         //   → frontend/packs/meta/art/manifest.json, the worked example (1 repo).
         //   412 → 413: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
         //   415 → 416: content sets S1 — text-adventure.md's `things` field → its own § Things that are not AP checks (1 same-doc).
-        expect(checked).toBe(416);
+        //   416 → 419: region-map step 3a — region-layout.md (its index row, its registry link, the registry's row to it)
+        expect(checked).toBe(419);
     });
 
     it('tags each link with the kind that produced it', () => {
