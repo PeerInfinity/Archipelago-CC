@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 29,
         "headings": 1311,
         "indexHeadings": 2,
-        "lines": 36444,
+        "lines": 36445,
         "pages": 4,
-        "words": 550810
+        "words": 550860
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -125,7 +125,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-editor.md",
             "h1": "The Seedling Editor",
             "headings": 18,
-            "lines": 306,
+            "lines": 307,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -133,7 +133,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7710
+            "words": 7760
         },
         {
             "description": "The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0).",

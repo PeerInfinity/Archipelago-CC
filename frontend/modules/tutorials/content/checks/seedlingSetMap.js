@@ -26,8 +26,6 @@ const sourceSelect = (ctx) => ctx.query(inLab('#source'));
 const roomsSelect = (ctx) => ctx.query(inLab('#editSetRoom'));
 /** The room the select step clicked (set by its `run`, read by its `done`). */
 let pickedRoom = null;
-/** The lab page's document before the fresh-page step reloaded it (its `done` waits for a new one). */
-let staleDocument = null;
 
 /**
  * The room the walk selects: the first room the map links to from the room
@@ -79,24 +77,6 @@ export const CHECK_SEEDLING_SET_MAP = Object.freeze({
             blocks: [
                 ...look('open-lab', LAB, 'Open the **Procgen Lab — Seedling** tab (in Quick Launch if it is closed). Wait for its status line to say it is connected.',
                     (ctx) => ctx.text(labStatus).includes('· connected') && Boolean(sourceSelect(ctx))),
-                {
-                    step: {
-                        id: 'fresh-page',
-                        text: 'Start from a fresh lab page: right-click inside the lab and choose **Reload frame**. (If another tutorial or check left a room or a level set in the lab, the page would otherwise bring that one back.)',
-                        run: (ctx) => {
-                            const w = labWindow(ctx);
-                            if (!w) throw new Error('the Seedling lab has no page to reload');
-                            staleDocument = w.document;
-                            w.location.reload();
-                        },
-                        done: (ctx) => {
-                            const w = labWindow(ctx);
-                            return Boolean(w) && w.document !== staleDocument && w.document.readyState === 'complete'
-                                && ctx.text(labStatus).includes('· connected') && Boolean(sourceSelect(ctx));
-                        },
-                        doneTimeoutMs: 60000,
-                    },
-                },
                 {
                     step: {
                         id: 'source-edit',
