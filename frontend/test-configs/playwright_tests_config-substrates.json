@@ -61,6 +61,16 @@
             "category": "textAdventureSubstrateWrapper"
         },
         {
+            "id": "tasw-thing-examine-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-exit-label-by-place",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
             "id": "tasw-playback-no-double-append",
             "enabled": true,
             "category": "TA block modes"

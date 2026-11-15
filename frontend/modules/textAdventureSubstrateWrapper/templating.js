@@ -150,3 +150,38 @@ export function customExitInaccessibleMessage(customData, exitName, vars = {}) {
     if (!t) return null;
     return processMessageTemplate(t, { exitName, ...vars });
 }
+
+/**
+ * ⛓ CONTENT SETS S1 — **AN EXIT'S LABEL**: `<exit name> (to <target>)`, where
+ * the bridge passes the target's PLACE name when its payload names one, else
+ * its region id (a maze region, an unthemed world). Plain text: the engine
+ * escapes a label when it renders it.
+ *
+ * @param {string} exitName
+ * @param {string} target
+ */
+export function exitLabel(exitName, target) {
+    return `${exitName} (to ${target})`;
+}
+
+/**
+ * ⛓⛓ CONTENT SETS S1 — **WHAT EXAMINING A THING SHOWS**, as HTML lines, in
+ * order: its `description`; a character's line (`<name> says: …`); the
+ * information it holds (`<info name>: <body>`). A thing of kind `info` (no
+ * holder) shows the last part only. A thing that says nothing at all shows
+ * `You see <name>.` Names are escaped; the description, `says` and `body` are
+ * a pack's authored text (markup, like every template here) whose values were
+ * filled and escaped at generation.
+ *
+ * @param {{kind: string, name: string, description?: string, says?: string,
+ *          info?: {name: string, body: string}}} thing
+ * @returns {string[]}
+ */
+export function thingLines(thing) {
+    const lines = [];
+    if (thing?.kind !== 'info' && thing?.description) lines.push(thing.description);
+    if (thing?.kind === 'character' && thing.says) lines.push(`${escapeHtml(thing.name)} says: ${thing.says}`);
+    if (thing?.info?.body) lines.push(`${escapeHtml(thing.info.name)}: ${thing.info.body}`);
+    if (!lines.length) lines.push(escapeHtml(`You see ${thing?.name ?? 'something'}.`));
+    return lines;
+}

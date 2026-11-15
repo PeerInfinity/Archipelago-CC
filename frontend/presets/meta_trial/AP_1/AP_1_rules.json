@@ -257,6 +257,21 @@
               }
             }
           },
+          "things": [
+            {
+              "id": "thing_0",
+              "kind": "character",
+              "concept": "meta:character/placeholder",
+              "name": "Placeholder",
+              "description": "It stands in a spot the theme set aside for a character.",
+              "says": "Sorry about the name. The Generated Room was picked from a short list, not written for this room.",
+              "info": {
+                "concept": "meta:info/exits",
+                "name": "On exits",
+                "body": "An exit with a rule opens when its rule passes. The rule is fixed when the world is generated."
+              }
+            }
+          ],
           "fogEnabled": true
         }
       },

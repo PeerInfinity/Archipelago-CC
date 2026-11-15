@@ -1,10 +1,15 @@
 {
   "schema_version": 1,
-  "_comment": "The `meta` theme's text (content sets R3). Every line is true of every world the pack can be used in: it names only what every generated world has (rooms, exits, checks, items, rules, a seed). {placeholder} templates are filled at PLAY by the substrate that shows them (the text adventure's templating.js): {destinationRegion} in a gate's lines, {item} in a check's.",
+  "_comment": "The `meta` theme's text (content sets R3). Every line is true of every world the pack can be used in: it names only what every generated world has (rooms, exits, checks, items, rules, a seed). {placeholder} templates: {item} in a gate's lines is filled at GENERATION by the placer (the item the gate's rule asks for); the rest are filled at PLAY by the substrate that shows them (the text adventure's templating.js): {destinationRegion} in a gate's lines, {item} in a check's. Characters' `says` and information's `body` (content sets S1) are filled at GENERATION: {roomName} (the room's place name) and {regionId} (its region id).",
   "strings": {
-    "meta:concept/guardian/blocked": "The Gate stays shut. Its rule is one item, Progressive Sword, and you do not have it. Come back with it and the way to {destinationRegion} opens.",
-    "meta:concept/guardian/passedWith": "The Gate checks for Progressive Sword and finds it. That is its whole rule, so it opens. The way to {destinationRegion} is clear.",
+    "meta:concept/guardian/blocked": "The Gate stays shut. Its rule is one item, {item}, and you do not have it. Come back with it and the way to {destinationRegion} opens.",
+    "meta:concept/guardian/passedWith": "The Gate checks for {item} and finds it. That is its whole rule, so it opens. The way to {destinationRegion} is clear.",
     "meta:concept/sword/checkMessage": "This location is a check. You checked it and received {item}. A rule that asks only for this item now passes.",
-    "meta:concept/swim/checkMessage": "This location is a check. You checked it and received {item}. A rule that asks only for this item now passes."
+    "meta:concept/swim/checkMessage": "This location is a check. You checked it and received {item}. A rule that asks only for this item now passes.",
+    "meta:character/narrator/says": "This is {roomName}. The rules know it as {regionId}.",
+    "meta:character/placeholder/says": "Sorry about the name. {roomName} was picked from a short list, not written for this room.",
+    "meta:info/checks/body": "A check is a location that sends an item. Reading this is not a check: nothing is sent.",
+    "meta:info/exits/body": "An exit with a rule opens when its rule passes. The rule is fixed when the world is generated.",
+    "meta:info/rooms/body": "Each room here is one region of the world's rules. An exit takes you to another region."
   }
 }
