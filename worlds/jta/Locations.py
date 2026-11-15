@@ -65,3 +65,8 @@ def get_full_location_table() -> Dict[str, LocationData]:
 
 # Static table used for class-level registration (includes all possible locations)
 location_table: Dict[str, LocationData] = get_full_location_table()
+
+# The goal location, max+1 of the static table, in the goal zone of the seed (its region is
+# set per seed in Regions.py). It holds the locked Victory item.
+VICTORY_LOCATION = "Reach Goal Zone"
+VICTORY_LOCATION_ID = BASE_LOCATION_ID + len(location_table)

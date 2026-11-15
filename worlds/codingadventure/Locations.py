@@ -75,5 +75,6 @@ location_table: Dict[str, LocationData] = {
     "Cloud Provider": LocationData("DeploymentBranch", "Cloud Provider", 400000059),
     "Domain Setup": LocationData("DeploymentBranch", "Domain Setup", 400000060),
     "SSL Certificate": LocationData("DeploymentBranch", "SSL Certificate", 400000061),
-    "Production Deployment": LocationData("ProductionHub", "Production Deployment", None, event=True),
+    # The goal location (max+1, the WorldGen twin's ID): holds the locked Victory item.
+    "Production Deployment": LocationData("ProductionHub", "Production Deployment", 400000062),
 }

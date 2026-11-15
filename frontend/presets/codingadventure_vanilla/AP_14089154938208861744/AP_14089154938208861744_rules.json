@@ -1478,7 +1478,7 @@
         "locations": [
           {
             "name": "Production Deployment",
-            "id": null,
+            "id": 400000062,
             "access_rule": {
               "rule": "True_"
             },
@@ -1488,8 +1488,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
           }
         ]
       }
@@ -2018,13 +2017,12 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": null,
+        "id": 400100052,
         "groups": [
-          "Event"
+          "Everything"
         ],
         "classification": "progression",
-        "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }
@@ -2205,6 +2203,9 @@
       },
       "is_vanilla": true,
       "world_description": "Coding Adventure is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
+      "slot_data": {
+        "reports_goal_by_server_item": true
+      },
       "web": {
         "theme": "ocean",
         "tutorials": [
