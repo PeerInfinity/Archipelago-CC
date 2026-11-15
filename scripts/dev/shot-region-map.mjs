@@ -124,9 +124,11 @@ try {
             gs.setCurrentRegion(target?.name ?? [...view.regions.keys()][5]);
         });
         await page.waitForTimeout(1500);
+        // the camera has eased onto the player's cell (follow); widen it so the neighbours show, keeping it centred
         await page.evaluate(() => {
             const p = window.__rm;
-            p.camera = { ...p.camera, zoom: p.camera.zoom * 0.35 };
+            const f = p._currentFrame();
+            if (f) p.camera = { ...p.camera, zoom: p._focusCamera(f).zoom * 0.3 };
             p._requestPaint();
         });
         await shot(page, 'seedling_playthrough-follow.png');
