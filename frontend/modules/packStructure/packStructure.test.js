@@ -85,6 +85,18 @@ describe('structure: ⛔ refusal by name', () => {
     it('an after naming a stat', () => refuses((e) => { t(e).after = [['omsi:stat/dex']]; }, /after\[0\]\[0\]: the task "omsi:stat\/dex" is a stat/));
     it('max other than true', () => refuses((e) => { e['omsi:stat/wander'].max = 100; }, /max is true .* or absent/));
     it('a reference no pack in the stack holds', () => refuses((e) => { t(e).time = 'omsi:resource/stamina'; }, /time names "omsi:resource\/stamina", which no pack in the stack holds/));
+    it('a boon result of a form a boon cannot give (PL-2: stat or resource only, no `when`)', async () => {
+        const [jta] = await load(['jta'], ['structure']);
+        const withBoon = (results) => {
+            const json = structuredClone(jta.layers.structure);
+            json.entries['jta:boon/how-to-read'].results = results;
+            return () => parseStructureManifest(json, 'jta');
+        };
+        expect(withBoon([{ opens: 'jta:task/use-food' }])).toThrow(/how-to-read": results\[0\] needs exactly one of stat, resource \(got opens\)/);
+        expect(withBoon([{ stat: 'jta:stat/study', when: 'last' }])).toThrow(/results\[0\]: the result has unknown field "when"/);
+        expect(withBoon([{ resource: 'jta:resource/food' }])).toThrow(/needs sign "\+" or "-"/);
+        expect(withBoon([{ stat: 'jta:stat/study' }])()).toBeTruthy();
+    });
     it('an unknown manifest field', async () => {
         const json = await omsiStructureWith(() => {});
         json.tasks = {};
@@ -126,6 +138,7 @@ describe('the words: a pack concept presents a structure entry (Z.1, Z.3)', () =
 describe('numbers (Z.4) — a set holds DEFAULTS (Z7)', () => {
     it('value paths: the forms Z.4 writes', () => {
         expect(parseValuePath('time')).toEqual({ head: 'time' });
+        expect(parseValuePath('count')).toEqual({ head: 'count' });     // ⛓ PL-2: a boon's item-pool copies
         expect(parseValuePath('requires.omsi:stat/wander.min')).toEqual({ head: 'requires', id: 'omsi:stat/wander', field: 'min' });
         expect(parseValuePath('results.omsi:resource/gold')).toEqual({ head: 'results', id: 'omsi:resource/gold' });
         expect(parseValuePath('modifies.results.omsi:stat/wander')).toEqual({ head: 'modifies', part: 'results.omsi:stat/wander' });

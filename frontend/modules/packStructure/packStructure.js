@@ -23,6 +23,8 @@
  *   limit     (task, C2) true | { grows_with: <stat id> } | absent
  *   after     (task, S10) a list of sets of task ids
  *   tags      (task) free strings
+ *   results   (boon; ⛓ PL-2, a Z.2 addition ⚖ planner) what the boon gives when received:
+ *             [{ stat } | { resource, sign }], no `when`; the amounts are numbers `results.<id>`
  *
  * ⛔ REFUSAL BY NAME: a `ContentPackError` naming the pack, the key and the
  * field. Nothing is half-loaded. A key's namespace is its pack's id, so packs
@@ -43,7 +45,7 @@ export const STRUCTURE_FIELDS = Object.freeze({
     place: Object.freeze(['kind', 'src']),
     stat: Object.freeze(['kind', 'src', 'owner', 'max', 'modifies']),
     resource: Object.freeze(['kind', 'src', 'modifies']),
-    boon: Object.freeze(['kind', 'src', 'modifies']),
+    boon: Object.freeze(['kind', 'src', 'modifies', 'results']),
     task: Object.freeze(['kind', 'src', 'place', 'time', 'requires', 'results', 'limit', 'after', 'tags']),
 });
 
@@ -55,6 +57,11 @@ export const MODIFIES_LASTS = Object.freeze(['loop', 'always']);
 export const MODIFIES_PARTS = Object.freeze(['time', 'limit', 'results.<id>', 'requires.<id>']);
 /** The four forms of a result: exactly one of these fields, plus `when` (and `sign` with `resource`). */
 export const RESULT_FORMS = Object.freeze(['stat', 'resource', 'boon', 'opens']);
+/**
+ * ⛓ PL-2 (a Z.2 addition, ⚖ planner 2026-11-16): the forms a BOON's `results` take — what holding it gives. Z.2's
+ * boon had no field for "which stat or resource it boosts", which ActionNodes' design puts in what exists.
+ */
+export const BOON_RESULT_FORMS = Object.freeze(['stat', 'resource']);
 
 const MANIFEST_FIELDS = Object.freeze(['schema_version', 'entries', 'provenance', '_comment']);
 
@@ -136,6 +143,25 @@ function checkSets(at, field, list, checkMember) {
     }
 }
 
+/** A `results` list: each entry exactly one of `forms`, plus `sign` with `resource` and (when `withWhen`) `when`. */
+function checkResults(at, results, forms, withWhen) {
+    if (!Array.isArray(results)) fail(`${at}: results must be a list`);
+    for (const [i, r] of results.entries()) {
+        const rAt = `${at}: results[${i}]`;
+        if (!isObject(r)) fail(`${rAt} is not an object`);
+        const found = RESULT_FORMS.filter((f) => f in r);
+        if (found.length !== 1 || !forms.includes(found[0])) {
+            fail(`${rAt} needs exactly one of ${forms.join(', ')} (got ${found.length ? found.join(' + ') : 'none'})`);
+        }
+        const [form] = found;
+        const when = withWhen ? ['when'] : [];
+        onlyFields(rAt, r, form === 'resource' ? ['resource', 'sign', ...when] : [form, ...when], 'the result');
+        ref(rAt, form, r[form], form === 'opens' ? ['place', 'task'] : [form]);
+        if (form === 'resource' && r.sign !== '+' && r.sign !== '-') fail(`${rAt}: a resource result needs sign "+" or "-" (got ${JSON.stringify(r.sign)})`);
+        if ('when' in r && !RESULT_WHEN.includes(r.when)) fail(`${rAt}: when ${JSON.stringify(r.when)} is not one of ${RESULT_WHEN.join(', ')}`);
+    }
+}
+
 function checkTask(at, e) {
     if ('place' in e) ref(at, 'place', e.place, ['place']);
     if ('time' in e) ref(at, 'time', e.time, ['resource']);
@@ -154,20 +180,7 @@ function checkTask(at, e) {
             }
         });
     }
-    if ('results' in e) {
-        if (!Array.isArray(e.results)) fail(`${at}: results must be a list`);
-        for (const [i, r] of e.results.entries()) {
-            const rAt = `${at}: results[${i}]`;
-            if (!isObject(r)) fail(`${rAt} is not an object`);
-            const forms = RESULT_FORMS.filter((f) => f in r);
-            if (forms.length !== 1) fail(`${rAt} needs exactly one of ${RESULT_FORMS.join(', ')} (got ${forms.length ? forms.join(' + ') : 'none'})`);
-            const [form] = forms;
-            onlyFields(rAt, r, form === 'resource' ? ['resource', 'sign', 'when'] : [form, 'when'], 'the result');
-            ref(rAt, form, r[form], form === 'opens' ? ['place', 'task'] : [form]);
-            if (form === 'resource' && r.sign !== '+' && r.sign !== '-') fail(`${rAt}: a resource result needs sign "+" or "-" (got ${JSON.stringify(r.sign)})`);
-            if ('when' in r && !RESULT_WHEN.includes(r.when)) fail(`${rAt}: when ${JSON.stringify(r.when)} is not one of ${RESULT_WHEN.join(', ')}`);
-        }
-    }
+    if ('results' in e) checkResults(at, e.results, RESULT_FORMS, true);
     if ('limit' in e) {
         if (e.limit !== true) {
             onlyFields(at, e.limit, ['grows_with'], 'limit (true, or { grows_with })');
@@ -206,6 +219,7 @@ export function parseStructureManifest(json, packId) {
         }
         if ('modifies' in e) checkModifies(at, e.modifies);
         if (e.kind === 'task') checkTask(at, e);
+        if (e.kind === 'boon' && 'results' in e) checkResults(at, e.results, BOON_RESULT_FORMS, false);
     }
     return json;
 }

@@ -6,7 +6,8 @@
     { "id": "archipelago", "title": "Archipelago — the fork's AP item pickup" },
     { "id": "text-adventure", "title": "Text adventure — the built-in prose" },
     { "id": "maze", "title": "Maze — the built-in looks" },
-    { "id": "meta", "title": "Meta — a world that knows it is a generated game" }
+    { "id": "meta", "title": "Meta — a world that knows it is a generated game" },
+    { "id": "example-village", "title": "The Village — ActionNodes' example graph, as a pack (structure, words, numbers)" }
   ],
   "graphics": {
     "seedling": ["seedling", "archipelago"]
