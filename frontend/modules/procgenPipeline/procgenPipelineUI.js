@@ -82,10 +82,10 @@ import {
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
     substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
     sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
-    buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun, worldContentStackOf,
+    buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun, worldContentStackOf, worldContentSubstrateIds,
 } from './presetRun.js';
 import {
-    attachEnvelopeContent, browserPackIo, loadContentSet, loadSelectableContentPacks, pickedContentList,
+    assertWorldNumbers, attachEnvelopeContent, browserPackIo, loadContentSet, loadSelectableContentPacks, pickedContentList,
 } from './worldContent.js';
 import { getRegionEditor, openRoomEditor, roomEditorKindOf } from './regionEditors.js';
 import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
@@ -4136,6 +4136,10 @@ export class ProcgenPipelineUI {
      */
     async _loadWorldContent() {
         const io = browserPackIo();
+        // ⛓ CONTENT SETS PL-1 — a numbers pack for another substrate or `exists` is refused by name (Z.5); the
+        //   panel has no picker for either setting, so this reads nothing unless a loaded config names one.
+        await assertWorldNumbers(this.params,
+            { substrateIds: worldContentSubstrateIds(this, { resolvedLibraries: this.regionLibraries }), ...io });
         this.contentSet = await loadContentSet(
             worldContentStackOf(this, { resolvedLibraries: this.regionLibraries }), io);
         for (const st of [this._stepState, this._tdState, this._spiralState]) {

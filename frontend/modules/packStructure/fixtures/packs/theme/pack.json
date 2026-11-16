@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "id": "theme",
+  "title": "A test fixture: a theme that renames a task by presenting it later in the words stack (Z.3)",
+  "licence": "test fixture",
+  "layers": { "concepts": "concepts/manifest.json" }
+}

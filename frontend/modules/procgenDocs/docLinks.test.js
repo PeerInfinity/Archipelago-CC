@@ -362,15 +362,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              link to gotchas.md § the monotonicity gotcha, its four Related links (architecture.md,
          *              substrate-registry.md, loop-recording.md, gotchas.md), and the registry's hand-kept
          *              annotation row → it (`doc` 316 → 323).
+         *   428 → 429  content packs PL-1 (2026-11-15): concepts.md § Content roles' `assertPresents` bullet → its
+         *              own § What exists, the numbers and the bindings (`same-doc` 39 → 40).
          */
         expect(by).toEqual({
-            'same-doc': 39,
+            'same-doc': 40,
             doc: 323,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(428);
+        expect(CORPUS.length).toBe(429);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

@@ -185,6 +185,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "report"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "rerecord"
         },
         {
@@ -241,11 +246,11 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 532,
         "browser": 227,
-        "cited": 287,
-        "files": 552,
-        "lineStyle": 20,
-        "withDocblock": 552,
-        "withFlags": 470
+        "cited": 289,
+        "files": 553,
+        "lineStyle": 21,
+        "withDocblock": 553,
+        "withFlags": 471
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6598,7 +6603,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "extract",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [
                 "check",
@@ -22027,6 +22034,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only — REPLAY A CAPTURED SOLVE REQUEST in node, N times, each in a FRESH process: is the solver's answer a function of the request?",
             "path": "scripts/procgen/replay-seedling-solve-request.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "report",
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "report-pack-provenance.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Pack provenance report — counts, per committed content pack and layer, the entries each provenance source accounts for (⛓ CONTENT SETS PL-1, Z.7 check 4).",
+            "path": "scripts/procgen/report-pack-provenance.mjs"
         },
         {
             "argvHelpers": [

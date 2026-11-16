@@ -43,6 +43,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { loadPackStack, packsBaseUrl, parseRegistry, PACK_ID_PATTERN } from '../contentPacks/contentPacks.js';
+import { numbersSelectionRefusal } from '../packStructure/packNumbers.js';
 import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { assertPresents } from '../procgenCore/contentRoles.js';
@@ -50,6 +51,38 @@ import { CONCEPTS } from '../procgenCore/concepts.js';
 
 /** The params key, the regionParams key and the `procgen_metadata[p]` key for the world's own list. */
 export const RECORDED_CONTENT_KEY = 'content';
+/**
+ * ⛓ CONTENT SETS PL-1 (Z.5, ⚖ the user 2026-11-15) — the two new world settings, keyed the same way in
+ * `params`, `regionParams` and `procgen_metadata[p]` (⚠ a PER-PLAYER map), beside `content`:
+ *   `exists`  — WHAT EXISTS: a list of pack ids whose `structure` entries (and matching bindings) are added
+ *               together. Default: the `defaultContentPack` of each substrate in the mix.
+ *   `numbers` — THE NUMBERS: a stack of pack ids, later wins per value path. Default: each `exists` pack's own
+ *               set for the substrate, when it has one. A pack with no set for the world's substrate over the
+ *               world's `exists` is refused by name (`numbersSelectionRefusal`).
+ * Each is recorded only when it is not the default, so every existing world compiles byte-equal. ⛔ Nothing reads
+ * them to build a region yet: the resolver (Z.5, Z.6) is the next slice. ⛔ The words never read them either:
+ * `CONTENT_LAYERS` is `concepts` and `text`.
+ */
+export const RECORDED_EXISTS_KEY = 'exists';
+export const RECORDED_NUMBERS_KEY = 'numbers';
+/** The two pack-LIST settings' keys, in the order a metadata block records them (after `content`). */
+export const WORLD_SETTING_KEYS = Object.freeze([RECORDED_EXISTS_KEY, RECORDED_NUMBERS_KEY]);
+/**
+ * ⛓ PL-1 (Z8, ⚖ the user 2026-11-15: "I agree with this plan.") — THE NUMBERS SWITCH, beside `numbers`:
+ *   `assign` — assign by playthrough: the table's values are starting points, a substrate's walk assigns over them;
+ *   `table`  — use the table as written: nothing is reassigned (a missing number is filled by rule and listed).
+ * ⛔ STABLE MEANING (the planner's reading of Z8, 2026-11-15): an ABSENT `numbersMode` in a document ALWAYS
+ * means `table`, so no existing world changes meaning when a later slice declares a walk. `assign` is therefore
+ * RECORDED whenever a world is generated in that mode, and nothing is recorded for `table`. A NEW world's mode is
+ * its own `params.numbersMode`, else the generation default: `assign` when every substrate in its mix declares a
+ * walk (its registry entry's `numbersWalk: true`), else `table`. ⛔ No entry declares one in this slice (the walk
+ * over a numbers table is PL-2's), so nothing is written and every world stays byte-equal. An unknown value is
+ * refused by name.
+ */
+export const RECORDED_NUMBERS_MODE_KEY = 'numbersMode';
+export const NUMBERS_MODES = Object.freeze(['assign', 'table']);
+/** The registry-entry field that says a substrate has a playthrough walk that assigns numbers (Z8). */
+export const NUMBERS_WALK_FIELD = 'numbersWalk';
 /** The regionParams key the loaded set rides on (runtime only: never serialised). */
 export const CONTENT_SET_KEY = 'contentSet';
 /** The registry-entry field naming a substrate's built-in pack. */
@@ -64,19 +97,27 @@ export class WorldContentError extends Error {
     }
 }
 
-/** A refusal sentence for a `params.content` value, or null when it is a list of distinct pack ids. */
-export function contentParamRefusal(list) {
+/**
+ * A refusal sentence for a `params.<name>` pack list (`content`, `exists`, `numbers`), or null when it is a list of
+ * distinct pack ids (absent = null too).
+ */
+export function packListRefusal(name, list) {
     if (list === undefined || list === null) return null;
-    if (!Array.isArray(list)) return `params.content is not a list (${JSON.stringify(list)})`;
+    if (!Array.isArray(list)) return `params.${name} is not a list (${JSON.stringify(list)})`;
     const seen = new Set();
     for (const id of list) {
         if (typeof id !== 'string' || !PACK_ID_PATTERN.test(id)) {
-            return `params.content names ${JSON.stringify(id)}, which is not a pack id (${PACK_ID_PATTERN})`;
+            return `params.${name} names ${JSON.stringify(id)}, which is not a pack id (${PACK_ID_PATTERN})`;
         }
-        if (seen.has(id)) return `params.content names "${id}" twice`;
+        if (seen.has(id)) return `params.${name} names "${id}" twice`;
         seen.add(id);
     }
     return null;
+}
+
+/** A refusal sentence for a `params.content` value, or null when it is a list of distinct pack ids. */
+export function contentParamRefusal(list) {
+    return packListRefusal(RECORDED_CONTENT_KEY, list);
 }
 
 /**
@@ -251,10 +292,21 @@ export function assertContentLoaded(params, substrateId, registry = substrateReg
     return params;
 }
 
-/** `{content: [...]}` for the metadata block when the world names its own content, else `{}`. */
+/**
+ * `{content: [...]}` for the metadata block when the world names its own content, else `{}`.
+ * ⛓ CONTENT SETS PL-1 — and `exists` / `numbers` (the two new settings, Z.5) the same way, each only when the
+ * world's regionParams carry it (`worldSettingsRegionParams` writes them only when not the default). Key order:
+ * `content`, `exists`, `numbers`.
+ */
 export function recordedContentOf(regionParams) {
-    const list = regionParams?.[RECORDED_CONTENT_KEY];
-    return Array.isArray(list) && list.length ? { [RECORDED_CONTENT_KEY]: [...list] } : {};
+    const out = {};
+    for (const key of [RECORDED_CONTENT_KEY, ...WORLD_SETTING_KEYS]) {
+        const list = regionParams?.[key];
+        if (Array.isArray(list) && list.length) out[key] = [...list];
+    }
+    // ⛓ Z8 — the switch, when the regionParams carry it (only when it is not the world's default).
+    if (NUMBERS_MODES.includes(regionParams?.[RECORDED_NUMBERS_MODE_KEY])) out[RECORDED_NUMBERS_MODE_KEY] = regionParams[RECORDED_NUMBERS_MODE_KEY];
+    return out;
 }
 
 /**
@@ -354,6 +406,143 @@ export function pickedContentList(choices, picked, current = []) {
     const offered = choices.map((c) => c.id);
     const kept = (Array.isArray(current) ? current : []).filter((id) => !offered.includes(id));
     return [...kept, ...offered.filter((id) => picked.has(id))];
+}
+
+/* ── ⛓⛓ CONTENT SETS PL-1 — what exists, and the numbers (Z.5) ─────────── */
+
+/** Throws `WorldContentError` on a malformed `params.<name>` pack list; returns the list (`[]` when absent). */
+export function assertPackListParam(name, list) {
+    const refusal = packListRefusal(name, list);
+    if (refusal) throw new WorldContentError(refusal);
+    return list ?? [];
+}
+
+/**
+ * The DEFAULT of `exists` for a mix: the `defaultContentPack` of each substrate in `substrateIds`, in registry
+ * order, once each (the packs `effectiveContentStack` puts first).
+ */
+export function defaultExistsOf({ substrateIds = [], registry = substrateRegistry } = {}) {
+    return effectiveContentStack({ substrateIds, content: [], registry });
+}
+
+/** A refusal sentence for a `numbersMode` value, or null when it is absent or one of `NUMBERS_MODES`. */
+export function numbersModeRefusal(mode, where = 'params') {
+    if (mode === undefined || mode === null) return null;
+    return NUMBERS_MODES.includes(mode) ? null
+        : `${where}.${RECORDED_NUMBERS_MODE_KEY} ${JSON.stringify(mode)} is not one of ${NUMBERS_MODES.join(', ')}`;
+}
+
+/** Throws `WorldContentError` on an unknown `numbersMode`; returns it (or null when absent). */
+export function assertNumbersMode(mode, where = 'params') {
+    const refusal = numbersModeRefusal(mode, where);
+    if (refusal) throw new WorldContentError(refusal);
+    return mode ?? null;
+}
+
+/** The mode a document that records no `numbersMode` is in: always `table` (stable meaning). */
+export const ABSENT_NUMBERS_MODE = 'table';
+
+/**
+ * ⛓ Z8 — **THE SWITCH'S DEFAULT FOR A NEW WORLD OF A MIX** (generation only; a document's absent key is
+ * `ABSENT_NUMBERS_MODE`): `assign` when the mix is non-empty and every substrate in it declares a walk
+ * (`numbersWalk: true` on its registry entry), else `table`. A malformed declaration is refused by name.
+ */
+export function defaultNumbersModeOf({ substrateIds = [], registry = substrateRegistry } = {}) {
+    const entries = [...new Set(substrateIds)].map((id) => registry.get(id)).filter(Boolean);
+    for (const e of entries) {
+        const v = e[NUMBERS_WALK_FIELD];
+        if (v !== undefined && typeof v !== 'boolean') {
+            throw new WorldContentError(`entry "${e.id}"'s ${NUMBERS_WALK_FIELD} ${JSON.stringify(v)} is not true or false`);
+        }
+    }
+    return entries.length && entries.every((e) => e[NUMBERS_WALK_FIELD] === true) ? 'assign' : 'table';
+}
+
+/** A NEW world's numbers switch: its own `params.numbersMode`, else the generation default of its mix. */
+export function generationNumbersMode({ substrateIds = [], numbersMode = null, registry = substrateRegistry } = {}) {
+    return assertNumbersMode(numbersMode) ?? defaultNumbersModeOf({ substrateIds, registry });
+}
+
+/** A DOCUMENT's numbers switch for player `p`: the recorded one, else `table` (an absent key always means table). */
+export function documentNumbersModeOf(doc, player) {
+    return assertNumbersMode(doc?.procgen_metadata?.[String(player)]?.[RECORDED_NUMBERS_MODE_KEY], 'procgen_metadata')
+        ?? ABSENT_NUMBERS_MODE;
+}
+
+/**
+ * ⛓ **THE SETTINGS' REGIONPARAMS KEYS** — `{ exists?, numbers?, numbersMode? }`, each only when it is not the
+ * default: `exists` when `params.exists` names packs and they are not exactly the mix's defaults
+ * (`defaultExistsOf`, in order); `numbers` when `params.numbers` names packs; `numbersMode` (Z8) when the new
+ * world's mode (`generationNumbersMode`) is `assign` — `table` is what an absent key means, so it is never written.
+ * `{}` otherwise, so a world that names none takes no key. A malformed list or an unknown mode is refused by name.
+ */
+export function worldSettingsRegionParams({ params, substrateIds = [], registry = substrateRegistry } = {}) {
+    const exists = assertPackListParam(RECORDED_EXISTS_KEY, params?.[RECORDED_EXISTS_KEY]);
+    const numbers = assertPackListParam(RECORDED_NUMBERS_KEY, params?.[RECORDED_NUMBERS_KEY]);
+    const mode = generationNumbersMode({ substrateIds, numbersMode: params?.[RECORDED_NUMBERS_MODE_KEY], registry });
+    const defaults = defaultExistsOf({ substrateIds, registry });
+    const isDefault = exists.length === defaults.length && exists.every((id, i) => id === defaults[i]);
+    const modeDiffers = mode !== ABSENT_NUMBERS_MODE;
+    return {
+        ...(exists.length && !isDefault ? { [RECORDED_EXISTS_KEY]: [...exists] } : {}),
+        ...(numbers.length ? { [RECORDED_NUMBERS_KEY]: [...numbers] } : {}),
+        ...(modeDiffers ? { [RECORDED_NUMBERS_MODE_KEY]: mode } : {}),
+    };
+}
+
+/** The world's `exists` list: its own, or the mix's defaults. */
+export function effectiveExists({ substrateIds = [], exists = [], registry = substrateRegistry } = {}) {
+    const own = assertPackListParam(RECORDED_EXISTS_KEY, exists);
+    return own.length ? [...own] : defaultExistsOf({ substrateIds, registry });
+}
+
+/**
+ * ⛓ **A NUMBERS STACK, CHECKED AGAINST THE WORLD** (Z.5): every pack `params.numbers` names is loaded (its
+ * `numbers` layer only) and must hold a set whose key is one of `substrateIds` and whose `exists` is in the
+ * world's `exists` (its own, or the defaults). The first pack that does not is refused by name. An empty
+ * `params.numbers` reads nothing. Returns the loaded numbers stack (`[]` when none is named).
+ */
+export async function assertWorldNumbers(params, { substrateIds = [], registry = substrateRegistry, base, readJson } = {}) {
+    const numbers = assertPackListParam(RECORDED_NUMBERS_KEY, params?.[RECORDED_NUMBERS_KEY]);
+    if (!numbers.length) return [];
+    const exists = effectiveExists({ substrateIds, exists: params?.[RECORDED_EXISTS_KEY] ?? [], registry });
+    const io = readJson ? { base, readJson } : browserPackIo(base ? { base } : {});
+    const loaded = await loadPackStack(numbers, { ...io, only: ['numbers'] });
+    for (const pack of loaded) {
+        const refusal = numbersSelectionRefusal(pack, { substrateIds, exists });
+        if (refusal) throw new WorldContentError(refusal);
+    }
+    return loaded;
+}
+
+/**
+ * The settings a metadata block (`procgen_metadata[p]`) records, validated by name, as regionParams keys:
+ * `{ exists?, numbers?, numbersMode? }` (absent when not recorded). The rebuild's read-back (`rebuildRegionParams`).
+ */
+export function recordedWorldSettingsOf(meta) {
+    const out = {};
+    for (const key of WORLD_SETTING_KEYS) {
+        const list = assertPackListParam(key, meta?.[key]);
+        if (list.length) out[key] = [...list];
+    }
+    const mode = assertNumbersMode(meta?.[RECORDED_NUMBERS_MODE_KEY], 'procgen_metadata');
+    if (mode !== null) out[RECORDED_NUMBERS_MODE_KEY] = mode;
+    return out;
+}
+
+/**
+ * The settings a document records for player `p` (`procgen_metadata[p].exists` / `.numbers` / `.numbersMode`,
+ * ⚠ a PER-PLAYER map), validated: `{ exists: [...], numbers: [...], numbersMode }`, the lists `[]` and the mode
+ * null when the document records none.
+ */
+export function documentWorldSettingsOf(doc, player) {
+    const meta = doc?.procgen_metadata?.[String(player)];
+    return {
+        [RECORDED_EXISTS_KEY]: [...assertPackListParam(RECORDED_EXISTS_KEY, meta?.[RECORDED_EXISTS_KEY])],
+        [RECORDED_NUMBERS_KEY]: [...assertPackListParam(RECORDED_NUMBERS_KEY, meta?.[RECORDED_NUMBERS_KEY])],
+        // ⛓ Z8 — the RECORDED switch, or null (absent always means `table`: `documentNumbersModeOf`).
+        [RECORDED_NUMBERS_MODE_KEY]: assertNumbersMode(meta?.[RECORDED_NUMBERS_MODE_KEY], 'procgen_metadata'),
+    };
 }
 
 /* ── ⛓⛓ CONTENT SETS C4 — the process-level cache of DEFAULT packs ─────── */

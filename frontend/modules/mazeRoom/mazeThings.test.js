@@ -22,6 +22,7 @@ import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { createRng } from '../shared/rng.js';
 import { defaultContentSetOf, loadContentSet } from '../procgenPipeline/worldContent.js';
 import { importClosure } from '../../../scripts/procgen/seedlingDerivedRuleTable.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const DEFAULT = substrateRegistryEntry.defaultContentPack;
 const DEFAULT_SET = defaultContentSetOf([DEFAULT]);
@@ -64,12 +65,12 @@ function ioOf(files) {
     const disk = nodePackIo();
     return {
         base: MEM,
-        readJson: async (url) => {
+        readJson: withFixtureProvenance(async (url) => {
             const rel = url.slice(MEM.length);
             if (rel in files) return structuredClone(files[rel]);
             if (rel.startsWith(`${THEME}/`)) throw new Error(`no file ${url}`);
             return disk.readJson(new URL(rel, disk.base).href);
-        },
+        }),
     };
 }
 const themeSet = (concepts = CONCEPTS_OF(), strings = STRINGS) => loadContentSet([DEFAULT, THEME], ioOf(filesOf(concepts, strings)));

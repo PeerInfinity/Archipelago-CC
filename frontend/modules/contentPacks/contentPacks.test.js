@@ -11,16 +11,17 @@ import {
     ContentPackError, KEY_PATTERN, KNOWN_LAYERS, RESERVED_LAYERS, STACK_KINDS, loadPackStack, mergeKeyed, packsBaseUrl,
     parsePack, parseRegistry,
 } from './contentPacks.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const PACKS = join(dirname(fileURLToPath(import.meta.url)), '../../packs');
 const BASE = pathToFileURL(`${PACKS}/`).href;
 const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'));
 
 /** A readJson over committed files, with `extra` (url suffix → json) layered on top. */
-const withExtra = (extra) => async (url) => {
+const withExtra = (extra) => withFixtureProvenance(async (url) => {
     for (const [suffix, json] of Object.entries(extra)) if (url.endsWith(suffix)) return structuredClone(json);
     return fsJson(url);
-};
+});
 
 const RESKIN = {
     'reskin/pack.json': { schema_version: 1, id: 'reskin', title: 'a test reskin', licence: 'CC0', layers: { art: 'art/manifest.json' } },
@@ -205,11 +206,11 @@ describe('the concepts and text layers, and the content stacks', () => {
             'p/concepts/manifest.json': { schema_version: 1, concepts: {} },
             'p/text/manifest.json': { schema_version: 1, strings: {} },
         };
-        const stack = await loadPackStack(['p'], { base: 'mem:/packs/', readJson: async (u) => {
+        const stack = await loadPackStack(['p'], { base: 'mem:/packs/', readJson: withFixtureProvenance(async (u) => {
             const hit = Object.keys(files).find((k) => u.endsWith(k));
             if (!hit) throw new Error(`no ${u}`);
             return structuredClone(files[hit]);
-        } });
+        }) });
         expect(Object.keys(stack[0].layers)).toEqual(['concepts', 'text']);
     });
 });

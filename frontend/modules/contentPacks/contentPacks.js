@@ -27,7 +27,14 @@
  *
  * Pure and DOM-free: loading takes a `readJson(url)` the caller supplies
  * (`fetch` in a browser, `fs` in node), so node tests drive it with no server.
+ *
+ * ⛔ PROVENANCE (⛓ CONTENT SETS PL-1, Z.7): every layer `loadPackStack` reads is
+ * held to its `provenance` block (`provenance.js` `checkLayerProvenance`), so a
+ * layer whose entries do not all resolve to a listed source is refused by pack,
+ * layer and key, for every consumer at once.
  */
+import { ContentPackError } from './contentPackError.js';
+import { checkLayerProvenance } from './provenance.js';
 
 /**
  * The layers a pack may provide today. A new consumer adds its name here.
@@ -38,8 +45,16 @@
  * characters, places, objects, information) and `text` — the text library
  * (`textLibrary/`: strings and word lists), both ⛓ CONTENT SETS C1 (⚖ the user
  * 2026-11-10).
+ *
+ * ⛓ CONTENT SETS PL-1 (the shared task shape, Z.1; ⚖ the user 2026-11-15): `structure` — what EXISTS (entries of
+ * kind task, stat, resource, boon, place: ids and links only), `numbers` — the magnitudes, one set per game, and
+ * `bindings` — per game, what only that game needs (`packStructure/`). ⛔ All three carry LOGIC, so the words
+ * setting never reads them: a content set loads `concepts` and `text` only (`worldContent.CONTENT_LAYERS`).
  */
-export const KNOWN_LAYERS = Object.freeze(['art', 'sfx', 'music', 'concepts', 'text']);
+export const KNOWN_LAYERS = Object.freeze(['art', 'sfx', 'music', 'concepts', 'text', 'structure', 'numbers', 'bindings']);
+
+/** The layers that carry logic (Z.1): never read by a content set (the words). */
+export const LOGIC_LAYERS = Object.freeze(['structure', 'numbers', 'bindings']);
 
 /**
  * Layer names RESERVED for a consumer that is planned but not built: a pack
@@ -61,12 +76,7 @@ export const KEY_PATTERN = /^[a-z][a-zA-Z0-9-]*:[A-Za-z0-9_./-]+$/;
 export const PACK_ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 const ID_PATTERN = PACK_ID_PATTERN;
 
-export class ContentPackError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'ContentPackError';
-    }
-}
+export { ContentPackError };
 
 const fail = (where, message) => { throw new ContentPackError(`content pack ${where}: ${message}`); };
 
@@ -145,6 +155,8 @@ export function packsBaseUrl(moduleUrl = import.meta.url, pageHref = globalThis.
  * `only` (optional) names the layers to read: a graphics stack need not fetch
  * the sound manifest. A pack is still validated whole.
  *
+ * Every layer read is held to its provenance block (`checkLayerProvenance`).
+ *
  * @param {string[]} ids
  * @param {{ base: string, readJson: (url: string) => Promise<any>, only?: string[] }} io
  * @returns {Promise<Array<{ id, pack, base, layers: { [name]: any } }>>}
@@ -170,6 +182,7 @@ export async function loadPackStack(ids, { base, readJson, only = null }) {
             } catch (err) {
                 fail(`"${id}"`, `layer "${name}" (${path}) could not be read (${err.message})`);
             }
+            checkLayerProvenance(id, name, layers[name]);
         }
         out.push(Object.freeze({ id, pack, base: packBase, layers: Object.freeze(layers) }));
     }

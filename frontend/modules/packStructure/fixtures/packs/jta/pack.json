@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "jta",
+  "title": "A test fixture: two Journey to Ascension tasks and a boon (Z.2)",
+  "licence": "test fixture",
+  "layers": {
+    "structure": "structure/manifest.json",
+    "bindings": "bindings/manifest.json"
+  }
+}
