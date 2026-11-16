@@ -114,8 +114,9 @@ describe('C3 D2 — `ICE_TURRET_SPEAR_ARM` (ON by default): the solver\'s ON pla
     // ⛓ fidelity FLIP14: the committed tape was solved and game-witnessed under the pre-flip strike gate, so this byte
     // comparison runs `strikeIframeLapse` OFF; ON (⚖ the wave-14 flip, user 2026-10-12) the arm re-derives a 724 t plan
     // (the witness: 693 t), the sword back at t533 — unwitnessed (FLIP14 report, D1).
-    // ⛓ hammer KILLLOCK-FLIP: the witness predates `KILLLOCK_CHASER_REWIND` + `KILLLOCK_LINE_STANCE` (ON since the
-    // kill-lock flip), which re-derive the jellyfish kills (measured on CI: 718 t, unwitnessed), so both are held OFF here.
+    // ⛓ hammer KILLLOCK-FLIP: the witness predates `KILLLOCK_CHASER_REWIND` (ON since the kill-lock flip) and
+    // `KILLLOCK_LINE_STANCE` (landed OFF, ⚖ Robert via hammer; `KILLLOCK_LINE_STANCE_DEFAULT = false`), which re-derive
+    // the jellyfish kills (measured on CI: 718 t, unwitnessed), so both are held OFF here.
     it('OFF the staging refuses with the sweep\'s words; ON it re-derives the committed tape byte for byte', { timeout: 600000 }, () => withContactFidelity({ strikeIframeLapse: false }, () => withKillLockChaserRewind(false, () => withKillLockLineStance(false, async () => {
         const arm = ICETURRET_SPEAR_ARMS.find((a) => a.name === 'c3-l98-spear-l93');
         const off = await armPlan(arm, false);
