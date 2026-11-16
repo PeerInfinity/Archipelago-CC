@@ -27,7 +27,7 @@
  */
 import { ContentPackError, KEY_PATTERN, mergeKeyed } from '../contentPacks/contentPacks.js';
 
-const MANIFEST_FIELDS = Object.freeze(['schema_version', 'strings', 'lists', '_comment']);
+const MANIFEST_FIELDS = Object.freeze(['schema_version', 'strings', 'lists', 'provenance', '_comment']);
 
 const fail = (message) => { throw new ContentPackError(`text library: ${message}`); };
 const isObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

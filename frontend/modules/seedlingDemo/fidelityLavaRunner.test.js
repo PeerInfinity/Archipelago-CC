@@ -125,6 +125,9 @@ describe('K2PREP D2 — the L75 witnesses: a chain that hits a lavarunner, and a
         // ⚖ the band stays a refusal for anything that does not hold the game's answer
         expect(() => withKillLockBodies({ lavaRunnerLive: true }, () => replay(GRENADE)))
             .toThrow(/is on screen at tick 155 depends on where inside `Game.shake`'s jiggle/);
+        // ⛓ unbilledhits D3: and the refusal names the `SHAKE_BAND_KEPT` case that opened the band (a split:false tape).
+        expect(() => withKillLockBodies({ lavaRunnerLive: true }, () => replay(GRENADE)))
+            .toThrow(/the band was opened by `camera\.SHAKE_BAND_KEPT\.unsplit`/);
         // the game's camera on those ticks sat inside the model's band, and it moved (the jiggle landed)
         const band = [155, 156, 157, 158, 159].map((t) => cams.get(t));
         expect(band.map((c) => c.shake)).toEqual([4, 3, 2, 1, 0]);

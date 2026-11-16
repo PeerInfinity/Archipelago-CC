@@ -33,6 +33,7 @@ import {
     preloadedDefaultContentPacks, resetDefaultContentCache, DEFER_CONTENT_SET, withoutContentSet,
     pickedContentList, selectableContentPacks,
 } from './worldContent.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
@@ -80,7 +81,7 @@ function memIo(files = FIXTURE) {
         read,
         defaultRead,
         base: MEM,
-        readJson: async (url) => {
+        readJson: withFixtureProvenance(async (url) => {
             const hit = Object.keys(table).find((suffix) => url.endsWith(`/${suffix}`));
             if (!hit) {
                 const id = url.slice(MEM.length).split('/')[0];
@@ -93,7 +94,7 @@ function memIo(files = FIXTURE) {
             }
             read.push(url);
             return structuredClone(table[hit]);
-        },
+        }),
     };
 }
 /**

@@ -1,0 +1,8 @@
+0 wallflyer@64,80 wallflyer@128,80 wallflyer@48,112 wallflyer@144,112 | OFF 4 ON wallflyer@64,80,wallflyer@128,80,wallflyer@48,112,wallflyer@144,112
+287 wallflyer@64,80 wallflyer@128,80 wallflyer@48,112[die] wallflyer@144,112 | OFF 4 ON wallflyer@64,80,wallflyer@128,80,wallflyer@144,112
+300 wallflyer@64,80 wallflyer@128,80 wallflyer@48,112[die][destroy] wallflyer@144,112 | OFF 4 ON wallflyer@64,80,wallflyer@128,80,wallflyer@144,112
+311 wallflyer@64,80 wallflyer@128,80 wallflyer@144,112 | OFF 4 ON wallflyer@64,80,wallflyer@128,80,wallflyer@144,112
+408 wallflyer@64,80[die] wallflyer@128,80 wallflyer@144,112 | OFF 4 ON wallflyer@128,80,wallflyer@144,112
+421 wallflyer@64,80[die][destroy] wallflyer@128,80 wallflyer@144,112 | OFF 4 ON wallflyer@128,80,wallflyer@144,112
+432 wallflyer@128,80 wallflyer@144,112 | OFF 4 ON wallflyer@128,80,wallflyer@144,112
+level 22 hits []

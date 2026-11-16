@@ -14,7 +14,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { GOAL_ITEM, goalItemPool, withGoalItemDef } from '../procgenCore/goalItem.js';
-import { contentRegionParams } from './worldContent.js';
+import { contentRegionParams, worldSettingsRegionParams } from './worldContent.js';
 
 /**
  * Merge `base` with every registered substrate's declared
@@ -125,6 +125,8 @@ export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra
     if (Array.isArray(params?.concepts) && params.concepts.length > 0) out.concepts = [...params.concepts];
     // ⛓ CONTENT SETS C3 — the world's content stack, on the same channel (no key when it is empty).
     Object.assign(out, contentRegionParams({ params, contentSet, substrateIds: activeIds }));
+    // ⛓ CONTENT SETS PL-1 — what exists and the numbers (Z.5): a key only when not the default.
+    Object.assign(out, worldSettingsRegionParams({ params, substrateIds: activeIds }));
     return out;
 }
 

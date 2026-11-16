@@ -1,0 +1,1392 @@
+{
+ "census": {
+  "adjacent": 0,
+  "cols": 7,
+  "consistent": 0,
+  "directed": 0,
+  "honoured": 0,
+  "links": 0,
+  "meanLength": 0,
+  "rows": 1
+ },
+ "doors": {
+  "links": [],
+  "sizes": [
+   {
+    "h": 11,
+    "w": 11
+   },
+   {
+    "h": 11,
+    "w": 11
+   },
+   {
+    "h": 11,
+    "w": 11
+   },
+   {
+    "h": 11,
+    "w": 11
+   }
+  ],
+  "unreadable": []
+ },
+ "frame@0.5": {
+  "cells": [
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 22,
+     "y": 22
+    },
+    "w": 44,
+    "x": 20,
+    "y": 20
+   },
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 154,
+     "y": 22
+    },
+    "w": 44,
+    "x": 152,
+    "y": 20
+   },
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 286,
+     "y": 22
+    },
+    "w": 44,
+    "x": 284,
+    "y": 20
+   },
+   {
+    "h": 44,
+    "still": {
+     "h": 40,
+     "w": 40,
+     "x": 418,
+     "y": 22
+    },
+    "w": 44,
+    "x": 416,
+    "y": 20
+   }
+  ],
+  "height": 84,
+  "width": 480,
+  "zoom": 0.5
+ },
+ "frame@1": {
+  "cells": [
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 22,
+     "y": 22
+    },
+    "w": 88,
+    "x": 20,
+    "y": 20
+   },
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 286,
+     "y": 22
+    },
+    "w": 88,
+    "x": 284,
+    "y": 20
+   },
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 550,
+     "y": 22
+    },
+    "w": 88,
+    "x": 548,
+    "y": 20
+   },
+   {
+    "h": 88,
+    "still": {
+     "h": 84,
+     "w": 84,
+     "x": 814,
+     "y": 22
+    },
+    "w": 88,
+    "x": 812,
+    "y": 20
+   }
+  ],
+  "height": 128,
+  "width": 920,
+  "zoom": 1
+ },
+ "frame@2": {
+  "cells": [
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 22,
+     "y": 22
+    },
+    "w": 176,
+    "x": 20,
+    "y": 20
+   },
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 550,
+     "y": 22
+    },
+    "w": 176,
+    "x": 548,
+    "y": 20
+   },
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 1078,
+     "y": 22
+    },
+    "w": 176,
+    "x": 1076,
+    "y": 20
+   },
+   {
+    "h": 176,
+    "still": {
+     "h": 172,
+     "w": 172,
+     "x": 1606,
+     "y": 22
+    },
+    "w": 176,
+    "x": 1604,
+    "y": 20
+   }
+  ],
+  "height": 216,
+  "width": 1800,
+  "zoom": 2
+ },
+ "graphKey": "4|0|",
+ "provider": {
+  "frame": {
+   "cells": [
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 22,
+      "y": 22
+     },
+     "w": 88,
+     "x": 20,
+     "y": 20
+    },
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 286,
+      "y": 22
+     },
+     "w": 88,
+     "x": 284,
+     "y": 20
+    },
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 550,
+      "y": 22
+     },
+     "w": 88,
+     "x": 548,
+     "y": 20
+    },
+    {
+     "h": 88,
+     "still": {
+      "h": 84,
+      "w": 84,
+      "x": 814,
+      "y": 22
+     },
+     "w": 88,
+     "x": 812,
+     "y": 20
+    }
+   ],
+   "height": 128,
+   "width": 920,
+   "zoom": 1
+  },
+  "picks": [
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    1,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    2,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    3,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    null,
+    null,
+    null
+   ],
+   [
+    0,
+    null,
+    null
+   ]
+  ],
+  "shapes": [
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#0",
+    "marker": {
+     "index": 0,
+     "room": 0,
+     "x": 41.09090909090909,
+     "y": 25.81818181818182
+    },
+    "points": [
+     {
+      "x": 38.09090909090909,
+      "y": 25.81818181818182
+     },
+     {
+      "x": 44.09090909090909,
+      "y": 25.81818181818182
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#1",
+    "marker": {
+     "index": 1,
+     "room": 0,
+     "x": 102.18181818181819,
+     "y": 79.27272727272728
+    },
+    "points": [
+     {
+      "x": 99.18181818181819,
+      "y": 79.27272727272728
+     },
+     {
+      "x": 105.18181818181819,
+      "y": 79.27272727272728
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#2",
+    "marker": {
+     "index": 2,
+     "room": 0,
+     "x": 64,
+     "y": 102.18181818181819
+    },
+    "points": [
+     {
+      "x": 61,
+      "y": 102.18181818181819
+     },
+     {
+      "x": 67,
+      "y": 102.18181818181819
+     }
+    ]
+   },
+   {
+    "highlight": true,
+    "kind": "polyline",
+    "label": "#3",
+    "marker": {
+     "index": 3,
+     "room": 0,
+     "x": 25.81818181818182,
+     "y": 71.63636363636364
+    },
+    "points": [
+     {
+      "x": 22.81818181818182,
+      "y": 71.63636363636364
+     },
+     {
+      "x": 28.81818181818182,
+      "y": 71.63636363636364
+     }
+    ]
+   }
+  ],
+  "state0": {
+   "census": {
+    "adjacent": 0,
+    "cols": 7,
+    "consistent": 0,
+    "directed": 0,
+    "honoured": 0,
+    "links": 0,
+    "meanLength": 0,
+    "rows": 1
+   },
+   "links": [],
+   "moved": 4,
+   "positionCount": 4,
+   "relayouts": 0,
+   "rule": "canonical",
+   "unreadable": [],
+   "zoom": 1
+  },
+  "stateReset": {
+   "census": {
+    "adjacent": 0,
+    "cols": 7,
+    "consistent": 0,
+    "directed": 0,
+    "honoured": 0,
+    "links": 0,
+    "meanLength": 0,
+    "rows": 1
+   },
+   "links": [],
+   "moved": 4,
+   "positionCount": 4,
+   "relayouts": 1,
+   "rule": "canonical",
+   "unreadable": [],
+   "zoom": 1
+  }
+ },
+ "shapes@0.5_sel0": [],
+ "shapes@0.5_sel3": [],
+ "shapes@0.5_selnull": [],
+ "shapes@1_sel0": [],
+ "shapes@1_sel3": [],
+ "shapes@1_selnull": [],
+ "shapes@2_sel0": [],
+ "shapes@2_sel3": [],
+ "shapes@2_selnull": []
+}

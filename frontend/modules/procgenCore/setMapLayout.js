@@ -103,7 +103,9 @@ export function roomFingerprintOf(names, sizes) {
  *
  * @param {{n, start, links}} graph
  * @param {Function} [fail] how a refusal is thrown — the substrate's own error class and module name
- * @returns {{gx:number, gy:number}[]} one grid cell per room, normalised so the smallest x and y are 0
+ * @returns {{gx:number, gy:number}[]} one grid cell per room, SIGNED: the start room is exactly (0,0) and the
+ *   others are relative to it (negative x is west of it, negative y north). Nothing is normalised here; a consumer
+ *   that indexes pixels or arrays subtracts the minimum itself (`frameOf`, `layoutCensus`).
  */
 export function canonicalLayout(graph, fail = defaultFail) {
     const { n, start } = graph;
@@ -112,8 +114,11 @@ export function canonicalLayout(graph, fail = defaultFail) {
     /**
      * ⛓⛓ region-map step 3a — **A THIN WRAPPER over `regionLayout.layoutRegions`**, the same algorithm keyed by id:
      * room index `i` is the id `String(i)`, the `nodes` array is in index order (so the lowest index still starts
-     * each unreached group), and the signed, start-at-origin result is min-shifted back to this function's contract.
-     * Byte-identical: `seedlingSetMapLift.test.js`'s digests and `regionLayout.test.js`'s oracle.
+     * each unreached group), and the signed, start-at-origin result is returned AS IS.
+     * ⚖ region-map (0,0)-origin follow-up (user, 2026-11-14/15): this used to min-shift to a top-left origin. It no
+     * longer does, so a room's cell does not move when the minimum does. `regionLayout.test.js`'s oracle proves the
+     * result is the old one translated by exactly the start room's old cell; the drawn map is byte-identical
+     * (`frameOf` subtracts the minimum; `scripts/dev/set-map-frame-dump.mjs`).
      */
     const id = (i) => String(i);
     const nodes = Array.from({ length: n }, (_, i) => id(i));
@@ -126,10 +131,29 @@ export function canonicalLayout(graph, fail = defaultFail) {
         if (e instanceof RegionLayoutError) fail(e.message.replace(/^regionLayout:/, 'setMapLayout:'));
         throw e;
     }
-    const pos = nodes.map((v) => at.get(v));
-    const mx = Math.min(...pos.map((p) => p.gx));
-    const my = Math.min(...pos.map((p) => p.gy));
-    return pos.map((p) => Object.freeze({ gx: p.gx - mx, gy: p.gy - my }));
+    return nodes.map((v) => {
+        const p = at.get(v);
+        return Object.freeze({ gx: p.gx, gy: p.gy });
+    });
+}
+
+/**
+ * The bounding box of a layout's cells: `{minX, minY, maxX, maxY}`, or `null` for no cells. Positions are signed
+ * (`canonicalLayout`), so every consumer that turns a cell into a pixel or an array index offsets by the minimum.
+ */
+function cellBounds(positions) {
+    if (!positions.length) return null;
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const p of positions) {
+        if (p.gx < minX) minX = p.gx;
+        if (p.gy < minY) minY = p.gy;
+        if (p.gx > maxX) maxX = p.gx;
+        if (p.gy > maxY) maxY = p.gy;
+    }
+    return { minX, minY, maxX, maxY };
 }
 
 /**
@@ -137,6 +161,7 @@ export function canonicalLayout(graph, fail = defaultFail) {
  * @returns {{links, directed, honoured, consistent, adjacent, meanLength, cols, rows}}
  */
 export function layoutCensus(graph, positions) {
+    const box = cellBounds(positions);
     let directed = 0;
     let honoured = 0;
     let consistent = 0;
@@ -165,8 +190,9 @@ export function layoutCensus(graph, positions) {
         consistent,
         adjacent,
         meanLength: graph.links.length ? total / graph.links.length : 0,
-        cols: positions.length ? Math.max(...positions.map((p) => p.gx)) + 1 : 0,
-        rows: positions.length ? Math.max(...positions.map((p) => p.gy)) + 1 : 0,
+        // ⛓ the extent, not `max + 1`: positions are signed (the start room is (0,0))
+        cols: box ? box.maxX - box.minX + 1 : 0,
+        rows: box ? box.maxY - box.minY + 1 : 0,
     };
 }
 
@@ -175,6 +201,7 @@ export const clampZoom = (z) => Math.min(MAP_GEOMETRY.maxZoom, Math.max(MAP_GEOM
 
 /**
  * The canvas geometry of a layout at a zoom: one square cell per room, and the room's still letterboxed inside it.
+ * Positions are signed: the leftmost column and the top row sit at the margin, whatever their values.
  * @returns {{width, height, zoom, cells: {x,y,w,h, still:{x,y,w,h}}[]}}
  */
 export function frameOf(positions, sizes, zoom = 1) {
@@ -182,11 +209,12 @@ export function frameOf(positions, sizes, zoom = 1) {
     const cell = Math.max(12, Math.round(MAP_GEOMETRY.cellPx * z));
     const gap = Math.max(6, Math.round(MAP_GEOMETRY.gapPx * z));
     const m = MAP_GEOMETRY.marginPx;
-    const cols = positions.length ? Math.max(...positions.map((p) => p.gx)) + 1 : 1;
-    const rows = positions.length ? Math.max(...positions.map((p) => p.gy)) + 1 : 1;
+    const box = cellBounds(positions);
+    const cols = box ? box.maxX - box.minX + 1 : 1;
+    const rows = box ? box.maxY - box.minY + 1 : 1;
     const cells = positions.map((p, i) => {
-        const x = m + p.gx * (cell + gap);
-        const y = m + p.gy * (cell + gap);
+        const x = m + (p.gx - box.minX) * (cell + gap);
+        const y = m + (p.gy - box.minY) * (cell + gap);
         const s = sizes[i];
         let still = { x: x + 2, y: y + 2, w: cell - 4, h: cell - 4 };
         if (s && s.w > 0 && s.h > 0) {

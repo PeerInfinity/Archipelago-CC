@@ -53,23 +53,23 @@ export const MAZE_ART_NAMESPACE = 'maze';
  * painter's colour table rather than trusted.
  */
 export const MAZE_ART_KEYS = Object.freeze({
-    floor: Object.freeze({ key: 'maze:tile/floor', colors: ['floor'], what: 'an open floor cell (the base layer)' }),
-    wall: Object.freeze({ key: 'maze:tile/wall', colors: ['wall'], what: 'a wall cell (the base layer)' }),
-    exit: Object.freeze({ key: 'maze:tile/exit', colors: ['exit'], what: 'an exit cell whose gate is open (a closed one stays the `exitBlocked` fill)' }),
-    entrance: Object.freeze({ key: 'maze:tile/entrance', colors: ['entrance'], what: 'the entrance cell (today a green border)' }),
-    manaTile: Object.freeze({ key: 'maze:tile/mana', colors: ['manaTile'], what: 'a mana-refill tile (today a diamond labelled M; faded once collected)' }),
-    player: Object.freeze({ key: 'maze:character/player', colors: ['player'], what: 'the player (today a disc; the facing tick is drawn over it either way)' }),
-    trap: Object.freeze({ key: 'maze:object/trap', colors: ['trap'], what: 'an arrow trap\'s own cell (its lane stays the armed/silent tint)' }),
-    block: Object.freeze({ key: 'maze:object/block', colors: ['block', 'blockEdge'], what: 'a pushable block (the walked kind)' }),
-    blockStruck: Object.freeze({ key: 'maze:object/block-struck', colors: ['blockStruck', 'blockEdge'], what: 'a struck block kind (fire, spear, a woken corpse)' }),
-    blockDormant: Object.freeze({ key: 'maze:object/block-dormant', colors: ['blockDormant', 'blockEdge'], what: 'a dormant block kind (a turret)' }),
-    button: Object.freeze({ key: 'maze:object/button', colors: ['button'], what: 'a button, UP' }),
-    buttonDown: Object.freeze({ key: 'maze:object/button-down', colors: ['button'], what: 'a button, DOWN (held by the player, a block or a latch)' }),
-    pulser: Object.freeze({ key: 'maze:object/pulser', colors: ['pulser'], what: 'a pulser\'s body on its wall cell (its ring stays the armed/silent signal)' }),
-    pull: Object.freeze({ key: 'maze:object/pull', colors: ['pullTrap', 'pullMouth'], what: 'a pull\'s trap cell (its disc stays the live/inert tint)' }),
+    floor: Object.freeze({ key: 'maze:tile/floor', colors: ['floor'], base: 'floor', what: 'an open floor cell (the base layer)' }),
+    wall: Object.freeze({ key: 'maze:tile/wall', colors: ['wall'], base: 'wall', what: 'a wall cell (the base layer)' }),
+    exit: Object.freeze({ key: 'maze:tile/exit', colors: ['exit'], base: 'floor', what: 'an exit cell whose gate is open (a closed one stays the `exitBlocked` fill)' }),
+    entrance: Object.freeze({ key: 'maze:tile/entrance', colors: ['entrance'], base: 'floor', what: 'the entrance cell (today a green border)' }),
+    manaTile: Object.freeze({ key: 'maze:tile/mana', colors: ['manaTile'], base: 'marker', what: 'a mana-refill tile (today a diamond labelled M; faded once collected)' }),
+    player: Object.freeze({ key: 'maze:character/player', colors: ['player'], base: 'character', what: 'the player (today a disc; the facing tick is drawn over it either way)' }),
+    trap: Object.freeze({ key: 'maze:object/trap', colors: ['trap'], base: 'marker', what: 'an arrow trap\'s own cell (its lane stays the armed/silent tint)' }),
+    block: Object.freeze({ key: 'maze:object/block', colors: ['block', 'blockEdge'], base: 'marker', what: 'a pushable block (the walked kind)' }),
+    blockStruck: Object.freeze({ key: 'maze:object/block-struck', colors: ['blockStruck', 'blockEdge'], base: 'marker', what: 'a struck block kind (fire, spear, a woken corpse)' }),
+    blockDormant: Object.freeze({ key: 'maze:object/block-dormant', colors: ['blockDormant', 'blockEdge'], base: 'marker', what: 'a dormant block kind (a turret)' }),
+    button: Object.freeze({ key: 'maze:object/button', colors: ['button'], base: 'marker', what: 'a button, UP' }),
+    buttonDown: Object.freeze({ key: 'maze:object/button-down', colors: ['button'], base: 'marker', what: 'a button, DOWN (held by the player, a block or a latch)' }),
+    pulser: Object.freeze({ key: 'maze:object/pulser', colors: ['pulser'], base: 'marker', what: 'a pulser\'s body on its wall cell (its ring stays the armed/silent signal)' }),
+    pull: Object.freeze({ key: 'maze:object/pull', colors: ['pullTrap', 'pullMouth'], base: 'marker', what: 'a pull\'s trap cell (its disc stays the live/inert tint)' }),
     // ⛓ CONTENT SETS S2 — a region's thing (`mazeThings.js`) that is a piece of information no character or object
     // holds; drawn by `mazeThingOverlay.js`, beside `drawWorld`.
-    sign: Object.freeze({ key: 'maze:object/sign', colors: ['sign'], what: 'a piece of information on a floor cell that no character or object holds (a sign)' }),
+    sign: Object.freeze({ key: 'maze:object/sign', colors: ['sign'], base: 'marker', what: 'a piece of information on a floor cell that no character or object holds (a sign)' }),
 });
 
 /** The thing names (`MAZE_ART_KEYS`' own keys) — what `drawTileArt` accepts. */
@@ -127,6 +127,137 @@ export function drawTileArt(ctx, tileArt, thing, dx, dy, dw, dh) {
     if (!f) return false;
     ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, dx, dy, dw, dh);
     return true;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓ CONTENT SETS TILE-1 — THE ONE FALLBACK CHAIN (⚖ the user 2026-11-15: "I don't want adding a new custom tile type
+ * in the library to require updating the default graphics.")
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE BASES — a small CLOSED set of what a tile kind IS, each with ONE default draw. Every `MAZE_ART_KEYS` row
+ * declares its `base`; a kind the table does not know (one a pack names) needs only a base to be drawn, never a
+ * default graphic of its own. A base's draw is plain and deliberately generic: it says "an object is here", not which.
+ *
+ * `floor`/`wall` paint with the painter's own `COLORS.floor`/`COLORS.wall` values (`mazeTileArt.test.js` holds them
+ * equal; they are spelled here because `mazeRoomRender.js` imports this file). `marker`/`character` have colours of
+ * their own that no kind uses, so a base draw is never mistaken for a kind's own.
+ */
+export const MAZE_TILE_BASES = Object.freeze({
+    floor: Object.freeze({ color: '#2a2a2a', what: 'a cell the player can stand on: the whole cell filled' }),
+    wall: Object.freeze({ color: '#000000', what: 'a cell nothing stands on: the whole cell filled' }),
+    marker: Object.freeze({ color: '#9aa0b4', what: 'an object on a cell: an inset square, ink-edged' }),
+    character: Object.freeze({ color: '#e6e6f0', what: 'someone on a cell: a disc, ink-edged' }),
+});
+
+/** ⛓ THE PLACEHOLDER — a kind with no art, no own draw and no base: a labelled box in a colour no kind or base uses. */
+export const MAZE_TILE_PLACEHOLDER = Object.freeze({ color: '#ff00ff', ink: '#000000' });
+
+/** The kinds the placeholder has been drawn for, so each is logged once. */
+const placeholderLogged = new Set();
+
+/** TEST SEAM: forget which kinds the placeholder has logged. */
+export function resetMazeTilePlaceholderLogForTests() {
+    placeholderLogged.clear();
+}
+
+/** The base a kind resolves to: its row's, else the caller's declared one; null when neither names a known base. */
+export function mazeTileBaseOf(kind, declaredBase = null) {
+    const base = MAZE_ART_KEYS[kind]?.base ?? declaredBase ?? null;
+    return base !== null && Object.prototype.hasOwnProperty.call(MAZE_TILE_BASES, base) ? base : null;
+}
+
+function artFrameFor(tileArt, kind, artKey) {
+    if (!tileArt) return null;
+    if (Object.prototype.hasOwnProperty.call(MAZE_ART_KEYS, kind)) return tileArtFrame(tileArt, kind);
+    if (typeof artKey !== 'string' || !tileArt.art.has(artKey)) return null;
+    const r = tileArt.art.frameRect(artKey, 0);
+    const image = r ? tileArt.images.get(r.sheetRef) : null;
+    return image ? { key: artKey, image, sx: r.sx, sy: r.sy, sw: r.sw, sh: r.sh } : null;
+}
+
+/**
+ * Which step of the chain would draw `kind`, without drawing it: `'art'`, `'default'`, `'base'` or `'placeholder'`
+ * (`drawMazeTile`'s answers). `hasOwn` says whether the caller has an own draw for it.
+ */
+export function mazeTileStep(tileArt, kind, { hasOwn = false, base = null, artKey = null } = {}) {
+    if (artFrameFor(tileArt, kind, artKey)) return 'art';
+    if (hasOwn) return 'default';
+    return mazeTileBaseOf(kind, base) ? 'base' : 'placeholder';
+}
+
+/** A base's one default draw into the cell `(x0, y0, px)`. */
+export function paintMazeTileBase(ctx, base, x0, y0, px) {
+    const { color } = MAZE_TILE_BASES[base];
+    if (base === 'floor' || base === 'wall') {
+        ctx.fillStyle = color;
+        ctx.fillRect(x0, y0, px, px);
+        return;
+    }
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.strokeStyle = MAZE_TILE_PLACEHOLDER.ink;
+    ctx.lineWidth = 1.5;
+    if (base === 'character') {
+        ctx.beginPath();
+        ctx.arc(x0 + px / 2, y0 + px / 2, px * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    } else {
+        ctx.fillRect(x0 + px * 0.2, y0 + px * 0.2, px * 0.6, px * 0.6);
+        ctx.strokeRect(x0 + px * 0.2, y0 + px * 0.2, px * 0.6, px * 0.6);
+    }
+    ctx.restore();
+}
+
+/** The placeholder: the cell in `MAZE_TILE_PLACEHOLDER.color`, ink-edged, the kind's first two letters on it. */
+export function paintMazeTilePlaceholder(ctx, kind, x0, y0, px) {
+    ctx.save();
+    ctx.fillStyle = MAZE_TILE_PLACEHOLDER.color;
+    ctx.fillRect(x0 + 1, y0 + 1, px - 2, px - 2);
+    ctx.strokeStyle = MAZE_TILE_PLACEHOLDER.ink;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0 + 1.5, y0 + 1.5, px - 3, px - 3);
+    ctx.fillStyle = MAZE_TILE_PLACEHOLDER.ink;
+    ctx.font = `bold ${Math.floor(px * 0.4)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(kind ?? '?').slice(0, 2), x0 + px / 2, y0 + px / 2);
+    ctx.restore();
+}
+
+/**
+ * ⛓⛓ THE CHAIN — "how do I draw kind K" into the cell `(x0, y0, px)`, first that applies:
+ *   1. the theme's ART for K (`tileArtFrame` for a `MAZE_ART_KEYS` row; the declared `artKey` for a kind the table
+ *      does not know);
+ *   2. K's OWN default draw, `own()` — for a row, the painter's existing `COLORS` shape (both views pass it);
+ *   3. K's BASE (`MAZE_ART_KEYS[K].base`, else the declared `base`): that base's one draw (`paintMazeTileBase`);
+ *   4. the PLACEHOLDER (`paintMazeTilePlaceholder`), logged once per kind. ⛔ It never throws.
+ * Answers the step that drew. A row's painter always passes `own`, so for every existing kind steps 1–2 are exactly
+ * the draw it made before the chain existed (⛔ the one-region view is op-identical: `mazeTileFallback.test.js`).
+ * A kind the table does not know resolves through 1, 3 and 4: it needs a base, not a default graphic.
+ */
+export function drawMazeTile(ctx, tileArt, kind, x0, y0, px, { own = null, base = null, artKey = null } = {}) {
+    const f = artFrameFor(tileArt, kind, artKey);
+    if (f) {
+        ctx.drawImage(f.image, f.sx, f.sy, f.sw, f.sh, x0, y0, px, px);
+        return 'art';
+    }
+    if (typeof own === 'function') {
+        own();
+        return 'default';
+    }
+    const b = mazeTileBaseOf(kind, base);
+    if (b) {
+        paintMazeTileBase(ctx, b, x0, y0, px);
+        return 'base';
+    }
+    if (!placeholderLogged.has(kind)) {
+        placeholderLogged.add(kind);
+        console.warn(`[mazeTileArt] tile kind "${kind}" has no art, no default draw and no base: drawn as the placeholder`);
+    }
+    paintMazeTilePlaceholder(ctx, kind, x0, y0, px);
+    return 'placeholder';
 }
 
 /** Which of the key table's keys a library carries: `{ thing: pack }` for each, the rest absent. */

@@ -10,6 +10,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ContentPackError, loadPackStack, parseRegistry } from '../contentPacks/contentPacks.js';
 import { processMessageTemplate } from '../textAdventureSubstrateWrapper/templating.js';
 import { createTextLibrary, parseTextManifest } from './textLibrary.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const PACKS_BASE = pathToFileURL(`${join(dirname(fileURLToPath(import.meta.url)), '../../packs')}/`).href;
 const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'));
@@ -32,10 +33,10 @@ const memReader = (files) => async (url) => {
 };
 const stackOf = (manifests) => loadPackStack(Object.keys(manifests), {
     base: 'mem:/packs/',
-    readJson: memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
+    readJson: withFixtureProvenance(memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
         [`/${id}/pack.json`, { schema_version: 1, id, title: id, licence: 'CC0', layers: { text: 'text/manifest.json' } }],
         [`/${id}/text/manifest.json`, m],
-    ]))),
+    ])))),
 });
 
 describe('the manifest, read through loadPackStack', () => {

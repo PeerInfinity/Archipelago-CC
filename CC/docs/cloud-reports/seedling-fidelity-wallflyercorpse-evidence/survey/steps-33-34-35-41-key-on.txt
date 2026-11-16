@@ -1,0 +1,4 @@
+== step 33 — L22 ... SOLVED 113 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6814 ms
+== step 34 — L25 ... SOLVED 108 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 546 ms
+== step 35 — L22 ... SOLVED 539 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 28836 ms
+== step 41 — L22 ... SOLVED 126 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8104 ms

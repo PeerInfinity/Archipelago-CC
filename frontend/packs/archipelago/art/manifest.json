@@ -1,6 +1,41 @@
 {
   "schema_version": 1,
   "generated_by": "scripts/procgen/extract-seedling-art-packs.mjs — do not edit; regenerate and --check",
+  "provenance": {
+    "sources": {
+      "seedling-fork": {
+        "type": "game",
+        "name": "Seedling (the PeerInfinity fork's AP item pickup)",
+        "repo": "PeerInfinity/Seedling",
+        "commit": "ccdf189776471fa57be8c0568c6e881a2d5acc18",
+        "files": [
+          "assets/graphics/ArchipelagoLogo.png"
+        ],
+        "credit": "the Archipelago application icon, downscaled to 16x16 by the Seedling fork (src/Pickups/APItem.as:67-73)",
+        "licence": "MIT",
+        "extracted_by": "scripts/procgen/extract-seedling-art-packs.mjs --check"
+      },
+      "logo64": {
+        "type": "derived",
+        "from": [
+          "archipelago-icon"
+        ],
+        "by": "scripts/procgen/archipelagoLogoArt.mjs",
+        "licence": "MIT",
+        "note": "data/icon.png (512x512) by an 8x8 box filter"
+      },
+      "archipelago-icon": {
+        "type": "game",
+        "name": "Archipelago (the application icon)",
+        "path": "data/icon.png",
+        "licence": "MIT"
+      }
+    },
+    "default": "seedling-fork",
+    "groups": {
+      "archipelago:pickup/item-64": "logo64"
+    }
+  },
   "clocks": {
     "world": {
       "ticksPerFrame": 45,

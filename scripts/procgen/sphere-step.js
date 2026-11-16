@@ -114,7 +114,7 @@ import {
     mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 import {
-    attachEnvelopeContent, contentListOf, effectiveContentStack, loadContentSet,
+    WORLD_SETTING_KEYS, assertWorldNumbers, attachEnvelopeContent, contentListOf, effectiveContentStack, loadContentSet,
 } from '../../frontend/modules/procgenPipeline/worldContent.js';
 import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
 
@@ -232,7 +232,8 @@ function buildConfig(args, contentSet = null) {
     if (args.fallBehavior != null) params.bounceFallBehavior = args.fallBehavior;
     Object.assign(params, args.params);
     // ⛓ CONTENT SETS C3 — `--param content=a,b` is a string; the param is a list.
-    if (params.content !== undefined) params.content = contentListOf(params.content);
+    // ⛓ PL-1 — so are `--param exists=…` and `--param numbers=…` (the two new settings, Z.5).
+    for (const key of ['content', ...WORLD_SETTING_KEYS]) if (params[key] !== undefined) params[key] = contentListOf(params[key]);
 
     // Pre-plan prep (bounce's free arrow → starting item + pool delta +
     // bounceFreeArrow regionParam) + the full braid regionParams. --no-arrow-
@@ -279,8 +280,14 @@ function buildConfig(args, contentSet = null) {
 
 /** ⛓ CONTENT SETS C3 — the args' content stack (the mix's default packs, then `--param content`), loaded from disk. */
 async function loadArgsContent(args) {
+    const substrateIds = activeSubstrateIds(args.quotas, args.start);
+    // ⛓ PL-1 — a `--param numbers` pack for another substrate or another `exists` is refused by name, here, before
+    //   anything is built (Z.5).
+    await assertWorldNumbers({
+        exists: contentListOf(args.params?.exists) ?? [], numbers: contentListOf(args.params?.numbers) ?? [],
+    }, { substrateIds, ...nodePackIo() });
     return loadContentSet(effectiveContentStack({
-        substrateIds: activeSubstrateIds(args.quotas, args.start), content: contentListOf(args.params?.content) ?? [],
+        substrateIds, content: contentListOf(args.params?.content) ?? [],
     }), nodePackIo());
 }
 
