@@ -1359,6 +1359,8 @@ try {
         await settled(() => window.__mazeLab?.edits === 1, 'one maze edit on the converted room');
         const edited5 = await read();
         const editedLine = await lineOf();
+        /** ⛓ MAZE PASTED ROOM LINK — the save box as a person would COPY it, edited (one edit) and not (savedBefore). */
+        const copiedEdited = await page.inputValue('#labText');
         check(edited5.seedlingLink?.ok === true && editedLine.open.href === seedlingHref(level5)
             && editedLine.note.includes(`opens the ORIGINAL level ${level5}`) && editedLine.note.includes('1 maze edit(s)')
             && (await page.inputValue('#labText')) !== savedBefore,
@@ -1375,8 +1377,38 @@ try {
         check(pasted.seedlingLink?.shown === true && pasted.seedlingLink.ok === false && !pastedLine.hidden
             && pastedLine.open.hidden && pastedLine.open.href === null && pastedLine.note.includes(`level number ${level5}`)
             && pastedLine.note.includes('open it by preset link'),
-            '⛔ …a PASTED converted sidecar shows NO link (a paste brings no rules, so the number names no map) and the '
-            + 'line says why', pastedLine.note);
+            '⛔ …a BARE pasted converted sidecar shows NO link (it brings no rules and no `converted_from`, so the number '
+            + 'names no map) and the line says why', pastedLine.note);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `4b-pasted-bare-sidecar-reason-${roomKey}.png`), fullPage: true });
+
+        /**
+         * ⛓⛓ MAZE PASTED ROOM LINK (⚖ Robert 2026-11-16) — the maze lab's OWN save box, copied from the link boot above
+         * and pasted into LOAD, names its map (`converted_from`, the map the rules declared), so it links to the same
+         * level. The map is read off the committed rules here, never asked of the page.
+         */
+        const pasteBox = async (text, what) => {
+            await page.fill('#labText', text);
+            await page.evaluate(() => { document.getElementById('status').textContent = ''; });
+            await page.click('#labLoad');
+            await settled(() => /^loaded a /.test(document.getElementById('status')?.textContent ?? ''), what);
+            return { state: await read(), line: await lineOf(), bar: new URL(page.url()).searchParams };
+        };
+        const declaredMap = rules.region_atlas['1'].map_document;
+        const copied = JSON.parse(savedBefore).converted_from ?? null;
+        const copy = await pasteBox(savedBefore, 'the pasted save box of the converted room');
+        check(json(copied) === json({ map_document: declaredMap, level: level5, edits: 0 })
+            && copy.state.seedlingLink?.ok === true && copy.state.seedlingLink.level === level5 && !copy.line.hidden
+            && copy.line.open.href === seedlingHref(level5) && copy.line.open.target === '_blank'
+            && !copy.line.note.includes('ORIGINAL') && !copy.bar.has('preset') && !copy.bar.has('region'),
+            `⛓⛓ CLAIM 26 (paste): the maze lab's own SAVE BOX of ${roomKey}, copied and pasted into LOAD, names its map `
+            + `(\`converted_from\` = ${declaredMap}, level ${level5}) and links to the SAME level as its preset-link boot`,
+            `${json(copied)} · ${json(copy.line)}`);
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, `5-pasted-save-box-links-${roomKey}.png`), fullPage: true });
+        const copyEd = await pasteBox(copiedEdited, 'the pasted save box of the EDITED converted room');
+        check(JSON.parse(copiedEdited).converted_from?.edits === 1 && copyEd.line.open.href === seedlingHref(level5)
+            && copyEd.line.note.includes(`opens the ORIGINAL level ${level5}`) && copyEd.line.note.includes('1 maze edit(s)'),
+            `⛓ …the save box of the EDITED room pasted: still level ${level5}, and the note says the editor opens the `
+            + 'ORIGINAL (the edit was counted into the copy)', copyEd.line.note);
 
         presetReqs.length = 0;
         const errorsBefore = errors.length;
@@ -1389,6 +1421,12 @@ try {
             '⛔ …and a PLAIN generated maze (seed 1) has no link line, no error, and its boot fetched no preset document',
             `${json(plainBoot.seedlingLink)} · ${presetReqs.length} preset request(s)`);
         if (shotsDir) await page.screenshot({ path: join(shotsDir, '4-plain-maze-no-link.png'), fullPage: true });
+        const plainCopy = await page.inputValue('#labText');
+        const plainPaste = await pasteBox(plainCopy, 'the pasted save box of the plain generated maze');
+        check(!('converted_from' in JSON.parse(plainCopy)) && json(plainPaste.state.seedlingLink) === json({ shown: false })
+            && plainPaste.line.hidden,
+            '⛔ …and the PLAIN maze\'s save box writes no `converted_from`, so its paste shows no link line', json(plainPaste.state.seedlingLink));
+        if (shotsDir) await page.screenshot({ path: join(shotsDir, '6-pasted-generated-no-link.png'), fullPage: true });
     }
 
     /* ── CLAIM 8: the URL round-trips, and its VALUES are asserted ── */
