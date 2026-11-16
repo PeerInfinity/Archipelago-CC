@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Unbounded grid render</title>
+<style>body{margin:0;background:#fff;font:12px sans-serif} #meta{padding:4px}</style></head>
+<body>
+<!--
+  unbounded-grid-render — draws ONE rules.json's composite map with the app's own renderer
+  (compositeMapDocument.reconstructResultFromSidecars → compositeMapRenderer.drawCompositeMap,
+  substrateArt off: generic cells, so no artwork painter or asset load is involved).
+  ?src=<url of a rules.json>&tile=<px per tile>&box=<WxH, optional: outlines the growth box>
+  Driven by scripts/dev/unbounded-grid-shots.mjs (survey unbounded-grid-survey, 2026-11-15).
+-->
+<div id="meta"></div>
+<canvas id="c"></canvas>
+<script type="module">
+import { reconstructResultFromSidecars } from '/frontend/modules/procgenPipeline/compositeMapDocument.js';
+import { drawCompositeMap } from '/frontend/modules/procgenCore/compositeMapRenderer.js';
+const q = new URLSearchParams(location.search);
+const tilePx = Number(q.get('tile') ?? 2);
+// The substrate entries the map reader deserialises payloads with: the shots driver hands the
+// page REGISTRY_LIBRARIES (scripts/procgen/reference/registry.mjs) as window.__libs.
+const libErrors = [];
+for (const rel of window.__libs ?? []) {
+    try { await import('/' + rel); } catch (e) { libErrors.push(rel + ': ' + String(e.message).split('\n')[0]); }
+}
+try {
+    const rules = await (await fetch(q.get('src'))).json();
+    const res = reconstructResultFromSidecars(rules, { playerId: '1' });
+    const { grid, regionSize } = res;
+    const c = document.getElementById('c');
+    c.width = grid.width * regionSize.width * tilePx;
+    c.height = grid.height * regionSize.height * tilePx;
+    drawCompositeMap(c, grid, regionSize, { tilePx, substrateArt: false, source: { rules, playerId: '1' } });
+    const box = q.get('box');
+    if (box) {
+        const [bw, bh] = box.split('x').map(Number);
+        const ctx = c.getContext('2d');
+        ctx.strokeStyle = '#d00'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+        ctx.strokeRect(1, 1, bw * regionSize.width * tilePx - 2, bh * regionSize.height * tilePx - 2);
+    }
+    const n = grid.allRegions().length;
+    document.getElementById('meta').textContent = `${q.get('label') ?? ''} — ${n} regions, map ${grid.width}×${grid.height} cells`
+        + (box ? `, growth box ${box} (red dashes)` : '');
+    window.__done = { ok: true, libErrors, width: c.width, height: c.height, cells: [grid.width, grid.height], regions: n };
+} catch (e) {
+    window.__done = { ok: false, libErrors, error: String(e?.stack ?? e) };
+}
+</script>
+</body>
+</html>
