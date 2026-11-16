@@ -1,0 +1,122 @@
+{
+ "topdown-apcalc-AP4-box": {
+  "label": "topdown-apcalc-AP4-box",
+  "path": "frontend/presets/procgen_topdown/AP_4/AP_4_rules.json",
+  "box": "12x12",
+  "tile": "3",
+  "ok": true,
+  "libErrors": [],
+  "width": 288,
+  "height": 216,
+  "cells": [
+   12,
+   12
+  ],
+  "regions": 81
+ },
+ "topdown-apcalc-AP4-huge": {
+  "label": "topdown-apcalc-AP4-huge",
+  "path": "frontend/downloads/ugs/td4_huge.json",
+  "box": "163x163",
+  "tile": "1",
+  "ok": true,
+  "libErrors": [],
+  "width": 1280,
+  "height": 948,
+  "cells": [
+   160,
+   158
+  ],
+  "regions": 81
+ },
+ "topdown-alttp-AP7-box": {
+  "label": "topdown-alttp-AP7-box",
+  "path": "frontend/presets/procgen_topdown/AP_7/AP_7_rules.json",
+  "box": "23x23",
+  "tile": "2",
+  "ok": true,
+  "libErrors": [],
+  "width": 1012,
+  "height": 920,
+  "cells": [
+   23,
+   23
+  ],
+  "regions": 235
+ },
+ "topdown-alttp-AP7-huge": {
+  "label": "topdown-alttp-AP7-huge",
+  "path": "frontend/downloads/ugs/td7_huge.json",
+  "box": "481x481",
+  "tile": "1",
+  "ok": true,
+  "libErrors": [],
+  "width": 10560,
+  "height": 9600,
+  "cells": [
+   480,
+   480
+  ],
+  "regions": 235
+ },
+ "maze-AP3-box": {
+  "label": "maze-AP3-box",
+  "path": "frontend/presets/procgen_maze/AP_3/AP_3_rules.json",
+  "box": "4x5",
+  "tile": "6",
+  "ok": true,
+  "libErrors": [],
+  "width": 192,
+  "height": 180,
+  "cells": [
+   4,
+   5
+  ],
+  "regions": 10
+ },
+ "maze-AP3-huge": {
+  "label": "maze-AP3-huge",
+  "path": "frontend/downloads/ugs/maze3_huge.json",
+  "box": "21x21",
+  "tile": "3",
+  "ok": true,
+  "libErrors": [],
+  "width": 288,
+  "height": 234,
+  "cells": [
+   12,
+   13
+  ],
+  "regions": 10
+ },
+ "spiral-seedling-room": {
+  "label": "spiral-seedling-room",
+  "path": "frontend/presets/seedling_spiral_room/AP_1/AP_1_rules.json",
+  "box": null,
+  "tile": "6",
+  "ok": true,
+  "libErrors": [],
+  "width": 96,
+  "height": 72,
+  "cells": [
+   2,
+   2
+  ],
+  "regions": 4
+ },
+ "sphere-seedling-atlas": {
+  "label": "sphere-seedling-atlas",
+  "path": "frontend/presets/seedling_atlas_sphere/AP_1/AP_1_rules.json",
+  "box": "11x11",
+  "tile": "4",
+  "ok": true,
+  "libErrors": [],
+  "width": 640,
+  "height": 880,
+  "cells": [
+   8,
+   11
+  ],
+  "regions": 18
+ }
+}
