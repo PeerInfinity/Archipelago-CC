@@ -38,7 +38,9 @@ REPO = Path(__file__).resolve().parents[2]
 PRESETS = REPO / "frontend" / "presets"
 ADDON_DIR = REPO / "worlds" / "upstream_rules_addon"
 RESULTS = REPO / "test-results" / "in-app-tests"
-WORK = "test-results/upstream-rules-addon-row"      # under the served root; test-results/ is gitignored
+#: The app resolves --rules from frontend/ (as its presets: ./presets/...), so the copies live under frontend/. The
+#: folder is removed before and after every run.
+WORK = "upstream-rules-addon-row"
 RUN_TIMEOUT = int(os.environ.get("UPSTREAM_RULES_ADDON_ROW_TIMEOUT", "480"))
 
 #: (game folder, preset folder, rules file, --player or None)
@@ -88,7 +90,7 @@ def seed_of(game, folder):
 
 def write_copy(kind, game, folder, file, doc):
     """<WORK>/<kind>/<game>/<folder>/<file>, with the preset's sphere log beside it (when it has a .jsonl)."""
-    target_dir = REPO / WORK / kind / game / folder
+    target_dir = REPO / "frontend" / WORK / kind / game / folder
     target_dir.mkdir(parents=True, exist_ok=True)
     (target_dir / file).write_text(json.dumps(doc), encoding="utf-8")
     base = re.match(r"^(.*?)(?:_P\d+)?_rules\.json$", file).group(1)
@@ -136,7 +138,11 @@ def run(kind, game, rules, seed, player, port, out_dir):
                     continue
                 record.update({k: detail.get(k) for k in ("passed", "processedEvents", "totalEvents", "testLogPath")})
         shutil.move(str(RESULTS / after), str(out_dir / f"{kind}__{game}.json"))
-    record["verdict"] = "PASS" if proc.returncode == 0 and record.get("passed") is True else "FAIL"
+    # A run that tested some other file (the override did not load, and the app fell back to a default preset) is a
+    # FAIL whatever it says: measured on the first CI run, every row read ./presets/action_nodes_example.
+    record["read_our_copy"] = str(record.get("testLogPath") or "").startswith(rules.rsplit("/", 1)[0])
+    record["verdict"] = ("PASS" if proc.returncode == 0 and record.get("passed") is True and record["read_our_copy"]
+                         else "FAIL")
     if record["verdict"] == "FAIL":
         (out_dir / f"{kind}__{game}.log").write_text(out.decode("utf-8", "replace")[-200000:], encoding="utf-8")
     return record
@@ -151,8 +157,20 @@ def main(argv=None):
     strip = load_addon_strip()
     out_dir = args.out
     out_dir.mkdir(parents=True, exist_ok=True)
-    shutil.rmtree(REPO / WORK, ignore_errors=True)
+    shutil.rmtree(REPO / "frontend" / WORK, ignore_errors=True)
     records, problems = [], []
+    try:
+        run_roster(args, strip, out_dir, records, problems)
+    finally:
+        shutil.rmtree(REPO / "frontend" / WORK, ignore_errors=True)
+    (out_dir / "results.json").write_text(json.dumps(records, indent=1), encoding="utf-8")
+    print(f"{len(records)} run(s), {len(problems)} problem(s)")
+    for problem in problems:
+        print("  FAIL", problem)
+    return 1 if problems else 0
+
+
+def run_roster(args, strip, out_dir, records, problems):
     for game, folder, file, player in ROSTER:
         if args.only and game not in args.only:
             continue
@@ -172,15 +190,9 @@ def main(argv=None):
             if kind == "ADDON" and record["verdict"] != "PASS":
                 problems.append(f"{game}: the add-on's stripped document fails the spoiler test where the full one "
                                 f"passes; a field in worlds/upstream_rules_addon/_unused_fields.py is read")
-            if kind == "NEG" and record["verdict"] != "FAIL":
+            if kind == "NEG" and (record.get("passed") is not False or not record["read_our_copy"]):
                 problems.append(f"{game}: the negative control (location rules removed) PASSED; the row cannot see "
                                 f"a broken document")
-    (out_dir / "results.json").write_text(json.dumps(records, indent=1), encoding="utf-8")
-    shutil.rmtree(REPO / WORK, ignore_errors=True)
-    print(f"{len(records)} run(s), {len(problems)} problem(s)")
-    for problem in problems:
-        print("  FAIL", problem)
-    return 1 if problems else 0
 
 
 if __name__ == "__main__":
