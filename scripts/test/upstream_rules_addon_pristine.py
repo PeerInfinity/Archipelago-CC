@@ -159,7 +159,8 @@ def check_envelope(slot: str, game: str, envelope: dict, md: dict, unused: dict,
     item_ids = set(package.get("items") or ())
     location_ids = set(package.get("locations") or ())
     items = (doc.get("items") or {}).get(slot) or {}
-    foreign = [n for n, it in items.items() if it.get("id") is not None and it["id"] not in item_ids]
+    foreign = [n for n, it in items.items() if it.get("id") is not None
+               and (not isinstance(it["id"], int) or it["id"] not in item_ids)]
     if foreign:
         fail(f"{where}: {len(foreign)} item id(s) not in the game's DataPackage, e.g. {foreign[:3]}")
     leftover = [n for n, it in items.items() if any(k in it for k in unused["ITEM"])]

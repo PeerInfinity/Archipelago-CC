@@ -150,6 +150,26 @@ def test_the_editor_level_keeps_the_fields_and_play_is_the_default():
         _unused_fields.strip_unused({}, "nonsense")
 
 
+def test_an_item_id_that_is_not_an_integer_becomes_none():
+    """ALttP's prizes carry ROM bytes as id; the client's ID check refused the whole server document over them."""
+    from worlds.upstream_rules_addon._addon import ids_the_server_knows
+    doc = {"items": {"2": {"Crystal 1": {"id": [2, 52, 100, 64, 127, 6]}, "Bow": {"id": 59}, "Event": {"id": None},
+                           "Odd": {"id": True}, "Text": {"id": "12"}}}}
+    assert ids_the_server_knows(doc) == {"items": {"2": {"Crystal 1": {"id": None}, "Bow": {"id": 59},
+                                                         "Event": {"id": None}, "Odd": {"id": None},
+                                                         "Text": {"id": None}}}}
+
+
+def test_the_committed_alttp_preset_has_the_prize_ids_the_add_on_clears():
+    """The premise, on the fork's own preset (the add-on's ALttP doc equals it after the strips)."""
+    preset = json.loads((REPO / "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json")
+                        .read_text(encoding="utf-8"))
+    odd = sorted(n for n, it in preset["items"]["1"].items() if isinstance(it.get("id"), list))
+    assert "Crystal 1" in odd and "Red Pendant" in odd and len(odd) == 10
+    cleared = _addon.ids_the_server_knows(preset)
+    assert all(isinstance(it.get("id"), int) or it.get("id") is None for it in cleared["items"]["1"].values())
+
+
 def test_fields_the_client_reads_are_never_stripped():
     """Known readers (rules-feature-inventory census): KH2's helpers read option_definitions, SM's logic reads item
     type, and the client reads world options and the top-level dungeons."""
@@ -211,7 +231,8 @@ def test_the_doc_is_the_raw_export_after_the_three_strips(exported):
     from world_generator._embedded_rules import strip_placements
     result, raw = exported
     for p, entry in result.items():
-        expected = _unused_fields.strip_unused(_addon.strip_room(strip_placements(json.loads(json.dumps(raw[p])))))
+        expected = _unused_fields.strip_unused(_addon.ids_the_server_knows(
+            _addon.strip_room(strip_placements(json.loads(json.dumps(raw[p]))))))
         assert entry["envelope"]["doc"] == expected
 
 

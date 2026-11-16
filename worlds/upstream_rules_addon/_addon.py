@@ -81,10 +81,27 @@ def strip_room(doc: Dict[str, Any]) -> Dict[str, Any]:
     return doc
 
 
+def ids_the_server_knows(doc: Dict[str, Any]) -> Dict[str, Any]:
+    """An item ``id`` that is not an integer becomes ``None``, as an event's is.
+
+    AP item IDs are integers. A Link to the Past's prizes (Crystal 1–7, the three Pendants) are events placed on
+    ID-less prize locations, but the exporter writes their ``ItemData`` code, a tuple of ROM bytes, as ``id``. The
+    client's ID check compares every non-null ``id`` with the room's DataPackage and refused the whole document:
+    "10 item ID(s) differ from the server's: Crystal 1, …" (measured live, ALttP at slot 2, this slice). The client's
+    procgen code already reads an array ``id`` as no ID (procgenPipelineEngine.js).
+    """
+    for items in (doc.get("items") or {}).values():
+        for item in (items.values() if isinstance(items, dict) else ()):
+            if isinstance(item, dict) and item.get("id") is not None and (
+                    isinstance(item["id"], bool) or not isinstance(item["id"], int)):
+                item["id"] = None
+    return doc
+
+
 def strip(doc: Dict[str, Any], strip_placements, level: str = DEFAULT_LEVEL) -> Dict[str, Any]:
-    """Every strip the add-on applies, in order: placements (the embed recipe's), the room's, the unused fields at
-    ``level`` (``_unused_fields.LEVELS``)."""
-    return strip_unused(strip_room(strip_placements(doc)), level)
+    """Every change the add-on makes, in order: placements (the embed recipe's), the room's strip, item IDs the
+    server knows, the unused fields at ``level`` (``_unused_fields.LEVELS``)."""
+    return strip_unused(ids_the_server_knows(strip_room(strip_placements(doc))), level)
 
 
 def envelope_bytes(envelope: Dict[str, Any]) -> int:
