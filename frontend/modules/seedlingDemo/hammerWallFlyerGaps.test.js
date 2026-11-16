@@ -13,7 +13,7 @@
  *     (`fixtures/wallflyer-gaps/survey-step-35-plan-539.json`), wallflyer@48,112 and wallflyer@64,80 leave
  *     `wallFlyerBodies` and are still priced; the dashless pass then refuses on "enemy:wallflyer@64,80 (a static
  *     "Enemy" body at its placement …)" — the JS runtime's L22 → L29 refusal, word for word. The row pins the gap AS
- *     IT IS: the fix's slice flips it.
+ *     IT IS at the shipped defaults, and fidelity's W45 key `wallFlyerCorpseGone` (OFF) closes it when ON.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -23,6 +23,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { contactRect } from './combat.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { staticEnemyDanger } from './dangerMap.js';
 import { liveOf, replayTape, solveFromTape } from './jsRuntimeSolver.js';
 import { BODY_FAMILY_KILL_COUNTS, resetBodyFamilyKillCounts, SolverRefusal, WALLFLYER_KILL_ARM } from './solverBot.js';
@@ -77,10 +78,12 @@ describe('hammer-phase WALLFLYER-GAPS — THE MODEL GAP (fidelity\'s hand-over):
         expect(run.ledger('playerHits')).toEqual([]);
         const live = (run.entities('wallFlyerBodies') ?? []).map((w) => w.id);
         expect(live).toEqual(['wallflyer@128,80', 'wallflyer@144,112']);
-        const priced = flyers.filter((e) => staticEnemyDanger(run, contactRect(e)).some((d) => d.id === `${e.tag}@${e.x},${e.y}`))
+        const pricedNow = () => flyers.filter((e) => staticEnemyDanger(run, contactRect(e)).some((d) => d.id === `${e.tag}@${e.x},${e.y}`))
             .map((e) => `${e.tag}@${e.x},${e.y}`);
-        // ⛔ THE GAP, pinned as it is: the two REMOVED bodies are priced. The fix (skip a wallflyer the run no longer
-        // holds, as `liveDrill?.removed` does for a drill) makes this `['wallflyer@128,80', 'wallflyer@144,112']`.
-        expect(priced).toEqual(['wallflyer@64,80', 'wallflyer@128,80', 'wallflyer@48,112', 'wallflyer@144,112']);
+        // ⛔ THE GAP at the shipped defaults: the two REMOVED bodies are priced (fidelity's `wallFlyerCorpseGone` is OFF).
+        expect(pricedNow()).toEqual(['wallflyer@64,80', 'wallflyer@128,80', 'wallflyer@48,112', 'wallflyer@144,112']);
+        // ⛓ fidelity WALLFLYERCORPSE (W45): with `wallFlyerCorpseGone` ON, `staticEnemyDanger` skips a wallflyer the
+        // run no longer holds — only the two live bodies are priced.
+        expect(withContactFidelity({ wallFlyerCorpseGone: true }, pricedNow)).toEqual(['wallflyer@128,80', 'wallflyer@144,112']);
     }, 60000);
 });
