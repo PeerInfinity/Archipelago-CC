@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (packStructure.test.js): the Z.4 bindings example.",
+  "provenance": {
+    "sources": { "z": { "type": "authored", "by": "the Z write-up's example (content-sets-structure-options, Z.4)" } },
+    "default": "z"
+  },
+  "bindings": {
+    "omsi": {
+      "omsi:task/start-journey": { "var": "StartJourney", "type": "normal" },
+      "omsi:task/pick-locks": { "var": "PickLocks", "type": "normal", "native_effects": ["pickLocksFinish"], "src": "z" }
+    }
+  }
+}

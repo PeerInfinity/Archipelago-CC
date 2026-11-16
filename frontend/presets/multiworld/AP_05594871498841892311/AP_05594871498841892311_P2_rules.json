@@ -151,30 +151,6 @@
         "classification": "progression",
         "type": null,
         "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
-        "id": 5,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Springs": {
-        "name": "Springs",
-        "id": 3,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Blue platforms": {
-        "name": "Blue platforms",
-        "id": 4,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
       }
     }
   },

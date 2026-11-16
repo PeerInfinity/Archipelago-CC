@@ -90,9 +90,9 @@ location_table: Dict[str, LocationData] = {
         region="Baking"
     ),
     
-    # Victory event location (no ID)
+    # The goal location (max+1, the WorldGen twin's ID): holds the locked Victory item.
     "Cool on Wire Rack": LocationData(
-        id=None,  # Event locations don't have IDs
+        id=base_location_id + 16,
         region="Baking"
     ),
 }

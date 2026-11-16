@@ -89,6 +89,15 @@ export const AP_ID_NAMESPACES = Object.freeze([
         pinnedBy: 'nothing yet — no committed robotkitty preset',
     }),
     Object.freeze({
+        name: 'action-nodes',
+        locationBase: 40000000,
+        itemBase: 40000000,
+        owner: 'actionNodes/actionGraphCompiler.compileActionGraph — base + index in SORTED NAME order (allocateIdsBySortedName)',
+        declaredAt: 'frontend/modules/procgenCore/apIdNamespaces.js:93 (this row; the compiler reads it by name)',
+        pinnedBy: 'the committed frontend/presets/action_nodes_example preset (action-nodes-compile.mjs --check); actionGraphCompiler.test.js',
+        note: 'Ten million clear of region-atlas (30000000) and of the flashpanel rows, so no two rows share a space.',
+    }),
+    Object.freeze({
         name: 'apcalc-world',
         locationBase: 234810100,
         itemBase: 234810000,

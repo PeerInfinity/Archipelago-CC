@@ -212,7 +212,9 @@ const el = (doc, tag, className, text) => {
  *   state(record)}`, all in CANVAS PIXELS (see `seedlingDemo/seedlingSetMap.createSetMap`). ⛔ A VIEW: the
  *   adapter's one-row grid, the room ids and every op are unchanged, and a click still answers `{tx: room, ty: 0}`.
  *   `null` (the default) is today's strip, untouched. The substrate builds the provider, because which way a door
- *   leads is a fact about the substrate's documents.
+ *   leads is a fact about the substrate's documents. OPTIONAL `unreachableOf(report)` → `[{room, partial, regions}]`
+ *   (seedling-map-unreachable, additive): the rooms the last REPORT found unreachable, hatched on the map while the
+ *   set is still the one REPORT ran over, with a legend in `#editSetMapUnreachable`. A provider without it draws as before.
  * @param {boolean} [o.overviewMapOn] whether the map (rather than the strip) is shown at mount — `false` unless
  *   asked, so a caller that never heard of the map keeps the strip; `#editSetMapView` toggles it
  */
@@ -439,6 +441,58 @@ export function mountSetEditor({
     let mapFrame = null;
     /** A DISCONNECT picked on the map and waiting for its confirming click: `{room, value, link}`. */
     let disconnectPick = null;
+    /**
+     * ⛓ (seedling-map-unreachable, ADDITIVE) the last REPORT's unreachable rooms, `{record, marks}`, taken from the
+     * provider's optional `unreachableOf(report)` when REPORT runs. ⛔ THE STALE RULE: the marks are drawn only while
+     * `record()` IS the record that REPORT ran over (every op is copy-on-write, so any edit, undo or load makes a new
+     * one); after a change they are not drawn and the legend says to run REPORT again. A provider without the hook
+     * (the maze's) leaves this `null`, and the map paints exactly what it painted before.
+     */
+    let reportMarks = null;
+    /** The marks the last map paint drew: `[{room, partial, regions}]`. */
+    let mapMarks = [];
+    const UNREACHABLE_INK = '#ff5a5a';
+    const marksNow = () => (reportMarks && reportMarks.record === record() ? reportMarks.marks : []);
+    const renderUnreachableLegend = () => {
+        const note = $('editSetMapUnreachable');
+        if (!note || typeof overviewMap?.unreachableOf !== 'function') return;
+        const stale = reportMarks !== null && reportMarks.record !== record();
+        const rooms = mapMarks.map((m) => m.room);
+        const partial = mapMarks.filter((m) => m.partial).map((m) => m.room);
+        note.textContent = !mapOn || reportMarks === null ? ''
+            : stale ? '⚠ the set changed since the last REPORT — unreachable rooms are not marked until REPORT runs again'
+                : rooms.length === 0 ? '⛓ the last REPORT found no unreachable room'
+                    : `▨ red-hatched = UNREACHABLE from the start, as of the last REPORT: room(s) ${rooms.join(', ')}`
+                      + (partial.length ? ` (dashed = only some of its regions: ${partial.join(', ')})` : '');
+        note.className = !stale && rooms.length > 0 ? 'note bad' : 'note';
+    };
+    /** Hatch and outline one unreachable cell (partial: a dashed outline only). */
+    const paintUnreachable = (ctx, r, partial) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(r.x, r.y, r.w, r.h);
+        ctx.clip();
+        ctx.strokeStyle = UNREACHABLE_INK;
+        if (!partial) {
+            ctx.globalAlpha = 0.35;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let d = -r.h; d < r.w; d += 10) {
+                ctx.moveTo(r.x + d, r.y + r.h);
+                ctx.lineTo(r.x + d + r.h, r.y);
+            }
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        ctx.lineWidth = 3;
+        if (partial) ctx.setLineDash([6, 4]);
+        ctx.strokeRect(r.x + 1.5, r.y + 1.5, r.w - 3, r.h - 3);
+        ctx.setLineDash([]);
+        ctx.fillStyle = UNREACHABLE_INK;
+        ctx.font = '10px monospace';
+        ctx.fillText(partial ? '✖ part unreachable' : '✖ unreachable', r.x + 3, r.y + r.h - 4);
+        ctx.restore();
+    };
 
     const paintMap = () => {
         const layout = overviewMap.frame(record());
@@ -478,6 +532,9 @@ export function mountSetEditor({
             }
             ctx.restore();
         }
+        mapMarks = marksNow().filter((m) => layout.cells[m.room]);
+        for (const m of mapMarks) paintUnreachable(ctx, layout.cells[m.room], m.partial);
+        renderUnreachableLegend();
     };
 
     /** A pointer event as a point on the map canvas, in canvas pixels. */
@@ -524,6 +581,8 @@ export function mountSetEditor({
         if (!overview) return;
         if (mapOn) { paintMap(); return; }
         mapFrame = null;
+        mapMarks = [];
+        renderUnreachableLegend();
         const layout = layoutNow();
         overview.width = layout.width;
         overview.height = layout.height;
@@ -1444,6 +1503,9 @@ export function mountSetEditor({
          * refusal is `reportOver`'s alone (its own docblock: *"a page that
          * disabled the button on its own condition would be a second answer"*).
          */
+        if (typeof overviewMap?.unreachableOf === 'function') {
+            reportMarks = { record: record(), marks: overviewMap.unreachableOf(lastReport) ?? [] };
+        }
         if (typeof reportRows === 'function') {
             const extra = reportRows(session.record(), lastReport) ?? [];
             if (extra.length > 0) {
@@ -2043,6 +2105,22 @@ export function mountSetEditor({
             frame: mapFrame ? { width: mapFrame.width, height: mapFrame.height } : null,
             cells: mapFrame ? mapFrame.cells.map((c) => [c.x, c.y, c.w, c.h]) : [],
             picked: disconnectPick ? { room: disconnectPick.room, value: disconnectPick.value } : null,
+            /**
+             * ⛓ (seedling-map-unreachable) present only with a provider that has `unreachableOf`: the room indices
+             * the map marks from the last REPORT, each mark with its cell, and whether that REPORT is `current`,
+             * `stale` (the set changed since; nothing is marked) or `none` (REPORT has not run).
+             */
+            ...(typeof overviewMap.unreachableOf === 'function' ? {
+                unreachable: mapMarks.map((m) => m.room),
+                unreachableMarks: mapMarks.map((m) => ({
+                    room: m.room, partial: m.partial, regions: [...m.regions],
+                    cell: mapFrame?.cells[m.room]
+                        ? [mapFrame.cells[m.room].x, mapFrame.cells[m.room].y,
+                            mapFrame.cells[m.room].w, mapFrame.cells[m.room].h] : null,
+                })),
+                unreachableReport: reportMarks === null ? 'none'
+                    : reportMarks.record === record() ? 'current' : 'stale',
+            } : {}),
         } : null),
         report: () => lastReport,
         destroy() {

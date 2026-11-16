@@ -15,6 +15,7 @@ import {
 import { createWorld } from './mazeRoomEngine.js';
 import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { loadPackStack } from '../contentPacks/contentPacks.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const ROLES = substrateRegistryEntry.contentRoles;
 const FIX_BASE = 'https://fixture.invalid/packs/';
@@ -34,7 +35,7 @@ const FILES = Object.freeze({
 });
 const io = {
     base: FIX_BASE,
-    readJson: async (url) => JSON.parse(JSON.stringify(FILES[url.slice(FIX_BASE.length)])),
+    readJson: withFixtureProvenance(async (url) => JSON.parse(JSON.stringify(FILES[url.slice(FIX_BASE.length)]))),
     decode: async () => { throw new Error('no sheet'); },
     rasterise: async (shape) => ({ shape: JSON.stringify(shape.draw) }),
 };

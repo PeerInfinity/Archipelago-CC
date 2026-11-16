@@ -56,7 +56,8 @@ function paintHolder(ctx, thing, x0, y0, px) {
 
 /**
  * Draw every thing of `world`. `view` is `{ tilePx, playerPos, fogEnabled, isTileVisible, tileArt }` — the same
- * values the panel hands `drawWorld`. Returns how each was drawn, `[{ id, x, y, as: 'art'|'sign-art'|'sign'|'look' }]`
+ * values the panel hands `drawWorld` — plus an optional cell origin `offX`/`offY` (default 0; the composite map's
+ * cell, `mazeCompositeMap.js`). Returns how each was drawn, `[{ id, x, y, as: 'art'|'sign-art'|'sign'|'look' }]`
  * (the ones skipped are absent), for the in-app row and the tests.
  */
 export function drawMazeThings(ctx, world, view) {
@@ -66,8 +67,8 @@ export function drawMazeThings(ctx, world, view) {
         if (!Number.isInteger(t?.x) || !Number.isInteger(t?.y)) continue;
         if (view.fogEnabled && !view.isTileVisible(t.x, t.y)) continue;
         if (view.playerPos && view.playerPos.x === t.x && view.playerPos.y === t.y) continue;
-        const x0 = t.x * px;
-        const y0 = t.y * px;
+        const x0 = (view.offX ?? 0) + t.x * px;
+        const y0 = (view.offY ?? 0) + t.y * px;
         let as;
         if (view.tileArt && drawThingArt(ctx, view.tileArt, t.concept, x0, y0, px, px)) as = 'art';
         else if (t.kind === 'info' && view.tileArt && drawTileArt(ctx, view.tileArt, 'sign', x0, y0, px, px)) as = 'sign-art';

@@ -63,6 +63,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 
 - [Path Analyzer Panel](./pathAnalyzerPanel.md)
 - [Region Graph](./regionGraph.md)
+- [Region Map](./regionMap.md)
 
 ## Embedding and Windows
 

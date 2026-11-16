@@ -331,23 +331,6 @@
         "classification": "progression",
         "type": null,
         "max_count": 1
-      },
-      "victory": {
-        "name": "victory",
-        "id": 2,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "key_red": {
-        "name": "key_red",
-        "hint_text": "key red",
-        "id": 1,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
       }
     }
   },

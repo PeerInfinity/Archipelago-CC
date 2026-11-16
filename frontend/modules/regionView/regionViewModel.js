@@ -161,9 +161,34 @@ export function exitState(snapshot, staticData, exit, { snapshotInterface = null
 
 /** Build a discovery context (see the file header). */
 export function discoveryContext({ active = false, settings = {}, discovery, regions, showUndiscovered = true,
-    showAccessibility = true } = {}) {
-    return { active: !!active, settings: settings || {}, discovery, regions, showUndiscovered, showAccessibility };
+    showAccessibility = true, enteredFromDiscovered = null } = {}) {
+    return {
+        active: !!active, settings: settings || {}, discovery, regions, showUndiscovered, showAccessibility,
+        ...(enteredFromDiscovered ? { enteredFromDiscovered } : {}),
+    };
 }
+
+/**
+ * ⛓ region-map step 3b — THE INVERSE-ENTRANCE INDEX: the set of every region some DISCOVERED region has an exit to,
+ * in one O(R·E) pass. `hasEntranceFromDiscoveredRegion(name, …)` is exactly `index.has(name)`; a context built with
+ * it (`discoveryContext({ enteredFromDiscovered })`, as `computeRegionView` does) answers from the set instead of
+ * re-scanning every region per undiscovered region (O(R²·E) per recompute). A context WITHOUT it (the Region Graph's)
+ * keeps the scan, unchanged.
+ */
+export function enteredFromDiscoveredIndex(regions, discovery) {
+    const out = new Set();
+    for (const [sourceName, sourceData] of regions?.entries?.() ?? []) {
+        if (!discovery.isRegionDiscovered(sourceName)) continue;
+        for (const exit of sourceData?.exits ?? []) {
+            if (typeof exit?.connected_region === 'string') out.add(exit.connected_region);
+        }
+    }
+    return out;
+}
+
+const enteredFrom = (name, ctx) => (ctx.enteredFromDiscovered
+    ? ctx.enteredFromDiscovered.has(name)
+    : hasEntranceFromDiscoveredRegion(name, ctx.regions, ctx.discovery));
 
 /** Does any DISCOVERED region have an exit to `regionName`? */
 export function hasEntranceFromDiscoveredRegion(regionName, regions, discovery) {
@@ -187,7 +212,7 @@ const hidesUndiscovered = (ctx) => ctx.settings?.undiscoveredDisplay === 'hidden
 export function regionDiscovery(name, ctx) {
     const discovered = ctx.discovery.isRegionDiscovered(name);
     if (!ctx.active || discovered) return { discovered, hasEntrance: null, visibility: 'shown' };
-    const hasEntrance = hasEntranceFromDiscoveredRegion(name, ctx.regions, ctx.discovery);
+    const hasEntrance = enteredFrom(name, ctx);
     const hidden = !hasEntrance || hidesUndiscovered(ctx);
     return { discovered, hasEntrance, visibility: hidden ? 'hidden' : 'placeholder' };
 }
@@ -233,7 +258,7 @@ export function exitDiscovery(exit, ctx) {
     const d = ctx.discovery;
     const forward = exit.forwardExitName ? d.isExitDiscovered(exit.source, exit.forwardExitName) : false;
     const reverse = exit.reverseExitName ? d.isExitDiscovered(exit.target, exit.reverseExitName) : false;
-    const entered = (r) => d.isRegionDiscovered(r) || hasEntranceFromDiscoveredRegion(r, ctx.regions, d);
+    const entered = (r) => d.isRegionDiscovered(r) || enteredFrom(r, ctx);
     let hidden = !entered(exit.source) || !entered(exit.target);
     const discovered = forward || reverse;
     if (!discovered && hidesUndiscovered(ctx)) hidden = true;
@@ -284,12 +309,22 @@ export function displayKeyIndex(groups) {
     return out;
 }
 
-/** The sidecar entries of `rulesJson.preset_sidecars[playerId]`, by region id. */
+/**
+ * The sidecar entries of `rulesJson.preset_sidecars[playerId]`, by region id.
+ * ⛓ region-map step 3b FIX: the committed presets store the block as an OBJECT keyed by region name (all 60 slots
+ * with sidecars, measured 2026-11-15; the shape `regionLayoutResolve.js` reads). Step 2 read only an ARRAY of
+ * `{region_id}` entries, so on real data no region folded (every rules region was its own display group). Both
+ * shapes are read now; an array entry still keys by its `region_id`.
+ */
 export function sidecarIndex(rulesJson, playerId = '1') {
     const out = new Map();
-    const list = rulesJson?.preset_sidecars?.[String(playerId)];
-    for (const sc of Array.isArray(list) ? list : []) {
-        if (sc && typeof sc.region_id === 'string') out.set(sc.region_id, sc);
+    const block = rulesJson?.preset_sidecars?.[String(playerId)];
+    if (Array.isArray(block)) {
+        for (const sc of block) {
+            if (sc && typeof sc.region_id === 'string') out.set(sc.region_id, sc);
+        }
+    } else if (block && typeof block === 'object') {
+        for (const [name, sc] of Object.entries(block)) if (sc && typeof sc === 'object') out.set(name, sc);
     }
     return out;
 }

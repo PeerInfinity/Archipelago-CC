@@ -1,0 +1,67 @@
+{
+  "kind": "action-graph",
+  "schema_version": 1,
+  "graph_id": "example-village",
+  "name": "The Village",
+  "provenance": {
+    "sources": {
+      "actionnodes-design": {
+        "type": "model",
+        "model": "claude-fable-5-2",
+        "date": "2026-11-15",
+        "session": "actionnodes-design",
+        "approved": { "by": "Robert", "date": "2026-11-15", "ruling": "A14: accepted for initial testing, details adjustable" }
+      },
+      "do-chores-change": {
+        "type": "model",
+        "model": "claude-fable-5-2",
+        "date": "2026-11-15",
+        "session": "actionnodes-design",
+        "note": "Do Chores made repeatable (5 mana, Gold +3, limit 2); the floated 'three times, +5 each' makes the goal impossible"
+      },
+      "an1-boost-mana": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-15",
+        "session": "actionnodes-an1",
+        "note": "The boon's name and stat/gold amounts are actionnodes-design's; AN-1 set `gives.mana: 0` explicitly. Under the ruled default (+10 starting mana per item) the goal no longer needs the bread, which is the accepted example's puzzle"
+      }
+    },
+    "default": "actionnodes-design"
+  },
+  "loop": { "mana": 100 },
+  "stats": { "strength": { "name": "Strength" }, "knowledge": { "name": "Knowledge" } },
+  "resources": { "gold": { "name": "Gold" }, "bread": { "name": "Bread" } },
+  "boons": {
+    "strength-boost": { "name": "Strength Boost", "count": 1, "gives": { "stats": { "strength": 1 }, "mana": 0 },
+      "src": "an1-boost-mana" },
+    "pocket-money": { "name": "Pocket Money", "count": 1, "gives": { "resources": { "gold": 5 }, "mana": 0 },
+      "src": "an1-boost-mana" }
+  },
+  "start": "start",
+  "settings": { "xpGainScale": 1, "xpEffect": "cost" },
+  "nodes": {
+    "start": { "name": "Start", "kind": "start", "time": 0, "limit": 1 },
+    "do-chores": { "name": "Do Chores", "kind": "action", "time": 5, "limit": 2,
+      "results": { "resources": { "gold": 3 } }, "after": [["start"]], "src": "do-chores-change" },
+    "train": { "name": "Train", "kind": "action", "time": 20, "limit": 1,
+      "results": { "stats": { "strength": 1 } }, "after": [["start"]] },
+    "read-the-notice": { "name": "Read the Notice", "kind": "action", "time": 10, "limit": 1,
+      "results": { "stats": { "knowledge": 1 } }, "after": [["start"]] },
+    "eat-bread": { "name": "Eat Bread", "kind": "use", "time": 0, "limit": 1,
+      "requires": { "resources": { "bread": 1 } },
+      "results": { "resources": { "bread": -1 }, "mana": 30 }, "after": [["start"]] },
+    "buy-bread": { "name": "Buy Bread", "kind": "action", "time": 5, "limit": 1,
+      "requires": { "resources": { "gold": 5 } },
+      "results": { "resources": { "gold": -5, "bread": 1 } }, "after": [["do-chores"]] },
+    "bribe-the-guard": { "name": "Bribe the Guard", "kind": "action", "time": 5, "limit": 1,
+      "requires": { "resources": { "gold": 5 } },
+      "results": { "resources": { "gold": -5 } }, "after": [["do-chores"]] },
+    "guards-locker": { "name": "Guard's Locker", "kind": "check", "time": 30, "limit": 1,
+      "after": [["bribe-the-guard"]] },
+    "move-the-boulder": { "name": "Move the Boulder", "kind": "check", "time": 40, "limit": 1,
+      "requires": { "stats": { "strength": 1 } }, "after": [["train"]] },
+    "leave-the-village": { "name": "Leave the Village", "kind": "goal", "time": 40, "limit": 1,
+      "requires": { "stats": { "strength": 2, "knowledge": 1 } }, "after": [["move-the-boulder"]] }
+  }
+}

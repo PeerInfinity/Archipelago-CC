@@ -772,30 +772,6 @@
         "classification": "progression",
         "type": null,
         "max_count": 1
-      },
-      "Left arrow": {
-        "name": "Left arrow",
-        "id": 2,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Blue platforms": {
-        "name": "Blue platforms",
-        "id": 4,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Right arrow": {
-        "name": "Right arrow",
-        "id": 1,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
       }
     },
     "2": {
@@ -815,30 +791,6 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
-        "id": 5,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Springs": {
-        "name": "Springs",
-        "id": 3,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Blue platforms": {
-        "name": "Blue platforms",
-        "id": 4,
-        "groups": [],
         "classification": "progression",
         "type": null,
         "max_count": 1
@@ -904,15 +856,6 @@
         "classification": "progression",
         "type": null,
         "max_count": 1
-      },
-      "key_red": {
-        "name": "key_red",
-        "hint_text": "key red",
-        "id": 1,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
       }
     },
     "4": {
@@ -972,23 +915,6 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "victory": {
-        "name": "victory",
-        "id": 2,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "key_red": {
-        "name": "key_red",
-        "hint_text": "key red",
-        "id": 1,
-        "groups": [],
         "classification": "progression",
         "type": null,
         "max_count": 1

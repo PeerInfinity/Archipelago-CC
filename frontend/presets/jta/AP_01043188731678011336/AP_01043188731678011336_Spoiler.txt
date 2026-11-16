@@ -4,7 +4,7 @@ Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Journey to Ascension
-Location Count:                  21
+Location Count:                  22
 Progression Balancing:           50
 Accessibility:                   Full
 Local Items:                     

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (packStructure.test.js): the Z.4 numbers example. Under Z7 a set holds DEFAULTS only.",
+  "provenance": {
+    "sources": { "z": { "type": "authored", "by": "the Z write-up's example (content-sets-structure-options, Z.4)" } },
+    "default": "z"
+  },
+  "sets": {
+    "omsi": {
+      "exists": "omsi",
+      "economy": { "start_clock": 250 },
+      "values": {
+        "omsi:task/pick-locks": { "time": 400, "requires.omsi:stat/wander.min": 20,
+                                  "limit": { "ratio": 1 }, "results.omsi:resource/gold": { "base": 10, "every": 10 } },
+        "omsi:stat/wander": { "max": 100 },
+        "omsi:resource/glasses": { "modifies.results.omsi:stat/wander": { "mult": 4 } }
+      }
+    },
+    "action_nodes": { "exists": "omsi", "economy": { "loop_mana": 100 },
+      "values": { "omsi:task/pick-locks": { "time": 30 } } }
+  }
+}
