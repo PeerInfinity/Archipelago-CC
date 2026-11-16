@@ -548,19 +548,8 @@ export function countGroup(sm, groupName) {
     }
   }
 
-  // Also check item_groups for explicit group definitions
-  const itemGroups = sm.itemGroups?.[sm.playerId] || sm.itemGroups;
-  if (itemGroups?.[groupName]) {
-    const itemsInGroup = itemGroups[groupName];
-    if (Array.isArray(itemsInGroup)) {
-      for (const itemName of itemsInGroup) {
-        const itemCount = sm.inventory[itemName] || 0;
-        count += itemCount;
-      }
-      return count;
-    }
-  }
-
+  // (A `sm.itemGroups` lookup stood here; nothing ever sets `sm.itemGroups`
+  // — group membership is each item's `groups` — so it was removed.)
   // Fall back to checking itemData.groups array format
   if (sm.itemData) {
     for (const itemName in sm.itemData) {
@@ -742,24 +731,8 @@ export function has_group_unique(sm, groupName, count = 1) {
     }
   }
 
-  // Also check item_groups for explicit group definitions
-  const itemGroups = sm.itemGroups?.[sm.playerId] || sm.itemGroups;
-  if (itemGroups?.[groupName]) {
-    const itemsInGroup = itemGroups[groupName];
-    if (Array.isArray(itemsInGroup)) {
-      for (const itemName of itemsInGroup) {
-        const itemCount = sm.inventory[itemName] || 0;
-        if (itemCount > 0) {
-          uniqueItemsFound++;
-          if (uniqueItemsFound >= count) {
-            return true;
-          }
-        }
-      }
-      return uniqueItemsFound >= count;
-    }
-  }
-
+  // (A `sm.itemGroups` lookup stood here; nothing ever sets `sm.itemGroups`
+  // — group membership is each item's `groups` — so it was removed.)
   // Fall back to checking itemData.groups array format
   if (sm.itemData) {
     for (const itemName in sm.itemData) {

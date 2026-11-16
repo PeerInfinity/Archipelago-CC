@@ -88,6 +88,21 @@ export function slotGameName(sm) {
   return sm.rules?.world?.[sm.playerId]?.game;
 }
 
+/**
+ * The loaded slot's item name groups as `{groupName: [itemName, ...]}`, the
+ * shape Python's `world.item_name_groups` has. `item_groups[p]` (sm.groupData)
+ * is only the list of group NAMES — spreading it gave `{0: name, 1: name}` —
+ * so membership is read from each item's `groups`.
+ */
+export function itemNameGroupsOf(sm) {
+  const groups = {};
+  for (const [itemName, info] of Object.entries(sm.itemData || {})) {
+    if (!Array.isArray(info?.groups)) continue;
+    for (const g of info.groups) (groups[g] ||= []).push(itemName);
+  }
+  return groups;
+}
+
 function log(level, message, ...data) {
   console[level === 'info' ? 'log' : level]?.(message, ...data);
 }
@@ -392,7 +407,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       if (rawValue === undefined && settingName === 'item_name_groups') {
         const gameInfo = sm.gameInfo?.[playerIdKey] || sm.gameInfo || {};
         rawValue = {
-          ...(sm.groupData || {}),
+          ...itemNameGroupsOf(sm),
           ...(gameInfo.relic_groups || {})
         };
       }
@@ -487,7 +502,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
         // - sm.itemGroups for standard item groups
         // - gameInfo.relic_groups for AHIT relic combos
         const itemNameGroups = {
-          ...(sm.itemGroups?.[playerIdKey] || sm.itemGroups || {}),
+          ...itemNameGroupsOf(sm),
           ...(gameInfo.relic_groups || {})
         };
 
