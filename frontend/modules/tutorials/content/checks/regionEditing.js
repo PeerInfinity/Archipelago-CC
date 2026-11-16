@@ -14,7 +14,7 @@
  * The cells are read off the pipeline's own region (`__panel`).
  * ⛔ Imports only content files.
  */
-import { PIPELINE, choosePreset, generatedSinceStep, openSection, resetPipeline, runAll } from '../steps/procgen.js';
+import { PIPELINE, choosePreset, generatedSinceStep, look, openSection, resetPipeline, runAll } from '../steps/procgen.js';
 
 const LAB_TITLE = Object.freeze({ maze: 'Procgen Lab — maze', seedling: 'Procgen Lab — Seedling' });
 const lab = (page) => ({ panel: 'procgenLabPanel', title: LAB_TITLE[page] });
@@ -430,6 +430,16 @@ const labStatusLine = (ctx) => ctx.text(inLab('seedling', '#status'));
 const labSet = (ctx) => labWindow(ctx)?.__editorEdit?.set ?? null;
 /** What the re-pick step saw before it switched: the arm's generation and the page's `__watch`. */
 let beforeSwitch = null;
+/**
+ * The arm the lab page has mounted (`__editorLifetime`), as its Source/side drop-downs spell it, or null.
+ * `replay` is two arms, `replay-js` and `replay-wasm`; every other arm is named by its source.
+ */
+const mountedArm = (ctx) => labWindow(ctx)?.__editorLifetime?.current?.name ?? null;
+const shownArm = (ctx) => {
+    const source = ctx.query(inLab('seedling', '#source'))?.value;
+    const side = ctx.query(inLab('seedling', '#side'))?.value;
+    return source === 'replay' ? `replay-${side}` : (source ?? null);
+};
 
 export const CHECK_SEEDLING_LOAD_VANILLA_AFTER_HANDOVER = Object.freeze({
     id: 'seedling-load-vanilla-after-handover',
@@ -451,6 +461,9 @@ export const CHECK_SEEDLING_LOAD_VANILLA_AFTER_HANDOVER = Object.freeze({
             title: 'A room handed over',
             blocks: [
                 ...APWORLD_OPEN,
+                ...look('source-shows-edit', lab('seedling'),
+                    'The lab\'s **Source** drop-down now reads **EDIT — a room, on its own**: the arm the handed-over room opened in, though nobody picked it there.',
+                    (ctx) => mountedArm(ctx) === 'edit' && shownArm(ctx) === 'edit'),
                 {
                     step: {
                         id: 'load-while-open',
