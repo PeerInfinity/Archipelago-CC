@@ -17,6 +17,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { answerGets } from './fixtures/answerGets.js';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -182,6 +183,7 @@ describe('MessageHandler: no preset for this room (sdc-no-preset-refusal)', () =
 
   beforeEach(() => {
     connectionMock.send.mockClear();
+    answerGets(connectionMock, () => handler);
     connectionMock.isConnected.mockReturnValue(true);
     calls.length = 0;
     loadInApp(ADVENTURE_BOOT, '1', 'presets');

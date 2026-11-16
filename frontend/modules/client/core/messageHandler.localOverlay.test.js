@@ -13,6 +13,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { answerGets } from './fixtures/answerGets.js';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -141,6 +142,22 @@ const consoleLines = (bus) =>
   bus.published.filter((p) => p.event === 'ui:printToConsole').map((p) => p.data.message);
 const loads = (bus) => bus.published.filter((p) => p.event === 'files:jsonLoaded');
 
+// sdc-server-item-groups: what a server answers for this game's groups, with one group the file lacks.
+const GROUPS_KEY = `_read_item_name_groups_${GAME}`;
+const SERVER_GROUPS = { Everything: Object.keys(ownItemIds), Blocks: ['Moving Blocks'] };
+const answerWithGroups = (getHandler) =>
+  answerGets(connectionMock, getHandler, (key) => (key === GROUPS_KEY ? structuredClone(SERVER_GROUPS) : null));
+function expectServerGroups(doc, bus) {
+  expect(Object.keys(doc.item_groups)).toEqual(['2']);
+  expect(doc.item_groups['2']).toEqual(['Blocks', 'Everything']);
+  expect(doc.items['2']['Moving Blocks'].groups).toEqual(['Blocks', 'Everything']);
+  const differ = consoleLines(bus).filter((m) => /item groups differ/.test(m));
+  expect(differ).toEqual([
+    `The server's ${GAME} item groups differ from the rules' (group(s) only on the server: Blocks; ` +
+      "1 item(s) in other groups: Moving Blocks); using the server's.",
+  ]);
+}
+
 /** The app as if `doc` were loaded for `player` (static data + the raw payload). */
 function loadInApp(doc, player = '1', source = 'userLoadedFile') {
   stateManagerMock.staticData = {
@@ -192,6 +209,7 @@ describe('MessageHandler: local generated-world rules + server placements', () =
 
   beforeEach(() => {
     connectionMock.send.mockClear();
+    answerGets(connectionMock, () => handler);
     calls.length = 0;
     stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
     stateManagerMock.rawPayload = null;
@@ -251,6 +269,17 @@ describe('MessageHandler: local generated-world rules + server placements', () =
     expect(consoleLines(bus).some((m) => /Loaded the local Cloudberry Sphere WorldGen rules with the server's placements \(4 locations/.test(m))).toBe(true);
     // No seed-mismatch warning: the overlay replaces it
     expect(consoleLines(bus).some((m) => /Warning: the server's seed/.test(m))).toBe(false);
+  });
+
+  it("the local file's groups give way to the server's (slot 2), with ONE console line", async () => {
+    answerWithGroups(() => handler);
+    loadInApp(LOCAL);
+    await roomInfoThenLogIn();
+    expect(sent('Get')).toEqual([{ cmd: 'Get', keys: [GROUPS_KEY] }]);
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+    expect(loads(bus)).toHaveLength(1);
+    expectServerGroups(loads(bus)[0].data.jsonData, bus);
   });
 
   it("a room that isn't the file's world: console error, stays connected, no load", async () => {
@@ -429,6 +458,7 @@ describe('MessageHandler: the rules the server sends (worldgen_rules)', () => {
 
   beforeEach(() => {
     connectionMock.send.mockClear();
+    answerGets(connectionMock, () => handler);
     calls.length = 0;
     stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
     stateManagerMock.rawPayload = null;
@@ -474,6 +504,13 @@ describe('MessageHandler: the rules the server sends (worldgen_rules)', () => {
     expect(doc.world['2'].slot_data?.[WORLDGEN_RULES_KEY]).toBeUndefined();
     expect(consoleLines(bus).some((m) => /Loaded the server-sent Cloudberry Sphere WorldGen rules with the server's placements/.test(m))).toBe(true);
     expect(handler.getAwaitedRulesGame()).toBe(null);
+  });
+
+  it("the server-sent doc's groups give way to the server's data storage groups", async () => {
+    answerWithGroups(() => handler);
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(ENVELOPE) }));
+    expect(loads(bus)).toHaveLength(1);
+    expectServerGroups(loads(bus)[0].data.jsonData, bus);
   });
 
   it('the server doc wins over a loaded local doc (and equals overlayServerData of it)', async () => {
