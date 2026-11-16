@@ -33,7 +33,7 @@ upstream_rules_addon:
 | `enabled` | `true` | Installing the add-on turns it on. Set `false` to keep it installed but idle. |
 | `max_kb` | `1024` | The largest document one slot may carry, in KB (compact JSON). A bigger one is not sent, and that slot gets the reason `over_cap` instead. All 73 upstream games that have presets here fit under 1024 KB at their default options; the largest is Stardew Valley at about 860 KB. |
 | `exclude_games` | APCalc, DepGraph, Metamath | Games that never get a document. The three defaults build their rules in the client from the room itself. |
-| `strip_level` | `play` | How much of each document is left out besides placements. `play` leaves out the fields the client never needs to play the room. `editor` keeps them (item classifications, location flags, the meta rows), so the APWorld Editor opened on a server-sent document shows them; documents are about 5–12% larger. Placements and the item pool counts are never sent, at any level. |
+| `strip_level` | `play` | How much of each document is left out besides placements. `play` leaves out the fields the client never needs to play the room. `editor` keeps them (item classifications, location flags, the meta rows), so the APWorld Editor opened on a server-sent document shows them; documents are larger by a median of 11% (2–22% across the 73 upstream presets). Placements and the item pool counts are never sent, at any level. |
 
 The setting applies to the whole room: every slot of every game that isn't excluded. A player can't turn it on or off from their YAML.
 
