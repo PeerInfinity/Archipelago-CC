@@ -188,7 +188,8 @@ export function parseProvenance(block, packId, layer) {
  *
  *   structure  `entries`                      concepts  `concepts`
  *   text       `strings` and `lists` (plain values: a per-entry source is a group whose prefix is the key)
- *   numbers    `sets` (one entry per set)     bindings  every `<game>/<key>` of `bindings`
+ *   numbers    each set, and each `<set>/<key>` of its values (PL-2)
+ *   bindings   every `<game>/<key>` of `bindings`
  *   art        `sprites` and `shapes`         sfx       `sounds`        music  `tracks`
  */
 export function layerEntries(layer, json) {
@@ -198,7 +199,11 @@ export function layerEntries(layer, json) {
         case 'structure': return keyed(json?.entries);
         case 'concepts': return keyed(json?.concepts);
         case 'text': return [...keyed(json?.strings), ...keyed(json?.lists)];
-        case 'numbers': return keyed(json?.sets);
+        // ⛓ PL-2: a set is an entry, and so is each priced entry of it (`<set>/<structure id>`, the bindings' form),
+        // so a group can name the source of one entry's values. A value row cannot carry `src` (values are numbers).
+        case 'numbers': return Object.entries(isObject(json?.sets) ? json.sets : {})
+            .flatMap(([game, set]) => [{ key: game, src: isObject(set) ? set.src : undefined },
+                ...Object.keys(isObject(set?.values) ? set.values : {}).map((key) => ({ key: `${game}/${key}`, src: undefined }))]);
         case 'bindings': return Object.entries(isObject(json?.bindings) ? json.bindings : {})
             .flatMap(([game, table]) => keyed(table).map((e) => ({ ...e, key: `${game}/${e.key}` })));
         case 'art': return [...keyed(json?.sprites), ...keyed(json?.shapes)];
