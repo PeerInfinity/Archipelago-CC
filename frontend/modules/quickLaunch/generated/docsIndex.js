@@ -372,6 +372,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "- ID: windowPanel - Purpose: Provides a UI panel within the main application to display the connection status and heartbeat information of a separate browser window managed by the windowAdapter."
     },
     {
+        "path": "docs/json/developer/procgen/action-nodes.md",
+        "title": "ActionNodes Substrate",
+        "section": "developer/procgen",
+        "summary": "The ActionNodes substrate (id action_nodes) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop…"
+    },
+    {
         "path": "docs/json/developer/procgen/architecture.md",
         "title": "Procedural Generation Architecture",
         "section": "developer/procgen",
@@ -1650,6 +1656,7 @@ export const HELP_SECTIONS = Object.freeze([
         "order": 140,
         "audience": "developer",
         "docs": [
+            "docs/json/developer/procgen/action-nodes.md",
             "docs/json/developer/procgen/architecture.md",
             "docs/json/developer/procgen/bounce.md",
             "docs/json/developer/procgen/cloudberry.md",

@@ -516,6 +516,16 @@
                       "both",
                       "none"
                     ]
+                  },
+                  "xpGainScale": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Region XP gained in this region per mana spent there (default 1 when absent; 0 = no XP). Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (the graph's `settings.xpGainScale` on every node). Read by the ActionNodes runtime (slice 2); nothing else reads it yet."
+                  },
+                  "actions": {
+                    "type": "object",
+                    "description": "AUTHORED per-verb costs of this region, verb name -> mana, for a substrate whose costs are its own. Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (`act` = the node's time). Read by the ActionNodes runtime and the Loops `act` verb (slice 2); nothing else reads it yet.",
+                    "additionalProperties": { "type": "number", "minimum": 0 }
                   }
                 }
               }
@@ -623,6 +633,61 @@
             }
           },
           "required": ["algorithm", "coupled", "target_group_lookup", "placements"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "action_nodes": {
+      "type": "object",
+      "description": "Each slot's ActionNodes world: what the runtime reads that the per-node `preset_sidecars` payloads do not say, keyed by player slot ID (string) — the shape `loop_costs` and `region_atlas` use. Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (`actionNodesBlockOf`), via scripts/procgen/action-nodes-compile.mjs. Consumer: the ActionNodes runtime (slice 2); nothing reads it yet.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's ActionNodes world.",
+          "properties": {
+            "schema_version": { "type": "integer", "description": "The block's version (`ACTION_NODES_BLOCK_VERSION`)." },
+            "graph_id": { "type": "string", "description": "The graph document's `graph_id`." },
+            "name": { "type": "string", "description": "The graph's display name." },
+            "loop": {
+              "type": "object",
+              "description": "A loop's starting pool before boosts.",
+              "properties": { "mana": { "type": "integer", "minimum": 1 } },
+              "required": ["mana"],
+              "additionalProperties": false
+            },
+            "stats": { "type": "object", "description": "Stat id -> {name}. Stats only go up, and reset with the loop." },
+            "resources": { "type": "object", "description": "Resource id -> {name}. Resources go up or down, and reset with the loop." },
+            "boosts": {
+              "type": "object",
+              "description": "Archipelago item name -> what holding one gives, at once and at the start of every loop: {boon_id, stats, resources, mana}. `mana` is the PER-ITEM starting-mana boost (⚖ user 2026-11-15: configurable per item, default 10); while an ActionNodes world is loaded the runtime takes each item's mana from here instead of the global flat per-item term.",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "boon_id": { "type": "string" },
+                  "stats": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+                  "resources": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+                  "mana": { "type": "integer", "minimum": 0 }
+                },
+                "required": ["boon_id", "stats", "resources", "mana"],
+                "additionalProperties": false
+              }
+            },
+            "mana_per_item_default": { "type": "integer", "minimum": 0, "description": "The per-item mana boost an item with no `boosts` row gets (DEFAULT_MANA_PER_ITEM)." },
+            "start": { "type": "string", "description": "The start node's id (its region)." },
+            "goal": { "type": "string", "description": "The goal node's id (its region)." },
+            "action": { "type": "string", "description": "The Loops queue verb that performs a node: `act`." },
+            "settings": {
+              "type": "object",
+              "description": "The graph's settings with defaults applied.",
+              "properties": {
+                "xpGainScale": { "type": "number", "minimum": 0 },
+                "xpEffect": { "type": "string", "description": "As a `loop_costs` region's `xpEffect`." }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["schema_version", "graph_id", "loop", "stats", "resources", "boosts", "mana_per_item_default", "start", "goal", "action"],
           "additionalProperties": false
         }
       },
