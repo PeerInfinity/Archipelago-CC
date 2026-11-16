@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 30,
-        "headings": 1323,
+        "headings": 1325,
         "indexHeadings": 2,
-        "lines": 36584,
+        "lines": 36615,
         "pages": 4,
-        "words": 554288
+        "words": 555440
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 26,
-            "lines": 348,
+            "lines": 354,
             "links": [
                 "action-nodes.md",
                 "architecture.md",
@@ -74,7 +74,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 8501
+            "words": 8837
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -198,9 +198,10 @@ export const DOCS_INDEX = frz({
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
             "file": "loop-recording.md",
             "h1": "Loop Recording and Block Modes",
-            "headings": 25,
-            "lines": 284,
+            "headings": 26,
+            "lines": 288,
             "links": [
+                "action-nodes.md",
                 "bounce.md",
                 "cloudberry.md",
                 "gotchas.md",
@@ -212,7 +213,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 4882
+            "words": 5025
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
@@ -349,8 +350,8 @@ export const DOCS_INDEX = frz({
             "description": "The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop.",
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
-            "headings": 9,
-            "lines": 72,
+            "headings": 10,
+            "lines": 93,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -358,7 +359,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 1709
+            "words": 2382
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",

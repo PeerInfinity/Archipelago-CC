@@ -22,6 +22,7 @@ import {
   START_REGION_MOVE_COST,
 } from '../shared/procgen/loopCostGenerator.js';
 import { formatAnnotations } from './blockAnnotations.js';
+import { customActionDescription } from '../shared/procgen/loopCustomActions.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -1104,7 +1105,7 @@ export class LoopBlockBuilder {
       } else if (pathEntry.type === 'locationCheck') {
         fullName = `Check: ${pathEntry.locationName}`;
       } else if (pathEntry.type === 'customAction') {
-        fullName = `Explore: ${pathEntry.sourceRegion}`;
+        fullName = customActionDescription(pathEntry);
       } else {
         fullName = `${pathEntry.type}`;
       }

@@ -88,7 +88,7 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | Field | Type | Meaning |
 |-------|------|---------|
 | `loopSupport` | object | Which loops-panel features this substrate's regions get. If absent, none. |
-| `loopSupport.queueActions` | string[] | Loop-queue action types that can be authored for a region: `'regionMove'`, `'locationCheck'`, `'explore'`. |
+| `loopSupport.queueActions` | string[] | Loop-queue action types that can be authored for a region: `'regionMove'`, `'locationCheck'`, `'explore'`, `'act'`. A named custom action (`explore`, `act`) is priced, completed and labelled by its row in `shared/procgen/loopCustomActions.js`. |
 | `loopSupport.manual` | boolean | The region can be played by hand in loop mode. |
 | `loopSupport.record` | boolean | The Record block mode is offered (requires `playback`); without it the default block mode falls back to Manual. `record` plus `playback` also turns on the strict loop-mode action gate and the live-play drain. |
 | `loopSupport.playback` | boolean | Recorded visits can be replayed: by `replayActions` on fine-grained substrates, or by the loops executor for coarse ones. |
@@ -96,6 +96,8 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | `loopSupport.summaryRecording` | boolean | Summary capture: Record stores the visit's net result and Playback applies it instantly; regions are priced by time. A real recorder (`takeLastRecording`) wins if both are present. |
 | `loopSupport.playClock` | boolean | The substrate's page reports whether its own clock runs (`substrate:playClock` {region, running[, stats]}, through `flashSubstrate/bridge.js` `setPlayClock`); a summary region whose last report says stopped is not drained and its seconds are not recorded. A report whose `stats` carry `gameSeconds` is charged per game second played instead, and a summary keeps the last `stats` as `playStats`. Without it, reports are ignored. See [loop-recording.md](./loop-recording.md#the-play-clock). |
 | `loopSupport.customQueues` | boolean | The legacy custom-queue dropdown (attach a saved queue as a `customQueue` action). |
+| `loopSupport.actionGate` | `(action) → {ok, reason?, code?}` (optional) | The START GATE: Loops asks it before the generic executor starts a queue entry of this substrate's region. `ok: false` stops the queue at that entry, records it (`loopState.lastActionRefusal`, the loops public function `getLastActionRefusal`) and publishes `loops:actionRefused` `{label, region, reason, code, …}`; the Loops panel shows it. The entry is never skipped. Mana is no gate's business. A gate that throws refuses, naming the throw. ActionNodes answers for `act` and for a move out of a node not cleared this loop ([action-nodes.md](./action-nodes.md#the-runtime)). |
+| `loopSupport.authoredCosts` | boolean (optional) | The substrate AUTHORS its `loop_costs` entries: the cost class `authored` (`loopCostGenerator.classifyRegion`, tested first). A cost pass — the pipeline's `generateLoopCosts`, the Loops panel's Generate Costs — copies the region's entries from the block it is given, verbatim, and never re-prices them. ActionNodes declares it. |
 | `loopSupport.requiresLoopMode` | boolean | A loop game whose regions only work in loop mode; loops refuses a user loop-mode disable while one is loaded. See [loop-recording.md](./loop-recording.md#requiresloopmode--loop-game-substrates). |
 | `loopSupport.executeVia` | `'solver'` (optional) | A Bot-mode block drives the substrate's PlaybackController and waits for the resulting event: its `perform(target)` where the controller has one, else `walkTo`. An `explore` action engages only a `perform` controller, and loops completes it at once. If absent, actions run on the generic timer. |
 | `loopSupport.botActsAtOnce` | boolean | Each Bot action lands in one step, so the Bot has nothing for Instant to skip: the chart's "The Bot honours Instant" reads n/a, as it does for summary substrates. Declare it from a measurement (Instant ON and OFF take the same time), not as a way to hide a ✗. |
@@ -113,6 +115,10 @@ The optional `sharing` field declares which resource-channel categories a substr
 | `sharing.mana` | object (optional) | Takes part in the shared-mana channel (drain, refill, bonus, reset against the loop-mode pool). |
 | `sharing.mana.loopActionDelegation` | boolean (optional) | Loops hands action execution and per-step charging for this substrate's `manaEnabled` regions to the substrate's own walker. |
 | `sharing.items` | object (optional) | Offers consumables named `<substrateId>/<type>`, listed by exactly one of `types: string[]` or `getTypes(): string[]`; `grantItem` validates against it. |
+| `sharing.stats` | object (optional) | Per-loop stats the HOST LEDGER keeps for this substrate (`resourceChannels/resourceLedger.js`): they only go up and reset with the loop. Same `types` / `getTypes` shape as `items`. Not transferable. |
+| `sharing.resources` | object (optional) | Per-loop resources the host ledger keeps: they go up or down, never below 0, and reset with the loop. Same shape. A substrate that also lists them under `items` receives cross-substrate grants of them. |
+
+**The ledger.** One `ResourceLedger` (`getResourceLedger()` in `resourceChannelsLibrary.js`), configured by its owner for the loaded world: `getStat`, `getResource`, `snapshot()`, `apply({stats, resources}, {source})` (all or nothing; refuses a stat going down, a resource below 0, an unknown id or a fraction, each by name), `resetRun(totals)` (every value to 0 plus the totals: the owner's held boosts) and `setBoosts` (display only). Every change is published as `resourceChannels:ledgerChanged`. The **Resources** panel (`resourcesPanel.js`, component `resourcesPanel`) shows, for each substrate of the loaded world that declares a sharing category, the mana line, the ledger's values when that substrate owns it, and the boosts in effect.
 
 ### Editing
 
@@ -305,7 +311,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 108 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 112 fields · 17 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -331,7 +337,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `loadRegionEvent` | actionNodes:loadRegion | bounce:loadRegion | cloudberry:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | maze:loadRegion | noiz2sa:loadRegion | omsi:loadRegion | textAdventure:loadRegion |
 | `panelComponentType` | actionNodesPanel | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
-| `sharing` | — | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
+| `sharing` | {items, mana, resources, stats} | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
 | `sidecarFields` | 11 keys | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 32 keys | 11 keys | 9 keys | 6 keys |
 | `supportedFeatures` | [] | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |
 
@@ -365,15 +371,17 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | — | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys |
+| `loopSupport` | 4 keys | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys |
+| `loopSupport.actionGate` | fn | — | — | — | — | — | — | — | — | — |
+| `loopSupport.authoredCosts` | yes | — | — | — | — | — | — | — | — | — |
 | `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | yes |
 | `loopSupport.customQueues` | — | no | no | no | no | no | yes | no | no | no |
 | `loopSupport.executeVia` | — | solver | solver | solver | solver | solver | — | solver | solver | solver |
 | `loopSupport.instant` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
-| `loopSupport.manual` | — | yes | yes | yes | yes | yes | yes | yes | yes | yes |
+| `loopSupport.manual` | no | yes | yes | yes | yes | yes | yes | yes | yes | yes |
 | `loopSupport.playClock` | — | — | yes | yes | yes | — | — | yes | — | — |
 | `loopSupport.playback` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
-| `loopSupport.queueActions` | — | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
+| `loopSupport.queueActions` | regionMove, act | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore |
 | `loopSupport.record` | — | yes | yes | — | — | yes | yes | yes | yes | yes |
 | `loopSupport.requiresLoopMode` | — | — | — | — | — | yes | — | — | yes | — |
 | `loopSupport.summaryRecording` | — | yes | yes | — | — | — | — | yes | — | — |
@@ -384,9 +392,11 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `sharing.items` | — | — | — | — | — | {getTypes} | — | — | {types} | — |
-| `sharing.mana` | — | — | — | — | — | {} | {loopActionDelegation} | — | {} | {} |
+| `sharing.items` | {getTypes} | — | — | — | — | {getTypes} | — | — | {types} | — |
+| `sharing.mana` | {} | — | — | — | — | {} | {loopActionDelegation} | — | {} | {} |
 | `sharing.mana.loopActionDelegation` | — | — | — | — | — | — | yes | — | — | — |
+| `sharing.resources` | {getTypes} | — | — | — | — | — | — | — | — | — |
+| `sharing.stats` | {getTypes} | — | — | — | — | — | — | — | — | — |
 
 **Editing**
 
