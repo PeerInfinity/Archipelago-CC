@@ -19,6 +19,10 @@
       "reason": "Not a game. A helper apworld that refuses to be played."
     },
     {
+      "name": "Upstream Rules Addon.yaml",
+      "reason": "Not a game. A helper apworld for hosts (sends upstream worlds' rules in slot_data) that refuses to be played."
+    },
+    {
       "name": "Universal Tracker.yaml",
       "reason": "Not a game."
     },
