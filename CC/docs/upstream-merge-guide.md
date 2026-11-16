@@ -184,6 +184,20 @@ pytest test/general/test_rule_builder.py
 python scripts/test/test-all-templates.py --include-list "Adventure.yaml" -p
 ```
 
+### Step 8: The Upstream Rules Add-on's pins
+
+The add-on (`apworlds/upstream_rules_addon.apworld`, host guide `docs/json/features/upstream-rules-addon.md`)
+carries a copy of `exporter/`, and `.github/workflows/upstream-rules-addon.yml` generates rooms with it on
+pristine upstream at pinned refs: today the `0.6.8` tag and upstream main `3745641196` (Utils 0.6.9; upstream had
+no 0.6.9 tag when the add-on was built).
+
+1. Re-pack after the merge: `python scripts/build/pack_upstream_rules_addon.py` (its freshness test fails otherwise).
+2. In the workflow's matrix, add the release tag this sync is at. When that tag is the version the main-SHA row
+   stood in for (0.6.9 today), replace that row with the tag. Keep the oldest supported tag.
+3. Dispatch it: `gh workflow run upstream-rules-addon.yml -R PeerInfinity/Archipelago-CC --ref <branch>`.
+4. If the oldest tag is dropped, raise `minimum_ap_version` in `worlds/upstream_rules_addon/archipelago.json` to
+   the oldest ref still in the matrix, and bump `world_version` with `__version__`.
+
 ## Diff Files Reference
 
 All diff files are in `docs/json/developer/diffs/diff-files/`:
