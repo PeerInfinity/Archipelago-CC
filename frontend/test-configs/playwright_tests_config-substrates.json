@@ -636,13 +636,13 @@
         {
             "id": "seedling-js-runtime-solver-walks-enemy-room",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S1. flashPanel.runtime = js + flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page handle teleports the real page into level 6 (⚖ Q2: no new preset) and the page's bot walks to the stairs (224, 32) past the bobs — the REAL solver (solveSegment with the session as prefix) plans a bait, the page plays it one key set per tick; the stairs crossing reported, 0 HALT, no refutation, no error: status. Fast batch, like the J1–J3 rows."
         },
         {
             "id": "seedling-js-runtime-solve-progress-view",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and the panel's Solver section open (PANEL LAYOUT: the section replaced the retired seedlingSolveProgressView setting), on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; the open section never hides it; the progress line reads the final state; closing the section hides the view and keeps it listening. seedling-js batch."
         },
         {
@@ -708,49 +708,49 @@
         {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S3. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports the real page into level 5 and walks to the teleporter (48, 112) behind the kill lock — the page boots on SCRATCH persistence (⚖ Q4), the solver's kill solves, the run writes the lock's clear itself and the crossing to level 6 is reported; the clear reported once as pendingCheck <seq>|5|0|0 (the game's Lock.turnOff), no AP location checked (no false check), 0 HALT."
         },
         {
             "id": "seedling-js-runtime-solver-steps-off-the-door",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S5. Runtime js + the solver mode ON on seedling_atlas: the vanilla L3 <-> L11 round trip — the solver breaks L3's rock and takes the door to 11, 11's only door lands the player INSIDE L3's door (latched), and the SOLVER steps off onto the rock's cell and walks back on (one step-off,walk plan; STEP-OFF RETIRE: the walker never steps off), the crossing to 11 is reported; 0 HALT, no decline."
         },
         {
             "id": "seedling-js-runtime-solver-budget-falls-back",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door under a 300 ms wall-clock BACKSTOP, the solve held in flight by the ROW (a wrapped page worker that starts and never answers — never the solve's speed) (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
         },
         {
             "id": "seedling-js-runtime-solver-stop-button",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "SOLVER LIMIT OFF (the user 2026-11-10: a manual stop button). Runtime js + the solver mode ON on seedling_atlas, both limits at their defaults: level 12's door, the solve held in flight by the ROW (a wrapped page worker that starts and never answers). The Flash panel's Solver-section Stop is disabled, then enabled while the solve runs; pressed, it terminates the worker and the goal FAILS BY NAME (\"the solve was stopped by the player …\"); the game steps again and Stop greys out; the next walk solves in a FRESH worker and is done."
         },
         {
             "id": "seedling-js-runtime-solver-limits-off",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "SOLVER LIMIT OFF (the user 2026-11-10: both limits off, in the panel). Runtime js + the solver mode ON on seedling_atlas: level 12's door → its exit solved at the defaults (js-runtime-L12-reach-exit, no pass row with a deadline); the Solver section's \"No work limit\" and \"Backstop off\" checkboxes write the settings and the page reads 0 / 0; the same walk from the same state solves with both off and finds the same plan (keys, verbs, pass, prefix, end). Un-ticked: 640 / 300 s again."
         },
         {
             "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (the solve that froze the S1 page). The solve runs in the worker, its real answer held to 800 ms by the ROW (a wrapped page worker — never the solve's speed): the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
         },
         {
             "id": "seedling-js-runtime-solver-falls-through-pit",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the sword granted through the AP item path (removed after), the page handle teleports to seedling_playthrough's level_30__r2c10 arrival; the bot walks to out_pit_3_34 (a PIT tile, no teleporter — the page used to refuse it) — the solver's reach-pit BREAKS the rock on the pit and falls to level 31; the walk completes on the fall, no pendingExit (the game writes none for a fall), 0 HALT."
         },
         {
             "id": "seedling-js-runtime-solver-opens-chest",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports to seedling_playthrough's level 17 arrival and the bot opens the chest (tag 0) through collect-placement (the chest verb); the clear reported once as pendingCheck <seq>|17|0|0, 0 HALT, no refutation."
         },
         {
@@ -1847,6 +1847,12 @@
             "_comment": "SEEDLING SET MAP (the user 2026-11-14: 'How do I open the map in the Seedling lab? Can you add a tutorial to the feature check list in the Tutorials panel?'). The walk row of feature check seedling-set-map: the Procgen Lab — Seedling tab; its Source drop-down set to EDIT; LOAD the VANILLA 116 (the rooms list holds the set's count, read off the page); map view ticked, a cell per room; fit; a click on a door-neighbour's cell (read off the page's map at run time) selects it. Manual batch feature-checks."
         },
         {
+            "id": "feature-check-content-theme-maze-look",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "CONTENT THEME MAZE LOOK (the user 2026-11-15: 'Can we set up a Feature Check in the Tutorials panel to load the scenario for me to see what this maze example currently looks like?'). The walk row of feature check content-theme-maze-look: meta_trial then the plain control concept_trial, each loaded, its first room's location and exit taken in the Text Adventure panel (read off its links), the Maze Room on the region that exit names (fog unticked), then the APWorld Editor's Map tab holding that document. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",
@@ -2240,7 +2246,7 @@
         {
             "id": "seedling-js-runtime-solver-cuts-rope-event",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "seedling-js-event-goals. Runtime js + the solver mode ON on seedling_playthrough: the sword granted, the page teleported to level_16__r1c1, and the Playback Bot asks for the L16 rope EVENT by name; the page walks the solver's clear-tag and completes on the game's flag {16,0} (persistence_cleared, one pendingCheck <seq>|16|0|0, the event collector's local check). Batch seedling-js."
         },
         {
@@ -2342,7 +2348,7 @@
         {
             "id": "seedling-js-runtime-solver-fights-bob-encounter",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling JS solver",
             "_comment": "seedling-js-encounter-legs. Runtime js + the solver mode ON on seedling_playthrough (the vanilla arm): sword + shield granted, the page teleported to L32 @ (72,120), and the Playback Bot asks for Level 032 - Bob Boss by name; the page walks the solver's encounter executor and completes on the Fire drop's report clear {32,4} (one pendingCheck <seq>|32|4|0; the location checked). Batch seedling-js."
         },
         {

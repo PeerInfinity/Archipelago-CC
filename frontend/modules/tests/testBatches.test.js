@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -52,6 +52,37 @@ describe('testBatches', () => {
         expect(categoryInBatch(nobody, 'bot-walks')).toBe(false);
     });
 
+    it('a row\'s config category equals its registration\'s (the runner filters on the registration)', () => {
+        // The in-app runner merges the config's `enabled`/`order`/`batch` onto the
+        // DISCOVERED test and keeps the registration's category (testLogic.js
+        // applyLoadedState); scripts/test/testWebgpu.js and this file read the
+        // config's. A category edited on one side only would put a row in a batch
+        // here and in another in the browser. Read off the source text: only a
+        // registerTest({ ... }) block with a literal id and category is compared
+        // (factory-built rows have neither), and every config row so matched.
+        const dir = join(REPO, 'frontend/modules/tests/testCases');
+        const registered = new Map();
+        for (const file of readdirSync(dir).filter((f) => f.endsWith('.js'))) {
+            const source = readFileSync(join(dir, file), 'utf8');
+            for (const block of source.split('registerTest({').slice(1)) {
+                const body = block.split('\n});')[0];
+                const id = /^\s+id: '([^']+)',/m.exec(body);
+                const category = /^\s+category: '([^']+)',/m.exec(body);
+                if (id && category) registered.set(id[1], category[1]);
+            }
+        }
+        const config = JSON.parse(readFileSync(
+            join(REPO, 'frontend/test-configs/playwright_tests_config-substrates.json'), 'utf8'));
+        const compared = config.tests.filter((t) => registered.has(t.id));
+        expect(compared.length).toBeGreaterThan(0);
+        expect(compared.filter((t) => t.category !== registered.get(t.id))
+            .map((t) => `${t.id}: config '${t.category}', registration '${registered.get(t.id)}'`)).toEqual([]);
+        // The moved rows are all literal registrations, so the pin covers them.
+        const solverRows = config.tests.filter((t) => t.category === 'Seedling JS solver');
+        expect(solverRows.length).toBeGreaterThan(0);
+        for (const t of solverRows) expect(registered.has(t.id), t.id).toBe(true);
+    });
+
     it('every enabled substrate row lands in exactly one batch', () => {
         const rows = substrateRows();
         expect(rows.length).toBeGreaterThan(0);
@@ -75,6 +106,27 @@ describe('testBatches', () => {
         expect(categoryInBatch('Seedling JS runtime', 'seedling-js')).toBe(true);
         expect(categoryInBatch('Seedling JS runtime', 'fast')).toBe(false);
         expect(listOnPushBatches()).toContain('seedling-js');
+    });
+
+    it('seedling-js-solver claims the Seedling JS solver rows, on push, no WebGPU (split from seedling-js, 2026-11-15)', () => {
+        expect(categoryInBatch('Seedling JS solver', 'seedling-js-solver')).toBe(true);
+        expect(categoryInBatch('Seedling JS solver', 'seedling-js')).toBe(false);
+        expect(categoryInBatch('Seedling JS solver', 'fast')).toBe(false);
+        expect(categoryInBatch('Seedling JS runtime', 'seedling-js-solver')).toBe(false);
+        expect(listOnPushBatches()).toContain('seedling-js-solver');
+        expect(batchNeedsWebgpu('seedling-js-solver')).toBe(false);
+    });
+
+    it('the two Seedling JS batches share no row, and each holds live rows of its own category only', () => {
+        const rows = substrateRows();
+        const js = rows.filter((r) => testInBatch(r, 'seedling-js')).map((r) => r.id);
+        const solver = rows.filter((r) => testInBatch(r, 'seedling-js-solver')).map((r) => r.id);
+        expect(js.length).toBeGreaterThan(0);
+        expect(solver.length).toBeGreaterThan(0);
+        expect(js.filter((id) => solver.includes(id))).toEqual([]);
+        const jsCategories = new Set(['Seedling JS runtime', 'Seedling JS solver']);
+        expect([...js, ...solver].sort())
+            .toEqual(rows.filter((r) => jsCategories.has(r.category)).map((r) => r.id).sort());
     });
 
     it('the Region Map: its Seedling rows in playback-bot (on push), its one classic-world smoke row in fast (js-19 e2)', () => {
@@ -161,7 +213,7 @@ describe('testBatches', () => {
         it('on push = every batch not marked manual, the default among them', () => {
             const manual = new Set(listManualBatches());
             expect(listOnPushBatches()).toEqual(listBatchNames().filter((b) => !manual.has(b)));
-            expect(listOnPushBatches()).toEqual(expect.arrayContaining(['fast', 'seedling-js', 'apworld']));
+            expect(listOnPushBatches()).toEqual(expect.arrayContaining(['fast', 'seedling-js', 'seedling-js-solver', 'apworld']));
             expect(listOnPushBatches()).toContain(getDefaultBatchName());
             for (const b of listManualBatches()) expect(listOnPushBatches()).not.toContain(b);
         });

@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 30,
-        "headings": 1320,
+        "headings": 1321,
         "indexHeadings": 2,
-        "lines": 36517,
+        "lines": 36543,
         "pages": 4,
-        "words": 552571
+        "words": 553148
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -126,7 +126,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-editor.md",
             "h1": "The Seedling Editor",
             "headings": 18,
-            "lines": 306,
+            "lines": 307,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -134,7 +134,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7710
+            "words": 7760
         },
         {
             "description": "The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0).",
@@ -144,7 +144,7 @@ export const DOCS_INDEX = frz({
             "lines": 63,
             "links": [],
             "path": "docs/json/developer/procgen/region-layout.md",
-            "words": 1033
+            "words": 1085
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
@@ -218,8 +218,8 @@ export const DOCS_INDEX = frz({
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
             "file": "maze.md",
             "h1": "Maze Substrate",
-            "headings": 31,
-            "lines": 488,
+            "headings": 32,
+            "lines": 513,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -231,7 +231,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 22253
+            "words": 22728
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",

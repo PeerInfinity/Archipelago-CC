@@ -462,6 +462,31 @@ Two payload facts hold for any hand-built or projected maze sidecar:
 | **`exit_id` equals `exitName`** | `createWorld` keys `world.exits` on `exit_id`, the panel publishes `user:regionMove` with `exitName`, and `procgenPlayer`'s region-move handler reads `exits.get(exitName).targetExitId` on the source world. If they differ the lookup misses silently and every arrival falls back to the entrance. (The flash family keys on `exitName ?? exit_id`.) |
 | **Semantics live in the overlays** | The tile grid is binary; anything conditional is an obstacle, item, consumable or mana tile on a floor tile, never a new tile value. |
 
+### The P3 timing pass: did an engine change slow a level down?
+
+A slice that moves the engine closure's md5 (`node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`) owes a **P3 pass**: the calib tier's full scripted certifier pass, timed per level at the slice tip and compared with a control (session tile-p3-probe, ⚖ "Reusable timing probe"). The calib file has one test per level, and vitest's JSON reporter times each one, so one run is a time per level. `scripts/procgen/probe-seedling-calib-levels.mjs` runs it and reads it (its pure half is `seedlingCalibLevels.js`). It takes no box lock: it runs on CI.
+
+**Run** each side as its own `seedling-probe.yml` job:
+- the slice tip, and a control: main at the slice's base. A probe that is on main needs no added file.
+- `gh workflow run seedling-probe.yml --ref <branch> -f probes=probe-seedling-calib-levels.mjs`. The workflow word-splits `args`, so an argument must not contain a space (run mode takes none).
+
+The job prints a `PASS:`/`FAIL:` row per level and per other test (the partition and the whole verdict), and one row for each of these:
+- every level the preset holds has exactly one test;
+- the heaviest test is inside `vitest.calib.config.js`'s `testTimeout`, read from the config;
+- the file is green.
+
+Then it prints `MEASURED:` lines: each level's ms, heaviest first, the wall clock, and the heaviest test's headroom. It writes `test-results/seedling-probe/calib-levels.json` (head SHA, limit, each level's ms and status) to the job's artifact.
+
+**Compare** locally; it runs nothing: `node scripts/procgen/probe-seedling-calib-levels.mjs --compare=<control run id> --tip=<tip run id>`.
+- A side is a seedling-probe run id, whose artifact `gh run download` fetches, or a path to a `calib-levels.json`.
+- `--moved=<level,level>` names the levels the slice says it moved.
+
+Per level, the ratio is tip ms over control ms, divided by the MEDIAN ratio of the reference levels. The reference levels are every level both runs timed, minus `--moved`, minus those under `FLOOR_MS` in the control. The median is the runner-speed correction: CI runners differ by a near-constant factor, often larger than the slowdown being looked for, and the median does not move with the few levels a slice slowed. It replaces the one-level yardstick the branch-only P3 probes timed, which moved whenever the slice moved that level.
+
+A level costing at least `FLOOR_MS` in the control whose normalised ratio is over `THRESHOLD` prints a `FLAG:` row by name. The verdict row passes when nothing is flagged; `--expect-flag=<level>` expects exactly that set, for a mutant. The comparison also prints the median, and the normalised band with and without the flagged levels.
+
+The two constants and their derivation from main-vs-main runs and a 2× mutant (run ids included) are in the probe's own comment, so no number is copied here. A slowdown smaller than the measured noise band, on one level, is invisible to one tip/control pair: run two of each rather than lower the threshold.
+
 ## Registry entry
 
 The maze entry implements the full procedural build-time contract (`generateRegionCore`, `placeFromItems`, `placeFromRules`, `extractPathsAndObstacles`, `serializeWorld`, `applyContentModules`), the region-library hooks (`captureLibraryEntry`, `instantiateLibraryEntry`) and the full loop-mode surface (queue actions, manual play, custom queues, record / playback / instant, `takeLastRecording`). Field detail and the capability matrix: [Substrate Registry Reference](./substrate-registry.md).

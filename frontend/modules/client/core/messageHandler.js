@@ -37,6 +37,7 @@ import {
 } from './localRulesOverlay.js';
 import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
+import { applyServerItemGroups, itemNameGroupsKey, readServerItemGroups } from './serverItemGroups.js';
 import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
 
 /** "gameKey/folder, …" for a few preset candidates (the console names them). */
@@ -73,6 +74,9 @@ const MODULE_NAME = 'client';
 const PRESET_LOAD_TIMEOUT_MS = 60_000;
 // How long a build from server data waits for the scouts' LocationInfo.
 const SCOUT_TIMEOUT_MS = 30_000;
+// How long a build waits for the server's item groups (a `Get` answer) before
+// it goes on with the rules' own (see _requestServerItemGroups).
+export const GROUPS_TIMEOUT_MS = 10_000;
 // Packets that change runtime state. While rules are being built from server
 // data they are held, then applied against the built rules.
 const HELD_DURING_BUILD = new Set(['ReceivedItems', 'RoomUpdate']);
@@ -280,6 +284,11 @@ export class MessageHandler {
 
       case 'LocationInfo':
         this._handleLocationInfo(command);
+        break;
+
+      case 'Retrieved':
+        this._handleRetrieved(command);
+        this.eventBus?.publish(`game:raw:${command.cmd}`, command);
         break;
 
       default:
@@ -1050,6 +1059,7 @@ export class MessageHandler {
       message = `Logged in; the server sent no ${build.game} rules, and none for this room are loaded.`;
     }
     this._printToConsole(message, 'info');
+    this._requestServerItemGroups(build, data);
     if (this.missingLocationIds.length + this.checkedLocationIds.length === 0) {
       // Nothing to scout: no LocationInfo will come.
       this.scoutedLocations = new Map();
@@ -1072,9 +1082,15 @@ export class MessageHandler {
   async _completeServerBuild(failure = null, { useLoaded = false } = {}) {
     const build = this._serverBuild;
     if (!build?.connected || build.completing) return;
+    if (!failure && !useLoaded && build.groups?.pending) {
+      // The scouts are in; the build goes on when the groups answer (or time out).
+      build.groups.readyBesidesGroups = true;
+      return;
+    }
     build.completing = true;
     clearTimeout(build.timer);
     build.timer = null;
+    clearTimeout(build.groups?.timer);
     const data = build.connected;
     let error = failure;
     if (!error && !useLoaded) {
@@ -1086,6 +1102,7 @@ export class MessageHandler {
           this._awaitLocalRules(build);
           return;
         }
+        this._applyServerItemGroups(build, data, rules);
         const playerName = this.slotInfo?.[String(data.slot)]?.name ?? this.clientSlotName;
         const sourceName = `server:${this.roomInfo?.seed_name ?? 'seedless'}:P${data.slot}`;
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
@@ -1225,9 +1242,82 @@ export class MessageHandler {
     });
   }
 
+  /**
+   * Ask the server for the slot's game's item groups (data storage
+   * `_read_item_name_groups_<game>`), to arrive with the scouts before the one
+   * loadRules. The build does not wait past GROUPS_TIMEOUT_MS: an old server, or
+   * one that never answers, leaves the rules' own groups (one console line).
+   */
+  _requestServerItemGroups(build, connected) {
+    const game = connected.slot_info?.[String(connected.slot)]?.game ?? build.game;
+    const key = itemNameGroupsKey(game);
+    build.groups = { key, game, pending: true, value: null, readyBesidesGroups: false, timer: null };
+    try {
+      connection.send([{ cmd: 'Get', keys: [key] }]);
+    } catch (e) {
+      log('warn', `[MessageHandler] Could not ask for ${key}: ${e.message}`);
+      this._settleServerItemGroups(build, null, `asking for them failed (${e.message})`);
+      return;
+    }
+    build.groups.timer = setTimeout(() => {
+      if (this._serverBuild !== build) return;
+      this._settleServerItemGroups(build, null, `no answer within ${GROUPS_TIMEOUT_MS / 1000} s`);
+    }, GROUPS_TIMEOUT_MS);
+  }
+
+  /** A Retrieved packet: the answer to _requestServerItemGroups, when it names our key. */
+  _handleRetrieved(data) {
+    const groups = this._serverBuild?.groups;
+    if (!groups?.pending || !Object.prototype.hasOwnProperty.call(data?.keys || {}, groups.key)) return;
+    const raw = data.keys[groups.key];
+    const value = readServerItemGroups(raw);
+    let why = null;
+    if (!value) why = raw === null || raw === undefined ? 'the server has no such key' : 'the answer was not a group table';
+    this._settleServerItemGroups(this._serverBuild, value, why);
+  }
+
+  _settleServerItemGroups(build, value, why = null) {
+    const groups = build?.groups;
+    if (!groups?.pending) return;
+    groups.pending = false;
+    clearTimeout(groups.timer);
+    groups.timer = null;
+    groups.value = value;
+    if (!value) {
+      const message = `The server did not send ${groups.game}'s item groups (${why}); using the rules' own.`;
+      log('warn', `[MessageHandler] ${message}`);
+      this._printToConsole(message, 'info');
+    }
+    if (groups.readyBesidesGroups && this._serverBuild === build) this._completeServerBuild();
+  }
+
+  /**
+   * The server's item groups into the rules about to load (in place): the
+   * server is the record when it answered. A disagreement with the file's (or
+   * the builder's) groups is one console line.
+   */
+  _applyServerItemGroups(build, connected, rules) {
+    const groups = build.groups;
+    if (!groups?.value) return;
+    const ownItemNames = Object.keys(this.dataPackage?.games?.[groups.game]?.item_name_to_id || {});
+    const { differences } = applyServerItemGroups(rules, connected.slot, groups.value, {
+      ownItemNames: ownItemNames.length > 0 ? ownItemNames : undefined,
+    });
+    if (differences.length === 0) {
+      log('info', `[MessageHandler] The server's ${groups.game} item groups match the rules' (${groups.value.size}).`);
+      return;
+    }
+    const message =
+      `The server's ${groups.game} item groups differ from the rules' (${differences.join('; ')}); ` +
+      "using the server's.";
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
+  }
+
   _cancelServerBuild() {
     if (!this._serverBuild) return;
     clearTimeout(this._serverBuild.timer);
+    clearTimeout(this._serverBuild.groups?.timer);
     this._serverBuild = null;
   }
 
