@@ -17,13 +17,15 @@ had to stay byte-identical, and did.
 | `f04a17a0ac` | the pixel/door instrument `scripts/dev/set-map-frame-dump.mjs` + the BEFORE dumps (`origin-dumps/before/`) |
 | `4a8471b1be` | the change, the four test edits, the doc + its regenerated index |
 | `8a98d19c76` | merge of origin/main `3757b3f421` (train tile-calib-split); conflicts only in the generated docs word counts, regenerated |
-| this commit | this report |
+| `0528b7ad2f` | this report (first version) |
+| `c85d7f5f67` | merge of origin/main `ee58a9d8db` (train 120: seedling-source-sync, content-fc1, sdc-embed-handwritten-rules); the same generated word-count conflicts, regenerated |
+| this commit | this report, updated for the second merge |
 
-- 0 gitlinks. `git diff --name-only origin/main..HEAD` = the 20 files above plus this report. Nothing under `frontend/presets/`,
+- 0 gitlinks. `git diff --name-only origin/main..HEAD` = the 20 files of the two code commits, plus this report. Nothing under `frontend/presets/`,
   any `atlases/`, `apworlds/` or `worlds/`.
 - Closure ∩ diff = ∅: none of `setMapLayout.js`, `regionLayout.js`, `seedlingSetMap.js`, `mazeSetMap.js`, `setEditorView.js`,
   `watchSetEditor.js` is in the js-gate closure list. `seedlingDerivedRuleTable.js --print-engine-closure` at `8a98d19c76` is
-  byte-identical to base (43 lines, sha256 `a458a51c…9202b`).
+  byte-identical to base at both merges, `8a98d19c76` and `c85d7f5f67` (43 lines, sha256 `a458a51c…9202b`).
 
 ## What changed
 
@@ -81,7 +83,7 @@ the demo maze pack bare / ring / chain+closing-connect / chain+reorder, and gene
 
 - BEFORE at base, committed: `CC/docs/region-map/origin-dumps/before/` (`index.json` holds each file's sha256). The dump is
   deterministic: two BEFORE runs gave identical output under `diff -r`.
-- AFTER at `4a8471b1be` and again after the merge: **`diff -r` empty, byte-identical, all 9.** That includes `moved` on the
+- AFTER at `4a8471b1be`, at `8a98d19c76` and at `c85d7f5f67`: **`diff -r` empty, byte-identical, all 9.** That includes `moved` on the
   reorder fixture (3), where a prev-vs-new comparison by index could have changed. It did not.
 - The lift pin carries a second, independent proof (below): the old digests, which hash frames at three zooms, shapes for four
   selections and 400 picks per zoom, still match once only the positions are translated back.
@@ -135,17 +137,28 @@ finished at 16:07:04, before the merge, on a clean `4a8471b1be`.
   `watchSetEditor` plus `regionMap/` (22 files):
   - BEFORE: 798/798.
   - AFTER, with `procgenDocs/` (30 files): 1294/1294.
-  - At the merge: 1295/1295.
+  - At each merge (`8a98d19c76`, `c85d7f5f67`): 1295/1295.
 - `check-procgen-docs.mjs`: ALL CHECKS PASSED. `generate-procgen-reference.mjs` regenerated the word counts only;
   `generate-docs-index.mjs --check` (quickLaunch) is current.
 - In-app at the merge `8a98d19c76`, port 8147:
   - `--batch=fast`: 101/101 PASSED, including the Region Map smoke row `region-map-classic-world`.
   - `--test=region-map-classic-world,region-map-seedling-paints,region-map-follow-player,region-map-discovery`: 4/4.
-- CI (JSUT/unittests push runs, TT, `feature-checks`, `playback-bot` at this report's tip): quoted in the packet to
-  seedling-js-planning-20, because this commit is the tip they run at.
+- CI before train 120's merge:
+  - JSUT push run 43778583462 at `8a98d19c76`: suite 28027/0, slow 437/0, success.
+  - Its CI-GATE rows equal main's train-119 run 43772803196 row for row: e1 69/0, e2 40/0, e3 35/0, lab-art 189/0, load-in-js
+    60/0. **No e3 expectation was re-recorded.**
+  - At `0528b7ad2f`:
+    - `unittests` 43779787888 success.
+    - TT (`train_only`) 43779795615 success.
+    - `feature-checks` 43779798181: 9/9, equal to train 118's 132970672383 row for row, `feature-check-seedling-set-map` PASSED.
+    - `test-templates.yml` 43785258375 success (fast, fast bundled, playback-bot, seedling-js, seedling-wasm, apworld, ALTTP).
+  - ⚠ A `test-substrates-manual.yml -f batch=playback-bot` dispatch (43779801139) fails at "Resolve the batch", because
+    playback-bot is an on-push batch. Its rows run through `test-templates.yml`.
+- CI at this report's tip (after train 120): quoted in the packet to seedling-js-planning-20, because this commit is the tip they
+  run at.
 
 ## Merge order (js-20 edit 4)
 
-lab-5's `seedling-source-sync` (train 120) was not on origin/main at `3757b3f421`. If it lands first, this branch merges origin/main
-again and re-dispatches `feature-checks` and `playback-bot` at that merge tip. I did not edit
-`tutorials/content/checks/seedlingSetMap.js`.
+lab-5's `seedling-source-sync` landed first (train 120, `ee58a9d8db`). This branch merged it (`c85d7f5f67`) and re-dispatched
+`feature-checks` (now 10 rows, with content-fc1's check) and the on-push batches (`test-templates.yml`, which carries playback-bot) at
+the tip. `tutorials/content/checks/seedlingSetMap.js` is byte-identical to origin/main's: I did not edit it.
