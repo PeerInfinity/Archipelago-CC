@@ -195,7 +195,9 @@ describe('fidelity CORRIDORFLIP D2 — the corridor forecast memoises its frozen
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_CORRIDOR_FORECAST_MEMO)(
         'ships ON (⚖ user 2026-11-12, the CORRIDORFLIP flip), appended last, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.corridorForecastMemo).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('corridorForecastMemo');
+            // ⛓ wave 45: WALLFLYERCORPSE `wallFlyerCorpseGone` appended after it.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf('corridorForecastMemo') + 1)).toEqual(['wallFlyerCorpseGone']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CORRIDOR_FORECAST_MEMO');
         });
 

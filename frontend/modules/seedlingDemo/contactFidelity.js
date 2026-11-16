@@ -2044,6 +2044,23 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1` for a node measurement.
      */
     corridorForecastMemo: true,
+    /**
+     * fidelity WALLFLYERCORPSE D2 (wave 45) — A WALLFLYER THE RUN NO LONGER HOLDS LIVE IS NOT PRICED AT ITS PLACEMENT.
+     * `dangerMap.staticEnemyDanger` priced every wallflyer at its `.oel` placement box for the whole visit, including
+     * one the run had killed (hammer WALLFLYER-GAPS §3: survey step 35, L22 → L29, the kill arm takes
+     * `wallflyer@48,112` at t134 and `wallflyer@64,80` at t311, and at t432 the dashless corridor meets the dead
+     * @64,80's placement at (81.0,96.7) and the ladder EXHAUSTS; the JS runtime's L22 → L29 refusal is the same ghost).
+     * The drills already skip a removed body (`liveDrill?.removed`); wallflyers had no equivalent. The game: a wallflyer
+     * touches the player only through `Enemy.hitPlayer`, gated `!destroy && currentAnim != "die" && hitsTimer <= 0`
+     * (`Enemies/Enemy.as:211-221`), called from `Enemy.update` only when `!destroy` (`:106-111`); `WallFlyer.startDeath`
+     * plays "die" (`Enemies/WallFlyer.as:47-51`) and the anim's `endAnim` sets `destroy` (`:99-110`); `Player.hit` has
+     * no other wallflyer caller. So a DYING body (the "die" anim on, then `destroy` while it fades) never hurts, and a
+     * removed one is not in the world. ON: a wallflyer whose id has no LIVE row in `run.entities('wallFlyerBodies')`
+     * (live = `!destroy && dieAnim === null`, the family's own reading) is skipped, when the family is an array. A LIVE
+     * flyer keeps its placement price (the WAIT arm has no other wallflyer price; D1(b) in the slice report).
+     * OFF: byte-identical. ⛔ OFF by default (⚖ user 2026-11-15, "OFF key, flip later"); `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`.
+     */
+    wallFlyerCorpseGone: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2447,6 +2464,9 @@ if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '0') CONTACT_FI
 // ⛓ fidelity CORRIDORFLIP D2: `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '1') CONTACT_FIDELITY.corridorForecastMemo = true;
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '0') CONTACT_FIDELITY.corridorForecastMemo = false;
+// ⛓ fidelity WALLFLYERCORPSE D2: `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '1') CONTACT_FIDELITY.wallFlyerCorpseGone = true;
+if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '0') CONTACT_FIDELITY.wallFlyerCorpseGone = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
