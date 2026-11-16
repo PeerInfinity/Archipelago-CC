@@ -101,7 +101,7 @@ function worldViews(w) {
     ];
 }
 
-const NOT_ON_THE_MAP = 'The composite map draws 4 of the maze\'s 14 tile kinds today: floor, wall, an open exit and the entrance. It does not draw the other 10: mana, the player, trap, the three block kinds (block, struck, dormant), button up and button down, pulser and pull.';
+const ON_THE_MAP = 'The composite map draws every tile kind the Maze Room draws, by the same fallback (the theme\'s art, else the kind\'s default look), except the player: the map shows a world\'s layout, not a game in play. These maze cells hold only floor, walls, exits and the entrance, so that is all of the tile kinds they show.';
 
 export const CHECK_CONTENT_THEME_MAZE = Object.freeze({
     id: 'content-theme-maze-look',
@@ -122,7 +122,7 @@ export const CHECK_CONTENT_THEME_MAZE = Object.freeze({
                 title: 'the meta theme\'s trial world',
                 content: ['meta'],
                 look: 'Every tile is drawn from the **meta** theme\'s art: the hatched walls, the pale floor, the exits and the entrance, and the player (the orange disc, at the entrance). The waves are the **Progressive Swim** pickup, drawn as the theme\'s swimmer. The speech bubble is the **Narrator**, a thing the theme put in the room: walk onto it to read its lines. The blue **~** square at the left edge is the **water gate**: it keeps the maze\'s own default look, because the theme does not present water. (The theme\'s **Gate** guards the sword exit you just took, in the text adventure room, so it is not in the maze.)',
-                map: `Both maze cells are drawn with the theme's art: the hatched walls, the pale floor and the open exits, the swim pickup as the swimmer, and a Narrator's speech bubble in each. The water gate and the **Victory** pickup keep the default look (the theme gives them no art). ${NOT_ON_THE_MAP}`,
+                map: `Both maze cells are drawn with the theme's art: the hatched walls, the pale floor and the open exits, the swim pickup as the swimmer, and a Narrator's speech bubble in each. The water gate and the **Victory** pickup keep the default look (the theme gives them no art). ${ON_THE_MAP}`,
             }),
         },
         {
@@ -134,7 +134,7 @@ export const CHECK_CONTENT_THEME_MAZE = Object.freeze({
                 title: 'the plain concept trial world (no theme)',
                 content: null,
                 look: 'The same region, drawn with the maze\'s default graphics: flat dark tiles, the player as a blue disc at the entrance, the swim pickup as a disc labelled with its item, the same water gate, and no Narrator (no theme, so no things).',
-                map: `The same two maze cells in the default graphics: flat colour fills, the swim pickup as its labelled disc, no Narrator. ${NOT_ON_THE_MAP}`,
+                map: `The same two maze cells in the default graphics: flat colour fills, the swim pickup as its labelled disc, no Narrator. ${ON_THE_MAP}`,
             }),
         },
     ],
