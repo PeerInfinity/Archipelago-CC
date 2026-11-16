@@ -236,4 +236,13 @@ No sandtrap or icetrap room is visited with the suit, so only the darktrap no-op
 
 ## CI addendum
 
-`JavaScript Unit Tests` push run 43962972746 at `31a9b3ed`: pending when this report was committed; the result is appended below when it lands.
+`JavaScript Unit Tests` push run 43962972746 at `31a9b3ed`: **failure, 1 of 28,182** (shards 1, 2 and slow green;
+shard 3 red: `scripts/procgen/seedlingConstantsCensus.test.js` › *(b) PREDICTED GREEN: a new literal inside a cosmetic
+table*). **It was mine.** My new `levelRun.js` code adds 5 structural literals (`ticksCompleted + 1` ×3,
+`persistTag >= 0`, `killedAt = ticksCompleted + 1`) that the committed census did not hold. `--check` passes green
+drift, so I missed it; the mutant row pins the exact green set, so it went red. Fix: `census-seedling-constants.mjs
+--write` (7119 → 7124 literals, structural only; `seedling-constants.md`'s region). The test is now green locally
+(24/24), `--check` PASS, and the reference `--check` matches. **Owed:** this branch's push run at the new head (read
+with `ci-vitest-summary.mjs <head>`), and the `train_only` dispatch named above. In Gates, read "constants census
+`--check` PASS" as *PASS after the `--write`*.
+
