@@ -151,30 +151,6 @@
         "classification": "progression",
         "type": null,
         "max_count": 1
-      },
-      "Left arrow": {
-        "name": "Left arrow",
-        "id": 2,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Blue platforms": {
-        "name": "Blue platforms",
-        "id": 4,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "Right arrow": {
-        "name": "Right arrow",
-        "id": 1,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
       }
     }
   },
