@@ -158,16 +158,17 @@ describe('the committed packs, backfilled (Z.7)', () => {
         for (const [where, note] of approvedNotes) expect(note, where).toMatch(/^content sets S[12] /);
     });
 
-    it('⛔ no committed world document carries per-entry provenance (Z.7): no source note, no model id', async () => {
+    it('⛔ no committed world document carries a PACK\'s provenance (Z.7): no pack source\'s note', async () => {
+        // A world looks its sources up through its packs. Only the packs' own records are needles: a model id is
+        // shared with sources that are not packs (the ActionNodes example world records its graph's block, which is
+        // not a pack yet; the planner ruled that honest until PL-2 makes the graph a structure layer).
         const needles = new Set();
         for (const p of await loadAll()) {
             for (const json of Object.values(p.layers)) {
-                for (const s of Object.values(json.provenance.sources)) {
-                    if (s.note) needles.add(s.note);
-                    if (s.type === 'model' && s.model !== 'unrecorded') needles.add(s.model);
-                }
+                for (const s of Object.values(json.provenance.sources)) if (s.note) needles.add(s.note);
             }
         }
+        expect(needles.size).toBeGreaterThan(0);
         const rules = execFileSync('git', ['-C', REPO, 'ls-files', '-z', 'frontend/presets/*_rules.json'], { encoding: 'utf8' })
             .split('\0').filter(Boolean);
         expect(rules.length).toBeGreaterThan(0);

@@ -7325,5 +7325,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "action_nodes_example": {
+    "name": "Action Nodes",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Action Nodes"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

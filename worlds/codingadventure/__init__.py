@@ -210,15 +210,21 @@ class CodingAdventureWorld(World):
         return CodingAdventureItem(name, data.classification, data.id, self.player)
     
     def generate_basic(self) -> None:
-        """Place Victory event at the Victory location."""
+        """Place the ID-bearing Victory item at the ID-bearing Production Deployment location,
+        locked on every seed: the player finishes by checking it, and the server sends
+        Victory back."""
         victory_location = self.multiworld.get_location("Production Deployment", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)
         if victory_location.item is None:
-            victory_item = CodingAdventureItem("Victory", item_table["Victory"].classification, None, self.player)
-            victory_location.place_locked_item(victory_item)
+            victory_location.place_locked_item(self.create_item("Victory"))
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
     
     def fill_slot_data(self) -> Dict[str, Any]:
-        return {}
+        return {
+            # The client reports the goal (StatusUpdate 30) once the server has delivered
+            # Victory (frontend/modules/client/core/goalCheck.js). A hand-written world
+            # opts in by declaring it; world_generator worlds are admitted by their marker.
+            "reports_goal_by_server_item": True,
+        }

@@ -11,7 +11,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
-import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID, WALK_TOLERANCE, nextWaypoint, stepOffPoint } from './jsRuntimeWalker.js';
+import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID, PRICED_DANGER, WALK_TOLERANCE, nextWaypoint, stepOffPoint } from './jsRuntimeWalker.js';
 import { drive, driveStepHeld, livePerVisitOpts, planTilePath, planWaypoints } from './botDriverV2.js';
 import { withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -227,6 +227,77 @@ describe('jsRuntimeWalker — an arrival inside a solid', () => {
             expect(w.state).toBe(WALK_STATES.WALKING);
             expect(events.some((e) => 'obstacle' in e)).toBe(false);
         }
+    });
+});
+
+/**
+ * ⛓ FALLBACK HONESTY (R1, ⚖ Robert 2026-11-15) — a decline whose refusal names a PRICED DANGER (`obstacle.kind`
+ * `'danger'`, the solver's own field) FAILS the goal at once, by the solver's reason, and never walks: the plain walk
+ * has no model of the danger and tanks it (measured at main 75e45c964d: the whole-game JS walk's L22 legs, 2 and 35
+ * hits). Every other decline walks instead and retries, as before. The refusal's WHOLE text reaches the status
+ * (`reason`, the FAILED message); only `describe()`'s one-line label shows its first line.
+ *
+ * MUTANTS (run during development, each row's catcher named):
+ *   f1 the PRICED_DANGER branch deleted                 -> 'a `danger` decline: FAILED …' reds (it walks)
+ *   f2 the branch matched on any obstacle               -> 'no obstacle, a budget or a `proximity-hazard` …' reds
+ *   f3 the solver's decline cut to its first line again -> jsRuntimeSolveService 'a refusal the worker answered …' reds
+ *   f4 describe() prints the reason unsplit             -> 'a multi-line refusal …' reds (the label spans lines)
+ */
+describe('jsRuntimeWalker — a decline that names a priced danger', () => {
+    const DANGER = { kind: 'danger', id: 'wallflyer@64,80', sources: ['enemy:wallflyer@64,80'] };
+    const LADDER = 'solverBot(x) reach-exit (192,64)->L29: the combat ladder is EXHAUSTED. The corridor passes through danger '
+        + 'at (81.0,96.7) — enemy:wallflyer@64,80 — and every rung of ⚖ §11.8a\'s order refused:\n  kill: no stance\n  bait: no lane';
+    const stubSolver = (answer) => ({ enabled: true, budgetWork: 0, keysFor: () => answer, cancel() {}, clear() {} });
+    const walkerWith = (answer, events) => createRuntimeWalker({
+        apItemOf: () => ({ rect: { x: 64, y: 16, right: 72, bottom: 24 } }), isCollected: () => false,
+        onEvent: (e) => events.push(e), solver: stubSolver(answer) });
+
+    it('a `danger` decline: FAILED on that tick by the solver\'s whole reason, the obstacle on the event, never a step', () => {
+        const events = [];
+        const w = walkerWith({ declined: LADDER, obstacle: DANGER }, events);
+        const { rt } = started();
+        w.setGoal(AP_GOAL);
+        w.play();
+        expect(w.heldFor(rt.run)).toBeNull();
+        expect(w.state).toBe(WALK_STATES.FAILED);
+        expect(w.reason).toBe(`the solver declined — ${LADDER}`);
+        expect(w.reason).not.toMatch(/walking instead/);
+        const failed = events.filter((e) => e.state === WALK_STATES.FAILED);
+        expect(failed).toHaveLength(1);
+        expect(failed[0].message).toContain('  bait: no lane');
+        expect(failed[0].obstacle).toEqual(DANGER);
+        expect(w.stats).toMatchObject({ driven: 0, walked: 0, plans: 0, retries: 0 });
+        expect(w.heldFor(rt.run)).toBeNull();
+        expect(PRICED_DANGER).toBe(DANGER.kind);
+    });
+
+    it('no obstacle, a budget or a `proximity-hazard` (measured: L20\'s no-corridor decline): walks instead, as before', () => {
+        for (const answer of [{ declined: 'the caller\'s anytime deadline (`shouldStop`) was reached' },
+            { declined: 'no corridor', obstacle: { kind: 'proximity-hazard', id: 'shieldlocknorm@176,16' } }]) {
+            const events = [];
+            const w = walkerWith(answer, events);
+            const { rt } = started();
+            w.setGoal(AP_GOAL);
+            w.play();
+            expect(w.heldFor(rt.run)).toBeInstanceOf(Set);
+            expect(w.state).toBe(WALK_STATES.WALKING);
+            expect(w.reason).toBe(`the solver declined — ${answer.declined}; walking instead`);
+            expect(w.stats.walked).toBe(1);
+        }
+    });
+
+    it('a multi-line refusal: the whole text in `reason`; `describe()` stays ONE line and names what it left out', () => {
+        const w = walkerWith({ declined: LADDER }, []);
+        const { rt } = started();
+        w.setGoal(AP_GOAL);
+        w.play();
+        w.heldFor(rt.run);
+        expect(w.state).toBe(WALK_STATES.WALKING);
+        expect(w.reason).toBe(`the solver declined — ${LADDER}; walking instead`);
+        expect(w.reason.split('\n')).toHaveLength(3);
+        const label = w.describe();
+        expect(label).not.toContain('\n');
+        expect(label).toContain('every rung of ⚖ §11.8a\'s order refused: (+2 more line(s))');
     });
 });
 

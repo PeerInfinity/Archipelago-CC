@@ -270,7 +270,9 @@ describe('MessageHandler: rules built from server data', () => {
     handler.processMessage({ cmd: 'RoomInfo', games: ['APQuest'], seed_name: SEED });
     await flush();
     expect(sent('Connect')[0]).toMatchObject({ game: 'APQuest' });
-    expect(handler._serverBuild).toBe(null);
+    // Not a build: with no rules that fit, the overlay path's wait for rules (sdc-no-preset-refusal).
+    expect(handler._serverBuild?.mode).toBe('overlay');
+    expect(handler._serverBuild?.local).toBe(null);
   });
 
   it('a picked Metamath in a multi-game room means build', async () => {

@@ -6,7 +6,7 @@ Regions are zones, connected in a linear chain.
 
 from BaseClasses import Entrance, MultiWorld, Region
 
-from .Locations import JTALocation, build_location_table
+from .Locations import JTALocation, VICTORY_LOCATION, VICTORY_LOCATION_ID, build_location_table
 from .game_data import get_zones_for_goal
 
 
@@ -32,11 +32,10 @@ def create_regions(multiworld: MultiWorld, player: int, goal_zone: int) -> None:
         location = JTALocation(player, loc_name, loc_data.location_id, region)
         region.locations.append(location)
 
-    # Add victory event location to the goal zone
+    # Add the ID-bearing goal location to the goal zone
     goal_zone_data = zones[-1]
     goal_region = zone_regions[goal_zone_data.id]
-    victory_loc = JTALocation(player, "Reach Goal Zone", None, goal_region)
-    victory_loc.event = True
+    victory_loc = JTALocation(player, VICTORY_LOCATION, VICTORY_LOCATION_ID, goal_region)
     goal_region.locations.append(victory_loc)
 
     # Connect Menu -> Zone 0

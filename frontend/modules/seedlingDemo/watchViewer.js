@@ -9077,12 +9077,49 @@ async function runEditor(params, lifetime) {
     /** ⛓ Which room of the SET the room session below was opened on, or null. */
     let openRoom = null;
     /**
+     * ⛓⛓⛓ **A HOST'S ROOM IS OPEN** — true from the moment `?room=` opens a room
+     * of the HELD HOST DOCUMENT (an Edit ▸ handover) until that room session ends.
+     *
+     * ⚖ THE RULE (slice seedling-load-vanilla-fix, ⚖ Robert 2026-11-15):
+     *   · WHILE IT IS OPEN the reader's LOAD doors REFUSE, by name. The owning
+     *     panel is waiting for this room's close, and the close it would see after
+     *     a new set (`openRoom = null`) would hand it THAT set as the room's save.
+     *   · ONCE IT CLOSES (or is discarded) the held host document is RELEASED.
+     *     The host has its record (the close's announce carries it); each Edit ▸
+     *     sends its document again. ⛔ Kept, it was re-taken on the next remount —
+     *     a SOURCE switch — and `validateLevelSet` refused it: its stamp predates
+     *     the folded close (an EDITED SET REUSING ITS ID), so the page lost the
+     *     set and said so in the LOAD box's words.
+     */
+    let hostRoomOpen = false;
+    /** ⛓ Is the host's room still open? Releases the held document once it is not. */
+    const hostRoomStillOpen = () => {
+        if (hostRoomOpen && openRoom === null) {
+            hostRoomOpen = false;
+            holdHostSetDocument(null);
+        }
+        return hostRoomOpen;
+    };
+    /** ⛔ The reader's LOAD doors, while a host's room is open: refused, with the sentence. */
+    const refuseWhileHostRoomOpen = () => {
+        if (!hostRoomStillOpen()) return false;
+        const why = `room ${openRoom} was HANDED OVER by another panel (its Edit ▸) and is still `
+            + 'OPEN — CLOSE the handed-over room first. Its edits go back to the panel that '
+            + 'opened it, and a document loaded now would replace them.';
+        $('editLoadNote').textContent = `⛔ REFUSED — ${why}`;
+        $('status').className = 'bad';
+        $('status').textContent = `the LOAD box was REFUSED — ${why}`;
+        return true;
+    };
+    /**
      * ⛓ EDITOR INTEGRATION W3 — a RETIRED arm reports nothing to the host.
      * ⛔ Registered here, beside the locals it is about, rather than beside the
      * install: trap 259's law is that a subscription's undo is written where
      * the subscription is, and this is the module-level handle's own undo.
      */
     lifetime.onRetire(() => installSetArmSnapshot(() => null));
+    // ⛓ A remount after the host's room closed must not re-take its document.
+    lifetime.onRetire(() => { hostRoomStillOpen(); });
     const adapter = createSeedlingEditAdapter({
         schema: null,
         levelSource: levelSourceFromAtlas(atlas),
@@ -9824,7 +9861,8 @@ async function runEditor(params, lifetime) {
      * makes an overlay a document that can arrive at all.
      */
     let heldOverlay = null;
-    const takeLevelSet = (set, overlay = null) => {
+    const takeLevelSet = (set, overlay = null, { fromHost = false } = {}) => {
+        if (!fromHost && refuseWhileHostRoomOpen()) return false;
         const v = validateLevelSet(set);
         if (!v.ok) {
             const why = `this JSON has \`rooms\`, so it is a LEVEL SET — and `
@@ -9850,6 +9888,8 @@ async function runEditor(params, lifetime) {
         setSession = createSetSession(setAdapter, record, { base });
         setRoomSource = setSessionRoomSource(setSession);
         openRoom = null;
+        // ⛓ A set the READER loaded is theirs: the host's document is not held for it.
+        if (!fromHost) holdHostSetDocument(null);
         /**
          * ⛓⛓ EDITOR INTEGRATION W3 — the host bridge's window onto this arm.
          * ⛔ A FUNCTION over the live locals, and it is re-installed on every
@@ -9920,8 +9960,11 @@ async function runEditor(params, lifetime) {
                  * restores what is on screen rather than what arrived. ⚠ Only
                  * while a host handed one over — a set the READER pasted is
                  * theirs and this page has never restored one across a switch.
+                 * ⛓ And only while the host's ROOM is open: its close RELEASES
+                 * the document (`hostRoomStillOpen`), so a later remount cannot
+                 * re-take a copy whose stamp predates the fold.
                  */
-                if (peekHostSetDocument()) {
+                if (hostRoomStillOpen() && peekHostSetDocument()) {
                     holdHostSetDocument({
                         set: setSession.record().set,
                         overlay: setSession.record().overlay,
@@ -9994,7 +10037,8 @@ async function runEditor(params, lifetime) {
      * happens once, at download (§20.6). Re-validating here read a correct
      * session as a broken document and silently kept the old overlay.
      */
-    const takeOverlay = (overlay) => {
+    const takeOverlay = (overlay, { fromHost = false } = {}) => {
+        if (!fromHost && refuseWhileHostRoomOpen()) return false;
         if (!setSession) {
             heldOverlay = overlay;
             setNote(`HELD an OVERLAY (${overlay.overlay_id ?? 'unstamped'}) with no set to `
@@ -10008,7 +10052,7 @@ async function runEditor(params, lifetime) {
                 + 'set (that writes the overlay too) or undo back to zero first.', true);
             return false;
         }
-        return takeLevelSet(setSession.record().set, overlay);
+        return takeLevelSet(setSession.record().set, overlay, { fromHost });
     };
 
     lifetime.on($('editSetOpen'), 'click', () => {
@@ -10159,6 +10203,7 @@ async function runEditor(params, lifetime) {
      * @returns {boolean} whether anything was taken
      */
     const intakeLoadText = (text) => {
+        if (refuseWhileHostRoomOpen()) return false;
         const got = sniffLoadBox(text);
         if (got.kind === null) {
             $('editLoadNote').textContent = `⛔ REFUSED — ${got.why}`;
@@ -10336,8 +10381,8 @@ async function runEditor(params, lifetime) {
      * silent.
      */
     const hostDoc = peekHostSetDocument();
-    if (hostDoc?.set) takeLevelSet(hostDoc.set, hostDoc.overlay ?? null);
-    else if (hostDoc?.overlay) takeOverlay(hostDoc.overlay);
+    if (hostDoc?.set) takeLevelSet(hostDoc.set, hostDoc.overlay ?? null, { fromHost: true });
+    else if (hostDoc?.overlay) takeOverlay(hostDoc.overlay, { fromHost: true });
 
     /**
      * ⛓⛓ **`?room=` OPENS ONE ROOM OF WHAT IS HELD**, through `openRoomAt` —
@@ -10362,7 +10407,7 @@ async function runEditor(params, lifetime) {
                 + `${setSession.record().set.rooms.length} room(s), numbered from 0. No room `
                 + 'was opened.', true);
         } else {
-            openRoomAt(params.room);
+            hostRoomOpen = openRoomAt(params.room) && Boolean(hostDoc?.set);
         }
         setUi?.render();
         render();

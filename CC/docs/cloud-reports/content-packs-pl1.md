@@ -469,7 +469,7 @@ How each pack was recorded:
 | The same probe: every committed `rules.json` whose driver is `sphere-growth` or `top-down-sphere`, through `rebuildEnvelopeFromRulesJson` → `serializeEnvelope`, md5 per player | 25 worlds, **0 differ** (8 refuse the rebuild, identically on both sides) |
 | `make-seedling-spiral-room-preset.mjs --state=concept-trial --check` / `--state=meta-trial --check` | both OK (a fresh build matches the committed preset) |
 | `seedlingDerivedRuleTable.js --print-engine-closure`, base export and tip | **identical**: `engineMd5 bec369878feb67081187edca62baa951 (42 files)`, and no file of the diff is in it |
-| `provenance.test.js` | no committed `rules.json` (all of them) contains any source note or model id |
+| `provenance.test.js` | no committed `rules.json` (all of them) contains any pack source's note (narrowed at the re-merge, see §8.9) |
 | `worldSettings.test.js` | the concept trial world with `exists` and `numbersMode: assign` equals the committed preset once those two `procgen_metadata[p]` keys are removed |
 | No preset file in the diff | `git diff --stat 75e45c964d -- frontend/presets` is empty |
 | `ci-producer-checks.mjs` (every `plan-seedling-*`, `regenerate-*-tapes` and `regenerate-*-presets` `--check`), at the tip | `PRODUCER-DONE | 99 run | 0 red | 1 skipped | 0 known-red`; `git status --porcelain` empty afterwards |
@@ -524,7 +524,7 @@ lines are the browser evidence; they are quoted at the exact tip in the report b
 - New:
   - `frontend/modules/contentPacks/provenance.test.js`: the block; each type's required fields; resolution; the
     loader refusal; every committed pack and layer resolving; the report's counts; model ids from trailers;
-    `approved` only on S1/S2; no provenance in any committed world; check 2.
+    `approved` only on S1/S2; no pack's provenance in any committed world; check 2.
   - `frontend/modules/packStructure/packStructure.test.js`: the fixture packs from disk; C1–C6; refusal by name; the
     words presenting structure; the words reading concepts only; numbers; bindings.
   - `frontend/modules/procgenPipeline/worldSettings.test.js`: the record, the read-back, Z8's two halves, the
@@ -532,7 +532,8 @@ lines are the browser evidence; they are quoted at the exact tip in the report b
 - Moved:
   - `packConcepts.test.js`: the kinds list, and `src` on the field-coverage fixture, plus new `presents` refusals;
   - `contentRoles.test.js`: the namespaced `presents` skip;
-  - `docLinks.test.js` and `docsRender.test.js`: census 421 → 422, one `same-doc` link;
+  - `docLinks.test.js` and `docsRender.test.js`: census +1, one `same-doc` link (421 → 422 on the base; 428 → 429
+    after the re-merge over AN-1, measured by test);
   - in-memory fixture stacks wrapped in `contentPacks/testing/fixtureProvenance.js` in `contentPacks`, `packConcepts`,
     `contentRoles`, `textLibrary`, `worldContent`, `regionJobContent`, `mazeConceptArt`, `mazeTileArt`,
     `mazeThingOverlay`, `mazeContent`, `mazeThings` and `textAdventureContent`.
@@ -562,8 +563,34 @@ lines are the browser evidence; they are quoted at the exact tip in the report b
 7. **Defects my own tests found:** the field-coverage pin found that no fixture stat used `modifies` (a fixture gap,
    fixed). The bounded run found three in-memory fixture stacks my first sweep missed (fixed in `c288bee3fe`). No
    code defect.
+8. **The TT dispatch found one more in-memory stack.** The first TT run (43758438254, at `f4dac5c018`) failed the
+   `fast` batch on both boots. The in-app row `maze-tile-art-from-pack-stack`
+   (`frontend/modules/tests/testCases/mazeTileArtTests.js`) builds a pack stack in memory, and the loader refused
+   it for having no provenance block. A bounded vitest run cannot see a browser row. Fixed in `4126a312ea` with the
+   same `withFixtureProvenance` wrapper. The re-dispatch was green.
+9. **The re-merge over AN-1 narrowed one test (planner ruling (a)).** The new `action_nodes_example` world records its
+   graph's provenance block under a top-level per-player `provenance[p].graph_provenance`, model ids included. My pin
+   "no committed world carries per-entry provenance" matched on the generic model id `claude-opus-5-5`. Z.7's rule
+   is marked (detail), and its reason is that a world looks its sources up through its packs. AN-1's graph is not a
+   pack yet, so the planner ruled the world-level block the honest record for now. The pin now covers what PL-1 owns:
+   no PACK source's note appears in any world. AN-1's files are untouched. The loader never sees that graph:
+   `frontend/modules/actionNodes/` imports nothing from `contentPacks`, and the graph lives in `actionNodes/graphs/`,
+   not in `frontend/packs/`.
+
+## Open items for PL-2
+
+1. **The ActionNodes world-level provenance block.** Once the ActionNodes graph becomes a pack's `structure`
+   layer, the world records pack ids, as every other world does, and its `provenance[p].graph_provenance` goes.
+2. **Two provenance validators have drifted.** `actionGraph.js`'s `validateProvenance` keeps its own copy of the
+   five types (`PROVENANCE_SOURCE_FIELDS`), and it accepts `session` on a source and `ruling` inside `approved`.
+   `contentPacks/provenance.js` refuses both. Measured: `parseProvenance` on `example-village.json`'s block refuses
+   `source "actionnodes-design": field "session" is not one a model source takes`, and it parses once those two
+   fields are removed. PL-2 makes ONE validator and decides those two fields.
 
 ## 9. Landing
 
-`actionnodes-an1` lands first. This branch re-merges main once after it lands, on the planner's word, and
-re-measures the doc-link census then. Gitlinks in the diff: 0.
+`actionnodes-an1` landed first (main `3757b3f421`, train 119). This branch merged origin/main once after that, on
+the planner's word. The doc-link census measures 429 by test: AN-1's 428 plus this slice's one `same-doc` link. The
+generated reference was regenerated over the merge, and `generate-procgen-reference.mjs --check` prints "ALL 7
+GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE". The merge brings no JS generator file and no `*.train` test.
+It does bring tile-calib-split's tier move, so `train_only` was re-dispatched anyway. Gitlinks in the diff: 0.

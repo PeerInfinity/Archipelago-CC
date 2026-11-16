@@ -20,6 +20,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Presets](./presets.md) — Loading pre-configured game files
 - [Progress Bar Panel](./progressBarPanel.md) — Progress bar UI host panel
 - [Region Graph](./regionGraph.md) — Interactive region connectivity visualization
+- [Region Map](./regionMap.md) — The world as a flat map of its rendered levels, with location squares
 - [Regions](./regions.md) — Game world organized by regions
 - [Settings](./settings.md) — Application settings
 - [Spoiler Checklist](./spoilerChecklist.md) — Sphere log progression checklist

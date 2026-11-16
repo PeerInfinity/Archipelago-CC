@@ -30,11 +30,23 @@
  *       from `"<theme>#<key>"`, and its cell shows the recipe's first mark; the water gate resolves no art.
  *   Pins of the recipes themselves (inside their box, states apart, every carried key through the seam) are in node:
  *   `mazeRoom/mazeMetaArt.test.js`.
+ *
+ * ⛓ CONTENT SETS TIDY-1 — a third row, the COMPOSITE MAP (`mazeRoom/mazeCompositeMap.js`), with no test seam:
+ *
+ *   meta-trial-composite-map-art — opens the committed `meta_trial` preset on the APWorld Editor's Map tab, whose
+ *   painter loads the stack the document records through the browser's own io, and reads the map canvas's `drawImage`
+ *   calls: a concept item the theme gives art, every thing whose pack concept names art, and the floor are drawn from
+ *   `"<theme>#<key>"`; the water gate resolves no art. Then the PLAIN control: `procgen_maze` seed 1 on the same tab —
+ *   its stack (the maze default pack alone) loads to no art, and its map canvas draws no image at all, as before.
+ *   The draw-op pins (plain worlds' ops captured before the seam; every committed default-stack world) are in node:
+ *   `mazeRoom/mazeCompositeArt.test.js`.
  */
 import { registerTest } from '../testRegistry.js';
 import { getPanelInstance } from '../../mazeRoom/index.js';
 import { COLORS, TILE_PX } from '../../mazeRoom/mazeRoomRender.js';
 import { MAZE_ART_KEYS } from '../../mazeRoom/mazeTileArt.js';
+import { mazeCompositeArtStatus, mazeCompositeStackOf, mazeCompositeTileArt } from '../../mazeRoom/mazeCompositeMap.js';
+import { compositeMapIdOf } from '../../procgenCore/compositeMapRenderer.js';
 import { browserRasteriser } from '../../artLibrary/artLibrary.js';
 import { browserPackIo } from '../../procgenPipeline/worldContent.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
@@ -355,6 +367,147 @@ registerTest({
         + 'maze default pack\'s water in name, colour, symbol and pixel (R5: and a concept item the theme gives art is drawn from '
         + 'its "<theme>#<key>" sheet, while the water gate resolves no art).',
     testFunction: metaTrialMazeTileArt,
+    category: 'Maze tile art',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── ⛓ TIDY-1 — the composite map ────────────────────────────────────────────────────────────────────────────────
+const PLAIN_PRESET = PRESET;
+const HUB_PANEL_ID = 'apworldEditorPanel';
+const HUB_SELECTOR = '.apworld-editor-panel';
+const MAP_CANVAS = `${HUB_SELECTOR} .apworld-map-canvas`;
+
+/** Open `path` on the APWorld Editor's Map tab; → `{ panel, result }` once the hub holds THAT document (`same`). */
+async function openHubMap(testController, path, same) {
+    await testController.loadRulesFromFile(path);
+    await testController.stateManager.pingWorker('after-rules-load', 8000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: HUB_PANEL_ID });
+    const panel = await testController.pollForValue(() => {
+        const p = document.querySelector(HUB_SELECTOR)?.__panel;
+        return p?.rulesDoc && same(p.rulesDoc) ? p : null;
+    }, `the APWorld editor holds ${path}`, 15000, 50);
+    testController.reportCondition(`identity: the APWorld editor holds ${path}`, !!panel);
+    if (!panel) return null;
+    panel._selectTab('map');
+    const canvas = await testController.pollForValue(() => document.querySelector(MAP_CANVAS), 'the Map tab\'s canvas', 8000, 50);
+    testController.reportCondition('the Map tab draws a canvas', !!canvas);
+    const result = canvas ? panel._mapResult() : null;
+    return result ? { panel, result } : null;
+}
+
+/** The stack a map's maze cells load, and its load once settled. */
+async function mazeCellStack(testController, panel, result) {
+    const region = result.grid.allRegions().find((r) => compositeMapIdOf(r) === 'maze' && r.playable_payload);
+    testController.reportCondition('⛓ premise: the map holds a maze cell', !!region);
+    if (!region) return null;
+    const stack = mazeCompositeStackOf(region, { rules: panel.rulesDoc, playerId: result.playerId });
+    const status = await testController.pollForValue(() => {
+        const st = mazeCompositeArtStatus(stack);
+        return (st.status === 'ready' || st.status === 'failed') ? st : null;
+    }, `the composite map's maze art loaded (${stack.join(', ')})`, 15000, 100);
+    testController.log(`composite maze art: ${JSON.stringify(status)}`);
+    return { region, stack, status };
+}
+
+async function metaTrialCompositeMapArt(testController) {
+    const doc = await (await fetch(META_TRIAL_PRESET, { cache: 'no-store' })).json();
+    const slot = Object.keys(doc.procgen_metadata ?? {})[0] ?? null;
+    const theme = doc.procgen_metadata?.[slot]?.content?.[0] ?? null;
+    testController.reportCondition(`⛓ premise: ${META_TRIAL_PRESET} records a content set for player ${slot} (${theme})`, !!theme);
+    if (!theme) return testController.getOverallResult();
+    const themePack = await readPack(theme);
+    const shapes = themePack.art?.shapes ?? {};
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+
+    // Every blit on a map canvas, by the image drawn (the composite load's sheets are named by identity below).
+    const realDrawImage = CanvasRenderingContext2D.prototype.drawImage;
+    const blits = [];
+    CanvasRenderingContext2D.prototype.drawImage = function drawImageSpy(img, ...rest) {
+        if (this.canvas?.classList?.contains('apworld-map-canvas')) blits.push({ canvas: this.canvas, img });
+        return realDrawImage.call(this, img, ...rest);
+    };
+    try {
+        // ⛔ IDENTITY (trap 1302): concept_trial has the same maze payloads; the recorded content tells them apart.
+        const themed = await openHubMap(testController, META_TRIAL_PRESET,
+            (d) => d.procgen_metadata?.[slot]?.content?.includes(theme));
+        if (!themed) return testController.getOverallResult();
+        const cell = await mazeCellStack(testController, themed.panel, themed.result);
+        if (!cell) return testController.getOverallResult();
+        testController.reportCondition(`the composite map's maze stack ends with the document's theme "${theme}"`, cell.stack.at(-1) === theme);
+        testController.reportCondition('the composite map\'s maze art loaded', cell.status.status === 'ready' && cell.status.failedSheets === 0);
+        const tileArt = mazeCompositeTileArt(cell.stack);
+        testController.reportCondition('the load brought art', !!tileArt);
+        if (!tileArt) return testController.getOverallResult();
+        const sheetOf = new Map([...tileArt.images].map(([ref, img]) => [img, ref]));
+
+        // What must be drawn from the theme, read off the data: concept items the theme gives art, things whose pack
+        // concept names art, the floor.
+        const worlds = themed.result.grid.allRegions().filter((r) => compositeMapIdOf(r) === 'maze').map((r) => r.playable_payload);
+        // ⚠ an item row with no `concept` must not match a pack concept that presents nothing (a character)
+        const themeArtOf = (mechanic) => (mechanic
+            ? Object.values(themePack.concepts).find((c) => c.presents === mechanic && c.art)?.art ?? null : null);
+        const itemKeys = [...new Set(worlds.flatMap((w) => [...w.items.values()].map((id) => themeArtOf(w.itemLib?.[id]?.concept))))].filter(Boolean);
+        const things = worlds.flatMap((w) => w.things ?? []);
+        const thingKeys = [...new Set(things.map((t) => themePack.concepts[t.concept]?.art).filter(Boolean))];
+        testController.reportCondition(`⛓ premise: the world holds a concept item the "${theme}" theme gives art (${itemKeys.join(', ')})`, itemKeys.length > 0);
+        testController.reportCondition(`⛓ premise: the world holds a thing whose pack concept names art (${thingKeys.join(', ')})`, thingKeys.length > 0);
+        for (const key of itemKeys) {
+            testController.reportCondition(`the item art resolves to the theme's key ${key}`,
+                Object.values(cell.status.conceptArt.item ?? {}).some((e) => e.key === key && e.pack === theme));
+        }
+        testController.reportCondition(`the water gate has no concept art (the "${theme}" theme presents no water)`,
+            !cell.status.conceptArt.gate?.water);
+
+        const wanted = [...itemKeys, ...thingKeys, MAZE_ART_KEYS.floor.key].filter((k) => k in shapes).map((k) => `${theme}#${k}`);
+        const drawnRefs = () => {
+            const live = document.querySelector(MAP_CANVAS);
+            return new Set(blits.filter((b) => b.canvas === live).map((b) => sheetOf.get(b.img)).filter(Boolean));
+        };
+        const drawn = await testController.pollForValue(() => {
+            const d = drawnRefs();
+            return wanted.every((ref) => d.has(ref)) ? d : null;
+        }, 'the map canvas was repainted from the theme\'s sheets', 10000, 100) ?? drawnRefs();
+        testController.log(`sheets drawn on the map: ${JSON.stringify([...drawn].sort())}`);
+        for (const ref of wanted) testController.reportCondition(`the composite map drew ${ref}`, drawn.has(ref));
+
+        // ⛔ THE PLAIN CONTROL: procgen_maze seed 1 — its stack is the maze default pack alone, which has no art.
+        blits.length = 0;
+        const plain = await openHubMap(testController, PLAIN_PRESET,
+            (d) => !Object.values(d.procgen_metadata ?? {}).some((m) => (m?.content ?? []).length) && !!d.preset_sidecars);
+        if (!plain) return testController.getOverallResult();
+        const plainCell = await mazeCellStack(testController, plain.panel, plain.result);
+        if (!plainCell) return testController.getOverallResult();
+        const mazePackId = substrateRegistry.get('maze')?.defaultContentPack ?? null;
+        testController.assertEqual('the plain world\'s stack is the maze default pack alone',
+            JSON.stringify([mazePackId]), JSON.stringify(plainCell.stack));
+        testController.reportCondition('the plain world\'s load brought no art (it draws as before)',
+            plainCell.status.status === 'ready' && mazeCompositeTileArt(plainCell.stack) === null);
+        plain.panel._selectTab('map');
+        await testController.pollForValue(() => document.querySelector(MAP_CANVAS), 'the plain map canvas', 8000, 50);
+        const live = document.querySelector(MAP_CANVAS);
+        testController.assertEqual('the plain world\'s map canvas draws no image', '0',
+            String(blits.filter((b) => b.canvas === live).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('composite-map art row error-free', false);
+    } finally {
+        CanvasRenderingContext2D.prototype.drawImage = realDrawImage;
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'meta-trial-composite-map-art',
+    name: 'Meta theme trial: the composite map draws the theme\'s items, things and tiles; a plain world draws as before',
+    description: 'Opens the committed meta_trial preset on the APWorld Editor\'s Map tab (content sets TIDY-1): the maze '
+        + 'cell painter loads the stack the document records and repaints; a concept item the theme gives art, every '
+        + 'thing whose pack concept names art, and the floor are drawn from "<theme>#<key>" sheets, while the water gate '
+        + 'resolves no art. Then procgen_maze seed 1: its stack is the maze default pack alone, it loads to no art, and its '
+        + 'map canvas draws no image.',
+    testFunction: metaTrialCompositeMapArt,
     category: 'Maze tile art',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

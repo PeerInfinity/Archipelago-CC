@@ -104,6 +104,10 @@
       "path": "./modules/regionGraph/index.js",
       "enabled": true
     },
+    "regionMap": {
+      "path": "./modules/regionMap/index.js",
+      "enabled": true
+    },
     "discovery": {
       "path": "./modules/discovery/index.js",
       "enabled": true
@@ -352,6 +356,7 @@
     "helpers",
     "dungeons",
     "regionGraph",
+    "regionMap",
     "discovery",
     "discoveryPanel",
     "gameState",
