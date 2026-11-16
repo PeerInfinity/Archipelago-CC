@@ -594,3 +594,5 @@ the planner's word. The doc-link census measures 429 by test: AN-1's 428 plus th
 generated reference was regenerated over the merge, and `generate-procgen-reference.mjs --check` prints "ALL 7
 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE". The merge brings no JS generator file and no `*.train` test.
 It does bring tile-calib-split's tier move, so `train_only` was re-dispatched anyway. Gitlinks in the diff: 0.
+A second merge of origin/main (`ee58a9d8db`, train 120, after seedling-source-sync `206e482ad7`) conflicted only in
+the generated docs index, so the README's word count and `docsIndex.js` were regenerated (`--check` OK). The census still measures 429.

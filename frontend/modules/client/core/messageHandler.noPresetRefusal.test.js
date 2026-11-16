@@ -54,6 +54,7 @@ import messageHandlerSingleton, {
   rulesNeededMessage,
   handleUserLocationCheckForClient,
 } from './messageHandler.js';
+import { goalMet } from './goalCheck.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FRONTEND = join(HERE, '..', '..', '..');
@@ -317,6 +318,71 @@ describe('MessageHandler: no preset for this room (sdc-no-preset-refusal)', () =
     expect(handler._serverBuild?.game).toBe('APCalc');
     expect(handler._serverBuild?.mode).toBeUndefined();
     expect(text().some((m) => m.includes("building APCalc rules from the server's data"))).toBe(true);
+  });
+
+  // sdc-embed-handwritten-rules (⚖ Robert 2026-11-15, "Embed their rules"): Baking and Coding send their
+  // own rules document (worlds/<w>/_embedded_rules.json, the envelope fill_slot_data sends). The room plays
+  // with it: one load of the server's document with the room's placements, and the goal rule holds on it.
+  describe.each([
+    ['Baking at slot 1', { slot: 1, game: BAKING, name: 'Baker', dir: 'bakingadventure', goal: 'Cool on Wire Rack' }],
+    ['Coding at slot 2', { slot: 2, game: CODING, name: 'Coder', dir: 'codingadventure', goal: 'Production Deployment' }],
+    ['Baking vanilla at slot 2', { slot: 2, game: BAKING, name: 'BakerV', dir: 'bakingadventure', goal: 'Cool on Wire Rack', vanilla: 1 }],
+  ])("%s: the world's embedded rules, sent by the server", (_label, opts) => {
+    it("are loaded with the room's placements and slot_data, and the goal is met only by Victory", async () => {
+      const envelope = JSON.parse(readFileSync(join(FRONTEND, '..', 'worlds', opts.dir, '_embedded_rules.json'), 'utf8'));
+      const doc = envelope.doc;
+      const locations = Object.values(doc.regions['1']).flatMap((region) => region.locations);
+      const itemNameToId = Object.fromEntries(Object.values(doc.items['1']).map((item) => [item.name, item.id]));
+      const pool = Object.keys(itemNameToId).filter((name) => name !== 'Victory');
+      const r = room({
+        slot: opts.slot,
+        game: opts.game,
+        name: opts.name,
+        slotData: {
+          ...(opts.game === BAKING ? { vanilla_placement: opts.vanilla ?? 0 } : {}),
+          reports_goal_by_server_item: true,
+          worldgen_rules: envelope,
+        },
+      });
+      r.dataPackage.games[opts.game] = {
+        item_name_to_id: itemNameToId,
+        location_name_to_id: Object.fromEntries(locations.map((loc) => [loc.name, loc.id])),
+      };
+      r.connected.missing_locations = locations.map((loc) => loc.id);
+      r.locationInfo.locations = locations.map((loc, i) => ({
+        item: itemNameToId[loc.name === opts.goal ? 'Victory' : pool[i % pool.length]],
+        location: loc.id,
+        player: opts.slot,
+        flags: 1,
+      }));
+      await play(r, { chosen: opts.game, name: opts.name });
+
+      expect(loads()).toHaveLength(1);
+      const loaded = loads()[0].data;
+      expect(loaded.sourceName).toBe(`server:${ROOM_SEED}:P${opts.slot}`);
+      expect(String(loaded.selectedPlayerId)).toBe(String(opts.slot));
+      const s = String(opts.slot);
+      const placed = Object.values(loaded.jsonData.regions[s]).flatMap((region) => region.locations);
+      expect(placed).toHaveLength(locations.length);
+      expect(placed.every((loc) => loc.item?.name)).toBe(true);
+      expect(placed.find((loc) => loc.name === opts.goal).item.name).toBe('Victory');
+      // The world's own slot_data, without the document it carried.
+      expect(loaded.jsonData.world[s].slot_data.worldgen_rules).toBeUndefined();
+      expect(loaded.jsonData.world[s].slot_data.reports_goal_by_server_item).toBe(true);
+      if (opts.game === BAKING) expect(loaded.jsonData.world[s].options.vanilla_placement).toBe(opts.vanilla ?? 0);
+      expect(handler.getAwaitedRulesGame()).toBe(null);
+      expect(sent('LocationChecks')).toEqual([]);
+      expect(text()).toContain(
+        `Loaded the server-sent ${opts.game} rules with the server's placements ` +
+          `(${locations.length} locations, room seed ${ROOM_SEED}).`
+      );
+      expect(text().some((m) => m.startsWith('Not using the rules the server sent'))).toBe(false);
+
+      // The goal: not met with no items, met once the server delivered Victory (goalCheck.goalMet).
+      expect(goalMet(loaded.jsonData, opts.slot, opts.game, new Map())).toBe(false);
+      expect(goalMet(loaded.jsonData, opts.slot, opts.game, new Map(pool.map((name) => [name, 1])))).toBe(false);
+      expect(goalMet(loaded.jsonData, opts.slot, opts.game, new Map([['Victory', 1]]))).toBe(true);
+    });
   });
 
   describe("the game's preset of another seed is loaded", () => {
