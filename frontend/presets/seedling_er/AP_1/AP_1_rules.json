@@ -15077,7 +15077,8 @@
         "l29-fallrock-removed",
         "l29-button-removed",
         "l32-bossrock-moved",
-        "l43-fallrock-removed"
+        "l43-fallrock-removed",
+        "l73-lavarunner-moved"
       ],
       "pit_chains": "frontend/modules/seedlingDemo/fidelityDescent.js censusFallsOntoDoors",
       "semantics": "frontend/modules/flashPanel/seedlingSemantics.js",

@@ -123,6 +123,24 @@
  *      Activators), so nothing falls there either way. Game witness:
  *      `probe-seedling-l39-pulser.mjs` (its `l43-*` tapes).
  *
+ * ⚖ The user (2026-11-16, RULES rules-fire-only-witness's L73 south finding): fix the arrival by CHANGING
+ * THE LEVEL DATA — move the enemy so it does not hit the player on entry ("Census + move patch, then Fire
+ * fix"):
+ *
+ *  11. `l73-lavarunner-moved` — L73 (`Dungeon7/2`) has its `lavarunner@72,24` moved to (32,24), 40 px due
+ *      west, from the pocket floor (Igneous Stone r1c4) into the lava behind the Dark Stone at r1c3 (a
+ *      LavaRunner holds lava: `LavaRunner.as` `dieInLava = false`, it swims at 1). At (72,24) its 12×12 box
+ *      (centre 80,32) touched the L74 door's landing box (centre 72,24) at the boot: the game hit every
+ *      arrival at t2, on every input and with every arm, and the knockback threw the player back through
+ *      the door at t6, so `level_74 → level_73__r0c4`, priced free, was never hit-free. Every placement on
+ *      the pocket floor still reaches an idle arrival (the pocket is inside the runner's 80 px leash), so the
+ *      runner has to leave the floor; (32,24) is the smallest such move (40 px, tied with two others that
+ *      jam over the L74 door or chase the L72 arrival). Behind r1c3 it parks while the player stands in the
+ *      pocket's top row and comes round through r2c2 when the player goes down to the rock, so it still
+ *      guards the crossing (the Sword plan of `r3c7 → r0c4` is the vanilla room's, 166 ticks).
+ *      Measured: `rules-landing-contact-census` (the cloud reports), the census probe
+ *      `probe-seedling-landing-contact.mjs`.
+ *
  * ── ⛔ WHERE THIS APPLIES, AND WHERE IT DOES NOT ─────────────────────────────
  *
  * ONE caller: `levelSetExporter.vanillaRecordSet`, the single source of the
@@ -171,6 +189,7 @@ export const SET_PATCH_IDS = Object.freeze({
     l29ButtonRemoved: 'l29-button-removed',
     l32BossrockMoved: 'l32-bossrock-moved',
     l43FallrockRemoved: 'l43-fallrock-removed',
+    l73LavarunnerMoved: 'l73-lavarunner-moved',
 });
 
 /**
@@ -268,6 +287,23 @@ export const PATCH_L43_FALLROCK_REMOVED = removeRow(SET_PATCH_IDS.l43FallrockRem
     + 'Wand sealed the arena, losing the Totem of Lacste and the L37 link. With no rock the doorway stays open, as '
     + 'the rules price it; the two pocket rocks (orbs only) stay');
 
+/**
+ * ⚖ 2026-11-16 (header, edit 11): L73's lavarunner moves 40 px west, off the L74 door's landing, into the lava
+ * behind r1c3. At (72,24) its box [74,86)×[26,38) touched the landing's [70,74)×[22,27); at (32,24) it is
+ * [34,46)×[26,38), with the Dark Stone r1c3 [48,64)×[16,32) between.
+ */
+export const PATCH_L73_LAVARUNNER_MOVED = Object.freeze({
+    id: SET_PATCH_IDS.l73LavarunnerMoved,
+    level: 73,
+    op: 'move',
+    match: Object.freeze({ type: 'lavarunner', x: 72, y: 24, attrs: Object.freeze({}) }),
+    to: Object.freeze({ x: 32, y: 24 }),
+    why: 'its contact box touched the L74 door\'s landing at the boot, so the game hit every arrival at t2 on every '
+        + 'input and with every arm, and the knockback threw the player back through the door at t6: '
+        + '`level_74 → level_73__r0c4`, priced free, was never hit-free (⚖ 2026-11-16: move the enemy). In the lava '
+        + 'behind the Dark Stone r1c3 it no longer reaches the arrival, and it still guards the rock crossing',
+});
+
 /** L110's control, repointed so its pit's fall arrives at L2 (`x`, `y`) — `xOff`/`yOff` solved from (64,64). */
 const l110RepointTo = (id, x, y, why) => Object.freeze({
     id,
@@ -289,7 +325,7 @@ export const PATCH_L110_FALL_OFF_STAIRS = l110RepointTo(SET_PATCH_IDS.l110FallOf
     + 'fall-from-ceiling descent does not cross L2\'s `stairsup@48,16`');
 
 /**
- * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3, 4–8, 9 and 10: edit 2 is STOPPED (the
+ * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3, 4–8, 9, 10 and 11: edit 2 is STOPPED (the
  * header above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand
  * ready for the user's choice.
  */
@@ -299,6 +335,7 @@ export const SEEDLING_SET_PATCHES = Object.freeze([
     ...ROCKMOVE_REMOVE_BUNDLE,
     PATCH_L32_BOSSROCK_MOVED,
     PATCH_L43_FALLROCK_REMOVED,
+    PATCH_L73_LAVARUNNER_MOVED,
 ]);
 
 const sameAttrs = (have, want) => Object.entries(want)

@@ -49,7 +49,8 @@ describe('the oracle is a recording of THIS delivery', () => {
         // eb8cc643 → ce77a823: the table gained the ROCKMOVE bundle (rules rock-remove; the game rows re-recorded identical)
         // ce77a823 → f5bdb07d: the table gained the L32 move (rules l32-rock-move; re-recorded on the game)
         // f5bdb07d → 5aeefc3c: the table gained L43's doorway rock (rules rules-l39; re-recorded on p4g, only the ids moved)
-        expect(ORACLE.delivered_set_id).toBe('seedling-vanilla-record-5aeefc3c');
+        // 5aeefc3c → 23510f80: the table gained L73's runner move (rules rules-landing-contact-census; re-recorded on p4g)
+        expect(ORACLE.delivered_set_id).toBe('seedling-vanilla-record-23510f80');
         for (const [world, id] of Object.entries(ORACLE.variant_set_ids)) {
             const v = world === 'delivered' ? 'table' : world.slice('delivered:'.length);
             expect(deliveredMoonrockSet(ROOT, v).set.set_id, world).toBe(id);
