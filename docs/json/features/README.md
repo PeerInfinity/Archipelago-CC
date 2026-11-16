@@ -13,6 +13,7 @@ An overview of the major features in the Archipelago JSON Export Tools project.
 | **JSON Tools Installer** | APWorld package for installing JSON Tools into a vanilla Archipelago installation — no repository clone needed | [worlds/json_tools_installer/README.md](../../../worlds/json_tools_installer/README.md) |
 | **Skip Required Files** | Generate seeds without ROM files for testing, CI/CD, and tool development | [skip-required-files.md](skip-required-files.md) |
 | **Spoiler Export Hook** | Optional apworld: supporting worlds send their sphere order in the room's slot data, so Loop mode and the region views work with no spoiler file | [spoiler-export-hook.md](spoiler-export-hook.md) |
+| **Upstream Rules Add-on** | Optional apworld for hosts: every slot of a room carries its rules document in slot data, so the web client plays upstream games (TUNIC, SC2, ALttP, …) with no preset file | [upstream-rules-addon.md](upstream-rules-addon.md) |
 
 ## World Generation & Tracking
 
