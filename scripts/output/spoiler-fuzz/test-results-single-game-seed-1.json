@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "created": "2026-11-16T03:47:46.143686+00:00",
+    "last_updated": "2026-11-16T03:47:58.733558+00:00",
+    "script_version": "1.1.0",
+    "test_type": "spoiler_fuzz",
+    "seed_mode": "fixed",
+    "starting_seed": 1,
+    "runs_per_game": 1,
+    "generation_timeout": 300,
+    "test_timeout": 120,
+    "total_templates": 1
+  },
+  "results": {
+    "Secret of Evermore.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 1,
+        "success": 1,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Secret of Evermore",
+        "world_directory": "soe"
+      },
+      "timestamp": "2026-11-16T03:47:58.733529+00:00"
+    }
+  }
+}
