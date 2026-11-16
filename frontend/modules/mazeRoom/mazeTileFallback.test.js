@@ -8,11 +8,23 @@
  *   2. The bases: every `MAZE_ART_KEYS` row declares one of the closed set; `floor`/`wall` paint the painter's own
  *      colours; the `marker`/`character` colours and the placeholder's are used by no kind (no `COLORS` value, no
  *      composite `COLORS` value), so a fallback is never mistaken for a kind's own look.
+ *   3. ⛔ THE COVERAGE PIN: every `MAZE_ART_KEYS` row resolves in BOTH views — the one-region view (`drawWorld` + the
+ *      things pass) and the composite map's cell (`drawMazeCompositeRegion`) — save the kinds the composite map names
+ *      in `MAZE_COMPOSITE_UNDRAWN`, each with its reason. With art for every key, each view blits every row's key; with
+ *      none, each view draws every row's OWN look and never a base or the placeholder. The kinds and the exemptions
+ *      are read off the tables, never counted here.
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { recordingContext } from './drawOpRecorder.js';
-import { COLORS } from './mazeRoomRender.js';
+import { COLORS, drawWorld, plainView } from './mazeRoomRender.js';
+import { TILE_WALL, getTile } from './mazeRoomEngine.js';
+import { substrateRegistryEntry } from './mazeRoomLibrary.js';
+import { drawMazeThings } from './mazeThingOverlay.js';
+import { MAZE_COMPOSITE_UNDRAWN, drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { COLORS as COMPOSITE_COLORS } from '../procgenCore/compositeMapRenderer.js';
 import { createArtLibrary } from '../artLibrary/artLibrary.js';
 import {
@@ -125,4 +137,110 @@ describe('the bases', () => {
         expect(own.filter((c) => used.has(c))).toEqual([]);
         expect(new Set(own).size).toBe(own.length);
     });
+});
+
+// ── (3) the coverage pin ────────────────────────────────────────────────────────────────────────────────────────
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
+const PLAYTHROUGH = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json'), 'utf8'));
+const floorCells = (w) => {
+    let n = 0;
+    for (let y = 0; y < w.height; y++) for (let x = 0; x < w.width; x++) if (getTile(w, x, y) !== TILE_WALL) n++;
+    return n;
+};
+
+/**
+ * A world on which every kind of the key table appears: the roomiest maze region of a committed world (its floor,
+ * walls, exits and entrance; read off the data, never named), with the rest STAGED on free cells of the deserialized world, as the painters read it —
+ * a mana tile, an arrow trap, the three block kinds, a button up and one held down by a block, a pulser on a wall, a
+ * pull, and a sign. Nothing here is a world anyone plays. Also returns a floor cell for the player.
+ */
+function everyKindWorld() {
+    const worlds = Object.values(PLAYTHROUGH.preset_sidecars['1']).filter((v) => v.playable_payload)
+        .map((v) => substrateRegistryEntry.deserializeWorld(JSON.parse(JSON.stringify(v.playable_payload))));
+    // ⚠ an entrance that is also an exit draws as the exit (§5), so the world must have one that is not
+    const own = worlds.filter((w) => ![...w.exits.values()].some((e) => e.x === w.entrance.x && e.y === w.entrance.y));
+    const world = own.reduce((a, b) => (floorCells(b) > floorCells(a) ? b : a));
+    world.atlas = undefined; // ⚠ a Seedling-atlas world gets no tile art on the map; this one is a plain maze stage
+    const busy = new Set([...world.items.keys(), ...world.obstacles.keys(), `${world.entrance.x},${world.entrance.y}`,
+        ...[...world.exits.values()].map((e) => `${e.x},${e.y}`)]);
+    const free = (wantWall) => {
+        for (let y = 0; y < world.height; y++) {
+            for (let x = 0; x < world.width; x++) {
+                const key = `${x},${y}`;
+                if (!busy.has(key) && (getTile(world, x, y) === TILE_WALL) === wantWall) { busy.add(key); return { x, y, key }; }
+            }
+        }
+        throw new Error('staging: no free cell');
+    };
+    world.manaTiles = new Map([[free(false).key, 1]]);
+    const trap = free(false);
+    world.traps = [{ x: trap.x, y: trap.y, lane: [] }];
+    world.blockLib = { 'staged-walk': { walk: true }, 'staged-struck': {}, 'staged-dormant': { wake: true } };
+    const up = free(false);
+    const down = free(false);
+    world.buttons = new Map([[up.key, 'staged-up'], [down.key, 'staged-down']]);
+    world.blocks = new Map([[free(false).key, 'staged-walk'], [free(false).key, 'staged-struck'],
+        [free(false).key, 'staged-dormant'], [down.key, 'staged-walk']]);
+    const pulser = free(true);
+    world.pulsers = [{ x: pulser.x, y: pulser.y, reach: [], token: 'staged-pulser' }];
+    const pull = free(false);
+    world.pulls = [{ x: pull.x, y: pull.y, gate: 'staged-gate', disc: [pull.key] }];
+    const sign = free(false);
+    world.things = [{ id: 'thing_0', x: sign.x, y: sign.y, kind: 'info', concept: 'staged:info/sign', name: 'Staged',
+        info: { concept: 'staged:info/sign', name: 'Staged', body: 'Staged.' } }];
+    return { world, player: free(false) };
+}
+
+/** Each view's draw of the world with `tileArt` → its op log. */
+const VIEWS = Object.freeze({
+    single: (world, player, tileArt) => {
+        const ctx = recordingContext();
+        const view = plainView({ tilePx: 16, playerPos: { x: player.x, y: player.y }, tileArt });
+        drawWorld(ctx, world, view);
+        drawMazeThings(ctx, world, { tilePx: 16, playerPos: view.playerPos, fogEnabled: false, isTileVisible: () => true, tileArt });
+        return ctx.__log;
+    },
+    composite: (world, player, tileArt) => {
+        const ctx = recordingContext();
+        drawMazeCompositeRegion(ctx, { region_id: 'staged', substrate: 'maze', playable_payload: world }, { offX: 28, offY: 14, tileArt });
+        return ctx.__log;
+    },
+});
+const UNDRAWN = Object.freeze({ single: {}, composite: MAZE_COMPOSITE_UNDRAWN });
+const blitted = (log) => new Set(log.map((l) => l.match(/^drawImage\(\{"src":"([^"]+)"\}/)?.[1]).filter(Boolean));
+
+describe('⛔ the coverage pin: every key-table kind resolves in both views', () => {
+    it('every exemption names a real kind and says why', () => {
+        for (const [view, undrawn] of Object.entries(UNDRAWN)) {
+            for (const [kind, why] of Object.entries(undrawn)) {
+                expect(MAZE_ART_THINGS, `${view}.${kind}`).toContain(kind);
+                expect(typeof why === 'string' && why.length > 0, `${view}.${kind}`).toBe(true);
+            }
+        }
+    });
+
+    for (const [name, draw] of Object.entries(VIEWS)) {
+        const wanted = MAZE_ART_THINGS.filter((k) => !(k in UNDRAWN[name]));
+
+        it(`${name}: with art for every key, every drawn kind is the theme's art`, () => {
+            const { world, player } = everyKindWorld();
+            const log = draw(world, player, stubTileArt(MAZE_ART_THINGS.map((k) => MAZE_ART_KEYS[k].key)));
+            const got = blitted(log);
+            expect(wanted.filter((k) => !got.has(MAZE_ART_KEYS[k].key)), 'kinds not drawn from art').toEqual([]);
+            expect(Object.keys(UNDRAWN[name]).filter((k) => got.has(MAZE_ART_KEYS[k].key)), 'an exempt kind was drawn').toEqual([]);
+        });
+
+        it(`${name}: with no art, every drawn kind draws its own look — never a base or the placeholder`, () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+            const { world, player } = everyKindWorld();
+            const log = draw(world, player, null).join('\n');
+            const missing = wanted.filter((k) => !MAZE_ART_KEYS[k].colors.some((c) => log.includes(JSON.stringify(COLORS[c]))));
+            expect(missing, 'kinds whose own colour is not drawn').toEqual([]);
+            for (const c of [MAZE_TILE_BASES.marker.color, MAZE_TILE_BASES.character.color, MAZE_TILE_PLACEHOLDER.color]) {
+                expect(log, c).not.toContain(JSON.stringify(c));
+            }
+            expect(warn).not.toHaveBeenCalled();
+            vi.restoreAllMocks();
+        });
+    }
 });
