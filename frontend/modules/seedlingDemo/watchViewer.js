@@ -11752,16 +11752,35 @@ function showPanelsFor(source) {
  * cannot be honoured is worse than none.
  */
 function wireSourceSelector(params, onSwitch) {
+    showSourceFor(params);
     const sel = $('source');
-    sel.value = params.source;
-    showPanelsFor(params.source);
     sel.onchange = () => onSwitch(sel.value);
 
     // ⛓ The engine picker rides the same switch — REPLAY-only, because the
     // other three arms build JS worlds and the wasm side builds none.
     const sideSel = $('side');
-    sideSel.value = params.side;
     sideSel.onchange = () => onSwitch('replay', sideSel.value);
+}
+
+/**
+ * ⛓⛓ THE SOURCE AND SIDE DROP-DOWNS SHOW THE ARM `params` NAMES — at boot AND
+ * after every `navigateTo` (slice seedling-source-sync). ONE helper for both
+ * paths, so they cannot drift.
+ *
+ * ⛔ A host navigate (another panel's Edit ▸ → `?source=edit&room=`) mounts an
+ * arm the drop-down did not pick. Before this, only the boot set the
+ * drop-downs, so after it `#source` still showed the boot arm; picking the arm
+ * that WAS mounted then fired `change` → a second, async remount, and a LOAD
+ * pressed during it landed in the retiring arm.
+ *
+ * ⚠ Setting `.value` fires no `change` (measured: 0 events, no remount), so
+ * this cannot start a second switch. And a person re-picking the option the
+ * drop-down already shows fires none either, so it does not remount.
+ */
+function showSourceFor(params) {
+    $('source').value = params.source;
+    $('side').value = params.side;
+    showPanelsFor(params.source);
 }
 
 /**
@@ -12070,7 +12089,7 @@ async function navigateTo(search, why) {
     }
     window.history.replaceState(null, '', `${window.location.pathname}?${asked.toString()}`);
     const params = readParams();
-    showPanelsFor(params.source);
+    showSourceFor(params);
     resetPageChrome();
     await mountArm(params, armLifetimes.start(armNameFor(params), why));
 }
