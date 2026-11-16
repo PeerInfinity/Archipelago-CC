@@ -17,6 +17,7 @@ Scenarios (ChecksFinder and TUNIC: no ROM, quick to export):
   over_cap   max_kb 1: both slots get worldgen_rules_omitted reason over_cap
   disabled   enabled false: nothing is added
   excluded   exclude_games [ChecksFinder]: only TUNIC is sent
+  editor     strip_level editor: both sent, the unused fields kept (item classification), placements still gone
   absent     no add-on: nothing is added
   broken     the vendored exporter raises on import: every slot gets export_failed
   no_handlers  the vendored handler modules removed: export_failed ("0 game handlers")
@@ -54,6 +55,7 @@ SCENARIOS = {
     "over_cap": (ROOM, [], {"max_kb": "1"}, "packed"),
     "disabled": (ROOM, [], {"enabled": "false"}, "packed"),
     "excluded": (ROOM, [], {"exclude_games": '["ChecksFinder"]'}, "packed"),
+    "editor": (ROOM, [], {"strip_level": "editor"}, "packed"),
     "absent": (ROOM, [], {}, None),
     "broken": (ROOM, [], {}, "broken"),
     "no_handlers": (ROOM, [], {}, "no_handlers"),
@@ -86,7 +88,8 @@ def make_variant(packed: Path, variant: str, out: Path) -> Path:
 # ---------------------------------------------------------------------------------------- host.yaml
 def set_section(host_yaml: Path, overrides: dict) -> None:
     """Rewrite the add-on's host.yaml section to its defaults plus the overrides (AP wrote it on first load)."""
-    values = {"enabled": "true", "max_kb": "1024", "exclude_games": '["APCalc", "DepGraph", "Metamath"]', **overrides}
+    values = {"enabled": "true", "max_kb": "1024", "exclude_games": '["APCalc", "DepGraph", "Metamath"]',
+              "strip_level": "play", **overrides}
     section = "upstream_rules_addon:\n" + "".join(f"  {k}: {v}\n" for k, v in values.items())
     text = host_yaml.read_text(encoding="utf-8") if host_yaml.exists() else ""
     text = re.sub(r"^upstream_rules_addon:\n(?:[ #].*\n|\n)*", "", text, flags=re.M)
@@ -132,7 +135,10 @@ def unused_fields(packed: Path) -> dict:
     return {k: namespace[k] for k in ("TOP", "WORLD", "ITEM", "LOCATION")}
 
 
-def check_envelope(slot: str, game: str, envelope: dict, md: dict, unused: dict, fail) -> None:
+def check_envelope(slot: str, game: str, envelope: dict, md: dict, unused: dict, fail, editor: bool = False) -> None:
+    """``editor``: strip_level editor, so the unused fields are expected to be there (not checked as stripped)."""
+    if editor:
+        unused = {k: () for k in unused}
     where = f"slot {slot} ({game})"
     if envelope.get("format") != 1 or envelope.get("player") != slot or envelope.get("source") != NAME:
         fail(f"{where}: envelope header {({k: envelope.get(k) for k in ('format', 'player', 'source')})}")
@@ -183,7 +189,7 @@ def expect(name: str, md: dict, packed: Path, fail) -> None:
     omitted = {s: d["worldgen_rules_omitted"] or {} for s, d in sd.items()
                if isinstance(d, dict) and "worldgen_rules_omitted" in d}
     for slot, envelope in rules.items():
-        check_envelope(slot, games[slot], envelope, md, unused, fail)
+        check_envelope(slot, games[slot], envelope, md, unused, fail, editor=name == "editor")
 
     def want(sent, reasons=None):
         if sorted(rules) != sorted(sent):
@@ -192,8 +198,13 @@ def expect(name: str, md: dict, packed: Path, fail) -> None:
         if got != (reasons or {}):
             fail(f"{name}: worldgen_rules_omitted {omitted}, expected reasons {reasons or {}}")
 
-    if name in ("present", "er", "race"):
+    if name in ("present", "er", "race", "editor"):
         want(list(games))
+        if name == "editor":
+            for slot, envelope in rules.items():
+                items = envelope["doc"]["items"][slot]
+                if not any("classification" in it for it in items.values()):
+                    fail(f"editor: slot {slot}'s items carry no classification (the editor level should keep it)")
         if name == "race" and md.get("race_mode") != 1:
             fail(f"race: race_mode {md.get('race_mode')}")
         if name == "er":

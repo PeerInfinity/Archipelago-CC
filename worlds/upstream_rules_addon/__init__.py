@@ -54,9 +54,15 @@ class UpstreamRulesAddonSettings(settings.Group):
     class ExcludeGames(list):
         """Games that never get a document (their client builds the rules itself, or the host does not want it)."""
 
+    class StripLevel(str):
+        """How much of each document is left out beyond placements: "play" (the default) leaves out the fields the
+        client never needs to play; "editor" keeps them, so the APWorld Editor opened on the server's document shows
+        item classifications and the meta rows. Placements are never sent."""
+
     enabled: Enabled | bool = True
     max_kb: MaxKb = MaxKb(1024)
     exclude_games: ExcludeGames = ExcludeGames(list(BUILDER_GAMES))
+    strip_level: StripLevel = StripLevel("play")
 
 
 class UpstreamRulesAddonWeb(WebWorld):
@@ -117,6 +123,7 @@ def on_pre_output(multiworld) -> None:
     cfg = host_settings()
     result = _addon.export_room(multiworld, __name__, enabled=bool(cfg.enabled), max_kb=int(cfg.max_kb),
                                 exclude_games=list(cfg.exclude_games or ()),
+                                strip_level=str(getattr(cfg, "strip_level", "play") or "play"),
                                 keep_dir=os.environ.get("UPSTREAM_RULES_ADDON_KEEP"))
     run = _Run(len(result), multiworld.seed_name)
     setattr(multiworld, _RUN_ATTR, (run, result))

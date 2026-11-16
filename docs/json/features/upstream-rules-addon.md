@@ -25,6 +25,7 @@ upstream_rules_addon:
     - "APCalc"
     - "DepGraph"
     - "Metamath"
+  strip_level: "play"
 ```
 
 | Setting | Default | What it does |
@@ -32,6 +33,7 @@ upstream_rules_addon:
 | `enabled` | `true` | Installing the add-on turns it on. Set `false` to keep it installed but idle. |
 | `max_kb` | `1024` | The largest document one slot may carry, in KB (compact JSON). A bigger one is not sent, and that slot gets the reason `over_cap` instead. All 73 upstream games that have presets here fit under 1024 KB at their default options; the largest is Stardew Valley at about 860 KB. |
 | `exclude_games` | APCalc, DepGraph, Metamath | Games that never get a document. The three defaults build their rules in the client from the room itself. |
+| `strip_level` | `play` | How much of each document is left out besides placements. `play` leaves out the fields the client never needs to play the room. `editor` keeps them (item classifications, location flags, the meta rows), so the APWorld Editor opened on a server-sent document shows them; documents are about 5–12% larger. Placements and the item pool counts are never sent, at any level. |
 
 The setting applies to the whole room: every slot of every game that isn't excluded. A player can't turn it on or off from their YAML.
 
@@ -62,7 +64,7 @@ The document is the game's logic: its regions, locations, items, rules and optio
 - **Race rooms** (`--race`) get their documents too, because the document holds no placements.
 - **Entrance randomizer:** the logic can't be built without the connections, so the document carries the seed's shuffled entrance layout. Anyone in the room can read that layout. TUNIC already sends its own pairing in its slot data, so for TUNIC nothing new is revealed.
 
-The add-on also leaves out fields the web client never reads, to save space. The list is `worlds/upstream_rules_addon/_unused_fields.py`.
+At `strip_level: play` the add-on also leaves out fields the web client never reads to play, to save space. The list is `worlds/upstream_rules_addon/_unused_fields.py`; a spoiler-test sweep of every committed preset showed it safe. (Two fields on the original list stay because some games' logic reads them: `option_definitions`, read by Kingdom Hearts 2, and item `type`, read by Super Metroid.)
 
 ### Goals
 

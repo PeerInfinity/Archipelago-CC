@@ -1,21 +1,14 @@
 # The standing spoiler-test row for the Upstream Rules Add-on's stripped documents
 # (scripts/test/upstream_rules_addon_spoiler_row.py): nine presets whose own spoiler test passes, each tested
-# unstripped (the control) and after the add-on's own strips, plus one negative control that must fail. It runs when
-# the strip list, the presets or the client's logic change, because a new reader of a stripped field is what it
-# guards against. Roster and cost: the strip spoiler sweep's proposal (about 6 minutes).
+# unstripped (the control) and after the add-on's own strips (strip_level play), plus one negative control that must
+# fail. Run it when the strip list, the presets or the client's logic change: a new reader of a stripped field is
+# what it guards against. Roster and cost: the strip spoiler sweep's proposal (about 6 minutes).
 # Reads nothing secret, writes nothing, deploys nothing.
 name: upstream-rules-addon-spoiler-row
 
 on:
-  push:
-    paths:
-      - 'worlds/upstream_rules_addon/**'
-      - 'scripts/test/upstream_rules_addon_spoiler_row.py'
-      - 'frontend/modules/**'
-      - 'frontend/presets/**'
-      - 'test_json/**'
-      - 'scripts/test/run-tests.js'
-      - '.github/workflows/upstream-rules-addon-spoiler-row.yml'
+  # MANUAL ONLY (Robert, 2026-11-16: "I don't want these tests run in every push"):
+  # gh workflow run upstream-rules-addon-spoiler-row.yml -R PeerInfinity/Archipelago-CC --ref <branch>
   workflow_dispatch:
 
 permissions:

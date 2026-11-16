@@ -97,6 +97,7 @@ def test_the_source_manifest_and_settings_defaults():
     defaults = addon.UpstreamRulesAddonSettings()
     assert bool(defaults.enabled) is True and int(defaults.max_kb) == 1024
     assert list(defaults.exclude_games) == ["APCalc", "DepGraph", "Metamath"]
+    assert str(defaults.strip_level) == "play" == _unused_fields.DEFAULT_LEVEL
     assert addon.UpstreamRulesAddonWorld.hidden is True
     with pytest.raises(RuntimeError):
         addon.UpstreamRulesAddonWorld.stage_assert_generate(None)
@@ -135,6 +136,18 @@ def test_strip_unused_removes_exactly_the_listed_fields():
     assert _unused_fields.strip_unused(doc) == {"keep": 1, "world": {"1": {"options": {}}},
                                                 "items": {"1": {"Sword": {"id": 5}}},
                                                 "regions": {"1": {"R": {"locations": [{"name": "L", "id": 9}]}}}}
+
+
+def test_the_editor_level_keeps_the_fields_and_play_is_the_default():
+    doc = {"items": {"1": {"Sword": {"id": 5, "classification": "progression", "type": "Sword"}}},
+           "world": {"1": {"world_class_name": "W"}}, "archipelago_version": "0.6.9"}
+    assert _unused_fields.strip_unused(json.loads(json.dumps(doc)), "editor") == doc
+    assert _unused_fields.strip_unused(json.loads(json.dumps(doc))) == \
+        _unused_fields.strip_unused(json.loads(json.dumps(doc)), "play") == \
+        {"items": {"1": {"Sword": {"id": 5, "type": "Sword"}}}, "world": {"1": {}}}
+    assert set(_unused_fields.LEVELS) == {"play", "editor"}
+    with pytest.raises(KeyError):
+        _unused_fields.strip_unused({}, "nonsense")
 
 
 def test_fields_the_client_reads_are_never_stripped():
@@ -222,6 +235,24 @@ def test_every_per_player_map_holds_only_the_slot(exported):
         doc = entry["envelope"]["doc"]
         maps = {k: v for k, v in doc.items() if isinstance(v, dict) and v and all(str(x).isdigit() for x in v)}
         assert maps and all(list(v) == [str(p)] for v in maps.values()), {k: list(v) for k, v in maps.items()}
+
+
+def test_the_editor_level_keeps_classifications_but_never_placements(room, recipe, caplog):
+    play = _export(room)
+    editor = _export(room, strip_level="editor")
+    with caplog.at_level(logging.WARNING, logger="UpstreamRulesAddon"):
+        unknown = _export(room, strip_level="nonsense")
+    assert any("unknown strip_level 'nonsense'" in r.getMessage() for r in caplog.records)
+    for p in room.player_ids:
+        kept, cut = editor[p]["envelope"]["doc"], play[p]["envelope"]["doc"]
+        assert unknown[p]["envelope"]["doc"] == cut
+        assert any("classification" in it for it in kept["items"][str(p)].values())
+        assert not any("classification" in it for it in cut["items"][str(p)].values())
+        assert "itempool_counts" not in kept and "seed_name" not in kept
+        located = [loc for region in kept["regions"][str(p)].values() for loc in region.get("locations", [])
+                   if loc.get("id") is not None]
+        assert located and not [loc for loc in located if "item" in loc]
+        assert editor[p]["bytes"] > play[p]["bytes"]
 
 
 def test_over_the_cap_sends_the_reason(room, recipe):

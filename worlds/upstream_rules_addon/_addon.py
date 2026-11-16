@@ -20,7 +20,7 @@ import tempfile
 import time
 from typing import Any, Dict, Iterable, Optional, Tuple
 
-from ._unused_fields import strip_unused
+from ._unused_fields import DEFAULT_LEVEL, LEVELS, strip_unused
 
 logger = logging.getLogger("UpstreamRulesAddon")
 
@@ -81,9 +81,10 @@ def strip_room(doc: Dict[str, Any]) -> Dict[str, Any]:
     return doc
 
 
-def strip(doc: Dict[str, Any], strip_placements) -> Dict[str, Any]:
-    """Every strip the add-on applies, in order: placements (the embed recipe's), the room's, the unused fields."""
-    return strip_unused(strip_room(strip_placements(doc)))
+def strip(doc: Dict[str, Any], strip_placements, level: str = DEFAULT_LEVEL) -> Dict[str, Any]:
+    """Every strip the add-on applies, in order: placements (the embed recipe's), the room's, the unused fields at
+    ``level`` (``_unused_fields.LEVELS``)."""
+    return strip_unused(strip_room(strip_placements(doc)), level)
 
 
 def envelope_bytes(envelope: Dict[str, Any]) -> int:
@@ -144,8 +145,12 @@ def _omitted(reason: str, **extra) -> Dict[str, Any]:
 
 
 def export_room(multiworld, package: str, *, enabled: bool, max_kb: int, exclude_games,
-                keep_dir: Optional[str] = None) -> Dict[int, Dict[str, Any]]:
+                strip_level: str = DEFAULT_LEVEL, keep_dir: Optional[str] = None) -> Dict[int, Dict[str, Any]]:
     """One result per wanted slot: ``{"envelope": ..., "bytes": n}`` or ``{"omitted": {"reason": ...}}``."""
+    if strip_level not in LEVELS:
+        logger.warning("Upstream Rules Add-on: unknown strip_level %r (known: %s); using %r",
+                       strip_level, ", ".join(LEVELS), DEFAULT_LEVEL)
+        strip_level = DEFAULT_LEVEL
     if not enabled:
         logger.info("Upstream Rules Add-on: off (host.yaml upstream_rules_addon.enabled is false); no slot gets rules")
         return {}
@@ -191,7 +196,7 @@ def export_room(multiworld, package: str, *, enabled: bool, max_kb: int, exclude
                                          **({"format_fallback": fallback.get("reason")} if fallback else {}))
                     continue
                 envelope = {"format": FORMAT, "player": str(p), "source": SOURCE,
-                            "doc": strip(doc, strip_placements)}
+                            "doc": strip(doc, strip_placements, strip_level)}
                 size = envelope_bytes(envelope)
                 if size > cap_kb * 1024:
                     result[p] = _omitted("over_cap", size_kb=round(size / 1024), cap_kb=cap_kb)
@@ -206,8 +211,8 @@ def export_room(multiworld, package: str, *, enabled: bool, max_kb: int, exclude
         if root:
             _clear_exporter_caches(root)
     sent = sum(1 for r in result.values() if "envelope" in r)
-    logger.info("Upstream Rules Add-on: %d of %d slot(s) get their rules (%.2f s, %d export handlers)%s",
-                sent, len(wanted), time.perf_counter() - started, handler_count,
+    logger.info("Upstream Rules Add-on: %d of %d slot(s) get their rules (%.2f s, %d export handlers, strip_level %s)%s",
+                sent, len(wanted), time.perf_counter() - started, handler_count, strip_level,
                 "".join(f"; slot {p}: {r['omitted']['reason']}" for p, r in result.items() if "omitted" in r))
     return result
 

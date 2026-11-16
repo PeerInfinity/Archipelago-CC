@@ -14,17 +14,19 @@ This document describes the GitHub Actions workflows used for testing and CI/CD 
 | [Test World Generator](#test-world-generator) | Manual | World generator consistency testing | `test-results-world-generator` / `test-results-world-generator-canonical` / `test-results-world-generator-random` |
 | [Cloudberry end-to-end](#cloudberry-end-to-end) | Push (Cloudberry paths only)/Manual | The Cloudberry substrate's generation and play gates against the live Cloudberry site | N/A |
 | [Upstream Rules Add-on](#upstream-rules-add-on) | Push (add-on/exporter paths only)/Manual | The packed add-on generates rooms on PRISTINE upstream Archipelago (0.6.8 tag, 0.6.9 main) and each slot's slot_data is checked | N/A |
-| [Upstream Rules Add-on spoiler row](#upstream-rules-add-on) | Push (add-on, presets, frontend logic)/Manual | Spoiler tests of nine presets after the add-on's strips, with controls | N/A |
+| [Upstream Rules Add-on spoiler row](#upstream-rules-add-on) | Manual | Spoiler tests of nine presets after the add-on's strips, with controls | N/A |
 
 ## Upstream Rules Add-on
 
 `upstream-rules-addon.yml` checks out upstream Archipelago at each pinned ref (the `0.6.8` tag, and upstream main
 `3745641196`, whose `Utils.__version__` is 0.6.9; add the `0.6.9` tag when upstream cuts it), installs its
 requirements, holds `apworlds/upstream_rules_addon.apworld` equal to a fresh pack (`pack_upstream_rules_addon.py
---check`), then runs `scripts/test/upstream_rules_addon_pristine.py`: ten generated rooms (present, ER, race, over
-cap, disabled, excluded, absent, and three modified copies of the apworld: broken, no handlers, degraded). Every
-generation must exit 0. `upstream-rules-addon-spoiler-row.yml` runs `scripts/test/upstream_rules_addon_spoiler_row.py`
-(the stripped documents' spoiler tests; about 6 minutes). Neither deploys or writes anything. Host guide:
+--check`), then runs `scripts/test/upstream_rules_addon_pristine.py`: eleven generated rooms (present, ER, race, over
+cap, disabled, excluded, editor strip level, absent, and three modified copies of the apworld: broken, no handlers,
+degraded). Every generation must exit 0. `upstream-rules-addon-spoiler-row.yml` (MANUAL only, Robert 2026-11-16:
+`gh workflow run upstream-rules-addon-spoiler-row.yml -R PeerInfinity/Archipelago-CC --ref <branch>`) runs
+`scripts/test/upstream_rules_addon_spoiler_row.py`: the stripped documents' spoiler tests, about 6 minutes. Run it
+after a change to the strip list, the presets or the client's logic. Neither deploys or writes anything. Host guide:
 [docs/json/features/upstream-rules-addon.md](../../docs/json/features/upstream-rules-addon.md).
 
 ## Push-run policy (the two heavy push workflows)

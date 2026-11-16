@@ -7,7 +7,19 @@ test of the stripped document passes wherever the unstripped one does. A field t
 were known before the sweep.
 
 Removing a field here changes only the size of what is sent. Adding one needs the sweep (or the standing
-spoiler-test row, test/test_upstream_rules_addon_spoiler_row.py) to say it is safe.
+spoiler-test row, scripts/test/upstream_rules_addon_spoiler_row.py) to say it is safe.
+
+The host chooses how much is stripped with ``host.yaml`` ``upstream_rules_addon.strip_level`` (Robert, 2026-11-16:
+"I'll want an option somewhere for whether to keep them"):
+
+- ``play`` (the default): every field below is removed. The client plays the room the same; panels that only show
+  these fields (the APWorld Editor's classifications and meta rows, the procgen pipeline's locked/event flags) show
+  them empty.
+- ``editor``: these fields are kept, so the APWorld Editor opened on the server's document shows them.
+
+Placements, the seed's facts and ``itempool_counts`` are removed at every level. A later level that keeps
+everything needed to rebuild a rules.json and run it through the World Generator (Robert's, for later) is one more
+entry in ``LEVELS``.
 """
 from typing import Any, Dict
 
@@ -23,23 +35,32 @@ ITEM = ('classification', 'classification_counts', 'hint_text')
 LOCATION = ('locked', 'progress_type', 'show_in_spoiler', 'pinned', 'event', 'targets')
 
 
-def strip_unused(doc: Dict[str, Any]) -> Dict[str, Any]:
-    """Remove the fields above, in place. Returns the document."""
-    for key in TOP:
+#: strip_level → (TOP, WORLD, ITEM, LOCATION) removed at that level.
+LEVELS = {
+    "play": (TOP, WORLD, ITEM, LOCATION),
+    "editor": ((), (), (), ()),
+}
+DEFAULT_LEVEL = "play"
+
+
+def strip_unused(doc: Dict[str, Any], level: str = DEFAULT_LEVEL) -> Dict[str, Any]:
+    """Remove the fields the level strips, in place. Returns the document. An unknown level raises KeyError."""
+    top, world_keys, item_keys, location_keys = LEVELS[level]
+    for key in top:
         doc.pop(key, None)
     for world in (doc.get('world') or {}).values():
         if isinstance(world, dict):
-            for key in WORLD:
+            for key in world_keys:
                 world.pop(key, None)
     for items in (doc.get('items') or {}).values():
         for item in (items.values() if isinstance(items, dict) else ()):
             if isinstance(item, dict):
-                for key in ITEM:
+                for key in item_keys:
                     item.pop(key, None)
     for regions in (doc.get('regions') or {}).values():
         for region in (regions.values() if isinstance(regions, dict) else regions or ()):
             for location in (region.get('locations') or ()) if isinstance(region, dict) else ():
                 if isinstance(location, dict):
-                    for key in LOCATION:
+                    for key in location_keys:
                         location.pop(key, None)
     return doc
