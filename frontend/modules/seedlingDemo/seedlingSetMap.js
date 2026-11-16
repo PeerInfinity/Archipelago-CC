@@ -50,6 +50,7 @@ import {
     createSetMapProvider, distToSegment, doorTickShapes, edgeOf, frameOf, layoutCensus, layoutGraph,
     mapLinkShapes as linkShapesOf, roomFingerprintOf,
 } from '../procgenCore/setMapLayout.js';
+import { unreachableRoomsOf } from './seedlingSetMapUnreachable.js';
 
 export { CONSISTENT_RINGS, DIRS, EDGE_FRACTION, MAP_GEOMETRY, clampZoom, distToSegment, edgeOf, frameOf, layoutCensus };
 /** ⛓ `dirOfExit` MOVED to `seedlingDoorDirection.js` (region-map 3a: the composite-map hook reuses it without this
@@ -191,7 +192,7 @@ export const mapLinkShapes = (links, frame, { selected = null } = {}) => linkSha
  */
 export function createSetMap(deps = {}) {
     const { tileSize = TILE_PX } = deps;
-    return createSetMapProvider({
+    const provider = createSetMapProvider({
         linksOf: (record) => mapLinksOf(record, deps),
         graphOf: layoutGraphOf,
         fingerprintOf: roomFingerprint,
@@ -199,4 +200,8 @@ export function createSetMap(deps = {}) {
         kinds: SEEDLING_LINK_KINDS,
         fail: (m) => fail(m.replace(/^setMapLayout:/, 'seedlingSetMap:')),
     });
+    /** ⛓ (seedling-map-unreachable, additive) the rooms the last REPORT finds unreachable — `setEditorView` marks
+     *  them. A provider without it (the maze's) draws exactly what it drew before. */
+    provider.unreachableOf = (report) => unreachableRoomsOf(report);
+    return provider;
 }

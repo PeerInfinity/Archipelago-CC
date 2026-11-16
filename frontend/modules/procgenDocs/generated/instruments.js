@@ -3886,6 +3886,7 @@ export const INSTRUMENTS = frz({
                 "arg",
                 "check",
                 "json",
+                "legend",
                 "settled"
             ],
             "browser": true,
