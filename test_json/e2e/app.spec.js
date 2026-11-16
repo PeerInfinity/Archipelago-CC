@@ -87,6 +87,9 @@ test.describe('Application End-to-End Tests', () => {
   if (process.env.TEST_MEASURE_SOLVER_ENV) {
     APP_URL += `&seedlingSolverEnv=${encodeURIComponent(process.env.TEST_MEASURE_SOLVER_ENV)}`;
   }
+  if (process.env.TEST_MEASURE_CONTACT_CORPSE_GONE) {
+    APP_URL += `&measureContactCorpseGone=${encodeURIComponent(process.env.TEST_MEASURE_CONTACT_CORPSE_GONE)}`;
+  }
   if (process.env.TEST_MEASURE_NO_WORK_LIMIT) {
     APP_URL += `&measureNoWorkLimit=${encodeURIComponent(process.env.TEST_MEASURE_NO_WORK_LIMIT)}`;
   }
@@ -134,6 +137,9 @@ test.describe('Application End-to-End Tests', () => {
 
     // MEASUREMENT-ONLY (cloud slice seedling-hammer-wallflyer-flip-walk-check-2): witness that the env reached the
     // solve worker — its URL, and what its own process.env holds for the two wallflyer switches, read IN the worker.
+    page.on('framenavigated', (fr) => {
+      if (/jsRuntime\.html/.test(fr.url())) console.log(`[MEASURE jsframe] url=${fr.url()}`);
+    });
     page.on('worker', (w) => {
       const url = w.url();
       if (!/SolveWorker/i.test(url)) return;

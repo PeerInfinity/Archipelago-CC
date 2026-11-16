@@ -526,6 +526,14 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
             .then(() => console.log('[MEASURE] no work limit: ON (session override)'))
             .catch((e) => console.log(`[MEASURE] no work limit: FAILED ${e?.message ?? e}`));
     }
+    // MEASUREMENT-ONLY (cloud slice seedling-hammer-wallflyer-flip-walk-check-2): ?measureContactCorpseGone=1 ticks the
+    // Flash panel's own contact switch `wallFlyerCorpseGone` for this page load (session override, not persisted). The
+    // product carries it to the JS runtime page as ?contactFidelity= and stamps it on every solve request.
+    if (MEASURE_PARAMS.get('measureContactCorpseGone') === '1') {
+        settingsManager.updateSetting('moduleSettings.flashPanel.seedlingContactWallFlyerCorpseGone', true, { persist: false })
+            .then(() => console.log('[MEASURE] contact wallFlyerCorpseGone: ON (session override)'))
+            .catch((e) => console.log(`[MEASURE] contact wallFlyerCorpseGone: FAILED ${e?.message ?? e}`));
+    }
     let regionChanges = 0;
     let lastRegion = null;
     const unsub = eventBus.subscribe('gameState:regionChanged', (d) => {
