@@ -4,6 +4,8 @@
  * ⛓ THE WRAPPER PROOF: `ORACLE_canonicalLayout` below is `setMapLayout.canonicalLayout` COPIED VERBATIM from the
  * base before the move (9b99178fa7), kept test-only. The wrapper must equal it on random graphs (and
  * `seedlingSetMapLift.test.js`'s digests pin the vanilla 116 + a generated set through the real readers).
+ * ⚖ Since the (0,0)-origin follow-up (2026-11-15) the wrapper no longer min-shifts: it must equal the oracle
+ * TRANSLATED by exactly the start room's oracle cell (so the start is (0,0) and every offset between rooms is kept).
  *
  * MUTANTS (each turns a row red): a string sort of `nodes` inside `layoutRegions`; a min-shift in `layoutRegions`;
  * dropping the slide-right; placing a `down` group at the parent's top instead of under its bottom; R1 joining over
@@ -178,12 +180,23 @@ describe('D1 — layoutRegions', () => {
     });
 });
 
-describe('D1 — setMapLayout.canonicalLayout is a byte-identical wrapper', () => {
-    it('equals the pre-move function on 400 random index graphs', () => {
+/** The oracle's answer in the follow-up's frame: translated so the start room is (0,0). */
+const startAtOrigin = (cells, start) => cells.map((p) => ({ gx: p.gx - cells[start].gx, gy: p.gy - cells[start].gy }));
+
+describe('D1 — setMapLayout.canonicalLayout is a byte-identical wrapper (up to the start-room translation)', () => {
+    /** MUTANT: keep the min-shift (the start room is off the origin), or translate by anything but the start's cell. */
+    it('equals the pre-move function, translated so the start room is (0,0), on 400 random index graphs', () => {
+        let moved = 0;
         for (let s = 1; s <= 400; s++) {
             const g = randomIndexGraph(s);
-            expect(JSON.stringify(canonicalLayout(g))).toBe(JSON.stringify(ORACLE_canonicalLayout(g)));
+            const oracle = ORACLE_canonicalLayout(g);
+            const got = canonicalLayout(g);
+            expect(got[g.start]).toEqual({ gx: 0, gy: 0 });
+            expect(JSON.stringify(got)).toBe(JSON.stringify(startAtOrigin(oracle, g.start)));
+            if (oracle[g.start].gx !== 0 || oracle[g.start].gy !== 0) moved += 1;
         }
+        // ⛓ not vacuous: the sample has graphs whose start room was NOT the old top-left
+        expect(moved).toBeGreaterThan(0);
     });
     it('keeps its refusal (as the caller\'s own error, named as setMapLayout)', () => {
         expect(() => canonicalLayout({ n: -1, start: 0, links: [] })).toThrow(/setMapLayout: a layout needs a room count/);
