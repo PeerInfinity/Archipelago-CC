@@ -82,6 +82,7 @@ const { auditFire } = await imp('frontend/modules/seedlingDemo/presses.js');
 const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriverV2.js');
 const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
 const HP = await imp('scripts/procgen/seedlingHolderParking.js');
+const FCG = await imp('scripts/procgen/seedlingFireChaserGuard.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -251,12 +252,36 @@ function narrowRockFireByHolders(raw) {
                     without = HP.holderPrices(level, g, HP.tileTypesOf(level, g.width), [], { entitySemantics: playthroughEntitySemantics });
                 } finally { rockFireForGrid = null; }
                 if (hasFireTerm(without[entry])) continue;
-                out.set(key, { ...rock, stances: [], fireDirs: [], swingDirs: [...rock.fireDirs, ...rock.swingDirs].sort(),
-                    narrowed: { entry, body: row.body, block: `${row.block.type}@${row.block.x},${row.block.y}` } });
+                // ⛓ rules-fire-arm-chaser-guard: the fold is the guard's shared one, over the entry so far (the raw rock on
+                // the first fold), so the two narrowings commute; the output is the one this pass always wrote.
+                out.set(key, FCG.foldRockFire(out.get(key), 'narrowed',
+                    { entry, body: row.body, block: `${row.block.type}@${row.block.x},${row.block.y}` }));
                 rockFireNarrowings.push({ level: level.level, rock: key, entry, body: row.body });
             }
         }
     }
+    return out;
+}
+/**
+ * ⛓⛓ rules-fire-arm-chaser-guard — THE FIRE ARM DOES NOT COUNT WHERE A BODY FIRE CANNOT STOP GUARDS THE CROSSING.
+ * ⚖ Robert 2026-11-16: "Build the general fix (Recommended)". A rock loses its flame stances where a body in its room is
+ * (a) unstoppable by the Fire-only state (no Fire damage, no lethal tile on its border), (b) faster than the player on
+ * its terrain and (c) a homer whose leash covers the crossing's corridor (`seedlingFireChaserGuard.chaserGuardVerdict`,
+ * every term derived from the class constants, the patched map's bodies and the tiles; no level literal). ONE pass over
+ * the same map the holder narrowing writes, so rules and maze drop Fire together. Pass order: holders, then this guard;
+ * both decide from the RAW map and only fold Fire away (`foldRockFire`), so the order does not change the map. A rock
+ * both passes narrow carries both reasons (`narrowed`, `guarded`).
+ */
+export const rockFireChaserGuards = [];
+function narrowRockFireByChasers(sides, raw) {
+    const roomOf = (n) => {
+        const level = LEVELS.find((l) => l.level === n);
+        if (!level) return null;
+        const grid = gridFor(level);
+        return { grid, tileTypes: HP.tileTypesOf(level, grid.width), bodies: combatCensusOf(level).enemies };
+    };
+    const { sides: out, narrowings } = FCG.narrowRockFireByChasers(sides, raw, { roomOf });
+    for (const n of narrowings) rockFireChaserGuards.push({ level: n.level, rock: n.rock, guards: n.guards });
     return out;
 }
 const rockFireSides = () => {
@@ -264,10 +289,13 @@ const rockFireSides = () => {
     if (rockFireMemo) return rockFireMemo;
     if (rockFireNarrowing) return rockFireRaw();
     rockFireNarrowing = true;
-    try { rockFireMemo = narrowRockFireByHolders(rockFireRaw()); } finally { rockFireNarrowing = false; }
+    try {
+        const raw = rockFireRaw();
+        rockFireMemo = narrowRockFireByChasers(narrowRockFireByHolders(raw), raw);
+    } finally { rockFireNarrowing = false; }
     return rockFireMemo;
 };
-/** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides (narrowed by the holder census), for the maze and the reports. */
+/** ⛓ RULES rules-fire-breaks-rocks — the rocks' Fire sides (narrowed by the holder census and the chaser guard), for the maze and the reports. */
 export const playthroughRockFireSides = () => rockFireSides();
 // The fidelity ARRIVAL census over THESE rooms (the obstacle events' rows), computed once: the event layer reads it after
 // the atlas is built, and the rock rulings read the names it will mint before (`mintedRockEvents`).
