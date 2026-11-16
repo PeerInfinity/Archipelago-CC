@@ -453,7 +453,8 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   (atlas id e3ae176e -> 32298df9). The overlay fixture `--check`s byte-identical.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
             // merged rules-no-hit-directional + tile-fire-breaks-rocks: atlas id 88e3788c.
-            .toBe('e53ce5173114a245d96c7d6ce80b4af8');
+            // ⛓ rules-fire-arm-chaser-guard: atlas id 626182a8 (L73's and L100's rocks lose their Fire arm; no name moves).
+            .toBe('1dd93b16134b655868d656ae93a5be68');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

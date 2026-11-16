@@ -10624,12 +10624,6 @@
                   "args": {
                     "item_name": "Ghost Spear"
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
-                  }
                 }
               ]
             }
@@ -10669,12 +10663,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -12609,12 +12597,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire"
                   }
                 }
               ]
@@ -14685,7 +14667,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-d6f5bf4b",
+      "atlas_id": "seedling-d35c71c1",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -63982,7 +63964,7 @@
             {
               "x": 4,
               "y": 3,
-              "id": "rock_4_3"
+              "id": "rock_sword_spear"
             },
             {
               "x": 9,
@@ -64072,41 +64054,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_4_3": {
-              "id": "rock_4_3",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "3,2,N",
-                  "3,2,E",
-                  "3,2,S",
-                  "3,2,W",
-                  "4,2,N",
-                  "4,2,E",
-                  "4,2,S",
-                  "4,2,W",
-                  "5,2,N",
-                  "5,2,E",
-                  "5,2,S",
-                  "5,2,W",
-                  "4,4,N",
-                  "4,4,E",
-                  "4,4,S",
-                  "4,4,W",
-                  "5,4,N",
-                  "5,4,E",
-                  "5,4,S",
-                  "5,4,W"
-                ]
-              },
-              "at": "4,3",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -64266,150 +64222,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
@@ -74570,7 +74382,7 @@
             {
               "x": 8,
               "y": 9,
-              "id": "rock_8_9"
+              "id": "rock_sword_spear"
             },
             {
               "x": 4,
@@ -74590,29 +74402,15 @@
           ],
           "items": [],
           "obstacleLib": {
-            "rock_8_9": {
-              "id": "rock_8_9",
-              "name": "rock (sword or spear or fire)",
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
               "kind": "rock",
               "clear_set": [],
               "struck_by": [
                 "sword",
-                "spear",
-                "fire"
+                "spear"
               ],
-              "struck_from": {
-                "fire": [
-                  "9,8,N",
-                  "9,8,E",
-                  "9,8,S",
-                  "9,8,W",
-                  "9,9,N",
-                  "9,9,E",
-                  "9,9,S",
-                  "9,9,W"
-                ]
-              },
-              "at": "8,9",
               "color": "#7a6a55"
             },
             "atlas_gate_0": {
@@ -74788,150 +74586,6 @@
                   [
                     -1,
                     0
-                  ]
-                ]
-              }
-            },
-            "fire": {
-              "item": "Fire",
-              "primitive": "strike",
-              "condition": "strikes",
-              "key": "c",
-              "footprint": {
-                "N": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "E": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "S": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
-                  ]
-                ],
-                "W": [
-                  [
-                    -1,
-                    -1
-                  ],
-                  [
-                    0,
-                    -1
-                  ],
-                  [
-                    1,
-                    -1
-                  ],
-                  [
-                    -1,
-                    0
-                  ],
-                  [
-                    1,
-                    0
-                  ],
-                  [
-                    -1,
-                    1
-                  ],
-                  [
-                    0,
-                    1
-                  ],
-                  [
-                    1,
-                    1
                   ]
                 ]
               }
