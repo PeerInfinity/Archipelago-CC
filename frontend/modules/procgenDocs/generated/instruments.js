@@ -144,7 +144,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 157,
-            "count": 207,
+            "count": 208,
             "id": "probe"
         },
         {
@@ -239,13 +239,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 531,
+        "blockStyle": 532,
         "browser": 227,
-        "cited": 286,
-        "files": 551,
+        "cited": 287,
+        "files": 552,
         "lineStyle": 20,
-        "withDocblock": 551,
-        "withFlags": 469
+        "withDocblock": 552,
+        "withFlags": 470
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12188,6 +12188,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity BURN, D1: **WHEN THE BURN'S PERSISTENCE WRITE LANDS, ON THE GAME.** `BurnableTree.hit()` removes nothing; `burnEnd -> die()` removes the tree twenty animation frames later, and `removed()` calls `Game.setPersistence(tag, false)` (`Scenery/BurnableTree.as:39-54`).",
             "path": "scripts/procgen/probe-seedling-burn-write.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "compare",
+                "expect-flag",
+                "moved",
+                "ref",
+                "tip"
+            ],
+            "file": "probe-seedling-calib-levels.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect-flag"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "moved"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tip"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling P3 TIMING PROBE: the calib scripted pass, timed per level, and a tip compared with a control.",
+            "path": "scripts/procgen/probe-seedling-calib-levels.mjs"
         },
         {
             "argvHelpers": [
