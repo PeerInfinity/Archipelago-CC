@@ -11928,8 +11928,7 @@ export function createLevelRun({
      *
      * @returns the `playerHit` result, so a caller can see `died`/`applied`
      */
-    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null, retaliate = undefined,
-        undeclaredWhy = null }) {
+    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null, retaliate = undefined }) {
         let r;
         try {
             r = playerHit(damage, {
@@ -11950,10 +11949,8 @@ export function createLevelRun({
             });
         } catch (e) {
             if (!(e instanceof PlayerDamageError)) throw e;
-            // ⛓ fidelity DARKSUITSTATIC D2: an undeclared source may name WHY it is undeclared (ON only).
             throw new Error(`levelRun: the \`${source}\` hit (${id}) at tick `
-                + `${ticksCompleted + 1} in level ${level} — ${e.message}`
-                + (undeclaredWhy ? ` ${undeclaredWhy}` : ''));
+                + `${ticksCompleted + 1} in level ${level} — ${e.message}`);
         }
         // `if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y),
         // darkSuitDamage, "Suit")` — the attacker's own `Enemy.hit`, from the
@@ -12364,7 +12361,9 @@ export function createLevelRun({
                 });
                 continue;
             }
-            applyPlayerHit({
+            // ⛓ fidelity DARKSUITSTATIC D2 (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, ON only): the body is `e`.
+            const suit = CONTACT_FIDELITY.darkSuitStaticRetaliation ? staticSuitRetaliation(inst, id) : null;
+            const bill = () => applyPlayerHit({
                 source: 'enemy',
                 id,
                 // `p.hit(this, 3, new Point(x, y), damage)` — the base
@@ -12373,9 +12372,19 @@ export function createLevelRun({
                 force: PLAYER_DAMAGE.contactForce,
                 damage: inst.row.damage,
                 from: { x: inst.cx, y: inst.cy },
-                // ⛓ fidelity DARKSUITSTATIC D2 (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, ON only): the body is `e`.
-                ...(CONTACT_FIDELITY.darkSuitStaticRetaliation ? staticSuitRetaliation(inst, id) : {}),
+                ...(suit?.retaliate ? { retaliate: suit.retaliate } : {}),
             });
+            if (suit?.undeclaredWhy) {
+                // an undeclared class's refusal (`playerHit`'s `byEnemy`) names WHY it is undeclared
+                try {
+                    bill();
+                } catch (e) {
+                    if (!/`hasDarkSuit` retaliates INTO the attacker/.test(e.message)) throw e;
+                    throw new Error(`${e.message} ${suit.undeclaredWhy}`);
+                }
+            } else {
+                bill();
+            }
             if (pendingDeath) return;
         }
     }
