@@ -1,6 +1,33 @@
 {
   "schema_version": 1,
   "generated_by": "scripts/procgen/extract-seedling-art-packs.mjs — do not edit; regenerate and --check",
+  "provenance": {
+    "sources": {
+      "seedling": {
+        "type": "game",
+        "name": "Seedling",
+        "repo": "PeerInfinity/Seedling",
+        "commit": "ccdf189776471fa57be8c0568c6e881a2d5acc18",
+        "files": [
+          "assets/graphics"
+        ],
+        "credit": "art by Connor Ullmann (vendor/seedling/README)",
+        "licence": "Unlicense",
+        "extracted_by": "scripts/procgen/extract-seedling-art-packs.mjs --check"
+      },
+      "font": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-10-21",
+        "licence": "MIT",
+        "note": "ORIGINAL glyphs (not 04B_03): the glyph table in scripts/procgen/make-seedling-font.mjs, first committed in e7288a431d (Co-Authored-By: Claude Opus 5.5); the sheet is that script's fontSheetBytes(), not a checkout file"
+      }
+    },
+    "default": "seedling",
+    "groups": {
+      "seedling:font/default": "font"
+    }
+  },
   "clocks": {
     "world": {
       "ticksPerFrame": 45,

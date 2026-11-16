@@ -320,7 +320,8 @@ describe('⛓ the links the render emits', () => {
         //   416 → 418: content sets S2 — maze.md § Things ⇄ concepts.md § Content roles (2 doc).
         //   416 → 419: region-map step 3a — region-layout.md (its index row, its registry link, the registry's row to it)
         //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out, the registry's annotation row to it)
-        expect(checked).toBe(428);
+        //   428 → 429: content packs PL-1 — concepts.md § Content roles → its own § What exists, the numbers and the bindings (1 same-doc).
+        expect(checked).toBe(429);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -45,6 +45,9 @@
 // The source is the `vendor/seedling` submodule unless `--source` names another
 // checkout; an uninitialised submodule is a refusal by name (`seedlingSource.js`).
 //
+// ⛓ CONTENT SETS PL-1 — each layer manifest carries a `provenance` block (Z.7), written by
+// `seedlingPackProvenance.js`; its game source names vendor/seedling at the commit this repository pins.
+//
 // --check re-extracts IN MEMORY and compares every file each pack would hold
 // (pack.json, the art manifest, every sheet's bytes) and every file the pack
 // directory DOES hold, WITHOUT writing; exit 1 names each drifted, missing or
@@ -62,6 +65,7 @@ import { FONT_ART_ROW, fontSheetBytes } from './make-seedling-font.mjs';
 import { LOGO64_ART_ROW } from './archipelagoLogoArt.mjs';
 import { SFX_MANIFEST, buildSfxLayer } from './seedlingSfxLayer.js';
 import { MUSIC_MANIFEST, buildMusicLayer } from './seedlingMusicLayer.js';
+import { artProvenance, seedlingPinnedCommit } from './seedlingPackProvenance.js';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -286,7 +290,7 @@ const sheetIdOf = (file) => file.replace(/\.png$/, '');
  * Every file each pack holds, as `{ [pack]: Map<relative path, Buffer|string> }`,
  * built in memory from the source checkout. Pure apart from the reads.
  */
-export function buildPacks(source) {
+export function buildPacks(source, { commit = seedlingPinnedCommit() } = {}) {
     const dir = join(source, GRAPHICS);
     const out = {};
     for (const [id, meta] of Object.entries(PACKS)) {
@@ -324,6 +328,8 @@ export function buildPacks(source) {
         const manifest = {
             schema_version: 1,
             generated_by: 'scripts/procgen/extract-seedling-art-packs.mjs — do not edit; regenerate and --check',
+            // ⛓ CONTENT SETS PL-1 (Z.7) — where every row came from (`seedlingPackProvenance.js`).
+            provenance: artProvenance(id, rows, commit),
             clocks: { world: { ticksPerFrame: WORLD_TICKS_PER_FRAME, as3: 'Game.as:488 timePerFrame; Game.as:1962 worldFrame(n, loops)' } },
             sheets,
             sprites,
@@ -340,12 +346,12 @@ export function buildPacks(source) {
         if (meta.sfx) {
             pack.source += `; vendor/seedling/assets/sound, as src/Music.as names it`;
             pack.layers.sfx = SFX_MANIFEST;
-            for (const [rel, data] of buildSfxLayer(source).files) files.set(rel, data);
+            for (const [rel, data] of buildSfxLayer(source, { commit }).files) files.set(rel, data);
         }
         if (meta.music) {
             pack.source += '; its songs and jingles, as src/Music.as names them';
             pack.layers.music = MUSIC_MANIFEST;
-            for (const [rel, data] of buildMusicLayer(source).files) files.set(rel, data);
+            for (const [rel, data] of buildMusicLayer(source, { commit }).files) files.set(rel, data);
         }
         files.set('pack.json', `${JSON.stringify(pack, null, 2)}\n`);
         files.set('art/manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
