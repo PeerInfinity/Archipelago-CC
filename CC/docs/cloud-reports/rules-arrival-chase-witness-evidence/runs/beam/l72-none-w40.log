@@ -1,0 +1,27 @@
+DEPTH 1 {"alive":9,"best":{"s":834.96,"at":[28.5,259.5],"ch":["lavarunner@80,216(85,225)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 2 {"alive":23,"best":{"s":818.92,"at":[28.6,255.4],"ch":["lavarunner@80,216(80,227)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 3 {"alive":39,"best":{"s":802.86,"at":[35.5,252.5],"ch":["lavarunner@80,216(76,229)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 4 {"alive":65,"best":{"s":802.82,"at":[38.8,249.2],"ch":["lavarunner@80,216(72,230)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 5 {"alive":105,"best":{"s":802.75,"at":[43.2,244.8],"ch":["lavarunner@80,216(68,232)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 6 {"alive":88,"best":{"s":802.7,"at":[47.2,240.8],"ch":["lavarunner@80,216(63,232)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 7 {"alive":61,"best":{"s":786.71,"at":[52.1,244.3],"ch":["lavarunner@80,216(61,234)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 8 {"alive":76,"best":{"s":786.7,"at":[48.7,241.7],"ch":["lavarunner@80,216(58,236)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 9 {"alive":75,"best":{"s":786.7,"at":[59.8,248.2],"ch":["lavarunner@80,216(59,241)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 10 {"alive":62,"best":{"s":786.7,"at":[55.3,245.7],"ch":["lavarunner@80,216(55,238)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 11 {"alive":56,"best":{"s":786.71,"at":[58.6,247.8],"ch":["lavarunner@80,216(55,241)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 12 {"alive":50,"best":{"s":786.76,"at":[61.4,255.2],"ch":["lavarunner@80,216(56,245)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 13 {"alive":69,"best":{"s":786.77,"at":[51.5,251.8],"ch":["lavarunner@80,216(49,244)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 14 {"alive":59,"best":{"s":786.79,"at":[55,255.2],"ch":["lavarunner@80,216(49,245)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 15 {"alive":54,"best":{"s":802.8,"at":[43.7,250.8],"ch":["lavarunner@80,216(42,242)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 16 {"alive":62,"best":{"s":802.84,"at":[39.4,251.9],"ch":["lavarunner@80,216(40,243)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 17 {"alive":61,"best":{"s":802.86,"at":[34.7,252.1],"ch":["lavarunner@80,216(37,243)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 18 {"alive":52,"best":{"s":818.82,"at":[24.3,240.1],"ch":["lavarunner@80,216(32,239)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 19 {"alive":52,"best":{"s":818.84,"at":[20.6,240.1],"ch":["lavarunner@80,216(29,239)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 20 {"alive":32,"best":{"s":818.87,"at":[16.1,240.4],"ch":["lavarunner@80,216(26,247)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 21 {"alive":24,"best":{"s":818.91,"at":[26,252.1],"ch":["lavarunner@80,216(26,243)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 22 {"alive":21,"best":{"s":818.94,"at":[40.6,264.1],"ch":["lavarunner@80,216(32,254)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 23 {"alive":28,"best":{"s":818.88,"at":[45.3,260.1],"ch":["lavarunner@80,216(35,257)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 24 {"alive":10,"best":{"s":818.95,"at":[47.4,269.7],"ch":["lavarunner@80,216(37,258)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 25 {"alive":7,"best":{"s":818.96,"at":[47.1,271],"ch":["lavarunner@80,216(38,262)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]}}
+DEPTH 26 {"alive":0,"best":null}
+BEAM {"boot":[72,16,256],"goal":[176,0,73],"items":[],"width":40,"seg":4,"depth":120,"tried":7506,"survivors":1240,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":49,"at":[48.7,241.7],"ticks":32,"ch":["lavarunner@80,216(58,236)","lavarunner@136,88(144,96)","lavarunner@216,240(224,248)"]},"ms":19392}
