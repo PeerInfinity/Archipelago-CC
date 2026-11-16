@@ -184,7 +184,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "report"
         },
         {
@@ -246,10 +246,10 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 532,
         "browser": 227,
-        "cited": 289,
-        "files": 553,
-        "lineStyle": 21,
-        "withDocblock": 553,
+        "cited": 290,
+        "files": 554,
+        "lineStyle": 22,
+        "withDocblock": 554,
         "withFlags": 471
     },
     "dir": "scripts/procgen",
@@ -22033,6 +22033,32 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only — REPLAY A CAPTURED SOLVE REQUEST in node, N times, each in a FRESH process: is the solver's answer a function of the request?",
             "path": "scripts/procgen/replay-seedling-solve-request.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "report",
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "content",
+                "exists",
+                "numbers",
+                "numbers-mode",
+                "substrate"
+            ],
+            "file": "report-content-gaps.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Content gap report — resolves (substrate, the three settings) through the pack resolver and prints its gap report (⛓ CONTENT SETS PL-2; Z.5 the resolver, Z.6 the fill rules and the report).",
+            "path": "scripts/procgen/report-content-gaps.mjs"
         },
         {
             "argvHelpers": [],
