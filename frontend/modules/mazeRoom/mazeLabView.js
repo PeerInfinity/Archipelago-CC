@@ -91,8 +91,9 @@ import {
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
     framesForActions, generateStep, generateWithDirectives, labCatalogue,
     labPayload, labReadoutIdentity, labUrlFields,
-    levelOfPayload, loadPayload, openEditSession, planFrames, projectSession, readLabParams,
-    serializeMazeLevel, skeletonCatalogue, stepFromParams, writeLabParams,
+    convertedFromOfState, levelOfPayload, loadPayload, openEditSession, planFrames, projectSession,
+    readLabParams,
+    serializeMazeLevel, skeletonCatalogue, stepFromParams, withConvertedFrom, writeLabParams,
 } from './mazeLab.js';
 import { describePresetLink, openPresetRegion } from './mazeLabPreset.js';
 import { seedlingLinkFor, seedlingOriginOf } from './mazeSeedlingLink.js';
@@ -1132,7 +1133,9 @@ export function main() {
     };
     const seedlingLinkView = () => seedlingLinkFor({
         origin: (state?.baseRecord && seedlingOrigins.get(state.baseRecord)) ?? null,
-        edits: (state?.edits ?? []).length,
+        /** ⛓ MAZE PASTED ROOM LINK — edits folded in before the save box was copied count too: a paste of an edited
+         *  room is still not the ORIGINAL level. */
+        edits: (convertedFromOfState(state)?.edits ?? 0) + (state?.edits ?? []).length,
         presetLink: state?.presetLink ?? null,
     });
     /** The line under the identity: the link (new tab) and its notes, or the reason a converted room cannot link. */
@@ -1931,13 +1934,16 @@ export function main() {
             },
         });
         const { sidecar: _sidecar, ...where } = link;
+        const origin = seedlingOriginOf({
+            payload: link.sidecar.playable_payload, rules: fetched.get(link.path) ?? null, player: link.player,
+        });
         adopt(Object.freeze({
-            ...loadPayload(link.sidecar),
+            /** ⛓ MAZE PASTED ROOM LINK — when the rules PROVED this room's map, the save box says so (`converted_from`)
+             *  and a paste of it links too. ⛔ Only a linkable origin: anything unproven writes nothing. */
+            ...withConvertedFrom(loadPayload(link.sidecar), origin),
             presetLink: Object.freeze({ ...where, asked: Object.freeze({ preset, region }) }),
         }));
-        noteSeedlingOrigin(seedlingOriginOf({
-            payload: link.sidecar.playable_payload, rules: fetched.get(link.path) ?? null, player: link.player,
-        }));
+        noteSeedlingOrigin(origin);
         say(describePresetLink(link));
     };
 
@@ -1967,9 +1973,13 @@ export function main() {
     const loadFromBox = () => {
         try {
             const payload = JSON.parse($('labText').value);
-            adopt(loadPayload(payload));
-            /** ⛓ MAZE SEEDLING LINK — a pasted room brings no rules, so a level number in it cannot link (it says so). */
-            noteSeedlingOrigin(seedlingOriginOf({ payload: levelOfPayload(payload) }));
+            const loaded = adopt(loadPayload(payload));
+            /** ⛓ MAZE SEEDLING LINK — a pasted room brings no rules, so a level number in it cannot link (it says so)…
+             *  ⛓ MAZE PASTED ROOM LINK — …unless it is this page's own save box from a room whose rules named its map:
+             *  its `converted_from` (kept by `loadPayload`) names the map, and the same map test decides. */
+            noteSeedlingOrigin(seedlingOriginOf({
+                payload: levelOfPayload(payload), convertedFrom: convertedFromOfState(loaded),
+            }));
             /** ⛓ MAZE CONVERTED LINK — the box replaced the link's room, so the bar stops naming it. */
             const bar = new URLSearchParams(window.location.search);
             if (bar.has('preset') || bar.has('region')) {
