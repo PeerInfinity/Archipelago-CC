@@ -35,7 +35,7 @@ describe('ROCKBUTTON D1 — `fallRockHoldsButton` (ON since the flip, ⚖ user 2
             expect(CONTACT_FIDELITY_DEFAULTS.fallRockHoldsButton).toBe(true);
             expect(CONTACT_FIDELITY.fallRockHoldsButton).toBe(true);
             // ⛓ wave 42: CORRIDORFLIP `corridorForecastMemo` landed after it.
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fallRockHoldsButton') + 1)).toEqual(['corridorForecastMemo']);
+            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(Object.keys(CONTACT_FIDELITY_DEFAULTS).indexOf('fallRockHoldsButton') + 1)).toEqual(['corridorForecastMemo', 'pulserForecastPulse']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FALL_ROCK_HOLDS_BUTTON');
         });
 

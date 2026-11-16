@@ -105,7 +105,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
         || !!process.env.SEEDLING_BAIT_PARKED_TAIL
-        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE
+        || !!process.env.SEEDLING_PULSER_FORECAST_PULSE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -404,7 +405,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity ROCKBUTTON D1 (wave 41): a landed FallRock is a Solid that holds a Button down — ON since the ROCKBUTTON flip (⚖ user 2026-11-12).
             fallRockHoldsButton: true,
             // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — ON since the CORRIDORFLIP flip (⚖ user 2026-11-12).
-            corridorForecastMemo: true });
+            corridorForecastMemo: true,
+            // ⛓ fidelity L39HIT D2 (wave 47): a spinner forecast steps the room's pulsers and their pulse on the bodies — OFF.
+            pulserForecastPulse: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
