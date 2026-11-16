@@ -23,6 +23,7 @@
 
 import { DEFAULT_MANA_PER_ITEM } from '../shared/procgen/loopCostDefaults.js';
 import { REGION_XP_EFFECTS } from '../shared/procgen/xpFormulas.js';
+import { SOURCE_FIELDS, parseProvenance } from '../contentPacks/provenance.js';
 
 /** The document kind every graph states. */
 export const ACTION_GRAPH_KIND = 'action-graph';
@@ -32,14 +33,11 @@ export const ACTION_GRAPH_SCHEMA_VERSION = 1;
 /** The node kinds (design §1). `start` is the one node every loop begins at. */
 export const ACTION_NODE_KINDS = Object.freeze(['start', 'action', 'check', 'use', 'goal']);
 
-/** The provenance source types (content-sets Z.7) and the fields each requires. */
-export const PROVENANCE_SOURCE_FIELDS = Object.freeze({
-    game: Object.freeze(['name']),
-    person: Object.freeze(['name']),
-    model: Object.freeze(['model', 'date']),
-    authored: Object.freeze(['by']),
-    derived: Object.freeze(['from', 'by']),
-});
+/**
+ * The provenance source types (content-sets Z.7) and the fields each may carry. ⛓ CONTENT SETS PL-2: ONE validator —
+ * this is `contentPacks/provenance.js`'s table, re-exported, so a graph and a pack layer are checked by the same code.
+ */
+export const PROVENANCE_SOURCE_FIELDS = SOURCE_FIELDS;
 
 /** Every way a graph is refused, by name. */
 export const ACTION_GRAPH_REFUSALS = Object.freeze({
@@ -336,21 +334,16 @@ function validateProvenance(graph, err) {
     const R = ACTION_GRAPH_REFUSALS;
     const prov = graph.provenance;
     if (!isPlainObject(prov)) { err(R.NO_PROVENANCE, 'provenance', 'every graph names its sources (Z.7)'); return; }
-    if (!isPlainObject(prov.sources) || Object.keys(prov.sources).length === 0) {
-        err(R.BAD_PROVENANCE, 'provenance.sources', 'at least one source');
+    // ⛓ CONTENT SETS PL-2: the block is checked by the pack layer's one validator (`parseProvenance`), so a graph and
+    // a pack layer accept exactly the same sources. Its refusal sentence is kept; the name is this module's.
+    try {
+        parseProvenance(prov, graph.graph_id ?? '(graph)', 'action-graph');
+    } catch (e) {
+        const unlistedDefault = isPlainObject(prov.sources) && typeof prov.default === 'string' && prov.default
+            && !Object.hasOwn(prov.sources, prov.default);
+        err(unlistedDefault ? R.UNLISTED_SOURCE : R.BAD_PROVENANCE, unlistedDefault ? 'provenance.default' : 'provenance', e.message);
         return;
     }
-    for (const [id, source] of Object.entries(prov.sources)) {
-        const fields = PROVENANCE_SOURCE_FIELDS[source?.type];
-        if (!fields) { err(R.BAD_PROVENANCE, `provenance.sources.${id}.type`, `one of ${Object.keys(PROVENANCE_SOURCE_FIELDS).join(', ')}`); continue; }
-        for (const f of fields) {
-            if (source[f] === undefined || source[f] === '') err(R.BAD_PROVENANCE, `provenance.sources.${id}.${f}`, `a ${source.type} source names its ${f}`);
-        }
-        if (source.approved !== undefined && !(isPlainObject(source.approved) && source.approved.by && source.approved.date)) {
-            err(R.BAD_PROVENANCE, `provenance.sources.${id}.approved`, '{by, date}');
-        }
-    }
-    if (!Object.hasOwn(prov.sources, prov.default)) err(R.UNLISTED_SOURCE, 'provenance.default', `'${prov.default}' is not a listed source`);
     for (const [group, table] of [['nodes', graph.nodes], ['boons', graph.boons]]) {
         for (const [id, entry] of Object.entries(isPlainObject(table) ? table : {})) {
             if (entry?.src !== undefined && !Object.hasOwn(prov.sources, entry.src)) {

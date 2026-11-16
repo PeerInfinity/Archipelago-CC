@@ -14,6 +14,7 @@ import {
     SOURCE_FIELDS, SOURCE_TYPES, checkLayerProvenance, layerEntries, parseProvenance, provenanceCounts, resolveSource,
 } from './provenance.js';
 import { packProvenanceReport } from '../../../scripts/procgen/report-pack-provenance.mjs';
+import { ACTION_GRAPH_REFUSALS, PROVENANCE_SOURCE_FIELDS, validateActionGraph } from '../actionNodes/actionGraph.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const REGISTRY = JSON.parse(readFileSync(join(REPO, 'frontend/packs/packs.json'), 'utf8'));
@@ -81,6 +82,44 @@ describe('the block (Z.7)', () => {
 
     it('every type\'s field list starts from its required fields (no type lists a field twice)', () => {
         for (const fields of Object.values(SOURCE_FIELDS)) expect(new Set(fields).size).toBe(fields.length);
+    });
+});
+
+describe('ONE validator (PL-2): the ActionNodes graph block and the pack layers are checked by the same code', () => {
+    const GRAPH = JSON.parse(readFileSync(join(REPO, 'frontend/modules/actionNodes/graphs/example-village.json'), 'utf8'));
+
+    it('the two drifted fields are OPTIONAL: `session` on a model source, `ruling` inside `approved`', () => {
+        expect(SOURCE_FIELDS.model).toContain('session');
+        const b = block();
+        b.sources.model.session = 'some-session';
+        b.sources.model.approved = { by: 'someone', date: '2026-11-15', ruling: 'A14' };
+        expect(parseProvenance(b, 'p', 'concepts').sources.model.session).toBe('some-session');
+        // Still optional: the minimal model source (neither field) parses above.
+        const empty = block();
+        empty.sources.model.session = '';
+        refuse(empty, /source "model": session must be a non-empty string/);
+        const noRuling = block();
+        noRuling.sources.model.approved = { by: 'someone', date: '2026-11-15', ruling: '' };
+        refuse(noRuling, /approved.ruling must be a non-empty string/);
+        const other = block();
+        other.sources.person.session = 'x';
+        refuse(other, /source "person": field "session" is not one a person source takes/);
+    });
+
+    it('the AN-1 example graph\'s block parses unchanged under the pack layer\'s validator', () => {
+        const parsed = parseProvenance(GRAPH.provenance, 'example-village', 'structure');
+        expect(Object.keys(parsed.sources)).toEqual(Object.keys(GRAPH.provenance.sources));
+    });
+
+    it('actionGraph.js keeps no copy: its table IS this one, and a source this module refuses the graph refuses too', () => {
+        expect(PROVENANCE_SOURCE_FIELDS).toBe(SOURCE_FIELDS);
+        expect(validateActionGraph(GRAPH).ok).toBe(true);
+        const g = structuredClone(GRAPH);
+        g.provenance.sources['actionnodes-design'].email = 'x@y';     // refused by name here, accepted by the old copy
+        const { ok, errors } = validateActionGraph(g);
+        expect(ok).toBe(false);
+        expect(errors[0].code).toBe(ACTION_GRAPH_REFUSALS.BAD_PROVENANCE);
+        expect(errors[0].message).toMatch(/field "email" is not one a model source takes/);
     });
 });
 
