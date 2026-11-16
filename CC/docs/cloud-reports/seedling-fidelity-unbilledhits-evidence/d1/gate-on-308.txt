@@ -1,0 +1,3 @@
+captured result keys [ 'ok', 'kind', 'work', 'passes' ] ticks cap undefined
+PLAN ticks 255
+END 30 72.11534614559599 50.12073494635269 deaths 0 hits 0

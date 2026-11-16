@@ -13,6 +13,12 @@
  * no link and no note. A room that carries a level but whose map is unknown (a pasted sidecar: the map is in its
  * preset's rules, which a paste does not bring) or is another map is converted but CANNOT link, and says why.
  *
+ * ⛓⛓ MAZE PASTED ROOM LINK (⚖ Robert 2026-11-16) — a PASTE links when it says its map itself: the maze lab's own save
+ * box writes `converted_from: {map_document, level, edits}` for a room whose preset rules declared its map (see
+ * `mazeLab.labPayload`), and `loadPayload` keeps it, so COPY → PASTE round-trips. That block stands in for the rules,
+ * and the SAME equality test with the editor's map decides. A bare sidecar paste still names no map and keeps the
+ * reason. ⛔ No fallback to the default map: a paste that does not name its map never links.
+ *
  * ⛔ The link names the level it opens, and only that: the Seedling editor opens the ORIGINAL level, so an edited
  * maze room carries a note that its edits are not carried over; a room-less region (opened as its shared level world's
  * room) and a level split across several maze rooms both open the WHOLE level, and say so.
@@ -41,21 +47,34 @@ export const seedlingEditorMap = () => mapDocumentPath(null).name;
  * @param {object} args.payload  the room (a sidecar's `playable_payload`, or a bare payload)
  * @param {object|null} [args.rules]  the preset's rules.json (null: the room was pasted, not opened by preset link)
  * @param {string|null} [args.player]  the slot whose sidecars hold the room
+ * @param {object|null} [args.convertedFrom]  a pasted lab payload's `converted_from` (`mazeLab.convertedFromOf`): the
+ *   map and level the page that wrote it was told by the preset's rules. Read only when there are no rules.
  * @returns {null | {level, linkable: true, mapDocument, url, siblings}
  *   | {level, linkable: false, reason}} null = not converted from a level-numbered map.
  */
-export function seedlingOriginOf({ payload, rules = null, player = null }) {
-    const level = payload?.level;
+export function seedlingOriginOf({ payload, rules = null, player = null, convertedFrom = null }) {
+    const level = Number.isInteger(payload?.level) ? payload.level : (rules ? undefined : convertedFrom?.level);
     if (!Number.isInteger(level)) return null;
     const editorMap = seedlingEditorMap();
     if (!rules) {
-        return Object.freeze({
-            level,
-            linkable: false,
-            reason: `this room carries level number ${level}, but a pasted room does not say which map that number `
-                + 'indexes (its preset\'s rules do) — open it by preset link (?preset=…&region=…) to get the Seedling '
-                + 'editor link',
-        });
+        const named = convertedFrom?.level === level ? convertedFrom.map_document : null;
+        if (typeof named !== 'string' || named === '') {
+            return Object.freeze({
+                level,
+                linkable: false,
+                reason: `this room carries level number ${level}, but a pasted room does not say which map that number `
+                    + 'indexes (its preset\'s rules do) — open it by preset link (?preset=…&region=…), or paste the maze '
+                    + 'lab\'s own save box from a room opened that way, to get the Seedling editor link',
+            });
+        }
+        if (named !== editorMap) {
+            return Object.freeze({
+                level,
+                linkable: false,
+                reason: `this room was converted from level ${level} of ${named}; the Seedling editor reads ${editorMap}`,
+            });
+        }
+        return Object.freeze({ level, linkable: true, mapDocument: named, url: seedlingEditorUrl(level), siblings: 0 });
     }
     const declared = regionAtlasOf(rules, player)?.map_document;
     if (typeof declared !== 'string' || declared === '') {

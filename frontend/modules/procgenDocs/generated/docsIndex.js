@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 30,
-        "headings": 1324,
+        "headings": 1323,
         "indexHeadings": 2,
-        "lines": 36617,
+        "lines": 36598,
         "pages": 4,
-        "words": 555117
+        "words": 555017
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -134,7 +134,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-editor.md",
-            "words": 7878
+            "words": 7890
         },
         {
             "description": "The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0).",
@@ -238,7 +238,7 @@ export const DOCS_INDEX = frz({
             "file": "maze-lab.md",
             "h1": "The Maze Lab Page",
             "headings": 20,
-            "lines": 312,
+            "lines": 313,
             "links": [
                 "architecture.md",
                 "editing-core.md",
@@ -248,7 +248,7 @@ export const DOCS_INDEX = frz({
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/maze-lab.md",
-            "words": 4803
+            "words": 4928
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
@@ -375,7 +375,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 55797
+            "words": 55787
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -387,7 +387,7 @@ export const DOCS_INDEX = frz({
                 "concepts.md"
             ],
             "path": "docs/json/developer/procgen/seedling-solver-surface.md",
-            "words": 4613
+            "words": 4616
         },
         {
             "description": "What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts.",
@@ -403,8 +403,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 784,
-            "lines": 28314,
+            "headings": 783,
+            "lines": 28294,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -412,7 +412,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 316969
+            "words": 316739
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",

@@ -64,7 +64,8 @@ The Seedling editor builds these links for the room it holds (*The maze lab link
 - A room-less region opens its shared world's room, so the link names that room's level (the whole level), and the note says so.
 - A level split across several maze rooms (level 94 has 2 in `seedling_playthrough_maze`; level 0 has 6 in `seedling_atlas_maze`): every one links to the same level, and the note says how many share it.
 - An edited room still links, to the ORIGINAL level; the note says the maze edits are not carried over.
-- A pasted sidecar (LOAD) carries its level number but not its preset's rules, so it shows the reason instead of a link. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing.
+- The page's own save box, copied from a room that links and pasted into LOAD, links to the same level. For such a room the save box carries `converted_from: {map_document, level, edits}`: the map its preset's rules declared, the level, and the maze edits made before the copy. LOAD keeps the block, and the same map test decides. Edits keep the block; a directive or a ladder step makes a new base, and the block is dropped with it.
+- A pasted bare sidecar (copied out of a `rules.json`) carries its level number but nothing that names its map, so it shows the reason instead of a link. So does a hand-edited `converted_from` that names another map. A malformed block is ignored. There is no fallback to the default map: a paste that does not name its map never links. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing, and their save boxes have no `converted_from`.
 
 All 126 converted rooms link (116 in `seedling_playthrough_maze`, 10 in `seedling_atlas_maze`), and every level they name is a level of the Seedling map (`mazeSeedlingLink.test.js`; `check-maze-lab` CLAIM 26).
 
