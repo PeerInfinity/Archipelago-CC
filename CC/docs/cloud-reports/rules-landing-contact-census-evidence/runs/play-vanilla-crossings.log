@@ -1,0 +1,7 @@
+SET vanilla: seedling-vanilla-record-5aeefc3c
+# box lock: TAKEN by rules-landing-contact-census play.mjs (browser, pid 10903) — head c1927ba30, 10 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only (asserted)
+ROW {"tape":"l73-north-sword-vanilla","set":"seedling-vanilla-record-5aeefc3c","ticks":174,"finished":true,"verdict":"left->L74@166","firstHit":null,"hitsInBoot":0,"restarts":0,"levels":[73,74],"end":{"level":74,"x":296,"y":136,"t":174},"lastInBoot":{"t":165,"x":72.35,"y":16.51,"mob":[]},"firstMob":["Bulb(88.0,88.0)","LavaRunner(80.0,32.0)"],"polled":924}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l73s-sword-east@vanilla","set":"seedling-vanilla-record-5aeefc3c","ticks":113,"finished":true,"verdict":"hit@2,left->L74@71","firstHit":2,"hitsInBoot":2,"restarts":1,"levels":[73,74],"end":{"level":74,"x":296,"y":136,"t":113},"lastInBoot":{"t":70,"x":66.7,"y":17.28,"mob":["Bulb(87.4,86.7)","LavaRunner(76.5,28.5)"]},"firstMob":["Bulb(88.0,88.0)","LavaRunner(80.0,32.0)"],"polled":658}
