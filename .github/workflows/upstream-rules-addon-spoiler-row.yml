@@ -51,6 +51,7 @@ jobs:
         run: npx playwright install chromium
       - name: Spoiler-test the stripped documents
         run: |
+          python -m pip install pyyaml   # scripts/lib/test_utils (the TEST_PORT helper) imports it
           python -m http.server 8000 > /dev/null 2>&1 &
           sleep 2
           python scripts/test/upstream_rules_addon_spoiler_row.py --out "$RUNNER_TEMP/row-out"

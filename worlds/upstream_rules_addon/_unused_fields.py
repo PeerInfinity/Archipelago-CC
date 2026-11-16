@@ -1,7 +1,7 @@
 """The fields the add-on removes from every document it sends because the web client never reads them.
 
 This is the ONE place the list lives. Each entry was shown safe by the strip spoiler sweep
-(NewDocs-side report `server-data/strip-spoiler-sweep.md`, sdc-strip-spoiler-sweep, 2026-11-16): a spoiler
+(the strip spoiler sweep, sdc-strip-spoiler-sweep, 2026-11-16, CI run 43813833769): a spoiler
 test of the stripped document passes wherever the unstripped one does. A field the client does read stays:
 `option_definitions` (Kingdom Hearts 2's helpers read it) and item `type` (Super Metroid's logic reads it)
 were known before the sweep.

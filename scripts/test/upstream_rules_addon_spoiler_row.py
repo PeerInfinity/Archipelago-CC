@@ -2,8 +2,8 @@
 """The standing spoiler-test row for the Upstream Rules Add-on's stripped documents.
 
 usage: python scripts/test/upstream_rules_addon_spoiler_row.py [--only <id> ...] [--out <dir>] [--port N]
-       (a static server for this tree must be up on --port, default 8000; `npm ci` and Playwright's chromium
-       installed)
+       (a static server for this tree must be up on --port, default TEST_PORT's (scripts/lib/test_utils.test_port);
+       `npm ci` and Playwright's chromium installed)
 
 For each roster preset, three kinds of run, each one `npm test -- --mode=test-spoilers --rules=<copy>`:
 - C (control): the preset re-serialised, nothing removed. A red control means the game's own spoiler test is red;
@@ -35,6 +35,8 @@ import types
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO / "scripts" / "lib"))
+from test_utils import test_port  # noqa: E402
 PRESETS = REPO / "frontend" / "presets"
 ADDON_DIR = REPO / "worlds" / "upstream_rules_addon"
 RESULTS = REPO / "test-results" / "in-app-tests"
@@ -153,7 +155,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n")[0])
     parser.add_argument("--only", nargs="*", help="roster game folders to run (default: all)")
     parser.add_argument("--out", type=Path, default=REPO / "test-results" / "upstream-rules-addon-row-out")
-    parser.add_argument("--port", type=int, default=int(os.environ.get("TEST_PORT", "8000")))
+    parser.add_argument("--port", type=int, default=test_port(), help="the static server's port (default: TEST_PORT)")
     args = parser.parse_args(argv)
     strip = load_addon_strip()
     out_dir = args.out

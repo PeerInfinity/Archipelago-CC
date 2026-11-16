@@ -684,6 +684,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "This fork extends Universal Tracker with three tracking modes and a hybrid system that automatically selects the best mode for each game."
     },
     {
+        "path": "docs/json/features/upstream-rules-addon.md",
+        "title": "Upstream Rules Add-on",
+        "section": "features",
+        "summary": "The Upstream Rules Add-on is an optional apworld for people who generate rooms. With it installed, every slot of a room carries its own rules document in the room's slot data. The web client reads…"
+    },
+    {
         "path": "docs/json/games/apcalc/README.md",
         "title": "APCalc",
         "section": "games/apcalc",
@@ -1332,7 +1338,8 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/features/procgen.md",
             "docs/json/features/skip-required-files.md",
             "docs/json/features/spoiler-export-hook.md",
-            "docs/json/features/universal-tracker.md"
+            "docs/json/features/universal-tracker.md",
+            "docs/json/features/upstream-rules-addon.md"
         ],
         "children": []
     },
