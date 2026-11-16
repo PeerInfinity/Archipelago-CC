@@ -1847,6 +1847,12 @@
             "_comment": "SEEDLING SET MAP (the user 2026-11-14: 'How do I open the map in the Seedling lab? Can you add a tutorial to the feature check list in the Tutorials panel?'). The walk row of feature check seedling-set-map: the Procgen Lab — Seedling tab; its Source drop-down set to EDIT; LOAD the VANILLA 116 (the rooms list holds the set's count, read off the page); map view ticked, a cell per room; fit; a click on a door-neighbour's cell (read off the page's map at run time) selects it. Manual batch feature-checks."
         },
         {
+            "id": "feature-check-content-theme-maze-look",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "CONTENT THEME MAZE LOOK (the user 2026-11-15: 'Can we set up a Feature Check in the Tutorials panel to load the scenario for me to see what this maze example currently looks like?'). The walk row of feature check content-theme-maze-look: meta_trial then the plain control concept_trial, each loaded, its first room's location and exit taken in the Text Adventure panel (read off its links), the Maze Room on the region that exit names (fog unticked), then the APWorld Editor's Map tab holding that document. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",
