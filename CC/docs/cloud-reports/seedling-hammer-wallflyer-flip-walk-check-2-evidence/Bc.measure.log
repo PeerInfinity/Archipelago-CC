@@ -1,0 +1,264 @@
+RUN Bc head=26d6035e env=TEST_MEASURE_FLASH_RUNTIME=js TEST_MEASURE_SOLVER_ENV=SEEDLING_WALLFLYER_CORPSE_GONE=1 start=2026-11-16T20:21:46Z
+# box lock: TAKEN by npm test test-substrates batch=tutorials-seedling-whole-game (browser, pid 10689) — head 26d6035ec, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-substrates&testBatch=tutorials-seedling-whole-game&autoStartTimeoutMs=10800000&measureStepTimeoutMs=10800000&measureFlashRuntime=js&seedlingSolverEnv=SEEDLING_WALLFLYER_CORPSE_GONE%3D1&measureBotStallMs=300000
+BROWSER LOG (log): [MEASURE hit] t=6.7s level=-1 hits=0 hits_timer=0 deaths=0 x=? y=? game_time=0 status="Sphere log loaded: 89 entries."
+BROWSER LOG (log): [MEASURE status] t=6.7s level=-1 "Sphere log loaded: 89 entries."
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE hit] t=7.3s level=0 hits=0 hits_timer=0 deaths=0 x=88 y=136 game_time=4 status="Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=7.3s level=0 "Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=8.4s level=-1 hits=0 hits_timer=0 deaths=0 x=? y=? game_time=27 status="Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=8.5s level=0 hits=0 hits_timer=0 deaths=0 x=88 y=136 game_time=27 status="Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=8.5s level=0 "Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 0: 183 tick(s), verbs walk (replay 17 ms over 0 tick(s), solve 85 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=8.6s level=0 "Sphere 0.1 → routing via \"level_0__r7c6 -> level_2\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=14.7s level=2 hits=0 hits_timer=0 deaths=0 x=56 y=40 game_time=210 status="Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=14.7s level=2 "Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=15s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botRegion="level_2" lastRegionEvent="level_2" regionChanges=3 wasmPushes=3 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 2: 47 tick(s), verbs walk (replay 15 ms over 0 tick(s), solve 44 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=15.3s level=2 "Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=16.8s level=3 hits=0 hits_timer=0 deaths=0 x=72 y=24 game_time=257 status="Sphere 0.1 → routing via \"level_3__r0c4 -> level_4\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=16.8s level=3 "Sphere 0.1 → routing via \"level_3__r0c4 -> level_4\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 3: 245 tick(s), verbs walk (replay 12 ms over 0 tick(s), solve 64 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=17.3s level=3 "Sphere 0.1 → routing via \"level_3__r0c4 -> level_4\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=26.4s level=4 hits=0 hits_timer=0 deaths=0 x=24 y=24 game_time=502 status="Sphere 0.1 → routing via \"level_4 -> level_5__r1c5\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=26.4s level=4 "Sphere 0.1 → routing via \"level_4 -> level_5__r1c5\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=26.5s level=4 "Sphere 0.1 → routing via \"level_4 -> level_5__r1c5\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 4: 255 tick(s), verbs hold, shove, walk (replay 15 ms over 0 tick(s), solve 112 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=27.1s level=4 "Sphere 0.1 → routing via \"level_4 -> level_5__r1c5\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=30s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botRegion="level_4" lastRegionEvent="level_4" regionChanges=5 wasmPushes=5 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.1 → routing via \"level_4 -> level_5__r1c5\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=35.6s level=5 hits=0 hits_timer=0 deaths=0 x=88 y=40 game_time=757 status="Sphere 0.1 → routing via \"level_5__r1c5 -> level_6\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=35.6s level=5 "Sphere 0.1 → routing via \"level_5__r1c5 -> level_6\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 5: 403 tick(s), verbs kill, walk (replay 13 ms over 0 tick(s), solve 164 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=36.3s level=5 "Sphere 0.1 → routing via \"level_5__r1c5 -> level_6\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=45s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botRegion="level_5__r1c5" lastRegionEvent="level_5__r1c5" regionChanges=6 wasmPushes=6 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.1 → routing via \"level_5__r1c5 -> level_6\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=49.8s level=6 hits=0 hits_timer=0 deaths=0 x=40 y=24 game_time=1160 status="Sphere 0.1 → routing via \"level_6 -> level_7\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=49.8s level=6 "Sphere 0.1 → routing via \"level_6 -> level_7\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=49.8s level=6 "Sphere 0.1 → routing via \"level_6 -> level_7\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 6: 294 tick(s), verbs bait, walk (replay 15 ms over 0 tick(s), solve 165 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=50.6s level=6 "Sphere 0.1 → routing via \"level_6 -> level_7\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=60s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botRegion="level_6" lastRegionEvent="level_6" regionChanges=7 wasmPushes=7 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.1 → routing via \"level_6 -> level_7\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=60.4s level=7 hits=0 hits_timer=0 deaths=0 x=40 y=40 game_time=1454 status="Sphere 0.1 → routing via \"level_7 -> level_8\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=60.4s level=7 "Sphere 0.1 → routing via \"level_7 -> level_8\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=60.4s level=7 "Sphere 0.1 → routing via \"level_7 -> level_8\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 7: 146 tick(s), verbs walk (replay 12 ms over 0 tick(s), solve 50 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=61.0s level=7 "Sphere 0.1 → routing via \"level_7 -> level_8\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=65.8s level=8 hits=0 hits_timer=0 deaths=0 x=152 y=56 game_time=1600 status="Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=65.8s level=8 "Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 8: 827 tick(s), verbs kill, shove, walk (replay 16 ms over 0 tick(s), solve 247 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=66.6s level=8 "Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=75s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botRegion="level_8" lastRegionEvent="level_8" regionChanges=9 wasmPushes=9 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=90s step=bot-plays checked=0 botQueue=48 botCursor=0 botChecked=0 botRegion="level_8" lastRegionEvent="level_8" regionChanges=9 wasmPushes=9 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.1 → routing via \"level_8 -> level_9\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=94.1s level=9 hits=0 hits_timer=0 deaths=0 x=152 y=24 game_time=2427 status="Sphere 0.1 → routing via \"level_9 -> level_10\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=94.1s level=9 "Sphere 0.1 → routing via \"level_9 -> level_10\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE status] t=94.2s level=9 "Sphere 0.1 → routing via \"level_9 -> level_10\" → level_10 (1/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 9: 122 tick(s), verbs walk (replay 11 ms over 0 tick(s), solve 45 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=94.7s level=9 "Sphere 0.1 → routing via \"level_9 -> level_10\" → level_10 (1/48)"
+BROWSER LOG (log): [MEASURE hit] t=98.8s level=10 hits=0 hits_timer=0 deaths=0 x=56 y=88 game_time=2549 status="Sphere 0.1 → walking to \"Level 010 - Sword\" (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=98.8s level=10 "Sphere 0.1 → walking to \"Level 010 - Sword\" (1/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved collect-placement in level 10: 35 tick(s), verbs apitem (replay 0 ms over 0 tick(s), solve 4 ms, worker; pass dashless)
+BROWSER LOG (log): [MEASURE status] t=98.9s level=10 "Sphere 0.1 → walking to \"Level 010 - Sword\" (1/48)"
+BROWSER LOG (log): [MEASURE status] t=99.7s level=10 "Sphere 0.2 → routing via \"level_10 -> level_11\" → level_11 (2/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 10: 12 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 15 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=100.3s level=10 "Sphere 0.2 → routing via \"level_10 -> level_11\" → level_11 (2/48)"
+BROWSER LOG (log): [MEASURE hit] t=100.7s level=11 hits=0 hits_timer=0 deaths=0 x=40 y=72 game_time=2586 status="Sphere 0.2 → walking to \"Level 011 - Chest\" (2/48)"
+BROWSER LOG (log): [MEASURE status] t=100.7s level=11 "Sphere 0.2 → walking to \"Level 011 - Chest\" (2/48)"
+BROWSER LOG (log): [MEASURE status] t=100.7s level=11 "Sphere 0.2 → walking to \"Level 011 - Chest\" (2/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved collect-placement in level 11: 12 tick(s), verbs apitem (replay 0 ms over 0 tick(s), solve 14 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=101.2s level=11 "Sphere 0.2 → walking to \"Level 011 - Chest\" (2/48)"
+BROWSER LOG (log): [MEASURE status] t=101.4s level=11 "Sphere 0.3 → routing via \"level_11 -> level_3__r8c6\" → level_86 (3/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 11: 17 tick(s), verbs walk (replay 2 ms over 0 tick(s), solve 24 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=101.5s level=11 "Sphere 0.3 → routing via \"level_11 -> level_3__r8c6\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE hit] t=102.1s level=3 hits=0 hits_timer=0 deaths=0 x=104 y=136 game_time=2611 status="Sphere 0.3 → routing via \"level_3__r8c6 -> level_3__r0c4\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE status] t=102.1s level=3 "Sphere 0.3 → routing via \"level_3__r8c6 -> level_3__r0c4\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE status] t=102.1s level=3 "Sphere 0.3 → routing via \"level_3__r0c4 -> level_2\" → level_86 (3/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 3: 152 tick(s), verbs break, walk (replay 1 ms over 0 tick(s), solve 114 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=102.9s level=3 "Sphere 0.3 → routing via \"level_3__r0c4 -> level_2\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=105s step=bot-plays checked=2 botQueue=48 botCursor=2 botChecked=2 botRegion="level_3__r0c4" lastRegionEvent="level_3__r0c4" regionChanges=14 wasmPushes=13 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 0.3 → routing via \"level_3__r0c4 -> level_2\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE hit] t=107.9s level=2 hits=0 hits_timer=0 deaths=0 x=56 y=88 game_time=2763 status="Sphere 0.3 → routing via \"level_2 -> level_0__r7c6\" → level_86 (3/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=107.9s level=2 "Sphere 0.3 → routing via \"level_2 -> level_0__r7c6\" → level_86 (3/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 2: 23 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 26 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=108.5s level=2 "Sphere 0.3 → routing via \"level_2 -> level_0__r7c6\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE hit] t=109.2s level=0 hits=0 hits_timer=0 deaths=0 x=264 y=264 game_time=2786 status="Sphere 0.3 → routing via \"level_0__r7c6 -> level_86\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE status] t=109.2s level=0 "Sphere 0.3 → routing via \"level_0__r7c6 -> level_86\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE status] t=109.3s level=0 "Sphere 0.3 → routing via \"level_0__r7c6 -> level_86\" → level_86 (3/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 0: 111 tick(s), verbs walk (replay 3 ms over 0 tick(s), solve 170 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=110.0s level=0 "Sphere 0.3 → routing via \"level_0__r7c6 -> level_86\" → level_86 (3/48)"
+BROWSER LOG (log): [MEASURE hit] t=113.7s level=86 hits=0 hits_timer=0 deaths=0 x=56 y=56 game_time=2897 status="Sphere 0.3 → walking to \"Level 086 - Chest\" (3/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=113.7s level=86 "Sphere 0.3 → walking to \"Level 086 - Chest\" (3/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved collect-placement in level 86: 23 tick(s), verbs apitem (replay 1 ms over 0 tick(s), solve 20 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=114.2s level=86 "Sphere 0.3 → walking to \"Level 086 - Chest\" (3/48)"
+BROWSER LOG (log): [MEASURE status] t=114.8s level=86 "Sphere 1.4 → routing via \"level_86 -> level_0__r7c6\" → level_36 (4/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 86: 15 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 16 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=115.3s level=86 "Sphere 1.4 → routing via \"level_86 -> level_0__r7c6\" → level_36 (4/48)"
+BROWSER LOG (log): [MEASURE hit] t=115.8s level=0 hits=0 hits_timer=0 deaths=0 x=168 y=296 game_time=2927 status="Sphere 1.4 → routing via \"level_0__r7c6 -> level_0__r11c19\" → level_36 (4/48)"
+BROWSER LOG (log): [MEASURE status] t=115.8s level=0 "Sphere 1.4 → routing via \"level_0__r7c6 -> level_0__r11c19\" → level_36 (4/48)"
+BROWSER LOG (log): [MEASURE status] t=115.9s level=0 "Sphere 1.4 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_36 (4/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 0: 199 tick(s), verbs break, walk (replay 1 ms over 0 tick(s), solve 350 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=117.1s level=0 "Sphere 1.4 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_36 (4/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=120s step=bot-plays checked=3 botQueue=48 botCursor=3 botChecked=3 botRegion="level_0__r11c19" lastRegionEvent="level_0__r11c19" regionChanges=19 wasmPushes=17 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 1.4 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_36 (4/48)"
+BROWSER LOG (log): [MEASURE hit] t=123.8s level=12 hits=0 hits_timer=0 deaths=0 x=24 y=88 game_time=3126 status="Sphere 1.4 → routing via \"level_12__r0c19 -> level_36\" → level_36 (4/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=123.8s level=12 "Sphere 1.4 → routing via \"level_12__r0c19 -> level_36\" → level_36 (4/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 12: 475 tick(s), verbs walk (replay 2 ms over 0 tick(s), solve 541 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=124.5s level=12 "Sphere 1.4 → routing via \"level_12__r0c19 -> level_36\" → level_36 (4/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=135s step=bot-plays checked=4 botQueue=48 botCursor=3 botChecked=3 botRegion="level_12__r0c19" lastRegionEvent="level_12__r0c19" regionChanges=20 wasmPushes=18 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 1.4 → routing via \"level_12__r0c19 -> level_36\" → level_36 (4/48)"
+BROWSER LOG (log): [MEASURE hit] t=140.3s level=36 hits=0 hits_timer=0 deaths=0 x=40 y=120 game_time=3601 status="Sphere 1.4 → walking to \"Level 036 - Chest\" (4/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=140.3s level=36 "Sphere 1.4 → walking to \"Level 036 - Chest\" (4/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved collect-placement in level 36: 72 tick(s), verbs walk (replay 0 ms over 0 tick(s), solve 61 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=140.5s level=36 "Sphere 1.4 → walking to \"Level 036 - Chest\" (4/48)"
+BROWSER LOG (log): [MEASURE status] t=142.9s level=36 "Sphere 2.2 → routing via \"level_36 -> level_12__r0c19\" → level_17 (5/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 36: 78 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 78 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=143.4s level=36 "Sphere 2.2 → routing via \"level_36 -> level_12__r0c19\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE hit] t=146.0s level=12 hits=0 hits_timer=0 deaths=0 x=176 y=392 game_time=3748 status="Sphere 2.2 → routing via \"level_12__r0c19 -> level_0__r11c19\" → level_17 (5/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=146.0s level=12 "Sphere 2.2 → routing via \"level_12__r0c19 -> level_0__r11c19\" → level_17 (5/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 12: 371 tick(s), verbs walk (replay 7 ms over 0 tick(s), solve 879 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=147.8s level=12 "Sphere 2.2 → routing via \"level_12__r0c19 -> level_0__r11c19\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=150s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botRegion="level_12__r0c19" lastRegionEvent="level_12__r0c19" regionChanges=22 wasmPushes=20 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.2 → routing via \"level_12__r0c19 -> level_0__r11c19\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE hit] t=160.2s level=0 hits=0 hits_timer=0 deaths=0 x=296 y=184 game_time=4119 status="Sphere 2.2 → routing via \"level_0__r7c6 -> level_13\" → level_17 (5/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=160.2s level=0 "Sphere 2.2 → routing via \"level_0__r7c6 -> level_13\" → level_17 (5/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 0: 215 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 264 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=161.1s level=0 "Sphere 2.2 → routing via \"level_0__r7c6 -> level_13\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=165s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botRegion="level_0__r7c6" lastRegionEvent="level_0__r7c6" regionChanges=24 wasmPushes=21 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.2 → routing via \"level_0__r7c6 -> level_13\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE hit] t=168.3s level=13 hits=0 hits_timer=0 deaths=0 x=72 y=136 game_time=4334 status="Sphere 2.2 → routing via \"level_13 -> level_14\" → level_17 (5/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=168.3s level=13 "Sphere 2.2 → routing via \"level_13 -> level_14\" → level_17 (5/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 13: 36 tick(s), verbs walk (replay 0 ms over 0 tick(s), solve 31 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=168.9s level=13 "Sphere 2.2 → routing via \"level_13 -> level_14\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE hit] t=170.0s level=14 hits=0 hits_timer=0 deaths=0 x=168 y=72 game_time=4370 status="Sphere 2.2 → routing via \"level_14 -> level_15__r1c5\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE status] t=170.0s level=14 "Sphere 2.2 → routing via \"level_14 -> level_15__r1c5\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE status] t=170.1s level=14 "Sphere 2.2 → routing via \"level_14 -> level_15__r1c5\" → level_17 (5/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 14: 116 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 699 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=171.6s level=14 "Sphere 2.2 → routing via \"level_14 -> level_15__r1c5\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE hit] t=175.4s level=15 hits=0 hits_timer=0 deaths=0 x=56 y=72 game_time=4486 status="Sphere 2.2 → routing via \"level_15__r1c9 -> level_16__r1c1\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE status] t=175.4s level=15 "Sphere 2.2 → routing via \"level_15__r1c9 -> level_16__r1c1\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE status] t=175.5s level=15 "Sphere 2.2 → routing via \"level_15__r1c9 -> level_16__r1c1\" → level_17 (5/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 15: 456 tick(s), verbs shove, walk, weigh (replay 0 ms over 0 tick(s), solve 124 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=175.8s level=15 "Sphere 2.2 → routing via \"level_15__r1c9 -> level_16__r1c1\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=180s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botRegion="level_15__r1c9" lastRegionEvent="level_15__r1c9" regionChanges=28 wasmPushes=24 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.2 → routing via \"level_15__r1c9 -> level_16__r1c1\" → level_17 (5/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE hit] t=191.0s level=16 hits=0 hits_timer=0 deaths=0 x=40 y=72 game_time=4942 status="Sphere 2.2 → breaking rope@32,16 first (flag:L16:0) — the route to level_17 (5/48) needs it — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=191.0s level=16 "Sphere 2.2 → breaking rope@32,16 first (flag:L16:0) — the route to level_17 (5/48) needs it — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved clear-tag in level 16: 112 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 974 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=192.8s level=16 "Sphere 2.2 → breaking rope@32,16 first (flag:L16:0) — the route to level_17 (5/48) needs it"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=195s step=bot-plays checked=5 botQueue=48 botCursor=4 botChecked=4 botRegion="level_16__r1c1" lastRegionEvent="level_16__r1c1" regionChanges=29 wasmPushes=25 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.2 → breaking rope@32,16 first (flag:L16:0) — the route to level_17 (5/48) needs it"
+BROWSER LOG (log): [MEASURE status] t=195.9s level=16 "Sphere 2.2 → routing via \"level_16__r1c9 -> level_17\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE status] t=196.0s level=16 "Sphere 2.2 → routing via \"level_16__r1c9 -> level_17\" → level_17 (5/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-pit in level 16: 159 tick(s), verbs walk (replay 26 ms over 92 tick(s), solve 340 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=196.4s level=16 "Sphere 2.2 → routing via \"level_16__r1c9 -> level_17\" → level_17 (5/48)"
+BROWSER LOG (log): [MEASURE hit] t=199.0s level=17 hits=0 hits_timer=0 deaths=0 x=120 y=-43 game_time=5114 status="Sphere 2.2 → walking to \"Level 017 - Chest\" (5/48)"
+BROWSER LOG (log): [MEASURE status] t=199.0s level=17 "Sphere 2.2 → walking to \"Level 017 - Chest\" (5/48)"
+BROWSER LOG (log): [MEASURE status] t=199.1s level=17 "Sphere 2.2 → walking to \"Level 017 - Chest\" (5/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved collect-placement in level 17: 17 tick(s), verbs apitem (replay 1 ms over 0 tick(s), solve 18 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=199.6s level=17 "Sphere 2.2 → walking to \"Level 017 - Chest\" (5/48)"
+BROWSER LOG (log): [MEASURE status] t=200.0s level=17 "Sphere 2.3 → routing via \"level_17 -> level_16__r3c7\" → level_19__r5c5 (6/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 17: 38 tick(s), verbs walk (replay 0 ms over 0 tick(s), solve 41 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=200.3s level=17 "Sphere 2.3 → routing via \"level_17 -> level_16__r3c7\" → level_19__r5c5 (6/48)"
+BROWSER LOG (log): [MEASURE hit] t=201.4s level=16 hits=0 hits_timer=0 deaths=0 x=120 y=56 game_time=5162 status="Sphere 2.3 → routing via \"level_16__r1c9 -> level_16__r4c21\" → level_19__r5c5 (6/48)"
+BROWSER LOG (log): [MEASURE status] t=201.4s level=16 "Sphere 2.3 → routing via \"level_16__r1c9 -> level_16__r4c21\" → level_19__r5c5 (6/48)"
+BROWSER LOG (log): [MEASURE status] t=201.5s level=16 "Sphere 2.3 → routing via \"level_16__r4c21 -> level_18__r1c1\" → level_19__r5c5 (6/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 16: 544 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 557 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=202.4s level=16 "Sphere 2.3 → routing via \"level_16__r4c21 -> level_18__r1c1\" → level_19__r5c5 (6/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=210s step=bot-plays checked=7 botQueue=48 botCursor=5 botChecked=5 botRegion="level_16__r4c21" lastRegionEvent="level_16__r4c21" regionChanges=34 wasmPushes=27 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.3 → routing via \"level_16__r4c21 -> level_18__r1c1\" → level_19__r5c5 (6/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE hit] t=220.6s level=18 hits=0 hits_timer=0 deaths=0 x=24 y=40 game_time=5707 status="Sphere 2.3 → routing via \"level_18__r1c1 -> level_18__r7c10\" → level_19__r5c5 (6/48)"
+BROWSER LOG (log): [MEASURE status] t=220.6s level=18 "Sphere 2.3 → routing via \"level_18__r1c1 -> level_18__r7c10\" → level_19__r5c5 (6/48)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE status] t=220.7s level=18 "Sphere 2.3 → routing via \"level_18__r7c10 -> level_19__r5c5\" → level_19__r5c5 (6/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 18: 393 tick(s), verbs kill, walk (replay 5 ms over 0 tick(s), solve 1451 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=224.7s level=18 "Sphere 2.3 → routing via \"level_18__r7c10 -> level_19__r5c5\" → level_19__r5c5 (6/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=225s step=bot-plays checked=7 botQueue=48 botCursor=5 botChecked=5 botRegion="level_18__r7c10" lastRegionEvent="level_18__r7c10" regionChanges=36 wasmPushes=28 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.3 → routing via \"level_18__r7c10 -> level_19__r5c5\" → level_19__r5c5 (6/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE hit] t=237.8s level=19 hits=0 hits_timer=0 deaths=0 x=24 y=152 game_time=6100 status="Sphere 2.3 → walking to \"Level 019 - Boss Key 0\" (6/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=237.8s level=19 "Sphere 2.3 → walking to \"Level 019 - Boss Key 0\" (6/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved collect-placement in level 19: 508 tick(s), verbs fight, walk (replay 1 ms over 0 tick(s), solve 195 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=238.6s level=19 "Sphere 2.3 → walking to \"Level 019 - Boss Key 0\" (6/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=240s step=bot-plays checked=8 botQueue=48 botCursor=5 botChecked=5 botRegion="level_19__r5c5" lastRegionEvent="level_19__r5c5" regionChanges=37 wasmPushes=29 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 2.3 → walking to \"Level 019 - Boss Key 0\" (6/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE status] t=254.0s level=19 "Sphere 2.3 → walking to \"Level 019 - Boss Key 0\" (6/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved collect-placement in level 19: 17 tick(s), verbs apitem (replay 0 ms over 0 tick(s), solve 15 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=254.1s level=19 "Sphere 2.3 → walking to \"Level 019 - Boss Key 0\" (6/48)"
+BROWSER LOG (log): [MEASURE status] t=254.5s level=19 "Sphere 3.6 → routing via \"level_19__r3c3 -> level_19__r1c1\" → level_20__r1c4 (8/48)"
+BROWSER LOG (log): [MEASURE status] t=254.6s level=19 "Sphere 3.6 → routing via \"level_19__r1c1 -> level_20__r1c4\" → level_20__r1c4 (8/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 19: 180 tick(s), verbs keylock, walk (replay 1 ms over 3 tick(s), solve 100 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=254.9s level=19 "Sphere 3.6 → routing via \"level_19__r1c1 -> level_20__r1c4\" → level_20__r1c4 (8/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=255s step=bot-plays checked=10 botQueue=48 botCursor=7 botChecked=7 botRegion="level_19__r1c1" lastRegionEvent="level_19__r1c1" regionChanges=39 wasmPushes=29 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.6 → routing via \"level_19__r1c1 -> level_20__r1c4\" → level_20__r1c4 (8/48)"
+BROWSER LOG (log): [MEASURE hit] t=260.8s level=20 hits=0 hits_timer=0 deaths=0 x=200 y=72 game_time=6753 status="Sphere 3.6 → walking to \"Level 020 - Shield\" (8/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=260.8s level=20 "Sphere 3.6 → walking to \"Level 020 - Shield\" (8/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved collect-placement in level 20: 99 tick(s), verbs apitem (replay 1 ms over 0 tick(s), solve 89 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=261.5s level=20 "Sphere 3.6 → walking to \"Level 020 - Shield\" (8/48)"
+BROWSER LOG (log): [MEASURE status] t=264.7s level=20 "Sphere 3.7 → breaking lock@32,80 first (flag:L20:4) — the route to level_25__r2c7 (9/48) needs it — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved clear-tag in level 20: 173 tick(s), verbs touch, walk (replay 0 ms over 0 tick(s), solve 106 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=265.4s level=20 "Sphere 3.7 → breaking lock@32,80 first (flag:L20:4) — the route to level_25__r2c7 (9/48) needs it"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=270s step=bot-plays checked=12 botQueue=48 botCursor=8 botChecked=8 botRegion="level_20__r1c12" lastRegionEvent="level_20__r1c12" regionChanges=41 wasmPushes=30 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → breaking lock@32,80 first (flag:L20:4) — the route to level_25__r2c7 (9/48) needs it"
+BROWSER LOG (log): [MEASURE status] t=270.9s level=20 "Sphere 3.7 → routing via \"level_20__r1c4 -> level_20__r3c1\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE status] t=271.0s level=20 "Sphere 3.7 → routing via \"level_20__r3c1 -> level_13\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] the solver declined — solverBot(js-runtime-L20-exit): no corridor for goal reach-exit toward (24,56) in level 20. Obstacle: proximity-hazard:shieldlocknorm (shieldlocknorm@176,16). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 20 from tile (12,1) to (1,3). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+BROWSER LOG (log): [MEASURE status] t=271.1s level=20 "Sphere 3.7 → routing via \"level_20__r3c1 -> level_13\" → level_25__r2c7 (9/48) — the solver declined — solverBot(js-runtime-L20-exit): no corridor for goal reach-exit toward (24,56) in level 20. Obstacle: proximity-hazard:shieldlocknorm (shieldlocknorm@176,16). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 20 from tile (12,1) to (1,3). The two are in differe"
+BROWSER LOG (log): [MEASURE status] t=274.0s level=20 "Sphere 3.7 → routing via \"level_20__r3c1 -> level_13\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 20: 119 tick(s), verbs hold, walk (replay 7 ms over 254 tick(s), solve 114 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=274.2s level=20 "Sphere 3.7 → routing via \"level_20__r3c1 -> level_13\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE hit] t=278.2s level=13 hits=0 hits_timer=0 deaths=0 x=104 y=56 game_time=7219 status="Sphere 3.7 → routing via \"level_13 -> level_0__r7c6\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=278.2s level=13 "Sphere 3.7 → routing via \"level_13 -> level_0__r7c6\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 13: 48 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 61 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=278.8s level=13 "Sphere 3.7 → routing via \"level_13 -> level_0__r7c6\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE hit] t=280.4s level=0 hits=0 hits_timer=0 deaths=0 x=56 y=200 game_time=7268 status="Sphere 3.7 → routing via \"level_0__r7c6 -> level_0__r11c19\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE status] t=280.4s level=0 "Sphere 3.7 → routing via \"level_0__r7c6 -> level_0__r11c19\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE status] t=280.5s level=0 "Sphere 3.7 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-exit in level 0: 229 tick(s), verbs walk (replay 0 ms over 0 tick(s), solve 246 ms, worker; pass full, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=280.8s level=0 "Sphere 3.7 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=285s step=bot-plays checked=14 botQueue=48 botCursor=8 botChecked=8 botRegion="level_0__r11c19" lastRegionEvent="level_0__r11c19" regionChanges=46 wasmPushes=32 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_0__r11c19 -> level_12__r0c19\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE hit] t=288.5s level=12 hits=0 hits_timer=0 deaths=0 x=24 y=88 game_time=7498 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE status] t=288.5s level=12 "Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE status] t=288.5s level=12 "Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] solved reach-pit in level 12: 2564 tick(s), verbs kill, touch, walk (replay 2 ms over 0 tick(s), solve 2062 ms, worker; pass dashless, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [MEASURE status] t=292.7s level=12 "Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+[MEASURE worker env] {"KILL_ARM":null,"CORPSE_GONE":null} url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=300s step=bot-plays checked=14 botQueue=48 botCursor=8 botChecked=8 botRegion="level_12__r0c37" lastRegionEvent="level_12__r0c37" regionChanges=48 wasmPushes=33 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=315s step=bot-plays checked=14 botQueue=48 botCursor=8 botChecked=8 botRegion="level_12__r0c37" lastRegionEvent="level_12__r0c37" regionChanges=48 wasmPushes=33 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=330s step=bot-plays checked=15 botQueue=48 botCursor=8 botChecked=8 botRegion="level_12__r0c37" lastRegionEvent="level_12__r0c37" regionChanges=48 wasmPushes=33 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=345s step=bot-plays checked=15 botQueue=48 botCursor=8 botChecked=8 botRegion="level_12__r0c37" lastRegionEvent="level_12__r0c37" regionChanges=48 wasmPushes=33 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=360s step=bot-plays checked=16 botQueue=48 botCursor=8 botChecked=8 botRegion="level_12__r0c37" lastRegionEvent="level_12__r0c37" regionChanges=48 wasmPushes=33 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE tick] seedling-whole-game t=375s step=bot-plays checked=16 botQueue=48 botCursor=8 botChecked=8 botRegion="level_12__r0c37" lastRegionEvent="level_12__r0c37" regionChanges=48 wasmPushes=33 transport=js wasmMemMB=? jsHeapMB=242 status="Sphere 3.7 → routing via \"level_12__r0c37 -> level_21\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE hit] t=375.5s level=21 hits=0 hits_timer=0 deaths=0 x=88 y=5 game_time=9982 status="Sphere 3.7 → routing via \"level_21 -> level_22__r0c6\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [MEASURE status] t=375.5s level=21 "Sphere 3.7 → routing via \"level_21 -> level_22__r0c6\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+[MEASURE worker] url=http://localhost:8000/frontend/modules/seedlingDemo/jsRuntimeSolveWorker.js
+BROWSER LOG (log): [js runtime] solved reach-exit in level 21: 26 tick(s), verbs walk (replay 1 ms over 0 tick(s), solve 31 ms, worker; pass full)
+BROWSER LOG (log): [MEASURE status] t=376.2s level=21 "Sphere 3.7 → routing via \"level_21 -> level_22__r0c6\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE hit] t=377.1s level=22 hits=0 hits_timer=0 deaths=0 x=104 y=24 game_time=10009 status="Sphere 3.7 → routing via \"level_22__r0c6 -> level_22__r8c0\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE status] t=377.1s level=22 "Sphere 3.7 → routing via \"level_22__r0c6 -> level_22__r8c0\" → level_25__r2c7 (9/48)"
+BROWSER LOG (log): [MEASURE flyers] t=377.1s level=22 count=0  others: 
+BROWSER LOG (log): [MEASURE status] t=377.1s level=22 "Sphere 3.7 → routing via \"level_22__r8c0 -> level_25__r2c7\" → level_25__r2c7 (9/48) — solving… (budget 640 work units)"
+BROWSER LOG (log): [js runtime] the solver declined — solverBot(js-runtime-L22-exit) reach-exit (0,128)->L25 -> kill (bob@96,144) stance -> kill (bob@96,144) stance: CORRIDOR — the corridor meets chaser:wallflyer@64,80 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (79.0,88.0), forecast along the walk)) inside a climb already 2 deep (CORRIDOR_LADDER_NEST 2): a stance walk whose own corridor needs the ladder again is not converging
+BROWSER LOG (log): [MEASURE status] t=380.4s level=22 "error: level_22__r8c0: the bot cannot walk to exit \"level_22__r8c0 -> level_25__r2c7\" — the JS runtime's walk failed: the solver declined — solverBot(js-runtime-L22-exit) reach-exit (0,128)->L25 -> kill (bob@96,144) stance -> kill (bob@96,144) stance: CORRIDOR — the corridor meets chaser:wallflyer@64,80 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THI"
+BROWSER LOG (log): [tutorial-walk-timing] seedling-whole-game: load 3.1s, start-game-page 3.6s, start-game 0.2s, bot-plays-open 0.2s, bot-plays 373.3s
+BROWSER LOG (log): [MEASURE end] seedling-whole-game t=380s step=bot-plays checked=16 botQueue=48 botCursor=8 botChecked=8 botRegion="level_22__r8c0" lastRegionEvent="level_22__r8c0" regionChanges=51 wasmPushes=35 transport=js wasmMemMB=? jsHeapMB=242 status="error: level_22__r8c0: the bot cannot walk to exit \"level_22__r8c0 -> level_25__r2c7\" — the JS runtime's walk failed: the solver declined — solverBot(js-runtime-L22-exit) reach-exit (0,128)->L25 -> kill (bob@96,144) stance -> kill (bob@96,144) stance: CORRIDOR — the corridor meets chaser:wallflyer@64,80 (the wallflyer's contact: its `hitPlayer` gate fires against the player's start-of-tick box THIS tick (body at (79.0,88.0), forecast along the walk)) inside a climb already 2 deep (CORRIDOR_LADDER_NEST 2): a stance walk whose own corridor needs the ladder again is not converging — solving… (budget 640 work units)"
+[PROGRESS 1/1] tutorial-walk-seedling-whole-game PASSED 382.4s
+PW DEBUG: ===== IN-APP RESULTS: 1 row(s) =====
+EXIT 0 end=2026-11-16T20:28:46Z
