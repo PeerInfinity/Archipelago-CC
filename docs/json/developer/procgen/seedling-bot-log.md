@@ -28337,3 +28337,20 @@ pattern by goal: 35 (L22) and 84 (L88) hit-taking solves → by-name refusals (t
 t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t clean; 193 (L77) 475 t, 1 hit → 491 t clean —
 the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
 in every arm; the 293 committed tapes' streams identical.
+
+### Seedling fidelity L39HIT — the walk's L39 hit; a spinner forecast steps the room's pulsers (`pulserForecastPulse`, OFF)
+
+**D1** (diagnosis): the walk's request was rebuilt on p4g (an inv leg at the walk's sphere-6.7 inventory) and seam-swept in
+node. Seams 30036–30038 give the walk's exact 2864 t kill,l39shaft,rope,walk dashless plan. A fresh p4g page plays it with
+the hit at t1522 (`spinner@112,88`'s hammer), at 0 px with the model, and the walk's two hit samples are that run's rows bit for
+bit, game_time included. The model steps the hit; the plan was accepted because its walk segment (t1310–t1679) was certified
+against a forecast that never stepped `pulser@64,96`'s t1317 pulse on that body, and `unbilledDamageGate` (the backstop) is
+OFF.
+
+**D2** (`pulserForecastPulse`, OFF, last key, `SEEDLING_PULSER_FORECAST_PULSE`): the three spinner forecasts step a copy of
+the room's pulsers after the bodies and apply the enemy arm. ON: the forecast is exact through the hit and prices the hammer
+at t1522. The request plans 3813 t, played hitless on p4g. Survey L39 rows are shorter (65: 2740→2477; 95/133/148/165:
+2624→2359; 172: 2626→2288), the L40 rows are unchanged, no verdict moves, and nothing turns hit-taking. Acceptance `391322d6`
+in every arm. ON movers: `fidelityL39Shaft` D2 (a re-record) and its t300 row (a strike-schedule refusal, handed to hammer),
+and `pressKillCost` r5-press-glide (the shift is bypassed by design).
+

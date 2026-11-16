@@ -19641,9 +19641,12 @@ export function createLevelRun({
                 const blocked = forecastSwordTest(st, th, t, from, { own, damage, frozen, weapon }, tests);
                 lineBlocked = lineBlocked ?? blocked;
             };
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, as `spinnerForecast` steps them
+            const pulses = live.byId.size > 0 ? pulserForecastStepper() : null;
             for (let i = 0; i < need; i += 1) {
                 const t = ticksCompleted + i;
                 if (live.byId.size > 0) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                pulses?.step(st, frozen);
                 // ⛓ SHIELDBUMP D1: `shieldBumpNow` runs after the bodies' update and above `slash()`'s tests
                 if (stepsBump) bumpRow(t);
                 if (!lineBlocked) {
@@ -19755,8 +19758,10 @@ export function createLevelRun({
              * ones its parent's.
              */
             const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked, bumped = null,
-                shieldBumps = null }) => {
+                shieldBumps = null, pulses = null }) => {
                 const snaps = [];
+                // ⛓ fidelity L39HIT D2: the pulsers' state after each own row (`pulserForecastPulse` ON; else all null)
+                const pulseSnaps = [];
                 const wins = [];
                 const slashes = [];
                 // ⛓ SHIELDBUMP D1: per row, was the bump stepped (a state given)? Whole arrays from row 0, as `rows`.
@@ -19773,6 +19778,8 @@ export function createLevelRun({
                         const i = rows.length;
                         const t = n0 + i;
                         if (hasBodies) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                        // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step and above the player's tests
+                        pulses?.step(st, frozen);
                         if (stepsBump) {
                             // ⛓ SHIELDBUMP D1: `shieldBumpNow`, the top-of-tick `slashing` (a swing ending ON t-1 is out)
                             const q = forecastPlayerState(point);
@@ -19831,6 +19838,7 @@ export function createLevelRun({
                         bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
                             destroy: s.spinner.destroy })));
                         snaps.push(new Map(st.byId));
+                        pulseSnaps.push(pulses?.copy() ?? null);
                         wins.push(win);
                         slashes.push(slash);
                         return out;
@@ -19842,7 +19850,10 @@ export function createLevelRun({
                     },
                     /** The state after row `j` (its own, or its parent's). */
                     snap(j) {
-                        if (j >= from) return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from] };
+                        if (j >= from) {
+                            return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from],
+                                pulses: pulseSnaps[j - from] };
+                        }
                         if (parent === null) throw new Error(`levelRun.spinnerFightForecast: no row ${j} to fork at`);
                         return parent.snap(j);
                     },
@@ -19851,7 +19862,8 @@ export function createLevelRun({
                         if (j >= rows.length) throw new Error(`levelRun.spinnerFightForecast: row ${j} not reached`);
                         const s = c.snap(j);
                         return cursor({ parent: c, from: j + 1, st: { byId: new Map(s.st), level },
-                            win: s.win, slash: s.slash, rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
+                            win: s.win, slash: s.slash, pulses: s.pulses?.copy() ?? null,
+                            rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
                             tests: tests.filter((x) => x.t <= n0 + j),
                             lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null,
                             ...(stepsBump ? { bumped: covered.slice(0, j + 1),
@@ -19869,7 +19881,8 @@ export function createLevelRun({
             return cursor({ parent: null, from: 0,
                 st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
                 win: swordWindow, slash: { state: info.state, endsAt: info.endsAt, gate, tick: n0 },
-                rows: [], bodies: [], tests: [], lineBlocked: null });
+                rows: [], bodies: [], tests: [], lineBlocked: null,
+                pulses: hasBodies ? pulserForecastStepper() : null });
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
