@@ -213,4 +213,33 @@ The CI run ids (JSUT + `unittests` push runs, the TT dispatch read job by job wi
 `feature-checks` dispatches) are taken at the exact tip that carries this report. They go in the packet to js-20 and in the
 report-back, because a commit cannot quote runs made at itself.
 
+### Pre-merge tip `d53f91c499` and the merge of origin/main `d24a057d99`
+
+All five runs at `d53f91c499` were green:
+
+| run | headSha | result |
+|---|---|---|
+| JSUT push `43950536676` | `d53f91c499` | success |
+| `unittests` push `43950536855` | `d53f91c499` | success |
+| TT dispatch `43950552920` | `d53f91c499` | success, all 9 jobs |
+| `apworld` dispatch `43950558549` | `d53f91c499` | success |
+| `feature-checks` dispatch `43950563900` | `d53f91c499` | success |
+
+The TT run's fast-batch headroom was 257.6 s of 600 s (**43%**). The base TT run `43939045743` at `c1927ba307` measured
+268.9 s (45%), so the tip ran 11.3 s faster.
+
+origin/main then moved to `d24a057d99` (train `sdc-addon-u2-apworld`: `worlds/upstream_rules_addon/` and its CI and docs; no file
+overlaps this slice). It was merged at `1749eb7b6a` and the gates were re-run there:
+
+- bounded vitest: 32 files, 1201 passed. The list was re-derived as the tests importing a touched source, plus `regionMap/` and
+  `compositeMapDocument*`.
+- `check-region-step-editing`: ALL OK.
+- `check-procgen-presets`: 191 passed.
+- `check-topdown-steps-ui` (`--host=http://localhost:8141`): 66 PASS.
+- Region Map `--test` rows: 4/4 PASSED.
+- engineMd5: `bec369878feb67081187edca62baa951` (42 files), unchanged.
+- The dump: all 58 BEFORE documents are byte-identical. The re-run lists one more document, this slice's own signed fixture
+  (`test/data/unbounded-grid/…`). The instrument takes every tracked rules doc with a `grid_cell`, and the fixture is tracked
+  since `9bd988a839`; the earlier AFTER dump was taken before that.
+
 presets: none; four marks: none (closure no, presets none, gitlink no, Seedling legs none; the 3 md5s do not move).
