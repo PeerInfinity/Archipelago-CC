@@ -5,8 +5,8 @@ import { combatCensusOf } from '../../../../../frontend/modules/seedlingDemo/lev
 import { rockCorridor, chaserGuardVerdict } from '../../../../../scripts/procgen/seedlingFireChaserGuard.js';
 const sides = playthroughRockFireSides();
 for (const [key, r0] of sides) {
-  // decide from the raw shape: a holder-folded rock carries no stances, so it is evaluated on nothing here
-  if (r0.stances.length === 0) { console.log(key, 'no stances (', r0.narrowed ? 'holder-narrowed' : 'none', r0.guarded ? 'guarded' : '', ')'); continue; }
+  // a guarded rock is evaluated on its folded entry (rock + sides; its stances are gone); a holder-folded one is skipped
+  if (r0.stances.length === 0 && !r0.guarded) { console.log(key, 'no stances (', r0.narrowed ? 'holder-narrowed' : 'none', r0.guarded ? 'guarded' : '', ')'); continue; }
   const level = PLAYTHROUGH_MAP.levels.find((l) => l.level === r0.level);
   const grid = playthroughGridFor(level);
   const tileTypes = HP.tileTypesOf(level, grid.width);
