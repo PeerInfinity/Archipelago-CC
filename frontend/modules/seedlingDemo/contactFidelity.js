@@ -2044,6 +2044,23 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1` for a node measurement.
      */
     corridorForecastMemo: true,
+    /**
+     * fidelity DARKSUITSTATIC D2 (wave 46) — THE DARK SUIT RETALIATES INTO A STATIC BODY. `Player.hit` calls
+     * `if (e && hasDarkSuit) e.hit(darkSuitForce 1, new Point(x, y), darkSuitDamage 1, "Suit")` inside its own gate
+     * (`Player.as:1384-1387`), and `Enemy.hitPlayer` passes the body as `e` (`p.hit(this, 3, …)`, `Enemies/Enemy.as:
+     * 211-221`). The static scan (`levelRun.stepContactsNow`) passed no `retaliate`, so every static contact under the
+     * suit was refused by name (`playerHit`'s `byEnemy`) — met by hammer at L63 `darktrap@128,272`. D1's census of the
+     * scan's classes (`IceTrap`, `SandTrap`, `DarkTrap`, and `Turret` relabelled by `STATIC_SWORD_ARM`), from the AS3:
+     * `DarkTrap.hit` is EMPTY (`Enemies/DarkTrap.as:56-59`) and `IceTrap` sets `canHit = false` (`Enemies/IceTrap.as:32`,
+     * `Enemy.as:147`) — no effect; `SandTrap` takes `Enemy.hit` (empty `knockback`) on F4's damage row: hits, the
+     * 30-tick i-frames that gate its own `hitPlayer`, the `hitByDarkStuff` latch, and a third hit's "die" staged as the
+     * sword arm stages it plus the one graphic step `World.update` gives a blow inside the body's own update. `Turret`
+     * is NOT declared: its fire gate reads `hitsTimer` after `super.update()` (`Enemies/Turret.as:45-79`) and the model
+     * steps that half above the scan, so it stays refused, and the refusal now says why. ON: the scan passes the
+     * declared `retaliate`, and the row lands in `playerHits[].retaliation`. OFF: byte-identical.
+     * `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    darkSuitStaticRetaliation: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2447,6 +2464,9 @@ if (globalThis.process?.env?.SEEDLING_FALL_ROCK_HOLDS_BUTTON === '0') CONTACT_FI
 // ⛓ fidelity CORRIDORFLIP D2: `SEEDLING_CORRIDOR_FORECAST_MEMO=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '1') CONTACT_FIDELITY.corridorForecastMemo = true;
 if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '0') CONTACT_FIDELITY.corridorForecastMemo = false;
+// ⛓ fidelity DARKSUITSTATIC D2: `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '1') CONTACT_FIDELITY.darkSuitStaticRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '0') CONTACT_FIDELITY.darkSuitStaticRetaliation = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

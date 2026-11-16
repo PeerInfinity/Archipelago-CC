@@ -11928,7 +11928,8 @@ export function createLevelRun({
      *
      * @returns the `playerHit` result, so a caller can see `died`/`applied`
      */
-    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null, retaliate = undefined }) {
+    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null, retaliate = undefined,
+        undeclaredWhy = null }) {
         let r;
         try {
             r = playerHit(damage, {
@@ -11949,8 +11950,10 @@ export function createLevelRun({
             });
         } catch (e) {
             if (!(e instanceof PlayerDamageError)) throw e;
+            // ⛓ fidelity DARKSUITSTATIC D2: an undeclared source may name WHY it is undeclared (ON only).
             throw new Error(`levelRun: the \`${source}\` hit (${id}) at tick `
-                + `${ticksCompleted + 1} in level ${level} — ${e.message}`);
+                + `${ticksCompleted + 1} in level ${level} — ${e.message}`
+                + (undeclaredWhy ? ` ${undeclaredWhy}` : ''));
         }
         // `if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y),
         // darkSuitDamage, "Suit")` — the attacker's own `Enemy.hit`, from the
@@ -12370,9 +12373,96 @@ export function createLevelRun({
                 force: PLAYER_DAMAGE.contactForce,
                 damage: inst.row.damage,
                 from: { x: inst.cx, y: inst.cy },
+                // ⛓ fidelity DARKSUITSTATIC D2 (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, ON only): the body is `e`.
+                ...(CONTACT_FIDELITY.darkSuitStaticRetaliation ? staticSuitRetaliation(inst, id) : {}),
             });
             if (pendingDeath) return;
         }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DARKSUITSTATIC D2 — **THE DARK SUIT'S RETALIATION INTO A STATIC BODY**
+     * (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, OFF).
+     *
+     *     Player.as:1384-1387   if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y), darkSuitDamage, "Suit");
+     *
+     * `Enemy.hitPlayer` (`Enemies/Enemy.as:211-221`) calls `p.hit(this, 3, …)`, so the static scan's body is `e`. Per
+     * class (D1 census, `CC/docs/cloud-reports/seedling-fidelity-darksuitstatic.md`):
+     *   · `DarkTrap` — `hit()` is an EMPTY override (`Enemies/DarkTrap.as:56-59`): no effect.
+     *   · `IceTrap` — `canHit = false` (`Enemies/IceTrap.as:32`) closes `Enemy.hit`'s only gate (`Enemy.as:147`): no effect.
+     *   · `SandTrap` — `Enemy.hit` unchanged (`SandTrap.knockback` is empty, `:77-80`): `enemyHit` on F4's damage row
+     *     (`staticBodyStateFor`), i.e. `hits += 1`, `hitsTimer = 30`, the `hitByDarkStuff` latch; a third hit plays
+     *     "die" (`startDeath`, `:88-92`), staged as the sword arm stages it, and — because the blow lands INSIDE the
+     *     trap's own `update()` — `World.update` advances its graphic on this same tick (`World.as` update loop:
+     *     `e.update()` then `e._graphic.update()`), one step the sword's blow (the Player updates last) does not get.
+     *   · `Turret` (relabelled here by `STATIC_SWORD_ARM`) — NOT declared: `Turret.update` reads `hitsTimer` in its fire
+     *     gate and plays "die" over "startshot" AFTER `super.update()` (`Enemies/Turret.as:45-79`), and the model steps
+     *     that half in `stepShootersNow`, above this scan. So a Suit hit would land after the turret's fire gate had
+     *     already read the pre-hit timer. It stays ABSENT (refused by name), with this reason.
+     *
+     * @returns {{retaliate: Function} | {undeclaredWhy: string}}
+     */
+    function staticSuitRetaliation(inst, id) {
+        const as3 = inst.as3;
+        if (as3 === 'DarkTrap') {
+            return { retaliate: () => ({ id, as3, landed: false, effect: 'none',
+                why: '`DarkTrap.hit` is an empty override (Enemies/DarkTrap.as:56-59)' }) };
+        }
+        if (as3 === 'IceTrap') {
+            return { retaliate: () => ({ id, as3, landed: false, effect: 'none',
+                why: '`canHit = false` (Enemies/IceTrap.as:32) closes `Enemy.hit` (Enemies/Enemy.as:147)' }) };
+        }
+        if (as3 === 'SandTrap') return { retaliate: () => staticSuitHit(id) };
+        if (as3 === 'Turret') {
+            return { undeclaredWhy: 'fidelity DARKSUITSTATIC D1: `Turret.update` reads `hitsTimer` in its fire gate '
+                + 'and plays "die" over "startshot" AFTER `super.update()` (Enemies/Turret.as:45-79), and this model '
+                + 'steps that half in `stepShootersNow`, above the contact scan — a Suit hit here would land after the '
+                + 'fire gate had read the pre-hit timer. Not declared.' };
+        }
+        return { undeclaredWhy: `fidelity DARKSUITSTATIC D1: no retaliation row for \`${as3}\`.` };
+    }
+
+    /** `Enemy.hit(darkSuitForce, …, darkSuitDamage, "Suit")` on a SandTrap's F4 damage row; a kill is staged. */
+    function staticSuitHit(id) {
+        const sb = staticBodyStateFor(level).get(id) ?? null;
+        if (!sb) {
+            throw new Error(`levelRun: the dark suit retaliates into ${id} at tick ${ticksCompleted + 1} in level `
+                + `${level}, which is not in the run's static body state.`);
+        }
+        const verdict = enemyHit(sb, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (verdict.killed) {
+            const spec = STATIC_SWORD_DEATH[sb.as3] ?? STATIC_ARROW_DEATH[sb.as3];
+            // `SandTrap.startDeath` is `play("die")`: no `destroy` at the blow.
+            sb.destroy = false;
+            if (!(sb.persistTag >= 0)) {
+                throw new Error(`levelRun: ${sb.id} dies to the dark suit's retaliation at tick ${ticksCompleted + 1} `
+                    + 'and carries no persistence tag, so its `removed()` would write OUT OF BAND. Refused by name '
+                    + '(fidelity DARKSUITSTATIC, F4\'s rule).');
+            }
+            const census = world.combat?.enemies ?? [];
+            const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+            const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== sb.id
+                && !(staticBodyStateFor(level).get(`${e.tag}@${e.x},${e.y}`)?.dying))
+                .map((e) => ({ as3: e.as3 }));
+            const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+            if (!led.nil) {
+                throw new Error(`levelRun: the dark suit's retaliation at tick ${ticksCompleted + 1} KILLS ${sb.id}, `
+                    + `whose removal OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not `
+                    + 'staged. Refused by name (fidelity DARKSUITSTATIC).');
+            }
+            sb.killedAt = ticksCompleted + 1;
+            sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+            // The blow is inside the trap's own `update()`, so its graphic advances on this tick too.
+            if (stepSpriteAnim(sb.dieAnim)) {
+                throw new Error(`levelRun: ${sb.id}'s "die" ended on its first step — not a SandTrap anim.`);
+            }
+        }
+        return {
+            id, as3: sb.as3, landed: verdict.landed, hits: sb.hits, hitsTimer: sb.hitsTimer,
+            hitByDarkStuff: sb.hitByDarkStuff,
+            ...(verdict.killed ? { killed: true } : {}),
+            ...(verdict.landed ? {} : { why: verdict.refusedAt }),
+        };
     }
 
     /**
