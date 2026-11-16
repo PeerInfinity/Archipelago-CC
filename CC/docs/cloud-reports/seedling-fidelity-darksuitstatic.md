@@ -246,3 +246,5 @@ drift, so I missed it; the mutant row pins the exact green set, so it went red. 
 with `ci-vitest-summary.mjs <head>`), and the `train_only` dispatch named above. In Gates, read "constants census
 `--check` PASS" as *PASS after the `--write`*.
 
+
+**Final CI** (`JavaScript Unit Tests` push run 43967789328 at `bf573841`): **success**. The unfiltered suite is 28182/28182 passed, the slow battery 437/437. Still owed: the `train_only` dispatch.
