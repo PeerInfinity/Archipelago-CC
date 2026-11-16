@@ -1205,7 +1205,7 @@ registerTest({
         + 'past the bobs, the page plays it one key set per tick, and the stairs crossing is reported — 0 HALT, no '
         + 'refutation, no error: status.',
     testFunction: seedlingJsRuntimeSolverWalksEnemyRoom,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -1388,7 +1388,7 @@ registerTest({
         + 'hides it; the progress line under the game reads the final state; closing the section hides the view and '
         + 'keeps it listening.',
     testFunction: seedlingJsRuntimeSolveProgressView,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -1735,7 +1735,7 @@ registerTest({
         + 'lock\'s clear itself, and the crossing to level 6 is reported — the clear reported once as pendingCheck '
         + '<seq>|5|0|0 (as the game\'s Lock.turnOff reports it), no AP location checked, 0 HALT.',
     testFunction: seedlingJsRuntimeSolverOpensKillLock,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -1852,7 +1852,7 @@ registerTest({
         + '(latched — it fires only on an entry). The SOLVER steps off onto the rock\'s cell and walks back on (one plan), '
         + 'and the crossing to 11 is reported — 0 HALT, no decline, no error: status.',
     testFunction: seedlingJsRuntimeSolverStepsOffTheDoor,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2036,7 +2036,7 @@ registerTest({
         + 'The worker is terminated at the backstop and the goal FAILS with "the solve exceeded the backstop on this machine '
         + '(0.3 s) …"; nothing of the solve is played and the walker does not take the goal instead.',
     testFunction: seedlingJsRuntimeSolverBudgetFallsBack,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2175,7 +2175,7 @@ registerTest({
         + 'terminates the worker and the goal FAILS with "the solve was stopped by the player …"; the room is released '
         + '(the game steps again) and Stop greys out. The next walk of the same exit solves in a fresh worker and is done.',
     testFunction: seedlingJsRuntimeSolverStopButton,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2257,7 +2257,7 @@ registerTest({
         + 'and seedlingSolverBackstopOff, and the page reads budget 0 and backstop 0. The same walk then solves with BOTH limits '
         + 'off and finds the same plan (keys, verbs, pass, prefix, end). Un-ticked, the page is back on 640 / 300 s.',
     testFunction: seedlingJsRuntimeSolverLimitsOff,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2358,7 +2358,7 @@ registerTest({
         + 'heartbeat never gaps past 250 ms while it does, the room is held (the run does not step), and the plan then '
         + 'plays to level 36 — solved once, no decline, no refutation.',
     testFunction: seedlingJsRuntimeSolverKeepsTheFrameClock,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2480,7 +2480,7 @@ registerTest({
         + 'level 31; the walk completes on the fall, and no pendingExit is reported (the game writes none for a '
         + 'fall). 0 HALT, no refutation.',
     testFunction: seedlingJsRuntimeSolverFallsThroughPit,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2526,7 +2526,7 @@ registerTest({
         + 'solver\'s collect-placement plans the chest verb (stance, press, ceremony), the page plays it, and the '
         + 'chest\'s clear is reported once as pendingCheck <seq>|17|0|0. 0 HALT, no refutation.',
     testFunction: seedlingJsRuntimeSolverOpensChest,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -3743,7 +3743,7 @@ registerTest({
         + 'persistence_cleared, one pendingCheck <seq>|16|0|0, and the event collector\'s LOCAL check of the location. '
         + '0 HALT, no refutation.',
     testFunction: seedlingJsRuntimeSolverCutsRopeEvent,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -5044,7 +5044,7 @@ registerTest({
         + 'used to refuse every encounter: "walked on the wasm runtime"); the leg completes on the Fire drop\'s report '
         + 'clear {32,4} (one pendingCheck <seq>|32|4|0) and the location is checked. 0 HALT, solved 1/0/0.',
     testFunction: seedlingJsRuntimeSolverFightsBobEncounter,
-    category: 'Seedling JS runtime',
+    category: 'Seedling JS solver',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
