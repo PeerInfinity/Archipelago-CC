@@ -28337,3 +28337,23 @@ pattern by goal: 35 (L22) and 84 (L88) hit-taking solves → by-name refusals (t
 t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t clean; 193 (L77) 475 t, 1 hit → 491 t clean —
 the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
 in every arm; the 293 committed tapes' streams identical.
+
+### Seedling fidelity DARKSUITSTATIC — the dark suit's retaliation into a static body (`darkSuitStaticRetaliation`, OFF)
+
+Planner `seedling-fidelity-planning-21`, wave 46 (⚖ the user's GO 2026-11-16, *"Darktrap Dark Suit (Recommended)"*).
+Base `d24a057d99`. The report is `CC/docs/cloud-reports/seedling-fidelity-darksuitstatic.md`; it answers hammer
+SMALL-WALLS §9's L63 `darktrap@128,272` hand-over.
+
+**D1** (census): the static scan reaches `IceTrap`, `SandTrap`, `DarkTrap` and, under `STATIC_SWORD_ARM`, `Turret`.
+`DarkTrap.hit` is empty and `IceTrap` sets `canHit = false`: no-ops. `SandTrap` is `Enemy.hit` with an empty
+`knockback`, on F4's damage row. `Turret` reads `hitsTimer` in its fire gate after `super.update()`, a half the model
+steps above the scan: not declared. Other call sites with `e` and no `retaliate`: `shieldBossStab`, `owlBody`, `bobBoss`,
+`bossBody` (boss arms, not this slice).
+
+**D2** (`darkSuitStaticRetaliation`, OFF, last key): the scan passes the declared `retaliate`; a SandTrap kill is staged
+as the sword's, plus the graphic step `World.update` gives a blow inside the body's own update (removal 18 ticks after
+the blow, not 19). The Turret's refusal gains its D1 reason. OFF byte-identical (acceptance `391322d6` base / OFF / ON).
+
+**D3** (ON, measured; no flip): 8 seed-1 legs (906 at L63, seven at L101) and 5 survey steps (208, 211, 230, 236, 241)
+hold the suit in such a room. The survey rows are identical OFF/ON; leg 906 (node) refuses before any darktrap contact,
+ON = OFF; the bounded set and the two train files of the icetrap rooms move nothing ON.
