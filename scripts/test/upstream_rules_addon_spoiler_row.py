@@ -140,7 +140,8 @@ def run(kind, game, rules, seed, player, port, out_dir):
         shutil.move(str(RESULTS / after), str(out_dir / f"{kind}__{game}.json"))
     # A run that tested some other file (the override did not load, and the app fell back to a default preset) is a
     # FAIL whatever it says: measured on the first CI run, every row read ./presets/action_nodes_example.
-    record["read_our_copy"] = str(record.get("testLogPath") or "").startswith(rules.rsplit("/", 1)[0])
+    read = str(record.get("testLogPath") or "").removeprefix("./")
+    record["read_our_copy"] = read.startswith(rules.rsplit("/", 1)[0].removeprefix("./") + "/")
     record["verdict"] = ("PASS" if proc.returncode == 0 and record.get("passed") is True and record["read_our_copy"]
                          else "FAIL")
     if record["verdict"] == "FAIL":
