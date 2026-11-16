@@ -52,9 +52,11 @@ import {
 } from '../shared/procgen/library.js';
 import { TILE_PX, COLORS, compositeMapIdOf } from '../procgenCore/compositeMapRenderer.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
-import { conceptArtFrame, drawConceptArt, drawTileArt, loadMazeTileArt } from './mazeTileArt.js';
+import { conceptArtFrame, drawConceptArt, drawMazeTile, loadMazeTileArt } from './mazeTileArt.js';
 import { drawMazeThings } from './mazeThingOverlay.js';
-import { CONCEPT_ART_CLEARED_ALPHA } from './mazeRoomRender.js';
+import {
+    CONCEPT_ART_CLEARED_ALPHA, drawArrowTraps, drawConsumableTile, drawLiveMarkers,
+} from './mazeRoomRender.js';
 import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -195,28 +197,41 @@ export function resetMazeCompositeArtForTests() {
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
+ * ⛓ TILE-1 — THE KINDS OF `mazeTileArt.MAZE_ART_KEYS` THIS CELL DOES NOT DRAW, each with its reason. Every other row is
+ * drawn here through the same chain as the one-region view (`mazeTileFallback.test.js` holds both views to the table).
+ */
+export const MAZE_COMPOSITE_UNDRAWN = Object.freeze({
+    player: 'the composite map draws a world\'s layout, not a play state: its geometry carries no player position, and '
+        + 'the one-region view also draws no player before play (`plainView`\'s `playerPos: null`). Drawing one at the '
+        + 'entrance would claim a position nobody holds.',
+});
+
+/**
  * Paint one maze region into its composite-map cell.
  *
  * @param {CanvasRenderingContext2D} ctx
  * @param {object} region the grid region — its `playable_payload` is the
  *   deserialized maze world (tiles / exits / items / obstacles).
  * @param {{offX:number, offY:number, regionSize:{width,height},
- *   tilePx?:number, colors?:object}} geom cell origin + the shared geometry.
+ *   tilePx?:number, colors?:object, source?, requestRedraw?, registry?,
+ *   tileArt?:object|null}} geom cell origin + the shared geometry (`tileArt`: TILE-1's held art, else the load).
  *   ⛓ `regionSize` is the GRID's uniform cell, which can be larger than this
  *   world; the maze paints its own `world.width`/`world.height` from the
  *   origin, exactly as the panel's version did.
  */
 export function drawMazeCompositeRegion(ctx, region, {
     offX, offY, tilePx = TILE_PX, colors = COLORS, source = null, requestRedraw = null,
-    registry = substrateRegistry,
+    registry = substrateRegistry, tileArt: heldArt = undefined,
 } = {}) {
     const world = region?.playable_payload;
     if (!world) return;
-    // ⛓ TIDY-1: the theme's art, or null (every `art(…)` below is then false and the cell draws as before).
-    const tileArt = world.atlas ? null : tileArtForStack(mazeCompositeStackOf(region, source, registry), requestRedraw,
+    // ⛓ TIDY-1: the theme's art, or null (every kind below then draws its own shape, as before the art seam).
+    // ⛓ TILE-1: a host that already holds the seam's `tileArt` (or null) may pass it as `geom.tileArt` instead of the
+    //   load (`mazeTileFallback.test.js` draws both views from one stub this way).
+    const tileArt = heldArt !== undefined ? heldArt : world.atlas ? null : tileArtForStack(mazeCompositeStackOf(region, source, registry), requestRedraw,
         registry?.get?.(compositeMapIdOf(region))?.contentRoles ?? null);
-    const art = (thing, x, y) => tileArt !== null
-        && drawTileArt(ctx, tileArt, thing, offX + x * tilePx, offY + y * tilePx, tilePx, tilePx);
+    // ⛓ TILE-1: every kind through the one chain (`mazeTileArt.drawMazeTile`): the art, else the `own` shape.
+    const tile = (thing, x, y, own) => drawMazeTile(ctx, tileArt, thing, offX + x * tilePx, offY + y * tilePx, tilePx, { own });
     const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
     const itemLib = world.itemLib ?? DEFAULT_ITEMS;
     // Composite view doesn't have a player inventory — gates
@@ -228,10 +243,11 @@ export function drawMazeCompositeRegion(ctx, region, {
     // Tile base layer
     for (let y = 0; y < world.height; y++) {
         for (let x = 0; x < world.width; x++) {
-            const tile = getTile(world, x, y);
-            if (art(tile === TILE_WALL ? 'wall' : 'floor', x, y)) continue;
-            ctx.fillStyle = tile === TILE_WALL ? colors.wall : colors.floor;
-            ctx.fillRect(offX + x * tilePx, offY + y * tilePx, tilePx, tilePx);
+            const kind = getTile(world, x, y) === TILE_WALL ? 'wall' : 'floor';
+            tile(kind, x, y, () => {
+                ctx.fillStyle = colors[kind];
+                ctx.fillRect(offX + x * tilePx, offY + y * tilePx, tilePx, tilePx);
+            });
         }
     }
 
@@ -256,9 +272,14 @@ export function drawMazeCompositeRegion(ctx, region, {
             const itemId = world.items.get(key);
 
             // R2b: an OPEN exit is a thing (`maze:tile/exit`); a closed one is a state signal and stays red.
-            if (isExit && ((isLogicGate && gateClosed) || !art('exit', x, y))) {
-                ctx.fillStyle = (isLogicGate && gateClosed) ? colors.exitBlocked : colors.exit;
+            if (isExit && isLogicGate && gateClosed) {
+                ctx.fillStyle = colors.exitBlocked;
                 ctx.fillRect(offX + x * tilePx, offY + y * tilePx, tilePx, tilePx);
+            } else if (isExit) {
+                tile('exit', x, y, () => {
+                    ctx.fillStyle = colors.exit;
+                    ctx.fillRect(offX + x * tilePx, offY + y * tilePx, tilePx, tilePx);
+                });
             }
             if (obstacle && !isLogicGate) {
                 const color = obstacle.color ?? '#b84040';
@@ -311,13 +332,36 @@ export function drawMazeCompositeRegion(ctx, region, {
                 ctx.lineWidth = 2;
                 ctx.strokeRect(offX + x * tilePx + 1, offY + y * tilePx + 1, tilePx - 2, tilePx - 2);
             }
-            if (isEntrance && !isExit && !art('entrance', x, y)) {
-                ctx.strokeStyle = colors.entrance;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(offX + x * tilePx + 1, offY + y * tilePx + 1, tilePx - 2, tilePx - 2);
+            if (isEntrance && !isExit) {
+                tile('entrance', x, y, () => {
+                    ctx.strokeStyle = colors.entrance;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(offX + x * tilePx + 1, offY + y * tilePx + 1, tilePx - 2, tilePx - 2);
+                });
             }
         }
     }
+
+    // ⛓ TILE-1: the rest of the kinds, by the one-region view's OWN drawers at this cell's origin — the mana and
+    //   consumable tiles, the arrow traps, then the live markers (pulsers, pulls, buttons, blocks). As the gates above,
+    //   the map has no play state: the world's own block layout, every lane and pulser silent, every pull's gate shut,
+    //   nothing collected. No player (`MAZE_COMPOSITE_UNDRAWN`). A world with none of these draws nothing more.
+    for (let y = 0; y < world.height; y++) {
+        for (let x = 0; x < world.width; x++) {
+            const key = `${x},${y}`;
+            const mana = world.manaTiles?.get(key);
+            const consumable = world.consumableTiles?.get(key);
+            if (mana || consumable) {
+                drawConsumableTile(ctx, tileArt, offX + x * tilePx, offY + y * tilePx, tilePx, { mana, consumable });
+            }
+        }
+    }
+    const markerView = {
+        tilePx, offX, offY, seedlingSkin: null, tileArt, inventory, ruleEvaluator: null,
+        armedTraps: null, livePulsers: null, blocks: null, blockKinds: null, playerPos: null, latched: null,
+    };
+    drawArrowTraps(ctx, world, markerView);
+    drawLiveMarkers(ctx, world, markerView);
 
     // ⛓ S2: the region's things (`mazeThingOverlay.drawMazeThings`, the panel's own pass): art by their pack concept,
     //   else the sign / the baked look. No fog and no player on the composite map. A world with none draws nothing.
