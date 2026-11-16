@@ -132,6 +132,21 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`BROWSER LOG (${msg.type()}): ${text}`);
     });
 
+    // MEASUREMENT-ONLY (cloud slice seedling-hammer-wallflyer-flip-walk-check-2): witness that the env reached the
+    // solve worker — its URL, and what its own process.env holds for the two wallflyer switches, read IN the worker.
+    page.on('worker', (w) => {
+      const url = w.url();
+      if (!/SolveWorker/i.test(url)) return;
+      console.log(`[MEASURE worker] url=${url}`);
+      setTimeout(() => {
+        w.evaluate(() => JSON.stringify({
+          KILL_ARM: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM ?? null,
+          CORPSE_GONE: globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE ?? null,
+        })).then((s) => console.log(`[MEASURE worker env] ${s} url=${url}`))
+          .catch((e) => console.log(`[MEASURE worker env] unreadable: ${e.message}`));
+      }, 15000);
+    });
+
     console.log(`PW DEBUG: Navigating to application with parameters:`);
     console.log(`  - machine: ${loadSnapshot()}`);
     console.log(`  - mode: ${testMode}`);
