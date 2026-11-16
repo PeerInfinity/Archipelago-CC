@@ -1,6 +1,17 @@
 {
   "schema_version": 1,
   "_comment": "The text adventure's DEFAULT content pack (content sets R1): every string the text adventure's GENERATION writes into a world document. {placeholder} templates are filled at PLAY by the wrapper (templating.js), which also escapes HTML and highlights the item.",
+  "provenance": {
+    "sources": {
+      "claude": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-09-30",
+        "note": "first written as code (frontend/modules/textAdventureSubstrateWrapper/textAdventureConceptRealisations.js, 7bbf0491e1, Co-Authored-By: Claude Opus 5.5) and moved here byte for byte by content sets R1 (5a18d3916d). No approval of these words is recorded"
+      }
+    },
+    "default": "claude"
+  },
   "strings": {
     "text-adventure:concept/sword/checkMessage": "Half-buried in the rubble lies {item}, its edge still keen after who knows how long. You take up the sword and test its weight. Whatever guards these halls will have to reckon with it now.",
     "text-adventure:concept/swim/checkMessage": "You find {item}, and with it the knack of the water: how to breathe, how to kick, how to let it take your weight. You can swim now. Deep water will no longer turn you back.",

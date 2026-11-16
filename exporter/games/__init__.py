@@ -9,6 +9,7 @@ This package organizes game export handlers into three categories:
 import os
 import importlib
 import inspect
+import pkgutil
 import logging
 from typing import Dict, Type, Optional, Tuple
 from .base import BaseGameExportHandler, GenericGameExportHandler
@@ -54,11 +55,10 @@ def _get_world_directory(world) -> Optional[str]:
             # For worldgen worlds, check if a specific worldgen handler exists first.
             # If so, use the worldgen handler; otherwise fall back to parent game's handler.
             if world_dir.endswith('_worldgen'):
-                # Check if a specific worldgen handler is registered in any handler directory
-                current_dir = os.path.dirname(__file__)
+                # Check if a specific worldgen handler module exists in any handler directory
+                # (by import spec, not by file path: a zipped copy has no files on disk)
                 for subdir in HANDLER_DIRECTORIES:
-                    handler_path = os.path.join(current_dir, subdir, f'{world_dir}.py')
-                    if os.path.exists(handler_path):
+                    if _handler_module_exists(f'{__name__}.{subdir}', world_dir):
                         # Use the worldgen-specific handler
                         return world_dir
                 # Fall back to parent game's handler
@@ -70,12 +70,38 @@ def _get_world_directory(world) -> Optional[str]:
     return None
 
 
+def _handler_module_names(package_name: str) -> list:
+    """The handler module names of a handler package: its non-package modules whose
+    names do not start with ``_``, sorted.
+
+    Listed by ``pkgutil.iter_modules`` over the package's ``__path__``, so the same set is
+    found in a folder and inside a zipped ``.apworld`` (zipimport), where ``os.listdir``
+    sees nothing. Sorted so discovery order (and so which of two same-named handlers
+    wins) does not depend on the filesystem's listing order.
+    """
+    try:
+        package = importlib.import_module(package_name)
+    except Exception as e:
+        logger.warning(f"Could not import handler package {package_name}: {e}")
+        return []
+    return sorted(
+        info.name for info in pkgutil.iter_modules(getattr(package, '__path__', []))
+        if not info.ispkg and not info.name.startswith('_')
+    )
+
+
+def _handler_module_exists(package_name: str, module_name: str) -> bool:
+    """Whether ``package_name.module_name`` is a handler module (folder or zip)."""
+    return module_name in _handler_module_names(package_name)
+
+
 def _discover_handlers_in_directory(directory_path: str, package_name: str) -> Dict[str, Type[BaseGameExportHandler]]:
     """
-    Discover all game export handlers in a specific directory.
+    Discover all game export handlers in a handler package.
 
     Args:
-        directory_path: Absolute path to the directory to scan
+        directory_path: The package's directory (kept for callers; the modules are listed
+            from the imported package, so a zipped copy is found too)
         package_name: Python package name for imports (e.g., 'exporter.games.official')
 
     Returns:
@@ -83,14 +109,7 @@ def _discover_handlers_in_directory(directory_path: str, package_name: str) -> D
     """
     handlers = {}
 
-    if not os.path.isdir(directory_path):
-        return handlers
-
-    for filename in os.listdir(directory_path):
-        if not filename.endswith('.py') or filename.startswith('_'):
-            continue
-
-        module_name = filename[:-3]  # Remove .py extension
+    for module_name in _handler_module_names(package_name):
 
         try:
             # Import the module
@@ -139,7 +158,7 @@ def _discover_handlers() -> Dict[str, Type[BaseGameExportHandler]]:
 
     for subdir in HANDLER_DIRECTORIES:
         subdir_path = os.path.join(current_dir, subdir)
-        package_name = f'exporter.games.{subdir}'
+        package_name = f'{__name__}.{subdir}'
 
         subdir_handlers = _discover_handlers_in_directory(subdir_path, package_name)
 
@@ -150,7 +169,15 @@ def _discover_handlers() -> Dict[str, Type[BaseGameExportHandler]]:
             else:
                 logger.debug(f"Handler '{name}' already registered, skipping from {package_name}")
 
-    logger.info(f"Discovered {len(handlers)} game export handlers")
+    if handlers:
+        logger.info(f"Discovered {len(handlers)} game export handlers")
+    else:
+        # Every game would fall back to the generic handler and export degraded rules
+        # (design-upstream-addon.md, defect 1): never silent.
+        logger.warning(
+            "Discovered 0 game export handlers: every game falls back to the generic handler "
+            f"(searched {', '.join(f'{__name__}.{d}' for d in HANDLER_DIRECTORIES)})"
+        )
     return handlers
 
 

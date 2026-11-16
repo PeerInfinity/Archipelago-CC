@@ -419,7 +419,7 @@
           },
           {
             "name": "Cool on Wire Rack",
-            "id": null,
+            "id": 300000016,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -432,8 +432,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
           }
         ]
       }
@@ -601,13 +600,12 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": null,
+        "id": 300100016,
         "groups": [
-          "Event"
+          "Everything"
         ],
         "classification": "progression",
-        "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }
@@ -708,7 +706,8 @@
       "base_id": 300000000,
       "world_description": "Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
       "slot_data": {
-        "vanilla_placement": 1
+        "vanilla_placement": 1,
+        "reports_goal_by_server_item": true
       },
       "web": {
         "theme": "partyTime",

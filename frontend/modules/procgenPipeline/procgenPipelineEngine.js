@@ -55,7 +55,7 @@ import {
 } from '../procgenCore/itemIntroduction.js';
 import { goalContainerReportOfSidecars } from '../procgenCore/goalContainer.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
-import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf } from './worldContent.js';
+import { assertContentLoaded, RECORDED_CONTENT_KEY, recordedContentOf, recordedWorldSettingsOf } from './worldContent.js';
 
 /** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
 const registryEntryOf = (substrateId) => substrateRegistry.get(substrateId);
@@ -5264,12 +5264,13 @@ export function recordedConceptsOf(regionParams) {
  * comes back the same way, as `regionParams.content`; a caller's own wins. The
  * loaded set does not: the rebuild is synchronous, so its caller awaits
  * `worldContent.attachContentSet` before it generates (an append).
+ * ⛓ CONTENT SETS PL-1 — `exists` and `numbers` (Z.5) come back the same way, validated by name.
  * Nothing recorded ⇒ exactly `opts.regionParams ?? {}`, as before T0b.
  */
 export function rebuildRegionParams(meta, optsRegionParams) {
     const recorded = {
         ...recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] }),
-        ...recordedContentOf({ [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY] }),
+        ...recordedContentOf({ [RECORDED_CONTENT_KEY]: meta?.[RECORDED_CONTENT_KEY], ...recordedWorldSettingsOf(meta) }),
     };
     if (!Object.keys(recorded).length) return optsRegionParams ?? {};
     return { ...recorded, ...(optsRegionParams ?? {}) };

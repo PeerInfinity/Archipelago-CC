@@ -21,6 +21,7 @@ import {
 } from './contentRoles.js';
 import { createTextLibrary } from '../textLibrary/textLibrary.js';
 import { SUBSTRATE_LIBRARIES } from './substrateLibraries.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -67,10 +68,10 @@ const memReader = (files) => async (url) => {
 };
 const stackOf = (manifests) => loadPackStack(Object.keys(manifests), {
     base: MEM,
-    readJson: memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
+    readJson: withFixtureProvenance(memReader(Object.fromEntries(Object.entries(manifests).flatMap(([id, m]) => [
         [`/${id}/pack.json`, packJson(id)],
         [`/${id}/concepts/manifest.json`, m],
-    ]))),
+    ])))),
 });
 // The registered entries: every library, imported once (registration is the import's side effect).
 for (const lib of SUBSTRATE_LIBRARIES) {
@@ -329,6 +330,14 @@ describe('⛓ S1 resolveRole — the one shared resolver', () => {
 });
 
 describe('assertPresents — every presents in the stack names a concept in the table', () => {
+    it('⛓ PL-1 — a NAMESPACED presents names a structure entry, so it is not looked up in the concept table', async () => {
+        const pc = await conceptsOf({
+            base: BASE,
+            game: { schema_version: 1, concepts: { 'game:task/pick-locks': { kind: 'task', name: 'Pick Locks', presents: 'game:task/pick-locks' } } },
+        });
+        expect(() => assertPresents(pc, CONCEPTS)).not.toThrow();
+        expect(pc.presenting('game:task/pick-locks').name).toBe('Pick Locks');
+    });
     it('refuses an unknown id by pack, key and id', async () => {
         const pc = await conceptsOf({
             base: BASE,

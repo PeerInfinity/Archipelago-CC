@@ -13,6 +13,27 @@ function log(level, message, ...data) {
 }
 
 // ConsoleUI class - Now primarily contains command handlers and history logic
+/**
+ * The `item_groups` command's text: one line per group of the loaded player,
+ * with how many of its items name it. staticData carries the group NAMES as
+ * `item_groups[playerId]` (a list) and membership on each item's `groups`.
+ * null when no rules are loaded; '' when the player has no groups.
+ */
+export function describeItemGroups(staticData) {
+  if (!staticData) return null;
+  const playerId = staticData.playerId;
+  const names = staticData.item_groups?.[playerId] ?? staticData.groupData;
+  if (!Array.isArray(names)) return null;
+  const items = staticData.itemsByPlayer?.[playerId] ?? staticData.items ?? {};
+  const counts = new Map(names.map((name) => [name, 0]));
+  for (const item of Object.values(items || {})) {
+    for (const group of item?.groups || []) {
+      if (counts.has(group)) counts.set(group, counts.get(group) + 1);
+    }
+  }
+  return names.map((name) => `${name} (${counts.get(name)} item${counts.get(name) === 1 ? '' : 's'})`).join('\n');
+}
+
 export class ConsoleUI {
   // Keep static cache/cursor for internal command history logic
   static cachedCommands = [];
@@ -241,17 +262,13 @@ export class ConsoleUI {
       await stateManager.ensureReady();
       const staticData = stateManager.getStaticData();
       
-      if (!staticData?.groups?.items) {
+      const output = describeItemGroups(staticData);
+      if (output === null) {
         consoleManager.print('No item groups available. Load rules data first via the JSON panel.', 'warn');
         return;
       }
-      
-      const groupNames = Object.keys(staticData.groups.items);
-      if (groupNames.length === 0) {
-        consoleManager.print('No item groups defined.', 'info');
-      } else {
-        consoleManager.print(groupNames.join('\n'));
-      }
+      if (output) consoleManager.print(output);
+      else consoleManager.print('No item groups defined.', 'info');
       
     } catch (error) {
       consoleManager.print(`Error getting item groups: ${error.message}`, 'error');

@@ -2,6 +2,24 @@
   "schema_version": 1,
   "generated_by": "scripts/procgen/extract-seedling-music-pack.mjs — do not edit; regenerate and --check",
   "source": "vendor/seedling/src/Music.as (every `sndO…:Sfx` no `sounds` set holds) + vendor/seedling/assets/sound, copied byte for byte",
+  "provenance": {
+    "sources": {
+      "seedling": {
+        "type": "game",
+        "name": "Seedling",
+        "repo": "PeerInfinity/Seedling",
+        "commit": "ccdf189776471fa57be8c0568c6e881a2d5acc18",
+        "files": [
+          "src/Music.as",
+          "assets/sound"
+        ],
+        "credit": "music by Rekcahdam (vendor/seedling/README)",
+        "licence": "Unlicense",
+        "extracted_by": "scripts/procgen/extract-seedling-music-pack.mjs --check"
+      }
+    },
+    "default": "seedling"
+  },
   "bytes": 6211608,
   "tracks": {
     "seedling:music/yes-master": {

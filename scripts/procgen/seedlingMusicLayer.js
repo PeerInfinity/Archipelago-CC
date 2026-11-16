@@ -29,6 +29,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { MUSIC_AS, SOUND, mp3Seconds, parseMusicAs } from './seedlingSfxLayer.js';
+import { musicProvenance, seedlingPinnedCommit } from './seedlingPackProvenance.js';
 
 export const MUSIC_KEY_PREFIX = 'seedling:music/';
 /** Where the layer's manifest sits in the pack (`pack.json`'s `layers.music`). */
@@ -78,7 +79,7 @@ export function parseMusicTracks(text) {
  * Every file the layer holds, as a `Map<path relative to the pack, Buffer|string>`,
  * plus the manifest object, the byte cost and the parsed `songs` order (as keys).
  */
-export function buildMusicLayer(source) {
+export function buildMusicLayer(source, { commit = seedlingPinnedCommit() } = {}) {
     const musicPath = join(source, MUSIC_AS);
     if (!existsSync(musicPath)) throw new Error(`${MUSIC_AS} is not in ${source}`);
     const { tracks, songs, songsAs3 } = parseMusicTracks(readFileSync(musicPath, 'utf8'));
@@ -105,6 +106,7 @@ export function buildMusicLayer(source) {
         schema_version: 1,
         generated_by: 'scripts/procgen/extract-seedling-music-pack.mjs — do not edit; regenerate and --check',
         source: `vendor/seedling/${MUSIC_AS} (every \`sndO…:Sfx\` no \`sounds\` set holds) + vendor/seedling/${SOUND}, copied byte for byte`,
+        provenance: musicProvenance(commit),
         bytes,
         tracks: out,
     };

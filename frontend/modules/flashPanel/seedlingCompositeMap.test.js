@@ -11,6 +11,10 @@
  *    ONCE per frame however many cells landed, the baked picture fitted and centred with the exit squares on top,
  *    a sub-region cell dimmed outside its tiles, a failure kept (generic, never retried), and no callback = no throw.
  * 4. The declaration: both Seedling entries declare it as DATA, frozen, `artwork: true`, node-importable.
+ * 5. Region-map step 3b's two additive hooks: `regionExtent` (a level's size in tiles = its record's, for every
+ *    region of `seedling_playthrough` and a generated room) and `remoteLocationTiles` (exactly the events
+ *    `unplacedSeedlingLocations` leaves out, placed in the level of their object); `locationTiles` with no
+ *    `ctx.atlases` answers as before.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -21,6 +25,7 @@ import { COLORS, TILE_PX } from '../procgenCore/compositeMapRenderer.js';
 import {
     OUTSIDE_SUB_REGION_DIM, createSeedlingCompositePainter, drawSeedlingCompositeRegion, resolveSeedlingLevel,
     seedlingDisplayRegionOf, seedlingLevelSourceOf, seedlingLocationTiles, subRegionTiles, unplacedSeedlingLocations,
+    seedlingRegionExtent, seedlingRemoteLocationTiles,
 } from './seedlingCompositeMap.js';
 import { SEEDLING_BACKGROUND } from '../seedlingDemo/seedlingLevelBake.js';
 
@@ -310,6 +315,71 @@ describe('4. the declaration', () => {
             expect(entry.compositeMap.artwork).toBe(true);
             expect(typeof entry.compositeMap.locationTiles).toBe('function');
             expect(entry.compositeMap.displayRegionOf).toBe(seedlingDisplayRegionOf);
+        }
+    });
+});
+
+describe('5. region-map step 3b — regionExtent and remoteLocationTiles (additive)', () => {
+    it('regionExtent is the level record\'s width × height, for every seedling_playthrough region (through the registry hook)', async () => {
+        const { substrateRegistryEntry } = await import('./flashSeedlingLibrary.js');
+        for (const [region_id, sc] of seedlingSidecars(PLAYTHROUGH)) {
+            const region = { region_id, playable_payload: sc.playable_payload };
+            const { record } = resolveSeedlingLevel(seedlingLevelSourceOf(sc.playable_payload), MAP);
+            expect(substrateRegistryEntry.compositeMap.regionExtent(region), region_id).toEqual({ w: record.width, h: record.height });
+        }
+        // without the atlas (a custom set's, not handed in) there is no answer — never a guess
+        const [region_id, sc] = seedlingSidecars(PLAYTHROUGH)[0];
+        expect(seedlingRegionExtent({ region_id, playable_payload: sc.playable_payload })).toBe(null);
+    });
+
+    it('regionExtent of a generated room is its embedded record', async () => {
+        const { substrateRegistryEntry } = await import('./flashSeedlingGenLibrary.js');
+        for (const [region_id, sc] of seedlingSidecars(GENERATED)) {
+            const rec = sc.playable_payload.record;
+            expect(substrateRegistryEntry.compositeMap.regionExtent({ region_id, playable_payload: sc.playable_payload }))
+                .toEqual({ w: rec.width, h: rec.height });
+        }
+    });
+
+    it('remoteLocationTiles places exactly the events locationTiles leaves out, in the level holding the object', async () => {
+        const { SEEDLING_PLAYTHROUGH_ATLAS } = await import('./flashSeedlingLibrary.js');
+        const atlases = { [SEEDLING_PLAYTHROUGH_ATLAS.atlas_id]: SEEDLING_PLAYTHROUGH_ATLAS };
+        const sc1 = PLAYTHROUGH.preset_sidecars['1'];
+        const ctx = { rules: PLAYTHROUGH, playerId: '1', atlases, sidecars: sc1 };
+        let residue = [];
+        const remote = [];
+        for (const [region_id, sc] of seedlingSidecars(PLAYTHROUGH)) {
+            const region = { region_id, playable_payload: sc.playable_payload };
+            residue = residue.concat(unplacedSeedlingLocations(region, ctx));
+            for (const t of seedlingRemoteLocationTiles(region, ctx)) remote.push({ ...t, from: region_id });
+        }
+        expect(remote.map((t) => t.location).sort()).toEqual(residue.sort());
+        for (const t of remote) {
+            const obstacle = PLAYTHROUGH.regions['1'][t.from].locations.find((l) => l.name === t.location).obstacle;
+            const host = Object.values(sc1).find((sc) => seedlingDisplayRegionOf(null, sc) === t.displayRegion);
+            expect(host.playable_payload.level).toBe(obstacle.level);
+            expect([t.x, t.y]).toEqual([Math.floor(obstacle.x / 16), Math.floor(obstacle.y / 16)]);
+            const { record } = resolveSeedlingLevel(seedlingLevelSourceOf(host.playable_payload), MAP);
+            expect(t.x < record.width && t.y < record.height).toBe(true);
+        }
+    });
+
+    it('the flash_seedling locationTiles hook with no ctx.atlases answers exactly the shipped-atlas call', async () => {
+        const { substrateRegistryEntry, SEEDLING_PLAYTHROUGH_ATLAS } = await import('./flashSeedlingLibrary.js');
+        const atlases = { [SEEDLING_PLAYTHROUGH_ATLAS.atlas_id]: SEEDLING_PLAYTHROUGH_ATLAS };
+        for (const [region_id, sc] of seedlingSidecars(PLAYTHROUGH)) {
+            const region = { region_id, playable_payload: sc.playable_payload };
+            expect(substrateRegistryEntry.compositeMap.locationTiles(region, { rules: PLAYTHROUGH, playerId: '1' }))
+                .toEqual(seedlingLocationTiles(region, { rules: PLAYTHROUGH, playerId: '1', atlases }));
+        }
+    });
+
+    it('both entries declare the two hooks as functions on the frozen block', async () => {
+        const { substrateRegistryEntry: atlas } = await import('./flashSeedlingLibrary.js');
+        const { substrateRegistryEntry: gen } = await import('./flashSeedlingGenLibrary.js');
+        for (const entry of [atlas, gen]) {
+            expect(typeof entry.compositeMap.regionExtent).toBe('function');
+            expect(entry.compositeMap.remoteLocationTiles).toBe(seedlingRemoteLocationTiles);
         }
     });
 });

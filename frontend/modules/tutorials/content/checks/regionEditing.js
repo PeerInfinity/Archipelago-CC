@@ -14,7 +14,7 @@
  * The cells are read off the pipeline's own region (`__panel`).
  * ⛔ Imports only content files.
  */
-import { PIPELINE, choosePreset, generatedSinceStep, openSection, resetPipeline, runAll } from '../steps/procgen.js';
+import { PIPELINE, choosePreset, generatedSinceStep, look, openSection, resetPipeline, runAll } from '../steps/procgen.js';
 
 const LAB_TITLE = Object.freeze({ maze: 'Procgen Lab — maze', seedling: 'Procgen Lab — Seedling' });
 const lab = (page) => ({ panel: 'procgenLabPanel', title: LAB_TITLE[page] });
@@ -322,6 +322,78 @@ export const CHECK_REGION_EDIT_SEEDLING_REAL_GAME = Object.freeze({
     outro: null,
 });
 
+/**
+ * The APWorld Editor handover, shared by its own check and the LOAD-vanilla
+ * check after it: the generated-host world opened in the APWorld Editor, then
+ * a generated room's Edit ▸ → one harmless paint → CLOSE in the Seedling lab.
+ */
+const APWORLD_WORLD = Object.freeze([
+    ...resetPipeline('reset-start'),
+    ...choosePreset('choose-preset', 'shipped:seedling-generated-host-demo', 'Generated Seedling room hosting a gated child'),
+    ...runAll('run-all'),
+    {
+        step: {
+            id: 'open-editor',
+            text: 'Press **Open in APWorld Editor**, then its **Regions** tab.',
+            actions: [
+                { click: { ...PIPELINE, selector: 'button.procgen-pipeline-btn', text: 'Open in APWorld Editor' } },
+                { click: { ...HUB, selector: 'button', text: 'Regions' } },
+            ],
+            done: (ctx) => ctx.exists({ ...HUB, selector: '.apworld-edit-room[data-substrate="flash_seedling_gen"]' }),
+            doneTimeoutMs: 30000,
+        },
+    },
+]);
+
+const APWORLD_OPEN = Object.freeze([
+    {
+        step: {
+            id: 'edit-room',
+            text: 'Press the generated room\'s **Edit ▸**. The **Procgen Lab — Seedling** tab opens the room, as from the pipeline.',
+            actions: [{ click: { ...HUB, selector: '.apworld-edit-room[data-substrate="flash_seedling_gen"]' } }],
+            done: (ctx) => roomOpen(ctx, 'seedling'),
+            failed: (ctx) => {
+                const s = ctx.text({ ...HUB, selector: '.apworld-status' });
+                return s.startsWith('Edit refused') ? s : null;
+            },
+            doneTimeoutMs: 60000,
+        },
+    },
+    {
+        step: {
+            id: 'paint',
+            text: 'With **PAINT terrain** / **wall**, paint one floor cell the room can spare. (An unedited close changes nothing, so there would be nothing to undo.)',
+            run: (ctx) => {
+                const world = hubRoom(ctx);
+                const cell = world ? harmlessFloorCell(world, world.doors) : null;
+                if (!cell) throw new Error('no floor cell to paint');
+                paintWalls(ctx, [cell], world);
+            },
+            done: (ctx) => editCount(ctx) > 0,
+        },
+    },
+]);
+
+const APWORLD_CLOSE = Object.freeze([
+    { prose: 'Walling the goal in instead comes back with *⚠ edited — NOT certified* on the editor\'s status line — saved anyway.' },
+    {
+        step: {
+            id: 'close',
+            text: 'Close the room in the lab. The APWorld Editor applies ONE edit to its working copy — **↶ Undo** takes it back — and **Download** keeps it.',
+            actions: [{ click: inLab('seedling', '#editRoomClose') }],
+            done: (ctx) => {
+                const undo = ctx.query({ ...HUB, selector: '.apworld-undo' });
+                return Boolean(undo) && !undo.disabled;
+            },
+            failed: (ctx) => {
+                const s = ctx.text({ ...HUB, selector: '.apworld-status' });
+                return s.startsWith('Save refused') ? s : null;
+            },
+            doneTimeoutMs: 30000,
+        },
+    },
+]);
+
 export const CHECK_REGION_EDIT_APWORLD_EDITOR = Object.freeze({
     id: 'region-edit-apworld-editor',
     title: 'Region editing: a generated Seedling room from the APWorld Editor',
@@ -334,68 +406,116 @@ export const CHECK_REGION_EDIT_APWORLD_EDITOR = Object.freeze({
             id: 'world',
             title: 'The world, in the APWorld Editor',
             blocks: [
-                ...resetPipeline('reset-start'),
-                ...choosePreset('choose-preset', 'shipped:seedling-generated-host-demo', 'Generated Seedling room hosting a gated child'),
-                ...runAll('run-all'),
-                {
-                    step: {
-                        id: 'open-editor',
-                        text: 'Press **Open in APWorld Editor**, then its **Regions** tab.',
-                        actions: [
-                            { click: { ...PIPELINE, selector: 'button.procgen-pipeline-btn', text: 'Open in APWorld Editor' } },
-                            { click: { ...HUB, selector: 'button', text: 'Regions' } },
-                        ],
-                        done: (ctx) => ctx.exists({ ...HUB, selector: '.apworld-edit-room[data-substrate="flash_seedling_gen"]' }),
-                        doneTimeoutMs: 30000,
-                    },
-                },
+                ...APWORLD_WORLD,
             ],
         },
         {
             id: 'edit',
             title: 'Edit ▸ from the APWorld Editor',
             blocks: [
+                ...APWORLD_OPEN,
+                ...APWORLD_CLOSE,
+                ...resetPipeline('reset-end'),
+            ],
+        },
+    ],
+    outro: null,
+});
+
+
+/** The Seedling lab page's window (the iframe's), or null. */
+const labWindow = (ctx) => ctx.query(inLab('seedling', 'body'))?.ownerDocument?.defaultView ?? null;
+const labStatusLine = (ctx) => ctx.text(inLab('seedling', '#status'));
+/** The page's set readout (`window.__editorEdit.set`), or null. */
+const labSet = (ctx) => labWindow(ctx)?.__editorEdit?.set ?? null;
+/** What the re-pick step saw before it switched: the arm's generation and the page's `__watch`. */
+let beforeSwitch = null;
+/**
+ * The arm the lab page has mounted (`__editorLifetime`), as its Source/side drop-downs spell it, or null.
+ * `replay` is two arms, `replay-js` and `replay-wasm`; every other arm is named by its source.
+ */
+const mountedArm = (ctx) => labWindow(ctx)?.__editorLifetime?.current?.name ?? null;
+const shownArm = (ctx) => {
+    const source = ctx.query(inLab('seedling', '#source'))?.value;
+    const side = ctx.query(inLab('seedling', '#side'))?.value;
+    return source === 'replay' ? `replay-${side}` : (source ?? null);
+};
+
+export const CHECK_SEEDLING_LOAD_VANILLA_AFTER_HANDOVER = Object.freeze({
+    id: 'seedling-load-vanilla-after-handover',
+    title: 'Seedling lab: LOAD the VANILLA 116 after a room was handed over',
+    summary: 'While a room handed over from the APWorld Editor is open, the Seedling lab refuses a new set and says to close the room first; once it is closed the lab is free again: re-pick EDIT, and LOAD the VANILLA 116 loads the game\'s rooms with no refusal.',
+    status: 'ready',
+    doc: null,
+    intro: [
+        { prose: 'Edit ▸ in the APWorld Editor (or the pipeline) hands a room over to the Seedling lab. While that room is open, the lab works for the panel that opened it. Once it is closed, the lab is yours again.' },
+    ],
+    sections: [
+        {
+            id: 'world',
+            title: 'The world, in the APWorld Editor',
+            blocks: [...APWORLD_WORLD],
+        },
+        {
+            id: 'handover',
+            title: 'A room handed over',
+            blocks: [
+                ...APWORLD_OPEN,
+                ...look('source-shows-edit', lab('seedling'),
+                    'The lab\'s **Source** drop-down now reads **EDIT — a room, on its own**: the arm the handed-over room opened in, though nobody picked it there.',
+                    (ctx) => mountedArm(ctx) === 'edit' && shownArm(ctx) === 'edit'),
                 {
                     step: {
-                        id: 'edit-room',
-                        text: 'Press the generated room\'s **Edit ▸**. The **Procgen Lab — Seedling** tab opens the room, as from the pipeline.',
-                        actions: [{ click: { ...HUB, selector: '.apworld-edit-room[data-substrate="flash_seedling_gen"]' } }],
-                        done: (ctx) => roomOpen(ctx, 'seedling'),
-                        failed: (ctx) => {
-                            const s = ctx.text({ ...HUB, selector: '.apworld-status' });
-                            return s.startsWith('Edit refused') ? s : null;
+                        id: 'load-while-open',
+                        text: 'With the handed-over room still open, press the lab\'s **LOAD the VANILLA 116 as `xml`**. It is refused, and the status line says to **close the handed-over room first**: the APWorld Editor is waiting for that room. The room stays open with its edit.',
+                        actions: [{ click: inLab('seedling', '#editLoadVanilla') }],
+                        done: (ctx) => labStatusLine(ctx).includes('CLOSE the handed-over room first')
+                            && roomOpen(ctx, 'seedling') && editCount(ctx) > 0,
+                        failed: (ctx) => (labStatusLine(ctx).startsWith('LOADED the VANILLA') ? labStatusLine(ctx) : null),
+                    },
+                },
+                ...APWORLD_CLOSE,
+            ],
+        },
+        {
+            id: 'load',
+            title: 'The lab is free again',
+            blocks: [
+                {
+                    step: {
+                        id: 'source-edit',
+                        text: 'Pick **EDIT — a room, on its own** in the lab\'s **Source** drop-down (pick another source first if it already reads EDIT). The editor starts afresh, with no refusal.',
+                        run: (ctx) => {
+                            const w = labWindow(ctx);
+                            const sel = ctx.query(inLab('seedling', '#source'));
+                            if (!w || !sel) throw new Error('the Seedling lab has no Source drop-down');
+                            beforeSwitch = { generation: w.__editorLifetime?.current?.generation ?? 0, watch: w.__watch };
+                            sel.value = 'edit';
+                            sel.dispatchEvent(new Event('change', { bubbles: true }));
                         },
+                        done: (ctx) => {
+                            const w = labWindow(ctx);
+                            return Boolean(w && beforeSwitch) && (w.__editorLifetime?.current?.generation ?? 0) > beforeSwitch.generation
+                                && Boolean(w.__watch) && w.__watch !== beforeSwitch.watch && w.__editorEdit?.status === 'ok'
+                                && !labStatusLine(ctx).includes('REFUSED');
+                        },
+                        failed: (ctx) => (labStatusLine(ctx).includes('REFUSED') ? labStatusLine(ctx) : null),
                         doneTimeoutMs: 60000,
                     },
                 },
                 {
                     step: {
-                        id: 'paint',
-                        text: 'With **PAINT terrain** / **wall**, paint one floor cell the room can spare. (An unedited close changes nothing, so there would be nothing to undo.)',
-                        run: (ctx) => {
-                            const world = hubRoom(ctx);
-                            const cell = world ? harmlessFloorCell(world, world.doors) : null;
-                            if (!cell) throw new Error('no floor cell to paint');
-                            paintWalls(ctx, [cell], world);
-                        },
-                        done: (ctx) => editCount(ctx) > 0,
-                    },
-                },
-                { prose: 'Walling the goal in instead comes back with *⚠ edited — NOT certified* on the editor\'s status line — saved anyway.' },
-                {
-                    step: {
-                        id: 'close',
-                        text: 'Close the room in the lab. The APWorld Editor applies ONE edit to its working copy — **↶ Undo** takes it back — and **Download** keeps it.',
-                        actions: [{ click: inLab('seedling', '#editRoomClose') }],
+                        id: 'load-vanilla',
+                        text: 'Press **LOAD the VANILLA 116 as `xml`**. The game\'s rooms load as a level set: the rooms drop-down (*the LOADED SET\'s rooms*) lists every one of them.',
+                        actions: [{ click: inLab('seedling', '#editLoadVanilla') }],
                         done: (ctx) => {
-                            const undo = ctx.query({ ...HUB, selector: '.apworld-undo' });
-                            return Boolean(undo) && !undo.disabled;
+                            const set = labSet(ctx);
+                            const rooms = ctx.query(inLab('seedling', '#editSetRoom'))?.options.length;
+                            return Boolean(set?.rooms) && set.edits === 0 && rooms === set.rooms
+                                && labStatusLine(ctx).startsWith('LOADED the VANILLA');
                         },
-                        failed: (ctx) => {
-                            const s = ctx.text({ ...HUB, selector: '.apworld-status' });
-                            return s.startsWith('Save refused') ? s : null;
-                        },
-                        doneTimeoutMs: 30000,
+                        failed: (ctx) => (labStatusLine(ctx).includes('REFUSED') ? labStatusLine(ctx) : null),
+                        doneTimeoutMs: 60000,
                     },
                 },
                 ...resetPipeline('reset-end'),

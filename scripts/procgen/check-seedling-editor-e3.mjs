@@ -18,6 +18,10 @@
  *      `named_rooms` arrival are not exits. Each refusal edits nothing.
  *   6. **PAN / ZOOM / TOGGLE / RE-LAYOUT** — `+`/`-` change the zoom and the canvas; the strip is one toggle away (and
  *      `?setView=strip` opens on it); RE-LAYOUT is the canonical layout.
+ *   7. **UNREACHABLE ROOMS** (slice `seedling-map-unreachable`) — a DISCONNECT on the map cuts a room off; nothing is
+ *      marked until REPORT runs; then exactly the rooms node's `unreachableRoomsOf` finds over node's own report of the
+ *      same set are hatched (ink in that cell, none in the start's) with a legend line; Ctrl+Z (the door back) clears
+ *      the marks as STALE until REPORT runs again, which then marks none.
  *
  * `--shots=<dir>` writes the E3 screenshots. Brings its own server (`serveRepoRoot`) unless `--host=`.
  *
@@ -59,7 +63,10 @@ async function main() {
     const { createSeedlingSetAdapter, setRecord } = await M('seedlingDemo/seedlingSetAdapter.js');
     const { assembleGeneratedSeedlingSet } = await M('seedlingDemo/seedlingGeneratedSet.js');
     const { canonicalLayout, layoutGraphOf, mapLinksOf } = await M('seedlingDemo/seedlingSetMap.js');
-    const { disconnectEffectOf, editorVanillaSet, roomRowsOf } = await M('seedlingDemo/watchSetEditor.js');
+    const { disconnectEffectOf, editorVanillaSet, reportOf, roomRowsOf } = await M('seedlingDemo/watchSetEditor.js');
+    const { unreachableRoomsOf } = await M('seedlingDemo/seedlingSetMapUnreachable.js');
+    const { compileRegionAtlas } = await M('procgenPipeline/regionAtlasCompiler.js');
+    const { createSetSession } = await M('seedlingDemo/seedlingSetAdapter.js');
     const readRepoJson = (p) => JSON.parse(readFileSync(join(REPO, p), 'utf8'));
     const EMBED = readRepoJson('frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json');
     const MAP_DOC = readRepoJson('frontend/modules/flashPanel/atlases/seedling-map.json');
@@ -392,6 +399,61 @@ async function main() {
         await page.click('#editSetMapRelayout');
         const rl = (await set()).map;
         check(rl.rule === 'canonical' && rl.relayouts === 1, '4 RE-LAYOUT asks for the canonical layout', json(rl.positions));
+
+        /* ── 7. UNREACHABLE ROOMS, from the last REPORT ───────────────────── */
+        await open();
+        await loadSet(SMALL, 4);
+        const u0 = (await set()).map;
+        /** Pixels of the unreachable ink (#ff5a5a, drawn over the still) inside one cell of the map canvas. */
+        const redInk = (cell) => page.evaluate((r) => {
+            const c = document.getElementById('editSetOverview');
+            const d = c.getContext('2d').getImageData(r[0], r[1], r[2], r[3]).data;
+            let n = 0;
+            for (let i = 0; i < d.length; i += 4) if (d[i] > 200 && d[i + 1] < 130 && d[i + 2] < 130) n += 1;
+            return n;
+        }, cell);
+        const legend = () => page.textContent('#editSetMapUnreachable');
+        await mapKey('d');
+        await clickMap(...along(u0.cells, 0, 1, 0.45));
+        await clickMap(...along(u0.cells, 0, 1, 0.45));
+        await settled(1, 'DISCONNECT room 0\'s door to room 1 on the map');
+        const cutOp = { op: 'disconnect', room: 0, exitIndex: 0 };
+        const nodeSession = createSetSession(setAdapter, setRecord(SMALL, emptyOverlay()),
+            { base: { kind: 'set', set_id: SMALL.set_id } });
+        nodeSession.apply(cutOp);
+        const nodeMarks = unreachableRoomsOf(reportOf(nodeSession, DEPS, { compileRegionAtlas })).map((m) => m.room);
+        const before = (await set()).map;
+        check(json(before.unreachable) === '[]' && before.unreachableReport === 'none' && (await redInk(before.cells[1])) === 0,
+            '7 ⛓ NOTHING is marked before REPORT runs, even with a room cut off', json(before.unreachable));
+        await mapKey('Escape');
+        await page.click('#editSetReport');
+        await page.waitForFunction(() => window.__editorEdit?.set?.map?.unreachableReport === 'current', null,
+            { timeout: 60000 }).catch(() => {});
+        const marked = (await set()).map;
+        const inkCut = await redInk(marked.cells[1]);
+        const inkStart = await redInk(marked.cells[0]);
+        check(json(marked.unreachable) === json(nodeMarks) && json(nodeMarks) === '[1]' && inkCut > 50 && inkStart === 0,
+            '7 ⛓⛓ REPORT → the map marks exactly the rooms node finds unreachable over the SAME set, ink in that cell',
+            `page ${json(marked.unreachable)} · node ${json(nodeMarks)} · ink room 1 ${inkCut}, room 0 ${inkStart}`);
+        check(json(marked.unreachableMarks?.[0]?.cell) === json(marked.cells[1]),
+            '7 the readout names the CELL each mark is drawn in', json(marked.unreachableMarks));
+        check(/UNREACHABLE.*as of the last REPORT: room\(s\) 1\b/.test(await legend()),
+            '7 a LEGEND line under the map names the marked room(s)', await legend());
+        await shot('7-unreachable-marked');
+        await mapKey('Control+z');
+        await settled(0, 'Ctrl+Z on the map puts the door back');
+        const stale = (await set()).map;
+        check(stale.unreachableReport === 'stale' && json(stale.unreachable) === '[]' && (await redInk(stale.cells[1])) === 0
+            && /changed since the last REPORT/.test(await legend()),
+        '7 ⛔ STALE: any change to the set clears the marks until REPORT runs again, and the legend says so',
+        await legend());
+        await page.click('#editSetReport');
+        await page.waitForFunction(() => window.__editorEdit?.set?.map?.unreachableReport === 'current', null,
+            { timeout: 60000 }).catch(() => {});
+        const again = (await set()).map;
+        check(json(again.unreachable) === '[]' && (await redInk(again.cells[1])) === 0
+            && /no unreachable room/.test(await legend()),
+        '7 reconnected → REPORT → no room is marked', await legend());
 
         await open('&setView=strip');
         await loadSet(SMALL, 4);

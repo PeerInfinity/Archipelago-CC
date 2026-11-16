@@ -40,7 +40,7 @@
  * `contentRoles.test.js`, which reads this file's source).
  */
 
-import { PACK_CONCEPT_KINDS } from '../packConcepts/packConcepts.js';
+import { PACK_CONCEPT_KINDS, presentsStructure } from '../packConcepts/packConcepts.js';
 import { ConceptContractError, realisationsOf } from './concepts.js';
 
 /** The fields a role declaration may carry. */
@@ -222,12 +222,19 @@ export function candidatesForRole(entryOrRoles, roleId, packConcepts) {
  * Reads the WINNING entries (an override that drops `presents` is not checked
  * for the entry it replaced).
  *
+ * ⛓ CONTENT SETS PL-1 — a NAMESPACED `presents` (`<pack>:task/<slug>`) names
+ * a STRUCTURE entry, not a mechanic concept (Z.1), so it is not looked up here:
+ * the words never load the structure layer. Its form is the pack layer's
+ * (`packConcepts.STRUCTURE_ID_PATTERN`); that it names a real entry is
+ * `packStructure.assertPresentsStructure`'s, where both layers are loaded.
+ *
  * @param {object} packConcepts a `createPackConcepts(stack)` object
  * @param {Record<string, object>} concepts the mechanic concept table
  */
 export function assertPresents(packConcepts, concepts) {
     for (const key of packConcepts.keys()) {
         const c = packConcepts.get(key);
+        if (presentsStructure(c.presents)) continue;
         if (c.presents !== undefined && !concepts?.[c.presents]) {
             fail(`content roles: pack "${c.pack}" concept "${key}" presents "${c.presents}", which the concept table does not hold`);
         }

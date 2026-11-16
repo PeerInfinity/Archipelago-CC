@@ -29,14 +29,39 @@ import { ContentPackError, KEY_PATTERN, mergeKeyed } from '../contentPacks/conte
 /**
  * The pack-concept kinds (Q2). This module OWNS the list: the roles contract
  * imports it. `info` is a piece of information (a clue).
+ *
+ * ⛓ CONTENT SETS PL-1 (S6, Z.1; ⚖ the user 2026-11-15): `task`, `stat`,
+ * `resource` and `boon` join the four. They are the kinds of the `structure`
+ * layer (`packStructure/`), so a pack concept that NAMES a task (presents a
+ * structure entry) has kind `task`. `object` stays for scenery; something
+ * counted is a `resource`; a `boon` is something kept.
  */
-export const PACK_CONCEPT_KINDS = Object.freeze(['character', 'place', 'object', 'info']);
+export const PACK_CONCEPT_KINDS = Object.freeze(['character', 'place', 'object', 'info', 'task', 'stat', 'resource', 'boon']);
 
-/** The fields an entry may carry; any other is refused. */
-export const PACK_CONCEPT_FIELDS = Object.freeze(['kind', 'name', 'description', 'look', 'art', 'text', 'presents']);
+/** The kinds a structure entry may have (`packStructure` re-uses this list): the four of S6, and `place`. */
+export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon', 'place']);
+
+/**
+ * The fields an entry may carry; any other is refused. `src` names the entry's
+ * provenance source when it differs from the manifest's default
+ * (`contentPacks/provenance.js`, ⛓ PL-1).
+ */
+export const PACK_CONCEPT_FIELDS = Object.freeze(['kind', 'name', 'description', 'look', 'art', 'text', 'presents', 'src']);
+
+/**
+ * ⛓ PL-1 — `presents` takes TWO forms (Z.1). A BARE id (`guardian`) names a
+ * mechanic concept in `procgenCore/concepts.js`, as before. A NAMESPACED id
+ * (`omsi:task/pick-locks`) names a STRUCTURE entry: `<pack>:<kind>/<slug>`,
+ * whose kind is one of `STRUCTURE_KINDS` and the presenting concept's own kind.
+ * The one-presenter-per-pack rule and latest-pack-wins hold for both.
+ */
+export const STRUCTURE_ID_PATTERN = /^([a-z][a-z0-9-]*):(task|stat|resource|boon|place)\/([a-z0-9][a-z0-9-]*)$/;
+
+/** True when a `presents` value is the namespaced (structure) form. */
+export const presentsStructure = (presents) => typeof presents === 'string' && presents.includes(':');
 
 const LOOK_FIELDS = Object.freeze(['color', 'symbol']);
-const MANIFEST_FIELDS = Object.freeze(['schema_version', 'concepts', '_comment']);
+const MANIFEST_FIELDS = Object.freeze(['schema_version', 'concepts', 'provenance', '_comment']);
 const COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
 const fail = (message) => { throw new ContentPackError(`pack concepts: ${message}`); };
@@ -82,6 +107,12 @@ export function parseConceptsManifest(json, packId) {
             }
         }
         if ('presents' in entry && !isText(entry.presents)) fail(`${at}: presents must be a non-empty mechanic concept id`);
+        if ('presents' in entry && presentsStructure(entry.presents)) {
+            const m = STRUCTURE_ID_PATTERN.exec(entry.presents);
+            if (!m) fail(`${at}: presents ${JSON.stringify(entry.presents)} is not a structure id (<pack>:<kind>/<slug>, kind one of ${STRUCTURE_KINDS.join(', ')})`);
+            if (m[2] !== entry.kind) fail(`${at}: presents the ${m[2]} "${entry.presents}", but its own kind is ${entry.kind} (a concept that presents a ${m[2]} has kind ${m[2]})`);
+        }
+        if ('src' in entry && !isText(entry.src)) fail(`${at}: src must be a provenance source id`);
     }
     return json;
 }

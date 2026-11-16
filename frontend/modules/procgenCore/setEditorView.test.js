@@ -2124,4 +2124,33 @@ describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the
         expect(h.ui.selected).toBe(4);
         expect(h.session.ops().length).toBe(0);
     });
+
+    /**
+     * ⛓ seedling-map-unreachable — the map marks the rooms the LAST REPORT finds unreachable, and only while the set
+     * is the one that REPORT ran over. MUTANTS: the provider's `unreachableOf` removed (nothing marked); the stale
+     * rule dropped (the marks survive the undo); the marks painted before REPORT runs (the `none` assertion).
+     */
+    it('REPORT → the unreachable rooms are marked; any change clears them until REPORT runs again', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const c = $(h, 'editSetOverview');
+        const red = (from) => c.calls.slice(from).filter((k) => k === 'strokeStyle=#ff5a5a').length;
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'none' });
+        // ⛓ room 4's exit #1 is its only door to 5 (the linked chain), so 5 is cut off
+        h.ui.applySet({ op: 'disconnect', room: 4, exitIndex: 1 });
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'none' });
+        let at = c.calls.length;
+        click(h, 'editSetReport');
+        const m = h.ui.map();
+        expect(m.unreachableReport).toBe('current');
+        expect(m.unreachable).toEqual([5]);
+        expect(m.unreachableMarks).toEqual([{ room: 5, partial: false, regions: ['level_5'], cell: m.cells[5] }]);
+        expect(red(at)).toBeGreaterThan(0);
+        at = c.calls.length;
+        click(h, 'editSetUndo');
+        expect(h.session.ops().length).toBe(0);
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'stale' });
+        expect(red(at)).toBe(0);
+        click(h, 'editSetReport');
+        expect(h.ui.map()).toMatchObject({ unreachable: [], unreachableReport: 'current' });
+    });
 });

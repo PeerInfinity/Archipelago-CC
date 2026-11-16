@@ -11,6 +11,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { answerGets } from './fixtures/answerGets.js';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,7 +45,7 @@ vi.mock('./storage.js', () => ({
   default: { getItem: () => null, setItem: () => {}, initialize: () => {} },
 }));
 
-import { MessageHandler } from './messageHandler.js';
+import { GROUPS_TIMEOUT_MS, MessageHandler } from './messageHandler.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 // Player 1 (Mathy, Metamath 2p2e4, entrance mode 3) of a Metamath + APQuest room.
@@ -152,6 +153,7 @@ describe('MessageHandler: rules built from server data', () => {
 
   beforeEach(() => {
     connectionMock.send.mockClear();
+    answerGets(connectionMock, () => handler);
     calls.length = 0;
     stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
     // No preset_files.json match: the lookup fails, as for an unknown seed.
@@ -270,7 +272,9 @@ describe('MessageHandler: rules built from server data', () => {
     handler.processMessage({ cmd: 'RoomInfo', games: ['APQuest'], seed_name: SEED });
     await flush();
     expect(sent('Connect')[0]).toMatchObject({ game: 'APQuest' });
-    expect(handler._serverBuild).toBe(null);
+    // Not a build: with no rules that fit, the overlay path's wait for rules (sdc-no-preset-refusal).
+    expect(handler._serverBuild?.mode).toBe('overlay');
+    expect(handler._serverBuild?.local).toBe(null);
   });
 
   it('a picked Metamath in a multi-game room means build', async () => {
@@ -295,6 +299,8 @@ describe('MessageHandler: rules built from server data', () => {
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
     expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'applyRuntimeStateData']);
     expect(sent('LocationScouts')).toHaveLength(1);
+    // The rules loaded before Connect: no groups are asked for (static data is never patched after load).
+    expect(sent('Get')).toEqual([]);
     // LocationInfo is only recorded: no build, no second scout, no load
     handler.processMessage(LOCATION_INFO);
     await flush(10);
@@ -314,6 +320,98 @@ describe('MessageHandler: rules built from server data', () => {
     expect(calls).toEqual([['addItemToInventory', 'Statement 4']]);
     expect(stateManagerMock.beginBatchUpdate).toHaveBeenCalledTimes(1);
     expect(stateManagerMock.commitBatchUpdate).toHaveBeenCalledTimes(1);
+  });
+
+  // ---- sdc-server-item-groups: the server's item groups (data storage) ----------------------------
+  const GROUPS_KEY = '_read_item_name_groups_Metamath';
+  const statements = Object.keys(metamathItems);
+  const odd = statements.filter((name) => Number(name.split(' ')[1]) % 2 === 1);
+
+  it("a builder world takes the server's groups; the disagreement is ONE console line", async () => {
+    answerGets(connectionMock, () => handler, (key) =>
+      key === GROUPS_KEY ? { Everything: statements, Statements: statements, Odd: odd } : null
+    );
+    await connectAndLogIn();
+    expect(sent('Get')).toEqual([{ cmd: 'Get', keys: [GROUPS_KEY] }]);
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.jsonData.item_groups).toEqual({ 1: ['Everything', 'Odd', 'Statements'] });
+    const items = load.jsonData.items['1'];
+    expect(items['Statement 1'].groups).toEqual(['Everything', 'Odd', 'Statements']);
+    expect(items['Statement 2'].groups).toEqual(['Everything', 'Statements']);
+    // The server has no say over an event's groups, nor over another game's item placed here.
+    for (const item of Object.values(items)) {
+      if (item.event || !(item.name in metamathItems)) expect(item.groups).toEqual(FIXTURE.items['1'][item.name].groups);
+    }
+    const differ = consoleLines(bus).filter((m) => /item groups differ/.test(m));
+    expect(differ).toHaveLength(1);
+    expect(differ[0]).toMatch(/only on the server: Odd/);
+    expect(differ[0]).toMatch(/50 item\(s\) in other groups/);
+    expect(differ[0]).toMatch(/using the server's/);
+  });
+
+  it("server groups equal to the builder's: no console line, the document unchanged", async () => {
+    answerGets(connectionMock, () => handler, (key) =>
+      key === GROUPS_KEY ? { Everything: statements, Statements: statements } : null
+    );
+    await connectAndLogIn();
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.jsonData.items).toEqual(FIXTURE.items);
+    expect(load.jsonData.item_groups).toEqual(FIXTURE.item_groups);
+    expect(consoleLines(bus).filter((m) => /item groups/.test(m))).toEqual([]);
+  });
+
+  it("a missing key (null, an old server): the builder's groups and ONE line", async () => {
+    await connectAndLogIn(); // answerGets' default answer is null
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.jsonData.item_groups).toEqual(FIXTURE.item_groups);
+    expect(load.jsonData.items).toEqual(FIXTURE.items);
+    const lines = consoleLines(bus).filter((m) => /item groups/.test(m));
+    expect(lines).toEqual(["The server did not send Metamath's item groups (the server has no such key); using the rules' own."]);
+  });
+
+  it('no answer at all: the build goes on after 10 s with its own groups (the connect does not hang)', async () => {
+    connectionMock.send.mockImplementation(() => true); // a server that never answers Get
+    vi.useFakeTimers();
+    try {
+      handler.processMessage({ cmd: 'RoomInfo', games: ['Metamath'], seed_name: SEED });
+      handler.processMessage({ cmd: 'DataPackage', data: DATA_PACKAGE });
+      await vi.advanceTimersByTimeAsync(0);
+      handler.processMessage(connected());
+      handler.processMessage(LOCATION_INFO);
+      await vi.advanceTimersByTimeAsync(100);
+      expect(calls).toEqual([]); // waiting for the groups
+      await vi.advanceTimersByTimeAsync(GROUPS_TIMEOUT_MS);
+      expect(calls.map(([kind]) => kind)).toEqual(['files:jsonLoaded', 'applyRuntimeStateData']);
+      expect(calls[0][1].jsonData.item_groups).toEqual(FIXTURE.item_groups);
+      expect(consoleLines(bus).filter((m) => /item groups/.test(m))).toEqual([
+        "The server did not send Metamath's item groups (no answer within 10 s); using the rules' own.",
+      ]);
+      // A late answer changes nothing.
+      handler.processMessage({ cmd: 'Retrieved', keys: { [GROUPS_KEY]: { Everything: [] } } });
+      await vi.advanceTimersByTimeAsync(100);
+      expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('the groups answering BEFORE the scouts: the build still waits for LocationInfo', async () => {
+    answerGets(connectionMock, () => handler, (key) =>
+      key === GROUPS_KEY ? { Everything: statements, Statements: statements, Odd: odd } : null
+    );
+    await connectAndLogIn();
+    expect(calls).toEqual([]);
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.jsonData.item_groups['1']).toContain('Odd');
   });
 
   it('a disconnect abandons the build', async () => {
@@ -348,6 +446,7 @@ describe('MessageHandler: DepGraph rules built from server data', () => {
 
   beforeEach(() => {
     connectionMock.send.mockClear();
+    answerGets(connectionMock, () => handler);
     calls.length = 0;
     stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404 })));
@@ -425,6 +524,9 @@ describe('MessageHandler: DepGraph rules built from server data', () => {
     expect(consoleLines(bus).some((m) => /Built DepGraph rules for tech_tree \(\d+ nodes, entrance mode 3\)/.test(m))).toBe(true);
   });
   it('a DepGraph build at SLOT 2 loads with selectedPlayerInfo.playerId 2 (the slot-2 defect)', async () => {
+    const dgNames = Object.keys(dgItems);
+    const SERVER_DG = { Everything: dgNames, Nodes: dgNames, Slot2Only: ['Node 1'] };
+    answerGets(connectionMock, () => handler, (key) => (key === '_read_item_name_groups_DepGraph' ? SERVER_DG : null));
     handler.chosenGame = 'DepGraph';
     handler.processMessage({
       cmd: 'RoomInfo',
@@ -480,6 +582,11 @@ describe('MessageHandler: DepGraph rules built from server data', () => {
     expect(load.playerInfo).toEqual({ playerId: '2', playerName: 'DG' });
     expect(buildSelectedPlayerInfo(load)).toEqual({ playerId: '2', playerName: 'DG' });
     expect(Object.keys(load.jsonData.regions)).toEqual(['2']);
+    // The groups asked for are the SLOT's game's, and land under the slot (never player 1).
+    expect(sent('Get')).toEqual([{ cmd: 'Get', keys: ['_read_item_name_groups_DepGraph'] }]);
+    expect(Object.keys(load.jsonData.item_groups)).toEqual(['2']);
+    expect(load.jsonData.item_groups['2']).toEqual(Object.keys(SERVER_DG).sort());
+    expect(load.jsonData.items['2']['Node 1'].groups).toContain('Slot2Only');
   });
 });
 
@@ -509,6 +616,7 @@ describe('MessageHandler: APCalc rules built from server data', () => {
 
   beforeEach(() => {
     connectionMock.send.mockClear();
+    answerGets(connectionMock, () => handler);
     calls.length = 0;
     stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404 })));

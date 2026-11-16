@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "omsi",
+  "title": "A test fixture: the Z.2 example's tasks (an Idle Loops first town, cut down)",
+  "licence": "test fixture",
+  "layers": {
+    "structure": "structure/manifest.json",
+    "numbers": "numbers/manifest.json",
+    "bindings": "bindings/manifest.json",
+    "concepts": "concepts/manifest.json"
+  }
+}

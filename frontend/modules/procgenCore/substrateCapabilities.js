@@ -324,11 +324,13 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         },
     },
     {
-        id: 'L6', group: 'loop', universal: true,
+        id: 'L6', group: 'loop',
         statement: 'A Bot block can play it for you',
         fields: ['loopSupport.executeVia', 'sharing.mana.loopActionDelegation'],
-        /* ⛓ UNIVERSAL since 2026-10-18: ta-loop-bot gave the text adventure a Bot
-         * block and the generic `flash` entry (the last ✗) was removed. */
+        /* ⛓ Universal from 2026-10-18 (ta-loop-bot gave the text adventure a Bot
+         * block and the generic `flash` entry, the last ✗, was removed) until
+         * 2026-11-15: ActionNodes registers its data half in slice AN-1 and gets
+         * its Bot block in slice AN-3, so it is the one ✗ in between. */
         answer: (e) => {
             const kind = solverKindOf(e);
             return kind ? cell(CELL_KINDS.YES, SOLVER_WORDING[kind] ?? kind) : cell(CELL_KINDS.NO);

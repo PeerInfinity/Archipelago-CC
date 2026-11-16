@@ -6,7 +6,7 @@ The Region Map's shared layout gives every world's display regions an integer ce
 
 - A position is `{ gx, gy }`, an integer cell. Coordinates are **signed and start-relative**: the start is exactly (0, 0) and nothing is min-shifted. Screen y points down, so +gy is below.
 - Why: a region keeps its coordinates when something unrelated is added. A min-shift would move every cell whenever the minimum moved. A saved camera, a "centre on start" control, test assertions and before/after screenshots stay meaningful across layouts.
-- Only a consumer that indexes arrays normalises. `procgenCore/setMapLayout.js` `canonicalLayout` keeps its min-shift as a thin wrapper, so the set editors' `frameOf` is unchanged.
+- Only a consumer that indexes arrays or pixels normalises. `procgenCore/setMapLayout.js` `canonicalLayout` returns the signed cells too (the start room is (0, 0)); its `frameOf` and `layoutCensus` subtract the minimum themselves, so the set editors draw exactly what they drew under the old min-shift (`scripts/dev/set-map-frame-dump.mjs` dumps both and they are byte-identical).
 - Stored `grid_cell`s (generated presets) stay non-negative data. The resolver subtracts the start region's cell.
 
 ## `layoutRegions({ nodes, start, links })`
@@ -22,7 +22,7 @@ This is the set map's canonical layout (Seedling editor E3), keyed by id instead
 
 **Order is input.** There is no rng and no internal sort. The `nodes` array order decides the BFS tie-breaks and which unreached node starts the next component: the lowest position in `nodes`, as `canonicalLayout` used the lowest index. `links` order matters the same way. A string sort inside would put `"10"` before `"2"` and break the wrapper. Callers with unordered input sort it first: `regionLayoutResolve.js` sorts nodes numeric-aware (`level_2` before `level_10`) and links by (from, to, kind, dir).
 
-`setMapLayout.canonicalLayout(graph)` is now a wrapper: room `i` becomes the id `String(i)`, the wrapper calls `layoutRegions`, maps back and min-shifts. It is byte-identical. `seedlingSetMapLift.test.js`'s digests are unchanged, and `regionLayout.test.js` keeps the pre-move function as an oracle over random graphs.
+`setMapLayout.canonicalLayout(graph)` is now a wrapper: room `i` becomes the id `String(i)`, the wrapper calls `layoutRegions` and maps back, with no min-shift (the (0,0)-origin follow-up, 2026-11-15). `regionLayout.test.js` keeps the pre-move function as an oracle over random graphs: the wrapper equals it translated by the start room's old cell. The drawn map did not move; only the position values did, so `seedlingSetMapLift.test.js`'s digests were re-recorded.
 
 ## Groups: `layoutGrouped(graph, { rule, gap })`
 
