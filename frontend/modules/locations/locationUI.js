@@ -1661,9 +1661,14 @@ export class LocationUI {
       return null;
     }
 
-    // Search through all dungeons to find one that contains this region
-    for (const dungeonData of Object.values(staticData.dungeons)) {
-      if (dungeonData.regions && dungeonData.regions.includes(regionName)) {
+    // `staticData.dungeons` is a Map (name → dungeon); Object.values() of a
+    // Map is [], so the lookup used to fail for every region.
+    const dungeons = staticData.dungeons;
+    const dungeonList = dungeons instanceof Map
+      ? Array.from(dungeons.values())
+      : Object.values(dungeons);
+    for (const dungeonData of dungeonList) {
+      if (dungeonData?.regions && dungeonData.regions.includes(regionName)) {
         return dungeonData;
       }
     }

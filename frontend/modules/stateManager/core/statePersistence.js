@@ -103,6 +103,27 @@ export function itemNameGroupsOf(sm) {
   return groups;
 }
 
+/**
+ * The staticData the self-snapshot's `hasItem`/`countItem` hand a game's
+ * `has`/`count` helper. It carries `world` (keyed by player id), so a helper
+ * that reads the loaded player's options (SoE's P_ALLOW_OOB /
+ * P_ALLOW_SEQUENCE_BREAKS read `world[p].options`) sees them; without it those
+ * read false (sdc-player1-tidy-3).
+ */
+function helperStaticData(sm) {
+  // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
+  return {
+    progressionMapping: sm.progressionMapping,
+    // Also include snake_case with player key for generic helpers
+    progression_mapping: { [sm.playerId]: sm.progressionMapping },
+    items: sm.itemData,
+    game_info: sm.gameInfo,
+    settings: sm.settings,
+    world: sm.rules?.world,
+    playerId: sm.playerId
+  };
+}
+
 function log(level, message, ...data) {
   console[level === 'info' ? 'log' : level]?.(message, ...data);
 }
@@ -308,16 +329,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
             player: { id: sm.playerId, slot: sm.playerId },
             prog_items: sm.prog_items  // Include prog_items for state counter games
           };
-          // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
-          const staticData = {
-            progressionMapping: sm.progressionMapping,
-            // Also include snake_case with player key for generic helpers
-            progression_mapping: { [sm.playerId]: sm.progressionMapping },
-            items: sm.itemData,
-            game_info: sm.gameInfo,
-            settings: sm.settings,
-            playerId: sm.playerId
-          };
+          const staticData = helperStaticData(sm);
           return sm.helperFunctions.has(snapshot, staticData, itemName);
         } catch (e) {
           // Fallback to direct inventory check if helper fails
@@ -339,16 +351,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
             player: { id: sm.playerId, slot: sm.playerId },
             prog_items: sm.prog_items  // Include prog_items for state counter games
           };
-          // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
-          const staticData = {
-            progressionMapping: sm.progressionMapping,
-            // Also include snake_case with player key for generic helpers
-            progression_mapping: { [sm.playerId]: sm.progressionMapping },
-            items: sm.itemData,
-            game_info: sm.gameInfo,
-            settings: sm.settings,
-            playerId: sm.playerId
-          };
+          const staticData = helperStaticData(sm);
 
           return sm.helperFunctions.count(snapshot, staticData, itemName);
         } catch (e) {
