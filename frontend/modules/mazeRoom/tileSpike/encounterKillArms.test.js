@@ -55,8 +55,9 @@ describe('opens_from: the census\'s side grades on each latched kill lock\'s eve
             }
         }
         expect(n).toBe(new Set(OPENERS.map(({ event }) => event.name)).size);
-        // a literal only CHECKS: the four latched kill locks of the committed preset (L71's lock has no event — a plain gate)
-        expect([...new Set(OPENERS.map(({ region }) => levelOf(region)))].sort((a, b) => a - b)).toEqual([18, 26, 53, 60]);
+        // a literal only CHECKS: the latched kill locks of the committed preset (L71's lock has no event — a plain gate)
+        // ⛓ rules-l99-sided-killlock: + L99 (its west pocket wakes only one of its three lavarunners: the 1 px side flood)
+        expect([...new Set(OPENERS.map(({ region }) => levelOf(region)))].sort((a, b) => a - b)).toEqual([18, 26, 53, 60, 99]);
     });
     it('a census `cannot` side is absent, `clears` is true, `across` is an item rule (never the empty Or)', () => {
         for (const { event } of OPENERS) {

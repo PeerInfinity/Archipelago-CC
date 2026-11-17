@@ -506,6 +506,21 @@ describe('MessageHandler: the rules the server sends (worldgen_rules)', () => {
     expect(handler.getAwaitedRulesGame()).toBe(null);
   });
 
+  it('a doc from the Upstream Rules Addon (source): ONE "Loaded the server-sent" line names it', async () => {
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: { ...structuredClone(ENVELOPE), source: 'upstream_rules_addon' } }));
+    expect(loads(bus)).toHaveLength(1);
+    const loaded = consoleLines(bus).filter((m) => /^Loaded the server-sent/.test(m));
+    expect(loaded).toHaveLength(1);
+    expect(loaded[0]).toMatch(
+      /^Loaded the server-sent Cloudberry Sphere WorldGen rules \(from the host's Upstream Rules Addon\) with the server's placements/
+    );
+  });
+
+  it('a doc without source (a world_generator package): no add-on in the line', async () => {
+    await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(ENVELOPE) }));
+    expect(consoleLines(bus).some((m) => /Upstream Rules Addon/.test(m))).toBe(false);
+  });
+
   it("the server-sent doc's groups give way to the server's data storage groups", async () => {
     answerWithGroups(() => handler);
     await logInWith(withRules({ [WORLDGEN_RULES_KEY]: structuredClone(ENVELOPE) }));

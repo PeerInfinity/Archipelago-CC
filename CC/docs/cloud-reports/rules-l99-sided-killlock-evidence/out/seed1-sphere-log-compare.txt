@@ -1,0 +1,4 @@
+item rows 48 48 same order+integer sphere: True
+event rows 40 41 added ['L99 flag 0: lock@80,96 cleared'] removed []
+item rows whose fractional index moved: 5 [('Level 063 - Chest', '13.2', '13.3'), ('Level 080 - Chest', '13.3', '13.4'), ('Level 082 - King of Fire', '13.4', '13.5'), ('Level 098 - Chest', '13.5', '13.6'), ('Level 106 - Ghostsword', '13.6', '13.7')]
+event rows (other than the new one) whose index moved: []

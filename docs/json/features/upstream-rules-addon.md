@@ -45,15 +45,17 @@ The setting applies to the whole room: every slot of every game that isn't exclu
 
 ## What players see
 
-Players connect as usual. When the room has no preset for their seed, the client prints *"Loaded the server-sent `<game>` rules"* and builds the room from the document.
+Players connect as usual. When the room has no preset for their seed, the client prints *"Loaded the server-sent `<game>` rules (from the host's Upstream Rules Addon) with the server's placements"* and builds the room from the document.
 
-A slot that didn't get a document carries a short reason (`worldgen_rules_omitted`) instead. The client then says the server did not send this world's rules and asks for the room's preset file, as it does without the add-on. It sends no checks until it has rules. The reasons are:
+A slot that didn't get a document carries a short reason (`worldgen_rules_omitted`) instead. The client prints one line naming the add-on and the reason, then asks for the room's preset file, as it does without the add-on. It sends no checks until it has rules; checks the game made meanwhile are held. The reasons, and the line the player sees:
 
-| Reason | When |
-|---|---|
-| `over_cap` | The document was over `max_kb`. It also carries `size_kb` and `cap_kb`. |
-| `export_degraded` | The exporter couldn't fully read some of this game's rules (`unanalysed_rules`: how many), or it wrote them in its fallback format. The add-on sends nothing rather than rules that describe different logic. |
-| `export_failed` | The export failed (`error` says why). Generation itself still succeeds. |
+| Reason | When | The player sees |
+|---|---|---|
+| `over_cap` | The document was over `max_kb`. It also carries `size_kb` and `cap_kb`. | *"The host's Upstream Rules Addon did not send this world's rules (290 KB, over its host.yaml max_kb of 100 KB)."* |
+| `export_degraded` | The exporter couldn't fully read some of this game's rules (`unanalysed_rules`: how many), or it wrote them in its fallback format (`format_fallback`). The add-on sends nothing rather than rules that describe different logic. | *"… did not send this world's rules: 3 of its rules could not be analysed, so they would not match the game's logic."* (or *"the export fell back to an older rule format"*) |
+| `export_failed` | The export failed (`error` says why). Generation itself still succeeds. | *"… did not send this world's rules: the export failed (`<error>`)."* The error is quoted on one line, cut to 160 characters. |
+
+A reason this client doesn't know is quoted as is (*"… (reason: "`<reason>`")."*). When a room's world sent neither a document nor a reason (the add-on isn't installed), the request for a preset adds *"(a host can send them by installing the Upstream Rules Addon)"*; APCalc's never does.
 
 A game whose own world already sends its rules is left alone: the World Generator packages, Baking Adventure and Coding Adventure.
 
