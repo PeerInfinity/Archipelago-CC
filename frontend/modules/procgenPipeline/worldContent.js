@@ -152,14 +152,31 @@ export function defaultContentPackOf(entry) {
  * ⛓ **THE WORLD'S EFFECTIVE STACK — THE ONE RULE.** The `defaultContentPack` of
  * each substrate in `substrateIds` (the world's mix; any order, repeats allowed),
  * taken in REGISTRY order (`substrateRegistry.getAll()`: by id), without
- * duplicates; then `content` (the world's `params.content`) in its own order. A
- * pack the defaults already named keeps its first position: the stack is an
- * override order, and one pack can only sit at one place in it.
+ * duplicates; then `exists` (the world's what-exists packs, ⛓ PL-2); then
+ * `content` (the world's `params.content`) in its own order. A pack an earlier
+ * part already named keeps its first position: the stack is an override order,
+ * and one pack can only sit at one place in it.
+ *
+ * ⛓ CONTENT SETS PL-2 — Z.5's words default: "the `exists` packs' own concepts
+ * and text underneath, then the named themes". `exists` absent (every world on
+ * main records none) is the mix's defaults, which the first part already holds,
+ * so the stack is exactly the C3 rule's. A world naming non-default packs gets
+ * them UNDER its themes and over the substrates' own packs (a region still
+ * finds its default pack in the set: `assertContentLoaded`).
  *
  * `registry` is injectable for tests; an id it does not hold contributes nothing.
  */
-export function effectiveContentStack({ substrateIds = [], content = [], registry = substrateRegistry } = {}) {
+export function effectiveContentStack({ substrateIds = [], exists = [], content = [], registry = substrateRegistry } = {}) {
     const own = assertContentParam(content);
+    const named = assertPackListParam(RECORDED_EXISTS_KEY, exists);
+    const out = defaultPacksOfMix(substrateIds, registry);
+    for (const id of named) if (!out.includes(id)) out.push(id);
+    for (const id of own) if (!out.includes(id)) out.push(id);
+    return out;
+}
+
+/** The `defaultContentPack` of each substrate in the mix, in registry order, once each. */
+function defaultPacksOfMix(substrateIds, registry) {
     const inMix = new Set(substrateIds);
     const out = [];
     for (const entry of registry.getAll()) {
@@ -167,7 +184,6 @@ export function effectiveContentStack({ substrateIds = [], content = [], registr
         const id = defaultContentPackOf(entry);
         if (id && !out.includes(id)) out.push(id);
     }
-    for (const id of own) if (!out.includes(id)) out.push(id);
     return out;
 }
 
@@ -243,13 +259,14 @@ export async function loadContentSet(stack, { base, readJson, concepts = CONCEPT
  */
 export function contentRegionParams({ params, contentSet = null, substrateIds = [] }) {
     const own = assertContentParam(params?.content);
-    const stack = effectiveContentStack({ substrateIds, content: own });
+    const exists = assertPackListParam(RECORDED_EXISTS_KEY, params?.[RECORDED_EXISTS_KEY]);
+    const stack = effectiveContentStack({ substrateIds, exists, content: own });
     if (!stack.length) return {};
     // ⛓ C4 — a stack of DEFAULT packs only, with no set handed in: built from the preload cache
     //   (refused by name when a pack was not preloaded). A stack naming `params.content` still
     //   needs the awaited load.
     if (contentSet === DEFER_CONTENT_SET) return own.length ? { [RECORDED_CONTENT_KEY]: [...own] } : {};
-    if (contentSet === null && !own.length) contentSet = defaultContentSetOf(stack);
+    if (contentSet === null && !own.length && !exists.length) contentSet = defaultContentSetOf(stack);
     if (!isContentSet(contentSet) || stack.some((id) => !contentSet.ids.includes(id))) {
         throw new WorldContentError(`the world's content stack [${stack.join(', ')}] was not loaded `
             + `(the set given holds [${isContentSet(contentSet) ? contentSet.ids.join(', ') : 'nothing'}]): `
@@ -276,11 +293,14 @@ export function assertContentLoaded(params, substrateId, registry = substrateReg
     const needed = [];
     const own = defaultContentPackOf(registry.get(substrateId));
     if (own) needed.push(own);
+    // ⛓ PL-2 — the world's own what-exists packs sit under its themes in the words stack (recorded only when not
+    //   the default, so a world on main names none).
+    const existsNamed = params?.[RECORDED_EXISTS_KEY] ?? [];
     const named = params?.[RECORDED_CONTENT_KEY] ?? [];
-    for (const id of named) if (!needed.includes(id)) needed.push(id);
+    for (const id of [...existsNamed, ...named]) if (!needed.includes(id)) needed.push(id);
     if (!needed.length) return params;
     const set = params?.[CONTENT_SET_KEY];
-    if ((set === undefined || set === null) && !named.length) {
+    if ((set === undefined || set === null) && !named.length && !existsNamed.length) {
         return { ...(params ?? {}), [CONTENT_SET_KEY]: defaultContentSetOf(needed) };
     }
     const missing = needed.filter((id) => !isContentSet(set) || !set.ids.includes(id));
@@ -317,7 +337,9 @@ export function recordedContentOf(regionParams) {
  * when the stack is empty (no load, no new key).
  */
 export async function attachContentSet(regionParams, { substrateIds = [], ...io } = {}) {
-    const stack = effectiveContentStack({ substrateIds, content: regionParams?.[RECORDED_CONTENT_KEY] ?? [] });
+    const stack = effectiveContentStack({
+        substrateIds, exists: regionParams?.[RECORDED_EXISTS_KEY] ?? [], content: regionParams?.[RECORDED_CONTENT_KEY] ?? [],
+    });
     if (!stack.length) return regionParams;
     const contentSet = await loadContentSet(stack, io);
     return { ...(regionParams ?? {}), [CONTENT_SET_KEY]: contentSet };
@@ -422,7 +444,7 @@ export function assertPackListParam(name, list) {
  * order, once each (the packs `effectiveContentStack` puts first).
  */
 export function defaultExistsOf({ substrateIds = [], registry = substrateRegistry } = {}) {
-    return effectiveContentStack({ substrateIds, content: [], registry });
+    return defaultPacksOfMix(substrateIds, registry);
 }
 
 /** A refusal sentence for a `numbersMode` value, or null when it is absent or one of `NUMBERS_MODES`. */

@@ -364,28 +364,31 @@ describe('the corpus census — printed, then pinned', () => {
          *              annotation row → it (`doc` 316 → 323).
          *   428 → 429  content packs PL-1 (2026-11-15): concepts.md § Content roles' `assertPresents` bullet → its
          *              own § What exists, the numbers and the bindings (`same-doc` 39 → 40).
-         *   429 → 434  ActionNodes AN-2 (2026-11-16): action-nodes.md's two same-doc links to its new § The
+         *   429 → 430  content packs PL-2 (2026-11-16): concepts.md § The resolver, the fill rules and the gap
+         *              report → action-nodes.md (`doc` 323 → 324).
+         *   430 → 435  ActionNodes AN-2 (2026-11-16): action-nodes.md's two same-doc links to its new § The
          *              runtime, that § → loop-recording.md § The start gate, that § → action-nodes.md § The
-         *              runtime, and substrate-registry.md's `loopSupport.actionGate` row → it (`doc` 323 → 326,
+         *              runtime, and substrate-registry.md's `loopSupport.actionGate` row → it (`doc` 324 → 327,
          *              `same-doc` 40 → 42).
          */
         expect(by).toEqual({
             'same-doc': 42,
-            doc: 326,
+            doc: 327,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(434);
+        expect(CORPUS.length).toBe(435);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
         //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out) and the registry's
         //   annotation row to it (7 doc).
-        //   323 → 326: ActionNodes AN-2 — action-nodes.md § The runtime ⇄ loop-recording.md § The start gate, and the
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver… → action-nodes.md (1 doc).
+        //   324 → 327: ActionNodes AN-2 — action-nodes.md § The runtime ⇄ loop-recording.md § The start gate, and the
         //   registry's `loopSupport.actionGate` row → action-nodes.md § The runtime (3 doc).
-        expect(docs).toHaveLength(326);
+        expect(docs).toHaveLength(327);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

@@ -295,24 +295,33 @@ A world's content stack can supply the maze's tiles. The art resolves by key at 
 
 **The key table** (`MAZE_ART_KEYS`) is the maze's declaration of what art it can show: one art key in the `maze` namespace per thing the plain painter draws in a `COLORS` colour.
 
-| Thing | Key | Drawn today as (the fallback) |
-|---|---|---|
-| `floor` | `maze:tile/floor` | the base layer's `COLORS.floor` fill |
-| `wall` | `maze:tile/wall` | the base layer's `COLORS.wall` fill |
-| `exit` | `maze:tile/exit` | an open exit's `COLORS.exit` fill (a closed one stays `exitBlocked`) |
-| `entrance` | `maze:tile/entrance` | a `COLORS.entrance` border |
-| `manaTile` | `maze:tile/mana` | a diamond labelled M, faded once collected (the art fades the same way) |
-| `player` | `maze:character/player` | a `COLORS.player` disc; the facing tick is drawn over either |
-| `trap` | `maze:object/trap` | an arrow trap's strip; its lane stays the armed/silent tint |
-| `block` / `blockStruck` / `blockDormant` | `maze:object/block`, `…/block-struck`, `…/block-dormant` | a pushable block by its kind's look |
-| `button` / `buttonDown` | `maze:object/button`, `…/button-down` | a ring, filled while down |
-| `pulser` | `maze:object/pulser` | a pulser's body; its ring stays the armed/silent signal |
-| `pull` | `maze:object/pull` | a pull's trap cell; its disc stays the live/inert tint |
-| `sign` | `maze:object/sign` | a region's thing that is a piece of information no one holds (§ Things), drawn by `mazeThingOverlay.js` beside `drawWorld`: a board in `COLORS.sign` |
+| Thing | Key | Base | Drawn today as (its own default) |
+|---|---|---|---|
+| `floor` | `maze:tile/floor` | `floor` | the base layer's `COLORS.floor` fill |
+| `wall` | `maze:tile/wall` | `wall` | the base layer's `COLORS.wall` fill |
+| `exit` | `maze:tile/exit` | `floor` | an open exit's `COLORS.exit` fill (a closed one stays `exitBlocked`) |
+| `entrance` | `maze:tile/entrance` | `floor` | a `COLORS.entrance` border |
+| `manaTile` | `maze:tile/mana` | `marker` | a diamond labelled M, faded once collected (the art fades the same way) |
+| `player` | `maze:character/player` | `character` | a `COLORS.player` disc; the facing tick is drawn over either |
+| `trap` | `maze:object/trap` | `marker` | an arrow trap's strip; its lane stays the armed/silent tint |
+| `block` / `blockStruck` / `blockDormant` | `maze:object/block`, `…/block-struck`, `…/block-dormant` | `marker` | a pushable block by its kind's look |
+| `button` / `buttonDown` | `maze:object/button`, `…/button-down` | `marker` | a ring, filled while down |
+| `pulser` | `maze:object/pulser` | `marker` | a pulser's body; its ring stays the armed/silent signal |
+| `pull` | `maze:object/pull` | `marker` | a pull's trap cell; its disc stays the live/inert tint |
+| `sign` | `maze:object/sign` | `marker` | a region's thing that is a piece of information no one holds (§ Things), drawn by `mazeThingOverlay.js` beside `drawWorld`: a board in `COLORS.sign` |
 
 The other `COLORS` keys are state signals or edges and get no key: `exitBlocked`, `locationBlocked`, `grid`, `laneArmed`, `laneSilent`, `pullLive`, `pullInert`, `pullMouth`, `blockEdge`. Items, doors and concept gates are drawn from the world document (their row's colour and symbol), not from `COLORS`, and are not in the table. `mazeTileArt.test.js` holds the table against `COLORS`: a new colour must be a thing's or a stated signal.
 
-**The seam.** The painter asks `drawTileArt(ctx, tileArt, thing, …)` once per thing. If the art has the key and its sheet decoded, it draws the key's frame 0 scaled to the cell and the painter skips that thing's fill. Otherwise it draws nothing and the painter does exactly what it did before. "Not available" covers no art loaded, a key absent from the stack, and a sheet that did not decode, and none of them refuses or leaves a blank cell. `drawWorld` reads the art from the view's `tileArt` field; `null` is today's draw, op for op.
+**The fallback chain** (`drawMazeTile`, content sets TILE-1). Both views ask one function how to draw each kind, and it answers with the first step that applies:
+
+1. **The theme's art.** If the art has the kind's key and its sheet decoded, it draws the key's frame 0 scaled to the cell. "Not available" covers no art loaded, a key absent from the stack, and a sheet that did not decode.
+2. **The kind's own default.** For a row of the table this is the painter's existing `COLORS` shape (the column above), which both views pass in. `drawWorld` with `tileArt: null` is the draw it always was, op for op.
+3. **The kind's base.** Every row declares a `base` from a closed set (`MAZE_TILE_BASES`), and each base has one plain draw: `floor` and `wall` fill the cell in `COLORS.floor`/`COLORS.wall`; `marker` is an inset grey-blue square, ink-edged (`#9aa0b4`); `character` is a pale disc, ink-edged (`#e6e6f0`).
+4. **The placeholder.** A magenta box (`#ff00ff`) labelled with the kind's first two letters. It never throws, and it logs the kind once.
+
+A kind the table does not know, such as one a pack names, goes through steps 1, 3 and 4: it declares an art key and a base, and needs no default graphic of its own. Nothing in the maze draws such a kind yet. When one arrives, the pack's concept row would carry the base next to its `art` key. `drawTileArt` stays as the seam for a single row (the sign uses it), and it still refuses a name that is not in the table, because a typo in the painter must not read as "no art". `mazeRoom/mazeTileFallback.test.js` pins the chain, the bases and the placeholder. It also checks that every row resolves in both views.
+
+**Both views.** The one-region view (`drawWorld` with `drawMazeThings`) and the composite map's maze cell (`mazeCompositeMap.drawMazeCompositeRegion`) draw every kind of the table, through the same chain and the same drawers (`drawLiveMarkers`, `drawArrowTraps`, `drawConsumableTile` and `drawMazePlayer` take a cell origin `offX`/`offY`). The one exception is listed in `MAZE_COMPOSITE_UNDRAWN`, with its reason: the composite map draws no player, because it shows a world's layout and not a play state. It has no player position, and the one-region view also draws no player before play. The map has no play state at all, so it shows the world's own block layout, every lane and pulser silent, every gate shut and nothing collected.
 
 **The play-time load.** On each render the panel works out the world's stack: `effectiveContentStack` over the maze entry's id and the loaded slot's `procgen_metadata[p].content`, the same substrate set the APWorld editor's region job uses. `loadMazeTileArt(stack, {base, readJson, decode})` loads only the `art` layer of each pack (`loadPackStack(ids, {only: ['art']})`), builds `createArtLibrary`, and decodes only the sheets the maze's keys draw from. It loads once per stack and re-renders when the art lands. A plain world's stack is the maze's own default pack (`frontend/packs/maze/`, declared as `defaultContentPack`). That pack carries no `art` layer, so its `pack.json` is read once, nothing is decoded and the maze draws as before. The same holds for an empty stack or any stack without a maze key. A later pack that overrides `maze:tile/wall` wins: this is the pack stack's own `mergeKeyed`, and there is no second merge.
 

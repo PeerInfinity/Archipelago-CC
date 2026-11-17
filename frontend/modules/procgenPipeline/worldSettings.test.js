@@ -109,7 +109,10 @@ describe('⛔ refused by name', () => {
 });
 
 describe('the record and the read-back, through a real generation (the concept trial world)', async () => {
-    const SET = { exists: ['meta'], numbersMode: 'assign' };
+    // ⛓ PL-2: `exists` names a STRUCTURE pack. Its words now sit under the themes (Z.5's words row), and this one's
+    // present only its own structure entries, so the words of this maze/text world do not move. (A words pack named
+    // in `exists` moves them, as Z.5 rules: `wordsStack.test.js`.)
+    const SET = { exists: ['example-village'], numbersMode: 'assign' };
     const bundle = { ...structuredClone(CONCEPT_TRIAL_STATE), params: { ...CONCEPT_TRIAL_STATE.params, ...SET } };
     const world = await runPresetHeadless(await prepareRunFromState(bundle, { io: nodePackIo() }));
     const committed = JSON.parse(readFileSync(join(ROOT, 'frontend/presets/concept_trial/AP_1/AP_1_rules.json'), 'utf8'));

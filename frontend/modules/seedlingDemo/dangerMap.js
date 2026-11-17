@@ -1492,6 +1492,16 @@ export function staticEnemyDanger(run, box) {
      */
     const liveDrills = CONTACT_FIDELITY.drillMixedRooms
         ? new Map((run.entities('drillBodies') ?? []).map((d) => [d.id, d])) : null;
+    /**
+     * ⛓ fidelity WALLFLYERCORPSE D2 (`wallFlyerCorpseGone`): a wallflyer the run no longer holds LIVE — removed, or
+     * dying (the "die" anim on, then `destroy` while it fades) — is not priced at its placement: `Enemy.hitPlayer` is
+     * gated `!destroy && currentAnim != "die"` (`Enemies/Enemy.as:211-221`). Live = the family's own reading
+     * (`!destroy && dieAnim === null`). A family that is not an array (no such read) skips nothing. OFF: every
+     * wallflyer at its placement, as before.
+     */
+    const wallFlyerFamily = CONTACT_FIDELITY.wallFlyerCorpseGone ? run.entities('wallFlyerBodies') : null;
+    const liveWallFlyers = Array.isArray(wallFlyerFamily)
+        ? new Set(wallFlyerFamily.filter((w) => !w.destroy && !w.dieAnim).map((w) => w.id)) : null;
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -1502,6 +1512,7 @@ export function staticEnemyDanger(run, box) {
         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
         const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
         if (liveDrill?.removed) continue;
+        if (liveWallFlyers && inst.tag === 'wallflyer' && !liveWallFlyers.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
         // ⛓ fidelity DRILLWATER D1: a drowned/burnt or falling drill bills no contact — `destroy` gates `Enemy.hitPlayer`,
         // and the pit's descent replaces it (`Enemy.as:96-111`). Its body fades out; nothing to price. (A sword-killed
         // drill's "die"/fade pricing is DRILLKILL's and is left as it was: this reads the terrain verdict only.)

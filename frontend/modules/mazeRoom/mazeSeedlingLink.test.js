@@ -15,7 +15,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { mapDocumentPath } from '../flashPanel/mapDocumentPath.js';
-import { levelOfPayload } from './mazeLab.js';
+import {
+    MazeRoomEditor, PALETTE_TYPES, applyEdit, convertedFromOfState, generateStep, labPayload, levelOfPayload, loadPayload,
+    withConvertedFrom,
+} from './mazeLab.js';
 import { PRESET_INDEX_PATH, openPresetRegion, presetRulesPath } from './mazeLabPreset.js';
 import {
     SEEDLING_EDITOR_PAGE, seedlingEditorMap, seedlingEditorUrl, seedlingLinkFor, seedlingOriginOf,
@@ -153,7 +156,7 @@ describe('mazeSeedlingLink — the rooms that do not link, and why', () => {
     const room = LINKED[0];
     const payload = room.sidecar.playable_payload;
 
-    it('a PASTED converted room (no rules) is converted but cannot link, and the reason names its level', () => {
+    it('a BARE pasted sidecar (no rules, no `converted_from`) is converted but cannot link; the reason names its level', () => {
         const fromBox = seedlingOriginOf({ payload: levelOfPayload(room.sidecar) });
         expect(fromBox.linkable).toBe(false);
         expect(fromBox.level).toBe(payload.level);
@@ -162,6 +165,7 @@ describe('mazeSeedlingLink — the rooms that do not link, and why', () => {
         const v = seedlingLinkFor({ origin: fromBox });
         expect(v).toEqual({ shown: true, ok: false, level: payload.level, reason: fromBox.reason });
         expect(seedlingOriginOf({ payload: levelOfPayload(payload) }).linkable).toBe(false);
+        expect(fromBox.reason).toContain('paste the maze lab\'s own save box');
     });
 
     it('a lab payload (its `level` is the world object) and a generated maze have no origin: no link, no note', () => {
@@ -189,5 +193,89 @@ describe('mazeSeedlingLink — the rooms that do not link, and why', () => {
             + `Seedling editor reads ${seedlingEditorMap()}`);
         const otherPlayer = seedlingOriginOf({ payload, rules: room.rules, player: '99' });
         expect(otherPlayer.linkable).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓ MAZE PASTED ROOM LINK (⚖ Robert 2026-11-16 "Maze lab link back to Seedling"): the maze lab's own save box, copied
+ * from a room opened by preset link and pasted into LOAD, links to the same level. The state is built the way the page
+ * builds it (`withConvertedFrom(loadPayload(sidecar), origin)`), the box is the JSON text of `labPayload`, and the paste
+ * is `loadPayload(JSON.parse(text))` — the page's own LOAD path.
+ */
+describe('mazeSeedlingLink — a paste of the maze lab\'s own save box', () => {
+    const bootOf = (r) => withConvertedFrom(loadPayload(r.sidecar), originOf(r));
+    const copyOf = (state) => JSON.stringify(labPayload(state), null, 2);
+    const pasteOriginOf = (text) => {
+        const payload = JSON.parse(text);
+        const loaded = loadPayload(payload);
+        return { loaded, origin: seedlingOriginOf({ payload: levelOfPayload(payload), convertedFrom: convertedFromOfState(loaded) }) };
+    };
+
+    it('every converted room: COPY → PASTE links to the same level as its preset-link boot, and the copy is a fixed point', () => {
+        for (const r of LINKED) {
+            const boot = originOf(r);
+            const text = copyOf(bootOf(r));
+            expect(JSON.parse(text).converted_from).toEqual({ map_document: seedlingEditorMap(), level: boot.level, edits: 0 });
+            const { loaded, origin } = pasteOriginOf(text);
+            expect(origin.linkable).toBe(true);
+            expect(origin.url).toBe(boot.url);
+            expect(seedlingLinkFor({ origin, edits: convertedFromOfState(loaded).edits }).notes).toEqual([]);
+            expect(copyOf(loaded)).toBe(text);
+            // ⛔ the rest of the payload is exactly what it was before this slice (the block only ADDS a key)
+            const { converted_from: _c, ...rest } = JSON.parse(text);
+            expect(JSON.stringify(rest)).toBe(JSON.stringify(labPayload(loadPayload(r.sidecar))));
+        }
+    });
+
+    it('an EDITED room: the copy counts its edits, and the paste (and an edit after it) still notes the ORIGINAL level', () => {
+        const r = LINKED[0];
+        const boot = bootOf(r);
+        const e = new MazeRoomEditor({ itemLib: {}, obstacleLib: {} });
+        e.selectType(PALETTE_TYPES.WALL);
+        const c = boot.model.allCells(boot.record).find((p) => boot.model.isFree(boot.record, p.tx, p.ty));
+        const edited = applyEdit(boot, e, c.tx, c.ty).state;
+        expect(convertedFromOfState(edited)).not.toBe(null);
+        const text = copyOf(edited);
+        expect(JSON.parse(text).converted_from.edits).toBe(1);
+        const { loaded, origin } = pasteOriginOf(text);
+        expect(origin.url).toBe(originOf(r).url);
+        const pastedView = seedlingLinkFor({ origin, edits: convertedFromOfState(loaded).edits + loaded.edits.length });
+        expect(pastedView.notes).toContain(`the Seedling editor opens the ORIGINAL level ${origin.level}: this room's 1 `
+            + 'maze edit(s) are not carried over');
+        const c2 = loaded.model.allCells(loaded.record).find((p) => loaded.model.isFree(loaded.record, p.tx, p.ty));
+        const again = applyEdit(loaded, e, c2.tx, c2.ty).state;
+        expect(convertedFromOfState(again).edits + again.edits.length).toBe(2);
+        expect(JSON.parse(copyOf(again)).converted_from.edits).toBe(2);
+    });
+
+    it('an unproven room writes no block, and a paste that does not name the editor\'s map never links', () => {
+        const generated = generateStep({ seed: 1, step: 1 });
+        expect('converted_from' in labPayload(generated)).toBe(false);
+        expect(withConvertedFrom(generated, null)).toBe(generated);
+        const r = LINKED[0];
+        const bareSidecar = loadPayload(r.sidecar);
+        expect('convertedFrom' in bareSidecar).toBe(false);
+        expect(withConvertedFrom(bareSidecar, { level: 3, linkable: false, reason: 'x' })).toBe(bareSidecar);
+        const good = JSON.parse(copyOf(bootOf(r)));
+        const level = good.converted_from.level;
+        const other = pasteOriginOf(JSON.stringify({ ...good, converted_from: { ...good.converted_from,
+            map_document: 'another-map.json' } })).origin;
+        expect(other.linkable).toBe(false);
+        expect(other.reason).toBe(`this room was converted from level ${level} of another-map.json; the Seedling editor `
+            + `reads ${seedlingEditorMap()}`);
+        for (const bad of [{ level }, { map_document: '', level }, { map_document: seedlingEditorMap(), level: '5' }, 'x']) {
+            const { loaded, origin } = pasteOriginOf(JSON.stringify({ ...good, converted_from: bad }));
+            expect('convertedFrom' in loaded).toBe(false);
+            expect(origin).toBe(null);
+        }
+        const { converted_from: _c, ...old } = good;
+        expect(pasteOriginOf(JSON.stringify(old)).origin).toBe(null);
+    });
+
+    it('a directive or ladder step moves the base, and the claim lapses with it', () => {
+        const boot = bootOf(LINKED[0]);
+        const moved = Object.freeze({ ...boot, baseRecord: generateStep({ seed: 1, step: 1 }).record });
+        expect(convertedFromOfState(moved)).toBe(null);
+        expect('converted_from' in labPayload(moved)).toBe(false);
     });
 });

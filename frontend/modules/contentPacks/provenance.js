@@ -29,6 +29,12 @@
  * script whose `--check` compares the pack with the game's files (check 2, held
  * by `provenance.test.js`).
  *
+ * ⛓ THE ONLY VALIDATOR (PL-2). `actionNodes/actionGraph.js` checks a graph's
+ * inline block with `parseProvenance` and re-exports `SOURCE_FIELDS`; it keeps
+ * no copy. Two optional fields came from that graph (⚖ planner, PL-2): `session`
+ * on a `model` source (the session that wrote it) and `ruling` inside
+ * `approved` (where the approval is recorded).
+ *
  * ⛔ A WORLD DOCUMENT CARRIES NO PER-ENTRY PROVENANCE (Z.7). It records its pack
  * ids; the source of anything in it is looked up through the packs.
  *
@@ -43,7 +49,7 @@ export const SOURCE_TYPES = Object.freeze(['game', 'person', 'model', 'authored'
 export const SOURCE_FIELDS = Object.freeze({
     game: Object.freeze(['name', 'repo', 'commit', 'path', 'files', 'extracted_by', 'credit', 'licence', 'approved', 'note']),
     person: Object.freeze(['name', 'permission', 'licence', 'approved', 'note']),
-    model: Object.freeze(['model', 'family', 'date', 'licence', 'approved', 'note']),
+    model: Object.freeze(['model', 'family', 'date', 'session', 'licence', 'approved', 'note']),
     authored: Object.freeze(['by', 'licence', 'approved', 'note']),
     derived: Object.freeze(['from', 'by', 'licence', 'approved', 'note']),
 });
@@ -52,7 +58,8 @@ export const SOURCE_FIELDS = Object.freeze({
 export const UNRECORDED_MODEL = 'unrecorded';
 
 const BLOCK_FIELDS = Object.freeze(['sources', 'default', 'groups']);
-const APPROVED_FIELDS = Object.freeze(['by', 'date']);
+/** `approved`: `by` and `date` required; `ruling` (where the approval is recorded) optional (⚖ planner, PL-2). */
+const APPROVED_FIELDS = Object.freeze(['by', 'date', 'ruling']);
 const SOURCE_ID_PATTERN = /^[a-z][a-zA-Z0-9_-]*$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const COMMIT_PATTERN = /^[0-9a-f]{7,40}$/;
@@ -71,10 +78,11 @@ function refuse(packId, layer, message, key = null) {
 }
 
 function checkApproved(value, fail) {
-    if (!isObject(value)) fail('approved must be { by, date }');
+    if (!isObject(value)) fail('approved must be { by, date, ruling? }');
     for (const f of Object.keys(value)) if (!APPROVED_FIELDS.includes(f)) fail(`approved has unknown field "${f}" (${APPROVED_FIELDS.join(', ')})`);
     if (!isText(value.by)) fail('approved.by is missing');
     if (typeof value.date !== 'string' || !DATE_PATTERN.test(value.date)) fail(`approved.date ${JSON.stringify(value.date)} is not YYYY-MM-DD`);
+    if ('ruling' in value && !isText(value.ruling)) fail('approved.ruling must be a non-empty string');
 }
 
 /**
@@ -90,7 +98,7 @@ export function checkSource(id, source, fail) {
     for (const f of Object.keys(source)) {
         if (f !== 'type' && !allowed.includes(f)) at(`field "${f}" is not one a ${source.type} source takes (${allowed.join(', ')})`);
     }
-    for (const f of ['licence', 'note', 'credit', 'permission']) {
+    for (const f of ['licence', 'note', 'credit', 'permission', 'session']) {
         if (f in source && !isText(source[f])) at(`${f} must be a non-empty string`);
     }
     if ('approved' in source) checkApproved(source.approved, at);
@@ -180,7 +188,8 @@ export function parseProvenance(block, packId, layer) {
  *
  *   structure  `entries`                      concepts  `concepts`
  *   text       `strings` and `lists` (plain values: a per-entry source is a group whose prefix is the key)
- *   numbers    `sets` (one entry per set)     bindings  every `<game>/<key>` of `bindings`
+ *   numbers    each set, and each `<set>/<key>` of its values (PL-2)
+ *   bindings   every `<game>/<key>` of `bindings`
  *   art        `sprites` and `shapes`         sfx       `sounds`        music  `tracks`
  */
 export function layerEntries(layer, json) {
@@ -190,7 +199,11 @@ export function layerEntries(layer, json) {
         case 'structure': return keyed(json?.entries);
         case 'concepts': return keyed(json?.concepts);
         case 'text': return [...keyed(json?.strings), ...keyed(json?.lists)];
-        case 'numbers': return keyed(json?.sets);
+        // ⛓ PL-2: a set is an entry, and so is each priced entry of it (`<set>/<structure id>`, the bindings' form),
+        // so a group can name the source of one entry's values. A value row cannot carry `src` (values are numbers).
+        case 'numbers': return Object.entries(isObject(json?.sets) ? json.sets : {})
+            .flatMap(([game, set]) => [{ key: game, src: isObject(set) ? set.src : undefined },
+                ...Object.keys(isObject(set?.values) ? set.values : {}).map((key) => ({ key: `${game}/${key}`, src: undefined }))]);
         case 'bindings': return Object.entries(isObject(json?.bindings) ? json.bindings : {})
             .flatMap(([game, table]) => keyed(table).map((e) => ({ ...e, key: `${game}/${e.key}` })));
         case 'art': return [...keyed(json?.sprites), ...keyed(json?.shapes)];
