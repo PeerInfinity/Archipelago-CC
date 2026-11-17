@@ -238,7 +238,8 @@ describe('the Seedling hook (compositeMap.layoutGraph)', () => {
         const blind = resolveRegionLayout({ rules });
         expect(blind.stats.source).toBe('hook');
         expect(blind.stats.directed).toBe(0); // the derived atlas is not shipped: no level sizes, no directions
-        // ⛓ MEASURED: R1 joins level_82 / 96 / 98 into the overworld by teleporters, and a pit or stairs reaches each
+        // ⛓ MEASURED: blind (no level sizes, so no exit can be told an edge transition or a warp) R1 joins level_82 /
+        //   96 / 98 into the overworld by `join` exits, and a pit or stairs reaches each
         //   from a group BELOW it — a cycle, so 3 of 43 down links cannot land below (the 3a report's R2 motivation)
         expect(blind.stats.down).toEqual({ across: 43, below: 40 });
         expect(blind.stats.vertical.cycleDropped).toBeGreaterThanOrEqual(3);
