@@ -516,6 +516,53 @@ function wasmMemoryBytes() {
     return best;
 }
 
+// MEASUREMENT-ONLY (cloud slice seedling-seed2-stall-diagnosis): the wasm playback engine's closure at each tick,
+// and one full dump when a "playing tick k/N" status repeats (the stall). Not for landing.
+let measureLastStatus = null;
+let measureStallDumps = 0;
+function measureSafe(v) {
+    try {
+        return JSON.stringify(v, (k, x) => (x instanceof Set ? [...x] : x instanceof Map ? [...x] : x));
+    } catch (e) { return `<unserialisable: ${e?.message ?? e}>`; }
+}
+function measureWasmProbe(tag, line) {
+    const wp = globalThis.__measureWasmPlayback;
+    if (!wp) return;
+    let st = null;
+    try { st = wp.status(); } catch { st = null; }
+    const p = wp.play;
+    const pick = st ? Object.fromEntries(['level', 'x', 'y', 'game_time', 'held', 'armed', 'finished', 'frozen', 'error', 'tape_t', 't', 'tick', 'name', 'tape', 'paused', 'freeze', 'input']
+        .filter((k) => k in st).map((k) => [k, st[k]])) : null;
+    console.log(`[MEASURE wp ${tag}] phase=${wp.phase} goal=${measureSafe(wp.goal?.name ?? wp.goal?.kind ?? null)} goalLevel=${wp.goal?.level ?? null}`
+        + ` ticks=${p?.ticks ?? null} drained=${p?.progress?.ticks ?? null} rows=${p?.progress?.rows?.length ?? null} hold=${p?.hold ?? null}`
+        + ` continuation=${p?.continuation ?? null} frozen=${measureSafe(wp.frozen ? { tick: wp.frozen.tick } : null)} room=${measureSafe(wp.room ? { level: wp.room.level, shipped: wp.room.shipped?.length } : null)}`
+        + ` gate=${measureSafe(wp.gate ? { pending: !!wp.gate.pending, deferred: wp.gate.deferred ?? null } : null)} landing=${measureSafe(wp.landing ? { since: wp.landing.since } : null)}`
+        + ` selfCheck=${measureSafe(wp.selfCheck)} queued=${measureSafe(wp.queued?.goal?.name ?? null)} game=${measureSafe(pick)}`);
+    const m = /playing tick (\d+)\/(\d+)/.exec(line);
+    const statusText = /status=(.*)$/.exec(line)?.[1] ?? null;
+    if (m && statusText === measureLastStatus && measureStallDumps < 2) {
+        measureStallDumps += 1;
+        const dump = {
+            botStatus: st,
+            readState: (() => { try { return wp.readState(); } catch (e) { return String(e); } })(),
+            seam: (() => { try { return wp.seam(); } catch (e) { return String(e); } })(),
+            planHead: p?.plan ? { ticks: p.plan.solution?.length, solution: p.plan.solution?.slice(0, 8), expected: p.plan.expected?.slice(0, 8), verbs: p.plan.verbs, pass: p.pass, producer: p.plan.producer ?? null, equipsAt: p.plan.equipsAt } : null,
+            progress: p?.progress ? { ticks: p.progress.ticks, rows: p.progress.rows?.slice(0, 8) } : null,
+            playKeys: p ? Object.keys(p) : null,
+            lead: p?.lead ?? null, leadShipped: p?.leadShipped ?? null, heldRow: p?.heldRow ?? null, prefix: p?.prefix ?? null, crossing: p?.crossing ?? null,
+            divergence: p?.divergence ?? null, request: p?.request ? { name: p.request.name, live: p.request.live ?? null, goal: p.request.goal ?? null } : null,
+            timeline: wp.stats.timeline.slice(-40),
+            history: wp.history.slice(-6),
+            deliveries: wp.stats.deliveries.slice(-6), deliveryServed: wp.stats.deliveryServed?.slice?.(-6), selfChecks: wp.stats.selfChecks.slice(-6),
+            fallbacks: wp.stats.fallbacks.slice(-6), holdSeams: wp.stats.holdSeams.slice(-6), shipClock: wp.stats.shipClock.slice(-6),
+            hostStarts: wp.stats.hostStarts.slice(-6), arrivalRow: wp.stats.arrivalRow.slice(-6), timerThrows: wp.stats.timerThrows,
+            latchWaits: wp.stats.latchWaits.slice(-4), crossLevelEnds: wp.stats.crossLevelEnds.slice(-4),
+        };
+        console.log(`[MEASURE stall-dump ${measureStallDumps}] ${measureSafe(dump)}`);
+    }
+    measureLastStatus = statusText;
+}
+
 function startMeasureSampler(tutorial, stepStarts, ui) {
     if (!(MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0)) return null;
     const t0 = performance.now();
@@ -541,6 +588,7 @@ function startMeasureSampler(tutorial, stepStarts, ui) {
                 + ` wasmMemMB=${mem == null ? '?' : (mem / 1048576).toFixed(0)} jsHeapMB=${heap == null ? '?' : (heap / 1048576).toFixed(0)}`
                 + ` status=${JSON.stringify(document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? null)}`;
             console.log(line);
+            measureWasmProbe(tag, line);
         } catch (e) {
             console.log(`[MEASURE ${tag}] sampler threw: ${e?.message ?? e}`);
         }

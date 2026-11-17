@@ -468,6 +468,15 @@ export function createWasmPlayback({
     const readState = () => J(game()?.readState?.()) ?? {};
     const seam = () => J(game()?.botSeam?.()) ?? {};
     const status = () => J(game()?.botStatus?.());
+    // MEASUREMENT-ONLY (cloud slice seedling-seed2-stall-diagnosis): the closure, for the stall probe. Not for landing.
+    try {
+        globalThis.__measureWasmPlayback = {
+            get phase() { return phase; }, get goal() { return goal; }, get play() { return play; }, get room() { return room; },
+            get frozen() { return frozen; }, get gate() { return gate; }, get landing() { return landing; }, get selfCheck() { return selfCheck; },
+            get queued() { return queued; }, get arriving() { return arriving; }, get driving() { return driving; },
+            stats, history, game, status, readState, seam,
+        };
+    } catch { /* measurement only */ }
     const seqNow = () => parsePendingCheck(readState().pendingCheck)?.seq ?? 0;
     const swapState = () => { try { return glueQuery ? (getSwapState() ?? null) : null; } catch { return null; } };
 
