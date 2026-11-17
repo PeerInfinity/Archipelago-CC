@@ -686,8 +686,11 @@ async function sphereWorldBotCompletion(testController) {
     // Completion means the goal item, not just an empty queue.
     await testController.stateManager.pingWorker('after-bot-run', 5000);
     const inventory = testController.stateManager.getSnapshot()?.inventory ?? {};
+    // The goal item is the preset's own completion_condition, not a spelling.
+    const goalItem = (await (await fetch(SPHERE_PRESET_PATH)).json())
+        .game_info?.['1']?.completion_condition?.item;
     testController.assertEqual('the bot is holding the victory item',
-        true, Number(inventory.victory ?? 0) > 0);
+        true, !!goalItem && Number(inventory[goalItem] ?? 0) > 0);
 
     // It really crossed regions rather than finishing where it started. The
     // witness is gameState's own PATH — the AP-side record of every regionMove
