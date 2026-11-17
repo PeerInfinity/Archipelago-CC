@@ -360,11 +360,71 @@ export const deadlineOf = (answer) => (answer?.ok ? answer.plan?.deadline : answ
 export function betterAnswer(best, next) {
     if (!next || next.kind === 'skipped') return false;
     if (!best || best.kind === 'skipped') return true;
-    if (best.ok) return next.ok === true && next.plan.solution.length < best.plan.solution.length;
+    if (best.ok) {
+        // ⛓ HIT-AWARE ANSWER (OFF) — between two plans with DIFFERENT model hit verdicts, the hitless one wins.
+        const verdict = HIT_AWARE_ANSWER.enabled && next.ok === true ? hitVerdictOrder(best.plan, next.plan) : null;
+        if (verdict !== null) return verdict;
+        return next.ok === true && next.plan.solution.length < best.plan.solution.length;
+    }
     // ⛓ DETERMINISTIC BUDGET — a refusal cut by its deadline is not the fuller search's word: it never
     // replaces a refusal that was not cut (the dashless decline leads, as when a page cut the full pass).
     if (!next.ok && next.deadline && !best.deadline) return false;
     return true;
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE HIT-TIEBREAK — **THE ANYTIME RANKING READS THE MODEL'S OWN HIT VERDICT**
+ * (`HIT_AWARE_ANSWER`, OFF). ⚖ The user, 2026-11-17: *"Slice it now (Recommended)"*
+ * (`CC/docs/cloud-reports/seedling-hammer-hit-tiebreak.md`).
+ *
+ * MEASURED: `betterAnswer` kept the later pass's plan on length alone, so a shorter plan the MODEL plays into a hit
+ * beat a longer one it plays hitless (L30 `bosslock@64,32` from L31: dashless 255 t hitless, full 191 t three hits and
+ * a death; L12 `bosslock@416,240` from L95 under FADE_MOVE: dashless 680 t hitless, full 632 t two punches). Both
+ * verdicts are the model's: the run each pass's segment ENDED on (the shadow, or the fork a rewind adopted) holds the
+ * hits in its `playerHits` ledger and the deaths in its rows — nothing the game alone sees.
+ *
+ * ON: `solveFromTape` stamps each plan with `modelHits` (`{hits, deaths}`: the ledger rows and deaths the plan's own
+ * ticks added, the prefix excluded), and `betterAnswer` ranks two plans whose verdicts differ by the verdict alone — a
+ * plan the model predicts hitless beats one it predicts takes a hit, whatever their lengths. Same verdict (or a plan
+ * with no stamp) → today's rule (strictly fewer ticks; a tie keeps the first). Refusals and skipped passes: unchanged.
+ * OFF: no stamp, no read — byte-identical.
+ *
+ * ⛓ THE THREAD: `betterAnswer` runs inside `solveAnytime`, i.e. in the page's SOLVE WORKER (and in node); no
+ * main-thread mapper reads it, so the worker's env channel (`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=1`) is the
+ * whole page wiring. `withHitAwareAnswer(enabled, fn)` for a row.
+ */
+export const HIT_AWARE_ANSWER = { enabled: globalThis.process?.env?.SEEDLING_HIT_AWARE_ANSWER === '1' };
+export const HIT_AWARE_ANSWER_DEFAULT = false;
+
+/** Run `fn` with `HIT_AWARE_ANSWER` set to `enabled`, restoring the previous value. */
+export function withHitAwareAnswer(enabled, fn) {
+    const was = HIT_AWARE_ANSWER.enabled;
+    HIT_AWARE_ANSWER.enabled = enabled === true;
+    try { return fn(); } finally { HIT_AWARE_ANSWER.enabled = was; }
+}
+
+/** ⛓ HIT-AWARE ANSWER — does the model predict `plan` takes a hit (or dies)? null = the plan carries no verdict. */
+export function planTakesHit(plan) {
+    const m = plan?.modelHits;
+    if (!m || typeof m !== 'object') return null;
+    return (m.hits ?? 0) > 0 || (m.deaths ?? 0) > 0;
+}
+
+/**
+ * ⛓ HIT-AWARE ANSWER — the verdict order of two plans: true = `next` (hitless) beats `best` (hit), false = `best`
+ * (hitless) beats `next` (hit), null = the same verdict, or either plan unknown (today's length rule decides).
+ */
+export function hitVerdictOrder(bestPlan, nextPlan) {
+    const b = planTakesHit(bestPlan);
+    const n = planTakesHit(nextPlan);
+    if (b === null || n === null || b === n) return null;
+    return b && !n;
+}
+
+/** ⛓ HIT-AWARE ANSWER — the model's `playerHits` ledger length of `run` (0 when the run keeps none). */
+function modelHitCount(run) {
+    if (typeof run?.ledger === 'function') return run.ledger('playerHits').length;
+    return Array.isArray(run?.playerHits) ? run.playerHits.length : 0;
 }
 
 /**
@@ -491,7 +551,8 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         const tripped = deadlineOf(answer);
         rows.push({ pass: p.pass, ok: answer.ok, kind: answer.kind ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
             ms: Math.round(clock() - t0), ...(shouldStop ? { work: work.units - w0 } : {}),
-            ...(tripped ? { deadline: tripped.first, limit: limit.first ?? null } : {}) });
+            ...(tripped ? { deadline: tripped.first, limit: limit.first ?? null } : {}),
+            ...(answer.ok && answer.plan.modelHits ? { modelHits: { ...answer.plan.modelHits } } : {}) });
         last = answer;
         if (betterAnswer(best, answer)) best = answer;
         try { onPass(answer, best, i); } catch { /* a listener's bug is not the solve's */ }
@@ -953,6 +1014,8 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         forkRecs.set(fork, rec);
         return fork;
     };
+    // ⛓ HIT-AWARE ANSWER — the model's hits before the segment (the prefix's), ON only.
+    const hitsBefore = HIT_AWARE_ANSWER.enabled ? modelHitCount(shadow) : null;
     const t1 = clock();
     // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
     // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
@@ -993,7 +1056,10 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         ...(trailingEquip ? { trailingEquip } : {}),
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
         deadline: out.deadline ?? null,
-        ...forcedHitFieldsOf(out) };
+        ...forcedHitFieldsOf(out),
+        // ⛓ HIT-AWARE ANSWER — the model's verdict on the plan's own ticks (the run it ended on), ON only.
+        ...(hitsBefore === null ? {} : { modelHits: { hits: modelHitCount(ended) - hitsBefore,
+            deaths: expected[expected.length - 1].deaths - expected[0].deaths } }) };
     // ⛓ PANEL-ROUTE — beside the plan, never on it (the plan's bytes and its structured clone are unchanged).
     if (liveRec.dashTicks) PLAN_DASH_TICKS.set(plan, Object.freeze([...liveRec.dashTicks]));
     return plan;
