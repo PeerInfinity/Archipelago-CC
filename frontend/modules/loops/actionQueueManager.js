@@ -1,4 +1,5 @@
 // actionQueueManager.js
+import { isQueueCustomAction } from '../shared/procgen/loopCustomActions.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 
 const logger = createUniversalLogger('loopUI:ActionQueue');
@@ -49,7 +50,8 @@ export class ActionQueueManager {
       // Pass through raw path entry types without renaming.
       // Only add overlay data: id, pathIndex, progress, completed.
       if (entry.type === 'regionMove' || entry.type === 'locationCheck' ||
-          (entry.type === 'customAction' && entry.actionName === 'explore') ||
+          // A named custom action the table knows (explore, act).
+          isQueueCustomAction(entry) ||
           entry.type === 'manual' ||
           entry.type === 'customQueue') {
         const action = {

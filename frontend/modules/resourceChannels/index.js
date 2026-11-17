@@ -37,8 +37,12 @@ import {
     fireLoopResetTeleport,
     grantItem,
     getShareableItemTypes,
+    getSharedTypes,
+    getResourceLedger,
     ITEM_GRANTED_EVENT,
 } from './resourceChannelsLibrary.js';
+import { LEDGER_CHANGED_EVENT } from './resourceLedger.js';
+import { ResourcesPanel, RESOURCES_PANEL_COMPONENT_TYPE } from './resourcesPanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 export const RESOURCE_DELTA_EVENT = 'substrate:resourceDelta';
@@ -52,6 +56,11 @@ export const SUBSTRATE_ITEM_GRANT_EVENT = 'substrate:itemGrant';
 
 export const moduleInfo = {
     name: 'resourceChannels',
+    title: 'Resources',
+    componentType: RESOURCES_PANEL_COMPONENT_TYPE,
+    icon: '🎒',
+    column: 1,
+    category: 'Loop Mode Modules',
     description:
         'Generic cross-substrate resource channels: the shared mana '
         + 'charge/XP/reset helper, the id-keyed channel event router for '
@@ -74,6 +83,13 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(RESOURCE_BONUS_EVENT);
     registrationApi.registerEventBusSubscriberIntent(RESOURCE_RESET_EVENT);
     registrationApi.registerEventBusPublisher(ITEM_GRANTED_EVENT);
+    registrationApi.registerEventBusPublisher(LEDGER_CHANGED_EVENT);
+
+    // The Resources panel (design §5): mana, the ledger's stats and
+    // resources, and the boosts in effect, driven by the sharing
+    // declarations of the loaded world's substrates.
+    registrationApi.registerPanelComponent?.(RESOURCES_PANEL_COMPONENT_TYPE, ResourcesPanel);
+    registrationApi.registerPublicFunction(moduleId, 'getLedgerSnapshot', () => getResourceLedger().snapshot());
 
     // Debug harness (and the P1 grant entry point): fire a validated
     // cross-substrate grant / inspect the registry's sharing
@@ -89,6 +105,12 @@ export function register(registrationApi) {
                     : undefined,
                 items: entry.sharing.items !== undefined
                     ? { types: getShareableItemTypes(entry.id) }
+                    : undefined,
+                stats: entry.sharing.stats !== undefined
+                    ? { types: getSharedTypes(entry.id, 'stats') }
+                    : undefined,
+                resources: entry.sharing.resources !== undefined
+                    ? { types: getSharedTypes(entry.id, 'resources') }
                     : undefined,
             };
         }

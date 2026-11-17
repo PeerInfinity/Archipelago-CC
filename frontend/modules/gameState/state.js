@@ -56,6 +56,18 @@ export class GameState {
         // Whether the AP-item term contributes to maxMana. Default true
         // preserves prior behavior; toggleable via setIncludePerItemMaxMana.
         this.includePerItemMaxMana = true;
+        // PER-ITEM starting mana (ActionNodes, design §2 / AN-1's contract):
+        // while a world states a table (item name → mana), each received item
+        // adds ITS row's mana instead of the flat `manaPerItem`; an item with
+        // no row adds `_perItemManaDefault`. null = no table = the flat term,
+        // exactly as before. Set by the world's runtime on load, cleared by
+        // it for a world without one; not touched by reset() (it belongs to
+        // the loaded world, like the substrate bonuses).
+        this._perItemManaTable = null;
+        this._perItemManaDefault = this.manaPerItem;
+        // Per-item counts from the last snapshot (name → count > 0), cached
+        // beside `_itemCount` so the table can be applied without a fresh one.
+        this._inventoryCounts = new Map();
         // Monotonic count of loop resets, incremented by triggerLoopReset.
         // A substrate that was inactive across resets can compare its
         // last-seen count and apply its internal reset logic once per
@@ -188,13 +200,55 @@ export class GameState {
      */
     recalculateMaxMana(snapshot) {
         let itemCount = 0;
+        const counts = new Map();
         if (snapshot && snapshot.inventory) {
-            for (const [, count] of Object.entries(snapshot.inventory)) {
-                if (count > 0) itemCount += count;
+            for (const [name, count] of Object.entries(snapshot.inventory)) {
+                if (count > 0) {
+                    itemCount += count;
+                    counts.set(name, count);
+                }
             }
         }
         this._itemCount = itemCount;
+        this._inventoryCounts = counts;
         this._recomputeMaxMana();
+    }
+
+    /**
+     * Set (or clear, with null) the per-item starting-mana table: an object
+     * or Map of item name → mana per copy. `defaultMana` is what an item
+     * with no row adds (default: the flat `manaPerItem`). Recomputes maxMana.
+     * With no table the item term is `items × manaPerItem`, unchanged.
+     */
+    setPerItemManaTable(table, defaultMana = this.manaPerItem) {
+        if (table == null) {
+            this._perItemManaTable = null;
+        } else {
+            const entries = table instanceof Map ? [...table] : Object.entries(table);
+            this._perItemManaTable = new Map(entries
+                .filter(([, v]) => typeof v === 'number' && Number.isFinite(v))
+                .map(([k, v]) => [k, v]));
+        }
+        this._perItemManaDefault = typeof defaultMana === 'number' && Number.isFinite(defaultMana)
+            ? defaultMana : this.manaPerItem;
+        this._recomputeMaxMana();
+    }
+
+    /** The per-item table in force (a copy), or null when the flat term applies. */
+    getPerItemManaTable() {
+        return this._perItemManaTable ? new Map(this._perItemManaTable) : null;
+    }
+
+    /** The AP-item term of maxMana: the per-item table's sum, or the flat count × manaPerItem. */
+    _itemManaContribution() {
+        if (!this._perItemManaTable) return this._itemCount * this.manaPerItem;
+        let sum = 0;
+        for (const [name, count] of this._inventoryCounts) {
+            const per = this._perItemManaTable.has(name)
+                ? this._perItemManaTable.get(name) : this._perItemManaDefault;
+            sum += count * per;
+        }
+        return sum;
     }
 
     /**
@@ -211,7 +265,7 @@ export class GameState {
             bonusSum += bonus;
         }
         const itemContribution = this.includePerItemMaxMana
-            ? this._itemCount * this.manaPerItem
+            ? this._itemManaContribution()
             : 0;
         this.maxMana = this.defaultMaxMana + bonusSum + itemContribution;
         this.emitManaChanged();
@@ -1097,6 +1151,7 @@ export class GameState {
         // per-game state.
         this._substrateBonuses.clear();
         this._itemCount = 0;
+        this._inventoryCounts = new Map();
         this.loopResetCount = 0;
         this.maxMana = this.defaultMaxMana;
         this.currentMana = this.maxMana;

@@ -15,12 +15,12 @@ import {
   DEFAULT_LOCATION_COST,
 } from './costDataManager.js';
 import {
-  DEFAULT_EXPLORE_MULTIPLIER,
   START_REGION_MOVE_COST,
 } from '../shared/procgen/loopCostGenerator.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { DisplaySettingsManager } from './displaySettingsManager.js';
+import { customActionBaseCost, customActionLabel } from '../shared/procgen/loopCustomActions.js';
 import { ExpansionStateManager } from './expansionStateManager.js';
 import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
@@ -524,6 +524,19 @@ export class LoopUI {
       const onLoopReset = () => {
         hideStateBanner();
       };
+      // ActionNodes design §3: a start-gate refusal stops the queue; say
+      // which entry and why. The next loop reset clears it.
+      const onActionRefused = ({ label, region, reason }) => {
+        showStateBanner(
+          `Loop queue stopped — ${label ?? 'an action'} in ${region ?? 'this region'} was refused: ${reason ?? 'no reason given'}. `
+          + 'Fix the queue (or reset the loop) and press Start.',
+          'warn',
+        );
+      };
+      this.eventBus.subscribe('loops:actionRefused', onActionRefused);
+      this._stateBannerUnsubscribes.push(
+        () => this.eventBus.unsubscribe?.('loops:actionRefused', onActionRefused),
+      );
       this.eventBus.subscribe('loopState:manualEntered', onManualEntered);
       this.eventBus.subscribe('loopState:manualResumed', onManualResumed);
       this.eventBus.subscribe('loopState:queuePausedUntilReset', onQueuePaused);
@@ -949,7 +962,9 @@ export class LoopUI {
       }
 
       // Get generated cost data and load it into costDataManager
-      const costData = costPlanner.getCostData();
+      // ⛓ An AUTHORED substrate's regions (ActionNodes) keep the entries of the
+      // block already loaded: the planner never re-prices them.
+      const costData = costPlanner.getCostData({ authoredBlock: costDataManager.getCostData?.() ?? null });
       if (costData) {
         costDataManager.setCostData(costData, 'costPlanner');
         log('info', `Costs generated: ${Object.keys(costData.regions).length} regions, ${Object.keys(costData.locations).length} locations`);
@@ -2211,7 +2226,7 @@ export class LoopUI {
     let actionName = '';
     switch (action.type) {
       case 'customAction':
-        actionName = `Explore ${action.sourceRegion}`;
+        actionName = customActionLabel(action);
         break;
       case 'locationCheck':
         actionName = `Check ${action.locationName}`;
@@ -2393,8 +2408,7 @@ export class LoopUI {
           baseCost = costDataManager.getLocationCost(action.locationName);
           break;
         case 'customAction':
-          baseCost = costDataManager.getRegionCost(action.sourceRegion)
-            * DEFAULT_EXPLORE_MULTIPLIER;
+          baseCost = customActionBaseCost(action, costDataManager);
           break;
         default:
           baseCost = DEFAULT_REGION_COST;
@@ -2593,7 +2607,7 @@ export class LoopUI {
     if (!action) return '';
     switch (action.type) {
       case 'customAction':
-        return `Explore ${action.sourceRegion}`;
+        return customActionLabel(action);
       case 'locationCheck':
         return `Check ${action.locationName}`;
       case 'regionMove':

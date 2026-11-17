@@ -15,7 +15,8 @@
  * so zooming never re-bakes.
  *
  * The camera: `screen = (world − camera) · zoom + viewport / 2` (`regionMapCamera.js`). Drag pans, the wheel zooms
- * around the cursor. A click (no drag) SELECTS a cell (outline only — v1 publishes no moves or checks).
+ * around the cursor. A click (no drag) SELECTS the cell under it and does what a Region Graph click does
+ * (`regionMapClicks.js`, step 4): a location square → that location's click; elsewhere in a cell → its region's.
  */
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -23,7 +24,9 @@ import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { createRegionViewState } from '../regionView/regionViewState.js';
+import { createRegionViewState, readDiscoverySettings } from '../regionView/regionViewState.js';
+import { PathFinder } from '../shared/pathfinder.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { GROUPING_RULES } from '../procgenCore/regionLayout.js';
 import { COLORS, compositeMapPainterFor, drawGenericRegion } from '../procgenCore/compositeMapRenderer.js';
 import { buildRegionMapModel } from './regionMapModel.js';
@@ -32,7 +35,8 @@ import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
 } from './regionMapCamera.js';
 import { SQUARE_COLORS, frameSquares, squareAt, squareColorKey } from './regionMapOverlay.js';
-import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, panelInstances } from './regionMapSettings.js';
+import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, moduleHandles, panelInstances } from './regionMapSettings.js';
+import { onLocationClick, onRegionClick, readClickOptions, regionOfCell } from './regionMapClicks.js';
 
 /** The tile size every level is baked at (the art's own); drawn scaled by the camera. */
 export const BAKE_TILE_PX = 16;
@@ -58,6 +62,10 @@ export class RegionMapUI {
         this.dpr = 1;
         this.selected = null;
         this.hover = null;
+        this.pathFinder = new PathFinder(stateManager);
+        this.lastClick = null;
+        this.clickCount = 0;
+        this._statusTimer = null;
         this._anim = null;
         this._paintHandle = null;
         this._disposed = false;
@@ -165,6 +173,11 @@ export class RegionMapUI {
         button('region-map-centre-start', 'Centre on start', () => this.centreOnStart());
         button('region-map-fit-all', 'Fit all', () => this.fitAll());
         this.info = el('div', 'region-map-info', { padding: '2px 6px', color: '#9ab', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' });
+        // An overlay over the canvas (not a row above it): showing it must not resize the canvas.
+        this.status = el('div', 'region-map-status', {
+            position: 'absolute', left: '4px', top: '4px', pointerEvents: 'none', display: 'none', zIndex: '2',
+            background: 'rgba(0,0,0,0.75)', color: '#dfe6a0', padding: '2px 6px', borderRadius: '3px', fontSize: '11px',
+        });
         this.notOnMap = el('div', 'region-map-not-on-map', { padding: '2px 6px', color: '#c9a227', fontSize: '11px', display: 'none' });
         this.wrap = el('div', 'region-map-canvas-wrap', { position: 'relative', flex: '1 1 auto', minHeight: '0' });
         this.canvas = el('canvas', 'region-map-canvas', { position: 'absolute', inset: '0', width: '100%', height: '100%', cursor: 'grab', touchAction: 'none' });
@@ -172,14 +185,14 @@ export class RegionMapUI {
             position: 'absolute', pointerEvents: 'none', display: 'none', background: 'rgba(0,0,0,0.85)', color: '#fff',
             padding: '3px 6px', borderRadius: '3px', fontSize: '11px', whiteSpace: 'pre', zIndex: '2',
         });
-        this.wrap.append(this.canvas, this.tooltip);
+        this.wrap.append(this.canvas, this.tooltip, this.status);
         this.root.append(bar, this.info, this.notOnMap, this.wrap);
         this.container.element?.appendChild(this.root);
 
         const c = this.canvas;
         this._onPointerDown = (e) => {
             this._drag = { x: e.clientX, y: e.clientY, moved: false };
-            c.setPointerCapture?.(e.pointerId);
+            try { c.setPointerCapture?.(e.pointerId); } catch { /* a synthetic pointer (the in-app rows) has none */ }
             c.style.cursor = 'grabbing';
         };
         this._onPointerMove = (e) => {
@@ -206,8 +219,11 @@ export class RegionMapUI {
                 const p = this._local(e);
                 const w = screenToWorld(this.camera, this.vp, p.x, p.y);
                 const f = frameAt(this.frameList, w.x, w.y);
-                this.selected = f && f.key !== this.selected ? f.key : null;
+                const q = squareAt(this._squares, p.x, p.y);
+                const visible = f && this._visibilityOf(f.key, this.view?.get()) !== 'hidden';
+                this.selected = visible ? f.key : null;
                 this._requestPaint();
+                if (visible) this.clickAt(f, q);
             }
         };
         this._onWheel = (e) => {
@@ -485,13 +501,68 @@ export class RegionMapUI {
                 + `${c.checked} checked · ${c.accessible} accessible · ${c.inaccessible} inaccessible / ${c.total}`;
             if (q) {
                 const loc = view?.locations?.get(q.location);
-                text = `${q.location}${q.kind === 'event' ? ' (event)' : ''}: ${loc?.state ?? '?'}\n${text}`;
+                // ⛓ step 4: the Region Graph's location-node label — '???' while discovery shows it as a placeholder.
+                text = loc?.visibility === 'placeholder'
+                    ? `???\n${text}`
+                    : `${q.location}${q.kind === 'event' ? ' (event)' : ''}: ${loc?.state ?? '?'}\n${text}`;
             }
         }
         this.tooltip.textContent = text;
         this.tooltip.style.display = 'block';
         this.tooltip.style.left = `${Math.min(sx + 12, Math.max(0, this.vp.w - 220))}px`;
         this.tooltip.style.top = `${sy + 14}px`;
+    }
+
+    /* ── CLICKS (step 4) ─────────────────────────────────────────────── */
+
+    /** The action handles (`regionView/regionActions.js`): THIS module's dispatcher and event bus. */
+    _handles() {
+        return {
+            dispatcher: moduleHandles.dispatcher,
+            eventBus: moduleHandles.eventBus ?? { publish: (event, data) => eventBus.publish(event, data, OWNER) },
+            stateManager,
+            pathFinder: this.pathFinder,
+            get gameState() { return getGameStateSingleton(); },
+            getRules: () => this._rulesOf() ?? { rules: null, playerId: '1' },
+            restart: () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.(),
+        };
+    }
+
+    /**
+     * ⛓ A CLICK on cell `frame` — on location square `square` when there is one (`squareAt`), else on the cell's
+     * region. The toggles and discovery settings are read at click time (async), then the click runs synchronously.
+     * Resolves to the click's record (also kept as `lastClick`, for the in-app rows).
+     */
+    async clickAt(frame, square = null) {
+        const view = this.view?.get();
+        const members = view?.displayGroups?.get(frame.key)?.members ?? this.model?.cells.get(frame.key)?.members ?? [];
+        const [opts, discovery] = await Promise.all([readClickOptions(settingsManager), readDiscoverySettings(settingsManager)]);
+        const onStatus = (text) => this._flashStatus(text);
+        const h = this._handles();
+        let record;
+        if (square) {
+            const regionName = view?.locations?.get(square.location)?.region ?? regionOfCell(frame.key, members);
+            const result = onLocationClick(h, { locationName: square.location, regionName }, opts, discovery, { onStatus });
+            record = { target: 'location', location: square.location, region: regionName, opts, result };
+        } else {
+            const region = regionOfCell(frame.key, members);
+            const result = onRegionClick(h, region, opts, discovery, { onStatus, data: { id: region, displayKey: frame.key } });
+            record = { target: 'region', region, cell: frame.key, opts, result };
+        }
+        this.clickCount += 1;
+        this.lastClick = { n: this.clickCount, ...record };
+        return this.lastClick;
+    }
+
+    /** A click's status text (the Region Graph's status-bar texts) for 2 s. */
+    _flashStatus(text) {
+        this.status.textContent = text;
+        this.status.style.display = 'block';
+        if (this._statusTimer) clearTimeout(this._statusTimer);
+        this._statusTimer = setTimeout(() => {
+            this._statusTimer = null;
+            if (!this._disposed) this.status.style.display = 'none';
+        }, 2000);
     }
 
     /* ── PAINT ───────────────────────────────────────────────────────── */
@@ -728,8 +799,12 @@ export class RegionMapUI {
             discoveryActive: !!view?.discoveryActive,
             visibility: Object.fromEntries([...(view?.displayGroups ?? new Map())].map(([k, g]) => [k, g.visibility])),
             lastPaint: this._lastPaint ? { ...this._lastPaint, keys: [...this._lastPaint.keys] } : null,
-            squares: this._squares.map((q) => ({ location: q.location, kind: q.kind, side: q.side, color: q.color, key: q.key })),
+            squares: this._squares.map((q) => ({ location: q.location, kind: q.kind, side: q.side, color: q.color, key: q.key, sx: q.sx, sy: q.sy })),
             counters: { ...this.counters },
+            selected: this.selected,
+            clickCount: this.clickCount,
+            lastClick: this.lastClick ? JSON.parse(JSON.stringify(this.lastClick)) : null,
+            status: this.status?.style.display === 'none' ? null : this.status?.textContent ?? null,
         };
     }
 
@@ -746,6 +821,7 @@ export class RegionMapUI {
         panelInstances.delete(this);
         if (this._paintHandle != null) cancelAnimationFrame(this._paintHandle);
         this._paintHandle = null;
+        if (this._statusTimer) clearTimeout(this._statusTimer);
         this.view?.dispose();
         for (const u of this._unsubs.splice(0)) {
             try { u(); } catch { /* already gone */ }

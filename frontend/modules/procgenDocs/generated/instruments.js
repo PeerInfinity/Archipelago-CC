@@ -69,7 +69,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "derive"
         },
         {
@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 158,
-            "count": 210,
+            "browser": 157,
+            "count": 209,
             "id": "probe"
         },
         {
@@ -245,7 +245,7 @@ export const INSTRUMENTS = frz({
     ],
     "counts": {
         "blockStyle": 534,
-        "browser": 228,
+        "browser": 227,
         "cited": 290,
         "files": 556,
         "lineStyle": 22,
@@ -6255,6 +6255,70 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "derive-seedling-tick0 — THE v11 TICK-0 LATCH, MEASURED ONCE PER CHAIN SEGMENT BY A ZERO-TICK FRESH-PAGE RUN.",
             "path": "scripts/procgen/derive-seedling-tick0.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "derive",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "check",
+                "json",
+                "lane-dump",
+                "quick",
+                "verify"
+            ],
+            "file": "derive-seedling-wallflyer-nohit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "lane-dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quick"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "verify"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The wallflyer no-hit gates, DERIVED from the transcribed physics and CHECKED against the per-room table (slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 \"Wand L22 + CI cross-check (Recommended)\"; the derivation itself is slice rules-nohit-derivation's, moved here from its evidence directory).",
+            "path": "scripts/procgen/derive-seedling-wallflyer-nohit.mjs"
         },
         {
             "argvHelpers": [
@@ -16497,81 +16561,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ladder2-phase — ⛓⛓⛓ SEEDLING FIDELITY LADDER2, D1: **WHEN DO A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER HIT A STANDING PLAYER, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-ladder2-phase.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "also",
-                "host",
-                "near",
-                "only",
-                "out",
-                "ticks",
-                "wait-for-box"
-            ],
-            "file": "probe-seedling-landing-contact.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "also"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "near"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "out"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "screen-only"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "ticks"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling LANDING CONTACT, THE GAME'S WAY (rules `rules-landing-contact-census`).",
-            "path": "scripts/procgen/probe-seedling-landing-contact.mjs"
         },
         {
             "argvHelpers": [

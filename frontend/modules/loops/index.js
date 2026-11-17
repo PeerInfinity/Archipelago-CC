@@ -320,6 +320,9 @@ export function register(registrationApi) {
   // substrate loadRegion), so a loops-side receiver could not block the
   // substrate-visible move. Returns true when the action may proceed;
   // publishes loops:clickIgnored feedback when blocking.
+  // The last start-gate refusal (or null): what stopped the queue, and why.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getLastActionRefusal',
+    () => (loopStateSingleton?.lastActionRefusal ? { ...loopStateSingleton.lastActionRefusal } : null));
   registrationApi.registerPublicFunction(moduleInfo.name, 'gateSubstrateAction', ({ kind, regionName, eventName = null, data = null } = {}) => {
     const verdict = loopStateSingleton.evaluateActionGate?.({ kind, regionName, eventName, data });
     if (!verdict || verdict.allowed) return true;
@@ -481,6 +484,11 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopUI:clickToQueueChanged');
   registrationApi.registerEventBusPublisher('loops:setLoopMode');
   registrationApi.registerEventBusPublisher('loops:clickIgnored');
+  // ActionNodes design §3: a start-gate refusal (which entry, which region,
+  // why), and the `act` verb's completion (the named-action table's
+  // event-bus row; the substrate's runtime applies the results).
+  registrationApi.registerEventBusPublisher('loops:actionRefused');
+  registrationApi.registerEventBusPublisher('loop:actionCompleted');
   // N4: a summary Playback applied (a substrate that earns from play earns the recorded visit)
   registrationApi.registerEventBusPublisher('loops:summaryApplied');
   // bulletml N5: every mana spend with its region and substrate (Noiz2sa trains from it)

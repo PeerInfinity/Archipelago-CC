@@ -23,6 +23,7 @@ import {
     MOVE_SOURCE_START,
     MOVE_SOURCE_RESTART,
 } from '../menuPanel/menuPanelEngine.js';
+import { REGION_MAP_SOURCES } from '../regionMap/regionMapClicks.js';
 
 describe('⛓ isLoopModePlanningSource — authoring sources', () => {
     it('classifies the region graph\'s four click shapes', () => {
@@ -32,6 +33,13 @@ describe('⛓ isLoopModePlanningSource — authoring sources', () => {
             'regionGraph-oneStep',
             'regionGraph-directMove',
         ]) {
+            expect(isLoopModePlanningSource(source)).toBe(true);
+        }
+    });
+
+    it('classifies the Region Map\'s four click shapes, by the module\'s own constants (region-map step 4)', () => {
+        expect(Object.keys(REGION_MAP_SOURCES).sort()).toEqual(['addToPath', 'direct', 'oneStep', 'overwritePath']);
+        for (const source of Object.values(REGION_MAP_SOURCES)) {
             expect(isLoopModePlanningSource(source)).toBe(true);
         }
     });
@@ -71,5 +79,6 @@ describe('⛓ isLoopModePlanningSource — everything else is performed play', (
     it('matches on a PREFIX, so a lookalike that merely CONTAINS a tag is play', () => {
         expect(isLoopModePlanningSource('substrate-menuPanel')).toBe(false);
         expect(isLoopModePlanningSource('replay-regionGraph')).toBe(false);
+        expect(isLoopModePlanningSource('replay-regionMap')).toBe(false);
     });
 });

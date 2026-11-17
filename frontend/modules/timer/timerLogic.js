@@ -5,6 +5,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { PathFinder } from '../shared/pathfinder.js';
 import { frozenFindPath } from '../playbackBot/walkOrder.js';
 import { DEFAULT_TIMER_CHECK_ORDER, TIMER_CHECK_ORDERS, picksByCost, pickTimerCheck } from './checkOrder.js';
+import { playerChecksEvent } from '../stateManager/core/eventKinds.js';
 
 // settingsManager key for the batch-checks toggle (schema registered in
 // timer/index.js). When true (default) the timer batch-checks all accessible
@@ -43,6 +44,8 @@ function isEventLocation(loc, itemData) {
   if (!loc.item || !loc.item.name) {
     return false;
   }
+  // An event the player checks like a location (event_kind 'goal': an add-on slot's goal) is not skipped.
+  if (playerChecksEvent(loc)) return false;
 
   const fullItemData = itemData instanceof Map
     ? itemData.get(loc.item.name)
