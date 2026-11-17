@@ -1,6 +1,6 @@
 /**
- * upstreamGoal.js — the add-on slot's goal: derivation, marking, the deliberate-click test and
- * completion over the server's items (design-upstream-goal-report § 2). Every helper fails closed.
+ * upstreamGoal.js — the add-on slot's goal: derivation, marking and completion over the server's items
+ * (design-upstream-goal-report § 2). Every helper fails closed.
  */
 
 import { readdirSync, readFileSync } from 'node:fs';
@@ -9,18 +9,9 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  deriveUpstreamGoal,
-  markGoalEvent,
-  deliberateRefusal,
-  completesWithGoal,
-  goalHoldMessage,
-  GOAL_HOLD,
-  GOAL_EVENT_KIND,
-  DELIBERATE_GOAL_ORIGINATORS,
-} from './upstreamGoal.js';
+import { deriveUpstreamGoal, markGoalEvent, completesWithGoal, GOAL_EVENT_KIND } from './upstreamGoal.js';
 import { overlayServerData } from './localRulesOverlay.js';
-import { autoCollectsEvent } from '../../stateManager/core/eventKinds.js';
+import { autoCollectsEvent, playerChecksEvent } from '../../stateManager/core/eventKinds.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
 const preset = (dir) => {
@@ -99,6 +90,7 @@ describe('markGoalEvent + the state manager policy', () => {
     const all = Object.values(doc.regions['1']).flatMap((r) => r.locations);
     expect(all.filter((l) => l.event_kind === GOAL_EVENT_KIND).map((l) => l.name)).toEqual(['Final Boss Defeated']);
     expect(autoCollectsEvent({ event_kind: GOAL_EVENT_KIND })).toBe(false);
+    expect(playerChecksEvent({ event_kind: GOAL_EVENT_KIND })).toBe(true); // the Timer / bots check it like a location
   });
 
   it('refuses a location that has an ID or is missing', () => {
@@ -131,40 +123,6 @@ describe('markGoalEvent + the state manager policy', () => {
     expect(sm.inventory.Victory ?? 0).toBe(0);
     expect(sm.checkedLocations.has('Top Left Room Button')).toBe(true); // other (logic) events still auto-collect
     expect(sm.isLocationAccessible(sm.locations.get('Final Boss Defeated'))).toBe(true);
-  });
-});
-
-describe('deliberateRefusal — fail-closed allowlist', () => {
-  const CARD = { locationName: 'G', originator: 'LocationCardClick', originalDOMEvent: true };
-  const NODE = { locationName: 'G', originator: 'RegionGraphCheck', originalDOMEvent: true };
-
-  it('the two allowlisted single clicks pass outside Loop mode', () => {
-    expect(DELIBERATE_GOAL_ORIGINATORS).toEqual(['LocationCardClick', 'RegionGraphCheck']);
-    expect(deliberateRefusal('user:locationCheck', CARD, false)).toBeNull();
-    expect(deliberateRefusal('user:locationCheck', NODE, false)).toBeNull();
-  });
-
-  it.each([
-    ['Region Graph bulk check', 'user:locationCheck', { originator: 'RegionGraphBulkCheck', originalDOMEvent: true }],
-    ['Timer', 'user:locationCheck', { originator: 'TimerModuleAuto', fromBot: true }],
-    ['Playback Bot', 'user:locationCheck', { originator: 'PlaybackBot', fromBot: true }],
-    ['a card click marked fromBot', 'user:locationCheck', { ...CARD, fromBot: true }],
-    ['Loop queue replay', 'user:locationCheck', { fromLoop: true }],
-    ['a card click replayed by Loop', 'user:locationCheck', { ...CARD, fromLoop: true }],
-    ['a game report', 'user:locationCheck', { ...CARD, reportedByGame: true }],
-    ['a system: event', 'system:locationCheck', CARD],
-    ['no originator', 'user:locationCheck', { locationName: 'G' }],
-    ['an unknown originator', 'user:locationCheck', { originator: 'SomethingNew' }],
-  ])('%s → held', (_label, eventName, data) => {
-    expect(deliberateRefusal(eventName, data, false)).toBe(GOAL_HOLD.NOT_A_CLICK);
-  });
-
-  it.each([[true], [undefined], [null]])('Loop mode %s → held (only a definite "off" passes)', (loop) => {
-    expect(deliberateRefusal('user:locationCheck', CARD, loop)).toBe(GOAL_HOLD.LOOP_MODE);
-  });
-
-  it('every hold reason has a message', () => {
-    for (const reason of Object.values(GOAL_HOLD)) expect(goalHoldMessage('G', reason)).toMatch(/Not checked: "G"/);
   });
 });
 

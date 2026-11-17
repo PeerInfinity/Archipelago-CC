@@ -1,11 +1,13 @@
 /**
- * The add-on slot's goal report in the message handler (design-upstream-goal-report § 2–3).
+ * The add-on slot's goal report in the message handler (design-upstream-goal-report § 2–3, as ruled 2026-11-17:
+ * no send restrictions this mode doesn't have elsewhere).
  *
- * Every row of the safety table has a negative here: nothing is sent when the goal becomes reachable, on a bulk /
- * timer / bot / Loop / replay / game check, in Loop mode, out of logic, when already checked, on another document,
- * after a new Connected, when the state manager does not record the check, when the server's items don't complete
- * the goal, offline, or for rules that did not come from the add-on. The one positive: a deliberate click sends
- * exactly one StatusUpdate 30.
+ * A check of the goal location takes the ordinary path, whoever sends it (a card, a node, the Region Graph bulk
+ * check, the Timer, a bot, the Loop queue, a game report); it reports exactly one StatusUpdate 30 when this
+ * connection saw the goal go from unchecked to checked and the SERVER's items complete it. Negatives: nothing when
+ * the goal becomes reachable or on ReceivedItems/sync alone, out of logic, already checked before, on another
+ * document / seed / slot, when the state manager does not record the check, when the server's items don't complete
+ * it (until they do), offline, on a later connection, or for rules that did not come from the add-on.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -30,17 +32,6 @@ vi.mock('../../stateManager/index.js', () => {
   return { getLastRawJsonData: () => (smState.raw ? { rawJsonData: smState.raw } : null), stateManagerProxySingleton: proxy };
 });
 
-const loop = vi.hoisted(() => ({ active: false, throws: false, registered: true }));
-vi.mock('../../../app/core/centralRegistry.js', () => ({
-  centralRegistry: {
-    getPublicFunction: (mod, name) => {
-      if (loop.throws) throw new Error('registry down');
-      if (!loop.registered || mod !== 'loops' || name !== 'isLoopModeActive') return undefined;
-      return () => loop.active;
-    },
-  },
-}));
-
 const NAME_TO_ID = { 'Bottom Left Chest': 1001, 'Top Middle Chest': 1002 };
 vi.mock('../utils/idMapping.js', () => ({
   getItemNameFromServerId: () => null,
@@ -58,7 +49,7 @@ vi.mock('../utils/debugSphereLogger.js', () => ({
 }));
 
 import messageHandler, { handleUserLocationCheckForClient } from './messageHandler.js';
-import { GOAL_HOLD, GOAL_EVENT_KIND, deriveUpstreamGoal } from './upstreamGoal.js';
+import { GOAL_EVENT_KIND, deriveUpstreamGoal } from './upstreamGoal.js';
 import { UPSTREAM_RULES_ADDON_SOURCE } from './localRulesOverlay.js';
 
 const GOAL = 'Final Boss Defeated';
@@ -109,9 +100,6 @@ beforeEach(() => {
   connectionMock.send.mockClear();
   smState.reachability = { [GOAL]: 'reachable', 'Bottom Left Chest': 'checked', 'Top Middle Chest': 'checked' };
   smState.raw = null;
-  loop.active = false;
-  loop.throws = false;
-  loop.registered = true;
   busEvents = [];
   // The state manager's local check: the goal becomes 'checked' when the event reaches it.
   dispatcher = {
@@ -134,6 +122,7 @@ beforeEach(() => {
   messageHandler._heldGameChecks = [];
   messageHandler._serverItems = new Map([['Sword', 1], ['Shield', 1]]);
   messageHandler._upstreamGoal = null;
+  messageHandler._connectionSeq = 7;
   messageHandler.roomInfo = { seed_name: '1234' };
 });
 
@@ -168,84 +157,49 @@ describe('_prepareUpstreamGoal — only the add-on\'s rules, marked before load'
   });
 });
 
-describe('the deliberate click — the only report', () => {
-  it.each([['a Locations card', CARD], ['a Region Graph node', NODE]])('%s sends exactly one StatusUpdate 30', async (_l, data) => {
+describe('any sender checks it; the goal is reported once', () => {
+  it.each([
+    ['a Locations card', 'user:locationCheck', CARD],
+    ['a Region Graph node', 'user:locationCheck', NODE],
+    ['the Region Graph bulk check', 'user:locationCheck', { originator: 'RegionGraphBulkCheck', originalDOMEvent: true }],
+    ['the Timer', 'user:locationCheck', { originator: 'TimerModuleAuto', fromBot: true, originalDOMEvent: false }],
+    ['the Playback Bot', 'user:locationCheck', { originator: 'PlaybackBot', fromBot: true }],
+    ['the Loop queue executing the action', 'user:locationCheck', { fromLoop: true }],
+    ['a game report', 'user:locationCheck', { originator: 'TextAdventure', reportedByGame: true }],
+    ['a system: check', 'system:locationCheck', { originator: 'SomeSubstrate' }],
+  ])('%s: checked locally, one StatusUpdate 30', async (_l, eventName, extra) => {
     arm();
-    await handleUserLocationCheckForClient({ ...data }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).toHaveBeenCalledTimes(1); // checked locally, as offline
+    await handleUserLocationCheckForClient({ locationName: GOAL, regionName: 'Final Boss Room', ...extra }, eventName);
+    expect(dispatcher.publishToNextModule).toHaveBeenCalledTimes(1);
     expect(frames('LocationChecks')).toEqual([]); // an event has no server ID
     expect(goalFrames()).toEqual([{ cmd: 'StatusUpdate', status: 30 }]);
     expect(consoleLines()).toContain('Goal sent: you finished at "Final Boss Defeated". The server now marks Quester as done.');
+    expect(published('client:locationCheckRefused')).toEqual([]);
   });
 
-  it('a second click (already checked) sends nothing more', async () => {
+  it('a second check sends nothing more', async () => {
     arm();
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
     expect(goalFrames()).toHaveLength(1);
   });
-});
 
-describe('held back: nothing sent, nothing checked locally', () => {
-  it.each([
-    ['Region Graph "check all accessible"', 'user:locationCheck', { originator: 'RegionGraphBulkCheck', originalDOMEvent: true }, GOAL_HOLD.NOT_A_CLICK],
-    ['the Timer', 'user:locationCheck', { originator: 'TimerModuleAuto', fromBot: true, originalDOMEvent: false }, GOAL_HOLD.NOT_A_CLICK],
-    ['the Playback Bot', 'user:locationCheck', { originator: 'PlaybackBot', fromBot: true }, GOAL_HOLD.NOT_A_CLICK],
-    ['a Loop queue replay', 'user:locationCheck', { regionName: 'Final Boss Room', fromLoop: true }, GOAL_HOLD.NOT_A_CLICK],
-    ['a game report', 'user:locationCheck', { originator: 'TextAdventure', reportedByGame: true }, GOAL_HOLD.NOT_A_CLICK],
-    ['a system: check (playback, sync)', 'system:locationCheck', { originator: 'LocationCardClick' }, GOAL_HOLD.NOT_A_CLICK],
-  ])('%s', async (_l, eventName, extra, reason) => {
+  it('the Timer\'s batch path (checked locally first, then sendBatchLocationChecks) reports too', async () => {
     arm();
-    await handleUserLocationCheckForClient({ locationName: GOAL, ...extra }, eventName);
-    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
-    expect(smState.reachability[GOAL]).toBe('reachable'); // still clickable
-    expect(goalFrames()).toEqual([]);
-    expect(published('client:locationCheckRefused')).toEqual([
-      { locationName: GOAL, reason, originator: extra.originator ?? null },
-    ]);
-  });
-
-  it.each([
-    ['Loop mode on', () => { loop.active = true; }],
-    ['the registry throws (fail closed)', () => { loop.throws = true; }],
-  ])('a card click with %s', async (_l, set) => {
-    arm();
-    set();
-    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
-    expect(goalFrames()).toEqual([]);
-    expect(published('client:locationCheckRefused')[0].reason).toBe(GOAL_HOLD.LOOP_MODE);
-  });
-
-  it('no loops module registered = Loop mode off: the click reports', async () => {
-    arm();
-    loop.registered = false;
-    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    smState.reachability[GOAL] = 'checked'; // batchCheckLocations already ran
+    await messageHandler._noteUpstreamGoalCheck(GOAL, 'reachable');
     expect(goalFrames()).toHaveLength(1);
   });
-
-  it.each([
-    ['another document was loaded after the add-on\'s (equal content, a different load)', () => { smState.raw = addonDoc(); }],
-    ['no document loaded', () => { smState.raw = null; }],
-    ['a room of another seed', () => { messageHandler.roomInfo = { seed_name: '9999' }; }],
-    ['another slot', () => { messageHandler.clientSlot = 3; }],
-  ])('%s: the ordinary ID-less path (checked locally), no report', async (_l, set) => {
-    arm();
-    set();
-    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(goalFrames()).toEqual([]);
-    expect(published('client:locationCheckRefused').filter((r) => String(r.reason).startsWith('goal_'))).toEqual([]);
-  });
 });
 
-describe('the other gates', () => {
-  it('goal becomes reachable: nothing is sent without a click (and ReceivedItems/sync never report it)', () => {
+describe('what still decides', () => {
+  it('goal becomes reachable: nothing is sent without a check (ReceivedItems/sync alone never report)', () => {
     arm();
     messageHandler._reportGoalIfMet(); // what every ReceivedItems (index 0 = connect, /sync) runs
     expect(goalFrames()).toEqual([]);
   });
 
-  it('out of logic: refused by the landed gate', async () => {
+  it('out of logic: refused by the landed gate, as for every location', async () => {
     arm();
     smState.reachability[GOAL] = 'unreachable';
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
@@ -254,11 +208,13 @@ describe('the other gates', () => {
     expect(published('client:locationCheckRefused')[0].reason).toBe('not_accessible');
   });
 
-  it('already checked earlier (e.g. offline on a kept document): no report', async () => {
+  it('already checked before the check (e.g. offline on a kept document): passed on, no report', async () => {
     arm();
     smState.reachability[GOAL] = 'checked';
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
+    expect(dispatcher.publishToNextModule).toHaveBeenCalledTimes(1);
+    expect(goalFrames()).toEqual([]);
+    messageHandler._reportGoalIfMet();
     expect(goalFrames()).toEqual([]);
   });
 
@@ -275,23 +231,45 @@ describe('the other gates', () => {
     expect(goalFrames()).toEqual([]);
   });
 
-  it('the server\'s items don\'t complete the goal: no report, and the goal stays clickable', async () => {
+  it('the server\'s items don\'t complete it yet: checked, no report; the ReceivedItems that completes it reports', async () => {
     const doc = addonDoc();
     doc.game_info[String(SLOT)].completion_condition = { rule: 'HasAll', args: { item_names: ['Victory', 'Sword'] } };
     arm(doc);
     messageHandler._serverItems = new Map([['Shield', 1]]); // the frontend may hold a Sword; the server sent none
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
-    expect(smState.reachability[GOAL]).toBe('reachable');
+    expect(dispatcher.publishToNextModule).toHaveBeenCalledTimes(1);
     expect(goalFrames()).toEqual([]);
-    expect(consoleLines().at(-1)).toMatch(/don't complete the goal/);
-    // the server delivers the Sword: the same click now reports
+    expect(consoleLines().at(-1)).toMatch(/goal is sent once the items the server has sent you complete it/);
     messageHandler._serverItems.set('Sword', 1);
-    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    messageHandler._reportGoalIfMet();
     expect(goalFrames()).toHaveLength(1);
   });
 
-  it('a same-seed reconnect keeps the loaded rules and the record; nothing is sent until the click', async () => {
+  it('a check on an earlier connection does not report on a later one', async () => {
+    const doc = addonDoc();
+    doc.game_info[String(SLOT)].completion_condition = { rule: 'HasAll', args: { item_names: ['Victory', 'Sword'] } };
+    arm(doc);
+    messageHandler._serverItems = new Map();
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    messageHandler._connectionSeq += 1; // a reconnect (_handleConnected)
+    messageHandler._serverItems = new Map([['Sword', 1]]);
+    messageHandler._reportGoalIfMet();
+    expect(goalFrames()).toEqual([]);
+  });
+
+  it.each([
+    ['another document was loaded after the add-on\'s (equal content, a different load)', () => { smState.raw = addonDoc(); }],
+    ['no document loaded', () => { smState.raw = null; }],
+    ['a room of another seed', () => { messageHandler.roomInfo = { seed_name: '9999' }; }],
+    ['another slot', () => { messageHandler.clientSlot = 3; }],
+  ])('%s: the ordinary ID-less path, no report', async (_l, set) => {
+    arm();
+    set();
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    expect(goalFrames()).toEqual([]);
+  });
+
+  it('a same-seed reconnect keeps the loaded rules and the record; nothing is sent until a check', async () => {
     arm();
     messageHandler._handleConnected = vi.fn(); // the reconnect: no build, the loaded rules stay
     try {
@@ -300,12 +278,13 @@ describe('the other gates', () => {
       delete messageHandler._handleConnected;
     }
     messageHandler._goalReported = false; // what _handleConnected re-arms
+    messageHandler._connectionSeq += 1;
     expect(goalFrames()).toEqual([]);
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
     expect(goalFrames()).toHaveLength(1);
   });
 
-  it('offline: the click is passed up locally, nothing is reported', async () => {
+  it('offline: the check is passed up locally, nothing is reported', async () => {
     arm();
     connectionMock.isConnected.mockReturnValue(false);
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
@@ -324,4 +303,3 @@ describe('the other gates', () => {
     expect(deriveUpstreamGoal(addonDoc(), String(SLOT)).goal.location).toBe(GOAL);
   });
 });
-

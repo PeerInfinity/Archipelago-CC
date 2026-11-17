@@ -70,11 +70,11 @@ At `strip_level: play` the add-on also leaves out fields the web client never re
 
 ### Goals
 
-Most games' goals are events, which the server never delivers. For a game whose goal is one event at one location (ALttP's Ganon, TUNIC's The Heir, APQuest's Final Boss Defeated, and most others), the web client shows that location as an ordinary location, and **clicking it yourself** finishes the game: the client checks it, then tells the server the goal is done, and the console says `Goal sent: you finished at "<location>"`. Under `release_mode`/`collect_mode` `auto` the server then releases and collects the rest at once, so that click can't be undone.
+Most games' goals are events, which the server never delivers. For a game whose goal is one event at one location (ALttP's Ganon, TUNIC's The Heir, APQuest's Final Boss Defeated, and most others), the web client shows that location as an ordinary location, and **checking it** finishes the game: the client checks it, then tells the server the goal is done, and the console says `Goal sent: you finished at "<location>"`. Under `release_mode`/`collect_mode` `auto` the server then releases and collects the rest at once, so that check can't be undone.
 
-- Only a click on that one location (its Locations card or its Region Graph node) counts. "Check all accessible", the Timer, bots, Loop mode and replays never finish the game: they leave the goal location unchecked, and the console says why.
+- Any way of checking it counts, as for any other location: a click, "Check all locations in region", the Timer, a bot, the Loop queue.
 - It must be in logic: an out-of-logic click is refused, as for every location.
-- The goal must be complete with the items the server has sent you; a click before that checks the location and sends no goal.
+- The goal must be complete with the items the server has sent you. If it isn't yet, the location is checked and the goal is sent as soon as the missing items arrive.
 - A game whose goal isn't a single location (SC2, ChecksFinder, Super Mario 64 and other goals written as code) isn't reported by the web client; the console says so when the rules load, and the game's own client reports it. Locations are still checked as usual.
 
 ## Games that need a ROM

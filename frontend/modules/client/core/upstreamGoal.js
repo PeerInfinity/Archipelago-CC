@@ -10,11 +10,14 @@
 // and it decides narrowly:
 //   - the slot's one goal location is derived from the document (no game names); it
 //     is marked `event_kind: 'goal'`, which the state manager never auto-collects
-//     (stateManager/core/eventKinds.js), so reaching it finishes nothing;
-//   - the goal is reported only after a DELIBERATE single click on that location
-//     (deliberateRefusal), the out-of-logic gate passing, the state manager recording
-//     the check, and completion_condition holding over the SERVER's delivered items
-//     plus that one goal item, and not without it (completesWithGoal).
+//     (stateManager/core/eventKinds.js), so reaching it finishes nothing: it stays a
+//     location to check, like our own worlds' Victory location;
+//   - a check of it takes the ordinary path, whoever sends it (a click, the Region
+//     Graph bulk check, the Timer, a bot, the Loop queue; ⚖ Robert 2026-11-17: no
+//     send restrictions this mode doesn't have elsewhere). The goal is reported when
+//     THIS connection saw it go from unchecked to checked and completion_condition
+//     holds over the SERVER's delivered items plus that one goal item, and not
+//     without it (completesWithGoal).
 //
 // ⛔ A goal cannot be undone (under `auto` the server collects and releases at once).
 // Every test here fails closed: a missed report is acceptable, a false one is not.
@@ -23,15 +26,6 @@ import { evaluateRuleWithInventory } from '../../shared/procgen/library.js';
 
 /** The event_kind the client puts on an add-on slot's derived goal location. */
 export const GOAL_EVENT_KIND = 'goal';
-
-/** The only originators whose click may finish the game: one location, chosen by the player. */
-export const DELIBERATE_GOAL_ORIGINATORS = Object.freeze(['LocationCardClick', 'RegionGraphCheck']);
-
-/** Why a check of the goal location was held back (client:locationCheckRefused reasons). */
-export const GOAL_HOLD = Object.freeze({
-  NOT_A_CLICK: 'goal_not_a_click',
-  LOOP_MODE: 'goal_loop_mode',
-});
 
 const ITEM_RULES = new Set(['Has', 'HasAll', 'HasAny', 'HasAllCounts']);
 
@@ -108,21 +102,6 @@ export function markGoalEvent(doc, player, goal) {
 }
 
 /**
- * null when this check may finish the game; else a GOAL_HOLD reason.
- * Fail-closed: only a `user:` check from an allowlisted originator, carrying none of
- * the bot / Loop-queue / game-report marks, outside Loop mode.
- */
-export function deliberateRefusal(eventName, eventData, loopModeActive) {
-  if (eventName !== 'user:locationCheck') return GOAL_HOLD.NOT_A_CLICK;
-  if (!DELIBERATE_GOAL_ORIGINATORS.includes(eventData?.originator)) return GOAL_HOLD.NOT_A_CLICK;
-  if (eventData?.fromBot === true || eventData?.fromLoop === true || eventData?.reportedByGame === true) {
-    return GOAL_HOLD.NOT_A_CLICK;
-  }
-  if (loopModeActive !== false) return GOAL_HOLD.LOOP_MODE;
-  return null;
-}
-
-/**
  * Whether the goal item is what completes the slot over the server's record: the rule
  * is false over the server-delivered items alone and true with the goal item added.
  *
@@ -137,12 +116,4 @@ export function completesWithGoal(goal, serverItems, player) {
   if (evaluate(items) !== false) return false;
   items.set(goal.item, (items.get(goal.item) ?? 0) + 1);
   return evaluate(items) === true;
-}
-
-/** The console line for a held-back goal check. */
-export function goalHoldMessage(locationName, reason) {
-  if (reason === GOAL_HOLD.LOOP_MODE) {
-    return `Not checked: "${locationName}" finishes the game, and Loop mode is on. Turn Loop mode off and click it to finish.`;
-  }
-  return `Not checked: "${locationName}" finishes the game, so it is only sent when you click it yourself (not a bulk check, bot, timer, replay or game report).`;
 }
