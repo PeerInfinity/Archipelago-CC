@@ -10855,6 +10855,9 @@ export function createLevelRun({
                     force: SHIELD_BOSS.swingForce,
                     damage: SHIELD_BOSS.damage,
                     from: { x: b.x, y: b.y },
+                    // ⛓ fidelity DARKSUITBOSSES D2 (`CONTACT_FIDELITY.darkSuitBossRetaliation`, ON only):
+                    // `p.hit(this, swingForce, …)` (`ShieldBoss.as:112`), so the boss is `e`.
+                    ...(CONTACT_FIDELITY.darkSuitBossRetaliation ? { retaliate: () => shieldBossSuitRetaliation(b) } : {}),
                 });
             }
             // ⛔ THE REMOVAL IS WHAT OPENS THE ROOM, and it is eleven ticks
@@ -10881,6 +10884,25 @@ export function createLevelRun({
                 });
             }
         }
+    }
+
+    /**
+     * ⛓ fidelity DARKSUITBOSSES D2 — `ShieldBoss.hit(darkSuitForce, …, darkSuitDamage, "Suit")` (`Enemies/ShieldBoss.as:
+     * 130-151`), on the model's own row. The stab's damaging frames are 5-8, all in "stab" (`:37`, `:108`), so an armed
+     * boss takes the `playedSound`/`startStab(true)` arm and `startStab` refuses (it needs "sit", `:172`); an unarmed one
+     * is armed (`activated = true`). Called between `stepShieldBoss` and the graphic step, where `hitPlayer` is.
+     */
+    function shieldBossSuitRetaliation(b) {
+        const v = shieldBossTakesHit(b, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (v.landed || v.killed || v.aborted || v.retaliated) {
+            throw new Error(`levelRun: the dark suit's retaliation into ${b.id} at tick ${ticksCompleted + 1} in level `
+                + `${level} ${v.killed ? 'kills' : v.landed ? 'damages' : 'moves'} it (anim "${b.anim}"). D1 found the `
+                + 'stab frames in "stab", where `ShieldBoss.hit` damages nothing. Refused by name (fidelity DARKSUITBOSSES).');
+        }
+        return {
+            id: b.id, as3: 'ShieldBoss', landed: false, swallowed: v.swallowed, activated: b.activated,
+            why: v.refusedAt,
+        };
     }
 
     /**
@@ -11246,13 +11268,24 @@ export function createLevelRun({
                         + 'barrage aim reads on this very tick — and this model runs the '
                         + 'contact after the arms. Refused rather than approximated.');
                 }
-                applyPlayerHit({
-                    source: 'owlBody',
-                    id: b.id,
-                    force: PLAYER_DAMAGE.contactForce,
-                    damage: 1,
-                    from: { x: b.x, y: b.y },
-                });
+                // ⛓ fidelity DARKSUITBOSSES D1 (ON only): the Owl is `e` and is NOT declared — the refusal names why.
+                try {
+                    applyPlayerHit({
+                        source: 'owlBody',
+                        id: b.id,
+                        force: PLAYER_DAMAGE.contactForce,
+                        damage: 1,
+                        from: { x: b.x, y: b.y },
+                    });
+                } catch (e) {
+                    if (!CONTACT_FIDELITY.darkSuitBossRetaliation
+                        || !/`hasDarkSuit` retaliates INTO the attacker/.test(e.message)) throw e;
+                    throw new Error(`${e.message} — fidelity DARKSUITBOSSES D1: \`FinalBoss.hit\` is \`Enemy.hit\` `
+                        + 'with `onlyHitBy = "Lava"` and `justKnock` (Enemies/FinalBoss.as:61-62), so a "Suit" hit is '
+                        + '`knockback(1, p)` into `v` inside `super.update()`, and the phase arms then read `v.length` '
+                        + '(Enemies/FinalBoss.as:126-155). This model bills the contact after `stepFinalBoss`\'s arms. '
+                        + 'Not declared.');
+                }
                 if (pendingDeath) return { frozen: false };
             }
         }
@@ -16898,7 +16931,24 @@ export function createLevelRun({
         if (a.boss) {
             const b = a.boss;
             const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const billBob = (h) => {
+                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
+                    force: h.force, damage: h.damage, from: h.from,
+                    // ⛓ fidelity DARKSUITBOSSES D2: `p.hit(this, …)` (`Enemy.as:217`, `BobSoldier.as:169`).
+                    ...(suitInStep ? { retaliate: () => bobBossSuitRetaliation(b) } : {}) });
+                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
+                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
+                // (`pendingDeath`, rebooted at end of tick). The new `Game`
+                // builds the rock fallen and re-adds the boss on its first
+                // live frame (`bobArenaNow`); the respawn is the rock's own
+                // `playerPosition` write, `ARENA.respawn`.
+            };
+            // ⛓ fidelity DARKSUITBOSSES D2 (`CONTACT_FIDELITY.darkSuitBossRetaliation`, ON, with the suit): the bill
+            // lands INSIDE the step, where `BobBoss.update` makes it, so a retaliation's writes (form 2's re-seed,
+            // `BobBoss.as:165-173`) precede `spin` and the later sword lines (`BobSoldier.as:72-84`).
+            const suitInStep = CONTACT_FIDELITY.darkSuitBossRetaliation && !!inventory.hasDarkSuit;
             const r = stepBobBossBody(b, {
+                ...(suitInStep ? { onPlayerHit: billBob } : {}),
                 player: { x: state.x, y: state.y },
                 playerBox: playerBoxAt(state.x, state.y),
                 frozen: false,
@@ -16915,16 +16965,7 @@ export function createLevelRun({
                         && box.bottom > ARENA_NPC_POINT.y)
                     || !!world.collidesSolid(box, solidOpts),
             });
-            for (const h of r.playerHits) {
-                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
-                    force: h.force, damage: h.damage, from: h.from });
-                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
-                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
-                // (`pendingDeath`, rebooted at end of tick). The new `Game`
-                // builds the rock fallen and re-adds the boss on its first
-                // live frame (`bobArenaNow`); the respawn is the rock's own
-                // `playerPosition` write, `ARENA.respawn`.
-            }
+            if (!suitInStep) for (const h of r.playerHits) billBob(h);
             if (r.transition && !r.transition.done) {
                 bobNoInput = true;
                 a.faceUp = true;
@@ -17727,6 +17768,24 @@ export function createLevelRun({
                 reach, why: verdict.refusedAt ?? null });
             hits.push({ as3: 'LightBoss', id: f.id, landed: verdict.landed, killed: verdict.killed === true });
         }
+    }
+
+    /**
+     * ⛓ fidelity DARKSUITBOSSES D2 — `BobBoss.hit(darkSuitForce, …, darkSuitDamage, "Suit")` (`Enemies/BobBoss.as:
+     * 163-175`): form 2's own-gate re-seed, then `Enemy.hit(0, null, d, "Suit")` — hits, i-frames, the latch, a kill's
+     * `destroy` (`bobBossHit`, the sword arm's function). A kill starts `death()`'s transition on the next step, as a
+     * sword kill does. The `boss-hit` ledger row carries `by: 'suit'`.
+     */
+    function bobBossSuitRetaliation(b) {
+        const v = bobBossHit(b, { d: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null });
+        bobLedger({ what: 'boss-hit', by: 'suit', form: b.form, landed: v.landed, killed: v.killed, hits: b.hits,
+            hitsMax: b.hitsMax, hitsTimer: b.hitsTimer, why: v.refusedAt ?? null });
+        return {
+            id: b.id, as3: 'BobBoss', form: b.form, landed: v.landed, hits: b.hits, hitsTimer: b.hitsTimer,
+            hitByDarkStuff: b.hitByDarkStuff === true, swords: b.swords,
+            ...(v.killed ? { killed: true } : {}),
+            ...(v.landed ? {} : { why: v.refusedAt }),
+        };
     }
 
     function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, lineWaived = false }) {
@@ -23373,6 +23432,13 @@ export function createLevelRun({
                             force: BOSS_TOTEM_BODY.force,
                             damage: BOSS_TOTEM_BODY.damage,
                             from: { x: b.x, y: b.y },
+                            // ⛓ fidelity DARKSUITBOSSES D2 (ON only): `Enemy.hitPlayer` passes the totem as `e`
+                            // (`BossTotem.as:301`), and its "Suit" hit writes nothing.
+                            ...(CONTACT_FIDELITY.darkSuitBossRetaliation ? { retaliate: () => ({
+                                id: b.id ?? 'bosstotem', as3: 'BossTotem', landed: false, effect: 'none',
+                                why: '`BossTotem.hit` → `Enemy.hit` (Enemies/BossTotem.as:719-725): `onlyHitBy = "Wand"` '
+                                    + '(:262) and `justKnock` false (Enemies/Enemy.as:42, :149-180); `knockback` is empty (:727)',
+                            }) } : {}),
                         });
                     }
                     // 4. THE CAMERA OVERRIDE, which runs on every frame he

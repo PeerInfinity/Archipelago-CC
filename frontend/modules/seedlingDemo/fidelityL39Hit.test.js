@@ -114,7 +114,9 @@ describe('fidelity L39HIT — the walk\'s L39 hit is the model\'s (the solver ac
 describe('fidelity L39HIT D2 — `pulserForecastPulse`: the spinner forecast steps the room\'s pulsers', () => {
     it('ships OFF, appended last, with a worker env name', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.pulserForecastPulse).toBe(false);
-        expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('pulserForecastPulse');
+        // ⛓ wave 48: DARKSUITBOSSES `darkSuitBossRetaliation` was appended after this key.
+        const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+        expect(keys.slice(keys.indexOf('pulserForecastPulse') + 1)).toEqual(['darkSuitBossRetaliation']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PULSER_FORECAST_PULSE');
     });
 

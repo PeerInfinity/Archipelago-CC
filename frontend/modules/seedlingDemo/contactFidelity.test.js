@@ -93,7 +93,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_SPINNING_AXE_PLAYER_HIT || !!process.env.SEEDLING_PARTIAL_DODGE_REPROBE
         || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING || !!process.env.SEEDLING_CORRIDOR_FORECAST_MEMO
         || !!process.env.SEEDLING_WALLFLYER_CORPSE_GONE
-        || !!process.env.SEEDLING_DARK_SUIT_STATIC_RETALIATION
+        || !!process.env.SEEDLING_DARK_SUIT_STATIC_RETALIATION || !!process.env.SEEDLING_DARK_SUIT_BOSS_RETALIATION
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -413,7 +413,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity DARKSUITSTATIC D2 (wave 46): the dark suit retaliates into a static body — OFF.
             darkSuitStaticRetaliation: false,
             // ⛓ fidelity L39HIT D2 (wave 47): a spinner forecast steps the room's pulsers and their pulse on the bodies — OFF.
-            pulserForecastPulse: false });
+            pulserForecastPulse: false,
+            // ⛓ fidelity DARKSUITBOSSES D2 (wave 48): the dark suit retaliates into a boss — OFF.
+            darkSuitBossRetaliation: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
