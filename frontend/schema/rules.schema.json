@@ -1095,8 +1095,8 @@
         },
         "event_kind": {
           "type": "string",
-          "enum": ["game_state"],
-          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js)."
+          "enum": ["game_state", "goal"],
+          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js). 'goal' = the slot's goal event, set by the CLIENT (never in a file) on rules the host's Upstream Rules Add-on sent (client/core/upstreamGoal.js): never auto-collected; it is checked like any location (a click, the Timer, a bot, the Loop queue), and that check reports the goal."
         },
         "event_id": {
           "type": "string",
