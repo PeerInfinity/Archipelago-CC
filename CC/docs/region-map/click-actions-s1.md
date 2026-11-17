@@ -172,6 +172,10 @@ pin red. `regionView-teleport`, a bare `regionView`, and `replay-regionView-path
 Result: **10 files, 124 tests passed**. `loops/blockModes.test.js` (166 tests) passed as well; it carries a
 `regionGraph-addToPath` gate row.
 
+- **Gate-label lint** (`scripts/procgen/lintGateLabels.test.js`): the first CI run at `da76073646` was red on it. The
+  equivalence file's test names stated counts ("128 combinations", "the seven keys") and it pinned
+  `toHaveLength(7)`. The names now interpolate `KEYS.length`, and the length pin is the named list of keys. No
+  allowlist row was added.
 - **Census pins:** none moved. `regionView/README.md` is under no docs-link census: `procgenDocs/docLinks.test.js`
   scans `docs/json/developer/procgen/` only. No module-import-order or binding-contract test enrols `regionView/`.
 - **Engine closure:** the closure ∩ the diff = ∅ (42 files). `engineMd5` is `bec369878feb67081187edca62baa951` at

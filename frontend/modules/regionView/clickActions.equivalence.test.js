@@ -259,19 +259,21 @@ for (const target of ['region', 'location']) {
     }
 }
 
-describe('⛓ 128 combinations × {region, location}: migrated config ≡ today\'s Region Graph handlers', () => {
-    it('the seven keys and defaults are regionGraph/layoutControlsManager.js\'s (the source of the 2^7 table)', async () => {
+describe(`⛓ 2^${KEYS.length} = ${1 << KEYS.length} combinations × {region, location}: migrated config ≡ today's Region Graph handlers`, () => {
+    it('the click keys and defaults are regionGraph/layoutControlsManager.js\'s (the source of the table)', async () => {
         const fs = await import('node:fs');
         const src = fs.readFileSync(new URL('../regionGraph/layoutControlsManager.js', import.meta.url), 'utf8');
         const rg = {};
         for (const m of src.matchAll(/setting: 'moduleSettings\.regionGraph\.(\w+)', default: (true|false)/g)) rg[m[1]] = m[2] === 'true';
         expect(Object.fromEntries(KEYS.map((k) => [k, rg[k]]))).toEqual({ ...CA.LEGACY_REGION_GRAPH_CLICK_DEFAULTS });
-        expect(KEYS).toHaveLength(7);
+        // The design's migration (§4.4) maps exactly these keys; a new box must be mapped before the table can pass.
+        expect(KEYS).toEqual(['movePlayerOneStep', 'movePlayerDirectly', 'showRegionInPanel', 'addToPath',
+            'overwritePath', 'addLocationsToPath', 'checkAllLocationsInRegion']);
     });
 
     for (const sc of SCENARIOS) {
         const name = `${sc.target} click on ${sc.region}, discovery ${sc.disc}, Show All starts ${sc.showAll}`;
-        it(`${name}: all 128 combinations`, async () => {
+        it(`${name}: all ${1 << KEYS.length} combinations`, async () => {
             const opts = { region: sc.region, discovery: DISCOVERY[sc.disc], showAll: sc.showAll };
             for (const bits of combos()) {
                 const today = await measureToday(sc.target, bits, opts);
