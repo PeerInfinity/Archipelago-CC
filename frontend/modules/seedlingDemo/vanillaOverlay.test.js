@@ -453,9 +453,13 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   (atlas id e3ae176e -> 32298df9). The overlay fixture `--check`s byte-identical.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
             // merged rules-no-hit-directional + tile-fire-breaks-rocks: atlas id 88e3788c.
+            // ⛓ rules-l99-sided-killlock (e53ce517… -> 28dc5dc7): L99's lock@80,96 is cleared only from the lower floor (the
+            //   west pocket's two far lavarunners never wake), so its two-way internal row splits into the room's weapon row
+            //   and the pocket's latch return (internal exits only; atlas id 88e3788c -> 2ac275e8). No name, exit or location moves.
             // ⛓ rules-nohit-wand-crosscheck (e53ce517 -> 7443e728): the Wand joins L22 south-to-north's no-hit arms (one
             //   internal row's Or gains Wand); atlas id 88e3788c -> df2a42ee.
-            .toBe('7443e72866c96c5498fb87291ea9d849');
+            // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers.
+            .toBe('28dc5dc7b2eccf756d5d59fed66a9bf9');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

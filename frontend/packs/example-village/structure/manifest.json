@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "sources": {
+      "actionnodes-design": {
+        "type": "model",
+        "model": "claude-fable-5-2",
+        "date": "2026-11-15",
+        "session": "actionnodes-design",
+        "approved": { "by": "Robert", "date": "2026-11-15", "ruling": "A14: accepted for initial testing, details adjustable" }
+      },
+      "pl2-pack": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-16",
+        "session": "content-packs-pl2",
+        "note": "The entries the graph document held implicitly, written out when PL-2 moved the graph into pack layers: the place (the graph's name) and the clock resource (the graph's loop mana). No approval is recorded"
+      }
+    },
+    "default": "actionnodes-design",
+    "groups": {
+      "example-village:place/village": "pl2-pack",
+      "example-village:resource/mana": "pl2-pack"
+    }
+  },
+  "entries": {
+    "example-village:place/village": { "kind": "place" },
+    "example-village:resource/mana": { "kind": "resource" },
+    "example-village:stat/strength": { "kind": "stat" },
+    "example-village:stat/knowledge": { "kind": "stat" },
+    "example-village:resource/gold": { "kind": "resource" },
+    "example-village:resource/bread": { "kind": "resource" },
+    "example-village:boon/strength-boost": { "kind": "boon",
+      "results": [ { "stat": "example-village:stat/strength" }, { "resource": "example-village:resource/mana", "sign": "+" } ] },
+    "example-village:boon/pocket-money": { "kind": "boon",
+      "results": [ { "resource": "example-village:resource/gold", "sign": "+" }, { "resource": "example-village:resource/mana", "sign": "+" } ] },
+    "example-village:task/start": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "limit": true, "tags": ["start"]
+    },
+    "example-village:task/do-chores": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "results": [ { "resource": "example-village:resource/gold", "sign": "+" } ],
+      "limit": true, "after": [ [ "example-village:task/start" ] ]
+    },
+    "example-village:task/train": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "results": [ { "stat": "example-village:stat/strength" } ],
+      "limit": true, "after": [ [ "example-village:task/start" ] ]
+    },
+    "example-village:task/read-the-notice": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "results": [ { "stat": "example-village:stat/knowledge" } ],
+      "limit": true, "after": [ [ "example-village:task/start" ] ]
+    },
+    "example-village:task/eat-bread": {
+      "kind": "task", "time": "example-village:resource/mana",
+      "requires": [ [ { "resource": "example-village:resource/bread", "consume": true } ] ],
+      "results": [ { "resource": "example-village:resource/mana", "sign": "+" } ],
+      "limit": true, "tags": ["use"]
+    },
+    "example-village:task/buy-bread": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "requires": [ [ { "resource": "example-village:resource/gold", "consume": true } ] ],
+      "results": [ { "resource": "example-village:resource/bread", "sign": "+" } ],
+      "limit": true, "after": [ [ "example-village:task/do-chores" ] ]
+    },
+    "example-village:task/bribe-the-guard": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "requires": [ [ { "resource": "example-village:resource/gold", "consume": true } ] ],
+      "limit": true, "after": [ [ "example-village:task/do-chores" ] ]
+    },
+    "example-village:task/guards-locker": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "limit": true, "after": [ [ "example-village:task/bribe-the-guard" ] ], "tags": ["check"]
+    },
+    "example-village:task/move-the-boulder": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "requires": [ [ { "stat": "example-village:stat/strength" } ] ],
+      "limit": true, "after": [ [ "example-village:task/train" ] ], "tags": ["check"]
+    },
+    "example-village:task/leave-the-village": {
+      "kind": "task", "place": "example-village:place/village", "time": "example-village:resource/mana",
+      "requires": [ [ { "stat": "example-village:stat/strength" }, { "stat": "example-village:stat/knowledge" } ] ],
+      "limit": true, "after": [ [ "example-village:task/move-the-boulder" ] ], "tags": ["goal"]
+    }
+  }
+}

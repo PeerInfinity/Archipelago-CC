@@ -99,6 +99,11 @@
  *    whatever is left. Only a new `Game` clears it, because `loadlevel`
  *    writes `FP.camera` raw.
  *
+ * ⛓ unbilledhits D3 — ⚠ SINCE ⚖ the user's "Exact for split" (2026-10-25, `CONTACT_FIDELITY.shakeExactSplit`, ON):
+ * a SPLIT run (`Rng.split`) is EXACT — `view()` jiggles by `Game.shakeJiggle(Game.time, axis)` and takes no draw, so
+ * point 2 does not apply there (`stepCameraSplit`). Only the `SHAKE_BAND_KEPT` cases band (below, by name: unsplit,
+ * noClock, bandAlready, acrossLoad, rebootSettle), and the on-screen refusals name the case that opened the band.
+ *
  * ⇒ the model carries an INTERVAL, folds each `view()`'s two draws into it
  * as a mutation (never a sample), and answers `onScreen` with three values
  * — yes / no / **uncertain**. `stepCamera` still refuses, but now only for

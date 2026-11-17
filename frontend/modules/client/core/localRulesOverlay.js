@@ -30,8 +30,72 @@ export const GENERATED_WORLD_OPTION = 'use_canonical_options';
 // (world_generator/_embedded_rules.py). A document over the slot's
 // rules_in_slot_data_max_kb is not sent; `worldgen_rules_omitted` says so.
 
+// The host's Upstream Rules Addon (worlds/upstream_rules_addon/) sends the
+// same envelope for a world that has none of its own, marked
+// `source: "upstream_rules_addon"`; so is every note it omits a slot with.
+
 export const WORLDGEN_RULES_KEY = 'worldgen_rules';
 export const WORLDGEN_RULES_OMITTED_KEY = 'worldgen_rules_omitted';
+
+/** The `source` the Upstream Rules Addon puts on its envelopes and notes (worlds/upstream_rules_addon/_addon.py SOURCE). */
+export const UPSTREAM_RULES_ADDON_SOURCE = 'upstream_rules_addon';
+/** The add-on's name as the player reads it (its World's `game`). */
+export const UPSTREAM_RULES_ADDON_NAME = 'Upstream Rules Addon';
+
+/** An error quoted on one line, cut to `max` characters. */
+function shortened(text, max = 160) {
+  const line = String(text).replace(/\s+/g, ' ').trim();
+  return line.length > max ? `${line.slice(0, max - 1)}…` : line;
+}
+
+/** "N KB" or null when the number is missing. */
+function kb(value) {
+  return typeof value === 'number' && Number.isFinite(value) ? `${value} KB` : null;
+}
+
+/**
+ * The console line for slot_data.worldgen_rules_omitted: why the server sent
+ * no rules for this slot. It reads the note's `reason` and never assumes the
+ * sizes are there. A note from the Upstream Rules Addon (`source`) names the
+ * add-on and its host.yaml `max_kb`; a world_generator package's names its
+ * `rules_in_slot_data_max_kb` option. An unknown reason is quoted as is.
+ *
+ * @param {*} note - slot_data.worldgen_rules_omitted
+ * @returns {string}
+ */
+export function omittedRulesMessage(note) {
+  const n = isPlainObject(note) ? note : {};
+  const reason = typeof n.reason === 'string' && n.reason ? n.reason : null;
+  const size = kb(n.size_kb);
+  const cap = kb(n.cap_kb);
+  if (n.source === UPSTREAM_RULES_ADDON_SOURCE) {
+    const head = `The host's ${UPSTREAM_RULES_ADDON_NAME} did not send this world's rules`;
+    if (reason === 'over_cap') {
+      const limit = `over its host.yaml max_kb${cap ? ` of ${cap}` : ''}`;
+      return `${head} (${size ? `${size}, ` : ''}${limit}).`;
+    }
+    if (reason === 'export_degraded') {
+      const parts = [];
+      const count = n.unanalysed_rules;
+      if (typeof count === 'number' && count > 0) {
+        parts.push(`${count} of its rule${count === 1 ? '' : 's'} could not be analysed`);
+      }
+      if (n.format_fallback) parts.push('the export fell back to an older rule format');
+      const what = parts.length > 0 ? parts.join(', and ') : 'the export was incomplete';
+      return `${head}: ${what}, so they would not match the game's logic.`;
+    }
+    if (reason === 'export_failed') {
+      return `${head}: the export failed${n.error ? ` (${shortened(n.error)})` : ''}.`;
+    }
+    return `${head} (reason: ${reason ? `"${shortened(reason)}"` : 'none given'}).`;
+  }
+  const head = "The server did not send this world's rules";
+  if (reason === null || reason === 'over_cap') {
+    const limit = `over the slot's rules_in_slot_data_max_kb${cap ? ` of ${cap}` : ''}`;
+    return `${head} (${size ? `${size}, ` : ''}${limit}).`;
+  }
+  return `${head} (reason: "${shortened(reason)}").`;
+}
 
 /**
  * The envelope format this client reads. It is world_generator's
@@ -54,7 +118,7 @@ export const RETIRED_KEYS_AT_FORMAT = Object.freeze([
  * client can load it, else `{refusal}` (one sentence naming why).
  *
  * @param {*} envelope - slot_data.worldgen_rules
- * @returns {{doc: Object, player: string}|{refusal: string}}
+ * @returns {{doc: Object, player: string, source: string|null}|{refusal: string}}
  */
 export function readWorldgenRules(envelope) {
   if (!isPlainObject(envelope) || !isPlainObject(envelope.doc) || envelope.player === undefined) {
@@ -78,7 +142,7 @@ export function readWorldgenRules(envelope) {
   } catch (e) {
     return { refusal: `this room's world was built by an older world generator (${e.message})` };
   }
-  return { doc: envelope.doc, player };
+  return { doc: envelope.doc, player, source: typeof envelope.source === 'string' ? envelope.source : null };
 }
 
 /**

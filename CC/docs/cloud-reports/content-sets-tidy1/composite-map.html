@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Composite Map Art</title>
+<!--
+  Content sets TIDY-1 — meta_trial's composite map (and a plain control), drawn by the real shared renderer
+  (`procgenCore/compositeMapRenderer.drawCompositeMap`) exactly as the APWorld Editor's Map tab calls it: the grid
+  rebuilt from the document's sidecars (`compositeMapDocument.reconstructResultFromSidecars`), `source = {rules,
+  playerId}`, and a repaint on `onCellArtReady`. Whatever tree serves this page is the tree drawn, so the BEFORE picture
+  is this page served from an export of the base commit, the AFTER one served from the slice's tip
+  (render-composite-map.mjs, beside this file). Open it from a dev server at the repository root:
+  http://localhost:<port>/CC/docs/cloud-reports/content-sets-tidy1/composite-map.html
+-->
+<style>
+  :root { --bg: #f4f5f7; --fg: #1d2129; --muted: #5d6573; --line: #d5d9e0; --card: #ffffff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #16181d; --fg: #e6e8ec; --muted: #9aa2b1; --line: #2c313a; --card: #1e2128; } }
+  :root[data-theme="dark"] { --bg: #16181d; --fg: #e6e8ec; --muted: #9aa2b1; --line: #2c313a; --card: #1e2128; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 12px; }
+  .maps { display: flex; flex-wrap: wrap; gap: 16px; }
+  figure { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  figcaption { color: var(--muted); font-size: 12px; margin-top: 6px; max-width: 60ch; }
+  canvas { image-rendering: pixelated; display: block; max-width: 100%; }
+  #status { color: var(--muted); font-size: 12px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<h1 id="title">Composite map</h1>
+<div class="maps" id="maps"></div>
+<div id="status">drawing…</div>
+<script type="module">
+const F = '../../../../frontend/';
+const label = new URLSearchParams(location.search).get('label') ?? '';
+document.getElementById('title').textContent = `Composite map — ${label}`;
+await import(`${F}modules/mazeRoom/mazeRoomLibrary.js`);
+await import(`${F}modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js`).catch(() => {});
+const { drawCompositeMap, TILE_PX } = await import(`${F}modules/procgenCore/compositeMapRenderer.js`);
+const { reconstructResultFromSidecars } = await import(`${F}modules/procgenPipeline/compositeMapDocument.js`);
+const json = async (u) => (await fetch(u, { cache: 'no-store' })).json();
+const SCALE = 3;
+const WORLDS = [
+    ['meta_trial (theme: meta)', `${F}presets/meta_trial/AP_1/AP_1_rules.json`],
+    ['procgen_maze seed 1 (no theme: the control)', `${F}presets/procgen_maze/AP_1/AP_1_rules.json`],
+];
+const lines = [];
+for (const [name, path] of WORLDS) {
+    const rules = await json(path);
+    const res = reconstructResultFromSidecars(rules, {});
+    const { grid, regionSize } = res;
+    const canvas = document.createElement('canvas');
+    canvas.width = grid.width * regionSize.width * TILE_PX;
+    canvas.height = grid.height * regionSize.height * TILE_PX;
+    let paints = 0;
+    const source = { rules, playerId: res.playerId ?? null };
+    const paint = () => { paints++; drawCompositeMap(canvas, grid, regionSize, { source, onCellArtReady: paint }); };
+    paint();
+    await new Promise((r) => setTimeout(r, 2500)); // the art load, if the painter has one
+    const shown = document.createElement('canvas');
+    shown.width = canvas.width * SCALE;
+    shown.height = canvas.height * SCALE;
+    const g = shown.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.drawImage(canvas, 0, 0, shown.width, shown.height);
+    const f = document.createElement('figure');
+    f.append(shown, Object.assign(document.createElement('figcaption'), { textContent: `${name} — painted ${paints}×` }));
+    document.getElementById('maps').append(f);
+    lines.push(`${name}: painted ${paints}×`);
+}
+document.getElementById('status').textContent = `${label}: ${lines.join('; ')}`;
+document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

@@ -109,8 +109,9 @@ describe('THE MAP — the canonical layout', () => {
         const b = layoutOf(setRecord(JSON.parse(JSON.stringify(VANILLA.set)), emptyOverlay()));
         expect(b).toEqual(a);
         expect(new Set(a.map((p) => `${p.gx},${p.gy}`)).size).toBe(VANILLA.set.rooms.length);
-        expect(Math.min(...a.map((p) => p.gx))).toBe(0);
-        expect(Math.min(...a.map((p) => p.gy))).toBe(0);
+        // ⚖ re-recorded by the (0,0)-origin follow-up (was: min gx = min gy = 0): the START room is (0,0), signed around it
+        expect(a[VANILLA.set.start.level]).toEqual({ gx: 0, gy: 0 });
+        expect(Math.min(...a.map((p) => p.gx))).toBeLessThan(0);
     });
 
     /** MUTANT: ignore every direction — the census must say the directions are what place the rooms. */

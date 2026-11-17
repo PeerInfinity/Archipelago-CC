@@ -489,6 +489,15 @@ export class SpoilerChecklistUI {
       return;
     }
 
+    // The LOADED slot. A combined (multiworld) document carries every
+    // player's game_info and player_names, so the fallbacks below would
+    // pick player "1" whichever slot is loaded.
+    if (staticData.playerId !== undefined && staticData.playerId !== null && staticData.playerId !== '') {
+      this.currentPlayerId = String(staticData.playerId);
+      log('info', `Current player ID: ${this.currentPlayerId}`);
+      return;
+    }
+
     // Try to get player ID from game_info (multiworld format)
     if (staticData.game_info) {
       const gameInfoKeys = Object.keys(staticData.game_info);

@@ -1,0 +1,93 @@
+{
+ "fixture": "frontend/modules/seedlingDemo/fixtures/wallflyer-drill-kill/survey-step-35-boot.json",
+ "exit": [
+  192,
+  64
+ ],
+ "ms": 18971,
+ "attempts": [
+  {
+   "budget": 1000000,
+   "ok": true,
+   "work": 5709,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 640
+    },
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null,
+     "ticks": 539,
+     "ms": 5,
+     "work": 5069
+    }
+   ],
+   "said": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "ticks": null,
+     "message": "solverBot(page-budget-step) reach-exit (192,64)->L29: the combat ladder is EXHAUSTED. The corridor passes through danger at (81.0,96.7) — enemy:wallflyer@64,80 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"stepped\" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:"
+    },
+    {
+     "pass": "full",
+     "ok": true,
+     "ticks": 539,
+     "message": null
+    }
+   ]
+  }
+ ],
+ "arm": {
+  "asked": 4,
+  "kills": [
+   {
+    "id": "wallflyer@48,112",
+    "family": "wallflyer",
+    "t": 134,
+    "ticks": 177,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 311,
+    "ticks": 121,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@48,112",
+    "family": "wallflyer",
+    "t": 134,
+    "ticks": 177,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 311,
+    "ticks": 121,
+    "forks": 1
+   }
+  ],
+  "refused": []
+ },
+ "plan": {
+  "ticks": 539,
+  "pass": "full",
+  "verbs": [
+   "bait",
+   "kill",
+   "walk"
+  ],
+  "hits": 0,
+  "deaths": 0,
+  "level": 29
+ }
+}

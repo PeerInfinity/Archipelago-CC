@@ -64,7 +64,8 @@ The Seedling editor builds these links for the room it holds (*The maze lab link
 - A room-less region opens its shared world's room, so the link names that room's level (the whole level), and the note says so.
 - A level split across several maze rooms (level 94 has 2 in `seedling_playthrough_maze`; level 0 has 6 in `seedling_atlas_maze`): every one links to the same level, and the note says how many share it.
 - An edited room still links, to the ORIGINAL level; the note says the maze edits are not carried over.
-- A pasted sidecar (LOAD) carries its level number but not its preset's rules, so it shows the reason instead of a link. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing.
+- The page's own save box, copied from a room that links and pasted into LOAD, links to the same level. For such a room the save box carries `converted_from: {map_document, level, edits}`: the map its preset's rules declared, the level, and the maze edits made before the copy. LOAD keeps the block, and the same map test decides. Edits keep the block; a directive or a ladder step makes a new base, and the block is dropped with it.
+- A pasted bare sidecar (copied out of a `rules.json`) carries its level number but nothing that names its map, so it shows the reason instead of a link. So does a hand-edited `converted_from` that names another map. A malformed block is ignored. There is no fallback to the default map: a paste that does not name its map never links. A generated maze, a SET-arm room and every preset room without an integer `level` show nothing, and their save boxes have no `converted_from`.
 
 All 126 converted rooms link (116 in `seedling_playthrough_maze`, 10 in `seedling_atlas_maze`), and every level they name is a level of the Seedling map (`mazeSeedlingLink.test.js`; `check-maze-lab` CLAIM 26).
 
@@ -256,6 +257,7 @@ A library is pasted into the mode's own box, uploaded (`.json`, or a `.zip` bund
 - **The layout** walks the links breadth-first from `overlay.start` (entry 0 if absent), placing each room one cell from the room that reached it on the door's side. Rooms no link reaches form groups to the right, so a library with no overlay lays out as a row.
 - **Stability.** Nothing about the map is stored. A `connect`, a `disconnect` or their undo moves no room while the rooms stay the same (count, ids, names and sizes); a renumbering re-derives the layout, as does RE-LAYOUT.
 - **On the map**, CONNECT (`c`) can pick the source exit by clicking its door tick, and DISCONNECT (`d`) previews first: a maze `disconnect` removes the whole link, both directions, and renumbers nothing. Every refusal is the adapter's own sentence.
+- **Unreachable rooms.** After REPORT, each room holding a region REPORT names unreachable is hatched and outlined in red, with a legend line under the map (`#editSetMapUnreachable`), as in the Seedling editor. Both providers use the same function (`procgenCore/setMapUnreachable.js`), which joins a region to its room through the report's own derived atlas (`map_ref`, the entry index). The marks are drawn only while the library is the one REPORT ran over: any edit or undo clears them until REPORT runs again.
 
 ### Editing a world (`?world=<bundle>.zip`)
 

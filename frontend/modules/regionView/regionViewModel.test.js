@@ -4,6 +4,8 @@
  * `displayRegionOf` fold — whose keys are DISPLAY groups, not rules regions.
  */
 import { describe, it, expect, vi } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 // A rule here is { ok: bool } or { throws: true }; the shared engine is replaced by that reading.
 vi.mock('../shared/ruleEngine.js', () => ({
@@ -143,6 +145,47 @@ describe('discovery visibility — the one decision', () => {
     });
 });
 
+describe('the inverse-entrance index (region-map step 3b) — the same answers as the scan', () => {
+    it('index.has(name) === hasEntranceFromDiscoveredRegion(name), over every discovered subset of random graphs', () => {
+        let seed = 7;
+        const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+        for (let g = 0; g < 40; g += 1) {
+            const names = Array.from({ length: 6 }, (_, i) => `R${i}`);
+            const regions = new Map(names.map((n) => [n, {
+                name: n,
+                exits: names.filter(() => rnd() < 0.3).map((t, i) => ({ name: `${n}>${t}${i}`, connected_region: t }))
+                    .concat(rnd() < 0.2 ? [{ name: `${n}>nowhere`, connected_region: null }] : []),
+            }]));
+            for (let mask = 0; mask < 64; mask += 1) {
+                const disc = fakeDiscovery({ regions: names.filter((_, i) => mask & (1 << i)) });
+                const index = vm.enteredFromDiscoveredIndex(regions, disc);
+                for (const n of [...names, 'Nope']) expect(index.has(n)).toBe(vm.hasEntranceFromDiscoveredRegion(n, regions, disc));
+            }
+        }
+    });
+
+    it('a context WITH the index gives every region / location / exit decision the scan gives; WITHOUT it has no extra key', () => {
+        const base = { active: true, settings: { undiscoveredDisplay: 'hidden' }, regions: staticData.regions };
+        for (const discovered of [[], ['A'], ['B'], ['A', 'C'], ['A', 'B', 'C', 'Empty']]) {
+            for (const showUndiscovered of [true, false]) {
+                const discovery = fakeDiscovery({ regions: discovered, locations: ['a1'], exits: ['B:B→A'] });
+                const plain = vm.discoveryContext({ ...base, discovery, showUndiscovered });
+                const indexed = vm.discoveryContext({ ...base, discovery, showUndiscovered,
+                    enteredFromDiscovered: vm.enteredFromDiscoveredIndex(staticData.regions, discovery) });
+                expect(Object.keys(plain)).not.toContain('enteredFromDiscovered');
+                for (const [name, data] of staticData.regions) {
+                    expect(vm.regionDiscovery(name, indexed)).toEqual(vm.regionDiscovery(name, plain));
+                    for (const l of data.locations) expect(vm.locationDiscovery(l.name, name, indexed)).toEqual(vm.locationDiscovery(l.name, name, plain));
+                    for (const e of data.exits) {
+                        const ex = { source: name, target: e.connected_region, forwardExitName: e.name, reverseExitName: 'B→A' };
+                        expect(vm.exitDiscovery(ex, indexed)).toEqual(vm.exitDiscovery(ex, plain));
+                    }
+                }
+            }
+        }
+    });
+});
+
 describe('displayGroupsOf — the displayRegionOf fold', () => {
     const registry = {
         get: (id) => (id === 'seedling'
@@ -167,6 +210,38 @@ describe('displayGroupsOf — the displayRegionOf fold', () => {
             ['room', ['room']],
         ]);
         expect(vm.displayKeyIndex(groups).get('level_0__r1c0')).toBe('level_0');
+    });
+
+    it('sidecarIndex reads the committed OBJECT shape (keyed by region name) as well as an array (region-map 3b fix)', () => {
+        const asObject = { preset_sidecars: { 1: Object.fromEntries(rules.preset_sidecars[1].map((sc) => {
+            const { region_id: id, ...rest } = sc;
+            return [id, rest];
+        })) } };
+        const byObject = vm.sidecarIndex(asObject, 1);
+        expect([...byObject.keys()]).toEqual([...sidecars.keys()]);
+        const groups = vm.displayGroupsOf(names, { registry, sidecarOf: (n) => byObject.get(n) });
+        expect([...groups.keys()]).toEqual(['Menu', 'level_0', 'level_1', 'room']);
+        expect(vm.sidecarIndex({ preset_sidecars: { 1: null } }, 1).size).toBe(0);
+    });
+
+    it('sidecarIndex over a COMMITTED preset\'s real sidecar block (seedling_playthrough): 267 groups unfolded → 116 folded', () => {
+        const doc = JSON.parse(readFileSync(fileURLToPath(new URL(
+            '../../presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json', import.meta.url)), 'utf8'));
+        const block = doc.preset_sidecars['1'];
+        expect(Array.isArray(block)).toBe(false); // the committed shape: an object keyed by region name
+        const idx = vm.sidecarIndex(doc, '1');
+        expect([...idx.keys()]).toEqual(Object.keys(block));
+        const names = Object.keys(doc.regions['1']);
+        const fold = { get: (id) => (String(id).startsWith('flash_seedling')
+            ? { compositeMap: { displayRegionOf: (n, sc) => sc?.playable_payload?.atlas_region ?? n } } : undefined) };
+        const unfolded = vm.displayGroupsOf(names, { registry: fold, sidecarOf: () => null });
+        const folded = vm.displayGroupsOf(names, { registry: fold, sidecarOf: (n) => idx.get(n) });
+        const levels = new Set(Object.values(block).map((sc) => sc.playable_payload.atlas_region));
+        const unsidecared = names.filter((n) => !block[n]).length;
+        expect(unfolded.size).toBe(names.length);
+        expect(folded.size).toBe(levels.size + unsidecared);
+        // measured 2026-11-15 (logged, not pinned): before the fix 267 groups, after 116 (115 levels + Menu)
+        console.log(`seedling_playthrough display groups: unfolded ${unfolded.size}, folded ${folded.size}`);
     });
 
     it('⚠ a display key is NOT a rules region: level_0 is a key while no level_0 region exists', () => {

@@ -52,6 +52,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { gridOriginOf } from './cellExtent.js';
 
 /** Pixels per substrate tile in the composite view. */
 export const TILE_PX = 14;
@@ -182,15 +183,33 @@ export function canvasPointOf(canvas, evt) {
  * The grid cell a canvas-backing pixel falls in, or null when it falls outside
  * the grid. `wx`/`wy` are the pixel WITHIN the cell, which is what an exit-square
  * hit-test needs next.
+ *
+ * ⛓ Unbounded grid S1: the canvas's column 0 is the grid's `minX`
+ * (`gridOriginOf`; 0 for an engine `Grid`), so the cell returned is SIGNED —
+ * the document's own coordinates, never a canvas index.
  */
 export function cellAtPoint(grid, regionSize, point, tilePx = TILE_PX) {
     if (!point) return null;
     const cellW = regionSize.width * tilePx;
     const cellH = regionSize.height * tilePx;
-    const gx = Math.floor(point.cx / cellW);
-    const gy = Math.floor(point.cy / cellH);
-    if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
-    return { gx, gy, wx: point.cx - gx * cellW, wy: point.cy - gy * cellH };
+    const col = Math.floor(point.cx / cellW);
+    const row = Math.floor(point.cy / cellH);
+    if (col < 0 || row < 0 || col >= grid.width || row >= grid.height) return null;
+    const { minX, minY } = gridOriginOf(grid);
+    return { gx: col + minX, gy: row + minY, wx: point.cx - col * cellW, wy: point.cy - row * cellH };
+}
+
+/**
+ * ⛓ Unbounded grid S1 — **THE CANVAS PIXEL OF A CELL'S TOP-LEFT CORNER**: cell
+ * (gx, gy) sits at `((gx − minX)·cellW, (gy − minY)·cellH)`. The one spelling for
+ * the draw loop, the connection lines, the selection and a host's click maths.
+ */
+export function cellOriginPx(grid, regionSize, cell, tilePx = TILE_PX) {
+    const { minX, minY } = gridOriginOf(grid);
+    return {
+        x: (cell.gx - minX) * regionSize.width * tilePx,
+        y: (cell.gy - minY) * regionSize.height * tilePx,
+    };
 }
 
 /**
@@ -352,8 +371,6 @@ function drawRegionCell(ctx, region, geom, registry, substrateArt) {
  * so the lines sit on top of the cells.
  */
 function drawConnections(ctx, grid, regionSize, tilePx, colors) {
-    const cellW = regionSize.width * tilePx;
-    const cellH = regionSize.height * tilePx;
     // Global green-square center for every (region_id, exit_id).
     const centers = new Map();
     for (const region of grid.allRegions()) {
@@ -362,9 +379,10 @@ function drawConnections(ctx, grid, regionSize, tilePx, colors) {
         const placed = resolveExitTilePositions(exitsOf(region) ?? [], regionSize);
         for (const p of placed) {
             if (!p?.exit?.exit_id) continue;
+            const o = cellOriginPx(grid, regionSize, cell, tilePx);
             centers.set(`${region.region_id} ${p.exit.exit_id}`, {
-                px: cell.gx * cellW + (p.x + 0.5) * tilePx,
-                py: cell.gy * cellH + (p.y + 0.5) * tilePx,
+                px: o.x + (p.x + 0.5) * tilePx,
+                py: o.y + (p.y + 0.5) * tilePx,
             });
         }
     }
@@ -430,11 +448,13 @@ export function drawCompositeMap(canvas, grid, regionSize, {
     ctx.fillStyle = colors.emptyCell;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let gy = 0; gy < grid.height; gy++) {
-        for (let gx = 0; gx < grid.width; gx++) {
+    // ⛓ S1: the cells are SIGNED; canvas column 0 is the grid's `minX`.
+    const { minX, minY } = gridOriginOf(grid);
+    for (let gy = minY; gy < minY + grid.height; gy++) {
+        for (let gx = minX; gx < minX + grid.width; gx++) {
             const region = grid.getRegion({ gx, gy });
-            const offX = gx * regionSize.width * tilePx;
-            const offY = gy * regionSize.height * tilePx;
+            const offX = (gx - minX) * regionSize.width * tilePx;
+            const offY = (gy - minY) * regionSize.height * tilePx;
             if (!region) {
                 ctx.strokeStyle = colors.cellBorder;
                 ctx.lineWidth = 1;
@@ -478,16 +498,17 @@ export function drawCompositeMap(canvas, grid, regionSize, {
         if (hit) {
             ctx.strokeStyle = colors.selection;
             ctx.lineWidth = 3;
+            const o = cellOriginPx(grid, regionSize, selection.cell, tilePx);
             ctx.strokeRect(
-                selection.cell.gx * cw + hit.x * tilePx - 1.5,
-                selection.cell.gy * ch + hit.y * tilePx - 1.5,
+                o.x + hit.x * tilePx - 1.5,
+                o.y + hit.y * tilePx - 1.5,
                 tilePx + 3, tilePx + 3,
             );
         }
     } else if (selection?.kind === 'region') {
-        const { gx, gy } = selection.cell;
+        const o = cellOriginPx(grid, regionSize, selection.cell, tilePx);
         ctx.strokeStyle = colors.selection;
         ctx.lineWidth = 3;
-        ctx.strokeRect(gx * cw + 1.5, gy * ch + 1.5, cw - 3, ch - 3);
+        ctx.strokeRect(o.x + 1.5, o.y + 1.5, cw - 3, ch - 3);
     }
 }

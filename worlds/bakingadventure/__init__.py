@@ -1,3 +1,5 @@
+import json
+import pkgutil
 from typing import ClassVar, Dict, Any
 from BaseClasses import Region, Entrance, Location, Item, Tutorial
 from worlds.AutoWorld import World, WebWorld
@@ -6,6 +8,30 @@ from .Locations import BakingAdventureLocation, base_location_id, location_table
 from .Regions import create_regions
 from .Rules import set_rules
 from .Options import BakingAdventureOptions
+
+
+# This world's rules document (worlds/<w>/_embedded_rules.json, no placements), sent in slot_data as
+# `worldgen_rules` so a web client with no preset for the room can play it: it lays the room's placements
+# over the document (frontend/modules/client/core/localRulesOverlay.js). The file is generator output:
+# scripts/test/check-handwritten-embedded-rules.py rebuilds it from this world's Python and fails when it
+# is stale. pkgutil.get_data reads it inside a packed .apworld too (open(__file__ dir) cannot).
+# The key names and the cap are world_generator/_embedded_rules.py's; this world does not import it, so
+# it loads on plain upstream Archipelago (test/test_handwritten_embedded_rules.py holds them equal).
+EMBEDDED_RULES_FILE = "_embedded_rules.json"
+EMBEDDED_RULES_KEY = "worldgen_rules"
+EMBEDDED_RULES_OMITTED_KEY = "worldgen_rules_omitted"
+EMBEDDED_RULES_MAX_KB = 1024
+
+
+def embedded_rules_slot_data() -> Dict[str, Any]:
+    """The slot_data entry carrying this world's rules document, or a note when it is not sent."""
+    raw = pkgutil.get_data(__name__, EMBEDDED_RULES_FILE)
+    if raw is None:
+        return {}
+    size_kb = -(-len(raw) // 1024)
+    if size_kb > EMBEDDED_RULES_MAX_KB:
+        return {EMBEDDED_RULES_OMITTED_KEY: {"size_kb": size_kb, "cap_kb": EMBEDDED_RULES_MAX_KB}}
+    return {EMBEDDED_RULES_KEY: json.loads(raw)}
 
 
 class BakingAdventureWeb(WebWorld):
@@ -86,6 +112,11 @@ class BakingAdventureWorld(World):
         """Fill slot data for the client."""
         return {
             "vanilla_placement": self.options.vanilla_placement.value,
+            # The client reports the goal (StatusUpdate 30) once the server has delivered
+            # Victory (frontend/modules/client/core/goalCheck.js). A hand-written world
+            # opts in by declaring it; world_generator worlds are admitted by their marker.
+            "reports_goal_by_server_item": True,
+            **embedded_rules_slot_data(),
         }
 
     def generate_early(self) -> None:
@@ -96,13 +127,14 @@ class BakingAdventureWorld(World):
     
     def generate_basic(self) -> None:
         """Generate basic elements including victory condition."""
-        # Place the Victory event at the Cool on Wire Rack location
+        # Place the ID-bearing Victory item at the ID-bearing Cool on Wire Rack location,
+        # locked on every seed: the player finishes by checking it, and the server sends
+        # Victory back.
         victory_location = self.multiworld.get_location("Cool on Wire Rack", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)
         if victory_location.item is None:
-            victory_item = BakingAdventureItem("Victory", item_table["Victory"].classification, None, self.player)
-            victory_location.place_locked_item(victory_item)
+            victory_location.place_locked_item(self.create_item("Victory"))
 
         # Set completion condition
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)

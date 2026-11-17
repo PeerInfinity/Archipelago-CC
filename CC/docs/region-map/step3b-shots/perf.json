@@ -1,0 +1,65 @@
+{
+  "seedling_playthrough": {
+    "cells": 115,
+    "groups": 21,
+    "layout": "hook",
+    "panel": {
+      "paints": 66,
+      "paintRequests": 70,
+      "artRedraws": 58,
+      "modelBuilds": 1,
+      "firstPaintMs": 290.59999999403954,
+      "modelMs": 21.299999997019768
+    },
+    "bakes": {
+      "requested": 115,
+      "baked": 115,
+      "failed": 0,
+      "redraws": 58,
+      "firstRequestToLastBakeMs": 4112.5,
+      "firstRequestToLastRedrawMs": 4121.5
+    }
+  },
+  "seedling_generated_chestdoor": {
+    "cells": 4,
+    "groups": 1,
+    "layout": "grid_cell",
+    "panel": {
+      "paints": 18,
+      "paintRequests": 23,
+      "artRedraws": 1,
+      "modelBuilds": 1,
+      "firstPaintMs": 46.79999999701977,
+      "modelMs": 3.3999999910593033
+    },
+    "bakes": {
+      "requested": 4,
+      "baked": 4,
+      "failed": 0,
+      "redraws": 6,
+      "firstRequestToLastBakeMs": 4996.100000008941,
+      "firstRequestToLastRedrawMs": 5000.20000000298
+    }
+  },
+  "alttp": {
+    "cells": 238,
+    "groups": 3,
+    "layout": "generic",
+    "panel": {
+      "paints": 8,
+      "paintRequests": 12,
+      "artRedraws": 0,
+      "modelBuilds": 1,
+      "firstPaintMs": 238.5,
+      "modelMs": 21.200000002980232
+    },
+    "bakes": {
+      "requested": 0,
+      "baked": 0,
+      "failed": 0,
+      "redraws": 0,
+      "firstRequestToLastBakeMs": null,
+      "firstRequestToLastRedrawMs": null
+    }
+  }
+}

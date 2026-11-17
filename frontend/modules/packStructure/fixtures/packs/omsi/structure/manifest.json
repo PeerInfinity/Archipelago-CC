@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (packStructure.test.js): the Z.2 example, every C1–C6 form at least once.",
+  "provenance": {
+    "sources": {
+      "z": { "type": "authored", "by": "the Z write-up's example (content-sets-structure-options, Z.2)" },
+      "fill": { "type": "derived", "from": ["z"], "by": "R1@1" }
+    },
+    "default": "z",
+    "groups": { "omsi:task/buy-": "fill" }
+  },
+  "entries": {
+    "omsi:place/beginnersville": { "kind": "place" },
+    "omsi:place/forest-path": { "kind": "place" },
+    "omsi:resource/mana": { "kind": "resource" },
+    "omsi:resource/gold": { "kind": "resource" },
+    "omsi:resource/supplies": { "kind": "resource" },
+    "omsi:stat/dex": { "kind": "stat" },
+    "omsi:stat/per": { "kind": "stat" },
+    "omsi:stat/wander": { "kind": "stat", "owner": "omsi:task/wander", "max": true },
+    "omsi:resource/glasses": { "kind": "resource",
+      "modifies": [ { "entry": "omsi:task/wander", "part": "results.omsi:stat/wander", "lasts": "loop" } ] },
+    "omsi:task/wander": {
+      "kind": "task", "place": "omsi:place/beginnersville", "time": "omsi:resource/mana",
+      "results": [ { "stat": "omsi:stat/wander" }, { "stat": "omsi:stat/per", "when": "each" } ],
+      "limit": true, "tags": ["check"]
+    },
+    "omsi:task/pick-locks": {
+      "kind": "task",
+      "place": "omsi:place/beginnersville",
+      "time": "omsi:resource/mana",
+      "requires": [
+        [ { "stat": "omsi:stat/dex" }, { "stat": "omsi:stat/per" }, { "stat": "omsi:stat/wander" } ],
+        [ { "resource": "omsi:resource/gold" } ]
+      ],
+      "results": [
+        { "stat": "omsi:stat/dex", "when": "each" },
+        { "resource": "omsi:resource/gold", "sign": "+", "when": "every_nth" }
+      ],
+      "limit": { "grows_with": "omsi:stat/wander" },
+      "after": [ [ "omsi:task/wander" ] ],
+      "tags": []
+    },
+    "omsi:task/buy-supplies": {
+      "kind": "task", "place": "omsi:place/beginnersville", "time": "omsi:resource/mana",
+      "requires": [ [ { "resource": "omsi:resource/gold", "consume": true } ] ],
+      "results": [ { "resource": "omsi:resource/supplies", "sign": "+" } ],
+      "limit": true
+    },
+    "omsi:task/start-journey": {
+      "kind": "task", "place": "omsi:place/beginnersville", "time": "omsi:resource/mana",
+      "requires": [ [ { "resource": "omsi:resource/supplies", "consume": true } ] ],
+      "results": [ { "opens": "omsi:place/forest-path", "when": "last" } ],
+      "limit": true, "after": [ [ "omsi:task/buy-supplies" ] ]
+    }
+  }
+}

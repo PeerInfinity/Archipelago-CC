@@ -2524,7 +2524,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_99__r2c4 -> level_99__r2c7", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L99 flag 0: lock@80,96 cleared'))
     )
 
     world.set_rule(
@@ -3035,6 +3035,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Level 089 - Feather", player),
         Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L99 flag 0: lock@80,96 cleared", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
     )
 
     world.set_rule(

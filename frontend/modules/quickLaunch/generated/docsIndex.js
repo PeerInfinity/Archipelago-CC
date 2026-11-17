@@ -282,6 +282,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Module ID: regionGraph"
     },
     {
+        "path": "docs/json/developer/modules/regionMap.md",
+        "title": "Region Map — technical reference",
+        "section": "developer/modules",
+        "summary": "frontend/modules/regionMap/ is region-map step 3b: a canvas panel that composes three earlier pieces and re-derives none of them. - Step 1, the art: procgenCore/compositeMapRenderer.js…"
+    },
+    {
         "path": "docs/json/developer/modules/regions.md",
         "title": "regions",
         "section": "developer/modules",
@@ -364,6 +370,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "windowPanel",
         "section": "developer/modules",
         "summary": "- ID: windowPanel - Purpose: Provides a UI panel within the main application to display the connection status and heartbeat information of a separate browser window managed by the windowAdapter."
+    },
+    {
+        "path": "docs/json/developer/procgen/action-nodes.md",
+        "title": "ActionNodes Substrate",
+        "section": "developer/procgen",
+        "summary": "The ActionNodes substrate (id action_nodes) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop…"
     },
     {
         "path": "docs/json/developer/procgen/architecture.md",
@@ -672,6 +684,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "This fork extends Universal Tracker with three tracking modes and a hybrid system that automatically selects the best mode for each game."
     },
     {
+        "path": "docs/json/features/upstream-rules-addon.md",
+        "title": "Upstream Rules Add-on",
+        "section": "features",
+        "summary": "The Upstream Rules Add-on is an optional apworld for people who generate rooms. With it installed, every slot of a room carries its own rules document in the room's slot data. The web client reads…"
+    },
+    {
         "path": "docs/json/games/apcalc/README.md",
         "title": "APCalc",
         "section": "games/apcalc",
@@ -960,6 +978,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Region Graph provides an interactive visual map of the game world using a node-and-edge graph. Regions appear as nodes, exits as directional edges, and the display updates in real time as your…"
     },
     {
+        "path": "docs/json/user/modules/regionMap.md",
+        "title": "Region Map Panel",
+        "section": "user/modules",
+        "summary": "The Region Map shows the loaded world as a flat map: each region is drawn as its own picture, laid out in groups. It has no node-and-edge graph. For Seedling worlds, each cell is the level as the…"
+    },
+    {
         "path": "docs/json/user/modules/regions.md",
         "title": "Regions Panel",
         "section": "user/modules",
@@ -1229,6 +1253,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/proofQueue.md",
             "docs/json/user/modules/quickLaunch.md",
             "docs/json/user/modules/regionGraph.md",
+            "docs/json/user/modules/regionMap.md",
             "docs/json/user/modules/regions.md",
             "docs/json/user/modules/settings.md",
             "docs/json/user/modules/spoilerChecklist.md",
@@ -1313,7 +1338,8 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/features/procgen.md",
             "docs/json/features/skip-required-files.md",
             "docs/json/features/spoiler-export-hook.md",
-            "docs/json/features/universal-tracker.md"
+            "docs/json/features/universal-tracker.md",
+            "docs/json/features/upstream-rules-addon.md"
         ],
         "children": []
     },
@@ -1567,7 +1593,8 @@ export const HELP_SECTIONS = Object.freeze([
                 "heading": true,
                 "docs": [
                     "docs/json/developer/modules/pathAnalyzerPanel.md",
-                    "docs/json/developer/modules/regionGraph.md"
+                    "docs/json/developer/modules/regionGraph.md",
+                    "docs/json/developer/modules/regionMap.md"
                 ],
                 "single": false
             },
@@ -1636,6 +1663,7 @@ export const HELP_SECTIONS = Object.freeze([
         "order": 140,
         "audience": "developer",
         "docs": [
+            "docs/json/developer/procgen/action-nodes.md",
             "docs/json/developer/procgen/architecture.md",
             "docs/json/developer/procgen/bounce.md",
             "docs/json/developer/procgen/cloudberry.md",

@@ -4,13 +4,14 @@
  * ⚖ (user, 2026-11-14) *"do we need a fixed grid size? Can't we just track the position of each node relative to
  * the center?"* → *"Yes, I approve of your unbounded layout plan."* This is that layout: the set map's canonical
  * layout (`setMapLayout.canonicalLayout`, Seedling editor E3) GENERALISED from room indices to region ids, and
- * `canonicalLayout` is now a thin wrapper over it (same positions, byte for byte: `regionLayout.test.js` keeps the
- * old function as an oracle).
+ * `canonicalLayout` is now a thin wrapper over it (the same positions, translated so the start room is (0,0):
+ * `regionLayout.test.js` keeps the old function as an oracle).
  *
  * ── ⛓⛓ THE COORDINATE CONTRACT ──
  *   · Positions are `{gx, gy}` integer CELLS, **SIGNED and START-RELATIVE: the start is exactly (0, 0)**. Nothing is
  *     min-shifted here. Screen y points DOWN (+gy is below), as in `canonicalLayout`.
- *   · Only a consumer that indexes arrays normalises (`canonicalLayout` keeps its min-shift for `frameOf`).
+ *   · Only a consumer that indexes arrays or pixels normalises: `setMapLayout.frameOf` and `layoutCensus` subtract the
+ *     minimum themselves (the (0,0)-origin follow-up dropped `canonicalLayout`'s own min-shift).
  *   · Why (⚖ the origin ruling): an id keeps its coordinates when something unrelated is added; a min-shift moves
  *     every cell whenever the minimum moves.
  *

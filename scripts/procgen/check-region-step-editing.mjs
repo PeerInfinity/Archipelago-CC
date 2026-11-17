@@ -269,9 +269,12 @@ function withPickupItems(level, contract) {
     const cellOf = (id) => grid.allRegions().find((r) => r.region_id === id)?.cell;
 
     // G. move a non-start region to an empty cell.
+    // ⛓ unbounded grid S1: scan the grid's own box, which may start below (0,0).
+    const x0 = grid.minX ?? 0;
+    const y0 = grid.minY ?? 0;
     let empty = null;
-    for (let gx = 0; gx < grid.width && !empty; gx++) {
-        for (let gy = 0; gy < grid.height && !empty; gy++) {
+    for (let gx = x0; gx < x0 + grid.width && !empty; gx++) {
+        for (let gy = y0; gy < y0 + grid.height && !empty; gy++) {
             if (!grid.hasRegion({ gx, gy })) empty = { gx, gy };
         }
     }
@@ -378,8 +381,11 @@ const gridSig = (grid) => JSON.stringify(grid.allRegions()
     .sort((a, b) => (a[0] < b[0] ? -1 : 1)));
 
 function emptyCellOf(grid) {
-    for (let gy = 0; gy < grid.height; gy += 1) {
-        for (let gx = 0; gx < grid.width; gx += 1) {
+    // ⛓ unbounded grid S1: the grid's own box, which may start below (0,0).
+    const x0 = grid.minX ?? 0;
+    const y0 = grid.minY ?? 0;
+    for (let gy = y0; gy < y0 + grid.height; gy += 1) {
+        for (let gx = x0; gx < x0 + grid.width; gx += 1) {
             if (!grid.hasRegion({ gx, gy })) return { gx, gy };
         }
     }
