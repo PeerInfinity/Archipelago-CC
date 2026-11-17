@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**30 documents · 4 pages · 556,968 words.**
+**30 documents · 4 pages · 557,196 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -22,7 +22,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [Procgen Gotchas and Disambiguations](./gotchas.md) | Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it. | 4346 |
 | [Procgen Editing Core](./editing-core.md) | The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms. | 4259 |
 | [The Seedling Editor](./seedling-editor.md) | How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page. | 7896 |
-| [Region Layout](./region-layout.md) | The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0). | 1085 |
+| [Region Layout](./region-layout.md) | The Region Map's shared layout gives every world's display regions an integer cell in one unbounded, signed frame, with the start region at exactly (0, 0). | 1313 |
 | [Bounce Substrate](./bounce.md) | Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored. | 2077 |
 | [Cloudberry Substrate](./cloudberry.md) | Cloudberry (substrate id `cloudberry`, in `frontend/modules/cloudberryDemo/`) plays each region as a Cloudberry Kingdom level. | 9891 |
 | [Playback and Debugging Tools](./playback-and-debugging.md) | Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers. | 5015 |

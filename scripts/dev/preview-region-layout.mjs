@@ -9,7 +9,7 @@
  *
  * One labelled box per display region at its `resolveRegionLayout` cell (uniform scale, no level art — the art is
  * the Region Map panel's), each group outlined, `down` links as solid arrows, `up` links as dashed arrows, `join`
- * links as faint lines, the start ringed. A legend line prints the source (grid_cell / hook / generic) and R1's stats.
+ * links as faint lines, `warp` links as dotted green lines, the start ringed. A legend line prints the source (grid_cell / hook / generic) and R1's stats.
  *
  * ⛔ NO NEW DEPENDENCY: the PNG is Playwright's own screenshot of an inline SVG (`page.setContent`) — no server, no
  * node-canvas. It launches a browser, so it takes the box lock (kind `browser`; `--wait-for-box=<sec>` queues).
@@ -136,10 +136,15 @@ export function layoutSvg(layout, { title = '' } = {}) {
         out.push(`<text x="${X(p.gx) + CELL / 2}" y="${Y(p.gy) + CELL / 2 + 4}" font-size="11" text-anchor="middle">${esc(label)}</text>`);
         if (isStart) out.push(`<text x="${X(p.gx) + CELL / 2}" y="${Y(p.gy) + 13}" font-size="10" text-anchor="middle" fill="#e03131">start (0,0)</text>`);
     }
+    // warp links (region-map placement (A)): dotted green, under the vertical ones
+    for (const l of graph.links) {
+        if (l.kind !== 'warp') continue;
+        out.push(`<line x1="${cx(l.from)}" y1="${cy(l.from)}" x2="${cx(l.to)}" y2="${cy(l.to)}" stroke="#2f9e44" stroke-width="1.4" stroke-dasharray="2 3"/>`);
+    }
     // vertical links on top
     for (const l of graph.links) {
         const k = l.kind ?? 'join';
-        if (k === 'join') continue;
+        if (k === 'join' || k === 'warp') continue;
         const dash = k === 'up' ? ' stroke-dasharray="5 3"' : '';
         const col = k === 'up' ? '#1971c2' : '#d9480f';
         out.push(`<line x1="${cx(l.from)}" y1="${cy(l.from)}" x2="${cx(l.to)}" y2="${cy(l.to)}" stroke="${col}" stroke-width="1.6" marker-end="url(#${k})"${dash}/>`);

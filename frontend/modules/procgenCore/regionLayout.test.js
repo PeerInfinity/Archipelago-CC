@@ -14,7 +14,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CONSISTENT_RINGS, DIRS, GROUPING_RULES, OPPOSITE, RegionLayoutError, groupsOf, groupsR1, layoutGrouped,
+    CONSISTENT_RINGS, DIRS, GROUPING_RULES, LINK_KINDS, OPPOSITE, RegionLayoutError, groupsOf, groupsR1, layoutGrouped,
     layoutRegions,
 } from './regionLayout.js';
 import { canonicalLayout } from './setMapLayout.js';
@@ -409,5 +409,64 @@ describe('(P) source-group placement — just above its first successor (⚖ use
             });
         }
         expect(sources).toBeGreaterThan(30); // exercised, not vacuous
+    });
+});
+
+/* ── (A) the `warp` kind — the pre-(A) R1, verbatim, as the oracle ── */
+function ORACLE_groupsR1({ nodes, links }) {
+    const at = new Map(nodes.map((id, i) => [id, i]));
+    const parent = nodes.map((_, i) => i);
+    const find = (i) => {
+        while (parent[i] !== i) {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        return i;
+    };
+    for (const l of links ?? []) {
+        if ((l.kind ?? 'join') !== 'join') continue;
+        const a = find(at.get(l.from));
+        const b = find(at.get(l.to));
+        if (a !== b) parent[Math.max(a, b)] = Math.min(a, b);
+    }
+    const byRoot = new Map();
+    nodes.forEach((id, i) => {
+        const r = find(i);
+        if (!byRoot.has(r)) byRoot.set(r, []);
+        byRoot.get(r).push(id);
+    });
+    return [...byRoot.values()];
+}
+
+describe('(A) the join audit — `warp` is drawn but never joins', () => {
+    it('LINK_KINDS gains `warp` (and nothing else)', () => {
+        expect(LINK_KINDS).toEqual(['join', 'down', 'up', 'warp']);
+    });
+
+    it('groupsR1 is UNCHANGED for any graph without `warp`: equal to the pre-(A) function over 400 random graphs', () => {
+        for (let s = 1; s <= 400; s++) {
+            const g = randomGroupedGraph(s, { dag: s % 2 === 0 });
+            expect(groupsR1(g), `seed ${s}`).toEqual(ORACLE_groupsR1(g));
+        }
+    });
+
+    it('a `warp` never joins two groups and places nothing: turning a join into a warp only splits', () => {
+        const g = {
+            nodes: ['s', 'e', 'dungeon', 'd2'], start: 's',
+            links: [{ from: 's', to: 'e', dir: 'E' }, { from: 'e', to: 'dungeon', kind: 'warp' }, { from: 'dungeon', to: 'd2', dir: 'N' }],
+        };
+        expect(groupsR1(g)).toEqual([['s', 'e'], ['dungeon', 'd2']]);
+        const asJoin = { ...g, links: g.links.map((l) => (l.kind === 'warp' ? { from: l.from, to: l.to } : l)) };
+        expect(groupsR1(asJoin)).toEqual([['s', 'e', 'dungeon', 'd2']]);
+        const { groups, stats } = layoutGrouped(g);
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['dungeon', 'right']]);
+        expect(stats.vertical.links).toBe(0);
+        // over random graphs: every warp-split grouping REFINES the all-join one (each group lies inside one join group)
+        for (let s = 1; s <= 100; s++) {
+            const base = randomGroupedGraph(s);
+            const warped = { ...base, links: base.links.map((l, i) => (l.kind === 'join' && i % 3 === 0 ? { ...l, kind: 'warp' } : l)) };
+            const coarse = new Map(groupsR1(base).flatMap((m, gi) => m.map((id) => [id, gi])));
+            for (const m of groupsR1(warped)) expect(new Set(m.map((id) => coarse.get(id))).size, `seed ${s}`).toBe(1);
+        }
     });
 });

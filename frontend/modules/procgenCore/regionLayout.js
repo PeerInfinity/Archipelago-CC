@@ -185,13 +185,20 @@ export function layoutRegions(graph) {
  * D2 — GROUPS, AND WHERE A GROUP GOES
  * ══════════════════════════════════════════════════════════════════════ */
 
-/** The link kinds a grouping rule and the group placement read. A link without one is a `join`. */
-export const LINK_KINDS = Object.freeze(['join', 'down', 'up']);
+/**
+ * The link kinds a grouping rule and the group placement read. A link without one is a `join`.
+ *   · `join` — an EDGE TRANSITION (walk off one side of a region, arrive at the other's): the two belong side by side
+ *     (⚖ user 2026-11-16), so R1 joins them;
+ *   · `down` / `up` — stairs, pits: the vertical relation between groups;
+ *   · `warp` — any other non-spatial link (a doorway into a dungeon, an in-game teleporter): DRAWN, but it never
+ *     joins two groups and places nothing (region-map placement (A)).
+ */
+export const LINK_KINDS = Object.freeze(['join', 'down', 'up', 'warp']);
 const kindOf = (l) => l.kind ?? 'join';
 
 /**
  * ⛓ **R1, THE SIMPLEST RULE** (⚖ user: *"experiment, starting with the simplest"*): the connected components over
- * `join` links (direction ignored). `down`/`up` links never join two nodes into one group. A rule is a pure
+ * `join` links (direction ignored). `down`/`up`/`warp` links never join two nodes into one group. A rule is a pure
  * `(graph) → string[][]` — each group's members, in `nodes` order, the groups ordered by their first member's position
  * in `nodes`. An R2 is one more function of that signature (`GROUPING_RULES`).
  */
@@ -276,7 +283,7 @@ const conflicts = (a, b, gap) => a.minX <= b.maxX + gap && b.minX <= a.maxX + ga
  *   ⇒ Every `down` link across groups lands with the target group STRICTLY below (and every `up` strictly above)
  *     unless the vertical relation has a cycle; `stats.down` / `stats.up` count what did.
  *
- * @param {{nodes: string[], start: string, links: {from, to, dir?, kind?: 'join'|'down'|'up'}[]}} graph
+ * @param {{nodes: string[], start: string, links: {from, to, dir?, kind?: 'join'|'down'|'up'|'warp'}[]}} graph
  * @param {{rule?: string|Function, gap?: number}} [opts]
  * @returns {{positions: Map<string,{gx,gy}>, groups: {id, root, members, bbox, placedBy}[], stats: object}}
  */
