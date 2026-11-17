@@ -60,8 +60,9 @@ import {
     stampLibraryIdentity, validateRegionLibrary,
 } from '../procgenPipeline/regionLibraryValidator.js';
 import { blankTileGridLibraryEntry, captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
-import { createWorld, deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
+import { createWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
+import { deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
 import {
     LINK_ONE_WAY_DEFAULT, assertOverlay, deriveAtlasOf, emptyMazeOverlay, exitRuleKey,
     locationRuleKey, overlayErrors, parseRuleTarget, renumberOverlay, rulesJsonOf,
@@ -306,7 +307,8 @@ function entryFromPayload(payload, { entry_id: entryId, name }, deps) {
     }
     let world;
     try {
-        world = deserializeMazeWorld(payload);
+        // ⛓ CONTENT SETS TILE-3 — with its placed tile kinds, which the capture path writes back.
+        world = deserializeMazeWorldWithKinds(payload);
     } catch (e) {
         fail(`mazeSetAdapter: this payload is not a tile-grid maze world — ${e.message}`);
     }

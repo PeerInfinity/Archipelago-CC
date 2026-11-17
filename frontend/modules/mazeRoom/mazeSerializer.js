@@ -75,6 +75,20 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
  */
+/**
+ * ⛓ CONTENT SETS TILE-3 — a world's placed tile kinds (`world.tileKinds`, a `Map("x,y" → kind)`) as the payload writes
+ * them: `[{x, y, kind}]` in row order, or null when there are none. Here, beside the field's declaration, so the
+ * serializer imports nothing new (`mazeTileKinds.js` re-exports it).
+ */
+export function tileKindsList(world) {
+    const map = world?.tileKinds;
+    if (!(map instanceof Map) || map.size === 0) return null;
+    return [...map].map(([key, kind]) => {
+        const [x, y] = key.split(',').map(Number);
+        return { x, y, kind };
+    }).sort((a, b) => (a.y - b.y) || (a.x - b.x));
+}
+
 /** ⛓ CONTENT SETS S2 — the kinds of thing a maze region may hold (`mazeThings.js`; each a maze content role). */
 export const MAZE_THING_KINDS = Object.freeze(['character', 'object', 'info']);
 
@@ -200,6 +214,23 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
                         properties: Object.freeze({ concept: THING_TEXT, name: THING_TEXT, body: THING_TEXT }),
                     }),
                 }),
+            }),
+        }),
+    }),
+    tileKinds: Object.freeze({
+        type: 'array', required: false,
+        description: 'The region\'s PLACED TILE KINDS (content sets TILE-3): `{x, y, kind}`, `kind` a pack concept key '
+            + 'whose row declares a tile `base` (`packConcepts.PACK_TILE_BASES`). Look-only and walkable (⚖ the user, '
+            + '2026-11-17): each stands on a floor cell no other record names, and no rule, location or reachability '
+            + 'reader sees it. Written by the maze editor (`setTileKind`); drawn through the tile fallback chain. '
+            + '`serializeMazeWorld` OMITS the key when there are none, so a world without kinds is byte-equal '
+            + '(`mazeTileKinds.js`).',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['x', 'y', 'kind']),
+                additionalProperties: false,
+                properties: Object.freeze({ ...xy, kind: THING_TEXT }),
             }),
         }),
     }),
@@ -531,6 +562,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         })
         : null;
 
+    const tileKindsOut = tileKindsList(world);
+
     return {
         width: world.width,
         height: world.height,
@@ -545,6 +578,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         ...(hazardsOut ? { hazards: hazardsOut } : {}),
         ...(consumableTilesOut ? { consumableTiles: consumableTilesOut } : {}),
         ...(manaTilesOut ? { manaTiles: manaTilesOut } : {}),
+        // ⛓ TILE-3: the placed tile kinds, omitted when there are none.
+        ...(tileKindsOut ? { tileKinds: tileKindsOut } : {}),
         // A room that says how it is entered keeps saying it (an editor
         // regenerate round-trips it); generation stamps it at compile.
         ...(world.arrival ? { arrival: world.arrival } : {}),
