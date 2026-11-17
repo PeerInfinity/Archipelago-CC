@@ -79,8 +79,8 @@ const READ = readAt([0, 286, 287, 300, 311, 432]);
 
 describe('fidelity WALLFLYERCORPSE — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_WALLFLYER_CORPSE_GONE)(
-        'ships OFF (⚖ user 2026-11-15, "OFF key, flip later"), appended last, with a worker env name', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.wallFlyerCorpseGone).toBe(false);
+        'shipped OFF (⚖ user 2026-11-15, "OFF key, flip later"), ON since the WALLFLYERCORPSE flip; appended last, with a worker env name', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.wallFlyerCorpseGone).toBe(true);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('wallFlyerCorpseGone');
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WALLFLYER_CORPSE_GONE');
         });
