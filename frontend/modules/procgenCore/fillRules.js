@@ -14,12 +14,11 @@
  * Under Z7 ("numbers come from a simulated playthrough") their values are
  * STARTING POINTS: a substrate with a walk assigns over them.
  *
- * ⛓ WHICH RULES A SUBSTRATE APPLIES. A registry entry lists them in
- * `fillRules`; an entry that declares none takes its row of
- * `SUBSTRATE_FILL_RULES` here (⚖ planner, PL-2: the ActionNodes entry belongs
- * to the AN-2 slice, so its list lives here until the next slice moves it onto
- * the entry). `fillRulesOf` reads either, and REFUSES BY NAME a rule this table
- * does not hold or one it lists as `not-yet` (X1, X2, AN3).
+ * ⛓ WHICH RULES A SUBSTRATE APPLIES. Its registry entry lists them in
+ * `fillRules` (ActionNodes since AN-1b; PL-2 kept that list here until the
+ * entry's slice could take it); an entry that declares none applies none.
+ * `fillRulesOf` REFUSES BY NAME a rule this table does not hold or one it lists
+ * as `not-yet` (X1, X2, AN3).
  *
  * Pure and DOM-free: every `apply` takes plain numbers and ids.
  */
@@ -213,25 +212,17 @@ export function fillRule(id) {
     return r;
 }
 
-/**
- * ⛓ **THE RULES EACH SUBSTRATE APPLIES, until its registry entry declares `fillRules`.** ActionNodes: every rule
- * its resolver can reach (R4 for a sum minimum a binding states; AN-flat for every v1-excluded form).
- */
-export const SUBSTRATE_FILL_RULES = Object.freeze({
-    action_nodes: Object.freeze(['P1', 'T1', 'L1', 'L2', 'W1', 'B1', 'R4', 'AN1', 'AN2', 'AN-flat']),
-});
-
 /** The registry field a substrate entry lists its rules in. */
 export const FILL_RULES_FIELD = 'fillRules';
 
 /**
- * ⛓ **THE RULES A SUBSTRATE APPLIES** — its entry's `fillRules`, else its row of `SUBSTRATE_FILL_RULES`, else none.
+ * ⛓ **THE RULES A SUBSTRATE APPLIES** — its entry's `fillRules`, else none.
  * Every id is checked: an unknown one, or one the table lists as not yet built (X1, X2, AN3), is REFUSED BY NAME,
  * naming the substrate. Returns a frozen list of ids.
  */
 export function fillRulesOf(entry, substrateId = entry?.id) {
     const declared = entry?.[FILL_RULES_FIELD];
-    const list = declared ?? SUBSTRATE_FILL_RULES[substrateId] ?? [];
+    const list = declared ?? [];
     if (!Array.isArray(list)) fail(`substrate "${substrateId}": ${FILL_RULES_FIELD} must be a list of rule ids`);
     for (const id of list) {
         const r = FILL_RULES[id];

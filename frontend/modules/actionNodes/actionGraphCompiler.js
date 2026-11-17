@@ -196,9 +196,14 @@ function payloadOf(graph, model, id, { locationName, exits }) {
  * @param {number} [opts.seed=1]
  * @param {number} [opts.budget] - the one-loop state budget
  * @param {string} [opts.graphPath] - where the graph lives, recorded in `procgen_metadata[p]`
+ * @param {string[]|null} [opts.exists] - the content packs the graph is the resolved structure of (`frontend/packs/`
+ *   ids). Given, `provenance[p]` records these pack ids and NOT the graph's own `provenance` block: a world looks its
+ *   sources up through its packs (Z.7; AN-1b). Absent, the graph's block travels with the world (a graph no pack holds).
  * @returns {{rules: object, report: object}}
  */
-export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEFAULT_STATE_BUDGET, graphPath = null } = {}) {
+export function compileActionGraph(graph, {
+    playerId = 1, seed = 1, budget = DEFAULT_STATE_BUDGET, graphPath = null, exists = null,
+} = {}) {
     const model = buildActionModel(graph);
     const logic = deriveActionLogic(model, { budget });
     const p = String(playerId);
@@ -325,7 +330,13 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
             action_logic: report,
         },
     };
-    rules.provenance = { [p]: { generator: 'frontend/modules/actionNodes/actionGraphCompiler.js', graph_id: graph.graph_id, graph_provenance: graph.provenance } };
+    rules.provenance = {
+        [p]: {
+            generator: 'frontend/modules/actionNodes/actionGraphCompiler.js',
+            graph_id: graph.graph_id,
+            ...(Array.isArray(exists) && exists.length ? { exists: [...exists] } : { graph_provenance: graph.provenance }),
+        },
+    };
     rules.loop_costs = { [p]: loopCostsOf(graph, model, settings) };
     // ⚖ Robert 2026-11-16T19:59:48Z (discovery): the world's own discovery policy, in and out of Loop mode — the
     // discovery module's `actionNodes` bundle (worldDiscoveryMode.js). Per world: no other world sees it.

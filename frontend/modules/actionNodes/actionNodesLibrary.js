@@ -144,6 +144,10 @@ export const substrateRegistryEntry = Object.freeze({
     // A node has no tiles: an exit is only an `after` edge.
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
+    // ⛓ The content-pack fill rules this substrate applies (procgenCore/fillRules.js `fillRulesOf`): every rule its
+    // resolver can reach — R4 for a sum minimum a binding states, AN-flat for every v1-excluded form (PL-2's list,
+    // moved onto the entry in AN-1b).
+    fillRules: Object.freeze(['P1', 'T1', 'L1', 'L2', 'W1', 'B1', 'R4', 'AN1', 'AN2', 'AN-flat']),
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', ACT_ACTION]),
         // ⚖ D6 (Robert 2026-11-16T19:59:48Z): no explore action in ActionNodes. The list above is ENFORCED: a custom

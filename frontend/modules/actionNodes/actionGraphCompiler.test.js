@@ -1,6 +1,6 @@
 // actionNodes/actionGraphCompiler — the compiled world, its A6 proof, and the committed preset.
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -18,13 +18,15 @@ import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { sidecarFieldsOf, sidecarPayloadErrors } from '../procgenCore/sidecarFields.js';
 import { substrateRegistryEntry } from './actionNodesLibrary.js';
+import { DEFAULT_EXISTS, DEFAULT_GRAPH, DEFAULT_OUT } from '../../../scripts/procgen/action-nodes-compile.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '../../..');
 const GRAPH_PATH = 'frontend/modules/actionNodes/graphs/example-village.json';
 const PRESET_PATH = 'frontend/presets/action_nodes_example/AP_1/AP_1_rules.json';
 const EXAMPLE = JSON.parse(readFileSync(join(REPO, GRAPH_PATH), 'utf8'));
-const { rules, report } = compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH });
+// The CLI's own recipe for the committed preset (action-nodes-compile.mjs with no arguments).
+const { rules, report } = compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH, exists: [...DEFAULT_EXISTS] });
 const P = '1';
 const model = buildActionModel(EXAMPLE);
 const allLocations = Object.values(rules.regions[P]).flatMap((r) => r.locations);
@@ -139,9 +141,20 @@ describe('the compiled world', () => {
         expect(block.goal).toBe(Object.keys(EXAMPLE.nodes).find((k) => EXAMPLE.nodes[k].kind === 'goal'));
         expect(block.action).toBe(ACT_ACTION);
     });
-    it('the graph\'s provenance travels with the world', () => {
-        expect(rules.provenance[P].graph_provenance).toEqual(EXAMPLE.provenance);
+    it('⛓ the committed world names its PACKS, not its graph\'s provenance block (Z.7, AN-1b)', () => {
+        expect(rules.provenance[P].exists).toEqual([...DEFAULT_EXISTS]);
+        expect('graph_provenance' in rules.provenance[P]).toBe(false);
         expect(rules.procgen_metadata[P].graph_path).toBe(GRAPH_PATH);
+        expect([DEFAULT_GRAPH, DEFAULT_OUT]).toEqual([GRAPH_PATH, PRESET_PATH]);
+        for (const id of DEFAULT_EXISTS) expect(existsSync(join(REPO, 'frontend/packs', id)), id).toBe(true);
+    });
+    it('a graph compiled with no packs named carries its own provenance block, as before', () => {
+        const bare = compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH }).rules;
+        expect(bare.provenance[P].graph_provenance).toEqual(EXAMPLE.provenance);
+        expect('exists' in bare.provenance[P]).toBe(false);
+        // …and only the provenance block differs
+        const strip = (d) => { const c = structuredClone(d); delete c.provenance; return stringifyRulesJson(c); };
+        expect(strip(bare)).toBe(strip(rules));
     });
 });
 
@@ -166,6 +179,6 @@ describe('⛓ the A6 proof', () => {
         expect(() => compileActionGraph(g)).toThrow(/fill-failed|goal-not-in-logic/);
     });
     it('is deterministic for a seed', () => {
-        expect(stringifyRulesJson(compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH }).rules)).toBe(stringifyRulesJson(rules));
+        expect(stringifyRulesJson(compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH, exists: [...DEFAULT_EXISTS] }).rules)).toBe(stringifyRulesJson(rules));
     });
 });
