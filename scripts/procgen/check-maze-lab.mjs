@@ -3383,6 +3383,88 @@ try {
         `room 1 → ${roomUndo.set.openRoomOps}, library ${stripUndo.set.ops} → `
         + `${roomUndo.set.ops}`);
 
+    /* ── CLAIM 19f: the map marks the rooms the REPORT finds UNREACHABLE ─ */
+    /**
+     * ⛓⛓⛓ **CLAIM 19f — MAZE MAP UNREACHABLE** (slice `maze-map-unreachable`). The maze provider now hands
+     * `setEditorView` the same `unreachableOf` hook Seedling's does (`procgenCore/setMapUnreachable`). The page SETS
+     * ITS OWN STATE: the 3-link CHAIN 0 ↔ 1 ↔ 2 ↔ 3, cut between rooms 1 and 2 with the MAP's own DISCONNECT tool,
+     * so the REPORT names rooms 2 and 3 unreachable. REPORT → those two cells hatched + the legend; an edit (undo,
+     * which reconnects) → `stale`, nothing marked; REPORT again → `current`, nothing marked.
+     * ⛔ MUTANT: the hook removed from `mazeSetMap.createMazeSetMap` → no `unreachable` readout key, no legend → red.
+     */
+    await load(`${setUrl}&setView=map`, () => window.__mazeLab?.set?.mounted === true
+        && window.__mazeLab.set.map?.cells?.length > 0, 'the SET arm on the MAP for unreachable marks');
+    await pasteSet(overlayOf(3), () => window.__mazeLab?.set?.links === 3
+        && window.__mazeLab.set.map?.cells?.length > 0, 'the 3-link CHAIN, on the map');
+    const unreachInk = (cell) => page.evaluate((c) => {
+        const cv = document.getElementById('editSetOverview');
+        const d = cv.getContext('2d').getImageData(c[0], c[1], c[2], c[3]).data;
+        let n = 0;
+        // ⛓ setEditorView's UNREACHABLE_INK is #ff5a5a
+        for (let i = 0; i < d.length; i += 4) if (d[i] > 200 && d[i + 1] < 140 && d[i + 2] < 140) n += 1;
+        return n;
+    }, cell);
+    const m0 = (await read()).set.map;
+    check(m0.unreachableReport === 'none' && json(m0.unreachable) === json([])
+        && (await page.textContent('#editSetMapUnreachable')) === '',
+    '⛓ **CLAIM 19f** — before any REPORT the maze map marks NOTHING and the legend is empty',
+    `${m0.unreachableReport} ${json(m0.unreachable)}`);
+    const inkNone = await unreachInk(m0.cells[3]);
+    // the map's own DISCONNECT tool: two clicks on the link between rooms 1 and 2
+    const clickMapAt = async (x, y) => {
+        const r = await page.evaluate(([px, py]) => {
+            const c = document.getElementById('editSetOverview');
+            const wrap = c.parentNode;
+            wrap.scrollIntoView({ block: 'center' });
+            wrap.scrollLeft = Math.max(0, px - wrap.clientWidth / 2);
+            wrap.scrollTop = Math.max(0, py - wrap.clientHeight / 2);
+            const b = c.getBoundingClientRect();
+            return { left: b.left, top: b.top, sx: b.width / c.width, sy: b.height / c.height };
+        }, [x, y]);
+        await page.mouse.click(r.left + x * r.sx, r.top + y * r.sy);
+    };
+    const midOf = (cells, a, b) => [
+        cells[a][0] + cells[a][2] / 2 + ((cells[b][0] + cells[b][2] / 2) - (cells[a][0] + cells[a][2] / 2)) * 0.5,
+        cells[a][1] + cells[a][3] / 2 + ((cells[b][1] + cells[b][3] / 2) - (cells[a][1] + cells[a][3] / 2)) * 0.5,
+    ];
+    await page.focus('#editSetOverview');
+    await page.keyboard.press('d');
+    await clickMapAt(...midOf(m0.cells, 1, 2));
+    await settled(() => window.__mazeLab?.set?.map?.picked !== null, 'the DISCONNECT pick on the map');
+    await clickMapAt(...midOf(m0.cells, 1, 2));
+    await settled(() => window.__mazeLab?.set?.links === 2, 'the map\'s DISCONNECT (second click)');
+    await page.keyboard.press('Escape');
+    await page.click('#editSetReport');
+    await settled(() => window.__mazeLab?.set?.map?.unreachableReport === 'current', 'REPORT over the cut chain');
+    const m1 = (await read()).set.map;
+    const legend1 = await page.textContent('#editSetMapUnreachable');
+    const inkMarked = await unreachInk(m1.cells[3]);
+    const inkReached = await unreachInk(m1.cells[0]);
+    check(json(m1.unreachable) === json([2, 3]) && m1.unreachableMarks.every((m) => m.partial === false)
+        && /UNREACHABLE.*room\(s\) 2, 3/.test(legend1),
+    '⛓⛓⛓ **CLAIM 19f — REPORT MARKS THE ROOMS IT FINDS UNREACHABLE** — the map\'s own DISCONNECT cut the chain '
+        + 'between rooms 1 and 2, and REPORT\'s rooms 2 and 3 are the marked ones, with the legend naming them',
+    `${json(m1.unreachable)} · ${legend1.slice(0, 120)}`);
+    check(inkMarked > inkNone + 50 && inkReached === 0,
+        '⛓⛓ …and the marks are INK on the canvas: red in room 3\'s cell (none before), none in reachable room 0',
+        `room 3 red px ${inkNone} → ${inkMarked}; room 0 ${inkReached}`);
+    await page.focus('#editSetOverview');
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.set?.links === 3
+        && window.__mazeLab.set.map?.unreachableReport === 'stale', 'the UNDO to make the REPORT stale');
+    const m2 = (await read()).set.map;
+    check(json(m2.unreachable) === json([]) && (await unreachInk(m2.cells[3])) === 0
+        && /changed since the last REPORT/.test(await page.textContent('#editSetMapUnreachable')),
+    '⛓⛓ **CLAIM 19f — AN EDIT MAKES THE MARKS STALE** — after the undo (which reconnects) nothing is marked and '
+        + 'the legend says to run REPORT again', m2.unreachableReport);
+    await page.click('#editSetReport');
+    await settled(() => window.__mazeLab?.set?.map?.unreachableReport === 'current', 'REPORT over the whole chain');
+    const m3 = (await read()).set.map;
+    check(json(m3.unreachable) === json([]) && (await unreachInk(m3.cells[3])) === 0
+        && /no unreachable room/.test(await page.textContent('#editSetMapUnreachable')),
+    '⛓⛓ **CLAIM 19f — RECONNECTED, REPORT MARKS NOTHING** — the chain closes and the legend says so',
+    `${m3.unreachableReport} ${json(m3.unreachable)}`);
+
     /* ── CLAIM 19e: ADD ROOM, and the one authority on a size ────────── */
     /**
      * ⛓⛓⛓ **CLAIM 19e — THE MAZE ARM MINTS A BLANK ROOM** (EDITOR v3 E6b).
