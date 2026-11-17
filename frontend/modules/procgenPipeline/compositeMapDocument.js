@@ -32,6 +32,7 @@
 import { Grid, DEFAULT_REGION_SIZE } from './procgenPipelineEngine.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
+import { cellExtent, drawnBox, isSignedCell } from '../procgenCore/cellExtent.js';
 
 /**
  * ⛓⛓⛓ **THE CELL SIZE, AND WHERE IT COMES FROM** (PRESET SIDECARS M0).
@@ -124,34 +125,83 @@ function cellSizeFor(entries) {
  * extents exactly. A malformed `grid_dims` (not
  * two positive whole numbers) is ignored.
  *
+ * ⛓⛓ UNBOUNDED GRID S1 — **SIGNED CELLS.** A `grid_cell` may be negative (⚖ user
+ * 2026-11-16, Q1: signed storage, the start room at (0,0)). The box is
+ * `procgenCore/cellExtent.drawnBox`: the cells' extent, widened to the origin
+ * cell — the slot's `procgen_metadata[p].grid_origin` when it declares one,
+ * else (0,0) — and to `grid_dims` anchored at that origin. It returns its
+ * top-left as `minX`/`minY`. For every committed document (all cells ≥ 0, no
+ * `grid_origin`) `minX = minY = 0` and `width`/`height` are what they were.
+ *
  * @param {object} rulesJson the whole document
  * @param {Array<[string, object]>} entries the slot's sidecar entries
  * @param {string|number} playerId the slot `entries` belong to
- * @returns {{width: number, height: number, boundsSource: 'extents'|'grid_dims'}|null}
- *   null when no entry carries a `grid_cell`.
+ * @returns {{minX: number, minY: number, width: number, height: number,
+ *   boundsSource: 'extents'|'grid_dims'}|null}
+ *   null when no entry carries a usable `grid_cell`.
  */
 export function mapBoundsFor(rulesJson, entries, playerId) {
-    let maxGx = -1;
-    let maxGy = -1;
-    for (const [, sc] of entries) {
-        const cell = sc?.grid_cell;
-        if (cell) {
-            if (cell.gx > maxGx) maxGx = cell.gx;
-            if (cell.gy > maxGy) maxGy = cell.gy;
-        }
-    }
-    if (maxGx < 0) return null;
-    const dims = rulesJson?.procgen_metadata?.[String(playerId)]?.grid_dims;
+    const extent = cellExtent(entries.map(([, sc]) => sc?.grid_cell));
+    if (!extent) return null;
+    const meta = rulesJson?.procgen_metadata?.[String(playerId)];
+    const dims = meta?.grid_dims;
     const usable = (n) => Number.isInteger(n) && n > 0;
-    const dimsW = usable(dims?.width) ? dims.width : 0;
-    const dimsH = usable(dims?.height) ? dims.height : 0;
-    const width = Math.max(maxGx + 1, dimsW);
-    const height = Math.max(maxGy + 1, dimsH);
+    const declared = usable(dims?.width) && usable(dims?.height)
+        ? { width: dims.width, height: dims.height }
+        // ⛓ one usable axis still bounds that axis (the rule before S1 read each
+        //   axis on its own); the other is the extent's.
+        : (usable(dims?.width) || usable(dims?.height)
+            ? { width: usable(dims?.width) ? dims.width : 1, height: usable(dims?.height) ? dims.height : 1 }
+            : null);
+    const origin = isSignedCell(meta?.grid_origin) ? meta.grid_origin : null;
+    const fromCells = drawnBox(extent, null, origin);
+    const box = drawnBox(extent, declared, origin);
     return {
-        width,
-        height,
-        boundsSource: width > maxGx + 1 || height > maxGy + 1 ? 'grid_dims' : 'extents',
+        minX: box.minX,
+        minY: box.minY,
+        width: box.width,
+        height: box.height,
+        boundsSource: box.width > fromCells.width || box.height > fromCells.height ? 'grid_dims' : 'extents',
     };
+}
+
+/**
+ * ⛓⛓ **THE S1 BRIDGE GRID** (unbounded grid S1; ⛔ S2 replaces it). An engine
+ * `Grid` whose box starts at `(minX, minY)` instead of (0,0): cells are stored
+ * and returned SIGNED, exactly as the document spells them, and `isInBounds`
+ * (hence `placeRegion`, `relocateRegions`, `neighborCell`) tests the box
+ * `[minX, minX + width) × [minY, minY + height)`. Readers find the origin as
+ * `grid.minX` / `grid.minY` (`procgenCore/cellExtent.gridOriginOf`), which is the
+ * spelling S2's `Grid` takes, so nothing that reads it changes when S2 lands.
+ *
+ * Why a subclass and not cells shifted into a min-0 `Grid`: a shifted grid hands
+ * every reader coordinates that are not the document's — `getRegion` with a
+ * clicked cell, the editor's moves, the in-app rows that compare
+ * `grid.allRegions()` cells with `grid_cell` — and each would need the shift
+ * undone by hand. Here only the PIXEL mapping knows the origin.
+ *
+ * @param {{minX?: number, minY?: number, width: number, height: number}} box
+ * @returns {Grid}
+ */
+export function gridForBox(box) {
+    const minX = Number.isInteger(box?.minX) ? box.minX : 0;
+    const minY = Number.isInteger(box?.minY) ? box.minY : 0;
+    if (minX === 0 && minY === 0) return new Grid({ width: box.width, height: box.height });
+    return new OriginGrid({ width: box.width, height: box.height, minX, minY });
+}
+
+/** The bridge itself; see `gridForBox`. Not exported: S2 deletes it. */
+class OriginGrid extends Grid {
+    constructor({ width, height, minX, minY }) {
+        super({ width, height });
+        this.minX = minX;
+        this.minY = minY;
+    }
+
+    isInBounds(cell) {
+        return cell.gx >= this.minX && cell.gx < this.minX + this.width
+            && cell.gy >= this.minY && cell.gy < this.minY + this.height;
+    }
 }
 
 /**
@@ -203,8 +253,10 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null, fall
     // ⛓ M2 — the grid's size in cells: `mapBoundsFor`, the rule a move shares.
     //   (No `grid_cell` at all ⇒ nothing is placed below ⇒ null; the 1×1 grid
     //   that branch builds is never returned.)
-    const bounds = mapBoundsFor(rulesJson, regionEntries, playerKey) ?? { width: 1, height: 1, boundsSource: 'extents' };
-    const grid = new Grid({ width: bounds.width, height: bounds.height });
+    //   ⛓ S1: the box may start below (0,0) — `gridForBox` keeps the cells signed.
+    const bounds = mapBoundsFor(rulesJson, regionEntries, playerKey)
+        ?? { minX: 0, minY: 0, width: 1, height: 1, boundsSource: 'extents' };
+    const grid = gridForBox(bounds);
     let placed = 0;
     let teleporters = 0;
     // ⛓ C1 — the regions whose payload their own substrate REFUSED, each with
@@ -212,7 +264,7 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null, fall
     //   returned so the surface that draws the map can say which and why.
     const refused = [];
     for (const [region_id, sc] of regionEntries) {
-        if (!sc?.grid_cell) continue;
+        if (!isSignedCell(sc?.grid_cell)) continue;
         // ⛓ H3b: the `?? 'maze'` that used to end this line is GONE.
         // MEASURED 2026-09-05 over all 205 committed rules.json: 1,360 of 1,360
         // sidecar entries carry `substrate`, so the fallback never fired — and
@@ -268,6 +320,9 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null, fall
         regionSizeSource,
         // ⛓ M2 — WHICH rule sized the grid ('extents' | 'grid_dims').
         boundsSource: bounds.boundsSource,
+        // ⛓ S1 — the grid's top-left cell (`grid.minX`/`grid.minY` say the same):
+        //   (0,0) for every committed document; negative for a signed one.
+        gridOrigin: { gx: bounds.minX, gy: bounds.minY },
         stats: {
             regionsBuilt: placed,
             regionsSkipped: refused.length,

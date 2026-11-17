@@ -58,8 +58,9 @@ import {
 // with it to `mazeRoom/mazeCompositeMap.js`.
 import {
     TILE_PX, drawCompositeMap, resolveExitTilePositions, substrateArtToggle,
-    canvasPointOf, cellAtPoint,
+    canvasPointOf, cellAtPoint, cellOriginPx,
 } from '../procgenCore/compositeMapRenderer.js';
+import { gridOriginOf } from '../procgenCore/cellExtent.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -3676,6 +3677,10 @@ export class ProcgenPipelineUI {
         // to a canvas click without re-deriving TILE_PX.
         canvas.dataset.gridW = String(grid.width);
         canvas.dataset.gridH = String(grid.height);
+        // ⛓ unbounded grid S1: the grid's top-left CELL (signed; 0 for every grid
+        //   today). Canvas column c is cell `gridMinX + c` — the scripts' scans read it.
+        canvas.dataset.gridMinX = String(gridOriginOf(grid).minX);
+        canvas.dataset.gridMinY = String(gridOriginOf(grid).minY);
         canvas.dataset.cellW = String(regionSize.width * TILE_PX);
         canvas.dataset.cellH = String(regionSize.height * TILE_PX);
         // ⛓ region-map step 1 (D4) — the old/new switch (in memory, per panel): off draws every region whose
@@ -3812,10 +3817,10 @@ export class ProcgenPipelineUI {
     _mapClickMoveExit(canvas, grid, regionSize, evt, cell) {
         const px = this._canvasPx(canvas, evt);
         if (!px) return;
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        const wx = px.cx - cell.gx * cellW;
-        const wy = px.cy - cell.gy * cellH;
+        // ⛓ S1: the cell is signed; its pixel corner is the renderer's mapping.
+        const o = cellOriginPx(grid, regionSize, cell);
+        const wx = px.cx - o.x;
+        const wy = px.cy - o.y;
 
         if (!this._mapSel || this._mapSel.kind !== 'exit') {
             const region = grid.getRegion(cell);
