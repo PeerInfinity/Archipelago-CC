@@ -1,0 +1,4 @@
+survey-seedling-route.mjs --through=end, OFF vs SEEDLING_HIT_AWARE_ANSWER=1 (code at the step-3 head)
+OFF {'SOLVED': 224, 'REFUSED': 26} ON {'SOLVED': 224, 'REFUSED': 26}
+steps 250 movers (verdict, ticks, replay hits, deaths) 0 [] steps gaining a hit []
+note: the survey solves each step in place with one search (no solveAnytime), so betterAnswer is never asked
