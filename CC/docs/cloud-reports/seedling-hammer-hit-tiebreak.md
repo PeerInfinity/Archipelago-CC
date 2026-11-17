@@ -9,7 +9,7 @@ the scope is the brief's.
 | | |
 |---|---|
 | Start SHA | `94d5e1be2722a2f2d7f3bff3026329076bb394a7` (`hammer-harvest-wave6`: main at train 136 + wave 6 + FADE-MOVE; not pushed to) |
-| Commits | step 1 measure `6adfe5ee` · step 2 switch `f67c5197` (the code head) · step 3 rows `f9334abd` · evidence `2a19b365`, `71c58807`, `115416d0` · this report (last) |
+| Commits | step 1 measure `6adfe5ee` · step 2 switch `f67c5197` (the code head) · step 3 rows `f9334abd` · evidence `2a19b365`, `71c58807`, `115416d0` · report `bee62ddb` · this one-line report fix (last; its message carries the Cloud trailers) |
 | Branch | `seedling-hammer-hit-tiebreak` |
 | Switch | `jsRuntimeSolver.HIT_AWARE_ANSWER`: `SEEDLING_HIT_AWARE_ANSWER=1`, `withHitAwareAnswer(enabled, fn)`, `HIT_AWARE_ANSWER_DEFAULT = false`, listed in `SOLVER_ENV_NAMES` |
 | Thread | `betterAnswer` runs inside `solveAnytime`. That is the page's **solve worker** (and node). No main-thread mapper reads the switch, so `pageSolverEnvSwitchOn` is not needed: the worker env channel is the whole page wiring. Measured: the page rows for `?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=1` carry `modelHits` on their pass rows (§6) |
