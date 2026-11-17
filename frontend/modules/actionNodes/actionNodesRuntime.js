@@ -247,9 +247,18 @@ export class ActionNodesRuntime {
         }
         this.held = held;
         if (this.applied === null) {
-            this.applied = new Map(held);
-            this._startLoop('baseline');
-            return;
+            // ⛓ A BASELINE THAT ARRIVES LATE (found by AN-3a's an-node-card row). Nothing guarantees a snapshot between
+            // a load and the first performance: when the first one comes with a check's own item, restarting the loop
+            // here wiped the loop's counts mid-loop and swallowed the item's boost. So the baseline restarts the loop
+            // only while nothing has been performed; after that, the loop began with nothing applied, and what is held
+            // now was received during it (A4: at once).
+            const progressed = this.counts.some((c, i) => i !== this.model.startIndex && c > 0);
+            if (!progressed) {
+                this.applied = new Map(held);
+                this._startLoop('baseline');
+                return;
+            }
+            this.applied = new Map();
         }
         const delta = { stats: {}, resources: {} };
         let mana = 0;
