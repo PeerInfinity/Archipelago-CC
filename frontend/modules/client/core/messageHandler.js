@@ -42,6 +42,7 @@ import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
 import { applyServerItemGroups, itemNameGroupsKey, readServerItemGroups } from './serverItemGroups.js';
 import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
+import { deriveUpstreamGoal, markGoalEvent, completesWithGoal } from './upstreamGoal.js';
 
 /** "gameKey/folder, …" for a few preset candidates (the console names them). */
 function describePresetFolders(presets, max = 3) {
@@ -180,6 +181,13 @@ export class MessageHandler {
     this._slotReleased = false;
     // What the server has delivered on this connection: item name -> count.
     this._serverItems = new Map();
+    // Counts connections (each _handleConnected), so a goal check is tied to the one it happened on.
+    this._connectionSeq = 0;
+    // The add-on goal (upstreamGoal.js): { goal, doc, slot, seedName } when the add-on's
+    // rules loaded with a derivable goal. It is honoured only while THAT document is the
+    // loaded one, for that room seed and slot (_upstreamGoalFor): a same-seed reconnect
+    // keeps the loaded rules, and so keeps it; any other load replaces the document.
+    this._upstreamGoal = null;
   }
 
   // Add method to inject eventBus
@@ -867,6 +875,7 @@ export class MessageHandler {
     this._slotReleased = false;
     this._invalidGameRetried = false;
     this._serverItems.clear();
+    this._connectionSeq += 1;
 
     // Get stateManager
     const stateManager = await this._getStateManager();
@@ -1116,11 +1125,18 @@ export class MessageHandler {
           return;
         }
         this._applyServerItemGroups(build, data, rules);
+        this._upstreamGoal = null;
+        const addonGoal = this._prepareUpstreamGoal(build, data, rules);
         const playerName = this.slotInfo?.[String(data.slot)]?.name ?? this.clientSlotName;
         const sourceName = `server:${this.roomInfo?.seed_name ?? 'seedless'}:P${data.slot}`;
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
         if (this._serverBuild !== build) return; // a reconnect superseded this build
         if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
+        if (addonGoal) {
+          this._upstreamGoal = {
+            goal: addonGoal, doc: rules, slot: String(data.slot), seedName: this.roomInfo?.seed_name ?? null,
+          };
+        }
         if (build.mode === 'overlay') {
           this._printToConsole(
             `Loaded ${build.overlaySource === 'server' ? 'the server-sent' : 'the local'} ${build.game} rules ` +
@@ -1563,10 +1579,106 @@ export class MessageHandler {
     });
   }
 
+  /**
+   * An add-on slot's goal (upstreamGoal.js), before its rules load: derive the one goal
+   * location and mark it `event_kind: 'goal'` (never auto-collected) in `rules`, the
+   * client's own overlay copy. Only for rules the server sent from the host's Upstream
+   * Rules Add-on; anything else returns null and is left as it is.
+   */
+  _prepareUpstreamGoal(build, connected, rules) {
+    if (build.mode !== 'overlay' || build.overlaySource !== 'server') return null;
+    if (build.overlayFrom !== UPSTREAM_RULES_ADDON_SOURCE) return null;
+    const slot = String(connected.slot);
+    const derived = deriveUpstreamGoal(rules, slot);
+    if (derived.goal && markGoalEvent(rules, slot, derived.goal)) {
+      log('info', `[MessageHandler] Add-on goal for slot ${slot}: "${derived.goal.location}" (${derived.goal.item}).`);
+      return derived.goal;
+    }
+    const why = derived.reason ?? 'its goal location was not found';
+    this._printToConsole(
+      `This client won't tell the server when ${build.game} is finished (${why}). Its own game client reports the goal.`,
+      'info'
+    );
+    return null;
+  }
+
+  /**
+   * The add-on goal record when `locationName` is its goal location AND its document is
+   * still the loaded one, for this room's seed and this slot; else null.
+   */
+  _upstreamGoalFor(locationName) {
+    const record = this._upstreamGoal;
+    if (!record || record.goal.location !== locationName) return null;
+    if (getLastRawJsonData?.()?.rawJsonData !== record.doc) return null;
+    if (String(this.clientSlot) !== record.slot) return null;
+    if (!record.seedName || !isSameSeed(record.seedName, this.roomInfo?.seed_name)) return null;
+    return record;
+  }
+
+  _goalStatus(name) {
+    return stateManagerProxySingleton.getLatestStateSnapshot?.()?.locationReachability?.[name] ?? null;
+  }
+
+  /**
+   * After a local check of an ID-less location went up to the state manager: when it is
+   * the add-on goal, it was NOT checked before (`before`), and the state manager now
+   * records it checked, note that THIS connection checked it, and report if complete.
+   * Whoever sent the check (design-upstream-goal-report; ⚖ Robert 2026-11-17).
+   */
+  async _noteUpstreamGoalCheck(locationName, before) {
+    const record = this._upstreamGoalFor(locationName);
+    if (!record || before === 'checked') return;
+    if (!(await this._waitForLocalCheck(locationName))) return;
+    if (this._upstreamGoalFor(locationName) !== record || !connection.isConnected()) return;
+    record.checkedOnConnection = this._connectionSeq;
+    if (!this._reportUpstreamGoalIfMet()) {
+      this._printToConsole(
+        `"${locationName}" is checked. The goal is sent once the items the server has sent you complete it.`,
+        'info'
+      );
+    }
+  }
+
+  /**
+   * Reports the add-on goal when this connection checked the goal location and the
+   * server-delivered items complete the goal with it (and not without it). Also run on
+   * every ReceivedItems, so items that arrive after the check still finish the game.
+   * @returns {boolean} whether the goal was sent now
+   */
+  _reportUpstreamGoalIfMet() {
+    const record = this._upstreamGoal;
+    if (!record || record.checkedOnConnection !== this._connectionSeq) return false;
+    if (this._upstreamGoalFor(record.goal.location) !== record) return false;
+    if (this._goalStatus(record.goal.location) !== 'checked') return false;
+    if (!completesWithGoal(record.goal, this._serverItems, record.slot)) return false;
+    if (!this.reportGoal()) return false;
+    const slotName = this.slotInfo?.[record.slot]?.name ?? this.clientSlotName ?? `slot ${record.slot}`;
+    this._printToConsole(
+      `Goal sent: you finished at "${record.goal.location}". The server now marks ${slotName} as done.`,
+      'success'
+    );
+    return true;
+  }
+
+  /** Whether the state manager records `name` as checked, within a short wait (its own guard ran). */
+  async _waitForLocalCheck(name, { tries = 20, intervalMs = 100 } = {}) {
+    for (let i = 0; i < tries; i += 1) {
+      try {
+        await stateManagerProxySingleton.pingWorker?.('client:upstreamGoal');
+      } catch {
+        // keep the last snapshot
+      }
+      if (this._goalStatus(name) === 'checked') return true;
+      await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    }
+    return false;
+  }
+
   /** Reports the goal once the server's items satisfy the slot's completion condition (see goalCheck.js). */
   _reportGoalIfMet() {
     const game = this.slotInfo?.[String(this.clientSlot)]?.game ?? this.clientGameName;
     if (goalMet(getLastRawJsonData?.()?.rawJsonData, this.clientSlot, game, this._serverItems)) this.reportGoal();
+    else this._reportUpstreamGoalIfMet();
   }
 
   _logDebug(message, ...args) {
@@ -2394,7 +2506,11 @@ export async function handleUserLocationCheckForClient(
         // judges it (sdc-connected-events). The server never echoes it, so nothing collects it twice.
         log('info', `[MessageHandler] "${eventData.locationName}" has no server ID; checking it locally.`);
         if (dispatcher) {
+          // The add-on goal (upstreamGoal.js) is one of these: note whether it was checked before.
+          const isGoal = messageHandlerSingleton._upstreamGoalFor(eventData.locationName) !== null;
+          const before = isGoal ? messageHandlerSingleton._goalStatus(eventData.locationName) : null;
           dispatcher.publishToNextModule(MODULE_NAME, eventName, eventData, { direction: 'up' });
+          if (isGoal) await messageHandlerSingleton._noteUpstreamGoalCheck(eventData.locationName, before);
         } else {
           log('error', '[ClientModule/MessageHandler] Dispatcher not available for a local (ID-less) check.');
         }
