@@ -166,19 +166,21 @@ export function mapBoundsFor(rulesJson, entries, playerId) {
 }
 
 /**
- * ⛓⛓ **THE S1 BRIDGE GRID** (unbounded grid S1; ⛔ S2 replaces it). An engine
- * `Grid` whose box starts at `(minX, minY)` instead of (0,0): cells are stored
- * and returned SIGNED, exactly as the document spells them, and `isInBounds`
- * (hence `placeRegion`, `relocateRegions`, `neighborCell`) tests the box
- * `[minX, minX + width) × [minY, minY + height)`. Readers find the origin as
- * `grid.minX` / `grid.minY` (`procgenCore/cellExtent.gridOriginOf`), which is the
- * spelling S2's `Grid` takes, so nothing that reads it changes when S2 lands.
+ * ⛓⛓ **THE GRID A DOCUMENT'S CELLS ARE PLACED ON** — an engine `Grid` whose box
+ * is `box`: `[minX, minX + width) × [minY, minY + height)` (`mapBoundsFor`'s
+ * shape). Cells are stored and returned SIGNED, exactly as the document spells
+ * them; readers find the origin as `grid.minX` / `grid.minY`
+ * (`procgenCore/cellExtent.gridOriginOf`). A box at (0,0) — every committed
+ * document — is the min-0 `Grid` it always was.
  *
- * Why a subclass and not cells shifted into a min-0 `Grid`: a shifted grid hands
- * every reader coordinates that are not the document's — `getRegion` with a
- * clicked cell, the editor's moves, the in-app rows that compare
- * `grid.allRegions()` cells with `grid_cell` — and each would need the shift
- * undone by hand. Here only the PIXEL mapping knows the origin.
+ * ⛓ S1 built this as a module-private `OriginGrid` subclass (the bridge); S2
+ * gave the engine `Grid` its own origin with the same spelling and deleted it.
+ *
+ * Why not cells shifted into a min-0 `Grid`: a shifted grid hands every reader
+ * coordinates that are not the document's — `getRegion` with a clicked cell, the
+ * editor's moves, the in-app rows that compare `grid.allRegions()` cells with
+ * `grid_cell` — and each would need the shift undone by hand. Here only the
+ * PIXEL mapping knows the origin.
  *
  * @param {{minX?: number, minY?: number, width: number, height: number}} box
  * @returns {Grid}
@@ -186,22 +188,7 @@ export function mapBoundsFor(rulesJson, entries, playerId) {
 export function gridForBox(box) {
     const minX = Number.isInteger(box?.minX) ? box.minX : 0;
     const minY = Number.isInteger(box?.minY) ? box.minY : 0;
-    if (minX === 0 && minY === 0) return new Grid({ width: box.width, height: box.height });
-    return new OriginGrid({ width: box.width, height: box.height, minX, minY });
-}
-
-/** The bridge itself; see `gridForBox`. Not exported: S2 deletes it. */
-class OriginGrid extends Grid {
-    constructor({ width, height, minX, minY }) {
-        super({ width, height });
-        this.minX = minX;
-        this.minY = minY;
-    }
-
-    isInBounds(cell) {
-        return cell.gx >= this.minX && cell.gx < this.minX + this.width
-            && cell.gy >= this.minY && cell.gy < this.minY + this.height;
-    }
+    return new Grid({ width: box.width, height: box.height, minX, minY });
 }
 
 /**
