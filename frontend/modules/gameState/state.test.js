@@ -161,6 +161,46 @@ describe('GameState — loop-mode resource API', () => {
     });
   });
 
+  describe('per-item starting mana (ActionNodes: each item\'s boost, default the flat term)', () => {
+    const INV = { 'Strength Boost': 1, 'Pocket Money': 2, Other: 1 };
+    const flatOf = (inv) => gs.defaultMaxMana
+      + Object.values(inv).reduce((a, n) => a + n, 0) * gs.getManaPerItem();
+
+    it('⛔ PIN: with no table (every non-ActionNodes world) maxMana is the flat count × manaPerItem, unchanged', () => {
+      expect(gs.getPerItemManaTable()).toBeNull();
+      gs.recalculateMaxMana({ inventory: INV });
+      expect(gs.getMaxMana()).toBe(flatOf(INV));
+    });
+
+    it('a table gives each item its own mana; an item with no row takes the default', () => {
+      gs.setPerItemManaTable({ 'Strength Boost': 0, 'Pocket Money': 3 }, 7);
+      gs.recalculateMaxMana({ inventory: INV });
+      expect(gs.getMaxMana()).toBe(gs.defaultMaxMana + 0 * 1 + 3 * 2 + 7 * 1);
+    });
+
+    it('every row at the default agrees with the flat term exactly', () => {
+      const per = gs.getManaPerItem();
+      gs.setPerItemManaTable(Object.fromEntries(Object.keys(INV).map((k) => [k, per])), per);
+      gs.recalculateMaxMana({ inventory: INV });
+      expect(gs.getMaxMana()).toBe(flatOf(INV));
+    });
+
+    it('setting and clearing the table recompute at once from the cached inventory', () => {
+      gs.recalculateMaxMana({ inventory: INV });
+      gs.setPerItemManaTable({ 'Strength Boost': 0, 'Pocket Money': 0, Other: 0 });
+      expect(gs.getMaxMana()).toBe(gs.defaultMaxMana);
+      gs.setPerItemManaTable(null);
+      expect(gs.getMaxMana()).toBe(flatOf(INV));
+    });
+
+    it('the includePerItemMaxMana toggle still governs the whole item term', () => {
+      gs.setPerItemManaTable({ 'Pocket Money': 5 });
+      gs.recalculateMaxMana({ inventory: INV });
+      gs.setIncludePerItemMaxMana(false);
+      expect(gs.getMaxMana()).toBe(gs.defaultMaxMana);
+    });
+  });
+
   describe('region XP', () => {
     it('initializes XP data on first access', () => {
       const data = gs.getRegionXP('Forest');

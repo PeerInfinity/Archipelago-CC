@@ -280,6 +280,10 @@
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
       "enabled": true
     },
+    "actionNodes": {
+      "path": "./modules/actionNodes/index.js",
+      "enabled": true
+    },
     "jtaSubstrateWrapper": {
       "path": "./modules/jtaSubstrateWrapper/index.js",
       "enabled": true
@@ -400,6 +404,7 @@
     "procgenLabPanel",
     "substrateRegistryPanel",
     "textAdventureSubstrateWrapper",
+    "actionNodes",
     "jtaSubstrateWrapper",
     "omsiSubstrateWrapper",
     "flashSubstrate",

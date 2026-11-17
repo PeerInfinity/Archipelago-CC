@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "`getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them",
     "columns": [
         {
-            "fields": 12,
+            "fields": 14,
             "id": "action_nodes",
             "label": "Action Nodes",
             "registeredBy": "frontend/modules/actionNodes/actionNodesLibrary.js"
@@ -137,6 +137,8 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "loopSupport",
+                "loopSupport.actionGate",
+                "loopSupport.authoredCosts",
                 "loopSupport.botActsAtOnce",
                 "loopSupport.customQueues",
                 "loopSupport.executeVia",
@@ -157,7 +159,9 @@ export const REGISTRY = frz({
             "rows": [
                 "sharing.items",
                 "sharing.mana",
-                "sharing.mana.loopActionDelegation"
+                "sharing.mana.loopActionDelegation",
+                "sharing.resources",
+                "sharing.stats"
             ],
             "title": "Cross-substrate sharing"
         },
@@ -5472,6 +5476,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -5485,10 +5490,15 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "4 keys",
+                    "type": "object",
+                    "value": [
+                        "actionGate",
+                        "authoredCosts",
+                        "manual",
+                        "queueActions"
+                    ]
                 },
                 {
                     "id": "bounce",
@@ -5632,6 +5642,166 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Loop mode",
             "name": "loopSupport"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.actionGate"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.authoredCosts"
         },
         {
             "carriedBy": [
@@ -5976,6 +6146,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -5989,10 +6160,10 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "no",
+                    "type": "boolean",
+                    "value": false
                 },
                 {
                     "id": "bounce",
@@ -6233,6 +6404,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -6246,10 +6418,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "regionMove, act",
+                    "type": "array",
+                    "value": [
+                        "regionMove",
+                        "act"
+                    ]
                 },
                 {
                     "id": "bounce",
@@ -8386,6 +8561,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "jta",
                 "maze",
                 "omsi",
@@ -8394,10 +8570,15 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{items, mana, resources, stats}",
+                    "type": "object",
+                    "value": [
+                        "items",
+                        "mana",
+                        "resources",
+                        "stats"
+                    ]
                 },
                 {
                     "id": "bounce",
@@ -8479,16 +8660,19 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "jta",
                 "omsi"
             ],
             "cells": [
                 {
                     "id": "action_nodes",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{getTypes}",
+                    "type": "object",
+                    "value": [
+                        "getTypes"
+                    ]
                 },
                 {
                     "id": "bounce",
@@ -8564,6 +8748,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes",
                 "jta",
                 "maze",
                 "omsi",
@@ -8572,10 +8757,10 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{}",
+                    "type": "object",
+                    "value": []
                 },
                 {
                     "id": "bounce",
@@ -8726,6 +8911,170 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Cross-substrate sharing",
             "name": "sharing.mana.loopActionDelegation"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{getTypes}",
+                    "type": "object",
+                    "value": [
+                        "getTypes"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Cross-substrate sharing",
+            "name": "sharing.resources"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "{getTypes}",
+                    "type": "object",
+                    "value": [
+                        "getTypes"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Cross-substrate sharing",
+            "name": "sharing.stats"
         },
         {
             "carriedBy": [

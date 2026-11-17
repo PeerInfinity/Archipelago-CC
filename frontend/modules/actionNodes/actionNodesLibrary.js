@@ -1,22 +1,30 @@
 /**
- * Substrate registry entry for **ActionNodes** (`action_nodes`) — the DATA HALF (slice AN-1).
+ * Substrate registry entry for **ActionNodes** (`action_nodes`) — the data half (slice AN-1) and the runtime half
+ * (slice AN-2: `loopSupport`, `sharing`).
  *
  * One region is one node, one node is one task: a time cost in mana, stat and resource minimums, results, a limit
  * per loop (design `action-nodes.md`). A world is compiled from a graph document by `actionGraphCompiler.js`, not
  * grown by a layout driver, so this entry declares no build-time hooks.
  *
- * ⛓ WHAT THIS ENTRY DOES NOT DECLARE YET, AND WHY. A declaration is a capability claim that the capability matrix and
- * the Loops panel read. This slice has no runtime, so it declares nothing that needs one:
- *   - `loopSupport` (the `act` verb, its start gate `actionGate`) and `sharing` (mana, plus the two new `stats` and
- *     `resources` categories, which the registry's validator in the `shared` submodule does not know yet): slice 2,
- *     with the runtime, the Loops verb and the ledger.
+ * ⛓ WHAT THIS ENTRY DECLARES (AN-2), each backed by `actionNodesRuntime.js`:
+ *   - `loopSupport`: the queue verbs `regionMove` and `act`; `actionGate`, the start gate Loops asks before an entry
+ *     starts; `authoredCosts`, so a cost pass (the pipeline's, the Loops panel's Generate Costs) copies the
+ *     compiler's `loop_costs` entries instead of re-pricing them. NOT `manual`: a Manual block parks the queue for
+ *     live play, and in Loop mode this substrate's panel QUEUES an `act` (every performance is a queue entry), so a
+ *     park would wait for nothing. NOT `record` / `playback`: the strict action gate's pair; the start gate does
+ *     that job. NOT `executeVia` / `botActsAtOnce`: they need the playback controller (slice 3).
+ *   - `sharing`: `mana` (outside Loop mode the runtime charges the shared pool itself), `items` (its resources, so a
+ *     cross-substrate grant lands in the ledger), `stats` and `resources` (the host ledger keeps them), each list read
+ *     from the loaded world.
+ *
+ * ⛓ WHAT IT DOES NOT DECLARE YET:
  *   - `getPlaybackController`, `regionClick`, `loopBot.planLoop`: slice 3, with click-to-play and the live bot.
  *   - `compositeMap.layoutGraph`: with the Region Map panel's click step (the panel is not on main).
  *   - `rulesJsonBlocks`: the `action_nodes[p]` block is graph-dependent and written by the compiler, which is the
  *     only producer; no pipeline driver realises an ActionNodes region.
- * The panel named by `panelComponentType` is slice 2's.
+ * The panel named by `panelComponentType` is `actionNodesPanel.js`.
  *
- * Node-importable: no DOM, no panel import.
+ * Node-importable: no DOM, no panel import (the runtime is pure).
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -24,7 +32,8 @@ import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { envelopeExitNames, REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { ACTION_NODE_KINDS } from './actionGraph.js';
-import { ACTION_NODES_SUBSTRATE_ID } from './actionGraphCompiler.js';
+import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
+import { getActionNodesRuntime } from './actionNodesRuntime.js';
 
 const NAMED_AMOUNTS = Object.freeze({
     type: 'object',
@@ -134,6 +143,18 @@ export const substrateRegistryEntry = Object.freeze({
     // A node has no tiles: an exit is only an `after` edge.
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
+    loopSupport: Object.freeze({
+        queueActions: Object.freeze(['regionMove', ACT_ACTION]),
+        manual: false,
+        authoredCosts: true,
+        actionGate: (action) => getActionNodesRuntime().gate(action),
+    }),
+    sharing: Object.freeze({
+        mana: Object.freeze({}),
+        items: Object.freeze({ getTypes: () => getActionNodesRuntime().resourceIds() }),
+        stats: Object.freeze({ getTypes: () => getActionNodesRuntime().statIds() }),
+        resources: Object.freeze({ getTypes: () => getActionNodesRuntime().resourceIds() }),
+    }),
 });
 
 if (!substrateRegistry.has(substrateRegistryEntry.id)) {

@@ -6,6 +6,36 @@
     "_comment": "Substrate in-app tests (text-adventure wrapper + flash + cloudberry + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes). A row's \"batch\" field is the smoke-row override (frontend/modules/tests/testBatches.js): it keeps ONE row of a manual batch on push; delete the line to drop it.",
     "tests": [
         {
+            "id": "an-load-and-act-once",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-refused-action-stops-queue",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-results-reach-ledger",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-loop-reset-restores-boosts",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-check-once-action-repeats",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-explore-unchanged",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
