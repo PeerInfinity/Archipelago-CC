@@ -1,0 +1,17 @@
+DEPTH 1 {"alive":6,"best":{"s":72.5,"at":[183.5,103.4],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 2 {"alive":15,"best":{"s":72.46,"at":[179.4,103.2],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 3 {"alive":26,"best":{"s":48.56,"at":[191.4,95.9],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 4 {"alive":51,"best":{"s":48.44,"at":[180.3,91.1],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 5 {"alive":81,"best":{"s":48.4,"at":[176,89.4],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 6 {"alive":91,"best":{"s":32.35,"at":[170.7,88.8],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 7 {"alive":87,"best":{"s":32.38,"at":[173.4,92.8],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 8 {"alive":90,"best":{"s":32.37,"at":[173.3,88.4],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 9 {"alive":83,"best":{"s":32.37,"at":[173.3,88.8],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 10 {"alive":89,"best":{"s":32.33,"at":[169,87],"ch":["lavarunner@96,32(104,40)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 11 {"alive":90,"best":{"s":32.28,"at":[164.3,90.9],"ch":["lavarunner@96,32(105,41)","lavarunner@56,120(64,128)","lavarunner@112,136(179,134)"]}}
+DEPTH 12 {"alive":86,"best":{"s":16.24,"at":[159.5,92.9],"ch":["lavarunner@96,32(107,43)","lavarunner@56,120(64,128)","lavarunner@112,136(178,134)"]}}
+DEPTH 13 {"alive":91,"best":{"s":16.19,"at":[154.5,93.5],"ch":["lavarunner@96,32(109,45)","lavarunner@56,120(64,128)","lavarunner@112,136(177,134)"]}}
+DEPTH 14 {"alive":96,"best":{"s":16.15,"at":[149.4,93.8],"ch":["lavarunner@96,32(111,47)","lavarunner@56,120(64,128)","lavarunner@112,136(176,134)"]}}
+DEPTH 15 {"alive":78,"best":{"s":16.09,"at":[144.6,89.5],"ch":["lavarunner@96,32(114,50)","lavarunner@56,120(64,128)","lavarunner@112,136(174,134)"]}}
+DEPTH 16 {"alive":45,"best":{"s":16.1,"at":[145.2,92.8],"ch":["lavarunner@96,32(117,53)","lavarunner@56,120(64,128)","lavarunner@112,136(172,134)"]}}
+BEAM {"boot":[78,256,16],"goal":[128,80,null],"items":["hasSpear"],"width":48,"seg":4,"depth":200,"tried":10493,"survivors":1105,"verdict":"MODEL ROUTE","ticks":64,"bestHitFree":{"tiles":1,"at":[144.6,89.5],"ticks":60,"ch":["lavarunner@96,32(114,50)","lavarunner@56,120(64,128)","lavarunner@112,136(174,134)"]},"ms":66196}

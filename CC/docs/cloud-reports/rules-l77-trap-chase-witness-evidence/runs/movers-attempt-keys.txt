@@ -1,0 +1,15 @@
+L73-72to74-suit right+up
+L73-74to72-suit down
+L74-73to75 left+down
+L74-75to73 right+down
+L75-71to74 left+up
+L78-77to79-suit left
+L78-79to77-suit right
+L80-71to79-suit-g0 left+down
+L80-71to79-suit-g1 left+down
+L80-79to71-suit up
+L88-12to87-g0 left+up
+L88-12to87-g1 right+up
+L88-87to12-b0 right+down
+L88-87to12-b1 left+down
+L91-92to89 left+down

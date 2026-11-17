@@ -1,0 +1,2 @@
+L73-74to72-suit-wide DEPTH 236 {"alive":117,"best":{"s":193.08,"at":[56.6,45],"ch":["bulb@80,80(71,70)","lavarunner@32,24(48,40)"]}}
+L73-72to74-suit-wide DEPTH 248 {"alive":109,"best":{"s":96.59,"at":[29.8,49.6],"ch":["lavarunner@32,24(31,42)"]}}

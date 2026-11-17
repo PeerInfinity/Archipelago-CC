@@ -1,0 +1,24 @@
+DEPTH 1 {"alive":9,"best":{"s":482.68,"at":[291.5,140.5],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(216,104)"]}}
+DEPTH 2 {"alive":16,"best":{"s":466.78,"at":[300.6,127.4],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(216,104)"]}}
+DEPTH 3 {"alive":31,"best":{"s":466.67,"at":[290,126.5],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(220,105)"]}}
+DEPTH 4 {"alive":67,"best":{"s":450.63,"at":[285.5,124.9],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(227,106)"]}}
+DEPTH 5 {"alive":108,"best":{"s":450.58,"at":[280.7,124.9],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(232,106)"]}}
+DEPTH 6 {"alive":61,"best":{"s":450.54,"at":[276.1,121.2],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(236,108)"]}}
+DEPTH 7 {"alive":68,"best":{"s":450.51,"at":[273.7,123.1],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(241,109)"]}}
+DEPTH 8 {"alive":61,"best":{"s":434.47,"at":[269.1,124.8],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(243,110)"]}}
+DEPTH 9 {"alive":74,"best":{"s":434.42,"at":[264.4,125.5],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(246,112)"]}}
+DEPTH 10 {"alive":63,"best":{"s":434.37,"at":[259.6,125.8],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(248,114)"]}}
+DEPTH 11 {"alive":70,"best":{"s":434.35,"at":[256.3,118.9],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(251,110)"]}}
+DEPTH 12 {"alive":81,"best":{"s":418.31,"at":[252.9,123.6],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(252,112)"]}}
+DEPTH 13 {"alive":62,"best":{"s":418.25,"at":[248.1,126.9],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(252,116)"]}}
+DEPTH 14 {"alive":47,"best":{"s":418.25,"at":[247.3,127.1],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(253,117)"]}}
+DEPTH 15 {"alive":38,"best":{"s":418.22,"at":[244.8,127.1],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(248,118)"]}}
+DEPTH 16 {"alive":16,"best":{"s":418.25,"at":[247.9,126.7],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(248,119)"]}}
+DEPTH 17 {"alive":20,"best":{"s":434.42,"at":[264.5,123.6],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(255,117)"]}}
+DEPTH 18 {"alive":21,"best":{"s":434.47,"at":[269.2,126.9],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(260,119)"]}}
+DEPTH 19 {"alive":24,"best":{"s":450.51,"at":[273.9,124.8],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(264,120)"]}}
+DEPTH 20 {"alive":19,"best":{"s":450.56,"at":[278.8,125],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(269,121)"]}}
+DEPTH 21 {"alive":12,"best":{"s":450.59,"at":[281.9,124.4],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(273,121)"]}}
+DEPTH 22 {"alive":3,"best":{"s":450.65,"at":[287.9,125],"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(277,122)"]}}
+DEPTH 23 {"alive":0,"best":null}
+BEAM {"boot":[74,288,128],"goal":[16,144,75],"items":[],"width":32,"seg":4,"depth":150,"tried":5004,"survivors":971,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":26,"at":[244.8,127.1],"ticks":60,"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,120)","lavarunner@208,96(248,118)"]},"ms":9678}

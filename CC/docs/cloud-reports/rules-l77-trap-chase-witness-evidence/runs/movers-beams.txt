@@ -1,0 +1,8 @@
+L26-25to27 BEAM {"boot":[26,128,32],"goal":[64,304,27],"items":[],"width":32,"seg":4,"depth":150,"tried":18846,"survivors":5235,"verdict":"MODEL ROUTE","ticks":280,"bestHitFree":{"tiles":1,"at":[72,302.5],"ticks":280,"ch":["puncher@32,208(70,251)","puncher@80,168(75,232)
+L74-73to75 BEAM {"boot":[74,288,128],"goal":[16,144,75],"items":[],"width":32,"seg":4,"depth":150,"tried":5004,"survivors":971,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":26,"at":[244.8,127.1],"ticks":60,"ch":["lavarunner@24,56(32,64)","bulb@48,112(56,
+L78-79to77-suit BEAM {"boot":[78,32,16],"goal":[256,0,77],"items":["hasDarkSuit"],"width":32,"seg":4,"depth":150,"tried":5355,"survivors":697,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":12,"at":[71.2,9.1],"ticks":56,"ch":["lavarunner@192,144(200,152)","lava
+Terminated
+CC/docs/cloud-reports/rules-l77-trap-chase-witness-evidence/tools/runMovers.sh: line 17: syntax error near unexpected token `('
+CC/docs/cloud-reports/rules-l77-trap-chase-witness-evidence/tools/runMovers.sh: line 17: `    r=json.loads(l)'
+L73-72to74-suit BEAM {"boot":[73,32,128],"goal":[64,0,74],"items":["hasDarkSuit"],"width":32,"seg":4,"depth":150,"tried":42588,"survivors":6277,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":5,"at":[17.1,44.8],"ticks":116,"ch":["bulb@80,80(53,86)","lavarunner@
+L80-79to71-suit BEAM {"boot":[80,40,288],"goal":[32,0,71],"items":["hasDarkSuit"],"width":32,"seg":4,"depth":150,"tried":42606,"survivors":6238,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":21,"at":[43.6,246.5],"ticks":52,"ch":["lavarunner@80,32(88,40)","lava
