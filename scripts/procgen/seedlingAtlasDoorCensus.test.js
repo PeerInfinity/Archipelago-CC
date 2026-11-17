@@ -129,8 +129,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   (the west pocket wakes one lavarunner of three), so its two-way internal row splits. No door or sub-region moves.
         // ⛓ rules-nohit-wand-crosscheck: the Wand joins L22 south-to-north's arms (game witness l22-25-21-wand); one internal
         //   row's rule widens, no exit or door moves; atlas 88e3788c -> df2a42ee.
-        // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers.
-        expect(c.atlasId).toBe('seedling-2ac275e8');
+        // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers
+        //   (2ac275e8 -> 77a4c0ea; one internal row's rule widens, no exit or door moves).
+        expect(c.atlasId).toBe('seedling-77a4c0ea');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

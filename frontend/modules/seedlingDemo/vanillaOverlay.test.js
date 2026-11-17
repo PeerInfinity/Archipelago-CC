@@ -458,8 +458,9 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             //   and the pocket's latch return (internal exits only; atlas id 88e3788c -> 2ac275e8). No name, exit or location moves.
             // ⛓ rules-nohit-wand-crosscheck (e53ce517 -> 7443e728): the Wand joins L22 south-to-north's no-hit arms (one
             //   internal row's Or gains Wand); atlas id 88e3788c -> df2a42ee.
-            // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers.
-            .toBe('28dc5dc7b2eccf756d5d59fed66a9bf9');
+            // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers
+            //   (28dc5dc7 -> 5f47a836; atlas id 2ac275e8 -> 77a4c0ea).
+            .toBe('5f47a836c0a0843d13547b1cbeb7093f');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
