@@ -226,6 +226,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
                     'L48 flag 1: bosslock@48,144 cleared', 'L53 flag 2: lock@144,208 cleared',
                     'L58 flag 1: yeti@56,56 cleared', 'L63 flag 6: lightpole@48,272 cleared',
                     'L63 flag 7: lightpole@112,272 cleared', 'L65 flag 0: lightpole@128,168 cleared', 'L68 flag 0: bosslock@16,32 cleared', 'L71 flag 2: shieldlock@288,256 cleared',
+                    // ⛓ rules-l99-sided-killlock: L99's kill-lock event, earned on the lower floor (behind its weapon-gated arrivals)
+                    'L99 flag 0: lock@80,96 cleared',
                     'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire',
                     'Level 032 - Bob Boss', 'Level 032 - Times', 'Level 039 - Totem Part 72,40', 'Level 040 - Boss Key 2', 'Level 040 - Chest',
                     'Level 040 - Totem Part 160,640', 'Level 040 - Totem Part 64,144', 'Level 041 - Totem Part 240,144',

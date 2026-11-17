@@ -1,0 +1,23 @@
+SOURCE: er — shuffled atlas seedling-6da8374a over rooms seedling-2ac275e8, 48 departure(s) moved, in 18014 ms
+BUILT: 115 levels, 267 regions, 2037580 B in 13904 ms
+ARM new: 1 problems (derived-true/atlas-false 1, derived-false/atlas-true 0, other 0) / 16 accepted / 0 threw; 100 row(s) skip unadmitted landing points; clean 114/115 levels; 766 lines; wall 51888 ms
+  PROBLEM[new] level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false
+  ACCEPTED[new] {"label":"level_0__r2c13 → level_0__r1c6","source":"level_0__r2c13","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r0c9","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
+  ACCEPTED[new] {"label":"level_39__r25c9 → level_39__r2c11","source":"level_39__r25c9","by":"L39 flag 8: wandlock@144,592 cleared"}
+  ACCEPTED[new] {"label":"level_57 @ Level 057 - Tentacled Beast","source":"level_57","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r10c2","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r5c14","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Ghost Spear"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"Progressive Swim"}
+  ACCEPTED[new] {"label":"level_63__r6c9 → level_63__r6c15","source":"level_63__r6c9","by":"no AP crossing into level_63__r6c9 from outside its world admits this arrival"}
+  ACCEPTED[new] {"label":"level_82 @ Level 082 - King of Fire","source":"level_82","by":"Dark Suit"}
+PASS: arm new measured
+PASS: the ER arm matches scripts/procgen/seedling-er-whole-game-certify-expected.json (1 / 16 / 0)
+ALL CHECKS PASSED
