@@ -1,0 +1,185 @@
+/home/user/Archipelago-CC/ModuleUpdate.py:77: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources  # noqa: F401
+Archipelago (0.6.8) logging initialized on Linux-6.18.44-fc-v553-x86_64-with-glibc2.39 process 22950 running Python 3.13.18
+Weights: /home/user/Archipelago-CC/Players/Templates/Seedling Playthrough.yaml >> Default Seedling Playthrough Template
+Generating for 1 player, 01043188731678011336 Seed 2 with plando: connections, texts, bosses
+Auto-installing monkey patch hooks
+Installed hook: temp_dir_capture
+Installed hook: slot_data_cache
+Installed hook: sphere_logging
+Installed hook: export_rules (to_file wrapper + main fallback)
+Could not load world WorldSource(zillion, is_zip=False, relative=True):
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/worlds/__init__.py", line 59, in load
+    importlib.import_module(f".{Path(self.path).stem}", "worlds")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1404, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1369, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1340, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1027, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/user/Archipelago-CC/worlds/zillion/__init__.py", line 14, in <module>
+    from .gen_data import GenData
+  File "/home/user/Archipelago-CC/worlds/zillion/gen_data.py", line 4, in <module>
+    from zilliandomizer.game import Game as ZzGame
+ModuleNotFoundError: No module named 'zilliandomizer'
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/worlds/__init__.py", line 59, in load
+    importlib.import_module(f".{Path(self.path).stem}", "worlds")
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1404, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1369, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1340, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1027, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/user/Archipelago-CC/worlds/zillion/__init__.py", line 14, in <module>
+    from .gen_data import GenData
+  File "/home/user/Archipelago-CC/worlds/zillion/gen_data.py", line 4, in <module>
+    from zilliandomizer.game import Game as ZzGame
+ModuleNotFoundError: No module named 'zilliandomizer'
+Patched fill_slot_data on 100 world subclasses
+Archipelago Version 0.6.8  -  Seed: 2
+
+Found 115 World Types:
+ Adventure                               : v0.0.0  | Items:   15 | Locations:    24
+ A Hat in Time                           : v0.0.0  | Items:   58 | Locations:   480
+ A Link to the Past                      : v5.1.0  | Items:  146 | Locations:   286
+ A Link to the Past Vanilla WorldGen     : v1.0.0  | Items:  146 | Locations:   217
+ A Link to the Past WorldGen             : v1.0.0  | Items:  146 | Locations:   250
+ APCalc                                  : v0.0.0  | Items:   16 | Locations:   501
+ APQuest                                 : v2.0.0  | Items:    7 | Locations:     7
+ APQuest ServerData                      : v2.0.0  | Items:    7 | Locations:     7
+ Aquaria                                 : v0.0.0  | Items:  135 | Locations:   219
+ Baking Adventure                        : v1.0.0  | Items:   16 | Locations:    16
+ Baking Adventure Vanilla WorldGen       : v1.0.0  | Items:   16 | Locations:    16
+ Baking Adventure WorldGen               : v1.0.0  | Items:   16 | Locations:    16
+ Blasphemous                             : v0.0.0  | Items:  204 | Locations:   306
+ Bomb Rush Cyberfunk                     : v1.0.6  | Items:  165 | Locations:   247
+ Bounce Demo WorldGen                    : v1.0.0  | Items:    6 | Locations:     6
+ Bumper Stickers                         : v1.0.0  | Items:   12 | Locations:   100
+ Choo-Choo Charles                       : v0.0.0  | Items:   43 | Locations:   691
+ Celeste 64                              : v1.3.1  | Items:   24 | Locations:    56
+ Celeste (Open World)                    : v1.0.7  | Items:  177 | Locations:  1215
+ ChecksFinder                            : v0.0.0  | Items:    3 | Locations:    25
+ Civilization VI                         : v0.0.0  | Items:  167 | Locations:   278
+ Cloudberry Double Jump WorldGen         : v1.0.0  | Items:    4 | Locations:     4
+ Cloudberry Hero Physics WorldGen        : v1.0.0  | Items:    4 | Locations:     4
+ Cloudberry Maze Mix WorldGen            : v1.0.0  | Items:    5 | Locations:     5
+ Cloudberry Sphere WorldGen              : v1.0.0  | Items:    4 | Locations:     4
+ Coding Adventure                        : v1.0.0  | Items:   52 | Locations:    62
+ Coding Adventure Vanilla WorldGen       : v1.0.0  | Items:   52 | Locations:    62
+ Coding Adventure WorldGen               : v1.0.0  | Items:   52 | Locations:    62
+ Castlevania 64                          : v0.0.0  | Items:   36 | Locations:   352
+ Castlevania - Circle of the Moon        : v0.0.0  | Items:   31 | Locations:   125
+ Dark Souls III                          : v0.0.0  | Items: 1204 | Locations:  1506
+ DepGraph                                : v1.0.0  | Items: 1000 | Locations:  1000
+ DepGraph WorldGen                       : v1.0.0  | Items: 1000 | Locations:    61
+ DLCQuest                                : v0.0.0  | Items:   51 | Locations: 18913
+ DOOM 1993                               : v0.0.0  | Items:  195 | Locations:   474
+ DOOM II                                 : v0.0.0  | Items:  178 | Locations:   479
+ EarthBound                              : v4.3.1  | Items:  274 | Locations:   526
+ Factorio                                : v0.0.0  | Items:  233 | Locations:  7176
+ Faxanadu                                : v0.0.0  | Items:   30 | Locations:   110
+ Final Fantasy                           : v1.0.0  | Items:  194 | Locations:   267
+ Final Fantasy Mystic Quest              : v0.0.0  | Items:   67 | Locations:   266
+ Heretic                                 : v0.0.0  | Items:  269 | Locations:  1014
+ Hero Core                               : v0.0.0  | Items:  163 | Locations:   229
+ Hollow Knight                           : v0.0.0  | Items:  249 | Locations:   740
+ Hylics 2                                : v0.0.0  | Items:   70 | Locations:   166
+ Inscryption                             : v0.0.0  | Items:   42 | Locations:   100
+ Jak and Daxter: The Precursor Legacy    : v1.1.5  | Items:   75 | Locations:  4239
+ Journey to Ascension                    : v0.0.0  | Items:   57 | Locations:    42
+ Kirby's Dream Land 3                    : v0.0.0  | Items:   24 | Locations:   876
+ Kingdom Hearts                          : v0.0.0  | Items:  215 | Locations:   714
+ Kingdom Hearts 2                        : v2.0.0  | Items:  293 | Locations:   724
+ Links Awakening DX                      : v2.0.2  | Items:  118 | Locations:   255
+ Landstalker - The Treasures of King Nole: v1.8.7  | Items:   62 | Locations:   292
+ Lingo                                   : v5.0.0  | Items:  276 | Locations:   872
+ Lufia II Ancient Cave                   : v0.0.0  | Items:  415 | Locations:   123
+ Super Mario Land 2                      : v0.0.0  | Items: 2725 | Locations:  2657
+ Meritous                                : v1.0.0  | Items:   23 | Locations:   104
+ The Messenger                           : v0.0.0  | Items:   64 | Locations:   136
+ Metamath                                : v1.0.0  | Items:  100 | Locations:   100
+ Metamath WorldGen                       : v1.0.0  | Items:  100 | Locations:     9
+ Mario & Luigi Superstar Saga            : v1.10.2 | Items:  146 | Locations:   600
+ Mega Man 2                              : v0.3.3  | Items:   23 | Locations:    71
+ Mega Man 3                              : v0.1.8  | Items:   27 | Locations:   170
+ MegaMan Battle Network 3                : v0.0.0  | Items:  224 | Locations:   263
+ Muse Dash                               : v1.5.33 | Items:  737 | Locations:  1444
+ Noita                                   : v1.4.0  | Items:   32 | Locations:   672
+ Ocarina of Time                         : v7.0.0  | Items:  143 | Locations:  1623
+ Old School Runescape                    : v0.0.0  | Items:   86 | Locations:   169
+ Overcooked! 2                           : v0.0.0  | Items:   45 | Locations:    43
+ Paint                                   : v0.5.2  | Items:   27 | Locations:   380
+ Pokemon Emerald                         : v2.5.0  | Items:  291 | Locations:  1338
+ Pokemon Red and Blue                    : v0.0.0  | Items:  207 | Locations:   709
+ Procgen Maze WorldGen                   : v1.0.0  | Items:    2 | Locations:     3
+ Raft                                    : v0.0.0  | Items:  325 | Locations:   154
+ Risk of Rain 2                          : v1.5.0  | Items:   59 | Locations:  1262
+ Sonic Adventure 2 Battle                : v2.4.2  | Items:  182 | Locations:  2555
+ Satisfactory                            : v2.2.0  | Items:  805 | Locations:   706
+ Saving Princess                         : v1.0.0  | Items:   20 | Locations:    36
+ Starcraft 2                             : v4.0.0  | Items: 1716 | Locations:  3668
+ Seedling                                : v0.0.0  | Items:   19 | Locations:    47
+ Seedling Playthrough                    : v1.0.0  | Items:   20 | Locations:    48
+ shapez                                  : v0.0.0  | Items:   67 | Locations:  3543
+ Shivers                                 : v2.7.5  | Items:   76 | Locations:   117
+ A Short Hike                            : v0.0.0  | Items:   37 | Locations:   131
+ Super Metroid                           : v0.0.0  | Items:   24 | Locations:   101
+ Super Mario 64                          : v0.0.0  | Items:   40 | Locations:   164
+ Super Mario World                       : v2.1.1  | Items:   29 | Locations:   765
+ SMZ3                                    : v0.0.0  | Items:  151 | Locations:   316
+ Secret of Evermore                      : v0.50.1 | Items:  165 | Locations:   913
+ Stardew Valley                          : v7.4.0  | Items: 1060 | Locations:  4051
+ Subnautica                              : v0.0.0  | Items:  104 | Locations:   181
+ Terraria                                : v0.0.0  | Items:  188 | Locations:   159
+ Timespinner                             : v1.38.0 | Items:  202 | Locations:   748
+ The Legend of Zelda                     : v1.0.0  | Items:   33 | Locations:   155
+ TOEM original                           : v1.0.0  | Items:  137 | Locations:   253
+ TOEM original WorldGen                  : v1.0.0  | Items:  138 | Locations:   157
+ TOEM rule builder                       : v1.0.0  | Items:  137 | Locations:   253
+ TOEM rule builder WorldGen              : v1.0.0  | Items:  138 | Locations:   157
+ TUNIC                                   : v4.2.7  | Items:  182 | Locations:  6860
+ The Wind Waker                          : v0.0.0  | Items:  152 | Locations:   313
+ Undertale                               : v0.0.0  | Items:   85 | Locations:   122
+ VVVVVV                                  : v0.0.0  | Items:   20 | Locations:    20
+ Wargroove                               : v1.0.0  | Items:   31 | Locations:    38
+ The Witness                             : v8.0.0  | Items:  271 | Locations:  1004
+ Yacht Dice                              : v2.1.4  | Items:   47 | Locations:  1000
+ Yoshi's Island                          : v1.0.0  | Items:   69 | Locations:   235
+ Yu-Gi-Oh! 2006                          : v0.0.0  | Items:  172 | Locations:   165
+
+Creating MultiWorld.
+Creating Items.
+Calculating Access Rules.
+Running Item Plando.
+Running Pre Main Fill.
+Filling the multiworld with 48 items.
+Progression balancing skipped.
+Beginning output...
+Discovered 44 game export handlers
+Generating output files (2/2).
+Calculating playthrough.
+Attempting to open spoiler log file for sphere data at: /home/user/Archipelago-CC/output/AP_01043188731678011336_sphere_log.jsonl
+Spoiler sphere log will be written to: /home/user/Archipelago-CC/output/AP_01043188731678011336_sphere_log.jsonl
+Closed spoiler log file: /home/user/Archipelago-CC/output/AP_01043188731678011336_sphere_log.jsonl
+Successfully wrote rules to /home/user/Archipelago-CC/output/AP_01043188731678011336_rules.json (0.86 MB)
+Found world directory 'seedling_playthrough' for game 'Seedling Playthrough' in world-mapping.json
+Detected single game world (Seedling Playthrough), using 'seedling_playthrough' preset folder.
+Updating preset directory: /home/user/Archipelago-CC/frontend/presets/seedling_playthrough/AP_01043188731678011336
+Created new preset directory: /home/user/Archipelago-CC/frontend/presets/seedling_playthrough/AP_01043188731678011336
+Copied 4 files to preset directory /home/user/Archipelago-CC/frontend/presets/seedling_playthrough/AP_01043188731678011336
+Updated preset_files.json with 4 files for seedling_playthrough/AP_01043188731678011336
+Creating final archive at /home/user/Archipelago-CC/output/AP_01043188731678011336.zip
+Done. Enjoy. Total Time: 0.9961381279990746
+gen rc=0
+ M frontend/presets/preset_files.json
+?? frontend/presets/seedling_playthrough/AP_01043188731678011336/
