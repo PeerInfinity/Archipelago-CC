@@ -2143,6 +2143,28 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     owlContactInStep: false,
+    /**
+     * fidelity TURRETSUIT D2 (wave 50) — A TURRET'S BODY CONTACT AT ITS AS3 SLOT, AND ITS "Suit" RETALIATION.
+     * `Turret.update` calls `super.update()` FIRST (`Enemies/Turret.as:47`) → `Enemy.update` → `hitUpdate()` and
+     * `hitPlayer()` (`Enemies/Enemy.as:106-111`; `p.hit(this, 3, new Point(x, y), damage)` behind `!destroy &&
+     * currentAnim != "die" && hitsTimer <= 0`, `:211-221`), and only THEN the "die" return (`Turret.as:48-51`) and the
+     * fire gate `else if (hitsTimer <= 0)` (`:64`). Under the suit `Player.hit` calls `e.hit(1, new Point(x, y), 1,
+     * "Suit")` (`Player.as:1384-1387`); `Turret` has no `hit` override, so it is `Enemy.hit` (`Enemy.as:141-181`):
+     * `hits += 1`, `hitsTimer = 30`, the `hitByDarkStuff` latch, and at `hitsMax` `startDeath` = `play("die")`
+     * (`Turret.as:91-95`; `knockback` is empty, `:86-89`). The model billed the turret's contact in the static scan
+     * (`STATIC_SWORD_ARM`'s relabel), BELOW `stepShootersNow`, so the fire gate and the "die" return had already read
+     * the pre-hit row: wave 46 (DARKSUITSTATIC) left Turret undeclared and refused for that reason. ON: `stepShootersNow`
+     * calls the caller's `onHitPlayer` at the top of each turret's turn (after `stepStaticBodiesNow`'s `hitUpdate`, as
+     * `Enemy.update` orders it); `levelRun` bills the contact there with `retaliate` declared (`turretSuitHit`:
+     * `enemyHit` on F4's row; a third hit stages "die" as the sword arm does, plus its graphic step on the blow's tick),
+     * so the fire gate reads `hitsTimer` 30 and a dying turret returns (a shot in the barrel is replaced). The static
+     * scan skips the turret (it was billed in its slot), with or without the suit; a freeze that starts later in the
+     * same tick (a pickup, a dialogue: their updates run BEFORE the turret's in the game) is refused by name.
+     * Composes with `darkSuitStaticRetaliation`: ON here declares the Turret whatever that key says (that key's Turret
+     * arm is never reached); OFF here leaves wave 46's refusal exactly as it was. OFF: byte-identical.
+     * `SEEDLING_TURRET_SUIT_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    turretSuitRetaliation: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2561,6 +2583,9 @@ if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '0') CONTAC
 // ⛓ fidelity OWLSUIT D2: `SEEDLING_OWL_CONTACT_IN_STEP=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '1') CONTACT_FIDELITY.owlContactInStep = true;
 if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '0') CONTACT_FIDELITY.owlContactInStep = false;
+// ⛓ fidelity TURRETSUIT D2: `SEEDLING_TURRET_SUIT_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TURRET_SUIT_RETALIATION === '1') CONTACT_FIDELITY.turretSuitRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_TURRET_SUIT_RETALIATION === '0') CONTACT_FIDELITY.turretSuitRetaliation = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

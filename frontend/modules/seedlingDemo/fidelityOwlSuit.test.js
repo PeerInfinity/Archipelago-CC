@@ -64,10 +64,12 @@ const ROCK = { ticks: 60, keysAt: holdAfter(30, ['up', 'right'], 26), peek: [57,
 
 describe('OWLSUIT — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_OWL_CONTACT_IN_STEP)(
-        'ships OFF, appended last, with a worker env name', () => {
+        'ships OFF, appended after darkSuitBossRetaliation, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ wave 50: TURRETSUIT `turretSuitRetaliation` was appended after this key.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['turretSuitRetaliation']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_OWL_CONTACT_IN_STEP');
         });
 });

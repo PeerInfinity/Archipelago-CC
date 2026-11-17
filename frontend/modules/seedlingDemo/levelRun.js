@@ -3464,6 +3464,12 @@ export function createLevelRun({
      */
     let pendingDeath = null;
     /**
+     * ⛓ fidelity TURRETSUIT D2 (`CONTACT_FIDELITY.turretSuitRetaliation`, ON only): the tick a turret's contact was
+     * answered in its own slot (`turretHitPlayerNow`), until the static scan of that tick is reached. A frozen return
+     * between the two (`runFrozenTick`) finds it set and refuses by name. OFF it is never written.
+     */
+    let turretSlotContact = null;
+    /**
      * The `Game` constructor args of the CURRENT world — what
      * `restartLevel()` reboots into.
      *
@@ -12415,6 +12421,8 @@ export function createLevelRun({
      * instead of a walk that silently took no damage.
      */
     function stepContactsNow() {
+        // ⛓ fidelity TURRETSUIT D2 (ON only): the scan is reached, so no freeze followed a slot contact.
+        if (turretSlotContact !== null) turretSlotContact = null;
         if (noclip || noDamage) return;
         const census = world.combat?.enemies;
         if (!census) return;
@@ -12423,6 +12431,8 @@ export function createLevelRun({
             const rect = contactRect(inst);
             if (!rect || !rectsOverlap(rect, box)) continue;
             const id = `${inst.tag}@${inst.x},${inst.y}`;
+            // ⛓ fidelity TURRETSUIT D2 (ON only): a turret's contact was answered in its own slot this tick.
+            if (turretContactInSlot(inst, id)) continue;
             const pricing = contactPricing(inst.tag);
             // ⛓⛓ R6 SLICE 4: a `boss` is priced IN ITS OWN STEP, above.
             // The census rect here is its `.oel` placement and the descent
@@ -12637,6 +12647,95 @@ export function createLevelRun({
             // The blow is inside the trap's own `update()`, so its graphic advances on this tick too.
             if (stepSpriteAnim(sb.dieAnim)) {
                 throw new Error(`levelRun: ${sb.id}'s "die" ended on its first step — not a SandTrap anim.`);
+            }
+        }
+        return {
+            id, as3: sb.as3, landed: verdict.landed, hits: sb.hits, hitsTimer: sb.hitsTimer,
+            hitByDarkStuff: sb.hitByDarkStuff,
+            ...(verdict.killed ? { killed: true } : {}),
+            ...(verdict.landed ? {} : { why: verdict.refusedAt }),
+        };
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY TURRETSUIT D2 — **A TURRET'S `hitPlayer`, IN ITS OWN TURN**
+     * (`CONTACT_FIDELITY.turretSuitRetaliation`, OFF; with `STATIC_SWORD_ARM` ON, whose relabel prices it).
+     *
+     *     Turret.as:47       super.update();          → Enemy.update: hitUpdate(); hitPlayer();   (Enemy.as:106-111)
+     *     Turret.as:48-51    if (freezeObjects || destroy || currentAnim == "die") return;
+     *     Turret.as:64       else if (hitsTimer <= 0) { shootTimer = 40; play("startshot"); }
+     *
+     * The static scan's gates and bill, asked here instead (`stepShootersNow`'s `onHitPlayer`): the box against the
+     * player as the previous tick left it, `enemyHitPlayerFires` on F4's row (whose `hitUpdate` ran above, in
+     * `stepStaticBodiesNow`), then `applyPlayerHit` with `retaliate` declared. A ceremony tick never reaches the scan
+     * (and `Player.hit` is freeze-gated), so it is skipped here too.
+     */
+    function turretHitPlayerNow(id) {
+        if (noDamage || ceremony !== null) return;
+        const inst = (world.combat?.enemies ?? []).find((e) => e.as3 === 'Turret' && `${e.tag}@${e.x},${e.y}` === id);
+        if (!inst) return;
+        const rect = contactRect(inst);
+        if (!rect || !rectsOverlap(rect, playerBoxAt(state.x, state.y))) return;
+        turretSlotContact = { t: ticksCompleted + 1, id };
+        const live = staticBodyStates.get(level)?.get(id) ?? null;
+        const verdict = enemyHitPlayerFires(
+            live
+                ? { hitsTimer: live.hitsTimer, destroy: live.destroy === true, dieAnim: live.dying === true }
+                : { hitsTimer: 0, destroy: false, dieAnim: false },
+            onScreenNow(rect, id) ? 'on' : 'off',
+        );
+        if (!verdict.fires) {
+            contactsSuppressed.push({ t: ticksCompleted + 1, level, source: 'enemy', id, why: verdict.refusedAt });
+            return;
+        }
+        applyPlayerHit({
+            source: 'enemy',
+            id,
+            force: PLAYER_DAMAGE.contactForce,
+            damage: inst.row.damage,
+            from: { x: inst.cx, y: inst.cy },
+            retaliate: () => turretSuitHit(id),
+        });
+    }
+
+    /** ⛓ fidelity TURRETSUIT D2: the static scan's skip — this turret's contact was answered in `stepShootersNow`. */
+    function turretContactInSlot(inst, id) {
+        return CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled && inst.as3 === 'Turret'
+            && shooterStateFor(level).has(id);
+    }
+
+    /**
+     * `Enemy.hit(darkSuitForce, …, darkSuitDamage, "Suit")` on a Turret's F4 damage row (`Turret` has no `hit`
+     * override; its `knockback` is empty). A kill is `startDeath` = `play("die")` (`Turret.as:91-95`), staged as the
+     * sword arm stages it (no `destroy` at the blow, no tag, the kill-lock ledger) — and, because the blow lands INSIDE
+     * the turret's own `update()`, its graphic takes the blow tick's step too (`World.update`: `e.update()` then
+     * `e._graphic.update()`), which `stepStaticBodiesNow` has already passed this tick.
+     */
+    function turretSuitHit(id) {
+        const sb = staticBodyStateFor(level).get(id) ?? null;
+        if (!sb) {
+            throw new Error(`levelRun: the dark suit retaliates into ${id} at tick ${ticksCompleted + 1} in level `
+                + `${level}, which is not in the run's static body state.`);
+        }
+        const verdict = enemyHit(sb, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (verdict.killed) {
+            const spec = STATIC_SWORD_DEATH[sb.as3];
+            sb.destroy = false;
+            const census = world.combat?.enemies ?? [];
+            const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+            const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== sb.id
+                && !(staticBodyStateFor(level).get(`${e.tag}@${e.x},${e.y}`)?.dying))
+                .map((e) => ({ as3: e.as3 }));
+            const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+            if (!led.nil) {
+                throw new Error(`levelRun: the dark suit's retaliation at tick ${ticksCompleted + 1} KILLS ${sb.id}, `
+                    + `whose removal OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not `
+                    + 'staged. Refused by name (fidelity TURRETSUIT).');
+            }
+            sb.killedAt = ticksCompleted + 1;
+            sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+            if (stepSpriteAnim(sb.dieAnim)) {
+                throw new Error(`levelRun: ${sb.id}'s "die" ended on its first step — not a Turret anim.`);
             }
         }
         return {
@@ -14636,8 +14735,12 @@ export function createLevelRun({
      * the ice turrets and above the player, the LAST placed first. It reads
      * the player as the previous tick left it. A spit its `endAnim` adds is
      * deferred to the frame's end: it first updates on the next tick.
+     *
+     * ⛓ fidelity TURRETSUIT D2: `onHitPlayer(id)`, when the caller passes one, is `Enemy.update`'s `hitPlayer()` —
+     * called at the top of each turret's turn, BELOW `hitUpdate` (`stepStaticBodiesNow`) and ABOVE the "die" return
+     * and the fire gate (`Turret.as:47-64`), so both read what the contact wrote. Absent, no statement runs.
      */
-    function stepShootersNow() {
+    function stepShootersNow(onHitPlayer) {
         const st = shooterStateFor(level);
         if (st.size === 0) return;
         if (turretStateFor(level).size > 0) {
@@ -14646,6 +14749,7 @@ export function createLevelRun({
         }
         for (const id of [...st.keys()].reverse()) {
             const t = st.get(id);
+            if (onHitPlayer) onHitPlayer(id);
             /**
              * ⛓ hammer-phase C1 (`STATIC_SWORD_ARM` ON): the body's own damage state is F4's row, stepped above
              * (`stepStaticBodiesNow`: `hitUpdate` first, as `Enemy.update` runs it before the aim). A turret playing
@@ -15864,6 +15968,14 @@ export function createLevelRun({
      * @param {string} what       what raised the freeze, for the messages
      */
     const runFrozenTick = (activators, what) => {
+        // ⛓ fidelity TURRETSUIT D2 (ON only): a freeze that starts AFTER a turret's contact was answered in its slot.
+        if (turretSlotContact !== null && turretSlotContact.t === ticksCompleted + 1) {
+            throw new Error(`levelRun: ${turretSlotContact.id}'s contact was answered in its own slot at tick `
+                + `${turretSlotContact.t} in level ${level}, and the same tick then froze (${what}). A pickup's or a `
+                + 'dialogue\'s update runs BEFORE the turret\'s in the game (`Game.loadlevel` adds them after it, and '
+                + '`addUpdate` prepends), so `Player.hit`\'s `!Game.freezeObjects` would have refused it; that order is '
+                + 'not transcribed. Refused by name (fidelity TURRETSUIT).');
+        }
         // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS MODEL IS
         // CONCERNED, and a bridge does not know that. `Tile.render` keeps
         // running, so the game would open one EARLIER than the tick count
@@ -22434,7 +22546,11 @@ export function createLevelRun({
             // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
             // `Game.as:2272` adds them just before the `iceturret`
             // (`:2273`), and `addUpdate` prepends.
-            if (!noclip) stepShootersNow();
+            // ⛓ fidelity TURRETSUIT D2 (ON only): each turret's `hitPlayer`, in its own turn (`turretHitPlayerNow`).
+            if (!noclip) {
+                stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
+                    ? turretHitPlayerNow : undefined);
+            }
 
             // ── ⛓⛓⛓ R5 SLICE 22: `Player.update`'s `freezeStep()` ────
             //
