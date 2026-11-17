@@ -462,8 +462,8 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             //   internal row's Or gains Wand); atlas id 88e3788c -> df2a42ee.
             // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers
             //   (28dc5dc7 -> 5f47a836; atlas id 2ac275e8 -> 77a4c0ea).
-            // ⛓ land/rules-move-fireguard: the Fire guard re-merged onto train 140 (L22 Wand); re-recorded from the producers (5f47a836 -> PENDING).
-            .toBe('PENDING');
+            // ⛓ land/rules-move-fireguard: the Fire guard re-merged onto train 140 (L22 Wand); re-recorded from the producers (5f47a836 -> 9925cc35; atlas id 77a4c0ea -> 5ca88dfe).
+            .toBe('9925cc3528df60c9c7d3eabfa805ac4c');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

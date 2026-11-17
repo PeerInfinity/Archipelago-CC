@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 157,
-            "count": 209,
+            "browser": 158,
+            "count": 210,
             "id": "probe"
         },
         {
@@ -244,13 +244,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 534,
-        "browser": 227,
+        "blockStyle": 535,
+        "browser": 228,
         "cited": 290,
-        "files": 556,
+        "files": 557,
         "lineStyle": 22,
-        "withDocblock": 556,
-        "withFlags": 473
+        "withDocblock": 557,
+        "withFlags": 474
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -16561,6 +16561,81 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ladder2-phase — ⛓⛓⛓ SEEDLING FIDELITY LADDER2, D1: **WHEN DO A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER HIT A STANDING PLAYER, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-ladder2-phase.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "also",
+                "host",
+                "near",
+                "only",
+                "out",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-landing-contact.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "also"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "near"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "screen-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling LANDING CONTACT, THE GAME'S WAY (rules `rules-landing-contact-census`).",
+            "path": "scripts/procgen/probe-seedling-landing-contact.mjs"
         },
         {
             "argvHelpers": [
