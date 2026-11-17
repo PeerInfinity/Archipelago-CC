@@ -450,7 +450,7 @@ describe('(A) the join audit — `warp` is drawn but never joins', () => {
         }
     });
 
-    it('a `warp` never joins two groups and places nothing: turning a join into a warp only splits', () => {
+    it('a `warp` never joins two groups: turning a join into a warp only splits', () => {
         const g = {
             nodes: ['s', 'e', 'dungeon', 'd2'], start: 's',
             links: [{ from: 's', to: 'e', dir: 'E' }, { from: 'e', to: 'dungeon', kind: 'warp' }, { from: 'dungeon', to: 'd2', dir: 'N' }],
@@ -459,7 +459,7 @@ describe('(A) the join audit — `warp` is drawn but never joins', () => {
         const asJoin = { ...g, links: g.links.map((l) => (l.kind === 'warp' ? { from: l.from, to: l.to } : l)) };
         expect(groupsR1(asJoin)).toEqual([['s', 'e', 'dungeon', 'd2']]);
         const { groups, stats } = layoutGrouped(g);
-        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['dungeon', 'right']]);
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['dungeon', 'warp']]);
         expect(stats.vertical.links).toBe(0);
         // over random graphs: every warp-split grouping REFINES the all-join one (each group lies inside one join group)
         for (let s = 1; s <= 100; s++) {
@@ -468,5 +468,71 @@ describe('(A) the join audit — `warp` is drawn but never joins', () => {
             const coarse = new Map(groupsR1(base).flatMap((m, gi) => m.map((id) => [id, gi])));
             for (const m of groupsR1(warped)) expect(new Set(m.map((id) => coarse.get(id))).size, `seed ${s}`).toBe(1);
         }
+    });
+});
+
+describe('(ii) a warp-only group goes BESIDE its first warp predecessor (⚖ user 2026-11-17)', () => {
+    it('starts on the warping cell and slides clear by the shortest of right / left / down / up (ties in that order)', () => {
+        // s(0,0) ─E→ e(1,0) ⇢warp⇢ dungeon (d2 north of it). From e's cell: right 2, left 3, down 3, up 2 → right
+        const g = {
+            nodes: ['s', 'e', 'dungeon', 'd2'], start: 's',
+            links: [{ from: 's', to: 'e', dir: 'E' }, { from: 'e', to: 'dungeon', kind: 'warp' }, { from: 'dungeon', to: 'd2', dir: 'N' }],
+        };
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(positions.get('dungeon')).toEqual({ gx: 3, gy: 0 });
+        expect(positions.get('d2')).toEqual({ gx: 3, gy: -1 });
+        expect(groups[1].placedBy).toBe('warp');
+        // a 2×2-box start group, warping from n1 (0,1): right 3, left 2, down 2, up 3 → LEFT (before down on a tie)
+        const tall = {
+            nodes: ['s', 'n1', 'e', 'house'], start: 's',
+            links: [{ from: 's', to: 'n1', dir: 'S' }, { from: 's', to: 'e', dir: 'E' }, { from: 'n1', to: 'house', kind: 'warp' }],
+        };
+        const t = layoutGrouped(tall, { gap: 1 });
+        expect(t.positions.get('n1')).toEqual({ gx: 0, gy: 1 });
+        expect(t.positions.get('house')).toEqual({ gx: -2, gy: 1 });
+    });
+
+    it('the FIRST warp predecessor is the placed group placed earliest; a chain of warp-only groups waits in turn', () => {
+        // b is warped into from the start's group AND from c (placed later, below): b sits beside the start's group
+        const g = {
+            nodes: ['s', 'c', 'b', 'b2'], start: 's',
+            links: [{ from: 's', to: 'c', kind: 'down' }, { from: 'c', to: 'b', kind: 'warp' }, { from: 's', to: 'b', kind: 'warp' },
+                { from: 'b', to: 'b2', kind: 'warp' }],
+        };
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['c', 'below'], ['b', 'warp'], ['b2', 'warp']]);
+        expect(Math.abs(positions.get('b').gy - positions.get('s').gy)).toBeLessThanOrEqual(2);
+        // b2 (warped into only from b) is placed beside b, not right of everything
+        const d = Math.abs(positions.get('b2').gx - positions.get('b').gx) + Math.abs(positions.get('b2').gy - positions.get('b').gy);
+        expect(d).toBe(2);
+    });
+
+    it('a warp-only group nothing placed warps into still goes right', () => {
+        const g = { nodes: ['s', 'x', 'y'], start: 's', links: [{ from: 'x', to: 'y', kind: 'warp' }, { from: 'y', to: 'x', kind: 'warp' }] };
+        const { groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.map((x) => x.placedBy)).toEqual(['start', 'right', 'warp']);
+    });
+
+    it('over 300 random graphs with warps: no overlap, the gap kept, every down/up honoured on a DAG', () => {
+        let warped = 0;
+        for (let s = 1; s <= 300; s++) {
+            const base = randomGroupedGraph(s, { dag: s % 2 === 0 });
+            const g = { ...base, links: base.links.map((l, i) => (l.kind === 'join' && i % 3 === 0 ? { ...l, kind: 'warp' } : l)) };
+            const gap = s % 4;
+            const { positions, groups, stats } = layoutGrouped(g, { gap });
+            warped += groups.filter((x) => x.placedBy === 'warp').length;
+            expect(positions.get(g.start)).toEqual({ gx: 0, gy: 0 });
+            expect(new Set([...positions.values()].map((p) => `${p.gx},${p.gy}`)).size).toBe(g.nodes.length);
+            for (let i = 0; i < groups.length; i++) {
+                for (let j = i + 1; j < groups.length; j++) {
+                    expect(boxesClear(groups[i].bbox, groups[j].bbox, gap), `seed ${s} groups ${i},${j}`).toBe(true);
+                }
+            }
+            if (s % 2 === 0) {
+                expect(stats.down.below, `seed ${s}`).toBe(stats.down.across);
+                expect(stats.up.above, `seed ${s}`).toBe(stats.up.across);
+            }
+        }
+        expect(warped).toBeGreaterThan(30); // exercised, not vacuous
     });
 });

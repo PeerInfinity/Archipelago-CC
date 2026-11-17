@@ -30,7 +30,7 @@ Links may carry a `kind` (`LINK_KINDS`): `'join'` (the default), `'down'`, `'up'
 
 - `join` is an **edge transition**: walking off one side of a region brings the player into the other, so the two belong side by side.
 - `down`/`up` are stairs and pits.
-- `warp` is any other non-spatial link: a doorway into a dungeon, an in-game teleporter. It is drawn, but it never joins two groups and places nothing.
+- `warp` is any other non-spatial link: a doorway into a dungeon, an in-game teleporter. It is drawn, but it never joins two groups. It only places a group that has no `down`/`up` link at all (below).
 
 - **The grouping rule** is a pure `(graph) → string[][]`, swappable by name in `GROUPING_RULES`. **R1** (the only one so far) is the connected components over `join` links. `down`/`up`/`warp` never join two nodes.
 - **Inside a group**, `layoutRegions` runs over the group's own `join` links. The root is the start if the group holds it. Otherwise it is the group's first member entered by a `down` link, then by an `up` link, then its first member.
@@ -39,6 +39,7 @@ Links may carry a `kind` (`LINK_KINDS`): `'join'` (the default), `'down'`, `'up'
   - The start's ancestors are placed upward, nearest first.
   - Every other group is placed downward in topological order: below the lowest group it lies under, aligned under the linking cell.
   - A group nothing reaches goes right of everything so far.
+  - A **warp-only** group (no `down`/`up` link, and some other group warps into it) is placed after that, beside its **first warp predecessor**: of the placed groups that warp into it, the one placed earliest. Its warped-to cell starts on the warping cell, and it slides clear right, left, down or up, whichever moves it least. `placedBy` is `'warp'`. A warp-only group that only another unplaced one warps into waits for it; one that nothing placed warps into goes right.
   - A **source** group (nothing lies over it, but it lies over something) is placed last, `gap` cells over the highest group it lies over. Its linking cell is aligned over the linked cell of its **first successor**: of the groups it lies over, the one placed earliest. `placedBy` is `'source'`.
   - `gap` empty cells separate any two groups, and a group that would come closer slides right. A source tries right, left and up and takes the shortest slide; each of these keeps it over everything it lies over.
 - The result is `{ positions, groups: [{ id, root, members, bbox, placedBy }], stats }`. `stats` holds the group count and sizes, the directed links honoured and consistent, the links between adjacent cells, `down`/`up` across groups and how many landed below/above, `crossLength` (the summed length in cells of the links between groups), and the bbox.

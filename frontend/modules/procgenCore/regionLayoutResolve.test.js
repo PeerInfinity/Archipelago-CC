@@ -206,15 +206,22 @@ describe('the Seedling hook (compositeMap.layoutGraph)', () => {
         const count = (k) => r.graph.links.filter((l) => l.kind === k).length;
         expect([count('join'), count('warp'), count('down'), count('up')]).toEqual([184, 46, 64, 26]);
         // ⛓ (P) the source groups sit just above their first successors (MEASURED before (A): 486.81 → 354.73 cells
-        //   summed over the 67 cross-group links; after (A): 131 cross-group links, 1561.94 — the warps are long)
+        //   summed over the 67 cross-group links; after (A): 131 cross-group links, 1561.94 — the warps are long;
+        //   after (ii), warp-only groups beside their first warp predecessor: 911.05)
         const byRoot = new Map(r.groups.map((g) => [g.root, g]));
         expect(byRoot.get('level_7')).toMatchObject({ placedBy: 'source', bbox: { minX: -3, minY: 5, maxX: -3, maxY: 5 } });
-        expect(byRoot.get('level_32')).toMatchObject({ placedBy: 'source', bbox: { minX: 8, minY: 1, maxX: 8, maxY: 1 } });
-        // level_32 → level_30: over level_30's group, `gap` clear; one column off since (A)'s new source level_24 sits beside it
+        // level_32 → level_30: straight over level_30's column, slid UP clear of the groups (ii) put beside level_12
+        expect(byRoot.get('level_32')).toMatchObject({ placedBy: 'source', bbox: { minX: 7, minY: -4, maxX: 7, maxY: -4 } });
         const g30 = r.groups.find((g) => g.members.includes('level_30'));
-        expect(r.positions.get('level_32').gy).toBe(g30.bbox.minY - 2);
-        expect(Math.abs(r.positions.get('level_32').gx - r.positions.get('level_30').gx)).toBeLessThanOrEqual(1);
-        expect(r.stats.crossLength).toBe(1561.94);
+        expect(r.positions.get('level_32').gx).toBe(r.positions.get('level_30').gx);
+        expect(r.positions.get('level_32').gy).toBeLessThan(g30.bbox.minY);
+        // (ii): the doorway levels sit beside the level that warps into them
+        expect(byRoot.get('level_1')).toMatchObject({ placedBy: 'warp', bbox: { minX: 5, minY: 0 } });
+        expect(byRoot.get('level_33')).toMatchObject({ placedBy: 'warp', bbox: { minX: 7, minY: 0 } });
+        const placedBy = {};
+        for (const g of r.groups) placedBy[g.placedBy] = (placedBy[g.placedBy] ?? 0) + 1;
+        expect(placedBy).toEqual({ start: 1, below: 17, warp: 11, source: 9, right: 5 });
+        expect(r.stats.crossLength).toBe(911.05);
         // every link the hook made from stairs/pits is vertical, and only those
         const kinds = new Set(r.graph.links.map((l) => l.kind));
         expect([...kinds].sort()).toEqual(['down', 'join', 'up', 'warp']);

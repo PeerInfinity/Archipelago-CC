@@ -7,7 +7,7 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
 ## What you see
 
 - **Cells.** One cell per *whole level*. A Seedling level split into several sub-regions is drawn once, whole, and its sub-regions' locations all appear in it.
-- **Groups.** Regions joined by **edge transitions** (walk off one side of a level and you are in the next one) form a group, and the groups are separated by gaps. A doorway or a teleporter (a **warp**) does not join two groups. A group reached by going **down** stairs or a pit sits below the group it is reached from, and a group you can only go down *from* sits just above the first group it leads to.
+- **Groups.** Regions joined by **edge transitions** (walk off one side of a level and you are in the next one) form a group, and the groups are separated by gaps. A doorway or a teleporter (a **warp**) does not join two groups, but a group you can only reach through one sits beside the group it is reached from. A group reached by going **down** stairs or a pit sits below the group it is reached from, and a group you can only go down *from* sits just above the first group it leads to.
 - **Location squares.** Each location is a square on its tile. Event locations are drawn as diamonds.
 
   | Colour | Meaning |

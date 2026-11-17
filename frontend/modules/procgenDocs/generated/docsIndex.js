@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 30,
         "headings": 1326,
         "indexHeadings": 2,
-        "lines": 36656,
+        "lines": 36657,
         "pages": 4,
-        "words": 557218
+        "words": 557308
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -141,10 +141,10 @@ export const DOCS_INDEX = frz({
             "file": "region-layout.md",
             "h1": "Region Layout",
             "headings": 6,
-            "lines": 69,
+            "lines": 70,
             "links": [],
             "path": "docs/json/developer/procgen/region-layout.md",
-            "words": 1313
+            "words": 1403
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",

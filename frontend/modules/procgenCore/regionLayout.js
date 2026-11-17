@@ -279,7 +279,13 @@ const conflicts = (a, b, gap) => a.minX <= b.maxX + gap && b.minX <= a.maxX + ga
  *      HIGHEST group it lies over, its linking node aligned over the linked node of its FIRST SUCCESSOR: of the
  *      groups it lies over, the one placed EARLIEST (between two links into that group, the first in link order).
  *      It slides clear RIGHT, LEFT or UP, whichever moves it least (ties in that order); each keeps it over all it
- *      lies over (`placedBy: 'source'`). A group with no vertical link at all still goes right (step 5).
+ *      lies over (`placedBy: 'source'`). A group with no vertical link at all still goes right (step 5), unless:
+ *   8. WARP-ONLY groups (⚖ user 2026-11-17, *"beside warp source"*): a group with no vertical link that some other
+ *      group WARPS into is placed after step 5 and before the sources, BESIDE its FIRST WARP PREDECESSOR (of the
+ *      placed groups that warp into it, the one placed earliest; between two warps from it, the first in link order):
+ *      its warped-to node starts on the warping node's cell and the group slides clear right / left / down / up,
+ *      whichever moves it least (ties in that order) (`placedBy: 'warp'`). One that only another unplaced warp-only
+ *      group warps into waits for it; one that nothing placed warps into goes right.
  *   ⇒ Every `down` link across groups lands with the target group STRICTLY below (and every `up` strictly above)
  *     unless the vertical relation has a cycle; `stats.down` / `stats.up` count what did.
  *
@@ -335,7 +341,7 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
     const placedBy = new Array(members.length).fill(null);
     const order = [];
     const placedBoxes = () => order.map((gi) => box[gi]);
-    /** Slide `gi`'s box from offset (dx, dy) one way (`right` / `left` / `up`) until clear of every placed group. */
+    /** Slide `gi`'s box from offset (dx, dy) one way (`right` / `left` / `up` / `down`) until clear of every placed group. */
     const slide = (gi, dx, dy, way) => {
         let b = shiftBox(localBox[gi], dx, dy);
         let moved = 0;
@@ -343,7 +349,7 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
             const hit = placedBoxes().find((p) => conflicts(b, p, gap));
             if (!hit) break;
             const sx = way === 'right' ? hit.maxX + gap + 1 - b.minX : way === 'left' ? hit.minX - gap - 1 - b.maxX : 0;
-            const sy = way === 'up' ? hit.minY - gap - 1 - b.maxY : 0;
+            const sy = way === 'up' ? hit.minY - gap - 1 - b.maxY : way === 'down' ? hit.maxY + gap + 1 - b.minY : 0;
             b = shiftBox(b, sx, sy);
             moved += Math.abs(sx) + Math.abs(sy);
         }
@@ -434,11 +440,21 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
         }
         // ⛓ SOURCES (step 7) wait: a group nothing lies over that lies over something, not yet placed.
         const source = members.map((_, gi) => !placed(gi) && predsOf(gi).length === 0 && succsOf(gi).length > 0);
-        const pending = () => members.reduce((n, _, gi) => n + (source[gi] ? 0 : 1), 0);
+        // ⛓ WARP-ONLY groups (step 8) wait too: no vertical link at all, and at least one `warp` INTO them.
+        const warpsIn = members.map(() => []);
+        for (const l of links) {
+            const ga = groupOf.get(l.from);
+            const gb = groupOf.get(l.to);
+            if (ga !== gb && kindOf(l) === 'warp') warpsIn[gb].push(l);
+        }
+        const warpOnly = members.map((_, gi) => !placed(gi) && !source[gi] && predsOf(gi).length === 0
+            && succsOf(gi).length === 0 && warpsIn[gi].length > 0);
+        const waits = (gi) => source[gi] || warpOnly[gi];
+        const pending = () => members.reduce((n, _, gi) => n + (waits(gi) ? 0 : 1), 0);
         // ⛓ DOWNWARD: everything else in topological order (Kahn) — a group reached from a placed one goes BELOW
         //   all it lies under (a waiting source is not waited for); a group nothing above reaches goes RIGHT.
         while (order.length < pending()) {
-            const ready = (gi) => !placed(gi) && !source[gi] && predsOf(gi).every((v) => source[v.above] || placed(v.above));
+            const ready = (gi) => !placed(gi) && !waits(gi) && predsOf(gi).every((v) => source[v.above] || placed(v.above));
             const pick = dag.find((v) => placed(v.above) && ready(v.below));
             if (pick) {
                 const gi = pick.below;
@@ -450,11 +466,33 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
             }
             let gi = members.findIndex((_, i) => ready(i));
             // a placed descendant of an unplaced source would make it not "ready" only through a cycle; none is kept
-            if (gi < 0) gi = members.findIndex((_, i) => !placed(i) && !source[i]);
+            if (gi < 0) gi = members.findIndex((_, i) => !placed(i) && !waits(i));
             const all = placedBoxes();
             const right = Math.max(...all.map((b) => b.maxX));
             const top = Math.min(...all.map((b) => b.minY));
             commit(gi, right + gap + 1 - localBox[gi].minX, top - localBox[gi].minY, 'right');
+        }
+        // ⛓ WARP-ONLY groups: each beside its FIRST WARP PREDECESSOR — of the placed groups that warp into it, the one
+        //   placed EARLIEST (`order`); between two warps from that group, the first in link order. Its warped-to node
+        //   starts ON the warping node's cell and the group slides clear right / left / down / up, the shortest (ties
+        //   in that order). Repeated until none is left: a warp-only group warped into only from another one waits for
+        //   it; one no placed group warps into goes right, as before.
+        for (;;) {
+            const left = members.map((_, gi) => gi).filter((gi) => warpOnly[gi] && !placed(gi));
+            if (!left.length) break;
+            let gi = left.find((g) => warpsIn[g].some((l) => placed(groupOf.get(l.from))));
+            if (gi === undefined) {
+                gi = left[0];
+                const all = placedBoxes();
+                commit(gi, Math.max(...all.map((b) => b.maxX)) + gap + 1 - localBox[gi].minX,
+                    Math.min(...all.map((b) => b.minY)) - localBox[gi].minY, 'right');
+                continue;
+            }
+            const first = warpsIn[gi].filter((l) => placed(groupOf.get(l.from)))
+                .reduce((a, l) => (order.indexOf(groupOf.get(l.from)) < order.indexOf(groupOf.get(a.from)) ? l : a));
+            const u = cellOf(first.from);
+            const vLocal = local[gi].pos.get(first.to);
+            commit(gi, u.gx - vLocal.gx, u.gy - vLocal.gy, 'warp', ['right', 'left', 'down', 'up']);
         }
         // ⛓ SOURCES, in group order: each `gap` cells over the HIGHEST group it lies over (so every one of its links
         //   still lands below it), its linking node aligned over the linked node of its FIRST SUCCESSOR — the group it
