@@ -33,7 +33,7 @@ same tick, and the plan length is unchanged.
   find one (680 t, hitless), but `betterAnswer` keeps the shorter 632 t punched plan. That is the JS arc's ranking,
   the same as L30's key 308 (§3).
 - **Phase 2 (`FADE_MOVE_ATTACK`):** built. On the target rows it ships nothing new. It killed the puncher hitless once,
-  in 172's dashless pass, which is not the shipped plan. Its survey arm is in §5.
+  in 172's dashless pass, which is not the shipped plan. Its survey arm has 0 movers (§5).
 
 ## 3. The reproduction (measured)
 
@@ -125,7 +125,9 @@ before `pacedHoldPlan`.
   only narrows ON; `hammerFadeMove.test.js` was re-run on it, 7/7.
 - **Survey `--through=end`** (each step a child process; the census comes from `tools/census-preload.mjs`):
   - OFF vs FADE_MOVE ON: **0 movers, no step gains a hit** (`survey/compare-off-on.txt`).
-  - FADE_MOVE + ATTACK: see the line below.
+  - FADE_MOVE + ATTACK (`survey/compare-off-atk.txt`, run on `58a025ea`): **0 movers, no step gains a hit**, 224 / 26.
+    The only move is still step 149's mouth. Step 134's latched still wait is hit by `bombpusher@112,128#5`, which is
+    not a chaser, so it is not attacked. MOVING_WAIT's paced hold keeps that step as it was.
   - Before the kill-lock decline, ON moved 4 steps. See §8.
 - Regenerated: `census-seedling-solver-surface.mjs --write` (line numbers only) then `--check` GREEN. Constants census
   `--check` PASS. `generate-procgen-reference.mjs` and `generate-docs-index.mjs` were run and changed nothing. No docs
@@ -216,7 +218,7 @@ exists). Kill-lock legs cannot move (§8).
   - The landing sweeps: an OFF + ON pair, edge arm, with capture on the ON arm.
   - Predicted from this slice: the L12 L35/L95 legs except 160 go roomHits 2 → 0 at unchanged ticks, kill-lock legs
     unchanged, and every keylock leg whose still wait is hitless unchanged.
-  - `FADE_MOVE_ATTACK` adds no shipped change on the measured rows. Its sweep is optional.
+  - `FADE_MOVE_ATTACK` adds no shipped change on the measured rows or the survey. Its sweep is optional.
 - **Not measured:**
   - per-leg counts over all 923 sweep legs (needs the capture sweep);
   - phase 2 against a body other than the puncher and the bobsoldier;
