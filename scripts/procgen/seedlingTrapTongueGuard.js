@@ -321,7 +321,7 @@ export function reachMask(trap, room, { chompRange = LAVATRAP_PULL.chompRange } 
  *   (`collideLine("Solid")`); `enterable(tx, ty, flag)` (the grid lets a player holding only `flag` onto that tile);
  *   `traps` = `[{id, tag, centre: [cx, cy], box}]` (killing classes only); `seeds` = `[{name, points: [[x, y], …]}]`.
  * Returns, per trap, the qualifying arms and the evidence: `{id, arms, perArm: {flag: {hits, spots, approaches, killedFrom,
- * granted, why}}}`.
+ * order, granted, why}}}` (`order`: per landing, the traps each round of the kill order killed).
  */
 export function trapKillArms(room, { arms = TONGUE_ARMS, overridesOf = () => ({}), chompRange = LAVATRAP_PULL.chompRange } = {}) {
     const W = room.widthPx;
@@ -339,6 +339,7 @@ export function trapKillArms(room, { arms = TONGUE_ARMS, overridesOf = () => ({}
         // Which landings come near each trap at all (the base flood, no reach avoided).
         const approaches = new Map(room.traps.map((t) => [t.id, []]));
         const killedFrom = new Map(room.traps.map((t) => [t.id, []]));
+        const order = {};
         for (const seed of room.seeds) {
             const base = pixelFlood(room, seed.points, enterable, () => false);
             const near = room.traps.filter((t) => { const m = reach.get(t.id); return base.some((v, i) => v && m[i]); });
@@ -351,6 +352,7 @@ export function trapKillArms(room, { arms = TONGUE_ARMS, overridesOf = () => ({}
                 const seen = pixelFlood(room, seed.points, enterable, (i) => masks.some((m) => m[i] === 1));
                 const dead = [...live].filter((id) => spots.get(id).some(({ p: [x, y] }) => seen[y * W + x] === 1));
                 if (dead.length === 0) break;
+                (order[seed.name] ??= []).push(dead);
                 for (const id of dead) { live.delete(id); killedFrom.get(id).push(seed.name); }
             }
         }
@@ -365,7 +367,7 @@ export function trapKillArms(room, { arms = TONGUE_ARMS, overridesOf = () => ({}
             const granted = killed && !ARM_TIME_UNDECIDED[arm.flag];
             result.get(t.id).perArm[arm.flag] = {
                 hits: hits.get(t.id), spots: spots.get(t.id).length,
-                windows: spotWindows(spots.get(t.id)), approaches: from, killedFrom: killedFrom.get(t.id), granted, why,
+                windows: spotWindows(spots.get(t.id)), approaches: from, killedFrom: killedFrom.get(t.id), order, granted, why,
             };
             if (granted) result.get(t.id).arms.push(arm.flag);
         }
