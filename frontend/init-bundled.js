@@ -135,6 +135,7 @@ import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
 import * as menuPanelModule from './modules/menuPanel/index.js';
 import * as resourceChannelsModule from './modules/resourceChannels/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
+import * as actionNodesModule from './modules/actionNodes/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
 import * as omsiSubstrateWrapperModule from './modules/omsiSubstrateWrapper/index.js';
 import * as jtaBalanceModule from './modules/jtaBalance/index.js';
@@ -191,6 +192,7 @@ import './modules/tests/testCases/manaDepletionFlagTests.js';
 import './modules/tests/testCases/seedlingAtlasMazeTests.js';
 import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
+import './modules/tests/testCases/actionNodesTests.js';
 import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/procgenPipelineTests.js';
@@ -278,6 +280,7 @@ const BUNDLED_MODULES = {
   menuPanel: menuPanelModule,
   resourceChannels: resourceChannelsModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
+  actionNodes: actionNodesModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
   omsiSubstrateWrapper: omsiSubstrateWrapperModule,
   jtaBalance: jtaBalanceModule,

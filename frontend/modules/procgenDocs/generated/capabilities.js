@@ -33,8 +33,33 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "loop",
+                    "statement": "What you can queue for it",
+                    "text": "moves between regions, performing each node's action"
+                },
+                {
+                    "group": "loop",
                     "statement": "You can play it outside loop mode",
                     "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "It shares the loop-mode mana pool",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "It shares consumable items with other substrates",
+                    "text": "its list comes from the running game — see the Substrate Registry panel"
+                },
+                {
+                    "group": "loop",
+                    "statement": "The host keeps its per-loop stats",
+                    "text": "its list comes from the loaded world's own data"
+                },
+                {
+                    "group": "loop",
+                    "statement": "The host keeps its per-loop resources",
+                    "text": "its list comes from the loaded world's own data"
                 },
                 {
                     "group": "generate",
@@ -1036,10 +1061,10 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 108,
-        "fieldsRead": 40,
-        "fieldsUnread": 65,
-        "statements": 30,
+        "fields": 112,
+        "fieldsRead": 42,
+        "fieldsUnread": 67,
+        "statements": 32,
         "substrates": 10
     },
     "fieldsRead": [
@@ -1078,6 +1103,8 @@ export const CAPABILITIES = frz({
         "sharing.items",
         "sharing.mana",
         "sharing.mana.loopActionDelegation",
+        "sharing.resources",
+        "sharing.stats",
         "startingInventory",
         "supportedFeatures",
         "takeLastRecording",
@@ -1112,7 +1139,9 @@ export const CAPABILITIES = frz({
                 "L8",
                 "L9",
                 "L10",
-                "L11"
+                "L11",
+                "L12",
+                "L13"
             ]
         },
         {
@@ -2125,7 +2154,7 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "loopSupport.manual",
-                            "value": "—"
+                            "value": "no"
                         }
                     ]
                 },
@@ -2240,12 +2269,12 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "moves between regions, performing each node's action",
                     "why": [
                         {
                             "field": "loopSupport.queueActions",
-                            "value": "—"
+                            "value": "regionMove, act"
                         }
                     ]
                 },
@@ -3408,12 +3437,12 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "sharing.mana",
-                            "value": "—"
+                            "value": "{}"
                         }
                     ]
                 },
@@ -3528,12 +3557,12 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "action_nodes",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "its list comes from the running game — see the Substrate Registry panel",
                     "why": [
                         {
                             "field": "sharing.items",
-                            "value": "—"
+                            "value": "{getTypes}"
                         }
                     ]
                 },
@@ -3783,6 +3812,246 @@ export const CAPABILITIES = frz({
             "group": "loop",
             "id": "L11",
             "statement": "Recorded actions are named in the game's own words"
+        },
+        {
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "its list comes from the loaded world's own data",
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "{getTypes}"
+                        }
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "sharing.stats"
+            ],
+            "group": "loop",
+            "id": "L12",
+            "statement": "The host keeps its per-loop stats"
+        },
+        {
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "kind": "yes",
+                    "text": "its list comes from the loaded world's own data",
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "{getTypes}"
+                        }
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "noiz2sa",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "sharing.resources"
+            ],
+            "group": "loop",
+            "id": "L13",
+            "statement": "The host keeps its per-loop resources"
         },
         {
             "cells": [
@@ -5553,6 +5822,8 @@ export const CAPABILITIES = frz({
         "label",
         "libraryEntryRefusal",
         "loadRegionEvent",
+        "loopSupport.actionGate",
+        "loopSupport.authoredCosts",
         "loopSupport.customQueues",
         "loopSupport.playClock",
         "onContentEdit",

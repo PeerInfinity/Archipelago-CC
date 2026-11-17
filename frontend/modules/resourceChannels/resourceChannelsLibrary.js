@@ -30,6 +30,7 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { ResourceLedger, LEDGER_CHANGED_EVENT } from './resourceLedger.js';
 
 // Injected by index.js initialize(); used only by grantItem (the one
 // helper that publishes on the eventBus itself).
@@ -45,10 +46,25 @@ export function initResourceChannelsLibrary({ eventBus }) {
     _eventBus = eventBus ?? null;
 }
 
+/**
+ * THE ledger (design §5): the loaded world's per-loop stats and resources, kept by the host for a substrate that
+ * declares the `stats` / `resources` sharing categories. Every change is published as
+ * `resourceChannels:ledgerChanged` with the ledger's snapshot.
+ */
+const _ledger = new ResourceLedger({
+    onChange: (snapshot) => { _eventBus?.publish?.(LEDGER_CHANGED_EVENT, snapshot); },
+});
+
+/** The host's one ledger. Its owner configures it (`configure`) for the loaded world. */
+export function getResourceLedger() {
+    return _ledger;
+}
+
 // Test-only: reset injected state + warn-once sets between cases.
 export function _testOnly_resetResourceChannelsLibrary() {
     _eventBus = null;
     _warnedManaIds.clear();
+    _ledger.clear({ silent: true });
 }
 
 function _gs() {
@@ -84,11 +100,20 @@ export function isItemsDeclarer(substrateId) {
  * items category (distinct from an empty list).
  */
 export function getShareableItemTypes(substrateId) {
-    const items = substrateRegistry.get(substrateId)?.sharing?.items;
-    if (!items) return null;
-    if (Array.isArray(items.types)) return items.types;
+    return getSharedTypes(substrateId, 'items');
+}
+
+/**
+ * The declared types of any TYPE-LIST sharing category (`items`, `stats`,
+ * `resources`), resolving `types` vs `getTypes`. null when the substrate
+ * declares no such category.
+ */
+export function getSharedTypes(substrateId, category) {
+    const decl = substrateRegistry.get(substrateId)?.sharing?.[category];
+    if (!decl) return null;
+    if (Array.isArray(decl.types)) return decl.types;
     try {
-        const types = items.getTypes?.();
+        const types = decl.getTypes?.();
         return Array.isArray(types) ? types : [];
     } catch {
         return [];
@@ -122,7 +147,7 @@ export function xpAdjustedCost(baseCost, regionId) {
 
 /**
  * Charge `amount` mana to the shared pool on behalf of `substrateId`,
- * awarding 1 XP : 1 mana to `regionId` when given (the loops
+ * awarding 1 XP : 1 mana (× the region's `xpGainScale`) to `regionId` when given (the loops
  * _processFrame ratio all legs match). Depletion is REPORTED, not
  * acted on — the caller runs its own pre-reset cleanup and then calls
  * fireLoopResetTeleport, preserving each leg's exact ordering.
@@ -148,7 +173,12 @@ export function chargeMana({ substrateId, amount, regionId = null }) {
     const gs = _gs();
     if (!gs) return { charged: false, depleted: false };
     gs.deductMana(amount);
-    if (regionId) gs.addRegionXP?.(regionId, amount);
+    // design §8: the region's `xpGainScale` (default 1, so every other
+    // substrate's award is unchanged) scales the XP.
+    if (regionId) {
+        const scale = _getCostDataManager()?.getRegionXpGainScale?.(regionId) ?? 1;
+        gs.addRegionXP?.(regionId, scale === 1 ? amount : amount * scale);
+    }
     const depleted = (gs.getCurrentMana?.() ?? 0) <= 0 && !gs.noManaDepletionReset;
     return { charged: true, depleted };
 }
