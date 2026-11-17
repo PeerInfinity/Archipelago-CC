@@ -20,7 +20,8 @@ import { fileURLToPath } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
 import {
-    FADE_MOVE, FADE_MOVE_COUNTS, FADE_MOVE_DEFAULT, resetFadeMoveCounts, withFadeMove,
+    FADE_MOVE, FADE_MOVE_ATTACK, FADE_MOVE_ATTACK_DEFAULT, FADE_MOVE_COUNTS, FADE_MOVE_DEFAULT, resetFadeMoveCounts,
+    withFadeMove, withFadeMoveAttack,
 } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -37,12 +38,13 @@ const PUNCHER = 'puncher@416,256';
 const L35_OFF_HITS = [[433, 'punch', PUNCHER], [474, 'punch', PUNCHER]];
 
 /** A captured leg solved as the worker does, FADE_MOVE at `on`; the model's hits re-driven from the plan. */
-function solveLeg(leg, on) {
+function solveLeg(leg, on, attack = false) {
     const req = restoreRequest(leg.requests[0].request);
     const { passes = ANYTIME_PASSES, source, ...tape } = req;
     const levelSource = levelSourceFromAtlas(source.records);
     resetFadeMoveCounts();
-    const answer = withFadeMove(on, () => solveAnytime({ ...tape, source, levelSource }, { passes }));
+    const answer = withFadeMoveAttack(attack, () => withFadeMove(on,
+        () => solveAnytime({ ...tape, source, levelSource }, { passes })));
     expect(answer.ok).toBe(true);
     const counts = JSON.parse(JSON.stringify(FADE_MOVE_COUNTS));
     const shadow = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
@@ -62,6 +64,15 @@ describe('FADE-MOVE — the switch', () => {
         expect(FADE_MOVE.enabled).toBe(was);
         expect(() => withFadeMove(true, () => { throw new Error('x'); })).toThrow('x');
         expect(FADE_MOVE.enabled).toBe(was);
+    });
+
+    it('phase 2 (FADE_MOVE_ATTACK) is OFF by default, named in the channel, and withFadeMoveAttack restores it', () => {
+        expect(FADE_MOVE_ATTACK_DEFAULT).toBe(false);
+        expect(FADE_MOVE_ATTACK.enabled).toBe(ENV.SEEDLING_FADE_MOVE_ATTACK === '1');
+        expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FADE_MOVE_ATTACK');
+        const was = FADE_MOVE_ATTACK.enabled;
+        expect(withFadeMoveAttack(!was, () => FADE_MOVE_ATTACK.enabled)).toBe(!was);
+        expect(FADE_MOVE_ATTACK.enabled).toBe(was);
     });
 });
 
@@ -98,5 +109,19 @@ describe('FADE-MOVE — leg 105 (L0 → L12 flag 4): the puncher is killed first
         expect(on.hits).toEqual([]);
         expect(on.counts.moves).toEqual([]);
         expect(on.counts.waits.keylock).toBeGreaterThan(0);
+    });
+});
+
+describe('FADE-MOVE phase 2 — FADE_MOVE_ATTACK needs FADE_MOVE, and keeps leg 127 hitless', () => {
+    it('ATTACK alone answers OFF byte for byte (phase 2 is asked only inside a phase-1 move)', () => {
+        expect(solveLeg(LEG_L35, false, true).plan).toBe(solveLeg(LEG_L35, false, false).plan);
+    });
+
+    it('both ON: leg 127 is hitless at OFF\'s length; the attack is ranked first and refused by the fork on a hit', () => {
+        const off = solveLeg(LEG_L35, false);
+        const both = solveLeg(LEG_L35, true, true);
+        expect(both.hits).toEqual([]);
+        expect(both.ticks).toBe(off.ticks);
+        expect(both.counts.moves.length).toBeGreaterThan(0);
     });
 });

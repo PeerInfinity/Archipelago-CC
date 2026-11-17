@@ -22513,6 +22513,25 @@ export function withFadeMove(enabled, fn) {
     return withSwitch(FADE_MOVE, enabled, fn);
 }
 
+/**
+ * ⛓⛓ hammer-phase FADE-MOVE phase 2 — **OPPORTUNISTIC ATTACK INSIDE THE WINDOW** (`FADE_MOVE_ATTACK`, OFF; needs
+ * `FADE_MOVE`). When the still wait is HIT by a chaser, the first candidate is to kill that body inside the window: the
+ * kill rung's own dwell (`guardedChaserDwell`, the one strike policy, its guard steps, any hit refusing by name) on the
+ * fork, bounded by the wait, then the empty-input stand until the open test holds — accepted only hitless,
+ * deathless, on the level, and open inside the bound, then replayed on the live run as phase 1's moves are. A body a later goal reads
+ * is never attacked: none while a kill-lock of `combat.KILL_LOCK_TAGS` (`tset == KILL_LOCK_TSET`) stands in the level,
+ * whose count is that body. Ranking: the body that hit the still wait (the danger the wait would price) only; no other
+ * kill is inserted. It changes the kill ledger, so it is its own switch. `SEEDLING_FADE_MOVE_ATTACK=1` /
+ * `withFadeMoveAttack(enabled, fn)`.
+ */
+export const FADE_MOVE_ATTACK = { enabled: globalThis.process?.env?.SEEDLING_FADE_MOVE_ATTACK === '1' };
+export const FADE_MOVE_ATTACK_DEFAULT = false;
+
+/** Run `fn` with `FADE_MOVE_ATTACK` set to `enabled`, restoring the previous value. */
+export function withFadeMoveAttack(enabled, fn) {
+    return withSwitch(FADE_MOVE_ATTACK, enabled, fn);
+}
+
 /** The refuge search: ring radii round the mouth (px, nearest first), directions per ring, and the fork cap. */
 export const FADE_MOVE_REFUGE = Object.freeze({ radii: Object.freeze([16, 24, 32, 48, 64]), directions: 8, maxForks: 12 });
 
@@ -22630,11 +22649,27 @@ function fadeMoveTry(run, perTick, spec, ctx) {
         cands.length = 0;
         cands.push(...awayFirst);
     }
+    // ⛓ phase 2 (`FADE_MOVE_ATTACK`): the hitter killed inside the window, ranked first (see `FADE_MOVE_ATTACK`)
+    if (FADE_MOVE_ATTACK.enabled && stillHit) {
+        const hitId = (f0.ledger('playerHits') ?? []).slice(hits0)[0]?.id ?? null;
+        const chaser = hitId && (run.entities('chasers') ?? []).some((b) => b?.id === hitId)
+            && (run.entities('strikeBodies') ?? []).some((b) => b?.id === hitId);
+        const lockCounts = (run.world.activators ?? []).some((a) => KILL_LOCK_TAGS.includes(a.tag)
+            && a.t === KILL_LOCK_TSET);
+        if (!chaser) {
+            FADE_MOVE_COUNTS.declined.push({ ...row, why: `attack: ${hitId ?? 'no hitter'} is not a live chaser` });
+        } else if (lockCounts) {
+            FADE_MOVE_COUNTS.declined.push({ ...row, why: `attack: a kill-lock in level ${level} counts it` });
+        }
+        if (chaser && !lockCounts) {
+            cands.unshift({ x: run.state.x, y: run.state.y, why: `attack ${hitId}`, attack: hitId });
+        }
+    }
     const tried = [];
     let forks = 0;
     for (const c of cands) {
         if (forks >= FADE_MOVE_REFUGE.maxForks) { tried.push(`the ${FADE_MOVE_REFUGE.maxForks}-fork bound`); break; }
-        if (planWaypointsOrNull(run.world, run.state, c, null, opts) === null) {
+        if (!c.attack && planWaypointsOrNull(run.world, run.state, c, null, opts) === null) {
             tried.push(`${c.why} (${c.x},${c.y}): no corridor plans`);
             continue;
         }
@@ -22642,7 +22677,24 @@ function fadeMoveTry(run, perTick, spec, ctx) {
         if (!f) { tried.push('the fork tripped the deadline'); break; }
         forks += 1;
         const keys = [];
-        const w = forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
+        if (c.attack) {
+            try {
+                guardedChaserDwell(f, keys, { id: c.attack, bound: spec.bound, strike: strikePolicyFor(f, {}),
+                    contacts, what: `${ctx.what} -> FADE_MOVE_ATTACK (${c.attack})`, ctx, lockId: spec.lockId });
+            } catch (e) {
+                if (!(e instanceof SolverRefusal)) throw e;
+                const said = String(e.message).split('\n')[0]
+                    .replace(`${ctx.what} -> FADE_MOVE_ATTACK (${c.attack}): `, '');
+                tried.push(`${c.why}: ${said.slice(0, 240)}`);
+                continue;
+            }
+            if ((f.ledger('playerHits') ?? []).length !== hits0
+                || (f.ledger('playerDeaths') ?? []).length !== deaths0) {
+                tried.push(`${c.why}: a hit or death on the fork`);
+                continue;
+            }
+        }
+        const w = c.attack ? {} : forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
         if (w.why) { tried.push(`${c.why} (${c.x},${c.y}): ${w.why}`); continue; }
         if (keys.length > spec.bound) { tried.push(`${c.why}: the walk outlasts the bound`); continue; }
         const st = fadeForkStand(f, keys, spec.open, spec.bound - keys.length + 1, hits0, deaths0);
@@ -22666,7 +22718,8 @@ function fadeMoveTry(run, perTick, spec, ctx) {
                 + 'fork is not this run).', { obstacle: { kind: 'solid', id: spec.lockId } });
         }
         const moved = { kind: spec.kind, target: { x: c.x, y: c.y }, why: c.why, from, ticks: keys.length,
-            still: row.still, forks };
+            still: row.still, forks, ...(c.attack ? { killed: c.attack,
+                dead: !(run.entities('strikeBodies') ?? []).some((b) => b?.id === c.attack) } : {}) };
         FADE_MOVE_COUNTS.moves.push({ ...row, ...moved });
         return { moved };
     }
