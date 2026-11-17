@@ -457,6 +457,13 @@
       <label title="draw each token wire (presser → responder) over the room"><input id="labShowLinks" type="checkbox" checked> links</label>
       <span id="labLinkNote" class="note"></span>
     </div>
+    <!-- ⛓⛓ CONTENT SETS TILE-3: the TILE KIND palette entry's kind — one the packs named by `?packs=` declare (a concept
+         row with a tile `base`; a wall-based kind is not offered: a placed kind is walkable). Shown only with `?packs=`.
+         ⛔ Not in `#labPalette`/`#labSetPalette`: those boxes are ENUMERATED, one button per palette entry. -->
+    <div id="labTileKindLine" class="line" hidden>
+      <label>tile kind <select id="labTileKind"></select></label>
+      <span id="labTileKindNote" class="note"></span>
+    </div>
     <!-- ⛓⛓⛓ WHERE THE LEVEL WOULD BE. A refused area graph — or a refused
          `requires` directive — prints the module's OWN reason here, VERBATIM,
          and a refused DIRECTIVE draws no level at all: a run that did not

@@ -106,7 +106,13 @@ import { seedlingLinkFor, seedlingOriginOf } from './mazeSeedlingLink.js';
  */
 import { REDO_COMMAND_ID, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { describeOps } from '../procgenCore/editCore.js';
-import { mazeEditAdapter } from './mazeEditAdapter.js';
+import { createMazeEditAdapter } from './mazeEditAdapter.js';
+import { placeableTileKinds } from './mazeRoomEditor.js';
+import { loadMazeTileArt } from './mazeTileArt.js';
+import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
+import { MAZE_CONTENT_ROLES } from './mazeContent.js';
+import { browserPackIo } from '../procgenPipeline/worldContent.js';
+import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 // ⛓ Maze editor tools (step B2): the shared FILL / CLEAR / MOVE this page turns on.
 import { MAZE_EDIT_TOOLS, MAZE_FILL_REFUSAL } from './mazeEditTools.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -166,7 +172,7 @@ import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { TILE_SIZE } from '../seedlingDemo/levelWorld.js';
 import { validateLevelSet } from '../seedlingDemo/levelSetValidator.js';
 import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
-import { deserializeMazeWorld } from './mazeRoomEngine.js';
+import { deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
 /**
  * ⛓⛓⛓ **THE SHARED SET EDITOR, MOUNTED — THE SAME FUNCTION `watch.html` BINDS
  * TO SEEDLING** (EDITOR v3 E2b lifted it; §7/§16.2's one-toolkit law). ⛔ The
@@ -331,6 +337,16 @@ export function main() {
     let payloadCheck = null;
     let hover = null;
     let editor = null;
+    /**
+     * ⛓⛓ CONTENT SETS TILE-3 — **THE LOADED PACKS' DECLARED TILE KINDS** (`?packs=`; `mazeTileArt.tileKindKeys`) and
+     * their art. `null` until a stack loads (no `?packs=`: never), and then every TILE KIND press refuses by name.
+     * ONE adapter for the page, asking for the current declared kinds at each apply, so a session opened before the
+     * packs landed checks against them all the same.
+     */
+    let labTileKinds = null;
+    let labTileArt = null;
+    let labPackNote = '';
+    const labEditAdapter = createMazeEditAdapter({ tileKinds: () => labTileKinds });
     /**
      * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE EDIT SESSION IS THE HOME FOR `record`,
      * `edits` AND `certified`**, for the whole page life and not only in the
@@ -534,7 +550,7 @@ export function main() {
      */
     const adopt = (next) => {
         state = next;
-        session = openEditSession(state);
+        session = openEditSession(state, { adapter: labEditAdapter });
         state = projectSession(state, session);
         return state;
     };
@@ -553,6 +569,7 @@ export function main() {
                 itemLib: state.record.itemLib ?? DEFAULT_ITEMS,
                 obstacleLib: state.record.obstacleLib ?? DEFAULT_OBSTACLES,
             });
+            editor.setTileKinds(labTileKinds);
         }
         return editor;
     };
@@ -840,6 +857,12 @@ export function main() {
             blocks: overlayBlocks(),
             latched: shownFrame()?.latched ?? null,
         }));
+        // ⛓ CONTENT SETS TILE-3 — the placed tile kinds, beside drawWorld (the panel's own pass), by the declared kinds
+        //   of `?packs=` (none loaded: every placed kind is undeclared and draws the placeholder). Nothing without one.
+        drawMazeTileKinds(ctx, w, {
+            tilePx: TILE_PX, playerPos: shownFrame()?.player ?? null, fogEnabled: false, isTileVisible: () => true,
+            tileArt: labTileArt, tileKinds: labTileKinds ?? {},
+        });
         /**
          * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,
          * AND THEY DO NOT DRAW OVER A LIBRARY ROOM.** The area graph, the
@@ -1168,7 +1191,31 @@ export function main() {
         setRoomTool?.repaint();
     };
 
+    /**
+     * ⛓ TILE-3 — the TILE KIND picker: the declared kinds a press may place (`placeableTileKinds`), the selected one,
+     * and how the `?packs=` load went. Outside both enumerated palette boxes (`lab.html`).
+     */
+    const renderTileKindPick = () => {
+        const line = $('labTileKindLine');
+        if (!line) return;
+        line.hidden = !params?.packs;
+        const sel = $('labTileKind');
+        const kinds = placeableTileKinds(labTileKinds);
+        sel.textContent = '';
+        for (const k of kinds) {
+            const o = document.createElement('option');
+            o.value = k;
+            o.textContent = k;
+            sel.appendChild(o);
+        }
+        sel.disabled = kinds.length === 0;
+        const current = (setRoomEditor ?? editor)?.selectedTileKind ?? null;
+        if (current) sel.value = current;
+        $('labTileKindNote').textContent = labPackNote;
+    };
+
     const renderEditPanel = () => {
+        renderTileKindPick();
         const box = $('labPalette');
         box.textContent = '';
         for (const e of PALETTE_ENTRIES) {
@@ -2446,14 +2493,14 @@ export function main() {
         const { library, entry, local } = mazeEntryAt(record, index);
         let world;
         try {
-            world = deserializeMazeWorld(cell.payload);
+            world = deserializeMazeWorldWithKinds(cell.payload);
         } catch (e) {
             say(`⛔ room ${index} ("${entry?.entry_id}") would not open — ${e.message}`, true);
             return false;
         }
         discardSetRoom();
         setRoomIndex = index;
-        setRoomSess = createEditSession(mazeEditAdapter, world, {
+        setRoomSess = createEditSession(labEditAdapter, world, {
             base: roomBaseTag(library, local, entry),
         });
         /**
@@ -2466,10 +2513,12 @@ export function main() {
             itemLib: world.itemLib ?? DEFAULT_ITEMS,
             obstacleLib: world.obstacleLib ?? DEFAULT_OBSTACLES,
         });
+        setRoomEditor.setTileKinds(labTileKinds);
+        if (editor?.selectedTileKind) setRoomEditor.selectTileKind(editor.selectedTileKind);
         setRoomTool = mountEditorView({
             canvas: $('canvas'),
             session: setRoomSess,
-            adapter: mazeEditAdapter,
+            adapter: labEditAdapter,
             // ⛔ THE GEOMETRY STAYS THIS PAGE'S, and it is the SAME `cellAt` the
             //   EDIT arm uses — it reads `canvasWorld()`, which is this room.
             cellAt,
@@ -3293,6 +3342,7 @@ export function main() {
             return;
         }
         if (setRoomSess === null) return;
+        renderTileKindPick();
         const pal = $('labSetPalette');
         pal.textContent = '';
         for (const e of PALETTE_ENTRIES) {
@@ -4384,7 +4434,7 @@ export function main() {
             tool = mountEditorView({
                 canvas,
                 session,
-                adapter: mazeEditAdapter,
+                adapter: labEditAdapter,
                 // ⛔ THE GEOMETRY STAYS THIS PAGE'S — `check-maze-lab` claim 5
                 //   computes the target cell independently and asserts the tile
                 //   it named is the tile that changed.
@@ -4572,6 +4622,33 @@ export function main() {
         $('status').className = 'bad';
         window.__mazeLab = { fatal: e.message };
         return;
+    }
+
+    /**
+     * ⛓⛓ CONTENT SETS TILE-3 — **THE `?packs=` STACK, LOADED ONCE**: its art and its declared tile kinds
+     * (`loadMazeTileArt` with the maze's roles, the panel's own load). A load that fails is said in the picker's note
+     * and leaves no kind declared; it never stops the page.
+     */
+    $('labTileKind')?.addEventListener('change', (e) => {
+        editor?.selectTileKind(e.target.value);
+        setRoomEditor?.selectTileKind(e.target.value);
+    });
+    if (params.packs) {
+        labPackNote = `loading packs ${params.packs.join(', ')}…`;
+        loadMazeTileArt(params.packs, {
+            ...browserPackIo(), decode: browserDecoder(), rasterise: browserRasteriser(), contentRoles: MAZE_CONTENT_ROLES,
+        }).then((loaded) => {
+            labTileKinds = loaded.tileKinds;
+            labTileArt = loaded.tileArt;
+            const n = placeableTileKinds(labTileKinds).length;
+            labPackNote = `packs ${params.packs.join(', ')}: ${n} placeable tile kind${n === 1 ? '' : 's'}`;
+            editor?.setTileKinds(labTileKinds);
+            setRoomEditor?.setTileKinds(labTileKinds);
+            render();
+        }, (err) => {
+            labPackNote = `⛔ packs ${params.packs.join(', ')} did not load — ${err.message}`;
+            render();
+        });
     }
 
     /**
