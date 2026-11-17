@@ -8,9 +8,9 @@ diagnosis, plus a model fix behind one new key, default OFF, only if the cause i
 | | |
 |---|---|
 | start SHA | `d24a057d99` (= `origin/main`, "train: sdc-addon-u2-apworld 64f7f64f9b"); 135 keys, 125 default-ON |
-| head | the commit carrying this report (the last code commit before it: `1d18ee10`) |
+| head | the commit carrying this report (the last code commit before it: `7fb5350a`, CI-green) |
 | harness branch | `claude/seedling-l39-hit-diagnosis-qorv9r` (the brief's `seedling-fidelity-l39hit`) |
-| commits | D1 evidence `3a8affaf` · D2 key + rows `88da10ee` · D2 press/fight forecasts + docs + surface `1d18ee10` · this report |
+| commits | D1 evidence `3a8affaf` · D2 key + rows `88da10ee` · D2 press/fight forecasts + docs + surface `1d18ee10` · constants census `--write` `7fb5350a` · census evidence + draft report `fa142c65` · this report |
 | verdicts | **D1 PASS** (rebuilt exactly; game-witnessed; cause named) · **D2 PASS** (key OFF, byte-inert; ON prices the hit at its tick and plans a hitless walk the game plays hitless) · **ON movers listed, STOP for the flip** |
 | node / wasm | v22.23.4; `session_bootstrap.sh --seedling` → READY; wasm pin `9968c7dd`, p4g; `vendor/seedling` `ccdf1897` |
 
@@ -206,17 +206,17 @@ totem-pickup read artifact as t2825.
 
 | gate | result |
 |---|---|
-| acceptance md5 (`batch-seedling-acceptance.mjs \| md5sum`) | base `391322d681b7aa0229d94b3f6906d024` · head OFF ACC_OFF · head ON ACC_ON |
+| acceptance md5 (`batch-seedling-acceptance.mjs \| md5sum`) | base `391322d681b7aa0229d94b3f6906d024` · head OFF `391322d681b7aa0229d94b3f6906d024` · head ON `391322d681b7aa0229d94b3f6906d024` |
 | bounded vitest BEFORE (base, 63 files: the brief's list + every `.test.js` naming `spinnerForecast`, `pulseReaches`, `stepPulser`, `hitSpinner`, `SOLVER_ENV_NAMES`, `pulserStateFor`, `stepPulsersNow`, + `fidelityUnbilledGate`) | **63/63 files, 1231/1231** |
-| bounded vitest AFTER, key OFF (64 files: + `fidelityL39Hit`) | BOUNDED_OFF |
+| bounded vitest AFTER, key OFF (64 files: + `fidelityL39Hit`) | **64/64 files, 1241/1241** (+9 `fidelityL39Hit` rows, +1 `contactFidelity` hook row) |
 | bounded vitest AFTER, key ON (`SEEDLING_PULSER_FORECAST_PULSE=1`) | **3 red**: the movers in §9 (the 9 L39HIT rows green ON) |
 | fixtures diff | **empty**: no committed fixture or tape changed; the one new fixture is `fixtures/l39hit/` |
-| `ci-producer-checks.mjs --jobs=3` | PRODUCERS |
+| `ci-producer-checks.mjs --jobs=3` | **99 run, 0 red, 1 skipped** |
 | `check-procgen-docs.mjs` | ALL CHECKS PASSED |
 | `generate-procgen-reference.mjs --check` | ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH (after a regenerate: README counts + `docsIndex.js` for the new doc text) |
 | constants census `--check` | PASS (7,122 literals; green drift only) |
 | surface census `--check` | GREEN after `--write`: 58 `line` shifts in `levelRun.js`; 375 rows before and after, none added or removed |
-| CI `JavaScript Unit Tests` at the last head | CI_RUN |
+| CI `JavaScript Unit Tests` at the last head | run `43980123118` at `7fb5350a`: **success**, unfiltered 28183/28183, slow 437/437. (The run at `1d18ee10`, `43976673973`, was red on `seedlingConstantsCensus` mutant (b): the census needed a `--write`, landed as `7fb5350a`) |
 
 ## 9. ON census and movers
 
@@ -262,8 +262,8 @@ the walk's own seam (30036 and 30039 measured). L40 legs: unchanged on the surve
 | hammerChooserPair | 6/6 | |
 | hammerGhostKillRung | 7/7 | |
 | hammerPitWest | 8/8 | |
-| hammerApproachOrder | 2 red (the "OFF: solved inside the budget … 4,519 ticks" and "ON: the right side's corridor … 4,527 ticks" rows) | APPROACH_OFF |
-| the other 20 | TRAIN_REST | |
+| hammerApproachOrder | 2 red (the "OFF: solved inside the budget … 4,519 ticks" and "ON: the right side's corridor … 4,527 ticks" rows) | **7/7 green**: so the key moves both rows |
+| the other 20 (BombPhase, OppFallbackHits, TurretApproach, Bk2Combat, EscapeExact, fidelityL40Latch, SpinnerPress, PocketBurn, OppPressFallback, BodyGate, OppDashDefers, KillHitBody, fidelityCorpseBump2, IceTurretStatic, StagedHuntScanMemo, fidelityL40Bk2, KeylockTurret, ClearTagChain, SouthDoor, LatchWeigh) | **20/20 files, 56/56** | not needed |
 
 ## 10. What the brief got wrong (measured)
 
@@ -286,7 +286,7 @@ the walk's own seam (30036 and 30039 measured). L40 legs: unchanged on the surve
   - (b) **the t300 strike-schedule refusal** under `pulserForecastPulse` ON (§9.2).
   - (c) **`pressKillCost`'s shift in pulser rooms**: ON recuts the forecast every tick there (+cost); a shift that carries
     the pulser copy is the clean form.
-  - (d) **`hammerApproachOrder.train`'s two rows ON**: APPROACH_HANDOVER.
+  - (d) **`hammerApproachOrder.train`'s two rows ON**: ON, the push side's solve comes back `['dashless', 4519]` where the row pins `['full', 4306]`, and the right side's corridor row reads `false`. Both are green OFF (7/7). The re-priced L39/L40 spinner forecast changes which pass wins; this is a chooser/pin question for hammer at a flip, not a model defect I measured.
 - **Fidelity (at a flip):** re-record `l39shaft-solver-step66` (step 65 is 2477 t ON); re-choose D0's witness window.
 - **JS arc / walk instrument:** the walk saves no request and no tape. Saving `--capture-requests`-style requests per leg
   would have made this a 10-minute replay. The page's AP L39 record (`apitem@72,40`) is what the node rebuild needs on top
