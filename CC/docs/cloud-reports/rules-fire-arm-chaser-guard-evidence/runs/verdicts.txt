@@ -42,11 +42,16 @@ L53:breakablerock@128,160 corridor 17 | icetrap@160,192 speed 0 vs 0.8 runRange 
 L53:breakablerock@128,160 corridor 17 | puncher@136,96 speed 1 vs 0.8 runRange 80 chase region 44 dist 16.0 lethalBorder 4 a=false b=true c=true 
 L53:breakablerock@128,160 corridor 17 | jellyfish@184,160 speed 0.8 vs 0.8 runRange 160 chase region 19 dist 0.0 lethalBorder 0 a=true b=false c=true 
 L53:breakablerock@128,160 corridor 17 | jellyfish@152,168 speed 0.8 vs 0.8 runRange 160 chase region 19 dist 0.0 lethalBorder 0 a=true b=false c=true 
-L73:breakablerock@64,48 no stances ( none guarded )
+L73:breakablerock@64,48 corridor 35 | bulb@80,80 speed 0.65 vs 0.8 runRange 80 chase region 35 dist 0.0 lethalBorder 12 a=false b=false c=true 
+L73:breakablerock@64,48 corridor 35 | lavarunner@32,24 speed 1.5 vs 0.8 runRange 80 chase region 73 dist 0.0 lethalBorder 0 a=true b=true c=true BLOCKS
 L92:breakablerock@176,48 corridor 69 | jellyfish@120,64 speed 0.8 vs 0.8 runRange 160 chase region 107 dist 0.0 lethalBorder 0 a=true b=false c=true 
 L92:breakablerock@176,48 corridor 69 | spinner@224,64 speed 1 vs 0.8 runRange 0 none region 69 dist 0.0 lethalBorder 5 a=false b=true c=false 
 L92:breakablerock@176,48 corridor 69 | bob@224,112 speed 0.5 vs 0.8 runRange 80 chase region 69 dist 0.0 lethalBorder 5 a=false b=false c=true 
 L92:breakablerock@256,112 corridor 69 | jellyfish@120,64 speed 0.8 vs 0.8 runRange 160 chase region 107 dist 0.0 lethalBorder 0 a=true b=false c=true 
 L92:breakablerock@256,112 corridor 69 | spinner@224,64 speed 1 vs 0.8 runRange 0 none region 69 dist 0.0 lethalBorder 5 a=false b=true c=false 
 L92:breakablerock@256,112 corridor 69 | bob@224,112 speed 0.5 vs 0.8 runRange 80 chase region 69 dist 0.0 lethalBorder 5 a=false b=false c=true 
-L100:breakablerock@128,144 no stances ( none guarded )
+L100:breakablerock@128,144 corridor 67 | flyer@224,96 speed 1 vs 0.8 runRange 80 chase-through-walls region 299 dist 0.0 lethalBorder 0 a=true b=true c=true BLOCKS
+L100:breakablerock@128,144 corridor 67 | jellyfish@80,112 speed 0.8 vs 0.8 runRange 160 chase region 76 dist 0.0 lethalBorder 0 a=true b=false c=true 
+L100:breakablerock@128,144 corridor 67 | jellyfish@88,144 speed 0.8 vs 0.8 runRange 160 chase region 76 dist 0.0 lethalBorder 0 a=true b=false c=true 
+L100:breakablerock@128,144 corridor 67 | jellyfish@88,88 speed 0.8 vs 0.8 runRange 160 chase region 76 dist 0.0 lethalBorder 0 a=true b=false c=true 
+L100:breakablerock@128,144 corridor 67 | jellyfish@80,16 speed 0.8 vs 0.8 runRange 160 chase region 76 dist 0.0 lethalBorder 0 a=true b=false c=true 

@@ -1,0 +1,3 @@
+CHANNEL: headless logic-only (no wasm: a node measurement of the maze certifier)
+BUILT: 115 levels, 267 regions, 2025501 B in 14514 ms
+PERMISSIVE: 1 — level_66/out_teleporter_72_64
