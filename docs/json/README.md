@@ -31,6 +31,7 @@ For an overview of all major features in this project, see the **[Features Index
 - [JSON Tools Installer](../../worlds/json_tools_installer/README.md) — One-click APWorld installer for vanilla Archipelago
 - [Skip Required Files](./features/skip-required-files.md) — Generate seeds without ROM files
 - [Spoiler Export Hook](./features/spoiler-export-hook.md) — Optional apworld: a room carries its own sphere order, so Loop mode works with no spoiler file
+- [Upstream Rules Add-on](./features/upstream-rules-addon.md) — Optional apworld for hosts: every slot of a room carries its rules, so the web client plays upstream games with no preset file
 
 **World Generation & Tracking:**
 - [World Generator](../../world_generator/README.md) — Convert JSON rules back into functional Python worlds

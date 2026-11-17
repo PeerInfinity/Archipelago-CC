@@ -110,6 +110,7 @@ location_table: Dict[str, LocationData] = {
     "Level 089 - Feather": LocationData("level_89__r1c10", "Level 089 - Feather", 30000041, False),
     "Level 090 - Chest": LocationData("level_90", "Level 090 - Chest", 30000042, False),
     "Level 098 - Chest": LocationData("level_98", "Level 098 - Chest", 30000043, False),
+    "L99 flag 0: lock@80,96 cleared": LocationData("level_99__r2c7", "L99 flag 0: lock@80,96 cleared", None, True, extra_attributes={"event_id": "flag:L99:0", "event_kind": "game_state", "obstacle": {"level": 99, "tag": 0, "class": "lock", "x": 80, "y": 96}, "action": {"verb": "opened by its activation group (turnOff)", "item": None}, "side": "level_99__r2c7", "across": ["level_99__r2c4"]}),
     "L101 flag 0: lightpole@144,64 cleared": LocationData("level_101__r4c2", "L101 flag 0: lightpole@144,64 cleared", None, True, extra_attributes={"event_id": "flag:L101:0", "event_kind": "game_state", "obstacle": {"level": 101, "tag": 0, "class": "lightpole", "x": 144, "y": 64}, "action": {"verb": "lit by a Spear thrust", "item": "hasSpear"}, "side": "level_101__r4c2", "across": []}),
     "Level 106 - Ghostsword": LocationData("level_106", "Level 106 - Ghostsword", 30000044, False),
     "Level 109 - Firewand": LocationData("level_109", "Level 109 - Firewand", 30000045, False),

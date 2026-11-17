@@ -269,7 +269,10 @@ describe('MessageHandler: no preset for this room (sdc-no-preset-refusal)', () =
     expect(handler.getAwaitedRulesGame()).toBe(BAKING);
     expect(handler._serverBuild?.presetsAtOtherSeeds).toBe(null);
     expect(text()).toContain(`No ${BAKING} rules are loaded; connecting to see whether the server sends them…`);
-    expect(text().some((m) => m.startsWith(`No rules for ${BAKING} are loaded, and the server did not send them.`))).toBe(true);
+    // The room's world sent no document and no note: the line names the host's add-on (sdc-addon-u3).
+    expect(text().some((m) => m.startsWith(
+      `No rules for ${BAKING} are loaded, and the server did not send them (a host can send them by installing the Upstream Rules Addon).`
+    ))).toBe(true);
     expect(text().some((m) => m.includes('other seeds'))).toBe(false);
     expect(calls).toEqual([]);
   });
@@ -487,6 +490,59 @@ describe('MessageHandler: no preset for this room (sdc-no-preset-refusal)', () =
       await flush();
       expect(handler._heldGameChecks).toEqual([]);
       expect(text().some((m) => m.endsWith('("B"); the server is another room now.'))).toBe(true);
+    });
+  });
+
+  // sdc-addon-u3: the server's note says why no rules came; every reason still ends in the refusal.
+  describe('the server sent a worldgen_rules_omitted note: the line reads its reason, then the refusal', () => {
+    const ADDON = 'upstream_rules_addon';
+    const ADDON_HEAD = "The host's Upstream Rules Addon did not send this world's rules";
+    const WG_HEAD = "The server did not send this world's rules";
+    it.each([
+      ['add-on over_cap', { reason: 'over_cap', size_kb: 290, cap_kb: 100, source: ADDON },
+        `${ADDON_HEAD} (290 KB, over its host.yaml max_kb of 100 KB).`],
+      ['add-on over_cap, no sizes', { reason: 'over_cap', source: ADDON },
+        `${ADDON_HEAD} (over its host.yaml max_kb).`],
+      ['add-on export_degraded, a count', { reason: 'export_degraded', unanalysed_rules: 3, source: ADDON },
+        `${ADDON_HEAD}: 3 of its rules could not be analysed, so they would not match the game's logic.`],
+      ['add-on export_degraded, format fallback', { reason: 'export_degraded', unanalysed_rules: 0, format_fallback: 'x', source: ADDON },
+        `${ADDON_HEAD}: the export fell back to an older rule format, so they would not match the game's logic.`],
+      ['add-on export_failed', { reason: 'export_failed', error: 'KeyError: \'Sword\'', source: ADDON },
+        `${ADDON_HEAD}: the export failed (KeyError: 'Sword').`],
+      ['add-on, an unknown reason', { reason: 'race', source: ADDON }, `${ADDON_HEAD} (reason: "race").`],
+      ['world_generator over_cap', { reason: 'over_cap', size_kb: 9, cap_kb: 4 },
+        `${WG_HEAD} (9 KB, over the slot's rules_in_slot_data_max_kb of 4 KB).`],
+      ['world_generator, no sizes', { reason: 'over_cap' }, `${WG_HEAD} (over the slot's rules_in_slot_data_max_kb).`],
+      ['world_generator, an unknown reason', { reason: 'export_failed' }, `${WG_HEAD} (reason: "export_failed").`],
+    ])('%s', async (_label, note, line) => {
+      const held = { eventData: { locationName: 'B' }, eventName: 'user:locationCheck', seedName: ROOM_SEED };
+      handler._heldGameChecks = [held];
+      await play(room({ slot: 2, slotData: { worldgen_rules_omitted: note } }), { chosen: BAKING });
+      expect(text()).toContain(line);
+      expect(text().some((m) => /undefined/.test(m))).toBe(false);
+      // Step 1's refusal: nothing loaded or sent, the held game checks kept, the wait on.
+      expect(loads()).toHaveLength(0);
+      expect(calls).toEqual([]);
+      expect(sent('LocationChecks')).toEqual([]);
+      expect(handler._heldGameChecks).toEqual([held]);
+      expect(handler.getAwaitedRulesGame()).toBe(BAKING);
+      // A note came, so the refusal does not also suggest the add-on.
+      expect(text().some((m) => m.includes('a host can send them'))).toBe(false);
+    });
+  });
+
+  describe('rulesNeededMessage, the add-on clause (sdc-addon-u3)', () => {
+    it('named when the world sent nothing', () => {
+      expect(rulesNeededMessage(BAKING, ROOM_SEED, null, { addonCould: true })).toMatch(
+        new RegExp(`^No rules for ${BAKING} are loaded, and the server did not send them \\(a host can send them by installing the Upstream Rules Addon\\)\\. Load its rules\\.json`)
+      );
+      expect(rulesNeededMessage(BAKING, ROOM_SEED, [{ gameKey: 'x', folderName: 'y' }], { addonCould: true })).toContain(
+        'the server did not send its rules (a host can send them by installing the Upstream Rules Addon). The'
+      );
+    });
+    it('never for APCalc (the add-on skips it), nor by default', () => {
+      expect(rulesNeededMessage('APCalc', ROOM_SEED, null, { addonCould: true })).not.toContain('Upstream Rules Addon');
+      expect(rulesNeededMessage(BAKING, ROOM_SEED)).not.toContain('Upstream Rules Addon');
     });
   });
 

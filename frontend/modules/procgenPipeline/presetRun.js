@@ -779,7 +779,8 @@ export function worldContentSubstrateIds(state, { resolvedLibraries = [] } = {})
 /** The world's effective content stack (`worldContent.effectiveContentStack` over `worldContentSubstrateIds`). */
 export function worldContentStackOf(state, opts = {}) {
     return effectiveContentStack({
-        substrateIds: worldContentSubstrateIds(state, opts), content: state?.params?.content ?? [],
+        substrateIds: worldContentSubstrateIds(state, opts), exists: state?.params?.exists ?? [],
+        content: state?.params?.content ?? [],
     });
 }
 

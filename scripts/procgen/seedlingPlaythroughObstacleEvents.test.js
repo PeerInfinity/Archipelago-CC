@@ -351,13 +351,42 @@ describe('encounter locks a side cannot clear — RULES rocklock-pocket', () => 
     it('the census fires on the kill-locks whose door pocket no inventory clears the room from, and names why the rest do not', () => {
         const rows = playthroughEncounterLocks();
         expect(named(rows.filter((r) => r.fires))).toEqual([
-            'L18 flag 0: lock@144,112 cleared', 'L26 flag 0: rocklock@112,208 cleared', 'L53 flag 2: lock@144,208 cleared']);
+            'L18 flag 0: lock@144,112 cleared', 'L26 flag 0: rocklock@112,208 cleared', 'L53 flag 2: lock@144,208 cleared',
+            // ⛓ rules-l99-sided-killlock: the west pocket (the L100 landing) wakes one lavarunner of three
+            'L99 flag 0: lock@80,96 cleared']);
         expect(rows.filter((r) => r.fires).every((r) => r.latch)).toBe(true);
         const why = Object.fromEntries(rows.filter((r) => !r.fires).map((r) => [r.name, r.why]));
         expect(why['L39 flag 8: wandlock@144,592 cleared']).toBe('a cross-level ButtonRoom also clears its tag');
         // L26: the census's pocket (the L28 door's) cannot reach puncher@32,208 by any arm
         const l26 = rows.find((r) => r.level === 26).sides.find((s) => s.verdict === 'cannot');
         expect(l26).toMatchObject({ beyond: ['puncher@32,208'], steps: [{ tile: [7, 13], dir: 'W' }] });
+    });
+
+    // ⛓⛓ RULES l99-sided-killlock — the game witness `rules-l99-l6-witness`: from the west pocket (the L100 landing) the
+    // lock never opens with any arm, from the lower floor it opens hitless with the Sword or the Ghost Spear. The pocket is
+    // a SIDE because the player's own 1 px flood says so (a cliffside's pixel mask cuts the tile flood's one component),
+    // and two of its three lavarunners never wake: no reachable centre comes within their class's runRange.
+    it('L99: the west pocket wakes one lavarunner of three (the 1 px flood\'s centres), so only the lower floor clears', async () => {
+        const { ENEMY_CLASSES } = await import('../../frontend/modules/seedlingDemo/combat.js');
+        const runRange = ENEMY_CLASSES.lavarunner.aggro.range;
+        const row = playthroughEncounterLocks().find((r) => r.name === 'L99 flag 0: lock@80,96 cleared');
+        expect(row).toMatchObject({ fires: true, latch: true, through: null });
+        const west = row.sides.find((s) => s.verdict === 'cannot');
+        const east = row.sides.find((s) => s.verdict === 'clears');
+        expect(row.sides).toHaveLength(2);
+        // the steps INTO the lock: the plateau's (from its north and west), the lower floor's (from its south)
+        expect(west.steps.map((s) => s.dir).sort()).toEqual(['E', 'S']);
+        expect(east.steps.map((s) => s.dir)).toEqual(['N']);
+        expect(west.beyond.sort()).toEqual(['lavarunner@176,64', 'lavarunner@192,64']);
+        expect(west.across).toEqual(['lavarunner@160,32']);
+        for (const at of west.beyond) expect(west.nearest[at], at).toBeGreaterThan(runRange);
+        expect(west.nearest['lavarunner@160,32']).toBeLessThanOrEqual(runRange);
+        // the rules: the pocket's crossing asks for the event, earned on the lower floor; the floor's own does not
+        const R = RULES.regions['1'];
+        const asks = (e) => JSON.stringify(e.access_rule).includes(JSON.stringify(row.name));
+        expect(asks(R.level_99__r2c4.exits.find((e) => e.connected_region === 'level_99__r2c7'))).toBe(true);
+        expect(asks(R.level_99__r2c7.exits.find((e) => e.connected_region === 'level_99__r2c4'))).toBe(false);
+        expect(eventsOf(RULES).find((e) => e.name === row.name)).toMatchObject({ region: 'level_99__r2c7', side: 'level_99__r2c7' });
     });
 
     it('each fired lock is a lock event on the side that clears it, and only the pocket\'s crossing asks for it', () => {

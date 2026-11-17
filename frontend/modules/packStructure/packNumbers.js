@@ -14,7 +14,7 @@
  *         } } }
  *
  * A VALUE PATH is a part name, optionally followed by an id and a field:
- * `time`, `limit`, `max`, `requires.<id>.<field>`, `results.<id>`,
+ * `time`, `limit`, `max`, `count` (a boon's item-pool copies, PL-2), `requires.<id>.<field>`, `results.<id>`,
  * `modifies.<part>` (a `modifies` part: `time`, `limit`, `results.<id>`,
  * `requires.<id>`). Only the named game reads the values, in its own units.
  *
@@ -32,7 +32,7 @@ export const SUBSTRATE_ID_PATTERN = /^[a-z][a-z0-9_]*$/;
 /** The fields a set may carry. */
 export const SET_FIELDS = Object.freeze(['exists', 'economy', 'values', 'src']);
 /** The heads of a value path. */
-export const VALUE_PATH_HEADS = Object.freeze(['time', 'limit', 'max', 'requires', 'results', 'modifies']);
+export const VALUE_PATH_HEADS = Object.freeze(['time', 'limit', 'max', 'count', 'requires', 'results', 'modifies']);
 
 const MANIFEST_FIELDS = Object.freeze(['schema_version', 'sets', 'provenance', '_comment']);
 const isObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -45,7 +45,8 @@ const fail = (message) => { throw new ContentPackError(`pack numbers: ${message}
  */
 export function parseValuePath(path) {
     if (typeof path !== 'string') return null;
-    if (path === 'time' || path === 'limit' || path === 'max') return { head: path };
+    // ⛓ PL-2 (a Z.4 addition, ⚖ planner): `count` — how many copies of a boon the item pool holds.
+    if (path === 'time' || path === 'limit' || path === 'max' || path === 'count') return { head: path };
     let m = /^requires\.([^.]+)\.([a-z_][a-z0-9_]*)$/.exec(path);
     if (m && parseStructureId(m[1])) return { head: 'requires', id: m[1], field: m[2] };
     m = /^results\.([^.]+)$/.exec(path);
@@ -83,7 +84,7 @@ export function parseNumbersManifest(json, packId) {
             if (id.pack !== set.exists) fail(`${vAt}: names an entry of pack "${id.pack}", but the set prices "${set.exists}"`);
             if (!isObject(paths)) fail(`${vAt}: is not { <value path>: <value> }`);
             for (const [path, value] of Object.entries(paths)) {
-                if (!parseValuePath(path)) fail(`${vAt}: ${JSON.stringify(path)} is not a value path (time, limit, max, requires.<id>.<field>, results.<id>, modifies.<part>)`);
+                if (!parseValuePath(path)) fail(`${vAt}: ${JSON.stringify(path)} is not a value path (time, limit, max, count, requires.<id>.<field>, results.<id>, modifies.<part>)`);
                 const ok = finite(value) || (isObject(value) && Object.keys(value).length && Object.values(value).every(finite));
                 if (!ok) fail(`${vAt}: "${path}" is ${JSON.stringify(value)}, not a number or a small object of numbers`);
             }

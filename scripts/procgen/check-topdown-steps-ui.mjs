@@ -287,16 +287,18 @@ const cells = await page.evaluate(() => {
     const c = document.querySelector('.procgen-pipeline-canvas');
     if (!c) return null;
     const gw = +c.dataset.gridW; const gh = +c.dataset.gridH;
+    // ⛓ unbounded grid S1: canvas column 0 is cell `gridMinX` (signed; 0 today).
+    const mx = +(c.dataset.gridMinX ?? 0); const my = +(c.dataset.gridMinY ?? 0);
     const cw = +c.dataset.cellW; const ch = +c.dataset.cellH;
     const ctx = c.getContext('2d');
     const colourAt = (gx, gy) => {
-        const px = ctx.getImageData(gx * cw + (cw >> 1), gy * ch + (ch >> 1), 1, 1).data;
+        const px = ctx.getImageData((gx - mx) * cw + (cw >> 1), (gy - my) * ch + (ch >> 1), 1, 1).data;
         return `${px[0]},${px[1]},${px[2]}`;
     };
     const grid = [];
     const freq = {};
-    for (let gy = 0; gy < gh; gy++) {
-        for (let gx = 0; gx < gw; gx++) {
+    for (let gy = my; gy < my + gh; gy++) {
+        for (let gx = mx; gx < mx + gw; gx++) {
             const col = colourAt(gx, gy);
             grid.push({ gx, gy, col });
             freq[col] = (freq[col] ?? 0) + 1;
@@ -316,9 +318,10 @@ assert(cells && cells.occupied.length >= 1 && cells.empties.length >= 1,
 const clickCell = (gx, gy) => page.evaluate(({ gx, gy }) => {
     const c = document.querySelector('.procgen-pipeline-canvas');
     const cw = +c.dataset.cellW; const ch = +c.dataset.cellH;
+    const mx = +(c.dataset.gridMinX ?? 0); const my = +(c.dataset.gridMinY ?? 0);
     const rect = c.getBoundingClientRect();
-    const clientX = rect.left + (gx * cw + cw / 2) * (rect.width / c.width);
-    const clientY = rect.top + (gy * ch + ch / 2) * (rect.height / c.height);
+    const clientX = rect.left + ((gx - mx) * cw + cw / 2) * (rect.width / c.width);
+    const clientY = rect.top + ((gy - my) * ch + ch / 2) * (rect.height / c.height);
     c.dispatchEvent(new MouseEvent('click', { clientX, clientY, bubbles: true }));
 }, { gx, gy });
 

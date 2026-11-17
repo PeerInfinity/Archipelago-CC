@@ -174,7 +174,13 @@ describe('seedling-divergence-sweep.yml', () => {
         expect(text).toMatch(/carry=\$\{\{ inputs\.carry_route_flags \}\}/);
         expect(text.match(/CARRY: \$\{\{ inputs\.carry_route_flags && 'on' \|\| '' \}\}/g)).toHaveLength(1);
         expect(text.match(/\$\{CARRY:\+--carry-route-flags\}/g)).toHaveLength(1);
-        expect(text).toMatch(/seedling-divergence-legs\.mjs --out="\$L" --presets=seedling_playthrough --blocks \$\{CARRY:\+--carry-route-flags\} \| tee plan\.txt/);
+        expect(text).toMatch(/seedling-divergence-legs\.mjs --out="\$L" --presets=seedling_playthrough --blocks \$\{CARRY:\+--carry-route-flags\} \$\{EDGE:\+--stage-edge-events\} \| tee plan\.txt/);
+    });
+    it('⛓ stage_edge_events (⚖ Robert 2026-11-14, the hammer sweep arm): a boolean defaulting OFF, stamped, reaching ONLY the plan\'s leg list', () => {
+        expect(text).toMatch(/ {6}stage_edge_events:\n(?: {8}.*\n)+? {8}type: boolean\n {8}default: false\n/);
+        expect(text).toMatch(/edge=\$\{\{ inputs\.stage_edge_events \}\}/);
+        expect(text.match(/EDGE: \$\{\{ inputs\.stage_edge_events && 'on' \|\| '' \}\}/g)).toHaveLength(1);
+        expect(text).toMatch(/seedling-divergence-legs\.mjs [^\n]*\$\{EDGE:\+--stage-edge-events\}/);
     });
 
     it('the shard timeout and the leg count are DERIVED by the plan job, never typed', () => {

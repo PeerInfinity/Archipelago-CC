@@ -143,7 +143,7 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 158,
+            "browser": 157,
             "count": 209,
             "id": "probe"
         },
@@ -184,7 +184,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "report"
         },
         {
@@ -245,11 +245,11 @@ export const INSTRUMENTS = frz({
     ],
     "counts": {
         "blockStyle": 533,
-        "browser": 228,
-        "cited": 289,
-        "files": 554,
-        "lineStyle": 21,
-        "withDocblock": 554,
+        "browser": 227,
+        "cited": 290,
+        "files": 555,
+        "lineStyle": 22,
+        "withDocblock": 555,
         "withFlags": 472
     },
     "dir": "scripts/procgen",
@@ -16507,81 +16507,6 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
-                "also",
-                "host",
-                "near",
-                "only",
-                "out",
-                "ticks",
-                "wait-for-box"
-            ],
-            "file": "probe-seedling-landing-contact.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "also"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "near"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "out"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "screen-only"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "ticks"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling LANDING CONTACT, THE GAME'S WAY (rules `rules-landing-contact-census`).",
-            "path": "scripts/procgen/probe-seedling-landing-contact.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
                 "cross",
                 "host",
                 "only",
@@ -17016,6 +16941,68 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's ONE-WAY EVENT CENSUS, ON THE GAME (rules `rules-oneway-event-census`, measure only).",
             "path": "scripts/procgen/probe-seedling-oneway-census.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget",
+                "dump-plan",
+                "exit",
+                "fixture"
+            ],
+            "file": "probe-seedling-page-budget-step.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump-plan"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "exit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "work-sites"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only — SOLVE A COMMITTED BOOT FIXTURE UNDER THE PAGE'S WORK BUDGET, in node: the page's own `solveAnytime` request at `SOLVER_BUDGET_WORK` (640) with the upgrade window, then — when the answer is a refusal cut at its budget with a pass left unanswered (`wasmPlayback.expiryAction` = 'retry') — the ONE held re…",
+            "path": "scripts/procgen/probe-seedling-page-budget-step.mjs"
         },
         {
             "argvHelpers": [
@@ -22109,6 +22096,32 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only — REPLAY A CAPTURED SOLVE REQUEST in node, N times, each in a FRESH process: is the solver's answer a function of the request?",
             "path": "scripts/procgen/replay-seedling-solve-request.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "report",
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "content",
+                "exists",
+                "numbers",
+                "numbers-mode",
+                "substrate"
+            ],
+            "file": "report-content-gaps.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Content gap report — resolves (substrate, the three settings) through the pack resolver and prints its gap report (⛓ CONTENT SETS PL-2; Z.5 the resolver, Z.6 the fill rules and the report).",
+            "path": "scripts/procgen/report-content-gaps.mjs"
         },
         {
             "argvHelpers": [],

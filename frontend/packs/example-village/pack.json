@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "id": "example-village",
+  "title": "The Village — ActionNodes' example graph, as a pack",
+  "licence": "MIT",
+  "credit": "Written for this repository (the Archipelago-CC project), under the repository's MIT licence (LICENSE). The ten-node example of the ActionNodes design (Claude Fable 5.2, accepted by the user for initial testing, ruling A14), its Do Chores change and AN-1's per-item mana value (each layer's provenance block names them), moved from the inline graph document into pack layers by content sets PL-2 (Claude Opus 5.5).",
+  "source": "frontend/modules/actionNodes/graphs/example-village.json (the AN-1 graph document, field for field; scripts/procgen/report-content-gaps.mjs resolves it back)",
+  "layers": {
+    "structure": "structure/manifest.json",
+    "concepts": "concepts/manifest.json",
+    "numbers": "numbers/manifest.json"
+  }
+}

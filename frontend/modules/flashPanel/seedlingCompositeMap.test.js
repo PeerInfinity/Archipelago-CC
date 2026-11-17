@@ -116,7 +116,7 @@ describe('2. the hooks for steps 2–3', () => {
         expect(seedlingDisplayRegionOf(genName, gen)).toBe(genName);
     });
 
-    it('locationTiles places seedling_playthrough\'s 48 items (atlas tile) + 37 events (obstacle); 3 remote events are residue', async () => {
+    it('locationTiles places seedling_playthrough\'s items (atlas tile) and events (obstacle); the remote events are residue', async () => {
         const { SEEDLING_PLAYTHROUGH_ATLAS } = await import('./flashSeedlingLibrary.js');
         const atlases = { [SEEDLING_PLAYTHROUGH_ATLAS.atlas_id]: SEEDLING_PLAYTHROUGH_ATLAS };
         const ctx = { rules: PLAYTHROUGH, playerId: '1', atlases };
@@ -131,7 +131,8 @@ describe('2. the hooks for steps 2–3', () => {
             }
             residue = residue.concat(unplacedSeedlingLocations(region, ctx));
         }
-        expect(kinds).toEqual({ item: 48, event: 37 });
+        // ⛓ rules-l99-sided-killlock: event 37 -> 38, L99's kill-lock event (its lock@80,96 stands in its own level)
+        expect(kinds).toEqual({ item: 48, event: 38 });
         // ⛓ the three events whose obstacle is in ANOTHER level than the region listing them (a remote effect)
         expect(residue.sort()).toEqual(['L39 flag 8: wandlock@144,592 cleared', 'L62 flag 0: lightpole@120,200 cleared',
             'L63 flag 1: lightpole@64,88 cleared'].sort());

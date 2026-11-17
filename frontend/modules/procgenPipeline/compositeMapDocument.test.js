@@ -517,29 +517,31 @@ describe('reconstructResultFromSidecars — the cell size (M0)', () => {
  * move refuses with are this one function (`apworldEditor/regionLayout.js`).
  */
 describe('mapBoundsFor', () => {
+    // ⛓ unbounded grid S1: `mapBoundsFor` also returns the box's top-left cell (`minX`/`minY`), 0 for every
+    //   non-negative document — the values below are unchanged; only the shape grew.
     const entries = (...cells) => cells.map(([gx, gy], i) => [`r${i}`, minimalSidecar(gx, gy)]);
 
     it('the extents, when the document records no size', () => {
         expect(mapBoundsFor({}, entries([0, 0], [2, 1]), '1'))
-            .toEqual({ width: 3, height: 2, boundsSource: 'extents' });
+            .toEqual({ minX: 0, minY: 0, width: 3, height: 2, boundsSource: 'extents' });
     });
 
     it('`grid_dims` wins on an axis where it is LARGER — and only there', () => {
         const doc = { procgen_metadata: { 1: { grid_dims: { width: 3, height: 5 } } } };
         expect(mapBoundsFor(doc, entries([0, 0], [4, 1]), '1'))
-            .toEqual({ width: 5, height: 5, boundsSource: 'grid_dims' });
+            .toEqual({ minX: 0, minY: 0, width: 5, height: 5, boundsSource: 'grid_dims' });
     });
 
     it('a `grid_dims` no larger than the extents leaves them as they are', () => {
         const doc = { procgen_metadata: { 1: { grid_dims: { width: 3, height: 2 } } } };
         expect(mapBoundsFor(doc, entries([0, 0], [2, 1]), '1'))
-            .toEqual({ width: 3, height: 2, boundsSource: 'extents' });
+            .toEqual({ minX: 0, minY: 0, width: 3, height: 2, boundsSource: 'extents' });
     });
 
     it('a malformed `grid_dims` is ignored', () => {
         for (const grid_dims of [{ width: '9', height: 9.5 }, { width: -4, height: 0 }, [9, 9], null]) {
             expect(mapBoundsFor({ procgen_metadata: { 1: { grid_dims } } }, entries([1, 1]), '1'), JSON.stringify(grid_dims))
-                .toEqual({ width: 2, height: 2, boundsSource: 'extents' });
+                .toEqual({ minX: 0, minY: 0, width: 2, height: 2, boundsSource: 'extents' });
         }
     });
 
@@ -567,9 +569,9 @@ describe('mapBoundsFor', () => {
     it('⛓⛓ P1a — a slot is bounded by ITS grid_dims, never another slot\'s', () => {
         const doc = { procgen_metadata: { 2: { grid_dims: { width: 3, height: 5 } } } };
         expect(mapBoundsFor(doc, entries([0, 0], [4, 1]), '1'))
-            .toEqual({ width: 5, height: 2, boundsSource: 'extents' });
+            .toEqual({ minX: 0, minY: 0, width: 5, height: 2, boundsSource: 'extents' });
         expect(mapBoundsFor(doc, entries([0, 0], [4, 1]), '2'))
-            .toEqual({ width: 5, height: 5, boundsSource: 'grid_dims' });
+            .toEqual({ minX: 0, minY: 0, width: 5, height: 5, boundsSource: 'grid_dims' });
         const two = { preset_sidecars: { 1: { a: minimalSidecar(0, 0) }, 2: { a: minimalSidecar(0, 0) } },
             procgen_metadata: { 2: { grid_dims: { width: 3, height: 2 } } } };
         expect(reconstructResultFromSidecars(two, { playerId: '1' }).boundsSource).toBe('extents');

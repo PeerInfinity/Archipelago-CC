@@ -1,0 +1,365 @@
+{
+ "path": "frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P2_rules.json",
+ "slots": {
+  "2": {
+   "bounds": {
+    "boundsSource": "extents",
+    "height": 2,
+    "left": 0,
+    "top": 0,
+    "width": 3
+   },
+   "draw": {
+    "art": {
+     "calls": 394,
+     "error": null,
+     "sha256": "b14f6128c29c30bdc4cdaa8eef03c245e30714d06a394f3f39521edc3dfbcee9"
+    },
+    "canvas": [
+     336,
+     168
+    ],
+    "plain": {
+     "calls": 394,
+     "error": null,
+     "sha256": "b14f6128c29c30bdc4cdaa8eef03c245e30714d06a394f3f39521edc3dfbcee9"
+    },
+    "selExit": {
+     "calls": 397,
+     "error": null,
+     "sha256": "75861527f7686657c6c8ca60f5da93c072138acfe444bb81d67aad127ce88b9f"
+    },
+    "selRegion": {
+     "calls": 397,
+     "error": null,
+     "sha256": "22511750527d394096d4bda3f54192e0027348e35f25e8c2e3baea21dd20a289"
+    }
+   },
+   "issues": [],
+   "picks": [
+    [
+     56,
+     42,
+     [
+      0,
+      0,
+      56,
+      42
+     ],
+     null
+    ],
+    [
+     0,
+     0,
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     null
+    ],
+    [
+     111,
+     83,
+     [
+      0,
+      0,
+      111,
+      83
+     ],
+     null
+    ],
+    [
+     168,
+     42,
+     [
+      1,
+      0,
+      56,
+      42
+     ],
+     "region_1_0"
+    ],
+    [
+     112,
+     0,
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     "region_1_0"
+    ],
+    [
+     223,
+     83,
+     [
+      1,
+      0,
+      111,
+      83
+     ],
+     "region_1_0"
+    ],
+    [
+     280,
+     42,
+     [
+      2,
+      0,
+      56,
+      42
+     ],
+     "region_2_0"
+    ],
+    [
+     224,
+     0,
+     [
+      2,
+      0,
+      0,
+      0
+     ],
+     "region_2_0"
+    ],
+    [
+     335,
+     83,
+     [
+      2,
+      0,
+      111,
+      83
+     ],
+     "region_2_0"
+    ],
+    [
+     56,
+     126,
+     [
+      0,
+      1,
+      56,
+      42
+     ],
+     null
+    ],
+    [
+     0,
+     84,
+     [
+      0,
+      1,
+      0,
+      0
+     ],
+     null
+    ],
+    [
+     111,
+     167,
+     [
+      0,
+      1,
+      111,
+      83
+     ],
+     null
+    ],
+    [
+     168,
+     126,
+     [
+      1,
+      1,
+      56,
+      42
+     ],
+     "region_1_1"
+    ],
+    [
+     112,
+     84,
+     [
+      1,
+      1,
+      0,
+      0
+     ],
+     "region_1_1"
+    ],
+    [
+     223,
+     167,
+     [
+      1,
+      1,
+      111,
+      83
+     ],
+     "region_1_1"
+    ],
+    [
+     280,
+     126,
+     [
+      2,
+      1,
+      56,
+      42
+     ],
+     null
+    ],
+    [
+     224,
+     84,
+     [
+      2,
+      1,
+      0,
+      0
+     ],
+     null
+    ],
+    [
+     335,
+     167,
+     [
+      2,
+      1,
+      111,
+      83
+     ],
+     null
+    ],
+    [
+     -1,
+     0,
+     null,
+     null
+    ],
+    [
+     0,
+     -1,
+     null,
+     null
+    ],
+    [
+     336,
+     0,
+     null,
+     null
+    ],
+    [
+     0,
+     168,
+     null,
+     null
+    ],
+    [
+     448,
+     252,
+     null,
+     null
+    ],
+    [
+     -112,
+     -84,
+     null,
+     null
+    ]
+   ],
+   "rects": [
+    [
+     "region_1_1",
+     112,
+     84,
+     112,
+     84
+    ],
+    [
+     "region_1_0",
+     112,
+     0,
+     112,
+     84
+    ],
+    [
+     "region_2_0",
+     224,
+     0,
+     112,
+     84
+    ]
+   ],
+   "result": {
+    "boundsSource": "extents",
+    "cells": [
+     [
+      "region_1_1",
+      1,
+      1
+     ],
+     [
+      "region_1_0",
+      1,
+      0
+     ],
+     [
+      "region_2_0",
+      2,
+      0
+     ]
+    ],
+    "grid": {
+     "height": 2,
+     "left": 0,
+     "top": 0,
+     "width": 3
+    },
+    "playerId": "2",
+    "refused": [],
+    "regionSize": {
+     "height": 6,
+     "width": 8
+    },
+    "regionSizeSource": "payload",
+    "stats": {
+     "regionsBuilt": 3,
+     "regionsSkipped": 0,
+     "stopReason": "pool_empty",
+     "teleportersPlaced": 0
+    }
+   },
+   "slotLayout": {
+    "cells": [
+     [
+      "region_1_1",
+      1,
+      1
+     ],
+     [
+      "region_1_0",
+      1,
+      0
+     ],
+     [
+      "region_2_0",
+      2,
+      0
+     ]
+    ],
+    "clash": null,
+    "grid": {
+     "height": 2,
+     "left": 0,
+     "top": 0,
+     "width": 3
+    }
+   }
+  }
+ }
+}

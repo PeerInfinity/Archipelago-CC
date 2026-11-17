@@ -14,6 +14,7 @@ import {
     SOURCE_FIELDS, SOURCE_TYPES, checkLayerProvenance, layerEntries, parseProvenance, provenanceCounts, resolveSource,
 } from './provenance.js';
 import { packProvenanceReport } from '../../../scripts/procgen/report-pack-provenance.mjs';
+import { ACTION_GRAPH_REFUSALS, PROVENANCE_SOURCE_FIELDS, validateActionGraph } from '../actionNodes/actionGraph.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const REGISTRY = JSON.parse(readFileSync(join(REPO, 'frontend/packs/packs.json'), 'utf8'));
@@ -84,6 +85,44 @@ describe('the block (Z.7)', () => {
     });
 });
 
+describe('ONE validator (PL-2): the ActionNodes graph block and the pack layers are checked by the same code', () => {
+    const GRAPH = JSON.parse(readFileSync(join(REPO, 'frontend/modules/actionNodes/graphs/example-village.json'), 'utf8'));
+
+    it('the two drifted fields are OPTIONAL: `session` on a model source, `ruling` inside `approved`', () => {
+        expect(SOURCE_FIELDS.model).toContain('session');
+        const b = block();
+        b.sources.model.session = 'some-session';
+        b.sources.model.approved = { by: 'someone', date: '2026-11-15', ruling: 'A14' };
+        expect(parseProvenance(b, 'p', 'concepts').sources.model.session).toBe('some-session');
+        // Still optional: the minimal model source (neither field) parses above.
+        const empty = block();
+        empty.sources.model.session = '';
+        refuse(empty, /source "model": session must be a non-empty string/);
+        const noRuling = block();
+        noRuling.sources.model.approved = { by: 'someone', date: '2026-11-15', ruling: '' };
+        refuse(noRuling, /approved.ruling must be a non-empty string/);
+        const other = block();
+        other.sources.person.session = 'x';
+        refuse(other, /source "person": field "session" is not one a person source takes/);
+    });
+
+    it('the AN-1 example graph\'s block parses unchanged under the pack layer\'s validator', () => {
+        const parsed = parseProvenance(GRAPH.provenance, 'example-village', 'structure');
+        expect(Object.keys(parsed.sources)).toEqual(Object.keys(GRAPH.provenance.sources));
+    });
+
+    it('actionGraph.js keeps no copy: its table IS this one, and a source this module refuses the graph refuses too', () => {
+        expect(PROVENANCE_SOURCE_FIELDS).toBe(SOURCE_FIELDS);
+        expect(validateActionGraph(GRAPH).ok).toBe(true);
+        const g = structuredClone(GRAPH);
+        g.provenance.sources['actionnodes-design'].email = 'x@y';     // refused by name here, accepted by the old copy
+        const { ok, errors } = validateActionGraph(g);
+        expect(ok).toBe(false);
+        expect(errors[0].code).toBe(ACTION_GRAPH_REFUSALS.BAD_PROVENANCE);
+        expect(errors[0].message).toMatch(/field "email" is not one a model source takes/);
+    });
+});
+
 describe('the loader check (Z6 check 1): refused by pack, layer and key', () => {
     const files = (layer) => ({
         'p/pack.json': { schema_version: 1, id: 'p', title: 'p', licence: 'CC0', layers: { concepts: 'c.json' } },
@@ -150,12 +189,17 @@ describe('the committed packs, backfilled (Z.7)', () => {
         for (const p of await loadAll()) {
             for (const [layer, json] of Object.entries(p.layers)) {
                 for (const [id, s] of Object.entries(json.provenance.sources)) {
-                    if (s.approved) approvedNotes.push([`${p.id}/${layer}/${id}`, s.note]);
+                    if (s.approved) approvedNotes.push([`${p.id}/${layer}/${id}`, s.note, s.approved.ruling]);
                 }
             }
         }
         expect(approvedNotes.length).toBeGreaterThan(0);
-        for (const [where, note] of approvedNotes) expect(note, where).toMatch(/^content sets S[12] /);
+        // ⛓ PL-2: the ActionNodes example (the pack `example-village`) carries its design's approval, ruling A14, as
+        // its graph did; `approved.ruling` names where it is recorded.
+        for (const [where, note, ruling] of approvedNotes) {
+            if (where.startsWith('example-village/')) expect(ruling, where).toMatch(/^A14: /);
+            else expect(note, where).toMatch(/^content sets S[12] /);
+        }
     });
 
     it('⛔ no committed world document carries a PACK\'s provenance (Z.7): no pack source\'s note', async () => {
@@ -172,7 +216,15 @@ describe('the committed packs, backfilled (Z.7)', () => {
         const rules = execFileSync('git', ['-C', REPO, 'ls-files', '-z', 'frontend/presets/*_rules.json'], { encoding: 'utf8' })
             .split('\0').filter(Boolean);
         expect(rules.length).toBeGreaterThan(0);
-        const hits = rules.filter((f) => { const text = readFileSync(join(REPO, f), 'utf8'); return [...needles].some((n) => text.includes(n)); });
+        // ⛓ PL-2: the ActionNodes example world still records its graph's own block (`provenance[p].graph_provenance`),
+        // whose notes now ALSO sit in the pack `example-village`. Replacing that block by pack ids is the next
+        // slice's (after AN-2 lands); until then the block is the world's honest record and is set aside here, by name.
+        const textOf = (f) => {
+            const doc = JSON.parse(readFileSync(join(REPO, f), 'utf8'));
+            for (const row of Object.values(doc.provenance ?? {})) if (row && typeof row === 'object') delete row.graph_provenance;
+            return JSON.stringify(doc);
+        };
+        const hits = rules.filter((f) => { const text = textOf(f); return [...needles].some((n) => text.includes(JSON.stringify(n).slice(1, -1))); });
         expect(hits).toEqual([]);
     });
 });

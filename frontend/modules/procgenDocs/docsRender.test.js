@@ -321,7 +321,8 @@ describe('⛓ the links the render emits', () => {
         //   416 → 419: region-map step 3a — region-layout.md (its index row, its registry link, the registry's row to it)
         //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out, the registry's annotation row to it)
         //   428 → 429: content packs PL-1 — concepts.md § Content roles → its own § What exists, the numbers and the bindings (1 same-doc).
-        expect(checked).toBe(429);
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver, the fill rules and the gap report → action-nodes.md (1 doc).
+        expect(checked).toBe(430);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -941,6 +941,7 @@ python scripts/build/pack_json_tools_installer.py          # -> apworlds/json_to
 for g in metamath depgraph bakingadventure codingadventure spoiler_export_hook; do
   python scripts/build/pack_apworld.py "$g"                # -> apworlds/<g>.apworld
 done
+python scripts/build/pack_upstream_rules_addon.py         # -> apworlds/upstream_rules_addon.apworld (vendors exporter/)
 ```
 
 The pack scripts are **content-deterministic but not byte-deterministic**:

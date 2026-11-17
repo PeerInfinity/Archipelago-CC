@@ -249,7 +249,7 @@ The boot is the spawn the still frame drew the player at. A SOLVED verdict stamp
 - **An edited room** links to its unedited original, and the note says how many edits the maze lab will not show. A level that the delivered set patches names the patches.
 - **No link**, with the reason on the line, for a generated room, a room that matches no vanilla level by content, and a level that no preset converts (level 81, which no door reaches).
 
-The reverse link is on the maze lab page: a converted room opened there by preset link shows **open level N in the Seedling editor ↗**, which opens `watch.html?source=edit&level=N` (*Opening a preset room* in the maze lab page).
+The reverse link is on the maze lab page: a converted room opened there by preset link (or a paste of the maze lab's own save box from one) shows **open level N in the Seedling editor ↗**, which opens `watch.html?source=edit&level=N` (*Opening a preset room* in the maze lab page).
 
 Tests: `seedlingMazeLink.test.js` and `check-seedling-editor-e1.mjs` claim 10.
 
@@ -280,7 +280,7 @@ The map (`seedlingDemo/seedlingSetMap.js`, handed to the shared mount as `overvi
 
 **What it draws.** Each room's still (the strip's thumbnail, letterboxed) in its own cell. Doors are one line per pair of rooms, two heads for two-way; pits and `named_rooms` arrivals are separate lines, marked `pit` and `★` (the key is spelled out when highlighted). The selected room's links in and out are highlighted, and its doors are ticked with their ordinals.
 
-**Unreachable rooms.** After REPORT, each room holding a region REPORT names unreachable is hatched and outlined in red, with a legend line under the map (`#editSetMapUnreachable`). A region is joined to its room through the report's own derived atlas (`map_ref`, `seedlingDemo/seedlingSetMapUnreachable.js`); a room where only some of its regions are unreachable gets a dashed outline instead. The marks are only drawn while the set is the one REPORT ran over: any edit or undo clears them, and the legend says to run REPORT again. Nothing is marked before the first REPORT. The maze lab's map is unchanged (its provider has no such hook).
+**Unreachable rooms.** After REPORT, each room holding a region REPORT names unreachable is hatched and outlined in red, with a legend line under the map (`#editSetMapUnreachable`). A region is joined to its room through the report's own derived atlas (`map_ref`, `procgenCore/setMapUnreachable.js`, re-exported by `seedlingDemo/seedlingSetMapUnreachable.js`); a room where only some of its regions are unreachable gets a dashed outline instead. The marks are only drawn while the set is the one REPORT ran over: any edit or undo clears them, and the legend says to run REPORT again. Nothing is marked before the first REPORT. The maze lab's map marks them the same way (Maze Lab, § The set arm).
 
 **Gestures on the map** (the room editor's table above holds the rest):
 
