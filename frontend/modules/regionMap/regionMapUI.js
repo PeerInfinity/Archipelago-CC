@@ -33,7 +33,7 @@ import { buildRegionMapModel } from './regionMapModel.js';
 import { cellFrames, frameAt, framesBounds, tileCentre, visibleFrames } from './regionMapFrames.js';
 import {
     centreOn, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
-} from './regionMapCamera.js';
+} from '../procgenCore/mapCamera.js';
 import { SQUARE_COLORS, frameSquares, squareAt, squareColorKey } from './regionMapOverlay.js';
 import { REGION_MAP_SETTING_DEFAULTS, SETTINGS_PREFIX, moduleHandles, panelInstances } from './regionMapSettings.js';
 import { onLocationClick, onRegionClick, readClickOptions, regionOfCell } from './regionMapClicks.js';

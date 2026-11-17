@@ -1,5 +1,5 @@
 /**
- * regionMap/regionMapCamera — **THE CAMERA MATH** (region-map step 3b). ⛔ PURE.
+ * procgenCore/mapCamera — **THE CAMERA MATH** (region-map step 3b; moved from `regionMap/regionMapCamera.js` so the labs' set maps share it). ⛔ PURE.
  *
  * A camera is `{x, y, zoom}`: the WORLD point at the viewport's centre and the screen px per world px.
  *     screen = (world − camera) · zoom + viewport / 2

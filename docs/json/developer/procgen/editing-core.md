@@ -97,6 +97,7 @@ Shared modules for the documents every substrate uses:
 | `setOverlay.js` | `createSetOverlay(spec)` — the shape of a set's authored overlay — and `applyOverlayRules(atlas, byRoom)`. |
 | `setEditorView.js` | `mountSetEditor(opts)` — the set editor's DOM (see below). |
 | `setMapLayout.js` | The set MAP's substrate-free half: `canonicalLayout`, the sticky rule, `frameOf`, `mapLinkShapes`, door ticks and picking, behind `createSetMapProvider(reader)`. A substrate's reader says which links a set has and which way each door leads (`seedlingDemo/seedlingSetMap.js`, `mazeRoom/mazeSetMap.js`). |
+| `mapCamera.js` | **Pure, imports nothing.** The 2D camera `{x, y, zoom}` (the WORLD point at the viewport's centre, screen px per world px): `worldToScreen`, `screenToWorld`, `viewRect`, `zoomAround` (keeps a screen point fixed), `panBy`, `fitCamera` (both axes), `centreOn`, `easeCamera`, `MIN_ZOOM`/`MAX_ZOOM`/`clampZoom`. Used by the Region Map panel (`regionMap/`). |
 | `worldDocument.js`, `worldDerivation.js`, `worldSetAdapter.js` | A world: one session over several set documents. See [The Seedling Editor](./seedling-editor.md#the-world--one-session-over-several-set-documents-procgencoreworldjs). |
 | `labRoomEnvelope.js` | The envelope a lab page sends to its host while a set session is open. |
 

@@ -16,7 +16,7 @@ import {
 } from './regionMapFrames.js';
 import {
     MAX_ZOOM, MIN_ZOOM, easeCamera, fitCamera, panBy, screenToWorld, viewRect, worldToScreen, zoomAround,
-} from './regionMapCamera.js';
+} from '../procgenCore/mapCamera.js';
 import {
     MIN_SQUARE_PX, frameSquares, genericLocationTiles, squareAt, squareColorKey, squareSide,
 } from './regionMapOverlay.js';
