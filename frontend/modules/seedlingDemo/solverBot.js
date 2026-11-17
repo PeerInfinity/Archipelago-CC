@@ -22483,7 +22483,8 @@ function keylockStandWalk(run, resolved) {
  * witnessed (1)-(3), (5) in AS3 at ccdf189): the BossLock key fade (`execKeylock`, after the key line latches,
  * `BossLock.as:62-66`), a latched Lock/Cover group (`runLatchedWait` via `execHold`), and the kill-lock's fade after the
  * last removal (`execKillByChaser`, the press arm). The ceiling arm and the button holds are not: presence IS their
- * activation (`Button.as:26-39`).
+ * activation (`Button.as:26-39`). ⛔ The two kill-lock waits are COUNTED but not moved: their open is a v9 declaration
+ * the measuring pass cannot see, and a move in one pass only breaks the two-pass agreement (measured, `fadeMoveTry`).
  *
  * THE MOVE (`fadeMoveTry`, asked where today's empty-input loop starts):
  *   - the target is the MOUTH — the tile before the activator on the side the player enters from (`preLockStance`, ⚖ 47's
@@ -22587,6 +22588,15 @@ function fadeMoveTry(run, perTick, spec, ctx) {
         FADE_MOVE_COUNTS.declined.push({ ...row, why: String(why).slice(0, 1200) });
         return null;
     };
+    /**
+     * ⛔ MEASURED (survey steps 27 / 120 / 227, L18 / L60 / L98): a kill-lock's open is a v9 DECLARATION
+     * (`PendingDeclaration`), never the model's own. The measuring pass cannot see it, so it stands; the declared pass
+     * sees it and moved, and the two-pass loop refused the solve ("pass 1 and pass 2 DISAGREE"). Both kill-lock arms
+     * decline until the move asks an open both passes share (the arithmetic clear tick) — the report's hand-over.
+     */
+    if (spec.kind === 'killlockChaser' || spec.kind === 'killlockPress') {
+        return decline('a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)');
+    }
     if (typeof ctx?.fork !== 'function') return decline('no fork (the segment has no `forkRun`)');
     if (!ctx.aim) return decline('no aim (the caller handed none)');
     if (spec.open(run)) return decline('already open');
