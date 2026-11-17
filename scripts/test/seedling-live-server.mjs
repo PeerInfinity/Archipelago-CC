@@ -49,6 +49,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { takeBoxLock, releaseBoxLock } from '../procgen/boxLock.js';
+import { waitForClientReady, waitForSyncFunction } from '../procgen/clientReady.js';
 import { resolveTestPort } from './testServer.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -149,13 +150,13 @@ function installApworlds(o, up, tmp) {
         if (fs.existsSync(target)) {
             const aside = path.join(tmp, `aside-${f}`);
             fs.copyFileSync(target, aside);
-            moved.push([aside, target]);
+            moved.push([aside, target, fs.statSync(target)]);
         } else added.push(target);
         fs.copyFileSync(path.join(built, f), target);
     }
     say(`packed + installed ${APWORLDS.join(', ')} into ${dest} (${moved.length} put aside, to be restored)`);
     return () => {
-        for (const [aside, target] of moved) fs.copyFileSync(aside, target);
+        for (const [aside, target, st] of moved) { fs.copyFileSync(aside, target); fs.utimesSync(target, st.atime, st.mtime); }
         for (const target of added) fs.rmSync(target, { force: true });
         say(`custom_worlds restored (${moved.length} put back, ${added.length} removed)`);
     };
@@ -229,12 +230,10 @@ async function play(o, httpPort, wsPort) {
             await route.fulfill({ response: res, json });
         });
         await page.goto(`http://localhost:${httpPort}/frontend/index.html`);
-        await page.waitForFunction(async () => {
-            if (!window.__apSpike) return false;
-            const sm = await import('/frontend/modules/stateManager/index.js');
-            return !!sm.getLastRawJsonData()?.rawJsonData && !!sm.stateManagerProxySingleton.getStaticData?.();
-        }, null, { timeout: 90000 });
+        // ⛔ Sync predicates only (clientReady.js, trap 2: an async one resolves at its first poll).
+        await waitForClientReady(page);
         await page.evaluate(async ({ runtime, slot, game }) => {
+            window.__fpMod = await import('/frontend/modules/flashPanel/index.js');
             window.__bus = (await import('/frontend/app/core/eventBus.js')).default;
             window.__bus.registerPublisher('ui:activatePanel', 'seedling-live-server');
             window.__lines = [];
@@ -252,10 +251,8 @@ async function play(o, httpPort, wsPort) {
         if (!loaded) return { frames, errors, bot: null, loaded: null };
         // The Flash panel's game, then the bot (the order the probes used).
         await page.evaluate(() => window.__bus.publish('ui:activatePanel', { panelId: 'flashPanel' }, 'seedling-live-server'));
-        await page.waitForFunction(async () => {
-            const fp = await import('/frontend/modules/flashPanel/index.js');
-            return !!fp.getActivePanelInstance?.()?._apLoadResult;
-        }, null, { timeout: 120000 }).catch(() => say('flash panel: no AP load result within 120 s'));
+        await waitForSyncFunction(page, () => !!window.__fpMod.getActivePanelInstance?.()?._apLoadResult, undefined, { timeout: 120000 })
+            .catch(() => say('flash panel: no AP load result within 120 s'));
         const bot = await page.evaluate(async (budgetMs) => {
             const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
             window.__bus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'seedling-live-server');
