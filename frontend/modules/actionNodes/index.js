@@ -18,6 +18,9 @@ import {
 } from '../resourceChannels/resourceChannelsLibrary.js';
 import { substrateRegistryEntry } from './actionNodesLibrary.js';
 import { getActionNodesRuntime, ACTION_NODES_STATE_EVENT } from './actionNodesRuntime.js';
+import { wireNodeCardOverlay } from './nodeCardOverlay.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
+import { getDiscoverySettings } from '../discovery/index.js';
 import {
     ActionNodesPanel, ACTION_NODES_PANEL_COMPONENT_TYPE, setActionNodesDispatcher,
 } from './actionNodesPanel.js';
@@ -75,6 +78,19 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         log: (level, msg) => (logger?.[level] ? logger[level](msg) : console[level === 'warn' ? 'warn' : 'log'](msg)),
     });
     if (!eventBus?.subscribe) return;
+    // The node card on the Region Graph (AN-3a): registered while an ActionNodes world is loaded, removed on unload.
+    const cards = wireNodeCardOverlay({
+        getModuleFunction: (m, f) => initializationApi.getModuleFunction?.(m, f),
+        eventBus,
+        viewDeps: {
+            loopState: () => initializationApi.getModuleFunction?.('loops', 'getLoopState')?.() ?? null,
+            loopMode: () => gs()?.isLoopModeActive === true,
+            discovery: () => ({
+                enabled: getDiscoverySettings()?.enableDiscoveryMode === true,
+                isRegionDiscovered: (id) => discoveryStateSingleton.isRegionDiscovered(id),
+            }),
+        },
+    });
     eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
         const rules = data?.rawJsonData;
         const playerId = data?.selectedPlayerInfo?.playerId ?? '1';
@@ -84,6 +100,7 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             console.warn('[actionNodes] the world could not be loaded', e);
             runtime.unload();
         }
+        cards.sync();
     });
     eventBus.subscribe('stateManager:snapshotUpdated', (data) => runtime.onSnapshot(data?.snapshot));
     eventBus.subscribe('gameState:loopReset', () => runtime.onLoopReset('gameState:loopReset'));

@@ -152,6 +152,7 @@ export class ActionNodesRuntime {
     unload() {
         const hadWorld = !!this.model;
         this.model = null;
+        this.payloads = null;
         this.playerId = null;
         this.counts = [];
         this.held = new Map();
@@ -183,6 +184,7 @@ export class ActionNodesRuntime {
         }
         this.unload();
         this.model = runtimeModelOf(block, payloads);
+        this.payloads = Object.freeze(payloads);
         this.playerId = p;
         const ledger = this.env.ledger?.();
         ledger?.configure({
