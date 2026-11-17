@@ -20,6 +20,10 @@ export const EVENT_KIND_POLICY = Object.freeze({
         autoCollect: false,
         why: 'mirrors a flag the game saves (a broken rock); the runtime collects it on the game\'s flag',
     }),
+    goal: Object.freeze({
+        autoCollect: false,
+        why: 'an add-on slot\'s goal event (client/core/upstreamGoal.js): reaching it is not finishing; only the player\'s deliberate click collects it, and that click reports the goal',
+    }),
 });
 
 /** True when the reachability engine may auto-collect this event location. */
