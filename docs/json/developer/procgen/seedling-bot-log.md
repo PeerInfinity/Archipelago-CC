@@ -28374,3 +28374,23 @@ at t1522. The request plans 3813 t, played hitless on p4g. Survey L39 rows are s
 in every arm. ON movers: `fidelityL39Shaft` D2 (a re-record) and its t300 row (a strike-schedule refusal, handed to hammer),
 and `pressKillCost` r5-press-glide (the shift is bypassed by design).
 
+
+### Seedling fidelity DARKSUITBOSSES — the dark suit's retaliation into a boss (`darkSuitBossRetaliation`, OFF)
+
+Planner `seedling-fidelity-planning-21`, wave 48 (⚖ the user's GO 2026-11-16, *"Dark Suit boss arms (Recommended)"*).
+Base `56dd7a3872` (the w46+w47 harvest). The report is `CC/docs/cloud-reports/seedling-fidelity-darksuitbosses.md`; it
+answers wave 46's "other call sites" hand-over.
+
+**D1** (census): every `applyPlayerHit` site whose AS3 passes `e` declares a `retaliate` except four boss arms, and each
+passes the boss itself. ShieldBoss stab: `ShieldBoss.hit` arms an unarmed boss and is otherwise a no-op (the damaging
+frames are in "stab", and `startStab` needs "sit"): held state. BobBoss body and swords: `bobBossHit(…, "Suit")`: held
+state, but the write lands mid-update. BossTotem body: `onlyHitBy = "Wand"`, no `justKnock`: a no-op. Owl body:
+`justKnock` writes `v` before the phase arms read it, and the model bills after them: not declared.
+
+**D2** (`darkSuitBossRetaliation`, OFF, last key, `SEEDLING_DARK_SUIT_BOSS_RETALIATION`): the three declared arms pass
+`retaliate`; BobBoss's bill moves inside `stepBobBossBody` (`onPlayerHit`, suit only), so form 2's re-seed precedes
+`spin` (the mutant: blade 0 at 3π/2 instead of 3π/2 − π/20 after a form-2 body contact). The suit alone kills every
+Bob form, and the third writes `{32,3}`. The Owl's refusal gains its D1 reason. OFF byte-identical.
+
+**D3** (ON, measured; no flip): only L112 is met with the suit (legs 786–789, survey step 246), and the Owl stays refused;
+survey 246 is identical OFF/ON (an ENCOUNTER-GATE refusal before any contact). Acceptance `391322d6` base / OFF / ON.
