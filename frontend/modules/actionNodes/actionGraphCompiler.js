@@ -7,7 +7,10 @@
  * the content, so there is no layout driver (design §2).
  *
  *   1. validate the graph (`actionGraph.js`, refusal by name);
- *   2. regions: `Menu` → the start node; one region per node; one exit per `after` edge;
+ *   2. regions: `Menu` → the start node; one region per node; for each `after` edge A→B a FORWARD exit A→B (gated by
+ *      "some one-loop plan reaches B") and a REVERSE exit B→A (ungated, `reverse: true` in the payload): movement
+ *      between nodes reached this loop is free (⚖ Robert 2026-11-16T17:41:55Z; two-way edges, planner 21:09:12Z). There
+ *      is no return-to-start exit: reaching the start is the `Menu → start` hop, as in every substrate;
  *   3. locations: one per check node (its name); the goal node holds the `Victory` event item;
  *   4. items: each boon `count` times, then the graph's `filler` boon to match the check count;
  *   5. access rules from `actionSearch.js` `deriveActionLogic`: a location's rule is "some one-loop plan performs the
@@ -72,6 +75,21 @@ export class ActionCompileError extends Error {
 
 const MENU = 'Menu';
 const exitNameOf = (from, to) => `${from} -> ${to}`;
+
+/**
+ * ⛓ TWO-WAY EDGES (AN-1b). Every node's exits, forward first (in `successorsOf` order), then its reverse exits back to
+ * each predecessor (in `predecessorsOf` order). A reverse exit is ungated: the logic does not change meaning, because
+ * every location and forward-exit rule is already the exact one-loop answer (the search assumes free movement), so a
+ * region reachable through a reverse exit gains no location and no exit. The Region Graph merges an exit pair A→B +
+ * B→A into ONE edge, so the graph still draws one edge per `after` edge.
+ * @returns {{to: string, reverse: boolean}[]}
+ */
+export function nodeExitsOf(graph, id) {
+    return [
+        ...successorsOf(graph, id).map((to) => ({ to, reverse: false })),
+        ...predecessorsOf(graph, id).map((to) => ({ to, reverse: true })),
+    ];
+}
 
 /** A rule over the minimal combinations: Or of And(Has(item, n)…); an empty combination is True. */
 function ruleOf(model, combos) {
@@ -219,13 +237,20 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
     }
     rules.world[p].world_directory = ACTION_NODES_GAME.gameDirectory;
     rules.game_info[p] = { completion_condition: { type: 'item_check', item: GOAL_ITEM } };
+    // ⛓ The world LISTS its back-exits (the reverse exits below), so it states that none may be assumed. `true` would
+    // let consumers construct a back-exit for every listed exit — `start -> Menu` included, which does not exist (the
+    // Regions panel would show the Menu entrance as two-way and the pathfinder would route through it). Absent would
+    // leave it to auto-detection. The reverse exits themselves are the mechanism, not this flag.
+    rules.exporter = { [p]: { assume_bidirectional_exits: false } };
 
     const regions = { [MENU]: makeRegion(MENU, [makeExit(exitNameOf(MENU, graph.start), graph.start, makeTrueRule())], []) };
     const sidecars = {};
     const performRules = {};
     model.nodes.forEach((node, i) => {
         const id = node.id;
-        const exitsOut = successorsOf(graph, id).map((to) => makeExit(exitNameOf(id, to), to, ruleOf(model, logic.reach[model.nodeIx.get(to)])));
+        const edges = nodeExitsOf(graph, id);
+        const exitsOut = edges.map(({ to, reverse }) => makeExit(exitNameOf(id, to), to,
+            reverse ? makeTrueRule() : ruleOf(model, logic.reach[model.nodeIx.get(to)])));
         const locations = [];
         let locationName = null;
         if (node.kind === 'check' || node.kind === 'goal') {
@@ -249,7 +274,10 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
             render_hint: ACTION_NODES_SUBSTRATE_ID,
             playable_payload: payloadOf(graph, model, id, {
                 locationName,
-                exits: exitsOut.map((e) => ({ exit_id: e.connected_region, exitName: e.name, targetRegion: e.connected_region })),
+                exits: exitsOut.map((e, k) => ({
+                    exit_id: e.connected_region, exitName: e.name, targetRegion: e.connected_region,
+                    ...(edges[k].reverse ? { reverse: true } : {}),
+                })),
             }),
         };
     });
