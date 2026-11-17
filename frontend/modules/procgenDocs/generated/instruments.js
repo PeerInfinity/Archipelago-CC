@@ -246,7 +246,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 533,
         "browser": 227,
-        "cited": 290,
+        "cited": 291,
         "files": 555,
         "lineStyle": 22,
         "withDocblock": 555,
@@ -2669,7 +2669,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/maze-lab.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-maze-world-map.mjs",
