@@ -30,7 +30,16 @@ Hover over a cell to see its name and its counts (checked, accessible and inacce
 - **Centre on start** goes to the start region. **Fit all** shows the whole map.
 - **Follow player** keeps your current region in the middle of the view: the view glides there whenever you move. Panning or zooming by hand turns it off, and the checkbox shows that. Tick it again to turn it back on.
 
-Clicking a cell selects it (a yellow outline) and nothing more. In this version, moving and checking locations are done from other panels.
+## Clicking
+
+A click does what the same click does in the **Region Graph**:
+
+- **Click a cell** to select it (a yellow outline) and act on its region. With the Region Graph's default settings, that adds the region to your path, which moves you there, and shows it in the Regions panel.
+- **Click a location square** to check that location. A location you cannot reach yet is refused, exactly as it is in the Region Graph.
+
+What a click does is set by the **Region Graph's** control-panel checkboxes, for both panels: *Move player one step*, *Move player directly*, *Show region in panel*, *Add to path*, *Overwrite path*, *Add locations to path* and *Check all locations in region*. The Region Map has no copy of these controls yet. A dragged pan never counts as a click.
+
+In loop mode, a Region Map click plans your path the way a Region Graph click does. With discovery mode on, a location you have not discovered shows as `???` when you hover over it.
 
 ## Discovery mode
 
