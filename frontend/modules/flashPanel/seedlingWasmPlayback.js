@@ -1683,6 +1683,15 @@ export function createWasmPlayback({
         } catch (err) { fail(err.message); return; }
         const decl = exactDeclarationRefusal(tape, st, { granted: apSave() });
         if (decl) { fail(`the plan tape was not shipped — ${decl}`); return; }
+        // MEASUREMENT-ONLY (cloud slice seedling-seed2-stall-diagnosis): every ship, with the slot facts at its tick 0.
+        try {
+            const sj = (v) => JSON.stringify(v, (k, x) => (x instanceof Set ? [...x] : x instanceof Map ? [...x] : x));
+            console.log(`[MEASURE ship] goal=${sj(goal?.name ?? goal?.kind)} level=${goal?.level} continuation=${!!play.continuation} prefix=${play.prefix ?? 0}`
+                + ` ticks=${plan.solution.length} first=${sj(plan.solution.slice(0, 3))} equipsAt=${sj(plan.equipsAt ?? null)} equipItems0=${sj(plan.equipItems?.get?.(0) ?? null)}`
+                + ` game.slots=${sj(st?.inventory_slots ?? null)} game.primary=${st?.primary} game.secondary=${st?.secondary}`
+                + ` items={sword:${st?.items?.hasSword},fire:${st?.items?.hasFire},wand:${st?.items?.hasWand},spear:${st?.items?.hasSpear}}`
+                + ` slotLag=${sj(room?.slotLag ?? null)} lastDelivery=${sj(stats.deliveries.at(-1) ?? null)}`);
+        } catch { /* measurement only */ }
         const started = hostStart(tape, play.continuation ? 'continuation' : 'plan');
         if (started) { fail(started); return; }
         // ⛓ ARRIVAL JITTER — the game's clock at the ship against the staged one + the ticks the shadow replays
