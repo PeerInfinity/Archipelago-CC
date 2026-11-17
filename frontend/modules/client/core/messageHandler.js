@@ -30,8 +30,11 @@ import { getLastRawJsonData, stateManagerProxySingleton } from '../../stateManag
 import {
   checkLocalWorld,
   isGeneratedWorldDoc,
+  omittedRulesMessage,
   overlayServerData,
   readWorldgenRules,
+  UPSTREAM_RULES_ADDON_NAME,
+  UPSTREAM_RULES_ADDON_SOURCE,
   WORLDGEN_RULES_KEY,
   WORLDGEN_RULES_OMITTED_KEY,
 } from './localRulesOverlay.js';
@@ -50,18 +53,23 @@ function describePresetFolders(presets, max = 3) {
  * The console line when a logged-in slot has no rules (_awaitLocalRules). A
  * game with presets only at other seeds needs this room's own preset file;
  * the APCalc Generator is named only for APCalc, the one game it makes.
+ * `addonCould`: the slot's world sent no rules document and no note (it is
+ * not a world_generator package), so the host's Upstream Rules Addon could
+ * have sent one; the line says so (never for APCalc, which the add-on skips).
  */
-export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null) {
+export function rulesNeededMessage(game, seedName, presetsAtOtherSeeds = null, { addonCould = false } = {}) {
   const tail = "; the client is logged in, sends no checks until then, and applies the server's data when they load.";
+  const addon =
+    addonCould && game !== APCALC_GAME ? ` (a host can send them by installing the ${UPSTREAM_RULES_ADDON_NAME})` : '';
   if (presetsAtOtherSeeds?.length > 0) {
     return (
       `This ${game} room needs its own preset file (seed ${seedName ?? 'unknown'}), and the server did not send ` +
-      `its rules. The ${game} presets here are for other seeds. Load this room's rules.json (the Files panel)` +
+      `its rules${addon}. The ${game} presets here are for other seeds. Load this room's rules.json (the Files panel)` +
       tail
     );
   }
   const where = game === APCALC_GAME ? 'APCalc Generator → Load in Frontend, or the Files panel' : 'the Files panel';
-  return `No rules for ${game} are loaded, and the server did not send them. Load its rules.json (${where})${tail}`;
+  return `No rules for ${game} are loaded, and the server did not send them${addon}. Load its rules.json (${where})${tail}`;
 }
 
 /** client:locationCheckRefused reason while a slot's rules are pending (not a checkGate REFUSAL). */
@@ -724,7 +732,12 @@ export class MessageHandler {
   _awaitLocalRules(build) {
     this._cancelRulesWait();
     const { game } = build;
-    this._printToConsole(rulesNeededMessage(game, this.roomInfo?.seed_name, build.presetsAtOtherSeeds), 'warning');
+    const slotData = build.connected?.slot_data || {};
+    const addonCould = slotData[WORLDGEN_RULES_KEY] === undefined && !slotData[WORLDGEN_RULES_OMITTED_KEY];
+    this._printToConsole(
+      rulesNeededMessage(game, this.roomInfo?.seed_name, build.presetsAtOtherSeeds, { addonCould }),
+      'warning'
+    );
     this.eventBus?.publish('client:rulesNeeded', { game });
     const unsubscribe = this.eventBus?.subscribe('stateManager:rulesLoaded', () => {
       if (this._serverBuild !== build) {
@@ -1111,6 +1124,9 @@ export class MessageHandler {
         if (build.mode === 'overlay') {
           this._printToConsole(
             `Loaded ${build.overlaySource === 'server' ? 'the server-sent' : 'the local'} ${build.game} rules ` +
+              (build.overlaySource === 'server' && build.overlayFrom === UPSTREAM_RULES_ADDON_SOURCE
+                ? `(from the host's ${UPSTREAM_RULES_ADDON_NAME}) `
+                : '') +
               "with the server's placements " +
               `(${this.getScoutedLocations().length} locations, room seed ${this.roomInfo?.seed_name ?? 'unknown'}).`,
             'success'
@@ -1201,7 +1217,7 @@ export class MessageHandler {
       } else {
         const check = checkLocalWorld(server.doc, server.player, room);
         if (check.ok) {
-          chosen = { doc: server.doc, player: server.player, source: 'server' };
+          chosen = { doc: server.doc, player: server.player, source: 'server', from: server.source };
         } else {
           // The ID check is a safety net: a package's own document matches by construction.
           this._printToConsole(
@@ -1211,12 +1227,7 @@ export class MessageHandler {
         }
       }
     } else if (slotData[WORLDGEN_RULES_OMITTED_KEY]) {
-      const { size_kb: size, cap_kb: cap } = slotData[WORLDGEN_RULES_OMITTED_KEY];
-      this._printToConsole(
-        `The server did not send this world's rules (${size} KB, over the slot's rules_in_slot_data_max_kb of ` +
-          `${cap} KB).`,
-        'info'
-      );
+      this._printToConsole(omittedRulesMessage(slotData[WORLDGEN_RULES_OMITTED_KEY]), 'info');
     }
     if (!chosen && build.local) {
       const { doc, player } = build.local;
@@ -1226,6 +1237,7 @@ export class MessageHandler {
     }
     if (!chosen) return null;
     build.overlaySource = chosen.source;
+    build.overlayFrom = chosen.from ?? null;
     if (chosen.source === 'server' && build.local) {
       log('info', `[MessageHandler] Using the server-sent ${build.game} rules over ${build.local.source}`);
     }
