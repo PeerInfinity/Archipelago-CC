@@ -129,7 +129,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   (the west pocket wakes one lavarunner of three), so its two-way internal row splits. No door or sub-region moves.
         // ⛓ rules-fire-arm-chaser-guard: 317 -> 316 internal exits (L100's rock row is two-way again: the flyer guards its Fire
         // arm, so both halves are the swing's); L73's two rows lose Fire in place. Atlas 2ac275e8 -> 630fbc4c. Swim unmoved.
-        expect(c.atlasId).toBe('seedling-630fbc4c');
+        // ⛓ rules-lavatrap-neck: atlas 630fbc4c -> ac434804 (rule T gates L77's and L78's lavatrap discs).
+        expect(c.atlasId).toBe('seedling-ac434804');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -144,7 +145,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ tile-fire-breaks-rocks: 308 -> 312 internal exits (four two-way rock rows split into one-way pairs).
         // ⛓ rules-l99-sided-killlock: 316 -> 317 internal exits (L99's lock row splits into the floor's weapon row and the
         //   pocket's latch return). Swim rows unmoved.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 56, 207, 316, 207]);
+        // ⛓ rules-lavatrap-neck: 56 -> 57 regions with a subgraph (L77), 207 -> 216 sub-regions (L77 +3, L78 +6), 316 -> 355
+        //   internal exits (rule T's gated discs split both rooms). Swim rows unmoved.
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 57, 216, 355, 207]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },

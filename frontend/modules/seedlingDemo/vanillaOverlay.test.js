@@ -458,7 +458,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             //   and the pocket's latch return (internal exits only; atlas id 88e3788c -> 2ac275e8). No name, exit or location moves.
             // ⛓ rules-fire-arm-chaser-guard (28dc5dc7… -> 26bec328…): atlas id 2ac275e8 -> 630fbc4c (L73's and L100's rocks lose
             //   their Fire arm; L100's one-way pair re-merges into one two-way row; no name moves).
-            .toBe('26bec328054eda2ae6a90409a405cbc1');
+            // ⛓ rules-lavatrap-neck (26bec328… -> 687a6ad3…): atlas id 630fbc4c -> ac434804 (rule T: L77's and L78's lavatrap
+            //   discs are gated cells costing Or(Dark Suit, Ghost Spear); L77 splits into r2c0 / r12c6 / r15c6, L78 gains six
+            //   sub-regions; no door, location or other level moves).
+            .toBe('687a6ad3ce21228cced6d13891f6d516');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
