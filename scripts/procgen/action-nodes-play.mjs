@@ -5,13 +5,18 @@
 // its reasoning lines. It reports loops-to-goal with the XP gain scale at the graph's value and at 0 (design §8:
 // "that number decides whether to lower it").
 //
+// Then the LIVE BOT'S PATH (AN-3a, actionNodes/actionLiveSim.js): each loop the registry entry's planner
+// (`loopBot.planLoop` → actionLoopBot.planLiveLoop) writes the Loops path — the free hops between performances and the
+// `act` entries — and the path is played through the real runtime's start gate, pool and checks. A refused hop or
+// act is a defect (exit 1). `--live-only` skips the pure planner runs.
+//
 // Usage:
-//   node scripts/procgen/action-nodes-play.mjs [<rules.json>] [--graph <graph.json>] [--quiet] [--json]
+//   node scripts/procgen/action-nodes-play.mjs [<rules.json>] [--graph <graph.json>] [--quiet] [--json] [--live-only]
 //
 //   node scripts/procgen/action-nodes-play.mjs
 //   node scripts/procgen/action-nodes-play.mjs frontend/presets/action_nodes_example/AP_1/AP_1_rules.json
 //
-// Exit 1 when the bot does not reach the goal.
+// Exit 1 when the bot does not reach the goal (on either path).
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -20,6 +25,7 @@ import { argvHelp } from './argvHelp.js';
 import { buildActionModel } from '../../frontend/modules/actionNodes/actionModel.js';
 import { playToGoal } from '../../frontend/modules/actionNodes/actionPlanner.js';
 import { placementsFromRules } from '../../frontend/modules/actionNodes/actionGraphCompiler.js';
+import { playLiveToGoal } from '../../frontend/modules/actionNodes/actionLiveSim.js';
 
 argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -49,7 +55,7 @@ function main() {
     const scales = [...new Set([model.graph.settings?.xpGainScale ?? 1, 0])];
     const summary = [];
     let ok = true;
-    for (const scale of scales) {
+    for (const scale of argv.includes('--live-only') ? [] : scales) {
         const run = playToGoal(model, { placements, xpGainScale: scale });
         summary.push({ xpGainScale: scale, reachedGoal: run.reachedGoal, loops: run.loops.length });
         ok &&= run.reachedGoal;
@@ -64,9 +70,24 @@ function main() {
             for (const line of loop.lines) console.log(`  | ${line}`);
         }
     }
+    // The live bot's path (AN-3a).
+    const live = playLiveToGoal(rules, { playerId: p });
+    ok &&= live.reachedGoal;
+    if (argv.includes('--json')) console.log(JSON.stringify({ live: true, ...live }));
+    else if (!quiet) {
+        console.log('=== live bot path (loopBot.planLoop → the Loops queue → the runtime gate) ===');
+        for (const loop of live.loops) {
+            console.log(`Loop ${loop.loop} [${loop.kind}]: ${loop.entries} queue entries; acts ${loop.acts.join(' → ') || '(none)'}`
+                + `${loop.attempt ? ` → attempt ${loop.attempt}` : ''}`);
+            console.log(`  checks: ${loop.checks.join(', ') || 'none'}; received: ${loop.received.join(', ') || 'nothing'}; mana left ${Math.round(loop.manaLeft * 10) / 10}`);
+            for (const line of loop.lines) console.log(`  | ${line}`);
+            if (loop.refused) console.log(`  ✗ REFUSED: ${JSON.stringify(loop.refused)}`);
+        }
+    }
     for (const s of summary) {
         console.log(`xpGainScale ${s.xpGainScale}: ${s.reachedGoal ? `goal in ${s.loops} loop(s)` : `NO GOAL after ${s.loops} loops`}`);
     }
+    console.log(`live bot path: ${live.reachedGoal ? `goal in ${live.loops.length} loop(s)` : `NO GOAL after ${live.loops.length} loops${live.refused ? ` (refused: ${live.refused.code})` : ''}`}`);
     process.exit(ok ? 0 : 1);
 }
 
