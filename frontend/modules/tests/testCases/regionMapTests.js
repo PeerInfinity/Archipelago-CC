@@ -533,9 +533,11 @@ async function clickLegs(testController, label) {
  * The checks a row made are undone by reloading the loaded world (the state manager's worker has no uncheck
  * command): a later row starts with nothing checked by this one.
  */
-async function reloadIfChecked(testController, ctx, names) {
+async function reloadIfChecked(testController, ctx, names, { before = null, restoreWorld = false } = {}) {
   if (!names.length || !ctx) return;
   const src = ctx.rulesSource();
+  // tearDown reloads the world loaded before when it was another preset: that load clears these checks too.
+  if (restoreWorld && typeof before === 'string' && before.startsWith('./presets/') && before !== src) return;
   try { if (typeof src === 'string' && src.startsWith('./presets/')) await ctx.loadRulesPath(src); }
   catch (e) { testController.log(`reload after the checks: ${e.message}`); }
 }
@@ -615,7 +617,7 @@ export async function testRegionMapClicksGenerated(testController) {
     testController.reportCondition(`generated-world clicks row error-free: ${error.message}`, false);
   } finally {
     restorePlayer?.();
-    await reloadIfChecked(testController, s?.ctx, checked);
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
     if (s) await tearDown(testController, s, { restoreWorld: true });
   }
   return testController.getOverallResult();
