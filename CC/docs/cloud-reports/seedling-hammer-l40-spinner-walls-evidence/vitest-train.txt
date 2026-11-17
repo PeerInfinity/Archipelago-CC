@@ -1,0 +1,13 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerShovedLookahead.train.test.js (3 tests) 427345ms
+     ✓ OFF: refused, no step out, at the approach corner  209741ms
+     ✓ ON: solved hitless — 1636 t, no death on a fresh run  155369ms
+     ✓ OFF = ON, byte-identical (1317 t)  62232ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  18:42:17
+   Duration  430.73s (transform 2.49s, setup 181ms, import 3.08s, tests 427.34s, environment 0ms)
+

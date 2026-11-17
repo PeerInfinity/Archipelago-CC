@@ -1,0 +1,7 @@
+OFF verdicts {'SOLVED': 224, 'REFUSED': 26}
+ON verdicts {'SOLVED': 221, 'REFUSED': 29}
+MOVER step 27 L 18 SOLVED 467 hits 0 -> REFUSED None hits None survey-step-27: the two-pass loop around {18,0}: pass 1 and pass 2 DISAGREE at tick 320, below the declared tick 419 — pass 1 held [nothing] and pass 
+MOVER step 120 L 60 SOLVED 443 hits 0 -> REFUSED None hits None survey-step-120: the two-pass loop around {60,0}: pass 1 and pass 2 DISAGREE at tick 230, below the declared tick 330 — pass 1 held [nothing] and pass
+MOVER step 227 L 98 SOLVED 520 hits 0 -> REFUSED None hits None survey-step-227: the two-pass loop around {98,0}: pass 1 and pass 2 DISAGREE at tick 382, below the declared tick 482 — pass 1 held [nothing] and pass
+MOVER step 228 L 99 REFUSED None hits None -> REFUSED None hits None solverBot(survey-step-228) reach-exit (48,96)->L100: the danger map forbids (87.94613675856091,119.13048682076652) — hazard:lavachain@80,64 (avoid (ph
+movers 4

@@ -1,0 +1,9 @@
+LEG-BUDGET: 480000 ms per leg (--leg-budget-ms; default 90000); the leg hang bound 1590 s; the solver's own backstop 300 s per solve (a named failure)
+LEG 350 start (page 1, pageLeg 0)
+ROW {"id":350,"key":"level_38 <- in_L37_288_0 -> location:Level 038 - Chest","mode":"inv","producer":"solver","page":1,"pageLeg":0,"level":38,"arrive":[144,288],"goal":"Level 038 - Chest","kind":"loca
+LEG 906 start (page 2, pageLeg 0)
+ROW {"id":906,"key":"level_63__r5c14 <- in_L65_128_0 ~> level_63__r6c9 -> location:Level 063 - Chest","mode":"inv","producer":"solver","page":2,"pageLeg":0,"level":63,"arrive":[128,288],"goal":"Level 
+LEG 183 start (page 3, pageLeg 0)
+ROW {"id":183,"key":"level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest","mode":"inv","producer":"solver","page":3,"pageLeg":0,"level":12,"arrive":[32,864],"goal":"Level 012 - Chest","kind
+LEG 354 start (page 4, pageLeg 0)
+ROW {"id":354,"key":"level_38 <- in_L39_144_624 -> location:Level 038 - Chest","mode":"inv","producer":"solver","page":4,"pageLeg":0,"level":38,"arrive":[144,16],"goal":"Level 038 - Chest","kind":"loc
