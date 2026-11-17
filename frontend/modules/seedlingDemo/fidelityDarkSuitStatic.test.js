@@ -47,10 +47,12 @@ const REFUSAL = /hasDarkSuit` retaliates INTO the attacker/;
 
 describe('DARKSUITSTATIC — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_DARK_SUIT_STATIC_RETALIATION)(
-        'ships OFF, appended last, with a worker env name', () => {
+        'ships OFF, appended after wallFlyerCorpseGone, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ wave 47: L39HIT `pulserForecastPulse` was appended after this key.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['pulserForecastPulse']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DARK_SUIT_STATIC_RETALIATION');
         });
 });

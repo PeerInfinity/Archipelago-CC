@@ -107,7 +107,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
         || !!process.env.SEEDLING_BAIT_PARKED_TAIL
-        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ || !!process.env.SEEDLING_SPINNER_ROSTER_GONE
+        || !!process.env.SEEDLING_PULSER_FORECAST_PULSE)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -410,7 +411,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WALLFLYERCORPSE D2 (wave 45): a wallflyer the run no longer holds live is not priced at its placement — OFF.
             wallFlyerCorpseGone: false,
             // ⛓ fidelity DARKSUITSTATIC D2 (wave 46): the dark suit retaliates into a static body — OFF.
-            darkSuitStaticRetaliation: false });
+            darkSuitStaticRetaliation: false,
+            // ⛓ fidelity L39HIT D2 (wave 47): a spinner forecast steps the room's pulsers and their pulse on the bodies — OFF.
+            pulserForecastPulse: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

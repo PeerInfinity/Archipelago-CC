@@ -2078,6 +2078,23 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
      */
     darkSuitStaticRetaliation: false,
+    /**
+     * fidelity L39HIT D2 (wave 47) — A SPINNER FORECAST STEPS THE ROOM'S PULSERS, AND THEIR PULSE HITS ITS BODIES.
+     *
+     * `Pulser.hit` (`Pulser.as:87-116`) collects every "Enemy" within `radiusHit` 22 and calls `Enemy.hit(force 6,
+     * pulser point, damage 1, "Pulse")` (`Enemy.as:141-181`: `hits += 1`, `hitsTimer` 30, an atan2 knockback), and a
+     * pulser whose group latched pulses forever. `advance` steps that (`levelRun.stepPulsersNow`'s enemy arm, after the
+     * bodies: `Game.as:2357` adds the pulser before `:2416` the spinner, and `World.addUpdate` prepends), but every
+     * spinner FORECAST stepped only the bodies, so a body a periodic pulse was about to shove stayed on its old line.
+     * MEASURED (L39, the seed-1 whole-game walk's 2864 t dashless plan, rebuilt at seam 30036 and game-witnessed on a
+     * fresh p4g page at 0 px): `pulser@64,96` hits `spinner@112,88` at t1317; the walk segment's forecast (cut at t1310)
+     * is 5.75 px off from t1318 and ~88 px off at t1522, where the walk took the body's hammer (`Spinner.as:66-76`,
+     * `Player.hit`), on the game and in the model alike, with 0 hits billed. ON: `levelRun.spinnerForecast` steps the
+     * room's pulsers after the bodies on every row (armed as now: latched, or pressed by the player's box now) and
+     * applies their enemy arm (`hitSpinner`); such a forecast is never shifted. OFF: byte-identical. ⛔ OFF by default
+     * (no licence); `SEEDLING_PULSER_FORECAST_PULSE=0|1` for a node measurement.
+     */
+    pulserForecastPulse: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2487,6 +2504,9 @@ if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '0') CONTACT_FID
 // ⛓ fidelity DARKSUITSTATIC D2: `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '1') CONTACT_FIDELITY.darkSuitStaticRetaliation = true;
 if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '0') CONTACT_FIDELITY.darkSuitStaticRetaliation = false;
+// ⛓ fidelity L39HIT D2: `SEEDLING_PULSER_FORECAST_PULSE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '1') CONTACT_FIDELITY.pulserForecastPulse = true;
+if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '0') CONTACT_FIDELITY.pulserForecastPulse = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

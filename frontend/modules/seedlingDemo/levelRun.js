@@ -5275,6 +5275,65 @@ export function createLevelRun({
      * deterministic, so its rows ARE those rows; past them the memo extends from its own `st` under this tick's ctx,
      * which is what extending a memo always did. Otherwise the forecast is cut fresh, exactly as before.
      */
+    /**
+     * ⛓⛓ fidelity L39HIT D2 (`CONTACT_FIDELITY.pulserForecastPulse`, OFF ⇒ `null`, so every forecast is byte-identical)
+     * — **THE ROOM'S PULSERS STEP ALONGSIDE A SPINNER FORECAST, AND THEIR PULSE HITS THE FORECAST'S BODIES.**
+     *
+     * `advance` steps the spinners (`stepSpinners`, the `:2416` adds) and, later in the same tick, the pulsers
+     * (`stepPulsersNow`, the `:2357` adds; `World.addUpdate` prepends, so the spinner moves first), and a pulse's enemy
+     * arm is `Enemy.hit(force 6, pulser point, damage 1, "Pulse")` (`Pulser.as:87-116`, `Enemy.as:141-181`): `hits += 1`,
+     * a 30-tick `hitsTimer` and an atan2 knockback that is twenty ticks of another trajectory. Every forecast stepped
+     * only the bodies, so a spinner a periodic Pulser was about to shove stayed on its old line in the forecast.
+     * MEASURED (L39, the seed-1 walk's 2864 t plan, seam 30036): `pulser@64,96` hits `spinner@112,88` at t1317; the
+     * forecast cut at t1310 has the body 5.75 px off from t1318 and ~88 px off at t1522, where the game and the model
+     * both take its hammer (the walk's preview priced the forecast's body, `dangerMap.spinnerDanger`).
+     *
+     * The stepper copies each pulser's state and steps it after the bodies on every forecast row, `armed` as
+     * `stepPulsersNow` reads it ONCE, at the forecast's own tick (the arrow forecast's bound, `arrowForecastNow`): the
+     * latched group, or the momentary group as the player's box presses it now (`pulserPublishLag`'s `pressedLast`
+     * first). Only the ENEMY arm acts here (`hitSpinner`, as `stepPulsersNow` calls it); a block's shove and the
+     * player's hit are not a spinner forecast's (it holds the blocks where they are and knows no player). A frozen ctx
+     * (a ceremony: the pulser slot is below its early return) steps no pulser. `null` with the switch OFF, under
+     * `noclip`, or in a room with no pulser.
+     *
+     * @returns {?{step(st: object, frozen: boolean): void, copy(): object}} `step` mutates the forecast's own `st` (its
+     *   `byId` is the forecast's copy, `stepSpinners`' contract); `copy` is an independent stepper at the same row
+     */
+    const pulserForecastStepper = () => {
+        if (!CONTACT_FIDELITY.pulserForecastPulse || noclip) return null;
+        const live = pulserStateFor(level);
+        if (live.size === 0) return null;
+        const activators = activatorStateFor(level);
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        const lag = CONTACT_FIDELITY.pulserPublishLag;
+        const make = (rows) => ({
+            step(st, frozen) {
+                if (frozen) return;
+                rows = rows.map((q) => {
+                    const armed = (lag ? q.p.pressedLast === true : q.pressedNow) || q.latched;
+                    const r = stepPulser(q.p, armed);
+                    const next = { ...q, p: lag ? { ...r.state, pressedLast: q.pressedNow } : r.state };
+                    if (!r.hit) return next;
+                    const targets = spinnerRects(st).map((sp) => ({
+                        id: sp.id, type: 'Enemy', as3: 'Spinner', x: sp.spinner.x, y: sp.spinner.y,
+                        originX: SPINNER.originX, originY: SPINNER.originY, w: SPINNER.w, h: SPINNER.h,
+                    }));
+                    for (const reached of pulseReaches(r.state, targets)) {
+                        if (reached.arm !== 'enemy') continue;
+                        const sp = st.byId.get(reached.id);
+                        if (sp) {
+                            st.byId.set(reached.id, hitSpinner(sp, { force: PULSER.force, from: { x: r.state.x, y: r.state.y },
+                                damage: PULSER.damage, t: 'Pulse', frozen: false }));
+                        }
+                    }
+                    return next;
+                });
+            },
+            copy: () => make(rows),
+        });
+        return make([...live].map(([id, p]) => ({ id, p, pressedNow: pressed.has(p.t),
+            latched: activators.latched.get(p.t) === true })));
+    };
     const shiftedSpinnerForecast = (live) => {
         const prev = spinnerForecastPrev;
         spinnerForecastPrev = null;
@@ -19502,7 +19561,10 @@ export function createLevelRun({
                 && memo.firstTick === firstTickInWorld
                 && memo.ticks === ticksCompleted;
             if (usable && memo.rows.length >= need) return memo.rows.slice(0, need);
-            const shifted = usable || !PRESS_KILL_COST.enabled ? null : shiftedSpinnerForecast(live);
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, stepped with the rows; a
+            // forecast that carries them is cut fresh (the shift's clauses compare the bodies, not the pulsers' rings)
+            const pulses = usable ? null : pulserForecastStepper();
+            const shifted = usable || !PRESS_KILL_COST.enabled || pulses !== null ? null : shiftedSpinnerForecast(live);
             if (!usable && PRESS_KILL_COST.enabled) {
                 if (shifted === null) PRESS_KILL_COST_COUNTS.forecastCut += 1;
                 else PRESS_KILL_COST_COUNTS.forecastShifted += 1;
@@ -19556,8 +19618,14 @@ export function createLevelRun({
                 // ⛓ hammer-phase P1: what rows 1… are stepped under, copied now (the shift's clause 4)
                 cur.key = PRESS_KILL_COST.enabled ? snapshotValue(cur.ctxAfter.inputs) : UNCACHEABLE;
             }
+            if (!usable && pulses !== null) {
+                cur.pulses = pulses;
+                cur.key = UNCACHEABLE; // ⛓ L39HIT D2: never the shift's `prev` (its rows carry the pulsers' rings)
+            }
             for (let i = cur.rows.length; i < need; i += 1) {
                 stepSpinners(cur.st, i === 0 ? cur.ctxNow : cur.ctxAfter);
+                // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step, as `advance` orders them
+                cur.pulses?.step(cur.st, (i === 0 ? cur.ctxNow : cur.ctxAfter).inputs?.frozen === true);
                 cur.rows.push(spinnerRects(cur.st).map((s) => s.rect));
                 // ⛓ hammer-phase P1: the bodies each row was cut from (`stepSpinner` never mutates one), for the shift
                 cur.states.push([...cur.st.byId.values()]);
@@ -19695,9 +19763,12 @@ export function createLevelRun({
                 const blocked = forecastSwordTest(st, th, t, from, { own, damage, frozen, weapon }, tests);
                 lineBlocked = lineBlocked ?? blocked;
             };
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, as `spinnerForecast` steps them
+            const pulses = live.byId.size > 0 ? pulserForecastStepper() : null;
             for (let i = 0; i < need; i += 1) {
                 const t = ticksCompleted + i;
                 if (live.byId.size > 0) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                pulses?.step(st, frozen);
                 // ⛓ SHIELDBUMP D1: `shieldBumpNow` runs after the bodies' update and above `slash()`'s tests
                 if (stepsBump) bumpRow(t);
                 if (!lineBlocked) {
@@ -19809,8 +19880,10 @@ export function createLevelRun({
              * ones its parent's.
              */
             const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked, bumped = null,
-                shieldBumps = null }) => {
+                shieldBumps = null, pulses = null }) => {
                 const snaps = [];
+                // ⛓ fidelity L39HIT D2: the pulsers' state after each own row (`pulserForecastPulse` ON; else all null)
+                const pulseSnaps = [];
                 const wins = [];
                 const slashes = [];
                 // ⛓ SHIELDBUMP D1: per row, was the bump stepped (a state given)? Whole arrays from row 0, as `rows`.
@@ -19827,6 +19900,8 @@ export function createLevelRun({
                         const i = rows.length;
                         const t = n0 + i;
                         if (hasBodies) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                        // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step and above the player's tests
+                        pulses?.step(st, frozen);
                         if (stepsBump) {
                             // ⛓ SHIELDBUMP D1: `shieldBumpNow`, the top-of-tick `slashing` (a swing ending ON t-1 is out)
                             const q = forecastPlayerState(point);
@@ -19885,6 +19960,7 @@ export function createLevelRun({
                         bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
                             destroy: s.spinner.destroy })));
                         snaps.push(new Map(st.byId));
+                        pulseSnaps.push(pulses?.copy() ?? null);
                         wins.push(win);
                         slashes.push(slash);
                         return out;
@@ -19896,7 +19972,10 @@ export function createLevelRun({
                     },
                     /** The state after row `j` (its own, or its parent's). */
                     snap(j) {
-                        if (j >= from) return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from] };
+                        if (j >= from) {
+                            return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from],
+                                pulses: pulseSnaps[j - from] };
+                        }
                         if (parent === null) throw new Error(`levelRun.spinnerFightForecast: no row ${j} to fork at`);
                         return parent.snap(j);
                     },
@@ -19905,7 +19984,8 @@ export function createLevelRun({
                         if (j >= rows.length) throw new Error(`levelRun.spinnerFightForecast: row ${j} not reached`);
                         const s = c.snap(j);
                         return cursor({ parent: c, from: j + 1, st: { byId: new Map(s.st), level },
-                            win: s.win, slash: s.slash, rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
+                            win: s.win, slash: s.slash, pulses: s.pulses?.copy() ?? null,
+                            rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
                             tests: tests.filter((x) => x.t <= n0 + j),
                             lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null,
                             ...(stepsBump ? { bumped: covered.slice(0, j + 1),
@@ -19923,7 +20003,8 @@ export function createLevelRun({
             return cursor({ parent: null, from: 0,
                 st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
                 win: swordWindow, slash: { state: info.state, endsAt: info.endsAt, gate, tick: n0 },
-                rows: [], bodies: [], tests: [], lineBlocked: null });
+                rows: [], bodies: [], tests: [], lineBlocked: null,
+                pulses: hasBodies ? pulserForecastStepper() : null });
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
