@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 30,
         "headings": 1326,
         "indexHeadings": 2,
-        "lines": 36650,
+        "lines": 36663,
         "pages": 4,
-        "words": 557092
+        "words": 557290
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -220,7 +220,7 @@ export const DOCS_INDEX = frz({
             "file": "maze.md",
             "h1": "Maze Substrate",
             "headings": 32,
-            "lines": 522,
+            "lines": 535,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -232,7 +232,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 23183
+            "words": 23381
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",

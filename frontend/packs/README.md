@@ -72,7 +72,8 @@ Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
   TILE-1) Both views draw every tile kind but the map's player through one fallback chain, `mazeTileArt.drawMazeTile`:
   the theme's art, the kind's default, its declared base, a placeholder (`mazeRoom/mazeTileFallback.test.js`). (Content
   sets TILE-2) A pack's concept row may declare a tile kind's `base` beside its `art` key (`packConcepts.PACK_TILE_BASES`),
-  read through `mazeTileArt.mazeTileKind`; no world field places such a kind yet. The art is
+  read through `mazeTileArt.mazeTileKind`. (TILE-3) The maze lab's editor places one on a floor cell (`?packs=` names
+  the stack; the payload field `tileKinds`, look-only and walkable), and both views draw it. The art is
   play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the

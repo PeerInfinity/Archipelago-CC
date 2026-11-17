@@ -338,7 +338,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `panelComponentType` | actionNodesPanel | bounceDemoPanel | cloudberryDemoPanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | noiz2saSubstratePanel | omsiSubstrateWrapperPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 | `sharing` | {items, mana, resources, stats} | — | — | — | — | {items, mana} | {mana} | — | {items, mana} | {mana} |
-| `sidecarFields` | 11 keys | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 32 keys | 11 keys | 9 keys | 6 keys |
+| `sidecarFields` | 11 keys | 7 keys | 7 keys | 7 keys | 14 keys | 5 keys | 33 keys | 11 keys | 9 keys | 6 keys |
 | `supportedFeatures` | [] | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations, cloudberry_items | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | arbitrary_ap_locations | 2 items | 6 items |
 
 **Playback**
