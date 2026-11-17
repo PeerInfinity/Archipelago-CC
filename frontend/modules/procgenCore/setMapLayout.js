@@ -440,6 +440,8 @@ export function createSetMapProvider(reader) {
             }
             return null;
         },
+        /** The start room's index — the layout graph's own (lab-map-camera: the map's "centre on start"). */
+        startOf(record) { return layoutOf(record).graph.start; },
         get zoom() { return zoom; },
         setZoom(z) { zoom = clampZoom(z); return zoom; },
         /** Forget the remembered positions: the next frame is the canonical layout. */

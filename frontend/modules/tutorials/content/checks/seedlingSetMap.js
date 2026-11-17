@@ -126,7 +126,7 @@ export const CHECK_SEEDLING_SET_MAP = Object.freeze({
                 {
                     step: {
                         id: 'fit',
-                        text: 'Press **fit** beside it to fit the whole map to the panel. **+** and **−** zoom (or Ctrl+wheel on the map); scroll the panel to pan.',
+                        text: 'Press **fit** beside it to fit the whole map to the panel. **+** and **−** zoom about the middle (Ctrl+wheel zooms at the pointer); drag the map to pan, and **centre on start** puts the start room in the middle.',
                         actions: [{ click: inLab('#editSetZoomFit') }],
                         done: (ctx) => ctx.text(inLab('#status')).startsWith('MAP fitted to the panel'),
                     },
