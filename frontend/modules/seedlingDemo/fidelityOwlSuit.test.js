@@ -102,7 +102,7 @@ describe('OWLSUIT — the dark suit contact (the tape\'s first contact, with the
         const a = Math.atan2(w26.bossY - p.y, w26.bossX - p.x);
         expect(r.vx).toBeCloseTo((to.x / s) * keep + Math.cos(a), 12);
         expect(r.vy).toBeCloseTo((to.y / s) * keep + Math.sin(a), 12);
-        expect(r.speed).toBeGreaterThan(FINAL_BOSS.moveSpeed);
+        expect(pointLength(r.vx, r.vy)).toBeGreaterThan(FINAL_BOSS.moveSpeed);
         // `v.length <= moveSpeed` is now false: that tick takes NO arm (the coast row), so it rolls no grenade.
         expect([w25.phase, w26.phase]).toEqual(['walk', 'coast']);
         expect(w26.streamCount).toBe(w25.streamCount);

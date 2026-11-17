@@ -167,7 +167,7 @@ import {
     FINAL_BOSS, GRENADE, ROCK_FALL, advanceFinalBossGraphic, advanceOwlGrenadeGraphic,
     advancePodGraphic, advanceRockFallGraphic, createFinalBoss, createOwlGrenade, createPod,
     createRockFall, finalBossBox, finalBossDeathSchedule, finalBossHit, finalBossLavaVerdict,
-    firstTileUnder, owlGrenadeReaches, podIsLethal, pointDistance, pointLength, rockFallBox, setPodOpen,
+    firstTileUnder, owlGrenadeReaches, podIsLethal, pointDistance, rockFallBox, setPodOpen,
     stepFinalBoss, stepOwlGrenade, stepRockFall,
 } from './finalBossFight.js';
 import {
@@ -434,14 +434,14 @@ function darkSuitHitChaser(c, p, frozen) {
  * `a = atan2(y - p.y, x - p.x)`. No hits, no i-frame, no latch: `darkSuitDamage` is unread. That is `finalBossHit`'s
  * `justKnock` arm, called here.
  *
- * @returns the `playerHits` row's `retaliation` field: the Owl's `v` (and `|v|`, through `Point.length`) AFTER the
- *   shove — the value the cap and the walk/coast split then read on this same tick.
+ * @returns the `playerHits` row's `retaliation` field: the Owl's `v` AFTER the shove — the value the cap and the
+ *   walk/coast split then read on this same tick.
  */
 function owlSuitRetaliation(b, p) {
     const r = finalBossHit(b, { force: DARK_SUIT_FORCE, fromX: p.x, fromY: p.y, type: 'Suit' });
     return {
         id: b.id, as3: 'FinalBoss', landed: r.landed, damaged: r.damaged === true, force: r.force,
-        why: r.why ?? 'justKnock: onlyHitBy "Lava" != "Suit"', vx: b.vx, vy: b.vy, speed: pointLength(b.vx, b.vy),
+        why: r.why ?? 'justKnock: onlyHitBy "Lava" != "Suit"', vx: b.vx, vy: b.vy,
     };
 }
 
