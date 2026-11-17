@@ -1,0 +1,124 @@
+diff --git a/scripts/procgen/make-seedling-playthrough-rules.mjs b/scripts/procgen/make-seedling-playthrough-rules.mjs
+index 161169f7..9b7a9c74 100644
+--- a/scripts/procgen/make-seedling-playthrough-rules.mjs
++++ b/scripts/procgen/make-seedling-playthrough-rules.mjs
+@@ -83,6 +83,7 @@ const { plannerObstacleAt } = await imp('frontend/modules/seedlingDemo/botDriver
+ const { buildRockFireSides, doorLandingTiles } = await imp('frontend/modules/flashPanel/seedlingRockBreakers.js');
+ const HP = await imp('scripts/procgen/seedlingHolderParking.js');
+ const FCG = await imp('scripts/procgen/seedlingFireChaserGuard.js');
++const AG = await imp('scripts/procgen/seedlingArrivalGuards.js');
+ const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
+ const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
+ const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
+@@ -233,7 +234,7 @@ function narrowRockFireByHolders(raw) {
+         if (!heldBy) continue;
+         const rocks = [...raw].filter(([, r]) => r.level === level.level && r.stances.length > 0);
+         if (rocks.length === 0) continue;
+-        const grid = gridFor(level);
++        const grid = gridFor(level, { guards: false });
+         const tileTypes = HP.tileTypesOf(level, grid.width);
+         const bodies = HP.holderRoomBodies(level, grid, tileTypes);
+         const rows = HP.holderParkVerdicts(level, { grid, tileTypes, heldBy, bodies, entitySemantics: playthroughEntitySemantics }) ?? [];
+@@ -248,7 +249,7 @@ function narrowRockFireByHolders(raw) {
+                 rockFireForGrid = new Map(raw).set(key, { ...rock, stances: [] });
+                 let without;
+                 try {
+-                    const g = gridFor(level);
++                    const g = gridFor(level, { guards: false });
+                     without = HP.holderPrices(level, g, HP.tileTypesOf(level, g.width), [], { entitySemantics: playthroughEntitySemantics });
+                 } finally { rockFireForGrid = null; }
+                 if (hasFireTerm(without[entry])) continue;
+@@ -277,7 +278,7 @@ function narrowRockFireByChasers(sides, raw) {
+     const roomOf = (n) => {
+         const level = LEVELS.find((l) => l.level === n);
+         if (!level) return null;
+-        const grid = gridFor(level);
++        const grid = gridFor(level, { guards: false });
+         return { grid, tileTypes: HP.tileTypesOf(level, grid.width), bodies: combatCensusOf(level).enemies };
+     };
+     const { sides: out, narrowings } = FCG.narrowRockFireByChasers(sides, raw, { roomOf });
+@@ -554,10 +555,47 @@ const gridFor = (level, options = {}) => {
+     if (gate === null) return base;
+     return { ...base, cells: base.cells.map((c) => (c.kind === 'gated' && gateKeyOf(c) === gate ? { ...c, kind: 'open', conditions: [] } : c)) };
+ };
+-const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true } = {}) => {
++const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true, encounter = true, guards = true } = {}) => {
+     const grid = rawBaseGridFor(level, { directionalLocks, arrivals });
+-    return encounter ? stampEncounterLocks(level, grid) : grid;
++    const stamped = encounter ? stampEncounterLocks(level, grid) : grid;
++    // ⛓ rules-chaser-arrival-killarm: the K/T gates price the PLAYER's walk. They are left off (`guards: false`) where a
++    // census models something else on the grid: a kinds-only call (`arrivals: false`, the pit census's: the gates add no
++    // kind, and their landing exemption reads the atlas that census is part of, a cycle); the rock Fire narrowings (the
++    // holder census and the chaser guard decide from the rooms as they were); and the block push model (a block is not
++    // stopped by a body's leash or a tongue: `seedlingBlockPaths` refuses a block on any gated cell).
++    return arrivals && guards ? stampArrivalGuards(level, stamped) : stamped;
+ };
++/**
++ * ⛓⛓ rules-chaser-arrival-killarm — RULE K (a fast contact chaser's leash costs its kill arm) and RULE T (a LavaTrap's
++ * clear-line disc costs the Dark Suit), as `enter` gates on the grid every reader plays: the analyzer, the maze's level
++ * worlds and the derived-rule table (`seedlingArrivalGuards.js` holds both rules, their terms and their citations). ⚖ Robert
++ * 2026-11-16: "General rules slice (Recommended)". Stamped last, over the finished grid (the encounter locks included), so a
++ * gate already on a cell is ANDed, never replaced. Read off the patched map's bodies and traps, the class constants and the
++ * grid; no level literal.
++ */
++export const playthroughArrivalGuards = new Map();
++function stampArrivalGuards(level, grid) {
++    const tileTypes = HP.tileTypesOf(level, grid.width);
++    const toIndex = ([x, y]) => (y - (grid.origin?.y ?? 0)) * grid.width + (x - (grid.origin?.x ?? 0));
++    // Never charged: an arrival landing, a door, and a LavaTrap's own tile (the pull's landing: `applyLavaTrapPulls` and the
++    // maze's `pulls` need it to stay a sub-region).
++    const pulls = OV.lavaTrapPulls(level, TILE);
++    const exempt = new Set([
++        ...arrivalTilesFor(level.level).map(toIndex),
++        ...[...doorTilesOf(level)].map((k) => toIndex(k.split(',').map(Number))),
++        ...pulls.map((p) => toIndex(p.tile)),
++    ]);
++    const centreOf = (b) => {
++        const ctor = ENEMY_CLASSES[b.tag]?.ctor;
++        if (!ctor) throw new Error(`arrival guards: L${level.level} ${b.tag}@${b.x},${b.y} has no ENEMY_CLASSES ctor row`);
++        return [b.x + ctor.dx, b.y + ctor.dy];
++    };
++    const bodies = combatCensusOf(level).enemies;
++    const out = AG.stampArrivalGuards({ grid, tileTypes, bodies, centreOf, exempt, pulls });
++    if (out.refused.length) throw new Error(`arrival guards: L${level.level}: ${out.refused.join('; ')}`);
++    if (out.guards.length || out.traps.length) playthroughArrivalGuards.set(level.level, { guards: out.guards, traps: out.traps });
++    return out.grid;
++}
+ const rawBaseGridFor = (level, { directionalLocks, arrivals }) => {
+     const build = (extra) => SEM.buildSeedlingRegionGrid(
+         { x: 0, y: 0, w: level.width, h: level.height }, level,
+@@ -1629,13 +1667,21 @@ function applyLavaTrapPulls(atlas, regionId, level, analysis) {
+         const i = indexOf[y * level.width + x];
+         return i >= 0 && subs.has(components[i].id) ? components[i].id : null;
+     };
++    // ⛓ rules-chaser-arrival-killarm: a disc tile RULE T gated (`seedlingArrivalGuards`) is no sub-region of its own; the
++    // player steps onto it from a sub-region beside it (paying its Dark Suit, the lift's own rule), so the lift leaves from
++    // those.
++    const fromSubs = ([x, y]) => {
++        const own = subOf([x, y]);
++        if (own) return [own];
++        return [[0, -1], [1, 0], [0, 1], [-1, 0]].map(([dx, dy]) => [x + dx, y + dy])
++            .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < level.width && ny < level.height).map(subOf).filter(Boolean);
++    };
+     const added = new Set();
+     for (const pull of pulls) {
+         const to = subOf(pull.tile);
+         if (!to) continue;
+-        for (const tile of pull.from) {
+-            const from = subOf(tile);
+-            if (!from || from === to || added.has(`${from}>${to}`)) continue;
++        for (const from of pull.from.flatMap(fromSubs)) {
++            if (from === to || added.has(`${from}>${to}`)) continue;
+             added.add(`${from}>${to}`);
+             region.subgraph.internal_exits.push({
+                 from, to, bidirectional: false, source: 'manual', access_rule: DARKSUIT_RULE,
+@@ -2443,7 +2489,8 @@ export function playthroughBlockCrossingCases(doc) {
+         const region = doc.regions.find((r) => r.region_id === regionId);
+         const analysis = regionAnalyses.get(regionId);
+         if (!region?.subgraph?.sub_regions || !analysis) continue;
+-        const grid = gridFor(level);
++        // ⛓ rules-chaser-arrival-killarm: the push model's grid carries no K/T gates (`baseGridFor` says why).
++        const grid = gridFor(level, { guards: false });
+         if ((grid.origin?.x ?? 0) !== 0 || (grid.origin?.y ?? 0) !== 0) throw new Error(`block crossings: L${level.level}'s grid is not whole-level`);
+         const { indexOf, components } = analysis.componentsResult;
+         const subOf = (i) => (indexOf[i] >= 0 && region.subgraph.sub_regions.includes(components[indexOf[i]].id) ? components[indexOf[i]].id : null);

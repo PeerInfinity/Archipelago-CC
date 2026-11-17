@@ -1,0 +1,15 @@
+locations in spheres: base 88 tip 75 | last sphere base 15 tip 12
+  L101 flag 0: lightpole@144,64 cleared: sphere 13 -> None (item {'name': 'L101 flag 0: lightpole@144,64 cleared', 'player': 1, 'advancement': True, 'type': 'Event'})
+  L112 flag 1: rocklock@112,16 cleared: sphere 14 -> None (item {'name': 'L112 flag 1: rocklock@112,16 cleared', 'player': 1, 'advancement': True, 'type': 'Event'})
+  L113 flag 0: finaldoor@112,0 cleared: sphere 15 -> None (item {'name': 'L113 flag 0: finaldoor@112,0 cleared', 'player': 1, 'advancement': True, 'type': 'Event'})
+  L114 flag 0: watcher@72,72 cleared: sphere 14 -> None (item {'name': 'L114 flag 0: watcher@72,72 cleared', 'player': 1, 'advancement': True, 'type': 'Event'})
+  Level 063 - Chest: sphere 13 -> None (item {'name': 'Seal', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 079 - Darksuit: sphere 12 -> None (item {'name': 'Dark Suit', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 080 - Chest: sphere 13 -> None (item {'name': 'Seal', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 082 - King of Fire: sphere 13 -> None (item {'name': 'Seal', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 098 - Chest: sphere 13 -> None (item {'name': 'Seal', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 106 - Ghostsword: sphere 13 -> None (item {'name': 'Ghost Sword Fusion', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 109 - Firewand: sphere 14 -> None (item {'name': 'Fire Wand Fusion', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 112 - Owl: sphere 14 -> None (item {'name': 'Seal', 'player': 1, 'advancement': True, 'type': 'progression'})
+  Level 115 - The Seed: sphere 15 -> None (item {'name': 'The Seed', 'player': 1, 'advancement': True, 'type': 'progression'})
+MOVED 13

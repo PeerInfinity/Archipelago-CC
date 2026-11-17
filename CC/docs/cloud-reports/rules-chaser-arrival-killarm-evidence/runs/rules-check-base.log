@@ -1,0 +1,5 @@
+ERROR: STALE derived-rule table: the maze world payloads moved (payloadMd5 2c844d3195c304d7148dacfcdaf58167 → 98d0ebe5cb0870cdc951344b4156b816): the derivation's input changed — regenerate: run alone, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) `node scripts/procgen/make-seedling-playthrough-rules.mjs` then `node scripts/procgen/make-seedling-playthrough-maze.mjs` (and the rest of the atlas recipe if the atlas id moves); (4) COMMIT THE TABLE IN THE SAME PACKET as the change that staled it. If the regenerated table's VERDICTS move (its rows or exclusions, not only its `inputs` hashes), the packet owes a tile-primitives designer review before js-16 slots it. The engine closure: `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`
+
+real	0m10.694s
+user	0m16.224s
+sys	0m0.515s

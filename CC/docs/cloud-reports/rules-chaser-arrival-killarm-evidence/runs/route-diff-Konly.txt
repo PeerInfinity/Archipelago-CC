@@ -1,0 +1,709 @@
+level_0:level_0 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_0:level_0 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_0:level_0 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_0:level_0 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_0:level_0 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_0:level_0 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_0:level_0 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_0:level_0 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_24:level_24 -> level_12 #2 => exit:level_12 -> level_21
+    base ['Fire & Green Key & Progressive Swim', 'Green Key & Red Key']
+    tip  ['Fire & Green Key & Progressive Swim', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 #2 => exit:level_12 -> level_34
+    base ['Green Key & Progressive Shield']
+    tip  ['Green Key & Progressive Shieldx2']
+level_24:level_24 -> level_12 #2 => exit:level_12 -> level_37
+    base ['Fire & Green Key & Progressive Swim', 'Green Key & Red Key']
+    tip  ['Fire & Green Key & Progressive Swim', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 #2 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Green Key & Progressive Shield']
+    tip  ['Green Key & Progressive Shieldx2']
+level_24:level_24 -> level_12 #2 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Green Key & Red Key & Yellow Key', 'Green Key & Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Green Key & Red Key & Yellow Key', 'Fire & Green Key & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Green Key & Progressive Sword & Red Key & Yellow Key', 'Fire & Green Key & Red Key & Wand & Yellow Key', 'Green Key & Progressive Swim & Yellow Key']
+level_24:level_24 -> level_12 #2 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Green Key & Red Key']
+    tip  ['Fire & Green Key & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & Green Key & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 #2 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Green Key & Red Key']
+    tip  ['Fire & Green Key & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & Green Key & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 #2 => loc:Level 012 - Chest
+    base ['Fire & Green Key & Red Key', 'Green Key & Progressive Swim']
+    tip  ['Fire & Ghost Spear & Green Key & Red Key', 'Fire & Green Key & Progressive Shieldx2 & Red Key', 'Fire & Green Key & Progressive Sword & Red Key', 'Fire & Green Key & Red Key & Wand', 'Green Key & Progressive Swim']
+level_24:level_24 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Green Key & Progressive Swim', 'Green Key & Red Key']
+    tip  ['Fire & Green Key & Progressive Swim', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 => exit:level_12 -> level_34
+    base ['Green Key & Progressive Shield']
+    tip  ['Green Key & Progressive Shieldx2']
+level_24:level_24 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Green Key & Progressive Swim', 'Green Key & Red Key']
+    tip  ['Fire & Green Key & Progressive Swim', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Green Key & Progressive Shield']
+    tip  ['Green Key & Progressive Shieldx2']
+level_24:level_24 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Green Key & Red Key & Yellow Key', 'Green Key & Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Green Key & Red Key & Yellow Key', 'Fire & Green Key & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Green Key & Progressive Sword & Red Key & Yellow Key', 'Fire & Green Key & Red Key & Wand & Yellow Key', 'Green Key & Progressive Swim & Yellow Key']
+level_24:level_24 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Green Key & Red Key']
+    tip  ['Fire & Green Key & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & Green Key & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Green Key & Red Key']
+    tip  ['Fire & Green Key & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & Green Key & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Green Key & Red Key', 'Green Key & Progressive Shieldx2 & Red Key', 'Green Key & Progressive Sword & Red Key', 'Green Key & Red Key & Wand']
+level_24:level_24 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Green Key & Red Key', 'Green Key & Progressive Swim']
+    tip  ['Fire & Ghost Spear & Green Key & Red Key', 'Fire & Green Key & Progressive Shieldx2 & Red Key', 'Fire & Green Key & Progressive Sword & Red Key', 'Fire & Green Key & Red Key & Wand', 'Green Key & Progressive Swim']
+level_33:level_33 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_33:level_33 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_33:level_33 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_33:level_33 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_33:level_33 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_33:level_33 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_33:level_33 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_33:level_33 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_34:level_34 -> level_12 => exit:level_12 -> level_0
+    base ['Fire & L0 flag 1: breakablerock@288,176 cleared & Progressive Swim', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & L0 flag 1: breakablerock@288,176 cleared & Progressive Swim', 'Ghost Spear & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_24
+    base ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Swim', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key']
+    tip  ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Swim', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key & Wand', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_33
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_34
+    base ['Fire & Progressive Shield & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shield & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shield & Red Key']
+    tip  ['Fire & Progressive Shieldx2 & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key']
+level_34:level_34 -> level_12 => exit:level_12 -> level_35
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_36
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_5
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key']
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key']
+level_34:level_34 -> level_12 => exit:level_12 -> level_88
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_95
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => exit:level_12 -> level_95 #2
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Fire & Progressive Shield & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shield & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shield & Red Key']
+    tip  ['Fire & Progressive Shieldx2 & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key']
+level_34:level_34 -> level_12 => loc:L12 flag 11: bosslock@112,192 cleared
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key']
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand & Yellow Key']
+level_34:level_34 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key']
+    tip  ['Fire & Yellow Key', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key']
+level_34:level_34 -> level_12 => loc:L12 flag 3: bosslock@80,656 cleared
+    base ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & Progressive Swim', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & Progressive Swim', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_34:level_34 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Fire & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Ghost Spear & Progressive Swim & Red Key', 'Fire & Progressive Shieldx2 & Progressive Swim & Red Key', 'Fire & Progressive Swim & Progressive Sword & Red Key', 'Fire & Progressive Swim & Red Key & Wand', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+level_34:level_34 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Fire & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Ghost Spear & Progressive Swim & Red Key', 'Fire & Progressive Shieldx2 & Progressive Swim & Red Key', 'Fire & Progressive Swim & Progressive Sword & Red Key', 'Fire & Progressive Swim & Red Key & Wand', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+level_34:level_34 -> level_12 => loc:Level 012 - Chest
+    base ['Fire', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key']
+    tip  ['Fire', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Wand']
+level_35:level_35 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_35:level_35 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_35:level_35 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_35:level_35 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_35:level_35 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_35:level_35 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_35:level_35 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_35:level_35 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_36:level_36 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_36:level_36 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_36:level_36 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_36:level_36 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_36:level_36 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_36:level_36 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_36:level_36 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_36:level_36 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_37:level_37 -> level_12 => exit:level_12 -> level_0
+    base ['Fire & L0 flag 1: breakablerock@288,176 cleared & Progressive Swim', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & L0 flag 1: breakablerock@288,176 cleared & Progressive Swim', 'Ghost Spear & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_24
+    base ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Swim', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key']
+    tip  ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Swim', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key & Wand', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_33
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_34
+    base ['Fire & Progressive Shield & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shield & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shield & Red Key']
+    tip  ['Fire & Progressive Shieldx2 & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key']
+level_37:level_37 -> level_12 => exit:level_12 -> level_35
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_36
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_5
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key']
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key']
+level_37:level_37 -> level_12 => exit:level_12 -> level_88
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_95
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => exit:level_12 -> level_95 #2
+    base ['Fire & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Fire & Progressive Shield & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shield & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shield & Red Key']
+    tip  ['Fire & Progressive Shieldx2 & Progressive Swim', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key']
+level_37:level_37 -> level_12 => loc:L12 flag 11: bosslock@112,192 cleared
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key']
+    tip  ['Fire & L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand & Yellow Key']
+level_37:level_37 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key']
+    tip  ['Fire & Yellow Key', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Progressive Sword & Red Key & Yellow Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Wand & Yellow Key']
+level_37:level_37 -> level_12 => loc:L12 flag 3: bosslock@80,656 cleared
+    base ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & Progressive Swim', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & Progressive Swim', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand']
+level_37:level_37 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Fire & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Ghost Spear & Progressive Swim & Red Key', 'Fire & Progressive Shieldx2 & Progressive Swim & Red Key', 'Fire & Progressive Swim & Progressive Sword & Red Key', 'Fire & Progressive Swim & Red Key & Wand', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+level_37:level_37 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Fire & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+    tip  ['Fire & Ghost Spear & Progressive Swim & Red Key', 'Fire & Progressive Shieldx2 & Progressive Swim & Red Key', 'Fire & Progressive Swim & Progressive Sword & Red Key', 'Fire & Progressive Swim & Red Key & Wand', 'L12 flag 4: bosslock@416,240 cleared & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Red Key']
+level_37:level_37 -> level_12 => loc:Level 012 - Chest
+    base ['Fire', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key']
+    tip  ['Fire', 'Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Progressive Sword & Red Key', 'L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Wand', 'L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Progressive Swim & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Progressive Sword & Red Key', 'L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Wand']
+level_5:level_5 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim & Yellow Key', 'Red Key & Yellow Key']
+    tip  ['Fire & Progressive Swim & Yellow Key', 'Ghost Spear & Red Key & Yellow Key', 'Progressive Shieldx2 & Red Key & Yellow Key', 'Progressive Sword & Red Key & Yellow Key', 'Red Key & Wand & Yellow Key']
+level_5:level_5 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield & Yellow Key']
+    tip  ['Progressive Shieldx2 & Yellow Key']
+level_5:level_5 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim & Yellow Key', 'Red Key & Yellow Key']
+    tip  ['Fire & Progressive Swim & Yellow Key', 'Ghost Spear & Red Key & Yellow Key', 'Progressive Shieldx2 & Red Key & Yellow Key', 'Progressive Sword & Red Key & Yellow Key', 'Red Key & Wand & Yellow Key']
+level_5:level_5 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield & Yellow Key']
+    tip  ['Progressive Shieldx2 & Yellow Key']
+level_5:level_5 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_5:level_5 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key & Yellow Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Ghost Spear & Red Key & Yellow Key', 'Progressive Shieldx2 & Red Key & Yellow Key', 'Progressive Sword & Red Key & Yellow Key', 'Red Key & Wand & Yellow Key']
+level_5:level_5 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key & Yellow Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key & Yellow Key', 'Ghost Spear & Red Key & Yellow Key', 'Progressive Shieldx2 & Red Key & Yellow Key', 'Progressive Sword & Red Key & Yellow Key', 'Red Key & Wand & Yellow Key']
+level_5:level_5 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_83:level_83 -> level_12 => exit:level_12 -> level_0
+    base ['Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'L0 flag 1: breakablerock@288,176 cleared & Progressive Swim']
+    tip  ['Fire & Ghost Spear & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L0 flag 1: breakablerock@288,176 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'L0 flag 1: breakablerock@288,176 cleared & Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_21
+    base ['Fire', 'Progressive Swim & Red Key']
+    tip  ['Fire', 'Ghost Spear & Progressive Swim & Red Key', 'Progressive Shieldx2 & Progressive Swim & Red Key', 'Progressive Swim & Progressive Sword & Red Key', 'Progressive Swim & Red Key & Wand']
+level_83:level_83 -> level_12 => exit:level_12 -> level_24
+    base ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Swim']
+    tip  ['Fire & Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Fire & Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Shieldx2 & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Sword & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key & Wand', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Shieldx2 & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Sword & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & L24 flag 0: burnabletree@32,128 cleared & Red Key & Wand', 'Green Key & L12 flag 3: bosslock@80,656 cleared & L24 flag 0: burnabletree@32,128 cleared & Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_33
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_34
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shield & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shield & Red Key', 'Progressive Shield & Progressive Swim']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Progressive Shieldx2 & Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_35
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_36
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_37
+    base ['Fire', 'Progressive Swim & Red Key']
+    tip  ['Fire', 'Ghost Spear & Progressive Swim & Red Key', 'Progressive Shieldx2 & Progressive Swim & Red Key', 'Progressive Swim & Progressive Sword & Red Key', 'Progressive Swim & Red Key & Wand']
+level_83:level_83 -> level_12 => exit:level_12 -> level_88
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_95
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Progressive Swim']
+level_83:level_83 -> level_12 => exit:level_12 -> level_95 #2
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Progressive Swim']
+level_83:level_83 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shield & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shield & Red Key', 'Progressive Shield & Progressive Swim']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Progressive Shieldx2 & Progressive Swim']
+level_83:level_83 -> level_12 => loc:L12 flag 11: bosslock@112,192 cleared
+    base ['Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Yellow Key', 'Fire & Ghost Spear & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key & Yellow Key', 'Fire & L12 flag 11: bosslock@112,192 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand & Yellow Key', 'L12 flag 11: bosslock@112,192 cleared & Progressive Swim & Yellow Key']
+level_83:level_83 -> level_12 => loc:L12 flag 3: bosslock@80,656 cleared
+    base ['Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Green Key & L12 flag 3: bosslock@80,656 cleared & Progressive Swim']
+    tip  ['Fire & Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & Ghost Spear & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Progressive Sword & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 4: bosslock@416,240 cleared & Red Key & Wand', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Shieldx2 & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Progressive Sword & Red Key', 'Fire & Green Key & L12 flag 3: bosslock@80,656 cleared & L12 flag 5: bosslock@432,240 cleared & Red Key & Wand', 'Green Key & L12 flag 3: bosslock@80,656 cleared & Progressive Swim']
+level_83:level_83 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim & Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Ghost Spear & Progressive Swim & Red Key', 'Progressive Shieldx2 & Progressive Swim & Red Key', 'Progressive Swim & Progressive Sword & Red Key', 'Progressive Swim & Red Key & Wand']
+level_83:level_83 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Progressive Swim & Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Red Key', 'Ghost Spear & Progressive Swim & Red Key', 'Progressive Shieldx2 & Progressive Swim & Red Key', 'Progressive Swim & Progressive Sword & Red Key', 'Progressive Swim & Red Key & Wand']
+level_88:level_88 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_88:level_88 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_88:level_88 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_88:level_88 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_88:level_88 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_88:level_88 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_88:level_88 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_88:level_88 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_95:level_95 -> level_12 #2 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 #2 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_95:level_95 -> level_12 #2 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 #2 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_95:level_95 -> level_12 #2 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_95:level_95 -> level_12 #2 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 #2 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 #2 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_95:level_95 -> level_12 => exit:level_12 -> level_21
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 => exit:level_12 -> level_34
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_95:level_95 -> level_12 => exit:level_12 -> level_37
+    base ['Fire & Progressive Swim', 'Red Key']
+    tip  ['Fire & Progressive Swim', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 => loc:L12 flag 10: shieldlocknorm@288,704 cleared
+    base ['Progressive Shield']
+    tip  ['Progressive Shieldx2']
+level_95:level_95 -> level_12 => loc:L12 flag 12: bosslock@32,864 cleared
+    base ['Fire & Red Key & Yellow Key', 'Progressive Swim & Yellow Key']
+    tip  ['Fire & Ghost Spear & Red Key & Yellow Key', 'Fire & Progressive Shieldx2 & Red Key & Yellow Key', 'Fire & Progressive Sword & Red Key & Yellow Key', 'Fire & Red Key & Wand & Yellow Key', 'Progressive Swim & Yellow Key']
+level_95:level_95 -> level_12 => loc:L12 flag 4: bosslock@416,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 => loc:L12 flag 5: bosslock@432,240 cleared
+    base ['Red Key']
+    tip  ['Fire & L12 flag 4: bosslock@416,240 cleared & Progressive Swim & Red Key', 'Fire & L12 flag 5: bosslock@432,240 cleared & Progressive Swim & Red Key', 'Ghost Spear & Red Key', 'Progressive Shieldx2 & Red Key', 'Progressive Sword & Red Key', 'Red Key & Wand']
+level_95:level_95 -> level_12 => loc:Level 012 - Chest
+    base ['Fire & Red Key', 'Progressive Swim']
+    tip  ['Fire & Ghost Spear & Red Key', 'Fire & Progressive Shieldx2 & Red Key', 'Fire & Progressive Sword & Red Key', 'Fire & Red Key & Wand', 'Progressive Swim']
+level_25:level_25 -> level_26 => exit:level_26 -> level_27
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_27:level_27 -> level_26 => exit:level_26 -> level_25
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_25:level_25 -> level_28 => exit:level_28 -> level_26
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_25:level_25 -> level_28 => loc:L28 flag 0: rope@160,64 cleared
+    base ['Fire', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Fire & Progressive Shieldx2', 'Fire & Wand', 'Ghost Spear', 'Progressive Sword']
+level_26:level_26 -> level_28 => exit:level_28 -> level_25
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_26:level_26 -> level_28 => loc:L28 flag 0: rope@160,64 cleared
+    base ['Fire', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Fire & Progressive Shieldx2', 'Fire & Wand', 'Ghost Spear', 'Progressive Sword']
+level_39:level_39 -> level_40 => exit:level_40 -> level_41
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 12: wandlock@480,560 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Sword & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Purple Key & Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_42
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 12: wandlock@480,560 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Sword & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Purple Key & Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #10
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #11
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #12
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #13
+    base ['FREE']
+    tip  None
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #2
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #3
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #4
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #5
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #6
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #7
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #8
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => exit:level_40 -> level_43 #9
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_39:level_39 -> level_40 => loc:Level 040 - Totem Part 160,640
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_39
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_42
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #10
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #11
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #12
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #13
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  None
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #2
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #3
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #4
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #5
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #6
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #7
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #8
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => exit:level_40 -> level_43 #9
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => loc:L40 flag 1: wandlock@176,80 cleared
+    base ['L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared']
+    tip  ['Ghost Spear & L40 flag 1: wandlock@176,80 cleared', 'Ghost Spear & L40 flag 7: wandlock@208,128 cleared', 'L40 flag 1: wandlock@176,80 cleared & Progressive Shieldx2', 'L40 flag 1: wandlock@176,80 cleared & Progressive Sword', 'L40 flag 1: wandlock@176,80 cleared & Wand', 'L40 flag 7: wandlock@208,128 cleared & Progressive Shieldx2', 'L40 flag 7: wandlock@208,128 cleared & Progressive Sword', 'L40 flag 7: wandlock@208,128 cleared & Wand']
+level_41:level_41 -> level_40 => loc:L40 flag 7: wandlock@208,128 cleared
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_41:level_41 -> level_40 => loc:L40 flag 8: bosslock@480,352 cleared
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => loc:Level 040 - Chest
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => loc:Level 040 - Totem Part 160,640
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_41:level_41 -> level_40 => loc:Level 040 - Totem Part 64,144
+    base ['L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared']
+    tip  ['Ghost Spear & L40 flag 1: wandlock@176,80 cleared', 'Ghost Spear & L40 flag 7: wandlock@208,128 cleared', 'L40 flag 1: wandlock@176,80 cleared & Progressive Shieldx2', 'L40 flag 1: wandlock@176,80 cleared & Progressive Sword', 'L40 flag 1: wandlock@176,80 cleared & Wand', 'L40 flag 7: wandlock@208,128 cleared & Progressive Shieldx2', 'L40 flag 7: wandlock@208,128 cleared & Progressive Sword', 'L40 flag 7: wandlock@208,128 cleared & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_39
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_41
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #10
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #11
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #12
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #13
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  None
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #2
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #3
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #4
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #5
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #6
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #7
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #8
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => exit:level_40 -> level_43 #9
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => loc:L40 flag 1: wandlock@176,80 cleared
+    base ['L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared']
+    tip  ['Ghost Spear & L40 flag 1: wandlock@176,80 cleared', 'Ghost Spear & L40 flag 7: wandlock@208,128 cleared', 'L40 flag 1: wandlock@176,80 cleared & Progressive Shieldx2', 'L40 flag 1: wandlock@176,80 cleared & Progressive Sword', 'L40 flag 1: wandlock@176,80 cleared & Wand', 'L40 flag 7: wandlock@208,128 cleared & Progressive Shieldx2', 'L40 flag 7: wandlock@208,128 cleared & Progressive Sword', 'L40 flag 7: wandlock@208,128 cleared & Wand']
+level_42:level_42 -> level_40 => loc:L40 flag 7: wandlock@208,128 cleared
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_42:level_42 -> level_40 => loc:L40 flag 8: bosslock@480,352 cleared
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => loc:Level 040 - Chest
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => loc:Level 040 - Totem Part 160,640
+    base ['L40 flag 8: bosslock@480,352 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 8: bosslock@480,352 cleared & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Progressive Sword & Purple Key', 'L40 flag 8: bosslock@480,352 cleared & Purple Key & Wand']
+level_42:level_42 -> level_40 => loc:Level 040 - Totem Part 64,144
+    base ['L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared']
+    tip  ['Ghost Spear & L40 flag 1: wandlock@176,80 cleared', 'Ghost Spear & L40 flag 7: wandlock@208,128 cleared', 'L40 flag 1: wandlock@176,80 cleared & Progressive Shieldx2', 'L40 flag 1: wandlock@176,80 cleared & Progressive Sword', 'L40 flag 1: wandlock@176,80 cleared & Wand', 'L40 flag 7: wandlock@208,128 cleared & Progressive Shieldx2', 'L40 flag 7: wandlock@208,128 cleared & Progressive Sword', 'L40 flag 7: wandlock@208,128 cleared & Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_41
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 12: wandlock@480,560 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Sword & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Purple Key & Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_42
+    base ['L40 flag 12: wandlock@480,560 cleared & Purple Key']
+    tip  ['Ghost Spear & L40 flag 12: wandlock@480,560 cleared & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Shieldx2 & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Progressive Sword & Purple Key', 'L40 flag 12: wandlock@480,560 cleared & Purple Key & Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #10
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #11
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #12
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #13
+    base ['FREE']
+    tip  None
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #2
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #3
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #4
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #5
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #6
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #7
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #8
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => exit:level_40 -> level_43 #9
+    base ['FREE']
+    tip  ['Ghost Spear', 'L40 flag 12: wandlock@480,560 cleared', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_43:level_43 -> level_40 => loc:Level 040 - Totem Part 160,640
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_40:level_40 -> level_43 #13 => exit:level_43 -> level_37
+    base ['Totem Shardx5 & Wand']
+    tip  None
+level_40:level_40 -> level_43 #13 => exit:level_43 -> level_40
+    base ['FREE']
+    tip  None
+level_40:level_40 -> level_43 #13 => loc:Level 043 - Totem of Lacste
+    base ['Totem Shardx5 & Wand']
+    tip  None
+level_40:level_40 -> level_43 #13 => loc:Level 043 - Wand
+    base ['Ghost Spear & Totem Shardx5', 'Progressive Sword & Totem Shardx5']
+    tip  None
+level_48:level_48 -> level_53 => exit:level_53 -> level_51
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_51:level_51 -> level_53 => exit:level_53 -> level_48
+    base ['Progressive Swim']
+    tip  ['Ghost Spear & Progressive Swim', 'Progressive Shieldx2 & Progressive Swim', 'Progressive Swim & Progressive Sword', 'Progressive Swim & Wand']
+level_71:level_71 -> level_72 => exit:level_72 -> level_73
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_73:level_73 -> level_72 => exit:level_72 -> level_71
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_72:level_72 -> level_73 => exit:level_73 -> level_74
+    base ['Dark Suit', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Wand', 'Ghost Spear', 'Progressive Sword']
+level_74:level_74 -> level_73 => exit:level_73 -> level_72
+    base ['Dark Suit', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Wand', 'Ghost Spear', 'Progressive Sword']
+level_73:level_73 -> level_74 => exit:level_74 -> level_75
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_73:level_73 -> level_74 => loc:Level 074 - Darkshield
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_75:level_75 -> level_74 => exit:level_74 -> level_73
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_71:level_71 -> level_75 => exit:level_75 -> level_74
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_74:level_74 -> level_75 => exit:level_75 -> level_71
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_76:level_76 -> level_77 => exit:level_77 -> level_78
+    base ['FREE']
+    tip  ['Dark Suit', 'Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_78:level_78 -> level_77 => exit:level_77 -> level_76
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_77:level_77 -> level_78 => exit:level_78 -> level_79
+    base ['Dark Suit', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Wand', 'Ghost Spear', 'Progressive Sword']
+level_79:level_79 -> level_78 => exit:level_78 -> level_77
+    base ['Dark Suit', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit & Progressive Shieldx2', 'Dark Suit & Wand', 'Ghost Spear', 'Progressive Sword']
+level_71:level_71 -> level_80 => loc:Level 080 - Chest
+    base ['Dark Suit']
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand']
+level_79:level_79 -> level_80 => exit:level_80 -> level_71
+    base ['Dark Suit']
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand']
+level_79:level_79 -> level_80 => loc:Level 080 - Chest
+    base ['Dark Suit']
+    tip  ['Dark Suit & Ghost Spear', 'Dark Suit & Progressive Shieldx2', 'Dark Suit & Progressive Sword', 'Dark Suit & Wand']
+level_12:level_12 -> level_88 => exit:level_88 -> level_87
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_12:level_12 -> level_88 => exit:level_88 -> level_87 #2
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_87:level_87 -> level_88 #2 => exit:level_88 -> level_12
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_87:level_87 -> level_88 => exit:level_88 -> level_12
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_89:level_89 -> level_91 => exit:level_91 -> level_92
+    base ['FREE']
+    tip  ['Ghost Spear', 'Progressive Shieldx2', 'Progressive Sword', 'Wand']
+level_92:level_92 -> level_91 => exit:level_91 -> level_89
+    base ['Progressive Swim']
+    tip  ['Ghost Spear & Progressive Swim', 'Progressive Shieldx2 & Progressive Swim', 'Progressive Swim & Progressive Sword', 'Progressive Swim & Wand']
+MOVED ROUTES: 236

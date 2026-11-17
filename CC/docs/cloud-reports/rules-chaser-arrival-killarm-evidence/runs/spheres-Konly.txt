@@ -1,0 +1,2 @@
+locations in spheres: base 88 tip 88 | last sphere base 15 tip 15
+MOVED 0

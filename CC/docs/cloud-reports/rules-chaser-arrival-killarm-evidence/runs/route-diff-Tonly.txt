@@ -1,0 +1,13 @@
+level_76:level_76 -> level_77 => exit:level_77 -> level_78
+    base ['FREE']
+    tip  ['Dark Suit']
+level_78:level_78 -> level_77 => exit:level_77 -> level_76
+    base ['FREE']
+    tip  ['Dark Suit']
+level_77:level_77 -> level_78 => exit:level_78 -> level_79
+    base ['Dark Suit', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit']
+level_79:level_79 -> level_78 => exit:level_78 -> level_77
+    base ['Dark Suit', 'Ghost Spear', 'Progressive Sword']
+    tip  ['Dark Suit']
+MOVED ROUTES: 4
