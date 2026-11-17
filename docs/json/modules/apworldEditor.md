@@ -2041,6 +2041,9 @@ places cells signed on `gridForBox`'s grid (`grid.minX`/`grid.minY`, also
 `result.gridOrigin`), the renderer draws cell (gx, gy) at
 `(gx − minX)·cellW`, `cellAtPoint` returns signed cells, `regionLayout.isGridCell`
 accepts negatives, and the Map canvas carries `data-grid-min-x`/`-y`.
+Since S2 that grid is the engine's own `Grid` with an origin
+(`new Grid({width, height, minX, minY})`); S1's module-private bridge subclass
+is gone, and nothing that reads `grid.minX`/`grid.minY` changed.
 
 The stats line beside the map says which rule sized the cell, off
 `regionSizeSource` rather than a second derivation (`data-cell-source` on
@@ -2550,7 +2553,10 @@ reads it without the procgen engine.
 **What the op writes** — `preset_sidecars[p]` (every placed region's entry),
 `procgen_metadata[p]` (`driver: 'apworld-initialise'`, `source_game` (the
 document's `game_name`), `source_counts` (`computeSourceCounts`, as the pipeline
-records it), `stop_reason`, `region_count`, `grid_dims` = the cells' extent,
+records it), `stop_reason`, `region_count`, `grid_dims` = the cells' box widened
+to (0,0) (`max + 1` when every cell is ≥ 0) plus `grid_origin` only when that box
+starts below 0 (`procgenCore/cellExtent.js` `recordedGridBox`, the writer
+`buildRulesJson` shares),
 `substrate_configs` per R6b when a declaring substrate realised a region), the
 substrate's own blocks (`rulesJsonBlocks`), each landed under the slot
 (`region_atlas[p]`, `flash_panel[p]`, rules F2 — so a second Seedling slot of one
