@@ -101,7 +101,7 @@ class BakingAdventureWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Mixing Bowls", "Electric Mixer", "Measuring Tools", "Preheated Oven", "Prepared Sheets", "Softened Butter", "Butter Sugar Base", "Egg Mixture", "Creamed Mixture", "Measured Flour", "Flour Mixture", "Basic Dough", "Cookie Dough", "Shaped Cookies", "Baked Cookies"]),
+        "Everything": frozenset(["Mixing Bowls", "Electric Mixer", "Measuring Tools", "Preheated Oven", "Prepared Sheets", "Softened Butter", "Butter Sugar Base", "Egg Mixture", "Creamed Mixture", "Measured Flour", "Flour Mixture", "Basic Dough", "Cookie Dough", "Shaped Cookies", "Baked Cookies", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -175,7 +175,7 @@ class BakingAdventureWorld(RuleWorldMixin, World):
         self.world_class_name = 'BakingAdventureWorld'
         self.base_id = 300000000
         self.world_description = 'Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!'
-        self.slot_data = types.SimpleNamespace(vanilla_placement=0)
+        self.slot_data = types.SimpleNamespace(vanilla_placement=0, reports_goal_by_server_item=True)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -424,6 +424,7 @@ class BakingAdventureWorld(RuleWorldMixin, World):
         """Return data for the client."""
         return {**self._with_embedded_rules({
             "vanilla_placement": 0,
+            "reports_goal_by_server_item": True,
         }), **_spoiler_hook_client.slot_data(self)}
 
     def _with_embedded_rules(self, data: Dict[str, Any]) -> Dict[str, Any]:

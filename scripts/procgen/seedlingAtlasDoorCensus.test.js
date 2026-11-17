@@ -121,7 +121,11 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   t2-button column).
         // ⛓ rules-no-hit-directional — restamped (e3ae176e -> 3a6a7579): L22 and L25 each split in two at their directional
         //   no-hit gate (⚖ the user 2026-11-11, a per-room table for now). No door or swim row moves.
-        expect(c.atlasId).toBe('seedling-3a6a7579');
+        // ⛓ tile-fire-breaks-rocks — restamped (e3ae176e -> 32298df9): an ordinary rock also breaks to Fire from a side with a
+        //   clean flame stance (rules-6's rule), so four two-way internal rows split into one-way pairs (L0 r6c5<->r7c6 and
+        //   r11c19<->r7c6, L100 r2c3<->r4c10, L16 r3c7<->r6c8: one side keeps the swing). No door or sub-region moves.
+        // ⛓ merged (rules-no-hit-directional + tile-fire-breaks-rocks): 308 -> 316 internal exits (no-hit's 4 + this slice's 4); atlas 88e3788c.
+        expect(c.atlasId).toBe('seedling-88e3788c');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
@@ -133,7 +137,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   r23c29 -> r26c13. Swim rows unmoved.
         // ⛓ rules-no-hit-directional: 54 -> 56 regions with a subgraph, 203 -> 207 sub-regions, 308 -> 312 internal exits
         //   (per room, L22 and L25: the priced crossing and its free reverse). Swim rows unmoved.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 56, 207, 312, 207]);
+        // ⛓ tile-fire-breaks-rocks: 308 -> 312 internal exits (four two-way rock rows split into one-way pairs).
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 56, 207, 316, 207]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },

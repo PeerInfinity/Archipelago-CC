@@ -31,9 +31,20 @@ the sound-effect and music libraries (`../sfxLibrary/`, `../musicLibrary/`), the
   | `music` | `music/manifest.json` | `../musicLibrary/` |
   | `concepts` | `concepts/manifest.json` | `../packConcepts/`: characters, places, objects and information |
   | `text` | `text/manifest.json` | `../textLibrary/`: strings and word lists |
+  | `structure` | `structure/manifest.json` | `../packStructure/`: what exists — tasks, stats, resources, boons, places |
+  | `numbers` | `numbers/manifest.json` | `../packStructure/packNumbers.js`: magnitudes, one set per game (defaults) |
+  | `bindings` | `bindings/manifest.json` | `../packStructure/packBindings.js`: per game, what only that game needs |
 
+  `LOGIC_LAYERS` names the last three: they carry logic, so a content set (the words) never reads them.
   `RESERVED_LAYERS` is empty. A layer named there is refused, saying it is reserved, until its reader is built.
   A new consumer adds its layer name to `KNOWN_LAYERS`.
+- **Provenance** (⛓ content packs PL-1): every layer manifest carries a `provenance` block — `sources` (each of
+  type `game`, `person`, `model`, `authored` or `derived`, with its type's required fields), a `default`, and
+  optional `groups` (a key prefix → a source) — and an entry may carry `src`. `loadPackStack` checks every layer it
+  reads (`provenance.js` `checkLayerProvenance`) and refuses by pack, layer and key. `provenanceCounts(loaded)`
+  counts entries per source; `scripts/procgen/report-pack-provenance.mjs` prints it for every committed pack. A
+  test that builds packs in memory wraps its `readJson` in `testing/fixtureProvenance.js`. `ContentPackError`
+  lives in `contentPackError.js` (re-exported here). Detail: `docs/json/developer/procgen/concepts.md` § Provenance.
 - **Stacks:** `packs.json` names them per kind (`STACK_KINDS`). Each table may be absent or empty.
 
   | Kind | `parseRegistry(...)` field | What it is |

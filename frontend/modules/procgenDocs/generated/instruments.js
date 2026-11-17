@@ -25,6 +25,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 2,
+            "id": "action"
+        },
+        {
+            "browser": 0,
+            "count": 2,
             "id": "attribute"
         },
         {
@@ -139,7 +144,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 157,
-            "count": 207,
+            "count": 209,
             "id": "probe"
         },
         {
@@ -176,6 +181,11 @@ export const INSTRUMENTS = frz({
             "browser": 0,
             "count": 2,
             "id": "replay"
+        },
+        {
+            "browser": 0,
+            "count": 2,
+            "id": "report"
         },
         {
             "browser": 0,
@@ -234,13 +244,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 531,
+        "blockStyle": 533,
         "browser": 227,
-        "cited": 284,
-        "files": 549,
-        "lineStyle": 18,
-        "withDocblock": 549,
-        "withFlags": 467
+        "cited": 290,
+        "files": 555,
+        "lineStyle": 22,
+        "withDocblock": 555,
+        "withFlags": 472
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -259,6 +269,99 @@ export const INSTRUMENTS = frz({
         "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"
     },
     "rows": [
+        {
+            "argvHelpers": [
+                "has",
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "action",
+            "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "seed"
+            ],
+            "file": "action-nodes-compile.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "quiet"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "seed"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ActionNodes graph → rules.json compiler CLI (design `action-nodes.md`, slice AN-1).",
+            "path": "scripts/procgen/action-nodes-compile.mjs"
+        },
+        {
+            "argvHelpers": [
+                "valueOf"
+            ],
+            "browser": false,
+            "category": "action",
+            "citedBy": [
+                "docs/json/developer/procgen/action-nodes.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "graph"
+            ],
+            "file": "action-nodes-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "graph"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quiet"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ActionNodes headless bot: plays a compiled world to its goal with the planner (A13, \"as early as possible\"; design `action-nodes.md` § The bot).",
+            "path": "scripts/procgen/action-nodes-play.mjs"
+        },
         {
             "argvHelpers": [],
             "browser": false,
@@ -3788,6 +3891,7 @@ export const INSTRUMENTS = frz({
                 "arg",
                 "check",
                 "json",
+                "legend",
                 "settled"
             ],
             "browser": true,
@@ -6499,7 +6603,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "extract",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [
                 "check",
@@ -12095,6 +12201,59 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg"
             ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "compare",
+                "expect-flag",
+                "moved",
+                "ref",
+                "tip"
+            ],
+            "file": "probe-seedling-calib-levels.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect-flag"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "moved"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tip"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling P3 TIMING PROBE: the calib scripted pass, timed per level, and a tip compared with a control.",
+            "path": "scripts/procgen/probe-seedling-calib-levels.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": true,
             "category": "probe",
             "citedBy": [],
@@ -13784,7 +13943,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
+                "arg",
+                "check"
             ],
             "browser": true,
             "category": "probe",
@@ -13807,6 +13967,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "set"
                 }
             ],
             "inheritedFlags": [
@@ -16779,6 +16945,68 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's ONE-WAY EVENT CENSUS, ON THE GAME (rules `rules-oneway-event-census`, measure only).",
             "path": "scripts/procgen/probe-seedling-oneway-census.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget",
+                "dump-plan",
+                "exit",
+                "fixture"
+            ],
+            "file": "probe-seedling-page-budget-step.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump-plan"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "exit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "work-sites"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only — SOLVE A COMMITTED BOOT FIXTURE UNDER THE PAGE'S WORK BUDGET, in node: the page's own `solveAnytime` request at `SOLVER_BUDGET_WORK` (640) with the upgrade window, then — when the answer is a refusal cut at its budget with a pass left unanswered (`wasmPlayback.expiryAction` = 'retry') — the ONE held re…",
+            "path": "scripts/procgen/probe-seedling-page-budget-step.mjs"
         },
         {
             "argvHelpers": [
@@ -21872,6 +22100,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only — REPLAY A CAPTURED SOLVE REQUEST in node, N times, each in a FRESH process: is the solver's answer a function of the request?",
             "path": "scripts/procgen/replay-seedling-solve-request.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "report",
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "content",
+                "exists",
+                "numbers",
+                "numbers-mode",
+                "substrate"
+            ],
+            "file": "report-content-gaps.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Content gap report — resolves (substrate, the three settings) through the pack resolver and prints its gap report (⛓ CONTENT SETS PL-2; Z.5 the resolver, Z.6 the fill rules and the report).",
+            "path": "scripts/procgen/report-content-gaps.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "report",
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md"
+            ],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "report-pack-provenance.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Pack provenance report — counts, per committed content pack and layer, the entries each provenance source accounts for (⛓ CONTENT SETS PL-1, Z.7 check 4).",
+            "path": "scripts/procgen/report-pack-provenance.mjs"
         },
         {
             "argvHelpers": [

@@ -1187,6 +1187,17 @@
     "template_file": "Universal Tracker.yaml",
     "world_directory": "tracker"
   },
+  "Upstream Rules Addon": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Upstream Rules Addon",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Upstream Rules Addon.yaml",
+    "world_directory": "upstream_rules_addon"
+  },
   "VVVVVV": {
     "exporter_path": "exporter/games/official/v6.py",
     "exporter_size": 3868,

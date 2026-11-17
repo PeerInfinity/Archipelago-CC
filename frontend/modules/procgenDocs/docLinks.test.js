@@ -355,20 +355,34 @@ describe('the corpus census — printed, then pinned', () => {
          *              § Things that are not AP checks (`same-doc` 38 → 39).
          *   416 → 418  content sets S2 (2026-11-14): maze.md § Things → concepts.md § Content roles, and
          *              concepts.md § Content roles → maze.md § Things (`doc` 311 → 313).
+         *   416 → 419  region-map step 3a (2026-11-14): the new region-layout.md — its README index row, its link to
+         *              substrate-registry.md § Entry contract, and that table's `compositeMap.layoutGraph` row → it
+         *              (`doc` 311 → 314).
+         *   421 → 428  ActionNodes AN-1 (2026-11-15): the new action-nodes.md — its README index row, its
+         *              link to gotchas.md § the monotonicity gotcha, its four Related links (architecture.md,
+         *              substrate-registry.md, loop-recording.md, gotchas.md), and the registry's hand-kept
+         *              annotation row → it (`doc` 316 → 323).
+         *   428 → 429  content packs PL-1 (2026-11-15): concepts.md § Content roles' `assertPresents` bullet → its
+         *              own § What exists, the numbers and the bindings (`same-doc` 39 → 40).
+         *   429 → 430  content packs PL-2 (2026-11-16): concepts.md § The resolver, the fill rules and the gap
+         *              report → action-nodes.md (`doc` 323 → 324).
          */
         expect(by).toEqual({
-            'same-doc': 39,
-            doc: 313,
+            'same-doc': 40,
+            doc: 324,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(418);
+        expect(CORPUS.length).toBe(430);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(313);
+        //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out) and the registry's
+        //   annotation row to it (7 doc).
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver… → action-nodes.md (1 doc).
+        expect(docs).toHaveLength(324);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

@@ -1,0 +1,7 @@
+SEQ
+1x none|bodyFamilyKillOnLadder (solverBot.js:25052:23)|134|true
+1x none|bodyFamilyKillOnLadder (solverBot.js:25052:23)|311|true
+1x none|hitlessWitness (forcedHit.js:144:19)|432|true
+36x none|continueHitless (forcedHit.js:220:23)|432|true
+1x all|bodyFamilyKillOnLadder (solverBot.js:25052:23)|134|false
+1x all|hitlessWitness (forcedHit.js:144:19)|134|false

@@ -92,8 +92,12 @@ item_table: Dict[str, ItemData] = {
         progression=True,
         classification=ItemClassification.progression
     ),
+    # The goal: an ID-bearing item, locked at the ID-bearing "Cool on Wire Rack" location on
+    # every seed (the SMW/Lufia shape, world_generator/_victory_location.py), so the server
+    # delivers it when the player checks that location. Never in the pool. The ID is the
+    # one the WorldGen twin allocated (max+1), so rooms of either world agree.
     "Victory": ItemData(
-        code=None,  # Event items don't have codes
+        code=base_item_id + 16,
         progression=True,
         classification=ItemClassification.progression
     ),

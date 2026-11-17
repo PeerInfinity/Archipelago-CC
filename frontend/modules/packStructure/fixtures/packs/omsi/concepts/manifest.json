@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (packStructure.test.js): the pack's own words for two of its entries (Z.3).",
+  "provenance": {
+    "sources": { "z": { "type": "authored", "by": "the Z write-up's example (content-sets-structure-options, Z.3)" } },
+    "default": "z"
+  },
+  "concepts": {
+    "omsi:task/pick-locks": { "kind": "task", "name": "Pick Locks", "presents": "omsi:task/pick-locks" },
+    "omsi:place/beginnersville": { "kind": "place", "name": "Beginnersville", "presents": "omsi:place/beginnersville" }
+  }
+}

@@ -33,6 +33,7 @@ import { prepareRunFromState, runPresetHeadless } from '../procgenPipeline/prese
 import {
     RECORDED_CONTENT_KEY, defaultContentSetOf, effectiveContentStack, loadContentSet,
 } from '../procgenPipeline/worldContent.js';
+import { withFixtureProvenance } from '../contentPacks/testing/fixtureProvenance.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const DEFAULT = substrateRegistryEntry.defaultContentPack;
@@ -99,13 +100,13 @@ function themeIo() {
     return {
         read,
         base: MEM,
-        readJson: async (url) => {
+        readJson: withFixtureProvenance(async (url) => {
             read.push(url);
             const rel = url.slice(MEM.length);
             if (rel in FILES) return structuredClone(FILES[rel]);
             if (rel.startsWith(`${THEME}/`)) throw new Error(`no file ${url}`);
             return disk.readJson(new URL(rel, disk.base).href);
-        },
+        }),
     };
 }
 const themeSet = () => loadContentSet([DEFAULT, THEME], themeIo());

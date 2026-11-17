@@ -222,7 +222,7 @@ describe('the `loop_costs` block, tightened (R-a)', () => {
 
     it('⛔ declares moveCost and timeDrainPerSecond as SIBLINGS — not "exactly one"', () => {
         expect(Object.keys(ENTRY.properties).sort())
-            .toEqual(['moveCost', 'timeDrainPerSecond', 'xpEffect']);
+            .toEqual(['actions', 'moveCost', 'timeDrainPerSecond', 'xpEffect', 'xpGainScale']);
         expect(ENTRY.oneOf).toBeUndefined();
         expect(ENTRY.required).toBeUndefined();
         expect(addedTo(HOST, {

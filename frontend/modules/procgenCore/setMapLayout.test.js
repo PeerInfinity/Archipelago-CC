@@ -7,7 +7,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    DIRS, canonicalLayout, createSetMapProvider, doorTickShapes, edgeOf, frameOf, layoutCensus, layoutGraph,
+    DIRS, MAP_GEOMETRY, canonicalLayout, createSetMapProvider, doorTickShapes, edgeOf, frameOf, layoutCensus, layoutGraph,
     mapLinkShapes, roomFingerprintOf,
 } from './setMapLayout.js';
 
@@ -68,6 +68,21 @@ describe('the canonical layout', () => {
         expect(edgeOf({ x: 5, y: 0.5 }, { w: 10, h: 10 })).toBe('N');
         expect(edgeOf({ x: 5, y: 5 }, { w: 10, h: 10 })).toBe(null);
         expect(Object.keys(DIRS).sort()).toEqual(['E', 'N', 'S', 'W']);
+    });
+});
+
+describe('signed positions (the (0,0)-origin follow-up): only VALUES are signed, the drawing is not', () => {
+    /** MUTANT: `frameOf` / `layoutCensus` read `max + 1` again (a west or north room falls off the canvas). */
+    it('the start room is (0,0), and the frame and census are translation-invariant', () => {
+        // ⛓ start 0; room 1 west, room 2 north of it: negative x and y
+        const g = layoutGraph(3, 0, [{ from: 0, to: 1, dir: 'W' }, { from: 0, to: 2, dir: 'N' }]);
+        const signed = canonicalLayout(g);
+        expect(pos(signed)).toEqual([[0, 0], [-1, 0], [0, -1]]);
+        const shifted = signed.map((p) => ({ gx: p.gx + 1, gy: p.gy + 1 }));
+        for (const z of [0.5, 1, 2]) expect(frameOf(signed, [null, null, null], z)).toEqual(frameOf(shifted, [null, null, null], z));
+        expect(frameOf(signed, [null, null, null]).cells[1]).toMatchObject({ x: MAP_GEOMETRY.marginPx, y: frameOf(signed, [null, null, null]).cells[0].y });
+        expect(layoutCensus(g, signed)).toEqual(layoutCensus(g, shifted));
+        expect(layoutCensus(g, signed)).toMatchObject({ cols: 2, rows: 2 });
     });
 });
 

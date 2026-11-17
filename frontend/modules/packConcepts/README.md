@@ -12,8 +12,13 @@ content-pack stack (`../contentPacks/`), merged so that a later pack wins per ke
     null.
   - `keys()`: every key, in stack order and then declaration order. An overridden key keeps the position where it
     first appeared.
-- `PACK_CONCEPT_KINDS` is `character`, `place`, `object` and `info` (a piece of information, such as a clue). This
-  module owns the list; the roles contract imports it.
+- `PACK_CONCEPT_KINDS` is `character`, `place`, `object` and `info` (a piece of information, such as a clue), and
+  since content packs PL-1 `task`, `stat`, `resource` and `boon` (the structure layer's kinds). This module owns the
+  list; the roles contract imports it. `STRUCTURE_KINDS` (the four, and `place`) and `STRUCTURE_ID_PATTERN` are the
+  structure layer's (`../packStructure/`).
+- `presents` takes two forms: a bare mechanic id (`guardian`), or a namespaced STRUCTURE id
+  (`<pack>:<kind>/<slug>`) whose kind is the concept's own. `presenting(id)` answers either. An entry may carry
+  `src`, its provenance source (`../contentPacks/provenance.js`).
 - ⛔ **A pack concept never affects reachability.** Mechanic concepts (`sword`, `guardian`, …) live in
   `procgenCore/concepts.js` and carry logic (`docs/json/developer/procgen/concepts.md`). A pack concept carries
   presentation only. `presents` names a mechanic concept that the entry re-presents. Here it is an opaque id: this
@@ -57,5 +62,6 @@ Each of these throws a `ContentPackError` that names the pack, the concept key a
 - a missing or empty `name`, or an empty `description`;
 - a malformed `look`: the colour must be `#rrggbb`, and the symbol a non-empty string;
 - an `art` value, or a `text` slot's value, that is not a namespaced key;
-- an empty `presents`;
+- an empty `presents`; a namespaced `presents` that is not a structure id, or names another kind than the entry's;
+- a `src` that is not a string;
 - two entries of one pack that present the same mechanic id (that pack's answer would be ambiguous).

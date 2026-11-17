@@ -72,7 +72,8 @@ import SEEDLING_STARTER_ATLAS_DOC from './atlases/seedling.json' with { type: 'j
 import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json' with { type: 'json' };
 import { atlasIndexPath, atlasPathInIndex } from './mapDocumentPath.js';
 import {
-    drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLocationTiles,
+    drawSeedlingCompositeRegion, seedlingDisplayRegionOf, seedlingLayoutGraph, seedlingLocationTiles,
+    seedlingRegionExtent, seedlingRemoteLocationTiles,
 } from './seedlingCompositeMap.js';
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
@@ -856,14 +857,21 @@ export const substrateRegistryEntry = Object.freeze({
      * substrates."*). `drawRegion` paints the region's level as the JS Seedling renderer draws it
      * (`seedlingCompositeMap.js`: a cached bake; the generic box until it lands, then the host's `requestRedraw`).
      * `artwork: true` puts it behind the renderer's "Substrate art" switch (`substrateArt: false` → the generic box).
-     * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3).
+     * `locationTiles` / `displayRegionOf` are pure data hooks for the Region Map panel (steps 2–3); `layoutGraph` is
+     * step 3a's Seedling adapter (`procgenCore/regionLayoutResolve.js`). Step 3b's Region Map panel adds
+     * `regionExtent` (a level's size in tiles, for cells sized by level) and `remoteLocationTiles` (an event whose
+     * object is in another level, placed there). Every hook that reads an atlas takes the shipped atlases plus any
+     * `ctx.atlases` the caller hands in (a custom set's derived atlas); with none handed in, the shipped ones alone.
      * ⛔ DATA: this file stays `loadable: true` in the generated matrix — nothing here touches a DOM at load.
      */
     compositeMap: Object.freeze({
         drawRegion: drawSeedlingCompositeRegion,
         artwork: true,
-        locationTiles: (region, ctx = {}) => seedlingLocationTiles(region, { ...ctx, atlases: KNOWN_ATLASES }),
+        locationTiles: (region, ctx = {}) => seedlingLocationTiles(region, { ...ctx, atlases: { ...KNOWN_ATLASES, ...(ctx.atlases ?? {}) } }),
         displayRegionOf: seedlingDisplayRegionOf,
+        layoutGraph: (ctx = {}) => seedlingLayoutGraph({ ...ctx, atlases: { ...KNOWN_ATLASES, ...(ctx.atlases ?? {}) } }),
+        regionExtent: (region, ctx = {}) => seedlingRegionExtent(region, { ...ctx, atlases: { ...KNOWN_ATLASES, ...(ctx.atlases ?? {}) } }),
+        remoteLocationTiles: seedlingRemoteLocationTiles,
     }),
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,

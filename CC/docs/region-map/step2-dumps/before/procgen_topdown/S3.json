@@ -1,0 +1,821 @@
+{
+ "currentRegion": "Menu",
+ "elements": {
+  "BlackCastle": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 3,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": true,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 4
+   }
+  },
+  "BlackCastle-BlackCastleVault": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "BlackCastle",
+   "target": "BlackCastleVault"
+  },
+  "BlackCastleVault": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "CreditsRoom": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "CreditsRoom-CreditsRoomFarSide": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "CreditsRoom",
+   "target": "CreditsRoomFarSide"
+  },
+  "CreditsRoomFarSide": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "Menu": {
+   "classes": [
+    "accessible",
+    "completed",
+    "current",
+    "region",
+    "start-region"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 0,
+   "isDiscovered": true,
+   "label": "Menu",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": false,
+    "hasLocations": false,
+    "hasUnchecked": false,
+    "inaccessible": 0,
+    "total": 0
+   }
+  },
+  "Menu-Overworld": {
+   "classes": [
+    "accessible"
+   ],
+   "group": "edges",
+   "label": "GameStart",
+   "source": "Menu",
+   "target": "Overworld"
+  },
+  "Overworld": {
+   "classes": [
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 1,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 7,
+    "allChecked": false,
+    "checked": 3,
+    "hasAccessible": true,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 11
+   }
+  },
+  "Overworld-BlackCastle": {
+   "classes": [
+    "accessible",
+    "bidirectional",
+    "discovery-hidden",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Overworld",
+   "target": "BlackCastle"
+  },
+  "Overworld-CreditsRoom": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Overworld",
+   "target": "CreditsRoom"
+  },
+  "Overworld-WhiteCastle": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Overworld",
+   "target": "WhiteCastle"
+  },
+  "Overworld-YellowCastle": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "Overworld",
+   "target": "YellowCastle"
+  },
+  "WhiteCastle": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "WhiteCastle-WhiteCastlePreVaultPeek": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "WhiteCastle",
+   "target": "WhiteCastlePreVaultPeek"
+  },
+  "WhiteCastle-WhiteCastleVault": {
+   "classes": [
+    "bidirectional",
+    "discovery-hidden",
+    "inaccessible",
+    "undiscovered"
+   ],
+   "group": "edges",
+   "label": "???",
+   "source": "WhiteCastle",
+   "target": "WhiteCastleVault"
+  },
+  "WhiteCastlePreVaultPeek": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 1,
+    "total": 1
+   }
+  },
+  "WhiteCastleVault": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 3,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "YellowCastle": {
+   "classes": [
+    "discovery-hidden",
+    "region",
+    "undiscovered-placeholder"
+   ],
+   "group": "nodes",
+   "hierarchyDepth": 2,
+   "isDiscovered": false,
+   "label": "???",
+   "locationCounts": {
+    "accessible": 0,
+    "allChecked": false,
+    "checked": 0,
+    "hasAccessible": false,
+    "hasInaccessible": true,
+    "hasLocations": true,
+    "hasUnchecked": true,
+    "inaccessible": 2,
+    "total": 2
+   }
+  },
+  "player": {
+   "classes": [
+    "player"
+   ],
+   "group": "nodes",
+   "label": "👤"
+  }
+ },
+ "path": [
+  {
+   "exit": "GameStart",
+   "location": null,
+   "region": "Overworld",
+   "type": "regionMove"
+  },
+  {
+   "exit": null,
+   "location": "Adjacent to Catacombs",
+   "region": null,
+   "type": "locationCheck"
+  },
+  {
+   "exit": null,
+   "location": "Black Castle Gate",
+   "region": null,
+   "type": "locationCheck"
+  },
+  {
+   "exit": null,
+   "location": "Blue Labyrinth 0",
+   "region": null,
+   "type": "locationCheck"
+  },
+  {
+   "exit": "GameStart",
+   "location": null,
+   "region": "Menu",
+   "type": "regionMove"
+  }
+ ],
+ "pathClasses": {},
+ "playerRegion": "Menu",
+ "rulesSource": "./presets/procgen_topdown/AP_1/AP_1_rules.json",
+ "hoverSweep": {
+  "BlackCastle": {
+   "edge_BlackCastle_Black Castle Foyer": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_BlackCastle_Dungeon0": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_BlackCastle_Dungeon1": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_BlackCastle_Slay Rhindle": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_BlackCastle_Black Castle Foyer": {
+    "classes": [
+     "discovery-hidden",
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_BlackCastle_Dungeon0": {
+    "classes": [
+     "discovery-hidden",
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_BlackCastle_Dungeon1": {
+    "classes": [
+     "discovery-hidden",
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_BlackCastle_Slay Rhindle": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "BlackCastleVault": {
+   "edge_BlackCastleVault_Dungeon Vault": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_BlackCastleVault_Dungeon Vault": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "CreditsRoom": {
+   "edge_CreditsRoom_Credits Left Side": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_CreditsRoom_Credits Left Side": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "CreditsRoomFarSide": {
+   "edge_CreditsRoomFarSide_Credits Right Side": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_CreditsRoomFarSide_Credits Right Side": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "Overworld": {
+   "edge_Overworld_Adjacent to Catacombs": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Black Castle Gate": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Blue Labyrinth 0": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Blue Labyrinth 1": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Catacombs": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Northeast of Catacombs": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Slay Yorgle": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Southeast of Catacombs": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Southwest of Catacombs": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_White Castle Gate": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_Overworld_Yellow Castle Gate": {
+    "classes": [
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_Overworld_Adjacent to Catacombs": {
+    "classes": [
+     "location-checked",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Black Castle Gate": {
+    "classes": [
+     "location-checked",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Blue Labyrinth 0": {
+    "classes": [
+     "location-checked",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Blue Labyrinth 1": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": true,
+    "label": "???"
+   },
+   "loc_Overworld_Catacombs": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Northeast of Catacombs": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Slay Yorgle": {
+    "classes": [
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Southeast of Catacombs": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Southwest of Catacombs": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_White Castle Gate": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_Overworld_Yellow Castle Gate": {
+    "classes": [
+     "location-accessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": true,
+    "label": "???"
+   }
+  },
+  "WhiteCastle": {
+   "edge_WhiteCastle_RedMaze0": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_WhiteCastle_RedMaze1": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_WhiteCastle_RedMaze0": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_WhiteCastle_RedMaze1": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "WhiteCastlePreVaultPeek": {
+   "edge_WhiteCastlePreVaultPeek_Red Maze Vault Entrance": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_WhiteCastlePreVaultPeek_Red Maze Vault Entrance": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "WhiteCastleVault": {
+   "edge_WhiteCastleVault_Red Maze Vault": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_WhiteCastleVault_Slay Grundle": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_WhiteCastleVault_Red Maze Vault": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_WhiteCastleVault_Slay Grundle": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  },
+  "YellowCastle": {
+   "edge_YellowCastle_Chalice Home": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "edge_YellowCastle_Inside Yellow Castle": {
+    "classes": [
+     "discovery-hidden",
+     "region-location-edge"
+    ],
+    "label": null
+   },
+   "loc_YellowCastle_Chalice Home": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   },
+   "loc_YellowCastle_Inside Yellow Castle": {
+    "classes": [
+     "discovery-hidden",
+     "location-inaccessible",
+     "location-node",
+     "region-inaccessible",
+     "undiscovered"
+    ],
+    "isDiscovered": false,
+    "label": "???"
+   }
+  }
+ }
+}

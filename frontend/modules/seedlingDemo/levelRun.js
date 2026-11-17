@@ -218,6 +218,8 @@ import {
     // ⛓ R9 SLICE 12c‴, ⚖ ruling 45: the same table MINUS `playerHit` — the
     // writers a room can open WITHOUT the player doing anything.
     BOSS_CLASS_SHAKE_WRITERS,
+    // ⛓ unbilledhits D3: the band's opener, named in the on-screen refusals (`bandOpenerText`).
+    SHAKE_BAND_KEPT,
     // ⛓ U14-swim D1: `Moonrock.update`'s camera target is `FP.screen`-relative.
     SCREEN_H, SCREEN_W,
 } from './camera.js';
@@ -479,6 +481,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'tentacleBeastFight',
     // ⛓ fidelity DRILL D2: the drills this visit steps, live (the danger map's static row reads them).
     'drillBodies',
+    // ⛓ seedling-fidelity-wallflyerbodies: the wallflyers still in the world (dying ones too, by their fields).
+    'wallFlyerBodies',
 ]);
 
 /**
@@ -5351,7 +5355,7 @@ export function createLevelRun({
     let shake = 0;
     let camBand = null;
     /**
-     * ⛓⛓ fidelity SHAKEEXACT D1 (`CONTACT_FIDELITY.shakeExactSplit`, OFF) — ⚖ the user (2026-10-25, "Exact for split").
+     * ⛓⛓ fidelity SHAKEEXACT D1 (`CONTACT_FIDELITY.shakeExactSplit`, ON since ⚖ the user, 2026-10-25, "Exact for split").
      * Under `Rng.split` `view()` jiggles by `shake * Game.shakeJiggle(Game.time, axis) - shake/2` and takes no draw
      * (`Game.as:2004-2011`), so a split run's shaking camera is a POINT wherever the run knows the `Game.time` that
      * `view()` reads. `exactJiggleTime(viewTime)` is that time, or `null` where the band stays — the cases are
@@ -5360,6 +5364,25 @@ export function createLevelRun({
     const rngSplit = rng?.split === true;
     const exactJiggleTime = (viewTime) => (CONTACT_FIDELITY.shakeExactSplit === true && rngSplit
         && Number.isFinite(viewTime) ? viewTime : null);
+    /**
+     * ⛓ unbilledhits D3 — WHICH CASE OPENED A BAND, for the on-screen refusals to name (text only: nothing decides on
+     * it). `exactJiggleTime`'s three terms in its own order: the switch, then `SHAKE_BAND_KEPT.unsplit`, then
+     * `SHAKE_BAND_KEPT.noClock`. `rebootSettle` is named at its own open site; `acrossLoad` refuses at the load and
+     * never opens a band; `bandAlready` is the band staying open, so the case is the one that OPENED it.
+     */
+    const bandKeptCaseAt = (viewTime) => {
+        if (CONTACT_FIDELITY.shakeExactSplit !== true) return 'shakeExactSplitOff';
+        if (!rngSplit) return 'unsplit';
+        if (!Number.isFinite(viewTime)) return 'noClock';
+        return null;
+    };
+    const bandOpenerText = (c) => (c && SHAKE_BAND_KEPT[c]
+        ? `the band was opened by \`camera.SHAKE_BAND_KEPT.${c}\` — ${SHAKE_BAND_KEPT[c]}`
+        : c === 'shakeExactSplitOff'
+            ? 'the band was opened because `CONTACT_FIDELITY.shakeExactSplit` is OFF (not a `SHAKE_BAND_KEPT` case)'
+            : 'the band\'s opener is not recorded');
+    /** The `SHAKE_BAND_KEPT` case that opened the live `camBand` (null while the camera is a point). */
+    let camBandCase = null;
     /**
      * The `Game.time` a `view()` reads (`Game.as:889-890`: `view(); time += timeRate;`), from the clock's side of it:
      * after a tick's `clock.tick()` it is `now() − 1`; inside a dead span not yet paid (`spendFrozen` after the loop),
@@ -5395,7 +5418,7 @@ export function createLevelRun({
             for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
                 if (camBand === null && shake === 0) { cam = stepCamera(cam, state, w); continue; }
                 // ⛓ SHAKEEXACT: the band stays here (`SHAKE_BAND_KEPT.rebootSettle`).
-                if (camBand === null) { camBand = cameraBand(cam); shakeBandOpens += 1; }
+                if (camBand === null) { camBand = cameraBand(cam); camBandCase = 'rebootSettle'; shakeBandOpens += 1; }
                 const r = stepCameraBand(camBand, state, w, { shake });
                 camBand = r.band;
                 shake = r.shake;
@@ -5452,7 +5475,7 @@ export function createLevelRun({
             shakeExactViews += 1;
             return;
         }
-        if (camBand === null) { camBand = cameraBand(cam); shakeBandOpens += 1; }
+        if (camBand === null) { camBand = cameraBand(cam); camBandCase = bandKeptCaseAt(viewTime); shakeBandOpens += 1; }
         const r = stepCameraBand(camBand, player, worldRec, { shake, cameraTarget });
         camBand = r.band;
         shake = r.shake;
@@ -5523,7 +5546,7 @@ export function createLevelRun({
         if (verdict === 'uncertain') {
             throw new Error(`levelRun: whether ${who} is on screen at tick `
                 + `${ticksCompleted} depends on where inside \`Game.shake\`'s jiggle the `
-                + 'camera landed, and the two draws that decide it are not indexable '
+                + `camera landed, and ${bandOpenerText(camBandCase)} `
                 + '(camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` '
                 + 'early-returns at ZERO margin, so this is the difference between a body '
                 + 'that damages and one that does not. Move the stance away from the '
@@ -8963,6 +8986,8 @@ export function createLevelRun({
         // mirrored here as such.
         let fcam = cam ? { ...cam } : null;
         let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
+        // ⛓ unbilledhits D3: the case that opened `fband` — the live band's, or the forecast's own open below.
+        let fbandCase = camBand ? camBandCase : null;
         let fshake = shake;
         // ⛓ fidelity SHAKEEXACT D1: the `Game.time` the forecast's next `view()` reads — the live tick's own, whose
         // `view()` the first advance below reproduces (`gameTimeAt`'s no-dead-frame assumption, named there).
@@ -8990,7 +9015,7 @@ export function createLevelRun({
                 fshake = r.shake;
                 return;
             }
-            if (fband === null) fband = cameraBand(fcam);
+            if (fband === null) { fband = cameraBand(fcam); fbandCase = bandKeptCaseAt(viewTime); }
             const r = stepCameraBand(fband, player, worldRec,
                 { shake: fshake, cameraTarget: target });
             fband = r.band;
@@ -9007,8 +9032,8 @@ export function createLevelRun({
             const verdict = onScreenUnderShake(rect, fband);
             if (verdict === 'uncertain') {
                 throw new Error(`chaserForecast: whether ${who} is on screen depends on `
-                    + 'where inside `Game.shake`\'s jiggle the camera landed, and the two '
-                    + 'draws that decide it are not indexable (camera.js, "THE SHAKE, AND '
+                    + `where inside \`Game.shake\`'s jiggle the camera landed, and ${bandOpenerText(fbandCase)} `
+                    + '(camera.js, "THE SHAKE, AND '
                     + 'WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so '
                     + 'this is the difference between a body that damages and one that '
                     + 'does not — and a FORECAST must not guess it any more than the live '
@@ -18190,6 +18215,21 @@ export function createLevelRun({
             hitsTimer: d.hitsTimer, destroy: d.destroy,
             // ⛓ fidelity DRILLWATER D1: the pit latch and its end (ON only; OFF the row is unchanged)
             ...(CONTACT_FIDELITY.drillTerrainSwitch ? { fallInPit: d.fallInPit === true, fell: d.fell === true, terrainDeath: d.terrainDeath ?? null } : {}) })));
+    /**
+     * ⛓ seedling-fidelity-wallflyerbodies: this level's wallflyers STILL IN THE WORLD, `{id, x, y, vx, vy, hits,
+     * hitsTimer, dieAnim, destroy, removed}` (`[]` under noclip) — the census-visible face of `run.wallFlyers.bodies`,
+     * which stays as it is (the debug getter: whole bodies, removed ones, and the events).
+     *
+     * A body leaves the list on the tick `removed` is set — `Mobile.death`'s fade ending (`wallFlyer.js:291-293`), the
+     * game's `FP.world.remove`. A DYING body stays and says so: the "die" anim on (`dieAnim !== null`, set by
+     * `hitWallFlyer`'s kill, `wallFlyer.js:358-361`), then `destroy` (the anim's `endAnim`, `wallFlyer.js:330-335`, or
+     * water/lava/pit, `:260-273`) while it fades. LIVE is `!destroy && dieAnim === null` — `stepWallFlyer`'s own tail
+     * gate (`wallFlyer.js:308`) and `hitWallFlyer`'s (`:347`). So `removed` reads false on every row; it is kept so a
+     * reader written against the getter's bodies reads the same field.
+     */
+    const wallFlyerBodiesNow = () => (noclip ? [] : [...wallFlyerStateFor(level).values()].filter((w) => !w.removed)
+        .map((w) => ({ id: w.id, x: w.x, y: w.y, vx: w.vx, vy: w.vy, hits: w.hits, hitsTimer: w.hitsTimer,
+            dieAnim: w.dieAnim && { ...w.dieAnim }, destroy: w.destroy, removed: w.removed })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -18226,6 +18266,7 @@ export function createLevelRun({
         lavaBossFight: lavaBossFightNow,
         tentacleBeastFight: tentacleBeastFightNow,
         drillBodies: drillBodiesNow,
+        wallFlyerBodies: wallFlyerBodiesNow,
     });
 
     /**
@@ -19188,6 +19229,8 @@ export function createLevelRun({
          */
         /** ⛓ fidelity DRILL D2: the entities fold's `drillBodies` (`run.entities('drillBodies')`). */
         get drillBodies() { return drillBodiesNow(); },
+        /** ⛓ seedling-fidelity-wallflyerbodies: the entities fold's `wallFlyerBodies` (`run.entities('wallFlyerBodies')`). */
+        get wallFlyerBodies() { return wallFlyerBodiesNow(); },
         /** ⛓ seedling-fidelity-terrain W3: the live drill(s) and their events (`hop`, `contact`, `struck`). */
         get drills() {
             return {

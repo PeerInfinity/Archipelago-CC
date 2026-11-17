@@ -318,7 +318,11 @@ describe('⛓ the links the render emits', () => {
         //   412 → 413: hammer PANEL-ROUTE — seedling-bot.md's solve-progress line → seedling-solve-progress.md § 7 (1 doc).
         //   415 → 416: content sets S1 — text-adventure.md's `things` field → its own § Things that are not AP checks (1 same-doc).
         //   416 → 418: content sets S2 — maze.md § Things ⇄ concepts.md § Content roles (2 doc).
-        expect(checked).toBe(418);
+        //   416 → 419: region-map step 3a — region-layout.md (its index row, its registry link, the registry's row to it)
+        //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out, the registry's annotation row to it)
+        //   428 → 429: content packs PL-1 — concepts.md § Content roles → its own § What exists, the numbers and the bindings (1 same-doc).
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver, the fill rules and the gap report → action-nodes.md (1 doc).
+        expect(checked).toBe(430);
     });
 
     it('tags each link with the kind that produced it', () => {

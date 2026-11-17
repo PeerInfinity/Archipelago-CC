@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (packStructure.test.js): a task with no place (C5), a boon that modifies every task (C4, entry *) and gives a stat and a resource when received (boon results, a PL-2 addition to Z.2).",
+  "provenance": {
+    "sources": { "y": { "type": "model", "model": "unrecorded", "family": "Claude Opus", "date": "2026-11-15" } },
+    "default": "y"
+  },
+  "entries": {
+    "jta:resource/energy": { "kind": "resource" },
+    "jta:resource/food": { "kind": "resource" },
+    "jta:stat/study": { "kind": "stat",
+      "modifies": [ { "entry": "jta:task/beg-for-food", "part": "time", "lasts": "always" } ] },
+    "jta:boon/how-to-read": { "kind": "boon",
+      "modifies": [ { "entry": "*", "part": "results.jta:stat/study", "lasts": "always" } ],
+      "results": [ { "stat": "jta:stat/study" }, { "resource": "jta:resource/food", "sign": "+" } ] },
+    "jta:task/use-food": {
+      "kind": "task", "time": "jta:resource/energy",
+      "requires": [ [ { "resource": "jta:resource/food", "consume": true } ] ],
+      "results": [ { "resource": "jta:resource/energy", "sign": "+", "when": "each" } ],
+      "limit": true, "tags": ["use"]
+    },
+    "jta:task/beg-for-food": {
+      "kind": "task", "time": "jta:resource/energy",
+      "results": [ { "resource": "jta:resource/food", "sign": "+" }, { "boon": "jta:boon/how-to-read", "when": "last" } ]
+    }
+  }
+}

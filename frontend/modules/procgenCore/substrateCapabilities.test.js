@@ -463,11 +463,16 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
         expect(rowOf('L7').cells.some((c) => c.kind === CELL_KINDS.YES)).toBe(true);
     });
 
-    it('L6: every real entry answers ✓ (declared universal); the ✗ arm holds on the flash factory\'s bare shape', () => {
-        for (const e of ENTRIES) expect(cellOf('L6', e.id).kind, e.id).toBe(CELL_KINDS.YES);
+    it('L6: every entry with a Bot block answers ✓, the rest ✗; the ✗ arm holds on the flash factory\'s bare shape', () => {
+        // ⛓ Not universal while an entry has no Bot block (ActionNodes until slice AN-3): the cell
+        // follows the declaration, so an entry that declares `executeVia` or delegation answers ✓.
+        for (const e of ENTRIES) {
+            const hasBot = e.loopSupport?.executeVia === 'solver' || e.sharing?.mana?.loopActionDelegation === true;
+            expect(cellOf('L6', e.id).kind, e.id).toBe(hasBot ? CELL_KINDS.YES : CELL_KINDS.NO);
+        }
+        expect(ENTRIES.filter((e) => cellOf('L6', e.id).kind === CELL_KINDS.YES).length).toBeGreaterThan(0);
         const bare = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
         const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'L6');
-        expect(s.universal).toBe(true);
         expect(s.answer(bare).kind).toBe(CELL_KINDS.NO);
     });
 });

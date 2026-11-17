@@ -77,7 +77,7 @@ import {
     defaultProcgenParams, assembleRegionParams,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 import {
-    attachEnvelopeContent, contentListOf, effectiveContentStack, loadContentSet,
+    WORLD_SETTING_KEYS, assertWorldNumbers, attachEnvelopeContent, contentListOf, effectiveContentStack, loadContentSet,
 } from '../../frontend/modules/procgenPipeline/worldContent.js';
 import { nodePackIo } from '../../frontend/modules/contentPacks/nodePackIo.js';
 
@@ -179,7 +179,8 @@ function buildEnv(args, { sourceDoc = null, contentSet = null } = {}) {
     if (args.fallBehavior != null) params.bounceFallBehavior = args.fallBehavior;
     Object.assign(params, args.params);
     // ⛓ CONTENT SETS C3 — `--param content=a,b` is a string; the param is a list.
-    if (params.content !== undefined) params.content = contentListOf(params.content);
+    // ⛓ PL-1 — so are `--param exists=…` and `--param numbers=…` (the two new settings, Z.5).
+    for (const key of ['content', ...WORLD_SETTING_KEYS]) if (params[key] !== undefined) params[key] = contentListOf(params[key]);
     const activeIds = Object.entries(args.mix)
         .filter(([, w]) => Number(w) > 0).map(([id]) => id);
     const regionParams = assembleRegionParams({ activeIds, mode: 'topDown', params, contentSet });
@@ -202,7 +203,13 @@ function buildEnv(args, { sourceDoc = null, contentSet = null } = {}) {
 /** ⛓ CONTENT SETS C3 — the args' content stack (the mix's default packs, then `--param content`), loaded from disk. */
 async function loadArgsContent(args) {
     const substrateIds = Object.entries(args.mix ?? {}).filter(([, w]) => Number(w) > 0).map(([id]) => id);
-    return loadContentSet(effectiveContentStack({ substrateIds, content: contentListOf(args.params?.content) ?? [] }), nodePackIo());
+    // ⛓ PL-1 — a `--param numbers` pack for another substrate or another `exists` is refused by name (Z.5).
+    await assertWorldNumbers({
+        exists: contentListOf(args.params?.exists) ?? [], numbers: contentListOf(args.params?.numbers) ?? [],
+    }, { substrateIds, ...nodePackIo() });
+    return loadContentSet(effectiveContentStack({
+        substrateIds, exists: contentListOf(args.params?.exists) ?? [], content: contentListOf(args.params?.content) ?? [],
+    }), nodePackIo());
 }
 
 // --- main ---

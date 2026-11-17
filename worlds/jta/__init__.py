@@ -16,7 +16,7 @@ from BaseClasses import ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 
 from .Items import JTAItem, build_item_table, item_table
-from .Locations import location_table
+from .Locations import VICTORY_LOCATION, VICTORY_LOCATION_ID, location_table
 from .Options import JTAOptions
 from .Regions import create_regions
 from .Rules import set_rules
@@ -57,9 +57,12 @@ class JTAWorld(World):
     }
 
     location_name_to_id: ClassVar[Dict[str, int]] = {
-        name: data.location_id
-        for name, data in location_table.items()
-        if data.location_id is not None
+        **{
+            name: data.location_id
+            for name, data in location_table.items()
+            if data.location_id is not None
+        },
+        VICTORY_LOCATION: VICTORY_LOCATION_ID,
     }
 
     def create_regions(self) -> None:
@@ -114,12 +117,10 @@ class JTAWorld(World):
         set_rules(self.multiworld, self.player, goal_zone, free_zones, starting_perks)
 
     def generate_basic(self) -> None:
-        # Place victory event
+        # Place the ID-bearing Victory item at the ID-bearing goal location, locked on every
+        # seed: the player finishes by checking it, and the server sends Victory back.
         victory_location = self.multiworld.get_location("Reach Goal Zone", self.player)
-        victory_item = JTAItem(
-            "Victory", ItemClassification.progression, None, self.player
-        )
-        victory_location.place_locked_item(victory_item)
+        victory_location.place_locked_item(self.create_item("Victory"))
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has(
             "Victory", self.player
@@ -333,4 +334,8 @@ class JTAWorld(World):
                 ),
             },
             "perkPlacements": perk_placements,
+            # The client reports the goal (StatusUpdate 30) once the server has delivered
+            # Victory (frontend/modules/client/core/goalCheck.js). A hand-written world
+            # opts in by declaring it; world_generator worlds are admitted by their marker.
+            "reports_goal_by_server_item": True,
         }

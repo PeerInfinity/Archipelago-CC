@@ -11,6 +11,7 @@ from BaseClasses import ItemClassification, Item
 
 
 BASE_ITEM_ID = 234810000
+VICTORY = "Victory"
 
 
 class APCalcItem(Item):
@@ -43,6 +44,10 @@ item_table: Dict[str, ItemData] = {
     "Button: *": ItemData(BASE_ITEM_ID + 12, ItemClassification.progression),
     "Button: /": ItemData(BASE_ITEM_ID + 13, ItemClassification.progression),
     "Junk": ItemData(BASE_ITEM_ID + 14, ItemClassification.filler),
+    # The goal: an ID-bearing item, locked at the ID-bearing Victory location on every
+    # seed (the SMW/Lufia shape, world_generator/_victory_location.py), so the server
+    # delivers it when the game reports its finish. Never in the pool.
+    VICTORY: ItemData(BASE_ITEM_ID + 15, ItemClassification.progression),
 }
 
 item_name_to_id: Dict[str, int] = {name: data.id for name, data in item_table.items() if data.id is not None}
