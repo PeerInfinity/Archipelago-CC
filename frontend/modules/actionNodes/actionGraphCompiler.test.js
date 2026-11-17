@@ -5,8 +5,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    ACTION_COMPILE_REFUSALS, ACTION_NODES_SUBSTRATE_ID, ACT_ACTION, compileActionGraph, placementsFromRules,
+    ACTION_COMPILE_REFUSALS, ACTION_NODES_DISCOVERY_BUNDLE, ACTION_NODES_SUBSTRATE_ID, ACT_ACTION, compileActionGraph,
+    placementsFromRules,
 } from './actionGraphCompiler.js';
+import { ACTION_NODES_BUNDLE, readWorldDiscoveryMode } from '../discovery/worldDiscoveryMode.js';
 import { buildActionModel } from './actionModel.js';
 import { resolvedBoostOf } from './actionGraph.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
@@ -69,6 +71,11 @@ describe('the compiled world', () => {
         const nodeExits = Object.entries(rules.regions[P]).filter(([r]) => r !== 'Menu').reduce((n, [, r]) => n + r.exits.length, 0);
         expect(nodeExits).toBe(2 * pairs);
         for (const r of Object.values(rules.regions[P])) expect(r.exits.some((e) => e.connected_region === 'Menu')).toBe(false);
+    });
+    it('⛓ the world names the discovery module\'s actionNodes bundle, and it reads back as that mode', () => {
+        expect(rules.discovery_mode[P]).toEqual({ enabled: true, bundle: ACTION_NODES_DISCOVERY_BUNDLE });
+        expect(ACTION_NODES_DISCOVERY_BUNDLE).toBe(ACTION_NODES_BUNDLE);
+        expect(readWorldDiscoveryMode(rules, P)).toBe(ACTION_NODES_BUNDLE);
     });
     it('the world states its back-exits are LISTED, not assumed (assume_bidirectional_exits: false)', () => {
         expect(rules.exporter[P].assume_bidirectional_exits).toBe(false);

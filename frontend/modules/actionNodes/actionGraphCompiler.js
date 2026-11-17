@@ -19,7 +19,8 @@
  *   7. `preset_sidecars[p]`, the `action_nodes[p]` block, `procgen_metadata[p]` with the logic and proof report,
  *      `provenance[p]`;
  *   8. the sphere log, `shared/procgen/forwardSimulator.js` `generateSphereLog`, embedded;
- *   9. `loop_costs[p]`, written directly: the costs are the graph's own (move cost 0, A10; `actions.act` = time).
+ *   9. `loop_costs[p]`, written directly: the costs are the graph's own (move cost 0, A10; `actions.act` = time);
+ *  10. `discovery_mode[p] = {enabled: true, bundle: 'actionNodes'}` (AN-1b: the discovery policy, Loop mode on or off).
  *
  * ⛓ THE A6 PROOF (design §7). A6: in each loop at least one location check can be earned. The compiler refuses by
  * name when (1) a check or the goal has no item combination that earns it (`check-never-earnable`), or (2) the sphere
@@ -55,6 +56,8 @@ export const ACTION_NODES_GAME = Object.freeze({
 export const ACTION_NODES_BLOCK_VERSION = 1;
 /** The Loops queue verb that performs a node (⚖ user 2026-11-15, Q4). */
 export const ACT_ACTION = 'act';
+/** The `discovery_mode[p].bundle` a compiled world names (discovery/worldDiscoveryMode.js `ACTION_NODES_BUNDLE`). */
+export const ACTION_NODES_DISCOVERY_BUNDLE = 'actionNodes';
 /** The `procgen_metadata[p].driver` a compiled world records. */
 export const ACTION_GRAPH_DRIVER = 'action-graph-compiler';
 
@@ -324,6 +327,9 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
     };
     rules.provenance = { [p]: { generator: 'frontend/modules/actionNodes/actionGraphCompiler.js', graph_id: graph.graph_id, graph_provenance: graph.provenance } };
     rules.loop_costs = { [p]: loopCostsOf(graph, model, settings) };
+    // ⚖ Robert 2026-11-16T19:59:48Z (discovery): the world's own discovery policy, in and out of Loop mode — the
+    // discovery module's `actionNodes` bundle (worldDiscoveryMode.js). Per world: no other world sees it.
+    rules.discovery_mode = { [p]: { enabled: true, bundle: ACTION_NODES_DISCOVERY_BUNDLE } };
     return { rules, report };
 }
 

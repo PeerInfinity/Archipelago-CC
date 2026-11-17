@@ -32,11 +32,13 @@ function makeEnv() {
     const gs = new GameState(bus);
     const ledger = new ResourceLedger();
     const dispatched = [];
+    const revealed = [];
     const charged = [];
     let resets = 0;
     const env = {
         publish: (e, d) => bus.publish(e, d),
         dispatch: (e, d) => dispatched.push({ event: e, data: d }),
+        revealExits: (regionName, exitNames) => revealed.push({ regionName, exitNames }),
         gameState: () => gs,
         ledger: () => ledger,
         chargeMana: ({ amount, regionId }) => {
@@ -48,7 +50,7 @@ function makeEnv() {
         xpAdjustedCost: (base) => base,
         fireReset: () => { resets += 1; gs.triggerLoopReset(); },
     };
-    return { env, gs, ledger, dispatched, charged, bus, resets: () => resets };
+    return { env, gs, ledger, dispatched, revealed, charged, bus, resets: () => resets };
 }
 
 describe('the ActionNodes runtime on the committed example', () => {
@@ -195,14 +197,18 @@ describe('the ActionNodes runtime on the committed example', () => {
         expect(rid in BLOCK.resources).toBe(true);
     });
 
-    it('the first clear publishes the node\'s exits as discovered, once; a loop reset does not re-publish', () => {
-        for (let k = 0; k < REPEATABLE.limit; k++) rt.perform(REPEATABLE.node_id);
-        const disc = () => e.dispatched.filter((d) => d.event === 'loop:exploreCompleted');
-        expect(disc()).toHaveLength(1);
-        expect(disc()[0].data.discoveredExits.sort()).toEqual(REPEATABLE.exits.map((x) => x.exitName).sort());
+    it('the first clear REVEALS the node\'s forward exits, once; a loop reset does not re-reveal; no explore is published (D6)', () => {
+        for (let k = 0; k < REPEATABLE.limit; k++) {
+            expect(e.revealed).toHaveLength(0); // not before the node is cleared
+            rt.perform(REPEATABLE.node_id);
+        }
+        expect(e.revealed).toHaveLength(1);
+        expect(e.revealed[0].regionName).toBe(REPEATABLE.node_id);
+        expect(e.revealed[0].exitNames.sort()).toEqual(REPEATABLE.exits.filter((x) => !x.reverse).map((x) => x.exitName).sort());
         rt.onLoopReset('loopState:loopReset');
         for (let k = 0; k < REPEATABLE.limit; k++) rt.perform(REPEATABLE.node_id);
-        expect(disc()).toHaveLength(1);
+        expect(e.revealed).toHaveLength(1);
+        expect(e.dispatched.some((d) => d.event === 'loop:exploreCompleted')).toBe(false);
     });
 
     it('a check is sent ONCE; the action repeats in the next loop without it (A15)', () => {

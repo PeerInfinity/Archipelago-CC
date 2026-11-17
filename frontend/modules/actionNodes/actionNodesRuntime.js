@@ -15,9 +15,10 @@
  *     Graph's path queueing) is never refused, and costs 0 (every node's `moveCost`). Mana is never part of it (⚖ Q1:
  *     a node may be started short of mana; Loops drains what is left).
  *   - **One performance** (`perform(nodeId)`): the results go to the ledger, `results.mana` to the pool
- *     (`gainMana`); the first time a node is cleared its exits are published as discovered
- *     (`loop:exploreCompleted` with `discoveredExits`); a check or goal node not yet checked sends its location once
- *     (A15: later loops repeat the action without it).
+ *     (`gainMana`); the first time a node is cleared its forward exits are REVEALED (`env.revealExits`, the discovery
+ *     module's `revealExits`: each exit, its target and the target's contents, and the target's move back — no random
+ *     pick, ⚖ D6, AN-1b; until AN-1b this was a `loop:exploreCompleted`, which also ran explore's random pick); a check
+ *     or goal node not yet checked sends its location once (A15: later loops repeat the action without it).
  *   - **In Loop mode** Loops runs the `act` entries (cost `loop_costs[p].regions[<node>].actions.act`) and publishes
  *     `loop:actionCompleted`; the runtime performs on it. **Outside Loop mode** `actNow(nodeId)` charges the same
  *     shared pool itself (`chargeMana`, the XP-adjusted price) and, at zero, fires the loop-reset teleport.
@@ -120,6 +121,7 @@ export class ActionNodesRuntime {
      * @param {object} env
      * @param {(event: string, data: object) => void} env.publish            event bus publish
      * @param {(event: string, data: object, opts?: object) => void} env.dispatch   dispatcher publish
+     * @param {(regionName: string, exitNames: string[]) => void} [env.revealExits] discovery's reveal (no random pick)
      * @param {() => object|null} env.gameState                            the gameState singleton
      * @param {() => object} env.ledger                                     the host ledger
      * @param {(args: object) => {depleted: boolean}} env.chargeMana
@@ -415,13 +417,14 @@ export class ActionNodesRuntime {
         this.counts[i] += 1;
         if (node.addMana > 0) this.env.gainMana?.({ substrateId: ACTION_NODES_SUBSTRATE_ID, amount: node.addMana });
         const cleared = this.counts[i] >= node.limit;
-        if (cleared && !this.discovered.has(nodeId) && node.exits.length) {
+        const forward = node.exits.filter((e) => !e.reverse);
+        if (cleared && !this.discovered.has(nodeId) && forward.length) {
             this.discovered.add(nodeId);
-            this.env.dispatch?.('loop:exploreCompleted', {
-                regionName: nodeId,
-                discoveredExits: node.exits.map((e) => e.name),
-                fromLoop,
-            }, { initialTarget: 'bottom' });
+            try {
+                this.env.revealExits?.(nodeId, forward.map((e) => e.name));
+            } catch (e) {
+                this._log('warn', `[actionNodes] ${nodeId}: revealing its exits failed — ${e?.message ?? e}`);
+            }
         }
         let checkSent = null;
         if (node.location && !this.sentChecks.has(node.location) && !this.checked.has(node.location)) {
