@@ -1,0 +1,224 @@
+75 difference(s)
+[folded] 1 x .../atlas_id: "seedling-817c842f" -> "seedling-69ec0fc5"
+/provenance/content_hash
+  - "817c842f"
+  + "69ec0fc5"
+/regions/72/annotations/rules_source
+  - "manual"
+  + "analyzer"
+/regions/72/exits/0/sub_region
+  - "<absent>"
+  + "r11c6"
+/regions/72/exits/1/sub_region
+  - "<absent>"
+  + "r11c6"
+/regions/72/exits/2/sub_region
+  - "<absent>"
+  + "r0c11"
+/regions/72/exits/3/sub_region
+  - "<absent>"
+  + "r0c11"
+/regions/72/subgraph
+  - "<absent>"
+  + {"sub_regions": ["r0c11", "r5c4", "r6c17", "r9c10", "r9c12", "r9c14", "r10c8", "r11c6", "r11c11"], "internal_exits": [{"from": "r0c11", "to": "r10c8", "bidirectional": true, "source": "analyzer", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "a
+/regions/73/exits/0/sub_region
+  - "r3c7"
+  + "r8c2"
+/regions/73/exits/1/sub_region
+  - "r3c7"
+  + "r8c2"
+/regions/73/subgraph/internal_exits
+  - "len 1"
+  + "len 7"
+/regions/73/subgraph/internal_exits/0/to
+  - "r3c7"
+  + "r4c4"
+/regions/73/subgraph/sub_regions
+  - "len 2"
+  + "len 5"
+/regions/74/annotations/rules_source
+  - "manual"
+  + "analyzer"
+/regions/74/exits/0/sub_region
+  - "<absent>"
+  + "r8c18"
+/regions/74/exits/1/sub_region
+  - "<absent>"
+  + "r2c2"
+/regions/74/exits/2/sub_region
+  - "<absent>"
+  + "r8c18"
+/regions/74/exits/3/sub_region
+  - "<absent>"
+  + "r2c2"
+/regions/74/locations/0/sub_region
+  - "<absent>"
+  + "r2c2"
+/regions/74/subgraph
+  - "<absent>"
+  + {"sub_regions": ["r1c7", "r2c2", "r2c11", "r8c18"], "internal_exits": [{"from": "r1c7", "to": "r2c11", "bidirectional": true, "source": "analyzer", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progre
+/regions/75/annotations/rules_source
+  - "manual"
+  + "analyzer"
+/regions/75/exits/0/sub_region
+  - "<absent>"
+  + "r13c3"
+/regions/75/exits/1/sub_region
+  - "<absent>"
+  + "r0c4"
+/regions/75/exits/2/sub_region
+  - "<absent>"
+  + "r0c4"
+/regions/75/exits/3/sub_region
+  - "<absent>"
+  + "r13c3"
+/regions/75/subgraph
+  - "<absent>"
+  + {"sub_regions": ["r0c4", "r3c3", "r8c4", "r8c6", "r10c4", "r10c6", "r11c3", "r11c5", "r13c3"], "internal_exits": [{"from": "r0c4", "to": "r10c4", "bidirectional": true, "source": "analyzer", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args":
+/regions/77/annotations/rules_source
+  - "manual"
+  + "mixed"
+/regions/77/exits/0/sub_region
+  - "<absent>"
+  + "r2c0"
+/regions/77/exits/1/sub_region
+  - "<absent>"
+  + "r2c0"
+/regions/77/exits/2/sub_region
+  - "<absent>"
+  + "r12c5"
+/regions/77/exits/3/sub_region
+  - "<absent>"
+  + "r12c5"
+/regions/77/subgraph
+  - "<absent>"
+  + {"sub_regions": ["r2c0", "r12c5"], "internal_exits": [{"from": "r12c5", "to": "r2c0", "bidirectional": true, "source": "analyzer", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "c
+/regions/78/annotations/rules_source
+  - "analyzer"
+  + "mixed"
+/regions/78/subgraph/internal_exits
+  - "len 1"
+  + "len 63"
+/regions/78/subgraph/internal_exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/78/subgraph/internal_exits/0/access_rule/children/1/args
+  - {"item_name": "Progressive Sword"}
+  + "<absent>"
+/regions/78/subgraph/internal_exits/0/access_rule/children/1/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/78/subgraph/internal_exits/0/access_rule/children/1/rule
+  - "Has"
+  + "Or"
+/regions/78/subgraph/internal_exits/0/access_rule/rule
+  - "Or"
+  + "And"
+/regions/78/subgraph/sub_regions
+  - "len 2"
+  + "len 11"
+/regions/80/subgraph/internal_exits
+  - "len 6"
+  + "len 14"
+/regions/80/subgraph/internal_exits/0/to
+  - "r6c4"
+  + "r6c5"
+/regions/80/subgraph/internal_exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/80/subgraph/internal_exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/80/subgraph/internal_exits/1/access_rule/rule
+  - "Has"
+  + "And"
+/regions/80/subgraph/internal_exits/2/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/80/subgraph/internal_exits/2/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/80/subgraph/internal_exits/2/access_rule/rule
+  - "Has"
+  + "Or"
+/regions/80/subgraph/internal_exits/2/from
+  - "r12c3"
+  + "r12c4"
+/regions/80/subgraph/internal_exits/2/to
+  - "r8c4"
+  + "r13c3"
+/regions/80/subgraph/internal_exits/3/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/80/subgraph/internal_exits/3/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/80/subgraph/internal_exits/3/access_rule/rule
+  - "Has"
+  + "And"
+/regions/80/subgraph/internal_exits/3/bidirectional
+  - false
+  + true
+/regions/80/subgraph/internal_exits/3/from
+  - "r16c1"
+  + "r12c4"
+/regions/80/subgraph/internal_exits/3/source
+  - "manual"
+  + "analyzer"
+/regions/80/subgraph/internal_exits/3/to
+  - "r12c3"
+  + "r14c2"
+/regions/80/subgraph/internal_exits/4/from
+  - "r6c4"
+  + "r12c4"
+/regions/80/subgraph/internal_exits/4/to
+  - "r8c1"
+  + "r9c5"
+/regions/80/subgraph/internal_exits/5/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/80/subgraph/internal_exits/5/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/80/subgraph/internal_exits/5/access_rule/rule
+  - "Has"
+  + "Or"
+/regions/80/subgraph/internal_exits/5/bidirectional
+  - false
+  + true
+/regions/80/subgraph/internal_exits/5/from
+  - "r8c4"
+  + "r13c3"
+/regions/80/subgraph/internal_exits/5/source
+  - "manual"
+  + "analyzer"
+/regions/80/subgraph/internal_exits/5/to
+  - "r6c4"
+  + "r14c2"
+/regions/80/subgraph/sub_regions
+  - "len 6"
+  + "len 9"
+/regions/80/subgraph/sub_regions/1
+  - "r6c4"
+  + "r6c5"
+/regions/80/subgraph/sub_regions/4
+  - "r12c3"
+  + "r9c5"
+/regions/80/subgraph/sub_regions/5
+  - "r16c1"
+  + "r12c4"
+/regions/98/exits/0/sub_region
+  - "r2c7"
+  + "r7c5"
+/regions/98/exits/2/sub_region
+  - "r2c7"
+  + "r7c5"
+/regions/98/subgraph/internal_exits
+  - "len 1"
+  + "len 7"
+/regions/98/subgraph/internal_exits/0/to
+  - "r2c7"
+  + "r7c5"
+/regions/98/subgraph/sub_regions
+  - "len 2"
+  + "len 5"

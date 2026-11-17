@@ -1,0 +1,16 @@
+model contact tick: 56  (game firstHit 81)
+game body index 2 (LavaRunner(216.0,104.0))
+t0 player 296.0,136.0  game 216.0,104.0  model (asleep)
+t6 player 298.3,129.3  game 216.0,104.0  model (asleep)
+t12 player 296.7,125.4  game 216.0,104.0  model (asleep)
+t18 player 285.1,124.9  game 221.6,105.1  model 218.1,104.6
+t24 player 278.7,119.4  game 228.4,105.5  model 225.1,104.6
+t30 player 272.7,114.1  game 235.4,105.5  model 232.0,104.6
+t36 player 265.3,116.3  game 241.9,106.1  model 238.9,105.8
+t42 player 256.1,120.5  game 246.6,109.2  model 242.8,107.9
+t48 player 249.8,126.1  game 248.0,112.9  model 244.2,111.7
+t54 player 243.8,127.2  game 247.0,123.0  model 244.6,117.6
+t60 player 243.8,127.2  game 243.5,127.2  model (asleep)
+t66 player 243.8,127.2  game 244.3,126.5  model (asleep)
+t72 player 290.6,141.4  game 216.0,104.0  model (asleep)
+closest: game 0.3 px, model 7.4 px

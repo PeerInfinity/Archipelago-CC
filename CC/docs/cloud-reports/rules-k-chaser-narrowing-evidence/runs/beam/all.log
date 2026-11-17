@@ -1,0 +1,4 @@
+L75-71to74 BEAM {"boot":[75,64,208],"goal":[64,0,74],"items":[],"width":48,"seg":4,"depth":200,"tried":7605,"survivors":1521,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":14,"at":[98.7,161.2],"t
+L91-92to89-swim BEAM {"boot":[91,240,64],"goal":[16,144,89],"items":["canSwim"],"width":48,"seg":4,"depth":200,"tried":29259,"survivors":5988,"verdict":"MODEL ROUTE","ticks":281,"bestHitFree":{"tiles":999,"at":[21.6,
+L72-73to71-suit BEAM {"boot":[72,176,16],"goal":[0,256,71],"items":["hasDarkSuit"],"width":48,"seg":4,"depth":200,"tried":39152,"survivors":7172,"verdict":"MODEL ROUTE","ticks":376,"bestHitFree":{"tiles":1,"at":[7.6,
+L72-71to73-suit BEAM {"boot":[72,16,256],"goal":[176,0,73],"items":["hasDarkSuit"],"width":48,"seg":4,"depth":200,"tried":38908,"survivors":7640,"verdict":"MODEL ROUTE","ticks":376,"bestHitFree":{"tiles":1,"at":[184.

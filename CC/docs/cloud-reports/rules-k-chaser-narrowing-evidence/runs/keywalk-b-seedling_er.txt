@@ -1,0 +1,597 @@
+461 difference(s)
+[folded] 260 x .../atlas_ref: "seedling-817c842f" -> "seedling-69ec0fc5"
+[folded] 3 x .../atlas_id: "seedling-7eea3c6d" -> "seedling-07e5b14b"; "seedling-817c842f" -> "seedling-69ec0fc5"
+/entrance_randomization/1/placements/20/exit
+  - "level_99__r2c7 -> level_16__r1c1"
+  + "level_99__r7c5 -> level_16__r1c1"
+/entrance_randomization/1/placements/20/target
+  - "level_16__r1c1 -> level_99__r2c7"
+  + "level_16__r1c1 -> level_99__r7c5"
+/entrance_randomization/1/placements/21/exit
+  - "level_16__r1c1 -> level_99__r2c7"
+  + "level_16__r1c1 -> level_99__r7c5"
+/entrance_randomization/1/placements/21/target
+  - "level_99__r2c7 -> level_16__r1c1"
+  + "level_99__r7c5 -> level_16__r1c1"
+/preset_sidecars/1/level_16__r1c1/playable_payload/exits/1/exitName
+  - "level_16__r1c1 -> level_99__r2c7"
+  + "level_16__r1c1 -> level_99__r7c5"
+/preset_sidecars/1/level_16__r1c1/playable_payload/exits/1/targetRegion
+  - "level_99__r2c7"
+  + "level_99__r7c5"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/0/exitName
+  - "level_71__r0c6 -> level_75"
+  + "level_71__r0c6 -> level_75__r13c3"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/0/targetRegion
+  - "level_75"
+  + "level_75__r13c3"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/2/exitName
+  - "level_71__r0c6 -> level_72"
+  + "level_71__r0c6 -> level_72__r11c6"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/2/targetRegion
+  - "level_72"
+  + "level_72__r11c6"
+/preset_sidecars/1/level_72
+  - {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-817c842f", "atlas_region": "level_72", "level": 72, "tile_size": 16, "exits": [{"exit_id": "in_L71_304_96", "kind": "teleporter", "exit_tiles": [[1, 16]], "entrance_tile": [1, 16], "entrance_spawn": {"x": 16, "y": 256}, "exitName": null, "targetRegion": null, "targetExitId": "out_teleporter_304_96", "
+  + "<absent>"
+/preset_sidecars/1/level_72__r0c11
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r0c11", "level": 72, "tile_size": 16, "exits": [{"exit_id": "out_teleporter_176_0", "kind": "teleporter", "exit_tiles": [[11, 0]], "entrance_tile": [11, 0], "entrance_spawn": {"x": 176, "y": 16}, "exitName": "level_72__r0c11 -> level_73__r8c2
+/preset_sidecars/1/level_72__r10c8
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r10c8", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_72__r11c11
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r11c11", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_72__r11c6
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r11c6", "level": 72, "tile_size": 16, "exits": [{"exit_id": "in_L71_304_96", "kind": "teleporter", "exit_tiles": [[1, 16]], "entrance_tile": [1, 16], "entrance_spawn": {"x": 16, "y": 256}, "exitName": null, "targetRegion": null, "targetExitId
+/preset_sidecars/1/level_72__r5c4
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r5c4", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_72__r6c17
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r6c17", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_72__r9c10
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r9c10", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_72__r9c12
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r9c12", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_72__r9c14
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_72", "atlas_sub_region": "r9c14", "level": 72, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/0/exitName
+  - "level_73__r0c4 -> level_74"
+  + "level_73__r0c4 -> level_74__r8c18"
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/0/targetRegion
+  - "level_74"
+  + "level_74__r8c18"
+/preset_sidecars/1/level_73__r3c7/playable_payload/exits
+  - "len 2"
+  + "len 0"
+/preset_sidecars/1/level_73__r4c4
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_73", "atlas_sub_region": "r4c4", "level": 73, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_73__r5c7
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_73", "atlas_sub_region": "r5c7", "level": 73, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_73__r8c2
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_73", "atlas_sub_region": "r8c2", "level": 73, "tile_size": 16, "exits": [{"exit_id": "in_L72_176_0", "kind": "teleporter", "exit_tiles": [[2, 8]], "entrance_tile": [2, 8], "entrance_spawn": {"x": 32, "y": 128}, "exitName": null, "targetRegion": null, "targetExitId": "
+/preset_sidecars/1/level_74
+  - {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-817c842f", "atlas_region": "level_74", "level": 74, "tile_size": 16, "exits": [{"exit_id": "in_L73_64_0", "kind": "teleporter", "exit_tiles": [[18, 8]], "entrance_tile": [18, 8], "entrance_spawn": {"x": 288, "y": 128}, "exitName": null, "targetRegion": null, "targetExitId": "out_teleporter_64_0", "tar
+  + "<absent>"
+/preset_sidecars/1/level_74__r1c7
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_74", "atlas_sub_region": "r1c7", "level": 74, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_74__r2c11
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_74", "atlas_sub_region": "r2c11", "level": 74, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_74__r2c2
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_74", "atlas_sub_region": "r2c2", "level": 74, "tile_size": 16, "exits": [{"exit_id": "out_teleporter_16_144", "kind": "teleporter", "exit_tiles": [[1, 9]], "entrance_tile": [1, 9], "entrance_spawn": {"x": 16, "y": 128}, "exitName": "level_74__r2c2 -> level_75__r0c4", 
+/preset_sidecars/1/level_74__r8c18
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_74", "atlas_sub_region": "r8c18", "level": 74, "tile_size": 16, "exits": [{"exit_id": "in_L73_64_0", "kind": "teleporter", "exit_tiles": [[18, 8]], "entrance_tile": [18, 8], "entrance_spawn": {"x": 288, "y": 128}, "exitName": null, "targetRegion": null, "targetExitId"
+/preset_sidecars/1/level_75
+  - {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-817c842f", "atlas_region": "level_75", "level": 75, "tile_size": 16, "exits": [{"exit_id": "in_L71_96_0", "kind": "teleporter", "exit_tiles": [[4, 13]], "entrance_tile": [4, 13], "entrance_spawn": {"x": 64, "y": 208}, "exitName": null, "targetRegion": null, "targetExitId": "out_teleporter_96_0", "targ
+  + "<absent>"
+/preset_sidecars/1/level_75__r0c4
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r0c4", "level": 75, "tile_size": 16, "exits": [{"exit_id": "in_L74_16_144", "kind": "teleporter", "exit_tiles": [[4, 1]], "entrance_tile": [4, 1], "entrance_spawn": {"x": 64, "y": 16}, "exitName": null, "targetRegion": null, "targetExitId": "
+/preset_sidecars/1/level_75__r10c4
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r10c4", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_75__r10c6
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r10c6", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_75__r11c3
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r11c3", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_75__r11c5
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r11c5", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_75__r13c3
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r13c3", "level": 75, "tile_size": 16, "exits": [{"exit_id": "in_L71_96_0", "kind": "teleporter", "exit_tiles": [[4, 13]], "entrance_tile": [4, 13], "entrance_spawn": {"x": 64, "y": 208}, "exitName": null, "targetRegion": null, "targetExitId":
+/preset_sidecars/1/level_75__r3c3
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r3c3", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_75__r8c4
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r8c4", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_75__r8c6
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_75", "atlas_sub_region": "r8c6", "level": 75, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_76/playable_payload/exits/2/exitName
+  - "level_76 -> level_77"
+  + "level_76 -> level_77__r2c0"
+/preset_sidecars/1/level_76/playable_payload/exits/2/targetRegion
+  - "level_77"
+  + "level_77__r2c0"
+/preset_sidecars/1/level_77
+  - {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-817c842f", "atlas_region": "level_77", "level": 77, "tile_size": 16, "exits": [{"exit_id": "in_L76_304_112", "kind": "teleporter", "exit_tiles": [[1, 2]], "entrance_tile": [1, 2], "entrance_spawn": {"x": 16, "y": 32}, "exitName": null, "targetRegion": null, "targetExitId": "out_teleporter_304_112", "t
+  + "<absent>"
+/preset_sidecars/1/level_77__r12c5
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_77", "atlas_sub_region": "r12c5", "level": 77, "tile_size": 16, "exits": [{"exit_id": "out_teleporter_96_304", "kind": "teleporter", "exit_tiles": [[6, 19]], "entrance_tile": [6, 19], "entrance_spawn": {"x": 96, "y": 288}, "exitName": "level_77__r12c5 -> level_78__r0c
+/preset_sidecars/1/level_77__r2c0
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_77", "atlas_sub_region": "r2c0", "level": 77, "tile_size": 16, "exits": [{"exit_id": "in_L76_304_112", "kind": "teleporter", "exit_tiles": [[1, 2]], "entrance_tile": [1, 2], "entrance_spawn": {"x": 16, "y": 32}, "exitName": null, "targetRegion": null, "targetExitId": 
+/preset_sidecars/1/level_78__r0c16/playable_payload/exits/1/exitName
+  - "level_78__r0c16 -> level_77"
+  + "level_78__r0c16 -> level_77__r12c5"
+/preset_sidecars/1/level_78__r0c16/playable_payload/exits/1/targetRegion
+  - "level_77"
+  + "level_77__r12c5"
+/preset_sidecars/1/level_78__r1c9
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r1c9", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r3c12
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r3c12", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r4c2
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r4c2", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r4c7
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r4c7", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r5c12
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r5c12", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r6c11
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r6c11", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r6c9
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r6c9", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r8c10
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r8c10", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_78__r8c8
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_78", "atlas_sub_region": "r8c8", "level": 78, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_80__r12c3
+  - {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-817c842f", "atlas_region": "level_80", "atlas_sub_region": "r12c3", "level": 80, "tile_size": 16, "exits": []}}
+  + "<absent>"
+/preset_sidecars/1/level_80__r12c4
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_80", "atlas_sub_region": "r12c4", "level": 80, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_80__r13c3
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_80", "atlas_sub_region": "r13c3", "level": 80, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_80__r14c2
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_80", "atlas_sub_region": "r14c2", "level": 80, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_80__r6c4
+  - {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-817c842f", "atlas_region": "level_80", "atlas_sub_region": "r6c4", "level": 80, "tile_size": 16, "exits": []}}
+  + "<absent>"
+/preset_sidecars/1/level_80__r6c5
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_80", "atlas_sub_region": "r6c5", "level": 80, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_80__r9c5
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_80", "atlas_sub_region": "r9c5", "level": 80, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_99__r2c7/playable_payload/exits
+  - "len 2"
+  + "len 0"
+/preset_sidecars/1/level_99__r6c12
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_99", "atlas_sub_region": "r6c12", "level": 99, "tile_size": 16, "exits": []}}
+/preset_sidecars/1/level_99__r7c5
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_99", "atlas_sub_region": "r7c5", "level": 99, "tile_size": 16, "exits": [{"exit_id": "in_L98_112_112", "kind": "teleporter", "exit_tiles": [[6, 7]], "entrance_tile": [6, 7], "entrance_spawn": {"x": 96, "y": 112}, "exitName": null, "targetRegion": null, "targetExitId":
+/preset_sidecars/1/level_99__r8c10
+  - "<absent>"
+  + {"substrate": "flash_seedling", "playable_payload": {"gameId": "seedling", "atlas_ref": "seedling-69ec0fc5", "atlas_region": "level_99", "atlas_sub_region": "r8c10", "level": 99, "tile_size": 16, "exits": []}}
+/regions/1/level_15__r1c9/exits/2/er/reverse
+  - "level_16__r1c1 -> level_99__r2c7"
+  + "level_16__r1c1 -> level_99__r7c5"
+/regions/1/level_16__r1c1/exits/3/connected_region
+  - "level_99__r2c7"
+  + "level_99__r7c5"
+/regions/1/level_16__r1c1/exits/3/name
+  - "level_16__r1c1 -> level_99__r2c7"
+  + "level_16__r1c1 -> level_99__r7c5"
+/regions/1/level_71__r0c6/exits/2/connected_region
+  - "level_75"
+  + "level_75__r13c3"
+/regions/1/level_71__r0c6/exits/2/name
+  - "level_71__r0c6 -> level_75"
+  + "level_71__r0c6 -> level_75__r13c3"
+/regions/1/level_71__r0c6/exits/4/connected_region
+  - "level_72"
+  + "level_72__r11c6"
+/regions/1/level_71__r0c6/exits/4/name
+  - "level_71__r0c6 -> level_72"
+  + "level_71__r0c6 -> level_72__r11c6"
+/regions/1/level_72
+  - {"name": "level_72", "exits": [{"name": "level_72 -> level_71__r0c6", "connected_region": "level_71__r0c6", "access_rule": {"rule": "True_"}}, {"name": "level_72 -> level_73__r3c7", "connected_region": "level_73__r3c7", "access_rule": {"rule": "True_"}}], "locations": []}
+  + "<absent>"
+/regions/1/level_72__r0c11
+  - "<absent>"
+  + {"name": "level_72__r0c11", "exits": [{"name": "level_72__r0c11 -> level_72__r10c8", "connected_region": "level_72__r10c8", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_72__r10c8
+  - "<absent>"
+  + {"name": "level_72__r10c8", "exits": [{"name": "level_72__r10c8 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_72__r11c11
+  - "<absent>"
+  + {"name": "level_72__r11c11", "exits": [{"name": "level_72__r11c11 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_na
+/regions/1/level_72__r11c6
+  - "<absent>"
+  + {"name": "level_72__r11c6", "exits": [{"name": "level_72__r11c6 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_72__r5c4
+  - "<absent>"
+  + {"name": "level_72__r5c4", "exits": [{"name": "level_72__r5c4 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_72__r6c17
+  - "<absent>"
+  + {"name": "level_72__r6c17", "exits": [{"name": "level_72__r6c17 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_72__r6c17 -> level_72__r10c8", "connected_region": "level_72__r10c8", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children
+/regions/1/level_72__r9c10
+  - "<absent>"
+  + {"name": "level_72__r9c10", "exits": [{"name": "level_72__r9c10 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_72__r9c12
+  - "<absent>"
+  + {"name": "level_72__r9c12", "exits": [{"name": "level_72__r9c12 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_72__r9c14
+  - "<absent>"
+  + {"name": "level_72__r9c14", "exits": [{"name": "level_72__r9c14 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_73__r0c4/exits
+  - "len 2"
+  + "len 3"
+/regions/1/level_73__r0c4/exits/0/connected_region
+  - "level_73__r3c7"
+  + "level_73__r4c4"
+/regions/1/level_73__r0c4/exits/0/name
+  - "level_73__r0c4 -> level_73__r3c7"
+  + "level_73__r0c4 -> level_73__r4c4"
+/regions/1/level_73__r0c4/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_73__r0c4/exits/1/access_rule/rule
+  - "True_"
+  + "And"
+/regions/1/level_73__r0c4/exits/1/connected_region
+  - "level_74"
+  + "level_73__r8c2"
+/regions/1/level_73__r0c4/exits/1/name
+  - "level_73__r0c4 -> level_74"
+  + "level_73__r0c4 -> level_73__r8c2"
+/regions/1/level_73__r3c7/exits/0/access_rule/children
+  - "len 3"
+  + "len 4"
+/regions/1/level_73__r3c7/exits/0/access_rule/children/0/args/item_name
+  - "Dark Suit"
+  + "Progressive Sword"
+/regions/1/level_73__r3c7/exits/0/access_rule/children/1/args/item_name
+  - "Progressive Sword"
+  + "Ghost Spear"
+/regions/1/level_73__r3c7/exits/0/access_rule/children/2/args/item_name
+  - "Ghost Spear"
+  + "Wand"
+/regions/1/level_73__r3c7/exits/0/connected_region
+  - "level_73__r0c4"
+  + "level_73__r4c4"
+/regions/1/level_73__r3c7/exits/0/name
+  - "level_73__r3c7 -> level_73__r0c4"
+  + "level_73__r3c7 -> level_73__r4c4"
+/regions/1/level_73__r3c7/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_73__r3c7/exits/1/access_rule/rule
+  - "True_"
+  + "Or"
+/regions/1/level_73__r3c7/exits/1/connected_region
+  - "level_72"
+  + "level_73__r5c7"
+/regions/1/level_73__r3c7/exits/1/name
+  - "level_73__r3c7 -> level_72"
+  + "level_73__r3c7 -> level_73__r5c7"
+/regions/1/level_73__r4c4
+  - "<absent>"
+  + {"name": "level_73__r4c4", "exits": [{"name": "level_73__r4c4 -> level_73__r0c4", "connected_region": "level_73__r0c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}]}}, {"name": "level_73__r4c4 -> level_73__r3c7", "connected_region": 
+/regions/1/level_73__r5c7
+  - "<absent>"
+  + {"name": "level_73__r5c7", "exits": [{"name": "level_73__r5c7 -> level_73__r3c7", "connected_region": "level_73__r3c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_73__r8c2
+  - "<absent>"
+  + {"name": "level_73__r8c2", "exits": [{"name": "level_73__r8c2 -> level_73__r0c4", "connected_region": "level_73__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "
+/regions/1/level_74
+  - {"name": "level_74", "exits": [{"name": "level_74 -> level_75", "connected_region": "level_75", "access_rule": {"rule": "True_"}}, {"name": "level_74 -> level_73__r0c4", "connected_region": "level_73__r0c4", "access_rule": {"rule": "True_"}}], "locations": [{"name": "Level 074 - Darkshield", "id": 30000036, "access_rule": {"rule": "True_"}, "item": {"name": "Progressive Shield", "player": 1, "adva
+  + "<absent>"
+/regions/1/level_74__r1c7
+  - "<absent>"
+  + {"name": "level_74__r1c7", "exits": [{"name": "level_74__r1c7 -> level_74__r2c11", "connected_region": "level_74__r2c11", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_74__r2c11
+  - "<absent>"
+  + {"name": "level_74__r2c11", "exits": [{"name": "level_74__r2c11 -> level_74__r1c7", "connected_region": "level_74__r1c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_74__r2c2
+  - "<absent>"
+  + {"name": "level_74__r2c2", "exits": [{"name": "level_74__r2c2 -> level_74__r1c7", "connected_region": "level_74__r1c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_74__r8c18
+  - "<absent>"
+  + {"name": "level_74__r8c18", "exits": [{"name": "level_74__r8c18 -> level_74__r1c7", "connected_region": "level_74__r1c7", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_74__r8c18 -> level_74__r2c11", "connected_region": "level_74__r2c11", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "ar
+/regions/1/level_75
+  - {"name": "level_75", "exits": [{"name": "level_75 -> level_74", "connected_region": "level_74", "access_rule": {"rule": "True_"}}, {"name": "level_75 -> level_71__r0c6", "connected_region": "level_71__r0c6", "access_rule": {"rule": "True_"}}], "locations": []}
+  + "<absent>"
+/regions/1/level_75__r0c4
+  - "<absent>"
+  + {"name": "level_75__r0c4", "exits": [{"name": "level_75__r0c4 -> level_75__r10c4", "connected_region": "level_75__r10c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r10c4
+  - "<absent>"
+  + {"name": "level_75__r10c4", "exits": [{"name": "level_75__r10c4 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r10c6
+  - "<absent>"
+  + {"name": "level_75__r10c6", "exits": [{"name": "level_75__r10c6 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r11c3
+  - "<absent>"
+  + {"name": "level_75__r11c3", "exits": [{"name": "level_75__r11c3 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r11c5
+  - "<absent>"
+  + {"name": "level_75__r11c5", "exits": [{"name": "level_75__r11c5 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r13c3
+  - "<absent>"
+  + {"name": "level_75__r13c3", "exits": [{"name": "level_75__r13c3 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r3c3
+  - "<absent>"
+  + {"name": "level_75__r3c3", "exits": [{"name": "level_75__r3c3 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_75__r8c4
+  - "<absent>"
+  + {"name": "level_75__r8c4", "exits": [{"name": "level_75__r8c4 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "
+/regions/1/level_75__r8c6
+  - "<absent>"
+  + {"name": "level_75__r8c6", "exits": [{"name": "level_75__r8c6 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_75__r8c6 -> level_75__r10c4", "connected_region": "level_75__r10c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{
+/regions/1/level_76/exits/1/connected_region
+  - "level_77"
+  + "level_77__r2c0"
+/regions/1/level_76/exits/1/name
+  - "level_76 -> level_77"
+  + "level_76 -> level_77__r2c0"
+/regions/1/level_77
+  - {"name": "level_77", "exits": [{"name": "level_77 -> level_76", "connected_region": "level_76", "access_rule": {"rule": "True_"}}, {"name": "level_77 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "True_"}}], "locations": []}
+  + "<absent>"
+/regions/1/level_77__r12c5
+  - "<absent>"
+  + {"name": "level_77__r12c5", "exits": [{"name": "level_77__r12c5 -> level_77__r2c0", "connected_region": "level_77__r2c0", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_77__r2c0
+  - "<absent>"
+  + {"name": "level_77__r2c0", "exits": [{"name": "level_77__r2c0 -> level_77__r12c5", "connected_region": "level_77__r12c5", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_78__r0c16/exits
+  - "len 2"
+  + "len 11"
+/regions/1/level_78__r0c16/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_78__r0c16/exits/0/access_rule/children/1/args
+  - {"item_name": "Progressive Sword"}
+  + "<absent>"
+/regions/1/level_78__r0c16/exits/0/access_rule/children/1/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_78__r0c16/exits/0/access_rule/children/1/rule
+  - "Has"
+  + "Or"
+/regions/1/level_78__r0c16/exits/0/access_rule/rule
+  - "Or"
+  + "And"
+/regions/1/level_78__r0c16/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_78__r0c16/exits/1/access_rule/rule
+  - "True_"
+  + "Or"
+/regions/1/level_78__r0c16/exits/1/connected_region
+  - "level_77"
+  + "level_78__r1c9"
+/regions/1/level_78__r0c16/exits/1/name
+  - "level_78__r0c16 -> level_77"
+  + "level_78__r0c16 -> level_78__r1c9"
+/regions/1/level_78__r0c2/exits
+  - "len 2"
+  + "len 11"
+/regions/1/level_78__r0c2/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_78__r0c2/exits/0/access_rule/children/1/args
+  - {"item_name": "Progressive Sword"}
+  + "<absent>"
+/regions/1/level_78__r0c2/exits/0/access_rule/children/1/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_78__r0c2/exits/0/access_rule/children/1/rule
+  - "Has"
+  + "Or"
+/regions/1/level_78__r0c2/exits/0/access_rule/rule
+  - "Or"
+  + "And"
+/regions/1/level_78__r0c2/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_78__r0c2/exits/1/access_rule/rule
+  - "True_"
+  + "And"
+/regions/1/level_78__r0c2/exits/1/connected_region
+  - "level_79__r8c4"
+  + "level_78__r1c9"
+/regions/1/level_78__r0c2/exits/1/name
+  - "level_78__r0c2 -> level_79__r8c4"
+  + "level_78__r0c2 -> level_78__r1c9"
+/regions/1/level_78__r1c9
+  - "<absent>"
+  + {"name": "level_78__r1c9", "exits": [{"name": "level_78__r1c9 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_78__r3c12
+  - "<absent>"
+  + {"name": "level_78__r3c12", "exits": [{"name": "level_78__r3c12 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 
+/regions/1/level_78__r4c2
+  - "<absent>"
+  + {"name": "level_78__r4c2", "exits": [{"name": "level_78__r4c2 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_78__r4c7
+  - "<absent>"
+  + {"name": "level_78__r4c7", "exits": [{"name": "level_78__r4c7 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_78__r5c12
+  - "<absent>"
+  + {"name": "level_78__r5c12", "exits": [{"name": "level_78__r5c12 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 
+/regions/1/level_78__r6c11
+  - "<absent>"
+  + {"name": "level_78__r6c11", "exits": [{"name": "level_78__r6c11 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 
+/regions/1/level_78__r6c9
+  - "<absent>"
+  + {"name": "level_78__r6c9", "exits": [{"name": "level_78__r6c9 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_78__r8c10
+  - "<absent>"
+  + {"name": "level_78__r8c10", "exits": [{"name": "level_78__r8c10 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_78__r8c8
+  - "<absent>"
+  + {"name": "level_78__r8c8", "exits": [{"name": "level_78__r8c8 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_80__r0c2/exits/0/connected_region
+  - "level_80__r6c4"
+  + "level_80__r6c5"
+/regions/1/level_80__r0c2/exits/0/name
+  - "level_80__r0c2 -> level_80__r6c4"
+  + "level_80__r0c2 -> level_80__r6c5"
+/regions/1/level_80__r0c2/exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r0c2/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r0c2/exits/1/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r12c3
+  - {"name": "level_80__r12c3", "exits": [{"name": "level_80__r12c3 -> level_80__r8c4", "connected_region": "level_80__r8c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}], "locations": []}
+  + "<absent>"
+/regions/1/level_80__r12c4
+  - "<absent>"
+  + {"name": "level_80__r12c4", "exits": [{"name": "level_80__r12c4 -> level_80__r13c3", "connected_region": "level_80__r13c3", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", 
+/regions/1/level_80__r13c3
+  - "<absent>"
+  + {"name": "level_80__r13c3", "exits": [{"name": "level_80__r13c3 -> level_80__r12c4", "connected_region": "level_80__r12c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", 
+/regions/1/level_80__r14c2
+  - "<absent>"
+  + {"name": "level_80__r14c2", "exits": [{"name": "level_80__r14c2 -> level_80__r12c4", "connected_region": "level_80__r12c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name
+/regions/1/level_80__r16c1/exits/0/connected_region
+  - "level_80__r12c3"
+  + "level_80__r14c2"
+/regions/1/level_80__r16c1/exits/0/name
+  - "level_80__r16c1 -> level_80__r12c3"
+  + "level_80__r16c1 -> level_80__r14c2"
+/regions/1/level_80__r6c4
+  - {"name": "level_80__r6c4", "exits": [{"name": "level_80__r6c4 -> level_80__r0c2", "connected_region": "level_80__r0c2", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_80__r6c4 -> level_80__r8c1", "connected_region": "level_80__r8c1", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}], "locations": []}
+  + "<absent>"
+/regions/1/level_80__r6c5
+  - "<absent>"
+  + {"name": "level_80__r6c5", "exits": [{"name": "level_80__r6c5 -> level_80__r0c2", "connected_region": "level_80__r0c2", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_80__r6c5 -> level_80__r8c1", "connected_region": "level_80__r8c1", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"r
+/regions/1/level_80__r8c1/exits/0/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r8c1/exits/0/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r8c1/exits/0/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r8c1/exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r8c1/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r8c1/exits/1/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r8c1/exits/1/connected_region
+  - "level_80__r6c4"
+  + "level_80__r6c5"
+/regions/1/level_80__r8c1/exits/1/name
+  - "level_80__r8c1 -> level_80__r6c4"
+  + "level_80__r8c1 -> level_80__r6c5"
+/regions/1/level_80__r8c4/exits/0/connected_region
+  - "level_80__r12c3"
+  + "level_80__r6c5"
+/regions/1/level_80__r8c4/exits/0/name
+  - "level_80__r8c4 -> level_80__r12c3"
+  + "level_80__r8c4 -> level_80__r6c5"
+/regions/1/level_80__r8c4/exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r8c4/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_80__r8c4/exits/1/access_rule/rule
+  - "Has"
+  + "Or"
+/regions/1/level_80__r8c4/exits/1/connected_region
+  - "level_80__r6c4"
+  + "level_80__r9c5"
+/regions/1/level_80__r8c4/exits/1/name
+  - "level_80__r8c4 -> level_80__r6c4"
+  + "level_80__r8c4 -> level_80__r9c5"
+/regions/1/level_80__r9c5
+  - "<absent>"
+  + {"name": "level_80__r9c5", "exits": [{"name": "level_80__r9c5 -> level_80__r12c4", "connected_region": "level_80__r12c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_80__r9c5 -> level_80__r13c3", "connected_region": "level_80__r13c3", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_80__r9c5 -> level_80__r14c2", "connecte
+/regions/1/level_98/exits/0/er/reverse
+  - "level_99__r2c7 -> level_16__r1c1"
+  + "level_99__r7c5 -> level_16__r1c1"
+/regions/1/level_99__r2c4/exits/0/connected_region
+  - "level_99__r2c7"
+  + "level_99__r7c5"
+/regions/1/level_99__r2c4/exits/0/name
+  - "level_99__r2c4 -> level_99__r2c7"
+  + "level_99__r2c4 -> level_99__r7c5"
+/regions/1/level_99__r2c7/exits
+  - "len 2"
+  + "len 3"
+/regions/1/level_99__r2c7/exits/0/access_rule/children
+  - "len 2"
+  + "len 5"
+/regions/1/level_99__r2c7/exits/0/connected_region
+  - "level_99__r2c4"
+  + "level_99__r6c12"
+/regions/1/level_99__r2c7/exits/0/name
+  - "level_99__r2c7 -> level_99__r2c4"
+  + "level_99__r2c7 -> level_99__r6c12"
+/regions/1/level_99__r2c7/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_99__r2c7/exits/1/access_rule/rule
+  - "True_"
+  + "Or"
+/regions/1/level_99__r2c7/exits/1/connected_region
+  - "level_16__r1c1"
+  + "level_99__r7c5"
+/regions/1/level_99__r2c7/exits/1/er
+  - {"group": "stairsdown", "type": "two_way", "reverse": "level_98 -> level_12__r13c6", "shuffle": true}
+  + "<absent>"
+/regions/1/level_99__r2c7/exits/1/name
+  - "level_99__r2c7 -> level_16__r1c1"
+  + "level_99__r2c7 -> level_99__r7c5"
+/regions/1/level_99__r6c12
+  - "<absent>"
+  + {"name": "level_99__r6c12", "exits": [{"name": "level_99__r6c12 -> level_99__r2c7", "connected_region": "level_99__r2c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_99__r7c5
+  - "<absent>"
+  + {"name": "level_99__r7c5", "exits": [{"name": "level_99__r7c5 -> level_99__r2c4", "connected_region": "level_99__r2c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}]}}, {"name": "level_99__r7c5 -> level_99__r2c7", "connected_region": "level_99__r2c7", "access_rule": {"rule": "Or", "chil
+/regions/1/level_99__r8c10
+  - "<absent>"
+  + {"name": "level_99__r8c10", "exits": [{"name": "level_99__r8c10 -> level_99__r2c7", "connected_region": "level_99__r2c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}

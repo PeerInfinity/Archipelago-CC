@@ -1,0 +1,36 @@
+| **L12** fan-out (130 routes) | | | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 | 0/130 |
+`level_25:level_25 -> level_26 => exit:level_26 -> level_27`       .  M  .  .  .  .  .  .  .  .  .  . 
+`level_27:level_27 -> level_26 => exit:level_26 -> level_25`       .  M  .  .  .  .  .  .  .  .  .  . 
+`level_25:level_25 -> level_28 => exit:level_28 -> level_26`       .  M  .  .  M  .  .  M  .  .  .  M 
+`level_25:level_25 -> level_28 => loc:L28 flag 0: rope@160,64 clea .  M  .  .  M  .  .  M  .  .  .  M 
+`level_26:level_26 -> level_28 => exit:level_28 -> level_25`       .  M  .  .  M  .  .  M  .  .  .  M 
+`level_26:level_26 -> level_28 => loc:L28 flag 0: rope@160,64 clea .  M  .  .  M  .  .  M  .  .  .  M 
+| **L40** fan-out (72 routes) | | | 0/72 | 54/72 | 0/72 | 0/72 | 68/72 | 0/72 | 0/72 | 68/72 | 0/72 | 0/72 | 0/72 | 68/72 |
+`level_40:level_40 -> level_43 #13 => exit:level_43 -> level_37`   .  M  .  .  M  .  .  M  .  .  .  M 
+`level_40:level_40 -> level_43 #13 => exit:level_43 -> level_40`   .  M  .  .  M  .  .  M  .  .  .  M 
+`level_40:level_40 -> level_43 #13 => loc:Level 043 - Totem of Lac .  M  .  .  M  .  .  M  .  .  .  M 
+`level_40:level_40 -> level_43 #13 => loc:Level 043 - Wand`        .  M  .  .  M  .  .  M  .  .  .  M 
+`level_48:level_48 -> level_53 => exit:level_53 -> level_51`       .  .  .  .  .  .  .  .  .  .  .  . 
+`level_51:level_51 -> level_53 => exit:level_53 -> level_48`       .  .  .  .  .  .  .  .  .  .  .  . 
+`level_71:level_71 -> level_72 => exit:level_72 -> level_73`       M  M  M  M* M* M* M* M* M* M* M* M*
+`level_73:level_73 -> level_72 => exit:level_72 -> level_71`       M  M  M  M* M* M* M* M* M* M* M* M*
+`level_72:level_72 -> level_73 => exit:level_73 -> level_74`       M  .  .  .  .  .  .  .  .  .  .  . 
+`level_74:level_74 -> level_73 => exit:level_73 -> level_72`       M  .  .  .  .  .  .  .  .  .  .  . 
+`level_73:level_73 -> level_74 => exit:level_74 -> level_75`       M  M* M* M* M* M* M  M  M* M* M  M 
+`level_73:level_73 -> level_74 => loc:Level 074 - Darkshield`      M  M* M* M* M* M* M  M  M* M* M  M 
+`level_75:level_75 -> level_74 => exit:level_74 -> level_73`       M  M* M* M* M* M* M  M  M* M* M  M 
+`level_71:level_71 -> level_75 => exit:level_75 -> level_74`       M  M* M* .  .  M* M  M  .  M* M  M 
+`level_74:level_74 -> level_75 => exit:level_75 -> level_71`       M  M* M* .  .  M* M  M  .  M* M  M 
+`level_76:level_76 -> level_77 => exit:level_77 -> level_78`       M  M  M  .  .  M  M  M  .  M  M  M 
+`level_78:level_78 -> level_77 => exit:level_77 -> level_76`       M  M* M* .  .  M* M  M  .  M* M  M 
+`level_77:level_77 -> level_78 => exit:level_78 -> level_79`       M  M  M  M  M  M  M  M  .  M  M  M 
+`level_79:level_79 -> level_78 => exit:level_78 -> level_77`       M  M  M  M  M  M  M  M  .  .  M  M 
+`level_71:level_71 -> level_80 => loc:Level 080 - Chest`           M  M  M  M  M  M  M  M  M  M  M  M 
+`level_79:level_79 -> level_80 => exit:level_80 -> level_71`       M  M  M  .  .  .  .  .  .  .  .  . 
+`level_79:level_79 -> level_80 => loc:Level 080 - Chest`           M  M  M  M  M  M  M  M  M  M  M  M 
+`level_12:level_12 -> level_88 => exit:level_88 -> level_87`       .  M  .  .  M  .  .  M  .  .  .  M 
+`level_12:level_12 -> level_88 => exit:level_88 -> level_87 #2`    .  M  .  .  M  .  .  M  .  .  .  M 
+`level_87:level_87 -> level_88 #2 => exit:level_88 -> level_12`    .  M  .  .  M  .  .  M  .  .  .  M 
+`level_87:level_87 -> level_88 => exit:level_88 -> level_12`       .  M  .  .  M  .  .  M  .  .  .  M 
+`level_89:level_89 -> level_91 => exit:level_91 -> level_92`       .  M  .  .  M  .  .  M  .  .  .  M 
+`level_92:level_92 -> level_91 => exit:level_91 -> level_89`       .  M  .  .  M  .  .  M  .  .  .  M 

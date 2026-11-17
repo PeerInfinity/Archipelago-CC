@@ -1,0 +1,1490 @@
+497 difference(s)
+[folded] 1 x .../atlas_id: "seedling-b6a813c8" -> "seedling-ae46036a"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/1/exitName
+  - "level_71__r0c6 -> level_75"
+  + "level_71__r0c6 -> level_75__r13c3"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/1/exit_id
+  - "level_71__r0c6 -> level_75"
+  + "level_71__r0c6 -> level_75__r13c3"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/1/targetRegion
+  - "level_75"
+  + "level_75__r13c3"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/3/exitName
+  - "level_71__r0c6 -> level_72"
+  + "level_71__r0c6 -> level_72__r6c17"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/3/exit_id
+  - "level_71__r0c6 -> level_72"
+  + "level_71__r0c6 -> level_72__r6c17"
+/preset_sidecars/1/level_71__r0c6/playable_payload/exits/3/targetRegion
+  - "level_72"
+  + "level_72__r6c17"
+/preset_sidecars/1/level_72
+  - {"substrate": "maze", "playable_payload": {"width": 20, "height": 18, "tiles": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
+  + "<absent>"
+/preset_sidecars/1/level_72__r0c11
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_72", "playable_payload": {"width": 20, "height": 18, "tiles": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+/preset_sidecars/1/level_72__r5c4
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_72"}
+/preset_sidecars/1/level_72__r6c17
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_72"}
+/preset_sidecars/1/level_72__r9c10
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_72"}
+/preset_sidecars/1/level_72__r9c12
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_72"}
+/preset_sidecars/1/level_72__r9c8
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_72"}
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/0/exitName
+  - "level_73__r3c7 -> level_72"
+  + "level_73__r3c7 -> level_72__r0c11"
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/0/exit_id
+  - "level_73__r3c7 -> level_72"
+  + "level_73__r3c7 -> level_72__r0c11"
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/0/targetRegion
+  - "level_72"
+  + "level_72__r0c11"
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/1/exitName
+  - "level_73__r0c4 -> level_74"
+  + "level_73__r0c4 -> level_74__r8c18"
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/1/exit_id
+  - "level_73__r0c4 -> level_74"
+  + "level_73__r0c4 -> level_74__r8c18"
+/preset_sidecars/1/level_73__r0c4/playable_payload/exits/1/targetRegion
+  - "level_74"
+  + "level_74__r8c18"
+/preset_sidecars/1/level_73__r0c4/playable_payload/obstacleLib/atlas_gate_1
+  - "<absent>"
+  + {"id": "atlas_gate_1", "name": "(Dark Suit AND (Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2))", "clear_set_type": "rule", "clear_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", 
+/preset_sidecars/1/level_73__r0c4/playable_payload/obstacles/27/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_74
+  - {"substrate": "maze", "playable_payload": {"width": 20, "height": 10, "tiles": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1,
+  + "<absent>"
+/preset_sidecars/1/level_74__r1c7
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_74", "playable_payload": {"width": 20, "height": 10, "tiles": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+/preset_sidecars/1/level_74__r2c10
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_74"}
+/preset_sidecars/1/level_74__r2c2
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_74"}
+/preset_sidecars/1/level_74__r8c18
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_74"}
+/preset_sidecars/1/level_75
+  - {"substrate": "maze", "playable_payload": {"width": 10, "height": 15, "tiles": [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+  + "<absent>"
+/preset_sidecars/1/level_75__r0c4
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75", "playable_payload": {"width": 10, "height": 15, "tiles": [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+/preset_sidecars/1/level_75__r10c4
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75"}
+/preset_sidecars/1/level_75__r11c3
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75"}
+/preset_sidecars/1/level_75__r11c5
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75"}
+/preset_sidecars/1/level_75__r13c3
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75"}
+/preset_sidecars/1/level_75__r3c3
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75"}
+/preset_sidecars/1/level_75__r8c6
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_75"}
+/preset_sidecars/1/level_76/playable_payload/exits/1/exitName
+  - "level_76 -> level_77"
+  + "level_76 -> level_77__r2c0"
+/preset_sidecars/1/level_76/playable_payload/exits/1/exit_id
+  - "level_76 -> level_77"
+  + "level_76 -> level_77__r2c0"
+/preset_sidecars/1/level_76/playable_payload/exits/1/targetRegion
+  - "level_77"
+  + "level_77__r2c0"
+/preset_sidecars/1/level_77
+  - {"substrate": "maze", "shared_world": "level_77", "playable_payload": {"width": 15, "height": 20, "tiles": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0
+  + "<absent>"
+/preset_sidecars/1/level_77__r12c5
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_77"}
+/preset_sidecars/1/level_77__r2c0
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_77", "playable_payload": {"width": 15, "height": 20, "tiles": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0
+/preset_sidecars/1/level_78__r0c2/playable_payload/exits/1/exitName
+  - "level_78__r0c16 -> level_77"
+  + "level_78__r0c16 -> level_77__r12c5"
+/preset_sidecars/1/level_78__r0c2/playable_payload/exits/1/exit_id
+  - "level_78__r0c16 -> level_77"
+  + "level_78__r0c16 -> level_77__r12c5"
+/preset_sidecars/1/level_78__r0c2/playable_payload/exits/1/targetRegion
+  - "level_77"
+  + "level_77__r12c5"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children/0/args/item_name
+  - "Progressive Sword"
+  + "Dark Suit"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children/1/args
+  - {"item_name": "Ghost Spear"}
+  + "<absent>"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children/1/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children/1/rule
+  - "Has"
+  + "Or"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_1/clear_rule/rule
+  - "Or"
+  + "And"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_1/name
+  - "(Progressive Sword OR Ghost Spear)"
+  + "(Dark Suit AND (Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2))"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_2
+  - "<absent>"
+  + {"id": "atlas_gate_2", "name": "(Progressive Sword OR Ghost Spear)", "clear_set_type": "rule", "clear_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}]}, "color": "#b06eb8", "display": {"mode": "tree"}}
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacleLib/atlas_gate_3
+  - "<absent>"
+  + {"id": "atlas_gate_3", "name": "(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)", "clear_set_type": "rule", "clear_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles
+  - "len 129"
+  + "len 140"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/1/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/5/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/10/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/11/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/22/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/27/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/35/id
+  - "atlas_gate_1"
+  + "atlas_gate_2"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/36/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/37/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/43/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/47/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/49/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/50/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/51/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/52/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/52/x
+  - 14
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/53/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/53/x
+  - 17
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/54/x
+  - 18
+  + 17
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/55/x
+  - 19
+  + 18
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/56/x
+  - 0
+  + 19
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/56/y
+  - 4
+  + 3
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/57/x
+  - 3
+  + 0
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/58/x
+  - 17
+  + 3
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/59/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/59/x
+  - 18
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/60/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/60/x
+  - 19
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/61/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/61/x
+  - 0
+  + 11
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/61/y
+  - 5
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/62/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/62/x
+  - 1
+  + 12
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/62/y
+  - 5
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/63/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/63/x
+  - 16
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/63/y
+  - 5
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/64/y
+  - 5
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/65/y
+  - 5
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/66/y
+  - 5
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/67/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/68/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/69/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/69/x
+  - 2
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/69/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/70/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/70/x
+  - 3
+  + 10
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/70/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/71/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/71/x
+  - 4
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/71/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/72/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/72/x
+  - 5
+  + 16
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/72/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/73/x
+  - 14
+  + 17
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/73/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/74/x
+  - 15
+  + 18
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/74/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/75/x
+  - 16
+  + 19
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/75/y
+  - 6
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/76/x
+  - 17
+  + 0
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/77/x
+  - 18
+  + 1
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/78/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/78/x
+  - 19
+  + 2
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/79/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/79/x
+  - 0
+  + 3
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/79/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/80/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/80/x
+  - 1
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/80/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/81/x
+  - 2
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/81/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/82/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/82/x
+  - 3
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/82/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/83/x
+  - 4
+  + 15
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/83/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/84/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/84/x
+  - 5
+  + 16
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/84/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/85/x
+  - 6
+  + 17
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/85/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/86/x
+  - 7
+  + 18
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/86/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/87/x
+  - 13
+  + 19
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/87/y
+  - 7
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/88/x
+  - 14
+  + 0
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/89/x
+  - 15
+  + 1
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/90/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/90/x
+  - 16
+  + 2
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/91/x
+  - 17
+  + 3
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/92/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/92/x
+  - 18
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/93/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/93/x
+  - 19
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/94/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/94/x
+  - 0
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/94/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/95/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/95/x
+  - 1
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/95/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/96/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/96/x
+  - 2
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/96/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/97/x
+  - 3
+  + 13
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/97/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/98/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/98/x
+  - 4
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/98/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/99/x
+  - 5
+  + 15
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/99/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/100/x
+  - 6
+  + 16
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/100/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/101/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/101/x
+  - 7
+  + 17
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/101/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/102/x
+  - 13
+  + 18
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/102/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/103/x
+  - 14
+  + 19
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/103/y
+  - 8
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/104/x
+  - 15
+  + 0
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/105/x
+  - 16
+  + 1
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/106/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/106/x
+  - 17
+  + 2
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/107/x
+  - 18
+  + 3
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/108/x
+  - 19
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/109/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/109/x
+  - 0
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/109/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/110/x
+  - 1
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/110/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/111/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/111/x
+  - 2
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/111/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/112/id
+  - "atlas_gate_0"
+  + "atlas_gate_3"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/112/x
+  - 3
+  + 12
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/112/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/113/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/113/x
+  - 4
+  + 13
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/113/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/114/x
+  - 5
+  + 14
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/114/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/115/x
+  - 6
+  + 15
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/115/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/116/x
+  - 7
+  + 16
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/116/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/117/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/117/x
+  - 8
+  + 17
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/117/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/118/x
+  - 9
+  + 18
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/118/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/119/x
+  - 10
+  + 19
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/119/y
+  - 9
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/120/x
+  - 11
+  + 0
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/121/x
+  - 12
+  + 1
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/122/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/122/x
+  - 13
+  + 2
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/123/x
+  - 14
+  + 3
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/124/x
+  - 15
+  + 4
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/125/x
+  - 16
+  + 5
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/126/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/126/x
+  - 17
+  + 6
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/127/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/127/x
+  - 18
+  + 7
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/128/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/obstacles/128/x
+  - 19
+  + 8
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/entrances/level_78__r1c9
+  - "<absent>"
+  + {"x": 9, "y": 1}
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/entrances/level_78__r3c1
+  - "<absent>"
+  + {"x": 1, "y": 3}
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/entrances/level_78__r8c8
+  - "<absent>"
+  + {"x": 8, "y": 8}
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r0c16>level_78__r1c9
+  - "<absent>"
+  + "level_78__r0c16 -> level_78__r1c9"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r0c16>level_78__r3c1
+  - "<absent>"
+  + "level_78__r0c16 -> level_78__r3c1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r0c16>level_78__r8c8
+  - "<absent>"
+  + "level_78__r0c16 -> level_78__r8c8"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r0c2>level_78__r1c9
+  - "<absent>"
+  + "level_78__r0c2 -> level_78__r1c9"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r0c2>level_78__r3c1
+  - "<absent>"
+  + "level_78__r0c2 -> level_78__r3c1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r0c2>level_78__r8c8
+  - "<absent>"
+  + "level_78__r0c2 -> level_78__r8c8"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r1c9>level_78__r0c16
+  - "<absent>"
+  + "level_78__r1c9 -> level_78__r0c16"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r1c9>level_78__r0c2
+  - "<absent>"
+  + "level_78__r1c9 -> level_78__r0c2"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r1c9>level_78__r3c1
+  - "<absent>"
+  + "level_78__r1c9 -> level_78__r3c1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r1c9>level_78__r8c8
+  - "<absent>"
+  + "level_78__r1c9 -> level_78__r8c8"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r3c1>level_78__r0c16
+  - "<absent>"
+  + "level_78__r3c1 -> level_78__r0c16"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r3c1>level_78__r0c2
+  - "<absent>"
+  + "level_78__r3c1 -> level_78__r0c2"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r3c1>level_78__r1c9
+  - "<absent>"
+  + "level_78__r3c1 -> level_78__r1c9"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r3c1>level_78__r8c8
+  - "<absent>"
+  + "level_78__r3c1 -> level_78__r8c8"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r8c8>level_78__r0c16
+  - "<absent>"
+  + "level_78__r8c8 -> level_78__r0c16"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r8c8>level_78__r0c2
+  - "<absent>"
+  + "level_78__r8c8 -> level_78__r0c2"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r8c8>level_78__r1c9
+  - "<absent>"
+  + "level_78__r8c8 -> level_78__r1c9"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/links/level_78__r8c8>level_78__r3c1
+  - "<absent>"
+  + "level_78__r8c8 -> level_78__r3c1"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/regions
+  - "len 2"
+  + "len 5"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/1
+  - "..A......BBB....B..."
+  + "..A......CCC....B..."
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/2
+  - ".........BBB...BB..."
+  + ".........CCC...BB..."
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/3
+  - ".BB....BBBBBBB.BB..."
+  + ".DD.....CCCCCC.BB..."
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/4
+  - ".BB.BBBBBBBBBBBBB..."
+  + ".DD..CCC.CC..C.BB..."
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/5
+  - "..BBBBBBBBBBBBBB...."
+  + "..DD.CCCCC.CCC.B...."
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/6
+  - "......BBBB.BBB......"
+  + "......CCCC.CCC......"
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/7
+  - "........B...B......."
+  + "............C......."
+/preset_sidecars/1/level_78__r0c2/playable_payload/shared_world/rows/8
+  - "........BBBBB......."
+  + "........EEEE........"
+/preset_sidecars/1/level_78__r1c9
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_78"}
+/preset_sidecars/1/level_78__r3c1
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_78"}
+/preset_sidecars/1/level_78__r8c8
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_78"}
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacleLib/atlas_gate_1
+  - "<absent>"
+  + {"id": "atlas_gate_1", "name": "(Dark Suit AND (Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2))", "clear_set_type": "rule", "clear_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", 
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacleLib/atlas_gate_2
+  - "<absent>"
+  + {"id": "atlas_gate_2", "name": "(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)", "clear_set_type": "rule", "clear_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles
+  - "len 122"
+  + "len 123"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/9/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/10/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/19/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/29/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/35/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/40/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/46/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/50/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/56/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/77/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/87/id
+  - "atlas_gate_0"
+  + "atlas_gate_2"
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/87/x
+  - 6
+  + 3
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/88/x
+  - 7
+  + 6
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/89/x
+  - 8
+  + 7
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/90/x
+  - 9
+  + 8
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/91/x
+  - 0
+  + 9
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/91/y
+  - 13
+  + 12
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/92/x
+  - 1
+  + 0
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/93/x
+  - 4
+  + 1
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/94/x
+  - 5
+  + 4
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/95/x
+  - 6
+  + 5
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/96/x
+  - 7
+  + 6
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/97/x
+  - 8
+  + 7
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/98/x
+  - 9
+  + 8
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/99/x
+  - 6
+  + 9
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/99/y
+  - 14
+  + 13
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/100/x
+  - 7
+  + 6
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/101/x
+  - 8
+  + 7
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/102/x
+  - 9
+  + 8
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/103/x
+  - 7
+  + 9
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/103/y
+  - 15
+  + 14
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/104/x
+  - 8
+  + 7
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/105/x
+  - 9
+  + 8
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/106/x
+  - 8
+  + 9
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/106/y
+  - 16
+  + 15
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/107/x
+  - 9
+  + 8
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/108/x
+  - 0
+  + 9
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/108/y
+  - 17
+  + 16
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/109/x
+  - 5
+  + 0
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/110/x
+  - 6
+  + 5
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/111/x
+  - 0
+  + 6
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/111/y
+  - 18
+  + 17
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/112/x
+  - 1
+  + 0
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/113/x
+  - 4
+  + 1
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/114/x
+  - 5
+  + 4
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/115/x
+  - 6
+  + 5
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/116/x
+  - 7
+  + 6
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/117/x
+  - 0
+  + 7
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/117/y
+  - 19
+  + 18
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/118/x
+  - 1
+  + 0
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/119/x
+  - 4
+  + 1
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/120/x
+  - 5
+  + 4
+/preset_sidecars/1/level_80__r0c2/playable_payload/obstacles/121/x
+  - 6
+  + 5
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/entrances/level_80__r12c3
+  - {"x": 3, "y": 12}
+  + "<absent>"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/entrances/level_80__r12c4
+  - "<absent>"
+  + {"x": 4, "y": 12}
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/entrances/level_80__r13c2
+  - "<absent>"
+  + {"x": 2, "y": 13}
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r12c3>level_80__r8c4
+  - "level_80__r12c3 -> level_80__r8c4"
+  + "<absent>"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r12c4>level_80__r13c2
+  - "<absent>"
+  + "level_80__r12c4 -> level_80__r13c2"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r12c4>level_80__r8c4
+  - "<absent>"
+  + "level_80__r12c4 -> level_80__r8c4"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r13c2>level_80__r12c4
+  - "<absent>"
+  + "level_80__r13c2 -> level_80__r12c4"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r13c2>level_80__r8c4
+  - "<absent>"
+  + "level_80__r13c2 -> level_80__r8c4"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r16c1>level_80__r12c3
+  - "level_80__r16c1 -> level_80__r12c3"
+  + "<absent>"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r16c1>level_80__r13c2
+  - "<absent>"
+  + "level_80__r16c1 -> level_80__r13c2"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r8c4>level_80__r12c3
+  - "level_80__r8c4 -> level_80__r12c3"
+  + "<absent>"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r8c4>level_80__r12c4
+  - "<absent>"
+  + "level_80__r8c4 -> level_80__r12c4"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/links/level_80__r8c4>level_80__r13c2
+  - "<absent>"
+  + "level_80__r8c4 -> level_80__r13c2"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions
+  - "len 6"
+  + "len 7"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/4
+  - "level_80__r12c3"
+  + "level_80__r12c4"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/regions/5
+  - "level_80__r16c1"
+  + "level_80__r13c2"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/12
+  - "...EEE...."
+  + "....EE...."
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/13
+  - "..EE......"
+  + "..FF......"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/14
+  - "..EE......"
+  + "..FF......"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/16
+  - ".FF......."
+  + ".GG......."
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/17
+  - "..FF......"
+  + "..GG......"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/18
+  - "..FF......"
+  + "..GG......"
+/preset_sidecars/1/level_80__r0c2/playable_payload/shared_world/rows/19
+  - "..FF......"
+  + "..GG......"
+/preset_sidecars/1/level_80__r12c3
+  - {"substrate": "maze", "shared_world": "level_80"}
+  + "<absent>"
+/preset_sidecars/1/level_80__r12c4
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_80"}
+/preset_sidecars/1/level_80__r13c2
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_80"}
+/preset_sidecars/1/level_98/playable_payload/exits/0/exitName
+  - "level_98 -> level_99__r2c7"
+  + "level_98 -> level_99__r7c5"
+/preset_sidecars/1/level_98/playable_payload/exits/0/exit_id
+  - "level_98 -> level_99__r2c7"
+  + "level_98 -> level_99__r7c5"
+/preset_sidecars/1/level_98/playable_payload/exits/0/targetRegion
+  - "level_99__r2c7"
+  + "level_99__r7c5"
+/preset_sidecars/1/level_99__r2c4/playable_payload/exits/1/exitName
+  - "level_99__r2c7 -> level_98"
+  + "level_99__r7c5 -> level_98"
+/preset_sidecars/1/level_99__r2c4/playable_payload/exits/1/exit_id
+  - "level_99__r2c7 -> level_98"
+  + "level_99__r7c5 -> level_98"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacleLib/atlas_gate_1/clear_rule/children
+  - "len 2"
+  + "len 4"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacleLib/atlas_gate_1/name
+  - "(Progressive Sword OR Ghost Spear)"
+  + "(Progressive Sword OR Ghost Spear OR Wand OR Progressive Shield x2)"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacleLib/atlas_gate_2
+  - "<absent>"
+  + {"id": "atlas_gate_2", "name": "(Progressive Sword OR Ghost Spear)", "clear_set_type": "rule", "clear_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}]}, "color": "#b06eb8", "display": {"mode": "tree"}}
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles
+  - "len 12"
+  + "len 19"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/8/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/8/x
+  - 11
+  + 6
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/9/id
+  - "atlas_gate_0"
+  + "atlas_gate_1"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/9/x
+  - 12
+  + 7
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/10/id
+  - "atlas_gate_1"
+  + "atlas_gate_0"
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/10/x
+  - 5
+  + 11
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/10/y
+  - 6
+  + 5
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/11/x
+  - 11
+  + 12
+/preset_sidecars/1/level_99__r2c4/playable_payload/obstacles/11/y
+  - 6
+  + 5
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/entrances/level_99__r2c7/x
+  - 6
+  + 7
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/entrances/level_99__r2c7/y
+  - 7
+  + 2
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/entrances/level_99__r6c12
+  - "<absent>"
+  + {"x": 12, "y": 6}
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/entrances/level_99__r7c5
+  - "<absent>"
+  + {"x": 6, "y": 7}
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r2c4>level_99__r2c7
+  - "level_99__r2c4 -> level_99__r2c7"
+  + "<absent>"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r2c4>level_99__r7c5
+  - "<absent>"
+  + "level_99__r2c4 -> level_99__r7c5"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r2c7>level_99__r2c4
+  - "level_99__r2c7 -> level_99__r2c4"
+  + "<absent>"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r2c7>level_99__r6c12
+  - "<absent>"
+  + "level_99__r2c7 -> level_99__r6c12"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r2c7>level_99__r7c5
+  - "<absent>"
+  + "level_99__r2c7 -> level_99__r7c5"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r6c12>level_99__r2c7
+  - "<absent>"
+  + "level_99__r6c12 -> level_99__r2c7"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r6c12>level_99__r7c5
+  - "<absent>"
+  + "level_99__r6c12 -> level_99__r7c5"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r7c5>level_99__r2c4
+  - "<absent>"
+  + "level_99__r7c5 -> level_99__r2c4"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r7c5>level_99__r2c7
+  - "<absent>"
+  + "level_99__r7c5 -> level_99__r2c7"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/links/level_99__r7c5>level_99__r6c12
+  - "<absent>"
+  + "level_99__r7c5 -> level_99__r6c12"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/regions
+  - "len 2"
+  + "len 4"
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/rows/5
+  - "..AAAA.BBBB...."
+  + "..AAAA..BBB...."
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/rows/6
+  - "..AA.....BB.B.."
+  + "..AA.....BB.C.."
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/rows/7
+  - "..AA.BBB.BBBB.."
+  + "..AA.DDD...D..."
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/rows/8
+  - ".....BBBBBBBB.."
+  + ".....DDDDDDDD.."
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/rows/9
+  - "...BBBBBBBBB..."
+  + "...DDDDDD..D..."
+/preset_sidecars/1/level_99__r2c4/playable_payload/shared_world/rows/10
+  - "....BBBBBBB...."
+  + "....DDDDDDD...."
+/preset_sidecars/1/level_99__r6c12
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_99"}
+/preset_sidecars/1/level_99__r7c5
+  - "<absent>"
+  + {"substrate": "maze", "shared_world": "level_99"}
+/regions/1/level_71__r0c6/exits/2/connected_region
+  - "level_75"
+  + "level_75__r13c3"
+/regions/1/level_71__r0c6/exits/2/name
+  - "level_71__r0c6 -> level_75"
+  + "level_71__r0c6 -> level_75__r13c3"
+/regions/1/level_71__r0c6/exits/4/connected_region
+  - "level_72"
+  + "level_72__r6c17"
+/regions/1/level_71__r0c6/exits/4/name
+  - "level_71__r0c6 -> level_72"
+  + "level_71__r0c6 -> level_72__r6c17"
+/regions/1/level_72
+  - {"name": "level_72", "exits": [{"name": "level_72 -> level_71__r0c6", "connected_region": "level_71__r0c6", "access_rule": {"rule": "True_"}}, {"name": "level_72 -> level_73__r3c7", "connected_region": "level_73__r3c7", "access_rule": {"rule": "True_"}}], "locations": []}
+  + "<absent>"
+/regions/1/level_72__r0c11
+  - "<absent>"
+  + {"name": "level_72__r0c11", "exits": [{"name": "level_72__r0c11 -> level_72__r5c4", "connected_region": "level_72__r5c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_72__r5c4
+  - "<absent>"
+  + {"name": "level_72__r5c4", "exits": [{"name": "level_72__r5c4 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_72__r6c17
+  - "<absent>"
+  + {"name": "level_72__r6c17", "exits": [{"name": "level_72__r6c17 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_72__r6c17 -> level_72__r5c4", "connected_region": "level_72__r5c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "ar
+/regions/1/level_72__r9c10
+  - "<absent>"
+  + {"name": "level_72__r9c10", "exits": [{"name": "level_72__r9c10 -> level_72__r5c4", "connected_region": "level_72__r5c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_72__r9c10 -> level_72__r6c17", "connected_region": "level_72__r6c17", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "ar
+/regions/1/level_72__r9c12
+  - "<absent>"
+  + {"name": "level_72__r9c12", "exits": [{"name": "level_72__r9c12 -> level_72__r5c4", "connected_region": "level_72__r5c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_72__r9c12 -> level_72__r6c17", "connected_region": "level_72__r6c17", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "ar
+/regions/1/level_72__r9c8
+  - "<absent>"
+  + {"name": "level_72__r9c8", "exits": [{"name": "level_72__r9c8 -> level_72__r0c11", "connected_region": "level_72__r0c11", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_73__r0c4/exits/1/connected_region
+  - "level_74"
+  + "level_74__r8c18"
+/regions/1/level_73__r0c4/exits/1/name
+  - "level_73__r0c4 -> level_74"
+  + "level_73__r0c4 -> level_74__r8c18"
+/regions/1/level_73__r3c7/exits/1/connected_region
+  - "level_72"
+  + "level_72__r0c11"
+/regions/1/level_73__r3c7/exits/1/name
+  - "level_73__r3c7 -> level_72"
+  + "level_73__r3c7 -> level_72__r0c11"
+/regions/1/level_74
+  - {"name": "level_74", "exits": [{"name": "level_74 -> level_75", "connected_region": "level_75", "access_rule": {"rule": "True_"}}, {"name": "level_74 -> level_73__r0c4", "connected_region": "level_73__r0c4", "access_rule": {"rule": "True_"}}], "locations": [{"name": "Level 074 - Darkshield", "id": 30000036, "access_rule": {"rule": "True_"}, "item": {"name": "Progressive Shield", "player": 1, "adva
+  + "<absent>"
+/regions/1/level_74__r1c7
+  - "<absent>"
+  + {"name": "level_74__r1c7", "exits": [{"name": "level_74__r1c7 -> level_74__r2c10", "connected_region": "level_74__r2c10", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_74__r2c10
+  - "<absent>"
+  + {"name": "level_74__r2c10", "exits": [{"name": "level_74__r2c10 -> level_74__r1c7", "connected_region": "level_74__r1c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_74__r2c2
+  - "<absent>"
+  + {"name": "level_74__r2c2", "exits": [{"name": "level_74__r2c2 -> level_74__r1c7", "connected_region": "level_74__r1c7", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "arg
+/regions/1/level_74__r8c18
+  - "<absent>"
+  + {"name": "level_74__r8c18", "exits": [{"name": "level_74__r8c18 -> level_74__r1c7", "connected_region": "level_74__r1c7", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_74__r8c18 -> level_74__r2c10", "connected_region": "level_74__r2c10", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"i
+/regions/1/level_75
+  - {"name": "level_75", "exits": [{"name": "level_75 -> level_74", "connected_region": "level_74", "access_rule": {"rule": "True_"}}, {"name": "level_75 -> level_71__r0c6", "connected_region": "level_71__r0c6", "access_rule": {"rule": "True_"}}], "locations": []}
+  + "<absent>"
+/regions/1/level_75__r0c4
+  - "<absent>"
+  + {"name": "level_75__r0c4", "exits": [{"name": "level_75__r0c4 -> level_75__r10c4", "connected_region": "level_75__r10c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r10c4
+  - "<absent>"
+  + {"name": "level_75__r10c4", "exits": [{"name": "level_75__r10c4 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r11c3
+  - "<absent>"
+  + {"name": "level_75__r11c3", "exits": [{"name": "level_75__r11c3 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_75__r11c5
+  - "<absent>"
+  + {"name": "level_75__r11c5", "exits": [{"name": "level_75__r11c5 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_75__r11c5 -> level_75__r10c4", "connected_region": "level_75__r10c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "ar
+/regions/1/level_75__r13c3
+  - "<absent>"
+  + {"name": "level_75__r13c3", "exits": [{"name": "level_75__r13c3 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_75__r13c3 -> level_75__r10c4", "connected_region": "level_75__r10c4", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children":
+/regions/1/level_75__r3c3
+  - "<absent>"
+  + {"name": "level_75__r3c3", "exits": [{"name": "level_75__r3c3 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_75__r8c6
+  - "<absent>"
+  + {"name": "level_75__r8c6", "exits": [{"name": "level_75__r8c6 -> level_75__r0c4", "connected_region": "level_75__r0c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_75__r8c6 -> level_75__r10c4", "connected_region": "level_75__r10c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args"
+/regions/1/level_76/exits/1/connected_region
+  - "level_77"
+  + "level_77__r2c0"
+/regions/1/level_76/exits/1/name
+  - "level_76 -> level_77"
+  + "level_76 -> level_77__r2c0"
+/regions/1/level_77
+  - {"name": "level_77", "exits": [{"name": "level_77 -> level_76", "connected_region": "level_76", "access_rule": {"rule": "True_"}}, {"name": "level_77 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "True_"}}], "locations": []}
+  + "<absent>"
+/regions/1/level_77__r12c5
+  - "<absent>"
+  + {"name": "level_77__r12c5", "exits": [{"name": "level_77__r12c5 -> level_77__r2c0", "connected_region": "level_77__r2c0", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_77__r2c0
+  - "<absent>"
+  + {"name": "level_77__r2c0", "exits": [{"name": "level_77__r2c0 -> level_77__r12c5", "connected_region": "level_77__r12c5", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "a
+/regions/1/level_78__r0c16/exits
+  - "len 2"
+  + "len 5"
+/regions/1/level_78__r0c16/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_78__r0c16/exits/0/access_rule/children/1/args
+  - {"item_name": "Progressive Sword"}
+  + "<absent>"
+/regions/1/level_78__r0c16/exits/0/access_rule/children/1/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_78__r0c16/exits/0/access_rule/children/1/rule
+  - "Has"
+  + "Or"
+/regions/1/level_78__r0c16/exits/0/access_rule/rule
+  - "Or"
+  + "And"
+/regions/1/level_78__r0c16/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_78__r0c16/exits/1/access_rule/rule
+  - "True_"
+  + "Or"
+/regions/1/level_78__r0c16/exits/1/connected_region
+  - "level_77"
+  + "level_78__r1c9"
+/regions/1/level_78__r0c16/exits/1/name
+  - "level_78__r0c16 -> level_77"
+  + "level_78__r0c16 -> level_78__r1c9"
+/regions/1/level_78__r0c2/exits
+  - "len 2"
+  + "len 5"
+/regions/1/level_78__r0c2/exits/0/access_rule/children
+  - "len 3"
+  + "len 2"
+/regions/1/level_78__r0c2/exits/0/access_rule/children/1/args
+  - {"item_name": "Progressive Sword"}
+  + "<absent>"
+/regions/1/level_78__r0c2/exits/0/access_rule/children/1/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]
+/regions/1/level_78__r0c2/exits/0/access_rule/children/1/rule
+  - "Has"
+  + "Or"
+/regions/1/level_78__r0c2/exits/0/access_rule/rule
+  - "Or"
+  + "And"
+/regions/1/level_78__r0c2/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_78__r0c2/exits/1/access_rule/rule
+  - "True_"
+  + "And"
+/regions/1/level_78__r0c2/exits/1/connected_region
+  - "level_79__r8c4"
+  + "level_78__r1c9"
+/regions/1/level_78__r0c2/exits/1/name
+  - "level_78__r0c2 -> level_79__r8c4"
+  + "level_78__r0c2 -> level_78__r1c9"
+/regions/1/level_78__r1c9
+  - "<absent>"
+  + {"name": "level_78__r1c9", "exits": [{"name": "level_78__r1c9 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}
+/regions/1/level_78__r3c1
+  - "<absent>"
+  + {"name": "level_78__r3c1", "exits": [{"name": "level_78__r3c1 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_78__r8c8
+  - "<absent>"
+  + {"name": "level_78__r8c8", "exits": [{"name": "level_78__r8c8 -> level_78__r0c16", "connected_region": "level_78__r0c16", "access_rule": {"rule": "And", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name":
+/regions/1/level_80__r0c2/exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r0c2/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r0c2/exits/1/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r12c3
+  - {"name": "level_80__r12c3", "exits": [{"name": "level_80__r12c3 -> level_80__r8c4", "connected_region": "level_80__r8c4", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}], "locations": []}
+  + "<absent>"
+/regions/1/level_80__r12c4
+  - "<absent>"
+  + {"name": "level_80__r12c4", "exits": [{"name": "level_80__r12c4 -> level_80__r13c2", "connected_region": "level_80__r13c2", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", 
+/regions/1/level_80__r13c2
+  - "<absent>"
+  + {"name": "level_80__r13c2", "exits": [{"name": "level_80__r13c2 -> level_80__r12c4", "connected_region": "level_80__r12c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", 
+/regions/1/level_80__r16c1/exits/0/connected_region
+  - "level_80__r12c3"
+  + "level_80__r13c2"
+/regions/1/level_80__r16c1/exits/0/name
+  - "level_80__r16c1 -> level_80__r12c3"
+  + "level_80__r16c1 -> level_80__r13c2"
+/regions/1/level_80__r6c4/exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r6c4/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r6c4/exits/1/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r8c1/exits/0/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r8c1/exits/0/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r8c1/exits/0/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r8c1/exits/1/access_rule/args
+  - {"item_name": "Dark Suit"}
+  + "<absent>"
+/regions/1/level_80__r8c1/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Dark Suit"}}, {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}]}]
+/regions/1/level_80__r8c1/exits/1/access_rule/rule
+  - "Has"
+  + "And"
+/regions/1/level_80__r8c4/exits
+  - "len 2"
+  + "len 3"
+/regions/1/level_80__r8c4/exits/0/connected_region
+  - "level_80__r12c3"
+  + "level_80__r12c4"
+/regions/1/level_80__r8c4/exits/0/name
+  - "level_80__r8c4 -> level_80__r12c3"
+  + "level_80__r8c4 -> level_80__r12c4"
+/regions/1/level_80__r8c4/exits/1/connected_region
+  - "level_80__r6c4"
+  + "level_80__r13c2"
+/regions/1/level_80__r8c4/exits/1/name
+  - "level_80__r8c4 -> level_80__r6c4"
+  + "level_80__r8c4 -> level_80__r13c2"
+/regions/1/level_98/exits/0/connected_region
+  - "level_99__r2c7"
+  + "level_99__r7c5"
+/regions/1/level_98/exits/0/name
+  - "level_98 -> level_99__r2c7"
+  + "level_98 -> level_99__r7c5"
+/regions/1/level_99__r2c4/exits/0/connected_region
+  - "level_99__r2c7"
+  + "level_99__r7c5"
+/regions/1/level_99__r2c4/exits/0/name
+  - "level_99__r2c4 -> level_99__r2c7"
+  + "level_99__r2c4 -> level_99__r7c5"
+/regions/1/level_99__r2c7/exits/0/access_rule/args
+  - "<absent>"
+  + {"item_name": "Dark Suit"}
+/regions/1/level_99__r2c7/exits/0/access_rule/children
+  - [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}]
+  + "<absent>"
+/regions/1/level_99__r2c7/exits/0/access_rule/rule
+  - "Or"
+  + "Has"
+/regions/1/level_99__r2c7/exits/0/connected_region
+  - "level_99__r2c4"
+  + "level_99__r6c12"
+/regions/1/level_99__r2c7/exits/0/name
+  - "level_99__r2c7 -> level_99__r2c4"
+  + "level_99__r2c7 -> level_99__r6c12"
+/regions/1/level_99__r2c7/exits/1/access_rule/children
+  - "<absent>"
+  + [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}, {"rule": "Has", "args": {"item_name": "Wand"}}, {"rule": "Has", "args": {"item_name": "Progressive Shield", "count": 2}}, {"rule": "Has", "args": {"item_name": "Dark Suit"}}]
+/regions/1/level_99__r2c7/exits/1/access_rule/rule
+  - "True_"
+  + "Or"
+/regions/1/level_99__r2c7/exits/1/connected_region
+  - "level_98"
+  + "level_99__r7c5"
+/regions/1/level_99__r2c7/exits/1/name
+  - "level_99__r2c7 -> level_98"
+  + "level_99__r2c7 -> level_99__r7c5"
+/regions/1/level_99__r6c12
+  - "<absent>"
+  + {"name": "level_99__r6c12", "exits": [{"name": "level_99__r6c12 -> level_99__r2c7", "connected_region": "level_99__r2c7", "access_rule": {"rule": "Has", "args": {"item_name": "Dark Suit"}}}, {"name": "level_99__r6c12 -> level_99__r7c5", "connected_region": "level_99__r7c5", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args
+/regions/1/level_99__r7c5
+  - "<absent>"
+  + {"name": "level_99__r7c5", "exits": [{"name": "level_99__r7c5 -> level_99__r2c4", "connected_region": "level_99__r2c4", "access_rule": {"rule": "Or", "children": [{"rule": "Has", "args": {"item_name": "Progressive Sword"}}, {"rule": "Has", "args": {"item_name": "Ghost Spear"}}]}}, {"name": "level_99__r7c5 -> level_99__r2c7", "connected_region": "level_99__r2c7", "access_rule": {"rule": "Or", "chil
+/sphere_log/68/player_data/1/new_accessible_regions
+  - "len 15"
+  + "len 29"
+/sphere_log/68/player_data/1/new_accessible_regions/6
+  - "level_72"
+  + "level_72__r0c11"
+/sphere_log/68/player_data/1/new_accessible_regions/7
+  - "level_73__r0c4"
+  + "level_72__r5c4"
+/sphere_log/68/player_data/1/new_accessible_regions/8
+  - "level_73__r3c7"
+  + "level_72__r6c17"
+/sphere_log/68/player_data/1/new_accessible_regions/9
+  - "level_74"
+  + "level_72__r9c10"
+/sphere_log/68/player_data/1/new_accessible_regions/10
+  - "level_75"
+  + "level_72__r9c12"
+/sphere_log/68/player_data/1/new_accessible_regions/11
+  - "level_80__r0c2"
+  + "level_72__r9c8"
+/sphere_log/68/player_data/1/new_accessible_regions/12
+  - "level_83"
+  + "level_73__r0c4"
+/sphere_log/68/player_data/1/new_accessible_regions/13
+  - "level_84__r2c4"
+  + "level_73__r3c7"
+/sphere_log/68/player_data/1/new_accessible_regions/14
+  - "level_85"
+  + "level_74__r1c7"
+/sphere_log/75/player_data/1/new_accessible_regions
+  - "len 6"
+  + "len 10"
+/sphere_log/75/player_data/1/new_accessible_regions/2
+  - "level_77"
+  + "level_77__r12c5"
+/sphere_log/75/player_data/1/new_accessible_regions/3
+  - "level_78__r0c16"
+  + "level_77__r2c0"
+/sphere_log/75/player_data/1/new_accessible_regions/4
+  - "level_78__r0c2"
+  + "level_78__r0c16"
+/sphere_log/75/player_data/1/new_accessible_regions/5
+  - "level_79__r8c4"
+  + "level_78__r0c2"
+/sphere_log/77/player_data/1/new_accessible_regions
+  - "len 26"
+  + "len 29"
+/sphere_log/77/player_data/1/new_accessible_regions/13
+  - "level_80__r12c3"
+  + "level_80__r12c4"
+/sphere_log/77/player_data/1/new_accessible_regions/14
+  - "level_80__r16c1"
+  + "level_80__r13c2"
+/sphere_log/77/player_data/1/new_accessible_regions/15
+  - "level_80__r6c4"
+  + "level_80__r16c1"
+/sphere_log/77/player_data/1/new_accessible_regions/16
+  - "level_80__r8c1"
+  + "level_80__r6c4"
+/sphere_log/77/player_data/1/new_accessible_regions/17
+  - "level_80__r8c4"
+  + "level_80__r8c1"
+/sphere_log/77/player_data/1/new_accessible_regions/18
+  - "level_82"
+  + "level_80__r8c4"
+/sphere_log/77/player_data/1/new_accessible_regions/19
+  - "level_93__r10c7"
+  + "level_82"
+/sphere_log/77/player_data/1/new_accessible_regions/20
+  - "level_93__r5c7"
+  + "level_93__r10c7"
+/sphere_log/77/player_data/1/new_accessible_regions/21
+  - "level_96"
+  + "level_93__r5c7"
+/sphere_log/77/player_data/1/new_accessible_regions/22
+  - "level_97"
+  + "level_96"
+/sphere_log/77/player_data/1/new_accessible_regions/23
+  - "level_98"
+  + "level_97"
+/sphere_log/77/player_data/1/new_accessible_regions/24
+  - "level_99__r2c4"
+  + "level_98"
+/sphere_log/77/player_data/1/new_accessible_regions/25
+  - "level_99__r2c7"
+  + "level_99__r2c4"

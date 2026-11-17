@@ -1,0 +1,23 @@
+DEPTH 1 {"alive":9,"best":{"s":338.04,"at":[67.5,211.5],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 2 {"alive":20,"best":{"s":322.04,"at":[63.4,211.4],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 3 {"alive":27,"best":{"s":305.97,"at":[60.5,204.5],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 4 {"alive":36,"best":{"s":305.93,"at":[60.6,200.6],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 5 {"alive":46,"best":{"s":305.9,"at":[52.8,196.8],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 6 {"alive":62,"best":{"s":305.85,"at":[58,192.6],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 7 {"alive":62,"best":{"s":289.81,"at":[62.9,188.5],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 8 {"alive":74,"best":{"s":273.76,"at":[68,183.8],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 9 {"alive":83,"best":{"s":273.71,"at":[67,179],"ch":["lavarunner@8,112(17,121)","lavarunner@104,64(112,72)"]}}
+DEPTH 10 {"alive":107,"best":{"s":257.66,"at":[67.4,174],"ch":["lavarunner@8,112(19,123)","lavarunner@104,64(112,72)"]}}
+DEPTH 11 {"alive":117,"best":{"s":257.61,"at":[67.5,168.9],"ch":["lavarunner@8,112(21,125)","lavarunner@104,64(112,72)"]}}
+DEPTH 12 {"alive":120,"best":{"s":241.61,"at":[80.1,168.6],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 13 {"alive":141,"best":{"s":241.53,"at":[80.1,161.3],"ch":["lavarunner@8,112(25,129)","lavarunner@104,64(112,72)"]}}
+DEPTH 14 {"alive":131,"best":{"s":241.53,"at":[89.3,160.1],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 15 {"alive":100,"best":{"s":225.58,"at":[96.6,164.5],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 16 {"alive":125,"best":{"s":225.56,"at":[98.7,161.2],"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]}}
+DEPTH 17 {"alive":100,"best":{"s":225.56,"at":[96.1,161.8],"ch":["lavarunner@8,112(27,126)","lavarunner@104,64(112,72)"]}}
+DEPTH 18 {"alive":68,"best":{"s":241.52,"at":[81.8,160.2],"ch":["lavarunner@8,112(37,135)","lavarunner@104,64(112,72)"]}}
+DEPTH 19 {"alive":59,"best":{"s":241.53,"at":[82.1,160.3],"ch":["lavarunner@8,112(25,127)","lavarunner@104,64(112,72)"]}}
+DEPTH 20 {"alive":29,"best":{"s":241.53,"at":[80,160.8],"ch":["lavarunner@8,112(28,131)","lavarunner@104,64(112,72)"]}}
+DEPTH 21 {"alive":5,"best":{"s":257.52,"at":[71,160.1],"ch":["lavarunner@8,112(30,133)","lavarunner@104,64(112,72)"]}}
+DEPTH 22 {"alive":0,"best":null}
+BEAM {"boot":[75,64,208],"goal":[64,0,74],"items":[],"width":48,"seg":4,"depth":200,"tried":7605,"survivors":1521,"verdict":"NO MODEL ROUTE","ticks":null,"bestHitFree":{"tiles":14,"at":[98.7,161.2],"ticks":64,"ch":["lavarunner@8,112(16,120)","lavarunner@104,64(112,72)"]},"ms":14447}
