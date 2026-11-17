@@ -92,6 +92,8 @@ import {
 } from '../flashPanel/mapDocumentPath.js';
 import { resolveMazeArrival } from './mazeArrival.js';
 import { loadMazeTileArt } from './mazeTileArt.js';
+import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
+import { placedTileKindRefusals } from './mazeTileKinds.js';
 import { drawMazeThings, mazeThingLines, thingAt } from './mazeThingOverlay.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
@@ -3540,7 +3542,9 @@ export class MazeRoomUI {
 
         const swatches = document.createElement('div');
         swatches.className = 'maze-room-editor-swatches';
-        for (const entry of PALETTE_ENTRIES) {
+        // ⛓ CONTENT SETS TILE-3 — the TILE KIND entry is the maze LAB's (it needs a kind picker over the loaded packs'
+        //   declared kinds); the panel's editor does not offer it.
+        for (const entry of PALETTE_ENTRIES.filter((e) => e.type !== PALETTE_TYPES.TILE_KIND)) {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'maze-room-editor-swatch';
@@ -4021,7 +4025,8 @@ export class MazeRoomUI {
             if (this._tileArt?.key !== key) return;
             if (loaded.failed.length) console.warn(`[mazeRoom] tile art: ${loaded.failed.length} sheet(s) failed (drawn in the maze's own colours): ${loaded.failed.join('; ')}`);
             this._tileArt = { status: 'ready', key, ...loaded };
-            if (loaded.tileArt) this.render();
+            // ⛓ TILE-3: a world with placed tile kinds redraws once the stack's declared kinds are known, art or not.
+            if (loaded.tileArt || this._tileKindsShown()) this.render();
         }, (err) => {
             if (this._tileArt?.key !== key) return;
             console.error(`[mazeRoom] tile art did not load (drawn in the maze's own colours): ${err.message}`);
@@ -4084,6 +4089,15 @@ export class MazeRoomUI {
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);
+        // ⛓ CONTENT SETS TILE-3 — the region's placed tile kinds, beside drawWorld (`mazeTileKindOverlay.js`), once the
+        //   world's stack has resolved (its declared kinds say each one's base): before that, nothing, rather than a
+        //   placeholder that the load would replace. Never on a Seedling-atlas world.
+        this._tileKindDraws = this._tileKindsShown() && this._tileKindsReady()
+            ? drawMazeTileKinds(ctx, this.world, {
+                tilePx: view.tilePx, playerPos: view.playerPos, fogEnabled: view.fogEnabled,
+                isTileVisible: view.isTileVisible, tileArt: view.tileArt, tileKinds: this._tileArt?.tileKinds ?? null,
+            })
+            : [];
         // ⛓ CONTENT SETS S2 — the region's thing, beside drawWorld (`mazeThingOverlay.js`). Never on a Seedling-atlas
         //   world (the Seedling skin draws there), as the tile art is not.
         this._thingDraws = this._thingsShown()
@@ -4092,6 +4106,32 @@ export class MazeRoomUI {
                 isTileVisible: view.isTileVisible, tileArt: view.tileArt,
             })
             : [];
+    }
+
+    /** ⛓ TILE-3 — whether this world's placed tile kinds are drawn: it has some, and it is not a Seedling-atlas world. */
+    _tileKindsShown() {
+        return this.world?.tileKinds instanceof Map && this.world.tileKinds.size > 0 && !this._seedlingSkin();
+    }
+
+    /** ⛓ TILE-3 — the world's stack has resolved (loaded, failed, or empty), so its declared kinds are known. */
+    _tileKindsReady() {
+        if (this._tileArt?.key !== this._tileArtStack().join(',')) return false;
+        return this._tileArt.status === 'ready' || this._tileArt.status === 'failed';
+    }
+
+    /**
+     * ⛓ TILE-3 — what the in-app row reads: the placed kinds, how each was last drawn (the chain's step), and the
+     * placed kinds the world's loaded packs refuse (`mazeTileKinds.placedTileKindRefusals`: undeclared, or wall-based;
+     * each still DRAWS — the placeholder or its base — and never throws).
+     */
+    getTileKindStatus() {
+        const ready = this._tileKindsShown() && this._tileKindsReady();
+        return {
+            shown: this._tileKindsShown(),
+            ready,
+            draws: JSON.parse(JSON.stringify(this._tileKindDraws ?? [])),
+            refusals: ready ? placedTileKindRefusals(this.world, this._tileArt?.tileKinds ?? {}) : [],
+        };
     }
 
     /** ⛓ S2 — whether this world's things are drawn and read: it has some, and it is not a Seedling-atlas world. */
