@@ -357,6 +357,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "live-only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "quiet"
                 }
             ],

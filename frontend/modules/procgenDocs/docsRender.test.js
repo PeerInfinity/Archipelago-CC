@@ -326,7 +326,9 @@ describe('⛓ the links the render emits', () => {
         //   loop-recording.md § The start gate and back, and the registry's `loopSupport.actionGate` row → it (3 doc).
         //   435 → 437: ActionNodes AN-1b — the registry's `fillRules` row → concepts.md and its `strictQueueActions` row →
         //   action-nodes.md § No explore (2 doc).
-        expect(checked).toBe(437);
+        //   437 → 440: ActionNodes AN-3a — the registry's `loopBot` row → action-nodes.md § The bot planner, that § ⇄
+        //   playback-and-debugging.md § The playback bot (3 doc).
+        expect(checked).toBe(440);
     });
 
     it('tags each link with the kind that produced it', () => {
