@@ -290,11 +290,17 @@ The map (`seedlingDemo/seedlingSetMap.js`, handed to the shared mount as `overvi
 | OPEN | double-click | opens the room in the room editor, as the rooms table's OPEN does |
 | CONNECT | `c` | the source room, optionally a door tick on it (picks that exit), then the target: one `connect`, with the return door from `#editSetTargetExit` |
 | DISCONNECT | `d` | first click on a link picks the door it means (the room at the nearer end; the exit list chooses among several) and says what the op will do, the ordinal shift included (`#editSetMapNote`); a second click on the same link applies one `disconnect`. A pit or a `named_rooms` arrival is refused by name |
-| ZOOM | `+` / `=`, `-`, `0` (fit), Ctrl+wheel | zooms the map; the panel scrolls to pan |
+| PAN | drag (press, move 4 px or more, release) | moves the map with the pointer; a drag is never read as a click |
+| ZOOM | `+` / `=`, `-` (or the − / + buttons) | zooms about the middle of the view |
+| ZOOM AT THE POINTER | Ctrl+wheel (a trackpad pinch) | zooms keeping the point under the pointer where it is. The plain wheel still scrolls the page |
+| FIT | `0` or **fit** | every room inside the view, both ways |
+| CENTRE ON START | **centre on start** (`#editSetCentreStart`) | puts the manifest's start room in the middle of the view, at the same zoom |
 | (clear the tool) | `Escape` | disarms CONNECT or DISCONNECT and drops a picked link |
 | UNDO / REDO | `Ctrl/Cmd+Z` with the map focused | the SET session's undo |
 
 Every refusal is the adapter's own sentence (self-join, a return ordinal the target lacks, an exit with children, a door a location is marked on). Tests: `seedlingEditorE3.test.js`, the `overviewMap` rows of `procgenCore/setEditorView.test.js`, and the browser row `scripts/procgen/check-seedling-editor-e3.mjs`.
+
+**The camera.** The map opens exactly as it did before it had a camera: the canvas is the whole map at zoom 1 and the panel's scroll bars move it. The first pan, zoom, FIT or CENTRE ON START switches to the camera (`procgenCore/setMapCamera.js` over `procgenCore/mapCamera.js`, the Region Map panel's camera): the canvas becomes the part of the panel that was showing, so nothing jumps, and from then on the camera pans and zooms. Every click is read through the camera, so select, OPEN, CONNECT, the door ticks and DISCONNECT pick what is drawn under the pointer at any pan or zoom. Toggling to the strip and back opens the map at the start view again. The readout `__editorEdit.set.map` gives `camera` (`x`, `y`: the map point at the middle of the canvas; `zoom`; `engaged`), `viewport` and `start`; its `zoom`, `frame` and `cells` are as drawn. Tests: `procgenCore/setMapCamera.test.js`, the camera rows of `procgenCore/setEditorView.test.js`, and section 8 of `check-seedling-editor-e3.mjs` (`scripts/procgen/setMapCameraClaims.js`, the same claims the maze lab runs).
 
 **Control ids.** `genEdit*` is a control both arms mount; `edit*` is a control only the EDIT arm has (inside `#editOnly`). `scripts/procgen/check-seedling-editor-arm.mjs` checks this over the live DOM.
 
