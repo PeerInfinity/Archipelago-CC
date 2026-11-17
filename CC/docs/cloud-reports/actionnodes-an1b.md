@@ -8,7 +8,8 @@ resets when the loop resets"), 19:59:48Z discovery + explore (D1–D6), 21:09:12
 the planner's two rulings under it (two-way edges; the discovery fixes fold into this slice). Also PL-2's "next slice's
 line" (the preset on pack ids, the fill rules onto the registry entry).
 
-The preset regenerated ONCE (part 6). 40 files, +1613/−235 against `48b7d39c30`. Gitlinks moved: 0.
+The preset regenerated ONCE (part 6). Merged with AN-2's landed main `ddf3630b24` (train 137) once, at
+`42b1bdd46c` — the FINAL tip. Against that main: 41 files, +1873/−235 (the same diff as base → code tip). Gitlinks moved: 0.
 
 ## The parts as built
 
@@ -224,6 +225,39 @@ Docs: `docs/json/developer/procgen/action-nodes.md` (§ The compiler, § The run
    module's `getDiscoverySettings` directly, and ask Loops' own `_lookupSubstrateId` for the node's substrate.
 
 ## CI
+
+### At the merged tip `42b1bdd46c` (FINAL: main `ddf3630b24` merged once)
+
+The merge conflicted only in the two generated files (`docs/json/developer/procgen/README.md`,
+`procgenDocs/generated/docsIndex.js`): taken from main, then regenerated (`generate-procgen-reference.mjs`, `--check`
+clean). Census re-measured: `procgenDocs/` 8 files / 495 tests pass with no count moved (docs 437, `doc` 329). The
+slice's bounded vitest (actionNodes, discovery, strictQueueActions, the Region Graph pin, procgenCore, gameState): 90
+files / 2442 tests pass. `action-nodes-compile.mjs --check`, `check-sidecar-fields.mjs`,
+`check-loop-costs-one-model.mjs` exit 0; `check-procgen-docs.mjs`: ALL CHECKS PASSED.
+
+| Run | Result |
+|---|---|
+| `unittests` push 44163812114 | success |
+| `JavaScript Unit Tests` push 44163812084 | success (18 jobs success, 2 skipped: the train shards and the already-green guard): suite `vitest (unfiltered)` 28423 passed, 0 skipped, 0 failed (1323 files); slow battery 437/437 |
+| `train_only` 44163832968 | success, Train-tier shards 1–3 |
+| TT 44163838273 | success, every batch HEADROOM OK: fast 265.0 s of 600 (44%), fast bundled 271.2 s (45%), playback-bot 67.1 s (11%), seedling-wasm 166.5 s (28%), apworld 184.8 s (31%), seedling-js 220.3 s (37%), seedling-js-solver 190.7 s (32%) |
+| feature-checks 44163842635 | success: 66.4 s of 600 (11%) |
+
+The eight ActionNodes rows in TT, PASSED on both boots (fast shown):
+
+```
+[PROGRESS 86/109] an-load-and-act-once PASSED 0.4s
+[PROGRESS 87/109] an-refused-action-stops-queue PASSED 1.1s
+[PROGRESS 88/109] an-results-reach-ledger PASSED 0.3s
+[PROGRESS 89/109] an-loop-reset-restores-boosts PASSED 0.6s
+[PROGRESS 90/109] an-check-once-action-repeats PASSED 0.6s
+[PROGRESS 91/109] an-explore-refused PASSED 0.4s
+[PROGRESS 92/109] an-discovery-sets PASSED 0.4s
+[PROGRESS 93/109] an-two-way-move PASSED 0.3s
+```
+
+Gitlinks against main: 0. This report commit is docs-only on top of `42b1bdd46c`; its push's JSUT is quoted below
+if the path filter skips it.
 
 ### At the code tip `09fc99f608` (before the main merge)
 
