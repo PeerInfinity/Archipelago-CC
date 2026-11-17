@@ -9,16 +9,17 @@
  * below; sub-regions fold into their level; it loads for any world (no `grid_cell`, no substrate hook → the generic
  * layout and boxes); cells sized by level by default, uniform cells as a toggle.
  *
- * ⛓ v1 PUBLISHES NOTHING: no region moves, no location checks (clicks only select). Clicks are step 4, through
- * `regionView/regionActions.js`. ⇒ no `loops/loopModeExemptions.js` entry is needed today. ⚠ STEP 4: a Region Map
- * click's `source` that does not start with `regionGraph` is NOT a loop-mode planning source
- * (`loopModeExemptions.js` `source.startsWith('regionGraph')`) — when the clicks land, add the Region Map's own
- * prefix there (and its pin in `loopModeExemptions.test.js`) if its clicks should plan the way the Region Graph's do.
+ * ⛓ CLICKS (step 4) do what the Region Graph's clicks do (`regionMapClicks.js`), through
+ * `regionView/regionActions.js`, under THIS module's dispatcher and event bus (registered below) and its own
+ * `regionMap-*` sources / `regionMap*Check` originators. `regionMap` is a loop-mode planning prefix
+ * (`loops/loopModeExemptions.js`), as `regionGraph` is. ⚖ The Region Graph's control-panel toggles
+ * (`moduleSettings.regionGraph.*`) choose what a click does in BOTH panels until the Region Map has its own copy.
  *
  * Open it from the panel menu ("Region Map"); it is in no layout preset.
  */
 import { RegionMapUI } from './regionMapUI.js';
-import { REGION_MAP_SETTINGS_SCHEMA, panelInstances } from './regionMapSettings.js';
+import { REGION_MAP_SETTINGS_SCHEMA, moduleHandles, panelInstances } from './regionMapSettings.js';
+import { REGION_MAP_NODE_SELECTED } from './regionMapClicks.js';
 
 export const moduleInfo = {
     name: 'regionMap',
@@ -38,8 +39,18 @@ export const getPanelInstances = () => [...panelInstances];
 export function register(registrationApi) {
     registrationApi.registerPanelComponent('regionMapPanel', RegionMapUI);
     registrationApi.registerSettingsSchema(REGION_MAP_SETTINGS_SCHEMA);
+    // ⛓ step 4: the clicks' senders and publishers — the same set the Region Graph registers for its own clicks.
+    registrationApi.registerEventBusPublisher('ui:activatePanel');
+    registrationApi.registerEventBusPublisher('ui:navigateToRegion');
+    registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+    registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+    registrationApi.registerEventBusPublisher(REGION_MAP_NODE_SELECTED);
 }
 
-export function initialize() {}
+export function initialize(mId, priorityIndex, initializationApi) {
+    // Held in regionMapSettings.js, not here: the UI reads them, and a UI → index import is a TDZ cycle.
+    moduleHandles.dispatcher = initializationApi?.getDispatcher?.() ?? null;
+    moduleHandles.eventBus = initializationApi?.getEventBus?.() ?? null;
+}
 
 export function postInitialize() {}

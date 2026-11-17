@@ -14,6 +14,10 @@
  * Sources:
  *   - 'regionGraph-*'        — region-graph authoring clicks
  *     (addToPath / overwritePath / oneStep / direct move).
+ *   - 'regionMap-*'          — the Region Map panel's clicks (region-map
+ *     step 4): the same four shapes as the Region Graph's, through the
+ *     shared regionView/regionActions.js (regionMap/regionMapClicks.js
+ *     REGION_MAP_SOURCES), so they plan the same way.
  *   - 'procgenPlayer-*'      — procgenPlayer's synthesized transitions
  *     (the initial Menu → first-region placement).
  *   - 'menuPanel-*'          — the menu panel's exit buttons, its
@@ -26,6 +30,7 @@
 export function isLoopModePlanningSource(source) {
     if (typeof source !== 'string') return false;
     return source.startsWith('regionGraph')
+        || source.startsWith('regionMap')
         || source.startsWith('procgenPlayer')
         || source.startsWith('menuPanel');
 }
