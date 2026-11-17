@@ -11678,6 +11678,19 @@ function lobberHoldRefusal(run, ticks, what) {
  * the stance from the presser's rect, the duration from the mechanism.
  */
 function execHold(run, perTick, resolved, ctx) {
+    // ⛓ hammer-phase FADE-MOVE: a latched group's fade (the census counts it; the move, ON only, is tried before a pace)
+    if (resolved.latched === true && resolved.stance === null) {
+        // `latchedFadeWait`'s own `until.why` names the responder first
+        const lockId = /^(\S+@-?\d+,-?\d+) is open/.exec(String(resolved.hold.until?.why ?? ''))?.[1] ?? null;
+        fadeWaitSeen(run, perTick, 'latched', lockId, ctx.what);
+        const fm = lockId === null || !FADE_MOVE.enabled ? null : fadeMoveTry(run, perTick, { kind: 'latched', lockId,
+            open: (r) => resolved.hold.until.test(r), bound: resolved.hold.ticks }, ctx);
+        if (fm) {
+            return { presser: null, latched: true, ticks: resolved.hold.ticks, heldFor: fm.moved.ticks,
+                stoppedOn: resolved.hold.until.why, at: { ...fm.moved.target }, opened: [], armed: [], traps: [],
+                volleys: 0, wrote: [], fadeMove: fm.moved };
+        }
+    }
     // ⛓ seedling-fidelity-movingwait D2: `null` unless MOVING_WAIT is ON and the still wait prices a bomb.
     const pace = pacedHoldPlan(run, resolved, ctx.what);
     if (pace === null) lobberHoldRefusal(run, resolved.hold.ticks, ctx.what);
@@ -11734,7 +11747,8 @@ function orphanPresserNamed(e, run, at) {
 
 /**
  * ⛓⛓⛓ seedling-fidelity-movingwait D2 — **A LATCHED WAIT INSIDE A LOBBER'S REACH PACES** (behind `MOVING_WAIT`,
- * which is `CONTACT_FIDELITY.movingWait`, OFF).
+ * which is `CONTACT_FIDELITY.movingWait`, ON by default — `contactFidelity.js`'s defaults; this said "OFF" until
+ * hammer-phase FADE-MOVE). A latched wait asks `FADE_MOVE` first (`execHold`); a paced hold is its fallback.
  *
  * BOMBPUSHER measured the hit as AVOIDABLE: on the three damage-on L40 walks every would-be hit landed on a player
  * who had moved 0–9 px in the 31 ticks after the launch, and every blast that landed on a walking player missed. A
@@ -20822,6 +20836,16 @@ function execKillByChaser(run, perTick, resolved, ctx) {
      * pass stands until both have passed the clear tick (measured: L60 step 112's run clock led its tape by 35).
      */
     const waitBound = Math.max(0, clearTick - perTick.length) + HOLD_SLACK;
+    // ⛓ hammer-phase FADE-MOVE: the fade runs from the last removal (the census counts it; the move only ON, and only
+    // when the fork opens the lock inside the bound — a wait that ends in the declaration below is never moved)
+    fadeWaitSeen(run, perTick, 'killlockChaser', resolved.lock.id, ctx.what);
+    const fm = fadeMoveTry(run, perTick, { kind: 'killlockChaser', lockId: resolved.lock.id, rect: resolved.lock.rect,
+        open: (r) => !killLockStands(r, resolved.lock), bound: waitBound + 1 }, ctx);
+    if (fm) {
+        return { kind: 'kill', verb: 'kill', arm: 'chaser', lock: resolved.lock.id, phases,
+            removedAt: last.t, fade: fadeTicks, openedAt: run.ticksCompleted,
+            from, ticks: perTick.length - from, fadeMove: fm.moved };
+    }
     for (let i = 0; i <= waitBound; i += 1) {
         if (!killLockStands(run, resolved.lock)) {
             return { kind: 'kill', verb: 'kill', arm: 'chaser', lock: resolved.lock.id, phases,
@@ -21853,6 +21877,22 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
         earlyWalk.fade = fade;
         earlyWalk.clearTick = clearTick;
         earlyWalk.waits = remaining;
+    }
+    // ⛓ hammer-phase FADE-MOVE: the fade runs from the last removal (census always; the move ON only, never after ⚖ 47's
+    // early walk, which is this move's one case already taken)
+    fadeWaitSeen(run, perTick, 'killlockPress', resolved.lock.id, ctx.what);
+    const fm = earlyWalk !== null ? null : fadeMoveTry(run, perTick, { kind: 'killlockPress', lockId: resolved.lock.id,
+        rect: resolved.lock.rect, open: (r) => !killLockStands(r, resolved.lock), bound: remaining + HOLD_SLACK + 1 }, ctx);
+    if (fm) {
+        return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
+            landings, cycles, bodies: resolved.bodies,
+            ...(economies ? { earlyWalk } : {}),
+            ...(phaseStalls.length ? { phaseStalls } : {}),
+            ...(escapes.length ? { escapes } : {}),
+            ...(fellBack.length ? { fellBack } : {}),
+            ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}),
+            ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}),
+            ...(opp !== null ? { opportunistic: oppStrikeRows(opp) } : {}), fadeMove: fm.moved };
     }
     for (let i = 0; i <= remaining + HOLD_SLACK; i += 1) {
         if (!killLockStands(run, resolved.lock)) {
@@ -23064,6 +23104,14 @@ function execKeylock(run, perTick, resolved, ctx) {
         if (!touched && keyLineTouches(playerBoxAt(run.state.x, run.state.y),
             (run.world.activators ?? []).find((a) => a.id === resolved.lock).keyLine)) {
             touched = true;
+            // ⛓ hammer-phase FADE-MOVE: the key fade has latched (the census counts it; the move only ON)
+            fadeWaitSeen(run, perTick, 'keylock', resolved.lock, ctx.what);
+            const fm = fadeMoveTry(run, perTick, { kind: 'keylock', lockId: resolved.lock,
+                open: (r) => resolved.hold.until.test(r), bound: resolved.hold.ticks - spent - 1 }, ctx);
+            if (fm) {
+                return { verb: 'keylock', target: resolved.lock, from,
+                    ticks: perTick.length - from, touchedAt: touched, fadeMove: fm.moved };
+            }
         }
     }
     return fail(`${ctx.what}: ${resolved.lock} did not open inside its own derived bound `
@@ -23135,6 +23183,268 @@ function keylockStandWalk(run, resolved) {
         };
     };
     return { stand: { ticks: resolved.hold.ticks, keys } };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE FADE-MOVE — **A LATCHED FADE IS NOT A REASON TO STAND STILL** (`FADE_MOVE`, OFF).
+ *
+ * ⚖ The user (2026-11-16): the solver should *"not just stand still while it's waiting for a fade. It should try to
+ * move towards the place it will want to be when the fade finishes, avoiding danger along the way"*. Four waits are
+ * covered, each one whose activation has LATCHED, so the player's presence is not what keeps the fade going (fidelity-21
+ * witnessed (1)-(3), (5) in AS3 at ccdf189): the BossLock key fade (`execKeylock`, after the key line latches,
+ * `BossLock.as:62-66`), a latched Lock/Cover group (`runLatchedWait` via `execHold`), and the kill-lock's fade after the
+ * last removal (`execKillByChaser`, the press arm). The ceiling arm and the button holds are not: presence IS their
+ * activation (`Button.as:26-39`). ⛔ The two kill-lock waits are COUNTED but not moved: their open is a v9 declaration
+ * the measuring pass cannot see, and a move in one pass only breaks the two-pass agreement (measured, `fadeMoveTry`).
+ *
+ * THE MOVE (`fadeMoveTry`, asked where today's empty-input loop starts):
+ *   - the target is the MOUTH — the tile before the activator on the side the player enters from (`preLockStance`, ⚖ 47's
+ *     own choice) — and only when the route to the caller's `ctx.aim` needs the opening (the aim does not plan with the
+ *     activator shut). No aim, no mouth: no target;
+ *   - every candidate is played on the segment's FORK (`ctx.fork`), the walk (`forkWalkTo`) and then the empty-input
+ *     stand until the executor's own open test holds, inside the wait's bound. A candidate is refused on any player hit or
+ *     death, any level crossing (⛓ fidelity-21 caveat A: a latch lives on a room entity and the durable flag is written
+ *     only at the fade's end — in this game one level is one room, `FP.world`), or no open inside the bound;
+ *   - the still wait is played on a fork too. If it is hitless, the move is taken only when it reaches the mouth STRICTLY
+ *     sooner than standing then walking there. If it takes a hit (L12's case), a hitless move wins regardless of ticks,
+ *     and when the mouth is itself in the hit (the keylock's mouth is its stance), the nearest hitless REFUGE in the room
+ *     (`FADE_MOVE_REFUGE`'s rings round the mouth) is the target: the place to wait out the fade, not to stand still in reach;
+ *   - the accepted keys are replayed on the live run, which must agree (no new hit, the open test true, read only: no
+ *     ledger write), or the executor refuses naming FADE_MOVE.
+ * Nothing found: `null`, and the executor stands still exactly as before (MOVING_WAIT's paced hold stays the fallback).
+ *
+ * OFF: `fadeMoveTry` returns `null` before reading anything, and no ctx consumer reads `aim`; the census counter
+ * (`FADE_MOVE_COUNTS.waits`) counts the covered waits either way, and counting changes no output.
+ * `SEEDLING_FADE_MOVE=1` / `withFadeMove(enabled, fn)`.
+ */
+export const FADE_MOVE = { enabled: globalThis.process?.env?.SEEDLING_FADE_MOVE === '1' };
+export const FADE_MOVE_DEFAULT = false;
+
+/** Run `fn` with `FADE_MOVE` set to `enabled`, restoring the previous value. */
+export function withFadeMove(enabled, fn) {
+    return withSwitch(FADE_MOVE, enabled, fn);
+}
+
+/**
+ * ⛓⛓ hammer-phase FADE-MOVE phase 2 — **OPPORTUNISTIC ATTACK INSIDE THE WINDOW** (`FADE_MOVE_ATTACK`, OFF; needs
+ * `FADE_MOVE`). When the still wait is HIT by a chaser, the first candidate is to kill that body inside the window: the
+ * kill rung's own dwell (`guardedChaserDwell`, the one strike policy, its guard steps, any hit refusing by name) on the
+ * fork, bounded by the wait, then the empty-input stand until the open test holds — accepted only hitless,
+ * deathless, on the level, and open inside the bound, then replayed on the live run as phase 1's moves are. A body a later goal reads
+ * is never attacked: none while a kill-lock of `combat.KILL_LOCK_TAGS` (`tset == KILL_LOCK_TSET`) stands in the level,
+ * whose count is that body. Ranking: the body that hit the still wait (the danger the wait would price) only; no other
+ * kill is inserted. It changes the kill ledger, so it is its own switch. `SEEDLING_FADE_MOVE_ATTACK=1` /
+ * `withFadeMoveAttack(enabled, fn)`.
+ */
+export const FADE_MOVE_ATTACK = { enabled: globalThis.process?.env?.SEEDLING_FADE_MOVE_ATTACK === '1' };
+export const FADE_MOVE_ATTACK_DEFAULT = false;
+
+/** Run `fn` with `FADE_MOVE_ATTACK` set to `enabled`, restoring the previous value. */
+export function withFadeMoveAttack(enabled, fn) {
+    return withSwitch(FADE_MOVE_ATTACK, enabled, fn);
+}
+
+/** The refuge search: ring radii round the mouth (px, nearest first), directions per ring, and the fork cap. */
+export const FADE_MOVE_REFUGE = Object.freeze({ radii: Object.freeze([16, 24, 32, 48, 64]), directions: 8, maxForks: 12 });
+
+/**
+ * What the covered waits did (the census and the decisions; read by the slice's instruments, reset by the caller).
+ * `waits[kind]` counts every covered wait reached (OFF too); `rows` one row per wait; `moves` / `declined` FADE_MOVE's.
+ */
+export const FADE_MOVE_COUNTS = { waits: { keylock: 0, latched: 0, killlockChaser: 0, killlockPress: 0 },
+    rows: [], moves: [], declined: [] };
+export function resetFadeMoveCounts() {
+    for (const k of Object.keys(FADE_MOVE_COUNTS.waits)) FADE_MOVE_COUNTS.waits[k] = 0;
+    FADE_MOVE_COUNTS.rows = [];
+    FADE_MOVE_COUNTS.moves = [];
+    FADE_MOVE_COUNTS.declined = [];
+}
+
+/** The census: one covered wait reached (a pure counter; no decision reads it). */
+function fadeWaitSeen(run, perTick, kind, lockId, what) {
+    FADE_MOVE_COUNTS.waits[kind] += 1;
+    FADE_MOVE_COUNTS.rows.push({ kind, lock: lockId, level: run.level, t: perTick.length,
+        what: String(what ?? '').slice(0, 160) });
+}
+
+/** The activator's solid rect `{x, y, right, bottom}` in the live world, or null. */
+function fadeLockRect(run, lockId, rect = null) {
+    if (rect) return rect;
+    const row = (run.world.activators ?? []).find((a) => a.id === lockId);
+    if (row?.rect) return row.rect;
+    const s = (run.world.solids ?? []).find((x) => `${x.tag}@${x.x},${x.y}` === lockId);
+    return s?.rect ?? null;
+}
+
+/** The first `n` forked samples of a stand with no input until `open(f)`: `{opened, ticks, why}` (keys pushed). */
+function fadeForkStand(f, keys, open, bound, hits0, deaths0) {
+    const NO_KEYS = new Set();
+    for (let k = 0; k < bound; k += 1) {
+        if (open(f)) return { opened: true, ticks: k };
+        const why = forkStep(f, keys, NO_KEYS, hits0, deaths0);
+        if (why) return { opened: false, ticks: k + 1, why };
+    }
+    return open(f) ? { opened: true, ticks: bound } : { opened: false, ticks: bound, why: `not open in ${bound} ticks` };
+}
+
+/**
+ * FADE_MOVE's decision and drive (see `FADE_MOVE`). `spec` = `{kind, lockId, rect?, open: (run) => boolean, bound}`,
+ * `bound` the ticks the caller's own still loop would stand from here. `null` = stand still as before (no tick spent);
+ * else `{moved}` with the keys played on the live run and `spec.open(run)` true.
+ */
+function fadeMoveTry(run, perTick, spec, ctx) {
+    if (!FADE_MOVE.enabled) return null;
+    const row = { kind: spec.kind, lock: spec.lockId, level: run.level, t: perTick.length };
+    const decline = (why) => {
+        FADE_MOVE_COUNTS.declined.push({ ...row, why: String(why).slice(0, 1200) });
+        return null;
+    };
+    /**
+     * ⛔ MEASURED (survey steps 27 / 120 / 227, L18 / L60 / L98): a kill-lock's open is a v9 DECLARATION
+     * (`PendingDeclaration`), never the model's own. The measuring pass cannot see it, so it stands; the declared pass
+     * sees it and moved, and the two-pass loop refused the solve ("pass 1 and pass 2 DISAGREE"). Both kill-lock arms
+     * decline until the move asks an open both passes share (the arithmetic clear tick) — the report's hand-over.
+     */
+    if (spec.kind === 'killlockChaser' || spec.kind === 'killlockPress') {
+        return decline('a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)');
+    }
+    if (typeof ctx?.fork !== 'function') return decline('no fork (the segment has no `forkRun`)');
+    if (!ctx.aim) return decline('no aim (the caller handed none)');
+    if (spec.open(run)) return decline('already open');
+    const rect = fadeLockRect(run, spec.lockId, spec.rect);
+    if (!rect) return decline(`no rect for ${spec.lockId}`);
+    const contacts = new Set([...senseContacts(run)]);
+    const opts = solverPlanOpts(run, contacts);
+    // the mouth: only when the route to the aim needs the opening (the aim does not plan with the activator shut)
+    const routeShut = planWaypointsOrNull(run.world, run.state, ctx.aim, null, opts);
+    // ⚠ a mouth no nearer the opening than the player already stands (a keylock's stance is ON its key line) is no target
+    const centre = { x: (rect.x + rect.right) / 2, y: (rect.y + rect.bottom) / 2 };
+    const near = (p) => Math.hypot(p.x - centre.x, p.y - centre.y);
+    const lockSide = routeShut === null ? preLockStance(run, { rect }, contacts) : null;
+    const mouth = lockSide && near(lockSide) < near(run.state) - 1 ? lockSide : null;
+    const level = run.level;
+    const hits0 = (run.ledger('playerHits') ?? []).length;
+    const deaths0 = (run.ledger('playerDeaths') ?? []).length;
+    // the still wait, on a fork
+    const f0 = ctx.fork();
+    if (!f0) return decline('the fork tripped the deadline');
+    const stillKeys = [];
+    const still = fadeForkStand(f0, stillKeys, spec.open, spec.bound, hits0, deaths0);
+    const stillHit = !still.opened && /HIT|death/.test(still.why ?? '');
+    if (!still.opened && !stillHit) return decline(`the still wait does not open on the fork: ${still.why}`);
+    row.still = stillHit ? `hit: ${still.why}` : `opens at +${still.ticks}`;
+    // where the still wait would then reach the mouth (rule 4's comparison, hitless still only)
+    let stillArrive = null;
+    if (!stillHit && mouth) {
+        if (hasArrived(f0.state, mouth, DEFAULT_TOLERANCE)) return decline('the still wait already stands at the mouth');
+        const w = forkWalkTo(f0, stillKeys, mouth, opts, null, hits0, deaths0);
+        stillArrive = w.why ? null : stillKeys.length;
+    }
+    if (!stillHit && !mouth) return decline('the still wait is hitless and no route needs the opening');
+    const cands = [];
+    if (mouth && !hasArrived(run.state, mouth, DEFAULT_TOLERANCE)) cands.push({ x: mouth.x, y: mouth.y, why: 'mouth' });
+    if (stillHit) {
+        const c0 = mouth ?? { x: run.state.x, y: run.state.y };
+        const geo = run.liveGeometryOpts();
+        // the body that hit the still wait, where it stands now: each ring is tried farthest from it first
+        const hitter = (f0.ledger('playerHits') ?? []).slice(hits0)[0]?.id ?? null;
+        const body = hitter === null ? null : [...(run.entities('chasers') ?? []), ...(run.entities('strikeBodies') ?? [])]
+            .find((b) => b?.id === hitter && Number.isFinite(b.x)) ?? null;
+        for (const r of FADE_MOVE_REFUGE.radii) {
+            const ring = [];
+            for (let a = 0; a < FADE_MOVE_REFUGE.directions; a += 1) {
+                const ang = (a * 2 * Math.PI) / FADE_MOVE_REFUGE.directions;
+                const p = { x: Math.round(c0.x + r * Math.cos(ang)), y: Math.round(c0.y + r * Math.sin(ang)) };
+                if (run.world.collidesSolid(playerBoxAt(p.x, p.y), geo)) continue;
+                if (plannerObstacleAt(run.world, p.x, p.y, null, opts) !== null) continue;
+                // `toward`: the step from the player heads at the body (its dot product with the body's offset is > 0)
+                const toward = body ? (p.x - run.state.x) * (body.x - run.state.x)
+                    + (p.y - run.state.y) * (body.y - run.state.y) > 0 : false;
+                ring.push({ ...p, why: `refuge r${r}`, toward, away: body ? Math.hypot(p.x - body.x, p.y - body.y) : 0 });
+            }
+            ring.sort((p, q) => q.away - p.away || p.y - q.y || p.x - q.x);
+            cands.push(...ring);
+        }
+        // every cell that steps away from the body first (the rings' order kept), then the rest
+        const awayFirst = [...cands.filter((c) => !c.toward), ...cands.filter((c) => c.toward)];
+        cands.length = 0;
+        cands.push(...awayFirst);
+    }
+    // ⛓ phase 2 (`FADE_MOVE_ATTACK`): the hitter killed inside the window, ranked first (see `FADE_MOVE_ATTACK`)
+    if (FADE_MOVE_ATTACK.enabled && stillHit) {
+        const hitId = (f0.ledger('playerHits') ?? []).slice(hits0)[0]?.id ?? null;
+        const chaser = hitId && (run.entities('chasers') ?? []).some((b) => b?.id === hitId)
+            && (run.entities('strikeBodies') ?? []).some((b) => b?.id === hitId);
+        const lockCounts = (run.world.activators ?? []).some((a) => KILL_LOCK_TAGS.includes(a.tag)
+            && a.t === KILL_LOCK_TSET);
+        if (!chaser) {
+            FADE_MOVE_COUNTS.declined.push({ ...row, why: `attack: ${hitId ?? 'no hitter'} is not a live chaser` });
+        } else if (lockCounts) {
+            FADE_MOVE_COUNTS.declined.push({ ...row, why: `attack: a kill-lock in level ${level} counts it` });
+        }
+        if (chaser && !lockCounts) {
+            cands.unshift({ x: run.state.x, y: run.state.y, why: `attack ${hitId}`, attack: hitId });
+        }
+    }
+    const tried = [];
+    let forks = 0;
+    for (const c of cands) {
+        if (forks >= FADE_MOVE_REFUGE.maxForks) { tried.push(`the ${FADE_MOVE_REFUGE.maxForks}-fork bound`); break; }
+        if (!c.attack && planWaypointsOrNull(run.world, run.state, c, null, opts) === null) {
+            tried.push(`${c.why} (${c.x},${c.y}): no corridor plans`);
+            continue;
+        }
+        const f = ctx.fork();
+        if (!f) { tried.push('the fork tripped the deadline'); break; }
+        forks += 1;
+        const keys = [];
+        if (c.attack) {
+            try {
+                guardedChaserDwell(f, keys, { id: c.attack, bound: spec.bound, strike: strikePolicyFor(f, {}),
+                    contacts, what: `${ctx.what} -> FADE_MOVE_ATTACK (${c.attack})`, ctx, lockId: spec.lockId });
+            } catch (e) {
+                if (!(e instanceof SolverRefusal)) throw e;
+                const said = String(e.message).split('\n')[0]
+                    .replace(`${ctx.what} -> FADE_MOVE_ATTACK (${c.attack}): `, '');
+                tried.push(`${c.why}: ${said.slice(0, 240)}`);
+                continue;
+            }
+            if ((f.ledger('playerHits') ?? []).length !== hits0
+                || (f.ledger('playerDeaths') ?? []).length !== deaths0) {
+                tried.push(`${c.why}: a hit or death on the fork`);
+                continue;
+            }
+        }
+        const w = c.attack ? {} : forkWalkTo(f, keys, c, opts, null, hits0, deaths0);
+        if (w.why) { tried.push(`${c.why} (${c.x},${c.y}): ${w.why}`); continue; }
+        if (keys.length > spec.bound) { tried.push(`${c.why}: the walk outlasts the bound`); continue; }
+        const st = fadeForkStand(f, keys, spec.open, spec.bound - keys.length + 1, hits0, deaths0);
+        if (!st.opened) { tried.push(`${c.why} (${c.x},${c.y}): ${st.why}`); continue; }
+        if (f.level !== level) { tried.push(`${c.why}: left level ${level}`); continue; }
+        // rule 4: a hitless still wait is beaten only by a strictly sooner arrival at the mouth
+        if (!stillHit && !(stillArrive !== null && keys.length < stillArrive)) {
+            tried.push(`${c.why}: ${keys.length} t is not sooner than still + walk (${stillArrive ?? 'no walk'})`);
+            continue;
+        }
+        // ── the live replay, key for key; the open test read only ──
+        const from = perTick.length;
+        for (const k of keys) {
+            perTick.push(k);
+            const { transition } = run.advance(k);
+            if (transition) fail(`${ctx.what}: FADE_MOVE's replay crossed to level ${transition.to_level}`);
+        }
+        if ((run.ledger('playerHits') ?? []).length !== hits0 || !spec.open(run)) {
+            throw new SolverRefusal(`${ctx.what}: FADE_MOVE's ${c.why} move to (${c.x},${c.y}) (${keys.length} t) did `
+                + `not replay on the live run — ${spec.open(run) ? 'a player hit' : `${spec.lockId} is not open`} (the `
+                + 'fork is not this run).', { obstacle: { kind: 'solid', id: spec.lockId } });
+        }
+        const moved = { kind: spec.kind, target: { x: c.x, y: c.y }, why: c.why, from, ticks: keys.length,
+            still: row.still, forks, ...(c.attack ? { killed: c.attack,
+                dead: !(run.entities('strikeBodies') ?? []).some((b) => b?.id === c.attack) } : {}) };
+        FADE_MOVE_COUNTS.moves.push({ ...row, ...moved });
+        return { moved };
+    }
+    return decline(`no hitless move (${forks} fork(s)): ${tried.slice(0, 16).join(' | ')}`);
 }
 
 /**
@@ -34084,6 +34394,8 @@ function solveSegmentUnder({
                         equip,
                         // ⛓ CRUSHER — a try-before-commit run (`forkRun`); null without one.
                         fork, rewind,
+                        // ⛓ hammer-phase FADE-MOVE (ON only): where this walk is going, for a latched fade's move
+                        ...(FADE_MOVE.enabled ? { aim } : {}),
                     });
                     /**
                      * ⛓ hammer-phase LWEIGH: the reordered weigh's kill stance is inside the turret's range, and the
@@ -35570,6 +35882,8 @@ function solveSegmentUnder({
             // passes it — `execLavaBoss` / `execTentacleBeast` try their policy variants on it. No other clear-tag verb
             // reads `ctx.fork` (`bait` is the frontier's only), so a verb that does not fight a boss is unchanged.
             fork,
+            // ⛓ hammer-phase FADE-MOVE (ON only): the goal's own point, for a latched fade's move
+            ...(FADE_MOVE.enabled ? { aim: { x: goal.at.x, y: goal.at.y } } : {}),
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
         // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
@@ -36061,6 +36375,8 @@ function solveSegmentUnder({
                 before: null, walkTo, goal, equip, rewind,
                 // ⛓ fidelity BOSSFORK D1: the segment's fork, as the frontier arm and the clear-tag arm pass it.
                 fork,
+                // ⛓ hammer-phase FADE-MOVE (ON only): the placement, for a latched fade's move
+                ...(FADE_MOVE.enabled ? { aim: { x: goal.placement.x, y: goal.placement.y } } : {}),
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).

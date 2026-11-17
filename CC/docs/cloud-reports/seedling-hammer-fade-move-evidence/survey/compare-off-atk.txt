@@ -1,0 +1,4 @@
+ATK verdicts {'SOLVED': 224, 'REFUSED': 26}
+movers 0 gain hit []
+moves [('149', 'mouth', 88)]
+declined {'a kill-lock opens by a v9 declaration the measuring pass can': 11, 'the still wait is hitless and no route needs the opening': 17, 'no hitless move (1 fork(s)): mouth: the walk outlasts the bo': 1, 'attack: bombpusher@112,128#5 is not a live chaser': 1}
