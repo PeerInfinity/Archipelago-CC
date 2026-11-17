@@ -1,0 +1,216 @@
+{
+ "path": "frontend/presets/jta_prestige_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+ "slots": {
+  "1": {
+   "bounds": {
+    "boundsSource": "extents",
+    "height": 1,
+    "left": 0,
+    "top": 0,
+    "width": 2
+   },
+   "draw": {
+    "art": {
+     "calls": 52,
+     "error": null,
+     "sha256": "fa056b37fc805bea4e64ebfd18f8eed12f2031683abc4283a1c9f77638cc0a8a"
+    },
+    "canvas": [
+     224,
+     84
+    ],
+    "plain": {
+     "calls": 52,
+     "error": null,
+     "sha256": "fa056b37fc805bea4e64ebfd18f8eed12f2031683abc4283a1c9f77638cc0a8a"
+    },
+    "selExit": {
+     "calls": 55,
+     "error": null,
+     "sha256": "6ca13e4216f7f0c2c07f41b5b17b4553babd45899238c81bc8b169e6e6a96897"
+    },
+    "selRegion": {
+     "calls": 55,
+     "error": null,
+     "sha256": "4f084f580f45c5b8c06bb9075a6f52af51576bec67c6ab21337e9fb2686a6f26"
+    }
+   },
+   "issues": [],
+   "picks": [
+    [
+     56,
+     42,
+     [
+      0,
+      0,
+      56,
+      42
+     ],
+     "region_0_0"
+    ],
+    [
+     0,
+     0,
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     "region_0_0"
+    ],
+    [
+     111,
+     83,
+     [
+      0,
+      0,
+      111,
+      83
+     ],
+     "region_0_0"
+    ],
+    [
+     168,
+     42,
+     [
+      1,
+      0,
+      56,
+      42
+     ],
+     "region_1_0"
+    ],
+    [
+     112,
+     0,
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     "region_1_0"
+    ],
+    [
+     223,
+     83,
+     [
+      1,
+      0,
+      111,
+      83
+     ],
+     "region_1_0"
+    ],
+    [
+     -1,
+     0,
+     null,
+     null
+    ],
+    [
+     0,
+     -1,
+     null,
+     null
+    ],
+    [
+     224,
+     0,
+     null,
+     null
+    ],
+    [
+     0,
+     84,
+     null,
+     null
+    ],
+    [
+     336,
+     168,
+     null,
+     null
+    ],
+    [
+     -112,
+     -84,
+     null,
+     null
+    ]
+   ],
+   "rects": [
+    [
+     "region_0_0",
+     0,
+     0,
+     112,
+     84
+    ],
+    [
+     "region_1_0",
+     112,
+     0,
+     112,
+     84
+    ]
+   ],
+   "result": {
+    "boundsSource": "extents",
+    "cells": [
+     [
+      "region_0_0",
+      0,
+      0
+     ],
+     [
+      "region_1_0",
+      1,
+      0
+     ]
+    ],
+    "grid": {
+     "height": 1,
+     "left": 0,
+     "top": 0,
+     "width": 2
+    },
+    "playerId": "1",
+    "refused": [],
+    "regionSize": {
+     "height": 6,
+     "width": 8
+    },
+    "regionSizeSource": "default",
+    "stats": {
+     "regionsBuilt": 2,
+     "regionsSkipped": 0,
+     "stopReason": "spiral_complete",
+     "teleportersPlaced": 0
+    }
+   },
+   "slotLayout": {
+    "cells": [
+     [
+      "region_0_0",
+      0,
+      0
+     ],
+     [
+      "region_1_0",
+      1,
+      0
+     ]
+    ],
+    "clash": null,
+    "grid": {
+     "height": 1,
+     "left": 0,
+     "top": 0,
+     "width": 2
+    }
+   }
+  }
+ }
+}
