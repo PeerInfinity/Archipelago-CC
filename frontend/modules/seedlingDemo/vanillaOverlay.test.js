@@ -456,9 +456,9 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             // ⛓ rules-l99-sided-killlock (e53ce517… -> 28dc5dc7): L99's lock@80,96 is cleared only from the lower floor (the
             //   west pocket's two far lavarunners never wake), so its two-way internal row splits into the room's weapon row
             //   and the pocket's latch return (internal exits only; atlas id 88e3788c -> 2ac275e8). No name, exit or location moves.
-            // ⛓ rules-fire-arm-chaser-guard (28dc5dc7… -> 28dc5dc7…): atlas id 2ac275e8 -> 2ac275e8 (L73's and L100's rocks lose
+            // ⛓ rules-fire-arm-chaser-guard (28dc5dc7… -> 26bec328…): atlas id 2ac275e8 -> 630fbc4c (L73's and L100's rocks lose
             //   their Fire arm; L100's one-way pair re-merges into one two-way row; no name moves).
-            .toBe('28dc5dc7b2eccf756d5d59fed66a9bf9');
+            .toBe('26bec328054eda2ae6a90409a405cbc1');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
