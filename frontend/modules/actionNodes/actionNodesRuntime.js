@@ -38,6 +38,7 @@
  */
 
 import { whyNot, isCleared, isReached } from './actionModel.js';
+import { nodeStates, viewStateOf } from './nodeStates.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { strictQueueRefusal } from '../loops/strictQueueActions.js';
 import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
@@ -295,6 +296,31 @@ export class ActionNodesRuntime {
             mana: Number.POSITIVE_INFINITY,
             spent: 0,
         };
+    }
+
+    /** The live prices of every node: its `time` after the region-XP discount (the env's `xpAdjustedCost`). */
+    liveCosts() {
+        if (!this.model) return [];
+        return this.model.nodes.map((n) => (this.env.xpAdjustedCost ? this.env.xpAdjustedCost(n.time, n.id) : n.time));
+    }
+
+    /** The live state with the shared pool's mana (Infinity when no pool is readable). */
+    liveViewState() {
+        const mana = this.env.gameState?.()?.getCurrentMana?.();
+        return { ...this.liveState(), mana: typeof mana === 'number' ? mana : Number.POSITIVE_INFINITY };
+    }
+
+    /**
+     * Every node's visual state (`nodeStates.js`, design §4): for the END of `queue` while it is being planned, for
+     * the live state while it runs (`running`).
+     * @param {{running?: boolean, queue?: object[], isDiscovered?: (id: string) => boolean}} [opts]
+     * @returns {{states: object, basis: string, stoppedAt: object|null}}
+     */
+    nodeStates({ running = false, queue = [], isDiscovered } = {}) {
+        if (!this.model) return { states: {}, basis: 'live', stoppedAt: null };
+        const costs = this.liveCosts();
+        const view = viewStateOf(this.model, this.liveViewState(), { running, queue, costs });
+        return { states: nodeStates(this.model, view.state, { costs, isDiscovered }), basis: view.basis, stoppedAt: view.stoppedAt };
     }
 
     nodeIndex(nodeId) {
