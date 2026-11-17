@@ -8,10 +8,12 @@
  *   - **The start gate** (`gate(action)`, the registry entry's `loopSupport.actionGate`): an `act` entry may start
  *     when its node is reached this loop, its limit is not used up and every requirement is met. A `regionMove`
  *     (⚖ Robert 2026-11-16T17:41:55Z: "once a node becomes reachable in a loop, it stays reachable for the rest of the
- *     loop, and moving between nodes is free. Reachability resets when the loop resets"): a FORWARD exit opens when
- *     its source is cleared this loop (performed `limit` times; the start is cleared from the beginning); a REVERSE
- *     exit (the compiler's two-way edges, AN-1b) is open whenever its target is reached this loop — which, for a node
- *     reached through a one-member `after` set, is always. So a multi-hop move between reached nodes (the Region
+ *     loop, and moving between nodes is free. Reachability resets when the loop resets"): ⛓ THE MULTI-ENTRY RULE
+ *     (planner ruling, AN-3a): EVERY exit, forward or reverse, is open iff its TARGET is reached this loop (the start,
+ *     or a node one of whose `after` sets is fully cleared). On a one-member set that is "the source is cleared"
+ *     (AN-1b's forward rule); on `after: [[A, B]]` both A→N and B→N stay shut until A and B are cleared; on
+ *     `after: [[A], [B]]` both open once either is. A move that names no exit of the node keeps "the source is
+ *     cleared". So a multi-hop move between reached nodes (the Region
  *     Graph's path queueing) is never refused, and costs 0 (every node's `moveCost`). Mana is never part of it (⚖ Q1:
  *     a node may be started short of mana; Loops drains what is left).
  *   - **One performance** (`perform(nodeId)`): the results go to the ledger, `results.mana` to the pool
@@ -332,9 +334,13 @@ export class ActionNodesRuntime {
     }
 
     /**
-     * Whether a move out of `nodeId` is allowed, or the refusal. A REVERSE exit is open when its target is reached this
-     * loop; a forward exit (or a move that names no exit of the node) when `nodeId` is cleared this loop (A1: its
-     * exits open on the action).
+     * Whether a move out of `nodeId` is allowed, or the refusal. ⛓ The multi-entry rule (AN-3a): an exit of the node,
+     * forward or reverse, is open iff its TARGET is reached this loop. A move that names no exit of the node is open
+     * when `nodeId` is cleared this loop (A1: its exits open on the action).
+     *
+     * A forward exit refused while its own source is not cleared says so (`not-cleared`, with the count): on a
+     * one-member `after` set that is the whole reason. Refused with the source cleared (a multi-member set), it names
+     * the members still to clear (`target-not-reached`).
      * @param {string} nodeId
      * @param {{exitName?: string|null, destination?: string|null}} [move]
      */
@@ -342,20 +348,34 @@ export class ActionNodesRuntime {
         const n = this.node(nodeId);
         if (!n) return null; // not a node of this world: not ours to refuse
         const exit = this.exitOf(nodeId, move);
-        if (exit?.reverse) {
-            if (this.isReached(exit.target)) return null;
-            const t = this.node(exit.target);
+        const i = this.nodeIndex(nodeId);
+        const notCleared = () => ({
+            code: RUNTIME_REFUSALS.notCleared,
+            text: `${n.name} is not cleared this loop (${this.counts[i]}/${n.limit}): its exits open after the action`,
+        });
+        if (!exit) return this.isCleared(nodeId) ? null : notCleared();
+        if (this.isReached(exit.target)) return null;
+        const t = this.node(exit.target);
+        if (exit.reverse) {
             return {
                 code: RUNTIME_REFUSALS.targetNotReached,
                 text: `${t?.name ?? exit.target} is not reached this loop: a move back opens to a node reached this loop`,
             };
         }
-        if (this.isCleared(nodeId)) return null;
-        const i = this.nodeIndex(nodeId);
+        if (!this.isCleared(nodeId)) return notCleared();
         return {
-            code: RUNTIME_REFUSALS.notCleared,
-            text: `${n.name} is not cleared this loop (${this.counts[i]}/${n.limit}): its exits open after the action`,
+            code: RUNTIME_REFUSALS.targetNotReached,
+            text: `${t?.name ?? exit.target} is not reached this loop: ${this.unclearedAfterText(exit.target)}`,
         };
+    }
+
+    /** "still to clear: A (0/1), B (1/2)" for the `after` set of `nodeId` closest to cleared. */
+    unclearedAfterText(nodeId) {
+        const t = this.node(nodeId);
+        if (!t?.after?.length) return 'it has no way in';
+        const missing = t.after.map((set) => set.filter((m) => this.counts[m] < this.model.nodes[m].limit));
+        const best = missing.reduce((a, b) => (b.length < a.length ? b : a));
+        return `still to clear: ${best.map((m) => `${this.model.nodes[m].name} (${this.counts[m]}/${this.model.nodes[m].limit})`).join(', ')}`;
     }
 
     // ── The start gate (loopSupport.actionGate) ──────────────────────────
