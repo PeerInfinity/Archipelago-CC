@@ -46,6 +46,18 @@
             "category": "ActionNodes"
         },
         {
+            "id": "an-node-states",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3a: every node's state (ready / blocked / not-reached / done / undiscovered) derived from the preset, at load, at a planned queue's END, after it ran (live), after a loop reset."
+        },
+        {
+            "id": "an-node-card",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3a: the Region Graph node card (undiscovered placeholder; a check node's fields + check mark + the reserved perform-all slot; the goal mark); then another world's node sizes and arrows are as before and no card is left (planner ruling (a): unregisterNodeOverlayProvider)."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2228,6 +2240,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S3 (⚖ first target): Adventure in Loop mode, no procgen. Generate Costs (enters Loop mode), Loops queue on Instant, bot Play: the bot writes the Loops queue one loop at a time (explore until found, then check) until every sphere-log location is checked."
+        },
+        {
+            "id": "an-bot-plays-to-goal",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on); loop count = the headless live path's."
         },
         {
             "id": "playback-bot-loop-mode-maze",
