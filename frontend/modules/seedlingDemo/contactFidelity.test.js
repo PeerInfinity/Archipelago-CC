@@ -406,8 +406,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             fallRockHoldsButton: true,
             // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — ON since the CORRIDORFLIP flip (⚖ user 2026-11-12).
             corridorForecastMemo: true,
-            // ⛓ fidelity WALLFLYERCORPSE D2 (wave 45): a wallflyer the run no longer holds live is not priced at its placement — OFF.
-            wallFlyerCorpseGone: false });
+            // ⛓ fidelity WALLFLYERCORPSE D2 (wave 45): a wallflyer the run no longer holds live is not priced at its placement — ON since the WALLFLYERCORPSE flip.
+            wallFlyerCorpseGone: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
