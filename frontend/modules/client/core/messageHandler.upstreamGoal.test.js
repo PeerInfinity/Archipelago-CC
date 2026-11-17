@@ -100,7 +100,7 @@ const arm = (doc = addonDoc()) => {
   const build = { mode: 'overlay', overlaySource: 'server', overlayFrom: UPSTREAM_RULES_ADDON_SOURCE, game: 'APQuest' };
   const goal = messageHandler._prepareUpstreamGoal(build, { slot: SLOT }, doc);
   smState.raw = doc;
-  messageHandler._upstreamGoal = { goal, doc, slot: String(SLOT) };
+  messageHandler._upstreamGoal = { goal, doc, slot: String(SLOT), seedName: '1234' };
   return doc;
 };
 
@@ -224,13 +224,17 @@ describe('held back: nothing sent, nothing checked locally', () => {
     expect(goalFrames()).toHaveLength(1);
   });
 
-  it('another document was loaded after the add-on\'s', async () => {
+  it.each([
+    ['another document was loaded after the add-on\'s (equal content, a different load)', () => { smState.raw = addonDoc(); }],
+    ['no document loaded', () => { smState.raw = null; }],
+    ['a room of another seed', () => { messageHandler.roomInfo = { seed_name: '9999' }; }],
+    ['another slot', () => { messageHandler.clientSlot = 3; }],
+  ])('%s: the ordinary ID-less path (checked locally), no report', async (_l, set) => {
     arm();
-    smState.raw = addonDoc(); // equal content, a different load
+    set();
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
     expect(goalFrames()).toEqual([]);
-    expect(published('client:locationCheckRefused')[0].reason).toBe(GOAL_HOLD.DOC_CHANGED);
+    expect(published('client:locationCheckRefused').filter((r) => String(r.reason).startsWith('goal_'))).toEqual([]);
   });
 });
 
@@ -271,24 +275,34 @@ describe('the other gates', () => {
     expect(goalFrames()).toEqual([]);
   });
 
-  it('the server\'s items don\'t complete the goal: no report', async () => {
+  it('the server\'s items don\'t complete the goal: no report, and the goal stays clickable', async () => {
     const doc = addonDoc();
     doc.game_info[String(SLOT)].completion_condition = { rule: 'HasAll', args: { item_names: ['Victory', 'Sword'] } };
     arm(doc);
     messageHandler._serverItems = new Map([['Shield', 1]]); // the frontend may hold a Sword; the server sent none
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).toHaveBeenCalledTimes(1);
+    expect(dispatcher.publishToNextModule).not.toHaveBeenCalled();
+    expect(smState.reachability[GOAL]).toBe('reachable');
     expect(goalFrames()).toEqual([]);
+    expect(consoleLines().at(-1)).toMatch(/don't complete the goal/);
+    // the server delivers the Sword: the same click now reports
+    messageHandler._serverItems.set('Sword', 1);
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    expect(goalFrames()).toHaveLength(1);
   });
 
-  it('a new Connected clears the record: a click then is an ordinary local event check, no report', async () => {
+  it('a same-seed reconnect keeps the loaded rules and the record; nothing is sent until the click', async () => {
     arm();
-    messageHandler.processMessage({ cmd: 'RoomUpdate' }); // unrelated packets keep it
-    expect(messageHandler._upstreamGoal).not.toBeNull();
-    messageHandler._upstreamGoal = null; // what the 'Connected' case and connection open/close do
-    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(dispatcher.publishToNextModule).toHaveBeenCalledTimes(1);
+    messageHandler._handleConnected = vi.fn(); // the reconnect: no build, the loaded rules stay
+    try {
+      messageHandler.processMessage({ cmd: 'Connected', slot: SLOT, slot_info: {} });
+    } finally {
+      delete messageHandler._handleConnected;
+    }
+    messageHandler._goalReported = false; // what _handleConnected re-arms
     expect(goalFrames()).toEqual([]);
+    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
+    expect(goalFrames()).toHaveLength(1);
   });
 
   it('offline: the click is passed up locally, nothing is reported', async () => {
@@ -296,13 +310,6 @@ describe('the other gates', () => {
     connectionMock.isConnected.mockReturnValue(false);
     await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
     expect(connectionMock.send).not.toHaveBeenCalled();
-  });
-
-  it('a slot that isn\'t the record\'s: no report', async () => {
-    arm();
-    messageHandler.clientSlot = 3;
-    await handleUserLocationCheckForClient({ ...CARD }, 'user:locationCheck');
-    expect(goalFrames()).toEqual([]);
   });
 
   it('another location of the same slot takes the normal path', async () => {
@@ -318,15 +325,3 @@ describe('the other gates', () => {
   });
 });
 
-describe('the record\'s lifetime in processMessage', () => {
-  it('a Connected packet clears it before anything else', () => {
-    messageHandler._upstreamGoal = { goal: { location: GOAL }, doc: {}, slot: String(SLOT) };
-    messageHandler._handleConnected = vi.fn();
-    try {
-      messageHandler.processMessage({ cmd: 'Connected', slot: SLOT, slot_info: {} });
-    } finally {
-      delete messageHandler._handleConnected;
-    }
-    expect(messageHandler._upstreamGoal).toBeNull();
-  });
-});

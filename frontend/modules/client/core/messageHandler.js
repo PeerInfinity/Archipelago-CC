@@ -48,7 +48,6 @@ import {
   deliberateRefusal,
   completesWithGoal,
   goalHoldMessage,
-  GOAL_HOLD,
 } from './upstreamGoal.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
@@ -189,9 +188,10 @@ export class MessageHandler {
     this._slotReleased = false;
     // What the server has delivered on this connection: item name -> count.
     this._serverItems = new Map();
-    // This connection's add-on goal (upstreamGoal.js): { goal, doc, slot } once the
-    // add-on's rules loaded with a derivable goal; null otherwise. Reset on every
-    // open, Connected and close, so it never outlives the connection whose doc it names.
+    // The add-on goal (upstreamGoal.js): { goal, doc, slot, seedName } when the add-on's
+    // rules loaded with a derivable goal. It is honoured only while THAT document is the
+    // loaded one, for that room seed and slot (_upstreamGoalFor): a same-seed reconnect
+    // keeps the loaded rules, and so keeps it; any other load replaces the document.
     this._upstreamGoal = null;
   }
 
@@ -236,7 +236,6 @@ export class MessageHandler {
       this.clientSlot = null;
       this.clientTeam = null;
       this._resetScouts();
-      this._upstreamGoal = null;
       this._cancelServerBuild();
       this._cancelRulesWait();
     });
@@ -250,7 +249,6 @@ export class MessageHandler {
       this.clientTeam = null;
       this.players = [];
       this._resetScouts();
-      this._upstreamGoal = null;
       this._cancelServerBuild();
       this._cancelRulesWait();
     });
@@ -271,7 +269,6 @@ export class MessageHandler {
         break;
 
       case 'Connected':
-        this._upstreamGoal = null;
         // Decided synchronously: the ReceivedItems in the same batch must
         // already see the build as started.
         if (build && !build.connected) this._beginServerBuild(command);
@@ -1132,13 +1129,18 @@ export class MessageHandler {
           return;
         }
         this._applyServerItemGroups(build, data, rules);
+        this._upstreamGoal = null;
         const addonGoal = this._prepareUpstreamGoal(build, data, rules);
         const playerName = this.slotInfo?.[String(data.slot)]?.name ?? this.clientSlotName;
         const sourceName = `server:${this.roomInfo?.seed_name ?? 'seedless'}:P${data.slot}`;
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
         if (this._serverBuild !== build) return; // a reconnect superseded this build
         if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
-        if (addonGoal) this._upstreamGoal = { goal: addonGoal, doc: rules, slot: String(data.slot) };
+        if (addonGoal) {
+          this._upstreamGoal = {
+            goal: addonGoal, doc: rules, slot: String(data.slot), seedName: this.roomInfo?.seed_name ?? null,
+          };
+        }
         if (build.mode === 'overlay') {
           this._printToConsole(
             `Loaded ${build.overlaySource === 'server' ? 'the server-sent' : 'the local'} ${build.game} rules ` +
@@ -1614,11 +1616,17 @@ export class MessageHandler {
     }
   }
 
-  /** The add-on goal record when `locationName` is this connection's goal location, else null. */
+  /**
+   * The add-on goal record when `locationName` is its goal location AND its document is
+   * still the loaded one, for this room's seed and this slot; else null (the check then
+   * takes the ordinary path, which never reports).
+   */
   _upstreamGoalFor(locationName) {
     const record = this._upstreamGoal;
     if (!record || record.goal.location !== locationName) return null;
+    if (getLastRawJsonData?.()?.rawJsonData !== record.doc) return null;
     if (String(this.clientSlot) !== record.slot) return null;
+    if (!record.seedName || !isSameSeed(record.seedName, this.roomInfo?.seed_name)) return null;
     return record;
   }
 
@@ -1642,7 +1650,6 @@ export class MessageHandler {
     const name = eventData.locationName;
     const hold = deliberateRefusal(eventName, eventData, this._loopModeActive());
     if (hold) return this._holdGoalCheck(eventData, hold);
-    if (getLastRawJsonData?.()?.rawJsonData !== record.doc) return this._holdGoalCheck(eventData, GOAL_HOLD.DOC_CHANGED);
     // The out-of-logic gate (checkGate.js), then: the goal must be reachable and NOT yet checked
     // (a goal checked earlier, e.g. offline on a kept document, never turns into a report).
     const refusal = await logicRefusal(name, stateManagerProxySingleton);
@@ -1652,6 +1659,8 @@ export class MessageHandler {
       this._printToConsole(`"${name}" is already checked here; no goal was sent.`, 'info');
       return;
     }
+    // Before the local check, so a click the server's items can't complete leaves the goal clickable.
+    if (!completesWithGoal(record.goal, this._serverItems, record.slot)) return this._goalIncomplete(name);
     if (!dispatcher) {
       log('error', '[ClientModule/MessageHandler] Dispatcher not available for the goal check.');
       return;
@@ -1661,18 +1670,19 @@ export class MessageHandler {
       this._printToConsole(`"${name}" was not recorded as checked; no goal was sent.`, 'warning');
       return;
     }
-    if (this._upstreamGoal !== record || !connection.isConnected()) return; // the connection moved on meanwhile
-    if (!completesWithGoal(record.goal, this._serverItems, record.slot)) {
-      this._printToConsole(
-        `"${name}" was checked, but the items the server has sent don't complete the goal with it; no goal was sent.`,
-        'warning'
-      );
-      return;
-    }
+    if (this._upstreamGoalFor(name) !== record || !connection.isConnected()) return; // the room or rules moved on meanwhile
+    if (!completesWithGoal(record.goal, this._serverItems, record.slot)) return this._goalIncomplete(name);
     if (this.reportGoal()) {
       const slotName = this.slotInfo?.[record.slot]?.name ?? this.clientSlotName ?? `slot ${record.slot}`;
       this._printToConsole(`Goal sent: you finished at "${name}". The server now marks ${slotName} as done.`, 'success');
     }
+  }
+
+  _goalIncomplete(name) {
+    this._printToConsole(
+      `Not sent: the items the server has sent you don't complete the goal with "${name}" yet; no goal was sent.`,
+      'warning'
+    );
   }
 
   /** Whether the state manager records `name` as checked, within a short wait (its own guard ran). */

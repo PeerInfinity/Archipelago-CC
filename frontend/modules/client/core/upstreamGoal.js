@@ -31,7 +31,6 @@ export const DELIBERATE_GOAL_ORIGINATORS = Object.freeze(['LocationCardClick', '
 export const GOAL_HOLD = Object.freeze({
   NOT_A_CLICK: 'goal_not_a_click',
   LOOP_MODE: 'goal_loop_mode',
-  DOC_CHANGED: 'goal_rules_changed',
 });
 
 const ITEM_RULES = new Set(['Has', 'HasAll', 'HasAny', 'HasAllCounts']);
@@ -144,9 +143,6 @@ export function completesWithGoal(goal, serverItems, player) {
 export function goalHoldMessage(locationName, reason) {
   if (reason === GOAL_HOLD.LOOP_MODE) {
     return `Not checked: "${locationName}" finishes the game, and Loop mode is on. Turn Loop mode off and click it to finish.`;
-  }
-  if (reason === GOAL_HOLD.DOC_CHANGED) {
-    return `Not checked: "${locationName}". Other rules were loaded after this room's, so the goal can't be sent from them.`;
   }
   return `Not checked: "${locationName}" finishes the game, so it is only sent when you click it yourself (not a bulk check, bot, timer, replay or game report).`;
 }
