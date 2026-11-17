@@ -35,6 +35,8 @@
  */
 
 import { whyNot, isCleared, isReached } from './actionModel.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { strictQueueRefusal } from '../loops/strictQueueActions.js';
 import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
 
 export const ACTION_NODES_STATE_EVENT = 'actionNodes:stateChanged';
@@ -372,6 +374,14 @@ export class ActionNodesRuntime {
             }
             const why = this.whyNotAct(nodeId);
             return why ? { ok: false, reason: why.text, code: why.code } : { ok: true };
+        }
+        if (action?.type === 'customAction') {
+            // ⚖ D6 (Robert 2026-11-16T19:59:48Z): no explore — or any other custom action — in ActionNodes. The entry's
+            // own `queueActions` is the list (`strictQueueActions`); refused by name, as at queue time.
+            const entry = substrateRegistry.get(ACTION_NODES_SUBSTRATE_ID);
+            const refusal = strictQueueRefusal(entry?.loopSupport ?? { strictQueueActions: true, queueActions: [ACT_ACTION] },
+                action.actionName, { substrateLabel: entry?.label ?? 'Action Nodes', region: action.sourceRegion });
+            if (refusal) return refusal;
         }
         if (action?.type === 'regionMove') {
             const why = this.whyNotLeave(action.sourceRegion, { exitName: action.exitUsed, destination: action.destinationRegion });

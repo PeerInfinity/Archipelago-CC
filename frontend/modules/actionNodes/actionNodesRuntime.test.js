@@ -165,6 +165,14 @@ describe('the ActionNodes runtime on the committed example', () => {
         expect(rt.gate(move)).toMatchObject({ ok: false, code: RUNTIME_REFUSALS.notCleared });
     });
 
+    it('⚖ D6: the start gate refuses an explore (any custom action but act) on a node, by name', () => {
+        for (const node of [BLOCK.start, REPEATABLE.node_id]) {
+            const v = rt.gate({ type: 'customAction', actionName: 'explore', sourceRegion: node, params: {} });
+            expect(v).toMatchObject({ ok: false, code: 'action-not-offered' });
+            expect(v.reason).toContain("no 'explore' action");
+        }
+    });
+
     it('a performance puts its results in the ledger; the limit refuses one more, by name', () => {
         const [res, amount] = firstAmount(REPEATABLE.results.resources);
         for (let k = 1; k <= REPEATABLE.limit; k++) {

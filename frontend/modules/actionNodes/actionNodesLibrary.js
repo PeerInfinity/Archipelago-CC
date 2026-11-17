@@ -7,7 +7,8 @@
  * grown by a layout driver, so this entry declares no build-time hooks.
  *
  * ⛓ WHAT THIS ENTRY DECLARES (AN-2), each backed by `actionNodesRuntime.js`:
- *   - `loopSupport`: the queue verbs `regionMove` and `act`; `actionGate`, the start gate Loops asks before an entry
+ *   - `loopSupport`: the queue verbs `regionMove` and `act`, ENFORCED (`strictQueueActions`, AN-1b: no explore);
+ *     `actionGate`, the start gate Loops asks before an entry
  *     starts; `authoredCosts`, so a cost pass (the pipeline's, the Loops panel's Generate Costs) copies the
  *     compiler's `loop_costs` entries instead of re-pricing them. NOT `manual`: a Manual block parks the queue for
  *     live play, and in Loop mode this substrate's panel QUEUES an `act` (every performance is a queue entry), so a
@@ -145,6 +146,9 @@ export const substrateRegistryEntry = Object.freeze({
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', ACT_ACTION]),
+        // ⚖ D6 (Robert 2026-11-16T19:59:48Z): no explore action in ActionNodes. The list above is ENFORCED: a custom
+        // action it does not hold is refused at queue time and by the start gate (`loops/strictQueueActions.js`).
+        strictQueueActions: true,
         manual: false,
         authoredCosts: true,
         actionGate: (action) => getActionNodesRuntime().gate(action),
