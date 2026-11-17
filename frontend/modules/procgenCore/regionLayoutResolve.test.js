@@ -193,6 +193,13 @@ describe('the Seedling hook (compositeMap.layoutGraph)', () => {
         });
         expect(r.groups[0]).toMatchObject({ root: 'level_0', placedBy: 'start' });
         expect(r.groups[0].members.length).toBe(54);
+        // ⛓ (P) the two source groups sit just above their first successors (MEASURED: 486.81 → 354.73 cells summed
+        //   over the 67 cross-group links; the placement report quotes both)
+        const byRoot = new Map(r.groups.map((g) => [g.root, g]));
+        expect(byRoot.get('level_7')).toMatchObject({ placedBy: 'source', bbox: { minX: -3, minY: 6, maxX: -3, maxY: 6 } });
+        expect(byRoot.get('level_32')).toMatchObject({ placedBy: 'source', bbox: { minX: 9, minY: 2, maxX: 9, maxY: 2 } });
+        expect(r.positions.get('level_32')).toEqual({ gx: r.positions.get('level_30').gx, gy: byRoot.get(r.groups.find((g) => g.members.includes('level_30')).root).bbox.minY - 2 });
+        expect(r.stats.crossLength).toBe(354.73);
         // every link the hook made from stairs/pits is vertical, and only those
         const kinds = new Set(r.graph.links.map((l) => l.kind));
         expect([...kinds].sort()).toEqual(['down', 'join', 'up']);

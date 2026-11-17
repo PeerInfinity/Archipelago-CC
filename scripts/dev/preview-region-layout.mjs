@@ -52,7 +52,7 @@ function parseArgs(argv) {
     return o;
 }
 
-function rulesPathOf(target) {
+export function rulesPathOf(target) {
     if (target.endsWith('.json') && existsSync(target)) return target;
     const dir = join(REPO, 'frontend/presets', target);
     if (!existsSync(dir)) throw new Error(`preview-region-layout: no preset ${JSON.stringify(target)} under frontend/presets/`);
@@ -63,7 +63,7 @@ function rulesPathOf(target) {
 }
 
 /** The editor's vanilla 116 as a CUSTOM set: `seedlingSetAdapter.rulesJsonOf`, the page's own compile. */
-async function vanillaSetRules() {
+export async function vanillaSetRules() {
     const [{ tileTypeForPlacement, SEEDLING_TILE_SIZE }, { loadRulesSchema }, { compileRegionAtlas }, { parseOelLevel },
         { emptyOverlay }, SA, { editorVanillaSet }] = await Promise.all([
         import(M('flashPanel/seedlingSemantics.js')), import(M('procgenCore/jsonSchemaFiles.js')),

@@ -25,7 +25,8 @@
  * ── D2: GROUPS ──
  * `layoutGrouped` lays out each GROUP (a swappable pure rule; R1 = connected components over `join` links) with
  * `layoutRegions`, then places the groups as rectangles in the same signed frame: a group reached by going DOWN
- * sits below the group above it, every other group to the right, `gap` empty cells between any two.
+ * sits below the group above it, a SOURCE group (nothing over it) just above its first successor, every other group
+ * to the right, `gap` empty cells between any two.
  *
  * ⛔ PURE: no imports at all (no substrate, no DOM, no rng). Not in the js engine closure, and imported by none of it.
  */
@@ -265,6 +266,13 @@ const conflicts = (a, b, gap) => a.minX <= b.maxX + gap && b.minX <= a.maxX + ga
  *      the next one by first member's position in `nodes`).
  *   6. A group that overlaps (or comes within `gap` of) a placed one slides RIGHT until it does not; x only, so the
  *      rule above stays true.
+ *   7. SOURCES (⚖ user 2026-11-16, *"just above its first successor"*): a group that NOTHING lies over but that lies
+ *      over something (and is not the start's group or one of its ancestors) is not placed in step 5 — nothing in
+ *      step 5 waits for it. Once every other group is placed, each source (group order) goes `gap` cells over the
+ *      HIGHEST group it lies over, its linking node aligned over the linked node of its FIRST SUCCESSOR: of the
+ *      groups it lies over, the one placed EARLIEST (between two links into that group, the first in link order).
+ *      It slides clear RIGHT, LEFT or UP, whichever moves it least (ties in that order); each keeps it over all it
+ *      lies over (`placedBy: 'source'`). A group with no vertical link at all still goes right (step 5).
  *   ⇒ Every `down` link across groups lands with the target group STRICTLY below (and every `up` strictly above)
  *     unless the vertical relation has a cycle; `stats.down` / `stats.up` count what did.
  *
@@ -320,16 +328,28 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
     const placedBy = new Array(members.length).fill(null);
     const order = [];
     const placedBoxes = () => order.map((gi) => box[gi]);
-    const commit = (gi, dx, dy, how) => {
-        // slide right until clear of every placed group (by `gap`)
+    /** Slide `gi`'s box from offset (dx, dy) one way (`right` / `left` / `up`) until clear of every placed group. */
+    const slide = (gi, dx, dy, way) => {
         let b = shiftBox(localBox[gi], dx, dy);
+        let moved = 0;
         for (;;) {
             const hit = placedBoxes().find((p) => conflicts(b, p, gap));
             if (!hit) break;
-            const step = hit.maxX + gap + 1 - b.minX;
-            dx += step;
-            b = shiftBox(b, step, 0);
+            const sx = way === 'right' ? hit.maxX + gap + 1 - b.minX : way === 'left' ? hit.minX - gap - 1 - b.maxX : 0;
+            const sy = way === 'up' ? hit.minY - gap - 1 - b.maxY : 0;
+            b = shiftBox(b, sx, sy);
+            moved += Math.abs(sx) + Math.abs(sy);
         }
+        return { dx: b.minX - localBox[gi].minX, dy: b.minY - localBox[gi].minY, b, moved };
+    };
+    /**
+     * Commit `gi` at offset (dx, dy), slid clear: RIGHT for every group (x only, so its vertical rule stays true);
+     * a SOURCE also tries LEFT and UP (both keep it over all it lies over) and takes the shortest slide, ties in
+     * that order.
+     */
+    const commit = (gi, dx0, dy0, how, ways = ['right']) => {
+        const best = ways.map((w) => slide(gi, dx0, dy0, w)).reduce((a, s) => (s.moved < a.moved ? s : a));
+        const { dx, dy, b } = best;
         offset[gi] = { dx, dy };
         box[gi] = b;
         placedBy[gi] = how;
@@ -405,14 +425,17 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
             const upperLocal = local[gi].pos.get(pick.upper);
             commit(gi, lower.gx - upperLocal.gx, bottom - gap - 1 - localBox[gi].maxY, 'above');
         }
+        // ⛓ SOURCES (step 7) wait: a group nothing lies over that lies over something, not yet placed.
+        const source = members.map((_, gi) => !placed(gi) && predsOf(gi).length === 0 && succsOf(gi).length > 0);
+        const pending = () => members.reduce((n, _, gi) => n + (source[gi] ? 0 : 1), 0);
         // ⛓ DOWNWARD: everything else in topological order (Kahn) — a group reached from a placed one goes BELOW
-        //   all it lies under; a group nothing above reaches goes RIGHT.
-        while (order.length < G) {
-            const ready = (gi) => !placed(gi) && predsOf(gi).every((v) => placed(v.above));
+        //   all it lies under (a waiting source is not waited for); a group nothing above reaches goes RIGHT.
+        while (order.length < pending()) {
+            const ready = (gi) => !placed(gi) && !source[gi] && predsOf(gi).every((v) => source[v.above] || placed(v.above));
             const pick = dag.find((v) => placed(v.above) && ready(v.below));
             if (pick) {
                 const gi = pick.below;
-                const top = Math.max(...predsOf(gi).map((w) => box[w.above].maxY));
+                const top = Math.max(...predsOf(gi).filter((w) => placed(w.above)).map((w) => box[w.above].maxY));
                 const upper = cellOf(pick.upper);
                 const lowerLocal = local[gi].pos.get(pick.lower);
                 commit(gi, upper.gx - lowerLocal.gx, top + gap + 1 - localBox[gi].minY, 'below');
@@ -420,11 +443,23 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
             }
             let gi = members.findIndex((_, i) => ready(i));
             // a placed descendant of an unplaced source would make it not "ready" only through a cycle; none is kept
-            if (gi < 0) gi = members.findIndex((_, i) => !placed(i));
+            if (gi < 0) gi = members.findIndex((_, i) => !placed(i) && !source[i]);
             const all = placedBoxes();
             const right = Math.max(...all.map((b) => b.maxX));
             const top = Math.min(...all.map((b) => b.minY));
             commit(gi, right + gap + 1 - localBox[gi].minX, top - localBox[gi].minY, 'right');
+        }
+        // ⛓ SOURCES, in group order: each `gap` cells over the HIGHEST group it lies over (so every one of its links
+        //   still lands below it), its linking node aligned over the linked node of its FIRST SUCCESSOR — the group it
+        //   lies over that was placed EARLIEST (`order`); between two links into that group, the first in `vertical`.
+        for (let gi = 0; gi < G; gi += 1) {
+            if (!source[gi]) continue;
+            const succ = succsOf(gi);
+            const first = succ.reduce((a, v) => (order.indexOf(v.below) < order.indexOf(a.below) ? v : a));
+            const bottom = Math.min(...succ.map((w) => box[w.below].minY));
+            const lower = cellOf(first.lower);
+            const upperLocal = local[gi].pos.get(first.upper);
+            commit(gi, lower.gx - upperLocal.gx, bottom - gap - 1 - localBox[gi].maxY, 'source', ['right', 'left', 'up']);
         }
     }
 
@@ -447,7 +482,8 @@ export function layoutGrouped(graph, { rule = groupsR1, gap = 1 } = {}) {
  * The legibility census of a grouped layout (`setMapLayout.layoutCensus`'s idea, over ids and signed cells):
  * group count and sizes, directed links honoured (exactly one cell that way) and consistent (in the right
  * quarter-plane), links between edge-adjacent cells, `down` links across groups that landed strictly below
- * (`up` across groups that landed strictly above), and the bounding box.
+ * (`up` across groups that landed strictly above), `crossLength` (the summed Euclidean length, in cells, of every
+ * link between two groups, to 2 decimals: what source placement shortens), and the bounding box.
  */
 export function groupedStats({ nodes, links }, positions, groups, groupOf = null) {
     const gOf = groupOf ?? new Map(groups.flatMap((g, gi) => g.members.map((id) => [id, gi])));
@@ -457,6 +493,7 @@ export function groupedStats({ nodes, links }, positions, groups, groupOf = null
     let adjacent = 0;
     const down = { across: 0, below: 0 };
     const up = { across: 0, above: 0 };
+    let crossLength = 0;
     for (const l of links) {
         if (l.from === l.to) continue;
         const a = positions.get(l.from);
@@ -474,6 +511,7 @@ export function groupedStats({ nodes, links }, positions, groups, groupOf = null
         const ga = gOf.get(l.from);
         const gb = gOf.get(l.to);
         if (ga === gb) continue;
+        crossLength += Math.hypot(dx, dy);
         if (kindOf(l) === 'down') {
             down.across += 1;
             if (groups[gb].bbox.minY > groups[ga].bbox.maxY) down.below += 1;
@@ -494,6 +532,7 @@ export function groupedStats({ nodes, links }, positions, groups, groupOf = null
         adjacent,
         down,
         up,
+        crossLength: Math.round(crossLength * 100) / 100,
         bbox,
     };
 }

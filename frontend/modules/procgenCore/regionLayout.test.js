@@ -339,3 +339,75 @@ describe('D2 — groups (R1) and their placement', () => {
         }
     });
 });
+
+describe('(P) source-group placement — just above its first successor (⚖ user 2026-11-16)', () => {
+    // s ─down→ c ─E→ c2 ─E→ c3; src ─down→ c3. Before (P), src went RIGHT of everything: (4, 0).
+    const chain = (extra = []) => ({
+        nodes: ['s', 'c', 'c2', 'c3', 'src', ...extra.flatMap((l) => [l.from, l.to]).filter((x, i, a) => !['s', 'c', 'c2', 'c3', 'src'].includes(x) && a.indexOf(x) === i)],
+        start: 's',
+        links: [{ from: 's', to: 'c', kind: 'down' }, { from: 'c', to: 'c2', dir: 'E' }, { from: 'c2', to: 'c3', dir: 'E' },
+            { from: 'src', to: 'c3', kind: 'down' }, ...extra],
+    });
+
+    it('a source group lands directly above its first successor, `gap` cells clear, aligned on the linked node', () => {
+        const { positions, groups, stats } = layoutGrouped(chain(), { gap: 1 });
+        expect(positions.get('c3')).toEqual({ gx: 2, gy: 2 });
+        expect(positions.get('src')).toEqual({ gx: 2, gy: 0 });
+        expect(groups.map((g) => [g.root, g.placedBy])).toEqual([['s', 'start'], ['c', 'below'], ['src', 'source']]);
+        expect(stats.down).toEqual({ across: 2, below: 2 });
+        expect(stats.crossLength).toBe(4); // s→c 2 + src→c3 2
+    });
+
+    it('the FIRST successor is the group placed earliest; the source sits over the HIGHEST group it lies over', () => {
+        // a second successor, d, placed after c's group (it is reached from c's group): src aligns over c3, not d
+        const g = chain([{ from: 'c', to: 'd', kind: 'down' }, { from: 'src', to: 'd', kind: 'down' }]);
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.find((x) => x.root === 'd').placedBy).toBe('below');
+        expect(positions.get('src').gx).toBe(positions.get('c3').gx);
+        expect(positions.get('src').gy).toBeLessThan(positions.get('c3').gy);
+        expect(positions.get('src').gy).toBeLessThan(positions.get('d').gy);
+    });
+
+    it('slides clear by the SHORTEST of right / left / up (ties: right first)', () => {
+        // src → c (directly under the start): its wanted cell (0,0) is the start's; right, left and up all move it 2
+        const tie = { nodes: ['s', 'c', 'src'], start: 's', links: [{ from: 's', to: 'c', kind: 'down' }, { from: 'src', to: 'c', kind: 'down' }] };
+        expect(layoutGrouped(tie, { gap: 1 }).positions.get('src')).toEqual({ gx: 2, gy: 0 });
+        // a wide start group to the right of the wanted cell: left is shorter than right
+        const wide = {
+            nodes: ['s', 's2', 's3', 'c', 'src'], start: 's',
+            links: [{ from: 's', to: 's2', dir: 'E' }, { from: 's2', to: 's3', dir: 'E' }, { from: 's', to: 'c', kind: 'down' },
+                { from: 'src', to: 'c', kind: 'down' }],
+        };
+        const w = layoutGrouped(wide, { gap: 1 });
+        expect(w.positions.get('c')).toEqual({ gx: 0, gy: 2 });
+        expect(w.positions.get('src')).toEqual({ gx: -2, gy: 0 });
+    });
+
+    it('a group with no vertical link still goes right; a group whose only predecessor is a source goes right too', () => {
+        const g = {
+            nodes: ['s', 'island', 'src', 't'], start: 's',
+            links: [{ from: 'src', to: 't', kind: 'down' }],
+        };
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['island', 'right'], ['src', 'source'], ['t', 'right']]);
+        expect(positions.get('src')).toEqual({ gx: positions.get('t').gx, gy: positions.get('t').gy - 2 });
+    });
+
+    it('over 300 random DAG graphs: every source lies strictly above every group it lies over', () => {
+        let sources = 0;
+        for (let s = 1; s <= 300; s++) {
+            const g = randomGroupedGraph(s, { dag: true });
+            const { groups } = layoutGrouped(g);
+            const gOf = new Map(groups.flatMap((x, gi) => x.members.map((id) => [id, gi])));
+            groups.forEach((gr, gi) => {
+                if (gr.placedBy !== 'source') return;
+                sources += 1;
+                for (const l of g.links) {
+                    if (gOf.get(l.from) !== gi || l.kind !== 'down' || gOf.get(l.to) === gi) continue;
+                    expect(groups[gOf.get(l.to)].bbox.minY, `seed ${s}`).toBeGreaterThan(gr.bbox.maxY);
+                }
+            });
+        }
+        expect(sources).toBeGreaterThan(30); // exercised, not vacuous
+    });
+});
