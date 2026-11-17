@@ -2,7 +2,8 @@
 
 Branch `atlas-sphere-rerecord`, base `4e0eab7215` (origin/main at launch; unmoved at packet time).
 Licence: Robert, 2026-11-17, "Fix parser + re-record, one slice", widened once to a fifth file by
-ruling (a) "Own small fixture for that row" when the re-record turned one reader red (below).
+ruling (a) "Own small fixture for that row" when the re-record turned one reader red, and to a sixth by
+"Read the goal from the preset" when CI at the tip turned a second one red (both below).
 
 ## Cause
 
@@ -49,7 +50,9 @@ region_5_5's tile grid, its Ghost Spear cell, its `longestShortestPath`, and eve
 | `check-preset-panel-click.mjs --host=…` | ALL CHECKS PASSED (sphere: 19 regions, 8 locations, 35 exits) |
 | `seedling-divergence-legs.mjs:626` | lists the preset name in `PRESETS`; pins no value from it (not run: a sweep) |
 
-No reader hard-codes `victory` or `region_5_5__loc_1__2_4`.
+One reader DID hard-code `victory`, and this table missed it: it lists only the sphere file's
+`placed-region` row, not its sibling `seedling-atlas-sphere-bot-completion` (below). A sweep of every
+file naming the preset found no other hard-coded `victory` or `region_5_5__loc_1__2_4`.
 
 ## The one red, and ruling (a)
 
@@ -72,6 +75,19 @@ Measured on the fixture:
 - **Found and routed:** the control finds A west→east and routes A.west → B → (B.north) → A.mid → walk
   to A.east, then crosses it.
 - **It bites:** opening A's walls (no severing) turns it red with its original message, 21/22.
+
+## The second red, and the goal-item ruling
+
+CI at the first tip (490b5dff66) failed TT: one row, 100/101, in both the fast and the fast (bundled)
+batch, while every other job passed. The row was `seedling-atlas-sphere-bot-completion`:
+*"the bot is holding the victory item: expected true, got false"*. The bot drained its queue and
+finished with no unreachable-target error, but `seedlingAtlasMazeTests.js` read `inventory.victory`,
+and (B) renamed the item. Ruled: read the goal off the preset instead of spelling it.
+`sphereWorldBotCompletion` now takes `game_info["1"].completion_condition.item` from the preset it
+loaded (and fails if that is missing). Measured locally on the re-recorded preset:
+
+- **With the fix:** the row passes (44.4 s).
+- **Without it:** it fails with CI's exact message.
 
 ## Closure
 
