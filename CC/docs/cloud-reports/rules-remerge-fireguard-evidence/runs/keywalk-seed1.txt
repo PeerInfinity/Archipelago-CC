@@ -1,0 +1,829 @@
+## frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json vs origin/main: 276 change(s)
+CHG /preset_sidecars/1/level_0__r11c19/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_0__r14c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_0__r1c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_0__r2c13/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_0__r4c16/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_0__r6c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_0__r7c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_100__r2c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_100__r4c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_101__r0c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_101__r4c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_101__r4c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_102__r5c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_102__r5c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_103/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_104/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_105/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_106/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_107/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_108__r11c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_108__r2c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_108__r5c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_108__r8c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_109/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_110/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_111/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_112__r0c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_112__r2c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_113/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_114/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r2c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r4c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r5c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r6c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r8c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r8c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_115__r9c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_12__r0c19/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_12__r0c37/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_12__r13c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_12__r40c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_12__r42c28/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_12__r43c21/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_13/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_14/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_15__r1c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_15__r1c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_15__r6c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_16__r1c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_16__r1c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_16__r3c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_16__r4c21/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_16__r6c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_17/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_18__r1c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_18__r7c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_19__r1c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_19__r1c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_19__r3c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_19__r5c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_20__r1c12/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_20__r1c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_20__r3c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_21/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_22__r0c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_22__r8c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_23/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_24/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_25__r2c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_25__r3c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_26__r13c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_26__r2c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_27/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_28__r0c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_28__r11c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_28__r1c18/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_29__r2c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_29__r5c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_29__r9c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_30__r0c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_30__r16c17/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_30__r17c11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_30__r2c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_30__r8c13/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_31__r24c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_31__r5c24/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_32/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_33/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_34/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_35/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_36/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_37__r0c18/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_37__r12c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_37__r5c33/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_37__r9c36/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_38/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_39__r0c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_39__r25c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_39__r2c11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_3__r0c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_3__r8c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r0c53/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r23c29/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r26c13/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r32c36/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r36c35/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r48c54/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_40__r4c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_41__r4c15/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_41__r4c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_41__r7c15/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_42/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_43__r13c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_43__r3c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_43__r8c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_44__r0c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_44__r4c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_44__r6c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_45__r0c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_45__r14c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_45__r4c18/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_45__r6c15/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_46__r0c11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_46__r1c26/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_46__r23c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_46__r24c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_46__r25c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_46__r6c24/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r10c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r13c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r14c18/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r14c22/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r19c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r1c21/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r2c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r7c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_47__r8c20/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_48__r11c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_48__r18c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_48__r2c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_48__r4c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_48__r7c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_49/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_50/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_51__r14c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_51__r2c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_51__r3c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_51__r3c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_52__r0c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_52__r2c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_52__r5c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_53__r14c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_53__r2c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_53__r9c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r10c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r13c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r16c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r18c15/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r18c19/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r19c13/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r1c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r27c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_54__r8c11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_55/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_56/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_57/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r1c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r1c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r2c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r2c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r3c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r4c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_58__r6c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_59/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_5__r1c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_5__r1c5/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_60__r5c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_60__r5c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_61__r0c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_61__r0c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_61__r13c12/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_62/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_63__r0c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_63__r10c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_63__r5c14/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_63__r6c15/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_63__r6c9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_64/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_65__r0c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_65__r0c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_65__r4c11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_66__r5c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_66__r9c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_67__r3c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_67__r6c11/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_68__r1c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_68__r3c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_69/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_70/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_71__r0c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_71__r11c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_71__r13c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_71__r14c12/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_71__r16c19/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_72/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_73__r0c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_73__r3c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_74/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_75/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_76/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_77/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_78__r0c16/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_78__r0c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_79__r0c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_79__r8c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_80__r0c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_80__r12c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_80__r16c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_80__r6c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_80__r8c1/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_80__r8c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_82/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_83/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_84__r0c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_84__r2c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_84__r3c0/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_85/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_86/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_87__r0c23/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_87__r1c3/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_87__r7c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_87__r7c13/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_88/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_89__r11c12/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_89__r1c10/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_89__r1c15/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_89__r4c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_89__r6c16/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_89__r9c6/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_9/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_90/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_91/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_92__r1c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_92__r3c12/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_92__r4c2/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_92__r7c17/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_92__r7c8/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_93__r10c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_93__r14c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_93__r5c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_94__r2c16/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_94__r3c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_95/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_96/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_97/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_98/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_99__r2c4/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /preset_sidecars/1/level_99__r2c7/playable_payload/atlas_ref
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /region_atlas/1/atlas_id
+    - "seedling-2ac275e8"
+    + "seedling-630fbc4c"
+CHG /regions/1/level_100__r4c10/exits/name=level_100__r4c10 -> level_100__r2c3/access_rule/args/item_names/[0]
+    - "Fire"
+    + "Ghost Spear"
+CHG /regions/1/level_100__r4c10/exits/name=level_100__r4c10 -> level_100__r2c3/access_rule/args/item_names/[1]
+    - "Ghost Spear"
+    + "Progressive Sword"
+DEL /regions/1/level_100__r4c10/exits/name=level_100__r4c10 -> level_100__r2c3/access_rule/args/item_names/[2]
+    - "Progressive Sword"
+    + null
+CHG /regions/1/level_73__r0c4/exits/name=level_73__r0c4 -> level_73__r3c7/access_rule/args/item_names/[1]
+    - "Fire"
+    + "Ghost Spear"
+CHG /regions/1/level_73__r0c4/exits/name=level_73__r0c4 -> level_73__r3c7/access_rule/args/item_names/[2]
+    - "Ghost Spear"
+    + "Progressive Sword"
+DEL /regions/1/level_73__r0c4/exits/name=level_73__r0c4 -> level_73__r3c7/access_rule/args/item_names/[3]
+    - "Progressive Sword"
+    + null
+CHG /regions/1/level_73__r3c7/exits/name=level_73__r3c7 -> level_73__r0c4/access_rule/args/item_names/[1]
+    - "Fire"
+    + "Ghost Spear"
+CHG /regions/1/level_73__r3c7/exits/name=level_73__r3c7 -> level_73__r0c4/access_rule/args/item_names/[2]
+    - "Ghost Spear"
+    + "Progressive Sword"
+DEL /regions/1/level_73__r3c7/exits/name=level_73__r3c7 -> level_73__r0c4/access_rule/args/item_names/[3]
+    - "Progressive Sword"
+    + null
