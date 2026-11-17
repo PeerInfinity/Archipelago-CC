@@ -167,7 +167,7 @@ import {
     FINAL_BOSS, GRENADE, ROCK_FALL, advanceFinalBossGraphic, advanceOwlGrenadeGraphic,
     advancePodGraphic, advanceRockFallGraphic, createFinalBoss, createOwlGrenade, createPod,
     createRockFall, finalBossBox, finalBossDeathSchedule, finalBossHit, finalBossLavaVerdict,
-    firstTileUnder, owlGrenadeReaches, podIsLethal, pointDistance, rockFallBox, setPodOpen,
+    firstTileUnder, owlGrenadeReaches, podIsLethal, pointDistance, pointLength, rockFallBox, setPodOpen,
     stepFinalBoss, stepOwlGrenade, stepRockFall,
 } from './finalBossFight.js';
 import {
@@ -418,6 +418,30 @@ function darkSuitHitChaser(c, p, frozen) {
         id: c.id, landed: verdict.landed, refusedAt: verdict.refusedAt,
         hits: c.hits, hitsTimer: c.hitsTimer, shoved,
         ...(verdict.killed ? { killed: true } : {}),
+    };
+}
+
+/**
+ * ⛓ fidelity OWLSUIT D2 (`CONTACT_FIDELITY.owlContactInStep`) — THE DARK SUIT'S RETALIATION INTO THE OWL.
+ *
+ * `Player.hit`'s `e.hit(darkSuitForce, new Point(x, y), darkSuitDamage, "Suit")` (`Player.as:1384-1387`) with `e` the
+ * Owl. `FinalBoss` has no `hit` override, so it is `Enemy.hit` (`Enemies/Enemy.as:141-181`): the `maxForce` clamp
+ * (-1, or 2 after the first lava hit: force 1 either way); the gate `(hitsTimer <= 0 || hitByDarkStuff) &&
+ * !freezeObjects && canHit` — `hitByDarkStuff` is never true for him (the lava hit writes it false, and this arm does
+ * not write it), and `canHit` is LAST tick's `rockfallTime < 0` (`FinalBoss.as:131`, assigned after
+ * `super.update()`), so a barrage swallows it; then `onlyHitBy = "Lava"` (`FinalBoss.as:61`) is not "Suit", so the
+ * damage arm is skipped and `justKnock` (`:62`) takes `knockback(f, p)` (`Enemy.as:247-255`): `v += f·(cos a, sin a)`,
+ * `a = atan2(y - p.y, x - p.x)`. No hits, no i-frame, no latch: `darkSuitDamage` is unread. That is `finalBossHit`'s
+ * `justKnock` arm, called here.
+ *
+ * @returns the `playerHits` row's `retaliation` field: the Owl's `v` (and `|v|`, through `Point.length`) AFTER the
+ *   shove — the value the cap and the walk/coast split then read on this same tick.
+ */
+function owlSuitRetaliation(b, p) {
+    const r = finalBossHit(b, { force: DARK_SUIT_FORCE, fromX: p.x, fromY: p.y, type: 'Suit' });
+    return {
+        id: b.id, as3: 'FinalBoss', landed: r.landed, damaged: r.damaged === true, force: r.force,
+        why: r.why ?? 'justKnock: onlyHitBy "Lava" != "Suit"', vx: b.vx, vy: b.vy, speed: pointLength(b.vx, b.vy),
     };
 }
 
@@ -11107,11 +11131,41 @@ export function createLevelRun({
          * says so — this is the reasoning, not the evidence.
          */
         const owlOpts = normalizeLiveOpts(liveSolidOpts());
+        /**
+         * ⛓ fidelity OWLSUIT D2 (`CONTACT_FIDELITY.owlContactInStep`, OFF) — `Enemy.update`'s `hitPlayer()` AT ITS
+         * AS3 SLOT. ON, `stepFinalBoss` calls `owlHitPlayer` inside `super.update()` (`Enemies/FinalBoss.as:110`),
+         * after the move and `hitUpdate`, so the contact sees the Owl's post-move, PRE-snap point and its `hitsTimer`
+         * before a lava hit sets it; its writes land before the lava test, the cap and the phase arms read them: the
+         * player's knockback `p.v` (the barrage aim, `:144`, reads `player` LIVE below) and, under the suit, the
+         * Owl's own `v` (`owlSuitRetaliation`, declared). The bill below the step then does not run.
+         */
+        const owlInStep = CONTACT_FIDELITY.owlContactInStep;
+        const owlHitPlayer = ({ frozen: owlFrozen }) => {
+            // `Bot.noDamage` returns first in `Player.hit`, and `!Game.freezeObjects` is its gate (a ceremony or the
+            // intro): no effect at all, so no row, as the bill below skips a ceremony.
+            if (noclip || noDamage || owlFrozen) return;
+            if (!rectsOverlap(finalBossBox(b.x, b.y), playerBox)) return;
+            // `p.hit(this, 3, new Point(x, y), damage)` (`Enemies/Enemy.as:218`); `damage` is `Enemy`'s default, which
+            // `FinalBoss` never assigns, and `applyPlayerHit`'s own default.
+            applyPlayerHit({
+                source: 'owlBody',
+                id: b.id,
+                force: PLAYER_DAMAGE.contactForce,
+                from: { x: b.x, y: b.y },
+                retaliate: (p) => owlSuitRetaliation(b, p),
+            });
+        };
         const step = stepFinalBoss(b, {
             frozen: frozenByCeremony,
             // The player as the boss sees them: the END of the previous tick,
             // because he updates first.
-            player: { x: state.x, y: state.y, vx: state.vx, vy: state.vy },
+            player: owlInStep
+                ? {
+                    get x() { return state.x; }, get y() { return state.y; },
+                    get vx() { return state.vx; }, get vy() { return state.vy; },
+                }
+                : { x: state.x, y: state.y, vx: state.vx, vy: state.vy },
+            onHitPlayer: owlInStep ? owlHitPlayer : undefined,
             solidAt: (x, y) => !!world.collidesSolid(finalBossBox(x, y), owlOpts),
             firstTileAt: (x, y) => firstTileUnder(world.tiles, finalBossBox(x, y)),
             stream,
@@ -11258,7 +11312,11 @@ export function createLevelRun({
         // case is unreachable while the pods are avoided (a contact during a
         // barrage means standing on a boss who is sitting in a pod cell). It
         // is REFUSED rather than approximated.
-        if (!noclip && !noDamage && !b.destroy && b.hitsTimer <= 0 && !frozenByCeremony) {
+        // ⛓ fidelity OWLSUIT D2: ON, the contact was billed INSIDE the step (`owlHitPlayer`), so this bill is skipped
+        // and the rock-spawn refusal with it: the barrage aim read the knocked-back `p.v`, as in the game.
+        if (owlInStep) {
+            if (pendingDeath) return { frozen: false };
+        } else if (!noclip && !noDamage && !b.destroy && b.hitsTimer <= 0 && !frozenByCeremony) {
             if (rectsOverlap(finalBossBox(b.x, b.y), playerBox)) {
                 if (rockSpawnedThisTick) {
                     throw new Error(`levelRun: the Owl's body touched the player at tick `

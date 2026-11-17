@@ -2122,6 +2122,27 @@ export const CONTACT_FIDELITY = {
      * ⛔ OFF by default (no flip licence).
      */
     darkSuitBossRetaliation: false,
+    /**
+     * fidelity OWLSUIT D2 (wave 49) — THE OWL'S BODY CONTACT AT ITS AS3 SLOT, AND HIS "Suit" RETALIATION. `FinalBoss.update`
+     * calls `super.update()` (`Enemies/FinalBoss.as:110`) → `Enemy.update` → `mobileUpdate` (friction, the move), then
+     * `hitUpdate()` and `hitPlayer()` (`Enemies/Enemy.as:106-111`; `hitPlayer` not overridden: `p.hit(this, 3, new
+     * Point(x, y), damage)` behind `!destroy && currentAnim != "die" && hitsTimer <= 0`, `:211-221`), and only THEN the
+     * lava test (`FinalBoss.as:116-124`), the `v.length > 4` cap and the phase arms (`:126-182`). The model billed
+     * `owlBody` AFTER `stepFinalBoss`'s arms, so four reads were wrong: (1) under the suit, `Player.hit`'s `e.hit(1, new
+     * Point(x, y), 1, "Suit")` (`Player.as:1384-1387`) is `Enemy.hit` with `onlyHitBy = "Lava"` and `justKnock`
+     * (`FinalBoss.as:61-62`) → `knockback(1, p)` into `v`, which the cap and the walk/coast split `v.length <= moveSpeed`
+     * read on the same tick (refused by name before); (2) the player's knockback `p.v`, which the barrage aim reads
+     * (`:144`; refused before on a rock-spawn tick); (3) the Owl's `hitsTimer`/`destroy`, which a lava hit on the same
+     * tick sets (`:120`) — the late bill skipped a contact the game lands; (4) his point, which the pod snap (`:176-177`)
+     * moves. ON: `stepFinalBoss` calls the caller's `onHitPlayer` at that slot; `levelRun` bills there with `retaliate`
+     * declared (`owlSuitRetaliation` → `finalBossHit(…, 'Suit')`: the clamp, the `canHit` gate, the `justKnock` shove;
+     * no hits, no i-frame), the barrage aim reads the player LIVE, and the rock-spawn refusal is retired (the order is
+     * the game's). The row lands in `playerHits[].retaliation` (with the Owl's `v` after the shove). Composes with
+     * `darkSuitBossRetaliation`: ON here declares the Owl whatever that key says; OFF here leaves wave 48's refusal
+     * (and its D1 text when that key is ON) exactly as it was. OFF: byte-identical. `SEEDLING_OWL_CONTACT_IN_STEP=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    owlContactInStep: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2537,6 +2558,9 @@ if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '0') CONTACT_FID
 // ⛓ fidelity DARKSUITBOSSES D2: `SEEDLING_DARK_SUIT_BOSS_RETALIATION=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '1') CONTACT_FIDELITY.darkSuitBossRetaliation = true;
 if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '0') CONTACT_FIDELITY.darkSuitBossRetaliation = false;
+// ⛓ fidelity OWLSUIT D2: `SEEDLING_OWL_CONTACT_IN_STEP=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '1') CONTACT_FIDELITY.owlContactInStep = true;
+if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '0') CONTACT_FIDELITY.owlContactInStep = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
