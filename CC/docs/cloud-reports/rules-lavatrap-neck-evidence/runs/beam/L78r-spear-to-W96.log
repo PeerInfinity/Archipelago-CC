@@ -1,0 +1,8 @@
+DEPTH 1 {"alive":9,"best":{"s":48.36,"at":[86.8,91.1],"ch":["lavarunner@192,144(200,152)"]}}
+DEPTH 2 {"alive":36,"best":{"s":48.3,"at":[91.6,93.9],"ch":["lavarunner@192,144(200,152)"]}}
+DEPTH 3 {"alive":53,"best":{"s":32.27,"at":[96.1,90.7],"ch":["lavarunner@192,144(200,152)"]}}
+DEPTH 4 {"alive":53,"best":{"s":16.2,"at":[100.6,99.4],"ch":["lavarunner@192,144(200,152)"]}}
+DEPTH 5 {"alive":55,"best":{"s":16.15,"at":[105.2,100.2],"ch":["lavarunner@192,144(200,152)"]}}
+DEPTH 6 {"alive":58,"best":{"s":16.1,"at":[111.2,100],"ch":["lavarunner@192,144(200,152)"]}}
+DEPTH 7 {"alive":31,"best":{"s":16.11,"at":[110.6,110.6],"ch":["lavarunner@192,144(200,152)"]}}
+BEAM {"boot":[78,32,16],"goal":[112,96,null],"items":["hasSpear"],"width":32,"seg":4,"depth":80,"tried":2533,"survivors":295,"verdict":"MODEL ROUTE","ticks":25,"bestHitFree":{"tiles":1,"at":[111.2,100],"ticks":24,"ch":["lavarunner@192,144(200,152)"]},"ms":30459}

@@ -1,0 +1,157 @@
+## frontend/modules/flashPanel/atlases/seedling-playthrough.json vs HEAD: 52 change(s)
+CHG /atlas_id
+    - "seedling-630fbc4c"
+    + "seedling-ac434804"
+CHG /provenance/content_hash
+    - "630fbc4c"
+    + "ac434804"
+CHG /regions/name=Level 077/annotations/rules_source
+    - "manual"
+    + "mixed"
+ADD /regions/name=Level 077/exits/exit_id=in_L76_304_112/sub_region
+    - null
+    + "r2c0"
+ADD /regions/name=Level 077/exits/exit_id=in_L78_256_0/sub_region
+    - null
+    + "r15c6"
+ADD /regions/name=Level 077/exits/exit_id=out_teleporter_0_32/sub_region
+    - null
+    + "r2c0"
+ADD /regions/name=Level 077/exits/exit_id=out_teleporter_96_304/sub_region
+    - null
+    + "r15c6"
+ADD /regions/name=Level 077/subgraph
+    - null
+    + {"internal_exits": [{"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r12c6", "source": "analyzer", "to": "r15c6"}, {"access_rule": {"children": [{"args": {"item_na…
+CHG /regions/name=Level 078/annotations/rules_source
+    - "analyzer"
+    + "mixed"
+ADD /regions/name=Level 078/subgraph/internal_exits/[0]/access_rule/args
+    - null
+    + {"item_name": "Dark Suit"}
+DEL /regions/name=Level 078/subgraph/internal_exits/[0]/access_rule/children
+    - [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Progressive Sword"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}]
+    + null
+CHG /regions/name=Level 078/subgraph/internal_exits/[0]/access_rule/rule
+    - "Or"
+    + "Has"
+ADD /regions/name=Level 078/subgraph/internal_exits/[10]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Progressive Sword"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c2", "source": "analyzer", "to": "r3c1"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[11]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": true, "from": "r0c2", "source": "analyzer", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[12]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": true, "from": "r0c2", "source": "analyzer", "to": "r4c4"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[13]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": true, "from": "r0c2", "source": "analyzer", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[14]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": true, "from": "r0c2", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[15]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r1c10", "source": "analyzer", "to": "r3c1"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[16]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r1c10", "source": "analyzer", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[17]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r1c10", "source": "manual", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[18]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r1c10", "source": "analyzer", "to": "r4c4"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[19]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r1c10", "source": "analyzer", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[1]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c16", "source": "analyzer", "to": "r1c10"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[20]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r1c10", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[21]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c1", "source": "analyzer", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[22]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c1", "source": "analyzer", "to": "r4c4"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[23]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c1", "source": "analyzer", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[24]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r3c1", "source": "manual", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[25]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c1", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[26]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c9", "source": "analyzer", "to": "r4c4"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[27]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c9", "source": "analyzer", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[28]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r3c9", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[29]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r3c9", "source": "manual", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[2]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c16", "source": "analyzer", "to": "r3c1"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[30]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r4c4", "source": "analyzer", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[31]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r4c4", "source": "manual", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[32]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r4c4", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[33]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r5c6", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[34]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r6c9", "source": "manual", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[3]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c16", "source": "analyzer", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[4]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r0c16", "source": "manual", "to": "r3c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[5]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c16", "source": "analyzer", "to": "r4c4"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[6]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c16", "source": "analyzer", "to": "r5c6"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[7]
+    - null
+    + {"access_rule": {"children": [{"args": {"item_name": "Dark Suit"}, "rule": "Has"}, {"args": {"item_name": "Ghost Spear"}, "rule": "Has"}], "rule": "Or"}, "bidirectional": true, "from": "r0c16", "source": "analyzer", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[8]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": false, "from": "r0c16", "source": "manual", "to": "r6c9"}
+ADD /regions/name=Level 078/subgraph/internal_exits/[9]
+    - null
+    + {"access_rule": {"args": {"item_name": "Dark Suit"}, "rule": "Has"}, "bidirectional": true, "from": "r0c2", "source": "analyzer", "to": "r1c10"}
+ADD /regions/name=Level 078/subgraph/sub_regions/[2]
+    - null
+    + "r1c10"
+ADD /regions/name=Level 078/subgraph/sub_regions/[3]
+    - null
+    + "r3c1"
+ADD /regions/name=Level 078/subgraph/sub_regions/[4]
+    - null
+    + "r3c9"
+ADD /regions/name=Level 078/subgraph/sub_regions/[5]
+    - null
+    + "r4c4"
+ADD /regions/name=Level 078/subgraph/sub_regions/[6]
+    - null
+    + "r5c6"
+ADD /regions/name=Level 078/subgraph/sub_regions/[7]
+    - null
+    + "r6c9"

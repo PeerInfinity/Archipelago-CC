@@ -1,0 +1,8 @@
+vanilla problems base 1 tip 1 identical []
+vanilla accepted base 16 tip 16 identical []
+vanilla threw base 0 tip 0 identical []
+vanilla lines in L77/L78: base 8 tip 24
+er problems base 1 tip 1 identical []
+er accepted base 16 tip 16 identical []
+er threw base 0 tip 0 identical []
+er lines in L77/L78: base 8 tip 24
