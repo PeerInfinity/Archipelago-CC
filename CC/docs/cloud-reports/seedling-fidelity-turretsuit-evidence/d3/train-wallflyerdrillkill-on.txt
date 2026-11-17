@@ -1,0 +1,8 @@
+ ✓ frontend/modules/seedlingDemo/hammerWallFlyerDrillKill.train.test.js (5 tests) 82497ms
+     ✓ OFF: EXHAUSTED at wallflyer@48,112  16825ms
+     ✓ ON: two wallflyers struck where they rest, and the step crosses to L29 with no hit (539 t)  20052ms
+     ✓ OFF (DRILL_EXIT_PASS off): EXHAUSTED at drill@128,160 ("not a body this run can watch die")  14351ms
+     ✓ OFF at the stack defaults (DRILL_EXIT_PASS on): L87 reached with no hit, and the drill arm is never asked  18457ms
+     ✓ ON (the drill arm alone): drill@128,160 killed from its south pre-stance, L87 reached with no hit (354 t)  12811ms
+ Test Files  1 passed (1)
+      Tests  5 passed (5)

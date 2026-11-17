@@ -1,0 +1,14 @@
+     ✓ ships OFF, appended last, with a worker env name 2ms
+     ✓ OFF: wave 46's refusal by name; with `darkSuitStaticRetaliation` ON it carries the D1 reason 54ms
+     ✓ ON: billed at tick 14 with `Enemy.hit`'s writes (hits, the 30-tick i-frames, the dark latch) 16ms
+     ✓ ON with `darkSuitStaticRetaliation` ON too: the same result (that key's Turret arm is never reached) 18ms
+     ✓ no suit (ON = OFF): the contact tick starts the shot, which leaves the barrel at t61 12ms
+     ✓ suit ON: `hitsTimer = 30` closes `else if (hitsTimer <= 0)` on that tick; the shot waits for the timer (t91) 21ms
+     × plays "die" in the turret's own turn: no shot after it, and the graphic steps on the blow's tick 17ms
+     ✓ no suit: ON = OFF, the whole result (the contact's player-side writes are order-free for the turret) 30ms
+     ✓ `STATIC_SWORD_ARM` OFF: no hook is passed, and the scan refuses the turret as before, ON as OFF 4ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretSuit.test.js > TURRETSUIT — the third Suit hit > plays "die" in the turret's own turn: no shot after it, and the graphic steps on the blow's tick
+-     "removedAt": 103,
++     "removedAt": 104,
+      Tests  1 failed | 8 passed (9)

@@ -1,0 +1,16 @@
+     ✓ ships OFF, appended last, with a worker env name 2ms
+     ✓ OFF: wave 46's refusal by name; with `darkSuitStaticRetaliation` ON it carries the D1 reason 38ms
+     ✓ ON: billed at tick 14 with `Enemy.hit`'s writes (hits, the 30-tick i-frames, the dark latch) 7ms
+     ✓ ON with `darkSuitStaticRetaliation` ON too: the same result (that key's Turret arm is never reached) 16ms
+     ✓ no suit (ON = OFF): the contact tick starts the shot, which leaves the barrel at t61 10ms
+     × suit ON: `hitsTimer = 30` closes `else if (hitsTimer <= 0)` on that tick; the shot waits for the timer (t91) 20ms
+     × plays "die" in the turret's own turn: no shot after it, and the graphic steps on the blow's tick 11ms
+     ✓ no suit: ON = OFF, the whole result (the contact's player-side writes are order-free for the turret) 34ms
+     ✓ `STATIC_SWORD_ARM` OFF: no hook is passed, and the scan refuses the turret as before, ON as OFF 4ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretSuit.test.js > TURRETSUIT — the fire gate reads the post-hit timer > suit ON: `hitsTimer = 30` closes `else if (hitsTimer <= 0)` on that tick; the shot waits for the timer (t91)
+AssertionError: expected [ [ 7, 'turret@128,192#1' ], …(1) ] to deeply equal [ [ 7, 'turret@128,192#1' ], …(1) ]
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretSuit.test.js > TURRETSUIT — the third Suit hit > plays "die" in the turret's own turn: no shot after it, and the graphic steps on the blow's tick
+AssertionError: expected [] to deeply equal [ 'die anim', 'die anim', …(27) ]
+      Tests  2 failed | 7 passed (9)
+late-hook ON fire-tick staging: spawns [(7, 'turret@128,192#1'), (7, 'turret@80,176#1'), (61, 'turret@128,192#2'), (61, 'turret@80,176#2')]
