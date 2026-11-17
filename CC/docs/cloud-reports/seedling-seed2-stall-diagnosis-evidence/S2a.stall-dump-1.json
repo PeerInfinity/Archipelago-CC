@@ -1,0 +1,1832 @@
+{
+    "botStatus": {
+        "input": {
+            "release_totals": {
+                "right": 0,
+                "up": 0,
+                "left": 0,
+                "down": 0,
+                "primary": 0,
+                "secondary": 0,
+                "inventory": 0,
+                "inventory2": 0
+            },
+            "press_totals": {
+                "right": 0,
+                "up": 0,
+                "left": 0,
+                "down": 0,
+                "primary": 0,
+                "secondary": 0,
+                "inventory": 0,
+                "inventory2": 0
+            },
+            "held": [],
+            "released": [],
+            "pressed": [],
+            "t": -1
+        },
+        "seam": {
+            "why": "equip check failed: equip at tick 0 selected slot 1 but the inventory holds 1 item(s); useItem on an out-of-range slot is a silent no-op",
+            "partial": true,
+            "latched": true
+        },
+        "slash": {
+            "hits": 0,
+            "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+            "hooks": true,
+            "split": true,
+            "seed": 0,
+            "cosmetic_state": 1486967168,
+            "state": 1741085794
+        },
+        "save": {
+            "has_all_seal_parts": false,
+            "has_all_totem_parts": false,
+            "seal_parts": [
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
+            ],
+            "keys": [
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
+            "totem_parts": [
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        },
+        "pins": {
+            "dead_frames": true,
+            "sound": true
+        },
+        "sound_pin": {
+            "channels": [
+                {
+                    "playing": false,
+                    "frames": 0,
+                    "len_frames": 0
+                }
+            ],
+            "set": "Swim"
+        },
+        "camera": {
+            "shake": 0,
+            "y": 749,
+            "x": 246
+        },
+        "game_time": 11788,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 0,
+        "drown_timer": 0,
+        "equips": [
+            {
+                "slot": 1,
+                "t": 0
+            }
+        ],
+        "inventory_slots": [
+            1,
+            0
+        ],
+        "secondary": 0,
+        "primary": 1,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+            {
+                "tag": 1,
+                "level": 0
+            },
+            {
+                "tag": 0,
+                "level": 3
+            },
+            {
+                "tag": 0,
+                "level": 5
+            },
+            {
+                "tag": 0,
+                "level": 8
+            },
+            {
+                "tag": 1,
+                "level": 8
+            },
+            {
+                "tag": 0,
+                "level": 10
+            },
+            {
+                "tag": 0,
+                "level": 11
+            },
+            {
+                "tag": 2,
+                "level": 12
+            },
+            {
+                "tag": 9,
+                "level": 12
+            },
+            {
+                "tag": 0,
+                "level": 44
+            },
+            {
+                "tag": 0,
+                "level": 86
+            }
+        ],
+        "persistence": [
+            {
+                "cleared": true,
+                "tag": 1,
+                "level": 0
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 3
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 5
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 8
+            },
+            {
+                "cleared": true,
+                "tag": 1,
+                "level": 8
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 10
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 11
+            },
+            {
+                "cleared": true,
+                "tag": 2,
+                "level": 12
+            },
+            {
+                "cleared": true,
+                "tag": 9,
+                "level": 12
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 44
+            },
+            {
+                "cleared": true,
+                "tag": 0,
+                "level": 86
+            }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "items": {
+            "hitsMax": 4,
+            "hasTorch": true,
+            "hasDarkSuit": false,
+            "hasSpear": false,
+            "hasFeather": false,
+            "canSwim": false,
+            "hasFireWand": false,
+            "hasWand": false,
+            "hasFire": true,
+            "hasDarkShield": false,
+            "hasShield": false,
+            "hasGhostSword": false,
+            "hasDarkSword": false,
+            "hasSword": true
+        },
+        "y": 824.8151079715487,
+        "x": 327.8454631151322,
+        "level": 12,
+        "saw_input_refused": false,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 0,
+        "buffered": 0,
+        "tick_count": 858,
+        "tick": 0,
+        "error": "equip at tick 0 selected slot 1 but the inventory holds 1 item(s); useItem on an out-of-range slot is a silent no-op",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+            "armed_at": 11388,
+            "pending": false
+        },
+        "armed": false,
+        "loaded": true
+    },
+    "readState": {
+        "hasSword": true,
+        "hasDarkSword": false,
+        "hasGhostSword": false,
+        "hasShield": false,
+        "hasDarkShield": false,
+        "hasFire": true,
+        "hasWand": false,
+        "hasFireWand": false,
+        "canSwim": false,
+        "hasFeather": false,
+        "hasSpear": false,
+        "hasDarkSuit": false,
+        "hasTorch": true,
+        "hitsMax": 4,
+        "playerPositionX": 592,
+        "playerPositionY": 16,
+        "pendingExit": "21|37|teleporter|32|304|12",
+        "pendingCheck": "224|86|0|0",
+        "keyMask": 0,
+        "totemCount": 0,
+        "beam": false,
+        "rockSet": false,
+        "freezeObjects": false,
+        "level": 12,
+        "sealSlot0": -1,
+        "sealSlot1": -1,
+        "sealSlot2": -1,
+        "sealSlot3": -1,
+        "sealSlot4": -1,
+        "sealSlot5": -1,
+        "sealSlot6": -1,
+        "sealSlot7": -1,
+        "sealSlot8": -1,
+        "sealSlot9": -1,
+        "sealSlot10": -1,
+        "sealSlot11": -1,
+        "sealSlot12": -1,
+        "sealSlot13": -1,
+        "sealSlot14": -1,
+        "sealSlot15": -1,
+        "totemPart0": false,
+        "totemPart1": false,
+        "totemPart2": false,
+        "totemPart3": false,
+        "totemPart4": false
+    },
+    "seam": {
+        "sinceBegin": {
+            "rng_first": 448081596,
+            "held_at_begin": [
+                "down"
+            ],
+            "pressed": {
+                "left": 31,
+                "down": 26,
+                "right": 30,
+                "up": 25,
+                "primary": 1
+            },
+            "input_frames": 1391,
+            "dead": 20,
+            "stepped": 1908
+        },
+        "beginEntry": null,
+        "seam": {
+            "level": 12,
+            "playerPositionX": 592,
+            "playerPositionY": 16,
+            "save.hasSword": true,
+            "save.hasGhostSword": false,
+            "save.hasShield": false,
+            "save.hasFire": true,
+            "save.hasWand": false,
+            "save.hasFireWand": false,
+            "save.canSwim": false,
+            "save.hasSpear": false,
+            "save.hasDarkShield": false,
+            "save.hasDarkSuit": false,
+            "save.hasDarkSword": false,
+            "save.hasFeather": false,
+            "save.hasTorch": true,
+            "save.beam": false,
+            "save.rockSet": false,
+            "save.hitsMax": 4,
+            "save.firstUse": false,
+            "save.extended": false,
+            "save.time": 11388,
+            "save.primary": 1,
+            "save.secondary": 0,
+            "save.grassCut": 0,
+            "save.hasKey": [
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
+            "save.hasTotemPart": [
+                false,
+                false,
+                false,
+                false,
+                false
+            ],
+            "save.hasSealPart": [
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
+            ],
+            "save.levelPersistence": [
+                {
+                    "tag": 1,
+                    "level": 0
+                },
+                {
+                    "tag": 0,
+                    "level": 3
+                },
+                {
+                    "tag": 0,
+                    "level": 5
+                },
+                {
+                    "tag": 0,
+                    "level": 8
+                },
+                {
+                    "tag": 1,
+                    "level": 8
+                },
+                {
+                    "tag": 0,
+                    "level": 10
+                },
+                {
+                    "tag": 0,
+                    "level": 11
+                },
+                {
+                    "tag": 2,
+                    "level": 12
+                },
+                {
+                    "tag": 9,
+                    "level": 12
+                },
+                {
+                    "tag": 0,
+                    "level": 44
+                },
+                {
+                    "tag": 0,
+                    "level": 86
+                }
+            ],
+            "static.Game.cutscene": [
+                false,
+                false,
+                false,
+                false
+            ],
+            "static.Game.shake": 0,
+            "static.Game.menu": false,
+            "static.Game.menuState": 0,
+            "static.Game.freezeObjects": false,
+            "static.Game.talking": false,
+            "static.Game.inventory": [
+                1
+            ],
+            "static.Music.currentSet": "Burn",
+            "static.Music.currentIndex": 0,
+            "static.Rng.split": true,
+            "static.Bot.pins": {
+                "dead_frames": true,
+                "sound": true
+            },
+            "rng.gameplay": 1741085794,
+            "rng.cosmetic": 1486967168,
+            "fp.seed": 1287610954,
+            "arrival.blackCover": 0,
+            "arrival.velocity": {
+                "hits_timer": 0,
+                "hits": 0,
+                "vy": 0,
+                "vx": 0
+            },
+            "latch.tick": 0,
+            "latch.dead_frames": 0
+        },
+        "why": "equip check failed: equip at tick 0 selected slot 1 but the inventory holds 1 item(s); useItem on an out-of-range slot is a silent no-op",
+        "partial": true,
+        "latched": true
+    },
+    "planHead": {
+        "ticks": 858,
+        "solution": [
+            [
+                "down",
+                "primary"
+            ],
+            [
+                "down"
+            ],
+            [
+                "down",
+                "primary"
+            ],
+            [
+                "down"
+            ],
+            [
+                "down"
+            ],
+            [
+                "down"
+            ],
+            [
+                "down"
+            ],
+            [
+                "down"
+            ]
+        ],
+        "expected": [
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 824.8151079715487,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 825.6151079715487,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 826.9651079715487,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 830.0651079715487,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 832.9151079715488,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 835.5151079715488,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 837.8651079715488,
+                "deaths": 0
+            },
+            {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 839.9651079715488,
+                "deaths": 0
+            }
+        ],
+        "verbs": [
+            "walk"
+        ],
+        "pass": "full",
+        "producer": null,
+        "equipsAt": [
+            [
+                0,
+                1
+            ]
+        ]
+    },
+    "progress": {
+        "ticks": 1,
+        "rows": [
+            {
+                "t": 0,
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 824.8151079715487
+            }
+        ]
+    },
+    "playKeys": [
+        "staging",
+        "continuation",
+        "prefix",
+        "lead",
+        "heldRow",
+        "bootCtor",
+        "holdSeam",
+        "t0",
+        "request",
+        "budget",
+        "budgets",
+        "retries",
+        "best",
+        "backstopMs",
+        "plan",
+        "solvedMs",
+        "pass",
+        "ticks",
+        "hold",
+        "crossing",
+        "swapPushes",
+        "respawns",
+        "equips",
+        "progress",
+        "divergence",
+        "lastStatusAt"
+    ],
+    "lead": [],
+    "leadShipped": null,
+    "heldRow": null,
+    "prefix": 1508,
+    "crossing": null,
+    "divergence": null,
+    "request": {
+        "name": "wasm-continue-exit-12",
+        "live": {
+            "digest": "{\"L\":12,\"s\":{\"x\":327.8454631151322,\"y\":824.8151079715487,\"vx\":0,\"vy\":0,\"hitX\":null,\"hitY\":null,\"terrain\":5,\"hazard\":{\"onIce\":false,\"onWaterfall\":false,\"inWater\":false,\"inLava\":false},\"drown\":{\"timer\":0,\"drowning\":false},\"swim\":null,\"latched\":{},\"transition\":null,\"fall\":null,\"direction\":1},\"t\":1508,\"d\":0,\"p\":0,\"tr\":0,\"c\":[{\"id\":\"puncher@416,256\",\"tag\":\"puncher\",\"x\":424,\"y\":264,\"vx\":0,\"vy\":0,\"hits\":0,\"hitsTimer\":0,\"dying\":false,\"destroy\":false,\"alpha\":1}],\"sb\":[{\"id\":\"puncher@416,256\",\"tag\":\"puncher\",\"as3\":\"Enemy\",\"enemyClass\":\"Puncher\",\"x\":424,\"y\":264,\"rect\":{\"x\":418,\"y\":260,\"w\":12,\"h\":12,\"right\":430,\"bottom\":272},\"hits\":0,\"hitsTimer\":0}]}",
+            "row": {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 824.8151079715487,
+                "deaths": 0
+            }
+        },
+        "goal": null
+    },
+    "timeline": [
+        {
+            "e": "begin",
+            "t": 141989,
+            "gt": 8217,
+            "lv": 86,
+            "held": false,
+            "phase": "held",
+            "room": 86,
+            "goal": null,
+            "to": "Level 086 - Chest",
+            "action": "continue",
+            "heldLevel": 86,
+            "liveLevel": 86
+        },
+        {
+            "e": "solve",
+            "t": 142766,
+            "gt": 8237,
+            "lv": 86,
+            "held": true,
+            "phase": "solving",
+            "room": 86,
+            "goal": "Level 086 - Chest",
+            "name": "wasm-location-86"
+        },
+        {
+            "e": "begin",
+            "t": 143728,
+            "gt": 8262,
+            "lv": 86,
+            "held": false,
+            "phase": "playing",
+            "room": 86,
+            "goal": "Level 086 - Chest",
+            "to": "level_86 -> level_0__r7c6",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 86
+        },
+        {
+            "e": "finish",
+            "t": 144138,
+            "gt": 8272,
+            "lv": 86,
+            "held": true,
+            "phase": "playing",
+            "room": 86,
+            "goal": "Level 086 - Chest",
+            "heldEnd": true,
+            "endLevel": 86,
+            "roomLevel": 86
+        },
+        {
+            "e": "begin",
+            "t": 144142,
+            "gt": 8272,
+            "lv": 86,
+            "held": true,
+            "phase": "held",
+            "room": 86,
+            "goal": null,
+            "to": "level_86 -> level_0__r7c6",
+            "action": "continue",
+            "heldLevel": 86,
+            "liveLevel": 86
+        },
+        {
+            "e": "self-check",
+            "t": 144145,
+            "gt": 8272,
+            "lv": 86,
+            "held": true,
+            "phase": "held",
+            "room": 86,
+            "goal": "level_86 -> level_0__r7c6",
+            "location": "Level 086 - Chest",
+            "checked": true
+        },
+        {
+            "e": "solve",
+            "t": 144181,
+            "gt": 8272,
+            "lv": 86,
+            "held": true,
+            "phase": "solving",
+            "room": 86,
+            "goal": "level_86 -> level_0__r7c6",
+            "name": "wasm-continue-exit-86"
+        },
+        {
+            "e": "begin",
+            "t": 145544,
+            "gt": 8306,
+            "lv": 0,
+            "held": false,
+            "phase": "playing",
+            "room": 86,
+            "goal": "level_86 -> level_0__r7c6",
+            "to": "level_0__r11c19 -> level_12__r0c19",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 0
+        },
+        {
+            "e": "hold",
+            "t": 145589,
+            "gt": 8307,
+            "lv": 0,
+            "held": false,
+            "phase": "playing",
+            "room": 86,
+            "goal": "level_86 -> level_0__r7c6",
+            "level": 0,
+            "begin": 8307
+        },
+        {
+            "e": "begin",
+            "t": 145593,
+            "gt": 8307,
+            "lv": 0,
+            "held": false,
+            "phase": "held",
+            "room": 0,
+            "goal": null,
+            "to": "level_0__r11c19 -> level_12__r0c19",
+            "action": "continue",
+            "heldLevel": 0,
+            "liveLevel": 0
+        },
+        {
+            "e": "solve",
+            "t": 146406,
+            "gt": 8327,
+            "lv": 0,
+            "held": true,
+            "phase": "solving",
+            "room": 0,
+            "goal": "level_0__r11c19 -> level_12__r0c19",
+            "name": "wasm-exit-0"
+        },
+        {
+            "e": "begin",
+            "t": 155739,
+            "gt": 8592,
+            "lv": 12,
+            "held": false,
+            "phase": "playing",
+            "room": 0,
+            "goal": "level_0__r11c19 -> level_12__r0c19",
+            "to": "level_12__r0c19 -> level_88",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 12
+        },
+        {
+            "e": "hold",
+            "t": 158378,
+            "gt": 8594,
+            "lv": 12,
+            "held": false,
+            "phase": "playing",
+            "room": 0,
+            "goal": "level_0__r11c19 -> level_12__r0c19",
+            "level": 12,
+            "begin": 8594
+        },
+        {
+            "e": "begin",
+            "t": 158383,
+            "gt": 8594,
+            "lv": 12,
+            "held": false,
+            "phase": "held",
+            "room": 12,
+            "goal": null,
+            "to": "level_12__r0c19 -> level_88",
+            "action": "continue",
+            "heldLevel": 12,
+            "liveLevel": 12
+        },
+        {
+            "e": "solve",
+            "t": 161495,
+            "gt": 8614,
+            "lv": 12,
+            "held": true,
+            "phase": "solving",
+            "room": 12,
+            "goal": "level_12__r0c19 -> level_88",
+            "name": "wasm-exit-12"
+        },
+        {
+            "e": "begin",
+            "t": 174235,
+            "gt": 8981,
+            "lv": 88,
+            "held": false,
+            "phase": "playing",
+            "room": 12,
+            "goal": "level_12__r0c19 -> level_88",
+            "to": "level_88 -> level_87__r1c3",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 88
+        },
+        {
+            "e": "hold",
+            "t": 174337,
+            "gt": 8983,
+            "lv": 88,
+            "held": false,
+            "phase": "playing",
+            "room": 12,
+            "goal": "level_12__r0c19 -> level_88",
+            "level": 88,
+            "begin": 8983
+        },
+        {
+            "e": "begin",
+            "t": 174342,
+            "gt": 8983,
+            "lv": 88,
+            "held": false,
+            "phase": "held",
+            "room": 88,
+            "goal": null,
+            "to": "level_88 -> level_87__r1c3",
+            "action": "continue",
+            "heldLevel": 88,
+            "liveLevel": 88
+        },
+        {
+            "e": "solve",
+            "t": 175172,
+            "gt": 9003,
+            "lv": 88,
+            "held": true,
+            "phase": "solving",
+            "room": 88,
+            "goal": "level_88 -> level_87__r1c3",
+            "name": "wasm-exit-88"
+        },
+        {
+            "e": "begin",
+            "t": 187876,
+            "gt": 9249,
+            "lv": 87,
+            "held": false,
+            "phase": "playing",
+            "room": 88,
+            "goal": "level_88 -> level_87__r1c3",
+            "to": "level_87__r1c3 -> level_44__r4c2",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 87
+        },
+        {
+            "e": "hold",
+            "t": 188233,
+            "gt": 9251,
+            "lv": 87,
+            "held": false,
+            "phase": "playing",
+            "room": 88,
+            "goal": "level_88 -> level_87__r1c3",
+            "level": 87,
+            "begin": 9251
+        },
+        {
+            "e": "begin",
+            "t": 188237,
+            "gt": 9251,
+            "lv": 87,
+            "held": false,
+            "phase": "held",
+            "room": 87,
+            "goal": null,
+            "to": "level_87__r1c3 -> level_44__r4c2",
+            "action": "continue",
+            "heldLevel": 87,
+            "liveLevel": 87
+        },
+        {
+            "e": "solve",
+            "t": 189102,
+            "gt": 9271,
+            "lv": 87,
+            "held": true,
+            "phase": "solving",
+            "room": 87,
+            "goal": "level_87__r1c3 -> level_44__r4c2",
+            "name": "wasm-exit-87"
+        },
+        {
+            "e": "begin",
+            "t": 197822,
+            "gt": 9526,
+            "lv": 44,
+            "held": false,
+            "phase": "playing",
+            "room": 87,
+            "goal": "level_87__r1c3 -> level_44__r4c2",
+            "to": "level_44__r6c4 -> level_37__r12c6",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 44
+        },
+        {
+            "e": "hold",
+            "t": 197860,
+            "gt": 9527,
+            "lv": 44,
+            "held": false,
+            "phase": "playing",
+            "room": 87,
+            "goal": "level_87__r1c3 -> level_44__r4c2",
+            "level": 44,
+            "begin": 9527
+        },
+        {
+            "e": "begin",
+            "t": 197864,
+            "gt": 9527,
+            "lv": 44,
+            "held": false,
+            "phase": "held",
+            "room": 44,
+            "goal": null,
+            "to": "level_44__r6c4 -> level_37__r12c6",
+            "action": "continue",
+            "heldLevel": 44,
+            "liveLevel": 44
+        },
+        {
+            "e": "solve",
+            "t": 198519,
+            "gt": 9547,
+            "lv": 44,
+            "held": true,
+            "phase": "solving",
+            "room": 44,
+            "goal": "level_44__r6c4 -> level_37__r12c6",
+            "name": "wasm-exit-44"
+        },
+        {
+            "e": "begin",
+            "t": 206394,
+            "gt": 9777,
+            "lv": 37,
+            "held": false,
+            "phase": "playing",
+            "room": 44,
+            "goal": "level_44__r6c4 -> level_37__r12c6",
+            "to": "level_37__r12c6 -> level_12__r0c37",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 37
+        },
+        {
+            "e": "hold",
+            "t": 206719,
+            "gt": 9779,
+            "lv": 37,
+            "held": false,
+            "phase": "playing",
+            "room": 44,
+            "goal": "level_44__r6c4 -> level_37__r12c6",
+            "level": 37,
+            "begin": 9779
+        },
+        {
+            "e": "begin",
+            "t": 206724,
+            "gt": 9779,
+            "lv": 37,
+            "held": false,
+            "phase": "held",
+            "room": 37,
+            "goal": null,
+            "to": "level_37__r12c6 -> level_12__r0c37",
+            "action": "continue",
+            "heldLevel": 37,
+            "liveLevel": 37
+        },
+        {
+            "e": "solve",
+            "t": 207808,
+            "gt": 9799,
+            "lv": 37,
+            "held": true,
+            "phase": "solving",
+            "room": 37,
+            "goal": "level_37__r12c6 -> level_12__r0c37",
+            "name": "wasm-exit-37"
+        },
+        {
+            "e": "begin",
+            "t": 212388,
+            "gt": 9859,
+            "lv": 12,
+            "held": false,
+            "phase": "playing",
+            "room": 37,
+            "goal": "level_37__r12c6 -> level_12__r0c37",
+            "to": "Level 012 - Chest",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 12
+        },
+        {
+            "e": "hold",
+            "t": 212624,
+            "gt": 9860,
+            "lv": 12,
+            "held": false,
+            "phase": "playing",
+            "room": 37,
+            "goal": "level_37__r12c6 -> level_12__r0c37",
+            "level": 12,
+            "begin": 9860
+        },
+        {
+            "e": "begin",
+            "t": 212633,
+            "gt": 9860,
+            "lv": 12,
+            "held": false,
+            "phase": "held",
+            "room": 12,
+            "goal": null,
+            "to": "Level 012 - Chest",
+            "action": "continue",
+            "heldLevel": 12,
+            "liveLevel": 12
+        },
+        {
+            "e": "solve",
+            "t": 215800,
+            "gt": 9880,
+            "lv": 12,
+            "held": true,
+            "phase": "solving",
+            "room": 12,
+            "goal": "Level 012 - Chest",
+            "name": "wasm-location-12"
+        },
+        {
+            "e": "begin",
+            "t": 272555,
+            "gt": 11384,
+            "lv": 12,
+            "held": false,
+            "phase": "playing",
+            "room": 12,
+            "goal": "Level 012 - Chest",
+            "to": "level_12__r0c37 -> level_21",
+            "action": "queue",
+            "heldLevel": null,
+            "liveLevel": 12
+        },
+        {
+            "e": "finish",
+            "t": 272818,
+            "gt": 11388,
+            "lv": 12,
+            "held": true,
+            "phase": "playing",
+            "room": 12,
+            "goal": "Level 012 - Chest",
+            "heldEnd": true,
+            "endLevel": 12,
+            "roomLevel": 12
+        },
+        {
+            "e": "begin",
+            "t": 272830,
+            "gt": 11388,
+            "lv": 12,
+            "held": true,
+            "phase": "held",
+            "room": 12,
+            "goal": null,
+            "to": "level_12__r0c37 -> level_21",
+            "action": "continue",
+            "heldLevel": 12,
+            "liveLevel": 12
+        },
+        {
+            "e": "self-check",
+            "t": 272833,
+            "gt": 11388,
+            "lv": 12,
+            "held": true,
+            "phase": "held",
+            "room": 12,
+            "goal": "level_12__r0c37 -> level_21",
+            "location": "Level 012 - Chest",
+            "checked": true
+        },
+        {
+            "e": "solve",
+            "t": 273612,
+            "gt": 11388,
+            "lv": 12,
+            "held": true,
+            "phase": "solving",
+            "room": 12,
+            "goal": "level_12__r0c37 -> level_21",
+            "name": "wasm-continue-exit-12"
+        }
+    ],
+    "history": [
+        {
+            "goal": {
+                "kind": "exit",
+                "level": 12,
+                "tiles": [
+                    [
+                        19,
+                        0
+                    ]
+                ],
+                "name": "level_12__r0c19 -> level_88"
+            },
+            "producer": "solver",
+            "ticks": 367,
+            "drained": 367,
+            "verbs": [
+                "walk"
+            ],
+            "solvedMs": 205,
+            "divergence": null,
+            "recoveries": 0,
+            "end": {
+                "level": 88,
+                "x": 104,
+                "y": 296
+            },
+            "expectedEnd": {
+                "level": 88,
+                "x": 104,
+                "y": 296,
+                "deaths": 0
+            },
+            "heldArrival": 88,
+            "continuation": false,
+            "prefix": 0,
+            "pass": "dashless",
+            "expired": false,
+            "retries": 0,
+            "budgets": [
+                640
+            ],
+            "passes": [
+                {
+                    "pass": "dashless",
+                    "ok": true,
+                    "kind": null,
+                    "ticks": 367,
+                    "ms": 128,
+                    "work": 24
+                },
+                {
+                    "pass": "full",
+                    "ok": false,
+                    "kind": "skipped",
+                    "ticks": null,
+                    "ms": 3,
+                    "work": 0
+                }
+            ],
+            "deadline": null,
+            "outcome": "done"
+        },
+        {
+            "goal": {
+                "kind": "exit",
+                "level": 88,
+                "tiles": [
+                    [
+                        2,
+                        0
+                    ]
+                ],
+                "name": "level_88 -> level_87__r1c3"
+            },
+            "producer": "solver",
+            "ticks": 246,
+            "drained": 246,
+            "verbs": [
+                "forced-hit"
+            ],
+            "solvedMs": 4351,
+            "divergence": null,
+            "recoveries": 0,
+            "end": {
+                "level": 87,
+                "x": 280,
+                "y": 296
+            },
+            "expectedEnd": {
+                "level": 87,
+                "x": 280,
+                "y": 296,
+                "deaths": 0
+            },
+            "heldArrival": 87,
+            "continuation": false,
+            "prefix": 0,
+            "pass": "dashless",
+            "expired": false,
+            "retries": 0,
+            "budgets": [
+                640
+            ],
+            "passes": [
+                {
+                    "pass": "dashless",
+                    "ok": true,
+                    "kind": null,
+                    "ticks": 246,
+                    "ms": 4344,
+                    "work": 551
+                },
+                {
+                    "pass": "full",
+                    "ok": false,
+                    "kind": "skipped",
+                    "ticks": null,
+                    "ms": 1,
+                    "work": 0
+                }
+            ],
+            "deadline": null,
+            "outcome": "done"
+        },
+        {
+            "goal": {
+                "kind": "exit",
+                "level": 87,
+                "tiles": [
+                    [
+                        29,
+                        17
+                    ]
+                ],
+                "name": "level_87__r1c3 -> level_44__r4c2"
+            },
+            "producer": "solver",
+            "ticks": 254,
+            "drained": 254,
+            "verbs": [
+                "walk"
+            ],
+            "solvedMs": 27,
+            "divergence": null,
+            "recoveries": 0,
+            "end": {
+                "level": 44,
+                "x": 24,
+                "y": 88
+            },
+            "expectedEnd": {
+                "level": 44,
+                "x": 24,
+                "y": 88,
+                "deaths": 0
+            },
+            "heldArrival": 44,
+            "continuation": false,
+            "prefix": 0,
+            "pass": "dashless",
+            "expired": false,
+            "retries": 0,
+            "budgets": [
+                640
+            ],
+            "passes": [
+                {
+                    "pass": "dashless",
+                    "ok": true,
+                    "kind": null,
+                    "ticks": 254,
+                    "ms": 14,
+                    "work": 16
+                },
+                {
+                    "pass": "full",
+                    "ok": false,
+                    "kind": "skipped",
+                    "ticks": null,
+                    "ms": 0,
+                    "work": 0
+                }
+            ],
+            "deadline": null,
+            "outcome": "done"
+        },
+        {
+            "goal": {
+                "kind": "exit",
+                "level": 44,
+                "tiles": [
+                    [
+                        9,
+                        8
+                    ]
+                ],
+                "name": "level_44__r6c4 -> level_37__r12c6"
+            },
+            "producer": "solver",
+            "ticks": 230,
+            "drained": 230,
+            "verbs": [
+                "burn",
+                "walk"
+            ],
+            "solvedMs": 47,
+            "divergence": null,
+            "recoveries": 0,
+            "end": {
+                "level": 37,
+                "x": 24,
+                "y": 264
+            },
+            "expectedEnd": {
+                "level": 37,
+                "x": 24,
+                "y": 264,
+                "deaths": 0
+            },
+            "heldArrival": 37,
+            "continuation": false,
+            "prefix": 0,
+            "pass": "dashless",
+            "expired": false,
+            "retries": 0,
+            "budgets": [
+                640
+            ],
+            "passes": [
+                {
+                    "pass": "dashless",
+                    "ok": true,
+                    "kind": null,
+                    "ticks": 230,
+                    "ms": 35,
+                    "work": 16
+                },
+                {
+                    "pass": "full",
+                    "ok": false,
+                    "kind": "skipped",
+                    "ticks": null,
+                    "ms": 1,
+                    "work": 0
+                }
+            ],
+            "deadline": null,
+            "outcome": "done"
+        },
+        {
+            "goal": {
+                "kind": "exit",
+                "level": 37,
+                "tiles": [
+                    [
+                        2,
+                        19
+                    ]
+                ],
+                "name": "level_37__r12c6 -> level_12__r0c37"
+            },
+            "producer": "solver",
+            "ticks": 59,
+            "drained": 59,
+            "verbs": [
+                "walk"
+            ],
+            "solvedMs": 49,
+            "divergence": null,
+            "recoveries": 0,
+            "end": {
+                "level": 12,
+                "x": 600,
+                "y": 24
+            },
+            "expectedEnd": {
+                "level": 12,
+                "x": 600,
+                "y": 24,
+                "deaths": 0
+            },
+            "heldArrival": 12,
+            "continuation": false,
+            "prefix": 0,
+            "pass": "dashless",
+            "expired": false,
+            "retries": 0,
+            "budgets": [
+                640
+            ],
+            "passes": [
+                {
+                    "pass": "dashless",
+                    "ok": true,
+                    "kind": null,
+                    "ticks": 59,
+                    "ms": 27,
+                    "work": 4
+                },
+                {
+                    "pass": "full",
+                    "ok": false,
+                    "kind": "skipped",
+                    "ticks": null,
+                    "ms": 3,
+                    "work": 0
+                }
+            ],
+            "deadline": null,
+            "outcome": "done"
+        },
+        {
+            "goal": {
+                "kind": "location",
+                "level": 12,
+                "tag": 9,
+                "entityType": "apitem",
+                "name": "Level 012 - Chest"
+            },
+            "producer": "solver",
+            "ticks": 1508,
+            "drained": 1509,
+            "verbs": [
+                "burn",
+                "walk"
+            ],
+            "solvedMs": 379,
+            "divergence": null,
+            "recoveries": 0,
+            "end": {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 824.8151079715487
+            },
+            "expectedEnd": {
+                "level": 12,
+                "x": 327.8454631151322,
+                "y": 824.8151079715487,
+                "deaths": 0
+            },
+            "continuation": false,
+            "prefix": 0,
+            "heldEnd": true,
+            "equips": [],
+            "pass": "dashless",
+            "expired": false,
+            "retries": 0,
+            "budgets": [
+                640
+            ],
+            "passes": [
+                {
+                    "pass": "dashless",
+                    "ok": true,
+                    "kind": null,
+                    "ticks": 1508,
+                    "ms": 350,
+                    "work": 96
+                },
+                {
+                    "pass": "full",
+                    "ok": false,
+                    "kind": "skipped",
+                    "ticks": null,
+                    "ms": 4,
+                    "work": 0
+                }
+            ],
+            "deadline": null,
+            "outcome": "done"
+        }
+    ],
+    "deliveries": [
+        {
+            "level": 10,
+            "goal": "level_10 -> level_11",
+            "phase": "held",
+            "tick": 35,
+            "items": [
+                {
+                    "property": "hasFire",
+                    "from": false,
+                    "to": true
+                }
+            ],
+            "save": [],
+            "heldKeys": [],
+            "outcome": "staged",
+            "policy": "hold-and-replan",
+            "landMs": 15
+        },
+        {
+            "level": 11,
+            "goal": "level_11 -> level_3__r8c6",
+            "phase": "held",
+            "tick": 26,
+            "items": [
+                {
+                    "property": "hitsMax",
+                    "from": 3,
+                    "to": 4
+                }
+            ],
+            "save": [],
+            "heldKeys": [],
+            "outcome": "staged",
+            "policy": "hold-and-replan",
+            "landMs": 16
+        },
+        {
+            "level": 86,
+            "goal": "level_86 -> level_0__r7c6",
+            "phase": "held",
+            "tick": 35,
+            "items": [
+                {
+                    "property": "hasTorch",
+                    "from": false,
+                    "to": true
+                }
+            ],
+            "save": [],
+            "heldKeys": [],
+            "outcome": "staged",
+            "policy": "hold-and-replan",
+            "landMs": 15
+        },
+        {
+            "level": 12,
+            "goal": "level_12__r0c37 -> level_21",
+            "phase": "held",
+            "tick": 1508,
+            "items": [
+                {
+                    "property": "hasSword",
+                    "from": false,
+                    "to": true
+                }
+            ],
+            "save": [],
+            "heldKeys": [],
+            "outcome": "staged",
+            "policy": "hold-and-replan",
+            "landMs": 136
+        }
+    ],
+    "deliveryServed": [
+        {
+            "level": 10,
+            "goal": "Level 010 - Sword",
+            "tick": 26
+        },
+        {
+            "level": 11,
+            "goal": "Level 011 - Chest",
+            "tick": 12
+        },
+        {
+            "level": 86,
+            "goal": "Level 086 - Chest",
+            "tick": 25
+        },
+        {
+            "level": 12,
+            "goal": "Level 012 - Chest",
+            "tick": 1503
+        }
+    ],
+    "selfChecks": [
+        {
+            "location": "Level 010 - Sword",
+            "level": 10,
+            "tick": 35,
+            "settled": true,
+            "delivered": true,
+            "waitedMs": 4
+        },
+        {
+            "location": "Level 011 - Chest",
+            "level": 11,
+            "tick": 26,
+            "settled": true,
+            "delivered": true,
+            "waitedMs": 9
+        },
+        {
+            "location": "Level 086 - Chest",
+            "level": 86,
+            "tick": 35,
+            "settled": true,
+            "delivered": true,
+            "waitedMs": 4
+        },
+        {
+            "location": "Level 012 - Chest",
+            "level": 12,
+            "tick": 1508,
+            "settled": true,
+            "delivered": true,
+            "waitedMs": 12
+        }
+    ],
+    "fallbacks": [],
+    "holdSeams": [],
+    "shipClock": [
+        {
+            "name": "wasm-exit-88",
+            "level": 88,
+            "staged": 8982,
+            "prefix": 0,
+            "game": 9003,
+            "gap": 21
+        },
+        {
+            "name": "wasm-exit-87",
+            "level": 87,
+            "staged": 9250,
+            "prefix": 0,
+            "game": 9271,
+            "gap": 21
+        },
+        {
+            "name": "wasm-exit-44",
+            "level": 44,
+            "staged": 9526,
+            "prefix": 0,
+            "game": 9547,
+            "gap": 21
+        },
+        {
+            "name": "wasm-exit-37",
+            "level": 37,
+            "staged": 9778,
+            "prefix": 0,
+            "game": 9799,
+            "gap": 21
+        },
+        {
+            "name": "wasm-location-12",
+            "level": 12,
+            "staged": 9859,
+            "prefix": 0,
+            "game": 9880,
+            "gap": 21
+        },
+        {
+            "name": "wasm-continue-exit-12",
+            "level": 12,
+            "staged": 9859,
+            "prefix": 1508,
+            "game": 11388,
+            "gap": 21
+        }
+    ],
+    "hostStarts": [
+        {
+            "label": "plan",
+            "from": 166,
+            "to": 174
+        },
+        {
+            "label": "freeze",
+            "from": 175,
+            "to": 184
+        },
+        {
+            "label": "plan",
+            "from": 184,
+            "to": 193
+        },
+        {
+            "label": "freeze",
+            "from": 193,
+            "to": 202
+        },
+        {
+            "label": "plan",
+            "from": 202,
+            "to": 211
+        },
+        {
+            "label": "continuation",
+            "from": 213,
+            "to": 224
+        }
+    ],
+    "arrivalRow": [],
+    "timerThrows": [],
+    "latchWaits": [
+        {
+            "n": 18,
+            "kind": "arrival",
+            "level": 87,
+            "since": 188239.80000000002,
+            "movedAt": 189065.99999999997,
+            "waitedMs": 858,
+            "polls": 26,
+            "moves": 19,
+            "stillMs": 67,
+            "frames": 20,
+            "first": {
+                "gt": 9251,
+                "dead": 0,
+                "tick": 0,
+                "level": 87
+            },
+            "last": {
+                "gt": 9271,
+                "dead": 20,
+                "tick": 0,
+                "level": 87
+            },
+            "outcome": "held",
+            "moved": false
+        },
+        {
+            "n": 19,
+            "kind": "arrival",
+            "level": 44,
+            "since": 197866.9,
+            "movedAt": 198486.69999999998,
+            "waitedMs": 648,
+            "polls": 28,
+            "moves": 19,
+            "stillMs": 28,
+            "frames": 20,
+            "first": {
+                "gt": 9527,
+                "dead": 0,
+                "tick": 0,
+                "level": 44
+            },
+            "last": {
+                "gt": 9547,
+                "dead": 20,
+                "tick": 0,
+                "level": 44
+            },
+            "outcome": "held",
+            "moved": false
+        },
+        {
+            "n": 20,
+            "kind": "arrival",
+            "level": 37,
+            "since": 206726.49999999997,
+            "movedAt": 207755.30000000002,
+            "waitedMs": 1076,
+            "polls": 27,
+            "moves": 20,
+            "stillMs": 47,
+            "frames": 20,
+            "first": {
+                "gt": 9779,
+                "dead": 0,
+                "tick": 0,
+                "level": 37
+            },
+            "last": {
+                "gt": 9799,
+                "dead": 20,
+                "tick": 0,
+                "level": 37
+            },
+            "outcome": "held",
+            "moved": false
+        },
+        {
+            "n": 21,
+            "kind": "arrival",
+            "level": 12,
+            "since": 212638.69999999998,
+            "movedAt": 215758.19999999998,
+            "waitedMs": 3155,
+            "polls": 22,
+            "moves": 20,
+            "stillMs": 35,
+            "frames": 20,
+            "first": {
+                "gt": 9860,
+                "dead": 0,
+                "tick": 0,
+                "level": 12
+            },
+            "last": {
+                "gt": 9880,
+                "dead": 20,
+                "tick": 0,
+                "level": 12
+            },
+            "outcome": "held",
+            "moved": false
+        }
+    ],
+    "crossLevelEnds": []
+}
