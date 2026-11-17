@@ -266,7 +266,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `lavaBossFight` | — | `solverBot` |
 | `tentacleBeastFight` | — | `dangerMap`, `solverBot` |
 | `drillBodies` | `contact`, `proximity` | `dangerMap`, `solverBot` |
-| `wallFlyerBodies` | `wall-launch`, `contact`, `hp` | `dangerMap` |
+| `wallFlyerBodies` | `wall-launch`, `contact`, `hp` | `dangerMap`, `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |
 | `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |
 | `volume:pulser` | `stationary`, `pulse` | `dangerMap`, `encounters` |

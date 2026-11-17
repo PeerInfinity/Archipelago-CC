@@ -16,6 +16,7 @@ import {
     SPEAR_ARM, SPEAR_ARM_COUNTS, SPEAR_ARM_DEFAULT, resetSpearArmCounts, spearArmSlot, spearStrikeGeometry, withSpearArm,
 } from './spearArm.js';
 import { createStrikePolicy, strikeCandidates } from './strikePolicy.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const ENV = globalThis.process?.env ?? {};
 const WAS = SPEAR_ARM.enabled;
@@ -72,11 +73,16 @@ describe('hammer-phase SPEAR-ARM — the scan asks with the thrust, not the swin
 });
 
 describe('hammer-phase SPEAR-ARM — L22 from L25\'s door to the L29 exit', () => {
+    // ⛓ fidelity WALLFLYERCORPSE FLIP (`wallFlyerCorpseGone` ON): the ladder's refusal below was the GHOST of a wallflyer
+    //   the run had removed, priced at its placement. The three refusal rows keep the key OFF as the witness of the
+    //   arm's counts; at the shipped defaults the crossing solves hitless (the last row; game-witnessed 0 hits by
+    //   hammer's spear-wallflyer-l22 slice, connected #49).
+    const corpseOff = (f) => withContactFidelity({ wallFlyerCorpseGone: false }, f);
     // ⛓ fidelity CORRIDOR FLIP (corridorBodyPricing ON): the OFF walk no longer stalls in the death loop — the corridor
     //   prices the wallflyer's contact, so the ladder refuses by name; the strike-free OFF arm still builds no policy.
     it('OFF: a spear-only run builds no strike policy; the ladder refuses on the wallflyer band (no sword arm)', () => {
         SPEAR_ARM.enabled = false;
-        const r = canCross({ ...ASK, inventory: ['spear'] });
+        const r = corpseOff(() => canCross({ ...ASK, inventory: ['spear'] }));
         expect(r.verdict).toBe('cannot');
         expect(r.why).toMatch(/the combat ladder is EXHAUSTED\. The corridor passes through danger at .* enemy:wallflyer@/);
         expect(r.why).toMatch(/chaser arm: this run holds no sword/);
@@ -85,7 +91,7 @@ describe('hammer-phase SPEAR-ARM — L22 from L25\'s door to the L29 exit', () =
 
     it('ON: the policy is built and the ladder refuses on the wallflyer band (the next wall)', () => {
         SPEAR_ARM.enabled = true;
-        const r = canCross({ ...ASK, inventory: ['spear'] });
+        const r = corpseOff(() => canCross({ ...ASK, inventory: ['spear'] }));
         expect(r.verdict).toBe('cannot');
         expect(r.why).toMatch(/the combat ladder is EXHAUSTED\. The corridor passes through danger at .* enemy:wallflyer@/);
         expect(SPEAR_ARM_COUNTS.policies).toBeGreaterThan(0);
@@ -94,10 +100,19 @@ describe('hammer-phase SPEAR-ARM — L22 from L25\'s door to the L29 exit', () =
 
     it('ON with Fire selected first: the walk selects the spear\'s slot once', () => {
         SPEAR_ARM.enabled = true;
-        const r = canCross({ ...ASK, inventory: ['fire', 'spear'] });
+        const r = corpseOff(() => canCross({ ...ASK, inventory: ['fire', 'spear'] }));
         expect(r.verdict).toBe('cannot');
         expect(SPEAR_ARM_COUNTS.equips).toBe(1);
         expect(SPEAR_ARM_COUNTS.policies).toBeGreaterThan(0);
+    });
+
+    it('the corpse flip: at the shipped defaults a spear-only run crosses hitless (bait, detour), ON and OFF', () => {
+        for (const on of [false, true]) {
+            SPEAR_ARM.enabled = on;
+            const r = canCross({ ...ASK, inventory: ['spear'] });
+            expect(r.verdict).toBe('can');
+            expect(r.why).toMatch(/^solved: 379 ticks \(rungs bait, detour\), onto level 29, 0 hit\(s\)/);
+        }
     });
 
     it('a sword holder is untouched: the same answer ON and OFF', () => {

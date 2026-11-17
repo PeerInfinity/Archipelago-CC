@@ -207,6 +207,7 @@ import {
   TILE_PX, drawCompositeMap, canvasPointOf, cellAtPoint, substrateArtToggle,
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
+import { gridOriginOf } from '../procgenCore/cellExtent.js';
 import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor, showMenuOnMap } from './menuMarker.js';
 import { LOSSY_BUILD_KEY, LOSSY_BUILD_SETTING, isLossyRefusal, lossyBuildOn, lossyRecordView } from './lossyBuild.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
@@ -4890,6 +4891,10 @@ class ApworldEditorUI {
     //   headless row can map a cell index to a click without re-deriving TILE_PX.
     canvas.dataset.gridW = String(grid.width);
     canvas.dataset.gridH = String(grid.height);
+    // ⛓ unbounded grid S1: the grid's top-left CELL (signed; 0 for every
+    //   committed document). Canvas column c is cell `gridMinX + c`.
+    canvas.dataset.gridMinX = String(gridOriginOf(grid).minX);
+    canvas.dataset.gridMinY = String(gridOriginOf(grid).minY);
     canvas.dataset.cellW = String(regionSize.width * TILE_PX);
     canvas.dataset.cellH = String(regionSize.height * TILE_PX);
     canvas.dataset.regions = String(result.stats.regionsBuilt);

@@ -72,9 +72,10 @@
  */
 
 import {
-    Grid, linkIsAdjacentOnSide, moveSphereRegion, swapSphereRegions,
+    linkIsAdjacentOnSide, moveSphereRegion, swapSphereRegions,
 } from '../procgenPipeline/procgenPipelineEngine.js';
-import { mapBoundsFor } from '../procgenPipeline/compositeMapDocument.js';
+import { gridForBox, mapBoundsFor } from '../procgenPipeline/compositeMapDocument.js';
+import { isSignedCell } from '../procgenCore/cellExtent.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 
@@ -93,9 +94,12 @@ export const SIDE_WORDS = Object.freeze({ N: 'north', S: 'south', E: 'east', W: 
 export const NO_EXITS_KEY_KEPT_ABSENT =
     'a payload that carries no `exits` key has no link to flag, so it keeps carrying none';
 
-/** ⛓ A usable `grid_cell`: two whole, non-negative numbers. */
-export const isGridCell = (c) => !!c && Number.isInteger(c.gx) && Number.isInteger(c.gy)
-    && c.gx >= 0 && c.gy >= 0;
+/**
+ * ⛓ A usable `grid_cell`: two whole numbers, NEGATIVES ALLOWED (unbounded grid
+ * S1; ⚖ user 2026-11-16, Q1: signed storage, the start room at (0,0)). Before
+ * S1 a negative cell was "unusable" here; no committed document has one.
+ */
+export const isGridCell = isSignedCell;
 
 /**
  * ⛓⛓ **ONE SLOT'S LAYOUT, READ OFF THE DOCUMENT.** Every entry with a usable
@@ -119,8 +123,8 @@ export function slotLayout(doc, player) {
         if (isGridCell(c)) cells.set(name, { gx: c.gx, gy: c.gy });
     }
     if (cells.size === 0) return { cells, grid: null, clash: null };
-    const { width, height } = mapBoundsFor(doc, entries, player);
-    const grid = new Grid({ width, height });
+    // ⛓ S1: the box may start below (0,0); `gridForBox` keeps the cells signed.
+    const grid = gridForBox(mapBoundsFor(doc, entries, player));
     for (const [name, cell] of cells) {
         if (grid.hasRegion(cell)) {
             return { cells, grid, clash: { a: grid.getRegion(cell).region_id, b: name, cell } };

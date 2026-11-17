@@ -1238,11 +1238,14 @@ export async function apworldRawViewOpensTheRefusedPreset(testController) {
 function expectedMapFromDocument(doc, playerId) {
     const entries = Object.entries(doc?.preset_sidecars?.[playerId] ?? {})
         .filter(([, sc]) => sc && sc.grid_cell);
-    let gw = 0; let gh = 0;
+    // ⛓ unbounded grid S1: cells are signed; the drawn box always includes (0,0).
+    let x0 = 0; let y0 = 0; let x1 = 0; let y1 = 0;
     for (const [, sc] of entries) {
-        gw = Math.max(gw, sc.grid_cell.gx + 1);
-        gh = Math.max(gh, sc.grid_cell.gy + 1);
+        x0 = Math.min(x0, sc.grid_cell.gx); x1 = Math.max(x1, sc.grid_cell.gx);
+        y0 = Math.min(y0, sc.grid_cell.gy); y1 = Math.max(y1, sc.grid_cell.gy);
     }
+    const gw = entries.length ? x1 - x0 + 1 : 0;
+    const gh = entries.length ? y1 - y0 + 1 : 0;
     return { regions: entries.length, gridW: gw, gridH: gh, names: entries.map(([n]) => n) };
 }
 

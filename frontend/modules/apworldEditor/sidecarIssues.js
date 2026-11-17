@@ -515,6 +515,20 @@ export function sidecarIssues(doc, player = DEFAULT_PLAYER_ID) {
     /* ── cells ── */
     const dims = doc?.procgen_metadata?.[p]?.grid_dims;
     const hasDims = isPlainObject(dims) && Number.isInteger(dims.width) && Number.isInteger(dims.height);
+    /* ⛓⛓ unbounded grid S1 — cells are SIGNED (⚖ user 2026-11-16, Q1). A negative cell is an issue ONLY
+     * against a box whose origin the document DECLARES (`procgen_metadata[p].grid_origin`, written by S2 when a
+     * slot's min is negative): then the box is `[origin, origin + grid_dims)`. Without one, `grid_dims` is the
+     * cells' recorded extent from (0,0) — still checked on its far edge, as before; the near edge is not a rule
+     * any more. */
+    const origin = doc?.procgen_metadata?.[p]?.grid_origin;
+    const hasOrigin = isPlainObject(origin) && Number.isInteger(origin.gx) && Number.isInteger(origin.gy);
+    const ox = hasOrigin ? origin.gx : 0;
+    const oy = hasOrigin ? origin.gy : 0;
+    const outside = (c) => (hasOrigin && (c.gx < ox || c.gy < oy))
+        || c.gx >= ox + dims.width || c.gy >= oy + dims.height;
+    const boxWords = hasOrigin
+        ? `${dims?.width}×${dims?.height} grid from (${ox}, ${oy}) \`procgen_metadata.${p}.grid_dims\` + \`grid_origin\``
+        : `${dims?.width}×${dims?.height} grid \`procgen_metadata.${p}.grid_dims\``;
     const taken = new Map();
     for (const [region, entry] of entries) {
         const cell = isPlainObject(entry) ? entry.grid_cell : null;
@@ -525,9 +539,9 @@ export function sidecarIssues(doc, player = DEFAULT_PLAYER_ID) {
             out.push(issue(K.GRID_CELL_DUPLICATE, region, `cell ${at} is also "${taken.get(key)}"'s`,
                 'grid_cell'));
         } else taken.set(key, region);
-        if (hasDims && (cell.gx < 0 || cell.gy < 0 || cell.gx >= dims.width || cell.gy >= dims.height)) {
-            out.push(issue(K.GRID_CELL_OUTSIDE, region, `cell ${at} is outside the `
-                + `${dims.width}×${dims.height} grid \`procgen_metadata.${p}.grid_dims\` declares`, 'grid_cell'));
+        if (hasDims && outside(cell)) {
+            out.push(issue(K.GRID_CELL_OUTSIDE, region, `cell ${at} is outside the ${boxWords} declares`,
+                'grid_cell'));
         }
     }
 

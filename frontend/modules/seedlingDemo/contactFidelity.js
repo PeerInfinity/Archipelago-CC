@@ -2058,9 +2058,10 @@ export const CONTACT_FIDELITY = {
      * removed one is not in the world. ON: a wallflyer whose id has no LIVE row in `run.entities('wallFlyerBodies')`
      * (live = `!destroy && dieAnim === null`, the family's own reading) is skipped, when the family is an array. A LIVE
      * flyer keeps its placement price (the WAIT arm has no other wallflyer price; D1(b) in the slice report).
-     * OFF: byte-identical. ⛔ OFF by default (⚖ user 2026-11-15, "OFF key, flip later"); `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`.
+     * OFF: byte-identical. Shipped OFF (⚖ user 2026-11-15, "OFF key, flip later"); ON since the WALLFLYERCORPSE flip
+     * (⚖ user, planning-21's session; licence bound to this flip's SHA). `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`.
      */
-    wallFlyerCorpseGone: false,
+    wallFlyerCorpseGone: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
