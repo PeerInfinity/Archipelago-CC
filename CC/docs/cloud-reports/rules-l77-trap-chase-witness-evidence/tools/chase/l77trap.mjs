@@ -104,9 +104,11 @@ for (const [nm, x, y] of [['a', 88, 36], ['b', 84, 36], ['c', 72, 36]]) {
 const L78B = { level: 78, x: 256, y: 16 };
 CASES['l78c-spear-kill96'] = { boot: L78B, items: ['hasSpear'], script: [['replay', K('L78-spear-to-E96')], ['to', 193, 104], ['wait', 8], ['keys', 'left', 1], ['wait', 6],
     ['nudge', 'left', 'x', 185.6, 188.4], ...presses(3, 40), ['wait', 10]] };
-// then the neck trap lavatrap@96,80 from c8 r5 facing left: x in [137.4, 140.6), y ~ 88
-CASES['l78c-spear-kill80'] = { boot: L78B, items: ['hasSpear'], script: [['replay', K('L78-spear-to-E80')],   // (a beam tape carries its --prefix)
-    ['to', 142, 88], ['wait', 8], ['keys', 'left', 1], ['wait', 6], ['nudge', 'left', 'x', 137.4, 140.6], ...presses(3, 40), ['wait', 10]] };
+// then the neck trap lavatrap@96,80 from c8 r5 facing left: x in [137.6, 140.4), y ~ 92 (spear rect y [y-0.5, y+4.5)
+// meets the hitbox 83..93; >= 36 px from lavatrap@144,48's centre: the game drifted ~2 px from the model and at
+// (142.3, 85.5), 31.1 px from it, was pulled in and died, run l78c-spear-kill80 first attempt)
+CASES['l78c-spear-kill80'] = { boot: L78B, items: ['hasSpear'], script: [['replay', K('L78-spear-to-E80b')],   // (a beam tape carries its --prefix)
+    ['to', 143, 93], ['wait', 8], ['keys', 'left', 1], ['wait', 6], ['nudge', 'left', 'x', 137.6, 140.4], ...presses(3, 40), ['wait', 10]] };
 // ad hoc: --adhoc='{"boot":"S"|"N","items":[...],"script":[...]}' (exploration on the model)
 if (arg('adhoc')) { const a = JSON.parse(arg('adhoc')); CASES.adhoc = { ...a, boot: a.boot === 'N' ? NORTH : SOUTH }; }
 export { CASES, SOUTH, NORTH, ON_NORTH, ON_SOUTH, TO_R10 };

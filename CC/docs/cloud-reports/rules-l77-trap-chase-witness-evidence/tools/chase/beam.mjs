@@ -41,7 +41,9 @@ const WIDTH = Number(arg('width', '12')); const SEG = Number(arg('seg', '10')); 
 const LAVA = process.argv.includes('--lava');
 const MARGIN = Number(arg('margin', '0'));
 const EDGE = Number(arg('edge', '0'));
-const st = arrivalStaging({ level, x: bx, y: by }, { items });
+// rules-l77-trap-chase-witness: --cleared=<tag>,… boots with those tags of the boot level cleared (e.g. L12's bosslocks 4,5 = opened)
+const CLEARED = (arg('cleared', '') || '').split(',').filter(Boolean).map(Number);
+const st = arrivalStaging({ level, x: bx, y: by }, { items, cleared: CLEARED });
 // tile distance field to the goal tile
 const w = buildLevelWorld(levelSource(level), { roles: ROLES });
 const solid = new Set(w.solids.map((s) => `${Math.floor(s.rect.x / 16)},${Math.floor(s.rect.y / 16)}`));
