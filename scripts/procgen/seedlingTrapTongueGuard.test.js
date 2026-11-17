@@ -289,6 +289,9 @@ describe('rule T — the delivered set (through the producer)', () => {
         expect(rows.map((r) => [r.id, r.arms])).toEqual([['9,3', ['hasSpear']], ['6,5', ['hasSpear']], ['9,6', ['hasSpear']]]);
         for (const r of rows) expect(r.perArm.hasSpear.killedFrom.sort()).toEqual(['16,1', '2,1']);
         expect(playthroughTrapTongues.get(78).sealed.length).toBeGreaterThan(0);
+        // the discs overlap: a cell in two of them carries the gate once
+        const grid = playthroughGridFor(level(78));
+        for (const c of grid.cells) expect(new Set((c.conditions ?? []).map(key)).size).toBe((c.conditions ?? []).length);
     });
 
     it('L80 and L108: their discs seal nothing, so nothing is stamped', () => {

@@ -133,13 +133,14 @@ const disjunctsOf = (c) => (c?.any ? c.any : [c]);
 
 /**
  * Charge `condition` to OCCUPY every cell of `cells` (indices): an `open` cell becomes `gated` with it, a gated or
- * directional cell adds it (ANDed with what it holds). A cell that already holds one of the condition's disjuncts is left
- * as it is: it already implies the charge (a lava cell's Dark Suit implies `Or(Dark Suit, …)`). Returns a new grid.
+ * directional cell adds it (ANDed with what it holds). A cell that already holds the condition, or one of its disjuncts,
+ * is left as it is: it already implies the charge (two overlapping discs; a lava cell's Dark Suit implies
+ * `Or(Dark Suit, …)`). Returns a new grid.
  */
 export function stampOccupancy(grid, cells, condition) {
     if (cells.size === 0) return grid;
     const out = grid.cells.slice();
-    const implied = new Set(disjunctsOf(condition).map(keyOf));
+    const implied = new Set([keyOf(condition), ...disjunctsOf(condition).map(keyOf)]);
     for (const i of cells) {
         const cell = out[i];
         if (BLOCKING.has(cell.kind)) continue;
