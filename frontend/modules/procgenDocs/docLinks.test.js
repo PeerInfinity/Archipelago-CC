@@ -364,22 +364,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              annotation row → it (`doc` 316 → 323).
          *   428 → 429  content packs PL-1 (2026-11-15): concepts.md § Content roles' `assertPresents` bullet → its
          *              own § What exists, the numbers and the bindings (`same-doc` 39 → 40).
+         *   429 → 430  content packs PL-2 (2026-11-16): concepts.md § The resolver, the fill rules and the gap
+         *              report → action-nodes.md (`doc` 323 → 324).
          */
         expect(by).toEqual({
             'same-doc': 40,
-            doc: 323,
+            doc: 324,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(429);
+        expect(CORPUS.length).toBe(430);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
         //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out) and the registry's
         //   annotation row to it (7 doc).
-        expect(docs).toHaveLength(323);
+        //   429 → 430: content packs PL-2 — concepts.md § The resolver… → action-nodes.md (1 doc).
+        expect(docs).toHaveLength(324);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

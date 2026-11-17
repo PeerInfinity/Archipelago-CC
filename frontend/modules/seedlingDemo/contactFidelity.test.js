@@ -408,8 +408,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             fallRockHoldsButton: true,
             // ⛓ fidelity CORRIDORFLIP D2 (wave 42): the corridor forecast memoises its frozen geometry reads — ON since the CORRIDORFLIP flip (⚖ user 2026-11-12).
             corridorForecastMemo: true,
-            // ⛓ fidelity WALLFLYERCORPSE D2 (wave 45): a wallflyer the run no longer holds live is not priced at its placement — OFF.
-            wallFlyerCorpseGone: false,
+            // ⛓ fidelity WALLFLYERCORPSE D2 (wave 45): a wallflyer the run no longer holds live is not priced at its placement — ON since the WALLFLYERCORPSE flip.
+            wallFlyerCorpseGone: true,
             // ⛓ fidelity DARKSUITSTATIC D2 (wave 46): the dark suit retaliates into a static body — OFF.
             darkSuitStaticRetaliation: false,
             // ⛓ fidelity L39HIT D2 (wave 47): a spinner forecast steps the room's pulsers and their pulse on the bodies — OFF.

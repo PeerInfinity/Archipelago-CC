@@ -51,10 +51,10 @@ const solveL27 = () => solveWdkFixture('l27-from-l28-boot.json', L27_GOALS, 'wdk
 afterEach(() => resetBodyFamilyKillCounts());
 
 describe('hammer-phase WALLFLYER-DRILL-KILL — the switches', () => {
-    it('both ship OFF, `SEEDLING_<NAME>=1` turns each on, and the channel carries both names', () => {
-        expect(WALLFLYER_KILL_ARM_DEFAULT).toBe(false);
+    it('the wallflyer arm ships ON (`=0` opts out), the drill arm OFF (`=1` turns it on), and the channel carries both names', () => {
+        expect(WALLFLYER_KILL_ARM_DEFAULT).toBe(true);
         expect(DRILL_KILL_ARM_DEFAULT).toBe(false);
-        expect(WALLFLYER_KILL_ARM.enabled).toBe(ENV.SEEDLING_WALLFLYER_KILL_ARM === '1');
+        expect(WALLFLYER_KILL_ARM.enabled).toBe(ENV.SEEDLING_WALLFLYER_KILL_ARM !== '0');
         expect(DRILL_KILL_ARM.enabled).toBe(ENV.SEEDLING_DRILL_KILL_ARM === '1');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WALLFLYER_KILL_ARM');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DRILL_KILL_ARM');

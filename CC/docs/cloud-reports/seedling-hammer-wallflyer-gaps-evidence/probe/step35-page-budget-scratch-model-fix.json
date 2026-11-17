@@ -1,0 +1,86 @@
+{
+ "fixture": "frontend/modules/seedlingDemo/fixtures/wallflyer-drill-kill/survey-step-35-boot.json",
+ "exit": [
+  192,
+  64
+ ],
+ "ms": 3092,
+ "attempts": [
+  {
+   "budget": 640,
+   "ok": true,
+   "work": 642,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": true,
+     "kind": null,
+     "ticks": 609,
+     "ms": 5,
+     "work": 530
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4,
+     "work": 112,
+     "deadline": "sword-dash",
+     "limit": "window"
+    }
+   ],
+   "said": [
+    {
+     "pass": "dashless",
+     "ok": true,
+     "ticks": 609,
+     "message": null
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "ticks": null,
+     "message": "solverBot(page-budget-step): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site after 32 tick(s) of the segment's drive — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `sword-dash`) and refused 2 `sword-dash` scan(s), 1 `kill-chaser` scan(s), 1 `walk` scan(s) — this refusal may be the deadline's, not the room's."
+    }
+   ]
+  }
+ ],
+ "arm": {
+  "asked": 4,
+  "kills": [
+   {
+    "id": "wallflyer@48,112",
+    "family": "wallflyer",
+    "t": 134,
+    "ticks": 177,
+    "forks": 1
+   },
+   {
+    "id": "wallflyer@64,80",
+    "family": "wallflyer",
+    "t": 311,
+    "ticks": 121,
+    "forks": 1
+   }
+  ],
+  "refused": [
+   {
+    "t": 432,
+    "why": "body-family arm: no hitless kill (8 fork(s)) — wallflyer@128,80: (119,88): HIT at fork tick 30 (wallflyer wallflyer@128,80) on the walk to (119,88) | (121,88): HIT at fork tick 30 (wallflyer wallflyer@128,80) on the walk to (121,88) | (123,88): HIT at fork tick 30 (wallflyer wallflyer@128,80) on the walk to (123,88) | (127,78): HIT at fork tick 30 (wallflyer wallflyer@128,80) on the walk to (127,7"
+   }
+  ]
+ },
+ "plan": {
+  "ticks": 609,
+  "pass": "dashless",
+  "verbs": [
+   "bait",
+   "detour",
+   "kill"
+  ],
+  "hits": 0,
+  "deaths": 0,
+  "level": 29
+ }
+}

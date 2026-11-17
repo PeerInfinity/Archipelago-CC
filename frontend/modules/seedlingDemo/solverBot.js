@@ -24778,8 +24778,8 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
 
 /**
  * ⛓⛓ hammer-phase WALLFLYER-DRILL-KILL — THE KILL RUNG'S ARMS FOR A WALLFLYER AND A DRILL (`WALLFLYER_KILL_ARM`,
- * `SEEDLING_WALLFLYER_KILL_ARM`; `DRILL_KILL_ARM`, `SEEDLING_DRILL_KILL_ARM`; both OFF: the rung's words and work are
- * the BEFORE ones, no fork is made).
+ * `SEEDLING_WALLFLYER_KILL_ARM`, ON since the wallflyer-kill flip; `DRILL_KILL_ARM`, `SEEDLING_DRILL_KILL_ARM`, OFF; an
+ * arm OFF leaves the rung's words and work the BEFORE ones, no fork is made).
  *
  * With the corridor forecast pricing body contact (`corridorBodyPricing`), a walk that crosses a wallflyer's ray or a
  * drill's run range is refused by the probe — but the kill rung's arms target chasers, spinners and statics only, so the
@@ -24802,10 +24802,13 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
  * refusal: the arm answers `why` and the rung goes on (DETOUR, …) as before, the why one line longer.
  * ⚠ The weapon is `drillKillWeapon`'s (the primary sword or spear, else a held one's slot): Fire kills neither body.
  */
+// ⚖ ON by default since the wallflyer-kill flip (the user, 2026-11-15: *"Flip WALLFLYER_KILL_ARM alone (Recommended)"*,
+// after whole-game re-measure-3 found survey step 35, L22 → L29, the walk's first wall): `SEEDLING_WALLFLYER_KILL_ARM=0`
+// opts out. `DRILL_KILL_ARM` stays OFF.
 export const WALLFLYER_KILL_ARM = {
-    enabled: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM === '1',
+    enabled: globalThis.process?.env?.SEEDLING_WALLFLYER_KILL_ARM !== '0',
 };
-export const WALLFLYER_KILL_ARM_DEFAULT = false;
+export const WALLFLYER_KILL_ARM_DEFAULT = true;
 /** Run `fn` with `WALLFLYER_KILL_ARM` set to `enabled`, restoring the previous value (also on a throw). */
 export function withWallFlyerKillArm(enabled, fn) {
     return withSwitch(WALLFLYER_KILL_ARM, enabled, fn);
@@ -24846,7 +24849,7 @@ export function resetBodyFamilyKillCounts() {
 
 /** A run's live, resting-or-flying wallflyer `id` (not dying, not removed), or null. */
 function liveWallFlyer(r, id) {
-    const w = (r.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+    const w = (r.entities('wallFlyerBodies') ?? []).find((b) => b.id === id);
     return w && !w.removed && !w.destroy && !w.dieAnim ? w : null;
 }
 
@@ -24955,7 +24958,7 @@ function playWallFlyerKill(f, keys, equips, id, kw, stance, opts, allowTeleporte
         if (why) return { why: `${why} in the fight` };
         if (ready) presses += 1;
         last = ready;
-        const after = (f.wallFlyers?.bodies ?? []).find((b) => b.id === id);
+        const after = (f.entities('wallFlyerBodies') ?? []).find((b) => b.id === id);
         if (after && ((after.hits ?? 0) > hitsWas || after.dieAnim || after.destroy || after.removed)) landed += 1;
         if (presses - landed > BODY_FAMILY_KILL.unanswered) {
             return { why: `${presses} press(es) with the ${kw.weapon} and ${landed} landed from (${stance.pre.x},${stance.pre.y})` };
@@ -24965,7 +24968,7 @@ function playWallFlyerKill(f, keys, equips, id, kw, stance, opts, allowTeleporte
         return { why: `${id} alive ${BODY_FAMILY_KILL.fightBound} ticks into the fight (${presses} press(es), ${landed} landed)` };
     }
     const gone = () => {
-        const b = (f.wallFlyers?.bodies ?? []).find((x) => x.id === id);
+        const b = (f.entities('wallFlyerBodies') ?? []).find((x) => x.id === id);
         return !b || b.removed;
     };
     for (let k = 0; k < BODY_FAMILY_KILL.removalBound && !gone(); k += 1) {
@@ -25031,6 +25034,7 @@ function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allo
     if (typeof fork !== 'function') return { why: 'body-family arm: no fork to try the kill on (the solve has no `forkRun`)' };
     const opts = solverPlanOpts(run, contacts);
     let forks = 0;
+    let deadline = false;
     for (const t of targets) {
         const body = t.family === 'wallflyer' ? liveWallFlyer(run, t.id) : liveDrills(run).find((d) => d.id === t.id);
         if (t.family === 'wallflyer' && (body.vx !== 0 || body.vy !== 0)) { whys.push(`${t.id}: in flight now`); continue; }
@@ -25043,7 +25047,10 @@ function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allo
         const tried = [];
         for (const stance of st.ok) {
             if (forks >= BODY_FAMILY_KILL.maxForks) { tried.push(`the ${BODY_FAMILY_KILL.maxForks}-fork bound`); break; }
+            // ⛓ wallflyer-gaps G1: the segment's fork replays under the caller's deadline and is `null` once it trips —
+            // the arm then stops by name and the rung's own refusal (and the budget's) is what the solve says
             const f = fork();
+            if (f === null) { tried.push('the caller\'s deadline tripped inside the fork'); deadline = true; break; }
             forks += 1;
             const keys = [];
             const equips = [];
@@ -25075,6 +25082,7 @@ function bodyFamilyKillOnLadder(run, perTick, hit, { fork, equip, contacts, allo
             return { record };
         }
         whys.push(`${t.id}: ${tried.slice(0, 4).join(' | ')}${tried.length > 4 ? ` (+${tried.length - 4} more)` : ''}`);
+        if (deadline) break;
     }
     const why = `body-family arm: no hitless kill (${forks} fork(s)) — ${whys.join(' || ')}`;
     BODY_FAMILY_KILL_COUNTS.refused.push({ t: perTick.length, why });
@@ -29771,6 +29779,13 @@ function solveSegmentUnder({
                     why: `${hunted.id} died on the staging walk to ${at}`, staged: { cell: row.cell, wait: 0, from: t0 } };
             }
             const f = fork();
+            if (f === null) {
+                // ⛓ wallflyer-gaps G1: the fork's replay tripped the caller's deadline
+                rewind.to(t0);
+                row.verdict = 'deadline';
+                whys.push(`${at}: the caller's anytime deadline tripped inside the still wait's fork`);
+                break;
+            }
             const fh0 = f.ledger('playerHits').length;
             let found = null;
             for (let d = 0; d <= cell.ceiling; d += 1) {

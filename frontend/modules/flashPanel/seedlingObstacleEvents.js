@@ -316,11 +316,18 @@ export function deriveLockEvents(projection, ctx) {
  *   does); `reach` = the farthest an across-the-cut arm reaches it from (default `a.reach`); `through: false` = no
  *   arm that passes a `Solid` hurts this body (it is then reached only by standing in the side)
  * @param {number} [a.reach] the farthest an across-the-cut arm reaches from the player's centre
+ * @param {(start:number[], tiles:Set<string>) => number[][]} [a.reachable] ⛓⛓ RULES l99-sided-killlock: the player's
+ *   reachable CENTRES (pixels) from the cell `start`, never leaving `tiles` (the side's tile flood). When given, a side
+ *   is one component of those points, not of tiles — a tile side the model's own solids cut in two (L99: a cliffside's
+ *   pixel mask) is two sides — and a body's distance is measured from those points, the way a chaser measures its
+ *   `runRange` (`Bob.as:58`: to the player's position), not from the nearest corner of a tile no centre reaches. Without
+ *   it, the tile reading stands (every caller before this one).
  * @returns {{steps:{tile:number[], dir:string}[], size:number, verdict:'clears'|'cannot'|'across',
- *   beyond:string[], across:string[]}[]} per side: the steps INTO the lock from it, and why
+ *   beyond:string[], across:string[], nearest?:object}[]} per side: the steps INTO the lock from it, and why
+ *   (`nearest`, with `reachable`: per body not standing in the side, its distance from the side's nearest centre)
  */
 export const ENCOUNTER_DIRS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
-export function encounterLockSides({ width, height, tile, passable, lockTiles, closed, bodies, reach }) {
+export function encounterLockSides({ width, height, tile, passable, lockTiles, closed, bodies, reach, reachable }) {
     const inGrid = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
     const walk = (x, y) => inGrid(x, y) && !closed.has(`${x},${y}`) && passable(x, y);
     const flood = (sx, sy) => {
@@ -343,6 +350,22 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
             // The step INTO the lock moving `dir` starts on the cell behind it.
             const [nx, ny] = [tx - dx, ty - dy];
             if (!walk(nx, ny)) continue;
+            if (reachable) {
+                // ⛓⛓ RULES l99-sided-killlock: the start cell's reachable centres, inside its tile side.
+                const tileSide = sides.find((s) => s.tileSide.has(`${nx},${ny}`))?.tileSide ?? flood(nx, ny);
+                const points = reachable([nx, ny], tileSide);
+                // A cell the tile flood walks but where the player's box has no free position is no step into the lock.
+                if (points.length === 0) continue;
+                let side = sides.find((s) => s.tileSide === tileSide && points.some(([x, y]) => s.keys.has(`${x},${y}`)));
+                if (!side) {
+                    const keys = new Set(points.map(([x, y]) => `${x},${y}`));
+                    const tiles = new Set(points.map(([x, y]) => `${Math.floor(x / tile)},${Math.floor(y / tile)}`));
+                    side = { tiles, tileSide, points, keys, steps: [] };
+                    sides.push(side);
+                }
+                side.steps.push({ tile: [tx, ty], dir });
+                continue;
+            }
             let side = sides.find((s) => s.tiles.has(`${nx},${ny}`));
             if (!side) {
                 side = { tiles: flood(nx, ny), steps: [] };
@@ -351,9 +374,14 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
             side.steps.push({ tile: [tx, ty], dir });
         }
     }
-    // The nearest a point of the side's tiles comes to a body's centre.
+    // The nearest a point of the side's tiles comes to a body's centre (⛓⛓ RULES l99-sided-killlock: with `reachable`,
+    // the nearest reachable centre).
     const distance = (side, [cx, cy]) => {
         let best = Infinity;
+        if (side.points) {
+            for (const [x, y] of side.points) best = Math.min(best, Math.hypot(x - cx, y - cy));
+            return best;
+        }
         for (const k of side.tiles) {
             const [x, y] = k.split(',').map(Number);
             const px = Math.max(x * tile, Math.min(cx, (x + 1) * tile));
@@ -370,14 +398,16 @@ export function encounterLockSides({ width, height, tile, passable, lockTiles, c
     return sides.map((side) => {
         const beyond = [];
         const across = [];
+        const nearest = {};
         for (const b of bodies) {
             if (standsIn(side, b.centre)) continue;
             const d = distance(side, b.centre);
+            if (side.points) nearest[b.at] = Math.round(d * 10) / 10;
             if (b.through !== false && (d <= (b.reach ?? reach) || (b.runRange !== null && d <= b.runRange))) across.push(b.at);
             else beyond.push(b.at);
         }
         const verdict = beyond.length > 0 ? 'cannot' : across.length > 0 ? 'across' : 'clears';
-        return { steps: side.steps, size: side.tiles.size, verdict, beyond, across };
+        return { steps: side.steps, size: side.tiles.size, verdict, beyond, across, ...(side.points ? { nearest } : {}) };
     });
 }
 

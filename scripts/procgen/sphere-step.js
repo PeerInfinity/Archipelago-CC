@@ -287,7 +287,7 @@ async function loadArgsContent(args) {
         exists: contentListOf(args.params?.exists) ?? [], numbers: contentListOf(args.params?.numbers) ?? [],
     }, { substrateIds, ...nodePackIo() });
     return loadContentSet(effectiveContentStack({
-        substrateIds, content: contentListOf(args.params?.content) ?? [],
+        substrateIds, exists: contentListOf(args.params?.exists) ?? [], content: contentListOf(args.params?.content) ?? [],
     }), nodePackIo());
 }
 

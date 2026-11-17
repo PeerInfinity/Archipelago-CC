@@ -88,6 +88,52 @@ export function modelFloodTiles(level, seeds, enterable, { tileSize = TILE_SIZE,
 }
 
 /**
+ * ⛓⛓ RULES l99-sided-killlock — **THE PLAYER'S REACHABLE CENTRES, NOT ITS TILES.** The same 1 px flood of the player's
+ * own box as `modelFloodTiles` (every solid live, a tile entered only when `enterable`), answering the POINTS: every
+ * `(x, y)` the player's position (`playerBoxAt`'s anchor, the point a chaser measures its `runRange` to, `Bob.as:58`)
+ * can take. A tile is the wrong unit for a distance: L99's west pocket holds tiles whose far corner lies within
+ * `Bob.runRange` of a lavarunner that no reachable centre comes within 80 px of (the witness `rules-l99-l6-witness`,
+ * 82.6 and 98.5 px), and a cliffside's pixel mask splits a tile the tile flood walks whole.
+ *
+ * @returns {number[][]} `[x, y]` per reachable centre, in flood order
+ */
+export function modelFloodPoints(level, seeds, enterable, { tileSize = TILE_SIZE } = {}) {
+    const TILE = tileSize;
+    const world = modelWorldOf(level);
+    const W = level.width * TILE;
+    const H = level.height * TILE;
+    const freeAt = (x, y) => world.collidesSolid(playerBoxAt(x, y), {}) === null;
+    const seen = new Uint8Array(W * H);
+    const queue = [];
+    for (const [tx, ty] of seeds) {
+        for (let y = ty * TILE; y < (ty + 1) * TILE; y += 1) {
+            for (let x = tx * TILE; x < (tx + 1) * TILE; x += 1) {
+                if (x < 0 || y < 0 || x >= W || y >= H || seen[y * W + x] || !freeAt(x, y)) continue;
+                seen[y * W + x] = 1;
+                queue.push(y * W + x);
+            }
+        }
+    }
+    for (let head = 0; head < queue.length; head += 1) {
+        const at = queue[head];
+        const x = at % W;
+        const y = (at - x) / W;
+        for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H || seen[ny * W + nx]) continue;
+            const ntx = Math.floor(nx / TILE);
+            const nty = Math.floor(ny / TILE);
+            if ((ntx !== Math.floor(x / TILE) || nty !== Math.floor(y / TILE)) && !enterable(ntx, nty)) continue;
+            seen[ny * W + nx] = 1;
+            if (!freeAt(nx, ny)) continue;
+            queue.push(ny * W + nx);
+        }
+    }
+    return queue.map((at) => [at % W, Math.floor(at / W)]);
+}
+
+/**
  * The analyzer's two model oracles for ONE level and the grid the analyzer is
  * running on (atlas tiles = grid cell + `grid.origin`).
  *
