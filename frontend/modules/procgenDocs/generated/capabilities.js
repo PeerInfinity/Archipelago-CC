@@ -1061,9 +1061,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 112,
+        "fields": 114,
         "fieldsRead": 42,
-        "fieldsUnread": 67,
+        "fieldsUnread": 69,
         "statements": 32,
         "substrates": 10
     },
@@ -5804,6 +5804,7 @@ export const CAPABILITIES = frz({
         "exitGateVeto",
         "extractPathsAndObstacles",
         "extractZoneRules",
+        "fillRules",
         "fillerItem",
         "gateHostingHint",
         "gateableItems",
@@ -5826,6 +5827,7 @@ export const CAPABILITIES = frz({
         "loopSupport.authoredCosts",
         "loopSupport.customQueues",
         "loopSupport.playClock",
+        "loopSupport.strictQueueActions",
         "onContentEdit",
         "pipelineConfigFromParams",
         "pipelineConfigKeys",
