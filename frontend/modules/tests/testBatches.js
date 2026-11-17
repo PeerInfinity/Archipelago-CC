@@ -88,8 +88,8 @@ export const TEST_BATCHES = Object.freeze({
             + 'took fast to 80 % of its budget. On push.',
         // ⛓ REGION MAP step 3b (2026-11-15): the Region Map's seedling_playthrough rows (≈ 1 min) ride here, on
         // push, rather than in fast (js-19 e2: fast at 62 % of its budget at the base) or seedling-js (66 %, which
-        // they would take past HEADROOM_WARN_FRACTION); this batch was at 8 %. The category 'Region Map' (its one
-        // classic-world smoke row) stays in fast.
+        // they would take past HEADROOM_WARN_FRACTION); this batch was at 8 %. The category 'Region Map' (its
+        // classic-world smoke row, and step 4's generated-world clicks row) stays in fast.
         categories: Object.freeze(['Playback Bot', 'Region Map: Seedling']),
     }),
     apworld: Object.freeze({
