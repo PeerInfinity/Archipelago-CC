@@ -1,0 +1,14 @@
+     ✓ ships OFF, appended last, with a worker env name 1ms
+     ✓ OFF: the named `byEnemy` refusal; with `darkSuitBossRetaliation` ON it carries wave 48's D1 text 49ms
+     × ON: billed in the step; the shove is `knockback(1, p)` into `v`, and that tick's phase reads the new `|v|` 18ms
+     ✓ ON with `darkSuitBossRetaliation` ON as well: the same rows (this key declares the Owl by itself) 13ms
+     ✓ the same inputs without the suit: the tick is a walk and the Owl's `v` is his own, ON as OFF 19ms
+     × the pod snap: the AS3 bills the PRE-snap point, so the lethal contact lands a tick later ON 64ms
+     × a rock-spawn tick: OFF refuses; ON bills, and the barrage aim reads the knocked-back `p.v` 10ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityOwlSuit.test.js > OWLSUIT — the dark suit contact (the tape's first contact, with the suit) > ON: billed in the step; the shove is `knockback(1, p)` into `v`, and that tick's phase reads the new `|v|`
+AssertionError: expected 1.5741698717432282 to be close to 1.3973931764465917, received difference is 0.17677669529663653, but expected 5e-13
+ FAIL  frontend/modules/seedlingDemo/fidelityOwlSuit.test.js > OWLSUIT — no suit: the order moves a measured value > the pod snap: the AS3 bills the PRE-snap point, so the lethal contact lands a tick later ON
+ FAIL  frontend/modules/seedlingDemo/fidelityOwlSuit.test.js > OWLSUIT — no suit: the order moves a measured value > a rock-spawn tick: OFF refuses; ON bills, and the barrage aim reads the knocked-back `p.v`
+AssertionError: expected 107 to be greater than or equal to 122
+      Tests  3 failed | 4 passed (7)
