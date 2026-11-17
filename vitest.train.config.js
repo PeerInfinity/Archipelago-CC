@@ -27,7 +27,10 @@ import { defineConfig, configDefaults } from 'vitest/config';
 // STACK_TRACE_ERROR rather than a clean timeout.
 export default defineConfig({
   test: {
-    include: ['frontend/**/*.train.test.js'],
+    // scripts/procgen: the CLI checks wrapped beside their scripts (⚖ Robert 2026-11-17, "Train tier +
+    // nightly": the wallflyer no-hit cross-check and the Seedling map extractor's --check; the nightly
+    // runs the same files).
+    include: ['frontend/**/*.train.test.js', 'scripts/procgen/**/*.train.test.js'],
     exclude: [...configDefaults.exclude],
     environment: 'node',
 
