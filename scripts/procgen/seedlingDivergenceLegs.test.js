@@ -283,15 +283,18 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-l99-sided-killlock: the SAME legs by key (66 goal-event legs, the same keys and events as before), every id
         //   from 743 on shifted by +1 — L99's kill-lock event is a location on the lower floor (level_99__r2c7), so r2c7's
         //   L98 arrival gains a leg to `L99 flag 0` (743). No leg gained or lost a goal event.
+        // ⛓ rules-lavatrap-neck: the SAME legs by key (no leg gained or lost a goal event), every id from 627 on shifted by
+        //   -2 — rule T splits L77 at its lava trap's sealing disc, so of its four door legs two re-key (r2c0 <- the L76
+        //   arrival, r15c6 <- the L78 arrival, each to its own door) and two go (each now a crossing of the trap neck).
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
             'flag:L16:0': [206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [348],
             'flag:L62:0': [515, 520, 525, 530, 535, 566], 'flag:L63:1': [517, 522, 527, 532, 537, 541, 546, 551, 556],
             'flag:L63:6': [569, 571], 'flag:L63:7': [572],
-            'flag:L71:2': [621, 623], 'flag:L12:7+flag:L12:12': [641], 'flag:L101:0': [749],
-            'flag:L112:1': [793, 794, 800, 801, 807, 808, 814, 815, 821, 822],
-            'flag:L114:0': [795, 796, 797, 802, 803, 804, 809, 810, 811, 816, 817, 823, 824],
-            'flag:L113:0': [832, 833, 834, 835],
+            'flag:L71:2': [621, 623], 'flag:L12:7+flag:L12:12': [639], 'flag:L101:0': [747],
+            'flag:L112:1': [791, 792, 798, 799, 805, 806, 812, 813, 819, 820],
+            'flag:L114:0': [793, 794, 795, 800, 801, 802, 807, 808, 809, 814, 815, 821, 822],
+            'flag:L113:0': [830, 831, 832, 833],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);

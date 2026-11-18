@@ -200,8 +200,11 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_65__r0c8', 'level_65__r4c11', 'level_66__r5c4', 'level_66__r9c8', 'level_68__r1c1', 'level_68__r3c1'];
         const SPHERE85_WEAPON_GATED = ['level_69', 'level_70', 'level_71__r0c6', 'level_71__r11c7', 'level_71__r14c12', 'level_71__r16c19',
             'level_72', 'level_73__r0c4', 'level_73__r3c7', 'level_74', 'level_75', 'level_80__r0c2', 'level_80__r6c4', 'level_80__r8c1'];
-        const SPHERE910_WEAPON_GATED = ['level_76', 'level_77', 'level_78__r0c16', 'level_78__r0c2', 'level_79__r0c4', 'level_79__r8c4',
-            'level_80__r12c3', 'level_80__r16c1', 'level_80__r8c4'];
+        // ⛓ rules-lavatrap-neck: rule T splits L77 (level_77 -> r2c0 / r12c6 / r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6,
+        //   r6c9) at their lava traps' sealing discs; every new sub-region stays behind the same weapon gate (+8, none freed).
+        const SPHERE910_WEAPON_GATED = ['level_76', 'level_77__r12c6', 'level_77__r15c6', 'level_77__r2c0', 'level_78__r0c16',
+            'level_78__r0c2', 'level_78__r1c10', 'level_78__r3c1', 'level_78__r3c9', 'level_78__r4c4', 'level_78__r5c6', 'level_78__r6c9',
+            'level_79__r0c4', 'level_79__r8c4', 'level_80__r12c3', 'level_80__r16c1', 'level_80__r8c4'];
         const SPHERE102_WEAPON_GATED = ['level_100__r2c3', 'level_100__r4c10', 'level_101__r0c6', 'level_101__r4c2', 'level_101__r4c9',
             'level_102__r5c3', 'level_102__r5c9', 'level_103', 'level_104', 'level_105', 'level_106', 'level_82', 'level_98', 'level_99__r2c4',
             'level_99__r2c7'];

@@ -63,7 +63,9 @@ describe('maze converted load: which object is the level', () => {
     it('the preset sidecars split into rooms and regions of a shared level world, as measured', () => {
         // 264/116/148 at fe98f37f22; train 102's no-hit (rules-7) split L22/L25 at their new gates: +2 sidecars, both
         // room-less regions of their level's shared world (measured on main 7e99af41cc).
-        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([266, 116, 150]);
+        // ⛓ rules-lavatrap-neck: 266/116/150 -> 274/116/158 — rule T splits L77 (level_77 -> r2c0 + r12c6 + r15c6) and L78 (+ r1c10, r3c1, r3c9, r4c4, r5c6, r6c9):
+        //   +8 sidecars, all room-less regions of their level's shared world.
+        expect([SIDECARS.length, ROOMS.length, SHARED.length]).toEqual([274, 116, 158]);
     });
     it('a sidecar envelope and its bare playable_payload load the same level', () => {
         const s = room('level_16');
