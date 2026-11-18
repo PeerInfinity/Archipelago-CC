@@ -1,0 +1,37 @@
+== seam-off-nocarry-L43.jsonl
+5215 OK  1686 hits 0 dashless:1753@734 full:1686@775 6467b2b3bdbb 
+5216 OK  1686 hits 0 dashless:1753@734 full:1686@775 6467b2b3bdbb 
+5217 OK  1686 hits 0 dashless:1753@734 full:1686@775 0b48d8c009b0 
+5218 OK  1686 hits 0 dashless:1753@734 full:1686@775 0b48d8c009b0 
+5219 REF None hits 0 dashless:refusal@2563 full:refusal@1  solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site befor
+5220 OK  1686 hits 0 dashless:1753@734 full:1686@775 09ccd765487a 
+5221 OK  1686 hits 0 dashless:1753@734 full:1686@775 09ccd765487a 
+5222 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.98,687.14)
+5223 REF None hits 0 dashless:refusal@56 full:refusal@56   at (738.27,686.09)
+5224 REF None hits 0 dashless:refusal@56 full:refusal@56   at (737.47,684.94) NOPHASE
+5225 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.27,684.21) NOPHASE
+5226 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.27,684.21) NOPHASE
+5227 ERR
+5228 OK  1238 hits 0 dashless:1333@725 full:1238@779 15684b07a9ac 
+5229 OK  1235 hits 0 dashless:1326@794 full:1235@865 0473e2b5ea8d 
+5230 OK  1229 hits 0 dashless:1332@777 full:1229@748 c837ae4d6e6b 
+5231 OK  1130 hits 0 dashless:1170@713 full:1130@741 ac5bd3e8c75b 
+5232 REF None hits 0 dashless:refusal@1197 full:refusal@1197  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5233 REF None hits 0 dashless:refusal@1134 full:refusal@1134  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5234 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.26,683.90) NOPHASE
+5235 REF None hits 0 dashless:refusal@56 full:refusal@56   at (739.26,683.90) NOPHASE
+5236 REF None hits 0 dashless:refusal@1178 full:refusal@1178  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5237 REF None hits 0 dashless:refusal@1178 full:refusal@1178  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5238 REF None hits 0 dashless:refusal@1178 full:refusal@1178  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5239 REF None hits 0 dashless:refusal@1178 full:refusal@1178  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5240 REF None hits 0 dashless:refusal@1178 full:refusal@1178  solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes thro
+5241 OK  1686 hits 0 dashless:1753@734 full:1686@775 09ccd765487a 
+5242 OK  1810 hits 0 dashless:1880@747 full:1810@820 f7e585661062 
+5243 OK  1694 hits 0 dashless:1756@714 full:1694@845 a8a281fe3e49 
+5244 OK  1031 hits 0 dashless:1100@751 full:1031@751 bd9efaf55697 
+5245 OK  972 hits 0 dashless:1058@652 full:972@684 4d0b5da04081 
+5246 OK  1017 hits 0 dashless:1100@742 full:1017@663 14138ed913c7 
+5247 OK  1027 hits 0 dashless:1103@706 full:1027@777 dec17390b161 
+5248 OK  1018 hits 0 dashless:1110@652 full:1018@713 2436136bbdd9 
+5249 OK  1003 hits 0 dashless:1110@652 full:1003@648 f7bd0c2dad1a 
+5250 OK  1056 hits 0 dashless:1144@634 full:1056@699 ffab5dfb03cf 
