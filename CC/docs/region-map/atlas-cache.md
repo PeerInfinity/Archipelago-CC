@@ -26,6 +26,8 @@ The lab hand-over writer needs a lab diff under either option. It was measured, 
 
 - 2026-11-17, the user: placement's 5 "right" groups stay as they are (*"Leave as is"*). This closes
   [`placement.md`](placement.md) residue 3.
+- 2026-11-17, the user (relayed by lab-6): the lab hand-over is *"Not now (Recommended)"*. No lab hunk is folded; this
+  slice lands the host-only half, and the hand-over is residue 3.
 
 ## The entry-path survey
 
@@ -115,7 +117,7 @@ The exact diff is [`atlas-cache-lab-handover.diff`](atlas-cache-lab-handover.dif
 6. The test updates. Measured with the diff applied: 103/103 pass across `labProtocol.test.js` and
    `procgenLabPanel.test.js`, including a new forward + re-hand-over row.
 
-lab-6 put the options to Robert:
+lab-6 put the options to Robert, who ruled **(1) "Not now"**:
 1. (Rec) not now: land the host-only half;
 2. a hand-over for the maze lab's mixed worlds only, which would add a `mazeLabView.js:2610` passthrough and a
    content-hashed id;
@@ -218,7 +220,7 @@ field; `regionMapTests.js:808`).
      option 2.
    - ⛔ Not host-side: re-keying there means rewriting the rules' `atlas_id`, which mutates the document the hub
      files.
-3. **The lab hand-over** (§ above): held pending the ruling.
+3. **The lab hand-over** (§ above): not now (⚖ 2026-11-17). The diff stays here as the measured design.
 4. **A cache put after the panel has built** does not rebuild it. Every host writer puts before `files:jsonLoaded`,
    so this does not arise today; a future writer that puts later would need a rebuild nudge.
 5. Out of scope, as briefed: clicks, the maze `layoutGraph` hook (placement residue 1), bake memory tiers, the
