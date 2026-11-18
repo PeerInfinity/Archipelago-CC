@@ -25,6 +25,9 @@
  *   d8 `deliver` not idempotent (a held key / seal value / flag value recorded again) -> the echo row reds.
  *   d9 `rebootInPlace` keeps the float constructor -> the restore row reds.
  *   d10 the tape deferral dropped (`tape.armed` out of `applyDeliveries`' gate) -> the tape row reds.
+ *   d11 (fidelity-22 pin a) `boot` carries the old session's recorded `deliveries` onto the new staging
+ *        -> the four "stage WITHOUT the old run's recorded deliveries" rows red.
+ *   d12 (fidelity-22 pin b) `buildStagedTape` copies `staging.deliveries` into the tape -> the fold/save row reds.
  *   (m5 of `jsRuntimeEncounterLegWalk.test.js` — `encounterHoldsDelivery` → false — reds that file's Bob row.)
  */
 import { readFileSync } from 'node:fs';
@@ -356,6 +359,109 @@ describe('⛓ the JS solver\'s shadow replays a live delivery (the staging recor
         const shadow = replayShadow(rt.session, rt.vanilla.source, { scratchPersistence: true });
         expect(shadow.stateDigest()).toBe(rt.run.stateDigest());
         expect(shadow.inventory.hasShield).toBe(true);
+    });
+});
+
+/**
+ * ⛓ fidelity-22 pin (a) — A NEW STAGING NEVER CARRIES THE OLD RUN'S RECORDED `deliveries`.
+ * The recorded list's `t` is the OLD run's clock (`ticksCompleted` of the run it was written into). A run built from a
+ * staging that carried it would replay those writes at those ticks of ITS OWN clock: a double apply at the wrong
+ * moment (what the boot staged from the ledgers already holds them). So every boot path starts the list empty — the
+ * pending list (dropped at boot) is not enough; this pins the RECORDED one.
+ * Mutant (measured red, all four rows): in `jsRuntimeCore.boot`, after the staging is built,
+ * `if (session?.staging?.deliveries) staging.deliveries = session.staging.deliveries;`.
+ */
+describe('⛓ a new boot, a teleport, a tape botStart and the RE2 restore each stage WITHOUT the old run\'s recorded deliveries', () => {
+    /** L19, live deliveries recorded on the session's staging at t > 0; returns the page and the old session. */
+    function recorded() {
+        const rt = page(19, 48, 48);
+        for (let t = 0; t < 4; t += 1) rt.tick(new Set(['right']));
+        rt.queueItems([flag('hasSword'), keyCall(0)]);
+        for (let t = 0; t < 3; t += 1) rt.tick(new Set(['down']));
+        rt.queueItems([flag('hasShield')]);
+        rt.tick();
+        const old = rt.session;
+        expect(old.staging.deliveries.length).toBe(3);
+        expect(old.staging.deliveries.every((d) => d.t > 0)).toBe(true);
+        return { rt, old, maxT: Math.max(...old.staging.deliveries.map((d) => d.t)) };
+    }
+    /** The new session stages no recorded list, and its run (past the old list's last `t`) applied none. */
+    function expectFresh(rt, old, maxT) {
+        expect(rt.session).not.toBe(old);
+        expect(rt.session.staging.deliveries ?? []).toEqual([]);
+        for (let t = 0; t <= maxT + 2; t += 1) rt.tick();
+        expect(rt.run.deliveries).toEqual([]);
+        expect(rt.session.staging.deliveries ?? []).toEqual([]);
+        // the old session's own record is untouched (nobody moved it onto the new staging)
+        expect(old.staging.deliveries.length).toBe(3);
+    }
+
+    it('a teleport (`new Game` into another room): the ledgers are staged as items/keys, the recorded list is not', () => {
+        const { rt, old, maxT } = recorded();
+        rt.queueItems([newGame(0, 16, 128)]);
+        rt.tick();
+        expect(rt.run.level).toBe(0);
+        expect(rt.run.inventory.hasSword && rt.run.inventory.hasShield).toBe(true);
+        expectFresh(rt, old, maxT);
+    });
+
+    it('a new boot of the same room (`new Game(19, 48, 48)` again): the recorded list is not carried', () => {
+        const { rt, old, maxT } = recorded();
+        rt.queueItems([newGame(19, 48, 48)]);
+        rt.tick();
+        expect(rt.run.level).toBe(19);
+        expect(rt.run.inventory.hasShield).toBe(true);
+        expectFresh(rt, old, maxT);
+    });
+
+    it('a tape\'s botStart (the DECLARED staging): the recorded list is not carried into the tape\'s run', () => {
+        const rt = page(39, 144, 608);
+        for (let t = 0; t < 2; t += 1) rt.tick();
+        rt.queueItems([flag('hasTorch')]);
+        rt.tick();
+        const old = rt.session;
+        expect(old.staging.deliveries.map((d) => d.change)).toEqual([{ kind: 'flag', property: 'hasTorch', value: true }]);
+        expect(rt.game.botLoadTape(TAPE_R5_SHAFT)).toMatch(/^ok/);
+        expect(rt.game.botStart()).toMatch(/^ok/);
+        rt.tick();
+        expect(rt.session).not.toBe(old);
+        expect(rt.session.staging.deliveries ?? []).toEqual([]);
+        expect(rt.run.deliveries).toEqual([]);
+        expect(old.staging.deliveries.length).toBe(1);
+    }, 60_000);
+
+    it('the RE2 restore (`rebootInPlace`): the recorded list is not carried', () => {
+        const { rt, old, maxT } = recorded();
+        expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true });
+        rt.tick();
+        expect(rt.events.filter((e) => e.type === 'boot').at(-1).why).toBe(IN_PLACE_REBOOT_WHY);
+        expect(rt.run.inventory.hasSword && rt.run.inventory.hasShield).toBe(true);
+        expectFresh(rt, old, maxT);
+    });
+});
+
+/**
+ * ⛓ fidelity-22 pin (b) — `deliveries` IS A SESSION-ONLY STAGING FIELD: nothing that WRITES a tape or a save carries
+ * it. The three writers of a session's state: `session.fold()` → `buildStagedTape` (the one fold every
+ * driver-emitted tape goes through; its field list is explicit), `exportSave()` (what `flashPanel/seedlingJsSave`
+ * stringifies into storage), and `botJsLatch` (`director.jsLiveEnvelope`, read off the run, not the staging).
+ * Mutant (measured red): `buildStagedTape` copies the staging's field (`deliveries: staging.deliveries` in its tape).
+ */
+describe('⛓ a session that took live deliveries folds to a tape, and exports a save, with NO `deliveries` field', () => {
+    it('fold() / exportSave() / botJsLatch(): the recorded list is in the staging and in none of the three', () => {
+        const rt = page(19, 48, 48);
+        for (let t = 0; t < 4; t += 1) rt.tick(new Set(['right']));
+        rt.queueItems([flag('hasSword'), keyCall(0)]);
+        for (let t = 0; t < 3; t += 1) rt.tick(new Set(['down']));
+        expect(rt.session.staging.deliveries.length).toBe(2);
+        const tape = rt.session.fold();
+        expect(Object.keys(tape)).not.toContain('deliveries');
+        expect(JSON.stringify(tape)).not.toMatch(/deliver/);
+        expect(tape.tick_count).toBe(rt.session.perTick.length);
+        const save = JSON.stringify(rt.exportSave());
+        expect(save).not.toMatch(/deliver/);
+        expect(JSON.parse(save).keys).toContain(0);          // the delivered key IS saved, as a key
+        expect(rt.game.botJsLatch()).not.toMatch(/deliver/);
     });
 });
 

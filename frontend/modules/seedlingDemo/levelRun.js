@@ -5767,6 +5767,12 @@ export function createLevelRun({
      * frame t and t+1 is what t+1's Player step reads, and t+1's tail appends its slot; the JS core calls this from
      * its queue drain at the top of a tick (`jsRuntimeCore.applyDeliveries`), which is that boundary.
      *
+     * ⚖ INTERIM — THE CEREMONY GATE (per Robert's 2026-10-12 ruling: model the interaction, do not avoid it). The core
+     * does not call this while a ceremony runs (`applyDeliveries`' `session.run.inCeremony` gate), so the model holds a
+     * delivery to the first tick after the ceremony. The game does not: BridgeGeneric writes on its own `ENTER_FRAME`,
+     * during the ceremony's dead frames and under `blackCover`, so the save already holds the item while the ceremony
+     * plays. The gate is a named interim avoidance, not the game's timing.
+     *
      * ⚠ WHAT IS NOT LIVE, ON PURPOSE: an `ADDED_TIME_PROPERTIES` flag (Fire → Karlore, `Karlore.as:27-33`) changes
      * no entity of the CURRENT visit — `added()` already ran — so the visit's world is held at the values it was built
      * with (`addedTimeHold`); the next `new Game` of any room builds with the delivery (`enterWorld` →
