@@ -104,7 +104,9 @@ export function readMazeCell(world, x, y) {
     const tileKind = world.tileKinds?.get(`${x},${y}`);
     if (tileKind) parts.tileKind = tileKind;
     return {
-        tile: NAME_OF_TILE[getTile(world, x, y)] ?? null,
+        // ⛓ CONTENT SETS PASS-1 — a placed kind OWNS the tile under it (a blocked one lowered it to a wall), so the
+        //   cell's own tile is the floor the kind took: a paste writes floor, then `setTileKind` lowers it again.
+        tile: tileKind ? 'floor' : (NAME_OF_TILE[getTile(world, x, y)] ?? null),
         entity: Object.keys(parts).length === 0 ? null : parts,
     };
 }
