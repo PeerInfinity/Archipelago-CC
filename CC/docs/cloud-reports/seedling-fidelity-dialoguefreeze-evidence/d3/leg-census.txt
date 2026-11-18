@@ -1,0 +1,12 @@
+legs 924
+legs in a room with a texted talker/watcher (built world, d1/world-rooms.txt) 223 {"0":45,"1":1,"12":90,"19":6,"34":2,"35":1,"36":4,"37":7,"48":5,"58":4,"64":2,"87":26,"88":9,"89":7,"94":4,"111":4,"114":6}
+legs in such a room that also holds one of the four (L88 only) 9
+  685 88 exit level_88 -> level_87__r1c3 arrive [96,288]
+  686 88 exit level_88 -> level_12__r0c19 arrive [96,288]
+  687 88 exit level_88 -> level_87__r1c3 #2 arrive [96,288]
+  688 88 exit level_88 -> level_87__r1c3 arrive [32,16]
+  689 88 exit level_88 -> level_12__r0c19 arrive [32,16]
+  690 88 exit level_88 -> level_87__r1c3 #2 arrive [32,16]
+  691 88 exit level_88 -> level_87__r1c3 arrive [192,16]
+  692 88 exit level_88 -> level_12__r0c19 arrive [192,16]
+  693 88 exit level_88 -> level_87__r1c3 #2 arrive [192,16]
