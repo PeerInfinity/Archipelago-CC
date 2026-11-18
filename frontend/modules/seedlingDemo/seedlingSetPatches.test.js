@@ -38,6 +38,7 @@ import {
     PATCH_L37_FALLROCK_REMOVED,
     PATCH_L39_FALLROCK_REMOVED,
     PATCH_L43_FALLROCK_REMOVED,
+    PATCH_L73_LAVARUNNER_MOVED,
     PATCH_L74_BUTTON_REMOVED,
     PATCH_L74_FALLROCK_REMOVED,
     PATCH_MOONROCK_REMOVED,
@@ -51,6 +52,8 @@ import {
 import { vanillaRecordSet } from './levelSetExporter.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { fallDestination } from './playerPhysicsV2.js';
+import { HITBOX, spawnFromBoot } from './playerPhysicsV1.js';
+import { ENEMY_CLASSES } from './combat.js';
 import { buildPlacementTable, rewriteRecordSet } from './apPlacementRewriter.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
@@ -90,7 +93,7 @@ const BUNDLE_ROOMS = {
         { type: 'button', x: 112, y: 128, attrs: { tset: '0' } }],
     door: { type: 'stairsdown', x: 112, y: 32, to: '31' } },
 };
-const PATCHED_ROOMS = [0, 29, 32, 37, 39, 43, 74];
+const PATCHED_ROOMS = [0, 29, 32, 37, 39, 43, 73, 74];
 /** L43's wand-dropped rocks (tset 0): the doorway one goes, the two pocket ones stay. */
 const L43_DOORWAY_ROCK = { type: 'fallrock', x: 176, y: 384, attrs: { tset: '0', tag: '3' } };
 const L43_POCKET_ROCKS = [{ type: 'fallrock', x: 96, y: 336, attrs: { tset: '0', tag: '2' } },
@@ -104,11 +107,12 @@ const overlaps = ([ax0, ax1, ay0, ay1], [bx0, bx1, by0, by1]) => ax0 < bx1 && bx
 const largeRocksIn = (record) => record.entities.filter((e) => e.type === 'fallrocklarge');
 
 describe('the table the delivery carries', () => {
-    it('is the moonrock, L37 and ROCKMOVE bundle removals, the L32 move, then L43\'s doorway rock — the L110 repoint is stopped, its two candidates unapplied', () => {
+    it('is the moonrock, L37 and ROCKMOVE bundle removals, the L32 move, L43\'s doorway rock, then the L73 runner move — the L110 repoint is stopped, its two candidates unapplied', () => {
         expect(SEEDLING_SET_PATCHES.map((p) => p.id))
             .toEqual([SET_PATCH_IDS.moonrockRemoved, SET_PATCH_IDS.l37FallrockRemoved,
                 'l74-fallrock-removed', 'l74-button-removed', 'l39-fallrock-removed',
-                'l29-fallrock-removed', 'l29-button-removed', 'l32-bossrock-moved', 'l43-fallrock-removed']);
+                'l29-fallrock-removed', 'l29-button-removed', 'l32-bossrock-moved', 'l43-fallrock-removed',
+                'l73-lavarunner-moved']);
         expect(ROCKMOVE_REMOVE_BUNDLE.every((p) => p.op === 'remove' && Object.isFrozen(p))).toBe(true);
         expect(SEEDLING_SET_PATCHES).not.toContain(PATCH_L110_FALL_TO_L2);
         expect(SEEDLING_SET_PATCHES).not.toContain(PATCH_L110_FALL_OFF_STAIRS);
@@ -217,6 +221,48 @@ describe('the table the delivery carries', () => {
         const alone = applySetPatches(map.levels, [PATCH_L32_BOSSROCK_MOVED]);
         alone.forEach((r, i) => { if (i !== 32) expect(r).toBe(map.levels[i]); });
         expect(alone[32].entities).toHaveLength(map.levels[32].entities.length);
+    });
+
+    it('L73\'s lavarunner moves 40 px west, off the L74 door\'s landing, into the lava behind r1c3; attrs and the rest of L73 untouched', () => {
+        const map = MAP();
+        const out = applySetPatches(map.levels);
+        const runners = (r) => r.entities.filter((e) => e.type === 'lavarunner');
+        // BEFORE: one runner at (72,24) on the pocket floor; AFTER: the same entity at (32,24)
+        expect(runners(map.levels[73])).toEqual([{ type: 'lavarunner', x: 72, y: 24 }]);
+        expect(runners(out[73])).toEqual([{ type: 'lavarunner', x: 32, y: 24 }]);
+        expect(out[73].entities).toEqual(map.levels[73].entities.map((e) => (e.type === 'lavarunner' ? { ...e, x: 32 } : e)));
+        expect(PATCH_L73_LAVARUNNER_MOVED).toMatchObject({ level: 73, op: 'move', to: { x: 32, y: 24 } });
+        // the boxes, derived: the runner's contact box (`ENEMY_CLASSES.lavarunner`: centre + ctor offset, 12×12) and
+        // the player's at the L74 door's landing (64,16) (`spawnFromBoot` + `HITBOX`)
+        const lr = ENEMY_CLASSES.lavarunner;
+        const runnerBox = (e) => { const cx = e.x + lr.ctor.dx; const cy = e.y + lr.ctor.dy;
+            return [cx - lr.hitbox.ox, cx - lr.hitbox.ox + lr.hitbox.w, cy - lr.hitbox.oy, cy - lr.hitbox.oy + lr.hitbox.h]; };
+        const c = spawnFromBoot({ x: 64, y: 16 });
+        const player = [c.x - HITBOX.originX, c.x - HITBOX.originX + HITBOX.width, c.y - HITBOX.originY, c.y - HITBOX.originY + HITBOX.height];
+        const gap = ([ax0, ax1, ay0, ay1], [bx0, bx1, by0, by1]) => Math.max(ax0 - bx1, bx0 - ax1, ay0 - by1, by0 - ay1);
+        // vanilla: the boxes touch (gap 0) at the boot, inside one tick of a 1.5 px/tick homer — the game hit at t2
+        expect(gap(runnerBox(runners(map.levels[73])[0]), player)).toBe(0);
+        expect(lr.speed).toBe(1.5);
+        expect(gap(runnerBox(runners(out[73])[0]), player)).toBe(24);
+        // the destination holds terrain a LavaRunner survives (lava), and no solid under its box
+        const world = buildLevelWorld(out[73]);
+        const [x0, x1, y0, y1] = runnerBox(runners(out[73])[0]);
+        const tilesUnder = world.tiles.filter((t) => t.tx * 16 < x1 && t.tx * 16 + 16 > x0 && t.ty * 16 < y1 && t.ty * 16 + 16 > y0);
+        expect(new Set(tilesUnder.map((t) => t.name))).toEqual(new Set(['Lava']));
+        expect(lr.terrain.lava).toBe('survives');
+        // the row alone touches L73 only; idempotent; the move stays a move
+        const alone = applySetPatches(map.levels, [PATCH_L73_LAVARUNNER_MOVED]);
+        alone.forEach((r, i) => { if (i !== 73) expect(r).toBe(map.levels[i]); });
+        expect(alone[73].entities).toHaveLength(map.levels[73].entities.length);
+        expect(applySetPatches(alone, [PATCH_L73_LAVARUNNER_MOVED])[73]).toBe(alone[73]);
+        // REFUSES BY NAME: the runner moved under the patch (neither BEFORE nor AFTER), and an occupied `to`
+        const withL73 = (f) => { const m = MAP(); m.levels[73].entities = f(m.levels[73].entities); return m.levels; };
+        const elsewhere = withL73((es) => es.map((e) => (e.type === 'lavarunner' ? { ...e, x: 80 } : e)));
+        expect(() => applySetPatches(elsewhere, [PATCH_L73_LAVARUNNER_MOVED]))
+            .toThrow(/l73-lavarunner-moved — level 73 holds no lavarunner@72,24 \{\} \(the BEFORE\) and 0 lavarunner@32,24 \{\} \(the AFTER\)/);
+        const stacked = withL73((es) => [...es, { type: 'lavarunner', x: 32, y: 24 }]);
+        expect(() => applySetPatches(stacked, [PATCH_L73_LAVARUNNER_MOVED]))
+            .toThrow(/l73-lavarunner-moved — level 73 already holds a lavarunner@32,24/);
     });
 
     it('the `move` op: idempotent, and REFUSES BY NAME — moved attrs, two matches, an occupied `to`, no `to`', () => {
@@ -366,10 +412,11 @@ describe('the two L110 repoints (NOT in the table): the arithmetic of `checkFall
         expect(outs).toEqual([{ to_level: 2, ctor: { x: 64, y: 32 } }]);
     });
 
-    it('the table is PATCH_MOONROCK_REMOVED, PATCH_L37_FALLROCK_REMOVED, the five ROCKMOVE rows, the L32 move and the L43 rock, in order', () => {
+    it('the table is PATCH_MOONROCK_REMOVED, PATCH_L37_FALLROCK_REMOVED, the five ROCKMOVE rows, the L32 move, the L43 rock and the L73 runner move, in order', () => {
         expect(SEEDLING_SET_PATCHES).toEqual([PATCH_MOONROCK_REMOVED, PATCH_L37_FALLROCK_REMOVED,
             PATCH_L74_FALLROCK_REMOVED, PATCH_L74_BUTTON_REMOVED, PATCH_L39_FALLROCK_REMOVED,
-            PATCH_L29_FALLROCK_REMOVED, PATCH_L29_BUTTON_REMOVED, PATCH_L32_BOSSROCK_MOVED, PATCH_L43_FALLROCK_REMOVED]);
+            PATCH_L29_FALLROCK_REMOVED, PATCH_L29_BUTTON_REMOVED, PATCH_L32_BOSSROCK_MOVED, PATCH_L43_FALLROCK_REMOVED,
+            PATCH_L73_LAVARUNNER_MOVED]);
         expect(ROCKMOVE_REMOVE_BUNDLE).toEqual(SEEDLING_SET_PATCHES.slice(2, 7));
     });
 });
@@ -381,25 +428,32 @@ describe('vanillaRecordSet carries the table — the single source of the delive
         for (const level of [29, 37, 39, 74]) expect(fallrocksIn(set.rooms[level].source.record), `${level}`).toEqual([]);
         const ids = ['moonrock-removed', 'l37-fallrock-removed', 'l74-fallrock-removed', 'l74-button-removed',
             'l39-fallrock-removed', 'l29-fallrock-removed', 'l29-button-removed', 'l32-bossrock-moved',
-            'l43-fallrock-removed'];
+            'l43-fallrock-removed', 'l73-lavarunner-moved'];
         expect(set.provenance.patches).toEqual(ids);
         expect(report.patches).toEqual(ids);
         expect(largeRocksIn(set.rooms[32].source.record)).toEqual([{ ...L32_ROCK, x: 88, y: 128 }]);
         expect(fallrocksIn(set.rooms[43].source.record)).toEqual(L43_POCKET_ROCKS);
+        expect(set.rooms[73].source.record.entities.filter((e) => e.type === 'lavarunner')).toEqual([{ type: 'lavarunner', x: 32, y: 24 }]);
         // f5bdb07d → 5aeefc3c: the table gained L43's doorway rock (rules rules-l39)
-        expect(set.set_id).toBe('seedling-vanilla-record-5aeefc3c');
-        // the delivery WITHOUT the L43 row (the l43 probe's control) keeps the pre-L43 id
+        // 5aeefc3c → 23510f80: the table gained L73's runner move (rules rules-landing-contact-census)
+        expect(set.set_id).toBe('seedling-vanilla-record-23510f80');
+        // the delivery WITHOUT the L73 row (the census's vanilla control) keeps the pre-move id
         expect(vanillaRecordSet(EMBED, MAP(), {
-            patches: SEEDLING_SET_PATCHES.filter((p) => p !== PATCH_L43_FALLROCK_REMOVED) }).set.set_id)
+            patches: SEEDLING_SET_PATCHES.filter((p) => p !== PATCH_L73_LAVARUNNER_MOVED) }).set.set_id)
+            .toBe('seedling-vanilla-record-5aeefc3c');
+        // the delivery WITHOUT the L43 row (and the later L73 row: the l43 probe's control) keeps the pre-L43 id
+        expect(vanillaRecordSet(EMBED, MAP(), {
+            patches: SEEDLING_SET_PATCHES.filter((p) => p !== PATCH_L43_FALLROCK_REMOVED && p !== PATCH_L73_LAVARUNNER_MOVED) }).set.set_id)
             .toBe('seedling-vanilla-record-f5bdb07d');
         // the delivery WITHOUT the L32 move and the L43 row (the l32 probe's control) keeps the pre-move id
         expect(vanillaRecordSet(EMBED, MAP(), {
-            patches: SEEDLING_SET_PATCHES.filter((p) => p !== PATCH_L32_BOSSROCK_MOVED && p !== PATCH_L43_FALLROCK_REMOVED) }).set.set_id)
+            patches: SEEDLING_SET_PATCHES.filter((p) => p !== PATCH_L32_BOSSROCK_MOVED && p !== PATCH_L43_FALLROCK_REMOVED
+                && p !== PATCH_L73_LAVARUNNER_MOVED) }).set.set_id)
             .toBe('seedling-vanilla-record-ce77a823');
         // the delivery WITHOUT the bundle (the rock-remove probe's control) keeps its pre-bundle id
         expect(vanillaRecordSet(EMBED, MAP(), {
             patches: SEEDLING_SET_PATCHES.filter((p) => !ROCKMOVE_REMOVE_BUNDLE.includes(p)
-                && p !== PATCH_L32_BOSSROCK_MOVED && p !== PATCH_L43_FALLROCK_REMOVED) }).set.set_id)
+                && p !== PATCH_L32_BOSSROCK_MOVED && p !== PATCH_L43_FALLROCK_REMOVED && p !== PATCH_L73_LAVARUNNER_MOVED) }).set.set_id)
             .toBe('seedling-vanilla-record-eb8cc643');
         // the moonrock-only delivery (the L37 probe's control) keeps its pre-L37 id
         expect(vanillaRecordSet(EMBED, MAP(), { patches: [PATCH_MOONROCK_REMOVED] }).set.set_id)
@@ -414,7 +468,7 @@ describe('vanillaRecordSet carries the table — the single source of the delive
         expect(moonrocksIn(set.rooms[0].source.record)).toHaveLength(1);
     });
 
-    it('only rooms 0, 29, 32, 37, 39, 43 and 74 differ between the two', () => {
+    it('only rooms 0, 29, 32, 37, 39, 43, 73 and 74 differ between the two', () => {
         const a = vanillaRecordSet(EMBED, MAP(), { patches: [] }).set;
         const b = vanillaRecordSet(EMBED, MAP()).set;
         const differ = a.rooms.filter((r, i) => JSON.stringify(r) !== JSON.stringify(b.rooms[i])).map((r) => r.id);

@@ -1,0 +1,8 @@
+SOLVE {"spot":"32,24","dir":"north","arm":"sword","verdict":"PLANNED","ticks":166,"breaks":["breakablerock@64,48 undefined t70"],"ms":574}
+SOLVE {"spot":"32,24","dir":"north","arm":"fire","verdict":"REFUSED","refusal":"solverBot(l73-north-fire-32-24) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (72.6,49.0) — chaser:l
+SOLVE {"spot":"40,0","dir":"north","arm":"sword","verdict":"PLANNED","ticks":117,"breaks":["breakablerock@64,48 undefined t70"],"ms":309}
+SOLVE {"spot":"40,0","dir":"north","arm":"fire","verdict":"PLANNED","ticks":252,"breaks":["breakablerock@64,48 fire t182"],"ms":496}
+SOLVE {"spot":"72,64","dir":"north","arm":"sword","verdict":"PLANNED","ticks":184,"breaks":["breakablerock@64,48 undefined t147"],"ms":484}
+SOLVE {"spot":"72,64","dir":"north","arm":"fire","verdict":"REFUSED","refusal":"solverBot(l73-north-fire-72-64) reach-exit (64,0)->L74 -> break stance (breakablerock@64,48): the combat ladder is EXHAUSTED. The corridor passes thro
+SOLVE {"spot":"32,16","dir":"north","arm":"sword","verdict":"PLANNED","ticks":167,"breaks":["breakablerock@64,48 undefined t70"],"ms":514}
+SOLVE {"spot":"32,16","dir":"north","arm":"fire","verdict":"REFUSED","refusal":"solverBot(l73-north-fire-32-16) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (72.6,49.0) — chaser:l

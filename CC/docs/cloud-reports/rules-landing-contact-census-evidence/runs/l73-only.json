@@ -1,0 +1,54 @@
+{
+ "rules": "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "ticks": 180,
+ "near": 0,
+ "rows": [
+  {
+   "level": 73,
+   "x": 64,
+   "y": 16,
+   "body": "lavarunner@72,24",
+   "gap": 0,
+   "screen": "reach",
+   "arrivedFrom": [
+    "level_74"
+   ],
+   "game": [
+    "idle:hit@2,left->L74@6",
+    "up:hit@2,left->L74@4",
+    "down:hit@2",
+    "left:hit@-11,left->L74@35",
+    "right:hit@2,left->L74@6"
+   ],
+   "arrivalHit": true,
+   "lastInBoot": [
+    {
+     "t": 5,
+     "x": 66.7,
+     "y": 17.28
+    },
+    {
+     "t": 3,
+     "x": 68.4,
+     "y": 17.76
+    },
+    {
+     "t": 180,
+     "x": 66.12,
+     "y": 19.35
+    },
+    {
+     "t": 34,
+     "x": 66.38,
+     "y": 17.36
+    },
+    {
+     "t": 5,
+     "x": 69.21,
+     "y": 17.23
+    }
+   ]
+  }
+ ]
+}

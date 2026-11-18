@@ -47,8 +47,9 @@ const cell = (r, x, y) => adapter.readCell(r, x, y);
  * the OEL parse of the record; the derived `vanillaRecordSet`; and a fixed list of every pre-E1 op kind plus a
  * paste, an undone flood and a stroke on L14 (payload, OEL and the fold's sentences). MUTANT: write `which`
  * into every `attrs` op (or `layer: 'tiles'` into every erase/paint) — the digest moves.
+ * ⛓ rules-remerge-fireguard: 5f49b4cd… → 476f8944…; the L73 lavarunner move patch is the only cause (with main's seedlingSetPatches.js this tree gives the old digest).
  */
-const IDENTITY_DIGEST = '5f49b4cda3e5658ce2c984e0a55ffdf5348eba5c58a0ae45aaf3e8e88b1491f4';
+const IDENTITY_DIGEST = '476f8944fd7b9928af9d75e4953cb995bb96e905c8113cfb07dc6bea57734261';
 
 describe('⛓⛓⛓ IDENTITY — load/fold/save is byte-identical to main', () => {
     it('the vanilla 116, the record set and a pre-E1 op list digest exactly as on main', () => {
