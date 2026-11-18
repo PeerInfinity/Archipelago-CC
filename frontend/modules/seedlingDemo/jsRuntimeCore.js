@@ -395,6 +395,24 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      */
     const sealSlots = Array.from({ length: SAVE_SLOTS.seal_parts }, () => -1);
     const heldTotems = new Set();
+    /**
+     * ⛓⛓ seedling-early-delivery — WHAT THE HOST ITSELF WROTE (⚖ Robert 2026-11-18T15:36:30Z: *"I don't want either to
+     * drop items that arrive from the server early"*): the keys, totem parts and seal identities its method calls
+     * set, and the last value it wrote to each item flag. The ledgers above MERGE these with what a run earned; this
+     * keeps the host's half apart, so the two resets that wipe the ledgers do not wipe the AP inventory with them:
+     *   · `mount` — "a new set is a new save" drops what the OLD set's runs earned (and a restored save), and kept
+     *     dropping what the host had already delivered: an item the server sent before the AP load mounted its set
+     *     (the panel attaches, then loads; the load's first await is a frame) was gone from the new save;
+     *   · `restoreSave` — the RE2 save is put back over the ledgers at the end of the AP load (`_bindJsSave`), and a
+     *     save written BEFORE an item arrived (a reload: the server re-sends on connect) took it away again.
+     * The panel's adapter re-sent most of them on its next push (`_setIfMissing` / its per-tick property writes), so
+     * the PAGE mostly recovered; the CORE did not, and Health never did (`stageSession`'s `hits_max`). Re-seated by
+     * `reseatHostDeliveries` into the ledgers, they reach the run the way every ledger does: the next boot stages them
+     * (a mount drops the session; a restore re-boots in place), once — the readouts then hold them, so the adapter
+     * writes nothing more. Never cleared: an AP item is not taken back by a level set (a `false` the host writes —
+     * the inventory panel's removal — is recorded as its last value, and re-seated as that).
+     */
+    const hostDelivered = { keys: new Set(), totems: new Set(), seals: [], flags: {} };
     /** The run whose opened chests were last folded into `sealSlots`, and how many. */
     let sealsFolded = { run: null, earned: 0 };
     let menu = true;
@@ -700,6 +718,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ SEAL DELIVERY — and its seal log and totem parts (only when it holds any: a run without stays byte-identical).
         if (heldTotems.size) staging.save.totem_parts = [...heldTotems].sort((a, b) => a - b);
         if (sealLog().length) staging.save.seal_parts = sealLog();
+        // ⛓ seedling-early-delivery — `Main.hitsMax` (AP's Health) survives every boot, as the game's static does. ⛔ NOT
+        // through `items`: `bootStaging` puts the flags under `seam.items`, and no seam key reads `items.hitsMax`
+        // (`SEAM_BOOT_SPEC`'s row is `hits_max` → `save.hitsMax`), so until this line a Health the host delivered
+        // before ANY boot (the page's first frame, the AP load's mount, a teleport, the RE2 restore) was dropped from
+        // the run while `flags` (and so the readout) said 4 — and the adapter, seeing 4, never wrote it again
+        // (measured, `CC/docs/cloud-reports/seedling-early-delivery.md`). Only above the base, so a run without stays
+        // byte-identical.
+        if (flags.hitsMax !== ITEM_FLAGS.hitsMax) staging.seam = { ...(staging.seam ?? {}), hits_max: flags.hitsMax };
         if (slots) {
             staging.inventory_slots = slots.slots;
             staging.seam = { ...(staging.seam ?? {}), primary: slots.primary };
@@ -1291,6 +1317,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (!(prop in save.flags)) continue;
             flags[prop] = typeof ITEM_FLAGS[prop] === 'number' ? Number(save.flags[prop]) : Boolean(save.flags[prop]);
         }
+        // ⛓ seedling-early-delivery — what the host delivered stays (a save written before it arrived lacks it).
+        reseatHostDeliveries();
         restoredSlots = save.slots ? { ...save.slots, slots: [...save.slots.slots] } : null;
         restorePending = true;
         if (session) {
@@ -1308,6 +1336,24 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
 
     function aliasClass(alias) { return aliases.get(alias) ?? alias; }
 
+    /**
+     * ⛓ seedling-early-delivery — put what the host delivered (`hostDelivered`) back into the ledgers after a reset:
+     * its keys and totem parts (a union), its seal identities appended to the log where it lacks them (the log's
+     * filled prefix: `sealLog`), and its last write to each item flag. Idempotent. Nothing is handed to a run here:
+     * both callers stage the ledgers into the next boot.
+     */
+    function reseatHostDeliveries() {
+        for (const k of hostDelivered.keys) heldKeys.add(k);
+        for (const i of hostDelivered.totems) heldTotems.add(i);
+        for (const id of hostDelivered.seals) {
+            const log = sealLog();
+            if (log.includes(id)) continue;
+            if (log.length >= SAVE_SLOTS.seal_parts) break;
+            sealSlots[log.length] = id;
+        }
+        Object.assign(flags, hostDelivered.flags);
+    }
+
     function applyItem(item) {
         // ⛓ KEY DELIVERY — `Main.hasKeySet(i, true)` (games/seedling.json's method-call keys): the session gains
         // the key, and (seedling-js-item-live-delivery) the LIVE run gains it at the next tick boundary
@@ -1316,6 +1362,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
             && item.method === 'hasKeySet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true) {
             const k = item.args[0];
+            hostDelivered.keys.add(k);
             if (!heldKeys.has(k) && !(session?.run?.keys?.has?.(k))) {
                 heldKeys.add(k);
                 if (session) pendingDeliveries.push({ kind: 'key', key: k });
@@ -1329,6 +1376,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             && item.method === 'hasSealPartSet' && Number.isInteger(item.args?.[0]) && Number.isInteger(item.args?.[1])
             && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.seal_parts && item.args[1] >= 0) {
             foldGainedSaves();
+            if (!hostDelivered.seals.includes(item.args[1])) hostDelivered.seals.push(item.args[1]);
             if (sealSlots[item.args[0]] !== item.args[1]) {
                 sealSlots[item.args[0]] = item.args[1];
                 if (session) pendingDeliveries.push({ kind: 'seal', slot: item.args[0], identity: item.args[1] });
@@ -1339,6 +1387,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             && item.method === 'hasTotemPartSet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true
             && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.totem_parts) {
             foldGainedSaves();
+            hostDelivered.totems.add(item.args[0]);
             if (!heldTotems.has(item.args[0])) {
                 heldTotems.add(item.args[0]);
                 if (session) pendingDeliveries.push({ kind: 'totem', index: item.args[0] });
@@ -1355,6 +1404,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (cls === GAME && item.property === 'menu') { menu = Boolean(item.value); return; }
             if (cls === MAIN && item.property in flags) {
                 const value = typeof ITEM_FLAGS[item.property] === 'number' ? Number(item.value) : Boolean(item.value);
+                hostDelivered.flags[item.property] = value;
                 if (flags[item.property] !== value) {
                     flags[item.property] = value;
                     if (session) pendingDeliveries.push({ kind: 'flag', property: item.property, value });
@@ -1538,6 +1588,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         heldKeys.clear();
         sealSlots.fill(-1);
         heldTotems.clear();
+        // ⛓ seedling-early-delivery — … but not the AP inventory: what the host delivered before the mount is the new
+        // save's too (the next boot, the set's start, stages it).
+        reseatHostDeliveries();
         collected.clear();
         reportedClears.clear();
         restoredSlots = null;
