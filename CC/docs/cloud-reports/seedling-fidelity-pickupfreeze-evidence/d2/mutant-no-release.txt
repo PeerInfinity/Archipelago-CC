@@ -1,0 +1,20 @@
+MUTANT 1 — no release frame (a text-less lump is 150 frozen frames). Predicted: 2 red (turret text-less row; composition text-less row).
+1
+     ✓ ships OFF, appended last, with a worker env name 2ms
+     × text-less (a green key): OFF the shot starts on T; ON it starts on the release frame and leaves at t7 101ms
+     ✓ texted (a feather): OFF the shot starts on T; ON no turret updates while the dialogue is up 29ms
+     ✓ ice turret, texted: OFF a volley starts on T and leaves at t4; ON none while the dialogue is up 27ms
+     ✓ ice turret, text-less: ON = OFF (T's one unfrozen step stands for the release frame) 30ms
+     ✓ drill, texted: OFF it hops toward the player on T; ON it sits 33ms
+     ✓ beam tower, texted: the tower's own slot on T is frozen ON (the frozen tick's second step is as OFF) 35ms
+     ✓ texted: the slot bills and wave 50 refuses by name OFF; ON the slot bills nothing and nothing refuses 34ms
+     × text-less: the contact is billed once, on T — ON from the release frame, after the frozen lump 37ms
+     ✓ L88 (`introchar@56,104` beside `drill@128,160`): the dialogue starts, ON = OFF, the whole result 6ms
+     ✓ ON = OFF, the whole result (wave 50's held-`down` walk into the turret, and a no-pickup ice turret room) 60ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityPickupFreeze.test.js > PICKUPFREEZE — the turrets (L29, a pickup underfoot at boot, the turrets in range) > text-less (a green key): OFF the shot starts on T; ON it starts on the release frame and leaves at t7
+AssertionError: expected [ 8, 62 ] to deeply equal [ 7, 61 ]
+ FAIL  frontend/modules/seedlingDemo/fidelityPickupFreeze.test.js > PICKUPFREEZE — with wave 50's slot contact (`turretSuitRetaliation`) > text-less: the contact is billed once, on T — ON from the release frame, after the frozen lump
+AssertionError: expected [ [ 2, 'enemy', 'turret@128,192' ] ] to deeply equal [ [ 1, 'enemy', 'turret@128,192' ] ]
+      Tests  2 failed | 9 passed (11)
+restored: MUTANT count 0
