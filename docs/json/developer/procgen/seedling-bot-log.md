@@ -28394,3 +28394,15 @@ Bob form, and the third writes `{32,3}`. The Owl's refusal gains its D1 reason. 
 
 **D3** (ON, measured; no flip): only L112 is met with the suit (legs 786–789, survey step 246), and the Owl stays refused;
 survey 246 is identical OFF/ON (an ENCOUNTER-GATE refusal before any contact). Acceptance `391322d6` base / OFF / ON.
+
+### Seedling hammer-phase TALK-FLIP — `TALK_CLEAR_GOAL` ON by default
+
+⚖ The user, 2026-11-17: *"Flip; sweeps now (Recommended)"* (the hammer replan after wave 6). The whole-game wasm walk
+(re-measure-4, 24/48 on seed 1) stopped first at the L58 yeti's `flag:L58:1`: the page's goal mapper refused it
+`no-verb` because no strategy row names `solid:yeti`. YETI-TALK's mapper fix (`jsRuntimeSolver.TALK_CLEAR_GOAL`) asks the
+solver's own talk arm instead, and it shipped OFF. The switch now reads `SEEDLING_TALK_CLEAR_GOAL !== '0'`, default
+`true`, and on the page's MAIN thread `?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=0` opts out through
+`solverEnvChannel.pageSolverEnvSwitchOff`, the opt-out twin of `pageSolverEnvSwitchOn`. Only a Solid that the solver's
+clear-tag arm talks maps differently, and in the shipped rules that is the L58 yeti alone. The stack sweep had shown its
+leg (`level_58__r3c3 <- in_tentacle_beast_mouth_L57_56_96 …`) as the switch's one real gain. `jsRuntimeSolverTalkClearGoal.test.js`
+pins the default ON and the page-side opt-out; its OFF and ON rows name their arm.

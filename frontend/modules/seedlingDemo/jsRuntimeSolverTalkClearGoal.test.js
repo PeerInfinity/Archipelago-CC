@@ -1,6 +1,6 @@
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE YETI-TALK — the page's goal MAPPER passes a talk-cleared event to the solver's talk arm
- * (`TALK_CLEAR_GOAL`, `SEEDLING_TALK_CLEAR_GOAL=1`; ships OFF).
+ * (`TALK_CLEAR_GOAL`, ON by default since the TALK flip; `SEEDLING_TALK_CLEAR_GOAL=0` opts out).
  *
  *   rules event → `atlasEventGoal` → `jsRuntimeSolver.solverGoalFor` → `clearTagVerbOf('solid:<class>')`
  *   OFF: the strategy tables only → no `solid:yeti` row → `no-verb` (the whole-game walk's L58 stop, byte-identical).
@@ -29,7 +29,7 @@ import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
 import { withContactFidelity } from './contactFidelity.js';
 import { assertGoal, clearTagTalkArmOf, solveSegment } from './solverBot.js';
-import { pageSolverEnvSwitchOn, SOLVER_ENV_NAMES } from './solverEnvChannel.js';
+import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn, SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 
 const PT = JSON.parse(readFileSync(new URL('../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 const SIDECARS = PT.preset_sidecars['1'];
@@ -42,12 +42,12 @@ const TALKED = () => EVENTS.filter((e) => clearTagTalkArmOf(e.obstacle?.class) =
 const SRC = atlasLevelSource();
 
 describe('YETI-TALK — the switch', () => {
-    it('ships OFF (`SEEDLING_TALK_CLEAR_GOAL=1` turns it on in node; the page channel knows the name)', () => {
-        expect(TALK_CLEAR_GOAL_DEFAULT).toBe(false);
-        expect(TALK_CLEAR_GOAL.enabled).toBe(process.env.SEEDLING_TALK_CLEAR_GOAL === '1');
+    it('ships ON since the TALK flip (`SEEDLING_TALK_CLEAR_GOAL=0` opts out in node; the page channel knows the name)', () => {
+        expect(TALK_CLEAR_GOAL_DEFAULT).toBe(true);
+        expect(TALK_CLEAR_GOAL.enabled).toBe(process.env.SEEDLING_TALK_CLEAR_GOAL !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_TALK_CLEAR_GOAL');
-        withTalkClearGoal(true, () => expect(TALK_CLEAR_GOAL.enabled).toBe(true));
-        expect(TALK_CLEAR_GOAL.enabled).toBe(process.env.SEEDLING_TALK_CLEAR_GOAL === '1');
+        withTalkClearGoal(false, () => expect(TALK_CLEAR_GOAL.enabled).toBe(false));
+        expect(TALK_CLEAR_GOAL.enabled).toBe(process.env.SEEDLING_TALK_CLEAR_GOAL !== '0');
     });
 
     it.each([
@@ -63,6 +63,18 @@ describe('YETI-TALK — the switch', () => {
 
     it('no `location` (node) reads OFF', () => {
         expect(pageSolverEnvSwitchOn('SEEDLING_TALK_CLEAR_GOAL', {})).toBe(false);
+    });
+
+    it.each([
+        ['?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=0', true],
+        ['?x=1&seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND%3D1%3BSEEDLING_TALK_CLEAR_GOAL%3D0', true],
+        ['?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=1', false],
+        ['?seedlingSolverEnv=SEEDLING_KILLLOCK_CHASER_REWIND=1', false],
+        ['?seedlingSolverEnv=SEEDLING_NOT_A_SWITCH=0', false], // malformed → the default stands
+        ['', false],
+    ])('the page-side opt-out (the flip): %s → %s', (search, off) => {
+        expect(pageSolverEnvSwitchOff('SEEDLING_TALK_CLEAR_GOAL', { location: { search } })).toBe(off);
+        expect(pageSolverEnvSwitchOff('SEEDLING_TALK_CLEAR_GOAL', {})).toBe(false);
     });
 });
 
