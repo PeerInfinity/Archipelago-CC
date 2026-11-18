@@ -13297,15 +13297,16 @@ export function createLevelRun({
             b.removedTick = ticksCompleted + 1;
         }
     }
-    function stepDrillsNow() {
+    function stepDrillsNow({ mainTick = false } = {}) {
         if (noclip || noDamage) return;
         const st = drillStateFor(level);
         if (st.size === 0) return;
         const base = spinnerCtx();
         const t = ticksCompleted + 1;
         const mixed = CONTACT_FIDELITY.drillMixedRooms;
-        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2290`).
-        const frozenAhead = pickupFreezesFamilyNow('drill', { lump: false });
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2290`). Asked
+        // from the main tick's slot only (a fall-rock span's release frame is not a pickup's first frame).
+        const frozenAhead = mainTick && pickupFreezesFamilyNow('drill', { lump: false });
         // ⛓ fidelity DRILL D2: the game's update order is the LAST placement first (one drill: no order).
         for (const id of (mixed ? [...st.keys()].reverse() : [...st.keys()])) {
             const before = st.get(id);
@@ -22464,7 +22465,7 @@ export function createLevelRun({
             // ── ⛓⛓⛓ R2-swim D1: THE WALLFLYERS, directly below the spinners
             // (`Game.as:2392` adds them one line above `:2393`'s spinners).
             if (!noclip) stepWallFlyersNow();
-            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow();
+            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow({ mainTick: true });
             if (!noclip) stepShieldBossesNow();
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
