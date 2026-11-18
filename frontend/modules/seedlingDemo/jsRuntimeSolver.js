@@ -374,8 +374,9 @@ export function betterAnswer(best, next) {
 
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE HIT-TIEBREAK — **THE ANYTIME RANKING READS THE MODEL'S OWN HIT VERDICT**
- * (`HIT_AWARE_ANSWER`, OFF). ⚖ The user, 2026-11-17: *"Slice it now (Recommended)"*
- * (`CC/docs/cloud-reports/seedling-hammer-hit-tiebreak.md`).
+ * (`HIT_AWARE_ANSWER`, ON by default since the HIT-FLIP; `SEEDLING_HIT_AWARE_ANSWER=0` opts out). ⚖ The user,
+ * 2026-11-17: *"Slice it now (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-hit-tiebreak.md`); the flip,
+ * 2026-11-18T04:33Z: *"Flip ON, 3 sweeps (Recommended)"*.
  *
  * MEASURED: `betterAnswer` kept the later pass's plan on length alone, so a shorter plan the MODEL plays into a hit
  * beat a longer one it plays hitless (L30 `bosslock@64,32` from L31: dashless 255 t hitless, full 191 t three hits and
@@ -390,11 +391,11 @@ export function betterAnswer(best, next) {
  * OFF: no stamp, no read — byte-identical.
  *
  * ⛓ THE THREAD: `betterAnswer` runs inside `solveAnytime`, i.e. in the page's SOLVE WORKER (and in node); no
- * main-thread mapper reads it, so the worker's env channel (`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=1`) is the
+ * main-thread mapper reads it, so the worker's env channel (`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=0`) is the
  * whole page wiring. `withHitAwareAnswer(enabled, fn)` for a row.
  */
-export const HIT_AWARE_ANSWER = { enabled: globalThis.process?.env?.SEEDLING_HIT_AWARE_ANSWER === '1' };
-export const HIT_AWARE_ANSWER_DEFAULT = false;
+export const HIT_AWARE_ANSWER = { enabled: globalThis.process?.env?.SEEDLING_HIT_AWARE_ANSWER !== '0' };
+export const HIT_AWARE_ANSWER_DEFAULT = true;
 
 /** Run `fn` with `HIT_AWARE_ANSWER` set to `enabled`, restoring the previous value. */
 export function withHitAwareAnswer(enabled, fn) {

@@ -28406,3 +28406,16 @@ solver's own talk arm instead, and it shipped OFF. The switch now reads `SEEDLIN
 clear-tag arm talks maps differently, and in the shipped rules that is the L58 yeti alone. The stack sweep had shown its
 leg (`level_58__r3c3 <- in_tentacle_beast_mouth_L57_56_96 …`) as the switch's one real gain. `jsRuntimeSolverTalkClearGoal.test.js`
 pins the default ON and the page-side opt-out; its OFF and ON rows name their arm.
+
+### Seedling hammer-phase HIT-TIEBREAK + HIT-FLIP — `HIT_AWARE_ANSWER` ON by default
+
+⚖ The user, 2026-11-17: *"Slice it now (Recommended)"*. Then, for the flip, 2026-11-18: *"Flip ON, 3 sweeps (Recommended)"*.
+`betterAnswer` used to rank the anytime passes' plans on length alone. A shorter plan that the model itself plays into
+a hit therefore beat a longer one it plays hitless. Two cases: L30 `bosslock@64,32` from L31 (dashless 255 t hitless
+vs full 191 t with three hits and a death), and L12 `bosslock@416,240` from L95 under FADE_MOVE. With
+`jsRuntimeSolver.HIT_AWARE_ANSWER` ON, `solveFromTape` stamps each plan with `modelHits`, taken from the ended run's own
+`playerHits` ledger and deaths with the prefix excluded. When two plans' verdicts differ, `betterAnswer` ranks by the
+verdict alone; otherwise the old rule stands. The switch reads `SEEDLING_HIT_AWARE_ANSWER !== '0'`, default `true`.
+It runs only inside `solveAnytime` (the solve worker, or node), so the worker's env channel
+`?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=0` is the whole page opt-out. `hammerHitTiebreak.test.js` pins the
+default and both arms. Its OFF rows wrap `withHitAwareAnswer(false, …)`.

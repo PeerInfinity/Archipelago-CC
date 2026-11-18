@@ -69,12 +69,13 @@ function solveLeg(leg, { on, fadeMove = false }) {
 }
 
 describe('HIT-TIEBREAK — the switch', () => {
-    it('is OFF by default, named in the solver env channel, and withHitAwareAnswer restores it (also on a throw)', () => {
-        expect(HIT_AWARE_ANSWER_DEFAULT).toBe(false);
-        expect(HIT_AWARE_ANSWER.enabled).toBe(ENV.SEEDLING_HIT_AWARE_ANSWER === '1');
+    it('is ON by default (=0 opts out), named in the solver env channel, and withHitAwareAnswer restores it (also on a throw)', () => {
+        expect(HIT_AWARE_ANSWER_DEFAULT).toBe(true);
+        expect(HIT_AWARE_ANSWER.enabled).toBe(ENV.SEEDLING_HIT_AWARE_ANSWER !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_HIT_AWARE_ANSWER');
         const was = HIT_AWARE_ANSWER.enabled;
         expect(withHitAwareAnswer(true, () => HIT_AWARE_ANSWER.enabled)).toBe(true);
+        expect(withHitAwareAnswer(false, () => HIT_AWARE_ANSWER.enabled)).toBe(false);
         expect(() => withHitAwareAnswer(!was, () => { throw new Error('x'); })).toThrow('x');
         expect(HIT_AWARE_ANSWER.enabled).toBe(was);
     });
