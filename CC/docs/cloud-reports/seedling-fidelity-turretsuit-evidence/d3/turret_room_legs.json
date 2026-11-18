@@ -1,0 +1,387 @@
+[
+ {
+  "id": 290,
+  "key": "level_29__r2c2 <- in_L22_192_64 -> exit:out_teleporter_0_224",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 291,
+  "key": "level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 292,
+  "key": "level_29__r2c2 <- in_L22_192_64 -> location:Level 029 - Boss Key 1",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 293,
+  "key": "level_29__r2c2 <- in_L31_384_96 -> exit:out_teleporter_0_224",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 294,
+  "key": "level_29__r2c2 <- in_L31_384_96 -> exit:out_stairsdown_112_32",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 295,
+  "key": "level_29__r2c2 <- in_L31_384_96 -> location:Level 029 - Boss Key 1",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 296,
+  "key": "level_29__r5c0 <- in_L21_160_80 -> exit:out_teleporter_0_80",
+  "level": 29,
+  "sphere": "2.3",
+  "darkSuit": false
+ },
+ {
+  "id": 478,
+  "key": "level_59 <- in_L60_0_80 -> exit:out_teleporter_0_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 479,
+  "key": "level_59 <- in_L60_0_80 -> exit:out_teleporter_144_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 480,
+  "key": "level_59 <- in_L60_0_80 -> exit:out_teleporter_160_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 481,
+  "key": "level_59 <- in_L60_0_80 -> exit:out_teleporter_304_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 482,
+  "key": "level_59 <- in_L67_224_112 -> exit:out_teleporter_0_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 483,
+  "key": "level_59 <- in_L67_224_112 -> exit:out_teleporter_144_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 484,
+  "key": "level_59 <- in_L67_224_112 -> exit:out_teleporter_160_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 485,
+  "key": "level_59 <- in_L67_224_112 -> exit:out_teleporter_304_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 486,
+  "key": "level_59 <- in_L95_32_0 -> exit:out_teleporter_0_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 487,
+  "key": "level_59 <- in_L95_32_0 -> exit:out_teleporter_144_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 488,
+  "key": "level_59 <- in_L95_32_0 -> exit:out_teleporter_160_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 489,
+  "key": "level_59 <- in_L95_32_0 -> exit:out_teleporter_304_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 490,
+  "key": "level_59 <- in_L95_48_0 -> exit:out_teleporter_0_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 491,
+  "key": "level_59 <- in_L95_48_0 -> exit:out_teleporter_144_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 492,
+  "key": "level_59 <- in_L95_48_0 -> exit:out_teleporter_160_304",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 493,
+  "key": "level_59 <- in_L95_48_0 -> exit:out_teleporter_304_128",
+  "level": 59,
+  "sphere": "0.1",
+  "darkSuit": false
+ },
+ {
+  "id": 513,
+  "key": "level_62 <- in_L61_112_0 -> exit:out_teleporter_48_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 514,
+  "key": "level_62 <- in_L61_112_0 -> exit:out_teleporter_96_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 515,
+  "key": "level_62 <- in_L61_112_0 -> exit:out_teleporter_112_64",
+  "level": 62,
+  "sphere": "6.4",
+  "darkSuit": false
+ },
+ {
+  "id": 516,
+  "key": "level_62 <- in_L61_112_0 -> exit:out_teleporter_192_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 517,
+  "key": "level_62 <- in_L61_112_0 -> exit:out_teleporter_240_304",
+  "level": 62,
+  "sphere": "6.5",
+  "darkSuit": false
+ },
+ {
+  "id": 518,
+  "key": "level_62 <- in_L61_160_0 -> exit:out_teleporter_48_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 519,
+  "key": "level_62 <- in_L61_160_0 -> exit:out_teleporter_96_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 520,
+  "key": "level_62 <- in_L61_160_0 -> exit:out_teleporter_112_64",
+  "level": 62,
+  "sphere": "6.4",
+  "darkSuit": false
+ },
+ {
+  "id": 521,
+  "key": "level_62 <- in_L61_160_0 -> exit:out_teleporter_192_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 522,
+  "key": "level_62 <- in_L61_160_0 -> exit:out_teleporter_240_304",
+  "level": 62,
+  "sphere": "6.5",
+  "darkSuit": false
+ },
+ {
+  "id": 523,
+  "key": "level_62 <- in_L63_16_0 -> exit:out_teleporter_48_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 524,
+  "key": "level_62 <- in_L63_16_0 -> exit:out_teleporter_96_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 525,
+  "key": "level_62 <- in_L63_16_0 -> exit:out_teleporter_112_64",
+  "level": 62,
+  "sphere": "6.4",
+  "darkSuit": false
+ },
+ {
+  "id": 526,
+  "key": "level_62 <- in_L63_16_0 -> exit:out_teleporter_192_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 527,
+  "key": "level_62 <- in_L63_16_0 -> exit:out_teleporter_240_304",
+  "level": 62,
+  "sphere": "6.5",
+  "darkSuit": false
+ },
+ {
+  "id": 528,
+  "key": "level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 529,
+  "key": "level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 530,
+  "key": "level_62 <- in_L63_64_0 -> exit:out_teleporter_112_64",
+  "level": 62,
+  "sphere": "6.4",
+  "darkSuit": false
+ },
+ {
+  "id": 531,
+  "key": "level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 532,
+  "key": "level_62 <- in_L63_64_0 -> exit:out_teleporter_240_304",
+  "level": 62,
+  "sphere": "6.5",
+  "darkSuit": false
+ },
+ {
+  "id": 533,
+  "key": "level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 534,
+  "key": "level_62 <- in_L64_32_96 -> exit:out_teleporter_96_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 535,
+  "key": "level_62 <- in_L64_32_96 -> exit:out_teleporter_112_64",
+  "level": 62,
+  "sphere": "6.4",
+  "darkSuit": false
+ },
+ {
+  "id": 536,
+  "key": "level_62 <- in_L64_32_96 -> exit:out_teleporter_192_304",
+  "level": 62,
+  "sphere": "5.6",
+  "darkSuit": false
+ },
+ {
+  "id": 537,
+  "key": "level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304",
+  "level": 62,
+  "sphere": "6.5",
+  "darkSuit": false
+ },
+ {
+  "id": 568,
+  "key": "level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_0_128",
+  "level": 65,
+  "sphere": "7.5",
+  "darkSuit": false
+ },
+ {
+  "id": 569,
+  "key": "level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_32_0",
+  "level": 65,
+  "sphere": "8.3",
+  "darkSuit": false
+ },
+ {
+  "id": 570,
+  "key": "level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_0_128",
+  "level": 65,
+  "sphere": "7.5",
+  "darkSuit": false
+ },
+ {
+  "id": 571,
+  "key": "level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_32_0",
+  "level": 65,
+  "sphere": "8.3",
+  "darkSuit": false
+ },
+ {
+  "id": 572,
+  "key": "level_65__r0c8 <- in_L63_128_304 -> exit:out_teleporter_128_0",
+  "level": 65,
+  "sphere": "8.4",
+  "darkSuit": false
+ },
+ {
+  "id": 573,
+  "key": "level_65__r0c8 <- in_L63_128_304 -> location:L65 flag 0: lightpole@128,168 cleared",
+  "level": 65,
+  "sphere": "7.5",
+  "darkSuit": false
+ },
+ {
+  "id": 574,
+  "key": "level_65__r4c11 <- in_L68_16_80 -> exit:out_teleporter_184_64",
+  "level": 65,
+  "sphere": "7.5",
+  "darkSuit": false
+ }
+]

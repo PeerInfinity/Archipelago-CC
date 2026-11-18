@@ -83,7 +83,7 @@ describe('fidelity WALLFLYERCORPSE — the key', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.wallFlyerCorpseGone).toBe(true);
             // ⛓ wave 46: DARKSUITSTATIC `darkSuitStaticRetaliation` was appended after this key; waves 47/48 after that.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf('wallFlyerCorpseGone') + 1)).toEqual(['darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation']);
+            expect(keys.slice(keys.indexOf('wallFlyerCorpseGone') + 1)).toEqual(['darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WALLFLYER_CORPSE_GONE');
         });
     it(`the witness: L22's ${ALL.length} wallflyers, the ${PLAN.length} t plan, hitless in L22 to every read tick`, () => {

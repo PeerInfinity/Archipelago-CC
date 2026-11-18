@@ -116,7 +116,7 @@ describe('fidelity L39HIT D2 — `pulserForecastPulse`: the spinner forecast ste
         expect(CONTACT_FIDELITY_DEFAULTS.pulserForecastPulse).toBe(false);
         // ⛓ wave 48: DARKSUITBOSSES `darkSuitBossRetaliation` was appended after this key.
         const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-        expect(keys.slice(keys.indexOf('pulserForecastPulse') + 1)).toEqual(['darkSuitBossRetaliation']);
+        expect(keys.slice(keys.indexOf('pulserForecastPulse') + 1)).toEqual(['darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PULSER_FORECAST_PULSE');
     });
 
