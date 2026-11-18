@@ -236,9 +236,12 @@ pickup.
 - `ci-producer-checks.mjs --jobs=3`: 99 run, 0 red, 1 skipped (`plan-seedling-r7-ends-meet`, a browser arm in CI).
 - `check-procgen-docs.mjs`: ALL PASSED. `generate-procgen-reference.mjs --check`: all match. Census and
   solver-surface checks: green after `--write` (the surface moved line numbers only).
-- **CI** `JavaScript Unit Tests` at the last head: see the chat line (read after the push).
+- **CI** `JavaScript Unit Tests`: no run at the last head. The later pushes (CSV/docs/evidence only) do not hit the
+  workflow's path filter. The last run is at `b76ac737` (run 44217356203): 28379 passed, **1 failed**, slow 437/437.
+  The one red is `seedlingConstantsCensus.test.js` › "the fields table's profile rows are exactly what --profile-rows
+  generates", the row `7e6edf46` fixes (measured 24/24 locally after it). A suite number at this head needs a dispatch.
 - **Owed by the planner (I cannot dispatch):**
-  `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/pickup-freeze-tick-order-jr8r81 -f train_only=true`
+  `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/pickup-freeze-tick-order-jr8r81 -f train_only=true` (and a plain dispatch of the same workflow for the suite at this head)
 
 ## What the brief got wrong (measured)
 
