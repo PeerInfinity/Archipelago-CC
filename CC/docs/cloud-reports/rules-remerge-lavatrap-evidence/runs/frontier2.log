@@ -1,0 +1,21 @@
+SKIP  coverage.route-only (answer, differsFromRecorded) — /home/user/Archipelago-CC/.cache/seedling-survey/through-4.2-route-only/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=route-only --out=.cache/seedling-survey/through-4.2-route-only/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them.
+      A check that cannot run is not a check that passed.
+SKIP  coverage.full (answer) — /home/user/Archipelago-CC/.cache/seedling-survey/through-4.2/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=full --out=.cache/seedling-survey/through-4.2/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them.
+      A check that cannot run is not a check that passed.
+PASS  campaign-frontier.json: chain
+PASS  campaign-frontier.json: segments
+PASS  campaign-frontier.json: arrivals
+PASS  campaign-frontier.json: sources
+PASS  campaign-frontier.json: recordingRoute (the fixture is on disk)
+PASS  campaign-frontier.json: recordingRoute
+PASS  campaign-frontier.json: coverage.recorded
+PASS  campaign-frontier.json: lastArrival
+PASS  campaign-frontier.json: nextStep
+PASS  campaign-frontier.json: refusal
+PASS  campaign-frontier.json: covered
+PASS  campaign-frontier.json: complete
+PASS  campaign-frontier.json: why
+PASS  campaign-frontier.json: coverage.route-only (identity)
+PASS  campaign-frontier.json: coverage.full (identity)
+
+  15 pass, 0 fail
