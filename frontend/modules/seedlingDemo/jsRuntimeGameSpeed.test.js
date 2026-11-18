@@ -16,8 +16,8 @@
  * display with stalls, on a simulated event loop: a frame callback, then its microtasks, then each posted task with
  * its microtasks.
  *
- * Mutants (each must turn the pin red — ⛓ but m1 and m2 are INERT since seedling-js-item-live-delivery, measured and
- * pinned as such: their answer lands on the same tick in every arm, and only the old reboot made the order visible):
+ * Mutants (each must turn the pin red — ⛓ since seedling-js-item-live-delivery the late answer is a live write on a
+ * later tick rather than a reboot, and each mutant's `deliveredAt` is pinned to differ from the reference's):
  *  m1 the PRE-SPEED loop (every due slot inside the frame callback) at 4× — the host's answer is drained a tick late;
  *  m2 a host delivery applied one slot late at 4× (the brief's mutant);
  *  m3 ⛓ CUSTOM SPEED — a host delivery applied one slot late at a FRACTIONAL speed (1.5×). ⚠ m2's mechanism (a
@@ -341,22 +341,17 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
         expect(b.checks).toEqual(a.checks);
     }, 240000);
 
-    // ⛓ seedling-js-item-live-delivery — m1 and m2 are INERT in this fixture now, and say so rather than pass vacuously.
-    // MEASURED (this slice): both host answers land at the SAME tick in every arm (`deliveredAt` [280, 310]) — the chest's
-    // echo while the solver holds the room for the next goal, the L0 one before the next step — so "a slot late" moves
-    // no tick. At BASE (ed92d80127) m2 went red from tick 296 only because the delivery REBOOTED the run, and a reboot
-    // before or after `walkTo` changed which run the plan was solved on. With the delivery written live there is no run
-    // to swap. The delivery-timing mutant that still bites is m3 (a whole slot late: `lateSlotAt`), below.
-    it('MUTANT m1 (inert since live delivery) — the pre-speed loop at 4×: the host answers land on the same ticks, the same sequence', async () => {
+    it('MUTANT m1 — the pre-speed loop (every due slot inside the frame callback) at 4×: a host answer lands a tick late, the pin goes red', async () => {
         const r = await play({ speed: 4, graphics: false, pump: 'legacy', untilTicks: ref.off.digests.length });
-        expect(r.deliveredAt).toEqual(ref.off.deliveredAt);
-        expect(firstDiff(r, ref.off)).toBe(-1);
+        expect(firstDiff(r, ref.off)).toBeGreaterThan(-1);
+        // ⛓ seedling-js-item-live-delivery — the late answer is now a LIVE write on a later tick (no reboot): measured
+        expect(r.deliveredAt).not.toEqual(ref.off.deliveredAt);
     }, 240000);
 
-    it('MUTANT m2 (inert since live delivery) — a host delivery posted a task late at 4×: it lands on the same tick, the same sequence', async () => {
+    it('MUTANT m2 — a host delivery applied one slot late at 4×: the pin goes red, from the delivery on', async () => {
         const r = await play({ speed: 4, graphics: false, lateAt: 4, untilTicks: ref.off.digests.length });
-        expect(r.deliveredAt).toEqual(ref.off.deliveredAt);
-        expect(firstDiff(r, ref.off)).toBe(-1);
+        expect(firstDiff(r, ref.off)).toBeGreaterThan(ref.off.checks[0].tick);
+        expect(r.deliveredAt).not.toEqual(ref.off.deliveredAt);
     }, 240000);
 
     // ⛓ CUSTOM SPEED — fractional and slow speeds: the same tick sequence as 1× (the 1× refs above)
