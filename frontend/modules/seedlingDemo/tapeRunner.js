@@ -422,6 +422,11 @@ export function createRunForStaging(staging, levelSource, { scratchPersistence =
         // staging where the game KEPT its `Player` (an in-place re-stage — `playerDamage.stagedPlayerDamage`). Absent
         // = a fresh `Player`'s 0/0/−1, which is every replay.
         playerDamage: staging.player_damage ?? null,
+        // ⛓⛓⛓ seedling-js-item-live-delivery: and the host deliveries a live session wrote into its run
+        // (`[{t, change}]`, `levelRun.deliver`), another OPTIONAL field no tape carries: a run rebuilt from the
+        // session's staging (the JS solver's shadow and forks) applies them at the same tick boundaries, so it is
+        // the run the page plays. Absent = none, which is every replay.
+        stagedDeliveries: staging.deliveries ?? [],
         // ⚠ The runner consults the SAME census the driver plans with,
         // and `noclip` is what decides it on both sides. A noclip tape
         // asks no collider question, so requiring a blocking

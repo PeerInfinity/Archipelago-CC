@@ -20,7 +20,9 @@
  *   m4 the encounter decline walks instead (`goal.encounter` dropped from the walker's decline arm)
  *        -> the no-wand row reds: WALKING, not FAILED.
  *   m5 the encounter's delivery hold dropped (`encounterHoldsDelivery` → false)
- *        -> the Bob row reds: the kill's Seal reboots the room mid-leg and the plan is refuted (2/0/1).
+ *        -> the Bob row reds: the kill's Seal lands mid-leg (⛓ seedling-js-item-live-delivery: written into the live
+ *           run, not a reboot — the row's "held while the leg walked" reds on the delivery note; at BASE the reboot
+ *           refuted the plan, 2/0/1).
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -142,9 +144,11 @@ describe('⛓ ENCOUNTER LEGS — the walks', () => {
         const rt = page({ boot: [32, 72, 120], items: ['hasSword', 'hasShield'] });
         expect(has(rt, { level: 32, tag: 4 })).toBe(false);
         // The kill's own report delivers its item mid-leg, as the server does (playthrough: Times holds a Seal):
-        // the delivery's reboot in place waits for the leg (`encounterHoldsDelivery`), then lands.
+        // the delivery waits for the leg (`encounterHoldsDelivery`), then lands. ⛓ seedling-js-item-live-delivery —
+        // restated from "the delivery's reboot in place … lands": it lands LIVE (a `delivery` note), and boots nothing.
         let sealAt = null;
         const boots = () => rt.events.filter((e) => e.type === 'boot').length;
+        const sealLanded = () => rt.events.filter((e) => e.type === 'delivery' && e.kind === 'seal' && e.changed).length;
         let bootsAtSeal = null;
         const { first, doneAt } = walk(rt, BOB, [{ level: 32, tag: 3 }, { level: 32, tag: 4 }], 3000, (t) => {
             if (sealAt === null && has(rt, { level: 32, tag: 3 })) {
@@ -154,9 +158,14 @@ describe('⛓ ENCOUNTER LEGS — the walks', () => {
             }
         });
         expect(sealAt).not.toBeNull();
-        expect(boots()).toBe(bootsAtSeal); // held while the leg walked
+        expect(sealLanded()).toBe(0); // held while the leg walked
+        expect(boots()).toBe(bootsAtSeal);
+        const runAtSettle = rt.run;
         rt.tick();
-        expect(boots()).toBe(bootsAtSeal + 1); // … and landed once it settled
+        expect(sealLanded()).toBe(1); // … and landed once it settled — live: no boot, the same run
+        expect(boots()).toBe(bootsAtSeal);
+        expect(rt.run).toBe(runAtSettle);
+        expect(rt.run.deliveries.at(-1)).toMatchObject({ kind: 'seal', slot: 0, identity: 3, level: 32 });
         expect(rt.playback.state).toBe(WALK_STATES.DONE);
         const kill = first.get('32:3');
         const drop = first.get('32:4');

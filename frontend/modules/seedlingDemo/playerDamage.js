@@ -528,7 +528,8 @@ export const STAGED_PLAYER_DAMAGE_KEYS = Object.freeze(['hits', 'hits_timer', 'd
  *     `stageItems` + `deliveryRefusal`'s `prefix`) re-bills every hit the prefix took — staging the LIVE hits there
  *     would bill them twice. The replay is checked against the game instead (`stagedHitsMismatch`);
  *   · a staging with NO prefix at a point the game did not construct (an in-place reboot at the player's position —
- *     `jsRuntimeCore.rebootInPlace` — or a cold adoption of a room someone else walked) is where the game's damage
+ *     `jsRuntimeCore.rebootInPlace`, which since seedling-js-item-live-delivery only the RE2 restore runs, as a fresh
+ *     life with no damage; a delivery no longer re-stages — or a cold adoption of a room someone else walked) is where the game's damage
  *     must be staged, from `botStatus` at that point (`playerDamageFromStatus`).
  *
  * @param {object|null|undefined} staged  the staging's `player_damage`, or null/undefined (a fresh `Player`)

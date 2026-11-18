@@ -1,0 +1,37 @@
+{
+ "A_delivered_with_nothing_mounted_then_mount": {
+  "before": {
+   "mounted": null,
+   "level": 0,
+   "runKeys": [
+    1
+   ],
+   "deliveries": [
+    "key1:written@L0",
+    "seal0:written@L0",
+    "flaghasSword:written@L0"
+   ]
+  },
+  "mount": "ok",
+  "kind": "generated",
+  "after": {
+   "level": 0,
+   "runKeys": [],
+   "sealSlot0": -1,
+   "hasSword": true,
+   "flags_hasSword": true
+  }
+ },
+ "B_delivered_into_a_generated_set": {
+  "kind": "generated",
+  "level": 0,
+  "runKeys": [
+   2
+  ],
+  "hasShield": true,
+  "deliveries": [
+   "key2:written@L0",
+   "flaghasShield:written@L0"
+  ]
+ }
+}

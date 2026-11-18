@@ -16,7 +16,7 @@
  *    the start): `restoreSave` sets the core's state at once and reboots in place on the next tick. A different
  *    room is a different key, so nothing is restored.
  *  · WRITTEN on each change the core announces (a persistence clear, an apitem, a boot — an item fold rides on one —
- *    a crossing, a slot write), debounced; and flushed when the binding is disposed or the page hides.
+ *    a crossing, a slot write, ⛓ a host delivery written into the live run), debounced; and flushed when the binding is disposed or the page hides.
  *  · ⛔ The player's position is IN the save (`at`) and is NOT used: the AP start is the host's (the follow-up slice).
  */
 import { reportStorageWriteFailure } from '../../app/core/storageQuota.js';
