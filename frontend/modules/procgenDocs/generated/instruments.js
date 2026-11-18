@@ -174,6 +174,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "regen"
+        },
+        {
+            "browser": 0,
             "count": 5,
             "id": "region"
         },
@@ -244,13 +249,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 534,
+        "blockStyle": 535,
         "browser": 227,
-        "cited": 290,
-        "files": 556,
+        "cited": 293,
+        "files": 557,
         "lineStyle": 22,
-        "withDocblock": 556,
-        "withFlags": 473
+        "withDocblock": 557,
+        "withFlags": 474
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1082,6 +1087,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
@@ -7737,7 +7743,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "atlas-out",
@@ -7801,7 +7809,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/maze.md"
+                "docs/json/developer/procgen/maze.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -7862,6 +7871,7 @@ export const INSTRUMENTS = frz({
             "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/gotchas.md",
+                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
@@ -7906,7 +7916,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-seedling-sphere-order.mjs",
@@ -7995,7 +8007,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md"
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -21821,6 +21834,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "record-standing-value — **ONE STANDING VALUE, RECORDED BY THE COMMAND THAT MEASURES IT** (R9 slice 12e, ⚖ ruling 38 item (5)).",
             "path": "scripts/procgen/record-standing-value.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "regen",
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from",
+                "list",
+                "only",
+                "write"
+            ],
+            "file": "regen-seedling.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "list"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "regen-seedling — **THE SEEDLING PLAYTHROUGH PRODUCER CHAIN, IN ORDER, AS ONE COMMAND** (slice seedling-regen-chain; ⚖ Robert 2026-11-17 \"Regen-chain command (Recommended)\").",
+            "path": "scripts/procgen/regen-seedling.mjs"
         },
         {
             "argvHelpers": [],
