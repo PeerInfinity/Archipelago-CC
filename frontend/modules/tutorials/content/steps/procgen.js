@@ -37,6 +37,10 @@ const sectionOpen = (ctx, sectionId) => ctx.exists({
 
 /** How long the bot's status may stay the same before a walk calls it stalled. */
 export const BOT_STALL_MS = 60000;
+// The whole-game walk instrument's knob (tutorialTests.js § The walk instrument): null unless the URL sets it.
+const MEASURE_BOT_STALL_MS = (() => {
+    try { return Number(new URLSearchParams(globalThis.location?.search ?? '').get('measureBotStallMs')) || null; } catch { return null; }
+})();
 
 /**
  * The bot cannot finish: its status is an error — a substrate whose walk
@@ -47,8 +51,10 @@ export const BOT_STALL_MS = 60000;
 export function botCannotFinish(ctx) {
     const status = ctx.text(botStatus);
     if (status.startsWith('error')) return `the Playback Bot says "${status}"`;
-    if (ctx.unchangedFor('bot-status', status, BOT_STALL_MS)) {
-        return `the Playback Bot has said "${status}" for ${BOT_STALL_MS / 1000} s`;
+    // The whole-game walk instrument's ?measureBotStallMs= lifts the stall window (inert when unset).
+    const stallMs = MEASURE_BOT_STALL_MS ?? BOT_STALL_MS;
+    if (ctx.unchangedFor('bot-status', status, stallMs)) {
+        return `the Playback Bot has said "${status}" for ${stallMs / 1000} s`;
     }
     return null;
 }

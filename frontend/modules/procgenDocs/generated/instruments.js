@@ -244,18 +244,23 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "walk"
+        },
+        {
+            "browser": 0,
             "count": 3,
             "id": "witness"
         }
     ],
     "counts": {
-        "blockStyle": 536,
+        "blockStyle": 537,
         "browser": 228,
-        "cited": 293,
-        "files": 558,
+        "cited": 294,
+        "files": 559,
         "lineStyle": 22,
-        "withDocblock": 558,
-        "withFlags": 475
+        "withDocblock": 559,
+        "withFlags": 476
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -24266,6 +24271,98 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a carved room, per skeleton kind, per room size, per seed, on BOTH substrates.",
             "path": "scripts/procgen/sweep-yield-table.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "walk",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "log",
+                "min",
+                "port",
+                "python",
+                "runtime",
+                "seed",
+                "skip-refusals",
+                "stall-s",
+                "wait-for-box"
+            ],
+            "file": "walk-seedling-whole-game.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "log"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "min"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "python"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "runtime"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "seed"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "skip-refusals"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "stall-s"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "wait-for-box"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The whole-game Seedling walk, as a measure: N/48 and where it stopped.",
+            "path": "scripts/procgen/walk-seedling-whole-game.mjs"
         },
         {
             "argvHelpers": [

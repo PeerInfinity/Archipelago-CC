@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 30,
-        "headings": 1333,
+        "headings": 1335,
         "indexHeadings": 2,
-        "lines": 36777,
+        "lines": 36833,
         "pages": 4,
-        "words": 559881
+        "words": 560794
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -366,8 +366,8 @@ export const DOCS_INDEX = frz({
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
-            "headings": 38,
-            "lines": 874,
+            "headings": 40,
+            "lines": 930,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -377,7 +377,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 56265
+            "words": 57178
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
