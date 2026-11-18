@@ -322,7 +322,11 @@ describe('⛓ the links the render emits', () => {
         //   421 → 428: ActionNodes AN-1 — action-nodes.md (its index row, 5 links out, the registry's annotation row to it)
         //   428 → 429: content packs PL-1 — concepts.md § Content roles → its own § What exists, the numbers and the bindings (1 same-doc).
         //   429 → 430: content packs PL-2 — concepts.md § The resolver, the fill rules and the gap report → action-nodes.md (1 doc).
-        expect(checked).toBe(430);
+        //   430 → 435: ActionNodes AN-2 — action-nodes.md § The runtime (2 same-doc links to it), its link to
+        //   loop-recording.md § The start gate and back, and the registry's `loopSupport.actionGate` row → it (3 doc).
+        //   435 → 437: ActionNodes AN-1b — the registry's `fillRules` row → concepts.md and its `strictQueueActions` row →
+        //   action-nodes.md § No explore (2 doc).
+        expect(checked).toBe(437);
     });
 
     it('tags each link with the kind that produced it', () => {

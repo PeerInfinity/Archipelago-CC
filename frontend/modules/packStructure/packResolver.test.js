@@ -16,7 +16,7 @@ import { compileActionGraph } from '../actionNodes/actionGraphCompiler.js';
 import { validateActionGraph } from '../actionNodes/actionGraph.js';
 import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { FIXTURE_PROVENANCE } from '../contentPacks/testing/fixtureProvenance.js';
-import { SUBSTRATE_FILL_RULES } from '../procgenCore/fillRules.js';
+import { substrateRegistryEntry as actionNodesEntry } from '../actionNodes/actionNodesLibrary.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { FIRST_WALK_CANDIDATE, resolveContent, resolveLoaded } from './packResolver.js';
@@ -205,7 +205,7 @@ describe('table mode: a missing number is filled by rule and listed (Z.6)', () =
 
     it('every rule a row names is one the substrate applies', () => {
         const used = [...report.filled, ...report.flattened, ...report.unused, ...report.unnamed].map((r) => r.rule.split('@')[0]);
-        for (const id of used) expect(SUBSTRATE_FILL_RULES.action_nodes).toContain(id);
+        for (const id of used) expect(actionNodesEntry.fillRules).toContain(id);
     });
 });
 

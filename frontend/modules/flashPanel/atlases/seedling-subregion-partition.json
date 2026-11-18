@@ -3,7 +3,7 @@
   "description": "GENERATED — do not edit. Which tile of a level is in which sub-region, per atlas; one character per tile, the sub-region's index in \"sub_regions\" over \"ABC…\", \".\" for none. Regenerate after either atlas changes.",
   "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   "atlases": {
-    "seedling-ac434804": {
+    "seedling-5ca88dfe": {
       "atlas": "seedling-playthrough.json",
       "tile_size": 16,
       "regions": {
@@ -1122,50 +1122,21 @@
             "..B......."
           ]
         },
-        "level_77": {
-          "level": 77,
-          "origin": [0,0],
-          "width": 15,
-          "height": 20,
-          "sub_regions": ["r2c0","r12c6","r15c6"],
-          "rows": [
-            "...............",
-            "...............",
-            "AAAAAA.........",
-            "...A.AA........",
-            "...A.AAA.......",
-            "...A.AAA.......",
-            ".......A.......",
-            ".......A.......",
-            ".......A.......",
-            ".......A.......",
-            "....AAAA.......",
-            "....A..........",
-            "......B........",
-            "...............",
-            "...............",
-            "......C........",
-            "......C........",
-            "......C........",
-            "......C........",
-            "......C........"
-          ]
-        },
         "level_78": {
           "level": 78,
           "origin": [0,0],
           "width": 20,
           "height": 10,
-          "sub_regions": ["r0c2","r0c16","r1c10","r3c1","r3c9","r4c4","r5c6","r6c9"],
+          "sub_regions": ["r0c2","r0c16"],
           "rows": [
             "..A.............B...",
-            "..A.......CC....B...",
-            "...........C...BB...",
-            ".DD......E..BB.BB...",
-            ".DD.F......BBBBBB...",
-            "..DD..G....BBBBB....",
-            ".........H.BBB......",
-            "............B.......",
+            "..A......BBB....B...",
+            ".........BBB...BB...",
+            ".BB....BBBBBBB.BB...",
+            ".BB.BBBBBBBBBBBBB...",
+            "..BBBBBBBBBBBBBB....",
+            "......BBBB.BBB......",
+            "........B...B.......",
             "........BBBBB.......",
             "...................."
           ]

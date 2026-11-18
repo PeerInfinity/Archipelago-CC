@@ -13,7 +13,7 @@
  *     (`fixtures/wallflyer-gaps/survey-step-35-plan-539.json`), wallflyer@48,112 and wallflyer@64,80 leave
  *     `wallFlyerBodies` and are still priced; the dashless pass then refuses on "enemy:wallflyer@64,80 (a static
  *     "Enemy" body at its placement …)" — the JS runtime's L22 → L29 refusal, word for word. The row pins the gap AS
- *     IT IS at the shipped defaults, and fidelity's W45 key `wallFlyerCorpseGone` (OFF) closes it when ON.
+ *     IT IS with fidelity's W45 key `wallFlyerCorpseGone` OFF; ON since its flip, the key closes it at the shipped defaults.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -80,10 +80,10 @@ describe('hammer-phase WALLFLYER-GAPS — THE MODEL GAP (fidelity\'s hand-over):
         expect(live).toEqual(['wallflyer@128,80', 'wallflyer@144,112']);
         const pricedNow = () => flyers.filter((e) => staticEnemyDanger(run, contactRect(e)).some((d) => d.id === `${e.tag}@${e.x},${e.y}`))
             .map((e) => `${e.tag}@${e.x},${e.y}`);
-        // ⛔ THE GAP at the shipped defaults: the two REMOVED bodies are priced (fidelity's `wallFlyerCorpseGone` is OFF).
-        expect(pricedNow()).toEqual(['wallflyer@64,80', 'wallflyer@128,80', 'wallflyer@48,112', 'wallflyer@144,112']);
-        // ⛓ fidelity WALLFLYERCORPSE (W45): with `wallFlyerCorpseGone` ON, `staticEnemyDanger` skips a wallflyer the
-        // run no longer holds — only the two live bodies are priced.
-        expect(withContactFidelity({ wallFlyerCorpseGone: true }, pricedNow)).toEqual(['wallflyer@128,80', 'wallflyer@144,112']);
+        // ⛔ THE GAP with fidelity's `wallFlyerCorpseGone` OFF: the two REMOVED bodies are priced.
+        expect(withContactFidelity({ wallFlyerCorpseGone: false }, pricedNow)).toEqual(['wallflyer@64,80', 'wallflyer@128,80', 'wallflyer@48,112', 'wallflyer@144,112']);
+        // ⛓ fidelity WALLFLYERCORPSE (W45), ON since its flip: at the shipped defaults `staticEnemyDanger` skips a
+        // wallflyer the run no longer holds — only the two live bodies are priced.
+        expect(pricedNow()).toEqual(['wallflyer@128,80', 'wallflyer@144,112']);
     }, 60000);
 });

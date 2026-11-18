@@ -69,7 +69,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "derive"
         },
         {
@@ -174,6 +174,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "regen"
+        },
+        {
+            "browser": 0,
             "count": 5,
             "id": "region"
         },
@@ -244,13 +249,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 534,
+        "blockStyle": 536,
         "browser": 228,
-        "cited": 290,
-        "files": 556,
+        "cited": 293,
+        "files": 558,
         "lineStyle": 22,
-        "withDocblock": 556,
-        "withFlags": 473
+        "withDocblock": 558,
+        "withFlags": 475
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -281,6 +286,7 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "line",
             "documentedFlags": [
+                "exists",
                 "seed"
             ],
             "file": "action-nodes-compile.mjs",
@@ -290,6 +296,12 @@ export const INSTRUMENTS = frz({
                         "has"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "exists"
                 },
                 {
                     "how": [
@@ -1075,6 +1087,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
@@ -6258,6 +6271,70 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "derive",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "check",
+                "json",
+                "lane-dump",
+                "quick",
+                "verify"
+            ],
+            "file": "derive-seedling-wallflyer-nohit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "lane-dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quick"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "verify"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The wallflyer no-hit gates, DERIVED from the transcribed physics and CHECKED against the per-room table (slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 \"Wand L22 + CI cross-check (Recommended)\"; the derivation itself is slice rules-nohit-derivation's, moved here from its evidence directory).",
+            "path": "scripts/procgen/derive-seedling-wallflyer-nohit.mjs"
+        },
+        {
+            "argvHelpers": [
                 "opt"
             ],
             "browser": false,
@@ -7666,7 +7743,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "atlas-out",
@@ -7730,7 +7809,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/maze.md"
+                "docs/json/developer/procgen/maze.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -7791,6 +7871,7 @@ export const INSTRUMENTS = frz({
             "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/gotchas.md",
+                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
@@ -7835,7 +7916,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-seedling-sphere-order.mjs",
@@ -7924,7 +8007,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md"
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -13429,6 +13513,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "seedling-divergence-legs.mjs",
                     "name": "blocks"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-line-only"
                 },
                 {
                     "from": "seedling-divergence-legs.mjs",
@@ -21825,6 +21913,63 @@ export const INSTRUMENTS = frz({
         {
             "argvHelpers": [],
             "browser": false,
+            "category": "regen",
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from",
+                "list",
+                "only",
+                "write"
+            ],
+            "file": "regen-seedling.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "list"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "regen-seedling — **THE SEEDLING PLAYTHROUGH PRODUCER CHAIN, IN ORDER, AS ONE COMMAND** (slice seedling-regen-chain; ⚖ Robert 2026-11-17 \"Regen-chain command (Recommended)\").",
+            "path": "scripts/procgen/regen-seedling.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
             "category": "region",
             "citedBy": [],
             "docblockStyle": "line",
@@ -22591,6 +22736,10 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-line-only"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
                     "name": "carry-route-flags"
                 },
                 {
@@ -22641,6 +22790,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "blocks"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "carry-line-only"
                 },
                 {
                     "how": [

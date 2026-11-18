@@ -40,6 +40,7 @@ The manifest is `concepts/manifest.json` inside a pack:
       "description": "…",                                   // optional
       "look": { "color": "#c0a040", "symbol": "N" },        // optional
       "art": "meta:character/narrator",                    // optional; an art-library key
+      "base": "character",                                 // optional; one of PACK_TILE_BASES (TILE-2)
       "text": { "greeting": "meta:narrator/greeting" },    // optional; slot → a text-library key
       "presents": "guardian"                               // optional; a mechanic concept id
     } } }
@@ -49,6 +50,11 @@ The manifest is `concepts/manifest.json` inside a pack:
   concept.
 - `art` names a key in the art library (`../artLibrary/`). `text` maps a slot name to a key in the text library
   (`../textLibrary/`). Neither key is resolved here.
+- `base` (content sets TILE-2) says what the concept IS as a maze tile when nothing draws it as itself: one of the
+  closed `PACK_TILE_BASES` (`floor`, `wall`, `marker`, `character`). This module owns the names;
+  `mazeRoom/mazeTileArt.js` holds one draw per name (`MAZE_TILE_BASES`) and refuses at import to drift from the list.
+  The maze reads it through `mazeTileArt.mazeTileKind` (kind → `{ artKey, base }`). A row with no `base` is valid; a
+  kind with neither art nor a base is drawn as the placeholder, never a throw.
 
 ## ⛔ Refusal by name
 
@@ -64,4 +70,5 @@ Each of these throws a `ContentPackError` that names the pack, the concept key a
 - an `art` value, or a `text` slot's value, that is not a namespaced key;
 - an empty `presents`; a namespaced `presents` that is not a structure id, or names another kind than the entry's;
 - a `src` that is not a string;
+- a `base` that is not one of `PACK_TILE_BASES` (the refusal lists the set);
 - two entries of one pack that present the same mechanic id (that pack's answer would be ambiguous).

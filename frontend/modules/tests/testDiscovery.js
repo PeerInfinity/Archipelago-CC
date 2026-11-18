@@ -69,6 +69,7 @@ export const TEST_CASE_FILES = [
   './testCases/seedlingAtlasMazeTests.js',
   './testCases/seedlingJsRuntimeTests.js',
   './testCases/taswBlockModeTests.js',
+  './testCases/actionNodesTests.js',
   './testCases/apworldEditorTests.js',
   './testCases/substrateRegistryPanelTests.js',
   './testCases/procgenPipelineTests.js',

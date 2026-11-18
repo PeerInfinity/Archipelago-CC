@@ -23,6 +23,8 @@ import {
     MOVE_SOURCE_START,
     MOVE_SOURCE_RESTART,
 } from '../menuPanel/menuPanelEngine.js';
+import { REGION_MAP_SOURCES } from '../regionMap/regionMapClicks.js';
+import { PATH_SOURCE_PREFIX, pathSourceFor } from '../regionView/clickActions.js';
 
 describe('⛓ isLoopModePlanningSource — authoring sources', () => {
     it('classifies the region graph\'s four click shapes', () => {
@@ -33,6 +35,20 @@ describe('⛓ isLoopModePlanningSource — authoring sources', () => {
             'regionGraph-directMove',
         ]) {
             expect(isLoopModePlanningSource(source)).toBe(true);
+        }
+    });
+
+    it('classifies the Region Map\'s four click shapes, by the module\'s own constants (region-map step 4)', () => {
+        expect(Object.keys(REGION_MAP_SOURCES).sort()).toEqual(['addToPath', 'direct', 'oneStep', 'overwritePath']);
+        for (const source of Object.values(REGION_MAP_SOURCES)) {
+            expect(isLoopModePlanningSource(source)).toBe(true);
+        }
+    });
+
+    it('classifies the shared click actions\' path moves, by the module\'s own constants (mode-toggle R7)', () => {
+        expect(PATH_SOURCE_PREFIX).toBe('regionView-path');
+        for (const panelId of ['regionGraph', 'regionMap', 'someFuturePanel']) {
+            expect(isLoopModePlanningSource(pathSourceFor(panelId))).toBe(true);
         }
     });
 
@@ -71,5 +87,12 @@ describe('⛓ isLoopModePlanningSource — everything else is performed play', (
     it('matches on a PREFIX, so a lookalike that merely CONTAINS a tag is play', () => {
         expect(isLoopModePlanningSource('substrate-menuPanel')).toBe(false);
         expect(isLoopModePlanningSource('replay-regionGraph')).toBe(false);
+        expect(isLoopModePlanningSource('replay-regionMap')).toBe(false);
+        expect(isLoopModePlanningSource('replay-regionView-path-regionGraph')).toBe(false);
+    });
+
+    it('only the PATH actions of regionView plan: another regionView-* source is play', () => {
+        expect(isLoopModePlanningSource('regionView-teleport')).toBe(false);
+        expect(isLoopModePlanningSource('regionView')).toBe(false);
     });
 });

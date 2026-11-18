@@ -24,7 +24,13 @@
  *     and `free`, the arm's own item for an arm), and its direction (a blocked-direction witness starts behind the
  *     band and ends past it along `blocked`; a `free` one the reverse);
  *   - the blocked direction is across every flight of the band (perpendicular to each flyer's launch), and every arm
- *     of the gate has a witness.
+ *     of the gate has a witness;
+ *   - an arm the table names `unwitnessed` for a gate (the derivation says it disarms, the game has not shown it: L25
+ *     east's Wand) is one the gate does NOT offer and has no witness for, so it is recorded, not silently absent.
+ *
+ * ⛓ THE CROSS-CHECK (slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15): `derive-seedling-wallflyer-nohit.mjs
+ * --check` derives every wallflyer room's gated and free directions from the transcribed flyer and player physics and
+ * compares them with this table. It is a cross-check, not a rule source: it sees flyers only, and it is knife-edge.
  *
  * What a gate does to the grid (`stampNoHitDirectionalGates`): each band tile that is not a wall takes
  * `dirs[blocked] += anyOf(arms)`, the analyzer's gate on MOVING that way on the tile (the waterfall's kind). The
@@ -36,7 +42,7 @@ const NAME = 'no-hit directional gates';
 /** Unit step of each compass letter (y grows downward). */
 const STEP = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
 /** The plan-file arm each engine flag is witnessed under (`probe-seedling-wallflyer-nohit.mjs` `ARMS`). */
-export const WITNESS_ARM_OF_FLAG = Object.freeze({ hasSword: 'sword', hasSpear: 'spear', hasShield: 'shield' });
+export const WITNESS_ARM_OF_FLAG = Object.freeze({ hasSword: 'sword', hasSpear: 'spear', hasShield: 'shield', hasWand: 'wand' });
 
 const parseWitness = (id) => {
     const m = /^l(\d+)-(\d+)-(\d+)-([a-z]+)$/.exec(id);
@@ -105,7 +111,19 @@ export function noHitDirectionalGatesFor(table, plans, level, bands, doorOf) {
         const extra = Object.keys(w.arms ?? {}).filter((f) => !gate.arms.includes(f));
         if (extra.length) throw new Error(`${who}: witness for ${extra.join(', ')}, which the gate does not offer`);
         for (const id of w.free ?? []) witness(id, { list: plans.plans, listName: 'plans', arm: 'none', blocked: false });
+        const unwitnessed = (table.unwitnessed ?? []).filter((u) => u.level === gate.level && u.blocked === gate.blocked);
+        for (const u of unwitnessed) {
+            if (!WITNESS_ARM_OF_FLAG[u.arm]) throw new Error(`${who}: unwitnessed arm ${u.arm} has no witness arm (${Object.keys(WITNESS_ARM_OF_FLAG).join(', ')})`);
+            if (gate.arms.includes(u.arm)) throw new Error(`${who}: ${u.arm} is named unwitnessed but the gate offers it`);
+            if (w.arms?.[u.arm]) throw new Error(`${who}: ${u.arm} is named unwitnessed but has the witness ${w.arms[u.arm]}`);
+            if (!u.says || !u.followUp) throw new Error(`${who}: unwitnessed ${u.arm} says no why or follow-up`);
+        }
         out.push({ gate, condition: gateCondition(gate), blocked: gate.blocked, tiles: [...tiles.values()] });
+    }
+    for (const u of (table.unwitnessed ?? []).filter((x) => x.level === level.level)) {
+        if (!(table.gates ?? []).some((g) => g.level === u.level && g.blocked === u.blocked)) {
+            throw new Error(`${NAME}: unwitnessed ${u.arm} names L${u.level} ${u.blocked}, which no gate holds`);
+        }
     }
     return out;
 }

@@ -1,0 +1,201 @@
+{
+  "crossLength": 0,
+  "crossLinks": 0,
+  "groupCount": 1,
+  "groups": [
+    {
+      "bbox": {
+        "maxX": 2,
+        "maxY": 1,
+        "minX": -2,
+        "minY": -1
+      },
+      "members": [
+        "BlackCastle",
+        "BlackCastleVault",
+        "CreditsRoom",
+        "CreditsRoomFarSide",
+        "Overworld",
+        "WhiteCastle",
+        "WhiteCastlePreVaultPeek",
+        "WhiteCastleVault",
+        "YellowCastle"
+      ],
+      "placedBy": "start",
+      "root": "Overworld"
+    }
+  ],
+  "largestGroup": 9,
+  "links": [
+    [
+      "BlackCastle",
+      "BlackCastleVault",
+      "join",
+      null
+    ],
+    [
+      "BlackCastle",
+      "Overworld",
+      "join",
+      null
+    ],
+    [
+      "BlackCastleVault",
+      "BlackCastle",
+      "join",
+      null
+    ],
+    [
+      "CreditsRoom",
+      "CreditsRoomFarSide",
+      "join",
+      null
+    ],
+    [
+      "CreditsRoom",
+      "Overworld",
+      "join",
+      null
+    ],
+    [
+      "CreditsRoomFarSide",
+      "CreditsRoom",
+      "join",
+      null
+    ],
+    [
+      "Overworld",
+      "BlackCastle",
+      "join",
+      null
+    ],
+    [
+      "Overworld",
+      "CreditsRoom",
+      "join",
+      null
+    ],
+    [
+      "Overworld",
+      "WhiteCastle",
+      "join",
+      null
+    ],
+    [
+      "Overworld",
+      "YellowCastle",
+      "join",
+      null
+    ],
+    [
+      "WhiteCastle",
+      "Overworld",
+      "join",
+      null
+    ],
+    [
+      "WhiteCastle",
+      "WhiteCastlePreVaultPeek",
+      "join",
+      null
+    ],
+    [
+      "WhiteCastle",
+      "WhiteCastleVault",
+      "join",
+      null
+    ],
+    [
+      "WhiteCastlePreVaultPeek",
+      "WhiteCastle",
+      "join",
+      null
+    ],
+    [
+      "WhiteCastleVault",
+      "WhiteCastle",
+      "join",
+      null
+    ],
+    [
+      "YellowCastle",
+      "Overworld",
+      "join",
+      null
+    ]
+  ],
+  "positions": {
+    "BlackCastle": [
+      1,
+      0
+    ],
+    "BlackCastleVault": [
+      2,
+      0
+    ],
+    "CreditsRoom": [
+      0,
+      1
+    ],
+    "CreditsRoomFarSide": [
+      1,
+      1
+    ],
+    "Overworld": [
+      0,
+      0
+    ],
+    "WhiteCastle": [
+      -1,
+      0
+    ],
+    "WhiteCastlePreVaultPeek": [
+      -1,
+      1
+    ],
+    "WhiteCastleVault": [
+      -2,
+      0
+    ],
+    "YellowCastle": [
+      0,
+      -1
+    ]
+  },
+  "sizes": [
+    9
+  ],
+  "source": "generic",
+  "start": "Overworld",
+  "stats": {
+    "adjacent": 16,
+    "bbox": {
+      "maxX": 2,
+      "maxY": 1,
+      "minX": -2,
+      "minY": -1
+    },
+    "consistent": 0,
+    "directed": 0,
+    "down": {
+      "across": 0,
+      "below": 0
+    },
+    "droppedLinks": 0,
+    "groups": 1,
+    "honoured": 0,
+    "links": 16,
+    "mixedGridCell": null,
+    "nodes": 9,
+    "player": "1",
+    "source": "generic",
+    "up": {
+      "above": 0,
+      "across": 0
+    },
+    "vertical": {
+      "cycleDropped": 0,
+      "links": 0
+    }
+  }
+}

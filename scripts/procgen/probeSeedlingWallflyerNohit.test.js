@@ -9,7 +9,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     ARMS, MODEL_REFUSES, PRESS_ARMS, caseName, caseStaging, doorsOf, isNoHitCrossing, parseCase, perTickOf, readMap,
-    readPlans, readRun, replayOnModel, spansOf, wallFlyerLevels,
+    readPlans, readRun, replayOnModel, spansOf, wallFlyerLevels, controlOf, gameOnly,
     CHEST_CASES, chestOf, chestCaseKeys, readChestRun,
 } from './probe-seedling-wallflyer-nohit.mjs';
 
@@ -39,7 +39,7 @@ describe('probe-seedling-wallflyer-nohit: the cases', () => {
         expect(() => doorsOf(MAP, -5)).toThrow(/no level -5/);
     });
 
-    it('every kept plan and every NOT FOUND row names a wallflyer room, two of its doors and an arm the model plays', () => {
+    it('every kept plan and every NOT FOUND row names a wallflyer room, two of its doors and an arm the model plays (or is a hand plan)', () => {
         const rooms = wallFlyerLevels(MAP);
         const names = [...Object.keys(PLANS.plans), ...Object.keys(PLANS.notFound)];
         expect(names.length).toBeGreaterThan(0);
@@ -51,9 +51,33 @@ describe('probe-seedling-wallflyer-nohit: the cases', () => {
             expect(to, name).toContain(c.from);
             expect(to, name).toContain(c.to);
             expect(c.from, name).not.toBe(c.to);
-            expect(Object.keys(MODEL_REFUSES), name).not.toContain(c.arm);
+            // ⛓ rules-nohit-wand-crosscheck: an arm the model refuses is kept only as a HAND plan (played on the game only).
+            if (Object.keys(MODEL_REFUSES).includes(c.arm)) {
+                expect(name in PLANS.plans && !!PLANS.plans[name].hand, `${name}: a refused arm needs a hand plan`).toBe(true);
+                expect(gameOnly(PLANS, name), name).toBe(true);
+            } else if (name in PLANS.plans) expect(gameOnly(PLANS, name), name).toBe(false);
         }
         for (const arm of [...PRESS_ARMS, ...Object.keys(MODEL_REFUSES)]) expect(Object.keys(ARMS)).toContain(arm);
+    });
+
+    it('every hand plan has a control: its own keys without the dropped presses, held with no item (refused otherwise)', () => {
+        const hands = Object.keys(PLANS.plans).filter((n) => PLANS.plans[n].hand);
+        expect(hands.length).toBeGreaterThan(0);
+        expect(Object.keys(PLANS.controls).sort()).toEqual(hands.sort());
+        for (const name of hands) {
+            const ctl = controlOf(PLANS, name);
+            expect(ctl.case.arm, name).toBe('none');
+            expect(ctl.name, name).toBe(caseName({ ...parseCase(name), arm: 'none' }));
+            expect(ctl.perTick.flat(), name).not.toContain('primary');
+            expect(perTickOf(PLANS.plans[name].inputs, PLANS.plans[name].ticks).flat(), name).toContain('primary');
+            const bad = JSON.parse(JSON.stringify(PLANS));
+            bad.controls[name].inputs = bad.controls[name].inputs.slice(1);
+            expect(() => controlOf(bad, name)).toThrow(new RegExp(`control ${name} is not the plan's keys without \\[primary\\]`));
+        }
+        const noHand = JSON.parse(JSON.stringify(PLANS));
+        delete noHand.plans[hands[0]].hand;
+        expect(() => gameOnly(noHand, hands[0])).toThrow(/which the model refuses, and is not a hand plan/);
+        expect(controlOf(PLANS, Object.keys(PLANS.plans).find((n) => !PLANS.plans[n].hand))).toBeNull();
     });
 
     it('a NOT FOUND row carries the search it stands on, and never claims the search ran dry', () => {
@@ -88,6 +112,7 @@ describe('probe-seedling-wallflyer-nohit: the staging and the keys', () => {
 describe('probe-seedling-wallflyer-nohit: the kept plans, on the model', () => {
     it('every kept plan lands in its room with no hit; the same keys with no item do not, where the arm is what clears the line', async () => {
         for (const [name, p] of Object.entries(PLANS.plans)) {
+            if (gameOnly(PLANS, name)) continue;   // a hand plan: the model refuses its arm (the game is its only leg)
             const c = parseCase(name);
             const perTick = perTickOf(p.inputs, p.ticks);
             expect(await replayOnModel(MAP, c, perTick), name).toEqual({ level: c.to, hits: [] });

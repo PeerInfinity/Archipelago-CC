@@ -7,7 +7,10 @@
  * the content, so there is no layout driver (design §2).
  *
  *   1. validate the graph (`actionGraph.js`, refusal by name);
- *   2. regions: `Menu` → the start node; one region per node; one exit per `after` edge;
+ *   2. regions: `Menu` → the start node; one region per node; for each `after` edge A→B a FORWARD exit A→B (gated by
+ *      "some one-loop plan reaches B") and a REVERSE exit B→A (ungated, `reverse: true` in the payload): movement
+ *      between nodes reached this loop is free (⚖ Robert 2026-11-16T17:41:55Z; two-way edges, planner 21:09:12Z). There
+ *      is no return-to-start exit: reaching the start is the `Menu → start` hop, as in every substrate;
  *   3. locations: one per check node (its name); the goal node holds the `Victory` event item;
  *   4. items: each boon `count` times, then the graph's `filler` boon to match the check count;
  *   5. access rules from `actionSearch.js` `deriveActionLogic`: a location's rule is "some one-loop plan performs the
@@ -16,7 +19,8 @@
  *   7. `preset_sidecars[p]`, the `action_nodes[p]` block, `procgen_metadata[p]` with the logic and proof report,
  *      `provenance[p]`;
  *   8. the sphere log, `shared/procgen/forwardSimulator.js` `generateSphereLog`, embedded;
- *   9. `loop_costs[p]`, written directly: the costs are the graph's own (move cost 0, A10; `actions.act` = time).
+ *   9. `loop_costs[p]`, written directly: the costs are the graph's own (move cost 0, A10; `actions.act` = time);
+ *  10. `discovery_mode[p] = {enabled: true, bundle: 'actionNodes'}` (AN-1b: the discovery policy, Loop mode on or off).
  *
  * ⛓ THE A6 PROOF (design §7). A6: in each loop at least one location check can be earned. The compiler refuses by
  * name when (1) a check or the goal has no item combination that earns it (`check-never-earnable`), or (2) the sphere
@@ -52,6 +56,8 @@ export const ACTION_NODES_GAME = Object.freeze({
 export const ACTION_NODES_BLOCK_VERSION = 1;
 /** The Loops queue verb that performs a node (⚖ user 2026-11-15, Q4). */
 export const ACT_ACTION = 'act';
+/** The `discovery_mode[p].bundle` a compiled world names (discovery/worldDiscoveryMode.js `ACTION_NODES_BUNDLE`). */
+export const ACTION_NODES_DISCOVERY_BUNDLE = 'actionNodes';
 /** The `procgen_metadata[p].driver` a compiled world records. */
 export const ACTION_GRAPH_DRIVER = 'action-graph-compiler';
 
@@ -72,6 +78,21 @@ export class ActionCompileError extends Error {
 
 const MENU = 'Menu';
 const exitNameOf = (from, to) => `${from} -> ${to}`;
+
+/**
+ * ⛓ TWO-WAY EDGES (AN-1b). Every node's exits, forward first (in `successorsOf` order), then its reverse exits back to
+ * each predecessor (in `predecessorsOf` order). A reverse exit is ungated: the logic does not change meaning, because
+ * every location and forward-exit rule is already the exact one-loop answer (the search assumes free movement), so a
+ * region reachable through a reverse exit gains no location and no exit. The Region Graph merges an exit pair A→B +
+ * B→A into ONE edge, so the graph still draws one edge per `after` edge.
+ * @returns {{to: string, reverse: boolean}[]}
+ */
+export function nodeExitsOf(graph, id) {
+    return [
+        ...successorsOf(graph, id).map((to) => ({ to, reverse: false })),
+        ...predecessorsOf(graph, id).map((to) => ({ to, reverse: true })),
+    ];
+}
 
 /** A rule over the minimal combinations: Or of And(Has(item, n)…); an empty combination is True. */
 function ruleOf(model, combos) {
@@ -175,9 +196,14 @@ function payloadOf(graph, model, id, { locationName, exits }) {
  * @param {number} [opts.seed=1]
  * @param {number} [opts.budget] - the one-loop state budget
  * @param {string} [opts.graphPath] - where the graph lives, recorded in `procgen_metadata[p]`
+ * @param {string[]|null} [opts.exists] - the content packs the graph is the resolved structure of (`frontend/packs/`
+ *   ids). Given, `provenance[p]` records these pack ids and NOT the graph's own `provenance` block: a world looks its
+ *   sources up through its packs (Z.7; AN-1b). Absent, the graph's block travels with the world (a graph no pack holds).
  * @returns {{rules: object, report: object}}
  */
-export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEFAULT_STATE_BUDGET, graphPath = null } = {}) {
+export function compileActionGraph(graph, {
+    playerId = 1, seed = 1, budget = DEFAULT_STATE_BUDGET, graphPath = null, exists = null,
+} = {}) {
     const model = buildActionModel(graph);
     const logic = deriveActionLogic(model, { budget });
     const p = String(playerId);
@@ -219,13 +245,20 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
     }
     rules.world[p].world_directory = ACTION_NODES_GAME.gameDirectory;
     rules.game_info[p] = { completion_condition: { type: 'item_check', item: GOAL_ITEM } };
+    // ⛓ The world LISTS its back-exits (the reverse exits below), so it states that none may be assumed. `true` would
+    // let consumers construct a back-exit for every listed exit — `start -> Menu` included, which does not exist (the
+    // Regions panel would show the Menu entrance as two-way and the pathfinder would route through it). Absent would
+    // leave it to auto-detection. The reverse exits themselves are the mechanism, not this flag.
+    rules.exporter = { [p]: { assume_bidirectional_exits: false } };
 
     const regions = { [MENU]: makeRegion(MENU, [makeExit(exitNameOf(MENU, graph.start), graph.start, makeTrueRule())], []) };
     const sidecars = {};
     const performRules = {};
     model.nodes.forEach((node, i) => {
         const id = node.id;
-        const exitsOut = successorsOf(graph, id).map((to) => makeExit(exitNameOf(id, to), to, ruleOf(model, logic.reach[model.nodeIx.get(to)])));
+        const edges = nodeExitsOf(graph, id);
+        const exitsOut = edges.map(({ to, reverse }) => makeExit(exitNameOf(id, to), to,
+            reverse ? makeTrueRule() : ruleOf(model, logic.reach[model.nodeIx.get(to)])));
         const locations = [];
         let locationName = null;
         if (node.kind === 'check' || node.kind === 'goal') {
@@ -249,7 +282,10 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
             render_hint: ACTION_NODES_SUBSTRATE_ID,
             playable_payload: payloadOf(graph, model, id, {
                 locationName,
-                exits: exitsOut.map((e) => ({ exit_id: e.connected_region, exitName: e.name, targetRegion: e.connected_region })),
+                exits: exitsOut.map((e, k) => ({
+                    exit_id: e.connected_region, exitName: e.name, targetRegion: e.connected_region,
+                    ...(edges[k].reverse ? { reverse: true } : {}),
+                })),
             }),
         };
     });
@@ -294,8 +330,17 @@ export function compileActionGraph(graph, { playerId = 1, seed = 1, budget = DEF
             action_logic: report,
         },
     };
-    rules.provenance = { [p]: { generator: 'frontend/modules/actionNodes/actionGraphCompiler.js', graph_id: graph.graph_id, graph_provenance: graph.provenance } };
+    rules.provenance = {
+        [p]: {
+            generator: 'frontend/modules/actionNodes/actionGraphCompiler.js',
+            graph_id: graph.graph_id,
+            ...(Array.isArray(exists) && exists.length ? { exists: [...exists] } : { graph_provenance: graph.provenance }),
+        },
+    };
     rules.loop_costs = { [p]: loopCostsOf(graph, model, settings) };
+    // ⚖ Robert 2026-11-16T19:59:48Z (discovery): the world's own discovery policy, in and out of Loop mode — the
+    // discovery module's `actionNodes` bundle (worldDiscoveryMode.js). Per world: no other world sees it.
+    rules.discovery_mode = { [p]: { enabled: true, bundle: ACTION_NODES_DISCOVERY_BUNDLE } };
     return { rules, report };
 }
 

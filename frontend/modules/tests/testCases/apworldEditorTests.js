@@ -9026,12 +9026,17 @@ async function m2Modules() {
     return { ...ops, ...layout, ...engine, ...doc };
 }
 
-/** ⛓ Every empty cell of a slot's map, row-major, off the op's own layout. */
+/**
+ * ⛓ Every empty cell of a slot's map, row-major, off the op's own layout. ⛓ Unbounded grid S2: the scan runs from
+ * the grid's origin (`grid.minX/minY`, (0,0) for every committed document, so the same cells in the same order).
+ */
 function m2EmptyCells(slotLayout, doc, slot) {
     const { grid } = slotLayout(doc, slot);
+    const x0 = grid.minX ?? 0;
+    const y0 = grid.minY ?? 0;
     const out = [];
-    for (let gy = 0; gy < grid.height; gy += 1) {
-        for (let gx = 0; gx < grid.width; gx += 1) {
+    for (let gy = y0; gy < y0 + grid.height; gy += 1) {
+        for (let gx = x0; gx < x0 + grid.width; gx += 1) {
             if (!grid.hasRegion({ gx, gy })) out.push({ gx, gy });
         }
     }

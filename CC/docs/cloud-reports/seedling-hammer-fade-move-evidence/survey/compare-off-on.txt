@@ -1,0 +1,40 @@
+OFF2 vs OFF1 diffs 0
+ON verdicts {'SOLVED': 224, 'REFUSED': 26} OFF {'SOLVED': 224, 'REFUSED': 26}
+movers 0 steps gaining a hit []
+CENSUS OFF waits {'keylock': 17, 'latched': 2, 'killlockChaser': 8, 'killlockPress': 3}
+  killlockPress [(27, 18, 'lock@144,112')]
+  keylock [(28, 19, 'bosslock@48,32'), (31, 12, 'bosslock@432,240'), (37, 31, 'bosslock@192,432'), (38, 30, 'bosslock@224,208'), (40, 30, 'bosslock@64,32'), (45, 12, 'bosslock@416,240'), (45, 12, 'bosslock@80,656'), (62, 12, 'bosslock@432,240'), (68, 12, 'bosslock@432,240'), (109, 56, 'bosslock@96,16'), (130, 12, 'bosslock@432,240'), (145, 12, 'bosslock@432,240'), (158, 66, 'bosslock@72,64'), (162, 12, 'bosslock@432,240'), (183, 68, 'bosslock@16,32'), (185, 12, 'bosslock@32,864'), (213, 12, 'bosslock@32,864')]
+  killlockChaser [(78, 53, 'lock@144,208'), (120, 60, 'lock@128,80'), (227, 98, 'lock@112,112'), (228, 99, 'lock@80,96')]
+  latched [(134, 40, 'wandlock@480,560'), (149, 40, 'wandlock@208,128')]
+CENSUS ON waits {'keylock': 17, 'latched': 2, 'killlockChaser': 8, 'killlockPress': 3}
+ON moves [('149', 40, 'wandlock@208,128', 'mouth', 88)]
+ON declined
+   ('27', 18, 'lock@144,112', 'killlockPress', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('27', 18, 'lock@144,112', 'killlockPress', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('27', 18, 'lock@144,112', 'killlockPress', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('28', 19, 'bosslock@48,32', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('31', 12, 'bosslock@432,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('37', 31, 'bosslock@192,432', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('38', 30, 'bosslock@224,208', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('40', 30, 'bosslock@64,32', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('45', 12, 'bosslock@80,656', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('45', 12, 'bosslock@416,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('62', 12, 'bosslock@432,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('68', 12, 'bosslock@432,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('78', 53, 'lock@144,208', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('78', 53, 'lock@144,208', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('109', 56, 'bosslock@96,16', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('120', 60, 'lock@128,80', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('120', 60, 'lock@128,80', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('130', 12, 'bosslock@432,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('134', 40, 'wandlock@480,560', 'latched', 'no hitless move (1 fork(s)): mouth: the walk outlasts the bound')
+   ('145', 12, 'bosslock@432,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('158', 66, 'bosslock@72,64', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('162', 12, 'bosslock@432,240', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('183', 68, 'bosslock@16,32', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('185', 12, 'bosslock@32,864', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('213', 12, 'bosslock@32,864', 'keylock', 'the still wait is hitless and no route needs the opening')
+   ('227', 98, 'lock@112,112', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('227', 98, 'lock@112,112', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('228', 99, 'lock@80,96', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')
+   ('228', 99, 'lock@80,96', 'killlockChaser', 'a kill-lock opens by a v9 declaration the measuring pass cannot see (two-pass agreement)')

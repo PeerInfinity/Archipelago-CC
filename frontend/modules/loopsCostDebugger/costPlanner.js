@@ -188,8 +188,11 @@ export class CostPlanner extends SharedCostPlanner {
    * what the procgen pipeline would have embedded for the same world (⚖ 2026-
    * 09-06, one algorithm and one block). The raw plan, with every region priced,
    * is `super.getCostData()`.
+   *
+   * @param {{authoredBlock?: Object|null}} [opts] the block AUTHORED regions'
+   *        entries are copied from (default none: they are left out).
    */
-  getCostData() {
+  getCostData({ authoredBlock = null } = {}) {
     const raw = super.getCostData();
     if (!raw) return null;
 
@@ -198,6 +201,9 @@ export class CostPlanner extends SharedCostPlanner {
       topology,
       regionClasses: classifyRegions(topology),
       xpEffect: DEFAULT_REGION_XP_EFFECT,
+      // ⛓ AUTHORED regions (ActionNodes) are copied from the block the caller
+      // holds — the Loops panel passes the loaded one. No other class reads it.
+      authoredBlock,
     });
 
     return {

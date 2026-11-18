@@ -389,12 +389,22 @@
             },
             "grid_dims": {
               "type": "object",
-              "description": "Bounding size of the generated grid in cells. Auto-derived by procgenPipelineEngine.js:6353-6356 from the maximum `grid_cell`.",
+              "description": "Bounding size of the generated grid in cells: the box of the slot's `grid_cell`s widened to include (0,0), i.e. max + 1 when every cell is >= 0; anchored at `grid_origin` when present, else at (0,0). Auto-derived by procgenCore/cellExtent.js `recordedGridBox` (buildRulesJson, slotInitialise).",
               "properties": {
                 "width": { "type": "integer" },
                 "height": { "type": "integer" }
               },
               "required": ["width", "height"]
+            },
+            "grid_origin": {
+              "type": "object",
+              "description": "Top-left cell of the `grid_dims` box, present ONLY when it is negative on either axis (region cells are signed; the start room sits at (0,0)). Absent, `grid_dims` is anchored at (0,0). Written by procgenCore/cellExtent.js `recordedGridBox` (buildRulesJson, slotInitialise); read by compositeMapDocument.mapBoundsFor, sidecarIssues GRID_CELL_OUTSIDE and the engine's sphere-tree rebuild.",
+              "properties": {
+                "gx": { "type": "integer" },
+                "gy": { "type": "integer" }
+              },
+              "required": ["gx", "gy"],
+              "additionalProperties": false
             },
             "source_game": {
               "type": ["string", "null"],
@@ -564,7 +574,7 @@
     },
     "discovery_mode": {
       "type": "object",
-      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
+      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Producer of the `bundle` field: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (ActionNodes AN-1b). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -572,6 +582,11 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "bundle": {
+              "type": "string",
+              "enum": ["actionNodes"],
+              "description": "Optional, with enabled:true: a named override bundle forced in AND out of loop mode. \"actionNodes\" — Loop mode's discovery overrides with autoDiscoverLocations on; the start node is fully discovered and its neighbours show their contents, a node's exits stay unnamed until it is first completed, nothing is cleared on a loop reset, no explore (ActionNodes AN-1b, Robert 2026-11-16). Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph`. Consumer: frontend/modules/discovery/worldDiscoveryMode.js `readWorldDiscoveryMode` / `ACTION_NODES_OVERRIDES`."
             }
           },
           "required": [
@@ -1085,8 +1100,8 @@
         },
         "event_kind": {
           "type": "string",
-          "enum": ["game_state"],
-          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js)."
+          "enum": ["game_state", "goal"],
+          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js). 'goal' = the slot's goal event, set by the CLIENT (never in a file) on rules the host's Upstream Rules Add-on sent (client/core/upstreamGoal.js): never auto-collected; it is checked like any location (a click, the Timer, a bot, the Loop queue), and that check reports the goal."
         },
         "event_id": {
           "type": "string",

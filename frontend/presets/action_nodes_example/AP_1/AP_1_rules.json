@@ -73,6 +73,13 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "do-chores -> start",
+            "connected_region": "start",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -86,23 +93,54 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "train -> start",
+            "connected_region": "start",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
       },
       "read-the-notice": {
         "name": "read-the-notice",
-        "exits": [],
+        "exits": [
+          {
+            "name": "read-the-notice -> start",
+            "connected_region": "start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
         "locations": []
       },
       "eat-bread": {
         "name": "eat-bread",
-        "exits": [],
+        "exits": [
+          {
+            "name": "eat-bread -> start",
+            "connected_region": "start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
         "locations": []
       },
       "buy-bread": {
         "name": "buy-bread",
-        "exits": [],
+        "exits": [
+          {
+            "name": "buy-bread -> do-chores",
+            "connected_region": "do-chores",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
         "locations": []
       },
       "bribe-the-guard": {
@@ -114,13 +152,28 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "bribe-the-guard -> do-chores",
+            "connected_region": "do-chores",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
       },
       "guards-locker": {
         "name": "guards-locker",
-        "exits": [],
+        "exits": [
+          {
+            "name": "guards-locker -> bribe-the-guard",
+            "connected_region": "bribe-the-guard",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
         "locations": [
           {
             "name": "Guard's Locker",
@@ -146,6 +199,13 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "move-the-boulder -> train",
+            "connected_region": "train",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": [
@@ -166,7 +226,15 @@
       },
       "leave-the-village": {
         "name": "leave-the-village",
-        "exits": [],
+        "exits": [
+          {
+            "name": "leave-the-village -> move-the-boulder",
+            "connected_region": "move-the-boulder",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
         "locations": [
           {
             "name": "Leave the Village",
@@ -252,7 +320,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": false
+    }
+  },
   "canonical_placements": {
     "1": {}
   },
@@ -345,6 +417,12 @@
               "exit_id": "bribe-the-guard",
               "exitName": "do-chores -> bribe-the-guard",
               "targetRegion": "bribe-the-guard"
+            },
+            {
+              "exit_id": "start",
+              "exitName": "do-chores -> start",
+              "targetRegion": "start",
+              "reverse": true
             }
           ]
         }
@@ -382,6 +460,12 @@
               "exit_id": "move-the-boulder",
               "exitName": "train -> move-the-boulder",
               "targetRegion": "move-the-boulder"
+            },
+            {
+              "exit_id": "start",
+              "exitName": "train -> start",
+              "targetRegion": "start",
+              "reverse": true
             }
           ]
         }
@@ -414,7 +498,14 @@
               "start"
             ]
           ],
-          "exits": []
+          "exits": [
+            {
+              "exit_id": "start",
+              "exitName": "read-the-notice -> start",
+              "targetRegion": "start",
+              "reverse": true
+            }
+          ]
         }
       },
       "eat-bread": {
@@ -450,7 +541,14 @@
               "start"
             ]
           ],
-          "exits": []
+          "exits": [
+            {
+              "exit_id": "start",
+              "exitName": "eat-bread -> start",
+              "targetRegion": "start",
+              "reverse": true
+            }
+          ]
         }
       },
       "buy-bread": {
@@ -490,7 +588,14 @@
               "do-chores"
             ]
           ],
-          "exits": []
+          "exits": [
+            {
+              "exit_id": "do-chores",
+              "exitName": "buy-bread -> do-chores",
+              "targetRegion": "do-chores",
+              "reverse": true
+            }
+          ]
         }
       },
       "bribe-the-guard": {
@@ -531,6 +636,12 @@
               "exit_id": "guards-locker",
               "exitName": "bribe-the-guard -> guards-locker",
               "targetRegion": "guards-locker"
+            },
+            {
+              "exit_id": "do-chores",
+              "exitName": "bribe-the-guard -> do-chores",
+              "targetRegion": "do-chores",
+              "reverse": true
             }
           ]
         }
@@ -558,7 +669,14 @@
               "bribe-the-guard"
             ]
           ],
-          "exits": [],
+          "exits": [
+            {
+              "exit_id": "bribe-the-guard",
+              "exitName": "guards-locker -> bribe-the-guard",
+              "targetRegion": "bribe-the-guard",
+              "reverse": true
+            }
+          ],
           "location": "Guard's Locker"
         }
       },
@@ -595,6 +713,12 @@
               "exit_id": "leave-the-village",
               "exitName": "move-the-boulder -> leave-the-village",
               "targetRegion": "leave-the-village"
+            },
+            {
+              "exit_id": "train",
+              "exitName": "move-the-boulder -> train",
+              "targetRegion": "train",
+              "reverse": true
             }
           ],
           "location": "Move the Boulder"
@@ -632,7 +756,14 @@
               "move-the-boulder"
             ]
           ],
-          "exits": [],
+          "exits": [
+            {
+              "exit_id": "move-the-boulder",
+              "exitName": "leave-the-village -> move-the-boulder",
+              "targetRegion": "move-the-boulder",
+              "reverse": true
+            }
+          ],
           "location": "Leave the Village"
         }
       }
@@ -896,36 +1027,9 @@
     "1": {
       "generator": "frontend/modules/actionNodes/actionGraphCompiler.js",
       "graph_id": "example-village",
-      "graph_provenance": {
-        "sources": {
-          "actionnodes-design": {
-            "type": "model",
-            "model": "claude-fable-5-2",
-            "date": "2026-11-15",
-            "session": "actionnodes-design",
-            "approved": {
-              "by": "Robert",
-              "date": "2026-11-15",
-              "ruling": "A14: accepted for initial testing, details adjustable"
-            }
-          },
-          "do-chores-change": {
-            "type": "model",
-            "model": "claude-fable-5-2",
-            "date": "2026-11-15",
-            "session": "actionnodes-design",
-            "note": "Do Chores made repeatable (5 mana, Gold +3, limit 2); the floated 'three times, +5 each' makes the goal impossible"
-          },
-          "an1-boost-mana": {
-            "type": "model",
-            "model": "claude-opus-5-5",
-            "date": "2026-11-15",
-            "session": "actionnodes-an1",
-            "note": "The boon's name and stat/gold amounts are actionnodes-design's; AN-1 set `gives.mana: 0` explicitly. Under the ruled default (+10 starting mana per item) the goal no longer needs the bread, which is the accepted example's puzzle"
-          }
-        },
-        "default": "actionnodes-design"
-      }
+      "exists": [
+        "example-village"
+      ]
     }
   },
   "loop_costs": {
@@ -1022,6 +1126,12 @@
       "defaultRegionCost": 0,
       "defaultLocationCost": 10,
       "defaultRegionXpEffect": "cost"
+    }
+  },
+  "discovery_mode": {
+    "1": {
+      "enabled": true,
+      "bundle": "actionNodes"
     }
   }
 }

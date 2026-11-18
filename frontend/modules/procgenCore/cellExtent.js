@@ -6,8 +6,8 @@
  * `Grid` to place cells into — asks this module for it instead of computing `max + 1`.
  *
  * The other spellings this replaces or sits beside (named so the next slice can fold them in):
- *   · `apworldEditor/slotInitialise.js` `cellExtent` (module-private): `max + 1`, which is what `grid_dims` records
- *     today. S2 changes `grid_dims` to `max − min + 1` and repoints that writer here.
+ *   · `apworldEditor/slotInitialise.js` and `procgenPipelineEngine.buildRulesJson`, the two writers of
+ *     `procgen_metadata[p].grid_dims`: since S2 both write `recordedGridBox` below (they computed `max + 1`).
  *   · `procgenCore/setMapLayout.js` `cellBounds` (module-private, lab-owned): the same min/max over set-map
  *     positions; already signed since the origin slice.
  *   · `regionMap/regionMapFrames.js`: signed frames that always include the start cell (0,0), the same rule
@@ -73,8 +73,32 @@ export function drawnBox(extent, declared = null, origin = null) {
 }
 
 /**
- * ⛓ The top-left cell of a `Grid`-like: `{minX, minY}` — `grid.minX/minY` when it carries them (the S1 bridge grid
- * from `compositeMapDocument.gridForBox`; S2's `Grid`), else (0,0) (an engine `Grid` today, always min-0).
+ * ⛓⛓ **WHAT A DOCUMENT RECORDS AS ITS GRID** (unbounded grid S2): `{grid_dims: {width, height}, grid_origin}` for
+ * `procgen_metadata[p]`. `grid_dims` is the cells' box widened to include (0,0) — `max − min + 1` with the min
+ * clamped at 0 — and `grid_origin` is that box's top-left `{gx, gy}` when it is NEGATIVE on either axis, else null
+ * (the writer then emits no field). No cell → 0×0, no origin.
+ *
+ * ⛓ WHY widened to (0,0), not the bare `max − min + 1`: the readers anchor `grid_dims` at `grid_origin` when it is
+ * declared and at (0,0) otherwise (`drawnBox` above; `sidecarIssues` GRID_CELL_OUTSIDE), so a box written without
+ * an origin must start at (0,0). It is also what keeps every committed document byte-identical: with all cells
+ * ≥ 0 it is `max + 1`, the value written before S2, including the slots whose lowest cell is above 0
+ * (`seedling_atlas_sphere` AP_1: cells (4..7, 4..10), recorded 8×11; a bare `max − min + 1` would write 4×7).
+ *
+ * @param {Iterable<{gx:number, gy:number}|null|undefined>} cells
+ * @returns {{grid_dims: {width:number, height:number}, grid_origin: {gx:number, gy:number}|null}}
+ */
+export function recordedGridBox(cells) {
+    const box = drawnBox(cellExtent(cells));
+    if (!box) return { grid_dims: { width: 0, height: 0 }, grid_origin: null };
+    return {
+        grid_dims: { width: box.width, height: box.height },
+        grid_origin: box.minX < 0 || box.minY < 0 ? { gx: box.minX, gy: box.minY } : null,
+    };
+}
+
+/**
+ * ⛓ The top-left cell of a `Grid`-like: `{minX, minY}` — `grid.minX/minY` (an engine `Grid` carries them since
+ * S2: its box origin, or an unbounded grid's extent), else (0,0) for any other grid-like.
  */
 export function gridOriginOf(grid) {
     return {

@@ -458,10 +458,16 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             //   and the pocket's latch return (internal exits only; atlas id 88e3788c -> 2ac275e8). No name, exit or location moves.
             // ⛓ rules-fire-arm-chaser-guard (28dc5dc7… -> 26bec328…): atlas id 2ac275e8 -> 630fbc4c (L73's and L100's rocks lose
             //   their Fire arm; L100's one-way pair re-merges into one two-way row; no name moves).
-            // ⛓ rules-lavatrap-neck (26bec328… -> 687a6ad3…): atlas id 630fbc4c -> ac434804 (rule T: L77's and L78's lavatrap
-            //   discs are gated cells costing Or(Dark Suit, Ghost Spear); L77 splits into r2c0 / r12c6 / r15c6, L78 gains six
-            //   sub-regions; no door, location or other level moves).
-            .toBe('687a6ad3ce21228cced6d13891f6d516');
+            // ⛓ rules-nohit-wand-crosscheck (e53ce517 -> 7443e728): the Wand joins L22 south-to-north's no-hit arms (one
+            //   internal row's Or gains Wand); atlas id 88e3788c -> df2a42ee.
+            // ⛓ rules-remerge-wand-nohit: both slices merged (L99 sided kill-lock + L22 Wand); re-recorded from the producers
+            //   (28dc5dc7 -> 5f47a836; atlas id 2ac275e8 -> 77a4c0ea).
+            // ⛓ land/rules-move-fireguard: the Fire guard re-merged onto train 140 (L22 Wand); re-recorded from the producers (5f47a836 -> 9925cc35; atlas id 77a4c0ea -> 5ca88dfe).
+            // ⛓ rules-lavatrap-neck: rule T (L77's and L78's lavatrap discs are gated cells costing Or(Dark Suit, Ghost Spear);
+            //   L77 splits into r2c0 / r12c6 / r15c6, L78 gains six sub-regions; no door, location or other level moves).
+            // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146, land/rules-move-fireguard); re-recorded from the
+            //   producers (9925cc35 -> NEWMD5S; atlas id 5ca88dfe -> NEWID).
+            .toBe('NEWMD5');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

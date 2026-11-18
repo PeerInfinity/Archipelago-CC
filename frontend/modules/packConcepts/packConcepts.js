@@ -46,7 +46,19 @@ export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon'
  * provenance source when it differs from the manifest's default
  * (`contentPacks/provenance.js`, ⛓ PL-1).
  */
-export const PACK_CONCEPT_FIELDS = Object.freeze(['kind', 'name', 'description', 'look', 'art', 'text', 'presents', 'src']);
+export const PACK_CONCEPT_FIELDS = Object.freeze(['kind', 'name', 'description', 'look', 'art', 'base', 'text', 'presents', 'src']);
+
+/**
+ * ⛓ CONTENT SETS TILE-2 — **THE TILE BASES A CONCEPT MAY DECLARE** (`base`, beside
+ * its `art` key). A base says what a tile kind IS when nothing draws it as itself:
+ * the maze's fallback chain (`mazeRoom/mazeTileArt.drawMazeTile`) draws the base's
+ * one default draw when the theme has no art for the kind. The set is CLOSED, and
+ * this module OWNS the names (as it owns `PACK_CONCEPT_KINDS`):
+ * `mazeTileArt.MAZE_TILE_BASES` holds one draw per name and refuses at load to
+ * drift from this list. A row with no `base` is valid; a kind with neither art nor
+ * a base is drawn as the placeholder, never a throw.
+ */
+export const PACK_TILE_BASES = Object.freeze(['floor', 'wall', 'marker', 'character']);
 
 /**
  * ⛓ PL-1 — `presents` takes TWO forms (Z.1). A BARE id (`guardian`) names a
@@ -98,6 +110,9 @@ export function parseConceptsManifest(json, packId) {
         }
         if ('art' in entry && (typeof entry.art !== 'string' || !KEY_PATTERN.test(entry.art))) {
             fail(`${at}: art ${JSON.stringify(entry.art)} is not a namespaced art-library key`);
+        }
+        if ('base' in entry && !PACK_TILE_BASES.includes(entry.base)) {
+            fail(`${at}: base ${JSON.stringify(entry.base)} is not one of ${PACK_TILE_BASES.join(', ')}`);
         }
         if ('text' in entry) {
             if (!isObject(entry.text)) fail(`${at}: text must be { <slot>: <text-library key> }`);

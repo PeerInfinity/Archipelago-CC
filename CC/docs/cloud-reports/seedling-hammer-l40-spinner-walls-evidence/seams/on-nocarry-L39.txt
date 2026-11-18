@@ -1,0 +1,9 @@
+== on-L39.jsonl
+5225 OK  1636 hits 0 dashless:1720@786 full:1636@856 f90b8e0581d6 
+5227 OK  1636 hits 0 dashless:1720@786 full:1636@856 f90b8e0581d6 
+5241 REF None hits 0 dashless:refusal@170 full:refusal@170   at (860.89,850.11) LANDED
+5233 OK  1317 hits 0 dashless:1368@909 full:1317@990 ff95a231a1b7 
+5228 REF None hits 0 dashless:refusal@72 full:refusal@72   at (745.71,792.86)
+5242 REF None hits 0 dashless:refusal@170 full:refusal@170   at (861.35,850.11) LANDED
+5216 OK  1165 hits 0 dashless:1360@727 full:1165@783 f8584f0ed43b 
+5243 OK  1106 hits 0 dashless:1126@705 full:1106@788 5378f4e4df44 

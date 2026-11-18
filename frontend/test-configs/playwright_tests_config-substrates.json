@@ -6,6 +6,46 @@
     "_comment": "Substrate in-app tests (text-adventure wrapper + flash + cloudberry + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes). A row's \"batch\" field is the smoke-row override (frontend/modules/tests/testBatches.js): it keeps ONE row of a manual batch on push; delete the line to drop it.",
     "tests": [
         {
+            "id": "an-load-and-act-once",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-refused-action-stops-queue",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-results-reach-ledger",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-loop-reset-restores-boosts",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-check-once-action-repeats",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-explore-refused",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-discovery-sets",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-two-way-move",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -1976,7 +2016,7 @@
             "id": "region-map-classic-world",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "REGION MAP step 3b (2026-11-15): the panel on a classic AP world (no grid_cell, no substrate hook): the generic layout and boxes. The category's ONE row on the fast batch (the smoke row); counts derived at run time. Reloads the world loaded before."
+            "_comment": "REGION MAP step 3b (2026-11-15): the panel on a classic AP world (no grid_cell, no substrate hook): the generic layout and boxes. The category's smoke row on the fast batch (step 4 adds region-map-clicks-generated beside it); counts derived at run time. Reloads the world loaded before."
         },
         {
             "id": "region-map-seedling-paints",
@@ -1995,6 +2035,24 @@
             "enabled": true,
             "category": "Region Map: Seedling",
             "_comment": "REGION MAP step 3b (2026-11-15): discovery mode hides and fogs as the view says; logs the discovery recompute cost. Batch playback-bot (on push)."
+        },
+        {
+            "id": "region-map-clicks-generated",
+            "enabled": true,
+            "category": "Region Map",
+            "_comment": "REGION MAP step 4 (2026-11-17): clicks on a generated non-Seedling world (procgen_topdown AP_1, by rules path): a cell click moves the player, a green square click checks it, the hover names it; the Region Graph panel's own boxes change what a Region Map click does (planner option A). Fast batch. Reloads the world loaded before."
+        },
+        {
+            "id": "region-map-clicks-seedling",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 4 (2026-11-17): seedling_playthrough clicks: move, check, and a red square refused (not_accessible) exactly as the Region Graph's own check of it is. Batch playback-bot (on push)."
+        },
+        {
+            "id": "region-map-clicks-loop-mode",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP step 4 (2026-11-17): with loop mode on, a Region Map cell click plans (regionMap-* is a loopModeExemptions planning source): its move is appended to the path. Batch playback-bot (on push)."
         },
         {
             "id": "test_region_graph_node_picker",

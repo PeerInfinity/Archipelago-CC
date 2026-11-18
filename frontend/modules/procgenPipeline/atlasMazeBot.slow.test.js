@@ -604,7 +604,93 @@ describe('region atlas Phase 8 — a sphere-grown world with real Seedling regio
         }
     });
 
+    it('routes over the SIDECAR exit set, not the AP graph', () => {
+        // The AP graph is a superset: it lists the Menu -> start hop, and (in
+        // the maze preset) crossings the projection walled. Nothing the bot
+        // crossed may be absent from the sidecars.
+        for (const key of bot.crossed) {
+            const [region, exitId] = key.split('|');
+            expect(bot.worlds.get(region)?.exits?.has(exitId), key).toBe(true);
+        }
+    });
+});
+
+// ---------------------------------------------------------------------------
+// excludeOtherExits severing — the positive control, on a fixture world
+// ---------------------------------------------------------------------------
+
+/**
+ * Two maze regions, built so that region A is severed by excludeOtherExits
+ * (0 = floor, 1 = wall):
+ *
+ *   A (5x3)        B (3x3, open)
+ *   # # # # #      . N .        A.west <-> B.west, A.mid <-> B.north,
+ *   W . M . E      W . E        A.east <-> B.east
+ *   # # # # #      . . .
+ *
+ * A's west and east crossings are joined only THROUGH its mid crossing, a cell
+ * a walk may not step over. So reaching A.east from an arrival on A.west means
+ * leaving through a crossing and coming back via B.
+ */
+function severedFixtureDoc() {
+    const exit = (exit_id, x, y, targetRegion, targetExitId) => ({
+        exit_id, x, y, exitName: exit_id, targetRegion, targetExitId, isBackExit: false, isTeleporter: false,
+    });
+    const maze = (width, height, tiles, entrance, exits) => ({
+        substrate: 'maze',
+        playable_payload: {
+            width, height, tiles, entrance, exits, obstacles: [], items: [], obstacleLib: {}, itemLib: {},
+        },
+    });
+    const region = (name, exits) => ({
+        name,
+        exits: exits.map(([exitName, to]) => ({ name: exitName, connected_region: to, access_rule: { rule: 'True_' } })),
+        locations: [],
+    });
+    return {
+        regions: {
+            [PLAYER]: {
+                A: region('A', [['west', 'B'], ['mid', 'B'], ['east', 'B']]),
+                B: region('B', [['west', 'A'], ['north', 'A'], ['east', 'A']]),
+            },
+        },
+        start_regions: { [PLAYER]: { default: ['A'], available: [] } },
+        canonical_placements: { [PLAYER]: {} },
+        starting_items: { [PLAYER]: [] },
+        preset_sidecars: {
+            [PLAYER]: {
+                A: maze(5, 3, [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1], { x: 1, y: 1 }, [
+                    exit('west', 0, 1, 'B', 'west'),
+                    exit('mid', 2, 1, 'B', 'north'),
+                    exit('east', 4, 1, 'B', 'east'),
+                ]),
+                B: maze(3, 3, [0, 0, 0, 0, 0, 0, 0, 0, 0], { x: 1, y: 1 }, [
+                    exit('west', 0, 1, 'A', 'west'),
+                    exit('north', 1, 0, 'A', 'mid'),
+                    exit('east', 2, 1, 'A', 'east'),
+                ]),
+            },
+        },
+    };
+}
+
+describe('excludeOtherExits severing — the bot routes AROUND it, on a fixture world', () => {
+    const fixture = {};
+
+    beforeAll(() => {
+        fixture.rulesDoc = severedFixtureDoc();
+        fixture.bot = createBot(fixture.rulesDoc);
+        // The sphere describe got this from its playthrough; here it is a
+        // whole-world traversal. Nothing may be left uncrossed.
+        fixture.uncrossed = traverseEverything(fixture.bot);
+    });
+
+    it('the fixture traversal crosses every exit', () => {
+        expect(fixture.uncrossed).toEqual([]);
+    });
+
     it('routes AROUND a crossing that excludeOtherExits severs, via the region graph', () => {
+        const { rulesDoc, bot } = fixture;
         // The positive control for invariant 2. A region whose exits are
         // mutually unreachable without stepping OVER an intervening crossing
         // (the common shape: a back-exit sitting on the region's own entrance
@@ -613,8 +699,10 @@ describe('region atlas Phase 8 — a sphere-grown world with real Seedling regio
         // The bot takes neither option: it crosses out and comes back, arriving
         // ON the tile that was in the way.
         //
-        // The severed pair is DISCOVERED rather than named, so a regenerated
-        // world keeps testing the thing instead of testing a stale region id.
+        // The severed pair is DISCOVERED rather than named. Its subject used to
+        // be the seedling_atlas_sphere world, until a maze re-carve (7379b019dc)
+        // left that world with no severed region and this control with nothing
+        // to test. The fixture below is built to have one.
         let found = null;
         for (const [regionName, world] of bot.worlds) {
             const opts = (strict) => ({
@@ -635,7 +723,7 @@ describe('region atlas Phase 8 — a sphere-grown world with real Seedling regio
         expect(found, 'some region in this world really is severed by excludeOtherExits')
             .toBeTruthy();
         const { regionName, from, to } = found;
-        // Every exit of that region was crossed during the playthrough anyway.
+        // Every exit of that region is crossed by a whole-world traversal anyway.
         for (const exit of bot.worlds.get(regionName).exits.values()) {
             expect(bot.crossed.has(`${regionName}|${exit.exit_id}`),
                 `${regionName}|${exit.exit_id}`).toBe(true);
@@ -659,15 +747,6 @@ describe('region atlas Phase 8 — a sphere-grown world with real Seedling regio
         expect(probe.crossed.has(`${regionName}|${to}`)).toBe(true);
     });
 
-    it('routes over the SIDECAR exit set, not the AP graph', () => {
-        // The AP graph is a superset: it lists the Menu -> start hop, and (in
-        // the maze preset) crossings the projection walled. Nothing the bot
-        // crossed may be absent from the sidecars.
-        for (const key of bot.crossed) {
-            const [region, exitId] = key.split('|');
-            expect(bot.worlds.get(region)?.exits?.has(exitId), key).toBe(true);
-        }
-    });
 });
 
 // ---------------------------------------------------------------------------

@@ -25,7 +25,7 @@ import { COLORS, TILE_PX } from '../procgenCore/compositeMapRenderer.js';
 import {
     OUTSIDE_SUB_REGION_DIM, createSeedlingCompositePainter, drawSeedlingCompositeRegion, resolveSeedlingLevel,
     seedlingDisplayRegionOf, seedlingLevelSourceOf, seedlingLocationTiles, subRegionTiles, unplacedSeedlingLocations,
-    seedlingRegionExtent, seedlingRemoteLocationTiles,
+    seedlingRegionExtent, seedlingRemoteLocationTiles, seedlingEdgeTransitionOf, seedlingLayoutGraph, EDGE_ARRIVAL_TILES,
 } from './seedlingCompositeMap.js';
 import { SEEDLING_BACKGROUND } from '../seedlingDemo/seedlingLevelBake.js';
 
@@ -381,5 +381,41 @@ describe('5. region-map step 3b — regionExtent and remoteLocationTiles (additi
             expect(typeof entry.compositeMap.regionExtent).toBe('function');
             expect(entry.compositeMap.remoteLocationTiles).toBe(seedlingRemoteLocationTiles);
         }
+    });
+});
+
+describe('6. region-map placement (A) — only an EDGE TRANSITION is a `join`', () => {
+    const px = (w, h) => ({ w: w * 16, h: h * 16 });
+    const exit = (tile, spawn) => ({ exit_tiles: [tile], target_spawn: { x: spawn[0], y: spawn[1] } });
+
+    it('seedlingEdgeTransitionOf: border door + arrival at the opposite border → true; interior door → false; no data → null', () => {
+        expect(EDGE_ARRIVAL_TILES).toBe(1);
+        // walk off the top of a 20×20 level, arrive one tile above the bottom of the 20×20 one above (level_0 → level_89)
+        expect(seedlingEdgeTransitionOf(exit([15, 0], [160, 288]), px(20, 20), px(20, 20))).toBe(true);
+        // walk off the east side (x = w-1), arrive in the target's west column
+        expect(seedlingEdgeTransitionOf(exit([19, 11], [16, 80]), px(20, 20), px(40, 60))).toBe(true);
+        // a doorway in the middle of the level (level_0 → level_1, a house)
+        expect(seedlingEdgeTransitionOf(exit([5, 6], [64, 96]), px(20, 20), px(9, 8))).toBe(false);
+        // a door ON the border whose arrival is deep inside the target (level_1 → level_0, leaving the house)
+        expect(seedlingEdgeTransitionOf(exit([4, 7], [80, 112]), px(9, 8), px(20, 20))).toBe(false);
+        // the measured borderline: arrival 2 tiles from the opposite border (level_28 → level_27) is NOT an edge
+        expect(seedlingEdgeTransitionOf(exit([8, 19], [160, 32]), px(20, 20), px(16, 6))).toBe(false);
+        expect(seedlingEdgeTransitionOf(exit([15, 0], [160, 288]), null, px(20, 20))).toBe(null);
+        expect(seedlingEdgeTransitionOf({ exit_tiles: [[15, 0]] }, px(20, 20), px(20, 20))).toBe(null);
+    });
+
+    it('seedlingLayoutGraph on seedling_playthrough: the doorways become `warp` (no dir), the edges stay `join`', async () => {
+        const { SEEDLING_PLAYTHROUGH_ATLAS } = await import('./flashSeedlingLibrary.js');
+        const sc = PLAYTHROUGH.preset_sidecars['1'];
+        const g = seedlingLayoutGraph({ sidecars: sc, atlases: { [SEEDLING_PLAYTHROUGH_ATLAS.atlas_id]: SEEDLING_PLAYTHROUGH_ATLAS } });
+        const kindOf = (from, to) => [...new Set(g.links.filter((l) => l.from === from && l.to === to).map((l) => l.kind))];
+        expect(kindOf('level_0', 'level_12')).toEqual(['join']); // walk off level_0's east side
+        expect(kindOf('level_0', 'level_1')).toEqual(['warp']); // a doorway
+        expect(kindOf('level_12', 'level_33')).toEqual(['warp']); // a dungeon entrance
+        expect(kindOf('level_33', 'level_12')).toEqual(['warp']); // and its way out
+        expect(g.links.filter((l) => l.kind === 'warp').every((l) => l.dir === null)).toBe(true);
+        // ⛓ without level sizes nothing can be judged: every non-vertical link stays `join` (UNCLASSIFIABLE)
+        const blind = seedlingLayoutGraph({ sidecars: sc, atlases: {} });
+        expect(blind.links.some((l) => l.kind === 'warp')).toBe(false);
     });
 });

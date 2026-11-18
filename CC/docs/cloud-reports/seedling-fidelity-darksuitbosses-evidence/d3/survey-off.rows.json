@@ -1,0 +1,363 @@
+[
+ {
+  "step": 246,
+  "level": 112,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L112@32,208 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 112,
+    "x": 32,
+    "y": 208
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkShield",
+     "hasDarkSuit",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasFireWand",
+     "hasGhostSword",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 11,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d71"
+     },
+     {
+      "step": 15,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d72"
+     },
+     {
+      "step": 18,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d73"
+     },
+     {
+      "step": 25,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d74"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 28,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d75"
+     },
+     {
+      "step": 29,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 34,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d76"
+     },
+     {
+      "step": 36,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 38,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 39,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 39,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d77"
+     },
+     {
+      "step": 45,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d78"
+     },
+     {
+      "step": 47,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d79"
+     },
+     {
+      "step": 54,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 58,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d710"
+     },
+     {
+      "step": 65,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d71"
+     },
+     {
+      "step": 66,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d711"
+     },
+     {
+      "step": 66,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d72"
+     },
+     {
+      "step": 72,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d712"
+     },
+     {
+      "step": 74,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d713"
+     },
+     {
+      "step": 81,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 88,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 89,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d714"
+     },
+     {
+      "step": 96,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 110,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d715"
+     },
+     {
+      "step": 124,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 135,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d73"
+     },
+     {
+      "step": 137,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d74"
+     },
+     {
+      "step": 142,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 149,
+      "item": "Totem Shard",
+      "grants": "save.totem_parts \u00d75"
+     },
+     {
+      "step": 160,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d716"
+     },
+     {
+      "step": 167,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 169,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     },
+     {
+      "step": 174,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d717"
+     },
+     {
+      "step": 189,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d718"
+     },
+     {
+      "step": 191,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasDarkShield"
+     },
+     {
+      "step": 197,
+      "item": "Dark Suit",
+      "grants": "seam.items.hasDarkSuit"
+     },
+     {
+      "step": 211,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d719"
+     },
+     {
+      "step": 218,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d720"
+     },
+     {
+      "step": 220,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d721"
+     },
+     {
+      "step": 227,
+      "item": "Seal",
+      "grants": "save.seal_parts \u00d722"
+     },
+     {
+      "step": 235,
+      "item": "Ghost Sword Fusion",
+      "grants": "seam.items.hasGhostSword"
+     },
+     {
+      "step": 240,
+      "item": "Fire Wand Fusion",
+      "grants": "seam.items.hasFireWand"
+     }
+    ],
+    "saveCounts": {
+     "seal_parts": 22,
+     "totem_parts": 5
+    },
+    "unpresentable": [
+     {
+      "step": 183,
+      "item": "Health",
+      "why": "'health' \u2192 hitsMax is not a boolean grant ({\"flash_name\":\"health\",\"class\":\"main\",\"property\":\"hitsMax\",\"op\":\"add\",\"value\":1,\"base\":3}) \u2014 a boot presentation declares a flag, it cannot add."
+     }
+    ]
+   },
+   "stagedSave": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  "withCommittedDeclarations": null,
+  "goals": [
+   {
+    "kind": "skip",
+    "report": {
+     "level": 112,
+     "tag": 0
+    },
+    "why": "Level 112 - Owl (sphere 14.2) \u2192 Seal \u2014 no solver executor fights finalboss@64,96 (no encounter row in L112, no strategy row for solid:finalboss); its report {112,0} is not walked",
+    "location": "Level 112 - Owl"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 112,
+     "y": 0
+    },
+    "why": "teleporter@112,0 \u2192 L113"
+   }
+  ],
+  "skipped": [
+   {
+    "location": "Level 112 - Owl",
+    "why": "Level 112 - Owl (sphere 14.2) \u2192 Seal \u2014 no solver executor fights finalboss@64,96 (no encounter row in L112, no strategy row for solid:finalboss); its report {112,0} is not walked"
+   }
+  ],
+  "views": {
+   "boot": ".cache/seedling-survey/through-end/views/step-246-boot.json"
+  },
+  "clock": {
+   "gameTime": 8607,
+   "refusal": null
+  },
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-246): no corridor for goal reach-exit toward (120,8) in level 112. Obstacle: solid:rocklock (rocklock@112,16); also on the frontier: planttorch@80,32, pod@112,48, planttorch@208,96, pod@184,120, cliffside1@0,96, pod@40,120, cliffside1@0,112, cliffside0@224,112, cliffside1@0,128, cliffside0@224,128, cliffside1@0,144, planttorch@16,160, pod@112,192, planttorch@144,208, cliffside4@112,224, cliffside4@128,224, cliffside3@64,224, cliffside2@48,224. ENCOUNTER-GATE (rocklock@112,16): no presser in level 112 publishes its group; its opener is finalboss@64,96's death (the `dead` arm: `Button.activateAll(null, 0, true)` and `setPersistence(tag + 1)`, `FinalBoss.as`). The work order is the fight, not the room. Planner said: no walkable tile path in level 112 from tile (2,13) to (7,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+  "ticks": null,
+  "traceRows": null,
+  "replans": null,
+  "passes": null,
+  "declarations": null,
+  "replay": null,
+  "ms": 115,
+  "knownAnswer": null,
+  "knownTicks": null,
+  "agreesWithKnown": null,
+  "visit": 1,
+  "family": "ENCOUNTER-GATE \u2014 rocklock@112,16 has no strategy row and its opener is not in this room (an encounter the route must win); the work order is the gate, not the room"
+ }
+]
