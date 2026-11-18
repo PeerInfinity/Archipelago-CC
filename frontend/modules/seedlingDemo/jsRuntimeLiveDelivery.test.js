@@ -24,6 +24,8 @@
  *        -> the solver-shadow row reds (`ShadowDivergence`), and so does the L0 rock walk in `jsRuntimeSave.test.js`.
  *   d8 `deliver` not idempotent (a held key / seal value / flag value recorded again) -> the echo row reds.
  *   d9 `rebootInPlace` keeps the float constructor -> the restore row reds.
+ *   d10 the tape deferral dropped (`tape.armed` out of `applyDeliveries`' gate) -> the tape row reds.
+ *   (m5 of `jsRuntimeEncounterLegWalk.test.js` — `encounterHoldsDelivery` → false — reds that file's Bob row.)
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -222,7 +224,7 @@ describe('⛓ condition 2 — SEAL 16 / CHESTSEAL\'s live half: the chest goes o
 describe('⛓ condition 3 — KARLORE: a delivered Fire does not change the current visit; the next L48 entry builds without him', () => {
     const karlore = (run) => run.world.talkers.some((t) => t.tag === 'karlore');
 
-    it('in L48: Fire delivered → Karlore stays (and stays through a mid-visit rebuild); a death\'s new Game drops him', () => {
+    it('in L48: Fire delivered → Karlore stays (and stays through a mid-visit rebuild); the next new Game(48) drops him', () => {
         const rt = page(48, 112, 300);
         expect(karlore(rt.run)).toBe(true);
         rt.queueItems([flag('hasFire')]);

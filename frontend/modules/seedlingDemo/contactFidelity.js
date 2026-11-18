@@ -1471,6 +1471,11 @@ export const CONTACT_FIDELITY = {
      * the chest verb and refused *"NEVER OPENED"*. ON: such a chest is open in `openChests` from the build, its flag is
      * banked like `open()`'s, and a `collect-placement` at it is satisfied (`arm: 'seal-removed'`). OFF:
      * byte-identical. `SEEDLING_CHEST_SEAL_REMOVAL=0|1`.
+     * ⛓ THE LIVE HALF (seedling-js-item-live-delivery, ⚖ Robert 2026-11-18; no new key): the sixteenth seal can also
+     * ARRIVE mid-visit from the host (`levelRun.deliver`). `Chest.update`'s own `checkBySeal()` (`Chest.as:59-61`)
+     * then writes the flag on the next frame (banked the same way) and its `FP.world.remove` lands at that frame's
+     * `updateLists()` (`Engine.as:69-76`): a wall to the Player that frame, gone from the next (`levelRun`'s
+     * `liveSealVisit` / `sealRemovedAt`). No committed tape takes the sixteenth seal mid-visit.
      */
     chestSealRemoval: true,
     /**

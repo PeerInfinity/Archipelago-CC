@@ -486,9 +486,10 @@ export const holdOwed = (skin) => !!skin?.fadeQueue?.length;
 
 /**
  * ⛓ G7 — THE SKIN FOR A RUN IT HAS NOT SEEN. A fresh run (`fresh`: no tick yet) owes its build's fade; a stack
- * switched on mid-run owes nothing. ⚖ A REBOOT IN PLACE (`inPlace`: the JS runtime rebuilt its run for an item
- * flag, a key or a seal part — `jsRuntimeCore.IN_PLACE_REBOOT_WHY`) owes NOTHING NEW: the game writes a `Main.*`
- * static and builds no new world, so `blackCover` is not reset. What the previous run still owed carries over (a
+ * switched on mid-run owes nothing. ⚖ A REBOOT IN PLACE (`inPlace`: the JS runtime rebuilt its run in place —
+ * `jsRuntimeCore.IN_PLACE_REBOOT_WHY`; since seedling-js-item-live-delivery only the RE2 restore does, an item flag,
+ * a key or a seal part being written into the live run) owes NOTHING NEW: the game builds no new world for either,
+ * so `blackCover` is not reset. What the previous run still owed carries over (a
  * fade the delivery interrupted plays on). Before G7 the reboot started a second full fade from black.
  */
 export function adoptRunEffectSkin(prev, view, { fresh = false, inPlace = false } = {}) {
