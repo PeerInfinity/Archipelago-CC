@@ -28,6 +28,7 @@ import { createRegionViewState, readDiscoverySettings } from '../regionView/regi
 import { PathFinder } from '../shared/pathfinder.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { GROUPING_RULES } from '../procgenCore/regionLayout.js';
+import { hookCtxFor } from '../procgenCore/atlasCache.js';
 import { COLORS, compositeMapPainterFor, drawGenericRegion } from '../procgenCore/compositeMapRenderer.js';
 import { buildRegionMapModel } from './regionMapModel.js';
 import { cellFrames, frameAt, framesBounds, tileCentre, visibleFrames } from './regionMapFrames.js';
@@ -312,8 +313,12 @@ export class RegionMapUI {
         return { rules: last.rawJsonData, playerId: String(last.selectedPlayerInfo?.playerId ?? '1') };
     }
 
-    /** ⛓ The hook context: a custom Seedling world's derived atlas would go here (`atlases`) — see the report. */
-    _hookCtx() { return {}; }
+    /**
+     * ⛓ The hook context: the atlas THIS player's `region_atlas` names, when the host-side `atlasCache` holds it (a
+     * custom world's derived atlas, put there by the host entry path that received it); `{}` otherwise, as before.
+     * See `CC/docs/region-map/atlas-cache.md`.
+     */
+    _hookCtx(got = this._rulesOf()) { return got ? hookCtxFor(got.rules, got.playerId) : {}; }
 
     _rebuild() {
         if (this._disposed) return;
@@ -322,7 +327,7 @@ export class RegionMapUI {
         const t0 = now();
         try {
             this.model = buildRegionMapModel({
-                rules: got.rules, player: got.playerId, registry: substrateRegistry, hookCtx: this._hookCtx(),
+                rules: got.rules, player: got.playerId, registry: substrateRegistry, hookCtx: this._hookCtx(got),
                 rule: this.settings.groupingRule,
             });
             this.modelError = null;
