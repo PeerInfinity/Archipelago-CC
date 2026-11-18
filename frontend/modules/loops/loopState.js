@@ -49,6 +49,7 @@ import {
 // AND exactly one exit). A pure module (it imports only `rulesGraph`), so this
 // is not a dependency on the menu panel's wiring.
 import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
+import { strictQueueRefusal } from './strictQueueActions.js';
 import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 /**
@@ -3806,6 +3807,20 @@ export class LoopState {
    * through.
    * @returns {null | {reason: string, code: string|null, substrate: string}}
    */
+  /**
+   * The QUEUE-TIME half of a substrate's strict verb list (AN-1b): gameState's
+   * custom-action guard, installed by the loops module. Null unless the
+   * region's substrate declares `loopSupport.strictQueueActions` and its
+   * `queueActions` does not hold `actionName` (strictQueueActions.js).
+   */
+  customActionRefusal(actionName, regionName) {
+    const substrate = this._lookupSubstrateId(regionName);
+    if (!substrate) return null;
+    let entry = null;
+    try { entry = substrateRegistry.get(substrate) ?? null; } catch { entry = null; }
+    return strictQueueRefusal(entry?.loopSupport ?? null, actionName, { substrateLabel: entry?.label ?? substrate, region: regionName });
+  }
+
   _startGateRefusal(action) {
     if (!action?.sourceRegion) return null;
     const substrate = this._lookupSubstrateId(action.sourceRegion);

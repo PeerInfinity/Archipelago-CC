@@ -107,7 +107,8 @@ describe('the table of directional no-hit gates', () => {
             expect(edit(n, (g) => { g.blocked = 'up'; })).toThrow(/"blocked" is not one of N, E, S, W/);
             expect(edit(n, (g) => { g.band.push('wallflyer@0,0'); })).toThrow(/holds no wallflyer@0,0/);
             expect(edit(n, (g) => { g.band = []; })).toThrow(/names no flyer/);
-            expect(edit(n, (g) => { g.arms.push('hasWand'); })).toThrow(/arm hasWand has no witness arm/);
+            // ⛓ rules-nohit-wand-crosscheck: hasWand is now a witness arm (L22's l22-25-21-wand), so the unknown arm is Fire's.
+            expect(edit(n, (g) => { g.arms.push('hasFire'); })).toThrow(/arm hasFire has no witness arm/);
             expect(edit(n, (g) => { delete g.witness.arms[g.arms[0]]; })).toThrow(/has no witness plan/);
             expect(edit(n, (g) => { g.witness.arms.hasFire = g.witness.arms[g.arms[0]]; })).toThrow(/witness for hasFire, which the gate does not offer/);
             expect(edit(n, (g) => { g.witness.notFound = []; })).toThrow(/no NOT FOUND witness/);
@@ -119,6 +120,29 @@ describe('the table of directional no-hit gates', () => {
         // A witness of another room.
         const [a, b] = TABLE.gates;
         expect(edit(a.level, (g) => { g.witness.free.push(b.witness.free[0]); })).toThrow(new RegExp(`is not a case of level ${a.level}`));
+    });
+});
+
+describe('the Wand: an arm of L22 north, and named unwitnessed on L25 east (slice rules-nohit-wand-crosscheck)', () => {
+    const gateAt = (n) => TABLE.gates.find((g) => g.level === n);
+    it('L22 north offers the Wand on its hand witness; L25 east does not, and the table names it unwitnessed with why', () => {
+        expect(gateAt(22).arms).toContain('hasWand');
+        expect(gateAt(22).witness.arms.hasWand).toBe('l22-25-21-wand');
+        expect(PLANS.plans['l22-25-21-wand'].hand).toBeTruthy();
+        expect(PLANS.controls['l22-25-21-wand']).toMatchObject({ arm: 'none', drop: ['primary'] });
+        expect(gateAt(25).arms).not.toContain('hasWand');
+        const u = TABLE.unwitnessed.filter((x) => x.arm === 'hasWand');
+        expect(u.map((x) => [x.level, x.blocked])).toEqual([[25, gateAt(25).blocked]]);
+        expect(u[0].says).toMatch(/Bobs/);
+        expect(u[0].followUp).toMatch(/l25-26-22-wand/);
+    });
+    it('refuses an unwitnessed entry the gate offers, one with a witness, one with no gate, and one with no why', () => {
+        const edit = (fn) => { const table = clone(TABLE); fn(table); return () => gatesOf(25, { table }); };
+        expect(edit((t) => { t.gates.find((g) => g.level === 25).arms.push('hasWand'); })).toThrow(/has no witness plan|named unwitnessed but the gate offers it/);
+        expect(edit((t) => { t.unwitnessed[0].arm = 'hasSword'; })).toThrow(/hasSword is named unwitnessed but the gate offers it/);
+        expect(edit((t) => { t.unwitnessed[0].blocked = 'N'; })).toThrow(/unwitnessed hasWand names L25 N, which no gate holds/);
+        expect(edit((t) => { delete t.unwitnessed[0].followUp; })).toThrow(/unwitnessed hasWand says no why or follow-up/);
+        expect(edit((t) => { t.unwitnessed[0].arm = 'hasFire'; })).toThrow(/unwitnessed arm hasFire has no witness arm/);
     });
 });
 
@@ -152,7 +176,7 @@ describe('stampNoHitDirectionalGates', () => {
 
 describe('the committed rules carry the gates and nothing else in those rooms', () => {
     const REGIONS = RULES.regions['1'];
-    const ITEM_OF_FLAG = { hasSword: 'Progressive Sword', hasSpear: 'Ghost Spear', hasShield: 'Progressive Shield' };
+    const ITEM_OF_FLAG = { hasSword: 'Progressive Sword', hasSpear: 'Ghost Spear', hasShield: 'Progressive Shield', hasWand: 'Wand' };
     const roomRegions = (n) => Object.keys(REGIONS).filter((r) => r === `level_${n}` || r.startsWith(`level_${n}__`));
     const isTrue = (rule) => rule === undefined || rule === null || rule.rule === 'True_';
 

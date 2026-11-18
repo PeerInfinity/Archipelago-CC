@@ -1,0 +1,859 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/procgenPipeline/regionAtlasCompiler.test.js [2m([22m[2m80 tests[22m[2m)[22m[32m 287[2mms[22m[39m
+[90mstderr[2m | frontend/modules/apworldEditor/regionContent.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/apworldEditor/regionContent.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/apworldEditor/regionContent.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/apworldEditor/regionContent.test.js [2m([22m[2m77 tests[22m[2m)[22m[33m 419[2mms[22m[39m
+[90mstdout[2m | frontend/modules/flashPanel/seedlingRandomizerWiring.test.js[2m > [22m[2mthe REAL stateManager builder, driven in node[2m > [22m[2manswers `locations` as a Map of name -> {id, item{name, player}}
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling", directory: "seedling"
+StateManager Loaded 19 item IDs
+StateManager Loaded 10 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 40 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 9 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling"
+StateManager Loaded logic module for: "Seedling"
+StateManager [Initialization] Creating canonical inventory for: Seedling
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+[90mstdout[2m | frontend/modules/flashPanel/seedlingRandomizerWiring.test.js[2m > [22m[2mthe REAL stateManager builder, driven in node[2m > [22m[2mand the whole load runs off it, for all three presets, with the census intact
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling", directory: "seedling"
+StateManager Loaded 19 item IDs
+StateManager Loaded 10 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 40 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 9 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling"
+StateManager Loaded logic module for: "Seedling"
+StateManager [Initialization] Creating canonical inventory for: Seedling
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+[90mstdout[2m | frontend/modules/flashPanel/seedlingRandomizerWiring.test.js[2m > [22m[2mthe REAL stateManager builder, driven in node[2m > [22m[2mand the whole load runs off it, for all three presets, with the census intact
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+ [32m✓[39m frontend/modules/seedlingDemo/levelSetExporter.test.js [2m([22m[2m45 tests[22m[2m)[22m[33m 11550[2mms[22m[39m
+     [33m[2m✓[22m[39m is deterministic — two calls produce the same document [33m 305[2mms[22m[39m
+     [33m[2m✓[22m[39m prints a byte-identical STDOUT twice, carrying the id the function stamps [33m 1228[2mms[22m[39m
+     [33m[2m✓[22m[39m REFUSES every generation flag by name, and still refuses `fixtures/` [33m 1106[2mms[22m[39m
+     [33m[2m✓[22m[39m writes a set with ZERO xml rooms and chunks with ZERO record rooms [33m 1251[2mms[22m[39m
+     [33m[2m✓[22m[39m --bundle writes a DETERMINISTIC zip beside the plain files, chunks excluded [33m 2778[2mms[22m[39m
+     [33m[2m✓[22m[39m --minify shrinks what is written and leaves STDOUT alone [33m 1016[2mms[22m[39m
+     [33m[2m✓[22m[39m REFUSES --bundle / --minify with no --out-dir, because neither touches STDOUT [33m 542[2mms[22m[39m
+     [33m[2m✓[22m[39m reproduces the regions, the boundary exits and the connections, 1:1 [33m 1663[2mms[22m[39m
+[90mstdout[2m | frontend/modules/flashPanel/seedlingRandomizerWiring.test.js[2m > [22m[2mthe REAL stateManager builder, driven in node[2m > [22m[2mand the whole load runs off it, for all three presets, with the census intact
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "seedling", directory: "seedling"
+StateManager Loaded 1 item IDs
+StateManager Loaded 11 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 1 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 21 exits
+StateManager [Initialization] Selecting logic module for game: "seedling"
+StateManager Loaded logic module for: "seedling"
+StateManager [Initialization] Creating canonical inventory for: seedling
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+[90mstdout[2m | frontend/modules/flashPanel/seedlingRandomizerWiring.test.js[2m > [22m[2mthe load sequence — overlay on, deliver, reset, overlay off[2m > [22m[2m⛓ WIND CUTSCENE — a teleport pushed and not yet begun: the delivery WAITS for its world, then sends
+[22m[39m[ap placement] swap-settle: waited 30 ms for a pushed teleport's world before the delivery (landed: true)
+
+[90mstdout[2m | frontend/modules/flashPanel/seedlingRandomizerWiring.test.js[2m > [22m[2mthe load sequence — overlay on, deliver, reset, overlay off[2m > [22m[2m⛓ WIND CUTSCENE — a world that never begins: bounded, then delivered anyway BY NAME
+[22m[39m[ap placement] swap-settle: waited 70 ms for a pushed teleport's world before the delivery (landed: false)
+
+ [32m✓[39m frontend/modules/flashPanel/seedlingRandomizerWiring.test.js [2m([22m[2m53 tests[22m[2m)[22m[33m 1456[2mms[22m[39m
+     [33m[2m✓[22m[39m and the whole load runs off it, for all three presets, with the census intact [33m 381[2mms[22m[39m
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-Bugz0I/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ [32m✓[39m scripts/procgen/boxLock.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 17643[2mms[22m[39m
+     [33m[2m✓[22m[39m lets exactly ONE of eight simultaneous takers hold the box; the rest refuse [33m 3188[2mms[22m[39m
+     [33m[2m✓[22m[39m serialises four QUEUED simultaneous takers — every one takes, no two hold at once [33m 8731[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a QUEUED taker die on SIGTERM — it never takes the box later [33m 2614[2mms[22m[39m
+     [33m[2m✓[22m[39m makes a REAL browser gate refuse before it spends anything [33m 553[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolveService.test.js [2m([22m[2m22 tests[22m[2m)[22m[33m 8413[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 bare (bait — ENEMIES), 150 walker ticks in: same keys, same end digest, the room HELD while the worker thinks [33m 1108[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: same keys, same end digest, the room HELD while the worker thinks [33m 1706[2mms[22m[39m
+     [33m[2m✓[22m[39m L12 (the solver's walk), 120 walker ticks in: same keys, same end digest, the room HELD while the worker thinks [33m 1231[2mms[22m[39m
+     [33m[2m✓[22m[39m a solve that runs out of its WORK budget DECLINES BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, and the walker takes the goal [33m 409[2mms[22m[39m
+     [33m[2m✓[22m[39m the BACKSTOP (default 300000 ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played [33m 328[2mms[22m[39m
+     [33m[2m✓[22m[39m decline → retry → SOLVED on the L6 W=71 leg (each retry named) [33m 572[2mms[22m[39m
+     [33m[2m✓[22m[39m a re-boot while the worker thinks: the answer is STALE — refuted, never played — and the goal re-solves [33m 620[2mms[22m[39m
+     [33m[2m✓[22m[39m the REAL worker: the dashless plan lands first as the PROVISIONAL answer, then the full plan (fewer ticks) settles [33m 690[2mms[22m[39m
+     [33m[2m✓[22m[39m Stop mid-solve (the REAL worker): terminated, the goal FAILS by name, the game steps again, and the next solve gets a FRESH worker and solves [33m 653[2mms[22m[39m
+     [33m[2m✓[22m[39m backstop OFF (0): a solve that never answers is still in flight past the old backstop's reach, until Stop [33m 307[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingAtlasDerivation.test.js [2m([22m[2m27 tests[22m[2m)[22m[33m 15399[2mms[22m[39m
+     [33m[2m✓[22m[39m rebuilds the committed atlas and its preset byte for byte, md5 unmoved [33m 14975[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/atlasOps.test.js [2m([22m[2m53 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingPlaythroughOverlay.test.js [2m([22m[2m47 tests[22m[2m)[22m[32m 96[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceLegs.test.js [2m([22m[2m32 tests[22m[2m)[22m[33m 782[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/vanillaOverlay.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 17814[2mms[22m[39m
+     [33m[2m✓[22m[39m is IDEMPOTENT — two builds are byte-equal and carry one stamped id [33m 8759[2mms[22m[39m
+     [33m[2m✓[22m[39m is byte-equal to a fresh build, and the SIZE is a measured literal [33m 4316[2mms[22m[39m
+     [33m[2m✓[22m[39m `--check` agrees with the committed bytes [33m 4264[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPlaythroughObstacleEvents.test.js [2m([22m[2m21 tests[22m[2m)[22m[33m 14127[2mms[22m[39m
+[90mstdout[2m | frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js[2m > [22m[2m⛓ PANEL-ROUTE — the plan in hand's tile path on the stream[2m > [22m[2mL6 bare (bait — ENEMIES), 150 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber
+[22m[39m[panel-route] L6 bare (bait — ENEMIES), 150 walker ticks in solve 1: pass dashless · 288 ticks · 15 cells · 0 dashes · 127 B · passRoutes - · posts 4 · with route 1 · dashesPressed 0 · map 6:17x5 · {"level":6,"cells":[[2,1],[3,1],[3,2],[4,2],[5,2],[5,3],[6,3],[7,3],[8,3],[9,3],[9,2],[10,2],[11,2],[12,2],[13,2]],"dashes":[]}
+
+[90mstdout[2m | frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js[2m > [22m[2m⛓ PANEL-ROUTE — the plan in hand's tile path on the stream[2m > [22m[2mL4 kit (hold + shove), 40 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber
+[22m[39m[panel-route] L4 kit (hold + shove), 40 walker ticks in solve 1: pass full · 227 ticks · 9 cells · 6 dashes · 122 B · passRoutes dashless · posts 9 · with route 7 · dashesPressed 6 · map 4:7x6 · {"level":4,"cells":[[1,1],[1,2],[1,3],[1,4],[2,4],[3,4],[3,3],[4,3],[4,2]],"dashes":[[1,1],[1,2],[1,3],[3,4],[3,3],[4,2]]}
+
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 11656[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress [33m 1916[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress [33m 2474[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: at 100 ms and at 1000 ms: the REQUEST, the plan, the digest and the shouldStop total are identical; only the envelope's rate differs [33m 2229[2mms[22m[39m
+     [33m[2m✓[22m[39m at most one post per the envelope's interval (default 100 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work [33m 982[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 bare (bait — ENEMIES), 150 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber [33m 1440[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: the final post's best.route is the posted plan's tile path; the plan (every field, its Maps and Sets) is the same bytes with no subscriber [33m 2588[2mms[22m[39m
+[90mstderr[2m | frontend/modules/flashPanel/flashSeedlingAtlasRoom.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/flashPanel/flashSeedlingAtlasRoom.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/flashPanel/flashSeedlingAtlasRoom.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/flashPanel/seedlingLogicalLinks.test.js [2m([22m[2m27 tests[22m[2m)[22m[33m 6100[2mms[22m[39m
+     [33m[2m✓[22m[39m a fresh build is byte-identical, and a partition that disagrees with its atlas is refused by name [33m 6059[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/flashSeedlingAtlasRoom.test.js [2m([22m[2m37 tests[22m[2m)[22m[33m 584[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 537[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/apPlacementRewriter.test.js [2m([22m[2m27 tests[22m[2m)[22m[33m 1223[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingRestartWarp.test.js [2m([22m[2m30 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+[90mstderr[2m | frontend/modules/flashPanel/seedlingEncounterBinding.test.js[2m > [22m[2m3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game's flag[2m > [22m[2m(32,4) checks Bob Boss (the Fire drop), (12,1) the Witch (the dark sword), (32,3) Times (the kill)
+[22m[39m[region atlas] the game moved from level 32 to level 12, which region "null" has no marked exit to. The atlas covers part of the map by design, so the AP region was NOT moved — mark this crossing in the Region Marking Tool to make it a real boundary.
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingEncounterBinding.test.js[2m > [22m[2m3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game's flag[2m > [22m[2m⛔ the RETIRED flag path: `hasFire` / `hasDarkSword` turning true checks NOTHING, in its own level or not
+[22m[39m[region atlas] the game moved from level 32 to level 12, which region "null" has no marked exit to. The atlas covers part of the map by design, so the AP region was NOT moved — mark this crossing in the Region Marking Tool to make it a real boundary.
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLevelSetDelivery.test.js[2m > [22m[2mthe ordering gate — the set goes in BEFORE the first region load[2m > [22m[2ma loadRegion arriving while the set is armed DELIVERS FIRST, then loads
+[22m[39m[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLevelSetDelivery.test.js[2m > [22m[2mthe ordering gate — the set goes in BEFORE the first region load[2m > [22m[2ma REFUSED delivery does not let the region load REACH THE BINDING
+[22m[39m[ap placement] the AP level set did NOT mount, so this region load would run on the vanilla rooms — botLoadLevels answered "error:nope" to chunk 1/9, and the non-final chunk of a delivery must answer "pending"
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLevelSetDelivery.test.js[2m > [22m[2mthe ordering gate — the set goes in BEFORE the first region load[2m > [22m[2ma glue with NO delivery reaches the binding and says nothing about placement
+[22m[39m[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLevelSetDelivery.test.js[2m > [22m[2mthe ordering gate — the set goes in BEFORE the first region load[2m > [22m[2mthe gate is idempotent across many loads — the set is delivered ONCE
+[22m[39m[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "null" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+ [32m✓[39m frontend/modules/flashPanel/seedlingLevelSetDelivery.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 2545[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/jsonSchemaCheck.test.js [2m([22m[2m39 tests[22m[2m)[22m[33m 1959[2mms[22m[39m
+     [33m[2m✓[22m[39m all 227 of them [33m 1884[2mms[22m[39m
+[90mstderr[2m | frontend/modules/apworldEditor/sidecarIssues.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/apworldEditor/sidecarIssues.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/apworldEditor/sidecarIssues.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/apworldEditor/sidecarIssues.test.js [2m([22m[2m49 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingEncounterBinding.test.js [2m([22m[2m24 tests[22m[2m)[22m[33m 17419[2mms[22m[39m
+     [33m[2m✓[22m[39m the staging carries {32,1}; the run builds the rock fallen; the encounter is mapped and solved (no arm leg) [33m 16513[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/campaignChain.test.js [2m([22m[2m19 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenPipeline/regionAtlasLevelWorld.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 26268[2mms[22m[39m
+     [33m[2m✓[22m[39m every region projects — the ghost rocks bind a rule strike (And of the fusion's items) [33m 3499[2mms[22m[39m
+     [33m[2m✓[22m[39m the CLASS beyond the preset: shoot=0 traps arm while pressed (L4), L67's shoot=1 trap has no rope, L39's refused rope is no row [33m 706[2mms[22m[39m
+     [33m[2m✓[22m[39m the projected L16 lane = the cells the atlas charged with the rope's event + the door tiles it leaves open [33m 11994[2mms[22m[39m
+     [33m[2m✓[22m[39m is byte-identical to its compile (make-seedling-playthrough-maze.mjs --check) [33m 9513[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolver.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 4155[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 bare: BAIT past the bobs (ENEMIES) from 150 walker ticks in → L7 [33m 484[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit: SHOVE + HOLD from 40 walker ticks in → L5 [33m 838[2mms[22m[39m
+     [33m[2m✓[22m[39m L12: a WALK the J2 walker cannot do (120 walker ticks in) → L36 [33m 460[2mms[22m[39m
+     [33m[2m✓[22m[39m the 3rd refutation of one goal FAILS it by name [33m 730[2mms[22m[39m
+     [33m[2m✓[22m[39m instant: one page tick plays the solved plan in a burst, and crosses [33m 372[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF ≡ the J2/J3 walk exactly: the same keys, states and events tick for tick (and the switch is inert) [33m 391[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeGameSpeed.test.js [2m([22m[2m28 tests[22m[2m)[22m[33m 7903[2mms[22m[39m
+     [33m[2m✓[22m[39m 1× (graphics on, microtask host): solved and played — L0 → L86, the chest checked, two items delivered, out to L0 [33m 597[2mms[22m[39m
+     [33m[2m✓[22m[39m 1× (graphics off, microtask host): solved and played — L0 → L86, the chest checked, two items delivered, out to L0 [33m 444[2mms[22m[39m
+     [33m[2m✓[22m[39m 2× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m 4× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 393[2mms[22m[39m
+     [33m[2m✓[22m[39m 2× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 324[2mms[22m[39m
+     [33m[2m✓[22m[39m 4× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m 4× with a SYNCHRONOUS host (answers inside the report): the same tick sequence as 1× [33m 638[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT m1 — the pre-speed loop (every due slot inside the frame callback) at 4×: a host answer lands a tick late, the pin goes red [33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT m2 — a host delivery applied one slot late at 4×: the pin goes red, from the delivery on [33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.25× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 318[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.5× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 315[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 1.5× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 3× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 420[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.25× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 325[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.5× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 309[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 16× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 305[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED — 1.5× with a SYNCHRONOUS host: the same tick sequence as 1× [33m 561[2mms[22m[39m
+[90mstderr[2m | frontend/modules/flashPanel/seedlingEventCollector.test.js[2m > [22m[2mthe region glue — the collector is the third reader of the reports[2m > [22m[2mthe FIRST region load reads botStatus once: a save where the rock is broken collects at load
+[22m[39m[region atlas] region "level_0__r7c6" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "level_0__r7c6" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingEventCollector.test.js[2m > [22m[2mthe region glue — the collector is the third reader of the reports[2m > [22m[2m⛔ NEVER ON REACHABILITY: a region load INTO the event's own region, flag not set, collects nothing
+[22m[39m[region atlas] region "level_0__r7c6" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "level_0__r11c19" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+ [32m✓[39m frontend/modules/flashPanel/seedlingEventCollector.test.js [2m([22m[2m25 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/entranceRetarget.test.js [2m([22m[2m21 tests[22m[2m)[22m[33m 669[2mms[22m[39m
+[90mstderr[2m | frontend/modules/mazeRoom/mazeMetaArt.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeMetaArt.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeMetaArt.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/mazeRoom/mazeMetaArt.test.js [2m([22m[2m34 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingCheckBinding.test.js [2m([22m[2m28 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingBossLockCensus.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/eventRoute.test.js [2m([22m[2m21 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingRandomizerEligibility.test.js [2m([22m[2m31 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyEventLocations.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 43025[2mms[22m[39m
+     [33m[2m✓[22m[39m certifies: L1 lands on the rock only once it is broken, and the event is priced by the strike [33m 3703[2mms[22m[39m
+     [33m[2m✓[22m[39m a mutant event rule (True_) is caught [33m 3104[2mms[22m[39m
+     [33m[2m✓[22m[39m certifies with no problem: the event priced from beside the tree, the landing in it only once burnt [33m 12101[2mms[22m[39m
+     [33m[2m✓[22m[39m mutants are caught: the gate dropped (the game lands IN the tree), and the event made free [33m 23696[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/sphereOrderLevels.test.js [2m([22m[2m35 tests[22m[2m)[22m[33m 124040[2mms[22m[39m
+     [33m[2m✓[22m[39m L2 + L3 compile and certify clean; the ghost action needs Fusion, Spear and Sword [33m 15507[2mms[22m[39m
+     [33m[2m✓[22m[39m L7 + L8 + L9: L8 → L9 is free in the world, as AP says; the levels certify clean [33m 814[2mms[22m[39m
+     [33m[2m✓[22m[39m r3c4 reaches r2c16 empty-handed; L94 certifies clean [33m 327[2mms[22m[39m
+     [33m[2m✓[22m[39m a per-sub-region world with no directional cell beside its ground carries no entry gates [33m 372[2mms[22m[39m
+     [33m[2m✓[22m[39m L0 + L86 certify clean; L86 -> L0 is free and its Chest is reached empty-handed [33m 3822[2mms[22m[39m
+     [33m[2m✓[22m[39m L12 certifies clean; the doorway's second lock is Red Key from r0c19, the stacked locks each their own item [33m 16632[2mms[22m[39m
+     [33m[2m✓[22m[39m the touched lock is a dead-end gate in its world; the stacked cell carries both events [33m 337[2mms[22m[39m
+     [33m[2m✓[22m[39m L30 + L32 certify clean; Bob Boss spills to (5,7), each priced by the weapon from the landing [33m 2862[2mms[22m[39m
+     [33m[2m✓[22m[39m L37 + L38 certify clean; the press for L39's wand lock is reached empty-handed [33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m the wand lock (9,37) is opened by the press alone; both doors are gated on it; L38 + L39 certify clean [33m 4046[2mms[22m[39m
+     [33m[2m✓[22m[39m the door (32,30) and every L40 crossing cell gated on Fire take Fire AND a weapon, the interior piece Fire alone; L38–L40 certify clean [33m 42753[2mms[22m[39m
+     [33m[2m✓[22m[39m a mutant world with the cells back at Fire alone is caught LOOSER, as before the ruling [33m 18539[2mms[22m[39m
+     [33m[2m✓[22m[39m L37 + L43 certify clean; Wand and Totem of Lacste each need Totem Shard ×5 [33m 543[2mms[22m[39m
+     [33m[2m✓[22m[39m L61–L64 certify clean; each press is reached empty-handed on its ButtonRoom's cell [33m 4593[2mms[22m[39m
+     [33m[2m✓[22m[39m L62's pole: its DarkTrap (7,13) is one obstacle, opened by the L63 press or a thrust from a stance on either side [33m 4197[2mms[22m[39m
+     [33m[2m✓[22m[39m L63's in-room poles are produced and carried: each event is a thrust from its stances, priced Ghost Spear [33m 4316[2mms[22m[39m
+     [33m[2m✓[22m[39m L89 + L91 + L92: the world climbs the fall on Swim×2, as the rules now charge; the cut's door-tile arrival is the one row [33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m L100–L102 certify clean; the event is r4c2's, a thrust from its stance (Ghost Spear) [33m 556[2mms[22m[39m
+     [33m[2m✓[22m[39m a mutant pole entry with no side is caught: the event goes back to the DarkTrap's sub-region [33m 379[2mms[22m[39m
+     [33m[2m✓[22m[39m the cut certifies with no problem; the world prices the water approach And(rock, Swim), as the rules now do [33m 739[2mms[22m[39m
+     [33m[2m✓[22m[39m the cut certifies with no problem; the finaldoor event costs the Watcher's talk [33m 913[2mms[22m[39m
+     [33m[2m✓[22m[39m a mutant lower row gated on the Seals alone reopens the row: the event priced without the talk [33m 371[2mms[22m[39m
+[90mstdout[2m | frontend/modules/regionView/regionViewModel.test.js[2m > [22m[2mdisplayGroupsOf — the displayRegionOf fold[2m > [22m[2msidecarIndex over a COMMITTED preset's real sidecar block (seedling_playthrough): 267 groups unfolded → 116 folded
+[22m[39mseedling_playthrough display groups: unfolded 267, folded 116
+
+ [32m✓[39m frontend/modules/regionView/regionViewModel.test.js [2m([22m[2m17 tests[22m[2m)[22m[32m 254[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceRouteCarry.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 908[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js [2m([22m[2m36 tests[22m[2m)[22m[32m 259[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeSeedlingLink.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 397[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeSidedOpeners.test.js [2m([22m[2m27 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m frontend/modules/regionMap/regionMap.test.js [2m([22m[2m26 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSave.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 1600[2mms[22m[39m
+     [33m[2m✓[22m[39m a reload restores (a)–(f): the broken L0 rock, keys, seals, totems, the slot order and the flags; the position is recorded, the player at the start [33m 1334[2mms[22m[39m
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLoopRestart.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLoopRestart.test.js[2m > [22m[2mend to end — procgenPlayer + glue + binding on the playthrough's rooms[2m > [22m[2m⛔ MENU START (the hypothesis case): the reset warps nobody; the replay's first move is the ONE teleport, to seedlingStartSpawn
+[22m[39m[centralRegistry] Registering public function 'getCurrentRegion' for gameState
+[centralRegistry] Registering public function 'getResolvedStartRegion' for procgenPlayer
+[centralRegistry] Registering public function 'retakeStartHop' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getActiveSubstrate' for procgenPlayer
+[centralRegistry] Registering public function 'getWarehouse' for procgenPlayer
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLoopRestart.test.js[2m > [22m[2mend to end — procgenPlayer + glue + binding on the playthrough's rooms[2m > [22m[2m⛓ SEEDLING START (the fixture): the reset puts the player back at seedlingStartSpawn — ONE teleport, gameState follows
+[22m[39m[centralRegistry] Registering public function 'getCurrentRegion' for gameState
+[centralRegistry] Registering public function 'getResolvedStartRegion' for procgenPlayer
+[centralRegistry] Registering public function 'retakeStartHop' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getActiveSubstrate' for procgenPlayer
+[centralRegistry] Registering public function 'getWarehouse' for procgenPlayer
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLoopRestart.test.js[2m > [22m[2mend to end — procgenPlayer + glue + binding on the playthrough's rooms[2m > [22m[2mSEEDLING START with loop mode OFF: nothing moves
+[22m[39m[centralRegistry] Registering public function 'getCurrentRegion' for gameState
+[centralRegistry] Registering public function 'getResolvedStartRegion' for procgenPlayer
+[centralRegistry] Registering public function 'retakeStartHop' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getActiveSubstrate' for procgenPlayer
+[centralRegistry] Registering public function 'getWarehouse' for procgenPlayer
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingLoopRestart.test.js[2m > [22m[2mend to end — procgenPlayer + glue + binding on the playthrough's rooms[2m > [22m[2m⛔ SEEDLING START whose first queued move ENTERS the start: the fallback declines, the move is the ONE teleport
+[22m[39m[centralRegistry] Registering public function 'getCurrentRegion' for gameState
+[centralRegistry] Registering public function 'getResolvedStartRegion' for procgenPlayer
+[centralRegistry] Registering public function 'retakeStartHop' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getActiveSubstrate' for procgenPlayer
+[centralRegistry] Registering public function 'getWarehouse' for procgenPlayer
+
+ [32m✓[39m frontend/modules/flashPanel/seedlingLoopRestart.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingEntranceShuffleLoad.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 1140[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingNoHitDirectionalGates.test.js [2m([22m[2m11 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingFootprints.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 3388[2mms[22m[39m
+     [33m[2m✓[22m[39m the playthrough generator runs with it: L0 (10,18) is open in its grid [33m 2858[2mms[22m[39m
+     [33m[2m✓[22m[39m the probe boots on the cells the atlas names: r10c7 for the pool, the L98 landing for the reverse [33m 490[2mms[22m[39m
+ [32m✓[39m scripts/procgen/probeSeedlingWallflyerNohit.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 1987[2mms[22m[39m
+     [33m[2m✓[22m[39m a staging boots on the landing holding exactly its arm, with no flag, key or switch of its own [33m 517[2mms[22m[39m
+     [33m[2m✓[22m[39m every kept plan lands in its room with no hit; the same keys with no item do not, where the arm is what clears the line [33m 1252[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingAtlasDoorCensus.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+[90mstderr[2m | frontend/modules/mazeRoom/mazeTileArt.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeTileArt.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeTileArt.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/mazeRoom/mazeTileArt.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m over every playable payload of the playthrough preset (116) [33m 351[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeVanillaDelivery.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 3572[2mms[22m[39m
+     [33m[2m✓[22m[39m after a mount (no run) the position statics read the last constructor's args — a door crossed in-run included; the level reads −1 [33m 379[2mms[22m[39m
+     [33m[2m✓[22m[39m … and walks on, solver-driven, L86 → L0 → L13 → L14 → L15 (since the fidelity L14 DETOUR rung the solver crosses L14 swordless; it declined there before) [33m 1929[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ §5.36 — the SAME rooms mounted as a set that names no provenance (kind GENERATED): the pit is admitted and SOLVED, the door SOLVED — the kind picks no producer [33m 390[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/mapDocumentPath.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 409[2mms[22m[39m
+     [33m[2m✓[22m[39m every preset that names a map_document names the DEFAULT [33m 366[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingErMode.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 44860[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla through the mode's compile hook is AP_1, byte for byte [33m 4752[2mms[22m[39m
+     [33m[2m✓[22m[39m sweep 'placed': live, never incomplete, refusals 9 → 6 [33m 9921[2mms[22m[39m
+     [33m[2m✓[22m[39m sweep 'events': live, never incomplete, refusals 0 → 0 [33m 8165[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeVerbs.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 1576[2mms[22m[39m
+     [33m[2m✓[22m[39m L30 (kit): the solver BREAKS the rock standing on the pit and falls → L31; the J2 walker alone stalls at the rock [33m 651[2mms[22m[39m
+     [33m[2m✓[22m[39m L11 chest (kit) [33m 334[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceSweep.test.js [2m([22m[2m39 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+[90mstderr[2m | frontend/modules/mazeRoom/mazeTileFallback.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeTileFallback.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeTileFallback.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/mazeRoom/mazeTileFallback.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 246[2mms[22m[39m
+[90mstdout[2m | scripts/procgen/seedlingPlaythroughLogicalLinks.test.js[2m > [22m[2mthe Sword keeps its sphere-0 route (PathFinder over the real StateManager)[2m > [22m[2mlevel_0__r7c6 -> level_10 in 9 hops, the stairs taken straight from r7c6
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+ [32m✓[39m scripts/procgen/seedlingPlaythroughLogicalLinks.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 10180[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingErSource.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 80297[2mms[22m[39m
+     [33m[2m✓[22m[39m the permissive bound is read off the compile's own layer and equals vanilla's (the bindings are the rooms build's) [33m 10215[2mms[22m[39m
+     [33m[2m✓[22m[39m resumed after shuffle on COLD hooks, it compiles the committed preset and never re-pools, re-classifies or re-compiles vanilla [33m 18565[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT: a resume whose pooled atlas is not this tree's build is refused by the Seedling hooks [33m 5734[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/regionLayoutResolve.test.js [2m([22m[2m13 tests[22m[2m)[22m[32m 293[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/countedRules.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 1675[2mms[22m[39m
+     [33m[2m✓[22m[39m mixed levels: Or(two Shields, Wand) beside a one-Shield gate — the minimal points and the emitted rule [33m 352[2mms[22m[39m
+     [33m[2m✓[22m[39m certifier: an event whose own rule counts is never held below that count (L71 shieldlock) [33m 590[2mms[22m[39m
+[90mstderr[2m | frontend/modules/flashPanel/seedlingGeneratedArm.test.js[2m > [22m[2mloadSeedlingGenerated over the headless spiral world
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingGeneratedArm.test.js[2m > [22m[2mloadSeedlingGenerated over the headless spiral world
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/flashPanel/seedlingGeneratedArm.test.js[2m > [22m[2mloadSeedlingGenerated over the headless spiral world
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+ [32m✓[39m frontend/modules/mazeRoom/mazeLiveMarkers.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingGeneratedArm.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 1333[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverPrefix.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 1279[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 (kit): hold + shove from 40 walker ticks in; the live page crosses to L5, end identical [33m 663[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 (bare): bait past the bobs from 150 walker ticks in; the live page crosses to L7, end identical [33m 413[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeSeedlingSprites.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 2255[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env [33m 489[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 492[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 869[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingArrivalSpawn.test.js [2m([22m[2m16 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/puzzleLocks.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 1718[2mms[22m[39m
+     [33m[2m✓[22m[39m the grid: the lock's cell gates both moves through it; the interior piece (30,30) reverts; the crossing piece and the tree keep the ruling [33m 1446[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeLongPlanWalk.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 8676[2mms[22m[39m
+     [33m[2m✓[22m[39m the pit leg from r0c19's door (Sword, Shield, Red Key): one solve, a plan past 1800 ticks, crossed to L21 [33m 8416[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/contentIdentity.test.js [2m([22m[2m30 tests[22m[2m)[22m[32m 118[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeEncounterLegWalk.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 14673[2mms[22m[39m
+     [33m[2m✓[22m[39m L32 Bob Boss (sword + shield): solved once as the encounter, DONE on the tick after the DROP {32,4} — not at the kill {32,3} [33m 11753[2mms[22m[39m
+     [33m[2m✓[22m[39m L12 Witch (sword + wand): solved once, DONE on the tick after {12,1} [33m 2882[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyLavaPulls.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 843[2mms[22m[39m
+[90mstdout[2m | scripts/procgen/seedlingErReachBinding.test.js[2m > [22m[2mrandomizeEntrances over the binding: E3's properties[2m > [22m[2mdeterministic per seed, and seed-sensitive
+[22m[39m[E4a] randomizeEntrances over AP_1 (50 stairs exits): seed 1 127 ms, seed 2 89 ms, seed 3 98 ms, seed 4 97 ms, seed 5 90 ms, seed 6 94 ms
+
+ [32m✓[39m scripts/procgen/seedlingErReachBinding.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 14102[2mms[22m[39m
+ [32m✓[39m scripts/procgen/derivedRulesProbe.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 11352[2mms[22m[39m
+     [33m[2m✓[22m[39m as ONE level world (the preset since tile-l12-one-world) none of its lock rows is copied; the two HAND sentinels stay [33m 932[2mms[22m[39m
+     [33m[2m✓[22m[39m the certifier AGREES on the Witch either way; only the echo label says the agreement is by construction [33m 9957[2mms[22m[39m
+     [33m[2m✓[22m[39m a sentinel compile leaves the producer's cached event layer alone: the true compile after it is unchanged [33m 317[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeConvertedLoad.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 472[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeConvertedLink.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeLinks.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/latchSandwich.test.js [2m([22m[2m15 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeEventGoalWalk.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 2226[2mms[22m[39m
+     [33m[2m✓[22m[39m L16's rope (the sword held): accepted, solved as clear-tag, DONE exactly when the game's flag {16,0} is set [33m 2170[2mms[22m[39m
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js[2m > [22m[2mMazeRoomUI — walking L15 across an in-world boundary[2m > [22m[2mwith the sword: break both rocks, push the block home, cross the held lock into r1c9 — state KEPT
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'gateSubstrateAction' not found for module 'loops'
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js[2m > [22m[2mMazeRoomUI — walking L15 across an in-world boundary[2m > [22m[2mwithout an item the lock stays shut: the move toward r1c9 is refused and no region move is published
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js[2m > [22m[2mMazeRoomUI — walking L15 across an in-world boundary[2m > [22m[2mthe loop-mode gate is asked BEFORE the step: a gated cross leaves the player on the near side
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js[2m > [22m[2mMazeRoomUI — walking L15 across an in-world boundary[2m > [22m[2ma replayed cross from the wrong region is refused by name
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeLevelWorld.test.js[2m > [22m[2mMazeRoomUI — walking L15 across an in-world boundary[2m > [22m[2ma FRESH entry into an alias region lands on that region's own entrance
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+[eventBus] Publisher mazeRoom not registered for event playback:snapshotUpdated. Call registerEventBusPublisher first.
+
+ [32m✓[39m frontend/modules/mazeRoom/mazeLevelWorld.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLightPole.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 29171[2mms[22m[39m
+     [33m[2m✓[22m[39m flag:L101:0 from ({ level: 101, x: 288, y: 240 }): ONE thrust, the pole activate, the flag on the ledger [33m 9057[2mms[22m[39m
+     [33m[2m✓[22m[39m flag:L101:0 from ({ level: 101, x: 32, y: 96 }): ONE thrust, the pole activate, the flag on the ledger [33m 872[2mms[22m[39m
+     [33m[2m✓[22m[39m lightpole-l101-ghost: the ghostsword arm, facing 1, from [7,4]; the plan is the tape key for key [33m 9453[2mms[22m[39m
+     [33m[2m✓[22m[39m lightpole-l101-spear: the spear arm, facing 0, from [7,4]; the plan is the tape key for key [33m 9271[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingKillLocks.test.js [2m([22m[2m18 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverRockLockMapper.test.js [2m([22m[2m23 tests[22m[2m)[22m[33m 3647[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (0) [33m 2715[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (1) [33m 897[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeBlockSinks.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 15983[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverTalkClearGoal.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m flag:L58:1 → talk, hitless, both of `doneTalking()`'s flags on the ledger [33m 388[2mms[22m[39m
+ [32m✓[39m scripts/procgen/mazeInputOutputSplit.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 30193[2mms[22m[39m
+     [33m[2m✓[22m[39m L49's necessary Swim (composed) is not copied: its exit is derived [33m 15849[2mms[22m[39m
+     [33m[2m✓[22m[39m L19: Boss Key 0's composed sealed-location charge is not copied; Shieldspire's LOCATION_GUARDS term is [33m 640[2mms[22m[39m
+     [33m[2m✓[22m[39m L82's CHARGED_DOORS term is copied (a hand input the world must carry) [33m 680[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT: an exit the hand terms do not name, planted in the hand source, IS carried — the read-back can fail [33m 694[2mms[22m[39m
+     [33m[2m✓[22m[39m RULE-LESS rows are planted too: L94's kept-plain crossing r2c16 <-> r3c4 (no access_rule, copied open) reads as an echo [33m 774[2mms[22m[39m
+     [33m[2m✓[22m[39m the analyzer's PRICING output does not move a payload byte (L12 one level world, L56 and L49 plain) [33m 603[2mms[22m[39m
+     [33m[2m✓[22m[39m every plain multi-sub-region level is one level world but one, kept per sub-region and saying why [33m 10104[2mms[22m[39m
+     [33m[2m✓[22m[39m the PLANTED compile takes the true compile's level-world decisions (a bound between L12's true and planted axes) [33m 840[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeSeedlingSkin.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 268[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/waterExits.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 9658[2mms[22m[39m
+     [33m[2m✓[22m[39m L89 r11c12 → r1c10 needs two Swims in the world, as AP says; the level certifies clean [33m 414[2mms[22m[39m
+     [33m[2m✓[22m[39m L54 (every crossing had been "not priced") certifies clean [33m 518[2mms[22m[39m
+     [33m[2m✓[22m[39m level_53 (9,13) is floor carrying the grid's own gate, and the level certifies clean [33m 625[2mms[22m[39m
+     [33m[2m✓[22m[39m level_71 (7,12) is floor carrying the grid's own gate, and the level certifies clean [33m 476[2mms[22m[39m
+     [33m[2m✓[22m[39m certifies clean, r11c19 striking its event rock from the arrival exit [33m 3116[2mms[22m[39m
+     [33m[2m✓[22m[39m its door to L86, in building1's doorway, is reached and priced [33m 3433[2mms[22m[39m
+     [33m[2m✓[22m[39m certifies clean alone, and with L46 the talk is priced (the yeti) [33m 377[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r5SwimCloseout.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 4730[2mms[22m[39m
+     [33m[2m✓[22m[39m W=70 through `solveSegment({prefix})` refuses BY NAME, not by the stack [33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m W=70 on the JS page declines by the exhausted ladder's name, not "Maximum call stack size exceeded" [33m 4421[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingLethalLandings.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 10163[2mms[22m[39m
+ [32m✓[39m scripts/procgen/deriveSeedlingWallflyerNohit.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 555[2mms[22m[39m
+     [33m[2m✓[22m[39m 'l25-22-26-none' t146-205: `tick` gives the model's player and every flyer, tick for tick [33m 311[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingProbeBoot.test.js [2m([22m[2m21 tests[22m[2m)[22m[33m 661[2mms[22m[39m
+     [33m[2m✓[22m[39m a bridge that never answers is a BootFault named bridge-never-ready, carrying the device-loss line count [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m a page that never becomes READY is NOT a retriable fault (it is not one of the two known ones) [33m 306[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingReturnToMenu.test.js [2m([22m[2m13 tests[22m[2m)[22m[32m 132[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyPocketTalk.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 22572[2mms[22m[39m
+     [33m[2m✓[22m[39m one named problem (r0c1 is entered on its dead end, east of the parked block); the pocket rows are excused or skipped by name [33m 11335[2mms[22m[39m
+     [33m[2m✓[22m[39m mutant: admit the pocket crossing free and the pocket arrival's pairs are problems again (the excuse is the admission) [33m 11159[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingInRoomPressGate.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m scripts/procgen/check-worldgen-package-sidecars.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 228[2mms[22m[39m
+ [32m✓[39m scripts/procgen/recordingRoute.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 5259[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ a route the chain does not walk in full (one step's crossing moved) [33m 2572[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ a route of another mode [33m 2677[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/encounterKillArms.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 994[2mms[22m[39m
+     [33m[2m✓[22m[39m L53: no problem at the event's room; with opens_from stripped, OPEN_L53 returns (the pocket fires the event again) [33m 897[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyInternalOnly.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 27893[2mms[22m[39m
+     [33m[2m✓[22m[39m L67 r3c2 (entered only from r6c11) is priced from r6c11; its own fresh-arrival rows are gone [33m 13369[2mms[22m[39m
+     [33m[2m✓[22m[39m a member with an AP entrance from outside its world keeps fresh-arrival pricing (L19 r1c1, from L20) [33m 593[2mms[22m[39m
+     [33m[2m✓[22m[39m L89's Feather (bound to its cheapest way, r1c10 by Swim) AGREES: no problem, nothing accepted, no permissive location [33m 3939[2mms[22m[39m
+     [33m[2m✓[22m[39m a STRICTER Feather row is a problem, accepted only by a permissive name [33m 6500[2mms[22m[39m
+     [33m[2m✓[22m[39m a LOOSER row on a permissive location is still a problem [33m 3393[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPlaythroughOffGridLock.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 9511[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenPipeline/regionAtlasMazeRopeRun.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 8811[2mms[22m[39m
+     [33m[2m✓[22m[39m the block-world pricer prices L16 r1c1 within its bound, and no rule names the rope's token [33m 8794[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/mazeLatchArt.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingLevelBake.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+[90mstdout[2m | frontend/modules/stateManager/core/entranceRandomization.load.test.js[2m > [22m[2mthe REAL StateManager keeps the data, per player[2m > [22m[2m`er` on each loaded exit, the slot's block, and both in the worker's static data
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "ER Fixture", directory: "undefined"
+StateManager Loaded 1 item IDs
+StateManager Loaded 2 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 1 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 3 exits
+StateManager [Initialization] Selecting logic module for game: "ER Fixture"
+StateManager Loaded logic module for: "ER Fixture"
+StateManager [Initialization] Creating canonical inventory for: ER Fixture
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+[90mstdout[2m | frontend/modules/stateManager/core/entranceRandomization.load.test.js[2m > [22m[2mthe REAL StateManager keeps the data, per player[2m > [22m[2ma slot without a block reads null, and an exit without `er` carries none
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "ER Fixture", directory: "undefined"
+StateManager Loaded 1 item IDs
+StateManager Loaded 2 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 1 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 3 exits
+StateManager [Initialization] Selecting logic module for game: "ER Fixture"
+StateManager Loaded logic module for: "ER Fixture"
+StateManager [Initialization] Creating canonical inventory for: ER Fixture
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+[90mstdout[2m | frontend/modules/stateManager/core/entranceRandomization.load.test.js[2m > [22m[2mreachability IGNORES `er` (the sphere evaluator and the stateManager)[2m > [22m[2mthe stateManager's reachable regions are identical
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+[90mstdout[2m | frontend/modules/stateManager/core/entranceRandomization.load.test.js[2m > [22m[2mreachability IGNORES `er` (the sphere evaluator and the stateManager)[2m > [22m[2mthe stateManager's reachable regions are identical
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+
+ [32m✓[39m frontend/modules/stateManager/core/entranceRandomization.load.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 345[2mms[22m[39m
+[90mstdout[2m | frontend/modules/stateManager/core/eventKinds.test.js[2m > [22m[2mthe REAL stateManager reachability pass, in node[2m > [22m[2ma reachable game_state event is NOT collected: neither checked nor in the inventory
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+StateManager [InventoryManager] addItemToInventory: Added "Progressive Sword" x1 (canonical format)
+StateManager [ReachabilityEngine] Cache invalidated.
+
+[90mstdout[2m | frontend/modules/stateManager/core/eventKinds.test.js[2m > [22m[2mthe REAL stateManager reachability pass, in node[2m > [22m[2mfail-closed: an UNKNOWN kind is not collected either
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+StateManager [InventoryManager] addItemToInventory: Added "Progressive Sword" x1 (canonical format)
+StateManager [ReachabilityEngine] Cache invalidated.
+
+[90mstdout[2m | frontend/modules/stateManager/core/eventKinds.test.js[2m > [22m[2mthe REAL stateManager reachability pass, in node[2m > [22m[2mthe same events with NO kind are auto-collected, as every event before this slice
+[22m[39mStateManager Instance created with injected logger.
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [Initialization] Loading JSON for player 1...
+StateManager Player ID set to: 1
+StateManager [Initialization] Game name: "Seedling Playthrough", directory: "seedlingplaythrough"
+StateManager Loaded 61 item IDs
+StateManager Loaded 267 regions into Map
+StateManager Loaded 0 dungeons into Map
+StateManager Linked regions to dungeon objects
+StateManager [Initialization] Initialized prog_items structure
+StateManager Processed 89 locations into Map
+StateManager [Initialization] Populating exits...
+StateManager Processed 829 exits
+StateManager [Initialization] Selecting logic module for game: "Seedling Playthrough"
+StateManager Loaded logic module for: "Seedling Playthrough"
+StateManager [Initialization] Creating canonical inventory for: Seedling Playthrough
+StateManager No starting items, ensuring initial computation
+StateManager [Initialization] Reset events in gameStateModule.
+StateManager [Initialization] loadFromJSON completed.
+StateManager [InventoryManager] addItemToInventory: Added "Progressive Sword" x1 (canonical format)
+StateManager [ReachabilityEngine] Cache invalidated.
+StateManager [ReachabilityEngine] Auto-collected event item: L0 flag 1: breakablerock@288,176 cleared from L0 flag 1: breakablerock@288,176 cleared
+StateManager [ReachabilityEngine] Auto-collected event item: L0 flag 4: breakablerock@80,112 cleared from L0 flag 4: breakablerock@80,112 cleared
+StateManager [ReachabilityEngine] Auto-collected event item: L16 flag 0: rope@32,16 cleared from L16 flag 0: rope@32,16 cleared
+StateManager [ReachabilityEngine] Auto-collected event item: L18 flag 0: lock@144,112 cleared from L18 flag 0: lock@144,112 cleared
+
+ [32m✓[39m frontend/modules/stateManager/core/eventKinds.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 454[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingLocationRebind.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstderr[2m | frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:251:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:119:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js
+[22m[39m[discoveryState] [DiscoveryState] Constructed
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js[2m > [22m[2mmaze-seedling-art-2: an in-place edit rebakes the Seedling room[2m > [22m[2ma render without an edit is a hit (one bake per world)
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js[2m > [22m[2mmaze-seedling-art-2: an in-place edit rebakes the Seedling room[2m > [22m[2merasing the maze's rock rebakes the room WITH the level's rock (the maze no longer draws it)
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+
+[90mstderr[2m | frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js[2m > [22m[2mmaze-seedling-art-2: an in-place edit rebakes the Seedling room[2m > [22m[2ma wall drawn by the editor is painted over the art; erasing it again rebakes clean
+[22m[39m[centralRegistry] Public function 'getActiveSubstrate' not found for module 'procgenPlayer'
+
+ [32m✓[39m frontend/modules/mazeRoom/mazeSeedlingArtEdit.test.js [2m([22m[2m3 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyLandingArrivals.test.js [2m([22m[2m8 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m scripts/procgen/surveyPreset.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 448[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPlaythroughEntryGateFloor.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 12582[2mms[22m[39m
+     [33m[2m✓[22m[39m exactly L50 and L52: no binding reaches a dry cell, and every binding stands on Swim water [33m 628[2mms[22m[39m
+     [33m[2m✓[22m[39m none uncharged, over the ways in it actually inspected (not vacuous) [33m 603[2mms[22m[39m
+     [33m[2m✓[22m[39m a door that lands dry (no rule) is named, with its level [33m 544[2mms[22m[39m
+     [33m[2m✓[22m[39m an Or with a Swim-free branch is NOT a charge; an And carrying Swim is [33m 886[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingRockFireNarrowing.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 3739[2mms[22m[39m
+     [33m[2m✓[22m[39m no holder entry a parked kill-needing body holds carries Fire, and the census reads no TIGHTER row [33m 3677[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPatchedSet.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 4942[2mms[22m[39m
+     [33m[2m✓[22m[39m a fresh partition: the rock's footprint is r7c6 (the start hub) in the playthrough and NO sub-region in the starter atlas [33m 4915[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingArrivalEscape.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m frontend/modules/presets/rulesJsonWriters.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 2916[2mms[22m[39m
+     [33m[2m✓[22m[39m is byte-identical on every committed document WITHOUT sidecar tiles [33m 2840[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingCalibLevels.test.js [2m([22m[2m10 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyLandingGates.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 141[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingRockOwnEvent.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 2128[2mms[22m[39m
+     [33m[2m✓[22m[39m every minted obstacle event is an event location of the compiled AP_1 (both presets) [33m 441[2mms[22m[39m
+     [33m[2m✓[22m[39m every credited rock event is minted, and the credit is not empty (L0's in-rock rocks) [33m 1682[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBindings.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+ [32m✓[39m frontend/modules/mazeRoom/tileSpike/certifyLandingCells.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingSphereOrderEvents.test.js [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPresetHasNames.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPlaythroughWaterfallDoor.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 12772[2mms[22m[39m
+     [33m[2m✓[22m[39m the census: two departures stand on a fall — L89 up it (from S), L91 down it (from N) [33m 908[2mms[22m[39m
+     [33m[2m✓[22m[39m the one reached only by climbing is charged the Feather; the one reached going down only the Swim [33m 837[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingPlaythroughNecessaryDoors.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 10028[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m121 passed[39m[22m[90m (121)[39m
+[2m      Tests [22m [1m[32m2132 passed[39m[22m[90m (2132)[39m
+[2m   Start at [22m 05:39:55
+[2m   Duration [22m 371.69s[2m (transform 12.29s, setup 8.57s, import 302.90s, tests 781.80s, environment 16ms)[22m
+
+
+real	6m13.118s
+user	20m26.177s
+sys	0m57.654s

@@ -384,7 +384,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_22__r8c0 -> level_22__r0c6", player),
-        HasAny('Progressive Sword', 'Ghost Spear', 'Progressive Shield')
+        HasAny('Progressive Sword', 'Ghost Spear', 'Progressive Shield', 'Wand')
     )
 
     world.set_rule(

@@ -1,12 +1,14 @@
 // actionNodes/actionGraphCompiler — the compiled world, its A6 proof, and the committed preset.
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    ACTION_COMPILE_REFUSALS, ACTION_NODES_SUBSTRATE_ID, ACT_ACTION, compileActionGraph, placementsFromRules,
+    ACTION_COMPILE_REFUSALS, ACTION_NODES_DISCOVERY_BUNDLE, ACTION_NODES_SUBSTRATE_ID, ACT_ACTION, compileActionGraph,
+    placementsFromRules,
 } from './actionGraphCompiler.js';
+import { ACTION_NODES_BUNDLE, readWorldDiscoveryMode } from '../discovery/worldDiscoveryMode.js';
 import { buildActionModel } from './actionModel.js';
 import { resolvedBoostOf } from './actionGraph.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
@@ -16,13 +18,15 @@ import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { sidecarFieldsOf, sidecarPayloadErrors } from '../procgenCore/sidecarFields.js';
 import { substrateRegistryEntry } from './actionNodesLibrary.js';
+import { DEFAULT_EXISTS, DEFAULT_GRAPH, DEFAULT_OUT } from '../../../scripts/procgen/action-nodes-compile.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '../../..');
 const GRAPH_PATH = 'frontend/modules/actionNodes/graphs/example-village.json';
 const PRESET_PATH = 'frontend/presets/action_nodes_example/AP_1/AP_1_rules.json';
 const EXAMPLE = JSON.parse(readFileSync(join(REPO, GRAPH_PATH), 'utf8'));
-const { rules, report } = compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH });
+// The CLI's own recipe for the committed preset (action-nodes-compile.mjs with no arguments).
+const { rules, report } = compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH, exists: [...DEFAULT_EXISTS] });
 const P = '1';
 const model = buildActionModel(EXAMPLE);
 const allLocations = Object.values(rules.regions[P]).flatMap((r) => r.locations);
@@ -43,11 +47,40 @@ describe('the compiled world', () => {
     it('validates against rules.schema.json', () => {
         expect(rulesJsonSchemaErrors(rules, loadRulesSchema())).toEqual([]);
     });
-    it('one region per node plus Menu; one exit per `after` edge', () => {
+    it('one region per node plus Menu; TWO exits per `after` edge (forward + reverse), plus Menu → start', () => {
         expect(Object.keys(rules.regions[P]).sort()).toEqual(['Menu', ...Object.keys(EXAMPLE.nodes)].sort());
         const edges = Object.values(EXAMPLE.nodes).reduce((n, node) => n + new Set((node.after ?? []).flat()).size, 0);
         const exits = Object.values(rules.regions[P]).reduce((n, r) => n + r.exits.length, 0);
-        expect(exits).toBe(edges + 1);
+        expect(exits).toBe(2 * edges + 1);
+    });
+    it('⛓ two-way edges: each `after` edge A→B is a gated forward exit and an UNGATED reverse exit B→A', () => {
+        const exitOf = (from, to) => rules.regions[P][from].exits.find((e) => e.connected_region === to);
+        let pairs = 0;
+        for (const [b, node] of Object.entries(EXAMPLE.nodes)) {
+            for (const a of new Set((node.after ?? []).flat())) {
+                pairs += 1;
+                expect(exitOf(a, b), `${a} -> ${b}`).toBeTruthy();
+                const back = exitOf(b, a);
+                expect(back, `${b} -> ${a}`).toBeTruthy();
+                expect(back.access_rule).toEqual({ rule: 'True_' });
+                const payloadBack = rules.preset_sidecars[P][b].playable_payload.exits.find((e) => e.targetRegion === a);
+                expect(payloadBack.reverse).toBe(true);
+                const payloadFwd = rules.preset_sidecars[P][a].playable_payload.exits.find((e) => e.targetRegion === b);
+                expect(payloadFwd.reverse).toBeUndefined();
+            }
+        }
+        // No other exit: no return-to-start exit, nothing back to Menu (reaching the start is the Menu → start hop).
+        const nodeExits = Object.entries(rules.regions[P]).filter(([r]) => r !== 'Menu').reduce((n, [, r]) => n + r.exits.length, 0);
+        expect(nodeExits).toBe(2 * pairs);
+        for (const r of Object.values(rules.regions[P])) expect(r.exits.some((e) => e.connected_region === 'Menu')).toBe(false);
+    });
+    it('⛓ the world names the discovery module\'s actionNodes bundle, and it reads back as that mode', () => {
+        expect(rules.discovery_mode[P]).toEqual({ enabled: true, bundle: ACTION_NODES_DISCOVERY_BUNDLE });
+        expect(ACTION_NODES_DISCOVERY_BUNDLE).toBe(ACTION_NODES_BUNDLE);
+        expect(readWorldDiscoveryMode(rules, P)).toBe(ACTION_NODES_BUNDLE);
+    });
+    it('the world states its back-exits are LISTED, not assumed (assume_bidirectional_exits: false)', () => {
+        expect(rules.exporter[P].assume_bidirectional_exits).toBe(false);
     });
     it('a location per check node, and the goal holds Victory, locked', () => {
         const checks = Object.values(EXAMPLE.nodes).filter((n) => n.kind === 'check').map((n) => n.name);
@@ -108,9 +141,20 @@ describe('the compiled world', () => {
         expect(block.goal).toBe(Object.keys(EXAMPLE.nodes).find((k) => EXAMPLE.nodes[k].kind === 'goal'));
         expect(block.action).toBe(ACT_ACTION);
     });
-    it('the graph\'s provenance travels with the world', () => {
-        expect(rules.provenance[P].graph_provenance).toEqual(EXAMPLE.provenance);
+    it('⛓ the committed world names its PACKS, not its graph\'s provenance block (Z.7, AN-1b)', () => {
+        expect(rules.provenance[P].exists).toEqual([...DEFAULT_EXISTS]);
+        expect('graph_provenance' in rules.provenance[P]).toBe(false);
         expect(rules.procgen_metadata[P].graph_path).toBe(GRAPH_PATH);
+        expect([DEFAULT_GRAPH, DEFAULT_OUT]).toEqual([GRAPH_PATH, PRESET_PATH]);
+        for (const id of DEFAULT_EXISTS) expect(existsSync(join(REPO, 'frontend/packs', id)), id).toBe(true);
+    });
+    it('a graph compiled with no packs named carries its own provenance block, as before', () => {
+        const bare = compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH }).rules;
+        expect(bare.provenance[P].graph_provenance).toEqual(EXAMPLE.provenance);
+        expect('exists' in bare.provenance[P]).toBe(false);
+        // …and only the provenance block differs
+        const strip = (d) => { const c = structuredClone(d); delete c.provenance; return stringifyRulesJson(c); };
+        expect(strip(bare)).toBe(strip(rules));
     });
 });
 
@@ -135,6 +179,6 @@ describe('⛓ the A6 proof', () => {
         expect(() => compileActionGraph(g)).toThrow(/fill-failed|goal-not-in-logic/);
     });
     it('is deterministic for a seed', () => {
-        expect(stringifyRulesJson(compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH }).rules)).toBe(stringifyRulesJson(rules));
+        expect(stringifyRulesJson(compileActionGraph(EXAMPLE, { graphPath: GRAPH_PATH, exists: [...DEFAULT_EXISTS] }).rules)).toBe(stringifyRulesJson(rules));
     });
 });

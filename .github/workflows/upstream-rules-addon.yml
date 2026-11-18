@@ -10,6 +10,9 @@ name: upstream-rules-addon
 
 on:
   push:
+    # A landing train (js-land/*) carries slices already gated on their own branch; main and slice-branch
+    # pushes that touch the paths below still run it (⚖ Robert 2026-11-17, "Yes, skip trains").
+    branches-ignore: ['js-land/**']
     paths:
       - 'worlds/upstream_rules_addon/**'
       - 'apworlds/upstream_rules_addon.apworld'

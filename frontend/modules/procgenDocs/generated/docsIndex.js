@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 30,
-        "headings": 1326,
+        "headings": 1332,
         "indexHeadings": 2,
-        "lines": 36663,
+        "lines": 36778,
         "pages": 4,
-        "words": 557290
+        "words": 559931
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 26,
-            "lines": 354,
+            "lines": 356,
             "links": [
                 "action-nodes.md",
                 "architecture.md",
@@ -74,7 +74,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 8837
+            "words": 9017
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -141,10 +141,10 @@ export const DOCS_INDEX = frz({
             "file": "region-layout.md",
             "h1": "Region Layout",
             "headings": 6,
-            "lines": 63,
+            "lines": 70,
             "links": [],
             "path": "docs/json/developer/procgen/region-layout.md",
-            "words": 1085
+            "words": 1403
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
@@ -299,7 +299,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 7705
+            "words": 7706
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
@@ -321,14 +321,14 @@ export const DOCS_INDEX = frz({
             "description": "The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical.",
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
-            "headings": 12,
-            "lines": 127,
+            "headings": 13,
+            "lines": 155,
             "links": [
                 "concepts.md",
                 "flash.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2111
+            "words": 2480
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
@@ -351,8 +351,8 @@ export const DOCS_INDEX = frz({
             "description": "The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop.",
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
-            "headings": 10,
-            "lines": 93,
+            "headings": 12,
+            "lines": 108,
             "links": [
                 "architecture.md",
                 "gotchas.md",
@@ -360,14 +360,14 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 2382
+            "words": 2993
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 38,
-            "lines": 868,
+            "lines": 874,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -377,7 +377,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 55787
+            "words": 56265
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -405,8 +405,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 783,
-            "lines": 28294,
+            "headings": 786,
+            "lines": 28351,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -414,7 +414,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 316739
+            "words": 317423
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",

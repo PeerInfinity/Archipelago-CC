@@ -558,6 +558,14 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   
   // Store the API for access by loopUI
   _gameStateAPI = gameStateAPI;
+
+  // A substrate that declares `loopSupport.strictQueueActions` (ActionNodes)
+  // refuses a custom action its `queueActions` does not list AT QUEUE TIME,
+  // whatever control queued it (strictQueueActions.js). Every other region is
+  // waved through by the guard, exactly as before.
+  initializationApi.getModuleFunction('gameState', 'setCustomActionGuard')?.(
+    (actionName, regionName) => loopStateSingleton.customActionRefusal(actionName, regionName),
+  );
   
   if (!gameStateAPI.getPath) {
     log('error', '[Loops Module] Could not get gameState API functions');

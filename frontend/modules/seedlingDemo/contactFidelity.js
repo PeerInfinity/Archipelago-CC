@@ -2062,6 +2062,66 @@ export const CONTACT_FIDELITY = {
      * (⚖ user, planning-21's session; licence bound to this flip's SHA). `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`.
      */
     wallFlyerCorpseGone: true,
+    /**
+     * fidelity DARKSUITSTATIC D2 (wave 46) — THE DARK SUIT RETALIATES INTO A STATIC BODY. `Player.hit` calls
+     * `if (e && hasDarkSuit) e.hit(darkSuitForce 1, new Point(x, y), darkSuitDamage 1, "Suit")` inside its own gate
+     * (`Player.as:1384-1387`), and `Enemy.hitPlayer` passes the body as `e` (`p.hit(this, 3, …)`, `Enemies/Enemy.as:
+     * 211-221`). The static scan (`levelRun.stepContactsNow`) passed no `retaliate`, so every static contact under the
+     * suit was refused by name (`playerHit`'s `byEnemy`) — met by hammer at L63 `darktrap@128,272`. D1's census of the
+     * scan's classes (`IceTrap`, `SandTrap`, `DarkTrap`, and `Turret` relabelled by `STATIC_SWORD_ARM`), from the AS3:
+     * `DarkTrap.hit` is EMPTY (`Enemies/DarkTrap.as:56-59`) and `IceTrap` sets `canHit = false` (`Enemies/IceTrap.as:32`,
+     * `Enemy.as:147`) — no effect; `SandTrap` takes `Enemy.hit` (empty `knockback`) on F4's damage row: hits, the
+     * 30-tick i-frames that gate its own `hitPlayer`, the `hitByDarkStuff` latch, and a third hit's "die" staged as the
+     * sword arm stages it plus the one graphic step `World.update` gives a blow inside the body's own update. `Turret`
+     * is NOT declared: its fire gate reads `hitsTimer` after `super.update()` (`Enemies/Turret.as:45-79`) and the model
+     * steps that half above the scan, so it stays refused, and the refusal now says why. ON: the scan passes the
+     * declared `retaliate`, and the row lands in `playerHits[].retaliation`. OFF: byte-identical.
+     * `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    darkSuitStaticRetaliation: false,
+    /**
+     * fidelity L39HIT D2 (wave 47) — A SPINNER FORECAST STEPS THE ROOM'S PULSERS, AND THEIR PULSE HITS ITS BODIES.
+     *
+     * `Pulser.hit` (`Pulser.as:87-116`) collects every "Enemy" within `radiusHit` 22 and calls `Enemy.hit(force 6,
+     * pulser point, damage 1, "Pulse")` (`Enemy.as:141-181`: `hits += 1`, `hitsTimer` 30, an atan2 knockback), and a
+     * pulser whose group latched pulses forever. `advance` steps that (`levelRun.stepPulsersNow`'s enemy arm, after the
+     * bodies: `Game.as:2357` adds the pulser before `:2416` the spinner, and `World.addUpdate` prepends), but every
+     * spinner FORECAST stepped only the bodies, so a body a periodic pulse was about to shove stayed on its old line.
+     * MEASURED (L39, the seed-1 whole-game walk's 2864 t dashless plan, rebuilt at seam 30036 and game-witnessed on a
+     * fresh p4g page at 0 px): `pulser@64,96` hits `spinner@112,88` at t1317; the walk segment's forecast (cut at t1310)
+     * is 5.75 px off from t1318 and ~88 px off at t1522, where the walk took the body's hammer (`Spinner.as:66-76`,
+     * `Player.hit`), on the game and in the model alike, with 0 hits billed. ON: `levelRun.spinnerForecast` steps the
+     * room's pulsers after the bodies on every row (armed as now: latched, or pressed by the player's box now) and
+     * applies their enemy arm (`hitSpinner`); such a forecast is never shifted. OFF: byte-identical. ⛔ OFF by default
+     * (no licence); `SEEDLING_PULSER_FORECAST_PULSE=0|1` for a node measurement.
+     */
+    pulserForecastPulse: false,
+    /**
+     * fidelity DARKSUITBOSSES D2 (wave 48) — THE DARK SUIT RETALIATES INTO A BOSS. `Player.hit` calls
+     * `if (e && hasDarkSuit) e.hit(darkSuitForce 1, new Point(x, y), darkSuitDamage 1, "Suit")` inside its own gate
+     * (`Player.as:1384-1387`). Four boss arms passed `e` and no `retaliate`, so under the suit each was refused by name
+     * (`playerHit`'s `byEnemy`). D1's census, from the AS3 (each `e` is the boss itself):
+     *   · `shieldBossStab`: `ShieldBoss.hitPlayer` → `p.hit(this, swingForce, …)` on the "stab" frames 5-8
+     *     (`Enemies/ShieldBoss.as:105-114`). `ShieldBoss.hit` (`:130-151`) arms first (`if (!activated) { activated = true;
+     *     return; }`); armed, the anim is "stab", so it takes the `playedSound`/`startStab(true)` arm, and `startStab`
+     *     needs "sit" (`:172`): a no-op. ON: `shieldBossTakesHit(…, t 'Suit')` on the model's row, between the entity
+     *     step and its graphic step, as in the game.
+     *   · `bobBoss` (body `Enemy.hitPlayer`, swords `BobSoldier.swordHitting`, `Enemies/BobSoldier.as:160-172`):
+     *     `BobBoss.hit` (`Enemies/BobBoss.as:163-175`) re-seeds form 2's blades, then `Enemy.hit(0, null, d, "Suit")`:
+     *     hits, i-frames, the `hitByDarkStuff` latch, a kill's `destroy` (`bobBossHit`). ON (with the suit): the bill
+     *     lands INSIDE `stepBobBossBody` (its `onPlayerHit`), so the re-seed precedes `spin` and the later sword lines
+     *     as it does in `BobSoldier.update`.
+     *   · `bossBody`: `Enemy.hitPlayer` from `BossTotem.update`'s `super.update()` (`Enemies/BossTotem.as:301`).
+     *     `BossTotem.hit` (`:719-725`) → `Enemy.hit`: `onlyHitBy = "Wand"` (`:262`) and `justKnock` false
+     *     (`Enemy.as:42`, `:149-180`), and `knockback` is empty (`:727`). A no-op row.
+     *   · `owlBody` is NOT declared. `FinalBoss.hit` is `Enemy.hit`; `onlyHitBy = "Lava"` and `justKnock` (`Enemies/
+     *     FinalBoss.as:61-62`), so a "Suit" hit is `knockback(1, p)` into `v` inside `super.update()`, and the phase
+     *     arms then read `v.length` (`:126-155`). The model bills the contact AFTER `stepFinalBoss`'s arms, so it stays
+     *     refused, and the refusal now says why.
+     * The row lands in `playerHits[].retaliation`. OFF: byte-identical. `SEEDLING_DARK_SUIT_BOSS_RETALIATION=0|1`.
+     * ⛔ OFF by default (no flip licence).
+     */
+    darkSuitBossRetaliation: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2468,6 +2528,15 @@ if (globalThis.process?.env?.SEEDLING_CORRIDOR_FORECAST_MEMO === '0') CONTACT_FI
 // ⛓ fidelity WALLFLYERCORPSE D2: `SEEDLING_WALLFLYER_CORPSE_GONE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '1') CONTACT_FIDELITY.wallFlyerCorpseGone = true;
 if (globalThis.process?.env?.SEEDLING_WALLFLYER_CORPSE_GONE === '0') CONTACT_FIDELITY.wallFlyerCorpseGone = false;
+// ⛓ fidelity DARKSUITSTATIC D2: `SEEDLING_DARK_SUIT_STATIC_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '1') CONTACT_FIDELITY.darkSuitStaticRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_STATIC_RETALIATION === '0') CONTACT_FIDELITY.darkSuitStaticRetaliation = false;
+// ⛓ fidelity L39HIT D2: `SEEDLING_PULSER_FORECAST_PULSE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '1') CONTACT_FIDELITY.pulserForecastPulse = true;
+if (globalThis.process?.env?.SEEDLING_PULSER_FORECAST_PULSE === '0') CONTACT_FIDELITY.pulserForecastPulse = false;
+// ⛓ fidelity DARKSUITBOSSES D2: `SEEDLING_DARK_SUIT_BOSS_RETALIATION=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '1') CONTACT_FIDELITY.darkSuitBossRetaliation = true;
+if (globalThis.process?.env?.SEEDLING_DARK_SUIT_BOSS_RETALIATION === '0') CONTACT_FIDELITY.darkSuitBossRetaliation = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

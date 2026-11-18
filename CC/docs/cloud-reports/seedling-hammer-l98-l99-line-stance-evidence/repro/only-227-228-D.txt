@@ -1,0 +1,3 @@
+== step 227 — L98 ... SOLVED 520 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 9159 ms
+== step 228 — L99 ... REFUSED — solverBot(survey-step-228): the player DIED at run t484 in level 99 (lavachain@80,64; the hits before it: lavachain@80,64 at t394, lavachain@80,64 at t414, lava
+## HEADLINE: 1/2 route steps SOLVE today

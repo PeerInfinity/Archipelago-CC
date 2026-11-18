@@ -1,0 +1,73 @@
+== base-on-l40.jsonl
+L39 5215 OK  1167 hits 0 dashless:1259@721 full:1167@779 95e4b43df7b0 35s deep=134 cut=- spentS=- 
+L39 5216 OK  1165 hits 0 dashless:1360@727 full:1165@783 f8584f0ed43b 33s deep=134 cut=- spentS=- 
+L39 5217 OK  1165 hits 0 dashless:1360@727 full:1165@783 f8584f0ed43b 34s deep=134 cut=- spentS=- 
+L39 5218 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 35s deep=134 cut=- spentS=- 
+L39 5219 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 33s deep=134 cut=- spentS=- 
+L39 5220 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 33s deep=134 cut=- spentS=- 
+L39 5221 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 34s deep=134 cut=- spentS=- 
+L39 5222 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 35s deep=134 cut=- spentS=- 
+L39 5223 OK  1222 hits 0 dashless:1270@726 full:1222@733 a904378d42d4 35s deep=134 cut=- spentS=- 
+L39 5224 OK  1285 hits 0 dashless:1366@800 full:1285@766 6287c7692431 28s deep=134 cut=- spentS=- 
+L39 5225 OK  1636 hits 0 dashless:1720@786 full:1636@856 f90b8e0581d6 146s deep=9944 cut=- spentS=- 
+L39 5226 OK  1302 hits 0 dashless:1359@752 full:1302@838 2662b97d4803 29s deep=134 cut=- spentS=- 
+L39 5227 OK  1636 hits 0 dashless:1720@786 full:1636@856 f90b8e0581d6 143s deep=7028 cut=- spentS=- 
+L39 5228 REF - hits 0 dashless:refusal@72 full:refusal@72 - 200s deep=436 cut=- spentS=- no step out at (745.71,792.86)
+L39 5229 OK  1253 hits 0 dashless:1330@797 full:1253@892 1ad0afea7028 29s deep=122 cut=- spentS=- 
+L39 5230 OK  1231 hits 0 dashless:1322@794 full:1231@893 0b5afac4954a 28s deep=122 cut=- spentS=- 
+L39 5231 OK  1192 hits 0 dashless:1373@728 full:1192@731 7dd3d0caaeb8 31s deep=194 cut=- spentS=- 
+L39 5232 OK  1190 hits 0 dashless:1284@639 full:1190@785 744ad79f62a4 35s deep=174 cut=- spentS=- 
+L39 5233 OK  1317 hits 0 dashless:1368@909 full:1317@990 ff95a231a1b7 34s deep=226 cut=- spentS=- 
+L39 5234 OK  1228 hits 0 dashless:1330@720 full:1228@830 d648d51dad0c 30s deep=134 cut=- spentS=- 
+L39 5235 OK  1228 hits 0 dashless:1330@720 full:1228@830 d648d51dad0c 30s deep=134 cut=- spentS=- 
+L39 5236 OK  1305 hits 0 dashless:1384@790 full:1305@830 6083dd9d60d7 35s deep=134 cut=- spentS=- 
+L39 5237 OK  1305 hits 0 dashless:1384@790 full:1305@830 6083dd9d60d7 34s deep=134 cut=- spentS=- 
+L39 5238 OK  1153 hits 0 dashless:1247@750 full:1153@834 1a97d4e2991a 51s deep=134 cut=- spentS=- 
+L39 5239 OK  1243 hits 0 dashless:1366@696 full:1243@788 ae52f0523c80 41s deep=368 cut=- spentS=- 
+L39 5240 OK  1260 hits 0 dashless:1314@703 full:1260@817 8a787b695d74 30s deep=134 cut=- spentS=- 
+L39 5241 REF - hits 0 dashless:refusal@170 full:refusal@170 - 29s deep=258 cut=- spentS=- no step out at (860.89,850.11) LANDED
+L39 5242 REF - hits 0 dashless:refusal@170 full:refusal@170 - 29s deep=258 cut=- spentS=- no step out at (861.35,850.11) LANDED
+L39 5243 OK  1106 hits 0 dashless:1126@705 full:1106@788 5378f4e4df44 62s deep=94 cut=- spentS=- 
+L39 5244 OK  1234 hits 0 dashless:1326@810 full:1234@876 3e62a305b410 56s deep=98 cut=- spentS=- 
+L39 5245 OK  1234 hits 0 dashless:1326@812 full:1234@878 fdc9ef66ade5 55s deep=98 cut=- spentS=- 
+L39 5246 OK  1039 hits 0 dashless:1118@703 full:1039@764 e696164cfe50 57s deep=98 cut=- spentS=- 
+L39 5247 OK  1066 hits 0 dashless:1149@702 full:1066@768 4de514330810 58s deep=98 cut=- spentS=- 
+L39 5248 OK  1018 hits 0 dashless:1095@723 full:1018@694 2f3c5a0259b6 55s deep=98 cut=- spentS=- 
+L39 5249 OK  1127 hits 0 dashless:1212@702 full:1127@798 037c8a6d6ba4 61s deep=98 cut=- spentS=- 
+L39 5250 OK  1022 hits 0 dashless:1094@687 full:1022@674 f49dcbbcd357 49s deep=134 cut=- spentS=- 
+L43 5215 OK  1686 hits 0 dashless:1753@734 full:1686@775 6467b2b3bdbb 88s deep=174 cut=- spentS=- 
+L43 5216 OK  1686 hits 0 dashless:1753@734 full:1686@775 6467b2b3bdbb 87s deep=174 cut=- spentS=- 
+L43 5217 OK  1686 hits 0 dashless:1753@734 full:1686@775 0b48d8c009b0 90s deep=174 cut=- spentS=- 
+L43 5218 OK  1686 hits 0 dashless:1753@734 full:1686@775 0b48d8c009b0 92s deep=174 cut=- spentS=- 
+L43 5219 REF - hits 0 dashless:refusal@2563 full:refusal@1 - 88s deep=120 cut=- spentS=- anytime deadline
+L43 5220 OK  1686 hits 0 dashless:1753@734 full:1686@775 09ccd765487a 89s deep=210 cut=- spentS=- 
+L43 5221 OK  1686 hits 0 dashless:1753@734 full:1686@775 09ccd765487a 89s deep=210 cut=- spentS=- 
+L43 5222 REF - hits 0 dashless:refusal@56 full:refusal@56 - 104s deep=352 cut=- spentS=- no step out at (739.98,687.14)
+L43 5223 REF - hits 0 dashless:refusal@56 full:refusal@56 - 102s deep=352 cut=- spentS=- no step out at (738.27,686.09)
+L43 5224 REF - hits 0 dashless:refusal@56 full:refusal@56 - 102s deep=360 cut=- spentS=- no step out at (737.47,684.94)
+L43 5225 REF - hits 0 dashless:refusal@77 full:refusal@77 - 1194s deep=542 cut=- spentS=- no step out at (749.12,791.89)
+L43 5226 REF - hits 0 dashless:refusal@1374 full:refusal@1187 - 548s deep=400 cut=- spentS=- combat ladder EXHAUSTED
+L43 5227 OK  1994 hits 0 dashless:2067@746 full:1994@873 c6179b256be3 981s deep=514 cut=- spentS=- 
+L43 5228 OK  1238 hits 0 dashless:1333@725 full:1238@779 15684b07a9ac 23s deep=132 cut=- spentS=- 
+L43 5229 OK  1235 hits 0 dashless:1326@794 full:1235@865 0473e2b5ea8d 25s deep=114 cut=- spentS=- 
+L43 5230 OK  1229 hits 0 dashless:1332@777 full:1229@748 c837ae4d6e6b 25s deep=102 cut=- spentS=- 
+L43 5231 OK  1130 hits 0 dashless:1170@713 full:1130@741 ac5bd3e8c75b 30s deep=250 cut=- spentS=- 
+L43 5232 REF - hits 0 dashless:refusal@1197 full:refusal@1197 - 88s deep=254 cut=- spentS=- combat ladder EXHAUSTED
+L43 5233 REF - hits 0 dashless:refusal@1134 full:refusal@1134 - 95s deep=180 cut=- spentS=- combat ladder EXHAUSTED
+L43 5234 HIT 1672 hits 2 dashless:1717@765 full:1672@735 b798d4d96374 834s deep=510 cut=- spentS=- 
+L43 5235 HIT 1672 hits 2 dashless:1717@765 full:1672@735 b798d4d96374 835s deep=510 cut=- spentS=- 
+L43 5236 REF - hits 0 dashless:refusal@1178 full:refusal@1178 - 75s deep=250 cut=- spentS=- combat ladder EXHAUSTED
+L43 5237 REF - hits 0 dashless:refusal@1178 full:refusal@1178 - 77s deep=250 cut=- spentS=- combat ladder EXHAUSTED
+L43 5238 REF - hits 0 dashless:refusal@1178 full:refusal@1178 - 75s deep=250 cut=- spentS=- combat ladder EXHAUSTED
+L43 5239 REF - hits 0 dashless:refusal@1178 full:refusal@1178 - 77s deep=250 cut=- spentS=- combat ladder EXHAUSTED
+L43 5240 REF - hits 0 dashless:refusal@1178 full:refusal@1178 - 76s deep=250 cut=- spentS=- combat ladder EXHAUSTED
+L43 5241 OK  1686 hits 0 dashless:1753@734 full:1686@775 09ccd765487a 84s deep=242 cut=- spentS=- 
+L43 5242 OK  1810 hits 0 dashless:1880@747 full:1810@820 f7e585661062 138s deep=112 cut=- spentS=- 
+L43 5243 OK  1694 hits 0 dashless:1756@714 full:1694@845 a8a281fe3e49 106s deep=112 cut=- spentS=- 
+L43 5244 OK  1031 hits 0 dashless:1100@751 full:1031@751 bd9efaf55697 52s deep=104 cut=- spentS=- 
+L43 5245 OK  972 hits 0 dashless:1058@652 full:972@684 4d0b5da04081 55s deep=104 cut=- spentS=- 
+L43 5246 OK  1017 hits 0 dashless:1100@742 full:1017@663 14138ed913c7 53s deep=134 cut=- spentS=- 
+L43 5247 OK  1027 hits 0 dashless:1103@706 full:1027@777 dec17390b161 54s deep=134 cut=- spentS=- 
+L43 5248 OK  1018 hits 0 dashless:1110@652 full:1018@713 2436136bbdd9 50s deep=142 cut=- spentS=- 
+L43 5249 OK  1003 hits 0 dashless:1110@652 full:1003@648 f7bd0c2dad1a 40s deep=142 cut=- spentS=- 
+L43 5250 OK  1056 hits 0 dashless:1144@634 full:1056@699 ffab5dfb03cf 38s deep=144 cut=- spentS=- 

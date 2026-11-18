@@ -32,11 +32,13 @@ function makeEnv() {
     const gs = new GameState(bus);
     const ledger = new ResourceLedger();
     const dispatched = [];
+    const revealed = [];
     const charged = [];
     let resets = 0;
     const env = {
         publish: (e, d) => bus.publish(e, d),
         dispatch: (e, d) => dispatched.push({ event: e, data: d }),
+        revealExits: (regionName, exitNames) => revealed.push({ regionName, exitNames }),
         gameState: () => gs,
         ledger: () => ledger,
         chargeMana: ({ amount, regionId }) => {
@@ -48,7 +50,7 @@ function makeEnv() {
         xpAdjustedCost: (base) => base,
         fireReset: () => { resets += 1; gs.triggerLoopReset(); },
     };
-    return { env, gs, ledger, dispatched, charged, bus, resets: () => resets };
+    return { env, gs, ledger, dispatched, revealed, charged, bus, resets: () => resets };
 }
 
 describe('the ActionNodes runtime on the committed example', () => {
@@ -98,17 +100,79 @@ describe('the ActionNodes runtime on the committed example', () => {
         expect(v).toMatchObject({ ok: false, code: RUNTIME_REFUSALS.wrongRegion });
     });
 
-    it('the start gate: a move out of a node is refused until it is cleared (limit performances); the start is open', () => {
-        const move = (from) => rt.gate({ type: 'regionMove', sourceRegion: from, destinationRegion: 'x' });
-        expect(move(BLOCK.start).ok).toBe(true);
-        expect(move(REPEATABLE.node_id)).toMatchObject({ ok: false, code: RUNTIME_REFUSALS.notCleared });
+    it('the start gate: a FORWARD move out of a node is refused until it is cleared (limit performances); the start is open', () => {
+        const fwd = (from) => {
+            const exit = PAYLOADS[from].exits.find((x) => !x.reverse);
+            return rt.gate({ type: 'regionMove', sourceRegion: from, destinationRegion: exit.targetRegion, exitUsed: exit.exitName });
+        };
+        expect(fwd(BLOCK.start).ok).toBe(true);
+        expect(fwd(REPEATABLE.node_id)).toMatchObject({ ok: false, code: RUNTIME_REFUSALS.notCleared });
         for (let k = 0; k < REPEATABLE.limit; k++) {
-            expect(move(REPEATABLE.node_id).ok).toBe(false);
+            expect(fwd(REPEATABLE.node_id).ok).toBe(false);
             expect(rt.perform(REPEATABLE.node_id).ok).toBe(true);
         }
-        expect(move(REPEATABLE.node_id).ok).toBe(true);
+        expect(fwd(REPEATABLE.node_id).ok).toBe(true);
         // a region of no ActionNodes node is not this runtime's to refuse (Menu)
-        expect(move('Menu').ok).toBe(true);
+        expect(rt.gate({ type: 'regionMove', sourceRegion: 'Menu', destinationRegion: BLOCK.start }).ok).toBe(true);
+    });
+
+    it('⛓ the start gate: a REVERSE move is open at once (its target was reached this loop), whatever the node\'s count', () => {
+        const back = REPEATABLE.exits.find((x) => x.reverse);
+        expect(back).toBeTruthy();
+        expect(rt.counts[rt.nodeIndex(REPEATABLE.node_id)]).toBe(0);
+        // by exit name, and by destination alone (a move that names no exit)
+        expect(rt.gate({ type: 'regionMove', sourceRegion: REPEATABLE.node_id, destinationRegion: back.targetRegion, exitUsed: back.exitName }).ok).toBe(true);
+        expect(rt.gate({ type: 'regionMove', sourceRegion: REPEATABLE.node_id, destinationRegion: back.targetRegion }).ok).toBe(true);
+    });
+
+    it('⛓ every reverse exit of every node reached this loop is open: a path between reached nodes is never refused', () => {
+        // Clear every node the empty-handed loop can clear, in an order the after sets allow, then walk every reverse
+        // exit of every reached node, and every forward exit of every cleared node.
+        let progressed = true;
+        while (progressed) {
+            progressed = false;
+            for (const p of Object.values(PAYLOADS)) {
+                while (!rt.isCleared(p.node_id) && !rt.whyNotAct(p.node_id)) { rt.perform(p.node_id); progressed = true; }
+            }
+        }
+        const reached = Object.keys(PAYLOADS).filter((id) => rt.isReached(id));
+        expect(reached.length).toBeGreaterThan(2);
+        for (const id of reached) {
+            for (const x of PAYLOADS[id].exits) {
+                const v = rt.gate({ type: 'regionMove', sourceRegion: id, destinationRegion: x.targetRegion, exitUsed: x.exitName });
+                if (x.reverse) expect(v.ok, x.exitName).toBe(true);
+                else expect(v.ok, x.exitName).toBe(rt.isCleared(id));
+            }
+        }
+    });
+
+    it('a reverse move to a node NOT reached this loop is refused by name (a multi-set node reached the other way)', () => {
+        // A copy of the world with one reverse exit pointing at a node that is not reached: the rule is "target reached".
+        const node = Object.values(PAYLOADS).find((p) => p.exits.some((x) => x.reverse) && p.after.length);
+        const unreached = Object.values(PAYLOADS).find((p) => !p.after.some((s) => s.includes(BLOCK.start)) && p.kind !== 'start');
+        const rules = structuredClone(RULES);
+        rules.preset_sidecars[P][node.node_id].playable_payload.exits.push({ exit_id: unreached.node_id, exitName: 'odd', targetRegion: unreached.node_id, reverse: true });
+        const rt2 = new ActionNodesRuntime(makeEnv().env);
+        rt2.loadWorld(rules, P);
+        expect(rt2.gate({ type: 'regionMove', sourceRegion: node.node_id, destinationRegion: unreached.node_id, exitUsed: 'odd' }))
+            .toMatchObject({ ok: false, code: RUNTIME_REFUSALS.targetNotReached });
+    });
+
+    it('reachability resets with the loop: after a reset a cleared node\'s forward exit is refused again', () => {
+        const exit = REPEATABLE.exits.find((x) => !x.reverse);
+        const move = { type: 'regionMove', sourceRegion: REPEATABLE.node_id, destinationRegion: exit.targetRegion, exitUsed: exit.exitName };
+        for (let k = 0; k < REPEATABLE.limit; k++) rt.perform(REPEATABLE.node_id);
+        expect(rt.gate(move).ok).toBe(true);
+        rt.onLoopReset('test');
+        expect(rt.gate(move)).toMatchObject({ ok: false, code: RUNTIME_REFUSALS.notCleared });
+    });
+
+    it('⚖ D6: the start gate refuses an explore (any custom action but act) on a node, by name', () => {
+        for (const node of [BLOCK.start, REPEATABLE.node_id]) {
+            const v = rt.gate({ type: 'customAction', actionName: 'explore', sourceRegion: node, params: {} });
+            expect(v).toMatchObject({ ok: false, code: 'action-not-offered' });
+            expect(v.reason).toContain("no 'explore' action");
+        }
     });
 
     it('a performance puts its results in the ledger; the limit refuses one more, by name', () => {
@@ -133,14 +197,18 @@ describe('the ActionNodes runtime on the committed example', () => {
         expect(rid in BLOCK.resources).toBe(true);
     });
 
-    it('the first clear publishes the node\'s exits as discovered, once; a loop reset does not re-publish', () => {
-        for (let k = 0; k < REPEATABLE.limit; k++) rt.perform(REPEATABLE.node_id);
-        const disc = () => e.dispatched.filter((d) => d.event === 'loop:exploreCompleted');
-        expect(disc()).toHaveLength(1);
-        expect(disc()[0].data.discoveredExits.sort()).toEqual(REPEATABLE.exits.map((x) => x.exitName).sort());
+    it('the first clear REVEALS the node\'s forward exits, once; a loop reset does not re-reveal; no explore is published (D6)', () => {
+        for (let k = 0; k < REPEATABLE.limit; k++) {
+            expect(e.revealed).toHaveLength(0); // not before the node is cleared
+            rt.perform(REPEATABLE.node_id);
+        }
+        expect(e.revealed).toHaveLength(1);
+        expect(e.revealed[0].regionName).toBe(REPEATABLE.node_id);
+        expect(e.revealed[0].exitNames.sort()).toEqual(REPEATABLE.exits.filter((x) => !x.reverse).map((x) => x.exitName).sort());
         rt.onLoopReset('loopState:loopReset');
         for (let k = 0; k < REPEATABLE.limit; k++) rt.perform(REPEATABLE.node_id);
-        expect(disc()).toHaveLength(1);
+        expect(e.revealed).toHaveLength(1);
+        expect(e.dispatched.some((d) => d.event === 'loop:exploreCompleted')).toBe(false);
     });
 
     it('a check is sent ONCE; the action repeats in the next loop without it (A15)', () => {

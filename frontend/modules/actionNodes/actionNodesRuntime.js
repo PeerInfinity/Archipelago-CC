@@ -6,13 +6,19 @@
  * and the nodes whose exits it has published as discovered (A2), both cleared only by a world load.
  *
  *   - **The start gate** (`gate(action)`, the registry entry's `loopSupport.actionGate`): an `act` entry may start
- *     when its node is reached this loop, its limit is not used up and every requirement is met; a `regionMove` out
- *     of a node may start when that node is cleared (performed `limit` times) — the start is cleared from the
- *     beginning. Mana is never part of it (⚖ Q1: a node may be started short of mana; Loops drains what is left).
+ *     when its node is reached this loop, its limit is not used up and every requirement is met. A `regionMove`
+ *     (⚖ Robert 2026-11-16T17:41:55Z: "once a node becomes reachable in a loop, it stays reachable for the rest of the
+ *     loop, and moving between nodes is free. Reachability resets when the loop resets"): a FORWARD exit opens when
+ *     its source is cleared this loop (performed `limit` times; the start is cleared from the beginning); a REVERSE
+ *     exit (the compiler's two-way edges, AN-1b) is open whenever its target is reached this loop — which, for a node
+ *     reached through a one-member `after` set, is always. So a multi-hop move between reached nodes (the Region
+ *     Graph's path queueing) is never refused, and costs 0 (every node's `moveCost`). Mana is never part of it (⚖ Q1:
+ *     a node may be started short of mana; Loops drains what is left).
  *   - **One performance** (`perform(nodeId)`): the results go to the ledger, `results.mana` to the pool
- *     (`gainMana`); the first time a node is cleared its exits are published as discovered
- *     (`loop:exploreCompleted` with `discoveredExits`); a check or goal node not yet checked sends its location once
- *     (A15: later loops repeat the action without it).
+ *     (`gainMana`); the first time a node is cleared its forward exits are REVEALED (`env.revealExits`, the discovery
+ *     module's `revealExits`: each exit, its target and the target's contents, and the target's move back — no random
+ *     pick, ⚖ D6, AN-1b; until AN-1b this was a `loop:exploreCompleted`, which also ran explore's random pick); a check
+ *     or goal node not yet checked sends its location once (A15: later loops repeat the action without it).
  *   - **In Loop mode** Loops runs the `act` entries (cost `loop_costs[p].regions[<node>].actions.act`) and publishes
  *     `loop:actionCompleted`; the runtime performs on it. **Outside Loop mode** `actNow(nodeId)` charges the same
  *     shared pool itself (`chargeMana`, the XP-adjusted price) and, at zero, fires the loop-reset teleport.
@@ -30,6 +36,8 @@
  */
 
 import { whyNot, isCleared, isReached } from './actionModel.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { strictQueueRefusal } from '../loops/strictQueueActions.js';
 import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
 
 export const ACTION_NODES_STATE_EVENT = 'actionNodes:stateChanged';
@@ -39,6 +47,7 @@ export const RUNTIME_REFUSALS = Object.freeze({
     unknownNode: 'unknown-node',
     wrongRegion: 'wrong-region',
     notCleared: 'not-cleared',
+    targetNotReached: 'target-not-reached',
     queueElsewhere: 'queue-ends-elsewhere',
 });
 
@@ -76,7 +85,9 @@ export function runtimeModelOf(block, payloads) {
             addMana: p.results?.mana ?? 0,
             after: (p.after ?? []).map((set) => set.map((ref) => nodeIx.get(ref)).filter((i) => i !== undefined)),
             location: typeof p.location === 'string' && p.location ? p.location : null,
-            exits: (p.exits ?? []).map((e) => ({ name: e.exitName ?? e.exit_id, target: e.targetRegion ?? e.exit_id })),
+            exits: (p.exits ?? []).map((e) => ({
+                name: e.exitName ?? e.exit_id, target: e.targetRegion ?? e.exit_id, reverse: e.reverse === true,
+            })),
         });
     });
     const boons = Object.entries(block.boosts ?? {}).map(([item, b]) => Object.freeze({
@@ -110,6 +121,7 @@ export class ActionNodesRuntime {
      * @param {object} env
      * @param {(event: string, data: object) => void} env.publish            event bus publish
      * @param {(event: string, data: object, opts?: object) => void} env.dispatch   dispatcher publish
+     * @param {(regionName: string, exitNames: string[]) => void} [env.revealExits] discovery's reveal (no random pick)
      * @param {() => object|null} env.gameState                            the gameState singleton
      * @param {() => object} env.ledger                                     the host ledger
      * @param {(args: object) => {depleted: boolean}} env.chargeMana
@@ -310,10 +322,34 @@ export class ActionNodesRuntime {
         return i !== undefined && isReached(this.model, this.liveState(), i);
     }
 
-    /** Whether leaving `nodeId` is allowed: it is cleared this loop (A1: exits open on the action). */
-    whyNotLeave(nodeId) {
+    /** The exit of `nodeId` a move uses: by exit name, else by its destination; null when neither names one. */
+    exitOf(nodeId, { exitName = null, destination = null } = {}) {
+        const n = this.node(nodeId);
+        if (!n) return null;
+        return (exitName && n.exits.find((e) => e.name === exitName))
+            ?? (destination && n.exits.find((e) => e.target === destination))
+            ?? null;
+    }
+
+    /**
+     * Whether a move out of `nodeId` is allowed, or the refusal. A REVERSE exit is open when its target is reached this
+     * loop; a forward exit (or a move that names no exit of the node) when `nodeId` is cleared this loop (A1: its
+     * exits open on the action).
+     * @param {string} nodeId
+     * @param {{exitName?: string|null, destination?: string|null}} [move]
+     */
+    whyNotLeave(nodeId, move = {}) {
         const n = this.node(nodeId);
         if (!n) return null; // not a node of this world: not ours to refuse
+        const exit = this.exitOf(nodeId, move);
+        if (exit?.reverse) {
+            if (this.isReached(exit.target)) return null;
+            const t = this.node(exit.target);
+            return {
+                code: RUNTIME_REFUSALS.targetNotReached,
+                text: `${t?.name ?? exit.target} is not reached this loop: a move back opens to a node reached this loop`,
+            };
+        }
         if (this.isCleared(nodeId)) return null;
         const i = this.nodeIndex(nodeId);
         return {
@@ -341,8 +377,16 @@ export class ActionNodesRuntime {
             const why = this.whyNotAct(nodeId);
             return why ? { ok: false, reason: why.text, code: why.code } : { ok: true };
         }
+        if (action?.type === 'customAction') {
+            // ⚖ D6 (Robert 2026-11-16T19:59:48Z): no explore — or any other custom action — in ActionNodes. The entry's
+            // own `queueActions` is the list (`strictQueueActions`); refused by name, as at queue time.
+            const entry = substrateRegistry.get(ACTION_NODES_SUBSTRATE_ID);
+            const refusal = strictQueueRefusal(entry?.loopSupport ?? { strictQueueActions: true, queueActions: [ACT_ACTION] },
+                action.actionName, { substrateLabel: entry?.label ?? 'Action Nodes', region: action.sourceRegion });
+            if (refusal) return refusal;
+        }
         if (action?.type === 'regionMove') {
-            const why = this.whyNotLeave(action.sourceRegion);
+            const why = this.whyNotLeave(action.sourceRegion, { exitName: action.exitUsed, destination: action.destinationRegion });
             return why ? { ok: false, reason: why.text, code: why.code } : { ok: true };
         }
         return { ok: true };
@@ -373,13 +417,14 @@ export class ActionNodesRuntime {
         this.counts[i] += 1;
         if (node.addMana > 0) this.env.gainMana?.({ substrateId: ACTION_NODES_SUBSTRATE_ID, amount: node.addMana });
         const cleared = this.counts[i] >= node.limit;
-        if (cleared && !this.discovered.has(nodeId) && node.exits.length) {
+        const forward = node.exits.filter((e) => !e.reverse);
+        if (cleared && !this.discovered.has(nodeId) && forward.length) {
             this.discovered.add(nodeId);
-            this.env.dispatch?.('loop:exploreCompleted', {
-                regionName: nodeId,
-                discoveredExits: node.exits.map((e) => e.name),
-                fromLoop,
-            }, { initialTarget: 'bottom' });
+            try {
+                this.env.revealExits?.(nodeId, forward.map((e) => e.name));
+            } catch (e) {
+                this._log('warn', `[actionNodes] ${nodeId}: revealing its exits failed — ${e?.message ?? e}`);
+            }
         }
         let checkSent = null;
         if (node.location && !this.sentChecks.has(node.location) && !this.checked.has(node.location)) {

@@ -1,11 +1,13 @@
 /**
- * In-app rows for the ActionNodes runtime (slice AN-2), category "ActionNodes", in batch `fast`.
+ * In-app rows for the ActionNodes runtime (slices AN-2, AN-1b), category "ActionNodes", in batch `fast`.
  *
  * Every row loads the committed example preset itself, sets its own queue, speed and flags, and puts them back. The
- * numbers it checks (prices, results, which item a check holds) are read from the preset, never typed here.
+ * numbers it checks (prices, results, which item a check holds, the exits and what is discovered) are read from the
+ * preset, never typed here.
  *
- * ⚠ The compiled example has forward exits only (one per `after` edge), so every queue here is a forward route from
- * the start node.
+ * ⛓ AN-1b: the compiled example has TWO-WAY edges (a forward exit per `after` edge and an ungated reverse exit back),
+ * so a route may move back to any node reached this loop for 0 (⚖ Robert 2026-11-16T17:41:55Z); there is no explore
+ * in ActionNodes (D6); and discovery follows the world's `actionNodes` bundle (19:59:48Z).
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -13,7 +15,9 @@ import { getGameStateSingleton } from '../../gameState/singleton.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { getActionNodesRuntime } from '../../actionNodes/actionNodesRuntime.js';
 import { getResourceLedger } from '../../resourceChannels/resourceChannelsLibrary.js';
-import { DEFAULT_EXPLORE_MULTIPLIER } from '../../shared/procgen/loopCostDefaults.js';
+import discoveryStateSingleton from '../../discovery/singleton.js';
+import { getDiscoverySettings } from '../../discovery/index.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
 
 const PRESET_RULES = './presets/action_nodes_example/AP_1/AP_1_rules.json';
 const CATEGORY = 'ActionNodes';
@@ -68,7 +72,8 @@ function freshQueue() {
 }
 
 /**
- * Author a forward route as queue entries. `steps`: node ids to move to, or `{act: nodeId, times}`.
+ * Author a route as queue entries. `steps`: node ids to move to (one hop each, over the exit named `<from> -> <to>`,
+ * forward or reverse), or `{act: nodeId, times}`.
  * The route starts at the declared start region (`Menu`), as every Loops path does: its first hop is what puts the
  * player back on the start node when a loop re-runs the queue (a Loops reset does not teleport).
  */
@@ -86,6 +91,41 @@ function author(payloads, steps) {
         }
     }
 }
+
+/** The node-to-node hops from `from` to `to` over the payloads' exits (forward and reverse), shortest first. */
+function hopsBetween(payloads, from, to) {
+    const prev = new Map([[from, null]]);
+    const queue = [from];
+    while (queue.length) {
+        const at = queue.shift();
+        if (at === to) break;
+        for (const e of payloads[at].exits) {
+            if (prev.has(e.targetRegion)) continue;
+            prev.set(e.targetRegion, at);
+            queue.push(e.targetRegion);
+        }
+    }
+    const hops = [];
+    for (let at = to; at !== from; at = prev.get(at)) hops.unshift(at);
+    return hops;
+}
+
+/** A witness plan (`steps`, node ids in performance order) as route steps: hops between nodes, then the act. */
+function routeOfPlan(block, payloads, steps) {
+    const out = [];
+    let at = block.start;
+    for (const id of steps) {
+        if (id !== at) out.push(...hopsBetween(payloads, at, id));
+        at = id;
+        const last = out[out.length - 1];
+        if (last && typeof last === 'object' && last.act === id) last.times += 1;
+        else out.push({ act: id, times: 1 });
+    }
+    return out;
+}
+
+/** Is the exit `<from> -> <to>` a reverse exit? */
+const isReverse = (payloads, from, to) => !!payloads[from]?.exits.find((e) => e.targetRegion === to)?.reverse;
 
 /** Every route begins with the hop from Menu to the start node. */
 function routeFrom(block, steps) {
@@ -139,26 +179,46 @@ async function refusalStops(tc) {
     if (!await loadExample(tc)) return tc.getOverallResult();
     let restore = freshQueue();
     try {
-        // (a) a move out of a node that is not cleared yet (its limit is above 1, performed once)
-        const multi = Object.values(payloads).find((p) => p.limit > 1 && p.exits.length);
-        const next = multi.exits[0].targetRegion;
-        author(payloads, routeFrom(block, [multi.node_id, { act: multi.node_id }, next]));
-        await runQueue(tc, 'the queue stopped (move refusal)');
-        const r1 = loopStateSingleton.lastActionRefusal;
-        tc.log(`refusal: ${JSON.stringify(r1)}`);
-        tc.assertEqual('the queue stopped on a refusal', true, !!r1);
-        tc.assertEqual('it names the move', `Move to ${next}`, r1?.label);
-        tc.assertEqual('…in the region it leaves', multi.node_id, r1?.region);
-        tc.assertEqual('…and why: not cleared', 'not-cleared', r1?.code);
-        tc.assertEqual('the reason states the count', true, String(r1?.reason).includes(`(1/${multi.limit})`));
-        tc.assertEqual('the move did not happen', multi.node_id, gs().getCurrentRegion());
-        tc.assertEqual('the refused entry was not skipped', r1?.index, loopStateSingleton.currentActionIndex);
-        tc.assertEqual('the loops public function reports it', r1?.label,
-            tc.centralRegistry?.getPublicFunction?.('loops', 'getLastActionRefusal')?.()?.label ?? r1?.label);
-        const banner = document.querySelector('#loop-state-banner');
-        if (banner && banner.style.display !== 'none') {
-            tc.assertEqual('the Loops panel banner names the action', true, banner.textContent.includes(`Move to ${next}`));
+        // (a) ⛓ AN-1b: a BACKWARD route reaches the goal in the browser. Loop 1 earns the item the goal's rule names
+        // (at the check the fill put it in); loop 2 plays the goal's own witness (procgen_metadata's A6 report), whose
+        // plan moves back to earlier nodes between performances. Nothing in it is refused; the goal is checked.
+        const { rules } = await readPreset();
+        const logic = rules.procgen_metadata[P].action_logic;
+        const goal = Object.values(payloads).find((p) => p.kind === 'goal');
+        const witness = logic.targets[goal.location].witnesses[0];
+        const needed = Object.keys(witness.items);
+        const holder = Object.entries(logic.placements).filter(([, item]) => needed.includes(item)).map(([loc]) => loc);
+        tc.log(`the goal's witness needs ${JSON.stringify(witness.items)}; held at ${holder.join(', ')}`);
+        for (const loc of holder) {
+            const node = Object.values(payloads).find((p) => p.location === loc);
+            const w = logic.targets[loc].witnesses.find((x) => !Object.keys(x.items).length);
+            tc.assertEqual(`${loc} has an empty-handed witness`, true, !!w);
+            author(payloads, routeFrom(block, routeOfPlan(block, payloads, w.steps)));
+            tc.assertEqual(`loop 1 (${node.name}) ran to its end`, true, await runQueue(tc, `loop 1 to ${loc}`));
+            tc.assertEqual('loop 1: no refusal', null, loopStateSingleton.lastActionRefusal);
+            restore();
+            restore = freshQueue();
         }
+        const heldAll = await tc.pollForCondition(
+            () => needed.every((it) => (tc.stateManager.getLatestStateSnapshot?.()?.inventory?.[it] ?? 0) >= witness.items[it]),
+            'the goal\'s items are held', 8000, 100);
+        tc.assertEqual('the goal\'s items are held', true, !!heldAll);
+        await tc.pollForCondition(() => needed.every((it) => runtime().held.get(it) >= witness.items[it]), 'the runtime saw them', 5000, 50);
+        restore();
+        restore = freshQueue();
+        const route = routeOfPlan(block, payloads, witness.steps);
+        const hops = [block.start, ...route.filter((x) => typeof x === 'string')];
+        const backHops = hops.slice(1).filter((to, k) => isReverse(payloads, hops[k], to));
+        tc.log(`goal route: ${JSON.stringify(route)} (${backHops.length} moves back)`);
+        tc.assertEqual('the goal\'s witness route moves back at least once', true, backHops.length > 0);
+        author(payloads, routeFrom(block, route));
+        tc.assertEqual('loop 2 (the goal route) ran to its end', true, await runQueue(tc, 'the goal route finished', 20000));
+        tc.assertEqual('loop 2: no refusal', null, loopStateSingleton.lastActionRefusal);
+        tc.assertEqual(`${goal.name} performed`, 1, countOf(goal.node_id));
+        const reached = await tc.pollForCondition(
+            () => (tc.stateManager.getLatestStateSnapshot?.()?.checkedLocations ?? []).includes(goal.location),
+            `${goal.location} checked`, 8000, 100);
+        tc.assertEqual(`the goal location ${goal.location} is checked`, true, !!reached);
         restore();
 
         // (b) an act whose requirement is unmet: a use node off the start with nothing to use
@@ -301,37 +361,174 @@ async function checkOnceRepeat(tc) {
     return tc.getOverallResult();
 }
 
-// ─── 6. An explore behaves as before ───────────────────────────────────────
+// ─── 6. No explore in ActionNodes (D6) ─────────────────────────────────────
 
-async function exploreUnchanged(tc) {
+async function exploreRefused(tc) {
     const { block, payloads } = await readPreset();
     if (!await loadExample(tc)) return tc.getOverallResult();
     const restore = freshQueue();
-    let acts = 0;
-    const offAct = tc.eventBus.subscribe('loop:actionCompleted', () => { acts += 1; }, 'tests');
-    const explores = [];
-    const offDone = tc.eventBus.subscribe('loopState:actionCompleted', ({ action }) => {
-        if (action?.type === 'customAction') explores.push(action.actionName);
-    }, 'tests');
+    const g = gs();
+    const guard = g.customActionGuard;
     try {
         const node = Object.values(payloads).find((p) => p.kind !== 'start' && p.after.some((s) => s.includes(block.start)));
         author(payloads, routeFrom(block, [node.node_id]));
-        gs().addCustomAction('explore', { regionName: node.node_id });
+        const len = loopStateSingleton.getActionQueue().length;
+        // (1) at queue time, whatever control queued it
+        tc.assertEqual('the queue guard is installed', true, typeof guard === 'function');
+        tc.assertEqual('an explore is refused at queue time', false, g.addCustomAction('explore', { regionName: node.node_id }));
+        tc.assertEqual('…nothing was appended', len, loopStateSingleton.getActionQueue().length);
+        tc.assertEqual('…the refusal names the action', 'explore', g.lastQueueRefusal?.actionName);
+        tc.assertEqual('…and the code', 'action-not-offered', g.lastQueueRefusal?.code);
+        tc.assertEqual('an act is still queued', true, g.addCustomAction('act', { nodeId: node.node_id, label: node.name, regionName: node.node_id }) !== false);
+        // (2) by the gate: an explore entry that got in some other way stops the queue, named
+        g.setCustomActionGuard(null);
+        g.addCustomAction('explore', { regionName: node.node_id });
+        g.setCustomActionGuard(guard);
         const entry = loopStateSingleton.getActionQueue().find((a) => a.actionName === 'explore');
-        tc.assertEqual('the explore entry is in the queue', true, !!entry);
-        const cdm = loopStateSingleton.costDataManager;
-        tc.assertEqual('an explore still prices at the move cost × the explore multiplier',
-            cdm.getRegionCost(node.node_id) * DEFAULT_EXPLORE_MULTIPLIER, loopStateSingleton._calculateActionCost(entry));
-        tc.assertEqual('…labelled as an explore', `Explore ${node.node_id}`,
-            loopStateSingleton._describeQueueEntry(entry));
-        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
-        tc.assertEqual('the start gate let the explore through', null, loopStateSingleton.lastActionRefusal);
-        tc.assertEqual('the explore completed as an explore', JSON.stringify(['explore']), JSON.stringify(explores));
-        tc.assertEqual('it published no act completion', 0, acts);
-        tc.assertEqual('…and performed no node', 0, countOf(node.node_id));
+        tc.assertEqual('(a stray explore entry is in the queue)', true, !!entry);
+        await runQueue(tc, 'the queue stopped (explore refusal)');
+        const r = loopStateSingleton.lastActionRefusal;
+        tc.log(`refusal: ${JSON.stringify(r)}`);
+        tc.assertEqual('the gate refused the explore', 'action-not-offered', r?.code);
+        tc.assertEqual('…naming it', loopStateSingleton._describeQueueEntry(entry), r?.label);
+        tc.assertEqual('…and why', true, String(r?.reason).includes("no 'explore' action"));
+        tc.assertEqual('the act before it ran', 1, countOf(node.node_id));
+        // (3) no explore control for an ActionNodes region: expand its block in the Loops panel and look.
+        tc.assertEqual('the node is an ActionNodes region (as Loops resolves it)', 'action_nodes',
+            loopStateSingleton._lookupSubstrateId(node.node_id));
+        const blockOf = () => document.querySelector(`.loop-region-block[data-region="${CSS.escape(node.node_id)}"]`);
+        if (!blockOf()) {
+            tc.log('the Loops panel draws no block for the node in this layout: the explore-control check is skipped');
+        } else {
+            if (!blockOf().querySelector('.loop-region-details')) blockOf().querySelector('.loop-region-header')?.click();
+            const expanded = await tc.pollForCondition(() => !!blockOf()?.querySelector('.loop-region-details'),
+                'the node\'s Loops block is expanded', 3000, 50);
+            tc.assertEqual('the node\'s Loops block is expanded (its details drawn)', true, !!expanded);
+            tc.assertEqual('no explore button in it', 0, blockOf()?.querySelectorAll('.explore-btn').length ?? -1);
+        }
     } finally {
-        try { offAct?.(); } catch { /* ignore */ }
-        try { offDone?.(); } catch { /* ignore */ }
+        g.setCustomActionGuard(guard);
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
+// ─── 7. Discovery under the 19:59 ruling (D1–D4, D6) ───────────────────────
+
+/** What discovery holds now, as sorted lists. */
+function discoverySets() {
+    const d = discoveryStateSingleton;
+    const st = d.getSerializableState();
+    return {
+        regions: [...st.regions].sort(),
+        exits: st.exits.flatMap(([r, xs]) => xs.map((x) => `${r}|${x}`)).sort(),
+        locations: [...st.locations].sort(),
+    };
+}
+
+/**
+ * What discovery should hold, from the preset alone, when `revealed` are the nodes whose exits are open to view (the
+ * start, and every node cleared on some loop): the start regions and their exits; each revealed node's forward exits,
+ * their targets with every location, and each target's exit straight back.
+ */
+function expectedSets(rules, payloads, revealed) {
+    const regions = new Set(rules.start_regions[P].default);
+    const exits = new Set();
+    const locations = new Set();
+    for (const s of rules.start_regions[P].default) {
+        for (const e of rules.regions[P][s].exits) { exits.add(`${s}|${e.name}`); regions.add(e.connected_region); }
+    }
+    const locs = (id) => (rules.regions[P][id].locations ?? []).forEach((l) => locations.add(l.name));
+    for (const id of revealed) {
+        regions.add(id);
+        locs(id);
+        for (const e of payloads[id].exits.filter((x) => !x.reverse)) {
+            exits.add(`${id}|${e.exitName}`);
+            regions.add(e.targetRegion);
+            locs(e.targetRegion);
+            for (const b of payloads[e.targetRegion].exits) if (b.targetRegion === id) exits.add(`${e.targetRegion}|${b.exitName}`);
+        }
+    }
+    return { regions: [...regions].sort(), exits: [...exits].sort(), locations: [...locations].sort() };
+}
+
+async function discoverySetsRow(tc) {
+    const { rules, block, payloads } = await readPreset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const restore = freshQueue();
+    try {
+        const same = (label, want) => {
+            const got = discoverySets();
+            for (const k of ['regions', 'exits', 'locations']) {
+                tc.assertEqual(`${label}: discovered ${k}`, JSON.stringify(want[k]), JSON.stringify(got[k]));
+            }
+        };
+        tc.assertEqual('the world names the actionNodes bundle', 'actionNodes',
+            centralRegistry.getPublicFunction('discovery', 'getWorldDiscoveryMode')?.());
+        // At load: D1 the start in full, D2 its neighbours with their contents, D3 their forward exits unnamed.
+        const atLoad = expectedSets(rules, payloads, [block.start]);
+        await tc.pollForCondition(() => JSON.stringify(discoverySets().exits) === JSON.stringify(atLoad.exits), 'the start revealed', 5000, 50);
+        same('at load', atLoad);
+        const neighbour = payloads[block.start].exits.find((e) => !e.reverse && payloads[e.targetRegion].limit === 1
+            && payloads[e.targetRegion].exits.some((x) => !x.reverse)).targetRegion;
+        tc.assertEqual(`D3: ${neighbour}'s forward exits are not named yet`, true,
+            payloads[neighbour].exits.filter((x) => !x.reverse).every((x) => !discoveryStateSingleton.isExitDiscovered(neighbour, x.exitName)));
+        // The first clear: its exits, their targets with contents, the moves back. Nothing random (D6).
+        author(payloads, routeFrom(block, [neighbour, { act: neighbour }]));
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        const afterClear = expectedSets(rules, payloads, [block.start, neighbour]);
+        same(`after ${payloads[neighbour].name}'s first clear`, afterClear);
+        // D4: a loop reset keeps it all.
+        loopStateSingleton._resetLoop();
+        gs().triggerLoopReset();
+        same('after a loop reset', afterClear);
+        // Loop mode off: the same bundle (discovery on, locations with their region), the same sets.
+        gs().setLoopModeActive(false);
+        const off = await tc.pollForCondition(() => {
+            const st = getDiscoverySettings();
+            return gs().isLoopModeActive === false && st.enableDiscoveryMode === true && st.autoDiscoverLocations === true;
+        }, 'Loop mode off, the bundle still forced', 5000, 50);
+        tc.assertEqual('with Loop mode off the bundle is still forced', true, !!off);
+        same('with Loop mode off', afterClear);
+    } finally {
+        restore();
+    }
+    return tc.getOverallResult();
+}
+
+// ─── 8. Two-way moves ──────────────────────────────────────────────────────
+
+async function twoWayMove(tc) {
+    const { block, payloads } = await readPreset();
+    if (!await loadExample(tc)) return tc.getOverallResult();
+    const restore = freshQueue();
+    try {
+        // a node off the start whose limit is above 1, with a forward exit: act once (not cleared), move back to the
+        // start, come back, then try its forward exit.
+        const multi = Object.values(payloads).find((p) => p.limit > 1 && p.after.some((s) => s.includes(block.start))
+            && p.exits.some((x) => !x.reverse));
+        const next = multi.exits.find((x) => !x.reverse).targetRegion;
+        author(payloads, routeFrom(block, [multi.node_id, { act: multi.node_id }, block.start, multi.node_id, next]));
+        const queue = loopStateSingleton.getActionQueue();
+        const back = queue.find((a) => a.type === 'regionMove' && a.sourceRegion === multi.node_id && a.destinationRegion === block.start);
+        tc.assertEqual('the move back uses a reverse exit', true, isReverse(payloads, multi.node_id, block.start));
+        tc.assertEqual('the move back costs 0', 0, loopStateSingleton._calculateActionCost(back));
+        const mana0 = gs().getCurrentMana();
+        await runQueue(tc, 'the queue stopped (forward refusal)');
+        const r = loopStateSingleton.lastActionRefusal;
+        tc.log(`refusal: ${JSON.stringify(r)}`);
+        tc.assertEqual('the move back was not refused: the queue stopped later, at the forward move', `Move to ${next}`, r?.label);
+        tc.assertEqual('…out of the node it leaves', multi.node_id, r?.region);
+        tc.assertEqual('…refused by name: not cleared', 'not-cleared', r?.code);
+        tc.assertEqual('the reason states the count', true, String(r?.reason).includes(`(1/${multi.limit})`));
+        tc.assertEqual('the move did not happen', multi.node_id, gs().getCurrentRegion());
+        tc.assertEqual('the refused entry was not skipped', r?.index, loopStateSingleton.currentActionIndex);
+        tc.assertEqual('the moves back and forth cost nothing: the pool paid the one act only', mana0 - multi.time, gs().getCurrentMana());
+        const banner = document.querySelector('#loop-state-banner');
+        if (banner && banner.style.display !== 'none') {
+            tc.assertEqual('the Loops panel banner names the action', true, banner.textContent.includes(`Move to ${next}`));
+        }
+    } finally {
         restore();
     }
     return tc.getOverallResult();
@@ -340,16 +537,20 @@ async function exploreUnchanged(tc) {
 const ROWS = [
     ['an-load-and-act-once', 'ActionNodes: load the preset and act once',
         'Loads the example, queues a move and one act, runs the queue: the node is performed once, its result is in the ledger, the pool paid its authored price.', actOnce],
-    ['an-refused-action-stops-queue', 'ActionNodes: a refused action stops the queue and says which and why',
-        'A move out of a node not cleared yet, and an act with an unmet requirement: each stops the queue at that entry, names it and the reason, spends nothing.', refusalStops],
+    ['an-refused-action-stops-queue', 'ActionNodes: a backward route reaches the goal; a refused action stops the queue and says which and why',
+        '(a) Earns the goal\'s item, then plays the goal\'s witness as a route that moves back to earlier nodes: nothing is refused and the goal is checked. (b) An act with an unmet requirement stops the queue at that entry, names it and the reason, spends nothing.', refusalStops],
     ['an-results-reach-ledger', 'ActionNodes: results reach the ledger',
         'A repeatable node then a node that spends what it earned: every resource in the host ledger is the sum of the results.', resultsReachLedger],
     ['an-loop-reset-restores-boosts', 'ActionNodes: a loop reset restores base plus boosts',
         'Earns a check whose item is a boost, then resets by both flows: the ledger is base plus the boost, the counts are zero, the starting mana is the per-item boost.', resetRestoresBoosts],
     ['an-check-once-action-repeats', 'ActionNodes: a check is sent once, and the action repeats next loop',
         'Runs a route to a check node twice: the check is sent in loop 1 only, the act entries stay in the queue and every one is performed again in loop 2.', checkOnceRepeat],
-    ['an-explore-unchanged', 'ActionNodes: an explore behaves as before',
-        'An explore entry on an ActionNodes node prices at move × multiplier, passes the start gate, completes as an explore and performs no node.', exploreUnchanged],
+    ['an-explore-refused', 'ActionNodes: no explore',
+        'An explore on an ActionNodes node is refused at queue time and, if it got into the queue, by the start gate, by name; no explore control is drawn for the node.', exploreRefused],
+    ['an-discovery-sets', 'ActionNodes: discovery under the actionNodes bundle',
+        'The discovered regions, exits and locations at load (the start in full, its neighbours with their contents, their forward exits unnamed), after a first clear, after a loop reset and with Loop mode off.', discoverySetsRow],
+    ['an-two-way-move', 'ActionNodes: a move back costs 0 and is not refused; a forward exit of an uncleared node is',
+        'Acts once at a repeatable node, moves back to the start and in again (cost 0, not refused), then takes its forward exit: refused by name, not cleared.', twoWayMove],
 ];
 
 for (const [id, name, description, testFunction] of ROWS) {

@@ -31,7 +31,17 @@
             "category": "ActionNodes"
         },
         {
-            "id": "an-explore-unchanged",
+            "id": "an-explore-refused",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-discovery-sets",
+            "enabled": true,
+            "category": "ActionNodes"
+        },
+        {
+            "id": "an-two-way-move",
             "enabled": true,
             "category": "ActionNodes"
         },
