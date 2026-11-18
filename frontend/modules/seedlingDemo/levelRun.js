@@ -35,7 +35,7 @@
 
 import {
     NEAREST_TILE_INDEX, PLAYER_SOLID_TYPES, SOLID_GRID, TILE_SIZE,
-    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
+    ADDED_TIME_PROPERTIES, addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
     maskHitsBox,
 } from './levelWorld.js';
 import {
@@ -845,6 +845,15 @@ export function createLevelRun({
      * (an in-place reboot, a cold adoption) — never over a replayed prefix, which re-bills its own hits.
      */
     playerDamage = null,
+    /**
+     * ⛓⛓⛓ seedling-js-item-live-delivery — THE HOST DELIVERIES A LIVE SESSION WROTE INTO ITS RUN (`deliver`), as
+     * `[{t, change}]`: applied at the same tick BOUNDARY (`t` = `ticksCompleted` when it was written), so a run
+     * rebuilt from the session's staging and replayed through its keys — the JS solver's shadow and every fork
+     * (`jsRuntimeSolver.replayTape` / `forkRunFor`, which hand the staging through `createRunForStaging`) — is the
+     * run the page plays. An OPTIONAL field no tape carries (`stagingFromTape` does not copy it), like
+     * `inventorySlots` / `playerDamage`: empty = every run before this slice.
+     */
+    stagedDeliveries = [],
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -1027,6 +1036,20 @@ export function createLevelRun({
     const sealParts = Array.from({ length: SAVE_SLOTS.seal_parts }, () => -1);
     (bootSave.seal_parts ?? []).forEach((identity, slot) => { sealParts[slot] = identity; });
     const hasAllTotemParts = () => totemParts.size >= SAVE_SLOTS.totem_parts;
+    /**
+     * ⛓ seedling-js-item-live-delivery — the two per-visit facts a LIVE delivery (`deliver`, below) leaves behind.
+     * Declared here, above every reader, because a reader may run during construction; both stay null on every run
+     * no host delivers into (every tape, every solve), so such a run is byte-identical to before.
+     *
+     *  · `liveSealVisit` `{level, entries}`: the visit during which the SIXTEENTH seal arrived. That visit's chests
+     *    were built without it, so they leave the way `Chest.update`'s `checkBySeal()` removes them (a wall until
+     *    the end of the frame that ran it), not the way a build removes them (absent from the start).
+     *  · `addedTimeHold` `{entries, values}`: the `ADDED_TIME_PROPERTIES` the current visit's world was built with,
+     *    held when a delivery changes one of them, so a mid-visit memo drop does not rebuild the room without an
+     *    entity whose `added()` already ran (Karlore, `Karlore.as:27-33`).
+     */
+    let liveSealVisit = null;
+    let addedTimeHold = null;
     /**
      * R2: the tape's persistence clears, indexed BY LEVEL.
      *
@@ -1290,7 +1313,10 @@ export function createLevelRun({
     };
     const worldFor = (n) => {
         if (!worlds.has(n)) {
-            const opts = { ...(roles ? { roles } : {}), inventory };
+            // ⛓ seedling-js-item-live-delivery: a delivered ADDED_TIME flag does not reach the CURRENT visit's build
+            // (its `added()` already ran); the next `new Game` — `enterWorld`'s `dropWorldIfBuiltStale` — does.
+            const held = addedTimeHold !== null && addedTimeHold.entries === worldEntries && n === level;
+            const opts = { ...(roles ? { roles } : {}), inventory: held ? { ...inventory, ...addedTimeHold.values } : inventory };
             if (clearedByLevel.has(n)) opts.cleared = clearedForBuild(n, clearedByLevel.get(n));
             // ⛓ Seedling fidelity F6 (I01): the next level's record, the only
             // one whose `tag = -1` writers land here — the provenance the build
@@ -4087,6 +4113,14 @@ export function createLevelRun({
      * all sixteen seal parts: `Chest`'s constructor runs `checkBySeal()` (the flag write), `Chest.check()` removes the
      * tagged chest on the first `Game.update` and `update`'s own `checkBySeal()` an untagged one, both before any frame
      * the player moves in. A derivation of the save, so it holds from the build — no state, no tick needed. OFF: false.
+     *
+     * ⛓ THE LIVE HALF (seedling-js-item-live-delivery, ⚖ Robert 2026-11-18 "Live apply, no rebuild"): the sixteenth
+     * seal can also ARRIVE mid-visit (`deliver`, a host's `Main.hasSealPartSet`). The game's `Chest.update` then runs
+     * `checkBySeal()` on the next frame, in the chest's update slot (before the Player's: `World.addUpdate` prepends):
+     * the flag is written at once (banked here through `pendingEarnedClears`, `open()`'s path) and `FP.world.remove`
+     * lands at that frame's `updateLists()` (`Engine.as:69-76`), so the Player still collides with it that frame and
+     * walks through from the next. `liveSealVisit` + `sealRemovedAt` carry that one frame; the next build of any room
+     * is the constructor half above. No committed tape takes the sixteenth seal mid-visit.
      */
     const chestsSealRemoved = () => CONTACT_FIDELITY.chestSealRemoval
         && sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
@@ -4095,7 +4129,15 @@ export function createLevelRun({
         if (st.size === 0) return null;
         const open = new Set();
         const sealGone = chestsSealRemoved();
-        for (const c of st.values()) if (!c.solid || sealGone) open.add(c.id);
+        // ⛓ seedling-js-item-live-delivery (CHESTSEAL's live half): in the visit the sixteenth seal arrived in, a chest
+        // stays a wall until the frame its own `checkBySeal()` ran has ended (`sealRemovedAt`, `stepChestsNow`).
+        const liveVisit = sealGone && liveSealVisit !== null && liveSealVisit.level === level
+            && liveSealVisit.entries === worldEntries;
+        for (const c of st.values()) {
+            if (!c.solid || (sealGone && (!liveVisit || (c.sealRemovedAt !== undefined && c.sealRemovedAt < ticksCompleted)))) {
+                open.add(c.id);
+            }
+        }
         return open.size === 0 ? null : open;
     };
     /**
@@ -5637,6 +5679,121 @@ export function createLevelRun({
         return record;
     };
     applyGrantsFor(level);
+
+    /**
+     * ⛓⛓⛓ seedling-js-item-live-delivery — **A HOST DELIVERY, APPLIED TO THE LIVE RUN** (⚖ Robert 2026-11-18T01:41Z,
+     * "Live apply, no rebuild"; the cure A of `CC/docs/cloud-reports/seedling-js-item-reboot-diagnosis.md` §5).
+     *
+     * The game's item setters write the SAVE and nothing else (`Main.as:187-212`); every reader is live. So the JS page
+     * no longer rebuilds the room for a delivery (`jsRuntimeCore.rebootInPlace`, which brought back every killed enemy
+     * and every pushed block and moved the respawn point to the pickup): it writes the same state here, and the room
+     * goes on. One entry point, four kinds — `change` is one of
+     *
+     *   {kind: 'flag', property, value}  `Main.<property> = value` — `applyGrantsFor`'s own `applyItem` for a `true`
+     *                                    (the grant path without its level gate), the setter's value for `hitsMax`
+     *                                    and for a `false`. Readers are use-time (`Player.as`, `ShieldLock.as:33`,
+     *                                    `LavaTrap.as:64`, …); the SLOT is appended by this frame's tail
+     *                                    (`syncSlotsAtTail`, `Inventory.update` → `addItemsFromSave`,
+     *                                    `Inventory.as:161,188,291-330`), never here.
+     *   {kind: 'key', key}               `Main.hasKeySet(key, true)` → `keys` (`BossLock.update` reads it every frame,
+     *                                    `BossLock.as:58-66`; `activators.js` reads this Set every tick).
+     *   {kind: 'totem', index}           `Main.hasTotemPartSet(index, true)` → `totemParts` (`hasAllTotemParts` live).
+     *   {kind: 'seal', slot, identity}   `Main.hasSealPartSet(slot, identity)` → `sealParts[slot]`; the sixteenth
+     *                                    removes the room's chests through `Chest.update`'s `checkBySeal()`
+     *                                    (`hasAllSealPartsNow`, `liveSealVisit`; fidelity CHESTSEAL's live half).
+     *
+     * ⛔ WHEN: AT A TICK BOUNDARY, NEVER INSIDE A STEP (it throws if `advance` is on the stack). The wasm game's write
+     * is BridgeGeneric's `getItemQueue` poll on its own `ENTER_FRAME` (`flash-ap-api` `BridgeGeneric.as:117,224`),
+     * outside `Game.update` and its `blackCover` gate — between two `Game.update()`s. So a write landing between
+     * frame t and t+1 is what t+1's Player step reads, and t+1's tail appends its slot; the JS core calls this from
+     * its queue drain at the top of a tick (`jsRuntimeCore.applyDeliveries`), which is that boundary.
+     *
+     * ⚠ WHAT IS NOT LIVE, ON PURPOSE: an `ADDED_TIME_PROPERTIES` flag (Fire → Karlore, `Karlore.as:27-33`) changes
+     * no entity of the CURRENT visit — `added()` already ran — so the visit's world is held at the values it was built
+     * with (`addedTimeHold`); the next `new Game` of any room builds with the delivery (`enterWorld` →
+     * `dropWorldIfBuiltStale`). A held key's `BossKey` / totem's `BossTotemPart` stays on the floor this visit too
+     * (their `check()` runs on a new world's first frame only, `Game.as:869-878`).
+     *
+     * IDEMPOTENT: a delivery the run already holds (the host's echo of the run's OWN pickup — a key, a totem part —
+     * or the same seal identity in the same slot, or a flag at its value) changes nothing and records nothing.
+     * @returns {{changed: boolean}}
+     */
+    const deliveries = [];
+    let advancing = false;
+    const deliver = (change) => {
+        if (advancing) {
+            throw new Error('levelRun.deliver: called INSIDE a step. A host write lands between two `Game.update()`s '
+                + '(BridgeGeneric polls on its own ENTER_FRAME), never mid-frame.');
+        }
+        return deliverNow(change);
+    };
+    /** The staged deliveries (`stagedDeliveries`) not applied yet, in tick order. */
+    const pendingStagedDeliveries = (Array.isArray(stagedDeliveries) ? stagedDeliveries : [])
+        .map((d, i) => {
+            if (!Number.isInteger(d?.t) || d.t < 0 || typeof d.change !== 'object' || d.change === null) {
+                throw new Error(`levelRun: staged delivery ${i} is not {t: integer >= 0, change: {kind, …}} — ${JSON.stringify(d)}`);
+            }
+            return { t: d.t, change: { ...d.change } };
+        })
+        .sort((a, b) => a.t - b.t);
+    /** Apply every staged delivery due at this boundary (`t === ticksCompleted`); a past one would be a lost write. */
+    const applyStagedDeliveries = () => {
+        while (pendingStagedDeliveries.length > 0 && pendingStagedDeliveries[0].t <= ticksCompleted) {
+            const d = pendingStagedDeliveries.shift();
+            if (d.t < ticksCompleted) {
+                throw new Error(`levelRun: staged delivery at t ${d.t} was not applied by t ${ticksCompleted} — `
+                    + `${JSON.stringify(d.change)}`);
+            }
+            deliverNow(d.change);
+        }
+    };
+    const deliverNow = (change) => {
+        const kind = change?.kind;
+        const unchanged = { changed: false };
+        const intIn = (v, n) => Number.isInteger(v) && v >= 0 && v < n;
+        let row;
+        if (kind === 'flag') {
+            const name = ITEM_NAMES.find((nm) => ITEM_PROPERTIES[nm].property === change.property);
+            if (name === undefined) throw new Error(`levelRun.deliver: ${JSON.stringify(change.property)} is not an item property`);
+            const spec = ITEM_PROPERTIES[name];
+            const value = spec.kind === 'add' ? Number(change.value) : change.value === true;
+            if (spec.kind === 'add' && !Number.isFinite(value)) throw new Error(`levelRun.deliver: ${spec.property} needs a number`);
+            if (inventory[spec.property] === value) return unchanged;
+            if (ADDED_TIME_PROPERTIES.includes(spec.property)
+                && (addedTimeHold === null || addedTimeHold.entries !== worldEntries)) {
+                addedTimeHold = {
+                    entries: worldEntries,
+                    values: Object.fromEntries(ADDED_TIME_PROPERTIES.map((p) => [p, inventory[p]])),
+                };
+            }
+            if (value === true) applyItem(inventory, name);
+            else inventory[spec.property] = value;
+            row = { property: spec.property, value };
+        } else if (kind === 'key') {
+            if (!intIn(change.key, SAVE_SLOTS.keys)) throw new Error(`levelRun.deliver: key ${change.key} is out of range`);
+            if (keys.has(change.key)) return unchanged;
+            keys.add(change.key);
+            row = { key: change.key };
+        } else if (kind === 'totem') {
+            if (!intIn(change.index, SAVE_SLOTS.totem_parts)) throw new Error(`levelRun.deliver: totem part ${change.index} is out of range`);
+            if (totemParts.has(change.index)) return unchanged;
+            totemParts.add(change.index);
+            row = { index: change.index };
+        } else if (kind === 'seal') {
+            if (!intIn(change.slot, SAVE_SLOTS.seal_parts) || !Number.isInteger(change.identity) || change.identity < 0) {
+                throw new Error(`levelRun.deliver: seal ${JSON.stringify(change)} is out of range`);
+            }
+            if (sealParts[change.slot] === change.identity) return unchanged;
+            const hadAll = hasAllSealPartsNow();
+            sealParts[change.slot] = change.identity;
+            if (!hadAll && hasAllSealPartsNow()) liveSealVisit = { level, entries: worldEntries };
+            row = { slot: change.slot, identity: change.identity };
+        } else {
+            throw new Error(`levelRun.deliver: unknown kind ${JSON.stringify(kind)} (flag | key | totem | seal)`);
+        }
+        deliveries.push({ t: ticksCompleted, level, kind, ...row });
+        return { changed: true };
+    };
 
     /**
      * ⛓⛓⛓ R6 SLICE 3: THE END-OF-TICK WORLD SWAP, ONCE.
@@ -8088,7 +8245,7 @@ export function createLevelRun({
         if (st.size === 0) return;
         const events = stepChests(st, {
             playerBox: playerBoxAt(state.x, state.y),
-            hasAllSealParts: HAS_ALL_SEAL_PARTS,
+            hasAllSealParts: hasAllSealPartsNow(),
             solidOver: (c) => {
                 // The chest's own box, and its own solid excluded — the
                 // `e !== this` of `Entity.collide`.
@@ -8108,6 +8265,12 @@ export function createLevelRun({
             // constructor; the model banks it on the visit's first chest step, as `open()`'s is (a `tag = -1` chest
             // writes nothing, `Chest.as:51`). OFF: dropped, as before.
             if (ev.kind === 'chestgone' && ev.why === 'checkBySeal' && chestsSealRemoved()) {
+                // ⛓ seedling-js-item-live-delivery: a chest of the visit the sixteenth seal arrived in, removed by
+                // its own update — `FP.world.remove` lands at the frame's `updateLists()` (`Engine.as:69-76`), so the
+                // Player, updated after it this frame, still collides with it; `openChestIdsNow` opens it next tick.
+                if (liveSealVisit !== null && liveSealVisit.level === level && liveSealVisit.entries === worldEntries) {
+                    st.get(ev.id).sealRemovedAt = ticksCompleted;
+                }
                 if (ev.persistTag >= 0) {
                     if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
                     pendingEarnedClears.get(level).add(ev.persistTag);
@@ -14888,8 +15051,13 @@ export function createLevelRun({
      * carries it, and the predicate is the game's own — **the LAST SLOT,
      * not the count** — because the array is a collection log and the game
      * tests `Main.hasSealPart(SEALS - 1) != -1`.
+     *
+     * ⛓ seedling-js-item-live-delivery: AND NO LONGER A BUILD CONSTANT. `Chest.update` asks `checkBySeal()` every
+     * frame (`Chest.as:59-61`), so a sixteenth seal the host delivers mid-visit (`deliver`) removes the room's
+     * chests on the next frame. Nothing in the model writes `sealParts` but the boot and `deliver`, so a run no host
+     * delivers into reads exactly the constant this was.
      */
-    const HAS_ALL_SEAL_PARTS = sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
+    const hasAllSealPartsNow = () => sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
     /** One record per chest this run opened. */
     const chestOpens = [];
     /** One per tick a pulse's `hit()` ran, per pulser. */
@@ -19086,6 +19254,8 @@ export function createLevelRun({
     // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
     tentacleMouthAtBuild();
 
+    // ⛓ seedling-js-item-live-delivery: a staged delivery written before the first step (`t` 0).
+    applyStagedDeliveries();
     return {
         get level() { return level; },
         get world() { return world; },
@@ -21720,7 +21890,14 @@ export function createLevelRun({
          * rather than swallowed, because a caller that wants to ignore them
          * can, and one that wants them cannot get them back.
          */
+        /** ⛓ seedling-js-item-live-delivery — a host delivery, applied live at a tick boundary (`deliver`). */
+        deliver(change) { return deliver(change); },
+        /** ⛓ seedling-js-item-live-delivery — one row per delivery that CHANGED the run: `{t, level, kind, …}`. */
+        get deliveries() { return deliveries.map((d) => ({ ...d })); },
         advance(held) {
+            // ⛓ seedling-js-item-live-delivery: `deliver` refuses while this is on the stack (a write is never mid-frame).
+            advancing = true;
+            try {
             // ⛓ fidelity FENCEPOST D1: the tick's body, unchanged, as one arrow — `settleSpinnerRemovalsNow` is its `updateLists()` tail.
             spinnersSteppedThisTick = null; // a tick that threw below its spinner step leaves no survivor
             const advanced = (() => {
@@ -24092,7 +24269,13 @@ export function createLevelRun({
             return { transition: record, grant, ...hits };
             })();
             settleSpinnerRemovalsNow();
+            advancing = false;
+            // ⛓ seedling-js-item-live-delivery: the next boundary's staged deliveries (`t` = this tick's end).
+            applyStagedDeliveries();
             return advanced;
+            } finally {
+                advancing = false;
+            }
         },
     };
 }
