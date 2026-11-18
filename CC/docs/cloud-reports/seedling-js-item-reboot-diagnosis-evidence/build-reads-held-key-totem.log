@@ -1,0 +1,2 @@
+key2 held false | run.keys [] | save.totem_parts [false,false,false,false,false] | bosskey/totem pickups in the built world: ["totempart@64,144","totempart@160,640","bosskey@656,528"] | all pickup tags ["totempart","totempart","bosskey"]
+key2 held true | run.keys [ 2 ] | save.totem_parts [true,true,false,false,false] | bosskey/totem pickups in the built world: ["totempart@64,144","totempart@160,640","bosskey@656,528"] | all pickup tags ["totempart","totempart","bosskey"]
