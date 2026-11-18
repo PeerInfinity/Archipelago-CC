@@ -17,7 +17,9 @@ TILE-2's report § 3.1, option B.
 | 3/4 | `c91824e924` | **The editor.** The `setTileKind` op, the **Tile kind** palette entry, copy/paste, the lab's `?packs=` and its picker |
 | 4/4 | `37e50acecf` | **The proof.** `mazeTileKindEditor.test.js` |
 | docs | `563ee4799c` | `maze.md`, `packs/README.md`, the `?packs=` URL-grammar row and its glossary term, the regenerated reference |
-| — | this commit | This report and its screenshots |
+| — | `6b567d39ef` | This report and its screenshots |
+| fix | `6e0e39e262` | `lint-gate-labels.allow.json`: the glossary pin's label `toHaveLength(166)` → `(167)`. CI's JSUT at `6b567d39ef` found it: 2 failures in `lintGateLabels.test.js`, which my bounded run (no `scripts/procgen`) did not cover |
+| merge | `d39977ebc9` | `main` `e390574969` (TILE-2 landed, train 144), merged once. The only conflicts were the generated `procgen/README.md` and `docsIndex.js`; both were regenerated (`--write`), not hand-merged |
 
 ## 1. The field
 
@@ -167,7 +169,30 @@ is covered by `check-maze-lab`.
   were added. The new files add 32 tests, all passing. `procgenDocs`: 8 files, 496 tests, all passed.
 - `generate-procgen-reference.mjs --check`: ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE.
 - `check-procgen-docs.mjs`: ALL CHECKS PASSED. `check-maze-lab.mjs`: ALL CHECKS PASSED (the box was free).
-- CI at the final tip: quoted in the report back.
+- CI at the final tip: see § 6.1.
+
+### 6.1 After the merge (`d39977ebc9`, main `e390574969`)
+
+- `--print-engine-closure`: still `engineMd5 bec369878feb67081187edca62baa951` (42 files). Gitlinks changed against
+  main: **0**. Preset and pack data against main: no byte differs (the only file under `frontend/packs` is its README).
+- **Op-log probe, main vs merged tip.** Main is a `git archive` export of `frontend/`, with the unchanged `shared`
+  submodule copied in, and the hashes are keyed on relative paths. Both sides gave 38 documents, 1,188 regions and
+  5,743,490 ops, and the hashes match: none `5210f7a4dc56d04c91eae4101c1b5966`, meta
+  `18cb8648ab5a2da84ca1c523a814ba5a`, every-key `2d88b83fac1f120c42a8144a7aa0018f`, composite
+  `9bfbc90f800043acf22b9d1f174b8d4e`. These differ from § 5's hashes because § 5 keyed on absolute paths and main's
+  presets moved since `3cc9fa2a51`; the op count did not change.
+- Both spiral-room preset `--check` runs OK; `action-nodes-compile --check` OK; `check-sidecar-fields` ALL PASS
+  (2,264 entries); `generate-procgen-reference --check`, `check-procgen-docs` and `check-maze-lab` ALL PASSED.
+- Bounded vitest (`mazeRoom`, `apworldEditor`, `procgenCore`, `contentPacks`, `packConcepts`,
+  `textAdventureSubstrateWrapper`, `procgenDocs`, `lintGateLabels`): 235 files, 6,655 tests, all passed.
+- CI at `d39977ebc9`, all success:
+  - ut 44340348697;
+  - JSUT 44340348816: suite 1347/28718 (28,718 passed), slow 36/438;
+  - TT 44340348554: every on-push batch HEADROOM OK, the largest being fast at 274.0 s of 600 s (46%), bundled
+    277.6 s (46%);
+  - feature-checks 44340355643.
+
+  JSUT 44205576126 (dispatched at `6e0e39e262`) concluded `success`.
 
 ## 7. Test paths
 
