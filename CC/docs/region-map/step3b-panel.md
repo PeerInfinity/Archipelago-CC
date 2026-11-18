@@ -152,6 +152,9 @@ resize-aware (a `ResizeObserver` and the container's `resize`).
    - **The fix:** the set editor (or the stateManager load) hands the derived atlas on. For example, an inline
      `region_atlas[p].atlas` or a registry-held cache keyed by `atlas_id` that `_hookCtx` reads. That is a cross-module
      question for the planner.
+   - ⛓ 2026-11-17: the cache landed (⚖ option (b)), with a host-side bundle writer; see
+     [`atlas-cache.md`](atlas-cache.md). ⚠ "What a custom world gets today" above was measured with `game: 'seedling'`
+     deps; the watch page's own sets (`seedling-watch-edit`) reach no Seedling hook at all (that report's residue 1).
 10. **Loop mode.**
     - v1 publishes no moves or checks, so it needs no `loopModeExemptions` entry.
     - Written in `index.js`'s docblock for step 4: a Region Map `source` that does not start with `regionGraph` is not a

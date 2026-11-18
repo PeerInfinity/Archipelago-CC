@@ -3,7 +3,7 @@
  * region-map-atlas-cache-dump — **THE REGION MAP MODEL AS CANONICAL JSON, BEFORE AND AFTER THE ATLAS CACHE**
  * (region-map atlas-cache slice; report `CC/docs/region-map/atlas-cache.md`).
  *
- *   node scripts/dev/region-map-atlas-cache-dump.mjs <outDir>
+ *   node scripts/dev/region-map-atlas-cache-dump.mjs <outDir> [--svg]
  *
  * Two worlds, two files each (`<world>.before.json`, `<world>.after.json`):
  *   · `vanilla_set_custom` — the editor's vanilla 116 with the VANILLA OVERLAY compiled as a CUSTOM set
@@ -90,10 +90,54 @@ export function canonicalModel(m) {
     });
 }
 
+/**
+ * ⛓ THE PICTURE — the model drawn with the panel's own geometry (`regionMapFrames.cellFrames`, `level` mode, the
+ * same frames the panel paints): each cell's frame (dashed grey = an ESTIMATED extent, solid = the level's real
+ * size), its squares at their tiles (`tileCentre`), and the cross-group links between cell centres coloured by
+ * kind (join grey, down orange, up blue, warp purple dashed). No art: what the slice changes is geometry.
+ */
+export function modelSvg(m, { cellFrames, tileCentre, framesBounds }, title) {
+    const ext = new Map([...m.cells].map(([k, c]) => [k, c.extent]));
+    const frames = cellFrames(m.layout.positions, ext, 'level');
+    const b = framesBounds([...frames.values()]);
+    const PAD = 40;
+    const HEAD = 60;
+    const S = 1600 / Math.max(b.x1 - b.x0, 1);
+    const X = (x) => PAD + (x - b.x0) * S;
+    const Y = (y) => PAD + HEAD + (y - b.y0) * S;
+    const W = Math.ceil((b.x1 - b.x0) * S + PAD * 2);
+    const H = Math.ceil((b.y1 - b.y0) * S + PAD * 2 + HEAD);
+    const COL = { join: '#adb5bd', down: '#e8590c', up: '#1971c2', warp: '#9c36b5' };
+    const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const out = [`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="sans-serif">`,
+        `<rect width="${W}" height="${H}" fill="#ffffff"/>`,
+        `<text x="${PAD}" y="26" font-size="18" font-weight="bold">${esc(title)}</text>`];
+    const d = canonicalModel(m);
+    out.push(`<text x="${PAD}" y="48" font-size="13" fill="#333">${esc(`cells sized ${d.sized}/${d.cellCount} · squares ${d.placed} (${JSON.stringify(d.tileSources)}) · links ${JSON.stringify(d.linkKinds)}`)}</text>`);
+    const centre = (k) => { const f = frames.get(k); return [X(f.x + f.w / 2), Y(f.y + f.h / 2)]; };
+    for (const l of m.layout.graph.links) {
+        if (m.groupOf.get(l.from) === m.groupOf.get(l.to)) continue;
+        const [x1, y1] = centre(l.from);
+        const [x2, y2] = centre(l.to);
+        const k = l.kind ?? 'join';
+        out.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${COL[k] ?? '#000'}" stroke-width="1.2" stroke-opacity="0.7"${k === 'warp' ? ' stroke-dasharray="4 3"' : ''}/>`);
+    }
+    for (const [k, f] of frames) {
+        const est = f.ext.estimated;
+        out.push(`<rect x="${X(f.x).toFixed(1)}" y="${Y(f.y).toFixed(1)}" width="${(f.w * S).toFixed(1)}" height="${(f.h * S).toFixed(1)}" fill="#f1f3f5" fill-opacity="0.85" stroke="${est ? '#868e96' : '#212529'}" stroke-width="1"${est ? ' stroke-dasharray="3 2"' : ''}/>`);
+        for (const t of m.cells.get(k).tiles) {
+            const c = tileCentre(f, t.x, t.y);
+            out.push(`<rect x="${(X(c.x) - 2.5).toFixed(1)}" y="${(Y(c.y) - 2.5).toFixed(1)}" width="5" height="5" fill="${t.kind === 'event' ? '#f08c00' : '#2f9e44'}"/>`);
+        }
+    }
+    out.push('</svg>');
+    return `${out.join('\n')}\n`;
+}
+
 const write = (dir, name, obj) => writeFileSync(join(dir, name), `${JSON.stringify(obj, null, 2)}\n`);
 
 async function main() {
-    const outDir = process.argv[2];
+    const outDir = process.argv.slice(2).find((a) => !a.startsWith('--'));
     if (!outDir) {
         console.log('usage: region-map-atlas-cache-dump.mjs <outDir>');
         process.exit(2);
@@ -137,6 +181,13 @@ async function main() {
     const after = canonicalModel(model(shown, ctx));
     write(outDir, 'vanilla_set_custom.before.json', before);
     write(outDir, 'vanilla_set_custom.after.json', after);
+    if (process.argv.includes('--svg')) {
+        const geo = await import(M('regionMap/regionMapFrames.js'));
+        writeFileSync(join(outDir, 'vanilla_set_custom.before.svg'),
+            modelSvg(model(custom.rules, {}), geo, 'custom Seedling set — BEFORE (no atlas: hookCtx {})'));
+        writeFileSync(join(outDir, 'vanilla_set_custom.after.svg'),
+            modelSvg(model(shown, ctx), geo, 'custom Seedling set — AFTER (the bundle\'s atlas, via atlasCache → _hookCtx)'));
+    }
 
     const pt = JSON.parse(readFileSync(rulesPathOf('seedling_playthrough'), 'utf8'));
     const ptBefore = canonicalModel(model(pt, {}));
