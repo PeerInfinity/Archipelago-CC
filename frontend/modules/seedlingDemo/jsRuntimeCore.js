@@ -95,9 +95,12 @@
  *
  * ── ⛔ WHAT IS NOT MODELLED, BY NAME ──────────────────────────────────────
  *
- *  · An item flag that changes MID-ROOM re-boots the run where the player
- *    stands (the run's inventory is fixed at boot). The room's earned clears
- *    are carried; its per-visit state (enemy positions, velocity) is not.
+ *  · ⛓ seedling-js-item-live-delivery — an item flag, a key, a totem part
+ *    or a seal part that arrives MID-ROOM is written into the LIVE run
+ *    (`applyDeliveries` → `levelRun.deliver`), as the game's setters write
+ *    the save and rebuild nothing: the room keeps every killed enemy, pushed
+ *    block and held button, and the respawn point stays the room's entry.
+ *    (Until then it re-booted the run where the player stood.)
  *  · ⛓ J3 — the VANILLA 116 are playable too: the page hands over the map
  *    document (`setVanilla`) and a `new Game` teleport with no level set
  *    mounted boots that level, exactly as the wasm game runs its own tables
@@ -231,11 +234,12 @@ const overlaps = (a, b) => a.x < b.right && b.x < a.right && a.y < b.bottom && b
 export const EXIT_TYPES = Object.freeze(['teleporter', ...STAIRS_TAGS]);
 
 /**
- * The `why` of a boot note for a REBOOT IN PLACE (`rebootInPlace`: an item flag, a key, a seal part). The game
- * builds no new world for one (a `Main.*` write), so no load fade either: the page's painter reads it off
+ * The `why` of a boot note for a REBOOT IN PLACE (`rebootInPlace`). ⛓ seedling-js-item-live-delivery: only the RE2
+ * restore reboots in place now; an item flag, a key, a totem part or a seal part is written into the LIVE run
+ * (`applyDeliveries`, a `delivery` note) and boots nothing. No load fade for it: the page's painter reads it off
  * `events` to tell such a run from a `new Game` (graphics G7).
  */
-export const IN_PLACE_REBOOT_WHY = 'an item flag changed';
+export const IN_PLACE_REBOOT_WHY = 'the save was restored';
 
 /**
  * ⛓ J3 — the `exitType` a fired door reports: the type of the room's own
@@ -424,7 +428,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     const carried = new Map();
     /** "level:tag" apitems collected (their slot is cleared). */
     const collected = new Set();
+    /** ⛓ RE2 — the restore's reboot in place is pending (the ONLY reboot in place since seedling-js-item-live-delivery). */
     let deferredReboot = false;
+    /**
+     * ⛓ seedling-js-item-live-delivery — host deliveries the session's ledgers hold and the LIVE run has not been handed
+     * yet (`applyDeliveries`): `{kind: 'flag'|'key'|'totem'|'seal', …}`, `levelRun.deliver`'s vocabulary. A boot drops
+     * them, because it stages the ledgers they are already in.
+     */
+    let pendingDeliveries = [];
     /** ⛓ RE2 — a restored save's slot order, staged by the next non-tape boot (then null). */
     let restoredSlots = null;
     /** ⛓ RE2 — the restore's own reboot in place: a fresh life, so it carries no damage. */
@@ -675,6 +686,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (declared) bootItems = { ...flags, ...pickItems(session.run.inventory ?? {}) };
         halted = null;
         deferredReboot = false;
+        pendingDeliveries = [];
         note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
         saveChanged('boot');
         return session;
@@ -865,9 +877,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ seedling-js-replay-continuation — a HELD room steps nothing (`Main.as:80-89`: `Bot.holding` skips
         // `super.update()`), and the host's queue was drained above, as the game's `drainItems` runs on such a frame.
         if (tape.holding) { flush(); return { stepped: false, held: true }; }
-        // ⛓ PHASE B — an item delivery's in-place reboot WAITS while a tape is armed (it would replace the tape's run
-        // mid-stream; the game's flag write rebuilds nothing), and lands on the first tick after the tape finishes.
+        // ⛓ RE2 — a restore's reboot in place WAITS while a tape is armed (it would replace the tape's run mid-stream),
+        // and lands on the first tick after the tape finishes.
         if (deferredReboot && !tape.armed && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        // ⛓ seedling-js-item-live-delivery — and so does a delivery's live write (a write into a tape's run would desync
+        // it): it lands at the boundary of the first tick after the tape finishes.
+        applyDeliveries();
+        if (!session || halted) { flush(); return { stepped: false }; }
         const run = session.run;
         // ⛓ PHASE B — the tape's keys for this tick, or null: no tape armed (every tick before Phase B), or the tape
         // finished on THIS frame (the game's frame still updates — `Bot.as:3330-3333` returns to `super.update()`).
@@ -1146,6 +1162,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         return { hits: d.hits, hits_timer: d.hitsTimer, direction_face: d.directionFace };
     }
 
+    /**
+     * ⛓ RE2 — THE RESTORE'S REBOOT IN PLACE, and since seedling-js-item-live-delivery its ONLY caller: a host delivery
+     * is written into the live run (`applyDeliveries` → `levelRun.deliver`), as the game's setters write the save and
+     * build nothing. The constructor args are INTEGERS (`new Game(_level:int, _playerx:int, _playery:int)`; AS3's
+     * `int()` truncates), never the float a live position minus the half tile is.
+     */
     function rebootInPlace(why) {
         const run = session.run;
         // The player's tick-0 state is the ctor args plus the half tile.
@@ -1154,9 +1176,44 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ RE2 — the restore's reboot is a fresh life (⚖ Robert: "No, a fresh life"): no damage carried.
         const fresh = restoreBoot;
         restoreBoot = false;
-        boot({ level: run.level, x: run.state.x - half, y: run.state.y - half }, why,
-            { playerDamage: fresh ? null : carriedDamage(run) });
+        const ctor = { x: Math.trunc(run.state.x - half), y: Math.trunc(run.state.y - half) };
+        if (!Number.isInteger(ctor.x) || !Number.isInteger(ctor.y)) {
+            throw new Error(`jsRuntimeCore.rebootInPlace: a non-integer constructor (${ctor.x}, ${ctor.y})`);
+        }
+        boot({ level: run.level, ...ctor }, why, { playerDamage: fresh ? null : carriedDamage(run) });
         arrival = keep;
+    }
+
+    /**
+     * ⛓⛓ seedling-js-item-live-delivery — HAND THE LIVE RUN WHAT THE HOST DELIVERED (⚖ Robert 2026-11-18, "Live
+     * apply, no rebuild"). Called at a TICK BOUNDARY only — the end of the queue drain and the top of `tickOnce`, both
+     * before the tick's `session.step` — the boundary the wasm game's BridgeGeneric write lands on (its own
+     * `ENTER_FRAME`, between two `Game.update()`s; `levelRun.deliver` has the citation). It waits, as the reboot it
+     * replaces waited, while a tape is armed, while a ceremony runs, and while an encounter leg's own report is
+     * being served (`encounterHoldsDelivery`): a live write can still refute a leg's plan.
+     */
+    function applyDeliveries() {
+        if (pendingDeliveries.length === 0 || !session || halted) return;
+        if (tape.armed || session.run.inCeremony || encounterHoldsDelivery()) return;
+        const batch = pendingDeliveries;
+        pendingDeliveries = [];
+        let changed = false;
+        for (const d of batch) {
+            let r;
+            try {
+                r = session.deliver(d);
+            } catch (err) {
+                halted = { tick: ticks, message: err.message };
+                note({ type: 'halt', message: `[js runtime] HALTED — the model refused a delivery: ${err.message.split('\n')[0]}` });
+                return;
+            }
+            // A delivered flag is not one the run GAINED in play (`foldGainedItems` measures against this).
+            if (d.kind === 'flag' && bootItems) bootItems[d.property] = session.run.inventory[d.property];
+            changed = changed || r.changed;
+            note({ type: 'delivery', ...d, changed: r.changed, level: session.run.level, tick: ticks,
+                message: `[js runtime] delivery ${JSON.stringify(d)} — ${r.changed ? 'written into the live run' : 'already held (no-op)'}` });
+        }
+        if (changed) saveChanged('delivery');
     }
 
     // ── ⛓⛓ RE2 — the save (`JS_SAVE_VERSION`'s head) ───────────────────────
@@ -1240,6 +1297,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             restoreBoot = true;
             deferredReboot = true;
         }
+        // ⛓ seedling-js-item-live-delivery — the restored ledgers supersede any delivery not yet handed to the run.
+        pendingDeliveries = [];
         note({ type: 'save', restored: true, message: `[js runtime] save restored — ${carried.size} clear(s), `
             + `${collected.size} apitem(s), ${heldKeys.size} key(s), ${sealLog().length} seal(s), ${heldTotems.size} totem part(s)` });
         return { ok: true };
@@ -1251,27 +1310,28 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
 
     function applyItem(item) {
         // ⛓ KEY DELIVERY — `Main.hasKeySet(i, true)` (games/seedling.json's method-call keys): the session gains
-        // the key and the room is rebooted in place, as for an item flag (a key is read at BUILD: a held key's
-        // `BossKey` removes itself). A `false` is never sent (the adapter never clears) and is not modelled.
+        // the key, and (seedling-js-item-live-delivery) the LIVE run gains it at the next tick boundary
+        // (`applyDeliveries`; `BossLock.update` reads it every frame). The host's echo of a key the run picked up itself
+        // is a no-op there. A `false` is never sent (the adapter never clears) and is not modelled.
         if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
             && item.method === 'hasKeySet' && Number.isInteger(item.args?.[0]) && item.args?.[1] === true) {
             const k = item.args[0];
             if (!heldKeys.has(k) && !(session?.run?.keys?.has?.(k))) {
                 heldKeys.add(k);
-                if (session) deferredReboot = true;
+                if (session) pendingDeliveries.push({ kind: 'key', key: k });
             } else heldKeys.add(k);
             return;
         }
         // ⛓ SEAL DELIVERY — `Main.hasSealPartSet(slot, identity)` / `Main.hasTotemPartSet(i, true)` (games/seedling.json's
-        // FILL items): the setter's own write (a slot / an index), then a reboot in place, as for a key (a chest reads
-        // `hasAllSealParts` at BUILD — `Chest.checkBySeal`; a `BossTotemPart` its index). A clear is never sent.
+        // FILL items): the setter's own write (a slot / an index), then the same write into the LIVE run at the next
+        // tick boundary (`applyDeliveries`; a chest asks `checkBySeal()` every frame, `Chest.as:59-61`). A clear is never sent.
         if (item?.invocation === 'method_call' && aliasClass(item.path?.[0]?.class) === MAIN
             && item.method === 'hasSealPartSet' && Number.isInteger(item.args?.[0]) && Number.isInteger(item.args?.[1])
             && item.args[0] >= 0 && item.args[0] < SAVE_SLOTS.seal_parts && item.args[1] >= 0) {
             foldGainedSaves();
             if (sealSlots[item.args[0]] !== item.args[1]) {
                 sealSlots[item.args[0]] = item.args[1];
-                if (session) deferredReboot = true;
+                if (session) pendingDeliveries.push({ kind: 'seal', slot: item.args[0], identity: item.args[1] });
             }
             return;
         }
@@ -1281,7 +1341,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             foldGainedSaves();
             if (!heldTotems.has(item.args[0])) {
                 heldTotems.add(item.args[0]);
-                if (session) deferredReboot = true;
+                if (session) pendingDeliveries.push({ kind: 'totem', index: item.args[0] });
             }
             return;
         }
@@ -1297,7 +1357,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 const value = typeof ITEM_FLAGS[item.property] === 'number' ? Number(item.value) : Boolean(item.value);
                 if (flags[item.property] !== value) {
                     flags[item.property] = value;
-                    if (session) deferredReboot = true;
+                    if (session) pendingDeliveries.push({ kind: 'flag', property: item.property, value });
                 }
                 return;
             }
@@ -1312,6 +1372,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (deferredReboot && session && !session.run.inCeremony && !halted && !encounterHoldsDelivery()) {
             rebootInPlace(IN_PLACE_REBOOT_WHY);
         }
+        applyDeliveries();
     }
 
     /**

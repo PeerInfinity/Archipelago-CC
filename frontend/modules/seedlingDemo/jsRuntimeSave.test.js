@@ -110,7 +110,9 @@ describe('⛓⛓ RE2 — the JS save across a page reload', () => {
         expect(b.restorePending).toBe(true);
         b.tick();                                                  // the restore's reboot in place
         expect(b.restorePending).toBe(false);
-        expect(b.events.at(-1).message).toMatch(/boot level 0 at \(80, 128\) — an item flag changed$/);
+        // ⛓ seedling-js-item-live-delivery — the restore is the one reboot in place left; its note names it
+        expect(b.events.at(-1).message).toMatch(/boot level 0 at \(80, 128\) — the save was restored$/);
+        expect(Number.isInteger(b.run.worldCtor.x) && Number.isInteger(b.run.worldCtor.y)).toBe(true);   // an int ctor
         expect([b.run.level, b.run.worldCtor.x, b.run.worldCtor.y]).toEqual(START);   // ⚖ the player at the start
         expect(b.run.inventorySlots).toEqual([1, 0]);
         expect([...b.run.keys].sort()).toEqual([0, 3]);

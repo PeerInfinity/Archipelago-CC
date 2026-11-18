@@ -1,0 +1,1110 @@
+{
+ "case": "l40-control",
+ "reboot_why": "the save was restored",
+ "snaps": [
+  {
+   "label": "booted in the corridor below the chest (new Game(40, 864,848))",
+   "tick": 1,
+   "run_id": 1,
+   "level": 40,
+   "pos": {
+    "x": 872,
+    "y": 856
+   },
+   "worldCtor": {
+    "x": 864,
+    "y": 848
+   },
+   "arrival": {
+    "level": 40,
+    "x": 864,
+    "y": 848
+   },
+   "damage": {
+    "hits": 0,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 0,
+   "keys": [
+    2
+   ],
+   "chasers": [
+    {
+     "id": "bob@320,112",
+     "x": 328,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,112",
+     "x": 296,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,80",
+     "x": 296,
+     "y": 88,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@304,144",
+     "x": 312,
+     "y": 152,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@272,112",
+     "x": 280,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bobsoldier@880,832",
+     "x": 888,
+     "y": 840,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,752",
+     "x": 744,
+     "y": 760,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,800",
+     "x": 744,
+     "y": 808,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@192,480",
+     "x": 200,
+     "y": 488,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,448",
+     "x": 360,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,416",
+     "x": 360,
+     "y": 424,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@208,448",
+     "x": 216,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@224,496",
+     "x": 232,
+     "y": 504,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@128,624",
+     "x": 136,
+     "y": 632,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@816,128",
+     "x": 824,
+     "y": 136,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    }
+   ],
+   "locks": [
+    {
+     "id": "wandlock@176,80",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,128",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,160",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@176,208",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@480,560",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@448,432",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@512,480",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@800,400",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "bosslock@480,352",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [],
+   "burnedTrees": {},
+   "pressed": [],
+   "persistence_cleared": []
+  },
+  {
+   "label": "the bobsoldier is dead (the room as the player has made it)",
+   "tick": 293,
+   "run_id": 1,
+   "level": 40,
+   "pos": {
+    "x": 887.63,
+    "y": 860.1
+   },
+   "worldCtor": {
+    "x": 864,
+    "y": 848
+   },
+   "arrival": {
+    "level": 40,
+    "x": 864,
+    "y": 848
+   },
+   "damage": {
+    "hits": 2,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 3,
+   "keys": [
+    2
+   ],
+   "chasers": [
+    {
+     "id": "bob@320,112",
+     "x": 328,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,112",
+     "x": 296,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,80",
+     "x": 296,
+     "y": 88,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@304,144",
+     "x": 312,
+     "y": 152,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@272,112",
+     "x": 280,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,752",
+     "x": 744,
+     "y": 760,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,800",
+     "x": 744,
+     "y": 808,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@192,480",
+     "x": 200,
+     "y": 488,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,448",
+     "x": 360,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,416",
+     "x": 360,
+     "y": 424,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@208,448",
+     "x": 216,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@224,496",
+     "x": 232,
+     "y": 504,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@128,624",
+     "x": 136,
+     "y": 632,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@816,128",
+     "x": 824,
+     "y": 136,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    }
+   ],
+   "locks": [
+    {
+     "id": "wandlock@176,80",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,128",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,160",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@176,208",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@480,560",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@448,432",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@512,480",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@800,400",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "bosslock@480,352",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [],
+   "burnedTrees": {},
+   "pressed": [],
+   "persistence_cleared": []
+  },
+  {
+   "label": "the chest opened (pendingCheck fired), BEFORE the host echoes the item",
+   "tick": 317,
+   "run_id": 1,
+   "level": 40,
+   "pos": {
+    "x": 887.63,
+    "y": 833.1
+   },
+   "worldCtor": {
+    "x": 864,
+    "y": 848
+   },
+   "arrival": {
+    "level": 40,
+    "x": 864,
+    "y": 848
+   },
+   "damage": {
+    "hits": 2,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 3,
+   "keys": [
+    2
+   ],
+   "chasers": [
+    {
+     "id": "bob@320,112",
+     "x": 328,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,112",
+     "x": 296,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,80",
+     "x": 296,
+     "y": 88,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@304,144",
+     "x": 312,
+     "y": 152,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@272,112",
+     "x": 280,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,752",
+     "x": 744,
+     "y": 760,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,800",
+     "x": 744,
+     "y": 808,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@192,480",
+     "x": 200,
+     "y": 488,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,448",
+     "x": 360,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,416",
+     "x": 360,
+     "y": 424,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@208,448",
+     "x": 216,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@224,496",
+     "x": 232,
+     "y": 504,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@128,624",
+     "x": 136,
+     "y": 632,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@816,128",
+     "x": 824,
+     "y": 136,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    }
+   ],
+   "locks": [
+    {
+     "id": "wandlock@176,80",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,128",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,160",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@176,208",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@480,560",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@448,432",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@512,480",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@800,400",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "bosslock@480,352",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [],
+   "burnedTrees": {},
+   "pressed": [],
+   "persistence_cleared": [
+    {
+     "level": 40,
+     "tag": 13
+    }
+   ]
+  },
+  {
+   "label": "one tick after the delivery (the in-place reboot ran)",
+   "tick": 318,
+   "run_id": 1,
+   "level": 40,
+   "pos": {
+    "x": 887.63,
+    "y": 831.9
+   },
+   "worldCtor": {
+    "x": 864,
+    "y": 848
+   },
+   "arrival": {
+    "level": 40,
+    "x": 864,
+    "y": 848
+   },
+   "damage": {
+    "hits": 2,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 3,
+   "keys": [
+    2
+   ],
+   "chasers": [
+    {
+     "id": "bob@320,112",
+     "x": 328,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,112",
+     "x": 296,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,80",
+     "x": 296,
+     "y": 88,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@304,144",
+     "x": 312,
+     "y": 152,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@272,112",
+     "x": 280,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,752",
+     "x": 744,
+     "y": 760,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,800",
+     "x": 744,
+     "y": 808,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@192,480",
+     "x": 200,
+     "y": 488,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,448",
+     "x": 360,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,416",
+     "x": 360,
+     "y": 424,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@208,448",
+     "x": 216,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@224,496",
+     "x": 232,
+     "y": 504,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@128,624",
+     "x": 136,
+     "y": 632,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@816,128",
+     "x": 824,
+     "y": 136,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    }
+   ],
+   "locks": [
+    {
+     "id": "wandlock@176,80",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,128",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,160",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@176,208",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@480,560",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@448,432",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@512,480",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@800,400",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "bosslock@480,352",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [],
+   "burnedTrees": {},
+   "pressed": [],
+   "persistence_cleared": [
+    {
+     "level": 40,
+     "tag": 13
+    }
+   ]
+  },
+  {
+   "label": "after 1800 idle ticks",
+   "tick": 2118,
+   "run_id": 1,
+   "level": 40,
+   "pos": {
+    "x": 887.63,
+    "y": 829.6
+   },
+   "worldCtor": {
+    "x": 864,
+    "y": 848
+   },
+   "arrival": {
+    "level": 40,
+    "x": 864,
+    "y": 848
+   },
+   "damage": {
+    "hits": 2,
+    "hitsTimer": 0,
+    "directionFace": -1
+   },
+   "deaths": 3,
+   "keys": [
+    2
+   ],
+   "chasers": [
+    {
+     "id": "bob@320,112",
+     "x": 328,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,112",
+     "x": 296,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@288,80",
+     "x": 296,
+     "y": 88,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@304,144",
+     "x": 312,
+     "y": 152,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@272,112",
+     "x": 280,
+     "y": 120,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,752",
+     "x": 744,
+     "y": 760,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@736,800",
+     "x": 744,
+     "y": 808,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@192,480",
+     "x": 200,
+     "y": 488,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,448",
+     "x": 360,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@352,416",
+     "x": 360,
+     "y": 424,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@208,448",
+     "x": 216,
+     "y": 456,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "bob@224,496",
+     "x": 232,
+     "y": 504,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@128,624",
+     "x": 136,
+     "y": 632,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    },
+    {
+     "id": "puncher@816,128",
+     "x": 824,
+     "y": 136,
+     "hits": 0,
+     "dying": false,
+     "destroy": false
+    }
+   ],
+   "locks": [
+    {
+     "id": "wandlock@176,80",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,128",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,144",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@208,160",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@176,208",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@480,560",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@448,432",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@512,480",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "wandlock@800,400",
+     "open": false,
+     "alpha": 1
+    },
+    {
+     "id": "bosslock@480,352",
+     "open": false,
+     "alpha": 1
+    }
+   ],
+   "pushedBlocks": [],
+   "burnedTrees": {},
+   "pressed": [],
+   "persistence_cleared": [
+    {
+     "level": 40,
+     "tag": 13
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "t": 81,
+   "death": "sword",
+   "at": {
+    "x": 872,
+    "y": 856
+   },
+   "ctor": {
+    "x": 864,
+    "y": 848
+   }
+  },
+  {
+   "t": 143,
+   "death": "sword",
+   "at": {
+    "x": 872,
+    "y": 856
+   },
+   "ctor": {
+    "x": 864,
+    "y": 848
+   }
+  },
+  {
+   "t": 199,
+   "death": "spinner",
+   "at": {
+    "x": 872,
+    "y": 856
+   },
+   "ctor": {
+    "x": 864,
+    "y": 848
+   }
+  }
+ ],
+ "host": [
+  {
+   "t": 317,
+   "pendingCheck": "1|40|13|0"
+  },
+  {
+   "t": 317,
+   "queued": "NOTHING (control: the host echoes no item)"
+  }
+ ],
+ "killed": {
+  "t": 273,
+  "bobsoldier": "gone"
+ },
+ "walk": {
+  "done": true
+ },
+ "deaths": [
+  {
+   "t": 81,
+   "level": 40,
+   "kind": "sword",
+   "respawn": {
+    "x": 872,
+    "y": 856
+   }
+  },
+  {
+   "t": 143,
+   "level": 40,
+   "kind": "sword",
+   "respawn": {
+    "x": 872,
+    "y": 856
+   }
+  },
+  {
+   "t": 199,
+   "level": 40,
+   "kind": "spinner",
+   "respawn": {
+    "x": 872,
+    "y": 856
+   }
+  }
+ ],
+ "notes": [
+  "[js runtime] boot level 0 at (80, 128) — the game's own first frame (Main.as:51)",
+  "[js runtime] boot level 40 at (864, 848) — teleport (new Game)",
+  "[js runtime] death (sword) in level 40 — the model restarted the room the game's way",
+  "[js runtime] death (sword) in level 40 — the model restarted the room the game's way",
+  "[js runtime] death (spinner) in level 40 — the model restarted the room the game's way"
+ ]
+}
