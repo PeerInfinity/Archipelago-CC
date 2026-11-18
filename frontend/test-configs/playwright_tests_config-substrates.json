@@ -2055,10 +2055,52 @@
             "_comment": "REGION MAP step 4 (2026-11-17): with loop mode on, a Region Map cell click plans (regionMap-* is a loopModeExemptions planning source): its move is appended to the path. Batch playback-bot (on push)."
         },
         {
+            "id": "test_region_graph_panel_activation",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): the panel activates and builds its DOM: the status bar, the control panel with Reset View / Re-layout / Export Positions, the graph container. On push (fast batch)."
+        },
+        {
+            "id": "test_cytoscape_library_loading",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): the panel's four Cytoscape scripts load on first show (cytoscape, cose-base, the fcose plugin). On push (fast batch)."
+        },
+        {
+            "id": "test_graph_initial_load",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): the graph shows every region of the ALREADY-loaded world on show, with no rules load of its own (region nodes = staticData.regions; durable cy state, not the transient status text). On push (fast batch)."
+        },
+        {
+            "id": "test_graph_data_loading",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): a rules load while the panel is up (ALTTP) rebuilds the graph for the new world (an old node is removed(), the new nodes = staticData.regions); reloads the world loaded before. On push (fast batch)."
+        },
+        {
+            "id": "test_control_buttons",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): Reset View, then Re-layout: the status goes Running layout → Layout complete. Waits out any running layout first (one makes Re-layout a no-op). On push (fast batch)."
+        },
+        {
+            "id": "test_node_selection",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): a pointer tap (mousedown + mouseup at the node's rendered position) on a region node publishes regionGraph:nodeSelected { nodeId, data } and marks it selected: the only row through the canvas → tap → handler wiring CA-S2 rewrites. Reloads the world loaded before. On push (fast batch)."
+        },
+        {
             "id": "test_region_graph_node_picker",
             "enabled": true,
             "category": "Region Graph",
-            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the Region Graph's folded \"Go to\" section (⚖ the user: regions AND locations, collapsed by default) does what a node tap does, so a tutorial step can reach a node. On push (fast batch). Reloads the world loaded before."
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the Region Graph's folded \"Go to\" section (⚖ the user: regions AND locations, collapsed by default) does what a node tap does, so a tutorial step can reach a node. On push (fast batch). Reloads the world loaded before. REGION GRAPH CHECKS (2026-11-18): picks an ACCESSIBLE unchecked location (it took the first unchecked one, Agahnim 1 in ALTTP, which the check gate refuses)."
+        },
+        {
+            "id": "test_region_graph_location_nodes_survive_rebuild",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "REGION GRAPH CHECKS (2026-11-18): the location-node rebuild bug. force-show written through the settings draws the location nodes, and a later moduleSettings.regionGraph.* write (which rebuilds the graph) leaves them drawn; restores both settings. On push (fast batch)."
         },
         {
             "id": "tutorial-walk-start-workbench",
