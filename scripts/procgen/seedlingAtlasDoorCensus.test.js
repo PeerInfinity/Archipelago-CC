@@ -135,8 +135,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   (2ac275e8 -> 77a4c0ea; one internal row's rule widens, no exit or door moves).
         // ⛓ land/rules-move-fireguard: the Fire guard re-merged onto train 140 (L22 Wand); re-recorded from the producers (77a4c0ea -> 5ca88dfe; 316 internal exits).
         // ⛓ rules-lavatrap-neck: rule T gates L77's and L78's lavatrap discs.
-        // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146); re-recorded from the producers (5ca88dfe -> NEWID).
-        expect(c.atlasId).toBe('seedling-NEWID');
+        // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146); re-recorded from the producers (5ca88dfe -> ea1ef5ba).
+        expect(c.atlasId).toBe('seedling-ea1ef5ba');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

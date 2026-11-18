@@ -466,8 +466,8 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             // ⛓ rules-lavatrap-neck: rule T (L77's and L78's lavatrap discs are gated cells costing Or(Dark Suit, Ghost Spear);
             //   L77 splits into r2c0 / r12c6 / r15c6, L78 gains six sub-regions; no door, location or other level moves).
             // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146, land/rules-move-fireguard); re-recorded from the
-            //   producers (9925cc35 -> NEWMD5S; atlas id 5ca88dfe -> NEWID).
-            .toBe('NEWMD5');
+            //   producers (9925cc35 -> 391ef89a; atlas id 5ca88dfe -> ea1ef5ba).
+            .toBe('391ef89a3af8a2410c835ce6c54455f7');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
