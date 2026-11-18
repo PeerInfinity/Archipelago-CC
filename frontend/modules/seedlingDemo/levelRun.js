@@ -3470,6 +3470,20 @@ export function createLevelRun({
      */
     let turretSlotContact = null;
     /**
+     * ⛓ fidelity PICKUPFREEZE D2 (`CONTACT_FIDELITY.pickupTickFreeze`, ON only): this tick's prediction that a pickup
+     * ceremony starts (`pickupFreezeAheadNow`), `{t, level, start: null | {tag, textless}, slots}`, asked by the
+     * families that update after a pickup and re-checked at the detection. OFF it is never written.
+     */
+    let pickupFreezeAhead = null;
+    /**
+     * ⛓ fidelity DIALOGUEFREEZE D2 (`CONTACT_FIDELITY.dialogueFrameFreeze`, ON only): this tick's prediction that a
+     * texted NPC's `talk()` raises `Game.freezeObjects` and keeps it up (`dialogueFreezeAheadNow`), `{t, level, frozen,
+     * slots}`, asked by the families that update after the NPC and re-checked at the talker and watcher arms; and the
+     * tick's held keys, for the talk key's release. OFF neither is ever written.
+     */
+    let dialogueFreezeAhead = null;
+    let dialogueHeldNow = null;
+    /**
      * The `Game` constructor args of the CURRENT world — what
      * `restartLevel()` reboots into.
      *
@@ -13291,20 +13305,25 @@ export function createLevelRun({
             b.removedTick = ticksCompleted + 1;
         }
     }
-    function stepDrillsNow() {
+    function stepDrillsNow({ mainTick = false } = {}) {
         if (noclip || noDamage) return;
         const st = drillStateFor(level);
         if (st.size === 0) return;
         const base = spinnerCtx();
         const t = ticksCompleted + 1;
         const mixed = CONTACT_FIDELITY.drillMixedRooms;
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2290`). Asked
+        // from the main tick's slot only (a fall-rock span's release frame is not a pickup's first frame).
+        const frozenAhead = mainTick && pickupFreezesFamilyNow('drill', { lump: false });
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2290` vs `:2389+`).
+        const dialogueAhead = mainTick && dialogueFreezeAheadNow('drill');
         // ⛓ fidelity DRILL D2: the game's update order is the LAST placement first (one drill: no order).
         for (const id of (mixed ? [...st.keys()].reverse() : [...st.keys()])) {
             const before = st.get(id);
             if (before.removed) continue;
             const enemyAt = mixed ? drillEnemyBodiesTest(id, st) : null;
             const out = stepDrill(before, {
-                frozen: ceremony !== null,
+                frozen: ceremony !== null || frozenAhead || dialogueAhead,
                 onScreen: (rect) => onScreenNow(rect, `drill ${id}`),
                 playerBox: playerBoxAt(state.x, state.y),
                 player: { x: state.x, y: state.y },
@@ -14740,7 +14759,7 @@ export function createLevelRun({
      * called at the top of each turret's turn, BELOW `hitUpdate` (`stepStaticBodiesNow`) and ABOVE the "die" return
      * and the fire gate (`Turret.as:47-64`), so both read what the contact wrote. Absent, no statement runs.
      */
-    function stepShootersNow(onHitPlayer) {
+    function stepShootersNow(onHitPlayer, { frozen = ceremony !== null } = {}) {
         const st = shooterStateFor(level);
         if (st.size === 0) return;
         if (turretStateFor(level).size > 0) {
@@ -14767,7 +14786,7 @@ export function createLevelRun({
                 }
                 if (row) t.hitsTimer = row.hitsTimer;
             }
-            stepTurret(t, { frozen: ceremony !== null, player: { x: state.x, y: state.y } });
+            stepTurret(t, { frozen, player: { x: state.x, y: state.y } });
             if (t.spawned) {
                 t.spawned.spawnedAt = ticksCompleted + 1;
                 spitsFor(level).unshift(t.spawned);
@@ -14789,6 +14808,28 @@ export function createLevelRun({
         for (let k = 0; k < frames; k += 1) {
             stepSpitsNow();
             stepShootersNow();
+        }
+    }
+
+    /**
+     * ⛓ fidelity PICKUPFREEZE D2 (`CONTACT_FIDELITY.pickupTickFreeze`, ON only): a TEXT-LESS pickup's last frame,
+     * F+150. The spits update before the pickup and still read the freeze; then `pick_up`'s `!myText` arm lowers it
+     * (`Pickups/Pickup.as:106-112`), so the turrets update UNFROZEN — their aim, `shootTimer` and fire gate, and, with
+     * wave 50's slot (`turretSuitRetaliation` + `STATIC_SWORD_ARM` ON), their `hitPlayer`, which `Player.hit` no longer
+     * refuses. The player has not moved since T's top, so every read is the box the touch was found at. `ceremony`
+     * stands for the flag in every reader (the fire gate, `turretHitPlayerNow`'s exit, `applyPlayerHit`'s `frozen`),
+     * so it is lowered for exactly the turrets' turn and restored.
+     */
+    function stepShooterReleaseFrameNow() {
+        if (shooterStateFor(level).size === 0 && spitsFor(level).length === 0) return;
+        stepSpitsNow();
+        const up = ceremony;
+        ceremony = null;
+        try {
+            stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
+                ? turretHitPlayerNow : undefined, { frozen: false });
+        } finally {
+            ceremony = up;
         }
     }
 
@@ -15041,6 +15082,10 @@ export function createLevelRun({
         const st = turretStateFor(level);
         if (st.size === 0) return;
         const ids = [...st.keys()].reverse();
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2296`).
+        const frozenAhead = pickupFreezesFamilyNow('iceturret', { lump: false });
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2296`).
+        const dialogueAhead = dialogueFreezeAheadNow('iceturret');
         for (const id of ids) {
             const t = st.get(id);
             if (t.removed) continue;
@@ -15048,7 +15093,7 @@ export function createLevelRun({
             const withoutSelf = opts.turrets === null ? null
                 : new Map([...opts.turrets].filter(([k]) => k !== id));
             stepIceTurret(t, {
-                frozen: ceremony !== null,
+                frozen: ceremony !== null || frozenAhead || dialogueAhead,
                 // ⛔⛔⛔ R5 SLICE 22: COMPUTED, NOT DECLARED — AND SLICE
                 // 20's DECLARATION IS WHAT THE RECORDING REFUTED.
                 //
@@ -15947,6 +15992,138 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓ fidelity PICKUPFREEZE D2 (`CONTACT_FIDELITY.pickupTickFreeze`) — WILL A PICKUP CEREMONY START THIS TICK?
+     *
+     * The detection below the families, asked above them as a pure read and in its own order: the runtime seed, the
+     * Witch's DarkSword, the BobBoss's Fire, then a placed pickup (`pickupUnderfoot`). `textless` is the ceremony's
+     * `text === ''` (`Pickup.pick_up`'s `!myText` arm lowers the freeze on frame F+150, before the families update).
+     * Every slot that asks is recorded; `assertPickupFreezeAheadHeld` re-checks the answer at the detection, and
+     * `runFrozenTick` refuses a predicted start that another freeze pre-empts. OFF: null, nothing recorded.
+     *
+     * @param {string} slot the family asking (for the refusal's text)
+     * @returns {null|{tag: string, textless: boolean}}
+     */
+    function pickupFreezeAheadNow(slot) {
+        if (!CONTACT_FIDELITY.pickupTickFreeze || noclip) return null;
+        const start = predictPickupCeremonyStart();
+        const prev = pickupFreezeAhead !== null && pickupFreezeAhead.t === ticksCompleted
+            && pickupFreezeAhead.level === level ? pickupFreezeAhead : null;
+        if (prev !== null && JSON.stringify(prev.start) !== JSON.stringify(start)) {
+            throw new Error(`levelRun: the pickup-freeze prediction moved inside tick ${ticksCompleted} in level `
+                + `${level}: ${prev.slots.join(', ')} read ${JSON.stringify(prev.start)}, ${slot} reads `
+                + `${JSON.stringify(start)} (the player's box moved between the two slots). Refused by name `
+                + '(fidelity PICKUPFREEZE).');
+        }
+        pickupFreezeAhead = prev ?? { t: ticksCompleted, level, start, slots: [] };
+        pickupFreezeAhead.slots.push(slot);
+        return start;
+    }
+    function predictPickupCeremonyStart() {
+        if (ceremony !== null) return null;
+        if (runtimeSeedUnderfoot()) return { tag: 'seed', textless: false };
+        if (witchSword && witchSword.level === level && witchSword.added && !witchSword.collected && !state.fall) {
+            const pb = playerBoxAt(state.x, state.y);
+            const sb = darkSwordBox(witchSword);
+            if (pb.right > sb.x && pb.x < sb.right && pb.bottom > sb.y && pb.y < sb.bottom) {
+                return { tag: 'darksword', textless: false };
+            }
+        }
+        if (bobFireUnderfoot()) return { tag: 'fire', textless: false };
+        const hit = pickupUnderfoot();
+        if (hit) return { tag: hit.tag ?? 'pickup', textless: ceremonyFor(hit).text === '' };
+        return null;
+    }
+    /** ⛓ fidelity PICKUPFREEZE D2: the slot answer — a turret freezes on T always, a lump-less family only if texted. */
+    function pickupFreezesFamilyNow(slot, { lump }) {
+        const start = pickupFreezeAheadNow(slot);
+        return start !== null && (lump || !start.textless);
+    }
+    /**
+     * ⛓ fidelity PICKUPFREEZE D2: the detection's answer against the slots' prediction. A slot that stepped its family
+     * frozen for a start that did not happen (or unfrozen for one that did) is refused by name; the record is spent.
+     */
+    function assertPickupFreezeAheadHeld() {
+        const rec = pickupFreezeAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        pickupFreezeAhead = null;
+        const last = ceremonyStarts.length > 0 ? ceremonyStarts[ceremonyStarts.length - 1] : null;
+        const started = last !== null && last.t === ticksCompleted && last.level === level && ceremony !== null;
+        const textless = started ? ceremony.dialogue === null : null;
+        const agree = rec.start === null ? !started
+            : started && rec.start.tag === (last.tag ?? 'pickup') && rec.start.textless === textless;
+        if (agree) return;
+        throw new Error(`levelRun: ${rec.slots.join(', ')} stepped tick ${ticksCompleted} in level ${level} for `
+            + `${rec.start === null ? 'no pickup ceremony' : `a ${rec.start.tag} ceremony`}, and the detection then `
+            + `${started ? `started a ${last.tag} ceremony (${textless ? 'text-less' : 'texted'})` : 'started none'}. `
+            + 'The families that update after a pickup read the freeze its first frame raises; refused by name rather '
+            + 'than stepped on a guess (fidelity PICKUPFREEZE).');
+    }
+
+    /**
+     * ⛓⛓ fidelity DIALOGUEFREEZE D2 (`CONTACT_FIDELITY.dialogueFrameFreeze`) — IS THIS TICK A DIALOGUE FRAME THAT
+     * FREEZES THE FAMILIES AFTER THE NPC?
+     *
+     * `NPC.talk()` (`NPCs/NPC.as:185-239`) raises `Game.freezeObjects` inside `if (talking)` and, on the frame the pages
+     * run out or the player is out of the circle, lowers it again through the `talking` setter (`:207-214`, `:230-236`,
+     * `:253-255`) before any family added ahead of the NPC updates. So the families are frozen on a frame iff an NPC was
+     * ALREADY talking at its `talk()` and does not close on it; the start frame (`startTalking()`, `:240-248`) is not
+     * one. Asked as a pure read of the two arms (`stepTalkersNow`, then `stepWatchersNow`, the same gates), the close
+     * read off a CLONE of the dialogue (`stepNpcDialogue`, the arms' own step). Every slot that asks is recorded;
+     * `assertDialogueFreezeAheadHeld` re-checks the answer at the arms, and `runFrozenTick` refuses a predicted dialogue
+     * frame that another freeze pre-empts. OFF: false, nothing recorded.
+     *
+     * @param {string} slot the family asking (for the refusal's text)
+     * @returns {boolean}
+     */
+    function dialogueFreezeAheadNow(slot) {
+        if (!CONTACT_FIDELITY.dialogueFrameFreeze || noclip) return false;
+        const frozen = predictDialogueFrameFrozen();
+        const prev = dialogueFreezeAhead !== null && dialogueFreezeAhead.t === ticksCompleted
+            && dialogueFreezeAhead.level === level ? dialogueFreezeAhead : null;
+        if (prev !== null && prev.frozen !== frozen) {
+            throw new Error(`levelRun: the dialogue-freeze prediction moved inside tick ${ticksCompleted} in level `
+                + `${level}: ${prev.slots.join(', ')} read ${prev.frozen}, ${slot} reads ${frozen} (the player moved `
+                + 'between the two slots, across a talk circle). Refused by name (fidelity DIALOGUEFREEZE).');
+        }
+        dialogueFreezeAhead = prev ?? { t: ticksCompleted, level, frozen, slots: [] };
+        dialogueFreezeAhead.slots.push(slot);
+        return frozen;
+    }
+    function predictDialogueFrameFrozen() {
+        const released = dialogueHeldNow !== null && releasedThisTick(dialogueHeldNow, TALK_KEY);
+        const player = { x: state.x, y: state.y };
+        const staysOpen = (d, inRange) => {
+            const c = structuredClone(d);
+            stepNpcDialogue(c, released, inRange);
+            return !c.done;
+        };
+        for (const w of talkerStateFor(level).values()) {
+            if (w.cleared || !w.text || !w.talking) continue;
+            return staysOpen(w.dialogue, inTalkRange({ x: w.ex, y: w.ey }, player, talkRangeOf(w.tag)));
+        }
+        for (const w of watcherStateFor(level).values()) {
+            if (w.cleared || w.persistTag < 0 || !w.text || !w.talking) continue;
+            if (staysOpen(w.dialogue, inTalkRange({ x: w.ex, y: w.ey }, player))) return true;
+        }
+        return false;
+    }
+    /**
+     * ⛓ fidelity DIALOGUEFREEZE D2: the arms' answer against the slots' prediction (`frozen`: the talker or watcher arm
+     * froze this tick). A slot that stepped its family frozen for a frame that then did not freeze (or unfrozen for one
+     * that did) is refused by name; the record is spent.
+     */
+    function assertDialogueFreezeAheadHeld(frozen) {
+        const rec = dialogueFreezeAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        dialogueFreezeAhead = null;
+        if (rec.frozen === frozen) return;
+        throw new Error(`levelRun: ${rec.slots.join(', ')} stepped tick ${ticksCompleted} in level ${level} `
+            + `${rec.frozen ? 'frozen for' : 'unfrozen, predicting no'} dialogue frame, and the talker/watcher arms then `
+            + `${frozen ? 'froze' : 'did not freeze'} it. The families that update after a texted NPC read the freeze its `
+            + '`talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).');
+    }
+
+    /**
      * ⛓⛓⛓ R6 SLICE 6c: ONE FROZEN TICK, EXTRACTED — one implementation, two
      * callers.
      *
@@ -15975,6 +16152,19 @@ export function createLevelRun({
                 + 'dialogue\'s update runs BEFORE the turret\'s in the game (`Game.loadlevel` adds them after it, and '
                 + '`addUpdate` prepends), so `Player.hit`\'s `!Game.freezeObjects` would have refused it; that order is '
                 + 'not transcribed. Refused by name (fidelity TURRETSUIT).');
+        }
+        // ⛓ fidelity PICKUPFREEZE D2 (ON only): a predicted pickup start that another freeze pre-empted.
+        if (pickupFreezeAhead !== null && pickupFreezeAhead.t === ticksCompleted && pickupFreezeAhead.start !== null) {
+            throw new Error(`levelRun: ${pickupFreezeAhead.slots.join(', ')} stepped tick ${ticksCompleted} in level `
+                + `${level} frozen for a ${pickupFreezeAhead.start.tag} ceremony, and the tick froze first for ${what}. `
+                + 'Refused by name (fidelity PICKUPFREEZE).');
+        }
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a predicted dialogue frame that another freeze pre-empted.
+        if (dialogueFreezeAhead !== null && dialogueFreezeAhead.t === ticksCompleted && dialogueFreezeAhead.level === level
+            && dialogueFreezeAhead.frozen) {
+            throw new Error(`levelRun: ${dialogueFreezeAhead.slots.join(', ')} stepped tick ${ticksCompleted} in level `
+                + `${level} frozen for a dialogue frame, and the tick froze first for ${what}. `
+                + 'Refused by name (fidelity DIALOGUEFREEZE).');
         }
         // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS MODEL IS
         // CONCERNED, and a bridge does not know that. `Tile.render` keeps
@@ -22141,6 +22331,8 @@ export function createLevelRun({
             // caller that catches. See `spinnerForecast`.
             spinnerForecastPrev = PRESS_KILL_COST.enabled ? spinnerForecastMemo : null;
             spinnerForecastMemo = null;
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): the tick's keys, for the slots' talk-key release.
+            if (CONTACT_FIDELITY.dialogueFrameFreeze) dialogueHeldNow = held;
             // ⛓ U9-swim: the shield box's player, as the last frame rendered it.
             // ⛔ Its `direction` is the GAME's, which `sprites()` pins to
             // `directionFace` while a hit has parked it (`Player.hit` arms
@@ -22358,7 +22550,7 @@ export function createLevelRun({
             // ── ⛓⛓⛓ R2-swim D1: THE WALLFLYERS, directly below the spinners
             // (`Game.as:2392` adds them one line above `:2393`'s spinners).
             if (!noclip) stepWallFlyersNow();
-            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow();
+            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow({ mainTick: true });
             if (!noclip) stepShieldBossesNow();
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
@@ -22541,13 +22733,26 @@ export function createLevelRun({
             // ⛓ fidelity BEAMTOWER D1: the towers (`Game.as:2297`, added after the ice turrets and before the
             // lobbers), so they update before every chaser and the player — both sweep against where THIS call
             // left the tower. A ceremony's `Game.freezeObjects` skips the drift (the anim still runs).
-            if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: ceremony !== null });
+            // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick has already frozen them (`Game.as:2297`).
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): on a texted NPC's later frame the main slot does NOT step them:
+            // `runFrozenTick`'s frozen step is the frame's one update, after the NPC as `Game.as:2297` orders it.
+            if (!noclip && beamTowersStepped() && !(CONTACT_FIDELITY.dialogueFrameFreeze
+                && beamTowerStateFor(level).size > 0 && dialogueFreezeAheadNow('beamtower'))) {
+                stepBeamTowersNow({ frozen: ceremony !== null
+                    || (beamTowerStateFor(level).size > 0 && pickupFreezesFamilyNow('beamtower', { lump: false })) });
+            }
             if (!noclip) stepIceTurretsNow();
             // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
             // `Game.as:2272` adds them just before the `iceturret`
             // (`:2273`), and `addUpdate` prepends.
             // ⛓ fidelity TURRETSUIT D2 (ON only): each turret's `hitPlayer`, in its own turn (`turretHitPlayerNow`).
-            if (!noclip) {
+            // ⛓ fidelity PICKUPFREEZE D2 (ON only): a pickup touched this tick updated first and froze them — no aim, no
+            // `shootTimer`, no shot, and no `hitPlayer` bill (`Player.hit`'s `!Game.freezeObjects`).
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): and so did a texted NPC's later frame (`Game.as:2295` vs `:2389+`).
+            if (!noclip && shooterStateFor(level).size > 0 && [pickupFreezesFamilyNow('turret', { lump: true }),
+                dialogueFreezeAheadNow('turret')].some(Boolean)) {
+                stepShootersNow(undefined, { frozen: true });
+            } else if (!noclip) {
                 stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
                     ? turretHitPlayerNow : undefined);
             }
@@ -22791,6 +22996,7 @@ export function createLevelRun({
                             + 'frame is a TICK, a ceremony\'s phase A is a DEAD frame. '
                             + 'Refused rather than approximated.');
                     }
+                    assertDialogueFreezeAheadHeld(true);
                     prevHeld = new Set(held);
                     return runFrozenTick(activators, 'a placed NPC\'s dialogue');
                 }
@@ -22798,6 +23004,8 @@ export function createLevelRun({
             if (!noclip) {
                 const watcherRelease = releasedThisTick(held, TALK_KEY);
                 const wr = stepWatchersNow(watcherRelease);
+                // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): the slots' prediction, against the two arms' answer.
+                assertDialogueFreezeAheadHeld(wr.frozen);
                 if (wr.frozen) {
                     if (ceremony !== null) {
                         throw new Error('levelRun: a Watcher\'s dialogue and a pickup '
@@ -23125,11 +23333,17 @@ export function createLevelRun({
                     // ⛓ CEREMONYSHOVE D2: and, ON, the chasers' and the player's — one tick later (see the arm).
                     if (ceremony.dialogue !== null) armCeremonyLumpNow(hit.tag ?? 'pickup');
                     // ⛓ U15-swim D1: phase A's dead frames, frozen, for the turrets.
-                    if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
+                    // ⛓ fidelity PICKUPFREEZE D2 (ON): a text-less pickup's F+150 is the turrets' release frame.
+                    if (!noclip && CONTACT_FIDELITY.pickupTickFreeze && ceremony.dialogue === null) {
+                        stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup - 1);
+                        stepShooterReleaseFrameNow();
+                    } else if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                     // ⛓ seedling-fidelity-bombpusher: and for the lobber and its bombs.
                     if (!noclip) stepBombsThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                 }
             }
+            // ⛓ fidelity PICKUPFREEZE D2 (ON only): the slots' prediction against what the detection found.
+            if (pickupFreezeAhead !== null) assertPickupFreezeAheadHeld();
             if (ceremony !== null) {
                 const released = releasedThisTick(held, TALK_KEY);
                 prevHeld = new Set(held);

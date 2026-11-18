@@ -1,0 +1,1831 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal (generated set, synthetic arrival)
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal (generated set, synthetic arrival)
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/mazeRoom/mazeRoomUI.js:23:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal (generated set, synthetic arrival)
+[discoveryState] [DiscoveryState] Constructed
+
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks" > ⛓ CUTSCENE UNDER ANY RECORD — the wind scene showing under a RESOLVED record (the explicit start's level, no −1) is WAITED OUT, not re-arrived into
+[wasm playback] SCENE LEAK #1 at level 86 (begin.level 86)
+
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks" > ⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)
+[wasm playback] SCENE LEAK #1 at level 86 (begin.level 86)
+
+ ✓ frontend/modules/flashPanel/seedlingWasmPlayback.test.js (150 tests) 15190ms
+     ✓ clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named)  7331ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (58 tests) 82685ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  13910ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  365ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21), the strike floor at its shipped ON: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  7865ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  4564ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  2761ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  344ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  4312ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  9512ms
+     ✓ ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message  1068ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  4392ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  9039ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  4436ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  9014ms
+     ✓ ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses  4612ms
+     ✓ ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null  5575ms
+ ✓ frontend/modules/mazeRoom/tileSpike/sphereOrderLevels.test.js (35 tests) 84352ms
+     ✓ L2 + L3 compile and certify clean; the ghost action needs Fusion, Spear and Sword  13112ms
+     ✓ L7 + L8 + L9: L8 → L9 is free in the world, as AP says; the levels certify clean  474ms
+     ✓ L0 + L86 certify clean; L86 -> L0 is free and its Chest is reached empty-handed  2263ms
+     ✓ L12 certifies clean; the doorway's second lock is Red Key from r0c19, the stacked locks each their own item  10724ms
+     ✓ L30 + L32 certify clean; Bob Boss spills to (5,7), each priced by the weapon from the landing  1427ms
+     ✓ the wand lock (9,37) is opened by the press alone; both doors are gated on it; L38 + L39 certify clean  2747ms
+     ✓ the door (32,30) and every L40 crossing cell gated on Fire take Fire AND a weapon, the interior piece Fire alone; L38–L40 certify clean  28637ms
+     ✓ a mutant world with the cells back at Fire alone is caught LOOSER, as before the ruling  12833ms
+     ✓ L61–L64 certify clean; each press is reached empty-handed on its ButtonRoom's cell  3025ms
+     ✓ L62's pole: its DarkTrap (7,13) is one obstacle, opened by the L63 press or a thrust from a stance on either side  2503ms
+     ✓ L63's in-room poles are produced and carried: each event is a thrust from its stances, priced Ghost Spear  2512ms
+     ✓ L100–L102 certify clean; the event is r4c2's, a thrust from its stance (Ghost Spear)  405ms
+     ✓ the cut certifies with no problem; the world prices the water approach And(rock, Swim), as the rules now do  555ms
+     ✓ the cut certifies with no problem; the finaldoor event costs the Watcher's talk  792ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 78524ms
+     ✓ ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  10747ms
+     ✓ ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  7903ms
+     ✓ ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included  14324ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's  6431ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's  4704ms
+     ✓ ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts  6802ms
+     ✓ ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts  6553ms
+     ✓ ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts  6178ms
+     ✓ ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did  4248ms
+     ✓ ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ  1088ms
+     ✓ ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches  2591ms
+     ✓ ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ  1724ms
+     ✓ ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer  2826ms
+     ✓ ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one  2148ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 34399ms
+     ✓ (iv) the family file list equals the import closure  727ms
+     ✓ the import door's closure is the simulation's: solverView.js pulls in no family file  444ms
+     ✓ (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED  1395ms
+     ✓ (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`  1617ms
+     ✓ (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door  1231ms
+     ✓ (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"  1292ms
+     ✓ (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments)  1345ms
+     ✓ (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule  1436ms
+     ✓ (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"  1412ms
+     ✓ (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice  1401ms
+     ✓ (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"  1337ms
+     ✓ (d) a COMMENT naming a simulation module in a family file ⇒ GREEN  1278ms
+     ✓ (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once  1321ms
+     ✓ (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family"  1291ms
+     ✓ (c) run.entities(name) with a variable ⇒ RED, a named blind spot  1439ms
+     ✓ (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table  1599ms
+     ✓ (e) a COMMENT naming run.pushables in a family file ⇒ GREEN  1130ms
+     ✓ (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once  1202ms
+     ✓ (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once  1383ms
+     ✓ (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS  1234ms
+     ✓ (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)  1462ms
+     ✓ (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table  1517ms
+     ✓ (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values  1442ms
+     ✓ (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN  1350ms
+     ✓ (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both"  1228ms
+ ✓ frontend/modules/seedlingDemo/fidelityLapseCost.test.js (14 tests) 36145ms
+     ✓ ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t)  17876ms
+     ✓ ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)  780ms
+     ✓ MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget  1644ms
+     ✓ AFTER (the shipped defaults) of the MUTANT: still refused at 160 (the companion still solves it, 776 t) — but by the dashless pass's `bait` refusal at work 113, then the full pass's budget at `kill-chaser`  15471ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorridorBody.test.js (11 tests) 55087ms
+     ✓ step 53 (L22): OFF the walk dies twice to wallflyers; ON it walks clean  5940ms
+     ✓ step 45 (L22): ON keeps the base's clean 6-window dash chain — certified WHOLE (no 1-window prefix is clean)  4584ms
+     ✓ step 170 (L77): the lavarunner's contact gate reads its own i-frame, not the dark shield's — ON walks clean  18885ms
+     ✓ ON = OFF on a whole solve: step 53 (L22) and step 45 (L22, the dash chain) plan the same ticks  25315ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters.test.js (15 tests) 34149ms
+     ✓ fresh (the survey's state): arm, seven landings, drop, burn, pit — 1042 t  5539ms
+     ✓ rock fallen at the door: snapped onto the rock, no arm leg, untouched — 1041 t  5254ms
+     ✓ rock fallen at the respawn (72,104): no snap, the fight — 1034 t  8643ms
+     ✓ mid-fight continuations solve from wherever the prefix stops  13158ms
+     ✓ SOLVES from the survey's step-140 arrival: talk, close, the sword at the feet next frame, hasDarkSword  1386ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyPocketTalk.test.js (8 tests) 15333ms
+     ✓ one named problem (r0c1 is entered on its dead end, east of the parked block); the pocket rows are excused or skipped by name  7936ms
+     ✓ mutant: admit the pocket crossing free and the pocket arrival's pairs are problems again (the excuse is the admission)  7359ms
+stdout | frontend/modules/seedlingDemo/observationTolerance.test.js > exact mode IS diffObservationStreams > agrees with it on all 293 committed recordings vs the model, and on 3 perturbations of each
+exact-mode equivalence: {"recorded":293,"pass":292,"fail":1,"nudged":293,"late":61,"swapped":293}
+
+ ✓ frontend/modules/seedlingDemo/observationTolerance.test.js (117 tests) 12707ms
+     ✓ agrees with it on all 293 committed recordings vs the model, and on 3 perturbations of each  12680ms
+ ✓ frontend/modules/mazeRoom/tileSpike/certifyEventLocations.test.js (26 tests) 32867ms
+     ✓ certifies: L1 lands on the rock only once it is broken, and the event is priced by the strike  2051ms
+     ✓ a mutant event rule (True_) is caught  2064ms
+     ✓ certifies with no problem: the event priced from beside the tree, the landing in it only once burnt  8953ms
+     ✓ mutants are caught: the gate dropped (the game lands IN the tree), and the event made free  19337ms
+     ✓ certifies: the event is priced at Seal×16 and the talk, from every landing  324ms
+ ✓ frontend/modules/seedlingDemo/dialogueAutoAdvance.test.js (8 tests) 12497ms
+     ✓ ⛓⛓ the two derivations part on EXACTLY ONE committed tape, and the GAME picked it  12452ms
+ ✓ frontend/modules/seedlingDemo/seedlingSoundCues.test.js (65 tests) 17508ms
+     ✓ r5-l40-part0: the cue list per tick; it contains Projectiles/Explosion.as:48, Puzzlements/ButtonRoom.as:72, Puzzlements/BreakableRock.as:62  330ms
+     ✓ lavaboss-witness/kof-policy-kill: the cue list per tick; it contains Enemies/LavaBoss.as:220, Enemies/LavaBoss.as:247, Projectiles/Explosion.as:48  322ms
+     ✓ crusher-l42-round-trip: the cue list per tick; it contains Puzzlements/Crusher.as:79  857ms
+     ✓ the Owl: a grenade Explosion per `exploded`; the Bob Boss: each form's hits, its last a death  319ms
+     ✓ the crusher: re-played only once its ONE channel has run 10 %, never on two consecutive ticks  742ms
+     ✓ u15-turret-spit: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  611ms
+     ✓ r5-l40-part0: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  3975ms
+     ✓ pushblock-l65-reach-l63: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  957ms
+     ✓ r6-totem-kill: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  2370ms
+     ✓ lavaboss-witness/kof-policy-kill: digests after every tick, the checks and the ticks are identical — no sound / off / muted / locked / refused / on / quarter-speed / speed-16  2849ms
+ ✓ frontend/modules/seedlingDemo/seedlingAtlasDerivation.test.js (27 tests) 11538ms
+     ✓ rebuilds the committed atlas and its preset byte for byte, md5 unmoved  11134ms
+ ✓ scripts/procgen/seedlingPlaythroughObstacleEvents.test.js (21 tests) 9848ms
+ ✓ frontend/modules/seedlingDemo/fidelityL100Lattice.test.js (10 tests) 13424ms
+     ✓ OFF: the break-stance walk is planned at 16 px, aims (124,140) past the pool node, and stalls on the mask  417ms
+     ✓ ON, DASH_CERT_SIGHT OFF: the walk is planned on FINE_LATTICE, the rock breaks, and the plan IS the game witness, key for key  3785ms
+     ✓ ON, DASH_CERT_SIGHT ON: the plan IS the DASHCERT game witness, key for key, hitless, into L101  3284ms
+     ✓ ON: step 168 (L66 → L70) — the keylock stance fineFrontierFlood found is walked on 8 px; the plan IS the witness  465ms
+     ✓ ON: a walk the 16 px lattice answers is untouched — the L89 control (W35 step 89) solves to the same keys  1347ms
+     ✓ ON: step 172 (L12, the wand stance (40,888), off the 8 px grid) walks axis-aligned — the OFF keys  1895ms
+     ✓ ON: step 200 (L12, the wand stance (40,888), off the 8 px grid) walks axis-aligned — the OFF keys  2175ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretCircle.test.js (18 tests) 7028ms
+     ✓ OFF (CORPSEBUMP's set): the Sword alone refuses by name, as CORPSEBUMP left it  3102ms
+     ✓ ON: SOLVED — the corpse weigh's kill is a circling one (cw from corner 3, delay 0, three swings)  1207ms
+     ✓ the Ghost Sword keeps CORPSEBUMP's standing kill: its recorded plan is unchanged with the key ON  1065ms
+     ✓ the recorded tape is the solver's plan, input for input  887ms
+ ✓ frontend/modules/seedlingDemo/fidelityL39Hit.test.js (9 tests) 8259ms
+     ✓ the rebuilt request plans the walk's plan at the defaults: 2864 t dashless, the full pass stopped at block-route  3343ms
+     ✓ OFF: the forecast cut at the walk's first tick leaves the body's line at t1318, ~88 px off at the hit, its hammer unpriced  394ms
+     ✓ ON: the walk's request plans a 3813 t dashless walk whose drive takes no hit  3965ms
+ ✓ frontend/modules/seedlingDemo/hammerAxisStrikes.test.js (7 tests) 7638ms
+     ✓ AXIS-L12HITS: L12 leg 149 ON takes 0 hits and answers OFF's plan; without the hold's tail it is punched  4027ms
+     ✓ AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF's plan  3243ms
+ ✓ frontend/modules/seedlingDemo/dangerMap.test.js (62 tests) 7782ms
+     ✓ ⛓ the map really constrains the search — the two plans differ  7361ms
+ ✓ scripts/procgen/oneSpelling.test.js (11 tests) 6958ms
+     ✓ ⛓⛓⛓ each transcription is defined EXACTLY ONCE in the model  474ms
+     ✓ ⛔⛔ no live second spelling anywhere in the transcription's reach  891ms
+     ✓ ⛓ the subject is derived from imports, and prose does not join it  889ms
+     ✓ ⛓⛓ the excluded population is enumerated, not implied  2332ms
+     ✓ ⛓ the same spelling outside the subject is not a finding  2366ms
+ ✓ frontend/modules/seedlingDemo/levelSetExporter.test.js (45 tests) 6857ms
+     ✓ prints a byte-identical STDOUT twice, carrying the id the function stamps  663ms
+     ✓ REFUSES every generation flag by name, and still refuses `fixtures/`  620ms
+     ✓ writes a set with ZERO xml rooms and chunks with ZERO record rooms  423ms
+     ✓ --bundle writes a DETERMINISTIC zip beside the plain files, chunks excluded  2172ms
+     ✓ --minify shrinks what is written and leaves STDOUT alone  790ms
+     ✓ REFUSES --bundle / --minify with no --out-dir, because neither touches STDOUT  379ms
+     ✓ reproduces the regions, the boundary exits and the connections, 1:1  1057ms
+ ✓ frontend/modules/seedlingDemo/procgenPostSword.test.js (13 tests) 7999ms
+     ✓ ⛔ no longer generates the pre-sword level — the roster split is REAL  1050ms
+     ✓ and the same room under both boots gives the same verdict and tick count  400ms
+     ✓ spinner-killlock: SOLVES, and the clear is DISCHARGED in the records  363ms
+     ✓ …and with the clock UNDECLARED the same room throws, as it always did  1124ms
+     ✓ seed 13: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED  4726ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (137 tests) 6087ms
+     ✓ r5-l42-part4: the query equals the getter for every family at every tick, and the tape makes crushers, crushersParked, pushables, spinnerBodies, turrets, turretDamage, turretsSettled non-trivial  403ms
+     ✓ r8-d2: the query equals the getter for every folded member at every tick, and the tape makes appliedTimedClears, bankedClears, collected, earnedClears, inCeremony, inputRefused, inventory, keyOpens, keys, lockSnaps, presses, roomWrites, saveState, shieldBossKills, shieldBossStabs, slashInfo, spinnerKillLockOpens, spinnerPressHits, spinnerWrites, takenPickups non-trivial  465ms
+     ✓ r5-l40-part5-control: the query equals the getter for every folded member at every tick, and the tape makes blastFreezes, frozenTimer, turretKills non-trivial  396ms
+     ✓ r5-bobboss-fire: the query equals the getter for every folded member at every tick, and the tape makes bobBossEvents non-trivial  489ms
+     ✓ r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query  659ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 5622ms
+     ✓ blank lines inserted above statements in a temp copy move lines and no key  1354ms
+     ✓ (a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key  1008ms
+     ✓ (b) PREDICTED GREEN: a new literal inside a cosmetic table  854ms
+     ✓ (c) PREDICTED RED: a committed physics row's statement deleted must be RETIRED  838ms
+     ✓ (d) PREDICTED RED: a hand edit inside the doc region is a stale doc  818ms
+     ✓ MUTANT, PREDICTED RED: a fields row whose class contradicts PROFILE_FIELDS names the key  471ms
+ ✓ frontend/modules/seedlingDemo/seedlingEffectSkin.test.js (40 tests) 4850ms
+     ✓ the bombpusher-L40 tape: every tick's (and held frame's) ops  709ms
+     ✓ the walk-L59 tape: every tick's (and held frame's) ops  505ms
+     ✓ Explosion — updateSprite: twice the fps  717ms
+     ✓ bombpusher-L40: the stream, the end state, the ledgers and the stateLog byte-identical with the renderer on and off  719ms
+     ✓ walk-L59: the stream, the end state, the ledgers and the stateLog byte-identical with the renderer on and off  356ms
+ ✓ frontend/modules/seedlingDemo/seedlingMusicCues.test.js (19 tests) 5766ms
+     ✓ r6-shield-kill: identical digests after every tick, checks and ticks — no sound / music on / off / muted / locked / 0.25× / 16×  1772ms
+     ✓ stance-l46-chest: identical digests after every tick, checks and ticks — no sound / music on / off / muted / locked / 0.25× / 16×  1629ms
+     ✓ r5-bosskey-leg: identical digests after every tick, checks and ticks — no sound / music on / off / muted / locked / 0.25× / 16×  1765ms
+ ✓ frontend/modules/seedlingDemo/solverEncounter.test.js (6 tests) 5915ms
+     ✓ ⛓ SOLVES: arm, seven verified landings, fourteen pages, the Fire, the burn and the pit to L30, untouched  5759ms
+ ✓ frontend/modules/seedlingDemo/levelRunDigestRead.test.js (11 tests) 4097ms
+     ✓ a fresh boot, before its first tick: no getter moves a part  636ms
+     ✓ a fresh boot, after one tick: no getter moves a part  714ms
+     ✓ each getter alone, on a fresh boot of its own (L16 and L41, before the first tick): no part moves  2386ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 5439ms
+     ✓ swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves  2062ms
+     ✓ `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves)  1079ms
+     ✓ `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why  328ms
+     ✓ untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged  1190ms
+ ✓ frontend/modules/seedlingDemo/watchOverlays.test.js (88 tests) 3417ms
+     ✓ ⛔⛔ L39's rope is SWAPPED, not gone — the builder's own shrunk box  621ms
+     ✓ a SPEAR press is THREE rows with spearGameTest ON: the thrust, then repeats 2 and 4 on T+3 / T+5  990ms
+     ✓ ⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound (spearGameTest OFF)  769ms
+ ✓ frontend/modules/seedlingDemo/r8Acceptance.test.js (95 tests) 4815ms
+     ✓ ⛔ the two exposed tapes are DERIVED by driving the roster, not declared (the model it was stated on: fireSpinnerArm OFF)  4273ms
+ ✓ frontend/modules/seedlingDemo/gameClock.test.js (60 tests) 4168ms
+     ✓ ⛔ MUTATION: dropping the ceremony spans breaks exactly the two segments that have one  1105ms
+     ✓ ⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 (+ any pit walk-on) at every one  1494ms
+ ✓ frontend/modules/seedlingDemo/seedlingMachineSkin.test.js (52 tests) 4672ms
+     ✓ the L40-wire run: every tick's machines  580ms
+     ✓ the skin dropped (L40-wire)  398ms
+     ✓ L40-wire: the stream, the end state, the ledgers, the stateLog and stateDigest identical with the renderer on and off  531ms
+ ✓ frontend/modules/seedlingDemo/r5Totem.test.js (133 tests) 3558ms
+     ✓ drives all three baits, and each starts where the last one ended  447ms
+     ✓ ⛓⛓⛓ …then six pushes, a fade nobody holds, and the fourth ceremony  317ms
+     ✓ ⛔⛔ …with the crusher still on `button@248,232` and never once touched  650ms
+ ✓ frontend/modules/seedlingDemo/fidelityFireBreak.test.js (36 tests) 3381ms
+     ✓ with the Sword selected alone, ON plans what OFF plans, tick for tick (a swing)  328ms
+     ✓ L53 from the L48 landing: `breakablerock@128,160`'s stance is behind `breakablerock@112,128`, so that rock is the prerequisite order (`rockHypothesis` admits a rock for a Fire run) — and its walk meets the room's puncher, which a run with no Sword cannot fight  2077ms
+ ✓ frontend/modules/seedlingDemo/procgenScratchPersistence.test.js (15 tests) 3268ms
+     ✓ the replay path is NOT scratch — the same walk refuses there  740ms
+     ✓ ...and WITH the option the same tape re-steps to completion  397ms
+     ✓ the page-side collector shows the SAME fork — short walk, then whole  394ms
+     ✓ the ORACLE solves it, certifies the collect, and carries the ledger out  317ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverRockLockMapper.test.js (23 tests) 2736ms
+     ✓ ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (0)  1855ms
+     ✓ ON: the mapped goal SOLVES in the worker (with KILLLOCK_CLEAR_WRITE), 0 hits, {26,0} written (1)  854ms
+ ✓ scripts/procgen/seedlingFootprints.test.js (12 tests) 2768ms
+     ✓ the playthrough generator runs with it: L0 (10,18) is open in its grid  2305ms
+     ✓ the probe boots on the cells the atlas names: r10c7 for the pool, the L98 landing for the reverse  430ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamLane.test.js (9 tests) 3275ms
+     ✓ OFF: the 640-unit request runs out at the PHASE arm's stall grid (the gap, measured)  1288ms
+     ✓ ON: seam 5564 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  527ms
+     ✓ ON: seam 5594 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  423ms
+     ✓ ON: seam 5605 solves inside the first request's 640 units, and the plan reaches L102 with zero hits on the model  356ms
+ ✓ frontend/modules/seedlingDemo/watchArt.test.js (57 tests) 2407ms
+ ✓ frontend/modules/seedlingDemo/fidelityFencepost.test.js (10 tests) 2682ms
+     ✓ OFF: the named fencepost is exactly t1278 on the D0 game witness (the model lists the corpse one read longer)  323ms
+     ✓ at the game's first gone read (t1278): OFF lists the corpse at alpha <= 0, ON does not, and no other row differs  334ms
+     ✓ one read earlier (t1277, the game's last listed read) and one later (t1279): ON equals OFF byte for byte  635ms
+     ✓ ONE CLOCK: the removal ledger is untouched — `spinnerWrites`, `spinnerKillLockOpens` and the observation stream are identical ON and OFF  889ms
+ ✓ frontend/modules/seedlingDemo/fidelityClearTag.test.js (37 tests) 2113ms
+     ✓ {12,7} magicallock from L0  613ms
+     ✓ {12,12} bosslock from L0 (every key)  553ms
+ ✓ frontend/modules/seedlingDemo/botDriverV2.test.js (136 tests) 1789ms
+ ✓ frontend/modules/seedlingDemo/fidelityProximity.test.js (16 tests) 1875ms
+     ✓ route step 103: the frontier holds the buttonroom, PULSES, opens the chest and crosses to L39 — the tape IS the plan  555ms
+     ✓ route step 68: the chest GOAL resolves its cover (uncover, then pulse), collects it and crosses — the tape IS the plan  470ms
+     ✓ route step 57: two skirts on the east lane, the return stance two tiles up, the rock never falls — the tape IS the plan  490ms
+ ✓ frontend/modules/seedlingDemo/fidelityWatcher.test.js (28 tests) 1886ms
+     ✓ the solver crosses L37 past the silent watcher into L38  919ms
+     ✓ the solver crosses L37 past the silent watcher into L44  688ms
+ ✓ frontend/modules/seedlingDemo/watchManual.test.js (36 tests) 1913ms
+     ✓ ⛔ SEVEN clears, SEVEN markers, ZERO unplaced — was 7 unplaced at slice 2  1125ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests | 1 skipped) 1816ms
+     ✓ leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick  465ms
+ ✓ frontend/modules/seedlingDemo/seedlingNpcSkin.test.js (40 tests) 1542ms
+     ✓ the L12-witch-talks tape: every tick's NPCs, prompts and watchers  318ms
+ ✓ frontend/modules/seedlingDemo/fidelityRockGone.test.js (14 tests) 1618ms
+     ✓ rockgone-l40-plain: the recorded tape is the one the module builds  343ms
+     ✓ ON: the model replays the plan = the game on every sampled tick (x, y, vx, vy, hits, hits_timer)  573ms
+     ✓ OFF: the first difference is t1256, player.x — game 194.673 (still pinned), model 191.593 (through the cell)  433ms
+ ✓ frontend/modules/seedlingDemo/seedlingDialogueSkin.test.js (13 tests) 1770ms
+     ✓ ⛓ BYTE-IDENTICAL in every room ≥ 160 px over the two talk tapes (totem-kill-L43, walk-L59): the same overlays, clamped or not  829ms
+     ✓ names the sign for exactly the talk window, and the run's stateDigest is unmoved by every read  365ms
+ ✓ frontend/modules/seedlingDemo/seedlingRoomBodySkin.test.js (34 tests) 1707ms
+ ✓ frontend/modules/seedlingDemo/fidelityFrontier3.test.js (14 tests) 1457ms
+     ✓ L87's pocket solves with the grant, on the 8 px lattice, up the 5 px column beside cliffside1@48,32  776ms
+ ✓ frontend/modules/seedlingDemo/fidelityFireSpinner.test.js (13 tests) 1743ms
+     ✓ a press whose flame reaches the spinner's .oel CELL (the body ~80 px off) throws  666ms
+ ✓ frontend/modules/seedlingDemo/fidelityL105.test.js (5 tests) 1023ms
+     ✓ ON: the leg solves hitless to L106 in 307 t, key for key the game witness (0 px, no hit, L106 at t307)  690ms
+ ✓ frontend/modules/seedlingDemo/fidelityL39Phantom.test.js (9 tests) 1296ms
+     ✓ the model kills it on the game's tick and agrees on every spinner row but the one named fencepost  411ms
+ ✓ frontend/modules/seedlingDemo/fidelityRockButton.test.js (9 tests) 1009ms
+     ✓ HAND-OVER (re-pinned): ON, the solver refuses at the button's stance with `RESTING_HOLDER` OFF, waits ON  609ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeWalker.test.js (25 tests) 987ms
+ ✓ frontend/modules/seedlingDemo/apPlacementRewriter.test.js (27 tests) 922ms
+ ✓ frontend/modules/seedlingDemo/fidelityYeti.test.js (16 tests) 872ms
+ ✓ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (13 tests) 770ms
+ ✓ frontend/modules/seedlingDemo/seedlingOwlIntro.test.js (6 tests) 903ms
+     ✓ (a) the digest, the clears, the stream and the end state are unmoved by a read every tick  658ms
+ ✓ frontend/modules/procgenCore/setEditorView.test.js (51 tests) 928ms
+ ✓ scripts/procgen/seedlingDivergenceRouteCarry.test.js (20 tests) 709ms
+ ✓ frontend/modules/seedlingDemo/tapeEnvelope.test.js (23 tests) 759ms
+     ✓ agrees with parseTape on every envelope field, for every committed tape  720ms
+ ✓ frontend/modules/seedlingDemo/fidelityRockFire.test.js (20 tests) 623ms
+ ✓ scripts/procgen/seedlingDivergenceLegs.test.js (32 tests) 592ms
+ ✓ frontend/modules/seedlingDemo/fidelityDrill.test.js (20 tests) 677ms
+ ✓ frontend/modules/seedlingDemo/fidelityDialogueFreeze.test.js (12 tests | 1 skipped) 440ms
+ ✓ frontend/modules/seedlingDemo/fidelityLadder2.test.js (12 tests) 703ms
+     ✓ every arm agrees on K = 0, and each class has a positive control  397ms
+ ✓ frontend/modules/seedlingDemo/procgenLevelOel.test.js (26 tests) 404ms
+ ✓ frontend/modules/seedlingDemo/fidelityDarkSuitBosses.test.js (11 tests) 459ms
+ ✓ frontend/modules/seedlingDemo/seedlingSetAdapter.test.js (93 tests) 494ms
+ ✓ frontend/modules/seedlingDemo/procgenShortcutRock.test.js (2 tests) 421ms
+     ✓ places, certifies, and the sword grades SHORTENS on the final level  367ms
+ ✓ frontend/modules/seedlingDemo/fidelityFrozenPress.test.js (11 tests) 343ms
+ ✓ frontend/modules/seedlingDemo/fidelityPickupFreeze.test.js (11 tests) 398ms
+ ✓ frontend/modules/seedlingDemo/levelSetValidator.test.js (95 tests) 411ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.test.js (11 tests) 424ms
+ ✓ frontend/modules/seedlingDemo/playthroughAcceptance.test.js (76 tests) 191ms
+ ✓ frontend/modules/seedlingDemo/fidelitySealDoor.test.js (20 tests) 334ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamTower.test.js (15 tests) 281ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverTalkClearGoal.test.js (18 tests) 300ms
+ ✓ frontend/modules/seedlingDemo/fidelityDrillWater.test.js (12 tests) 377ms
+     ✓ drillwater-l91-drown  331ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretSnap.test.js (9 tests) 360ms
+ ✓ scripts/procgen/extract-seedling-music-pack.test.js (9 tests) 185ms
+ ✓ frontend/modules/seedlingDemo/levelWorld.test.js (127 tests) 223ms
+stderr | frontend/modules/seedlingDemo/contactFidelityHook.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/seedlingDemo/contactFidelityHook.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:251:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:119:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/seedlingDemo/contactFidelityHook.test.js
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ ✓ frontend/modules/seedlingDemo/contactFidelityHook.test.js (151 tests) 260ms
+ ✓ frontend/modules/seedlingDemo/fidelityWatcherTalk.test.js (14 tests) 248ms
+ ✓ frontend/modules/seedlingDemo/r2Acceptance.test.js (25 tests) 260ms
+ ✓ frontend/modules/seedlingDemo/fidelityOwlSuit.test.js (7 tests) 193ms
+ ✓ frontend/modules/seedlingDemo/helpFrame.test.js (8 tests) 162ms
+ ✓ scripts/procgen/extract-seedling-sfx-pack.test.js (9 tests) 149ms
+ ✓ frontend/modules/seedlingDemo/fidelityStatueTalk.test.js (6 tests) 158ms
+ ✓ frontend/modules/seedlingDemo/contactControl.test.js (11 tests) 156ms
+ ✓ frontend/modules/seedlingDemo/dialogue.test.js (34 tests) 144ms
+ ✓ frontend/modules/seedlingDemo/tapeFormat.test.js (149 tests) 152ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretSuit.test.js (9 tests) 165ms
+ ✓ frontend/modules/seedlingDemo/hazards.test.js (23 tests) 114ms
+ ✓ frontend/modules/seedlingDemo/seedL115.test.js (15 tests) 125ms
+ ✓ frontend/modules/seedlingDemo/fidelityCeremony126.test.js (11 tests) 133ms
+stderr | frontend/modules/loops/blockModes.test.js
+[discoveryState] [DiscoveryState] Constructed
+
+stderr | frontend/modules/loops/blockModes.test.js
+[centralRegistry] CentralRegistry initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > defaults to defaultBlockMode — RECORD (M4), clamped where unsupported
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > defaults to defaultBlockMode — RECORD (M4), clamped where unsupported
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > a Record default is honoured where the substrate declares record+playback
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > a Record default is honoured where the substrate declares record+playback
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > a Record default is honoured where the substrate declares record+playback
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > stores an explicit mode per (region, instance)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > stores an explicit mode per (region, instance)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > two visits to one region can diverge
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > two visits to one region can diverge
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > legacy manualRegionStates makes every visit of that region manual
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > legacy manualRegionStates makes every visit of that region manual
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > an explicit per-block mode overrides the legacy region fallback
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > an explicit per-block mode overrides the legacy region fallback
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > a default of manual is capability-clamped for non-manual regions
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — storage & precedence > a default of manual is capability-clamped for non-manual regions
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — serialization & migration > blockModeStates round-trips through serialization
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — serialization & migration > migrates an old save with only manualRegionStates
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — serialization & migration > resetForNewRules clears per-block modes
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — setAllBlockModes > applies manual only to blocks whose substrate supports it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — setAllBlockModes > applies manual only to blocks whose substrate supports it
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — setAllBlockModes > applies playback to every block that offers it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — setAllBlockModes > applies playback to every block that offers it
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > defaults to not-instant and stores a per-(region,instance) flag
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > defaults to not-instant and stores a per-(region,instance) flag
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > clearing a flag deletes the entry (only truthy flags are stored)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > clearing a flag deletes the entry (only truthy flags are stored)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > round-trips through serialization
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > round-trips through serialization
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > round-trips through serialization
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > an old save without blockInstantStates loads with no flags
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > an old save without blockInstantStates loads with no flags
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > an old save without blockInstantStates loads with no flags
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > resetForNewRules clears the instant flags
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > resetForNewRules clears the instant flags
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > _regionSupportsInstant reflects the substrate declaration
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > _regionSupportsInstant reflects the substrate declaration
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > setAllBlockInstant applies only to instant-capable blocks
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > setAllBlockInstant applies only to instant-capable blocks
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > _currentBlockIsInstant resolves the running block
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > _currentBlockIsInstant resolves the running block
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > the generic timer completes a nonzero-cost action in one frame when the block is Instant
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block Instant (M3) — storage, capability & set-all > the generic timer completes a nonzero-cost action in one frame when the block is Instant
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > parks on a manual visit but runs a playback visit of the same region
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > parks on a manual visit but runs a playback visit of the same region
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > customQueue playback suppresses panel activation when focus is locked
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > customQueue playback suppresses panel activation when focus is locked
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > customQueue playback suppresses panel activation when focus is locked
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'isFocusLocked' for loops
+
+stdout | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > does NOT park on the A#2 (playback) visit
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > per-block mode — execution parks the right visit > does NOT park on the A#2 (playback) visit
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > parks a Record block like Manual and flags it for capture
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > parks a Record block like Manual and flags it for capture
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > on a successful exit: persists under the queue-derived tag + auto-switches to Playback
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > on a successful exit: persists under the queue-derived tag + auto-switches to Playback
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > on a successful exit: persists under the queue-derived tag + auto-switches to Playback
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > auto-switch OFF leaves the block in Record but still persists
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > auto-switch OFF leaves the block in Record but still persists
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > auto-switch OFF leaves the block in Record but still persists
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > wrong exit DISCARDS the recording and pauses until reset
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > wrong exit DISCARDS the recording and pauses until reset
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > mana-out mid-record discards the recording on reset
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > mana-out mid-record discards the recording on reset
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > coarse replacement rewrites the block interior to the performed actions
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > coarse replacement rewrites the block interior to the performed actions
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > coarse replacement rewrites the block interior to the performed actions
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > coarse replacement survives the gameState:pathUpdated auto-resume path (no cursor reentrancy)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > coarse replacement survives the gameState:pathUpdated auto-resume path (no cursor reentrancy)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Record lifecycle > coarse replacement survives the gameState:pathUpdated auto-resume path (no cursor reentrancy)
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — unparked wakes are inert (free-walk capture removed) > leaving a Record-mode block with nothing parked captures nothing
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — unparked wakes are inert (free-walk capture removed) > leaving a Record-mode block with nothing parked captures nothing
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > loop mode off → allowed (gate out of scope)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > loop mode off → allowed (gate out of scope)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > exemption matrix: fromLoop / fromReset / system:* / planning sources / delegation / bot
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > exemption matrix: fromLoop / fromReset / system:* / planning sources / delegation / bot
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > AP-native region → out of scope
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > AP-native region → out of scope
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > substrate without record+playback declarations → not yet gated (staged rollout)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > substrate without record+playback declarations → not yet gated (staged rollout)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > substrate without record+playback declarations → not yet gated (staged rollout)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > blocked states: empty queue / not started / completed / hard-pause / paused
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > blocked states: empty queue / not started / completed / hard-pause / paused
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > parked Manual live play in the matching region → allowed
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > parked Manual live play in the matching region → allowed
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > parked Record live play in the matching region → allowed
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > parked Record live play in the matching region → allowed
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > parked live play, action in a DIFFERENT gated region → blocked wrongRegion
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > parked live play, action in a DIFFERENT gated region → blocked wrongRegion
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > a parked Playback block is NOT live play
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > a parked Playback block is NOT live play
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > a move without a sourceRegion falls back to the player's current region
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > a move without a sourceRegion falls back to the player's current region
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > a move WITHOUT an exitName is a synthetic reposition — exempt
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — strict action gate (evaluateActionGate) > a move WITHOUT an exitName is a synthetic reposition — exempt
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > Record: observed live actions are charged AND buffered; exit rewrites the interior + auto-switches; no store write
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > Record: observed live actions are charged AND buffered; exit rewrites the interior + auto-switches; no store write
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+ ✓ frontend/modules/seedlingDemo/encounters.test.js (25 tests) 107ms
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > Record: observed live actions are charged AND buffered; exit rewrites the interior + auto-switches; no store write
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > Manual: observed live actions are charged but captured NOWHERE; exit leaves the interior untouched
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > Manual: observed live actions are charged but captured NOWHERE; exit leaves the interior untouched
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > wrong exit: the departing move is still charged, the capture is discarded, the queue hard-pauses
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > wrong exit: the departing move is still charged, the capture is discarded, the queue hard-pauses
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > fromReset wake: no charge, no finalize — the reset flow owns queue state
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > fromReset wake: no charge, no finalize — the reset flow owns queue state
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > depletion mid-live-play triggers the loop reset and discards the capture
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > depletion mid-live-play triggers the loop reset and discards the capture
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > with auto-restart ON the same depletion resumes the queue from index 0
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > with auto-restart ON the same depletion resumes the queue from index 0
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > auto-restart does NOT revive a step or a user pause
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > auto-restart does NOT revive a step or a user pause
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > fine-grained substrates (with a recorder) are exempt from loops-side charging and buffering
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > fine-grained substrates (with a recorder) are exempt from loops-side charging and buffering
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > fine-grained substrates (with a recorder) are exempt from loops-side charging and buffering
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > ONE ECONOMY: live-playing a block costs exactly what the generic executor charges to replay it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > ONE ECONOMY: live-playing a block costs exactly what the generic executor charges to replay it
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > ONE ECONOMY: live-playing a block costs exactly what the generic executor charges to replay it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] Instant mode enabled
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > ONE ECONOMY: live-playing a block costs exactly what the generic executor charges to replay it
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > coarse-only Playback never consults the recording store (stale entries are ignored)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M3b — loops-owned coarse capture + live-play economy > coarse-only Playback never consults the recording store (stale entries are ignored)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Playback replays a bound recording > a Playback block with a bound recording replays it (parks + dispatches replayActions)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Playback replays a bound recording > a Playback block with a bound recording replays it (parks + dispatches replayActions)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Playback replays a bound recording > a Playback block with a bound recording replays it (parks + dispatches replayActions)
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M2 — Playback replays a bound recording > a Playback block with NO bound recording does not replay (falls through)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Playback replays a bound recording > a Playback block with NO bound recording does not replay (falls through)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M2 — Playback replays a bound recording > a Playback block with NO bound recording does not replay (falls through)
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a Playback replay park is released, the cursor snaps to 0 and processing resumes
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a Playback replay park is released, the cursor snaps to 0 and processing resumes
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a Playback replay park is released, the cursor snaps to 0 and processing resumes
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > the per-index replay guard is cleared, so the retry can re-dispatch replayActions
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > the per-index replay guard is cleared, so the retry can re-dispatch replayActions
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > the per-index replay guard is cleared, so the retry can re-dispatch replayActions
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > an in-flight Record capture is discarded, matching _resetLoop
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > an in-flight Record capture is discarded, matching _resetLoop
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > the wrong-exit hard pause is lifted — its contract is "until the next loop reset"
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > the wrong-exit hard pause is lifted — its contract is "until the next loop reset"
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > an UNPARKED queue is untouched — the release is a park release, not a start button
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > an UNPARKED queue is untouched — the release is a park release, not a start button
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a user PAUSE survives the release
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a user PAUSE survives the release
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a user PAUSE survives the release
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a Bot park is left to _handleBotWake_regionChanged (M6)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > slice 4b — a substrate-driven loop reset releases the park > a Bot park is left to _handleBotWake_regionChanged (M6)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > records item movement as DELTAS from block start, not absolutes
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > records item movement as DELTAS from block start, not absolutes
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > records item movement as DELTAS from block start, not absolutes
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > counts CROSS-SUBSTRATE pool items, keyed by their owning substrate
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > counts CROSS-SUBSTRATE pool items, keyed by their owning substrate
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > counts CROSS-SUBSTRATE pool items, keyed by their owning substrate
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > folds the recording's item USES in as consumption, and the minimum is the trough
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > folds the recording's item USES in as consumption, and the minimum is the trough
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > folds the recording's item USES in as consumption, and the minimum is the trough
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > names a LABEL-LESS item use through the substrate's describeAction
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > names a LABEL-LESS item use through the substrate's describeAction
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > names a LABEL-LESS item use through the substrate's describeAction
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > a block that moved no economy stores no annotations object
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > a block that moved no economy stores no annotations object
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > a block that moved no economy stores no annotations object
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > a DISCARDED recording takes its annotations with it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > a DISCARDED recording takes its annotations with it
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > a DISCARDED recording takes its annotations with it
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > grants outside a Record block are ignored (no tracker, no leak)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > grants outside a Record block are ignored (no tracker, no leak)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — Record annotations (fine-grained) > grants outside a Record block are ignored (no tracker, no leak)
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > stores annotations with NO actions, and that entry never reads as playable
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > stores annotations with NO actions, and that entry never reads as playable
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > stores annotations with NO actions, and that entry never reads as playable
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > re-recording the same coarse block REPLACES its annotations (not a no-op duplicate)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > re-recording the same coarse block REPLACES its annotations (not a no-op duplicate)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > re-recording the same coarse block REPLACES its annotations (not a no-op duplicate)
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[GameState] No actions found to clear in A instance 1
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > a walk-through with no item movement still records its (undisplayed) XP
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > a walk-through with no item movement still records its (undisplayed) XP
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M4 — coarse substrates get an ACTIONS-LESS annotations entry > a walk-through with no item movement still records its (undisplayed) XP
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > resolves the three categories off the registry
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > resolves the three categories off the registry
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > a summary substrate is NOT fine-grained (nothing may pull a fine stream from it)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > a summary substrate is NOT fine-grained (nothing may pull a fine stream from it)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > a real recorder WINS over a summary declaration (the stronger contract)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > a real recorder WINS over a summary declaration (the stronger contract)
+[centralRegistry] Public function 'getRegionInfo' for module 'procgenPlayer' is already registered. Overwriting.
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > summary substrates opt into the Record default and the strict action gate
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — capture shape resolution > summary substrates opt into the Record default and the strict action gate
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > binds a summary entry by tag — and never a fine recording
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > binds a summary entry by tag — and never a fine recording
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > binds a summary entry by tag — and never a fine recording
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a stale FINE recording under the same tag does not bind as a summary
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a stale FINE recording under the same tag does not bind as a summary
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a stale FINE recording under the same tag does not bind as a summary
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a Playback block with no bound summary parks for live play, never the bot
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a Playback block with no bound summary parks for live play, never the bot
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a Playback block with no bound summary parks for live play, never the bot
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a COARSE block still falls through to the generic executor (no shape leakage)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a COARSE block still falls through to the generic executor (no shape leakage)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary binding and Playback dispatch > a COARSE block still falls through to the generic executor (no shape leakage)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > drains the region rate once per second while parked, and counts the seconds
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > drains the region rate once per second while parked, and counts the seconds
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > defaults to 1 mana per second when the sidecar names no rate
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > defaults to 1 mana per second when the sidecar names no rate
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > charges nothing unparked, paused, or hard-paused
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > charges nothing unparked, paused, or hard-paused
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > charges nothing in a COARSE region (the drain is summary-only)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > charges nothing in a COARSE region (the drain is summary-only)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > runs only while loop mode is active
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > runs only while loop mode is active
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > is XP-scaled and awards region XP 1:1, like every other cost
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > is XP-scaled and awards region XP 1:1, like every other cost
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > resets the counted duration at each park and on discard
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — the summary time drain > resets the counted duration at each park and on discard
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a running clock is charged and counted
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a running clock is charged and counted
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a stopped clock charges nothing and the duration does not grow; running again resumes
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a stopped clock charges nothing and the duration does not grow; running again resumes
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > no report at all is charged (fail safe)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > no report at all is charged (fail safe)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a report for another region does not stop this one
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a report for another region does not stop this one
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a region change drops the report, so a revisit is charged until the page speaks again
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a region change drops the report, so a revisit is charged until the page speaks again
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a substrate that did not opt in cannot stop its drain
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > a substrate that did not opt in cannot stop its drain
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > malformed reports are ignored
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > malformed reports are ignored
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > gates a bot-driven region the same way
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > N3b — the play clock gates the summary drain > gates a bot-driven region the same way
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a tick charges the whole game seconds played since the last charge, not one wall second
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a tick charges the whole game seconds played since the last charge, not one wall second
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > the same play costs the same mana at 1×, 2× and 4× (floor of its game seconds)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > the same play costs the same mana at 1×, 2× and 4× (floor of its game seconds)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a stopped clock settles at once: what it played is charged without waiting for a tick
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a stopped clock settles at once: what it played is charged without waiting for a tick
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a page counter that goes back (a new visit) starts the charged count over
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a page counter that goes back (a new visit) starts the charged count over
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a Record visit keeps whole game seconds as its duration and the last stats as playStats
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a Record visit keeps whole game seconds as its duration and the last stats as playStats
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > charges a bot-driven region per game second too
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > charges a bot-driven region per game second too
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a report without gameSeconds is a wall-clock clock, exactly as before
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — the game-time play clock charges per game second > a report without gameSeconds is a wall-clock clock, exactly as before
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > the fixture is coarse and the Bot block engaged
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > the fixture is coarse and the Bot block engaged
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > a bot-driven coarse region with a play clock is charged per game second
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > a bot-driven coarse region with a play clock is charged per game second
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > a coarse region WITHOUT a play clock is never time-drained
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > a coarse region WITHOUT a play clock is never time-drained
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > its queue actions keep their own prices (only timeDrain is priced like a summary region)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > loop-mode-bot — a COARSE region with a play clock drains by game seconds (⚖ Seedling) > its queue actions keep their own prices (only timeDrain is priced like a summary region)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > N4 — summary Playback publishes loops:summaryApplied > after the spend, with the substrate and the whole summary (playStats included)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > N4 — summary Playback publishes loops:summaryApplied > after the spend, with the substrate and the whole summary (playStats included)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > bulletml N5 — every spend publishes loops:manaSpent > a summary Playback's replay price, with its region and substrate (what Noiz2sa trains from)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > bulletml N5 — every spend publishes loops:manaSpent > a summary Playback's replay price, with its region and substrate (what Noiz2sa trains from)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > a performed check is FREE unless the sidecar names its cost
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > a performed check is FREE unless the sidecar names its cost
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > an EXPLICIT per-action cost is charged (and XP-scaled)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > an EXPLICIT per-action cost is charged (and XP-scaled)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > the departure move is free by default and charged when explicit
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > the departure move is free by default and charged when explicit
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > a COARSE substrate still gets the sidecar defaults (no cross-contamination)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — explicit-only per-action costs > a COARSE substrate still gets the sidecar defaults (no cross-contamination)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > persists duration, checks and the crossed departure on a successful exit
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > persists duration, checks and the crossed departure on a successful exit
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > lists only EXPLICITLY costed actions, so Playback cannot double-charge
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > lists only EXPLICITLY costed actions, so Playback cannot double-charge
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > records a free visit with an EMPTY costed list (the duration is the price)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > records a free visit with an EMPTY costed list (the duration is the price)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > falls back to the queued exit when the move carried no exit name
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > falls back to the queued exit when the move carried no exit name
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > rewrites the block interior to the performed checks (ruling 6)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > rewrites the block interior to the performed checks (ruling 6)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > auto-switches the block to Playback after a successful Record
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > auto-switches the block to Playback after a successful Record
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > records a zero-economy visit too — the duration alone is a recording
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > records a zero-economy visit too — the duration alone is a recording
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > discards everything on a WRONG exit
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > discards everything on a WRONG exit
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > a re-record with a different duration REPLACES the stale one
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — summary Record capture > a re-record with a different duration REPLACES the stale one
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+[GameState] No actions found to clear in A instance 1
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > prices the recorded duration at the CURRENT rate and spends it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > prices the recorded duration at the CURRENT rate and spends it
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > re-prices at the current XP level rather than replaying a frozen cost
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > re-prices at the current XP level rather than replaying a frozen cost
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > adds the current price of each explicitly-costed recorded action
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > adds the current price of each explicitly-costed recorded action
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > refires the recorded checks and crosses the departure, both fromLoop
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > refires the recorded checks and crosses the departure, both fromLoop
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > the game replays NOTHING — no walkTo, no replayActions
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > the game replays NOTHING — no walkTo, no replayActions
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > ABORTS the apply when the charge depletes mana (the ordering trap)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > ABORTS the apply when the charge depletes mana (the ordering trap)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > a fine recording under the same tag does NOT instant-apply
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M5 — instant-apply Playback > a fine recording under the same tag does NOT instant-apply
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > resolves 'delegation' from the capability declaration PLUS manaEnabled
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > resolves 'delegation' from the capability declaration PLUS manaEnabled
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > a delegation-capable substrate on a mana-less region has NO solver
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > a delegation-capable substrate on a mana-less region has NO solver
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > resolves 'walkTo' from executeVia: 'solver'
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > resolves 'walkTo' from executeVia: 'solver'
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > a substrate with neither mechanism has no solver, and neither does an AP-native region
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — regionSolver > a substrate with neither mechanism has no solver, and neither does an AP-native region
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a BOT block delegates: the action is parked and substrateActionBegan fires
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a BOT block delegates: the action is parked and substrateActionBegan fires
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a RECORD block parks for hand-play and is NEVER delegated
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a RECORD block parks for hand-play and is NEVER delegated
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a PLAYBACK block replays its bound recording and is NEVER delegated
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a PLAYBACK block replays its bound recording and is NEVER delegated
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a PLAYBACK block replays its bound recording and is NEVER delegated
+[centralRegistry] Public function 'getWarehouse' not found for module 'procgenPlayer'
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a MANUAL block parks and is NEVER delegated
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot is the ONLY trigger for delegation (the shadowing regression pin) > a MANUAL block parks and is NEVER delegated
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a walkTo-solver region dispatches walkTo and parks
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a walkTo-solver region dispatches walkTo and parks
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a walkTo-solver region dispatches walkTo and parks
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a region with NO solver parks for live play and warns — never the generic timer
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a region with NO solver parks for live play and warns — never the generic timer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a Bot block records nothing (capture stays Record-gated)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a Bot block records nothing (capture stays Record-gated)
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > a Bot block records nothing (capture stays Record-gated)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > livePlayRegion is null while a solver drives, but open during the fallback park
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > livePlayRegion is null while a solver drives, but open during the fallback park
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — the Bot branch dispatch matrix > livePlayRegion is null while a solver drives, but open during the fallback park
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot in the mode vocabulary > set-all Bot applies only where a solver exists
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot in the mode vocabulary > set-all Bot applies only where a solver exists
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot in the mode vocabulary > Bot is NOT part of the defaultBlockMode enum (explicit per-block choice, v1)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot in the mode vocabulary > Bot is NOT part of the defaultBlockMode enum (explicit per-block choice, v1)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot in the mode vocabulary > a 'bot' mode round-trips through serialization with no schema change
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot in the mode vocabulary > a 'bot' mode round-trips through serialization with no schema change
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the completion charge follows the capture shape > FINE: completing a bot action charges NOTHING — the substrate already did
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the completion charge follows the capture shape > FINE: completing a bot action charges NOTHING — the substrate already did
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the completion charge follows the capture shape > SUMMARY: completing charges the EXPLICIT cost only, and awards XP 1:1
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the completion charge follows the capture shape > SUMMARY: completing charges the EXPLICIT cost only, and awards XP 1:1
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the completion charge follows the capture shape > SUMMARY with no explicit cost: the completion is FREE (the duration was the price)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the completion charge follows the capture shape > SUMMARY with no explicit cost: the completion is FREE (the duration was the price)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > PATH A — a solver driving a summary region drains at the region rate
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > PATH A — a solver driving a summary region drains at the region rate
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > PATH B — a Bot block with NO solver falls back to live play, which drains
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > PATH B — a Bot block with NO solver falls back to live play, which drains
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > the two paths can never both charge in one tick
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > the two paths can never both charge in one tick
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > FINE substrates are not drained by loops while a bot drives them
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > FINE substrates are not drained by loops while a bot drives them
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > paused, hard-paused and stopped bot parks all cost nothing
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > paused, hard-paused and stopped bot parks all cost nothing
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > botSolverRegion reports the park livePlayRegion hides, in BOTH shapes
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > botSolverRegion reports the park livePlayRegion hides, in BOTH shapes
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > botSolverRegion closes with the park — paused, hard-paused or stopped
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > botSolverRegion closes with the park — paused, hard-paused or stopped
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > draining the pool dry mid-walk resets the loop and re-engages the bot
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > draining the pool dry mid-walk resets the loop and re-engages the bot
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > with auto-restart OFF the same depletion pauses instead of retrying
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot economy: the time drain matrix > with auto-restart OFF the same depletion pauses instead of retrying
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > YES for the walkTo solver on a fine substrate (jta)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > YES for the walkTo solver on a fine substrate (jta)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > NO for summary bots — real-time physics, no instant variant exists
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > NO for summary bots — real-time physics, no instant variant exists
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > NO for maze delegation (deferred — the visualizer/panel-engine split)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > NO for maze delegation (deferred — the visualizer/panel-engine split)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > NO where the substrate never declared instant at all
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant is offered per CAPABILITY > NO where the substrate never declared instant at all
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant, the effect > an Instant Bot block sets instant mode BEFORE dispatching the walk
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant, the effect > an Instant Bot block sets instant mode BEFORE dispatching the walk
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant, the effect > a NON-Instant Bot block turns instant mode OFF — pacing is per block
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant, the effect > a NON-Instant Bot block turns instant mode OFF — pacing is per block
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant, the effect > a stored Instant flag does NOT reach a solver that cannot honor it
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > M6 — Bot × Instant, the effect > a stored Instant flag does NOT reach a solver that cannot honor it
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > a check goes to `perform`, never the queueing `walkTo`, and parks until its event
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > a check goes to `perform`, never the queueing `walkTo`, and parks until its event
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > an explore is performed AND completed at once — the engine shows it, loops reveals
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to explore 'A' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > an explore is performed AND completed at once — the engine shows it, loops reveals
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+stdout | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > without `perform` an explore cannot engage: the block parks for live play, not the timer
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+
+stderr | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > without `perform` an explore cannot engage: the block parks for live play, not the timer
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+[loopState] [LoopState] Bot block in 'A' has no engageable solver (solver=walkTo, action=customAction) — parking for live play instead of running it on the generic timer.
+
+stdout | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > without `perform` a check still goes to `walkTo` (jta, bounce, runner unchanged)
+[loopState] [LoopState] Setting dependencies...
+[loopState] [LoopState] ActionQueueManager initialized
+[loopState] [LoopState] CostDataManager set
+[loopState] [LoopState] Bot walking to location 'Loc1' in A
+
+stderr | frontend/modules/loops/blockModes.test.js > text adventure Bot — a coarse walkTo solver that PERFORMS > without `perform` a check still goes to `walkTo` (jta, bounce, runner unchanged)
+[centralRegistry] Registering public function 'getRegionInfo' for procgenPlayer
+
+ ✓ frontend/modules/loops/blockModes.test.js (166 tests) 95ms
+ ✓ frontend/modules/seedlingDemo/watcherL114.test.js (14 tests) 105ms
+ ✓ frontend/modules/seedlingDemo/finalDoorL113.test.js (12 tests) 115ms
+ ✓ frontend/modules/seedlingDemo/endingChain.test.js (24 tests) 83ms
+ ✓ frontend/modules/seedlingDemo/fidelityDarkSuitStatic.test.js (8 tests) 114ms
+ ✓ frontend/modules/seedlingDemo/shieldL20.test.js (11 tests) 78ms
+ ✓ frontend/modules/flashPanel/seedlingPlaythroughOverlay.test.js (47 tests) 54ms
+ ✓ frontend/modules/seedlingDemo/rectInputs.test.js (8 tests) 65ms
+ ✓ frontend/modules/flashPanel/seedlingObstacleEvents.test.js (58 tests) 47ms
+ ✓ frontend/modules/flashPanel/flashBridgeAdapter.test.js (34 tests) 54ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 140ms
+ ✓ frontend/modules/seedlingDemo/bloodySeedL114.test.js (19 tests) 58ms
+ ✓ frontend/modules/seedlingDemo/wandL43.test.js (18 tests) 35ms
+ ✓ frontend/modules/seedlingDemo/fidelityHousekeepWalker.test.js (4 tests) 46ms
+ ✓ frontend/modules/seedlingDemo/decisionTrace.test.js (25 tests) 22ms
+ ✓ frontend/modules/seedlingDemo/wasmPlayback.test.js (72 tests) 22ms
+ ✓ frontend/modules/seedlingDemo/placedTalk.test.js (19 tests) 39ms
+ ✓ frontend/modules/seedlingDemo/seedlingFont.test.js (5 tests) 16ms
+ ✓ frontend/modules/seedlingDemo/fireVerb.test.js (32 tests) 9ms
+ ✓ frontend/modules/seedlingDemo/presses.test.js (31 tests) 14ms
+ ✓ frontend/modules/seedlingDemo/bridges.test.js (15 tests) 14ms
+stderr | frontend/modules/flashPanel/seedlingEventCollector.test.js > the region glue — the collector is the third reader of the reports > the FIRST region load reads botStatus once: a save where the rock is broken collects at load
+[region atlas] region "level_0__r7c6" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "level_0__r7c6" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+stderr | frontend/modules/flashPanel/seedlingEventCollector.test.js > the region glue — the collector is the third reader of the reports > ⛔ NEVER ON REACHABILITY: a region load INTO the event's own region, flag not set, collects nothing
+[region atlas] region "level_0__r7c6" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+[region atlas] region "level_0__r11c19" carries no arrival spawn (no wired exits, or no level) — the player was NOT teleported
+
+ ✓ frontend/modules/flashPanel/seedlingEventCollector.test.js (25 tests) 15ms
+ ✓ frontend/modules/seedlingDemo/playerDamage.test.js (34 tests) 9ms
+ ✓ frontend/modules/seedlingDemo/totemFight.test.js (23 tests) 11ms
+ ✓ frontend/modules/seedlingDemo/shieldFight.test.js (20 tests) 19ms
+ ✓ frontend/modules/seedlingDemo/bobBoss.test.js (22 tests) 10ms
+ ✓ frontend/modules/noiz2saSubstrate/noiz2saFirstEntry.test.js (6 tests) 3ms
+ ✓ frontend/modules/seedlingDemo/fidelityWallFlyerCorpse.test.js (7 tests) 4ms
+
+ Test Files  129 passed (129)
+      Tests  4185 passed | 2 skipped (4187)
+   Start at  04:03:35
+   Duration  280.68s (transform 12.43s, setup 7.11s, import 98.93s, tests 721.57s, environment 12ms)
+
