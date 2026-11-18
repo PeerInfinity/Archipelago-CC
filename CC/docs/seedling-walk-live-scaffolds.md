@@ -91,7 +91,7 @@ hand (`touch -d "2026-11-11 07:39"`). The script now restores mtimes itself.
 | JSUT at main | `fb030c550b` | run 44176264422: 1324 / 28460. **Delta: +2 files, +13 tests, 0 failed** (11 are the new rows; I did not attribute the other 2) |
 | unittests (push) | `64a4f20dd0` | run **44193299362** success |
 | TT (dispatch) | `64a4f20dd0` | run **44193298194** success (above) |
-| bounded vitest (⚖ 52) | local | `procgenDocs`, `quickLaunch`, `tutorials`, `lintGateLabels`, `argvHelp`, `noNewDocsReferences` + the two new files: 23 files / 708 passed |
+| bounded vitest (⚖ 52) | local | `procgenDocs`, `quickLaunch`, `tutorials`, `lintGateLabels`, `argvHelp`, the gitignored-plans-tree reference guard + the two new files: 23 files / 708 passed |
 
 ## Doc pins
 
@@ -101,7 +101,7 @@ hand (`touch -d "2026-11-11 07:39"`). The script now restores mtimes itself.
   after: 0 findings.
 - Doc-link census (`docLinks.test.js`): **unchanged**, because no markdown link was added. The `quickLaunch` docs index was
   regenerated and did not change.
-- No tracked file cites a `NewDocs/` path (`noNewDocsReferences.test.js` green).
+- No tracked file cites a path in the gitignored plans tree (its reference guard in `scripts/test/` is green; this report originally named that guard and the tree literally, which tripped the guard itself on train 145).
 
 ## Leftovers
 
