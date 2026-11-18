@@ -105,7 +105,7 @@ node scripts/procgen/regen-seedling.mjs --from=maze          # or --only=rules,p
 
 `--check` prints one line per step: `OK`, `STALE: <what>`, `REFUSED: <quoted reason>` or `SKIPPED: <why>`. The `template` and `seed1` steps have no check of their own. `template` is regenerated into a temp dir and compared. `seed1` sets the committed files aside, runs `Generate.py` in place, compares the output and then restores the committed bytes. `host-settings` reads `host.yaml` against the script's own `minimal-spoilers` table. `--write` restores the final newline that `Generate.py` drops from `preset_files.json` and removes the `output/` files that this run created. The step fails if the exporter changed another game's row or wrote a `seed` other than 1.
 
-The derived-rule table (`atlases/seedling-playthrough-derived-rules.json`) is **not** a step. CI makes it (`seedling-probe.yml`, recipe in `seedlingDerivedRuleTable.js` `REGEN_RECIPE`), and it will get its own refresh command. The chain only reads it: when it is stale, `rules` prints `REFUSED: STALE derived-rule table: …`. A new atlas id also has to be named in the hand-kept `atlases/atlas_files.json`.
+The derived-rule table (`atlases/seedling-playthrough-derived-rules.json`) is **not** a step. CI makes it (`seedling-probe.yml`, recipe in `seedlingDerivedRuleTable.js` `REGEN_RECIPE`), and `node scripts/procgen/refresh-seedling-derived-rules.mjs --dispatch --ref=<branch>` refreshes it and then runs this chain ([The Seedling Derived-Rule Table](./seedling-derived-rules.md)). The chain only reads it: when it is stale, `rules` prints `REFUSED: STALE derived-rule table: …`. A new atlas id also has to be named in the hand-kept `atlases/atlas_files.json`.
 
 ### The committed concept preset
 

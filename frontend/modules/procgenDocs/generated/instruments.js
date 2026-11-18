@@ -175,6 +175,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "refresh"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "regen"
         },
         {
@@ -249,13 +254,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 535,
+        "blockStyle": 536,
         "browser": 227,
-        "cited": 293,
-        "files": 557,
+        "cited": 294,
+        "files": 558,
         "lineStyle": 22,
-        "withDocblock": 557,
-        "withFlags": 474
+        "withDocblock": 558,
+        "withFlags": 475
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7810,7 +7815,8 @@ export const INSTRUMENTS = frz({
             "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/maze.md",
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/pipeline-presets.md",
+                "docs/json/developer/procgen/seedling-derived-rules.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -7872,6 +7878,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/pipeline-presets.md",
+                "docs/json/developer/procgen/seedling-derived-rules.md",
                 "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
@@ -13234,7 +13241,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/maze.md"
+                "docs/json/developer/procgen/maze.md",
+                "docs/json/developer/procgen/seedling-derived-rules.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -21836,11 +21844,90 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/record-standing-value.mjs"
         },
         {
+            "argvHelpers": [
+                "setMode",
+                "value"
+            ],
+            "browser": false,
+            "category": "refresh",
+            "citedBy": [
+                "docs/json/developer/procgen/pipeline-presets.md",
+                "docs/json/developer/procgen/seedling-derived-rules.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "allow-sha-mismatch",
+                "check",
+                "dispatch",
+                "no-chain",
+                "ref",
+                "run",
+                "wait-max"
+            ],
+            "file": "refresh-seedling-derived-rules.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "allow-sha-mismatch"
+                },
+                {
+                    "how": [
+                        "case",
+                        "setMode"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "case",
+                        "setMode"
+                    ],
+                    "name": "dispatch"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "no-chain"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "ref"
+                },
+                {
+                    "how": [
+                        "setMode",
+                        "startsWith"
+                    ],
+                    "name": "run"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "wait-max"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "refresh-seedling-derived-rules — **THE DERIVED-RULE TABLE'S REFRESH, AS ONE COMMAND: DISPATCH → FETCH → COPY → CHAIN → COUNT CHECK** (slice rule-table-doc-command; ⚖ Robert 2026-11-17 \"Rule-table doc + command (Recommended)\").",
+            "path": "scripts/procgen/refresh-seedling-derived-rules.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "regen",
             "citedBy": [
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/pipeline-presets.md",
+                "docs/json/developer/procgen/seedling-derived-rules.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
