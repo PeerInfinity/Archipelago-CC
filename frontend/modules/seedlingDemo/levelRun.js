@@ -5275,6 +5275,65 @@ export function createLevelRun({
      * deterministic, so its rows ARE those rows; past them the memo extends from its own `st` under this tick's ctx,
      * which is what extending a memo always did. Otherwise the forecast is cut fresh, exactly as before.
      */
+    /**
+     * ⛓⛓ fidelity L39HIT D2 (`CONTACT_FIDELITY.pulserForecastPulse`, OFF ⇒ `null`, so every forecast is byte-identical)
+     * — **THE ROOM'S PULSERS STEP ALONGSIDE A SPINNER FORECAST, AND THEIR PULSE HITS THE FORECAST'S BODIES.**
+     *
+     * `advance` steps the spinners (`stepSpinners`, the `:2416` adds) and, later in the same tick, the pulsers
+     * (`stepPulsersNow`, the `:2357` adds; `World.addUpdate` prepends, so the spinner moves first), and a pulse's enemy
+     * arm is `Enemy.hit(force 6, pulser point, damage 1, "Pulse")` (`Pulser.as:87-116`, `Enemy.as:141-181`): `hits += 1`,
+     * a 30-tick `hitsTimer` and an atan2 knockback that is twenty ticks of another trajectory. Every forecast stepped
+     * only the bodies, so a spinner a periodic Pulser was about to shove stayed on its old line in the forecast.
+     * MEASURED (L39, the seed-1 walk's 2864 t plan, seam 30036): `pulser@64,96` hits `spinner@112,88` at t1317; the
+     * forecast cut at t1310 has the body 5.75 px off from t1318 and ~88 px off at t1522, where the game and the model
+     * both take its hammer (the walk's preview priced the forecast's body, `dangerMap.spinnerDanger`).
+     *
+     * The stepper copies each pulser's state and steps it after the bodies on every forecast row, `armed` as
+     * `stepPulsersNow` reads it ONCE, at the forecast's own tick (the arrow forecast's bound, `arrowForecastNow`): the
+     * latched group, or the momentary group as the player's box presses it now (`pulserPublishLag`'s `pressedLast`
+     * first). Only the ENEMY arm acts here (`hitSpinner`, as `stepPulsersNow` calls it); a block's shove and the
+     * player's hit are not a spinner forecast's (it holds the blocks where they are and knows no player). A frozen ctx
+     * (a ceremony: the pulser slot is below its early return) steps no pulser. `null` with the switch OFF, under
+     * `noclip`, or in a room with no pulser.
+     *
+     * @returns {?{step(st: object, frozen: boolean): void, copy(): object}} `step` mutates the forecast's own `st` (its
+     *   `byId` is the forecast's copy, `stepSpinners`' contract); `copy` is an independent stepper at the same row
+     */
+    const pulserForecastStepper = () => {
+        if (!CONTACT_FIDELITY.pulserForecastPulse || noclip) return null;
+        const live = pulserStateFor(level);
+        if (live.size === 0) return null;
+        const activators = activatorStateFor(level);
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        const lag = CONTACT_FIDELITY.pulserPublishLag;
+        const make = (rows) => ({
+            step(st, frozen) {
+                if (frozen) return;
+                rows = rows.map((q) => {
+                    const armed = (lag ? q.p.pressedLast === true : q.pressedNow) || q.latched;
+                    const r = stepPulser(q.p, armed);
+                    const next = { ...q, p: lag ? { ...r.state, pressedLast: q.pressedNow } : r.state };
+                    if (!r.hit) return next;
+                    const targets = spinnerRects(st).map((sp) => ({
+                        id: sp.id, type: 'Enemy', as3: 'Spinner', x: sp.spinner.x, y: sp.spinner.y,
+                        originX: SPINNER.originX, originY: SPINNER.originY, w: SPINNER.w, h: SPINNER.h,
+                    }));
+                    for (const reached of pulseReaches(r.state, targets)) {
+                        if (reached.arm !== 'enemy') continue;
+                        const sp = st.byId.get(reached.id);
+                        if (sp) {
+                            st.byId.set(reached.id, hitSpinner(sp, { force: PULSER.force, from: { x: r.state.x, y: r.state.y },
+                                damage: PULSER.damage, t: 'Pulse', frozen: false }));
+                        }
+                    }
+                    return next;
+                });
+            },
+            copy: () => make(rows),
+        });
+        return make([...live].map(([id, p]) => ({ id, p, pressedNow: pressed.has(p.t),
+            latched: activators.latched.get(p.t) === true })));
+    };
     const shiftedSpinnerForecast = (live) => {
         const prev = spinnerForecastPrev;
         spinnerForecastPrev = null;
@@ -10796,6 +10855,9 @@ export function createLevelRun({
                     force: SHIELD_BOSS.swingForce,
                     damage: SHIELD_BOSS.damage,
                     from: { x: b.x, y: b.y },
+                    // ⛓ fidelity DARKSUITBOSSES D2 (`CONTACT_FIDELITY.darkSuitBossRetaliation`, ON only):
+                    // `p.hit(this, swingForce, …)` (`ShieldBoss.as:112`), so the boss is `e`.
+                    ...(CONTACT_FIDELITY.darkSuitBossRetaliation ? { retaliate: () => shieldBossSuitRetaliation(b) } : {}),
                 });
             }
             // ⛔ THE REMOVAL IS WHAT OPENS THE ROOM, and it is eleven ticks
@@ -10822,6 +10884,25 @@ export function createLevelRun({
                 });
             }
         }
+    }
+
+    /**
+     * ⛓ fidelity DARKSUITBOSSES D2 — `ShieldBoss.hit(darkSuitForce, …, darkSuitDamage, "Suit")` (`Enemies/ShieldBoss.as:
+     * 130-151`), on the model's own row. The stab's damaging frames are 5-8, all in "stab" (`:37`, `:108`), so an armed
+     * boss takes the `playedSound`/`startStab(true)` arm and `startStab` refuses (it needs "sit", `:172`); an unarmed one
+     * is armed (`activated = true`). Called between `stepShieldBoss` and the graphic step, where `hitPlayer` is.
+     */
+    function shieldBossSuitRetaliation(b) {
+        const v = shieldBossTakesHit(b, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (v.landed || v.killed || v.aborted || v.retaliated) {
+            throw new Error(`levelRun: the dark suit's retaliation into ${b.id} at tick ${ticksCompleted + 1} in level `
+                + `${level} ${v.killed ? 'kills' : v.landed ? 'damages' : 'moves'} it (anim "${b.anim}"). D1 found the `
+                + 'stab frames in "stab", where `ShieldBoss.hit` damages nothing. Refused by name (fidelity DARKSUITBOSSES).');
+        }
+        return {
+            id: b.id, as3: 'ShieldBoss', landed: false, swallowed: v.swallowed, activated: b.activated,
+            why: v.refusedAt,
+        };
     }
 
     /**
@@ -11187,13 +11268,24 @@ export function createLevelRun({
                         + 'barrage aim reads on this very tick — and this model runs the '
                         + 'contact after the arms. Refused rather than approximated.');
                 }
-                applyPlayerHit({
-                    source: 'owlBody',
-                    id: b.id,
-                    force: PLAYER_DAMAGE.contactForce,
-                    damage: 1,
-                    from: { x: b.x, y: b.y },
-                });
+                // ⛓ fidelity DARKSUITBOSSES D1 (ON only): the Owl is `e` and is NOT declared — the refusal names why.
+                try {
+                    applyPlayerHit({
+                        source: 'owlBody',
+                        id: b.id,
+                        force: PLAYER_DAMAGE.contactForce,
+                        damage: 1,
+                        from: { x: b.x, y: b.y },
+                    });
+                } catch (e) {
+                    if (!CONTACT_FIDELITY.darkSuitBossRetaliation
+                        || !/`hasDarkSuit` retaliates INTO the attacker/.test(e.message)) throw e;
+                    throw new Error(`${e.message} — fidelity DARKSUITBOSSES D1: \`FinalBoss.hit\` is \`Enemy.hit\` `
+                        + 'with `onlyHitBy = "Lava"` and `justKnock` (Enemies/FinalBoss.as:61-62), so a "Suit" hit is '
+                        + '`knockback(1, p)` into `v` inside `super.update()`, and the phase arms then read `v.length` '
+                        + '(Enemies/FinalBoss.as:126-155). This model bills the contact after `stepFinalBoss`\'s arms. '
+                        + 'Not declared.');
+                }
                 if (pendingDeath) return { frozen: false };
             }
         }
@@ -12384,7 +12476,9 @@ export function createLevelRun({
                 });
                 continue;
             }
-            applyPlayerHit({
+            // ⛓ fidelity DARKSUITSTATIC D2 (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, ON only): the body is `e`.
+            const suit = CONTACT_FIDELITY.darkSuitStaticRetaliation ? staticSuitRetaliation(inst, id) : null;
+            const bill = () => applyPlayerHit({
                 source: 'enemy',
                 id,
                 // `p.hit(this, 3, new Point(x, y), damage)` — the base
@@ -12393,9 +12487,106 @@ export function createLevelRun({
                 force: PLAYER_DAMAGE.contactForce,
                 damage: inst.row.damage,
                 from: { x: inst.cx, y: inst.cy },
+                ...(suit?.retaliate ? { retaliate: suit.retaliate } : {}),
             });
+            if (suit?.undeclaredWhy) {
+                // an undeclared class's refusal (`playerHit`'s `byEnemy`) names WHY it is undeclared
+                try {
+                    bill();
+                } catch (e) {
+                    if (!/`hasDarkSuit` retaliates INTO the attacker/.test(e.message)) throw e;
+                    throw new Error(`${e.message} ${suit.undeclaredWhy}`);
+                }
+            } else {
+                bill();
+            }
             if (pendingDeath) return;
         }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DARKSUITSTATIC D2 — **THE DARK SUIT'S RETALIATION INTO A STATIC BODY**
+     * (`CONTACT_FIDELITY.darkSuitStaticRetaliation`, OFF).
+     *
+     *     Player.as:1384-1387   if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y), darkSuitDamage, "Suit");
+     *
+     * `Enemy.hitPlayer` (`Enemies/Enemy.as:211-221`) calls `p.hit(this, 3, …)`, so the static scan's body is `e`. Per
+     * class (D1 census, `CC/docs/cloud-reports/seedling-fidelity-darksuitstatic.md`):
+     *   · `DarkTrap` — `hit()` is an EMPTY override (`Enemies/DarkTrap.as:56-59`): no effect.
+     *   · `IceTrap` — `canHit = false` (`Enemies/IceTrap.as:32`) closes `Enemy.hit`'s only gate (`Enemy.as:147`): no effect.
+     *   · `SandTrap` — `Enemy.hit` unchanged (`SandTrap.knockback` is empty, `:77-80`): `enemyHit` on F4's damage row
+     *     (`staticBodyStateFor`), i.e. `hits += 1`, `hitsTimer = 30`, the `hitByDarkStuff` latch; a third hit plays
+     *     "die" (`startDeath`, `:88-92`), staged as the sword arm stages it, and — because the blow lands INSIDE the
+     *     trap's own `update()` — `World.update` advances its graphic on this same tick (`World.as` update loop:
+     *     `e.update()` then `e._graphic.update()`), one step the sword's blow (the Player updates last) does not get.
+     *   · `Turret` (relabelled here by `STATIC_SWORD_ARM`) — NOT declared: `Turret.update` reads `hitsTimer` in its fire
+     *     gate and plays "die" over "startshot" AFTER `super.update()` (`Enemies/Turret.as:45-79`), and the model steps
+     *     that half in `stepShootersNow`, above this scan. So a Suit hit would land after the turret's fire gate had
+     *     already read the pre-hit timer. It stays ABSENT (refused by name), with this reason.
+     *
+     * @returns {{retaliate: Function} | {undeclaredWhy: string}}
+     */
+    function staticSuitRetaliation(inst, id) {
+        const as3 = inst.as3;
+        if (as3 === 'DarkTrap') {
+            return { retaliate: () => ({ id, as3, landed: false, effect: 'none',
+                why: '`DarkTrap.hit` is an empty override (Enemies/DarkTrap.as:56-59)' }) };
+        }
+        if (as3 === 'IceTrap') {
+            return { retaliate: () => ({ id, as3, landed: false, effect: 'none',
+                why: '`canHit = false` (Enemies/IceTrap.as:32) closes `Enemy.hit` (Enemies/Enemy.as:147)' }) };
+        }
+        if (as3 === 'SandTrap') return { retaliate: () => staticSuitHit(id) };
+        if (as3 === 'Turret') {
+            return { undeclaredWhy: 'fidelity DARKSUITSTATIC D1: `Turret.update` reads `hitsTimer` in its fire gate '
+                + 'and plays "die" over "startshot" AFTER `super.update()` (Enemies/Turret.as:45-79), and this model '
+                + 'steps that half in `stepShootersNow`, above the contact scan — a Suit hit here would land after the '
+                + 'fire gate had read the pre-hit timer. Not declared.' };
+        }
+        return { undeclaredWhy: `fidelity DARKSUITSTATIC D1: no retaliation row for \`${as3}\`.` };
+    }
+
+    /** `Enemy.hit(darkSuitForce, …, darkSuitDamage, "Suit")` on a SandTrap's F4 damage row; a kill is staged. */
+    function staticSuitHit(id) {
+        const sb = staticBodyStateFor(level).get(id) ?? null;
+        if (!sb) {
+            throw new Error(`levelRun: the dark suit retaliates into ${id} at tick ${ticksCompleted + 1} in level `
+                + `${level}, which is not in the run's static body state.`);
+        }
+        const verdict = enemyHit(sb, { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen: ceremony !== null });
+        if (verdict.killed) {
+            const spec = STATIC_SWORD_DEATH[sb.as3] ?? STATIC_ARROW_DEATH[sb.as3];
+            // `SandTrap.startDeath` is `play("die")`: no `destroy` at the blow.
+            sb.destroy = false;
+            if (!(sb.persistTag >= 0)) {
+                throw new Error(`levelRun: ${sb.id} dies to the dark suit's retaliation at tick ${ticksCompleted + 1} `
+                    + 'and carries no persistence tag, so its `removed()` would write OUT OF BAND. Refused by name '
+                    + '(fidelity DARKSUITSTATIC, F4\'s rule).');
+            }
+            const census = world.combat?.enemies ?? [];
+            const before = census.filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
+            const after = census.filter((e) => !e.removed && `${e.tag}@${e.x},${e.y}` !== sb.id
+                && !(staticBodyStateFor(level).get(`${e.tag}@${e.x},${e.y}`)?.dying))
+                .map((e) => ({ as3: e.as3 }));
+            const led = killLockLedger(levelSource(level), { bodiesBefore: before, bodiesAfter: after });
+            if (!led.nil) {
+                throw new Error(`levelRun: the dark suit's retaliation at tick ${ticksCompleted + 1} KILLS ${sb.id}, `
+                    + `whose removal OPENS ${led.opens.length} kill lock(s) in level ${level} (${led.why}) — not `
+                    + 'staged. Refused by name (fidelity DARKSUITSTATIC).');
+            }
+            sb.killedAt = ticksCompleted + 1;
+            sb.dieAnim = createSpriteAnim(spec.dieAnim.frames, spec.dieAnim.rate);
+            // The blow is inside the trap's own `update()`, so its graphic advances on this tick too.
+            if (stepSpriteAnim(sb.dieAnim)) {
+                throw new Error(`levelRun: ${sb.id}'s "die" ended on its first step — not a SandTrap anim.`);
+            }
+        }
+        return {
+            id, as3: sb.as3, landed: verdict.landed, hits: sb.hits, hitsTimer: sb.hitsTimer,
+            hitByDarkStuff: sb.hitByDarkStuff,
+            ...(verdict.killed ? { killed: true } : {}),
+            ...(verdict.landed ? {} : { why: verdict.refusedAt }),
+        };
     }
 
     /**
@@ -16740,7 +16931,24 @@ export function createLevelRun({
         if (a.boss) {
             const b = a.boss;
             const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const billBob = (h) => {
+                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
+                    force: h.force, damage: h.damage, from: h.from,
+                    // ⛓ fidelity DARKSUITBOSSES D2: `p.hit(this, …)` (`Enemy.as:217`, `BobSoldier.as:169`).
+                    ...(suitInStep ? { retaliate: () => bobBossSuitRetaliation(b) } : {}) });
+                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
+                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
+                // (`pendingDeath`, rebooted at end of tick). The new `Game`
+                // builds the rock fallen and re-adds the boss on its first
+                // live frame (`bobArenaNow`); the respawn is the rock's own
+                // `playerPosition` write, `ARENA.respawn`.
+            };
+            // ⛓ fidelity DARKSUITBOSSES D2 (`CONTACT_FIDELITY.darkSuitBossRetaliation`, ON, with the suit): the bill
+            // lands INSIDE the step, where `BobBoss.update` makes it, so a retaliation's writes (form 2's re-seed,
+            // `BobBoss.as:165-173`) precede `spin` and the later sword lines (`BobSoldier.as:72-84`).
+            const suitInStep = CONTACT_FIDELITY.darkSuitBossRetaliation && !!inventory.hasDarkSuit;
             const r = stepBobBossBody(b, {
+                ...(suitInStep ? { onPlayerHit: billBob } : {}),
                 player: { x: state.x, y: state.y },
                 playerBox: playerBoxAt(state.x, state.y),
                 frozen: false,
@@ -16757,16 +16965,7 @@ export function createLevelRun({
                         && box.bottom > ARENA_NPC_POINT.y)
                     || !!world.collidesSolid(box, solidOpts),
             });
-            for (const h of r.playerHits) {
-                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
-                    force: h.force, damage: h.damage, from: h.from });
-                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
-                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
-                // (`pendingDeath`, rebooted at end of tick). The new `Game`
-                // builds the rock fallen and re-adds the boss on its first
-                // live frame (`bobArenaNow`); the respawn is the rock's own
-                // `playerPosition` write, `ARENA.respawn`.
-            }
+            if (!suitInStep) for (const h of r.playerHits) billBob(h);
             if (r.transition && !r.transition.done) {
                 bobNoInput = true;
                 a.faceUp = true;
@@ -17569,6 +17768,24 @@ export function createLevelRun({
                 reach, why: verdict.refusedAt ?? null });
             hits.push({ as3: 'LightBoss', id: f.id, landed: verdict.landed, killed: verdict.killed === true });
         }
+    }
+
+    /**
+     * ⛓ fidelity DARKSUITBOSSES D2 — `BobBoss.hit(darkSuitForce, …, darkSuitDamage, "Suit")` (`Enemies/BobBoss.as:
+     * 163-175`): form 2's own-gate re-seed, then `Enemy.hit(0, null, d, "Suit")` — hits, i-frames, the latch, a kill's
+     * `destroy` (`bobBossHit`, the sword arm's function). A kill starts `death()`'s transition on the next step, as a
+     * sword kill does. The `boss-hit` ledger row carries `by: 'suit'`.
+     */
+    function bobBossSuitRetaliation(b) {
+        const v = bobBossHit(b, { d: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null });
+        bobLedger({ what: 'boss-hit', by: 'suit', form: b.form, landed: v.landed, killed: v.killed, hits: b.hits,
+            hitsMax: b.hitsMax, hitsTimer: b.hitsTimer, why: v.refusedAt ?? null });
+        return {
+            id: b.id, as3: 'BobBoss', form: b.form, landed: v.landed, hits: b.hits, hitsTimer: b.hitsTimer,
+            hitByDarkStuff: b.hitByDarkStuff === true, swords: b.swords,
+            ...(v.killed ? { killed: true } : {}),
+            ...(v.landed ? {} : { why: v.refusedAt }),
+        };
     }
 
     function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, lineWaived = false }) {
@@ -19403,7 +19620,10 @@ export function createLevelRun({
                 && memo.firstTick === firstTickInWorld
                 && memo.ticks === ticksCompleted;
             if (usable && memo.rows.length >= need) return memo.rows.slice(0, need);
-            const shifted = usable || !PRESS_KILL_COST.enabled ? null : shiftedSpinnerForecast(live);
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, stepped with the rows; a
+            // forecast that carries them is cut fresh (the shift's clauses compare the bodies, not the pulsers' rings)
+            const pulses = usable ? null : pulserForecastStepper();
+            const shifted = usable || !PRESS_KILL_COST.enabled || pulses !== null ? null : shiftedSpinnerForecast(live);
             if (!usable && PRESS_KILL_COST.enabled) {
                 if (shifted === null) PRESS_KILL_COST_COUNTS.forecastCut += 1;
                 else PRESS_KILL_COST_COUNTS.forecastShifted += 1;
@@ -19457,8 +19677,14 @@ export function createLevelRun({
                 // ⛓ hammer-phase P1: what rows 1… are stepped under, copied now (the shift's clause 4)
                 cur.key = PRESS_KILL_COST.enabled ? snapshotValue(cur.ctxAfter.inputs) : UNCACHEABLE;
             }
+            if (!usable && pulses !== null) {
+                cur.pulses = pulses;
+                cur.key = UNCACHEABLE; // ⛓ L39HIT D2: never the shift's `prev` (its rows carry the pulsers' rings)
+            }
             for (let i = cur.rows.length; i < need; i += 1) {
                 stepSpinners(cur.st, i === 0 ? cur.ctxNow : cur.ctxAfter);
+                // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step, as `advance` orders them
+                cur.pulses?.step(cur.st, (i === 0 ? cur.ctxNow : cur.ctxAfter).inputs?.frozen === true);
                 cur.rows.push(spinnerRects(cur.st).map((s) => s.rect));
                 // ⛓ hammer-phase P1: the bodies each row was cut from (`stepSpinner` never mutates one), for the shift
                 cur.states.push([...cur.st.byId.values()]);
@@ -19596,9 +19822,12 @@ export function createLevelRun({
                 const blocked = forecastSwordTest(st, th, t, from, { own, damage, frozen, weapon }, tests);
                 lineBlocked = lineBlocked ?? blocked;
             };
+            // ⛓ fidelity L39HIT D2 (`pulserForecastPulse`, OFF ⇒ null): the room's pulsers, as `spinnerForecast` steps them
+            const pulses = live.byId.size > 0 ? pulserForecastStepper() : null;
             for (let i = 0; i < need; i += 1) {
                 const t = ticksCompleted + i;
                 if (live.byId.size > 0) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                pulses?.step(st, frozen);
                 // ⛓ SHIELDBUMP D1: `shieldBumpNow` runs after the bodies' update and above `slash()`'s tests
                 if (stepsBump) bumpRow(t);
                 if (!lineBlocked) {
@@ -19710,8 +19939,10 @@ export function createLevelRun({
              * ones its parent's.
              */
             const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked, bumped = null,
-                shieldBumps = null }) => {
+                shieldBumps = null, pulses = null }) => {
                 const snaps = [];
+                // ⛓ fidelity L39HIT D2: the pulsers' state after each own row (`pulserForecastPulse` ON; else all null)
+                const pulseSnaps = [];
                 const wins = [];
                 const slashes = [];
                 // ⛓ SHIELDBUMP D1: per row, was the bump stepped (a state given)? Whole arrays from row 0, as `rows`.
@@ -19728,6 +19959,8 @@ export function createLevelRun({
                         const i = rows.length;
                         const t = n0 + i;
                         if (hasBodies) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                        // ⛓ fidelity L39HIT D2: the pulse lands after the bodies' step and above the player's tests
+                        pulses?.step(st, frozen);
                         if (stepsBump) {
                             // ⛓ SHIELDBUMP D1: `shieldBumpNow`, the top-of-tick `slashing` (a swing ending ON t-1 is out)
                             const q = forecastPlayerState(point);
@@ -19786,6 +20019,7 @@ export function createLevelRun({
                         bodies.push(now.map((s) => ({ id: s.id, hits: s.spinner.hits, hitsTimer: s.spinner.hitsTimer,
                             destroy: s.spinner.destroy })));
                         snaps.push(new Map(st.byId));
+                        pulseSnaps.push(pulses?.copy() ?? null);
                         wins.push(win);
                         slashes.push(slash);
                         return out;
@@ -19797,7 +20031,10 @@ export function createLevelRun({
                     },
                     /** The state after row `j` (its own, or its parent's). */
                     snap(j) {
-                        if (j >= from) return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from] };
+                        if (j >= from) {
+                            return { st: snaps[j - from], win: wins[j - from], slash: slashes[j - from],
+                                pulses: pulseSnaps[j - from] };
+                        }
                         if (parent === null) throw new Error(`levelRun.spinnerFightForecast: no row ${j} to fork at`);
                         return parent.snap(j);
                     },
@@ -19806,7 +20043,8 @@ export function createLevelRun({
                         if (j >= rows.length) throw new Error(`levelRun.spinnerFightForecast: row ${j} not reached`);
                         const s = c.snap(j);
                         return cursor({ parent: c, from: j + 1, st: { byId: new Map(s.st), level },
-                            win: s.win, slash: s.slash, rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
+                            win: s.win, slash: s.slash, pulses: s.pulses?.copy() ?? null,
+                            rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
                             tests: tests.filter((x) => x.t <= n0 + j),
                             lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null,
                             ...(stepsBump ? { bumped: covered.slice(0, j + 1),
@@ -19824,7 +20062,8 @@ export function createLevelRun({
             return cursor({ parent: null, from: 0,
                 st: { byId: new Map([...live.byId].map(([k, v]) => [k, { ...v }])), level },
                 win: swordWindow, slash: { state: info.state, endsAt: info.endsAt, gate, tick: n0 },
-                rows: [], bodies: [], tests: [], lineBlocked: null });
+                rows: [], bodies: [], tests: [], lineBlocked: null,
+                pulses: hasBodies ? pulserForecastStepper() : null });
         },
         /**
          * ⛔⛔ R5 slice 13: `{t, level, id, flag, cause}` per `Spinner.removed()`.
@@ -23193,6 +23432,13 @@ export function createLevelRun({
                             force: BOSS_TOTEM_BODY.force,
                             damage: BOSS_TOTEM_BODY.damage,
                             from: { x: b.x, y: b.y },
+                            // ⛓ fidelity DARKSUITBOSSES D2 (ON only): `Enemy.hitPlayer` passes the totem as `e`
+                            // (`BossTotem.as:301`), and its "Suit" hit writes nothing.
+                            ...(CONTACT_FIDELITY.darkSuitBossRetaliation ? { retaliate: () => ({
+                                id: b.id ?? 'bosstotem', as3: 'BossTotem', landed: false, effect: 'none',
+                                why: '`BossTotem.hit` → `Enemy.hit` (Enemies/BossTotem.as:719-725): `onlyHitBy = "Wand"` '
+                                    + '(:262) and `justKnock` false (Enemies/Enemy.as:42, :149-180); `knockback` is empty (:727)',
+                            }) } : {}),
                         });
                     }
                     // 4. THE CAMERA OVERRIDE, which runs on every frame he
