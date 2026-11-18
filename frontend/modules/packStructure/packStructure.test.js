@@ -10,8 +10,8 @@ import { nodePackIo } from '../contentPacks/nodePackIo.js';
 import { createPackConcepts } from '../packConcepts/packConcepts.js';
 import { CONTENT_LAYERS, loadContentSet } from '../procgenPipeline/worldContent.js';
 import {
-    MODIFIES_PARTS, RESULT_WHEN, STRUCTURE_FIELDS, STRUCTURE_KINDS,
-    assertPresentsStructure, createStructure, parseModifiesPart, parseStructureId, parseStructureManifest,
+    DEFAULT_TERRAIN_PASS, MODIFIES_PARTS, RESULT_WHEN, STRUCTURE_FIELDS, STRUCTURE_KINDS, TERRAIN_PASSES,
+    assertPresentsStructure, terrainPassOf, createStructure, parseModifiesPart, parseStructureId, parseStructureManifest,
 } from './packStructure.js';
 import { createNumbers, numbersSelectionRefusal, parseNumbersManifest, parseValuePath } from './packNumbers.js';
 import { assertBindingsBind, createBindings, parseBindingsManifest } from './packBindings.js';
@@ -29,9 +29,9 @@ async function omsiStructureWith(edit) {
 }
 
 describe('structure: the fixture packs, read from disk', () => {
-    it('loads omsi and jta together (what exists: packs added together), every entry kind present', async () => {
-        const s = createStructure(await load(['omsi', 'jta']));
-        expect(s.packs()).toEqual(['omsi', 'jta']);
+    it('loads omsi, jta and ground together (what exists: packs added together), every entry kind present', async () => {
+        const s = createStructure(await load(['omsi', 'jta', 'ground']));
+        expect(s.packs()).toEqual(['omsi', 'jta', 'ground']);
         for (const kind of STRUCTURE_KINDS) expect(s.ofKind(kind).length).toBeGreaterThan(0);
         expect(STRUCTURE_KINDS.flatMap((k) => s.ofKind(k)).sort()).toEqual(s.keys().sort());
         expect(Object.isFrozen(s.get('omsi:task/pick-locks').requires[0][0])).toBe(true);
@@ -103,11 +103,57 @@ describe('structure: ⛔ refusal by name', () => {
         expect(() => parseStructureManifest(json, 'omsi')).toThrow(/unknown field "tasks"/);
     });
     it('every field each kind takes is one the fixtures use (no field goes unread)', async () => {
-        const s = createStructure(await load(['omsi', 'jta']));
+        const s = createStructure(await load(['omsi', 'jta', 'ground']));
         const used = new Set(s.keys().flatMap((k) => Object.keys(s.get(k)).map((f) => `${s.get(k).kind}.${f}`)));
         const unused = Object.entries(STRUCTURE_FIELDS).flatMap(([kind, fs]) => fs.map((f) => `${kind}.${f}`))
             .filter((kf) => !used.has(kf) && !kf.endsWith('.src'));
         expect(unused).toEqual([]);
+    });
+});
+
+describe('⛓ PASS-1 — terrain: a tile kind\'s declared passability', () => {
+    const ground = async () => structuredClone((await load(['ground'], ['structure']))[0].layers.structure);
+    const parse = (json) => () => parseStructureManifest(json, 'ground');
+
+    it('the fixture declares one entry per value of the closed set; the default is walkable', async () => {
+        const s = createStructure(await load(['ground']));
+        expect(s.ofKind('terrain').map((k) => s.get(k).pass).sort()).toEqual([...TERRAIN_PASSES].sort());
+        expect(TERRAIN_PASSES).toContain(DEFAULT_TERRAIN_PASS);
+        expect(Object.isFrozen(TERRAIN_PASSES)).toBe(true);
+    });
+
+    it.each([
+        ['a value outside the set', (e) => { e['ground:terrain/rug'].pass = 'one-way'; }, /entry "ground:terrain\/rug": pass "one-way" is not one of walkable, blocked/],
+        ['no pass at all', (e) => { delete e['ground:terrain/rug'].pass; }, /entry "ground:terrain\/rug": pass undefined is not one of/],
+        ['a field a terrain does not take', (e) => { e['ground:terrain/rug'].needs = 'swim'; }, /field "needs" is not one a terrain takes \(kind, src, pass\)/],
+        ['pass on a kind that is not terrain', (e) => { e['ground:place/hall'] = { kind: 'place', pass: 'blocked' }; }, /field "pass" is not one a place takes/],
+    ])('refused by name: %s', async (_, edit, pattern) => {
+        const json = await ground();
+        edit(json.entries);
+        expect(parse(json)).toThrow(ContentPackError);
+        expect(parse(json)).toThrow(pattern);
+    });
+
+    it('terrainPassOf reads a concept\'s pass through the structure layer; no terrain presented is walkable', async () => {
+        const stack = await load(['ground']);
+        const words = createPackConcepts(stack);
+        const structure = createStructure(stack);
+        assertPresentsStructure(words, structure);
+        expect(terrainPassOf(words.get('ground:terrain/pillar'), structure)).toBe('blocked');
+        expect(terrainPassOf(words.get('ground:terrain/rug'), structure)).toBe('walkable');
+        expect(terrainPassOf(words.get('ground:object/lamp'), structure)).toBe(DEFAULT_TERRAIN_PASS);
+        expect(terrainPassOf(words.get('ground:object/lamp'), null)).toBe(DEFAULT_TERRAIN_PASS);
+        // A terrain presented with no logic layer loaded is refused by name, never read as walkable.
+        expect(() => terrainPassOf(words.get('ground:terrain/pillar'), null))
+            .toThrow(/concept "ground:terrain\/pillar" presents "ground:terrain\/pillar", which no structure in the stack holds/);
+    });
+
+    it('a concept that presents a terrain entry is of kind terrain (the Z.1 two-form presents)', async () => {
+        const [g] = await load(['ground'], ['concepts']);
+        const json = structuredClone(g.layers.concepts);
+        json.concepts['ground:terrain/pillar'].kind = 'object';
+        expect(() => createPackConcepts([{ id: 'ground', layers: { concepts: json } }]))
+            .toThrow(/presents the terrain "ground:terrain\/pillar", but its own kind is object/);
     });
 });
 

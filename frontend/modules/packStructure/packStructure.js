@@ -10,7 +10,8 @@
  * PRESENTS a structure entry), and what only one game needs its `bindings`
  * layer (`packBindings.js`).
  *
- *   kind      task | stat | resource | boon | place
+ *   kind      task | stat | resource | boon | place | terrain
+ *   pass      (terrain, ⛓ PASS-1) the tile kind's passability, one of `TERRAIN_PASSES`; REQUIRED
  *   owner,max (stat, C1) the task or place that owns it; `max: true` = a maximum exists
  *   modifies  (stat, resource, boon, C4) [{ entry: <task id> | "*", part, lasts: loop | always }];
  *             part ∈ time | limit | results.<id> | requires.<id>
@@ -36,9 +37,11 @@
  * Pure and DOM-free: it takes a LOADED stack (`loadPackStack`'s result).
  */
 import { ContentPackError } from '../contentPacks/contentPackError.js';
-import { STRUCTURE_ID_PATTERN, STRUCTURE_KINDS, presentsStructure } from '../packConcepts/packConcepts.js';
+import {
+    DEFAULT_TERRAIN_PASS, STRUCTURE_ID_PATTERN, STRUCTURE_KINDS, TERRAIN_PASSES, presentsStructure,
+} from '../packConcepts/packConcepts.js';
 
-export { STRUCTURE_KINDS, STRUCTURE_ID_PATTERN };
+export { DEFAULT_TERRAIN_PASS, STRUCTURE_KINDS, STRUCTURE_ID_PATTERN, TERRAIN_PASSES };
 
 /** The fields each kind of entry may carry (`src` names its provenance source, Z.7). */
 export const STRUCTURE_FIELDS = Object.freeze({
@@ -47,6 +50,8 @@ export const STRUCTURE_FIELDS = Object.freeze({
     resource: Object.freeze(['kind', 'src', 'modifies']),
     boon: Object.freeze(['kind', 'src', 'modifies', 'results']),
     task: Object.freeze(['kind', 'src', 'place', 'time', 'requires', 'results', 'limit', 'after', 'tags']),
+    // ⛓ PASS-1: a tile kind's declared passability. PASS-2 adds `needs`, PASS-3 `dirs`.
+    terrain: Object.freeze(['kind', 'src', 'pass']),
 });
 
 /** C3: when a result applies. `each` is the default. */
@@ -220,6 +225,9 @@ export function parseStructureManifest(json, packId) {
         if ('modifies' in e) checkModifies(at, e.modifies);
         if (e.kind === 'task') checkTask(at, e);
         if (e.kind === 'boon' && 'results' in e) checkResults(at, e.results, BOON_RESULT_FORMS, false);
+        if (e.kind === 'terrain' && !TERRAIN_PASSES.includes(e.pass)) {
+            fail(`${at}: pass ${JSON.stringify(e.pass)} is not one of ${TERRAIN_PASSES.join(', ')} (a terrain entry declares its passability)`);
+        }
     }
     return json;
 }
@@ -269,6 +277,20 @@ export function createStructure(stack) {
         /** The packs whose structure the stack holds, in stack order. */
         packs: () => [...new Set([...entries.values()].map((e) => e.pack))],
     });
+}
+
+/**
+ * ⛓ PASS-1 — **A PACK CONCEPT'S DECLARED PASSABILITY**, read through the structure layer: the `pass` of the terrain
+ * entry the concept presents, or `DEFAULT_TERRAIN_PASS` (`walkable`) when it presents none. A concept that presents a
+ * terrain entry the stack's structure does not hold is refused by name (`assertPresentsStructure`'s sentence), so a
+ * missing logic layer never reads as walkable. `structure` may be null when the stack carries no structure layer.
+ */
+export function terrainPassOf(concept, structure) {
+    const id = concept?.presents;
+    if (!presentsStructure(id) || parseStructureId(id)?.kind !== 'terrain') return DEFAULT_TERRAIN_PASS;
+    const entry = structure?.get(id) ?? null;
+    if (!entry) fail(`pack "${concept.pack}" concept "${concept.key}" presents "${id}", which no structure in the stack holds`);
+    return entry.pass;
 }
 
 /**

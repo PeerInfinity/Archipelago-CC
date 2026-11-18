@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "_comment": "A TEST FIXTURE (packStructure.test.js): one terrain entry per passability value PASS-1 builds.",
+  "provenance": {
+    "sources": { "pass1": { "type": "authored", "by": "content sets PASS-1's parser pins" } },
+    "default": "pass1"
+  },
+  "entries": {
+    "ground:terrain/rug": { "kind": "terrain", "pass": "walkable" },
+    "ground:terrain/pillar": { "kind": "terrain", "pass": "blocked" }
+  }
+}
