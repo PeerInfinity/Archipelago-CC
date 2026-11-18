@@ -9,7 +9,7 @@
 | Base | `60c8a0374584807477d3e79e8104e3ca5aacc223` (wave 50's head; 141 keys, 126 ON, measured) |
 | Harness branch | `claude/pickup-freeze-tick-order-jr8r81` (local branch `seedling-fidelity-pickupfreeze`) |
 | Commits | D1 evidence `db8b73a8` · D2 `f56afcae` + `b76ac737` · D3 evidence · this report (the head) |
-| Verdict | **PASS** (key OFF; OFF byte-identical; @@VERDICT@@) |
+| Verdict | **PASS** (key OFF; OFF byte-identical; ON moves no measured route answer: 0 ON movers in vitest, train, the survey and 293 tapes; the 57-leg sweep is the planner's) |
 
 **The one thing to know first:** every pickup the game ships beside one of these families is **TEXT-LESS** (L29's green
 key; L40's totem parts and purple key). For a text-less pickup the game's freeze is NOT the whole collecting tick: on the
@@ -193,7 +193,52 @@ pickup.
 
 ## D3 — the ON measurement
 
-@@D3@@
+- **Byte-inertia OFF.** The fixtures/golden/tapes grep over the diff is empty. The four acceptance md5s are all the
+  standing `391322d681b7aa0229d94b3f6906d024`: base, head OFF, head ON, and head ON + `turretSuitRetaliation`
+  (`d3/acceptance-*.md5`).
+- **The census** (`d3/leg-census.txt`, `d3/pickup_room_legs.json`):
+
+| set | count |
+|---|---|
+| legs | 924 |
+| legs in a room holding one of the four differing families | 150 (L28 8, L29 7, L40 50, L59 16, L62 25, L65 7, L88 9, L91 4, L98 6, L103-L108 18) |
+| legs in a room holding a `special` pickup beside one (L29 turrets + bosskey; L40 ice turret + totem parts + bosskey) | **57** (ids 290-296, 359-396, 856-867) |
+| legs that collect such a pickup | **8**: 292, 295 (L29 Boss Key 1); 379, 395 (L40 totem 160,640); 856, 858 (totem 64,144); 864, 865 (Boss Key 2). **All text-less** |
+
+- **Survey** (`--through=end`, OFF vs `SEEDLING_PICKUP_TICK_FREEZE=1`; `d3/survey-{off,on}.*`). The steps that collect
+  a pickup beside a differing family: 36 (L29) SOLVED 257 ticks, 0 hits, OFF = ON; 66, 96, 149 (L40) REFUSED, OFF and
+  ON with the same reason (pre-existing: a spinner corridor, and two ladder-routed corridors).
+- **Committed tapes.** All **293** replay byte-identical ON vs OFF (`d3/tapes-onoff.txt`), `r9-solve-29` and
+  `r5-bosskey-leg` included.
+- **Vitest ON** (the gate set, `--maxWorkers=3`, `SEEDLING_PICKUP_TICK_FREEZE=1`): 192/192 files, 5281 passed,
+  2 skipped (the env-guarded "ships OFF" rows). **0 ON movers** (`d3/vitest-on.txt`).
+- **Train ON.** The 13 `.train.` files of those rooms (`d3/train-files.txt`; the StagedHuntScanMemo and WallFlyerGaps
+  files are left out as not of these rooms), `vitest.train.config.js`, `--maxWorkers=2`: 13/13 files, 44/44 tests,
+  72 min. `strategySwitchApproach.slow.test.js` ON: 1/1. **0 ON movers** (`d3/train-on.txt`, `d3/slow-on.txt`).
+- **Why ON moves nothing measured:** every shipped collecting leg is text-less. L40's pickups sit beside a lump-less
+  ice turret, so ON is inert there by construction (text-less ⇒ only the lumped turret is reordered). L29's turrets
+  are out of range at Boss Key 1, so the reordered shot hits nothing either way.
+
+### The named sweep (for the planner)
+
+- Keys: the **57** legs in `d3/pickup_room_legs.json` (ids 290-296, 359-396, 856-867).
+- Shards = min(10, 57) = **10**, ×1 per arm, OFF and `SEEDLING_PICKUP_TICK_FREEZE=1`.
+- Expectation: no mover. A possible mover is a named refusal (the prediction/ceremony cross-check), never a silent
+  change. Measure for the flip test anyway: a leg that is hitless OFF must stay hitless ON.
+
+## Gates
+
+- **Bounded vitest BEFORE** (base worktree, submodules symlinked): 190/191 files, 5269 passed, 2 skipped. The 1 red
+  (`seedlingWasmPlayback`, "registerBackend: duplicate id 'empty'") is the symlink artifact, not the base.
+- **AFTER** (head, OFF): 191/192, the 1 red was `seedlingConstantsCensus` (the profile-rows order), fixed in `7e6edf46`
+  and re-run 24/24 green. With that: 192/192.
+- `lintGateLabels` and `oneSpelling`: green locally.
+- `ci-producer-checks.mjs --jobs=3`: 99 run, 0 red, 1 skipped (`plan-seedling-r7-ends-meet`, a browser arm in CI).
+- `check-procgen-docs.mjs`: ALL PASSED. `generate-procgen-reference.mjs --check`: all match. Census and
+  solver-surface checks: green after `--write` (the surface moved line numbers only).
+- **CI** `JavaScript Unit Tests` at the last head: see the chat line (read after the push).
+- **Owed by the planner (I cannot dispatch):**
+  `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/pickup-freeze-tick-order-jr8r81 -f train_only=true`
 
 ## What the brief got wrong (measured)
 
@@ -252,4 +297,4 @@ pickup.
 - Every ON row is staged and model-derived, not game-witnessed.
 - The 8 collecting legs (and the 57-leg sweep) were not replayed in node: the leg runner is the browser sweep.
 - Evidence: `seedling-fidelity-pickupfreeze-evidence/`: `tools/rooms.mjs` (room census), `tools/probe.mjs` (the staging,
-  OFF vs ON), `tools/tape-onoff.mjs` (committed tapes OFF vs ON); `d1/rooms.json`; `d2/` the mutants; `d3/` @@EVID@@.
+  OFF vs ON), `tools/tape-onoff.mjs` (committed tapes OFF vs ON); `d1/rooms.json`; `d2/` the mutants; `d3/` the acceptance md5s, the leg census and the 57 legs, the survey OFF/ON, the tapes OFF/ON, vitest BEFORE/AFTER/ON, train and slow ON, the gate file list and the producer line.
