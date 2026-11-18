@@ -123,7 +123,7 @@ only (see Residue).
 - CI at `1026bb121a`:
   - JSUT push run **44341911697** (headSha `1026bb121a`): success. Suite (`ci-vitest-summary.mjs`): vitest (unfiltered)
     28698 passed, 0 skipped, 0 failed; slow battery 438 passed; producer --checks, headless gates and browser gate
-    shards all succeeded. Compared with the base, +F = 0 new failures and +T = 19 new tests (the 18 in
+    shards all succeeded. Against the base's run 44242476339 at `e390574969` (28679 tests in 1344 files), +F = 0 and +T = 19, with +1 file (the 18 tests in
     `refreshSeedlingDerivedRules.test.js` plus the fifth recipe pin).
   - unittests push run **44341911832** (headSha `1026bb121a`): success.
   - Train-tier dispatch **44341926907** (`train_only=true`, headSha `1026bb121a`): success, all 3 shards, with the
