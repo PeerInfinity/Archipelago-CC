@@ -27,14 +27,22 @@
  *
  * Run: node scripts/procgen/check-seedling-editor-export.mjs
  *      node scripts/procgen/check-seedling-editor-export.mjs --keep=/tmp/shots
+ *
+ * ⛓ If the "exported twice is BYTE-IDENTICAL" row fails, its FAIL line says
+ * why: both exits and ticks, each PNG's size and sha256, and whether the
+ * PIXELS differ (a different frame) or only the bytes (the encoder). Both
+ * pictures, plus a diff mask, are kept under
+ * test-results/seedling-editor-export-flake/<UTC>/, and the line gives the path.
  */
 
 import { execFile } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { deflateSync, inflateSync } from 'node:zlib';
 
 import { EXIT, readPngHeader } from './exportSeedlingView.js';
 /**
@@ -118,6 +126,159 @@ async function cli(args) {
 const png = (file) => (existsSync(file)
     ? { ...readPngHeader(readFileSync(file)), bytes: readFileSync(file) }
     : { isPng: false, width: 0, height: 0, bytes: null });
+
+/**
+ * ⛓⛓ EXPORT-FLAKE-EVIDENCE — WHY TWO EXPORTS OF ONE VIEW DIFFERED.
+ *
+ * Row 7's byte-identity check went red 4 times in ~1,800 CI runs, each time
+ * as a bare label and each time green on rerun, so nobody could tell which of
+ * three causes it was: the CLI exited non-zero, the page was not really
+ * paused (a later frame), or the encoder is not deterministic. On a FAIL ONLY
+ * (a green run prints exactly what it always did) the detail below separates
+ * them: the CLI's exit and its own `wrote … tick N` line for BOTH exports, each
+ * PNG's size, dimensions and sha256, and — when both decode at one size — how
+ * many pixels differ and where. Same pixels with different bytes is the
+ * encoder; different pixels is the frame.
+ *
+ * ⛔ ONE LINE, because `ci-gates.mjs` copies only `FAIL:`/`SKIP:` lines into
+ * the CI log — a detail printed on a line of its own would never reach it.
+ * Both pictures (and a diff mask) are copied to a stable, named directory under
+ * `test-results/` (gitignored), whose path is on the same line.
+ */
+function decodeRgba(buf) {
+    let pos = 8; let width = 0; let height = 0; let colour = -1; let depth = 0; let interlace = 0;
+    const idat = [];
+    while (pos + 8 <= buf.length) {
+        const len = buf.readUInt32BE(pos);
+        const type = buf.toString('ascii', pos + 4, pos + 8);
+        const data = buf.subarray(pos + 8, pos + 8 + len);
+        if (type === 'IHDR') {
+            width = data.readUInt32BE(0); height = data.readUInt32BE(4);
+            depth = data[8]; colour = data[9]; interlace = data[12];
+        } else if (type === 'IDAT') idat.push(data);
+        else if (type === 'IEND') break;
+        pos += 12 + len;
+    }
+    const channels = { 0: 1, 2: 3, 4: 2, 6: 4 }[colour];
+    if (depth !== 8 || !channels || interlace !== 0) {
+        throw new Error(`undecodable here (depth ${depth}, colour ${colour}, interlace ${interlace})`);
+    }
+    const raw = inflateSync(Buffer.concat(idat));
+    const stride = width * channels;
+    const px = Buffer.alloc(height * stride);
+    let prev = Buffer.alloc(stride);
+    for (let y = 0, p = 0; y < height; y++) {
+        const filter = raw[p++];
+        const line = Buffer.from(raw.subarray(p, p + stride)); p += stride;
+        for (let i = 0; i < stride; i++) {
+            const a = i >= channels ? line[i - channels] : 0;
+            const b = prev[i];
+            const c = i >= channels ? prev[i - channels] : 0;
+            if (filter === 1) line[i] = (line[i] + a) & 0xff;
+            else if (filter === 2) line[i] = (line[i] + b) & 0xff;
+            else if (filter === 3) line[i] = (line[i] + ((a + b) >> 1)) & 0xff;
+            else if (filter === 4) {
+                const pa = Math.abs(b - c); const pb = Math.abs(a - c); const pc = Math.abs(a + b - 2 * c);
+                line[i] = (line[i] + ((pa <= pb && pa <= pc) ? a : (pb <= pc ? b : c))) & 0xff;
+            } else if (filter !== 0) throw new Error(`unknown PNG filter ${filter} on row ${y}`);
+        }
+        line.copy(px, y * stride);
+        prev = line;
+    }
+    return { width, height, channels, px };
+}
+
+/** The one-line "why" for two exports of one view that should be byte-identical. */
+function whyNotIdentical(first, second, firstRun, secondRun, files) {
+    const sha = (b) => (b ? createHash('sha256').update(b).digest('hex').slice(0, 12) : 'none');
+    const said = (r) => {
+        const tail = `${r.stdout}\n${r.stderr}`.split('\n').map((l) => l.trim()).filter(Boolean);
+        const wrote = tail.find((l) => l.startsWith('wrote '));
+        return wrote ? wrote.replace(/^wrote \S+ — /, '').replace(/, layers \[[^\]]*\]/, '')
+            : (tail.slice(-2).join(' / ').slice(0, 200) || '(silent)');
+    };
+    const face = (p) => (p.bytes ? `${p.bytes.length} B ${p.width}x${p.height} sha ${sha(p.bytes)}` : 'NO FILE');
+    const parts = [
+        `exit ${firstRun.code}/${secondRun.code}`,
+        `1st: ${face(first)} [${said(firstRun)}]`,
+        `2nd: ${face(second)} [${said(secondRun)}]`,
+    ];
+    let mask = null;
+    if (first.bytes && second.bytes) {
+        try {
+            const A = decodeRgba(first.bytes); const B = decodeRgba(second.bytes);
+            if (A.width !== B.width || A.height !== B.height || A.channels !== B.channels) {
+                parts.push('pixels: sizes/formats differ');
+            } else {
+                let n = 0; let x0 = A.width; let y0 = A.height; let x1 = -1; let y1 = -1;
+                mask = Buffer.alloc(A.width * A.height);
+                for (let y = 0; y < A.height; y++) {
+                    for (let x = 0; x < A.width; x++) {
+                        const o = (y * A.width + x) * A.channels;
+                        if (A.px.compare(B.px, o, o + A.channels, o, o + A.channels) !== 0) {
+                            n++; mask[y * A.width + x] = 1;
+                            x0 = Math.min(x0, x); y0 = Math.min(y0, y);
+                            x1 = Math.max(x1, x); y1 = Math.max(y1, y);
+                        }
+                    }
+                }
+                parts.push(n === 0
+                    ? 'pixels: IDENTICAL (bytes differ → the encoder, not the frame)'
+                    : `pixels: ${n} differ in x${x0}-${x1} y${y0}-${y1} (→ a different frame)`);
+                if (n === 0) mask = null;
+                else mask = { width: A.width, height: A.height, on: mask };
+            }
+        } catch (e) {
+            parts.push(`pixels: ${e.message}`);
+        }
+    }
+    parts.push(`kept: ${keepEvidence(files, mask)}`);
+    return parts.join(' · ');
+}
+
+/**
+ * Copy the pictures to `test-results/seedling-editor-export-flake/<UTC>/` and,
+ * when there is a pixel difference, a black/white diff mask beside them
+ * (white = differs), written as a plain grayscale PNG with no dependency.
+ */
+function keepEvidence(files, mask) {
+    try {
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const dir = join(fileURLToPath(new URL('../../', import.meta.url)),
+            'test-results', 'seedling-editor-export-flake', stamp);
+        mkdirSync(dir, { recursive: true });
+        for (const f of files) if (existsSync(f)) copyFileSync(f, join(dir, f.split(/[\\/]/).pop()));
+        if (mask) {
+            const { width, height, on } = mask;
+            const raw = Buffer.alloc(height * (width + 1));
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) raw[y * (width + 1) + 1 + x] = on[y * width + x] ? 255 : 0;
+            }
+            const chunk = (type, data) => {
+                const len = Buffer.alloc(4); len.writeUInt32BE(data.length);
+                const td = Buffer.concat([Buffer.from(type, 'ascii'), data]);
+                const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(td));
+                return Buffer.concat([len, td, crc]);
+            };
+            const ihdr = Buffer.alloc(13);
+            ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4); ihdr[8] = 8; ihdr[9] = 0;
+            writeFileSync(join(dir, 'diff-mask.png'), Buffer.concat([
+                Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+                chunk('IHDR', ihdr), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]));
+        }
+        return dir;
+    } catch (e) {
+        return `(could not keep them: ${e.message})`;
+    }
+}
+function crc32(buf) {
+    let c = ~0;
+    for (const byte of buf) {
+        c ^= byte;
+        for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1));
+    }
+    return ~c >>> 0;
+}
 
 /**
  * ⚠ THE ROOM AND THE TICK ARE BOTH CHOSEN, AND THE CHOOSING IS THE ROW.
@@ -330,8 +491,15 @@ check(amb.code === EXIT.refused && /no unambiguous default/.test(amb.stderr)
 
 console.log('\n## the rest of the contract');
 const again = await cli([`--out=${OUT}/a-again.png`, `--tape=${SOLVE4}`, `--tick=${ARROW_TICK}`]);
-check(again.code === EXIT.ok && png(`${OUT}/a-again.png`).bytes.equals(aPng.bytes),
-    '⛓ the SAME view exported twice is BYTE-IDENTICAL — the page really is paused');
+const againPng = png(`${OUT}/a-again.png`);
+const sameTwice = again.code === EXIT.ok && againPng.bytes !== null && aPng.bytes !== null
+    && againPng.bytes.equals(aPng.bytes);
+// ⛓ ONE check, as it always was (the standing value is 29/0): the "why" rides
+// in its detail and is computed ONLY on a FAIL, so a green line is unchanged.
+check(sameTwice,
+    '⛓ the SAME view exported twice is BYTE-IDENTICAL — the page really is paused',
+    sameTwice ? undefined : whyNotIdentical(aPng, againPng, a, again,
+        [`${OUT}/a-default.png`, `${OUT}/a-again.png`]));
 const noOut = await cli([`--tape=${SOLVE4}`]);
 check(noOut.code === EXIT.usage && /--out=.*required/.test(noOut.stderr),
     'no --out= is a usage refusal, before any browser starts', `exit ${noOut.code}`);
