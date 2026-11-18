@@ -3476,6 +3476,14 @@ export function createLevelRun({
      */
     let pickupFreezeAhead = null;
     /**
+     * ⛓ fidelity DIALOGUEFREEZE D2 (`CONTACT_FIDELITY.dialogueFrameFreeze`, ON only): this tick's prediction that a
+     * texted NPC's `talk()` raises `Game.freezeObjects` and keeps it up (`dialogueFreezeAheadNow`), `{t, level, frozen,
+     * slots}`, asked by the families that update after the NPC and re-checked at the talker and watcher arms; and the
+     * tick's held keys, for the talk key's release. OFF neither is ever written.
+     */
+    let dialogueFreezeAhead = null;
+    let dialogueHeldNow = null;
+    /**
      * The `Game` constructor args of the CURRENT world — what
      * `restartLevel()` reboots into.
      *
@@ -13307,13 +13315,15 @@ export function createLevelRun({
         // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2290`). Asked
         // from the main tick's slot only (a fall-rock span's release frame is not a pickup's first frame).
         const frozenAhead = mainTick && pickupFreezesFamilyNow('drill', { lump: false });
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2290` vs `:2389+`).
+        const dialogueAhead = mainTick && dialogueFreezeAheadNow('drill');
         // ⛓ fidelity DRILL D2: the game's update order is the LAST placement first (one drill: no order).
         for (const id of (mixed ? [...st.keys()].reverse() : [...st.keys()])) {
             const before = st.get(id);
             if (before.removed) continue;
             const enemyAt = mixed ? drillEnemyBodiesTest(id, st) : null;
             const out = stepDrill(before, {
-                frozen: ceremony !== null || frozenAhead,
+                frozen: ceremony !== null || frozenAhead || dialogueAhead,
                 onScreen: (rect) => onScreenNow(rect, `drill ${id}`),
                 playerBox: playerBoxAt(state.x, state.y),
                 player: { x: state.x, y: state.y },
@@ -15074,6 +15084,8 @@ export function createLevelRun({
         const ids = [...st.keys()].reverse();
         // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick froze it first (`Game.as:2296`).
         const frozenAhead = pickupFreezesFamilyNow('iceturret', { lump: false });
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a texted NPC's later frame froze it first (`Game.as:2296`).
+        const dialogueAhead = dialogueFreezeAheadNow('iceturret');
         for (const id of ids) {
             const t = st.get(id);
             if (t.removed) continue;
@@ -15081,7 +15093,7 @@ export function createLevelRun({
             const withoutSelf = opts.turrets === null ? null
                 : new Map([...opts.turrets].filter(([k]) => k !== id));
             stepIceTurret(t, {
-                frozen: ceremony !== null || frozenAhead,
+                frozen: ceremony !== null || frozenAhead || dialogueAhead,
                 // ⛔⛔⛔ R5 SLICE 22: COMPUTED, NOT DECLARED — AND SLICE
                 // 20's DECLARATION IS WHAT THE RECORDING REFUTED.
                 //
@@ -16048,6 +16060,70 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓ fidelity DIALOGUEFREEZE D2 (`CONTACT_FIDELITY.dialogueFrameFreeze`) — IS THIS TICK A DIALOGUE FRAME THAT
+     * FREEZES THE FAMILIES AFTER THE NPC?
+     *
+     * `NPC.talk()` (`NPCs/NPC.as:185-239`) raises `Game.freezeObjects` inside `if (talking)` and, on the frame the pages
+     * run out or the player is out of the circle, lowers it again through the `talking` setter (`:207-214`, `:230-236`,
+     * `:253-255`) before any family added ahead of the NPC updates. So the families are frozen on a frame iff an NPC was
+     * ALREADY talking at its `talk()` and does not close on it; the start frame (`startTalking()`, `:240-248`) is not
+     * one. Asked as a pure read of the two arms (`stepTalkersNow`, then `stepWatchersNow`, the same gates), the close
+     * read off a CLONE of the dialogue (`stepNpcDialogue`, the arms' own step). Every slot that asks is recorded;
+     * `assertDialogueFreezeAheadHeld` re-checks the answer at the arms, and `runFrozenTick` refuses a predicted dialogue
+     * frame that another freeze pre-empts. OFF: false, nothing recorded.
+     *
+     * @param {string} slot the family asking (for the refusal's text)
+     * @returns {boolean}
+     */
+    function dialogueFreezeAheadNow(slot) {
+        if (!CONTACT_FIDELITY.dialogueFrameFreeze || noclip) return false;
+        const frozen = predictDialogueFrameFrozen();
+        const prev = dialogueFreezeAhead !== null && dialogueFreezeAhead.t === ticksCompleted
+            && dialogueFreezeAhead.level === level ? dialogueFreezeAhead : null;
+        if (prev !== null && prev.frozen !== frozen) {
+            throw new Error(`levelRun: the dialogue-freeze prediction moved inside tick ${ticksCompleted} in level `
+                + `${level}: ${prev.slots.join(', ')} read ${prev.frozen}, ${slot} reads ${frozen} (the player moved `
+                + 'between the two slots, across a talk circle). Refused by name (fidelity DIALOGUEFREEZE).');
+        }
+        dialogueFreezeAhead = prev ?? { t: ticksCompleted, level, frozen, slots: [] };
+        dialogueFreezeAhead.slots.push(slot);
+        return frozen;
+    }
+    function predictDialogueFrameFrozen() {
+        const released = dialogueHeldNow !== null && releasedThisTick(dialogueHeldNow, TALK_KEY);
+        const player = { x: state.x, y: state.y };
+        const staysOpen = (d, inRange) => {
+            const c = structuredClone(d);
+            stepNpcDialogue(c, released, inRange);
+            return !c.done;
+        };
+        for (const w of talkerStateFor(level).values()) {
+            if (w.cleared || !w.text || !w.talking) continue;
+            return staysOpen(w.dialogue, inTalkRange({ x: w.ex, y: w.ey }, player, talkRangeOf(w.tag)));
+        }
+        for (const w of watcherStateFor(level).values()) {
+            if (w.cleared || w.persistTag < 0 || !w.text || !w.talking) continue;
+            if (staysOpen(w.dialogue, inTalkRange({ x: w.ex, y: w.ey }, player))) return true;
+        }
+        return false;
+    }
+    /**
+     * ⛓ fidelity DIALOGUEFREEZE D2: the arms' answer against the slots' prediction (`frozen`: the talker or watcher arm
+     * froze this tick). A slot that stepped its family frozen for a frame that then did not freeze (or unfrozen for one
+     * that did) is refused by name; the record is spent.
+     */
+    function assertDialogueFreezeAheadHeld(frozen) {
+        const rec = dialogueFreezeAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        dialogueFreezeAhead = null;
+        if (rec.frozen === frozen) return;
+        throw new Error(`levelRun: ${rec.slots.join(', ')} stepped tick ${ticksCompleted} in level ${level} `
+            + `${rec.frozen ? 'frozen for' : 'unfrozen, predicting no'} dialogue frame, and the talker/watcher arms then `
+            + `${frozen ? 'froze' : 'did not freeze'} it. The families that update after a texted NPC read the freeze its `
+            + '`talk()` raises; refused by name rather than stepped on a guess (fidelity DIALOGUEFREEZE).');
+    }
+
+    /**
      * ⛓⛓⛓ R6 SLICE 6c: ONE FROZEN TICK, EXTRACTED — one implementation, two
      * callers.
      *
@@ -16082,6 +16158,13 @@ export function createLevelRun({
             throw new Error(`levelRun: ${pickupFreezeAhead.slots.join(', ')} stepped tick ${ticksCompleted} in level `
                 + `${level} frozen for a ${pickupFreezeAhead.start.tag} ceremony, and the tick froze first for ${what}. `
                 + 'Refused by name (fidelity PICKUPFREEZE).');
+        }
+        // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): a predicted dialogue frame that another freeze pre-empted.
+        if (dialogueFreezeAhead !== null && dialogueFreezeAhead.t === ticksCompleted && dialogueFreezeAhead.level === level
+            && dialogueFreezeAhead.frozen) {
+            throw new Error(`levelRun: ${dialogueFreezeAhead.slots.join(', ')} stepped tick ${ticksCompleted} in level `
+                + `${level} frozen for a dialogue frame, and the tick froze first for ${what}. `
+                + 'Refused by name (fidelity DIALOGUEFREEZE).');
         }
         // ⚠ A FROZEN TICK IS NOT A RENDERED FRAME AS FAR AS THIS MODEL IS
         // CONCERNED, and a bridge does not know that. `Tile.render` keeps
@@ -22248,6 +22331,8 @@ export function createLevelRun({
             // caller that catches. See `spinnerForecast`.
             spinnerForecastPrev = PRESS_KILL_COST.enabled ? spinnerForecastMemo : null;
             spinnerForecastMemo = null;
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): the tick's keys, for the slots' talk-key release.
+            if (CONTACT_FIDELITY.dialogueFrameFreeze) dialogueHeldNow = held;
             // ⛓ U9-swim: the shield box's player, as the last frame rendered it.
             // ⛔ Its `direction` is the GAME's, which `sprites()` pins to
             // `directionFace` while a hit has parked it (`Player.hit` arms
@@ -22649,7 +22734,10 @@ export function createLevelRun({
             // lobbers), so they update before every chaser and the player — both sweep against where THIS call
             // left the tower. A ceremony's `Game.freezeObjects` skips the drift (the anim still runs).
             // ⛓ fidelity PICKUPFREEZE D2 (ON only): a texted pickup touched this tick has already frozen them (`Game.as:2297`).
-            if (!noclip && beamTowersStepped()) {
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): on a texted NPC's later frame the main slot does NOT step them:
+            // `runFrozenTick`'s frozen step is the frame's one update, after the NPC as `Game.as:2297` orders it.
+            if (!noclip && beamTowersStepped() && !(CONTACT_FIDELITY.dialogueFrameFreeze
+                && beamTowerStateFor(level).size > 0 && dialogueFreezeAheadNow('beamtower'))) {
                 stepBeamTowersNow({ frozen: ceremony !== null
                     || (beamTowerStateFor(level).size > 0 && pickupFreezesFamilyNow('beamtower', { lump: false })) });
             }
@@ -22660,7 +22748,9 @@ export function createLevelRun({
             // ⛓ fidelity TURRETSUIT D2 (ON only): each turret's `hitPlayer`, in its own turn (`turretHitPlayerNow`).
             // ⛓ fidelity PICKUPFREEZE D2 (ON only): a pickup touched this tick updated first and froze them — no aim, no
             // `shootTimer`, no shot, and no `hitPlayer` bill (`Player.hit`'s `!Game.freezeObjects`).
-            if (!noclip && shooterStateFor(level).size > 0 && pickupFreezesFamilyNow('turret', { lump: true })) {
+            // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): and so did a texted NPC's later frame (`Game.as:2295` vs `:2389+`).
+            if (!noclip && shooterStateFor(level).size > 0 && [pickupFreezesFamilyNow('turret', { lump: true }),
+                dialogueFreezeAheadNow('turret')].some(Boolean)) {
                 stepShootersNow(undefined, { frozen: true });
             } else if (!noclip) {
                 stepShootersNow(CONTACT_FIDELITY.turretSuitRetaliation && STATIC_SWORD_ARM.enabled
@@ -22906,6 +22996,7 @@ export function createLevelRun({
                             + 'frame is a TICK, a ceremony\'s phase A is a DEAD frame. '
                             + 'Refused rather than approximated.');
                     }
+                    assertDialogueFreezeAheadHeld(true);
                     prevHeld = new Set(held);
                     return runFrozenTick(activators, 'a placed NPC\'s dialogue');
                 }
@@ -22913,6 +23004,8 @@ export function createLevelRun({
             if (!noclip) {
                 const watcherRelease = releasedThisTick(held, TALK_KEY);
                 const wr = stepWatchersNow(watcherRelease);
+                // ⛓ fidelity DIALOGUEFREEZE D2 (ON only): the slots' prediction, against the two arms' answer.
+                assertDialogueFreezeAheadHeld(wr.frozen);
                 if (wr.frozen) {
                     if (ceremony !== null) {
                         throw new Error('levelRun: a Watcher\'s dialogue and a pickup '

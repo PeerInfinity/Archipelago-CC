@@ -60,9 +60,9 @@ describe('TURRETSUIT — the key', () => {
         'ships OFF, appended after owlContactInStep, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            // ⛓ wave 51: PICKUPFREEZE `pickupTickFreeze` was appended after this key.
+            // ⛓ wave 51: PICKUPFREEZE `pickupTickFreeze` was appended after this key; wave 52: DIALOGUEFREEZE after it.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['pickupTickFreeze']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['pickupTickFreeze', 'dialogueFrameFreeze']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_TURRET_SUIT_RETALIATION');
         });
 });

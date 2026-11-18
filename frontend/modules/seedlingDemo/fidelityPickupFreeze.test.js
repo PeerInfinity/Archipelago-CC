@@ -77,10 +77,12 @@ const mine = (r) => r.spawns.filter(([, id]) => id.startsWith(`${BODY}#`)).map((
 
 describe('PICKUPFREEZE — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_PICKUP_TICK_FREEZE)(
-        'ships OFF, appended last, with a worker env name', () => {
+        'ships OFF, appended after turretSuitRetaliation, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ wave 52: DIALOGUEFREEZE `dialogueFrameFreeze` was appended after this key.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['dialogueFrameFreeze']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PICKUP_TICK_FREEZE');
         });
 });
