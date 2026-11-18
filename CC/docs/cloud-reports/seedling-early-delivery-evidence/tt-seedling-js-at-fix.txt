@@ -1,0 +1,40 @@
+[PROGRESS 1/37] seedling-js-runtime-generated-room PASSED 20.0s
+[PROGRESS 2/37] seedling-js-runtime-bot-completes-generated-room PASSED 27.8s
+[PROGRESS 3/37] seedling-js-runtime-atlas-room PASSED 3.4s
+[PROGRESS 4/37] seedling-js-runtime-graphics-pack-boots PASSED 2.4s
+[PROGRESS 5/37] seedling-js-runtime-graphics-enemies PASSED 1.3s
+[PROGRESS 6/37] seedling-js-runtime-graphics-room-bodies PASSED 1.2s
+[PROGRESS 7/37] seedling-js-runtime-graphics-hazards PASSED 1.2s
+[PROGRESS 8/37] seedling-js-runtime-graphics-effects PASSED 1.2s
+[PROGRESS 9/37] seedling-js-runtime-graphics-lights PASSED 1.1s
+[PROGRESS 10/37] seedling-js-runtime-bot-completes-atlas-location PASSED 5.7s
+[PROGRESS 11/37] seedling-js-runtime-bot-walks-atlas-rooms PASSED 18.0s
+[PROGRESS 12/37] seedling-panel-layout-sections PASSED 1.3s
+[PROGRESS 13/37] seedling-panel-layout-settings PASSED 1.4s
+[PROGRESS 14/37] seedling-panel-layout-narrow PASSED 1.8s
+[PROGRESS 15/37] seedling-js-runtime-loop-bot-block-walks-generated-room PASSED 19.9s
+[PROGRESS 16/37] seedling-js-runtime-generated-chestdoor-chest PASSED 5.9s
+[PROGRESS 17/37] seedling-js-runtime-loop-play-clock-drains-mana PASSED 9.9s
+[PROGRESS 18/37] seedling-js-runtime-loop-play-clock-mana-out PASSED 3.3s
+[PROGRESS 19/37] seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms PASSED 5.9s
+[PROGRESS 20/37] seedling-js-runtime-graphics-effects-switch PASSED 2.1s
+[PROGRESS 21/37] seedling-js-runtime-graphics-puzzles PASSED 1.6s
+[PROGRESS 22/37] seedling-js-runtime-graphics-solids PASSED 1.1s
+[PROGRESS 23/37] seedling-js-runtime-graphics-rope PASSED 1.0s
+[PROGRESS 24/37] seedling-js-runtime-graphics-bridge PASSED 1.0s
+[PROGRESS 25/37] seedling-js-runtime-graphics-npcs PASSED 1.8s
+[PROGRESS 26/37] seedling-js-runtime-graphics-pickups PASSED 1.1s
+[PROGRESS 27/37] seedling-js-runtime-graphics-machines PASSED 1.5s
+[PROGRESS 28/37] seedling-js-runtime-game-speed PASSED 9.1s
+[PROGRESS 29/37] seedling-js-runtime-sound-start PASSED 7.1s
+[PROGRESS 30/37] seedling-js-runtime-sound-panel PASSED 1.7s
+[PROGRESS 31/37] seedling-js-runtime-touch-controls PASSED 10.5s
+[PROGRESS 32/37] seedling-js-runtime-graphics-one-fade-per-crossing PASSED 21.1s
+[PROGRESS 33/37] seedling-js-runtime-graphics-bosses PASSED 5.8s
+[PROGRESS 34/37] seedling-js-runtime-music PASSED 3.2s
+[PROGRESS 35/37] seedling-js-runtime-inventory-menu PASSED 1.7s
+[PROGRESS 36/37] seedling-js-runtime-tools-restart-teleport PASSED 11.3s
+[PROGRESS 37/37] seedling-js-runtime-same-wiring-switch-loads-new-rooms PASSED 10.2s
+PW DEBUG: ===== IN-APP RESULTS: 37 row(s) =====
+  totals: 37 run · 37 passed · 0 failed · 37 enabled · 0 not run
+  1 passed (3.9m)

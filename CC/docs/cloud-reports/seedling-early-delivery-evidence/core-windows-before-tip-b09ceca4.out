@@ -1,0 +1,34 @@
+ROW once first-frame {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":4},"pushes":1,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem"]}
+ROW once vanilla {"live":{"level":0,"sword":true,"key0":false,"seal":0,"totem":0,"hitsMax":3},"pushes":1,"notes":["boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem","mount","boot:L0"]}
+ROW once mounted {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":1,"notes":["boot:L0","mount","boot:L0"]}
+ROW once same-boot {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":1,"notes":["boot:L0","mount","boot:L0","boot:L0"]}
+ROW once after-boot {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":4},"pushes":1,"notes":["boot:L0","mount","boot:L0","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem"]}
+ROW once restore {"live":{"level":0,"sword":false,"key0":true,"seal":0,"totem":1,"hitsMax":3},"pushes":1,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem","save","boot:L0"]}
+ROW once restore-held {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":1,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem","save","boot:L0"]}
+ROW once control {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":4},"pushes":1,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem"]}
+ROW adapter first-frame {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":4},"pushes":40,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem"]}
+ROW adapter vanilla {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":42,"notes":["boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem","mount","boot:L0","delivery:key","delivery:seal","delivery:totem"]}
+ROW adapter mounted {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":41,"notes":["boot:L0","mount","boot:L0"]}
+ROW adapter same-boot {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":42,"notes":["boot:L0","mount","boot:L0","boot:L0"]}
+ROW adapter after-boot {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":4},"pushes":42,"notes":["boot:L0","mount","boot:L0","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem"]}
+ROW adapter restore {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":43,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem","save","boot:L0","delivery:seal"]}
+ROW adapter restore-held {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":3},"pushes":44,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem","save","boot:L0"]}
+ROW adapter control {"live":{"level":0,"sword":true,"key0":true,"seal":1,"totem":1,"hitsMax":4},"pushes":43,"notes":["boot:L0","mount","boot:L0","delivery:key","delivery:flag","delivery:flag","delivery:seal","delivery:totem"]}
+
+TABLE (mode | window | sword | key | seal | totem | health)
+once | first-frame | APPLIED | APPLIED | APPLIED | APPLIED | APPLIED
+once | vanilla | APPLIED | DROPPED | DROPPED | DROPPED | DROPPED
+once | mounted | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+once | same-boot | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+once | after-boot | APPLIED | APPLIED | APPLIED | APPLIED | APPLIED
+once | restore | DROPPED | APPLIED | DROPPED | APPLIED | DROPPED
+once | restore-held | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+once | control | APPLIED | APPLIED | APPLIED | APPLIED | APPLIED
+adapter | first-frame | APPLIED | APPLIED | APPLIED | APPLIED | APPLIED
+adapter | vanilla | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+adapter | mounted | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+adapter | same-boot | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+adapter | after-boot | APPLIED | APPLIED | APPLIED | APPLIED | APPLIED
+adapter | restore | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+adapter | restore-held | APPLIED | APPLIED | APPLIED | APPLIED | DROPPED
+adapter | control | APPLIED | APPLIED | APPLIED | APPLIED | APPLIED
