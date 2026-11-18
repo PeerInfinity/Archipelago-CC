@@ -29,12 +29,13 @@ describe('the ActionNodes panel model', () => {
         expect(actionNodesPanelModel({ payload: OPEN, runtime: rt, loopMode: true }).actLabel).toBe('Queue act');
     });
 
-    it('a node not reached is blocked and says why; its exits are closed until it is cleared', () => {
+    it('a node not reached is blocked and says why; its forward exits are closed until it is cleared, a move back is open when its target is reached', () => {
         const m = actionNodesPanelModel({ payload: CLOSED, runtime: rt, loopMode: false });
         expect(m.status).toBe('blocked');
         expect(m.canAct).toBe(false);
         expect(m.whyNot).toMatch(/not reached/);
-        expect(m.exits.every((e) => e.open === false)).toBe(true);
+        expect(m.exits.filter((e) => !e.reverse).every((e) => e.open === false)).toBe(true);
+        for (const e of m.exits.filter((x) => x.reverse)) expect(e.open, e.name).toBe(rt.isReached(e.target));
     });
 
     it('the start has no action and its exits are open', () => {

@@ -133,6 +133,10 @@ export async function register(registrationApi) {
         return gameState.addCustomAction(actionName, params);
     });
 
+    registrationApi.registerPublicFunction(moduleId, 'setCustomActionGuard', (fn) => {
+        getGameStateSingleton().setCustomActionGuard(fn);
+    });
+
     registrationApi.registerPublicFunction(moduleId, 'addManualAction', (regionName) => {
         const gameState = getGameStateSingleton();
         return gameState.addManualAction(regionName);

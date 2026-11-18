@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "`getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them",
     "columns": [
         {
-            "fields": 14,
+            "fields": 15,
             "id": "action_nodes",
             "label": "Action Nodes",
             "registeredBy": "frontend/modules/actionNodes/actionNodesLibrary.js"
@@ -149,6 +149,7 @@ export const REGISTRY = frz({
                 "loopSupport.queueActions",
                 "loopSupport.record",
                 "loopSupport.requiresLoopMode",
+                "loopSupport.strictQueueActions",
                 "loopSupport.summaryRecording",
                 "priceRegions",
                 "takeLastRecording"
@@ -181,6 +182,7 @@ export const REGISTRY = frz({
                 "contentRoles",
                 "defaultContentPack",
                 "extractPathsAndObstacles",
+                "fillRules",
                 "generateRegionCore",
                 "placeFromItems",
                 "placeFromRules"
@@ -3226,6 +3228,97 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "10 items",
+                    "type": "array",
+                    "value": [
+                        "P1",
+                        "T1",
+                        "L1",
+                        "L2",
+                        "W1",
+                        "B1",
+                        "R4",
+                        "AN1",
+                        "AN2",
+                        "AN-flat"
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "fillRules"
+        },
+        {
+            "carriedBy": [
                 "noiz2sa"
             ],
             "cells": [
@@ -5491,13 +5584,14 @@ export const REGISTRY = frz({
                 {
                     "id": "action_nodes",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
                         "actionGate",
                         "authoredCosts",
                         "manual",
-                        "queueActions"
+                        "queueActions",
+                        "strictQueueActions"
                     ]
                 },
                 {
@@ -6687,6 +6781,86 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Loop mode",
             "name": "loopSupport.requiresLoopMode"
+        },
+        {
+            "carriedBy": [
+                "action_nodes"
+            ],
+            "cells": [
+                {
+                    "id": "action_nodes",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.strictQueueActions"
         },
         {
             "carriedBy": [

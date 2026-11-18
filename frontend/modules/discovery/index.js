@@ -8,10 +8,17 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { getLastRawJsonData } from '../stateManager/index.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
+  ACTION_NODES_BUNDLE,
   createOverrideApplier,
   readWorldDiscoveryMode,
   resolveDiscoveryOverrides,
+  settingsChangeSteps,
 } from './worldDiscoveryMode.js';
+import {
+  cascadeTargetsOf,
+  revealExits as revealExitsCore,
+  revealStartNeighbourhood,
+} from './revealCore.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -147,6 +154,11 @@ export function register(registrationApi) {
     ({ loopActive = false } = {}) => syncDiscoveryOverrides(loopActive));
   registrationApi.registerPublicFunction(moduleInfo.name, 'getWorldDiscoveryMode',
     () => _worldDiscoveryMode);
+  // ActionNodes AN-1b: reveal named exits with their targets and the targets'
+  // locations, with NO random pick (revealCore.js). The ActionNodes runtime
+  // calls it on a node's first clear.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'revealExits',
+    (regionName, exitNames) => revealExits(regionName, exitNames));
 
   // Register dispatcher receivers for loop events
   registrationApi.registerDispatcherReceiver(
@@ -343,6 +355,7 @@ function handleRulesLoaded(eventData) {
     if (_settings.regionDiscoveryTrigger === 'onExitDiscovered') {
       applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
     }
+    applyWorldReveals();
   } catch (error) {
     log('error',
       '[Discovery Module] Error clearing/initializing DiscoveryState from rulesLoaded:',
@@ -552,7 +565,7 @@ function handleExitClickedForDiscovery(eventData) {
   // worlds — hand-enabled discovery, the discovery-* settings modes and loop
   // mode keep the click-only-discovers behaviour below.
   const { exitName: clickedExit, sourceRegion: clickedSource } = eventData || {};
-  const walkMove = _worldDiscoveryMode === 'on'
+  const walkMove = (_worldDiscoveryMode === 'on' || _worldDiscoveryMode === ACTION_NODES_BUNDLE)
     && !isLoopModeActive()
     && !!discoveryStateSingleton?.isExitDiscovered(clickedSource, clickedExit);
 
@@ -669,13 +682,17 @@ function handleRawJsonDataLoaded(payload) {
 
   log('info', `[Discovery Module] World discovery mode: ${next ?? 'same as loop mode'}`);
   const allDiscovered = next === 'off';
-  if (discoveryStateSingleton && discoveryStateSingleton.allDiscovered !== allDiscovered) {
+  // Entering or leaving the actionNodes bundle also starts discovery afresh: its
+  // reveals (revealStartNeighbourhood) belong to its world only.
+  const bundleMoved = (next === ACTION_NODES_BUNDLE) !== (previous === ACTION_NODES_BUNDLE);
+  if (discoveryStateSingleton && (discoveryStateSingleton.allDiscovered !== allDiscovered || bundleMoved)) {
     discoveryStateSingleton.allDiscovered = allDiscovered;
     // Static data may still be the previous world's; rulesLoaded re-clears.
     if (discoveryStateSingleton.stateManager?.getStaticData?.()?.regions) {
       discoveryStateSingleton.clearDiscovery();
     }
   }
+  applyWorldReveals();
   syncDiscoveryOverrides(isLoopModeActive());
 }
 
@@ -735,8 +752,9 @@ async function handleSettingsChanged({ key }) {
   if (key === '*' || key.startsWith('moduleSettings.discovery')) {
     log('info', '[Discovery Module] Settings changed, reloading...');
     const previousEnableMode = _settings.enableDiscoveryMode;
-    const previousTrigger = _settings.regionDiscoveryTrigger;
+    const previous = { ..._settings };
     await loadSettings();
+    const steps = settingsChangeSteps(previous, _settings);
 
     // If enableDiscoveryMode changed, publish the modeChanged event
     if (_settings.enableDiscoveryMode !== previousEnableMode && _moduleEventBus) {
@@ -752,9 +770,18 @@ async function handleSettingsChanged({ key }) {
     // all discovered regions causes amplification: the first cascade discovers
     // new regions, then the second cascade expands from the larger set.
     // Cascading from start regions is idempotent and matches handleRulesLoaded.
-    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && previousTrigger !== 'onExitDiscovered') {
+    if (steps.cascade) {
       if (discoveryStateSingleton) {
         applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
+      }
+    }
+    // AN-1b, the order trap: the applier writes the trigger BEFORE
+    // autoDiscoverLocations, so the cascade above ran with locations off. When
+    // they turn on, re-run its location step (worldDiscoveryMode.js
+    // settingsChangeSteps).
+    if (steps.cascadeLocations && discoveryStateSingleton) {
+      for (const region of cascadeTargetsOf(staticRegions(), discoveryStateSingleton.getStartRegions())) {
+        if (discoveryStateSingleton.isRegionDiscovered(region)) autoDiscoverLocationsInRegion(region);
       }
     }
 
@@ -849,6 +876,39 @@ function applyExitDiscoveryCascade(regionNames) {
   } catch (error) {
     log('error', '[Discovery Module] Error in applyExitDiscoveryCascade:', error);
   }
+}
+
+// --- Reveals without exploring (ActionNodes AN-1b; revealCore.js) --- //
+
+function staticRegions() {
+  try {
+    return stateManager?.getStaticData?.()?.regions ?? new Map();
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * Reveal `exitNames` of `regionName`: each exit, its target region, the
+ * target's locations and the target's exits straight back. No random pick.
+ */
+export function revealExits(regionName, exitNames = []) {
+  if (!discoveryStateSingleton) return null;
+  const out = revealExitsCore(discoveryStateSingleton, staticRegions(), regionName, exitNames);
+  log('info', `[Discovery Module] Revealed ${regionName}: ${out.exits.length} exits, ${out.regions.length} regions, ${out.locations.length} locations`);
+  return out;
+}
+
+/**
+ * The world's own reveals after discovery starts afresh. The actionNodes
+ * bundle: the start node fully discovered and its neighbours with their
+ * contents (D1, D2). Every other world: nothing.
+ */
+function applyWorldReveals() {
+  if (_worldDiscoveryMode !== ACTION_NODES_BUNDLE || !discoveryStateSingleton) return;
+  const regions = staticRegions();
+  if (!regions.size) return;
+  revealStartNeighbourhood(discoveryStateSingleton, regions, discoveryStateSingleton.getStartRegions());
 }
 
 /**

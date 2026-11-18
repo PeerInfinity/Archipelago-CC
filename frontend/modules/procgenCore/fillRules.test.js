@@ -3,8 +3,9 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    FILL_RULES, FILL_RULES_FIELD, RULE_HELPERS, RULE_STATUS, SUBSTRATE_FILL_RULES, fillRule, fillRulesOf, ruleTag,
+    FILL_RULES, FILL_RULES_FIELD, RULE_HELPERS, RULE_STATUS, fillRule, fillRulesOf, ruleTag,
 } from './fillRules.js';
+import { substrateRegistryEntry as actionNodesEntry } from '../actionNodes/actionNodesLibrary.js';
 
 /** The rule ids Z.6 names (the design's table), and the three it leaves for later. */
 const Z6_BUILT = ['P1', 'T1', 'R1', 'R2', 'R3', 'R4', 'L1', 'L2', 'W1', 'B1', 'AN1', 'AN2', 'AN-flat'];
@@ -34,11 +35,16 @@ describe('the table', () => {
         expect(() => ruleTag('Q9')).toThrow(/no rule "Q9"/);
     });
 
-    it('a substrate\'s list: its entry\'s own, else its row here, else none', () => {
-        expect(fillRulesOf({ id: 'action_nodes' })).toEqual(SUBSTRATE_FILL_RULES.action_nodes);
+    it('a substrate\'s list: its entry\'s own, else none (AN-1b: no table row is left)', () => {
+        expect(fillRulesOf({ id: 'action_nodes' })).toEqual([]);
         expect(fillRulesOf({ id: 'action_nodes', [FILL_RULES_FIELD]: ['W1'] })).toEqual(['W1']);
         expect(fillRulesOf({ id: 'maze' })).toEqual([]);
-        for (const list of Object.values(SUBSTRATE_FILL_RULES)) for (const id of list) expect(FILL_RULES[id].status).toBe(RULE_STATUS.BUILT);
+    });
+
+    it('⛓ the ActionNodes registry entry declares its list, and the resolver reads it there; every rule on it is built', () => {
+        expect(actionNodesEntry[FILL_RULES_FIELD].length).toBeGreaterThan(0);
+        expect(fillRulesOf(actionNodesEntry)).toEqual(actionNodesEntry[FILL_RULES_FIELD]);
+        for (const id of actionNodesEntry[FILL_RULES_FIELD]) expect(FILL_RULES[id].status).toBe(RULE_STATUS.BUILT);
     });
 });
 
