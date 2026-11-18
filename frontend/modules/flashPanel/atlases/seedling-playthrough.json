@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-5ca88dfe",
+  "atlas_id": "seedling-ea1ef5ba",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "5ca88dfe" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "ea1ef5ba" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -6481,29 +6481,91 @@
           "exit_id": "in_L76_304_112",
           "kind": "teleporter",
           "exit_tiles": [[1,2]],
-          "entrance_tile": [1,2]
+          "entrance_tile": [1,2],
+          "sub_region": "r2c0"
         },
         {
           "exit_id": "out_teleporter_0_32",
           "kind": "teleporter",
           "exit_tiles": [[0,2]],
-          "entrance_tile": [0,2]
+          "entrance_tile": [0,2],
+          "sub_region": "r2c0"
         },
         {
           "exit_id": "out_teleporter_96_304",
           "kind": "teleporter",
           "exit_tiles": [[6,19]],
-          "entrance_tile": [6,19]
+          "entrance_tile": [6,19],
+          "sub_region": "r15c6"
         },
         {
           "exit_id": "in_L78_256_0",
           "kind": "teleporter",
           "exit_tiles": [[6,18]],
-          "entrance_tile": [6,18]
+          "entrance_tile": [6,18],
+          "sub_region": "r15c6"
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "mixed" },
+      "subgraph": {
+        "sub_regions": ["r2c0","r12c6","r15c6"],
+        "internal_exits": [
+          {
+            "from": "r12c6",
+            "to": "r15c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r12c6",
+            "to": "r2c0",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r15c6",
+            "to": "r12c6",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r15c6",
+            "to": "r2c0",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r2c0",
+            "to": "r12c6",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_78",
@@ -6542,13 +6604,119 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "analyzer" },
+      "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c2","r0c16"],
+        "sub_regions": ["r0c2","r0c16","r1c10","r3c1","r3c9","r4c4","r5c6","r6c9"],
         "internal_exits": [
           {
             "from": "r0c16",
             "to": "r0c2",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c16",
+            "to": "r1c10",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c16",
+            "to": "r3c1",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c16",
+            "to": "r3c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c16",
+            "to": "r3c9",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c16",
+            "to": "r4c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c16",
+            "to": "r5c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c16",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c16",
+            "to": "r6c9",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c2",
+            "to": "r1c10",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c2",
+            "to": "r3c1",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": {
@@ -6559,6 +6727,264 @@
                 { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
               ]
             }
+          },
+          {
+            "from": "r0c2",
+            "to": "r3c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c2",
+            "to": "r4c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c2",
+            "to": "r5c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r0c2",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r1c10",
+            "to": "r3c1",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r1c10",
+            "to": "r3c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r1c10",
+            "to": "r3c9",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r1c10",
+            "to": "r4c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r1c10",
+            "to": "r5c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r1c10",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c1",
+            "to": "r3c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c1",
+            "to": "r4c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c1",
+            "to": "r5c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c1",
+            "to": "r5c6",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r3c1",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c9",
+            "to": "r4c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c9",
+            "to": "r5c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c9",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r3c9",
+            "to": "r6c9",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r4c4",
+            "to": "r5c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r4c4",
+            "to": "r5c6",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
+          },
+          {
+            "from": "r4c4",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r5c6",
+            "to": "r6c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r6c9",
+            "to": "r3c9",
+            "bidirectional": false,
+            "source": "manual",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Dark Suit" } }
           }
         ]
       }
