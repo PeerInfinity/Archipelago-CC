@@ -221,12 +221,7 @@ export class LayoutControlsManager {
     // | force-hide). Default is 'hover'. (Previously migrated from retired
     // forceShowLocations / forceHideLocations checkbox keys; that migration
     // has been removed.)
-    const mode = await settingsManager.getSetting(
-      'moduleSettings.regionGraph.locationVisibility', 'hover');
-    this.ui.locationVisibilityMode = mode;
-    const radio = this.ui.controlPanel.querySelector(
-      `input[name="locationVisibility"][value="${mode}"]`);
-    if (radio) radio.checked = true;
+    await this.loadLocationVisibilityMode();
 
     // Sync edge label visibility flag
     const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
@@ -293,6 +288,25 @@ export class LayoutControlsManager {
 
     // Update discovery controls visibility based on current mode
     this.updateDiscoveryControlsVisibility();
+  }
+
+  /**
+   * Read `moduleSettings.regionGraph.locationVisibility` into the UI and the
+   * radio. Called on the first settings load and on every settings:changed
+   * that may carry it, so a write through the settings API (not only a radio
+   * click) takes effect. A built graph re-draws its location nodes at once.
+   */
+  async loadLocationVisibilityMode() {
+    const mode = await settingsManager.getSetting(
+      'moduleSettings.regionGraph.locationVisibility', 'hover');
+    const changed = this.ui.locationVisibilityMode !== mode;
+    this.ui.locationVisibilityMode = mode;
+    const radio = this.ui.controlPanel?.querySelector(
+      `input[name="locationVisibility"][value="${mode}"]`);
+    if (radio) radio.checked = true;
+    if (changed && this.ui.cy && this.ui.graphInitialized) {
+      this.ui.dataManager.redrawLocationNodesForMode();
+    }
   }
 
   /**
@@ -685,7 +699,9 @@ export class LayoutControlsManager {
 
   saveNodePositions() {
     this.ui.nodePositions.clear();
-    this.ui.cy.nodes().forEach(node => {
+    // Location nodes are drawn around their region, never laid out; saving
+    // them would make the next rebuild's size check re-run the layout.
+    this.ui.cy.nodes().not('.location-node').forEach(node => {
       this.ui.nodePositions.set(node.id(), {
         x: node.position('x'),
         y: node.position('y')
