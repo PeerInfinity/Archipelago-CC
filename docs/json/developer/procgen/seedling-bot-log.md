@@ -28337,3 +28337,15 @@ pattern by goal: 35 (L22) and 84 (L88) hit-taking solves → by-name refusals (t
 t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t clean; 193 (L77) 475 t, 1 hit → 491 t clean —
 the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
 in every arm; the 293 committed tapes' streams identical.
+
+### Seedling hammer-phase TALK-FLIP — `TALK_CLEAR_GOAL` ON by default
+
+⚖ The user, 2026-11-17: *"Flip; sweeps now (Recommended)"* (the hammer replan after wave 6). The whole-game wasm walk
+(re-measure-4, 24/48 on seed 1) stopped first at the L58 yeti's `flag:L58:1`: the page's goal mapper refused it
+`no-verb` because no strategy row names `solid:yeti`. YETI-TALK's mapper fix (`jsRuntimeSolver.TALK_CLEAR_GOAL`) asks the
+solver's own talk arm instead, and it shipped OFF. The switch now reads `SEEDLING_TALK_CLEAR_GOAL !== '0'`, default
+`true`, and on the page's MAIN thread `?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=0` opts out through
+`solverEnvChannel.pageSolverEnvSwitchOff`, the opt-out twin of `pageSolverEnvSwitchOn`. Only a Solid that the solver's
+clear-tag arm talks maps differently, and in the shipped rules that is the L58 yeti alone. The stack sweep had shown its
+leg (`level_58__r3c3 <- in_tentacle_beast_mouth_L57_56_96 …`) as the switch's one real gain. `jsRuntimeSolverTalkClearGoal.test.js`
+pins the default ON and the page-side opt-out; its OFF and ON rows name their arm.

@@ -169,6 +169,17 @@ export function pageSolverEnvSwitchOn(name, scope = globalThis) {
 }
 
 /**
+ * The OPT-OUT twin of `pageSolverEnvSwitchOn`, for a mapper switch that ships ON (the TALK flip): `NAME=0` in the page
+ * URL's own `?seedlingSolverEnv=`. The switch reads `process.env.NAME !== '0' && !pageSolverEnvSwitchOff('NAME')`. A
+ * malformed spec, no `location` (node) or no param → false (the default stands).
+ */
+export function pageSolverEnvSwitchOff(name, scope = globalThis) {
+    let spec = null;
+    try { spec = solverEnvFromSearch(scope?.location?.search ?? ''); } catch { return false; }
+    return parseSolverEnv(spec)?.[name] === '0';
+}
+
+/**
  * The solve worker's URL for a page whose query is `search`:`base` itself (the SAME URL object) when the page sets
  * no switch, else a copy carrying the spec in `SOLVER_ENV_PARAM` — canonical when it parses, and AS GIVEN when it does
  * not, so the worker refuses every solve naming the bad switch (`solverEnvShim.js`) rather than this page throwing
