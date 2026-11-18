@@ -27,6 +27,8 @@ import { worldToScreen } from '../../regionMap/regionMapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
 import { CLICK_OPTION_DEFAULTS, CLICK_OPTIONS_PREFIX, regionOfCell } from '../../regionMap/regionMapClicks.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';
+import { writeBundle } from '../../presets/documentBundle.js';
+import { atlasCache } from '../../procgenCore/atlasCache.js';
 
 const COMPONENT = 'regionMapPanel';
 const WAIT = 15000;
@@ -749,6 +751,109 @@ export async function testRegionMapClicksLoopMode(testController) {
   return testController.getOverallResult();
 }
 
+/* ── a CUSTOM Seedling set loaded as a bundle: its derived atlas reaches the panel (region-map atlas-cache) ── */
+
+/**
+ * A module or document under `frontend/`, by a URL off the PAGE (not this file's `import.meta.url`), so the same row
+ * works on the bundled boot: the Seedling set editor's modules are fetched raw at run time and never join the bundle.
+ */
+const appUrl = (rel) => new URL(rel, document.baseURI).href;
+const fetchJson = async (rel) => {
+  const r = await fetch(appUrl(rel));
+  if (!r.ok) throw new Error(`${rel}: HTTP ${r.status}`);
+  return r.json();
+};
+
+/**
+ * The custom set the slice's dumps use (`scripts/dev/region-map-atlas-cache-dump.mjs` `customSetRules`): the editor's
+ * vanilla rooms + the committed vanilla overlay, compiled by the set editor's own `rulesJsonOf` → `{rules, atlas}`, the
+ * two documents the set editor's bundle download zips.
+ */
+async function buildCustomSeedlingSet() {
+  const [{ tileTypeForPlacement, SEEDLING_TILE_SIZE }, { compileRegionAtlas }, { parseOelLevel }, SA, { editorVanillaSet }] = await Promise.all([
+    import(appUrl('./modules/flashPanel/seedlingSemantics.js')),
+    import(appUrl('./modules/procgenPipeline/regionAtlasCompiler.js')),
+    import(appUrl('./modules/seedlingDemo/procgenLevelOel.js')),
+    import(appUrl('./modules/seedlingDemo/seedlingSetAdapter.js')),
+    import(appUrl('./modules/seedlingDemo/watchSetEditor.js')),
+  ]);
+  const [vanillaSet, mapDoc, overlay, rulesSchema] = await Promise.all([
+    fetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-set.json'),
+    fetchJson('./modules/flashPanel/atlases/seedling-map.json'),
+    fetchJson('./modules/seedlingDemo/fixtures/seedling-vanilla-overlay.json'),
+    fetchJson('./schema/rules.schema.json'),
+  ]);
+  const deps = {
+    parseOel: parseOelLevel, tileSize: SEEDLING_TILE_SIZE, tileTypeForPlacement, rulesSchema,
+    // ⛔ `game: 'seedling'` (→ `flash_seedling`, the registered substrate): the derivation's default and the maze set
+    // lab's `SEEDLING_ATLAS_GAME`. The watch page's `'seedling-watch-edit'` slugs to `flash_seedling_watch_edit`, which no
+    // substrate registers, so no Seedling hook runs for it (CC/docs/region-map/atlas-cache.md § Residue).
+    atlas: { game: 'seedling', mapDocument: 'custom-set.json' },
+  };
+  const record = SA.setRecord(editorVanillaSet(vanillaSet, mapDoc).set, overlay);
+  const session = SA.createSetSession(SA.createSeedlingSetAdapter(deps), record, { base: { kind: 'set', set_id: record.set.set_id } });
+  const { rules, atlas } = SA.rulesJsonOf(session, deps, { compileRegionAtlas });
+  return { rules, atlas };
+}
+
+/** Raise the Presets panel and hand back its live instance (its file door is `loadDocumentFile`). */
+async function presetsPanel(testController) {
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'presetsPanel' }, 'tests');
+  return testController.pollForValue(() => {
+    const p = document.getElementById('presets-panel')?.__panel;
+    return p && typeof p.loadDocumentFile === 'function' && p.presetsListContainer ? p : null;
+  }, 'the Presets panel is live', WAIT, 50);
+}
+
+export async function testRegionMapCustomSetAtlas(testController) {
+  let s = null;
+  try {
+    s = await setUp(testController, SEEDLING);
+    if (!s.ready) return testController.getOverallResult();
+    atlasCache.clear();
+    const t0 = performance.now();
+    const { rules, atlas } = await buildCustomSeedlingSet();
+    const id = rules.region_atlas?.['1']?.atlas_id;
+    testController.reportCondition(`the custom set compiled (${Object.keys(rules.regions?.['1'] ?? {}).length} regions, ${Math.round(performance.now() - t0)} ms) and its rules name its derived atlas (${id})`,
+      typeof id === 'string' && id === atlas.atlas_id);
+    const presets = await presetsPanel(testController);
+    testController.reportCondition('the Presets panel is live', !!presets);
+    if (!presets) return testController.getOverallResult();
+    const bytes = await writeBundle([{ kind: 'rules', doc: rules }, { kind: 'region-atlas', doc: atlas }], { jszip: await presets.loadJSZip() });
+    // ⛓ THE HOST ENTRY PATH: the same call a file pick makes (`#json-file-input` → `loadDocumentFile`).
+    await presets.loadDocumentFile(new File([bytes], 'custom-seedling-set.zip', { type: 'application/zip' }));
+    testController.reportCondition(`the bundle's region atlas is in the host cache under ${id}`, atlasCache.get(id)?.atlas_id === id);
+    testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
+    const want = Object.values(rules.regions['1']).reduce((n, r) => n + (r.locations?.length ?? 0), 0);
+    const loaded = await testController.pollForCondition(() => {
+      const r = rawRules();
+      const m = panel()?.model;
+      // ⛔ the PANEL's own source, not just the stored rules: those switch before the panel rebuilds its model.
+      return r?.rules?.region_atlas?.['1']?.atlas_id === id && panel()?.source?.rules === r.rules
+        && m && m.cells.size > 0 && dbg()?.lastPaint?.cells > 0;
+    }, 'the Region Map rebuilt on the custom set', WAIT, 100);
+    testController.reportCondition('the Region Map rebuilt on the custom set and painted', loaded);
+    if (!loaded) return testController.getOverallResult();
+    const m = panel().model;
+    const cells = [...m.cells.values()];
+    const sized = cells.filter((c) => c.extent).length;
+    testController.reportCondition(`every cell has its level's real extent (${sized}/${cells.length})`, sized === cells.length);
+    const placed = cells.reduce((n, c) => n + c.tiles.length, 0);
+    const onTiles = cells.filter((c) => c.tileSource === 'substrate').length;
+    testController.reportCondition(`N/N squares placed (${placed}/${want}), none "not on map" (${m.unplaced.length})`, want > 0 && placed === want && m.unplaced.length === 0);
+    testController.reportCondition(`squares on the substrate's own tiles in every cell (${onTiles}/${cells.length})`, onTiles === cells.length);
+    const kinds = {};
+    for (const l of m.layout.graph.links) kinds[l.kind ?? 'join'] = (kinds[l.kind ?? 'join'] ?? 0) + 1;
+    testController.reportCondition(`its warps are classified (${JSON.stringify(kinds)})`, (kinds.warp ?? 0) > 0);
+  } catch (error) {
+    testController.reportCondition(`custom-set atlas row error-free: ${error.message}`, false);
+  } finally {
+    atlasCache.clear();
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
 registerTest({
   id: 'region-map-classic-world',
   name: 'Region Map: a classic AP world (no grid_cell, no hook)',
@@ -804,4 +909,12 @@ registerTest({
   testFunction: testRegionMapClicksLoopMode,
   enabled: false,
   description: 'Step 4: with loop mode on, a Region Map cell click is a planning source (regionMap-*): its move is appended to the path',
+});
+registerTest({
+  id: 'region-map-custom-set-atlas',
+  name: 'Region Map: a custom Seedling set\'s derived atlas reaches the panel',
+  category: 'Region Map: Seedling',
+  testFunction: testRegionMapCustomSetAtlas,
+  enabled: false,
+  description: 'region-map atlas-cache: a custom set loaded as a bundle through the Presets panel\'s file door puts its derived atlas in the host cache; the panel then shows real extents, N/N squares on their tiles, and its warps',
 });
