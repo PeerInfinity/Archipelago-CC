@@ -3788,17 +3788,19 @@ export async function seedlingJsRuntimeGraphicsPuzzles(tc) {
         tc.assertEqual('every op from the seedling pack', 'seedling', [...new Set((drawn?.ops ?? []).map((o) => o.pack))].join(','));
         const heldBefore = g.held;
         const bootsBefore = rt.events.filter((e) => e.type === 'boot').length;
+        const runBefore = rt.run;
         win.__swfBridge.queueItems([{ class: 'Main', property: 'hasShield', value: true }]);
-        const rebooted = await tc.pollForValue(() => {
-            const boots = rt.events.filter((e) => e.type === 'boot');
-            return boots.length > bootsBefore ? boots.at(-1) : null;
-        }, 'the item flag rebooted the run in place', 5000, 50);
-        tc.assertEqual('the runtime rebooted in place for the item', 'an item flag changed', rebooted?.why ?? null);
+        // ⛓ seedling-js-item-live-delivery — restated from "the item flag rebooted the run in place" ('an item flag
+        // changed'): the item is written into the LIVE run (a `delivery` note) and boots nothing.
+        const delivered = await tc.pollForValue(() => rt.events.find((e) => e.type === 'delivery' && e.property === 'hasShield') ?? null,
+            'the item flag was written into the live run', 5000, 50);
+        tc.assertEqual('the runtime wrote the item live (no reboot): delivery changed / boots / same run',
+            'true/0/true', `${delivered?.changed ?? null}/${rt.events.filter((e) => e.type === 'boot').length - bootsBefore}/${rt.run === runBefore}`);
         const framesAt = g.frames;
-        await tc.pollForCondition(() => g.frames >= framesAt + 30, 'thirty paints after the reboot', 10000, 50);
-        tc.assertEqual('⚖ ONE fade per new Game: the reboot held no dead frame, and no cover is owed or shown', `${heldBefore}/0/0`,
+        await tc.pollForCondition(() => g.frames >= framesAt + 30, 'thirty paints after the delivery', 10000, 50);
+        tc.assertEqual('⚖ ONE fade per new Game: the delivery held no dead frame, and no cover is owed or shown', `${heldBefore}/0/0`,
             `${g.held}/${g.effects?.owed}/${g.effects?.cover}`);
-        tc.assertEqual('the puzzles are still drawn after the reboot', true, (g.puzzles?.ops.length ?? 0) >= 5);
+        tc.assertEqual('the puzzles are still drawn after the delivery', true, (g.puzzles?.ops.length ?? 0) >= 5);
         tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
         tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
         tc.assertEqual('the run is in level 8 and did not halt', '8/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
@@ -4974,9 +4976,10 @@ export async function seedlingJsRuntimeSolverFightsBobEncounter(tc) {
             'the host delivered the sword and the shield to the page', 10000, 100);
         tc.reportCondition('the page holds the sword and the shield', !!armed);
         if (!armed) return tc.getOverallResult();
-        // ⛔ A grant's in-place reboot can be DEFERRED (`jsRuntimeCore`'s `deferredReboot`, past a ceremony / dead
+        // ⛔ A grant's in-place reboot could be DEFERRED (`jsRuntimeCore`'s `deferredReboot`, past a ceremony / dead
         // frames) and land after the teleport — measured: "boot level 32 at (72, 109.85) — an item flag changed"
-        // refuted the first plan (2/0/1). So the row waits for the page's boots to go quiet, before and after.
+        // refuted the first plan (2/0/1). ⛓ seedling-js-item-live-delivery: a grant is written into the live run now
+        // and boots nothing, so this wait is belt and braces; the row still waits for the page's boots to go quiet.
         const quiet = (what) => {
             let seen = -1;
             let since = 0;

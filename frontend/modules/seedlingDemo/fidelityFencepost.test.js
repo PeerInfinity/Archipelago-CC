@@ -232,8 +232,11 @@ describe('FENCEPOST D1 — `spinnerRemoveRead` (OFF)', () => {
         expect(LEVEL_RUN_SRC.match(/stepped\.bank\(\)/g)?.length).toBe(1);
         const body = LEVEL_RUN_SRC.slice(LEVEL_RUN_SRC.indexOf('        advance(held) {'));
         // the tick's body is one arrow; the settle is below its close and above the return of its result
-        expect(body).toMatch(/advance\(held\) \{\n\s+\/\/[^\n]*FENCEPOST[^\n]*\n\s+spinnersSteppedThisTick = null;[^\n]*\n\s+const advanced = \(\(\) => \{/);
-        expect(body).toMatch(/\}\)\(\);\n\s+settleSpinnerRemovalsNow\(\);\n\s+return advanced;\n {8}\},/);
+        // ⛓ seedling-js-item-live-delivery — restated: `advance` now opens with the boundary guard (`advancing = true;
+        // try {`) and, between the settle and the return, hands the next boundary its staged deliveries
+        // (`advancing = false; applyStagedDeliveries();`); the settle is still the one line after the arrow's close.
+        expect(body).toMatch(/advance\(held\) \{\n\s+\/\/[^\n]*\n\s+advancing = true;\n\s+try \{\n\s+\/\/[^\n]*FENCEPOST[^\n]*\n\s+spinnersSteppedThisTick = null;[^\n]*\n\s+const advanced = \(\(\) => \{/);
+        expect(body).toMatch(/\}\)\(\);\n\s+settleSpinnerRemovalsNow\(\);\n\s+advancing = false;\n\s+\/\/[^\n]*\n\s+applyStagedDeliveries\(\);\n\s+return advanced;\n\s+\} finally \{\n\s+advancing = false;\n\s+\}\n {8}\},/);
         const spinnerSrc = readFileSync(new URL('./spinner.js', import.meta.url), 'utf8');
         expect(spinnerSrc).toMatch(/if \(s\.removePending\) return \{ \.\.\.s, removed: true, removePending: false \};/);
         expect(spinnerSrc).not.toMatch(/spinnerRemoveRead/);

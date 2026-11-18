@@ -30,6 +30,8 @@ const lastBootInPlace = (rt) => {
     for (let i = ev.length - 1; i >= 0; i -= 1) if (ev[i].type === 'boot') return ev[i].why === IN_PLACE_REBOOT_WHY;
     return false;
 };
+/** A script entry: queue items, or (⛓ seedling-js-item-live-delivery) a host verb run on the runtime itself. */
+const hostAct = (rt, entry) => (typeof entry === 'function' ? entry(rt) : rt.queueItems(entry));
 /** The black cover a paint shows (`seedlingEffectSkin.screenOps`): a queued fade not yet shown is 1. */
 const coverOf = (skin) => (skin?.fadeQueue?.length && !skin.cover ? 1 : (skin?.cover ?? 0));
 
@@ -46,7 +48,7 @@ function play(script, slots, { inPlace = lastBootInPlace } = {}) {
     let skin = null;
     const rows = [];
     for (let slot = 0; slot < slots; slot += 1) {
-        if (script[slot]) rt.queueItems(script[slot]);
+        if (script[slot]) hostAct(rt, script[slot]);
         const s = fadeSlot(skin, view(), { run: rt.run, fresh: rt.run.ticksCompleted === 0, inPlace: () => inPlace(rt) });
         skin = s.skin;
         if (!s.held) {
@@ -73,23 +75,28 @@ function ramps(rows) {
 
 // The level start the user sees: the game's own first frame (L0), then the host's arrival teleport, then its
 // item deliveries — one queued DURING the arrival's fade (the run does not tick while a dead frame is held, so it
-// is drained on the first live tick after the fade), one well after it.
+// is drained on the first live tick after the fade), one well after it. ⛓ seedling-js-item-live-delivery: the
+// deliveries are written into the live run and boot nothing now, so the one reboot IN PLACE left — the RE2 restore
+// (`restoreSave`) — is what the pin holds to "no fade" (it was the item reboots until this slice).
 const SCRIPT = {
     40: [{ invocation: 'new_instance', className: 'Game', args: [16, 32, 50] }],
     48: [{ class: 'Main', property: 'hasShield', value: true }],
     120: [{ class: 'Main', property: 'hasSword', value: true }],
+    150: (rt) => { expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true }); },
 };
 const SLOTS = 180;
 
 describe('G7 — one fade per new Game', () => {
-    it('the level start: one ramp per `new Game` (L0\'s first frame, the arrival) and none at a reboot in place', () => {
+    it('the level start: one ramp per `new Game` (L0\'s first frame, the arrival), none at a delivery and none at a reboot in place', () => {
         const rows = play(SCRIPT, SLOTS);
         const boots = rows.at(-1).boots;
-        // not vacuous: the runtime really rebooted twice in place, and once more after the arrival's fade
-        expect(boots).toEqual(['the game\'s own first frame (Main.as:51)', 'teleport (new Game)', IN_PLACE_REBOOT_WHY, IN_PLACE_REBOOT_WHY]);
+        // ⛓ seedling-js-item-live-delivery — restated from "[…, IN_PLACE_REBOOT_WHY, IN_PLACE_REBOOT_WHY]": the two
+        // item deliveries boot nothing; the restore is the one reboot in place, after the arrival's fade
+        expect(boots).toEqual(['the game\'s own first frame (Main.as:51)', 'teleport (new Game)', IN_PLACE_REBOOT_WHY]);
         const firstReboot = rows.findIndex((r) => r.boots.length === 3);
         const arrival = rows.findIndex((r) => r.boots.length === 2);
-        expect(rows.slice(arrival, firstReboot).some((r) => r.held), 'the delivery waited out the arrival\'s fade').toBe(true);
+        expect(firstReboot).toBe(150);   // the restore reboots at the slot it was asked on (the tick drains it)
+        expect(rows.slice(arrival, firstReboot).some((r) => r.held), 'the arrival\'s fade was held before the restore').toBe(true);
         // one ramp at the first frame and one at the arrival; nothing at either reboot
         expect(ramps(rows)).toEqual([0, arrival]);
         // each ramp falls monotonically from 1 to 0, and the cover stays 0 after it
@@ -105,11 +112,11 @@ describe('G7 — one fade per new Game', () => {
         expect(fade).toEqual(Array.from({ length: 20 }, (_, k) => +Math.max(1 - 0.05 * (k + 1), 0).toFixed(4)));
     });
 
-    it('MUTANT — the pre-G7 page (no reboot is in place): the reboots fade from black again, and the pin goes red', () => {
+    it('MUTANT — the pre-G7 page (no reboot is in place): the restore\'s reboot fades from black again, and the pin goes red', () => {
         const rows = play(SCRIPT, SLOTS, { inPlace: () => false });
         const arrival = rows.findIndex((r) => r.boots.length === 2);
         const r = ramps(rows);
-        expect(r.length).toBe(4);
+        expect(r.length).toBe(3);
         expect(r.slice(0, 2)).toEqual([0, arrival]);
     });
 });
@@ -129,7 +136,7 @@ async function playClocked(script, slots, speed) {
     const rows = [];
     const slot = () => {
         const n = rows.length;
-        if (script[n]) rt.queueItems(script[n]);
+        if (script[n]) hostAct(rt, script[n]);
         const s = fadeSlot(skin, view(), { run: rt.run, fresh: rt.run.ticksCompleted === 0, inPlace: () => lastBootInPlace(rt) });
         skin = s.skin;
         if (!s.held) {
