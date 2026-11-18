@@ -1,0 +1,2 @@
+ROUTE-CARRY: 83 leg(s) carry the flag(s) the route cleared before them (rows stamped carriedFlags; measurement only)
+INFO: sweep done

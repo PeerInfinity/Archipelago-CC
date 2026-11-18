@@ -23,11 +23,18 @@ import {
 import { getPanelInstances } from '../../regionMap/index.js';
 import { MIN_ZOOM } from '../../regionMap/regionMapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
+import { worldToScreen } from '../../regionMap/regionMapCamera.js';
+import { squareAt } from '../../regionMap/regionMapOverlay.js';
+import { CLICK_OPTION_DEFAULTS, CLICK_OPTIONS_PREFIX, regionOfCell } from '../../regionMap/regionMapClicks.js';
+import { resetLoopsToIdle } from './loopsPanelTests.js';
 
 const COMPONENT = 'regionMapPanel';
 const WAIT = 15000;
 const SEEDLING = 'seedling_playthrough';
 const CLASSIC = 'adventure';
+/** A generated, non-Seedling world (procgen topdown), loaded by its rules path. */
+const GENERATED = 'procgen_topdown';
+const GENERATED_RULES = './presets/procgen_topdown/AP_1/AP_1_rules.json';
 
 const rawRules = () => {
   const last = getLastRawJsonData();
@@ -40,11 +47,16 @@ const nextFrames = (n = 2) => new Promise((resolve) => {
   step(n);
 });
 
-/** Load the world unless it is the loaded one already, then open the panel and wait for its model. */
-async function setUp(testController, game) {
+/**
+ * Load the world unless it is the loaded one already, then open the panel and wait for its model. `rulesPath` loads a
+ * `./presets/…` rules file instead of `?game=<game>&seed=1` (a generated preset whose seed folder is not `AP_<seed id>`).
+ */
+async function setUp(testController, game, { rulesPath = null } = {}) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
-  if (!await ctx.isPresetLoaded(game, 1)) await ctx.loadPreset(game, 1);
+  if (rulesPath) {
+    if (ctx.rulesSource() !== rulesPath) await ctx.loadRulesPath(rulesPath);
+  } else if (!await ctx.isPresetLoaded(game, 1)) await ctx.loadPreset(game, 1);
   await testController.stateManager.pingWorker?.(`regionMap-${game}`, 5000);
   const opened = getPanelInstances().length === 0;
   if (opened) await panelManager.createPanelForComponent(COMPONENT, 'Region Map', 2);
@@ -330,6 +342,413 @@ export async function testRegionMapDiscovery(testController) {
   return testController.getOverallResult();
 }
 
+
+/* ── step 4: CLICKS — the Region Graph's click behaviour, through the panel's real pointer events ── */
+
+/**
+ * The click toggles (⚖ planner, option A: the Region Graph's `moduleSettings.regionGraph.*`) set for this row only:
+ * the defaults, overridden by `over`. Session-only (`ctx.setSetting`, put back by `restoreSettings`). The Region
+ * Graph's checkboxes are NOT touched: they read their own DOM, which the restore leaves in agreement again.
+ */
+async function setClickOptions(ctx, over = {}) {
+  for (const [k, v] of Object.entries({ ...CLICK_OPTION_DEFAULTS, ...over })) await ctx.setSetting(`${CLICK_OPTIONS_PREFIX}.${k}`, v);
+  // Follow off: a move would ease the camera under the next click's measured point.
+  await ctx.setSetting('moduleSettings.regionMap.followPlayer', false);
+  const p = panel();
+  if (p) { p.follow = false; p.controls.follow.checked = false; }
+}
+
+/** Dispatch a pointer down + up (no drag) at canvas point (sx, sy) and wait for the panel's click to land. */
+async function clickCanvas(testController, sx, sy, what) {
+  const p = panel();
+  const n = p.clickCount;
+  const r = p.canvas.getBoundingClientRect();
+  const init = { clientX: r.left + sx, clientY: r.top + sy, pointerId: 1, bubbles: true, button: 0 };
+  p.canvas.dispatchEvent(new PointerEvent('pointerdown', init));
+  p.canvas.dispatchEvent(new PointerEvent('pointerup', init));
+  const ok = await testController.pollForCondition(() => panel().clickCount > n, `the click on ${what} landed`, 5000, 25);
+  // "Show region in panel" (on by default) activates the Regions panel, which can hide this tab: bring it back.
+  testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
+  await testController.pollForCondition(() => dbg()?.viewport.w > 0 && panel().canvas.getBoundingClientRect().width > 0,
+    'the Region Map tab is showing again', 3000, 25);
+  await nextFrames(2);
+  return ok ? panel().lastClick : null;
+}
+
+/** Centre the camera on cell `key`, zoomed so its level fills most of the view, and wait for that paint. */
+async function focusCell(testController, key) {
+  const d = dbg();
+  const f = d.frames[key];
+  if (!f) return false;
+  const zoom = Math.min(d.viewport.w / f.w, d.viewport.h / f.h) * 0.8;
+  panel().setCamera({ x: f.x + f.w / 2, y: f.y + f.h / 2, zoom });
+  await nextFrames(3);
+  return testController.pollForCondition(() => {
+    const c = dbg().camera;
+    return Math.abs(c.zoom - zoom) < 1e-9 && dbg().lastPaint?.keys?.includes(key);
+  }, `focused on ${key}`, 3000, 25);
+}
+
+/** A canvas point inside display cell `key`'s level rectangle that is on no location square (null if none). */
+function cellPointOffSquares(key) {
+  const d = dbg();
+  const f = d.frames[key];
+  if (!f) return null;
+  const squares = d.squares;
+  const grid = [];
+  for (let v = 0.02; v < 1; v += 0.06) for (let u = 0.02; u < 1; u += 0.06) grid.push([u, v]);
+  for (const [u, v] of [[0.5, 0.5], ...grid]) {
+    const s = worldToScreen(d.camera, d.viewport, f.x + f.w * u, f.y + f.h * v);
+    if (s.x < 1 || s.y < 1 || s.x > d.viewport.w - 1 || s.y > d.viewport.h - 1) continue;
+    if (!squareAt(squares, s.x, s.y)) return s;
+  }
+  return null;
+}
+
+/** A painted square for `location` that a click at its centre hits (the topmost there), or null. */
+function squarePoint(location) {
+  const squares = dbg().squares;
+  const q = squares.find((x) => x.location === location);
+  if (!q) return null;
+  return squareAt(squares, q.sx, q.sy)?.location === location ? { x: q.sx, y: q.sy } : null;
+}
+
+/**
+ * A reachable rules region the player is not in, that a click on its cell moves to (`regionOfCell` = it): the camera
+ * is focused on its cell and a point off every square found. → { region, key, point } | null (the reasons logged)
+ */
+async function reachableTarget(testController) {
+  const view = panel().view.get();
+  const cur = gameStateRegion();
+  const seen = { cells: 0, clickable: 0, reachable: 0, focused: 0, visibility: {} };
+  // A hidden cell is not clickable (the Region Graph hides those nodes); a placeholder is (an undiscovered node taps).
+  // The player's own cell counts when it moves to another region (a level the player is in a sub-region of).
+  for (const [key, g] of view.displayGroups) {
+    seen.cells += 1;
+    seen.visibility[g.visibility] = (seen.visibility[g.visibility] ?? 0) + 1;
+    if (g.visibility === 'hidden' || !dbg().frames[key]) continue;
+    seen.clickable += 1;
+    const region = regionOfCell(key, g.members);
+    if (region === cur || !view.regions.get(region)?.reachable) continue;
+    seen.reachable += 1;
+    if (!await focusCell(testController, key)) continue;
+    seen.focused += 1;
+    const point = cellPointOffSquares(key);
+    if (point) return { region, key, point };
+  }
+  const reach = [...view.regions.values()].filter((r) => r.reachable).map((r) => `${r.name}→${r.displayKey}`);
+  testController.log(`no reachable target: current ${cur} (cell ${view.currentDisplayRegion}); ${JSON.stringify(seen)}; reachable: ${reach.slice(0, 12).join(', ')}`);
+  return null;
+}
+const gameStateRegion = () => { try { return getGameStateSingleton().getCurrentRegion(); } catch { return null; } };
+
+/** The unchecked locations whose painted square a click hits, by the view's square colour key. */
+function squaresByColor(color) {
+  return dbg().squares.filter((q) => q.color === color && squarePoint(q.location)).map((q) => q.location);
+}
+
+/** Record the player's region and path, and give back a restore that puts both back. */
+function savePlayer() {
+  const gs = getGameStateSingleton();
+  const region = gs.getCurrentRegion();
+  const path = gs.getPath().map((e) => ({ ...e }));
+  return () => { try { gs.setPath(path, region); gs.setCurrentRegion(region); } catch { /* best effort */ } };
+}
+
+/** Wait for the state manager to report `location` checked (true) or the check's rejection reason. */
+function watchCheck(testController, location) {
+  let rejected = null;
+  const onRej = (d) => { if (d?.locationName === location) rejected = d.reason ?? 'rejected'; };
+  testController.eventBus.subscribe('stateManager:locationCheckRejected', onRej, 'tests');
+  const isChecked = () => {
+    const c = stateManagerProxySingleton.getLatestStateSnapshot?.()?.checkedLocations;
+    return Array.isArray(c) ? c.includes(location) : c instanceof Set ? c.has(location) : false;
+  };
+  return {
+    isChecked,
+    rejected: () => rejected,
+    stop: () => testController.eventBus.unsubscribe?.('stateManager:locationCheckRejected', onRej, 'tests'),
+  };
+}
+
+/** Click the first clickable accessible (green) square: hover it, click it, wait for the check. → its name | null */
+async function checkGreenSquare(testController, label, { assert = true } = {}) {
+  await fitAllAndSettle(testController, `${label}: fit all`);
+  let loc = squaresByColor('accessible')[0];
+  if (loc) {
+    await focusCell(testController, dbg().squares.find((q) => q.location === loc).key);
+    if (!squarePoint(loc)) loc = squaresByColor('accessible')[0];
+  }
+  if (assert) testController.reportCondition(`${label}: an accessible (green) location square on screen (${loc ?? 'none'})`, !!loc);
+  if (!loc) return null;
+  const pt = squarePoint(loc);
+  const r = panel().canvas.getBoundingClientRect();
+  panel().canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: r.left + pt.x, clientY: r.top + pt.y, pointerId: 1, bubbles: true }));
+  const tip = panel().tooltip.textContent;
+  const w = watchCheck(testController, loc);
+  const c = await clickCanvas(testController, pt.x, pt.y, `square ${loc}`);
+  const ok = await testController.pollForCondition(w.isChecked, `${label}: ${loc} checked`, 5000, 50);
+  w.stop();
+  if (assert) {
+    testController.reportCondition(`${label}: hovering the square names the location as the Region Graph labels it ("${tip.split('\n')[0]}")`,
+      tip.startsWith(`${loc}`) && tip.split('\n')[0].endsWith(': accessible'));
+    testController.reportCondition(`${label}: the click resolves to a LOCATION click on ${loc} (got ${c?.target}:${c?.location})`,
+      c?.target === 'location' && c.location === loc);
+    testController.reportCondition(`${label}: click an accessible location square → checked (${loc})`, ok);
+  }
+  return ok ? loc : null;
+}
+
+/**
+ * The shared legs: a click on an accessible square checks it (and the hover names it); a click on a reachable
+ * region's cell moves the player there. A world whose start reaches no other cell gets more green squares checked
+ * first (up to 6; their items open the way) — the row's own state. Returns every location it checked (the caller
+ * reloads the world).
+ */
+async function clickLegs(testController, label) {
+  const checked = [];
+  const first = await checkGreenSquare(testController, label);
+  if (first) checked.push(first);
+  await fitAllAndSettle(testController, `${label}: fit all (moves)`);
+  let t = await reachableTarget(testController);
+  for (let i = 0; !t && i < 6; i += 1) {
+    const more = await checkGreenSquare(testController, `${label} (opening the way)`, { assert: false });
+    if (!more) break;
+    checked.push(more);
+    t = await reachableTarget(testController);
+  }
+  testController.reportCondition(`${label}: a reachable region in another cell, with a point off its squares (${t?.region ?? 'none'}; ${checked.length} check(s) first)`, !!t);
+  if (t) {
+    const c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key}`);
+    testController.reportCondition(`${label}: the click resolves to a REGION click on ${t.region} (got ${c?.target}:${c?.region})`,
+      c?.target === 'region' && c.region === t.region);
+    const moved = await testController.pollForCondition(() => gameStateRegion() === t.region, `${label}: the player moved to ${t.region}`, 5000, 50);
+    testController.reportCondition(`${label}: click a reachable region → the player moves there (${gameStateRegion()})`, moved);
+    testController.reportCondition(`${label}: the selection is the clicked cell`, dbg().selected === t.key);
+  }
+  return checked;
+}
+
+/**
+ * The checks a row made are undone by reloading the loaded world (the state manager's worker has no uncheck
+ * command): a later row starts with nothing checked by this one.
+ */
+async function reloadIfChecked(testController, ctx, names, { before = null, restoreWorld = false } = {}) {
+  if (!names.length || !ctx) return;
+  const src = ctx.rulesSource();
+  // tearDown reloads the world loaded before when it was another preset: that load clears these checks too.
+  if (restoreWorld && typeof before === 'string' && before.startsWith('./presets/') && before !== src) return;
+  try { if (typeof src === 'string' && src.startsWith('./presets/')) await ctx.loadRulesPath(src); }
+  catch (e) { testController.log(`reload after the checks: ${e.message}`); }
+}
+
+/**
+ * The Region Graph's control panel drives Region Map clicks (⚖ planner, option A): untick its "Add to path" and
+ * "Move player directly" boxes (the boxes' own change handlers save the settings) → a Region Map region click moves
+ * nobody; tick "Move player directly" → the same click moves the player (a `regionMap-direct` move). The boxes are
+ * put back by clicking them again, so the Region Graph's DOM and its settings agree after.
+ */
+async function rgToggleLeg(testController, label) {
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
+  let box = (id) => document.querySelector(`#${id}`);
+  let made = false;
+  if (!await testController.pollForCondition(() => !!box('movePlayerDirectly'), `${label}: the Region Graph panel's controls`, 4000, 50)) {
+    await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2);
+    made = true;
+  }
+  const have = await testController.pollForCondition(() => !!box('movePlayerDirectly') && !!box('addToPath') && !!box('overwritePath')
+    && !!box('movePlayerOneStep'), `${label}: the Region Graph panel's click checkboxes`, 8000, 50);
+  testController.reportCondition(`${label}: the Region Graph panel's click checkboxes are present`, have);
+  if (!have) return;
+  const ids = ['addToPath', 'overwritePath', 'movePlayerOneStep', 'movePlayerDirectly'];
+  const orig = Object.fromEntries(ids.map((id) => [id, box(id).checked]));
+  const setBox = async (id, want) => {
+    if (box(id).checked === want) return;
+    box(id).click();
+    await testController.pollForCondition(async () => (await settingsManager.getSetting(`${CLICK_OPTIONS_PREFIX}.${id}`)) === want,
+      `${label}: the Region Graph saved ${id}=${want}`, 3000, 25);
+  };
+  try {
+    testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
+    panel().follow = false;
+    panel().controls.follow.checked = false;
+    for (const id of ids) await setBox(id, false);
+    await fitAllAndSettle(testController, `${label}: fit all (toggles)`);
+    const t = await reachableTarget(testController);
+    testController.reportCondition(`${label}: a reachable target for the toggle leg (${t?.region ?? 'none'})`, !!t);
+    if (!t) return;
+    const before = gameStateRegion();
+    let c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (all move boxes off)`);
+    await nextFrames(4);
+    testController.reportCondition(`${label}: Region Graph boxes "Add to path", "Overwrite path", "Move one step", "Move directly" all OFF → the Region Map click moves nobody (${gameStateRegion()})`,
+      c?.target === 'region' && c.result.moves.length === 0 && gameStateRegion() === before);
+    await setBox('movePlayerDirectly', true);
+    c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (Move directly on)`);
+    const moved = await testController.pollForCondition(() => gameStateRegion() === t.region, `${label}: moved directly`, 5000, 50);
+    testController.reportCondition(`${label}: tick the Region Graph's "Move player directly" → the same Region Map click moves the player (a ${c?.result?.moves?.[0]?.kind} move to ${gameStateRegion()})`,
+      moved && c?.result?.moves?.length === 1 && c.result.moves[0].kind === 'direct');
+  } finally {
+    for (const id of ['movePlayerDirectly', 'movePlayerOneStep', 'overwritePath', 'addToPath']) {
+      if (orig[id] === false) await setBox(id, false);
+    }
+    for (const id of ['addToPath', 'overwritePath', 'movePlayerOneStep', 'movePlayerDirectly']) {
+      if (orig[id] === true) await setBox(id, true);
+    }
+    testController.reportCondition(`${label}: the Region Graph's boxes are put back`, ids.every((id) => box(id)?.checked === orig[id]));
+    if (made) { try { await panelManager.destroyPanelByComponentType('regionGraphPanel'); } catch { /* gone */ } }
+  }
+}
+
+/** Generated, non-Seedling (procgen topdown AP_1) — the fast row. */
+export async function testRegionMapClicksGenerated(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let checked = [];
+  try {
+    s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
+    if (!s.ready) return testController.getOverallResult();
+    await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
+    await setClickOptions(s.ctx);
+    restorePlayer = savePlayer();
+    checked = await clickLegs(testController, GENERATED);
+    await s.ctx.restoreSettings();
+    await rgToggleLeg(testController, GENERATED);
+  } catch (error) {
+    testController.reportCondition(`generated-world clicks row error-free: ${error.message}`, false);
+  } finally {
+    restorePlayer?.();
+    await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/** seedling_playthrough — the moves, a check, and the refusal of an inaccessible square (the Region Graph's). */
+export async function testRegionMapClicksSeedling(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let checked = [];
+  try {
+    s = await setUp(testController, SEEDLING);
+    if (!s.ready) return testController.getOverallResult();
+    await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
+    await setClickOptions(s.ctx);
+    restorePlayer = savePlayer();
+    checked = await clickLegs(testController, SEEDLING);
+
+    // An inaccessible (red) square: the same refusal the Region Graph's check gets — the state manager's
+    // `not_accessible` (the gate is downstream of both panels). The Region Graph's own dispatch of the same check,
+    // through ITS dispatcher and originator, is the control.
+    await fitAllAndSettle(testController, 'fit all (refusal)');
+    let red = squaresByColor('inaccessible')[0];
+    if (red) {
+      await focusCell(testController, dbg().squares.find((q) => q.location === red).key);
+      if (!squarePoint(red)) red = squaresByColor('inaccessible')[0];
+    }
+    testController.reportCondition(`an inaccessible (red) location square on screen (${red ?? 'none'})`, !!red);
+    if (red) {
+      const pt = squarePoint(red);
+      let w = watchCheck(testController, red);
+      const c = await clickCanvas(testController, pt.x, pt.y, `square ${red}`);
+      const mapRefused = await testController.pollForCondition(() => w.rejected() != null, `the Region Map's check of ${red} was refused`, 5000, 50);
+      const mapReason = w.rejected();
+      w.stop();
+      testController.reportCondition(`click an inaccessible square → refused (${mapReason}), not checked`,
+        c?.target === 'location' && mapRefused && !w.isChecked());
+      const { moduleDispatcher: rgDispatcher } = await import('../../regionGraph/index.js');
+      const { checkLocation } = await import('../../regionView/regionActions.js');
+      const { REGION_GRAPH_ORIGINATORS } = await import('../../regionGraph/regionGraphOriginators.js');
+      w = watchCheck(testController, red);
+      checkLocation({ dispatcher: rgDispatcher }, { locationName: red, regionName: c.region, originator: REGION_GRAPH_ORIGINATORS.check });
+      await testController.pollForCondition(() => w.rejected() != null, `the Region Graph's check of ${red} was refused`, 5000, 50);
+      testController.reportCondition(`the Region Graph's own check of it gets the same refusal (${w.rejected()} = ${mapReason})`,
+        w.rejected() === mapReason && mapReason === 'not_accessible');
+      w.stop();
+    }
+  } catch (error) {
+    testController.reportCondition(`Seedling clicks row error-free: ${error.message}`, false);
+  } finally {
+    restorePlayer?.();
+    await reloadIfChecked(testController, s?.ctx, checked);
+    if (s) await tearDown(testController, s, { restoreWorld: false });
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * Loop mode: a Region Map click PLANS, as a Region Graph click does — `regionMap-*` is a planning source
+ * (`loops/loopModeExemptions.js`), so the strict loop-mode gate lets the move through and its path append is kept.
+ */
+export async function testRegionMapClicksLoopMode(testController) {
+  let s = null;
+  let restorePlayer = null;
+  let loopsEl = null;
+  let loopModeAtEntry = null;
+  let pathBefore = null;
+  let savedDiscovery = null;
+  const { centralRegistry } = await import('../../../app/core/centralRegistry.js');
+  const loopState = (await import('../../loops/loopStateSingleton.js')).default;
+  const isLoopModeActive = () => centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.() === true;
+  const setPath = centralRegistry.getPublicFunction?.('gameState', 'setPath') ?? ((p) => getGameStateSingleton().setPath(p));
+  const setLoopMode = async (want) => {
+    if (isLoopModeActive() === want) return true;
+    loopsEl?.querySelector('#loop-ui-toggle-loop-mode')?.click();
+    return testController.pollForCondition(() => isLoopModeActive() === want, `loop mode ${want ? 'on' : 'off'}`, 3000, 50);
+  };
+  try {
+    s = await setUp(testController, SEEDLING);
+    if (!s.ready) return testController.getOverallResult();
+    await s.ctx.setSetting('moduleSettings.discovery.enableDiscoveryMode', false);
+    await setClickOptions(s.ctx);
+    restorePlayer = savePlayer();
+    pathBefore = getGameStateSingleton().getPath().map((e) => ({ ...e }));
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' }, 'tests');
+    loopsEl = await testController.pollForValue(() => document.querySelector('.loop-panel-container'), 'the Loops panel', 5000, 50);
+    testController.reportCondition('the Loops panel is in the DOM', !!loopsEl);
+    if (!loopsEl) return testController.getOverallResult();
+    loopModeAtEntry = isLoopModeActive();
+    testController.reportCondition('loop mode ON (the Loops panel\'s own toggle)', await setLoopMode(true));
+    testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
+    // Its own discovery state: loop mode shows only discovered levels, so one reachable level in another cell is
+    // discovered (all restored after).
+    savedDiscovery = discoveryStateSingleton.getSerializableState();
+    const view = panel().view.get();
+    const lvl = [...view.regions.values()].find((r) => r.reachable && r.displayKey !== view.currentDisplayRegion
+      && dbg().frames[r.displayKey] && regionOfCell(r.displayKey, view.displayGroups.get(r.displayKey)?.members) === r.name);
+    if (lvl) {
+      for (const m of view.displayGroups.get(lvl.displayKey).members) discoveryStateSingleton.discoverRegion(m);
+      testController.eventBus.publish('discovery:changed', {}, 'tests');
+      await testController.pollForCondition(() => dbg().visibility[lvl.displayKey] === 'shown', `loop mode: ${lvl.displayKey} discovered`, 5000, 50);
+    }
+    await fitAllAndSettle(testController, 'loop mode: fit all');
+    const t = await reachableTarget(testController);
+    testController.reportCondition(`loop mode: a reachable target (${t?.region ?? 'none'})`, !!t);
+    if (t) {
+      const n0 = getGameStateSingleton().getPath().length;
+      const c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (loop mode)`);
+      const planned = await testController.pollForCondition(() => {
+        const p = getGameStateSingleton().getPath();
+        const moves = p.filter((e) => e.type === 'regionMove');
+        return p.length > n0 && moves.at(-1)?.destinationRegion === t.region;
+      }, `loop mode: the click's move reached the path`, 5000, 50);
+      testController.reportCondition(`loop mode: a Region Map click PLANS — its move to ${t.region} is appended to the path (${c?.result?.moves?.[0]?.kind}, source regionMap-addToPath)`,
+        planned && c?.result?.moves?.[0]?.kind === 'addToPath');
+    }
+  } catch (error) {
+    testController.reportCondition(`loop-mode clicks row error-free: ${error.message}`, false);
+  } finally {
+    if (loopModeAtEntry != null) { try { await setLoopMode(loopModeAtEntry); } catch { /* best effort */ } }
+    if (pathBefore) resetLoopsToIdle(loopState, setPath, pathBefore);
+    if (savedDiscovery) {
+      discoveryStateSingleton.loadFromSerializedState(savedDiscovery);
+      testController.eventBus.publish('discovery:changed', {}, 'tests');
+    }
+    restorePlayer?.();
+    if (s) await tearDown(testController, s, { restoreWorld: false });
+  }
+  return testController.getOverallResult();
+}
+
 registerTest({
   id: 'region-map-classic-world',
   name: 'Region Map: a classic AP world (no grid_cell, no hook)',
@@ -361,4 +780,28 @@ registerTest({
   testFunction: testRegionMapDiscovery,
   enabled: false,
   description: 'Hidden regions are not drawn, placeholders are fog with no squares, as the view says; and the recompute cost is measured',
+});
+registerTest({
+  id: 'region-map-clicks-generated',
+  name: 'Region Map: clicks on a generated world (procgen topdown)',
+  category: 'Region Map',
+  testFunction: testRegionMapClicksGenerated,
+  enabled: false,
+  description: 'Step 4: a cell click moves the player, a green square click checks it, the hover names it; the Region Graph panel\'s own boxes change what a Region Map click does',
+});
+registerTest({
+  id: 'region-map-clicks-seedling',
+  name: 'Region Map: clicks on seedling_playthrough',
+  category: 'Region Map: Seedling',
+  testFunction: testRegionMapClicksSeedling,
+  enabled: false,
+  description: 'Step 4: a cell click moves the player, a green square click checks it, a red one is refused exactly as the Region Graph\'s check is',
+});
+registerTest({
+  id: 'region-map-clicks-loop-mode',
+  name: 'Region Map: a click plans in loop mode',
+  category: 'Region Map: Seedling',
+  testFunction: testRegionMapClicksLoopMode,
+  enabled: false,
+  description: 'Step 4: with loop mode on, a Region Map cell click is a planning source (regionMap-*): its move is appended to the path',
 });

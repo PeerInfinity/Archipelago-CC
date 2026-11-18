@@ -39,3 +39,9 @@ export const SETTINGS_PREFIX = 'moduleSettings.regionMap.';
 
 /** Every mounted Region Map panel (the in-app rows read their state through it). */
 export const panelInstances = new Set();
+
+/**
+ * ⛓ step 4: the dispatcher and event bus `index.js` `initialize()` takes from its initialization API — the module's
+ * OWN, under which the clicks' `user:regionMove` / `user:locationCheck` go out. Null before `initialize()` runs.
+ */
+export const moduleHandles = { dispatcher: null, eventBus: null };

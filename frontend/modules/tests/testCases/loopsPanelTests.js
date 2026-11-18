@@ -268,7 +268,7 @@ async function setLoopMode(testController, loopsPanelElement, isLoopModeActive, 
  * mana pool. `loops-pause-resume` asserts it starts at 'Start'/idle, and
  * measured RED on exactly that inheritance before this helper existed.
  */
-function resetLoopsToIdle(loopState, setPath, pathBefore) {
+export function resetLoopsToIdle(loopState, setPath, pathBefore) {
   try { loopState.stopProcessing(); } catch (e) { /* best effort */ }
   try { setPath([]); } catch (e) { /* best effort */ }
   try { loopState.setPaused(false); } catch (e) { /* best effort */ }

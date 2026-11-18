@@ -1,16 +1,25 @@
 {
-  "$comment": "⚖ USER RULING 2026-11-11: \"Add the directional gates for now, but make a note to reexamine this later.\" A PER-ROOM TABLE, licensed for now in place of a general derivation; read by seedlingNoHitDirectionalGates.js (whose header carries the ruling and the direction to re-examine). Each gate names a wallflyer band by its flyers (the tiles come from seedlingWallFlyerBands.wallFlyerBands, never typed here), the compass direction of movement that costs an arm (y grows down, so N is south to north), the witnessed arm set as engine flags, and its witnesses in scripts/procgen/seedling-wallflyer-nohit-plans.json: `notFound` (the no-item searches of the blocked direction that ended without a plan), `arms` (one game-verified no-hit plan per arm, blocked direction) and `free` (game-verified no-item plans of the reverse direction). A witness id missing from the plans file refuses the gate by name.",
-  "reexamine": "TO BE RE-EXAMINED (the user, 2026-11-11). The general rule slice rules-no-hit-l22 suggested, not built: a band is passable with no item where the room offers a waiting spot off the ray at the far end of every flight. NOT FOUND is a search budget, never \"impossible\". The Wand is unwitnessed and Fire was not found; neither is an arm here.",
+  "$comment": "⚖ USER RULING 2026-11-11: \"Add the directional gates for now, but make a note to reexamine this later.\" A PER-ROOM TABLE, licensed for now in place of a general derivation; read by seedlingNoHitDirectionalGates.js (whose header carries the ruling and the direction to re-examine). Each gate names a wallflyer band by its flyers (the tiles come from seedlingWallFlyerBands.wallFlyerBands, never typed here), the compass direction of movement that costs an arm (y grows down, so N is south to north), the witnessed arm set as engine flags, and its witnesses in scripts/procgen/seedling-wallflyer-nohit-plans.json: `notFound` (the no-item searches of the blocked direction that ended without a plan), `arms` (one game-verified no-hit plan per arm, blocked direction) and `free` (game-verified no-item plans of the reverse direction). A witness id missing from the plans file refuses the gate by name. `unwitnessed` names an arm a gate does NOT offer although the derivation says it disarms, with why and the follow-up, so it is not silently absent; the reader refuses an entry whose gate does not exist, whose arm the gate offers, or whose arm has a witness there.",
+  "reexamine": "TO BE RE-EXAMINED (the user, 2026-11-11). The general rule slice rules-no-hit-l22 suggested, not built: a band is passable with no item where the room offers a waiting spot off the ray at the far end of every flight. NOT FOUND is a search budget, never \"impossible\". Fire was not found; it is not an arm here. The Wand is an arm of L22 north only (game witness l22-25-21-wand, slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 \"Wand L22 + CI cross-check\"); it is NOT an arm of L25 east, which `unwitnessed` names. The derivation `scripts/procgen/derive-seedling-wallflyer-nohit.mjs --check` cross-checks every gate's direction against the rooms' own physics; it is a CROSS-CHECK, never a rule source (it sees flyers only, and its verdicts are knife-edge).",
+  "unwitnessed": [
+    {
+      "level": 25,
+      "blocked": "E",
+      "arm": "hasWand",
+      "says": "NOT AN ARM HERE, BY CHOICE (design-6): the derivation says the Wand disarms both flyers at rest from the west (strike spot near (34,50) facing east), but no game witness crosses. Three hand tapes (slice rules-nohit-derivation, tapes l25-26-22-wand, -wand-a and the plan's first version) failed to the room's two Bobs and its pushable block, which the derivation does not model.",
+      "followUp": "a game witness of l25-26-22-wand (a Bob-aware walk through the east column below row 3); until then L25 east keeps the table's arm set"
+    }
+  ],
   "gates": [
     {
       "level": 22,
       "band": ["wallflyer@48,112", "wallflyer@144,112"],
       "blocked": "N",
       "says": "south to north: from the L25/L30 doors to the L21/L29 doors, across the lower flyer row",
-      "arms": ["hasSword", "hasSpear", "hasShield"],
+      "arms": ["hasSword", "hasSpear", "hasShield", "hasWand"],
       "witness": {
         "notFound": ["l22-25-29-none", "l22-25-21-none", "l22-30-21-none", "l22-30-29-none"],
-        "arms": { "hasSword": "l22-25-29-sword", "hasSpear": "l22-25-29-spear", "hasShield": "l22-25-29-shield" },
+        "arms": { "hasSword": "l22-25-29-sword", "hasSpear": "l22-25-29-spear", "hasShield": "l22-25-29-shield", "hasWand": "l22-25-21-wand" },
         "free": ["l22-21-25-none", "l22-21-30-none", "l22-29-25-none", "l22-29-30-none"]
       }
     },

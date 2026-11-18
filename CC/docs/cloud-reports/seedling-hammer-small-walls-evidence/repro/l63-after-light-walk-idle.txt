@@ -1,0 +1,8 @@
+after98 t  63 123.62 301.17 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*1 t  63 122.28 301.23 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*1 t  63 121.27 301.16 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*1 t  63 120.56 300.99 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*1 t  63 120.11 300.72 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*1 t  63 119.90 300.37 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*5 t  63 119.94 298.58 dir 2 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}
+_*10 t  63 136.00 296.00 dir 3 hits 0 dt {"dying":false,"removed":false,"poles":[["lightpole@64,88",false],["lightpole@48,272",false],["lightpole@112,272",false]]}

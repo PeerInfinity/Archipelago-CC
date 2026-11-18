@@ -1,0 +1,1 @@
+{"leg":"L43","seam":5235,"on":["SEEDLING_SHOVED_BODY_LOOKAHEAD"],"ok":true,"ms":731422,"work":1500,"budget":2560,"passes":["dashless:1717@765","full:1672@735"],"shoved":{"asked":1431450,"deepened":510,"rechosen":0,"spent":0},"ticks":1672,"verbs":["bait","kill"],"sha":"b798d4d96374","hits":["776:bob@736,752","832:bob@736,800"],"deaths":0,"end":[40,887.83,823.46]}

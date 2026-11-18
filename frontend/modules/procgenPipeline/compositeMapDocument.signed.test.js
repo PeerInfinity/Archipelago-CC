@@ -89,7 +89,7 @@ describe('unbounded grid S1 — cellExtent', () => {
             .toEqual({ minX: -3, minY: -4, width: 6, height: 4 });
     });
 
-    it('gridOriginOf: an engine Grid is min-0; the bridge grid carries its own', () => {
+    it('gridOriginOf: a box at (0,0) is min-0; a Grid with an origin carries its own (S2: the engine Grid, no bridge)', () => {
         expect(gridOriginOf(gridForBox({ width: 2, height: 2 }))).toEqual({ minX: 0, minY: 0 });
         expect(gridOriginOf(gridForBox({ minX: -1, minY: -3, width: 2, height: 2 }))).toEqual({ minX: -1, minY: -3 });
     });

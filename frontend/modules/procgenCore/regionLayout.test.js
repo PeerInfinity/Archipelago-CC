@@ -14,7 +14,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CONSISTENT_RINGS, DIRS, GROUPING_RULES, OPPOSITE, RegionLayoutError, groupsOf, groupsR1, layoutGrouped,
+    CONSISTENT_RINGS, DIRS, GROUPING_RULES, LINK_KINDS, OPPOSITE, RegionLayoutError, groupsOf, groupsR1, layoutGrouped,
     layoutRegions,
 } from './regionLayout.js';
 import { canonicalLayout } from './setMapLayout.js';
@@ -337,5 +337,202 @@ describe('D2 — groups (R1) and their placement', () => {
             expect(a.groups).toEqual(b.groups);
             expect(a.stats).toEqual(b.stats);
         }
+    });
+});
+
+describe('(P) source-group placement — just above its first successor (⚖ user 2026-11-16)', () => {
+    // s ─down→ c ─E→ c2 ─E→ c3; src ─down→ c3. Before (P), src went RIGHT of everything: (4, 0).
+    const chain = (extra = []) => ({
+        nodes: ['s', 'c', 'c2', 'c3', 'src', ...extra.flatMap((l) => [l.from, l.to]).filter((x, i, a) => !['s', 'c', 'c2', 'c3', 'src'].includes(x) && a.indexOf(x) === i)],
+        start: 's',
+        links: [{ from: 's', to: 'c', kind: 'down' }, { from: 'c', to: 'c2', dir: 'E' }, { from: 'c2', to: 'c3', dir: 'E' },
+            { from: 'src', to: 'c3', kind: 'down' }, ...extra],
+    });
+
+    it('a source group lands directly above its first successor, `gap` cells clear, aligned on the linked node', () => {
+        const { positions, groups, stats } = layoutGrouped(chain(), { gap: 1 });
+        expect(positions.get('c3')).toEqual({ gx: 2, gy: 2 });
+        expect(positions.get('src')).toEqual({ gx: 2, gy: 0 });
+        expect(groups.map((g) => [g.root, g.placedBy])).toEqual([['s', 'start'], ['c', 'below'], ['src', 'source']]);
+        expect(stats.down).toEqual({ across: 2, below: 2 });
+        expect(stats.crossLength).toBe(4); // s→c 2 + src→c3 2
+    });
+
+    it('the FIRST successor is the group placed earliest; the source sits over the HIGHEST group it lies over', () => {
+        // a second successor, d, placed after c's group (it is reached from c's group): src aligns over c3, not d
+        const g = chain([{ from: 'c', to: 'd', kind: 'down' }, { from: 'src', to: 'd', kind: 'down' }]);
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.find((x) => x.root === 'd').placedBy).toBe('below');
+        expect(positions.get('src').gx).toBe(positions.get('c3').gx);
+        expect(positions.get('src').gy).toBeLessThan(positions.get('c3').gy);
+        expect(positions.get('src').gy).toBeLessThan(positions.get('d').gy);
+    });
+
+    it('slides clear by the SHORTEST of right / left / up (ties: right first)', () => {
+        // src → c (directly under the start): its wanted cell (0,0) is the start's; right, left and up all move it 2
+        const tie = { nodes: ['s', 'c', 'src'], start: 's', links: [{ from: 's', to: 'c', kind: 'down' }, { from: 'src', to: 'c', kind: 'down' }] };
+        expect(layoutGrouped(tie, { gap: 1 }).positions.get('src')).toEqual({ gx: 2, gy: 0 });
+        // a wide start group to the right of the wanted cell: left is shorter than right
+        const wide = {
+            nodes: ['s', 's2', 's3', 'c', 'src'], start: 's',
+            links: [{ from: 's', to: 's2', dir: 'E' }, { from: 's2', to: 's3', dir: 'E' }, { from: 's', to: 'c', kind: 'down' },
+                { from: 'src', to: 'c', kind: 'down' }],
+        };
+        const w = layoutGrouped(wide, { gap: 1 });
+        expect(w.positions.get('c')).toEqual({ gx: 0, gy: 2 });
+        expect(w.positions.get('src')).toEqual({ gx: -2, gy: 0 });
+    });
+
+    it('a group with no vertical link still goes right; a group whose only predecessor is a source goes right too', () => {
+        const g = {
+            nodes: ['s', 'island', 'src', 't'], start: 's',
+            links: [{ from: 'src', to: 't', kind: 'down' }],
+        };
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['island', 'right'], ['src', 'source'], ['t', 'right']]);
+        expect(positions.get('src')).toEqual({ gx: positions.get('t').gx, gy: positions.get('t').gy - 2 });
+    });
+
+    it('over 300 random DAG graphs: every source lies strictly above every group it lies over', () => {
+        let sources = 0;
+        for (let s = 1; s <= 300; s++) {
+            const g = randomGroupedGraph(s, { dag: true });
+            const { groups } = layoutGrouped(g);
+            const gOf = new Map(groups.flatMap((x, gi) => x.members.map((id) => [id, gi])));
+            groups.forEach((gr, gi) => {
+                if (gr.placedBy !== 'source') return;
+                sources += 1;
+                for (const l of g.links) {
+                    if (gOf.get(l.from) !== gi || l.kind !== 'down' || gOf.get(l.to) === gi) continue;
+                    expect(groups[gOf.get(l.to)].bbox.minY, `seed ${s}`).toBeGreaterThan(gr.bbox.maxY);
+                }
+            });
+        }
+        expect(sources).toBeGreaterThan(30); // exercised, not vacuous
+    });
+});
+
+/* ── (A) the `warp` kind — the pre-(A) R1, verbatim, as the oracle ── */
+function ORACLE_groupsR1({ nodes, links }) {
+    const at = new Map(nodes.map((id, i) => [id, i]));
+    const parent = nodes.map((_, i) => i);
+    const find = (i) => {
+        while (parent[i] !== i) {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        return i;
+    };
+    for (const l of links ?? []) {
+        if ((l.kind ?? 'join') !== 'join') continue;
+        const a = find(at.get(l.from));
+        const b = find(at.get(l.to));
+        if (a !== b) parent[Math.max(a, b)] = Math.min(a, b);
+    }
+    const byRoot = new Map();
+    nodes.forEach((id, i) => {
+        const r = find(i);
+        if (!byRoot.has(r)) byRoot.set(r, []);
+        byRoot.get(r).push(id);
+    });
+    return [...byRoot.values()];
+}
+
+describe('(A) the join audit — `warp` is drawn but never joins', () => {
+    it('LINK_KINDS gains `warp` (and nothing else)', () => {
+        expect(LINK_KINDS).toEqual(['join', 'down', 'up', 'warp']);
+    });
+
+    it('groupsR1 is UNCHANGED for any graph without `warp`: equal to the pre-(A) function over 400 random graphs', () => {
+        for (let s = 1; s <= 400; s++) {
+            const g = randomGroupedGraph(s, { dag: s % 2 === 0 });
+            expect(groupsR1(g), `seed ${s}`).toEqual(ORACLE_groupsR1(g));
+        }
+    });
+
+    it('a `warp` never joins two groups: turning a join into a warp only splits', () => {
+        const g = {
+            nodes: ['s', 'e', 'dungeon', 'd2'], start: 's',
+            links: [{ from: 's', to: 'e', dir: 'E' }, { from: 'e', to: 'dungeon', kind: 'warp' }, { from: 'dungeon', to: 'd2', dir: 'N' }],
+        };
+        expect(groupsR1(g)).toEqual([['s', 'e'], ['dungeon', 'd2']]);
+        const asJoin = { ...g, links: g.links.map((l) => (l.kind === 'warp' ? { from: l.from, to: l.to } : l)) };
+        expect(groupsR1(asJoin)).toEqual([['s', 'e', 'dungeon', 'd2']]);
+        const { groups, stats } = layoutGrouped(g);
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['dungeon', 'warp']]);
+        expect(stats.vertical.links).toBe(0);
+        // over random graphs: every warp-split grouping REFINES the all-join one (each group lies inside one join group)
+        for (let s = 1; s <= 100; s++) {
+            const base = randomGroupedGraph(s);
+            const warped = { ...base, links: base.links.map((l, i) => (l.kind === 'join' && i % 3 === 0 ? { ...l, kind: 'warp' } : l)) };
+            const coarse = new Map(groupsR1(base).flatMap((m, gi) => m.map((id) => [id, gi])));
+            for (const m of groupsR1(warped)) expect(new Set(m.map((id) => coarse.get(id))).size, `seed ${s}`).toBe(1);
+        }
+    });
+});
+
+describe('(ii) a warp-only group goes BESIDE its first warp predecessor (⚖ user 2026-11-17)', () => {
+    it('starts on the warping cell and slides clear by the shortest of right / left / down / up (ties in that order)', () => {
+        // s(0,0) ─E→ e(1,0) ⇢warp⇢ dungeon (d2 north of it). From e's cell: right 2, left 3, down 3, up 2 → right
+        const g = {
+            nodes: ['s', 'e', 'dungeon', 'd2'], start: 's',
+            links: [{ from: 's', to: 'e', dir: 'E' }, { from: 'e', to: 'dungeon', kind: 'warp' }, { from: 'dungeon', to: 'd2', dir: 'N' }],
+        };
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(positions.get('dungeon')).toEqual({ gx: 3, gy: 0 });
+        expect(positions.get('d2')).toEqual({ gx: 3, gy: -1 });
+        expect(groups[1].placedBy).toBe('warp');
+        // a 2×2-box start group, warping from n1 (0,1): right 3, left 2, down 2, up 3 → LEFT (before down on a tie)
+        const tall = {
+            nodes: ['s', 'n1', 'e', 'house'], start: 's',
+            links: [{ from: 's', to: 'n1', dir: 'S' }, { from: 's', to: 'e', dir: 'E' }, { from: 'n1', to: 'house', kind: 'warp' }],
+        };
+        const t = layoutGrouped(tall, { gap: 1 });
+        expect(t.positions.get('n1')).toEqual({ gx: 0, gy: 1 });
+        expect(t.positions.get('house')).toEqual({ gx: -2, gy: 1 });
+    });
+
+    it('the FIRST warp predecessor is the placed group placed earliest; a chain of warp-only groups waits in turn', () => {
+        // b is warped into from the start's group AND from c (placed later, below): b sits beside the start's group
+        const g = {
+            nodes: ['s', 'c', 'b', 'b2'], start: 's',
+            links: [{ from: 's', to: 'c', kind: 'down' }, { from: 'c', to: 'b', kind: 'warp' }, { from: 's', to: 'b', kind: 'warp' },
+                { from: 'b', to: 'b2', kind: 'warp' }],
+        };
+        const { positions, groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.map((x) => [x.root, x.placedBy])).toEqual([['s', 'start'], ['c', 'below'], ['b', 'warp'], ['b2', 'warp']]);
+        expect(Math.abs(positions.get('b').gy - positions.get('s').gy)).toBeLessThanOrEqual(2);
+        // b2 (warped into only from b) is placed beside b, not right of everything
+        const d = Math.abs(positions.get('b2').gx - positions.get('b').gx) + Math.abs(positions.get('b2').gy - positions.get('b').gy);
+        expect(d).toBe(2);
+    });
+
+    it('a warp-only group nothing placed warps into still goes right', () => {
+        const g = { nodes: ['s', 'x', 'y'], start: 's', links: [{ from: 'x', to: 'y', kind: 'warp' }, { from: 'y', to: 'x', kind: 'warp' }] };
+        const { groups } = layoutGrouped(g, { gap: 1 });
+        expect(groups.map((x) => x.placedBy)).toEqual(['start', 'right', 'warp']);
+    });
+
+    it('over 300 random graphs with warps: no overlap, the gap kept, every down/up honoured on a DAG', () => {
+        let warped = 0;
+        for (let s = 1; s <= 300; s++) {
+            const base = randomGroupedGraph(s, { dag: s % 2 === 0 });
+            const g = { ...base, links: base.links.map((l, i) => (l.kind === 'join' && i % 3 === 0 ? { ...l, kind: 'warp' } : l)) };
+            const gap = s % 4;
+            const { positions, groups, stats } = layoutGrouped(g, { gap });
+            warped += groups.filter((x) => x.placedBy === 'warp').length;
+            expect(positions.get(g.start)).toEqual({ gx: 0, gy: 0 });
+            expect(new Set([...positions.values()].map((p) => `${p.gx},${p.gy}`)).size).toBe(g.nodes.length);
+            for (let i = 0; i < groups.length; i++) {
+                for (let j = i + 1; j < groups.length; j++) {
+                    expect(boxesClear(groups[i].bbox, groups[j].bbox, gap), `seed ${s} groups ${i},${j}`).toBe(true);
+                }
+            }
+            if (s % 2 === 0) {
+                expect(stats.down.below, `seed ${s}`).toBe(stats.down.across);
+                expect(stats.up.above, `seed ${s}`).toBe(stats.up.across);
+            }
+        }
+        expect(warped).toBeGreaterThan(30); // exercised, not vacuous
     });
 });

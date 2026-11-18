@@ -26,17 +26,23 @@ This is the set map's canonical layout (Seedling editor E3), keyed by id instead
 
 ## Groups: `layoutGrouped(graph, { rule, gap })`
 
-Links may carry a `kind`: `'join'` (the default), `'down'` or `'up'`.
+Links may carry a `kind` (`LINK_KINDS`): `'join'` (the default), `'down'`, `'up'` or `'warp'`.
 
-- **The grouping rule** is a pure `(graph) → string[][]`, swappable by name in `GROUPING_RULES`. **R1** (the only one so far) is the connected components over `join` links. `down`/`up` never join two nodes.
+- `join` is an **edge transition**: walking off one side of a region brings the player into the other, so the two belong side by side.
+- `down`/`up` are stairs and pits.
+- `warp` is any other non-spatial link: a doorway into a dungeon, an in-game teleporter. It is drawn, but it never joins two groups. It only places a group that has no `down`/`up` link at all (below).
+
+- **The grouping rule** is a pure `(graph) → string[][]`, swappable by name in `GROUPING_RULES`. **R1** (the only one so far) is the connected components over `join` links. `down`/`up`/`warp` never join two nodes.
 - **Inside a group**, `layoutRegions` runs over the group's own `join` links. The root is the start if the group holds it. Otherwise it is the group's first member entered by a `down` link, then by an `up` link, then its first member.
 - **Between groups**, a `down` link a → b says a's group lies above b's, and an `up` link is the mirror. A cycle in that relation is broken by a depth-first walk from the start's group. `stats.vertical.cycleDropped` counts the dropped edges.
   - The start's group keeps its coordinates.
   - The start's ancestors are placed upward, nearest first.
   - Every other group is placed downward in topological order: below the lowest group it lies under, aligned under the linking cell.
   - A group nothing reaches goes right of everything so far.
-  - `gap` empty cells separate any two groups, and a group that would come closer slides right.
-- The result is `{ positions, groups: [{ id, root, members, bbox, placedBy }], stats }`. `stats` holds the group count and sizes, the directed links honoured and consistent, the links between adjacent cells, `down`/`up` across groups and how many landed below/above, and the bbox.
+  - A **warp-only** group (no `down`/`up` link, and some other group warps into it) is placed after that, beside its **first warp predecessor**: of the placed groups that warp into it, the one placed earliest. Its warped-to cell starts on the warping cell, and it slides clear right, left, down or up, whichever moves it least. `placedBy` is `'warp'`. A warp-only group that only another unplaced one warps into waits for it; one that nothing placed warps into goes right.
+  - A **source** group (nothing lies over it, but it lies over something) is placed last, `gap` cells over the highest group it lies over. Its linking cell is aligned over the linked cell of its **first successor**: of the groups it lies over, the one placed earliest. `placedBy` is `'source'`.
+  - `gap` empty cells separate any two groups, and a group that would come closer slides right. A source tries right, left and up and takes the shortest slide; each of these keeps it over everything it lies over.
+- The result is `{ positions, groups: [{ id, root, members, bbox, placedBy }], stats }`. `stats` holds the group count and sizes, the directed links honoured and consistent, the links between adjacent cells, `down`/`up` across groups and how many landed below/above, `crossLength` (the summed length in cells of the links between groups), and the bbox.
 - For an acyclic vertical relation, every `down` link across groups lands with its target group strictly below.
 
 ## The resolution order: `resolveRegionLayout({ rules, player, sidecars, registry, hookCtx, rule, gap })`
@@ -57,6 +63,7 @@ Steps 2 and 3 then run `layoutGrouped`. `stats.source` names the step that answe
 - **Nodes** are the display regions: `level_N__rRcC` folds onto `level_N` by its payload's `atlas_region`.
 - **Links** come from the sidecars' `exits` with a `targetRegion`. A link inside one level is dropped.
 - **`kind`** comes off the `exit_id` prefix, the only stairs/pit signal a compiled sidecar carries: `out_stairsdown`/`out_pit` → `down`, `out_stairsup` → `up`, everything else `join`.
+- **Edge transition or warp.** Every Seedling exit is the game's Teleporter object, whether it is a walk-off edge or a doorway. `seedlingEdgeTransitionOf` tells them apart. A `join` is kept only when its door tile is on the border of its level AND its arrival lies within `EDGE_ARRIVAL_TILES` (1) tiles of the opposite border of the target; otherwise it becomes `warp`. Without the level sizes it cannot say, and the link stays `join`.
 - **`dir`** (for joins only) comes from `seedlingSetMap.dirOfExit`: the door's side of its level, else the arrival's side of the target, reversed. It needs the level sizes from an atlas the library ships, or one handed in as `hookCtx.atlases`.
 
-A custom set compiled by the set editor (`seedlingSetAdapter.rulesJsonOf`) carries the same payload shape, so the hook lays it out. Its derived atlas is not shipped, though: without `hookCtx.atlases: { [atlas.atlas_id]: atlas }` its links have no direction.
+A custom set compiled by the set editor (`seedlingSetAdapter.rulesJsonOf`) carries the same payload shape, so the hook lays it out. Its derived atlas is not shipped, though: without `hookCtx.atlases: { [atlas.atlas_id]: atlas }` its links have no direction, and no warp can be told from an edge transition.

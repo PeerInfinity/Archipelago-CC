@@ -8,7 +8,7 @@ Report: `CC/docs/region-map/step2-view-model.md`.
 |------|------|-------------|
 | `regionViewModel.js` | Pure functions of (snapshot, staticData, discovery context): `isRegionReachable`, `locationState`, `locationCounts`, `regionInteriorState`, `regionColorState`, `exitState`, `regionDiscovery` / `locationDiscovery` / `exitDiscovery` (the ONE hide/placeholder decision), `displayGroupsOf` + `aggregateCounts` / `aggregateVisibility` | Region Graph (`graphDataManager.js`), `regionViewState.js` |
 | `regionViewState.js` | `createRegionViewState(handles)`: subscribes to the Region Graph's triggers, recomputes at most once per animation frame, `get()` a frozen view, `subscribe`, `refresh`, `dispose` | Region Map (step 3b). The Region Graph keeps its own wiring |
-| `regionActions.js` | Moves (one step, direct, the ⛓ restart step), path edits (add, overwrite), location checks (single, bulk), select/show publishes. Explicit handles in, a result out (`{ ok: false, reason: 'no-path' }`) | Region Graph (`navigationManager.js`, `graphInteractionManager.js`) |
+| `regionActions.js` | Moves (one step, direct, the ⛓ restart step), path edits (add, overwrite), location checks (single, bulk), select/show publishes. Explicit handles in, a result out (`{ ok: false, reason: 'no-path' }`) | Region Graph (`navigationManager.js`, `graphInteractionManager.js`); Region Map (`regionMap/regionMapClicks.js`, step 4) |
 
 ## Rules
 
@@ -23,8 +23,8 @@ Report: `CC/docs/region-map/step2-view-model.md`.
 - **Dispatcher senders are per module.** An action dispatches through the dispatcher it is handed, so it goes out
   under the caller's module id. A panel registers its own `user:regionMove` / `user:locationCheck` senders (and its
   event-bus publishers) in `register()`, and picks its own `source` / `originator` strings. ⚠ `loops/loopModeExemptions.js`
-  treats every `source` starting with `regionGraph` as a planning click; a new panel's prefix must be added there if
-  its clicks should be exempt the same way.
+  treats every `source` starting with `regionGraph` or `regionMap` as a planning click; a new panel's prefix must be
+  added there if its clicks should be exempt the same way.
 - **Remount = dispose.** A panel that remounts calls `dispose()` on its old view state.
 
 ## Tests
