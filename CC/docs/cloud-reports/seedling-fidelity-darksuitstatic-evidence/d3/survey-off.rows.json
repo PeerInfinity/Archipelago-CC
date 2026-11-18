@@ -1,0 +1,66 @@
+[
+ {
+  "step": 208,
+  "level": 59,
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 150,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 60,
+   "transitions": [
+    "undefined->undefined@150"
+   ],
+   "earnedClears": []
+  }
+ },
+ {
+  "step": 211,
+  "level": 63,
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 464,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 63,
+   "transitions": [],
+   "earnedClears": [
+    "{63,1}"
+   ]
+  }
+ },
+ {
+  "step": 230,
+  "level": 101,
+  "verdict": "SOLVED",
+  "refusal": null,
+  "ticks": 287,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 102,
+   "transitions": [
+    "undefined->undefined@287"
+   ],
+   "earnedClears": []
+  }
+ },
+ {
+  "step": 236,
+  "level": 101,
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-236) reach-exit (144,96)->L102 -> wand: magicallockfire@112,48 cannot be opened by this run \u2014 magicallockfire@112,48 is a FIRE MagicalLock (`lockType 1`): `MagicalLock.hit(t)` opens on `lockType <= t`, and only the Fire Wand's shot is type 1. This run does not hold the Fire Wand.",
+  "ticks": null,
+  "replay": null
+ },
+ {
+  "step": 241,
+  "level": 101,
+  "verdict": "REFUSED",
+  "refusal": "solverBot(survey-step-241) reach-exit (104,24)->L110 -> wand: magicallockfire@96,48 cannot be opened by this run \u2014 magicallockfire@96,48 needs the FIRE WAND's shot, whose slot is `useItem` case 5 (`wanding` AND `firing` on one press). `levelRun.weaponForPress` refuses that case by name \u2014 two windows on one press are not modelled \u2014 so the shot this lock needs cannot be pressed by this model. \u21d2 the work order is the case-5 press, not a stance.",
+  "ticks": null,
+  "replay": null
+ }
+]

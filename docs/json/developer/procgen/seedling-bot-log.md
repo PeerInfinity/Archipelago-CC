@@ -28338,6 +28338,63 @@ t110); 119 (L88) REFUSED → SOLVED 192 t; 41 (L22) 406 t, 2 deaths → 126 t cl
 the three ON plans played on p4g, hits 0, clock shift [0]. No hitless leg becomes hit-taking. Acceptance `391322d6`
 in every arm; the 293 committed tapes' streams identical.
 
+### Seedling fidelity DARKSUITSTATIC — the dark suit's retaliation into a static body (`darkSuitStaticRetaliation`, OFF)
+
+Planner `seedling-fidelity-planning-21`, wave 46 (⚖ the user's GO 2026-11-16, *"Darktrap Dark Suit (Recommended)"*).
+Base `d24a057d99`. The report is `CC/docs/cloud-reports/seedling-fidelity-darksuitstatic.md`; it answers hammer
+SMALL-WALLS §9's L63 `darktrap@128,272` hand-over.
+
+**D1** (census): the static scan reaches `IceTrap`, `SandTrap`, `DarkTrap` and, under `STATIC_SWORD_ARM`, `Turret`.
+`DarkTrap.hit` is empty and `IceTrap` sets `canHit = false`: no-ops. `SandTrap` is `Enemy.hit` with an empty
+`knockback`, on F4's damage row. `Turret` reads `hitsTimer` in its fire gate after `super.update()`, a half the model
+steps above the scan: not declared. Other call sites with `e` and no `retaliate`: `shieldBossStab`, `owlBody`, `bobBoss`,
+`bossBody` (boss arms, not this slice).
+
+**D2** (`darkSuitStaticRetaliation`, OFF, last key): the scan passes the declared `retaliate`; a SandTrap kill is staged
+as the sword's, plus the graphic step `World.update` gives a blow inside the body's own update (removal 18 ticks after
+the blow, not 19). The Turret's refusal gains its D1 reason. OFF byte-identical (acceptance `391322d6` base / OFF / ON).
+
+**D3** (ON, measured; no flip): 8 seed-1 legs (906 at L63, seven at L101) and 5 survey steps (208, 211, 230, 236, 241)
+hold the suit in such a room. The survey rows are identical OFF/ON; leg 906 (node) refuses before any darktrap contact,
+ON = OFF; the bounded set and the two train files of the icetrap rooms move nothing ON.
+
+### Seedling fidelity L39HIT — the walk's L39 hit; a spinner forecast steps the room's pulsers (`pulserForecastPulse`, OFF)
+
+**D1** (diagnosis): the walk's request was rebuilt on p4g (an inv leg at the walk's sphere-6.7 inventory) and seam-swept in
+node. Seams 30036–30038 give the walk's exact 2864 t kill,l39shaft,rope,walk dashless plan. A fresh p4g page plays it with
+the hit at t1522 (`spinner@112,88`'s hammer), at 0 px with the model, and the walk's two hit samples are that run's rows bit for
+bit, game_time included. The model steps the hit; the plan was accepted because its walk segment (t1310–t1679) was certified
+against a forecast that never stepped `pulser@64,96`'s t1317 pulse on that body, and `unbilledDamageGate` (the backstop) is
+OFF.
+
+**D2** (`pulserForecastPulse`, OFF, last key, `SEEDLING_PULSER_FORECAST_PULSE`): the three spinner forecasts step a copy of
+the room's pulsers after the bodies and apply the enemy arm. ON: the forecast is exact through the hit and prices the hammer
+at t1522. The request plans 3813 t, played hitless on p4g. Survey L39 rows are shorter (65: 2740→2477; 95/133/148/165:
+2624→2359; 172: 2626→2288), the L40 rows are unchanged, no verdict moves, and nothing turns hit-taking. Acceptance `391322d6`
+in every arm. ON movers: `fidelityL39Shaft` D2 (a re-record) and its t300 row (a strike-schedule refusal, handed to hammer),
+and `pressKillCost` r5-press-glide (the shift is bypassed by design).
+
+
+### Seedling fidelity DARKSUITBOSSES — the dark suit's retaliation into a boss (`darkSuitBossRetaliation`, OFF)
+
+Planner `seedling-fidelity-planning-21`, wave 48 (⚖ the user's GO 2026-11-16, *"Dark Suit boss arms (Recommended)"*).
+Base `56dd7a3872` (the w46+w47 harvest). The report is `CC/docs/cloud-reports/seedling-fidelity-darksuitbosses.md`; it
+answers wave 46's "other call sites" hand-over.
+
+**D1** (census): every `applyPlayerHit` site whose AS3 passes `e` declares a `retaliate` except four boss arms, and each
+passes the boss itself. ShieldBoss stab: `ShieldBoss.hit` arms an unarmed boss and is otherwise a no-op (the damaging
+frames are in "stab", and `startStab` needs "sit"): held state. BobBoss body and swords: `bobBossHit(…, "Suit")`: held
+state, but the write lands mid-update. BossTotem body: `onlyHitBy = "Wand"`, no `justKnock`: a no-op. Owl body:
+`justKnock` writes `v` before the phase arms read it, and the model bills after them: not declared.
+
+**D2** (`darkSuitBossRetaliation`, OFF, last key, `SEEDLING_DARK_SUIT_BOSS_RETALIATION`): the three declared arms pass
+`retaliate`; BobBoss's bill moves inside `stepBobBossBody` (`onPlayerHit`, suit only), so form 2's re-seed precedes
+`spin` (the mutant: blade 0 at 3π/2 instead of 3π/2 − π/20 after a form-2 body contact). The suit alone kills every
+Bob form, and the third writes `{32,3}`. The Owl's refusal gains its D1 reason. OFF byte-identical.
+
+**D3** (ON, measured; no flip): only L112 is met with the suit (legs 786–789, survey step 246), and the Owl stays refused;
+survey 246 is identical OFF/ON (an ENCOUNTER-GATE refusal before any contact). Acceptance `391322d6` base / OFF / ON.
+
 ### Seedling hammer-phase TALK-FLIP — `TALK_CLEAR_GOAL` ON by default
 
 ⚖ The user, 2026-11-17: *"Flip; sweeps now (Recommended)"* (the hammer replan after wave 6). The whole-game wasm walk
