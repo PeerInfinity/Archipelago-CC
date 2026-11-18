@@ -218,6 +218,13 @@ const roomEquips = (r) => equipsMap(r?.equips);
  *   ⛓ DELIVERY TICK — its optional `checked(locationName)` (true / false; null = cannot tell) is the state
  *   manager's checked set: without it no self-check is awaited (the item lands where it lands, as before).
  */
+/** ⛓ HELD SLOT LEAD — whether a delivery adds or moves a slot (the game's array before it vs `slotsAfterDelivery`'s). */
+function slotsMoved(before, after) {
+    const a = before ?? [];
+    const b = after ?? [];
+    return a.length !== b.length || a.some((v, i) => v !== b[i]);
+}
+
 export function createWasmPlayback({
     getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, pushSwapNow = null, records, generated = false, producer = null,
     solveService = null, timers = null,
@@ -1266,6 +1273,8 @@ export function createWasmPlayback({
                     mapped.refusal ? { obstacle: mapped.refusal } : null);
                 return;
             }
+            // ⛓ HELD SLOT LEAD — NOT covered here (diagnosis §5): a slot item delivered into a held ARRIVAL reaches the
+            // game's array in this tape's tick-0 tail too, and no idle lead tick is shipped for it. Known gap, unmeasured.
             startSolve(request, { staging: r.staging, continuation: false });
             return;
         }
@@ -1486,6 +1495,7 @@ export function createWasmPlayback({
         room.lead = null;
         room.slotLag = null;
         play = f.leg;
+        play.lastRowAt = null;
         frozen = null;
         const row = stats.deliveries.at(-1);
         if (row && row.outcome === 'replanning') { row.outcome = 'resumed'; row.freezeMs = Math.round(now() - f.at); row.why = why; }
@@ -1709,6 +1719,7 @@ export function createWasmPlayback({
         play.progress = foldDrain(null, null);
         play.divergence = null;
         play.lastStatusAt = 0;
+        play.lastRowAt = null;
         phase = 'playing';
         if (room) {
             room.lead = null;
@@ -1770,7 +1781,9 @@ export function createWasmPlayback({
     function watch() {
         if (phase !== 'playing') return;
         const d = J(game()?.botDrain?.());
+        const drained = play.progress.ticks;
         if (d) play.progress = foldDrain(play.progress, d);
+        if (play.progress.ticks > drained || play.lastRowAt == null) play.lastRowAt = now();
         if (!play.divergence) {
             play.divergence = firstDivergence(play.plan.expected, play.progress.rows, { roomLevel: goal.level });
             if (play.divergence) {
@@ -1789,6 +1802,14 @@ export function createWasmPlayback({
             const st = status();
             if (st?.error) { fail(`the game's tape errored: ${st.error}`); return; }
             if (st?.finished && !st?.armed && (!play.hold || st.held)) { finish(st); return; }
+        } else if (play.progress.ticks < play.ticks && t - play.lastRowAt >= STATUS_MS && t - play.lastStatusAt >= STATUS_MS) {
+            // ⛓ EARLY DISARM — ticks are still owed but the drain has stalled: the game may have stopped the tape
+            // itself (an equip check, a pin fault — `Bot.as` records why). Read it, ONLY on a stalled drain: W0's
+            // rule (never `botStatus` per frame on a healthy tape) holds, since a playing tape drains a row a frame.
+            play.lastStatusAt = t;
+            const st = status();
+            if (st?.error) { fail(`the game's tape errored: ${st.error}`); return; }
+            if (st?.finished && !st?.armed) { fail(`the game's tape ended at tick ${k} of ${play.ticks}`); return; }
         }
         if (queued && t - queued.since > QUEUE_WAIT_MS) {
             const q = queued;
@@ -2204,6 +2225,8 @@ export function createWasmPlayback({
             // ⛓ KEY DELIVERY — a delivered key is staged at the arrival too (only what is new to the staging and the game).
             room.staging = stageItems(room.staging, deliveredItems(st.items, landed.items), { slots: st.inventory_slots, save: added });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: heldKeys };
+            // ⛓ HELD SLOT LEAD — a frozen tape that held no keys leaves no lead tick for the game's tail to append the slot on.
+            if (!room.lead && room.shipped.length > 0 && slotsMoved(st.inventory_slots, post.slots)) room.lead = [[]];
             phase = 'held';
             if (goal) { solveInRoom(); return; }
             enterHeld();
@@ -2251,6 +2274,11 @@ export function createWasmPlayback({
             }
             room.staging = stageItems(room.staging, deliveredItems(st.items, landed.items), { slots: st.inventory_slots, save: added });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: [] };
+            // ⛓ HELD SLOT LEAD — a held room runs no frame, so a delivered slot item joins the game's array in the NEXT
+            // tape's tick-0 TAIL, after that tick's equip check (seed 2's L12 Sword: "equip at tick 0 selected slot 1 but
+            // the inventory holds 1 item(s)"). One idle lead tick lets the tail append it; the plan (its equips with it,
+            // `ship()`'s shift) starts at t=1. A continuation only: an arrival (nothing shipped) solves without the lead.
+            if (!room.lead && room.shipped.length > 0 && slotsMoved(st.inventory_slots, post.slots)) room.lead = [[]];
             if (!solving) row.outcome = 'staged';
             phase = 'held';
             if (goal) { solveInRoom(); return; }
