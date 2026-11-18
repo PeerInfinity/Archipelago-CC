@@ -20,6 +20,12 @@
  *   s1 the slot-lag check off (`ship()` never asks `firstTickSlotRefusal`) -> 'the SLOT LAG …' reds (1)
  *   s2 the delivery re-stage without the game's array (`stageItems` with no `slots`) -> 'two slot items …' reds (1)
  *   s3 the arrival stages no slot array -> 13 red over this file + `wasmArrival.test.js`
+ *   (s1's catcher moved with ⛓ HELD SLOT LEAD: a held slot delivery now ships an idle lead tick, so a continuation's
+ *    X is never its first tick; the guard still covers the ARRIVAL ship, unit-pinned in `wasmDelivery.test.js`.)
+ *   ⛓ HELD SLOT LEAD:
+ *   h1 the lead off in `deliverHeld` -> 'a held SLOT delivery …' + 'the SLOT LAG …' red (2)
+ *   h2 the lead off in the mid-tape `admit` -> 'a MID-TAPE slot delivery …' reds
+ *   h3 the lead set on ANY held delivery (no slot check) -> 'a held NON-slot delivery …' reds
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -305,7 +311,7 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
     });
 
-    it('the SLOT LAG: Fire delivered into the held room fills slot 0 one frame late — a continuation pressing X there first falls back, named', () => {
+    it('the SLOT LAG: Fire delivered into the held room fills slot 0 one frame late — a continuation pressing X there first plays it behind the idle LEAD tick (⛓ HELD SLOT LEAD; was: falls back, `delivery-first-tick`)', () => {
         // Nothing held: [] with primary 0 (past the end: reads 0, the sword's id); Fire makes it [1] (slot 0 = Fire).
         // ⛓ SLOTS CONSUMER: re-staged from the lag at primary 0 on an EMPTY array — the chest plan presses nothing
         // without a weapon, so staging Fire moves no prefix tick (the spear over [0] at primary 1 now changed the
@@ -322,8 +328,13 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
         e.engine.walkTo(DOOR);
         e.timers.run(3000);
-        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toContain('delivery-first-tick');
-        expect(e.engine.stats.fallbacks.find((f) => f.kind === 'delivery-first-tick').why).toMatch(/presses primary on its first tick.*\(0 → 1\)/);
+        // ⛓ HELD SLOT LEAD — the idle lead tick's tail appends Fire, so the plan's own first tick (its X) is tape t=1.
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).not.toContain('delivery-first-tick');
+        expect(e.failures).toEqual([]);
+        const tape = e.game.tapes.at(-1);
+        expect(heldAt(tape, 0)).toEqual([]);
+        expect(heldAt(tape, 1)).toContain('primary');
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
     });
 
     it('⛓ SLOTS CONSUMER — two slot items into the held room (Fire, then the sword): each re-stage carries the game\'s array as it stood, so the model holds [1, 0]', () => {
@@ -451,6 +462,77 @@ describe('⛓ WASM EQUIPS — the engine ships the solver\'s slot selections', (
         expect(e.failures).toHaveLength(1);
         expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan selects slot 2 at tick 5, and the game will hold 2 slot\(s\) \[1,0\] — an UNOWNED slot/);
         expect(e.game.tapes.filter((t) => t.tick_count > 0)).toEqual([]);
+    });
+});
+
+describe('⛓ HELD SLOT LEAD — a slot item delivered into a HELD room: the next plan starts behind ONE idle lead tick', () => {
+    // Seed 2's L12 stall (diagnosis 2026-11-17): Fire held [1], the Sword delivered into the held room, and the next
+    // continuation selects slot 1 at its tick 0 — the game's tail had not appended the Sword yet ("equip at tick 0
+    // selected slot 1 but the inventory holds 1 item(s)"). The idle lead tick runs that tail first.
+    const kit = { hasSword: true, hasFire: true };
+    const fireHeld = { game: { items: { hasFire: true }, slots: [1] }, live: { Fire: 1 } };
+    const equipAt0 = (plan, n) => (n === 1 ? { ...plan, equipsAt: new Map([[0, 1]]), equipItems: new Map([[0, kit]]) } : plan);
+
+    it('a held SLOT delivery (the Sword after Fire): the continuation is solved behind the idle tick and its t0 equip ships at t=1', () => {
+        const e = setup({ ...fireHeld, editPlan: equipAt0 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        const chestTicks = e.engine.room.shipped.length;
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
+        expect(e.game.slots).toEqual([1, 0]);
+        e.engine.walkTo(DOOR);
+        e.runUntil(() => e.engine.status().phase === 'playing');
+        // the solve's prefix carries the idle tick; the tape opens with it, the equip and every key moved by 1
+        expect(e.seen[1].request.perTick).toHaveLength(chestTicks + 1);
+        expect([...e.seen[1].request.perTick.at(-1)]).toEqual([]);
+        const tape = e.game.tapes.at(-1);
+        expect(tape.equips).toEqual([{ t: 1, slot: 1 }]);
+        expect(heldAt(tape, 0)).toEqual([]);
+        expect(tape.tick_count).toBe(e.seen[1].result.plan.solution.length + 1);
+        expect(e.engine.room.equips).toEqual([{ t: chestTicks + 1, slot: 1 }]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
+    });
+
+    it('a held NON-slot delivery (the Shield): no lead — the continuation starts at the held tick, its t0 equip at t=0 (unchanged)', () => {
+        const fire = { hasFire: true };
+        const e = setup({ ...fireHeld, editPlan: (plan, n) => (n === 1 ? { ...plan, equipsAt: new Map([[0, 0]]), equipItems: new Map([[0, fire]]) } : plan) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        const chestTicks = e.engine.room.shipped.length;
+        e.delivery.receive('Progressive Shield');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
+        expect(e.engine.room.lead ?? null).toBeNull();
+        e.engine.walkTo(DOOR);
+        e.runUntil(() => e.engine.status().phase === 'playing');
+        expect(e.seen[1].request.perTick).toHaveLength(chestTicks);
+        expect(e.game.slots).toEqual([1]);
+        expect(e.game.tapes.at(-1).equips).toEqual([{ t: 0, slot: 0 }]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+    });
+
+    it('a MID-TAPE slot delivery frozen where the tape holds NO key: the replan gets the idle lead tick (`lead [[]]`, was none)', () => {
+        // The chest plan holds nothing at the freeze reached from 12 drained rows (measured: heldKeys []).
+        const e = setup(fireHeld);
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 12);
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const row = e.engine.stats.deliveries[0];
+        expect(row).toMatchObject({ phase: 'playing', outcome: 'replanned', heldKeys: [], lead: [[]] });
+        expect(e.seen[1].request.perTick).toHaveLength(row.tick + 1);
+        expect(heldAt(e.game.tapes.at(-1), 0)).toEqual([]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation, d.prefix])).toEqual([[CHEST.name, true, row.tick]]);
     });
 });
 

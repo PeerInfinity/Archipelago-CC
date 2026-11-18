@@ -1,0 +1,37 @@
+## frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json vs origin/main: 12 change(s)
+DEL /preset_sidecars/1/level_100__r2c3/playable_payload/action_lib/fire
+    - {"condition": "strikes", "footprint": {"E": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "N": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "S": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "W": [[-1, -1], [0, -1], [1, -…
+    + null
+DEL /preset_sidecars/1/level_100__r2c3/playable_payload/obstacleLib/rock_8_9
+    - {"at": "8,9", "clear_set": [], "color": "#7a6a55", "id": "rock_8_9", "kind": "rock", "name": "rock (sword or spear or fire)", "struck_by": ["sword", "spear", "fire"], "struck_from": {"fire": ["9,8,N", "9,8,E", "9,8,S", "9,8,W", "9,9,N", "9,9,E", "9,9,S", "9,9,W"]}}
+    + null
+ADD /preset_sidecars/1/level_100__r2c3/playable_payload/obstacleLib/rock_sword_spear
+    - null
+    + {"clear_set": [], "color": "#7a6a55", "id": "rock_sword_spear", "kind": "rock", "name": "rock (sword or spear)", "struck_by": ["sword", "spear"]}
+CHG /preset_sidecars/1/level_100__r2c3/playable_payload/obstacles/[6]/id
+    - "rock_8_9"
+    + "rock_sword_spear"
+DEL /preset_sidecars/1/level_73__r0c4/playable_payload/action_lib/fire
+    - {"condition": "strikes", "footprint": {"E": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "N": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "S": [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]], "W": [[-1, -1], [0, -1], [1, -…
+    + null
+DEL /preset_sidecars/1/level_73__r0c4/playable_payload/obstacleLib/rock_4_3
+    - {"at": "4,3", "clear_set": [], "color": "#7a6a55", "id": "rock_4_3", "kind": "rock", "name": "rock (sword or spear or fire)", "struck_by": ["sword", "spear", "fire"], "struck_from": {"fire": ["3,2,N", "3,2,E", "3,2,S", "3,2,W", "4,2,N", "4,2,E", "4,2,S", "4,2,W", "5,2,N", "5,2,E", "5,2,S", "5,2,W", …
+    + null
+ADD /preset_sidecars/1/level_73__r0c4/playable_payload/obstacleLib/rock_sword_spear
+    - null
+    + {"clear_set": [], "color": "#7a6a55", "id": "rock_sword_spear", "kind": "rock", "name": "rock (sword or spear)", "struck_by": ["sword", "spear"]}
+CHG /preset_sidecars/1/level_73__r0c4/playable_payload/obstacles/[21]/id
+    - "rock_4_3"
+    + "rock_sword_spear"
+CHG /region_atlas/1/atlas_id
+    - "seedling-05686c0f"
+    + "seedling-704532ad"
+DEL /regions/1/level_100__r4c10/exits/name=level_100__r4c10 -> level_100__r2c3/access_rule/children/[2]
+    - {"args": {"item_name": "Fire"}, "rule": "Has"}
+    + null
+DEL /regions/1/level_73__r0c4/exits/name=level_73__r0c4 -> level_73__r3c7/access_rule/children/[3]
+    - {"args": {"item_name": "Fire"}, "rule": "Has"}
+    + null
+DEL /regions/1/level_73__r3c7/exits/name=level_73__r3c7 -> level_73__r0c4/access_rule/children/[3]
+    - {"args": {"item_name": "Fire"}, "rule": "Has"}
+    + null

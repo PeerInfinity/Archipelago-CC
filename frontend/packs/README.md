@@ -70,7 +70,9 @@ Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
   gates, items and things through the same seams once the world's stack has loaded, and a world with no theme draws
   as before (`mazeRoom/mazeCompositeArt.test.js`; the in-app row `meta-trial-composite-map-art`). (Content sets
   TILE-1) Both views draw every tile kind but the map's player through one fallback chain, `mazeTileArt.drawMazeTile`:
-  the theme's art, the kind's default, its declared base, a placeholder (`mazeRoom/mazeTileFallback.test.js`). The art is
+  the theme's art, the kind's default, its declared base, a placeholder (`mazeRoom/mazeTileFallback.test.js`). (Content
+  sets TILE-2) A pack's concept row may declare a tile kind's `base` beside its `art` key (`packConcepts.PACK_TILE_BASES`),
+  read through `mazeTileArt.mazeTileKind`; no world field places such a kind yet. The art is
   play-time only, so an edit to it owes no preset rebuild. It presents the guardian as **the Gate** (a `look`,
   `#a0a8b8` / `#`, for the maze's gate role; the `blocked` and `passedWith` lines for the text adventure's), gives
   the sword's and the swim's checks a line that knows it is a check (their names stay the AP item names, and the

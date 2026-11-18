@@ -172,6 +172,14 @@ describe('determinism: a permuted document → the same layout', () => {
     }
 });
 
+describe('(A) the join audit — the generic producer', () => {
+    it('generic (rules exits, no geometry): every link stays `join` — UNCLASSIFIABLE, left as it is (alttp)', () => {
+        const g = genericLayoutGraph(ALTTP, '1');
+        expect(g.links.length).toBeGreaterThan(0);
+        expect(g.links.every((l) => l.kind === 'join' && l.dir == null)).toBe(true);
+    });
+});
+
 describe('the Seedling hook (compositeMap.layoutGraph)', () => {
     it('kind off the exit_id prefix: stairs down and pits go down, stairs up up, the rest join', () => {
         expect(['out_stairsdown_32_192', 'out_pit_0_0', 'out_stairsup_1_2', 'out_teleporter_0_128', 'out_oracle_64_32', 'in_L0_80_96']
@@ -186,16 +194,37 @@ describe('the Seedling hook (compositeMap.layoutGraph)', () => {
         expect(r.positions.get('level_0')).toEqual({ gx: 0, gy: 0 });
         expect(r.positions.size).toBe(115);
         expect(new Set([...r.positions.values()].map((p) => `${p.gx},${p.gy}`)).size).toBe(115);
-        // ⛓ measured 2026-11-14 at the slice's base (9b99178fa7): the numbers the 3a report quotes
+        // ⛓ measured 2026-11-14 at 9b99178fa7 (the 3a report): groups 21, directed 220, honoured 135, consistent 196,
+        //   down 45/45, up 22/22, the start's group 54 levels. RE-MEASURED 2026-11-17 after the join audit (A): the 46
+        //   exits that are not edge transitions are `warp` now, so they join nothing (and carry no `dir`)
         expect(r.stats).toMatchObject({
-            groups: 21, directed: 220, honoured: 135, consistent: 196,
-            down: { across: 45, below: 45 }, up: { across: 22, above: 22 },
+            groups: 43, directed: 184, honoured: 122, consistent: 178,
+            down: { across: 62, below: 62 }, up: { across: 25, above: 25 },
         });
         expect(r.groups[0]).toMatchObject({ root: 'level_0', placedBy: 'start' });
-        expect(r.groups[0].members.length).toBe(54);
+        expect(r.groups[0].members.length).toBe(28);
+        const count = (k) => r.graph.links.filter((l) => l.kind === k).length;
+        expect([count('join'), count('warp'), count('down'), count('up')]).toEqual([184, 46, 64, 26]);
+        // ⛓ (P) the source groups sit just above their first successors (MEASURED before (A): 486.81 → 354.73 cells
+        //   summed over the 67 cross-group links; after (A): 131 cross-group links, 1561.94 — the warps are long;
+        //   after (ii), warp-only groups beside their first warp predecessor: 911.05)
+        const byRoot = new Map(r.groups.map((g) => [g.root, g]));
+        expect(byRoot.get('level_7')).toMatchObject({ placedBy: 'source', bbox: { minX: -3, minY: 5, maxX: -3, maxY: 5 } });
+        // level_32 → level_30: straight over level_30's column, slid UP clear of the groups (ii) put beside level_12
+        expect(byRoot.get('level_32')).toMatchObject({ placedBy: 'source', bbox: { minX: 7, minY: -4, maxX: 7, maxY: -4 } });
+        const g30 = r.groups.find((g) => g.members.includes('level_30'));
+        expect(r.positions.get('level_32').gx).toBe(r.positions.get('level_30').gx);
+        expect(r.positions.get('level_32').gy).toBeLessThan(g30.bbox.minY);
+        // (ii): the doorway levels sit beside the level that warps into them
+        expect(byRoot.get('level_1')).toMatchObject({ placedBy: 'warp', bbox: { minX: 5, minY: 0 } });
+        expect(byRoot.get('level_33')).toMatchObject({ placedBy: 'warp', bbox: { minX: 7, minY: 0 } });
+        const placedBy = {};
+        for (const g of r.groups) placedBy[g.placedBy] = (placedBy[g.placedBy] ?? 0) + 1;
+        expect(placedBy).toEqual({ start: 1, below: 17, warp: 11, source: 9, right: 5 });
+        expect(r.stats.crossLength).toBe(911.05);
         // every link the hook made from stairs/pits is vertical, and only those
         const kinds = new Set(r.graph.links.map((l) => l.kind));
-        expect([...kinds].sort()).toEqual(['down', 'join', 'up']);
+        expect([...kinds].sort()).toEqual(['down', 'join', 'up', 'warp']);
         expect(r.graph.links.filter((l) => l.kind !== 'join').every((l) => l.dir === null)).toBe(true);
     });
 
@@ -216,12 +245,19 @@ describe('the Seedling hook (compositeMap.layoutGraph)', () => {
         const blind = resolveRegionLayout({ rules });
         expect(blind.stats.source).toBe('hook');
         expect(blind.stats.directed).toBe(0); // the derived atlas is not shipped: no level sizes, no directions
-        // ⛓ MEASURED: R1 joins level_82 / 96 / 98 into the overworld by teleporters, and a pit or stairs reaches each
+        // ⛓ MEASURED: blind (no level sizes, so no exit can be told an edge transition or a warp) R1 joins level_82 /
+        //   96 / 98 into the overworld by `join` exits, and a pit or stairs reaches each
         //   from a group BELOW it — a cycle, so 3 of 43 down links cannot land below (the 3a report's R2 motivation)
         expect(blind.stats.down).toEqual({ across: 43, below: 40 });
         expect(blind.stats.vertical.cycleDropped).toBeGreaterThanOrEqual(3);
         const sighted = resolveRegionLayout({ rules, hookCtx: { atlases: { [atlas.atlas_id]: atlas } } });
         expect(sighted.stats.directed).toBeGreaterThan(100);
+        // ⛓ (A) MEASURED: with level sizes the warps are told apart (17 → 43 groups); blind, every exit is
+        //   UNCLASSIFIABLE and stays `join` (17 groups, as before)
+        expect(blind.graph.links.some((l) => l.kind === 'warp')).toBe(false);
+        expect(blind.stats.groups).toBe(17);
+        expect(sighted.stats.groups).toBe(43);
+        expect(sighted.graph.links.filter((l) => l.kind === 'warp').length).toBeGreaterThan(0);
         expect(sighted.positions.get(sighted.start)).toEqual({ gx: 0, gy: 0 });
         expect(sighted.positions.size).toBe(sc.length);
     });

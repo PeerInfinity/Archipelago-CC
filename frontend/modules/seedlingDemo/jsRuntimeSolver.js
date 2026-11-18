@@ -64,7 +64,7 @@ import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
     ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
 } from './solverBot.js';
-import { pageSolverEnvSwitchOn } from './solverEnvChannel.js';
+import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 // ⛓ PANEL-ROUTE — read once per recorder: is a progress hook installed (the worker's tap)? Never written here.
@@ -743,14 +743,16 @@ export const solverGoalsOf = (solverGoal) => (solverGoal?.kind === 'sequence' ? 
  * own reason (`already-clear`, `cannot-act`, or the talk). A Solid with no arm (a non-talker; a talker whose clear-tag
  * arm is off) still refuses `no-verb`. OFF: byte-identical.
  *
- * ⛓ THE SWITCH: `SEEDLING_TALK_CLEAR_GOAL=1` in a node process or the worker, and — this switch alone, because the
- * mapper runs on the page's MAIN thread — the page URL's `?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=1`
- * (`solverEnvChannel.pageSolverEnvSwitchOn`). `withTalkClearGoal(enabled, fn)` for a row.
+ * ⛓ THE SWITCH: **ON by default since the TALK flip** (⚖ the user 2026-11-17: *"Flip; sweeps now"* — re-measure-4's
+ * first wall, the whole-game walk's L58 stop). `SEEDLING_TALK_CLEAR_GOAL=0` in a node process or the worker, and —
+ * this switch alone, because the mapper runs on the page's MAIN thread — the page URL's
+ * `?seedlingSolverEnv=SEEDLING_TALK_CLEAR_GOAL=0` (`solverEnvChannel.pageSolverEnvSwitchOff`), opts out.
+ * `withTalkClearGoal(enabled, fn)` for a row.
  */
 export const TALK_CLEAR_GOAL = {
-    enabled: globalThis.process?.env?.SEEDLING_TALK_CLEAR_GOAL === '1' || pageSolverEnvSwitchOn('SEEDLING_TALK_CLEAR_GOAL'),
+    enabled: globalThis.process?.env?.SEEDLING_TALK_CLEAR_GOAL !== '0' && !pageSolverEnvSwitchOff('SEEDLING_TALK_CLEAR_GOAL'),
 };
-export const TALK_CLEAR_GOAL_DEFAULT = false;
+export const TALK_CLEAR_GOAL_DEFAULT = true;
 
 /** Run `fn` with `TALK_CLEAR_GOAL` set to `enabled`, restoring the previous value. */
 export function withTalkClearGoal(enabled, fn) {

@@ -574,7 +574,7 @@
     },
     "discovery_mode": {
       "type": "object",
-      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
+      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Producer of the `bundle` field: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph` (ActionNodes AN-1b). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -582,6 +582,11 @@
           "properties": {
             "enabled": {
               "type": "boolean"
+            },
+            "bundle": {
+              "type": "string",
+              "enum": ["actionNodes"],
+              "description": "Optional, with enabled:true: a named override bundle forced in AND out of loop mode. \"actionNodes\" — Loop mode's discovery overrides with autoDiscoverLocations on; the start node is fully discovered and its neighbours show their contents, a node's exits stay unnamed until it is first completed, nothing is cleared on a loop reset, no explore (ActionNodes AN-1b, Robert 2026-11-16). Producer: frontend/modules/actionNodes/actionGraphCompiler.js `compileActionGraph`. Consumer: frontend/modules/discovery/worldDiscoveryMode.js `readWorldDiscoveryMode` / `ACTION_NODES_OVERRIDES`."
             }
           },
           "required": [

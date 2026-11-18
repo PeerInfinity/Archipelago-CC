@@ -1,0 +1,55 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/flashPanel/seedlingObstacleEvents.test.js (58 tests) 47ms
+ ✓ frontend/modules/seedlingDemo/levelSetExporter.test.js (45 tests) 11371ms
+     ✓ prints a byte-identical STDOUT twice, carrying the id the function stamps  1453ms
+     ✓ REFUSES every generation flag by name, and still refuses `fixtures/`  816ms
+     ✓ writes a set with ZERO xml rooms and chunks with ZERO record rooms  800ms
+     ✓ --bundle writes a DETERMINISTIC zip beside the plain files, chunks excluded  2875ms
+     ✓ --minify shrinks what is written and leaves STDOUT alone  923ms
+     ✓ REFUSES --bundle / --minify with no --out-dir, because neither touches STDOUT  432ms
+     ✓ reproduces the regions, the boundary exits and the connections, 1:1  2676ms
+ ✓ frontend/modules/seedlingDemo/seedlingSetPatches.test.js (26 tests) 911ms
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-jnDxzp/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 17400ms
+     ✓ lets exactly ONE of eight simultaneous takers hold the box; the rest refuse  3205ms
+     ✓ serialises four QUEUED simultaneous takers — every one takes, no two hold at once  8699ms
+     ✓ lets a QUEUED taker die on SIGTERM — it never takes the box later  2613ms
+     ✓ makes a REAL browser gate refuse before it spends anything  673ms
+ ✓ frontend/modules/flashPanel/seedlingCompositeMap.test.js (20 tests) 270ms
+ ✓ frontend/modules/seedlingDemo/vanillaOverlay.test.js (12 tests) 14426ms
+     ✓ is IDEMPOTENT — two builds are byte-equal and carry one stamped id  6802ms
+     ✓ is byte-equal to a fresh build, and the SIZE is a measured literal  3402ms
+     ✓ `--check` agrees with the committed bytes  3780ms
+ ✓ frontend/modules/mazeRoom/mazeSeedlingLink.test.js (12 tests) 435ms
+     ✓ every converted room: COPY → PASTE links to the same level as its preset-link boot, and the copy is a fixed point  308ms
+ ✓ scripts/procgen/seedlingAtlasDoorCensus.test.js (4 tests) 5ms
+ ✓ scripts/procgen/seedlingFireChaserGuard.test.js (13 tests) 56ms
+ ✓ scripts/procgen/seedlingPlaythroughObstacleEvents.test.js (21 tests) 13620ms
+ ✓ frontend/modules/seedlingDemo/fidelityMoonrock.test.js (9 tests) 1684ms
+     ✓ its delivered set is the set vanillaRecordSet delivers today  826ms
+     ✓ MODEL = GAME (seedling fidelity DESCENT): the descent fires the stairs — built-in, delivered and rock-set alike  368ms
+ ✓ scripts/procgen/seedlingLandingContact.test.js (16 tests) 13ms
+ ✓ frontend/modules/flashPanel/atlasIndex.test.js (4 tests) 7ms
+ ✓ scripts/procgen/seedlingErMode.test.js (19 tests) 44319ms
+     ✓ vanilla through the mode's compile hook is AP_1, byte for byte  4695ms
+     ✓ sweep 'placed': live, never incomplete, refusals 9 → 6  8895ms
+     ✓ sweep 'events': live, never incomplete, refusals 0 → 0  7515ms
+
+ Test Files  14 passed (14)
+      Tests  285 passed (285)
+   Start at  05:32:16
+   Duration  63.62s (transform 6.61s, setup 1.37s, import 19.83s, tests 104.57s, environment 1ms)
+

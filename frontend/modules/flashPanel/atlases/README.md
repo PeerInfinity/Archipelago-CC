@@ -131,6 +131,12 @@ atlas, the CLI loads it and resolves every `map_ref` against a real level.
   read one registry, `regionMarkingTool/regionAnalyzers.js`), so they agree. **An internal exit with no `access_rule` compiles to a FREE
   AP exit**, so any such row is a logic obligation, not a cosmetic one.
 
+- `seedling-playthrough.json`, `seedling-subregion-partition.json`,
+  `seedling-sphere-order.json` — the playthrough chain's products. The chain
+  runs its producers in order (`node scripts/procgen/regen-seedling.mjs
+  --check` or `--write`). See
+  [Pipeline presets § Regenerating the Seedling playthrough chain](../../../../docs/json/developer/procgen/pipeline-presets.md#regenerating-the-seedling-playthrough-chain).
+
 - `seedling-fixture.json` — the Phase-1 test anchor. Three regions using
   Seedling's real region and item names, but **invented geometry**: it exists to
   exercise every feature of the format (multi-tile edge spans, teleporters, a

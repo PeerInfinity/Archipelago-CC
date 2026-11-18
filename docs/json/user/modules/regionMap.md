@@ -7,7 +7,7 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
 ## What you see
 
 - **Cells.** One cell per *whole level*. A Seedling level split into several sub-regions is drawn once, whole, and its sub-regions' locations all appear in it.
-- **Groups.** Regions joined by ordinary doors and teleporters form a group, and the groups are separated by gaps. A group reached by going **down** stairs or a pit sits below the group it is reached from.
+- **Groups.** Regions joined by **edge transitions** (walk off one side of a level and you are in the next one) form a group, and the groups are separated by gaps. A doorway or a teleporter (a **warp**) does not join two groups, but a group you can only reach through one sits beside the group it is reached from. A group reached by going **down** stairs or a pit sits below the group it is reached from, and a group you can only go down *from* sits just above the first group it leads to.
 - **Location squares.** Each location is a square on its tile. Event locations are drawn as diamonds.
 
   | Colour | Meaning |
@@ -18,7 +18,7 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
   | Light grey | Reachability is not shown (the accessibility colours are turned off, or the region is undiscovered) |
 
   A square never gets smaller than the **minimum square size** setting, however far you zoom out.
-- **Links.** Thin arrows link two *groups* where stairs or a pit lead from one to the other. Blue arrows go down, orange arrows go up. Neighbouring cells inside a group get no lines: being next to each other already says they connect.
+- **Links.** Thin arrows link two *groups*. Blue arrows go down stairs or a pit, orange arrows go up, and green dashed arrows are warps (doorways and teleporters). The legend in the toolbar names each colour. Neighbouring cells inside a group get no lines: being next to each other already says they connect.
 - **Markers.** The region you are in has a white outline, and the regions on your current path have a thin blue one. A hovered cell gets a light outline and a clicked cell a yellow one.
 - **Not on map.** A location the map cannot place on a tile is listed in a yellow line above the map. It is never dropped silently.
 
@@ -53,7 +53,7 @@ With discovery mode on, regions you have not discovered are not drawn. A region 
 | Show undiscovered | `showUndiscovered` | on | Discovery mode: draw fog cells for regions you can reach next |
 | Links | `showLinks` | on | Draw the arrows between groups |
 | Cells | `cellSize` | sized by level | **Sized by level**: one tile scale for every level, so a small level looks small. **Uniform**: every level scaled to fill the same square |
-| Grouping | `groupingRule` | R1 | How regions are grouped. **R1** groups everything joined by doors and teleporters |
+| Grouping | `groupingRule` | R1 | How regions are grouped. **R1** groups everything joined by edge transitions |
 | — | `minSquarePx` | 6 | The smallest a location square gets on screen, in pixels |
 
 The settings are under **Region Map** in the Settings panel (`moduleSettings.regionMap.*`).

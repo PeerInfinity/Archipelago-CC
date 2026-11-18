@@ -10,12 +10,17 @@
 // byte-identically" gate, the shape region-atlas-compile.mjs uses.
 //
 // Usage:
-//   node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--check] [--quiet]
+//   node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--exists id,id]
+//                                                 [--check] [--quiet]
 //
-// With no graph it compiles the example graph to the committed preset:
-//   node scripts/procgen/action-nodes-compile.mjs \
-//       frontend/modules/actionNodes/graphs/example-village.json \
-//       -o frontend/presets/action_nodes_example/AP_1/AP_1_rules.json
+// `--exists` names the content packs (`frontend/packs/`) the graph is the resolved structure of; the world then records
+// those pack ids in `provenance[p].exists` instead of the graph's own provenance block (Z.7, AN-1b).
+//
+// With no graph it compiles the example graph to the committed preset, the example pack named (`--exists
+// example-village`); these two are the same:
+//   node scripts/procgen/action-nodes-compile.mjs
+//   node scripts/procgen/action-nodes-compile.mjs frontend/modules/actionNodes/graphs/example-village.json \
+//       -o frontend/presets/action_nodes_example/AP_1/AP_1_rules.json --exists example-village
 //   node scripts/procgen/action-nodes-compile.mjs --check
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
@@ -27,9 +32,11 @@ import { stringifyRulesJson } from '../../frontend/modules/shared/rulesJsonBuild
 
 argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const DEFAULT_GRAPH = 'frontend/modules/actionNodes/graphs/example-village.json';
-const DEFAULT_OUT = 'frontend/presets/action_nodes_example/AP_1/AP_1_rules.json';
-const USAGE = 'usage: node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--check] [--quiet]';
+export const DEFAULT_GRAPH = 'frontend/modules/actionNodes/graphs/example-village.json';
+export const DEFAULT_OUT = 'frontend/presets/action_nodes_example/AP_1/AP_1_rules.json';
+/** The pack the example graph is the resolved structure of (PL-2: `resolve(action_nodes, {exists: [it]})` equals it). */
+export const DEFAULT_EXISTS = Object.freeze(['example-village']);
+const USAGE = 'usage: node scripts/procgen/action-nodes-compile.mjs [<graph.json>] [-o out.json] [--seed N] [--exists id,id] [--check] [--quiet]';
 
 function main() {
     const argv = process.argv.slice(2);
@@ -38,7 +45,7 @@ function main() {
         const i = argv.indexOf(flag);
         return i === -1 ? undefined : argv[i + 1];
     };
-    const VALUE_FLAGS = ['-o', '--out', '--seed'];
+    const VALUE_FLAGS = ['-o', '--out', '--seed', '--exists'];
     const unknown = argv.filter((a, i) => a.startsWith('-') && !VALUE_FLAGS.includes(a) && !['--check', '--quiet'].includes(a)
         && !VALUE_FLAGS.includes(argv[i - 1]));
     if (unknown.length) {
@@ -51,6 +58,15 @@ function main() {
     const check = has('--check');
     const quiet = has('--quiet');
     const seedArg = valueOf('--seed');
+    const existsArg = valueOf('--exists');
+    const exists = existsArg !== undefined ? existsArg.split(',').map((x) => x.trim()).filter(Boolean)
+        : (positional[0] ? null : [...DEFAULT_EXISTS]);
+    for (const id of exists ?? []) {
+        if (!existsSync(resolve(REPO, 'frontend/packs', id))) {
+            console.error(`unknown pack '${id}' in --exists: no frontend/packs/${id}/\n${USAGE}`);
+            process.exit(2);
+        }
+    }
 
     const graphPath = resolve(REPO, graphFile);
     const graph = JSON.parse(readFileSync(graphPath, 'utf8'));
@@ -59,6 +75,7 @@ function main() {
         result = compileActionGraph(graph, {
             seed: seedArg === undefined ? 1 : Number(seedArg),
             graphPath: relative(REPO, graphPath),
+            exists,
         });
     } catch (e) {
         console.error(`REFUSED: ${e.name}: ${e.message}`);
