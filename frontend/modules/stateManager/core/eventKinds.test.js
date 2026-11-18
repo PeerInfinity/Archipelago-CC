@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { autoCollectsEvent, EVENT_KIND_POLICY } from './eventKinds.js';
+import { autoCollectsEvent, playerChecksEvent, EVENT_KIND_POLICY } from './eventKinds.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..');
 const PRESETS = join(REPO, 'frontend', 'presets');
@@ -27,6 +27,14 @@ describe('autoCollectsEvent — the policy', () => {
         expect(autoCollectsEvent({ name: 'rock', event_kind: 'game_state' })).toBe(false);
         expect(autoCollectsEvent({ name: 'x', event_kind: 'some_future_kind' })).toBe(false);
         expect(autoCollectsEvent({ name: 'x', event_kind: 'toString' })).toBe(false);
+    });
+
+    it('playerChecksEvent: only a kind whose row says so (goal); none, game_state and unknown kinds are not', () => {
+        expect(playerChecksEvent({ event_kind: 'goal' })).toBe(true);
+        expect(playerChecksEvent({ event_kind: 'game_state' })).toBe(false);
+        expect(playerChecksEvent({ name: 'Victory' })).toBe(false);
+        expect(playerChecksEvent({ event_kind: 'some_future_kind' })).toBe(false);
+        expect(playerChecksEvent({ event_kind: 'toString' })).toBe(false);
     });
 
     it('every kind the schema allows has a policy row', () => {

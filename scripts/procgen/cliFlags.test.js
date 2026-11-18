@@ -153,6 +153,15 @@ describe('checkSubstrateIds', () => {
         expect(() => checkSubstrateIds({ quotas: {}, start: null }, how)).not.toThrow();
     });
 
+    it('passes an atlas:<game> source (the seedling_atlas_sphere recipe\'s --quota atlas:seedling=10)', () => {
+        const sphere = { layout: 'sphere', tool: 'dump-sphere-growth', counts: { quotas: '--quota' }, start: 'start' };
+        expect(() => checkSubstrateIds({ quotas: { maze: 6, 'atlas:seedling': 10 }, start: 'maze' }, sphere)).not.toThrow();
+        expect(() => checkSubstrateIds({ quotas: { 'atlas:seedling': 10 } }, how)).not.toThrow();
+        // the exemption is the prefix only: a plain unknown id beside it still refuses BY NAME
+        expect(() => checkSubstrateIds({ quotas: { 'atlas:seedling': 10, bogus: 1 } }, sphere))
+            .toThrow(/^quotas\.bogus=1 \(--quota\): 'bogus' is not a registered substrate/);
+    });
+
     it('refuses an unregistered id and one the layout cannot place, naming the flag', () => {
         expect(() => checkSubstrateIds({ quotas: { bogus: 2 } }, how))
             .toThrow(/^quotas\.bogus=2 \(--quota\): 'bogus' is not a registered substrate \(registered: .*maze/);

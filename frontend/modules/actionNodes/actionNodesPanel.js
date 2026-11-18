@@ -2,7 +2,8 @@
  * actionNodesPanel — the substrate's own small panel (design §10 slice 2): the node the player is at.
  *
  * Shows the node's name, kind, time (the XP-adjusted price), performances this loop, requirements and results, why it
- * cannot be performed when it cannot, and its exits (open once the node is cleared this loop). One button:
+ * cannot be performed when it cannot, and its exits (a forward exit opens once the node is cleared this loop; a move
+ * back to a node reached this loop is always open). One button:
  *   - OUTSIDE Loop mode, **Act** performs at once (the runtime charges the shared pool);
  *   - IN Loop mode, **Queue act** appends an `act` entry to the Loops queue — only when the queue ends at this node
  *     (moves are planned in the Region Graph or the Loops panel; slice 3 adds the routed click).
@@ -71,7 +72,7 @@ export function actionNodesPanelModel({ payload, runtime, loopMode, price = null
         canAct: node.kind !== 'start' && !why,
         actLabel: loopMode ? 'Queue act' : 'Act',
         cleared,
-        exits: node.exits.map((e) => ({ ...e, open: cleared })),
+        exits: node.exits.map((e) => ({ ...e, open: !runtime.whyNotLeave(nodeId, { exitName: e.name }) })),
     };
 }
 
@@ -162,9 +163,10 @@ export class ActionNodesPanel {
             this.root.appendChild(msg);
         }
         if (m.exits.length) {
-            this.root.appendChild(el('div', { class: 'an-exits-title' }, m.cleared ? 'Exits (open):' : 'Exits (open after the action):'));
+            this.root.appendChild(el('div', { class: 'an-exits-title' },
+                m.cleared || m.exits.every((e) => e.reverse) ? 'Exits (open):' : 'Exits (forward ones open after the action):'));
             for (const exit of m.exits) {
-                const b = el('button', { class: 'an-exit button', 'data-exit': exit.name }, `→ ${exit.target}`);
+                const b = el('button', { class: 'an-exit button', 'data-exit': exit.name }, `${exit.reverse ? '←' : '→'} ${exit.target}`);
                 b.disabled = !exit.open || this._gs()?.isLoopModeActive === true;
                 b.style.margin = '2px';
                 b.addEventListener('click', () => this._onExit(m.nodeId, exit));
@@ -187,7 +189,7 @@ export class ActionNodesPanel {
     }
 
     _onExit(nodeId, exit) {
-        const why = getActionNodesRuntime().whyNotLeave(nodeId);
+        const why = getActionNodesRuntime().whyNotLeave(nodeId, { exitName: exit.name, destination: exit.target });
         if (why) {
             this.message = why.text;
             this.render();

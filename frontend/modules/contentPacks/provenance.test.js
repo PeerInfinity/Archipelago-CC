@@ -204,8 +204,8 @@ describe('the committed packs, backfilled (Z.7)', () => {
 
     it('⛔ no committed world document carries a PACK\'s provenance (Z.7): no pack source\'s note', async () => {
         // A world looks its sources up through its packs. Only the packs' own records are needles: a model id is
-        // shared with sources that are not packs (the ActionNodes example world records its graph's block, which is
-        // not a pack yet; the planner ruled that honest until PL-2 makes the graph a structure layer).
+        // shared with sources that are not packs. ⛓ AN-1b: the ActionNodes example world records its pack ids
+        // (`provenance[p].exists`), no longer its graph's block, so no world is set aside.
         const needles = new Set();
         for (const p of await loadAll()) {
             for (const json of Object.values(p.layers)) {
@@ -216,14 +216,7 @@ describe('the committed packs, backfilled (Z.7)', () => {
         const rules = execFileSync('git', ['-C', REPO, 'ls-files', '-z', 'frontend/presets/*_rules.json'], { encoding: 'utf8' })
             .split('\0').filter(Boolean);
         expect(rules.length).toBeGreaterThan(0);
-        // ⛓ PL-2: the ActionNodes example world still records its graph's own block (`provenance[p].graph_provenance`),
-        // whose notes now ALSO sit in the pack `example-village`. Replacing that block by pack ids is the next
-        // slice's (after AN-2 lands); until then the block is the world's honest record and is set aside here, by name.
-        const textOf = (f) => {
-            const doc = JSON.parse(readFileSync(join(REPO, f), 'utf8'));
-            for (const row of Object.values(doc.provenance ?? {})) if (row && typeof row === 'object') delete row.graph_provenance;
-            return JSON.stringify(doc);
-        };
+        const textOf = (f) => JSON.stringify(JSON.parse(readFileSync(join(REPO, f), 'utf8')));
         const hits = rules.filter((f) => { const text = textOf(f); return [...needles].some((n) => text.includes(JSON.stringify(n).slice(1, -1))); });
         expect(hits).toEqual([]);
     });

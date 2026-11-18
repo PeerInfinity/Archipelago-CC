@@ -79,9 +79,11 @@ const READ = readAt([0, 286, 287, 300, 311, 432]);
 
 describe('fidelity WALLFLYERCORPSE — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_WALLFLYER_CORPSE_GONE)(
-        'shipped OFF (⚖ user 2026-11-15, "OFF key, flip later"), ON since the WALLFLYERCORPSE flip; appended last, with a worker env name', () => {
+        'shipped OFF (⚖ user 2026-11-15, "OFF key, flip later"), ON since the WALLFLYERCORPSE flip; appended after corridorForecastMemo, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.wallFlyerCorpseGone).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('wallFlyerCorpseGone');
+            // ⛓ wave 46: DARKSUITSTATIC `darkSuitStaticRetaliation` was appended after this key; waves 47/48 after that.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf('wallFlyerCorpseGone') + 1)).toEqual(['darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_WALLFLYER_CORPSE_GONE');
         });
     it(`the witness: L22's ${ALL.length} wallflyers, the ${PLAN.length} t plan, hitless in L22 to every read tick`, () => {

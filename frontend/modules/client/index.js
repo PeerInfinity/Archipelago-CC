@@ -350,10 +350,13 @@ export function register(registrationApi) {
     if (!coreMessageHandler || !coreConnection?.isConnected()) return;
     // The caller (the timer) has already checked every name locally (batchCheckLocations), so a mixed batch
     // is split: the ID-bearing ones are sent; the ID-less ones (events) stay local and are not checked again.
-    const { ids } = await coreMessageHandler.splitLocationChecks(locationNames);
+    const { ids, idless } = await coreMessageHandler.splitLocationChecks(locationNames);
     if (ids.length > 0) {
       coreMessageHandler._internalSendLocationChecks(ids);
     }
+    // The add-on goal (client/core/upstreamGoal.js) may be one of the ID-less ones: the timer picked it
+    // unchecked and has just checked it locally, so it counts as checked on this connection.
+    for (const name of idless) await coreMessageHandler._noteUpstreamGoalCheck(name, 'reachable');
   });
 
   registrationApi.registerSettingsSchema({

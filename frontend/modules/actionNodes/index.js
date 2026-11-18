@@ -39,10 +39,10 @@ export function register(registrationApi) {
     if (!substrateRegistry.has(substrateRegistryEntry.id)) substrateRegistry.register(substrateRegistryEntry);
     registrationApi.registerPanelComponent?.(ACTION_NODES_PANEL_COMPONENT_TYPE, ActionNodesPanel);
     registrationApi.registerEventBusPublisher?.(ACTION_NODES_STATE_EVENT);
-    // The runtime's dispatches: a check (once), the discovery of a node's exits on its first clear, and the panel's
-    // moves outside Loop mode.
+    // The runtime's dispatches: a check (once) and the panel's moves outside Loop mode. A node's first clear REVEALS
+    // its exits through discovery's public `revealExits` (AN-1b), not a `loop:exploreCompleted` (whose receiver also
+    // runs explore's random pick).
     registrationApi.registerDispatcherSender?.('user:locationCheck', 'bottom', 'first');
-    registrationApi.registerDispatcherSender?.('loop:exploreCompleted', 'bottom', 'first');
     registrationApi.registerDispatcherSender?.('user:regionMove', 'bottom', 'first');
     // Tests and the console read the runtime's state.
     registrationApi.registerPublicFunction?.(MODULE, 'getRuntimeSnapshot', () => getActionNodesRuntime().snapshot());
@@ -66,6 +66,7 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         chargeMana,
         gainMana,
         xpAdjustedCost,
+        revealExits: (regionName, exitNames) => initializationApi.getModuleFunction?.('discovery', 'revealExits')?.(regionName, exitNames),
         fireReset: () => fireLoopResetTeleport({
             sourceRegion: gs()?.getCurrentRegion?.() ?? null,
             dispatcher,

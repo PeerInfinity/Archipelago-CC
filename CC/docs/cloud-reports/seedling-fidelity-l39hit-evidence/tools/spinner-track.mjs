@@ -1,0 +1,24 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/';
+const [capFile, planFile, from, to] = process.argv.slice(2);
+const { restoreRequest } = await import(R + 'scripts/procgen/seedlingSolveRequestCodec.js');
+const { atSeamTime } = await import(R + 'scripts/procgen/replay-seedling-solve-request.mjs');
+const { levelSourceFromAtlas } = await import(R + 'frontend/modules/seedlingDemo/atlasSource.js');
+const { createRunForStaging } = await import(R + 'frontend/modules/seedlingDemo/tapeRunner.js');
+const plan = JSON.parse(readFileSync(planFile, 'utf8'));
+const cap = JSON.parse(readFileSync(capFile, 'utf8').split('\n')[0]).requests[0].request;
+const req = restoreRequest(atSeamTime(cap, plan.seam));
+const run = createRunForStaging(req.staging, levelSourceFromAtlas(req.source.records), { scratchPersistence: req.scratchPersistence === true });
+const equips = new Map(plan.equipsAt);
+const ID = process.env.ID ?? 'spinner@112,88';
+let ph = 0;
+plan.solution.forEach((k, i) => {
+    if (equips.has(i)) run.equipNow(equips.get(i));
+    run.advance(new Set(k));
+    const t = i + 1;
+    const l = run.ledger('pulserHits'); const newRows = l.slice(ph); ph = l.length;
+    if (t < Number(from) || t > Number(to)) return;
+    const b = run.entities('spinnerBodies').find((q) => q.id === ID);
+    const pl = run.entities('armedPulsers'); 
+    console.log(`t${t} ${ID} ${b ? JSON.stringify(Object.fromEntries(Object.entries(b).filter(([kk]) => !['id'].includes(kk)).map(([kk, v]) => [kk, typeof v === 'number' ? +v.toFixed(4) : v]))).slice(0, 300) : 'none'} pulserRows=${JSON.stringify(newRows).slice(0, 200)} pulsers=${JSON.stringify(pl).slice(0, 200)}`);
+});

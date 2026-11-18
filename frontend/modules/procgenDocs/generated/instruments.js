@@ -69,7 +69,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "derive"
         },
         {
@@ -244,13 +244,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 533,
+        "blockStyle": 534,
         "browser": 227,
         "cited": 291,
-        "files": 555,
+        "files": 556,
         "lineStyle": 22,
-        "withDocblock": 555,
-        "withFlags": 472
+        "withDocblock": 556,
+        "withFlags": 473
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -281,6 +281,7 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "line",
             "documentedFlags": [
+                "exists",
                 "seed"
             ],
             "file": "action-nodes-compile.mjs",
@@ -290,6 +291,12 @@ export const INSTRUMENTS = frz({
                         "has"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "valueOf"
+                    ],
+                    "name": "exists"
                 },
                 {
                     "how": [
@@ -6257,6 +6264,70 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "derive-seedling-tick0 — THE v11 TICK-0 LATCH, MEASURED ONCE PER CHAIN SEGMENT BY A ZERO-TICK FRESH-PAGE RUN.",
             "path": "scripts/procgen/derive-seedling-tick0.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "derive",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "check",
+                "json",
+                "lane-dump",
+                "quick",
+                "verify"
+            ],
+            "file": "derive-seedling-wallflyer-nohit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "lane-dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quick"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "verify"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The wallflyer no-hit gates, DERIVED from the transcribed physics and CHECKED against the per-room table (slice rules-nohit-wand-crosscheck, ⚖ Robert 2026-11-15 \"Wand L22 + CI cross-check (Recommended)\"; the derivation itself is slice rules-nohit-derivation's, moved here from its evidence directory).",
+            "path": "scripts/procgen/derive-seedling-wallflyer-nohit.mjs"
         },
         {
             "argvHelpers": [
@@ -13431,6 +13502,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "seedling-divergence-legs.mjs",
                     "name": "blocks"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-line-only"
                 },
                 {
                     "from": "seedling-divergence-legs.mjs",
@@ -22518,6 +22593,10 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "from": "seedling-divergence-legs.mjs",
+                    "name": "carry-line-only"
+                },
+                {
+                    "from": "seedling-divergence-legs.mjs",
                     "name": "carry-route-flags"
                 },
                 {
@@ -22568,6 +22647,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "blocks"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "carry-line-only"
                 },
                 {
                     "how": [

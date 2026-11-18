@@ -1,0 +1,11 @@
+# box lock: TAKEN by witness-l98-l99.mjs (browser, pid 5496) — head 5e59d9726, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"227-off","ticks":520,"sampled":517,"model":{"survey":{"hits":[],"deaths":0,"level":99},"delivered":{"hits":[],"deaths":0,"level":99}},"game":{"hits":[],"endLevel":99},"firstParting":null}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"227-line","ticks":483,"sampled":483,"model":{"survey":{"hits":["spinningaxe@128,64@t358","spinningaxe@128,64@t381"],"deaths":0,"level":99},"delivered":{"hits":["spinningaxe@128,64@t358","spinningaxe@128,64@t381"],"deaths":0,"level":99}},"game":{"hits":[358,381,483],"endLevel":99},"firstParting":null}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"227-line-standout","ticks":576,"sampled":571,"model":{"survey":{"hits":[],"deaths":0,"level":99},"delivered":{"hits":[],"deaths":0,"level":99}},"game":{"hits":[],"endLevel":99},"firstParting":null}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"228-line","ticks":477,"sampled":468,"model":{"survey":{"hits":[],"deaths":0,"level":100},"delivered":{"hits":[],"deaths":0,"level":100}},"game":{"hits":[],"endLevel":100},"firstParting":null}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"228-line-standout-death","ticks":477,"sampled":474,"model":{"survey":{"hits":[],"deaths":0,"level":100},"delivered":{"hits":[],"deaths":0,"level":100}},"game":{"hits":[],"endLevel":100},"firstParting":null}

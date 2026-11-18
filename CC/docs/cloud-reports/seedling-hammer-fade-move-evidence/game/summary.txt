@@ -1,0 +1,6 @@
+127 done None 494 hits max 0 [] divs 0 end@ (423.91, 274.5) cleared 1
+128 done None 541 hits max 0 [] divs 0 end@ (440.84, 281.99) cleared 2
+160 done None 632 hits max 2 [(575, 429.51, 258.15), (615, 445.89, 258.15)] divs 0 end@ (445.89, 258.15) cleared 1
+161 done None 610 hits max 0 [] divs 0 end@ (440.82, 282.07) cleared 2
+171 done None 672 hits max 0 [] divs 0 end@ (423.53, 274.72) cleared 1
+172 done None 675 hits max 0 [] divs 0 end@ (440.87, 282.83) cleared 2

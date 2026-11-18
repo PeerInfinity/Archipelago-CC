@@ -23,6 +23,15 @@ export class GameState {
         // - customAction: { type: 'customAction', actionName: string, params: object, sourceRegion: string, instanceNumber: number }
         this.path = [];
 
+        // The QUEUE-TIME GUARD for custom actions (ActionNodes AN-1b): a function
+        // (actionName, sourceRegion) → {ok:false, code, reason} | anything else,
+        // installed by the loops module (`loopState.customActionRefusal`). A
+        // refusal appends nothing: the entry is recorded in `lastQueueRefusal`
+        // and addCustomAction / insertCustomActionAt return false. Null (no
+        // guard) appends everything, exactly as before.
+        this.customActionGuard = null;
+        this.lastQueueRefusal = null;
+
         // Track instance counts for each region
         this.regionInstanceCounts = new Map();
 
@@ -615,6 +624,34 @@ export class GameState {
      *   currently at"), falling back to currentRegion for an empty
      *   path.
      */
+    /** Install (or clear, with null) the queue-time guard for custom actions. */
+    setCustomActionGuard(fn) {
+        this.customActionGuard = typeof fn === 'function' ? fn : null;
+    }
+
+    /**
+     * The guard's refusal of `actionName` in `sourceRegion`, or null. A guard that
+     * throws refuses, naming the throw (a broken guard must not wave an entry in).
+     * A refusal is recorded in `lastQueueRefusal`.
+     */
+    _customActionRefusal(actionName, sourceRegion) {
+        if (!this.customActionGuard) return null;
+        let verdict;
+        try {
+            verdict = this.customActionGuard(actionName, sourceRegion);
+        } catch (e) {
+            verdict = { ok: false, code: 'guard-threw', reason: `the queue guard threw: ${e?.message ?? e}` };
+        }
+        if (!verdict || verdict.ok !== false) return null;
+        const refusal = {
+            actionName, region: sourceRegion,
+            code: verdict.code ?? null, reason: String(verdict.reason ?? 'refused'),
+        };
+        this.lastQueueRefusal = refusal;
+        console.warn(`[GameState] ${actionName} in ${sourceRegion} refused at queue time: ${refusal.reason}`);
+        return refusal;
+    }
+
     addCustomAction(actionName, params = {}) {
         // Find the last regionMove for the implicit-source / instance-
         // number lookup. Mirrors addLocationCheck's pattern.
@@ -637,6 +674,7 @@ export class GameState {
             console.warn(`[GameState] Cannot add custom action: no source region`);
             return;
         }
+        if (this._customActionRefusal(actionName, sourceRegion)) return false;
 
         // Instance number: prefer the lastRegionMove's instance when it
         // matches sourceRegion (preserves the in-path semantics —
@@ -657,6 +695,7 @@ export class GameState {
 
         // Emit path updated event
         this.emitPathUpdated();
+        return true;
     }
 
     /**
@@ -812,6 +851,7 @@ export class GameState {
      * @param {Object} params - Additional parameters for the action
      */
     insertCustomActionAt(actionName, targetRegionName, targetInstanceNumber, params = {}) {
+        if (this._customActionRefusal(actionName, targetRegionName)) return false;
         // Find the target regionMove entry
         let foundCount = 0;
         let insertIndex = -1;

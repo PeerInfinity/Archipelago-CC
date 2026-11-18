@@ -42,7 +42,11 @@ import { onLocationClick, onRegionClick, readClickOptions, regionOfCell } from '
 export const BAKE_TILE_PX = 16;
 const OWNER = 'regionMap';
 const FOLLOW_EASE_MS = 350;
-const LINK_COLORS = Object.freeze({ down: '#7fb3ff', up: '#ffb37f', join: '#e6c84a' });
+const LINK_COLORS = Object.freeze({ down: '#7fb3ff', up: '#ffb37f', join: '#e6c84a', warp: '#6fd08c' });
+/** The toolbar legend, one swatch per `procgenCore/regionLayout.js` LINK_KINDS kind (region-map placement (A)). */
+const LINK_LEGEND = Object.freeze([
+    ['join', 'edge transition'], ['down', 'down'], ['up', 'up'], ['warp', 'warp (door / teleporter)'],
+]);
 const BG = '#0b0b10';
 
 const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
@@ -172,6 +176,13 @@ export class RegionMapUI {
         // only unticks the box (`_manualCamera`), it does not rewrite the saved setting.
         button('region-map-centre-start', 'Centre on start', () => this.centreOnStart());
         button('region-map-fit-all', 'Fit all', () => this.fitAll());
+        const legend = el('span', 'region-map-link-legend', { display: 'inline-flex', gap: '8px', alignItems: 'center', color: '#9ab', fontSize: '11px' });
+        for (const [kind, text] of LINK_LEGEND) {
+            const item = el('span', `region-map-link-legend-${kind}`, { display: 'inline-flex', alignItems: 'center', gap: '3px' });
+            item.append(el('span', null, { display: 'inline-block', width: '14px', height: '3px', background: LINK_COLORS[kind] }), document.createTextNode(text));
+            legend.appendChild(item);
+        }
+        bar.appendChild(legend);
         this.info = el('div', 'region-map-info', { padding: '2px 6px', color: '#9ab', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' });
         // An overlay over the canvas (not a row above it): showing it must not resize the canvas.
         this.status = el('div', 'region-map-status', {
@@ -739,10 +750,12 @@ export class RegionMapUI {
             const sb = worldToScreen(this.camera, this.vp, b.x, b.y);
             ctx.strokeStyle = LINK_COLORS[l.kind] ?? LINK_COLORS.join;
             ctx.fillStyle = ctx.strokeStyle;
+            ctx.setLineDash?.(l.kind === 'warp' ? [4, 4] : []);
             ctx.beginPath();
             ctx.moveTo(sa.x, sa.y);
             ctx.lineTo(sb.x, sb.y);
             ctx.stroke();
+            ctx.setLineDash?.([]);
             const ang = Math.atan2(sb.y - sa.y, sb.x - sa.x);
             ctx.beginPath();
             ctx.moveTo(sb.x, sb.y);

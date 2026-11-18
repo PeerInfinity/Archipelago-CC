@@ -34,6 +34,7 @@ import { SUBSTRATE_LIBRARIES } from '../../frontend/modules/procgenCore/substrat
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { pipelineLayoutsOf } from '../../frontend/modules/procgenCore/substratePredicates.js';
 import { isLibrarySourceId } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { isAtlasSourceId } from '../../frontend/modules/procgenPipeline/regionAtlasPool.js';
 import { UsageError } from './cliRun.js';
 import { preloadScriptContent } from './preloadContent.js';
 
@@ -71,8 +72,9 @@ export function loadPipelineSubstrates() {
  * ⛓ Refuse, as usage (exit 1) and before any work runs, a substrate id the
  * argv names that is not registered or that the driver's layout cannot place
  * (`pipelineLayoutsOf`) — the engine's own refusal, said first and naming
- * the flag and the substrates that DO fit. A `library:<id>` source, a count of
- * 0, and a start of `auto` / null pass through to the engine as before.
+ * the flag and the substrates that DO fit. A `library:<id>` source, an
+ * `atlas:<game>` source (the engine's `isAtlasSourceId`), a count of 0, and a
+ * start of `auto` / null pass through to the engine as before.
  * @param {object} opts the parsed flags
  * @param {{layout: string, tool: string, counts?: Record<string, string>, start?: string|null}} how
  *        `counts`: opts key → flag (`{quotas: '--quota'}`); `start`: the opts key of the start id
@@ -81,7 +83,7 @@ export function checkSubstrateIds(opts, { layout, tool, counts = {}, start = nul
     const all = substrateRegistry.getAll();
     const fits = all.filter((e) => pipelineLayoutsOf(e).includes(layout)).map((e) => e.id);
     const check = (id, what) => {
-        if (isLibrarySourceId(id)) return;
+        if (isLibrarySourceId(id) || isAtlasSourceId(id)) return;
         if (!substrateRegistry.has(id)) {
             throw new UsageError(`${what}: '${id}' is not a registered substrate (registered: ${all.map((e) => e.id).join(', ')})`);
         }
