@@ -74,6 +74,14 @@ export function register(registrationApi) {
     }
   });
 
+  // Remove the overlay provider from every panel (its teardown drops the cards, the has-overlay class and the
+  // overlay arrow style) and clear a provider still pending for a panel not yet created. ActionNodes registers its
+  // node card only while one of its worlds is loaded and removes it here on unload (slice AN-3a).
+  registrationApi.registerPublicFunction('regionGraph', 'unregisterNodeOverlayProvider', () => {
+    _pendingOverlayProvider = null;
+    for (const panel of _panelInstances) panel.overlayManager.unregisterProvider();
+  });
+
   registrationApi.registerPublicFunction('regionGraph', 'refreshNodeOverlays', () => {
     for (const panel of _panelInstances) panel.overlayManager.refresh();
   });

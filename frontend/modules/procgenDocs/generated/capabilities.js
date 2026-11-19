@@ -1061,9 +1061,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 114,
+        "fields": 115,
         "fieldsRead": 42,
-        "fieldsUnread": 69,
+        "fieldsUnread": 70,
         "statements": 32,
         "substrates": 10
     },
@@ -5823,6 +5823,7 @@ export const CAPABILITIES = frz({
         "label",
         "libraryEntryRefusal",
         "loadRegionEvent",
+        "loopBot",
         "loopSupport.actionGate",
         "loopSupport.authoredCosts",
         "loopSupport.customQueues",

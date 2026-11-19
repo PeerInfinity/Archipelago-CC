@@ -17,11 +17,26 @@
  * Loops actions) runs them under Playback. A substrate with neither cannot be played by the queue yet: the runner waits, naming the region.
  * The modes it set are put back on Stop (the user's explicit ones, or none).
  *
+ * ⛓ A SUBSTRATE'S OWN LOOP PLAN (ActionNodes design §7, AN-3a). When every region of the loaded world belongs to a
+ * substrate whose registry entry declares `loopBot.planLoop(context)` (`substrateLoopPlanner.js`, handed in as
+ * `deps.substrateLoopPlanner`), the runner asks IT for the whole loop instead of `planNextLoop`; the rest of the
+ * glue is the same (write the path, restart, wait). Its reasoning lines go to `deps.onReasoning`. Every other world
+ * plans exactly as before.
+ *
  * Every dependency is injected, so the runner is exercised in vitest without the app.
  */
 import { DEFAULT_MANA_STRATEGY, availableTasks, planNextLoop } from './loopDriver.js';
 
 const RETRY_MS = 1000;
+
+/**
+ * A region's TOTAL XP from gameState's `{level, xp}` (`xp` is the progress inside the level): the XP that level
+ * takes (`xpFormulas.levelFromXP`'s inverse, 10·L² + 90·L) plus the progress.
+ */
+export function totalRegionXp(xpData) {
+    const level = Number(xpData?.level) || 0;
+    return 10 * level * level + 90 * level + (Number(xpData?.xp) || 0);
+}
 // A loop whose actions keep completing without spending any mana never ends by itself (a substrate explore with
 // nothing left to find can be free — maze — and a repeating explore re-queues itself forever). After this many
 // free completions in a row the runner ends the loop and stops exploring that region for XP.
@@ -55,6 +70,9 @@ export class LoopModeRunner {
      * @param {(region: string, instance: number) => string} [deps.blockKeyOf]
      * @param {(region: string, actionType: string) => boolean} [deps.supportsQueueAction]  the region's queueActions
      * @param {(location: string) => string|null} [deps.regionOfLocation]
+     * @param {() => {substrateId: string, planLoop: Function}|null} [deps.substrateLoopPlanner]  a substrate's own plan
+     * @param {() => object|null} [deps.getSnapshot]       the latest state snapshot (inventory, checkedLocations)
+     * @param {(lines: string[], plan: object) => void} [deps.onReasoning]   a substrate plan's reasoning lines
      */
     constructor(deps) {
         this._d = deps;
@@ -210,6 +228,26 @@ export class LoopModeRunner {
         };
     }
 
+    /**
+     * The loop plan of a substrate that declares `loopBot.planLoop` (`substrateLoopPlanner.js`): its context is the
+     * live pool, inventory, checks and region XP. Its reasoning lines go to `onReasoning`.
+     */
+    _substratePlan(substrate, gameState) {
+        const d = this._d;
+        const snapshot = d.getSnapshot?.() ?? null;
+        const context = {
+            startRegion: d.getStartRegion(),
+            maxMana: gameState.getMaxMana?.() ?? gameState.maxMana,
+            inventory: snapshot?.inventory ?? {},
+            checkedLocations: snapshot?.checkedLocations ?? [],
+            regionXp: (region) => totalRegionXp(gameState.getRegionXP?.(region)),
+        };
+        const plan = substrate.planLoop(context) ?? { kind: 'unreachable', reason: 'no plan' };
+        const lines = Array.isArray(plan.lines) ? plan.lines : [];
+        if (lines.length) d.onReasoning?.(lines.map((l) => `loop ${this._loops + 1}: ${l}`), plan);
+        return { ...plan, path: plan.path ?? [], reason: plan.reason ?? lines[0] ?? plan.kind, substrate: substrate.substrateId };
+    }
+
     _runLoop() {
         if (!this._active) return;
         const d = this._d;
@@ -221,7 +259,17 @@ export class LoopModeRunner {
             return this._retry('waiting: Generate Costs first (Loops panel)');
         }
         if (!d.getStartRegion()) return this._retry('waiting: no loop start region');
-        const plan = planNextLoop(this._view());
+        const substrate = d.substrateLoopPlanner?.() ?? null;
+        let plan;
+        if (substrate) {
+            try {
+                plan = this._substratePlan(substrate, gameState);
+            } catch (e) {
+                return this._retry(`waiting: the ${substrate.substrateId} loop plan failed — ${e?.message ?? e}`);
+            }
+        } else {
+            plan = planNextLoop(this._view());
+        }
         this._lastPlan = plan;
         if (plan.kind === 'done') {
             this._status(`finished — ${this._loops} loop${this._loops === 1 ? '' : 's'}`);
@@ -231,7 +279,8 @@ export class LoopModeRunner {
         }
         if (plan.kind === 'unreachable') return this._retry(`waiting: ${plan.reason}`);
         const regions = new Set(plan.path.flatMap((e) => [e.sourceRegion, e.destinationRegion]).filter(Boolean));
-        const unplayable = [...regions].find((r) => this._modeFor(loopState, r) === null);
+        // A substrate's own plan is made of its own queue verbs, which the Loops queue plays as they are.
+        const unplayable = substrate ? null : [...regions].find((r) => this._modeFor(loopState, r) === null);
         if (unplayable) {
             return this._retry(`waiting: ${unplayable} is a substrate region the Loops queue cannot play yet (no Bot player)`);
         }
