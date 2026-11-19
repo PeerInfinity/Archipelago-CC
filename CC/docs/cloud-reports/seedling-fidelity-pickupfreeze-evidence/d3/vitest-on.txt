@@ -1,0 +1,4 @@
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+ Test Files  192 passed (192)
+      Tests  5281 passed | 2 skipped (5283)
+EXIT 0

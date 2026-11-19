@@ -1,0 +1,60 @@
+legs 924
+legs in a differing-family room 150 {28: 8, 29: 7, 40: 50, 59: 16, 62: 25, 65: 7, 88: 9, 91: 4, 98: 6, 103: 4, 104: 4, 105: 4, 107: 4, 108: 2}
+legs in a room holding a special pickup beside one (L29 turrets + bosskey; L40 iceturret + totem parts + bosskey): 57
+  290 29 exit level_29__r2c2 -> level_22__r0c6 [[0, 14]]
+  291 29 exit level_29__r2c2 -> level_31__r5c24 [[7, 2]]
+  292 29 location Level 029 - Boss Key 1 None
+  293 29 exit level_29__r2c2 -> level_22__r0c6 [[0, 14]]
+  294 29 exit level_29__r2c2 -> level_31__r5c24 [[7, 2]]
+  295 29 location Level 029 - Boss Key 1 None
+  296 29 exit level_29__r5c0 -> level_21 [[0, 5]]
+  359 40 exit level_40__r0c53 -> level_42 [[53, 0]]
+  360 40 exit level_40__r0c53 -> level_41__r4c3 [[59, 6]]
+  361 40 location L40 flag 7: wandlock@208,128 cleared None
+  362 40 exit level_40__r0c53 -> level_42 [[53, 0]]
+  363 40 exit level_40__r0c53 -> level_41__r4c3 [[59, 6]]
+  364 40 location L40 flag 7: wandlock@208,128 cleared None
+  365 40 exit level_40__r26c13 -> level_43__r13c7 [[20, 36]]
+  366 40 exit level_40__r26c13 -> level_39__r0c9 [[30, 57]]
+  367 40 exit level_40__r26c13 -> level_43__r13c7 #2 [[14, 27]]
+  368 40 exit level_40__r26c13 -> level_43__r13c7 #3 [[15, 27]]
+  369 40 exit level_40__r26c13 -> level_43__r13c7 #4 [[23, 27]]
+  370 40 exit level_40__r26c13 -> level_43__r13c7 #5 [[24, 27]]
+  371 40 exit level_40__r26c13 -> level_43__r13c7 #6 [[14, 28]]
+  372 40 exit level_40__r26c13 -> level_43__r13c7 #7 [[15, 28]]
+  373 40 exit level_40__r26c13 -> level_43__r13c7 #8 [[23, 28]]
+  374 40 exit level_40__r26c13 -> level_43__r13c7 #9 [[24, 28]]
+  375 40 exit level_40__r26c13 -> level_43__r13c7 #10 [[14, 29]]
+  376 40 exit level_40__r26c13 -> level_43__r13c7 #11 [[15, 29]]
+  377 40 exit level_40__r26c13 -> level_43__r13c7 #12 [[14, 30]]
+  378 40 exit level_40__r26c13 -> level_43__r13c7 #13 [[15, 30]]
+  379 40 location Level 040 - Totem Part 160,640 None
+  380 40 location Level 040 - Chest None
+  381 40 exit level_40__r26c13 -> level_43__r13c7 [[20, 36]]
+  382 40 exit level_40__r26c13 -> level_39__r0c9 [[30, 57]]
+  383 40 exit level_40__r26c13 -> level_43__r13c7 #2 [[14, 27]]
+  384 40 exit level_40__r26c13 -> level_43__r13c7 #3 [[15, 27]]
+  385 40 exit level_40__r26c13 -> level_43__r13c7 #4 [[23, 27]]
+  386 40 exit level_40__r26c13 -> level_43__r13c7 #5 [[24, 27]]
+  387 40 exit level_40__r26c13 -> level_43__r13c7 #6 [[14, 28]]
+  388 40 exit level_40__r26c13 -> level_43__r13c7 #7 [[15, 28]]
+  389 40 exit level_40__r26c13 -> level_43__r13c7 #8 [[23, 28]]
+  390 40 exit level_40__r26c13 -> level_43__r13c7 #9 [[24, 28]]
+  391 40 exit level_40__r26c13 -> level_43__r13c7 #10 [[14, 29]]
+  392 40 exit level_40__r26c13 -> level_43__r13c7 #11 [[15, 29]]
+  393 40 exit level_40__r26c13 -> level_43__r13c7 #12 [[14, 30]]
+  394 40 exit level_40__r26c13 -> level_43__r13c7 #13 [[15, 30]]
+  395 40 location Level 040 - Totem Part 160,640 None
+  396 40 location Level 040 - Chest None
+  856 40 location Level 040 - Totem Part 64,144 None
+  857 40 location L40 flag 1: wandlock@176,80 cleared None
+  858 40 location Level 040 - Totem Part 64,144 None
+  859 40 location L40 flag 1: wandlock@176,80 cleared None
+  860 40 location L40 flag 8: bosslock@480,352 cleared None
+  861 40 location L40 flag 8: bosslock@480,352 cleared None
+  862 40 location L40 flag 8: bosslock@480,352 cleared None
+  863 40 location L40 flag 8: bosslock@480,352 cleared None
+  864 40 location Level 040 - Boss Key 2 None
+  865 40 location Level 040 - Boss Key 2 None
+  866 40 location L40 flag 12: wandlock@480,560 cleared None
+  867 40 location L40 flag 12: wandlock@480,560 cleared None

@@ -1,0 +1,18 @@
+MUTANT 2 — a lump-less family is frozen on T for a text-less pickup too. Predicted: 1 red (ice turret text-less row).
+1
+     ✓ ships OFF, appended last, with a worker env name 2ms
+     ✓ text-less (a green key): OFF the shot starts on T; ON it starts on the release frame and leaves at t7 105ms
+     ✓ texted (a feather): OFF the shot starts on T; ON no turret updates while the dialogue is up 30ms
+     ✓ ice turret, texted: OFF a volley starts on T and leaves at t4; ON none while the dialogue is up 38ms
+     × ice turret, text-less: ON = OFF (T's one unfrozen step stands for the release frame) 59ms
+     ✓ drill, texted: OFF it hops toward the player on T; ON it sits 42ms
+     ✓ beam tower, texted: the tower's own slot on T is frozen ON (the frozen tick's second step is as OFF) 20ms
+     ✓ texted: the slot bills and wave 50 refuses by name OFF; ON the slot bills nothing and nothing refuses 46ms
+     ✓ text-less: the contact is billed once, on T — ON from the release frame, after the frozen lump 52ms
+     ✓ L88 (`introchar@56,104` beside `drill@128,160`): the dialogue starts, ON = OFF, the whole result 7ms
+     ✓ ON = OFF, the whole result (wave 50's held-`down` walk into the turret, and a no-pickup ice turret room) 69ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityPickupFreeze.test.js > PICKUPFREEZE — the lump-less families (L59, its turret swapped out) > ice turret, text-less: ON = OFF (T's one unfrozen step stands for the release frame)
+AssertionError: expected { thrown: null, …(7) } to deeply equal { thrown: null, …(7) }
+      Tests  1 failed | 10 passed (11)
+restored: MUTANT count 0

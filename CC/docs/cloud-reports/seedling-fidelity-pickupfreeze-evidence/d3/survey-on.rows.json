@@ -1,0 +1,868 @@
+[
+{
+"step": 36,
+"level": 29,
+"boot": {
+"kind": "staged",
+"source": "r8-solve-11",
+"note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L29@16,224 \u2014 R8 slice 8's construction for r8-solve-18",
+"block": {
+"level": 29,
+"x": 16,
+"y": 224
+},
+"check": null,
+"strippedTimedClears": [],
+"saveGrant": {
+"keys": [
+0
+],
+"items": [
+"hasShield"
+],
+"latched": [
+"hasSword"
+],
+"from": [
+{
+"step": 10,
+"item": "Progressive Sword",
+"grants": "latched hasSword"
+},
+{
+"step": 11,
+"item": "Seal",
+"grants": "save.seal_parts \u00d71"
+},
+{
+"step": 15,
+"item": "Seal",
+"grants": "save.seal_parts \u00d72"
+},
+{
+"step": 18,
+"item": "Seal",
+"grants": "save.seal_parts \u00d73"
+},
+{
+"step": 25,
+"item": "Seal",
+"grants": "save.seal_parts \u00d74"
+},
+{
+"step": 28,
+"item": "Red Key",
+"grants": "save.keys[0]"
+},
+{
+"step": 28,
+"item": "Seal",
+"grants": "save.seal_parts \u00d75"
+},
+{
+"step": 29,
+"item": "Progressive Shield",
+"grants": "seam.items.hasShield"
+},
+{
+"step": 34,
+"item": "Seal",
+"grants": "save.seal_parts \u00d76"
+}
+],
+"saveCounts": {
+"seal_parts": 6
+},
+"unpresentable": []
+},
+"stagedSave": {
+"keys": [
+0
+],
+"seal_parts": [
+0,
+1,
+2,
+3,
+4,
+5
+]
+}
+},
+"withCommittedDeclarations": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 112,
+"y": 64
+},
+"why": "Level 029 - Boss Key 1 (sphere 3.3) \u2192 Green Key",
+"location": "Level 029 - Boss Key 1"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 32
+},
+"why": "stairsdown@112,32 \u2192 L31"
+}
+],
+"views": {
+"boot": ".cache/seedling-survey/through-end/views/step-36-boot.json",
+"walk": ".cache/seedling-survey/through-end/views/step-36-walk.json"
+},
+"clock": {
+"gameTime": 8607,
+"refusal": null
+},
+"verdict": "SOLVED",
+"refusal": null,
+"ticks": 257,
+"traceRows": 3,
+"replans": 0,
+"passes": [
+{
+"pass": 1,
+"kind": "solve",
+"ticks": 257
+}
+],
+"declarations": [],
+"replay": {
+"hits": 0,
+"deaths": 0,
+"endLevel": 31,
+"transitions": [
+"undefined->undefined@257"
+],
+"earnedClears": []
+},
+"ms": 576,
+"knownAnswer": null,
+"knownTicks": null,
+"agreesWithKnown": null,
+"visit": 1,
+"family": null
+},
+{
+"step": 66,
+"level": 40,
+"boot": {
+"kind": "staged",
+"source": "r8-solve-11",
+"note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L40@480,896 \u2014 R8 slice 8's construction for r8-solve-18",
+"block": {
+"level": 40,
+"x": 480,
+"y": 896
+},
+"check": null,
+"strippedTimedClears": [],
+"saveGrant": {
+"keys": [
+0,
+1
+],
+"items": [
+"canSwim",
+"hasFire",
+"hasShield",
+"hasTorch"
+],
+"latched": [
+"hasSword"
+],
+"from": [
+{
+"step": 10,
+"item": "Progressive Sword",
+"grants": "latched hasSword"
+},
+{
+"step": 11,
+"item": "Seal",
+"grants": "save.seal_parts \u00d71"
+},
+{
+"step": 15,
+"item": "Seal",
+"grants": "save.seal_parts \u00d72"
+},
+{
+"step": 18,
+"item": "Seal",
+"grants": "save.seal_parts \u00d73"
+},
+{
+"step": 25,
+"item": "Seal",
+"grants": "save.seal_parts \u00d74"
+},
+{
+"step": 28,
+"item": "Red Key",
+"grants": "save.keys[0]"
+},
+{
+"step": 28,
+"item": "Seal",
+"grants": "save.seal_parts \u00d75"
+},
+{
+"step": 29,
+"item": "Progressive Shield",
+"grants": "seam.items.hasShield"
+},
+{
+"step": 34,
+"item": "Seal",
+"grants": "save.seal_parts \u00d76"
+},
+{
+"step": 36,
+"item": "Green Key",
+"grants": "save.keys[1]"
+},
+{
+"step": 38,
+"item": "Light",
+"grants": "seam.items.hasTorch"
+},
+{
+"step": 39,
+"item": "Fire",
+"grants": "seam.items.hasFire"
+},
+{
+"step": 39,
+"item": "Seal",
+"grants": "save.seal_parts \u00d77"
+},
+{
+"step": 45,
+"item": "Seal",
+"grants": "save.seal_parts \u00d78"
+},
+{
+"step": 47,
+"item": "Seal",
+"grants": "save.seal_parts \u00d79"
+},
+{
+"step": 54,
+"item": "Progressive Swim",
+"grants": "seam.items.canSwim"
+},
+{
+"step": 58,
+"item": "Seal",
+"grants": "save.seal_parts \u00d710"
+},
+{
+"step": 65,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d71"
+}
+],
+"saveCounts": {
+"seal_parts": 10,
+"totem_parts": 1
+},
+"unpresentable": []
+},
+"stagedSave": {
+"totem_parts": [
+0
+],
+"keys": [
+0,
+1
+],
+"seal_parts": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9
+]
+}
+},
+"withCommittedDeclarations": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 880,
+"y": 816
+},
+"why": "Level 040 - Chest (sphere 6.3) \u2192 Seal",
+"location": "Level 040 - Chest"
+},
+{
+"kind": "collect-placement",
+"placement": {
+"x": 160,
+"y": 640
+},
+"why": "Level 040 - Totem Part 160,640 (sphere 6.4) \u2192 Totem Shard",
+"location": "Level 040 - Totem Part 160,640"
+}
+],
+"views": {
+"boot": ".cache/seedling-survey/through-end/views/step-66-boot.json"
+},
+"clock": {
+"gameTime": 8607,
+"refusal": null
+},
+"verdict": "REFUSED",
+"refusal": "solverBot(survey-step-66) collect (160,640) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (625.9,680.6) \u2014 spinner:spinner@816,848 (a live Spinner BODY at (622.5,683.5) at horizon 419 \u2014 `Enemy.hitPlayer`'s 7x7 `collide(\"Player\", x, y)` at force 3) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (625.9,680.6) \u2014 spinner:spinner@816,848 (a live Spinner BODY at (622.5,683.5) at horizon 419 \u2014 `Enemy.hitPlayer`'s 7x7 `collide(\"Player\", x, y)` at force 3). \u26a0 The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the aim is 745 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within puncher@128,624's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 40 arms a trap whose lane covers puncher@128,624 \u2014 the room has 6 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: spinner@816,848 is not a body this run steps \u2014 the chaser arm needs a live position, and a static census body has none\n  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too \u2014 spinner:spinner@816,848 (a live Spinner BODY at (622.5,683.5) at horizon 419 \u2014 `Enemy.hitPlayer`'s 7x7 `collide(\"Player\", x, y)` at force 3) at (625.9,680.6)\n  forced-hit: no forced hit is proven from (888.2,823.4): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))",
+"ticks": null,
+"traceRows": null,
+"replans": null,
+"passes": null,
+"declarations": null,
+"replay": null,
+"ms": 24788,
+"knownAnswer": null,
+"knownTicks": null,
+"agreesWithKnown": null,
+"visit": 1,
+"family": "LADDER \u2014 every rung of \u2696 \u00a711.8a's order refused; see the per-rung reasons"
+},
+{
+"step": 96,
+"level": 40,
+"boot": {
+"kind": "staged",
+"source": "r8-solve-11",
+"note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L40@480,896 \u2014 R8 slice 8's construction for r8-solve-18",
+"block": {
+"level": 40,
+"x": 480,
+"y": 896
+},
+"check": null,
+"strippedTimedClears": [],
+"saveGrant": {
+"keys": [
+0,
+1,
+3
+],
+"items": [
+"canSwim",
+"hasFeather",
+"hasFire",
+"hasShield",
+"hasTorch"
+],
+"latched": [
+"hasSword"
+],
+"from": [
+{
+"step": 10,
+"item": "Progressive Sword",
+"grants": "latched hasSword"
+},
+{
+"step": 11,
+"item": "Seal",
+"grants": "save.seal_parts \u00d71"
+},
+{
+"step": 15,
+"item": "Seal",
+"grants": "save.seal_parts \u00d72"
+},
+{
+"step": 18,
+"item": "Seal",
+"grants": "save.seal_parts \u00d73"
+},
+{
+"step": 25,
+"item": "Seal",
+"grants": "save.seal_parts \u00d74"
+},
+{
+"step": 28,
+"item": "Red Key",
+"grants": "save.keys[0]"
+},
+{
+"step": 28,
+"item": "Seal",
+"grants": "save.seal_parts \u00d75"
+},
+{
+"step": 29,
+"item": "Progressive Shield",
+"grants": "seam.items.hasShield"
+},
+{
+"step": 34,
+"item": "Seal",
+"grants": "save.seal_parts \u00d76"
+},
+{
+"step": 36,
+"item": "Green Key",
+"grants": "save.keys[1]"
+},
+{
+"step": 38,
+"item": "Light",
+"grants": "seam.items.hasTorch"
+},
+{
+"step": 39,
+"item": "Fire",
+"grants": "seam.items.hasFire"
+},
+{
+"step": 39,
+"item": "Seal",
+"grants": "save.seal_parts \u00d77"
+},
+{
+"step": 45,
+"item": "Seal",
+"grants": "save.seal_parts \u00d78"
+},
+{
+"step": 47,
+"item": "Seal",
+"grants": "save.seal_parts \u00d79"
+},
+{
+"step": 54,
+"item": "Progressive Swim",
+"grants": "seam.items.canSwim"
+},
+{
+"step": 58,
+"item": "Seal",
+"grants": "save.seal_parts \u00d710"
+},
+{
+"step": 65,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d71"
+},
+{
+"step": 66,
+"item": "Seal",
+"grants": "save.seal_parts \u00d711"
+},
+{
+"step": 66,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d72"
+},
+{
+"step": 72,
+"item": "Seal",
+"grants": "save.seal_parts \u00d712"
+},
+{
+"step": 74,
+"item": "Seal",
+"grants": "save.seal_parts \u00d713"
+},
+{
+"step": 81,
+"item": "Blue Key",
+"grants": "save.keys[3]"
+},
+{
+"step": 88,
+"item": "Progressive Swim",
+"grants": "seam.items.hasFeather"
+},
+{
+"step": 89,
+"item": "Seal",
+"grants": "save.seal_parts \u00d714"
+}
+],
+"saveCounts": {
+"seal_parts": 14,
+"totem_parts": 2
+},
+"unpresentable": []
+},
+"stagedSave": {
+"totem_parts": [
+0,
+1
+],
+"keys": [
+0,
+1,
+3
+],
+"seal_parts": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13
+]
+}
+},
+"withCommittedDeclarations": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 40,
+"tag": 12
+},
+"at": {
+"x": 480,
+"y": 560
+},
+"obstacle": "wandlock@480,560",
+"presser": {
+"level": 40,
+"class": "buttonroom",
+"x": 880,
+"y": 768
+},
+"why": "L40 flag 12: wandlock@480,560 cleared (flag:L40:12) \u2014 broken before row 7.1 walks its landing",
+"location": "L40 flag 12: wandlock@480,560 cleared"
+},
+{
+"kind": "collect-placement",
+"placement": {
+"x": 656,
+"y": 528
+},
+"why": "Level 040 - Boss Key 2 (sphere 7.1) \u2192 Purple Key",
+"location": "Level 040 - Boss Key 2"
+}
+],
+"views": {
+"boot": ".cache/seedling-survey/through-end/views/step-96-boot.json"
+},
+"clock": {
+"gameTime": 8607,
+"refusal": null
+},
+"verdict": "REFUSED",
+"refusal": "solverBot(survey-step-96) collect (656,528) stance (ladder-routed: no corridor from (888.2497303124467,776.4935031361972) to a stance that can collect bosskey@656,528 \u2014 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach staging (488,579) -> kill (spinner@816,848) by press: every key set \u2014 the plan's own and 5 alternative(s) \u2014 lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (759.23,850.01) in level 40. There is no step out. The corner formed 12 tick(s) after the press on spinner@816,848 LANDED at t2743: a landing's knockback is player-coupled, so no forecast taken before it carries the rebound (HAMMER_PHASE_RUNG). The rung's preview saw no corner on this approach before it (it ends where the strike lapses, and a refuge wait is not previewed). The plain fallback (`OPP_PRESS_FALLBACK`) rewound to the kill's first tick (t1419) and redid the kill with `OPPORTUNISTIC_STRIKE` off; it did not kill (HAMMER_SAFETY: solverBot(survey-step-96) collect (656,528) stance (ladder-routed: no corridor from (888.2497303124467,776.4935031361972) to a stance that can collect bosskey@6).",
+"ticks": null,
+"traceRows": null,
+"replans": null,
+"passes": null,
+"declarations": null,
+"replay": null,
+"ms": 46601,
+"knownAnswer": null,
+"knownTicks": null,
+"agreesWithKnown": null,
+"visit": 2,
+"family": "unclassified \u2014 see the refusal text"
+},
+{
+"step": 149,
+"level": 40,
+"boot": {
+"kind": "staged",
+"source": "r8-solve-11",
+"note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L40@480,896 \u2014 R8 slice 8's construction for r8-solve-18",
+"block": {
+"level": 40,
+"x": 480,
+"y": 896
+},
+"check": null,
+"strippedTimedClears": [],
+"saveGrant": {
+"keys": [
+0,
+1,
+2,
+3,
+4
+],
+"items": [
+"canSwim",
+"hasFeather",
+"hasFire",
+"hasShield",
+"hasSpear",
+"hasTorch"
+],
+"latched": [
+"hasSword"
+],
+"from": [
+{
+"step": 10,
+"item": "Progressive Sword",
+"grants": "latched hasSword"
+},
+{
+"step": 11,
+"item": "Seal",
+"grants": "save.seal_parts \u00d71"
+},
+{
+"step": 15,
+"item": "Seal",
+"grants": "save.seal_parts \u00d72"
+},
+{
+"step": 18,
+"item": "Seal",
+"grants": "save.seal_parts \u00d73"
+},
+{
+"step": 25,
+"item": "Seal",
+"grants": "save.seal_parts \u00d74"
+},
+{
+"step": 28,
+"item": "Red Key",
+"grants": "save.keys[0]"
+},
+{
+"step": 28,
+"item": "Seal",
+"grants": "save.seal_parts \u00d75"
+},
+{
+"step": 29,
+"item": "Progressive Shield",
+"grants": "seam.items.hasShield"
+},
+{
+"step": 34,
+"item": "Seal",
+"grants": "save.seal_parts \u00d76"
+},
+{
+"step": 36,
+"item": "Green Key",
+"grants": "save.keys[1]"
+},
+{
+"step": 38,
+"item": "Light",
+"grants": "seam.items.hasTorch"
+},
+{
+"step": 39,
+"item": "Fire",
+"grants": "seam.items.hasFire"
+},
+{
+"step": 39,
+"item": "Seal",
+"grants": "save.seal_parts \u00d77"
+},
+{
+"step": 45,
+"item": "Seal",
+"grants": "save.seal_parts \u00d78"
+},
+{
+"step": 47,
+"item": "Seal",
+"grants": "save.seal_parts \u00d79"
+},
+{
+"step": 54,
+"item": "Progressive Swim",
+"grants": "seam.items.canSwim"
+},
+{
+"step": 58,
+"item": "Seal",
+"grants": "save.seal_parts \u00d710"
+},
+{
+"step": 65,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d71"
+},
+{
+"step": 66,
+"item": "Seal",
+"grants": "save.seal_parts \u00d711"
+},
+{
+"step": 66,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d72"
+},
+{
+"step": 72,
+"item": "Seal",
+"grants": "save.seal_parts \u00d712"
+},
+{
+"step": 74,
+"item": "Seal",
+"grants": "save.seal_parts \u00d713"
+},
+{
+"step": 81,
+"item": "Blue Key",
+"grants": "save.keys[3]"
+},
+{
+"step": 88,
+"item": "Progressive Swim",
+"grants": "seam.items.hasFeather"
+},
+{
+"step": 89,
+"item": "Seal",
+"grants": "save.seal_parts \u00d714"
+},
+{
+"step": 96,
+"item": "Purple Key",
+"grants": "save.keys[2]"
+},
+{
+"step": 110,
+"item": "Seal",
+"grants": "save.seal_parts \u00d715"
+},
+{
+"step": 124,
+"item": "Ghost Spear",
+"grants": "seam.items.hasSpear"
+},
+{
+"step": 135,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d73"
+},
+{
+"step": 137,
+"item": "Totem Shard",
+"grants": "save.totem_parts \u00d74"
+},
+{
+"step": 142,
+"item": "Yellow Key",
+"grants": "save.keys[4]"
+}
+],
+"saveCounts": {
+"seal_parts": 15,
+"totem_parts": 4
+},
+"unpresentable": []
+},
+"stagedSave": {
+"totem_parts": [
+0,
+1,
+2,
+3
+],
+"keys": [
+0,
+1,
+2,
+3,
+4
+],
+"seal_parts": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13,
+14
+]
+}
+},
+"withCommittedDeclarations": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 40,
+"tag": 7
+},
+"at": {
+"x": 208,
+"y": 128
+},
+"obstacle": "wandlock@208,128",
+"presser": {
+"level": 40,
+"class": "buttonroom",
+"x": 272,
+"y": 208
+},
+"why": "L40 flag 7: wandlock@208,128 cleared (flag:L40:7) \u2014 broken before row 9.1 walks its landing",
+"location": "L40 flag 7: wandlock@208,128 cleared"
+},
+{
+"kind": "collect-placement",
+"placement": {
+"x": 64,
+"y": 144
+},
+"why": "Level 040 - Totem Part 64,144 (sphere 9.1) \u2192 Totem Shard",
+"location": "Level 040 - Totem Part 64,144"
+}
+],
+"views": {
+"boot": ".cache/seedling-survey/through-end/views/step-149-boot.json"
+},
+"clock": {
+"gameTime": 8607,
+"refusal": null
+},
+"verdict": "REFUSED",
+"refusal": "solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempart@64,144 \u2014 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> hold stance (wandlock@176,80) -> hold: the hold stands still for up to 131 tick(s) at (280.3669873047385,216.60071614521746), inside bombpusher@112,128's 256 px reach \u2014 a Bomb's Explosion at (285,218) 58 tick(s) into the wait \u2014 a player standing within 256 px of a BombPusher is aimed at and the blast lands one step past the aim, inside its 15 px disc (`bombPusher.js`). The group is LATCHED, so the wait may pace, and no pacing is clean (MOVING_WAIT, 256 tried): left/right x6 gap 0: touches buttonroom@272,208 at paced tick 1; right/left x6 gap 0: touches buttonroom@272,208 at paced tick 1; up/down x6 gap 0: touches buttonroom@272,208 at paced tick 1; down/up x6 gap 0: touches buttonroom@272,208 at paced tick 1 \u2026.",
+"ticks": null,
+"traceRows": null,
+"replans": null,
+"passes": null,
+"declarations": null,
+"replay": null,
+"ms": 54456,
+"knownAnswer": null,
+"knownTicks": null,
+"agreesWithKnown": null,
+"visit": 5,
+"family": "BOMB \u2014 the wait stands still inside bombpusher@112,128's reach (a standing player is always hit; no verb waits while moving)"
+}
+]
