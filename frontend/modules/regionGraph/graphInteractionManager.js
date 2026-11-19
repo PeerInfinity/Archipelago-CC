@@ -54,6 +54,7 @@ export class GraphInteractionManager {
 
         this.ui.isLayoutRunning = false;
         this.ui.saveNodePositions();
+        this.ui.dataManager.reseatLocationNodes();
         this.ui.updateStatus('Layout complete');
 
         // Position the player after layout animation is complete (for initial load)

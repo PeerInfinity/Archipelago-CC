@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 30,
-        "headings": 1336,
+        "docs": 31,
+        "headings": 1344,
         "indexHeadings": 2,
-        "lines": 36876,
+        "lines": 36983,
         "pages": 4,
-        "words": 562571
+        "words": 564226
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -230,10 +230,11 @@ export const DOCS_INDEX = frz({
                 "maze-lab.md",
                 "paths-and-obstacles.md",
                 "playback-and-debugging.md",
+                "seedling-derived-rules.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 23381
+            "words": 23396
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
@@ -326,10 +327,11 @@ export const DOCS_INDEX = frz({
             "lines": 155,
             "links": [
                 "concepts.md",
-                "flash.md"
+                "flash.md",
+                "seedling-derived-rules.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2480
+            "words": 2488
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
@@ -427,6 +429,19 @@ export const DOCS_INDEX = frz({
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
             "words": 10899
+        },
+        {
+            "description": "The derived-rule table (`frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json`) holds the access rules that the maze worlds derive from Seedling's tiles, for the elements where that derivation is exact.",
+            "file": "seedling-derived-rules.md",
+            "h1": "The Seedling Derived-Rule Table",
+            "headings": 8,
+            "lines": 107,
+            "links": [
+                "maze.md",
+                "pipeline-presets.md"
+            ],
+            "path": "docs/json/developer/procgen/seedling-derived-rules.md",
+            "words": 1632
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

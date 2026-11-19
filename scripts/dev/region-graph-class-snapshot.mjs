@@ -19,7 +19,12 @@
  *   S5  discovery OFF with the external filters registered: an accessibility
  *       filter returning false (reachability colours off, as APCalc hard mode)
  *       and an edge filter hiding every edge whose source sorts after its target;
- *   S6  S5 with discovery ON.
+ *       S5 also sets "Max location nodes" to 0 (no cap) and picks "force-show"
+ *       on the location-visibility radio (moduleSettings.regionGraph.* writes,
+ *       which rebuild the graph);
+ *   S6  S5 with discovery ON;
+ *   S7  a fresh page that BOOTS with "force-show" persisted (written, then a
+ *       reload), so the panel reads it at its first show.
  * Every state also records `hoverSweep`: each region's location nodes as hover
  * mode (the default `locationVisibility`) draws them, one region at a time.
  * S2 hovers the first checked location's region BEFORE its actions, so those
@@ -210,6 +215,33 @@ async function doActions(page) {
     return plan;
 }
 
+const waitForRules = (page) => page.waitForFunction(async () => {
+    const { stateManagerProxySingleton: sm } = await import('./modules/stateManager/index.js');
+    return (sm.getStaticData?.()?.regions?.size ?? 0) > 0 && !!sm.getLatestStateSnapshot?.();
+}, null, { timeout: 90000, polling: 500 });
+
+/**
+ * Persist settings the way a returning user has them: write them once the
+ * boot has stopped replacing the settings (a write that lands during boot is
+ * wiped), check they held for 2 s, then reload so the next page boots with them.
+ */
+async function persistAndReload(page, settings) {
+    const deadline = Date.now() + 60000;
+    for (;;) {
+        for (const [k, v] of Object.entries(settings)) await setSetting(page, k, v);
+        await page.waitForTimeout(2000);
+        const held = await page.evaluate(async (want) => {
+            const { default: sm } = await import('./app/core/settingsManager.js');
+            for (const [k, v] of Object.entries(want)) if (await sm.getSetting(k, undefined) !== v) return false;
+            return true;
+        }, settings);
+        if (held) break;
+        if (Date.now() > deadline) throw new Error('settings did not hold before the reload');
+    }
+    await page.reload({ waitUntil: 'load', timeout: 60000 });
+    await waitForRules(page);
+}
+
 async function openPreset(browser, preset, presetSettings = {}) {
     const context = await browser.newContext({ viewport: { width: 1600, height: 1000 } });
     const page = await context.newPage();
@@ -218,16 +250,10 @@ async function openPreset(browser, preset, presetSettings = {}) {
     const [name, rules] = preset.split('=');
     const query = rules ? `rules=${encodeURIComponent(rules)}` : `game=${name}&seed=1`;
     await page.goto(`${BASE}?${query}`, { waitUntil: 'load', timeout: 60000 });
-    await page.waitForFunction(async () => {
-        const { stateManagerProxySingleton: sm } = await import('./modules/stateManager/index.js');
-        return (sm.getStaticData?.()?.regions?.size ?? 0) > 0 && !!sm.getLatestStateSnapshot?.();
-    }, null, { timeout: 90000, polling: 500 });
-    // Settings written BEFORE the panel's first show: a later write to a
-    // moduleSettings.regionGraph key rebuilds the graph, which drops drawn
-    // location nodes without re-showing them (a pre-existing Region Graph
-    // behaviour, named in the step 2 report), so S5/S6 set theirs here.
-    for (const [k, v] of Object.entries(presetSettings)) await setSetting(page, k, v);
-    if (Object.keys(presetSettings).length) await page.waitForTimeout(1000);
+    await waitForRules(page);
+    // Settings the page BOOTS with (S7): persisted, then a reload, so the
+    // panel reads them at its first show.
+    if (Object.keys(presetSettings).length) await persistAndReload(page, presetSettings);
     await page.evaluate(async () => {
         const { default: eventBus } = await import('./app/core/eventBus.js');
         eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
@@ -243,6 +269,7 @@ async function runPreset(browser, preset) {
     const dir = path.join(OUT, preset.split('=')[0]);
     const states = [];
     let { context, page, errors } = await openPreset(browser, preset);
+    let errors7 = [];
     fs.mkdirSync(dir, { recursive: true });
     const take = async (name) => {
         const ok = await settle(page, `${preset} ${name}`);
@@ -284,6 +311,21 @@ async function runPreset(browser, preset) {
         centralRegistry.getPublicFunction('regionGraph', 'registerEdgeVisibilityFilter')((a, b) => a < b);
         centralRegistry.getPublicFunction('regionGraph', 'registerAccessibilityVisibilityFilter')(() => false);
     });
+    // ...and "force-show every location node", picked on the radio as a user
+    // does: a moduleSettings.regionGraph.* write, so it also rebuilds the graph.
+    // "Max location nodes" 0 (= no cap) first: the cap keeps the regions
+    // nearest the viewport centre, and the cose layout is not deterministic.
+    const forceShown = await page.evaluate(() => {
+        const max = document.querySelector('.region-graph-panel-container #maxLocationNodes');
+        if (!max) return false;
+        max.value = '0';
+        max.dispatchEvent(new Event('change', { bubbles: true }));
+        const r = document.querySelector('.region-graph-panel-container input[name="locationVisibility"][value="force-show"]');
+        if (!r) return false;
+        r.checked = true;
+        r.dispatchEvent(new Event('change', { bubbles: true }));
+        return true;
+    });
     await take('S5');
 
     // S6: S5 + discovery ON.
@@ -295,7 +337,13 @@ async function runPreset(browser, preset) {
         centralRegistry.getPublicFunction('regionGraph', 'registerAccessibilityVisibilityFilter')(null);
     });
     await context.close();
-    return { preset, plan, hasBox, states, errors };
+
+    // S7: a fresh page that boots with "force-show" persisted.
+    ({ context, page, errors: errors7 } = await openPreset(browser, preset,
+        { 'moduleSettings.regionGraph.locationVisibility': 'force-show', 'moduleSettings.regionGraph.maxLocationNodes': 0 }));
+    await take('S7');
+    await context.close();
+    return { preset, plan, hasBox, forceShown, states, errors: [...errors, ...errors7] };
 }
 
 const browser = await chromium.launch({ headless: !HEADED });

@@ -514,6 +514,8 @@ export class GraphDataManager {
 
     this.ui.cy.elements().remove();
     this.ui.cy.add(elements);
+    // The remove took every drawn location node with it.
+    this.ui.locationsVisible = false;
 
     // Auto-apply hub detection if enabled
     this.autoApplyHubDetection();
@@ -547,7 +549,52 @@ export class GraphDataManager {
       logger.debug('Error getting initial path data:', error);
     }
 
+    this.redrawLocationNodesForMode();
+
     this.ui.updateStatus(`Loaded ${elements.nodes.length} regions, ${elements.edges.length} connections`);
+  }
+
+  /**
+   * After a rebuild, draw the location nodes the current visibility mode
+   * asks for. A rebuild (rules load, a moduleSettings.regionGraph.* write,
+   * discovery) removes every element, so without this force-show / zoom
+   * locations vanished for good: `locationsVisible` stayed true and
+   * updateZoomBasedVisibility never re-drew them. It also covers force-show
+   * set before the panel's first show, whose first draw ran on an empty graph.
+   * Hover mode re-draws the region still under the pointer; any other mode
+   * drops it. Also called when the mode itself changes through the settings.
+   */
+  redrawLocationNodesForMode() {
+    if (!this.ui.cy) return;
+    const hovered = this.ui._hoveredLocationRegion;
+    if (hovered) {
+      const stillThere = this.ui.cy.getElementById(hovered).length > 0;
+      if (this.ui.locationVisibilityMode === 'hover' && stillThere) {
+        this.showLocationNodesForRegion(hovered);
+      } else {
+        this.hideLocationNodesForRegion(hovered);
+        this.ui._hoveredLocationRegion = null;
+      }
+    }
+    this.ui.updateZoomBasedVisibility?.();
+  }
+
+  /**
+   * After a layout settles: the regions moved, but location nodes drawn
+   * before it ran stayed where they were (they are locked). Bulk-drawn ones
+   * (force-show / zoom) are re-selected and re-drawn, as the nearest-to-centre
+   * cap depends on the final positions; hover's one region is moved back
+   * around its node.
+   */
+  reseatLocationNodes() {
+    if (!this.ui.cy) return;
+    if (this.ui.locationsVisible) {
+      this.refreshLocationNodes();
+      return;
+    }
+    const regions = new Set();
+    this.ui.cy.nodes('.location-node').forEach((n) => { regions.add(n.data('parentRegion')); });
+    for (const regionId of regions) this.updateLocationNodePositions(regionId);
   }
 
   identifyHubNodes(threshold = 8) {
