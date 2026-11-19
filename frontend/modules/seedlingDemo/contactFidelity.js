@@ -2227,22 +2227,22 @@ export const CONTACT_FIDELITY = {
      * and `hitPlayer()` (refused by `Player.hit`'s `!freezeObjects`) are ungated (`Enemy.as:62-111`), and so are
      * `Jellyfish`'s and `Puncher`'s chase blocks (`Jellyfish.as:45-75`, `Puncher.as:53-119`: no freeze test; Bob,
      * BobSoldier and Bulb return on it, LavaRunner and Flyer return above everything). `Game.loadlevel` adds every
-     * chaser (`Game.as:2276-2301`) before the texted NPCs (`:2389-2406`), the `Moonrock` (`:2368`) and the `Button`
-     * (`:2341`) that drops a `FallRock`, and `addUpdate` prepends, so on those frames the flag is already up when the
-     * chasers update. The model returned above `stepChasersNow` on those frozen ticks (`runFrozenTick`) and stepped no
-     * chaser through a falling rock's collapsed span, so their i-frames, fades and pit falls stood still. ON:
-     * `runFrozenTick` runs the chasers' frozen update (`stepChasersNow` with the freeze held, the update the pickup
-     * ceremony's frames already run under `ceremonyShove`) on a placed talker's or watcher's frozen frame, a
-     * button-dropped rock's frozen frame, the final door's and the moonrock's; and every frozen frame of a rock's
-     * span (`dropRock`, `dropRocksTogether`; the release frame, which the rock unfreezes before the chasers update, is
-     * not stepped: named). And the PUSHABLE BLOCKS: `PushableBlock.update` and `PushableBlockFire.update` override
-     * `Mobile.update` WITHOUT calling `mobileUpdate` (`PushableBlock.as:96-111`, `PushableBlockFire.as:125-142`), so a
-     * block glides through EVERY frozen frame. The model's main-tick slot already steps them on a frozen tick (right);
-     * ON it also steps them on each collapsed dead frame it steps (a ceremony's and a seal piece's stepped lump, an
-     * inventory hold, a rock's span), ahead of the chasers (`:2382-2384` are added after them), and refuses by name a
-     * lump it does not step (a text-less pickup's, the wand's approach fade) while a block is still gliding. The Lights
-     * intro, the Owl intro and the two arenas are untouched (their controllers are added between the chaser classes,
-     * or their bodies are runtime adds: named), and the tree cutscene is not a freeze. OFF: byte-identical.
+     * chaser (`Game.as:2276-2301`) before the texted NPCs (`:2389-2406`), the `Button` (`:2341`) and the `FallRock`
+     * (`:2353`), and `addUpdate` prepends, so on a dialogue's frozen frame and a falling rock's frames the flag is
+     * already up when the chasers update. The model returned above `stepChasersNow` on those frozen ticks
+     * (`runFrozenTick`) and stepped no chaser through a rock's collapsed span, so their i-frames, fades and pit falls
+     * stood still. ON: `runFrozenTick` runs the chasers' frozen update (`stepChasersNow` with the freeze held, the update
+     * a pickup ceremony's frames already run under `ceremonyShove`) on a placed talker's or watcher's frozen frame and a
+     * button-dropped rock's frozen frame; and on every frozen frame of a rock's span (`dropRock`, `dropRocksTogether`;
+     * the release frame, which the rock unfreezes before the chasers update, is not stepped: named). And the PUSHABLE
+     * BLOCKS: `PushableBlock.update` and `PushableBlockFire.update` override `Mobile.update` WITHOUT calling
+     * `mobileUpdate` (`PushableBlock.as:96-111`, `PushableBlockFire.as:125-142`), so a block glides through EVERY frozen
+     * frame. The model's main-tick slot already steps them on a frozen tick (right); ON it also steps them on the dead
+     * frames it collapses: a ceremony's and a seal piece's stepped lump, the inventory hold, a rock's span (ahead of the
+     * rock and the chasers: `:2382-2384` are added after both), a text-less pickup's 150 frames and the wand's approach
+     * fade. The Lights intro, the Owl intro, the final door, the moonrock and the two arenas are untouched (their raisers
+     * sit between the chaser classes in the add order, or are runtime adds, and no placed chaser shares their rooms:
+     * named), and the tree cutscene is not a freeze. OFF: byte-identical.
      * `SEEDLING_FROZEN_TICK_UNGATED=0|1`. ⛔ OFF by default (no flip licence).
      */
     frozenTickUngated: false,
