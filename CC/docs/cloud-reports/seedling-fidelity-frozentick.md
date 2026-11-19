@@ -9,10 +9,17 @@ brief. Scope: ONE new `contactFidelity` key, default OFF, and one ON-branch chan
 | Planner | `seedling-fidelity-planning-22` |
 | Base | `54a27ec910da4ae16a697c2444e67db0991e2b27` (the W51+W52 harvest, TRAIN 159; 143 keys, 126 ON, the last five `darkSuitBossRetaliation`, `owlContactInStep`, `turretSuitRetaliation`, `pickupTickFreeze`, `dialogueFrameFreeze`, all OFF: measured) |
 | Harness branch | `claude/frozen-tick-fidelity-gaps-px1t9a` (local branch `seedling-fidelity-frozentick`) |
-| Commits | D2 `0c3f3b46` (the code, the key, the rows) · @@COMMITS@@ |
-| Verdict | @@VERDICT@@ |
+| Commits | D2 `0c3f3b46` (the code, the key, the rows) · `6637adae` (the doc block; **the last CODE commit**) · evidence `6015548b`, `f0cfdfa4`, `23b1dcff`, `7218be1f`, `d1b174ab` · this report (the head) |
+| Verdict | **PASS** (key OFF; OFF byte-identical; ON moves no measured route answer: 0 ON movers in vitest (183 files), train (29 files), the survey (48 steps) and 294 tapes; the keyed sweep is 209 legs, the planner's) |
 
-**The one thing to know first:** @@FIRST@@
+**The one thing to know first:** the brief's pushable premise is inverted. A `PushableBlock*` has NO freeze gate (it overrides `Mobile.update`
+without `mobileUpdate`), so the model's main-tick step on a frozen tick was already right; what it missed is the DEAD
+frames it collapses, where a gliding block glides on. For the chasers the gap is real but narrower than "every freeze":
+a pickup's ceremony, a seal piece and the inventory hold already step them (`ceremonyShove`). What was missing is the
+dialogue, Watcher and falling-rock frames, and more than `hitUpdate`: the fade, the terrain switch, the pit descent, and
+the Puncher's and Jellyfish's chase blocks (no freeze test in either class). Nothing shipped moves ON: L12's Puncher is
+out of the Witch's range, and no survey step or tape puts a chaser inside its i-frames, or a block mid-glide, at a
+freeze's start.
 
 ## D1 — the AS3 and the model, per gap
 
@@ -226,11 +233,62 @@ dead frames (`fidelityCeremonyShove.test.js`).
 
 ## D3 — the ON measurement
 
-@@D3@@
+- **Byte-inertia OFF.** `git diff --name-only 54a27ec910 HEAD | grep -aE 'fixtures/|golden|tapes/'` is EMPTY.
+  `batch-seedling-acceptance.mjs | md5sum` is the standing `391322d681b7aa0229d94b3f6906d024` at all five: the base, the
+  head OFF, the head with this key ON, the head with `pickupTickFreeze` ON, and the head with this key,
+  `pickupTickFreeze`, `dialogueFrameFreeze` and `turretSuitRetaliation` all ON (`d3/acceptance-*.md5`).
+- **Committed tapes:** all **294** replay byte-identical ON vs OFF, for this key (`d3/tapes-onoff.txt`) and for
+  `pickupTickFreeze` (`d3/tapes-onoff-pickupTickFreeze.txt`), with `tools/tape-onoff.mjs` (wave 52's, keyed by `KEY`).
+- **The census.** Method: the room census (`d1/rooms.json`) names every room where ON can step something: a chaser
+  beside a texted dialogue (L12), a button-dropped rock (L74) or a rope-dropped rock (L28); a pushable beside a dead
+  span (L15, L25, L38, L63: a chest; L39: a rope rock and a totem part; L40, L41: text-less pickups; L67: a boss key).
+  The legs (`seedling-divergence-legs.mjs`, 924) and the survey's 250 steps were filtered by level.
+
+| set | count |
+|---|---|
+| legs in a reached room (`d3/leg-census.txt`, `d3/reached_legs.json`) | **209** (L12 90, L15 4, L25 7, L28 8, L38 8, L39 3, L40 50, L41 2, L63 29, L67 2, L74 6) |
+| survey steps in a reached room | **48** (L12 ×18, L15 ×2, L25, L38 ×7, L39 ×6, L40 ×7, L41, L63 ×4, L67, L74; no L28 step) |
+
+- **Survey** (`--through=end --only=<the 48>`, OFF vs `SEEDLING_FROZEN_TICK_UNGATED=1`; `d3/survey-{off,on}.*`): every
+  step line equal; the rows JSON equal once the wall-clock `ms` fields are stripped. 44 SOLVED, **all with 0 hits**; 4 L40
+  steps (66, 96, 134, 149) REFUSED, the same reason both ways (pre-existing: a spinner corridor, two ladder-routed
+  stances, the keylock stance). So every hitless leg stays hitless ON. ON answers: none moves.
+- **Vitest ON** (the gate set, 183 files, `--maxWorkers=3`): 183/183, 4913 passed, 2 skipped (the env-guarded "ships
+  OFF" rows: this file's and `contactFidelity.test.js`'s). **0 ON movers** (`d3/vitest-on.txt`).
+- **Train ON** (`vitest.train.config.js`, the 29 `.train.` files naming a reached room: `d3/train-files.txt`): 29/29
+  files, 96/96 tests, 9559 s. **0 ON movers** (`d3/train-on.txt`).
+- **Why ON moves nothing measured:** no route step meets a dialogue or a rock with a chaser in its i-frames (the only
+  dialogue room, L12, keeps its Puncher out of range), and none collects a pickup, opens a chest or drops a rock while a
+  block glides.
+
+### The named sweeps (for the planner)
+
+- **`frozenTickUngated`:** the **209** legs in `d3/reached_legs.json`. Shards = min(10, 209) = **10**, ×1 per arm, OFF
+  and `SEEDLING_FROZEN_TICK_UNGATED=1`. Expectation: no mover. Measure the flip gate anyway: a leg hitless OFF must stay
+  hitless ON (the survey's 44 do).
+- **`pickupTickFreeze`'s delta from this slice:** **0 legs**. The amendment changes only a texted pickup's T in a room
+  with a beam tower, and no shipped tower room (L103, 104, 105, 107, 108) holds a special pickup. Its own 57-leg sweep
+  (wave 51) is unchanged.
 
 ## Gates
 
-@@GATES@@
+- **Bounded vitest BEFORE** (a worktree at the base, submodules symlinked; the 182 gate files, the new test absent):
+  **182/182 files, 4904 passed** (`d3/vitest-before.txt`, `d2/gate-files-before.txt`).
+- **AFTER** (the head, OFF; 183 files): **183/183, 4915 passed** (`d3/vitest-after.txt`, `d2/gate-files-after.txt`).
+  The set: `contactFidelity*`, `playerDamage*`, `levelRun*`, `fidelityPickupFreeze*`, `fidelityDialogueFreeze*`,
+  `fidelityTurret*`, `fidelityDarkSuit*`, `fidelityOwlSuit*`, `oneSpelling`, every file `grep -a -l` finds for
+  `runFrozenTick`, `stepChasersNow`, `hitUpdate`, `hitsTimer`, `pushable`, `beamTower`, `BeamTower`, `pickupTickFreeze`,
+  `dialogueFrameFreeze`, `frozenTickUngated` (the key-order pins among them), and `r8Acceptance`, `tapeEnvelope`,
+  `solverDeadline`, `decisionTrace`, `lintGateLabels`, `seedlingConstantsCensus`, `seedlingSolverSurface`.
+- `ci-producer-checks.mjs --jobs=3`: **99 run, 0 red**, 1 skipped (`plan-seedling-r7-ends-meet`, a browser arm in CI).
+- `check-procgen-docs.mjs`: ALL CHECKS PASSED. `generate-procgen-reference.mjs --check`: all 7 modules and 5 regions
+  match. Constants census `--check` PASS after `--write` (6 new + 1 vanished cosmetic/structural, line moves; no rule row
+  re-keyed); `--profile-rows` left `seedling-constants-fields.csv` byte-identical. Solver surface `--check` GREEN (374
+  rows) after `--write` (line numbers only). The first census test run caught the stale census before `--write`.
+- **CI** `JavaScript Unit Tests` at the code head `6637adae` (run 44429070031): **success**, suite 28789 passed, 0
+  skipped, 0 failed (3 shards); slow battery 438/438. Later commits are evidence/docs only.
+- **Owed by the planner (I cannot dispatch):**
+  `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref claude/frozen-tick-fidelity-gaps-px1t9a -f train_only=true`
 
 ## What the brief got wrong (measured)
 
@@ -271,4 +329,4 @@ dead frames (`fidelityCeremonyShove.test.js`).
   - `tools/`: `rooms.mjs` (the room census), `stage.mjs` (the staging probe), `tower-ceremony.mjs`, `tape-onoff.mjs`;
   - `d1/`: `rooms.json`, `tower-ceremony-frames.txt`;
   - `d2/`: the gate file lists and the four mutants;
-  - `d3/`: @@D3FILES@@
+  - `d3/`: the acceptance md5s, the leg census and the 209 legs, the survey OFF/ON, the tapes OFF/ON (both keys), vitest BEFORE/AFTER/ON, the train files and train ON, the producer line.
