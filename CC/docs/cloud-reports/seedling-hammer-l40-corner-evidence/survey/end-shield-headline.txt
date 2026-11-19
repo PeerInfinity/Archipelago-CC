@@ -1,0 +1,27 @@
+## HEADLINE: 224/250 route steps SOLVE today
+  step 39 L32: REFUSED — unclassified — see the refusal text
+  step 54 L49: REFUSED — unclassified — see the refusal text
+  step 66 L40: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 75 L49: REFUSED — VERB-APPLY — the 'collect' strategy IS registered and did not apply here
+  step 96 L40: TIMEOUT — 
+  step 105 L49: REFUSED — VERB-APPLY — the 'collect' strategy IS registered and did not apply here
+  step 111 L58: REFUSED — unclassified — see the refusal text
+  step 134 L40: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 149 L40: REFUSED — BOMB — the wait stands still inside bombpusher@112,128's reach (a standing player is always hit; no verb waits while moving)
+  step 155 L61: REFUSED — unclassified — see the refusal text
+  step 167 L43: REFUSED — unclassified — see the refusal text
+  step 174 L43: REFUSED — unclassified — see the refusal text
+  step 183 L68: REFUSED — VERB-APPLY — the 'collect' strategy IS registered and did not apply here
+  step 189 L71: REFUSED — unclassified — see the refusal text
+  step 190 L75: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 192 L75: REFUSED — unclassified — see the refusal text
+  step 195 L77: REFUSED — VERB-MISSING — the selected obstacle has NO strategy row at all
+  step 196 L78: REFUSED — VERB-MISSING — the selected obstacle has NO strategy row at all
+  step 217 L71: REFUSED — unclassified — see the refusal text
+  step 228 L99: REFUSED — CAMERA BAND — `levelRun` REFUSES an on-screen verdict for a body at the screen edge inside `Game.shake`'s jiggle (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). Not a missing mechanism: a missing STANCE RULE. The refusal names its own cure — "move the stance away from the screen edge, or wait the shake out"
+  step 232 L103: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 236 L101: REFUSED — ITEM-GATE — the 'wand' verb is registered and magicallockfire@112,48 is gated on an item this run does not hold (or on a press the model refuses); the work order is the item, not the room
+  step 238 L107: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 239 L108: REFUSED — VERB-MISSING — the selected obstacle has NO strategy row at all
+  step 241 L101: REFUSED — ITEM-GATE — the 'wand' verb is registered and magicallockfire@96,48 is gated on an item this run does not hold (or on a press the model refuses); the work order is the item, not the room
+  step 246 L112: REFUSED — ENCOUNTER-GATE — rocklock@112,16 has no strategy row and its opener is not in this room (an encounter the route must win); the work order is the gate, not the room
