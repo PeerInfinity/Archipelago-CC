@@ -42,7 +42,7 @@ import { applyReceivedItems, goalMet } from './goalCheck.js';
 import { readRoomSpoilerData } from './spoilerData.js';
 import { applyServerItemGroups, itemNameGroupsKey, readServerItemGroups } from './serverItemGroups.js';
 import { needsLogicGate, logicRefusal, refusalMessage, GAME_REPORTED_FIELD } from './checkGate.js';
-import { deriveUpstreamGoal, markGoalEvent, completesWithGoal } from './upstreamGoal.js';
+import { deriveUpstreamGoal, markGoalEvent, completesWithGoal, reportsOwnGoal } from './upstreamGoal.js';
 
 /** "gameKey/folder, …" for a few preset candidates (the console names them). */
 function describePresetFolders(presets, max = 3) {
@@ -508,7 +508,7 @@ export class MessageHandler {
         `Found preset ${preset.gameKey}/${preset.folderName} for this room; loading it before connecting…`,
         'info'
       );
-      const loaded = await this._loadPresetRules(preset);
+      const loaded = await this._loadPresetRules(preset, { roomSeedName: roomInfo.seed_name });
       if (isStale()) return;
       if (loaded) {
         this._printToConsole(`Loaded ${preset.path} (player ${preset.playerId}).`, 'success');
@@ -785,7 +785,7 @@ export class MessageHandler {
    *
    * @returns {Promise<boolean>} true when stateManager:rulesLoaded arrived
    */
-  async _loadPresetRules(preset) {
+  async _loadPresetRules(preset, { roomSeedName = null } = {}) {
     let jsonData;
     try {
       const response = await fetch(preset.path);
@@ -795,7 +795,25 @@ export class MessageHandler {
       log('warn', `[MessageHandler] Could not fetch ${preset.path}: ${e.message}`);
       return false;
     }
-    return this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+    this._upstreamGoal = null;
+    const goal = roomSeedName ? this._preparePresetGoal(jsonData, preset.playerId, preset.game, roomSeedName) : null;
+    const loaded = await this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+    if (loaded && goal) {
+      this._upstreamGoal = { goal, doc: jsonData, slot: String(preset.playerId), seedName: String(roomSeedName) };
+    }
+    return loaded;
+  }
+
+  /**
+   * A committed preset matched to the room by its exact seed (sdc-preset-goal-report): the
+   * same goal as an add-on slot's (_prepareUpstreamGoal), derived and marked in `doc` (this
+   * fetch's own object) before it loads. Not for a world that reports its own goal
+   * (reportsOwnGoal), nor for a document of another seed. Returns the goal or null.
+   */
+  _preparePresetGoal(doc, player, game, roomSeedName) {
+    if (!isSameSeed(doc?.seed_name, roomSeedName)) return null;
+    if (reportsOwnGoal(doc, player)) return null;
+    return this._deriveAndMarkGoal(doc, player, game ?? doc?.world?.[String(player)]?.game ?? 'this game');
   }
 
   /**
@@ -1588,15 +1606,20 @@ export class MessageHandler {
   _prepareUpstreamGoal(build, connected, rules) {
     if (build.mode !== 'overlay' || build.overlaySource !== 'server') return null;
     if (build.overlayFrom !== UPSTREAM_RULES_ADDON_SOURCE) return null;
-    const slot = String(connected.slot);
-    const derived = deriveUpstreamGoal(rules, slot);
-    if (derived.goal && markGoalEvent(rules, slot, derived.goal)) {
-      log('info', `[MessageHandler] Add-on goal for slot ${slot}: "${derived.goal.location}" (${derived.goal.item}).`);
+    return this._deriveAndMarkGoal(rules, connected.slot, build.game);
+  }
+
+  /** Derive `slot`'s goal in `doc` and mark it `event_kind: 'goal'`; else one console line saying why not. */
+  _deriveAndMarkGoal(doc, slot, game) {
+    const p = String(slot);
+    const derived = deriveUpstreamGoal(doc, p);
+    if (derived.goal && markGoalEvent(doc, p, derived.goal)) {
+      log('info', `[MessageHandler] Goal reported by this client for slot ${p}: "${derived.goal.location}" (${derived.goal.item}).`);
       return derived.goal;
     }
     const why = derived.reason ?? 'its goal location was not found';
     this._printToConsole(
-      `This client won't tell the server when ${build.game} is finished (${why}). Its own game client reports the goal.`,
+      `This client won't tell the server when ${game} is finished (${why}). Its own game client reports the goal.`,
       'info'
     );
     return null;

@@ -76,6 +76,7 @@ Most games' goals are events, which the server never delivers. For a game whose 
 - It must be in logic: an out-of-logic click is refused, as for every location.
 - The goal must be complete with the items the server has sent you. If it isn't yet, the location is checked and the goal is sent as soon as the missing items arrive.
 - A game whose goal isn't a single location (SC2, ChecksFinder, Super Mario 64 and other goals written as code) isn't reported by the web client; the console says so when the rules load, and the game's own client reports it. Locations are still checked as usual.
+- The same holds without the add-on when the web client connects with the committed preset made from the room's own seed (the client finds and loads it by the room's seed): its goal is reported the same way.
 
 ## Games that need a ROM
 
