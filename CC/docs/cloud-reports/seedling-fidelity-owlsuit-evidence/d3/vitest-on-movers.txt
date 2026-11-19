@@ -1,0 +1,6 @@
+     × Owl body (L112 `finalboss@64,96`): refused ON as OFF, and ON the refusal names the D1 reason 77ms
+     ✓ r6-shield-kill: identical digests after every tick, checks and ticks — no sound / music on / off / muted / locked / 0.25× / 16×  1970ms
+     ✓ stance-l46-chest: identical digests after every tick, checks and ticks — no sound / music on / off / muted / locked / 0.25× / 16×  1863ms
+     ✓ r5-bosskey-leg: identical digests after every tick, checks and ticks — no sound / music on / off / muted / locked / 0.25× / 16×  2448ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 2672 passed | 2 skipped (2675)

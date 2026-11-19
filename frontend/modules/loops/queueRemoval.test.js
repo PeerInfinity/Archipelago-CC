@@ -299,7 +299,8 @@ describe('removeCompletedActions — auto-remove paths', () => {
   });
 
   it('removes locationCheck actions whose locations are in checkedLocations', () => {
-    // addLocationCheck requires a prior regionMove for instance lookup.
+    // A regionMove first, so both checks take Region1's instance (outside
+    // Loop mode an empty path still refuses addLocationCheck).
     gs.updatePath('Region1', null, 'Menu');
     loopState.stateManager.getLatestStateSnapshot = () => ({ checkedLocations: ['Loc1'] });
     gs.addLocationCheck('Loc1', 'Region1');

@@ -1,0 +1,750 @@
+## tree: THROWAWAY WORKTREE /tmp/procgen-help-tree-M2HHO2 at HEAD f2ef58c47 — the children run there, both disk observers are scoped to it, 9 submodule(s) initialised (8 cloned from the primary's own stores; ⚠ FETCHED over the network, the primary has no store: frontend/modules/swfRecompilerPanel/browser), and it is removed on exit and on signal (a killed child's git locks live under its own private gitdir and die with it).
+## ⚠ the PRIMARY tree has 19 uncommitted change(s) — this run measures HEAD, NOT your working tree.
+##   ⛔ uncommitted under scripts/procgen/ and therefore NOT in this run's population: scripts/procgen/make-seedling-playthrough-rules.mjs, scripts/procgen/seedlingAtlasDoorCensus.test.js, scripts/procgen/seedlingFireChaserGuard.js, scripts/procgen/seedlingFireChaserGuard.test.js — use `--in-place` to measure them.
+
+## import batch 1/93 — 0/554 door(s) done, 0 s: action-nodes-compile.mjs, action-nodes-play.mjs, archipelagoLogoArt.mjs, attribute-seedling-door-cut.mjs, attribute-seedling-pairs-cost.mjs, audit-seedling-r5-stances.mjs
+## import batch 2/93 — 6/554 door(s) done, 7 s: audit-seedling-r6-boss-rooms.mjs, batch-seedling-acceptance.mjs, build-dj-loader-swf.mjs, can-cross-seedling.mjs, census-maze-keeps.mjs, census-seedling-areas.mjs
+## import batch 3/93 — 12/554 door(s) done, 13 s: census-seedling-arrival-solid.mjs, census-seedling-atlas-doors.mjs, census-seedling-block-stoppers.mjs, census-seedling-bosslocks.mjs, census-seedling-campaign.mjs, census-seedling-committed-rooms.mjs
+## import batch 4/93 — 18/554 door(s) done, 36 s: census-seedling-constants.mjs, census-seedling-darktrap-gates.mjs, census-seedling-dash-window.mjs, census-seedling-density.mjs, census-seedling-doors-elements.mjs, census-seedling-doors.mjs
+## import batch 5/93 — 24/554 door(s) done, 42 s: census-seedling-elements.mjs, census-seedling-enemies.mjs, census-seedling-er-doorways.mjs, census-seedling-killgate-clears.mjs, census-seedling-offgrid-blockers.mjs, census-seedling-sites.mjs
+## import batch 6/93 — 30/554 door(s) done, 49 s: census-seedling-solver-surface.mjs, census-seedling-stepoff.mjs, census-seedling-weapon-reach.mjs, census-skeleton-kinds.mjs, census-soft-locks.mjs, check-atlas-sphere-roundtrip.mjs
+## import batch 7/93 — 36/554 door(s) done, 65 s: check-bounce-embed.mjs, check-bounce-touch.mjs, check-canonical-placements.mjs, check-cli-sphere-config.mjs, check-cloudberry-embed.mjs, check-cloudberry-sphere.mjs
+## import batch 8/93 — 42/554 door(s) done, 71 s: check-concept-trial-play.mjs, check-dj-swf-patch.mjs, check-grid-growth-ui.mjs, check-item-channels.mjs, check-jta-balance-pass.mjs, check-jta-cost-hooks.mjs
+## import batch 9/93 — 48/554 door(s) done, 76 s: check-jta-dataset-load.mjs, check-jta-dataset-pipeline-preset.mjs, check-jta-dataset-transfer.mjs, check-jta-dataset-url-boot.mjs, check-jta-generated-dataset.mjs, check-jta-locations-roundtrip.mjs
+## import batch 10/93 — 54/554 door(s) done, 78 s: check-jta-managed-zone-skip.mjs, check-loop-costs-one-model.mjs, check-maze-consumable-tiles.mjs, check-maze-lab.mjs, check-maze-loop-mana.mjs, check-maze-world-map.mjs
+## import batch 11/93 — 60/554 door(s) done, 83 s: check-meta-trial-play.mjs, check-omsi-mana-leg.mjs, check-preset-bundle-load.mjs, check-preset-panel-click.mjs, check-procgen-demos.mjs, check-procgen-docs.mjs
+## import batch 12/93 — 66/554 door(s) done, 89 s: check-procgen-help.mjs, check-procgen-lab-hosting.mjs, check-procgen-maze-recipe.mjs, check-procgen-presets.mjs, check-procgen-reference.mjs, check-regenerate-region-control.mjs
+## import batch 13/93 — 72/554 door(s) done, 94 s: check-region-library-roundtrip.mjs, check-region-library-sphere-roundtrip-maze.mjs, check-region-library-sphere-roundtrip.mjs, check-region-library-ui.mjs, check-region-marking-tool.mjs, check-region-step-editing.mjs
+## import batch 14/93 — 78/554 door(s) done, 99 s: check-rule-gated-portals.mjs, check-seedling-ap-placement.mjs, check-seedling-atlas-host-play.mjs, check-seedling-atlas-location-play.mjs, check-seedling-atlas-maze.mjs, check-seedling-atlas-play.mjs
+## import batch 15/93 — 84/554 door(s) done, 104 s: check-seedling-atlas-preset.mjs, check-seedling-bot-differential.mjs, check-seedling-editor-arm.mjs, check-seedling-editor-boot.mjs, check-seedling-editor-e1.mjs, check-seedling-editor-e2.mjs
+## import batch 16/93 — 90/554 door(s) done, 110 s: check-seedling-editor-e3.mjs, check-seedling-editor-edit.mjs, check-seedling-editor-export.mjs, check-seedling-editor-generate.mjs, check-seedling-editor-lanes.mjs, check-seedling-editor-manual.mjs
+## import batch 17/93 — 96/554 door(s) done, 115 s: check-seedling-editor-overlays.mjs, check-seedling-editor-phases.mjs, check-seedling-editor-refusal.mjs, check-seedling-editor-sequence.mjs, check-seedling-editor-shapes.mjs, check-seedling-editor-solve.mjs
+## import batch 18/93 — 102/554 door(s) done, 120 s: check-seedling-editor-switch.mjs, check-seedling-editor-world.mjs, check-seedling-full-tier-owed.mjs, check-seedling-generated-host-play.mjs, check-seedling-generated-leaf-play.mjs, check-seedling-generated-room-play.mjs
+## import batch 19/93 — 108/554 door(s) done, 126 s: check-seedling-generated-set.mjs, check-seedling-generated-swim-play.mjs, check-seedling-hammer-monotonicity.mjs, check-seedling-lab-art.mjs, check-seedling-lab-load-in-js.mjs, check-seedling-producer-boundaries.mjs
+## import batch 20/93 — 114/554 door(s) done, 127 s: check-seedling-rerecord-rehearsal.mjs, check-seedling-rewind-exactness.mjs, check-seedling-save-stamp.mjs, check-seedling-source-pin.mjs, check-seedling-sphere-room-play.mjs, check-seedling-spiral-room-play.mjs
+## import batch 21/93 — 120/554 door(s) done, 133 s: check-seedling-string-pull-fast.mjs, check-seedling-vanilla-manifest.mjs, check-seedling-wasm-bridge.mjs, check-seedling-wasm-element.mjs, check-seedling-wasm-pages.mjs, check-seedling-wasm-pins.mjs
+## import batch 22/93 — 126/554 door(s) done, 138 s: check-seedling-wasm-ship.mjs, check-sidecar-fields.mjs, check-slice-records.mjs, check-sphere-batch-stepping.mjs, check-sphere-envelope-resume.mjs, check-sphere-growth-ui.mjs
+## import batch 23/93 — 132/554 door(s) done, 143 s: check-sphere-steps-ui.mjs, check-spiral-byteidentity.mjs, check-spiral-steps-ui.mjs, check-ta-mana-leg.mjs, check-topdown-steps-ui.mjs, check-topdown-steps.mjs
+## import batch 24/93 — 138/554 door(s) done, 149 s: check-world-persistence-reload.mjs, check-worldgen-package-sidecars.mjs, ci-expected-red.mjs, ci-gates.mjs, ci-producer-checks.mjs, ci-summary.mjs
+## import batch 25/93 — 144/554 door(s) done, 154 s: ci-vitest-summary.mjs, cloudberrySite.mjs, derive-seedling-tick0.mjs, dump-dj-traces.mjs, dump-maze-byteidentity.mjs, dump-seedling-gen-capacity.mjs
+## import batch 26/93 — 150/554 door(s) done, 156 s: dump-seedling-kind-pairs.mjs, dump-sphere-byteidentity.mjs, dump-topdown-byteidentity.mjs, export-seedling-level-set.mjs, export-seedling-view.mjs, extract-seedling-art-packs.mjs
+## import batch 27/93 — 156/554 door(s) done, 161 s: extract-seedling-damage-sites.mjs, extract-seedling-map.mjs, extract-seedling-masks.mjs, extract-seedling-music-pack.mjs, extract-seedling-sfx-pack.mjs, find-seedling-seeds.mjs
+## import batch 28/93 — 162/554 door(s) done, 164 s: gates.mjs, generate-envelope-schemas.mjs, generate-maze-level.mjs, generate-procgen-reference.mjs, generate-seedling-level.mjs, generate-tape-index.mjs
+## import batch 29/93 — 168/554 door(s) done, 176 s: harvest-procgen-terms.mjs, help.mjs, inventory-menu-identity.mjs, lint-gate-labels.mjs, loadJSZipNode.mjs, make-demo-bounce-pack.mjs
+## import batch 30/93 — 174/554 door(s) done, 189 s: make-demo-cloudberry-pack.mjs, make-seedling-entity-colliders.mjs, make-seedling-er-preset.mjs, make-seedling-font.mjs, make-seedling-playthrough-maze.mjs, make-seedling-playthrough-rules.mjs
+## import batch 31/93 — 180/554 door(s) done, 190 s: make-seedling-sphere-order.mjs, make-seedling-spiral-room-preset.mjs, make-seedling-starter-atlas.mjs, make-seedling-subregion-partition.mjs, make-seedling-vanilla-overlay.mjs, measure-apworld-raw-view.mjs
+## import batch 32/93 — 186/554 door(s) done, 191 s: measure-bot-route-orders.mjs, measure-seedling-cleartag-patch.mjs, measure-seedling-cleartag.mjs, measure-seedling-escape-kernel.mjs, measure-seedling-killlock-tag.mjs, measure-seedling-l18-live-gap.mjs
+## import batch 33/93 — 192/554 door(s) done, 192 s: measure-seedling-solver-surface.mjs, migrate-per-player-blocks.mjs, mine-seedling-roster-history.mjs, plan-seedling-axe-witness.mjs, plan-seedling-binding-witness.mjs, plan-seedling-bobsoldier.mjs
+## import batch 34/93 — 198/554 door(s) done, 192 s: plan-seedling-bobsoldier2.mjs, plan-seedling-bulb.mjs, plan-seedling-burn-witness.mjs, plan-seedling-c1-static-sword.mjs, plan-seedling-crusher-witness.mjs, plan-seedling-encounters.mjs
+## import batch 35/93 — 204/554 door(s) done, 192 s: plan-seedling-f1-l5-lock.mjs, plan-seedling-f1-l5-open-lock.mjs, plan-seedling-f1c-l18-lock.mjs, plan-seedling-f1c-l18-phase.mjs, plan-seedling-f4-l8-sandtraps.mjs, plan-seedling-f6-reentry.mjs
+## import batch 36/93 — 210/554 door(s) done, 193 s: plan-seedling-f7-reentry.mjs, plan-seedling-frontier3-witness.mjs, plan-seedling-ghostmotion.mjs, plan-seedling-ghostsword.mjs, plan-seedling-hammer-a-escape.mjs, plan-seedling-hammer-b1-approach.mjs
+## import batch 37/93 — 216/554 door(s) done, 193 s: plan-seedling-hammer-b2-fight.mjs, plan-seedling-hammer-bw-bombstand.mjs, plan-seedling-hammer-c2-ghost.mjs, plan-seedling-hammer-d-ghostwall.mjs, plan-seedling-hammer-dd-walkkill.mjs, plan-seedling-hammer-g1-ghostkill.mjs
+## import batch 38/93 — 222/554 door(s) done, 194 s: plan-seedling-hammer-sf-strikefloor.mjs, plan-seedling-l100-witness.mjs, plan-seedling-l12doors-witness.mjs, plan-seedling-l12keyline-witness.mjs, plan-seedling-l14-swordless.mjs, plan-seedling-l30keylock.mjs
+## import batch 39/93 — 228/554 door(s) done, 194 s: plan-seedling-l40button-witness.mjs, plan-seedling-ladder2-witness.mjs, plan-seedling-lightpole-witness.mjs, plan-seedling-proximity-witness.mjs, plan-seedling-pushblock-witness.mjs, plan-seedling-r1-dark-suit.mjs
+## import batch 40/93 — 234/554 door(s) done, 194 s: plan-seedling-r1-route.mjs, plan-seedling-r2-route.mjs, plan-seedling-r2-singles.mjs, plan-seedling-r2-wallflyer.mjs, plan-seedling-r3-death.mjs, plan-seedling-r3-route.mjs
+## import batch 41/93 — 240/554 door(s) done, 199 s: plan-seedling-r4-route.mjs, plan-seedling-r4.mjs, plan-seedling-r5-bobboss.mjs, plan-seedling-r5-bosskey.mjs, plan-seedling-r5-conch.mjs, plan-seedling-r5-feather.mjs
+## import batch 42/93 — 246/554 door(s) done, 203 s: plan-seedling-r5-karlore.mjs, plan-seedling-r5-l37-burn.mjs, plan-seedling-r5-l40-join.mjs, plan-seedling-r5-l40-part0.mjs, plan-seedling-r5-l40-part1.mjs, plan-seedling-r5-l40-part5.mjs
+## import batch 43/93 — 252/554 door(s) done, 208 s: plan-seedling-r5-l41-part3.mjs, plan-seedling-r5-l42-part4.mjs, plan-seedling-r5-l43-wand.mjs, plan-seedling-r5-l60-kill.mjs, plan-seedling-r5-shaft.mjs, plan-seedling-r5-swim.mjs
+## import batch 44/93 — 258/554 door(s) done, 212 s: plan-seedling-r5-totem-entrance.mjs, plan-seedling-r5-waterfall.mjs, plan-seedling-r6-shieldboss.mjs, plan-seedling-r6-wblood.mjs, plan-seedling-r6-wdoor.mjs, plan-seedling-r6-wowl.mjs
+## import batch 45/93 — 264/554 door(s) done, 213 s: plan-seedling-r6-wseed.mjs, plan-seedling-r6-wtalk.mjs, plan-seedling-r7-attribution.mjs, plan-seedling-r7-ends-meet.mjs, plan-seedling-r8-hammer-pair.mjs, plan-seedling-r8-l18-spinner.mjs
+## import batch 46/93 — 270/554 door(s) done, 231 s: plan-seedling-r9-l0-sword-dash.mjs, plan-seedling-r9-l6-bob-press.mjs, plan-seedling-r9-l6-harmless-window.mjs, plan-seedling-r9-l6-sword-dash-hit.mjs, plan-seedling-return-l15.mjs, plan-seedling-rulesref-witness.mjs
+## import batch 47/93 — 276/554 door(s) done, 235 s: plan-seedling-sealdoor-witness.mjs, plan-seedling-slots-witness.mjs, plan-seedling-stance-witness.mjs, plan-seedling-u10-puncher-dwell.mjs, plan-seedling-u11-dark-shield.mjs, plan-seedling-u11-facing.mjs
+## import batch 48/93 — 282/554 door(s) done, 235 s: plan-seedling-u12-pull.mjs, plan-seedling-u14-moonrock.mjs, plan-seedling-u15-turret.mjs, plan-seedling-u7-puncher.mjs, plan-seedling-u9-shield-bump.mjs, plan-seedling-wallflyer.mjs
+## import batch 49/93 — 288/554 door(s) done, 235 s: plan-seedling-wand-witness.mjs, plan-seedling-watcher-witness.mjs, plan-seedling-watchertalk-witness.mjs, probe-cloudberry-status-strip.mjs, probe-cloudberry-touch-up.mjs, probe-seedling-arrival-escape.mjs
+## import batch 50/93 — 294/554 door(s) done, 236 s: probe-seedling-arrival-solid.mjs, probe-seedling-axe-phase.mjs, probe-seedling-bobiframe.mjs, probe-seedling-bobsoldier-mobiles.mjs, probe-seedling-bomb-blast-body.mjs, probe-seedling-bombpusher.mjs
+## import batch 51/93 — 300/554 door(s) done, 237 s: probe-seedling-boot-clock.mjs, probe-seedling-boot-reset.mjs, probe-seedling-bosskills.mjs, probe-seedling-bosslock-latch.mjs, probe-seedling-bridge.mjs, probe-seedling-build-cost.mjs
+## import batch 52/93 — 306/554 door(s) done, 243 s: probe-seedling-burn-write.mjs, probe-seedling-calib-levels.mjs, probe-seedling-ceremony.mjs, probe-seedling-ceremony126.mjs, probe-seedling-certifier-tail.mjs, probe-seedling-chaser-mobiles.mjs
+## import batch 53/93 — 312/554 door(s) done, 248 s: probe-seedling-chest-incidental.mjs, probe-seedling-chestseal.mjs, probe-seedling-cleartag.mjs, probe-seedling-collider-cells.mjs, probe-seedling-contact-divergence.mjs, probe-seedling-corpse-bump.mjs
+## import batch 54/93 — 318/554 door(s) done, 249 s: probe-seedling-cross-room-button.mjs, probe-seedling-crusher-press.mjs, probe-seedling-ctor-args.mjs, probe-seedling-darktrap-mobiles.mjs, probe-seedling-dash-window.mjs, probe-seedling-deadframe-band.mjs
+## import batch 55/93 — 324/554 door(s) done, 250 s: probe-seedling-deadframes.mjs, probe-seedling-derived-rules.mjs, probe-seedling-descent.mjs, probe-seedling-divergence-sweep.mjs, probe-seedling-drill-kill.mjs, probe-seedling-drill-mixed.mjs
+## import batch 56/93 — 330/554 door(s) done, 256 s: probe-seedling-drill-water.mjs, probe-seedling-encounter-latch.mjs, probe-seedling-encounter-ticks.mjs, probe-seedling-er-landings.mjs, probe-seedling-f2-apitem.mjs, probe-seedling-f2-boundary.mjs
+## import batch 57/93 — 336/554 door(s) done, 257 s: probe-seedling-f6-reentry.mjs, probe-seedling-f7-reentry.mjs, probe-seedling-fire-break.mjs, probe-seedling-fire-move.mjs, probe-seedling-fire-push.mjs, probe-seedling-fire-spinner.mjs
+## import batch 58/93 — 342/554 door(s) done, 259 s: probe-seedling-frozen-press.mjs, probe-seedling-gen-arrowtrap-rooms.mjs, probe-seedling-gen-chest-rooms.mjs, probe-seedling-ghost-rope.mjs, probe-seedling-ghostsword-items.mjs, probe-seedling-help-frame.mjs
+## import batch 59/93 — 348/554 door(s) done, 260 s: probe-seedling-hold.mjs, probe-seedling-iceturret-spear.mjs, probe-seedling-inroom-darktraps.mjs, probe-seedling-inventory-menu.mjs, probe-seedling-inventory.mjs, probe-seedling-js-vs-wasm-tape.mjs
+## import batch 60/93 — 354/554 door(s) done, 265 s: probe-seedling-killlock-arms.mjs, probe-seedling-killlock-span1.mjs, probe-seedling-killlock.mjs, probe-seedling-l0-tighter.mjs, probe-seedling-l107-lane.mjs, probe-seedling-l12-bosslock.mjs
+## import batch 61/93 — 360/554 door(s) done, 266 s: probe-seedling-l12doors.mjs, probe-seedling-l14-swordless.mjs, probe-seedling-l15-block-path.mjs, probe-seedling-l15-chest-line.mjs, probe-seedling-l16-corner-pit.mjs, probe-seedling-l16-holder-bobs.mjs
+## import batch 62/93 — 366/554 door(s) done, 267 s: probe-seedling-l19-bosskey.mjs, probe-seedling-l25-apitem.mjs, probe-seedling-l3-water-door.mjs, probe-seedling-l32-rock-move.mjs, probe-seedling-l37-fallrock.mjs, probe-seedling-l39-pulser-kill.mjs
+## import batch 63/93 — 372/554 door(s) done, 269 s: probe-seedling-l39-pulser.mjs, probe-seedling-l39-shaft.mjs, probe-seedling-l40-flag12-lock.mjs, probe-seedling-l40bk2.mjs, probe-seedling-l40bk2b.mjs, probe-seedling-l40button.mjs
+## import batch 64/93 — 378/554 door(s) done, 270 s: probe-seedling-l40latch.mjs, probe-seedling-l55-waterfall.mjs, probe-seedling-l59-l67.mjs, probe-seedling-l63-darktrap.mjs, probe-seedling-l63-spear-block.mjs, probe-seedling-l65-bob-block.mjs
+## import batch 65/93 — 384/554 door(s) done, 275 s: probe-seedling-l65-breach.mjs, probe-seedling-l65.mjs, probe-seedling-l66-door.mjs, probe-seedling-l67-reach2.mjs, probe-seedling-l78-pull-order.mjs, probe-seedling-l89-waterfall.mjs
+## import batch 66/93 — 390/554 door(s) done, 280 s: probe-seedling-l93-door.mjs, probe-seedling-ladder2-phase.mjs, probe-seedling-landing-contact.mjs, probe-seedling-lethal-landings.mjs, probe-seedling-level-set-transport.mjs, probe-seedling-lights.mjs
+## import batch 67/93 — 396/554 door(s) done, 281 s: probe-seedling-loop-restart.mjs, probe-seedling-mask-lines.mjs, probe-seedling-mobile-fit.mjs, probe-seedling-moonrock.mjs, probe-seedling-music-pair.mjs, probe-seedling-obstacle-events.mjs
+## import batch 68/93 — 402/554 door(s) done, 287 s: probe-seedling-oneway-census.mjs, probe-seedling-persistence-rebuild.mjs, probe-seedling-pit-doors.mjs, probe-seedling-pushblock-weapon.mjs, probe-seedling-r1-suit-census.mjs, probe-seedling-r2-census.mjs
+## import batch 69/93 — 408/554 door(s) done, 288 s: probe-seedling-r5-feather.mjs, probe-seedling-r5-l38-chain.mjs, probe-seedling-r5-l38-entrance.mjs, probe-seedling-r5-l40-bumps.mjs, probe-seedling-r5-l40-corpse.mjs, probe-seedling-r5-l40-holder.mjs
+## import batch 70/93 — 414/554 door(s) done, 290 s: probe-seedling-r5-l40-kill.mjs, probe-seedling-r5-l40-link4.mjs, probe-seedling-r5-l40.mjs, probe-seedling-r5-l42-chain3.mjs, probe-seedling-r5-l42-escape.mjs, probe-seedling-r5-l42-solver.mjs
+## import batch 71/93 — 420/554 door(s) done, 295 s: probe-seedling-r5-l42.mjs, probe-seedling-r5-l43-boss-wake.mjs, probe-seedling-r5-l43-replay.mjs, probe-seedling-r5-l43-wand-window.mjs, probe-seedling-r5-mobiles.mjs, probe-seedling-r5-shaft-solver.mjs
+## import batch 72/93 — 426/554 door(s) done, 301 s: probe-seedling-r5-spinner.mjs, probe-seedling-r5-totem-entrance.mjs, probe-seedling-r5-totem-shaft.mjs, probe-seedling-r6-boss-rooms.mjs, probe-seedling-r6-owl-prefix.mjs, probe-seedling-r6-owl-rng.mjs
+## import batch 73/93 — 432/554 door(s) done, 306 s: probe-seedling-r7-l4-block.mjs, probe-seedling-r7-l40-holder.mjs, probe-seedling-r7-l5-arrows.mjs, probe-seedling-r7-l6-bait.mjs, probe-seedling-r7-l8-blocks.mjs, probe-seedling-r7-map-triggers.mjs
+## import batch 74/93 — 438/554 door(s) done, 311 s: probe-seedling-r7-rules-frontier.mjs, probe-seedling-r9-bob-press-mobiles.mjs, probe-seedling-r9-dash-rect-mobiles.mjs, probe-seedling-r9-harmless-window-mobiles.mjs, probe-seedling-rect-inputs.mjs, probe-seedling-restart-held-items.mjs
+## import batch 75/93 — 444/554 door(s) done, 312 s: probe-seedling-restart-route.mjs, probe-seedling-restart-warp.mjs, probe-seedling-rng.mjs, probe-seedling-rock-button.mjs, probe-seedling-rock-fire.mjs, probe-seedling-rock-gone.mjs
+## import batch 76/93 — 450/554 door(s) done, 317 s: probe-seedling-rock-remove.mjs, probe-seedling-rope-events.mjs, probe-seedling-rope-stance.mjs, probe-seedling-rope-verb.mjs, probe-seedling-seal-delivery.mjs, probe-seedling-seam-chain.mjs
+## import batch 77/93 — 456/554 door(s) done, 323 s: probe-seedling-secondary-use.mjs, probe-seedling-shake-exact.mjs, probe-seedling-shortcut-grade.mjs, probe-seedling-since-begin.mjs, probe-seedling-skin-swing.mjs, probe-seedling-slot-order.mjs
+## import batch 78/93 — 462/554 door(s) done, 324 s: probe-seedling-solve-progress.mjs, probe-seedling-solve-sites.mjs, probe-seedling-span-ceiling.mjs, probe-seedling-spearrect.mjs, probe-seedling-staged-hits.mjs, probe-seedling-static-sword-mobiles.mjs
+## import batch 79/93 — 468/554 door(s) done, 329 s: probe-seedling-stepoff.mjs, probe-seedling-swim-sound.mjs, probe-seedling-tentacle-mouth.mjs, probe-seedling-timed-pass.mjs, probe-seedling-turret-circle.mjs, probe-seedling-turret-snap.mjs
+## import batch 80/93 — 474/554 door(s) done, 334 s: probe-seedling-u11-wall5.mjs, probe-seedling-u15-turret-mobiles.mjs, probe-seedling-u7-puncher-mobiles.mjs, probe-seedling-u9-shield-mobiles.mjs, probe-seedling-v8-seam.mjs, probe-seedling-walk-order.mjs
+## import batch 81/93 — 480/554 door(s) done, 340 s: probe-seedling-wallflyer-mobiles.mjs, probe-seedling-wallflyer-nohit.mjs, probe-seedling-wand-mobiles.mjs, probe-seedling-wasm-adopt.mjs, probe-seedling-wasm-arrival-composites.mjs, probe-seedling-wasm-arrival-solve.mjs
+## import batch 82/93 — 486/554 door(s) done, 341 s: probe-seedling-wasm-continuation.mjs, probe-seedling-wasm-er-retarget.mjs, probe-seedling-wasm-generated-playback.mjs, probe-seedling-wasm-host-tape.mjs, probe-seedling-wasm-level0.mjs, probe-seedling-wasm-logical-links.mjs
+## import batch 83/93 — 492/554 door(s) done, 342 s: probe-seedling-wasm-midroom-replan.mjs, probe-seedling-wasm-playback.mjs, probe-seedling-wasm-vanilla-map.mjs, probe-seedling-watch-page.mjs, probe-seedling-weapon-reach.mjs, probe-seedling-whole-game-certify.mjs
+## import batch 84/93 — 498/554 door(s) done, 348 s: probe-seedling-yeti.mjs, probe-solver-hook-gaps.mjs, profile-seedling-hammer-approach.mjs, profile-seedling-hammer-escape.mjs, prove-seedling-procgen-seam.mjs, reach-seedling-change.mjs
+## import batch 85/93 — 504/554 door(s) done, 348 s: recon-seedling-pushes.mjs, recon-seedling-r3.mjs, recon-seedling-r4.mjs, recon-seedling-r5.mjs, recon-seedling-r7.mjs, record-slice.mjs
+## import batch 86/93 — 510/554 door(s) done, 351 s: record-standing-value.mjs, region-atlas-analyze.mjs, region-atlas-compile.mjs, region-atlas-pool.mjs, region-atlas-validate.mjs, region-library-validate.mjs
+## import batch 87/93 — 516/554 door(s) done, 352 s: replay-seedling-contact-capture.mjs, replay-seedling-solve-request.mjs, report-pack-provenance.mjs, rerecord-seedling-campaign.mjs, run-seedling-director.mjs, run-seedling-tape.mjs
+## import batch 88/93 — 522/554 door(s) done, 357 s: seedling-atlas-goals.mjs, seedling-control-for.mjs, seedling-divergence-bare.mjs, seedling-divergence-legs.mjs, seedling-solve-progress-hook.mjs, seedling-wasm-readme.mjs
+## import batch 89/93 — 528/554 door(s) done, 357 s: seedlingEntranceShuffleHooks.mjs, seedlingProfileLoader.mjs, seedlingRouteGraph.mjs, shot-loaded-composite-map.mjs, show-seedling-trace.mjs, solve-seedling-r8-battery.mjs
+## import batch 90/93 — 534/554 door(s) done, 361 s: solve-seedling-r8-d2-chain.mjs, solve-seedling-r8-d2.mjs, solve-seedling-r8-l18.mjs, solve-seedling-r8-tail.mjs, solve-seedling-r9-campaign.mjs, solve-seedling-r9-l3.mjs
+## import batch 91/93 — 540/554 door(s) done, 375 s: stamp-seedling-vanilla-set.mjs, standing-values.mjs, survey-seedling-route.mjs, survey-seedling-shards.mjs, sweep-seedling-anchor-search.mjs, sweep-seedling-directed-bound.mjs
+## import batch 92/93 — 546/554 door(s) done, 391 s: sweep-seedling-killarm-inertness.mjs, sweep-seedling-killlock.mjs, sweep-seedling-l18-residues.mjs, sweep-seedling-wave1-domains.mjs, sweep-yield-table.mjs, witness-seedling-entities.mjs
+## import batch 93/93 — 552/554 door(s) done, 394 s: witness-seedling-press-forecast.mjs, witness-seedling-profile.mjs
+## help batch 1/93 — 0/554 door(s) done, 394 s: action-nodes-compile.mjs, action-nodes-play.mjs, archipelagoLogoArt.mjs, attribute-seedling-door-cut.mjs, attribute-seedling-pairs-cost.mjs, audit-seedling-r5-stances.mjs
+## help batch 2/93 — 6/554 door(s) done, 395 s: audit-seedling-r6-boss-rooms.mjs, batch-seedling-acceptance.mjs, build-dj-loader-swf.mjs, can-cross-seedling.mjs, census-maze-keeps.mjs, census-seedling-areas.mjs
+## help batch 3/93 — 12/554 door(s) done, 395 s: census-seedling-arrival-solid.mjs, census-seedling-atlas-doors.mjs, census-seedling-block-stoppers.mjs, census-seedling-bosslocks.mjs, census-seedling-campaign.mjs, census-seedling-committed-rooms.mjs
+## help batch 4/93 — 18/554 door(s) done, 396 s: census-seedling-constants.mjs, census-seedling-darktrap-gates.mjs, census-seedling-dash-window.mjs, census-seedling-density.mjs, census-seedling-doors-elements.mjs, census-seedling-doors.mjs
+## help batch 5/93 — 24/554 door(s) done, 396 s: census-seedling-elements.mjs, census-seedling-enemies.mjs, census-seedling-er-doorways.mjs, census-seedling-killgate-clears.mjs, census-seedling-offgrid-blockers.mjs, census-seedling-sites.mjs
+## help batch 6/93 — 30/554 door(s) done, 397 s: census-seedling-solver-surface.mjs, census-seedling-stepoff.mjs, census-seedling-weapon-reach.mjs, census-skeleton-kinds.mjs, census-soft-locks.mjs, check-atlas-sphere-roundtrip.mjs
+## help batch 7/93 — 36/554 door(s) done, 398 s: check-bounce-embed.mjs, check-bounce-touch.mjs, check-canonical-placements.mjs, check-cli-sphere-config.mjs, check-cloudberry-embed.mjs, check-cloudberry-sphere.mjs
+## help batch 8/93 — 42/554 door(s) done, 399 s: check-concept-trial-play.mjs, check-dj-swf-patch.mjs, check-grid-growth-ui.mjs, check-item-channels.mjs, check-jta-balance-pass.mjs, check-jta-cost-hooks.mjs
+## help batch 9/93 — 48/554 door(s) done, 400 s: check-jta-dataset-load.mjs, check-jta-dataset-pipeline-preset.mjs, check-jta-dataset-transfer.mjs, check-jta-dataset-url-boot.mjs, check-jta-generated-dataset.mjs, check-jta-locations-roundtrip.mjs
+## help batch 10/93 — 54/554 door(s) done, 400 s: check-jta-managed-zone-skip.mjs, check-loop-costs-one-model.mjs, check-maze-consumable-tiles.mjs, check-maze-lab.mjs, check-maze-loop-mana.mjs, check-maze-world-map.mjs
+## help batch 11/93 — 60/554 door(s) done, 401 s: check-meta-trial-play.mjs, check-omsi-mana-leg.mjs, check-preset-bundle-load.mjs, check-preset-panel-click.mjs, check-procgen-demos.mjs, check-procgen-docs.mjs
+## help batch 12/93 — 66/554 door(s) done, 403 s: check-procgen-help.mjs, check-procgen-lab-hosting.mjs, check-procgen-maze-recipe.mjs, check-procgen-presets.mjs, check-procgen-reference.mjs, check-regenerate-region-control.mjs
+## help batch 13/93 — 72/554 door(s) done, 404 s: check-region-library-roundtrip.mjs, check-region-library-sphere-roundtrip-maze.mjs, check-region-library-sphere-roundtrip.mjs, check-region-library-ui.mjs, check-region-marking-tool.mjs, check-region-step-editing.mjs
+## help batch 14/93 — 78/554 door(s) done, 405 s: check-rule-gated-portals.mjs, check-seedling-ap-placement.mjs, check-seedling-atlas-host-play.mjs, check-seedling-atlas-location-play.mjs, check-seedling-atlas-maze.mjs, check-seedling-atlas-play.mjs
+## help batch 15/93 — 84/554 door(s) done, 407 s: check-seedling-atlas-preset.mjs, check-seedling-bot-differential.mjs, check-seedling-editor-arm.mjs, check-seedling-editor-boot.mjs, check-seedling-editor-e1.mjs, check-seedling-editor-e2.mjs
+## help batch 16/93 — 90/554 door(s) done, 408 s: check-seedling-editor-e3.mjs, check-seedling-editor-edit.mjs, check-seedling-editor-export.mjs, check-seedling-editor-generate.mjs, check-seedling-editor-lanes.mjs, check-seedling-editor-manual.mjs
+## help batch 17/93 — 96/554 door(s) done, 409 s: check-seedling-editor-overlays.mjs, check-seedling-editor-phases.mjs, check-seedling-editor-refusal.mjs, check-seedling-editor-sequence.mjs, check-seedling-editor-shapes.mjs, check-seedling-editor-solve.mjs
+## help batch 18/93 — 102/554 door(s) done, 410 s: check-seedling-editor-switch.mjs, check-seedling-editor-world.mjs, check-seedling-full-tier-owed.mjs, check-seedling-generated-host-play.mjs, check-seedling-generated-leaf-play.mjs, check-seedling-generated-room-play.mjs
+## help batch 19/93 — 108/554 door(s) done, 412 s: check-seedling-generated-set.mjs, check-seedling-generated-swim-play.mjs, check-seedling-hammer-monotonicity.mjs, check-seedling-lab-art.mjs, check-seedling-lab-load-in-js.mjs, check-seedling-producer-boundaries.mjs
+## help batch 20/93 — 114/554 door(s) done, 412 s: check-seedling-rerecord-rehearsal.mjs, check-seedling-rewind-exactness.mjs, check-seedling-save-stamp.mjs, check-seedling-source-pin.mjs, check-seedling-sphere-room-play.mjs, check-seedling-spiral-room-play.mjs
+## help batch 21/93 — 120/554 door(s) done, 413 s: check-seedling-string-pull-fast.mjs, check-seedling-vanilla-manifest.mjs, check-seedling-wasm-bridge.mjs, check-seedling-wasm-element.mjs, check-seedling-wasm-pages.mjs, check-seedling-wasm-pins.mjs
+## help batch 22/93 — 126/554 door(s) done, 414 s: check-seedling-wasm-ship.mjs, check-sidecar-fields.mjs, check-slice-records.mjs, check-sphere-batch-stepping.mjs, check-sphere-envelope-resume.mjs, check-sphere-growth-ui.mjs
+## help batch 23/93 — 132/554 door(s) done, 415 s: check-sphere-steps-ui.mjs, check-spiral-byteidentity.mjs, check-spiral-steps-ui.mjs, check-ta-mana-leg.mjs, check-topdown-steps-ui.mjs, check-topdown-steps.mjs
+## help batch 24/93 — 138/554 door(s) done, 417 s: check-world-persistence-reload.mjs, check-worldgen-package-sidecars.mjs, ci-expected-red.mjs, ci-gates.mjs, ci-producer-checks.mjs, ci-summary.mjs
+## help batch 25/93 — 144/554 door(s) done, 418 s: ci-vitest-summary.mjs, cloudberrySite.mjs, derive-seedling-tick0.mjs, dump-dj-traces.mjs, dump-maze-byteidentity.mjs, dump-seedling-gen-capacity.mjs
+## help batch 26/93 — 150/554 door(s) done, 418 s: dump-seedling-kind-pairs.mjs, dump-sphere-byteidentity.mjs, dump-topdown-byteidentity.mjs, export-seedling-level-set.mjs, export-seedling-view.mjs, extract-seedling-art-packs.mjs
+## help batch 27/93 — 156/554 door(s) done, 419 s: extract-seedling-damage-sites.mjs, extract-seedling-map.mjs, extract-seedling-masks.mjs, extract-seedling-music-pack.mjs, extract-seedling-sfx-pack.mjs, find-seedling-seeds.mjs
+## help batch 28/93 — 162/554 door(s) done, 419 s: gates.mjs, generate-envelope-schemas.mjs, generate-maze-level.mjs, generate-procgen-reference.mjs, generate-seedling-level.mjs, generate-tape-index.mjs
+## help batch 29/93 — 168/554 door(s) done, 420 s: harvest-procgen-terms.mjs, help.mjs, inventory-menu-identity.mjs, lint-gate-labels.mjs, loadJSZipNode.mjs, make-demo-bounce-pack.mjs
+## help batch 30/93 — 174/554 door(s) done, 421 s: make-demo-cloudberry-pack.mjs, make-seedling-entity-colliders.mjs, make-seedling-er-preset.mjs, make-seedling-font.mjs, make-seedling-playthrough-maze.mjs, make-seedling-playthrough-rules.mjs
+## help batch 31/93 — 180/554 door(s) done, 422 s: make-seedling-sphere-order.mjs, make-seedling-spiral-room-preset.mjs, make-seedling-starter-atlas.mjs, make-seedling-subregion-partition.mjs, make-seedling-vanilla-overlay.mjs, measure-apworld-raw-view.mjs
+## help batch 32/93 — 186/554 door(s) done, 422 s: measure-bot-route-orders.mjs, measure-seedling-cleartag-patch.mjs, measure-seedling-cleartag.mjs, measure-seedling-escape-kernel.mjs, measure-seedling-killlock-tag.mjs, measure-seedling-l18-live-gap.mjs
+## help batch 33/93 — 192/554 door(s) done, 424 s: measure-seedling-solver-surface.mjs, migrate-per-player-blocks.mjs, mine-seedling-roster-history.mjs, plan-seedling-axe-witness.mjs, plan-seedling-binding-witness.mjs, plan-seedling-bobsoldier.mjs
+## help batch 34/93 — 198/554 door(s) done, 424 s: plan-seedling-bobsoldier2.mjs, plan-seedling-bulb.mjs, plan-seedling-burn-witness.mjs, plan-seedling-c1-static-sword.mjs, plan-seedling-crusher-witness.mjs, plan-seedling-encounters.mjs
+## help batch 35/93 — 204/554 door(s) done, 425 s: plan-seedling-f1-l5-lock.mjs, plan-seedling-f1-l5-open-lock.mjs, plan-seedling-f1c-l18-lock.mjs, plan-seedling-f1c-l18-phase.mjs, plan-seedling-f4-l8-sandtraps.mjs, plan-seedling-f6-reentry.mjs
+## help batch 36/93 — 210/554 door(s) done, 425 s: plan-seedling-f7-reentry.mjs, plan-seedling-frontier3-witness.mjs, plan-seedling-ghostmotion.mjs, plan-seedling-ghostsword.mjs, plan-seedling-hammer-a-escape.mjs, plan-seedling-hammer-b1-approach.mjs
+## help batch 37/93 — 216/554 door(s) done, 425 s: plan-seedling-hammer-b2-fight.mjs, plan-seedling-hammer-bw-bombstand.mjs, plan-seedling-hammer-c2-ghost.mjs, plan-seedling-hammer-d-ghostwall.mjs, plan-seedling-hammer-dd-walkkill.mjs, plan-seedling-hammer-g1-ghostkill.mjs
+## help batch 38/93 — 222/554 door(s) done, 426 s: plan-seedling-hammer-sf-strikefloor.mjs, plan-seedling-l100-witness.mjs, plan-seedling-l12doors-witness.mjs, plan-seedling-l12keyline-witness.mjs, plan-seedling-l14-swordless.mjs, plan-seedling-l30keylock.mjs
+## help batch 39/93 — 228/554 door(s) done, 426 s: plan-seedling-l40button-witness.mjs, plan-seedling-ladder2-witness.mjs, plan-seedling-lightpole-witness.mjs, plan-seedling-proximity-witness.mjs, plan-seedling-pushblock-witness.mjs, plan-seedling-r1-dark-suit.mjs
+## help batch 40/93 — 234/554 door(s) done, 426 s: plan-seedling-r1-route.mjs, plan-seedling-r2-route.mjs, plan-seedling-r2-singles.mjs, plan-seedling-r2-wallflyer.mjs, plan-seedling-r3-death.mjs, plan-seedling-r3-route.mjs
+## help batch 41/93 — 240/554 door(s) done, 427 s: plan-seedling-r4-route.mjs, plan-seedling-r4.mjs, plan-seedling-r5-bobboss.mjs, plan-seedling-r5-bosskey.mjs, plan-seedling-r5-conch.mjs, plan-seedling-r5-feather.mjs
+## help batch 42/93 — 246/554 door(s) done, 427 s: plan-seedling-r5-karlore.mjs, plan-seedling-r5-l37-burn.mjs, plan-seedling-r5-l40-join.mjs, plan-seedling-r5-l40-part0.mjs, plan-seedling-r5-l40-part1.mjs, plan-seedling-r5-l40-part5.mjs
+## help batch 43/93 — 252/554 door(s) done, 427 s: plan-seedling-r5-l41-part3.mjs, plan-seedling-r5-l42-part4.mjs, plan-seedling-r5-l43-wand.mjs, plan-seedling-r5-l60-kill.mjs, plan-seedling-r5-shaft.mjs, plan-seedling-r5-swim.mjs
+## help batch 44/93 — 258/554 door(s) done, 428 s: plan-seedling-r5-totem-entrance.mjs, plan-seedling-r5-waterfall.mjs, plan-seedling-r6-shieldboss.mjs, plan-seedling-r6-wblood.mjs, plan-seedling-r6-wdoor.mjs, plan-seedling-r6-wowl.mjs
+## help batch 45/93 — 264/554 door(s) done, 428 s: plan-seedling-r6-wseed.mjs, plan-seedling-r6-wtalk.mjs, plan-seedling-r7-attribution.mjs, plan-seedling-r7-ends-meet.mjs, plan-seedling-r8-hammer-pair.mjs, plan-seedling-r8-l18-spinner.mjs
+## help batch 46/93 — 270/554 door(s) done, 429 s: plan-seedling-r9-l0-sword-dash.mjs, plan-seedling-r9-l6-bob-press.mjs, plan-seedling-r9-l6-harmless-window.mjs, plan-seedling-r9-l6-sword-dash-hit.mjs, plan-seedling-return-l15.mjs, plan-seedling-rulesref-witness.mjs
+## help batch 47/93 — 276/554 door(s) done, 429 s: plan-seedling-sealdoor-witness.mjs, plan-seedling-slots-witness.mjs, plan-seedling-stance-witness.mjs, plan-seedling-u10-puncher-dwell.mjs, plan-seedling-u11-dark-shield.mjs, plan-seedling-u11-facing.mjs
+## help batch 48/93 — 282/554 door(s) done, 429 s: plan-seedling-u12-pull.mjs, plan-seedling-u14-moonrock.mjs, plan-seedling-u15-turret.mjs, plan-seedling-u7-puncher.mjs, plan-seedling-u9-shield-bump.mjs, plan-seedling-wallflyer.mjs
+## help batch 49/93 — 288/554 door(s) done, 430 s: plan-seedling-wand-witness.mjs, plan-seedling-watcher-witness.mjs, plan-seedling-watchertalk-witness.mjs, probe-cloudberry-status-strip.mjs, probe-cloudberry-touch-up.mjs, probe-seedling-arrival-escape.mjs
+## help batch 50/93 — 294/554 door(s) done, 431 s: probe-seedling-arrival-solid.mjs, probe-seedling-axe-phase.mjs, probe-seedling-bobiframe.mjs, probe-seedling-bobsoldier-mobiles.mjs, probe-seedling-bomb-blast-body.mjs, probe-seedling-bombpusher.mjs
+## help batch 51/93 — 300/554 door(s) done, 432 s: probe-seedling-boot-clock.mjs, probe-seedling-boot-reset.mjs, probe-seedling-bosskills.mjs, probe-seedling-bosslock-latch.mjs, probe-seedling-bridge.mjs, probe-seedling-build-cost.mjs
+## help batch 52/93 — 306/554 door(s) done, 433 s: probe-seedling-burn-write.mjs, probe-seedling-calib-levels.mjs, probe-seedling-ceremony.mjs, probe-seedling-ceremony126.mjs, probe-seedling-certifier-tail.mjs, probe-seedling-chaser-mobiles.mjs
+## help batch 53/93 — 312/554 door(s) done, 435 s: probe-seedling-chest-incidental.mjs, probe-seedling-chestseal.mjs, probe-seedling-cleartag.mjs, probe-seedling-collider-cells.mjs, probe-seedling-contact-divergence.mjs, probe-seedling-corpse-bump.mjs
+## help batch 54/93 — 318/554 door(s) done, 436 s: probe-seedling-cross-room-button.mjs, probe-seedling-crusher-press.mjs, probe-seedling-ctor-args.mjs, probe-seedling-darktrap-mobiles.mjs, probe-seedling-dash-window.mjs, probe-seedling-deadframe-band.mjs
+## help batch 55/93 — 324/554 door(s) done, 437 s: probe-seedling-deadframes.mjs, probe-seedling-derived-rules.mjs, probe-seedling-descent.mjs, probe-seedling-divergence-sweep.mjs, probe-seedling-drill-kill.mjs, probe-seedling-drill-mixed.mjs
+## help batch 56/93 — 330/554 door(s) done, 438 s: probe-seedling-drill-water.mjs, probe-seedling-encounter-latch.mjs, probe-seedling-encounter-ticks.mjs, probe-seedling-er-landings.mjs, probe-seedling-f2-apitem.mjs, probe-seedling-f2-boundary.mjs
+## help batch 57/93 — 336/554 door(s) done, 440 s: probe-seedling-f6-reentry.mjs, probe-seedling-f7-reentry.mjs, probe-seedling-fire-break.mjs, probe-seedling-fire-move.mjs, probe-seedling-fire-push.mjs, probe-seedling-fire-spinner.mjs
+## help batch 58/93 — 342/554 door(s) done, 441 s: probe-seedling-frozen-press.mjs, probe-seedling-gen-arrowtrap-rooms.mjs, probe-seedling-gen-chest-rooms.mjs, probe-seedling-ghost-rope.mjs, probe-seedling-ghostsword-items.mjs, probe-seedling-help-frame.mjs
+## help batch 59/93 — 348/554 door(s) done, 442 s: probe-seedling-hold.mjs, probe-seedling-iceturret-spear.mjs, probe-seedling-inroom-darktraps.mjs, probe-seedling-inventory-menu.mjs, probe-seedling-inventory.mjs, probe-seedling-js-vs-wasm-tape.mjs
+## help batch 60/93 — 354/554 door(s) done, 443 s: probe-seedling-killlock-arms.mjs, probe-seedling-killlock-span1.mjs, probe-seedling-killlock.mjs, probe-seedling-l0-tighter.mjs, probe-seedling-l107-lane.mjs, probe-seedling-l12-bosslock.mjs
+## help batch 61/93 — 360/554 door(s) done, 444 s: probe-seedling-l12doors.mjs, probe-seedling-l14-swordless.mjs, probe-seedling-l15-block-path.mjs, probe-seedling-l15-chest-line.mjs, probe-seedling-l16-corner-pit.mjs, probe-seedling-l16-holder-bobs.mjs
+## help batch 62/93 — 366/554 door(s) done, 446 s: probe-seedling-l19-bosskey.mjs, probe-seedling-l25-apitem.mjs, probe-seedling-l3-water-door.mjs, probe-seedling-l32-rock-move.mjs, probe-seedling-l37-fallrock.mjs, probe-seedling-l39-pulser-kill.mjs
+## help batch 63/93 — 372/554 door(s) done, 447 s: probe-seedling-l39-pulser.mjs, probe-seedling-l39-shaft.mjs, probe-seedling-l40-flag12-lock.mjs, probe-seedling-l40bk2.mjs, probe-seedling-l40bk2b.mjs, probe-seedling-l40button.mjs
+## help batch 64/93 — 378/554 door(s) done, 448 s: probe-seedling-l40latch.mjs, probe-seedling-l55-waterfall.mjs, probe-seedling-l59-l67.mjs, probe-seedling-l63-darktrap.mjs, probe-seedling-l63-spear-block.mjs, probe-seedling-l65-bob-block.mjs
+## help batch 65/93 — 384/554 door(s) done, 450 s: probe-seedling-l65-breach.mjs, probe-seedling-l65.mjs, probe-seedling-l66-door.mjs, probe-seedling-l67-reach2.mjs, probe-seedling-l78-pull-order.mjs, probe-seedling-l89-waterfall.mjs
+## help batch 66/93 — 390/554 door(s) done, 451 s: probe-seedling-l93-door.mjs, probe-seedling-ladder2-phase.mjs, probe-seedling-landing-contact.mjs, probe-seedling-lethal-landings.mjs, probe-seedling-level-set-transport.mjs, probe-seedling-lights.mjs
+## help batch 67/93 — 396/554 door(s) done, 452 s: probe-seedling-loop-restart.mjs, probe-seedling-mask-lines.mjs, probe-seedling-mobile-fit.mjs, probe-seedling-moonrock.mjs, probe-seedling-music-pair.mjs, probe-seedling-obstacle-events.mjs
+## help batch 68/93 — 402/554 door(s) done, 453 s: probe-seedling-oneway-census.mjs, probe-seedling-persistence-rebuild.mjs, probe-seedling-pit-doors.mjs, probe-seedling-pushblock-weapon.mjs, probe-seedling-r1-suit-census.mjs, probe-seedling-r2-census.mjs
+## help batch 69/93 — 408/554 door(s) done, 455 s: probe-seedling-r5-feather.mjs, probe-seedling-r5-l38-chain.mjs, probe-seedling-r5-l38-entrance.mjs, probe-seedling-r5-l40-bumps.mjs, probe-seedling-r5-l40-corpse.mjs, probe-seedling-r5-l40-holder.mjs
+## help batch 70/93 — 414/554 door(s) done, 455 s: probe-seedling-r5-l40-kill.mjs, probe-seedling-r5-l40-link4.mjs, probe-seedling-r5-l40.mjs, probe-seedling-r5-l42-chain3.mjs, probe-seedling-r5-l42-escape.mjs, probe-seedling-r5-l42-solver.mjs
+## help batch 71/93 — 420/554 door(s) done, 455 s: probe-seedling-r5-l42.mjs, probe-seedling-r5-l43-boss-wake.mjs, probe-seedling-r5-l43-replay.mjs, probe-seedling-r5-l43-wand-window.mjs, probe-seedling-r5-mobiles.mjs, probe-seedling-r5-shaft-solver.mjs
+## help batch 72/93 — 426/554 door(s) done, 456 s: probe-seedling-r5-spinner.mjs, probe-seedling-r5-totem-entrance.mjs, probe-seedling-r5-totem-shaft.mjs, probe-seedling-r6-boss-rooms.mjs, probe-seedling-r6-owl-prefix.mjs, probe-seedling-r6-owl-rng.mjs
+## help batch 73/93 — 432/554 door(s) done, 457 s: probe-seedling-r7-l4-block.mjs, probe-seedling-r7-l40-holder.mjs, probe-seedling-r7-l5-arrows.mjs, probe-seedling-r7-l6-bait.mjs, probe-seedling-r7-l8-blocks.mjs, probe-seedling-r7-map-triggers.mjs
+## help batch 74/93 — 438/554 door(s) done, 458 s: probe-seedling-r7-rules-frontier.mjs, probe-seedling-r9-bob-press-mobiles.mjs, probe-seedling-r9-dash-rect-mobiles.mjs, probe-seedling-r9-harmless-window-mobiles.mjs, probe-seedling-rect-inputs.mjs, probe-seedling-restart-held-items.mjs
+## help batch 75/93 — 444/554 door(s) done, 459 s: probe-seedling-restart-route.mjs, probe-seedling-restart-warp.mjs, probe-seedling-rng.mjs, probe-seedling-rock-button.mjs, probe-seedling-rock-fire.mjs, probe-seedling-rock-gone.mjs
+## help batch 76/93 — 450/554 door(s) done, 460 s: probe-seedling-rock-remove.mjs, probe-seedling-rope-events.mjs, probe-seedling-rope-stance.mjs, probe-seedling-rope-verb.mjs, probe-seedling-seal-delivery.mjs, probe-seedling-seam-chain.mjs
+## help batch 77/93 — 456/554 door(s) done, 461 s: probe-seedling-secondary-use.mjs, probe-seedling-shake-exact.mjs, probe-seedling-shortcut-grade.mjs, probe-seedling-since-begin.mjs, probe-seedling-skin-swing.mjs, probe-seedling-slot-order.mjs
+## help batch 78/93 — 462/554 door(s) done, 463 s: probe-seedling-solve-progress.mjs, probe-seedling-solve-sites.mjs, probe-seedling-span-ceiling.mjs, probe-seedling-spearrect.mjs, probe-seedling-staged-hits.mjs, probe-seedling-static-sword-mobiles.mjs
+## help batch 79/93 — 468/554 door(s) done, 464 s: probe-seedling-stepoff.mjs, probe-seedling-swim-sound.mjs, probe-seedling-tentacle-mouth.mjs, probe-seedling-timed-pass.mjs, probe-seedling-turret-circle.mjs, probe-seedling-turret-snap.mjs
+## help batch 80/93 — 474/554 door(s) done, 465 s: probe-seedling-u11-wall5.mjs, probe-seedling-u15-turret-mobiles.mjs, probe-seedling-u7-puncher-mobiles.mjs, probe-seedling-u9-shield-mobiles.mjs, probe-seedling-v8-seam.mjs, probe-seedling-walk-order.mjs
+## help batch 81/93 — 480/554 door(s) done, 466 s: probe-seedling-wallflyer-mobiles.mjs, probe-seedling-wallflyer-nohit.mjs, probe-seedling-wand-mobiles.mjs, probe-seedling-wasm-adopt.mjs, probe-seedling-wasm-arrival-composites.mjs, probe-seedling-wasm-arrival-solve.mjs
+## help batch 82/93 — 486/554 door(s) done, 468 s: probe-seedling-wasm-continuation.mjs, probe-seedling-wasm-er-retarget.mjs, probe-seedling-wasm-generated-playback.mjs, probe-seedling-wasm-host-tape.mjs, probe-seedling-wasm-level0.mjs, probe-seedling-wasm-logical-links.mjs
+## help batch 83/93 — 492/554 door(s) done, 469 s: probe-seedling-wasm-midroom-replan.mjs, probe-seedling-wasm-playback.mjs, probe-seedling-wasm-vanilla-map.mjs, probe-seedling-watch-page.mjs, probe-seedling-weapon-reach.mjs, probe-seedling-whole-game-certify.mjs
+## help batch 84/93 — 498/554 door(s) done, 471 s: probe-seedling-yeti.mjs, probe-solver-hook-gaps.mjs, profile-seedling-hammer-approach.mjs, profile-seedling-hammer-escape.mjs, prove-seedling-procgen-seam.mjs, reach-seedling-change.mjs
+## help batch 85/93 — 504/554 door(s) done, 471 s: recon-seedling-pushes.mjs, recon-seedling-r3.mjs, recon-seedling-r4.mjs, recon-seedling-r5.mjs, recon-seedling-r7.mjs, record-slice.mjs
+## help batch 86/93 — 510/554 door(s) done, 472 s: record-standing-value.mjs, region-atlas-analyze.mjs, region-atlas-compile.mjs, region-atlas-pool.mjs, region-atlas-validate.mjs, region-library-validate.mjs
+## help batch 87/93 — 516/554 door(s) done, 472 s: replay-seedling-contact-capture.mjs, replay-seedling-solve-request.mjs, report-pack-provenance.mjs, rerecord-seedling-campaign.mjs, run-seedling-director.mjs, run-seedling-tape.mjs
+## help batch 88/93 — 522/554 door(s) done, 473 s: seedling-atlas-goals.mjs, seedling-control-for.mjs, seedling-divergence-bare.mjs, seedling-divergence-legs.mjs, seedling-solve-progress-hook.mjs, seedling-wasm-readme.mjs
+## help batch 89/93 — 528/554 door(s) done, 473 s: seedlingEntranceShuffleHooks.mjs, seedlingProfileLoader.mjs, seedlingRouteGraph.mjs, shot-loaded-composite-map.mjs, show-seedling-trace.mjs, solve-seedling-r8-battery.mjs
+## help batch 90/93 — 534/554 door(s) done, 474 s: solve-seedling-r8-d2-chain.mjs, solve-seedling-r8-d2.mjs, solve-seedling-r8-l18.mjs, solve-seedling-r8-tail.mjs, solve-seedling-r9-campaign.mjs, solve-seedling-r9-l3.mjs
+## help batch 91/93 — 540/554 door(s) done, 475 s: stamp-seedling-vanilla-set.mjs, standing-values.mjs, survey-seedling-route.mjs, survey-seedling-shards.mjs, sweep-seedling-anchor-search.mjs, sweep-seedling-directed-bound.mjs
+## help batch 92/93 — 546/554 door(s) done, 476 s: sweep-seedling-killarm-inertness.mjs, sweep-seedling-killlock.mjs, sweep-seedling-l18-residues.mjs, sweep-seedling-wave1-domains.mjs, sweep-yield-table.mjs, witness-seedling-entities.mjs
+## help batch 93/93 — 552/554 door(s) done, 476 s: witness-seedling-press-forecast.mjs, witness-seedling-profile.mjs
+PASS: action-nodes-compile.mjs — HELP ok (194 ms) · IMPORT ok (88 ms)
+PASS: action-nodes-play.mjs — HELP ok (127 ms) · IMPORT ok (64 ms)
+PASS: archipelagoLogoArt.mjs — HELP ok (206 ms) · IMPORT ok (69 ms)
+PASS: attribute-seedling-door-cut.mjs — HELP ok (173 ms) · IMPORT SIDE EFFECT (KNOWN) (57 ms)
+PASS: attribute-seedling-pairs-cost.mjs — HELP ok (209 ms) · IMPORT SIDE EFFECT (KNOWN) (5030 ms)
+PASS: audit-seedling-r5-stances.mjs — HELP ok (181 ms) · IMPORT SIDE EFFECT (KNOWN) (834 ms)
+PASS: audit-seedling-r6-boss-rooms.mjs — HELP ok (157 ms) · IMPORT SIDE EFFECT (KNOWN) (174 ms)
+PASS: batch-seedling-acceptance.mjs — HELP ok (239 ms) · IMPORT SIDE EFFECT (KNOWN) (5007 ms)
+PASS: build-dj-loader-swf.mjs — HELP ok (129 ms) · IMPORT SIDE EFFECT (KNOWN) (89 ms)
+PASS: can-cross-seedling.mjs — HELP ok (133 ms) · IMPORT ok (174 ms)
+PASS: census-maze-keeps.mjs — HELP ok (88 ms) · IMPORT SIDE EFFECT (KNOWN) (260 ms)
+PASS: census-seedling-areas.mjs — HELP ok (95 ms) · IMPORT SIDE EFFECT (KNOWN) (974 ms)
+PASS: census-seedling-arrival-solid.mjs — HELP ok (75 ms) · IMPORT ok (35 ms)
+PASS: census-seedling-atlas-doors.mjs — HELP ok (81 ms) · IMPORT ok (41 ms)
+PASS: census-seedling-block-stoppers.mjs — HELP ok (490 ms) · IMPORT ok (300 ms)
+PASS: census-seedling-bosslocks.mjs — HELP ok (112 ms) · IMPORT ok (34 ms)
+PASS: census-seedling-campaign.mjs — HELP ok (163 ms) · IMPORT SIDE EFFECT (KNOWN) (3494 ms)
+PASS: census-seedling-committed-rooms.mjs — HELP ok (95 ms) · IMPORT SIDE EFFECT (KNOWN) (2042 ms)
+PASS: census-seedling-constants.mjs — HELP ok (183 ms) · IMPORT ok (113 ms)
+PASS: census-seedling-darktrap-gates.mjs — HELP ok (157 ms) · IMPORT ok (92 ms)
+PASS: census-seedling-dash-window.mjs — HELP ok (75 ms) · IMPORT ok (60 ms)
+PASS: census-seedling-density.mjs — HELP ok (116 ms) · IMPORT SIDE EFFECT (KNOWN) (5008 ms)
+PASS: census-seedling-doors-elements.mjs — HELP ok (85 ms) · IMPORT SIDE EFFECT (KNOWN) (867 ms)
+PASS: census-seedling-doors.mjs — HELP ok (140 ms) · IMPORT SIDE EFFECT (KNOWN) (5011 ms)
+PASS: census-seedling-elements.mjs — HELP ok (149 ms) · IMPORT SIDE EFFECT (KNOWN) (1743 ms)
+PASS: census-seedling-enemies.mjs — HELP ok (152 ms) · IMPORT SIDE EFFECT (KNOWN) (5016 ms)
+PASS: census-seedling-er-doorways.mjs — HELP ok (139 ms) · IMPORT ok (92 ms)
+PASS: census-seedling-killgate-clears.mjs — HELP ok (106 ms) · IMPORT SIDE EFFECT (KNOWN) (5012 ms)
+PASS: census-seedling-offgrid-blockers.mjs — HELP ok (461 ms) · IMPORT ok (453 ms)
+PASS: census-seedling-sites.mjs — HELP ok (129 ms) · IMPORT SIDE EFFECT (KNOWN) (589 ms)
+PASS: census-seedling-solver-surface.mjs — HELP ok (205 ms) · IMPORT ok (87 ms)
+PASS: census-seedling-stepoff.mjs — HELP ok (59 ms) · IMPORT ok (35 ms)
+PASS: census-seedling-weapon-reach.mjs — HELP ok (567 ms) · IMPORT ok (343 ms)
+PASS: census-skeleton-kinds.mjs — HELP ok (141 ms) · IMPORT SIDE EFFECT (KNOWN) (1782 ms)
+PASS: census-soft-locks.mjs — HELP ok (120 ms) · IMPORT ok (61 ms)
+PASS: check-atlas-sphere-roundtrip.mjs — HELP ok (185 ms) · IMPORT SIDE EFFECT (KNOWN) (150 ms)
+PASS: check-bounce-embed.mjs — HELP ok (881 ms) · IMPORT SIDE EFFECT (KNOWN) (5009 ms)
+PASS: check-bounce-touch.mjs — HELP ok (785 ms) · IMPORT SIDE EFFECT (KNOWN) (5020 ms)
+PASS: check-canonical-placements.mjs — HELP ok (296 ms) · IMPORT ok (113 ms)
+PASS: check-cli-sphere-config.mjs — HELP ok (347 ms) · IMPORT SIDE EFFECT (KNOWN) (2699 ms)
+PASS: check-cloudberry-embed.mjs — HELP ok (921 ms) · IMPORT ok (853 ms)
+PASS: check-cloudberry-sphere.mjs — HELP ok (972 ms) · IMPORT ok (951 ms)
+PASS: check-concept-trial-play.mjs — HELP ok (637 ms) · IMPORT ok (655 ms)
+PASS: check-dj-swf-patch.mjs — HELP ok (70 ms) · IMPORT SIDE EFFECT (KNOWN) (161 ms)
+PASS: check-grid-growth-ui.mjs — HELP ok (677 ms) · IMPORT SIDE EFFECT (KNOWN) (5011 ms)
+PASS: check-item-channels.mjs — HELP ok (661 ms) · IMPORT SIDE EFFECT (KNOWN) (5009 ms)
+PASS: check-jta-balance-pass.mjs — HELP ok (103 ms) · IMPORT SIDE EFFECT (KNOWN) (46 ms)
+PASS: check-jta-cost-hooks.mjs — HELP ok (93 ms) · IMPORT SIDE EFFECT (KNOWN) (1655 ms)
+PASS: check-jta-dataset-load.mjs — HELP ok (110 ms) · IMPORT SIDE EFFECT (KNOWN) (246 ms)
+PASS: check-jta-dataset-pipeline-preset.mjs — HELP ok (148 ms) · IMPORT SIDE EFFECT (KNOWN) (188 ms)
+PASS: check-jta-dataset-transfer.mjs — HELP ok (156 ms) · IMPORT SIDE EFFECT (KNOWN) (244 ms)
+PASS: check-jta-dataset-url-boot.mjs — HELP ok (167 ms) · IMPORT SIDE EFFECT (KNOWN) (1400 ms)
+PASS: check-jta-generated-dataset.mjs — HELP ok (70 ms) · IMPORT SIDE EFFECT (KNOWN) (457 ms)
+PASS: check-jta-locations-roundtrip.mjs — HELP ok (153 ms) · IMPORT SIDE EFFECT (KNOWN) (256 ms)
+PASS: check-jta-managed-zone-skip.mjs — HELP ok (108 ms) · IMPORT SIDE EFFECT (KNOWN) (655 ms)
+PASS: check-loop-costs-one-model.mjs — HELP ok (110 ms) · IMPORT ok (72 ms)
+PASS: check-maze-consumable-tiles.mjs — HELP ok (827 ms) · IMPORT SIDE EFFECT (KNOWN) (798 ms)
+PASS: check-maze-lab.mjs — HELP ok (746 ms) · IMPORT SIDE EFFECT (KNOWN) (5018 ms)
+PASS: check-maze-loop-mana.mjs — HELP ok (733 ms) · IMPORT SIDE EFFECT (KNOWN) (700 ms)
+PASS: check-maze-world-map.mjs — HELP ok (805 ms) · IMPORT ok (453 ms)
+PASS: check-meta-trial-play.mjs — HELP ok (1049 ms) · IMPORT ok (754 ms)
+PASS: check-omsi-mana-leg.mjs — HELP ok (1079 ms) · IMPORT SIDE EFFECT (KNOWN) (5042 ms)
+PASS: check-preset-bundle-load.mjs — HELP ok (942 ms) · IMPORT SIDE EFFECT (KNOWN) (5084 ms)
+PASS: check-preset-panel-click.mjs — HELP ok (784 ms) · IMPORT SIDE EFFECT (KNOWN) (5015 ms)
+PASS: check-procgen-demos.mjs — HELP ok (717 ms) · IMPORT SIDE EFFECT (KNOWN) (5072 ms)
+PASS: check-procgen-docs.mjs — HELP ok (622 ms) · IMPORT SIDE EFFECT (KNOWN) (5010 ms)
+PASS: check-procgen-help.mjs — HELP ok (159 ms) · IMPORT SIDE EFFECT (KNOWN) (5022 ms)
+PASS: check-procgen-lab-hosting.mjs — HELP ok (667 ms) · IMPORT SIDE EFFECT (KNOWN) (5036 ms)
+PASS: check-procgen-maze-recipe.mjs — HELP ok (88 ms) · IMPORT ok (45 ms)
+PASS: check-procgen-presets.mjs — HELP ok (733 ms) · IMPORT SIDE EFFECT (KNOWN) (1330 ms)
+PASS: check-procgen-reference.mjs — HELP ok (952 ms) · IMPORT SIDE EFFECT (KNOWN) (5029 ms)
+PASS: check-regenerate-region-control.mjs — HELP ok (139 ms) · IMPORT ok (36 ms)
+PASS: check-region-library-roundtrip.mjs — HELP ok (178 ms) · IMPORT SIDE EFFECT (KNOWN) (311 ms)
+PASS: check-region-library-sphere-roundtrip-maze.mjs — HELP ok (185 ms) · IMPORT SIDE EFFECT (KNOWN) (297 ms)
+PASS: check-region-library-sphere-roundtrip.mjs — HELP ok (250 ms) · IMPORT SIDE EFFECT (KNOWN) (217 ms)
+PASS: check-region-library-ui.mjs — HELP ok (610 ms) · IMPORT SIDE EFFECT (KNOWN) (1245 ms)
+PASS: check-region-marking-tool.mjs — HELP ok (673 ms) · IMPORT SIDE EFFECT (KNOWN) (5011 ms)
+PASS: check-region-step-editing.mjs — HELP ok (521 ms) · IMPORT SIDE EFFECT (KNOWN) (4049 ms)
+PASS: check-rule-gated-portals.mjs — HELP ok (1361 ms) · IMPORT SIDE EFFECT (KNOWN) (5079 ms)
+PASS: check-seedling-ap-placement.mjs — HELP ok (1250 ms) · IMPORT SIDE EFFECT (KNOWN) (5052 ms)
+PASS: check-seedling-atlas-host-play.mjs — HELP ok (1011 ms) · IMPORT ok (671 ms)
+PASS: check-seedling-atlas-location-play.mjs — HELP ok (1111 ms) · IMPORT ok (1066 ms)
+PASS: check-seedling-atlas-maze.mjs — HELP ok (1063 ms) · IMPORT SIDE EFFECT (KNOWN) (1180 ms)
+PASS: check-seedling-atlas-play.mjs — HELP ok (720 ms) · IMPORT SIDE EFFECT (KNOWN) (5013 ms)
+PASS: check-seedling-atlas-preset.mjs — HELP ok (1205 ms) · IMPORT SIDE EFFECT (KNOWN) (5049 ms)
+PASS: check-seedling-bot-differential.mjs — HELP ok (1134 ms) · IMPORT SIDE EFFECT (KNOWN) (5069 ms)
+PASS: check-seedling-editor-arm.mjs — HELP ok (913 ms) · IMPORT SIDE EFFECT (KNOWN) (5081 ms)
+PASS: check-seedling-editor-boot.mjs — HELP ok (873 ms) · IMPORT SIDE EFFECT (KNOWN) (5080 ms)
+PASS: check-seedling-editor-e1.mjs — HELP ok (683 ms) · IMPORT ok (1012 ms)
+PASS: check-seedling-editor-e2.mjs — HELP ok (793 ms) · IMPORT ok (787 ms)
+PASS: check-seedling-editor-e3.mjs — HELP ok (910 ms) · IMPORT ok (575 ms)
+PASS: check-seedling-editor-edit.mjs — HELP ok (889 ms) · IMPORT SIDE EFFECT (KNOWN) (5032 ms)
+PASS: check-seedling-editor-export.mjs — HELP ok (258 ms) · IMPORT SIDE EFFECT (KNOWN) (5005 ms)
+PASS: check-seedling-editor-generate.mjs — HELP ok (920 ms) · IMPORT SIDE EFFECT (KNOWN) (5075 ms)
+PASS: check-seedling-editor-lanes.mjs — HELP ok (846 ms) · IMPORT SIDE EFFECT (KNOWN) (5022 ms)
+PASS: check-seedling-editor-manual.mjs — HELP ok (823 ms) · IMPORT SIDE EFFECT (KNOWN) (5029 ms)
+PASS: check-seedling-editor-overlays.mjs — HELP ok (634 ms) · IMPORT SIDE EFFECT (KNOWN) (5033 ms)
+PASS: check-seedling-editor-phases.mjs — HELP ok (538 ms) · IMPORT SIDE EFFECT (KNOWN) (5069 ms)
+PASS: check-seedling-editor-refusal.mjs — HELP ok (797 ms) · IMPORT SIDE EFFECT (KNOWN) (5046 ms)
+PASS: check-seedling-editor-sequence.mjs — HELP ok (945 ms) · IMPORT SIDE EFFECT (KNOWN) (5072 ms)
+PASS: check-seedling-editor-shapes.mjs — HELP ok (691 ms) · IMPORT SIDE EFFECT (KNOWN) (5029 ms)
+PASS: check-seedling-editor-solve.mjs — HELP ok (836 ms) · IMPORT SIDE EFFECT (KNOWN) (5042 ms)
+PASS: check-seedling-editor-switch.mjs — HELP ok (822 ms) · IMPORT SIDE EFFECT (KNOWN) (5021 ms)
+PASS: check-seedling-editor-world.mjs — HELP ok (873 ms) · IMPORT SIDE EFFECT (KNOWN) (5010 ms)
+PASS: check-seedling-full-tier-owed.mjs — HELP ok (194 ms) · IMPORT SIDE EFFECT (KNOWN) (550 ms)
+PASS: check-seedling-generated-host-play.mjs — HELP ok (893 ms) · IMPORT ok (1055 ms)
+PASS: check-seedling-generated-leaf-play.mjs — HELP ok (835 ms) · IMPORT ok (965 ms)
+PASS: check-seedling-generated-room-play.mjs — HELP ok (991 ms) · IMPORT ok (1076 ms)
+PASS: check-seedling-generated-set.mjs — HELP ok (161 ms) · IMPORT SIDE EFFECT (KNOWN) (1619 ms)
+PASS: check-seedling-generated-swim-play.mjs — HELP ok (684 ms) · IMPORT ok (716 ms)
+PASS: check-seedling-hammer-monotonicity.mjs — HELP ok (147 ms) · IMPORT ok (169 ms)
+PASS: check-seedling-lab-art.mjs — HELP ok (632 ms) · IMPORT ok (560 ms)
+PASS: check-seedling-lab-load-in-js.mjs — HELP ok (567 ms) · IMPORT ok (693 ms)
+PASS: check-seedling-producer-boundaries.mjs — HELP ok (96 ms) · IMPORT SIDE EFFECT (KNOWN) (403 ms)
+PASS: check-seedling-rerecord-rehearsal.mjs — HELP ok (168 ms) · IMPORT SIDE EFFECT (KNOWN) (5008 ms)
+PASS: check-seedling-rewind-exactness.mjs — HELP ok (81 ms) · IMPORT ok (40 ms)
+PASS: check-seedling-save-stamp.mjs — HELP ok (154 ms) · IMPORT SIDE EFFECT (KNOWN) (265 ms)
+PASS: check-seedling-source-pin.mjs — HELP ok (101 ms) · IMPORT ok (95 ms)
+PASS: check-seedling-sphere-room-play.mjs — HELP ok (584 ms) · IMPORT ok (590 ms)
+PASS: check-seedling-spiral-room-play.mjs — HELP ok (636 ms) · IMPORT ok (585 ms)
+PASS: check-seedling-string-pull-fast.mjs — HELP ok (86 ms) · IMPORT ok (212 ms)
+PASS: check-seedling-vanilla-manifest.mjs — HELP ok (126 ms) · IMPORT SIDE EFFECT (KNOWN) (476 ms)
+PASS: check-seedling-wasm-bridge.mjs — HELP ok (572 ms) · IMPORT SIDE EFFECT (KNOWN) (5042 ms)
+PASS: check-seedling-wasm-element.mjs — HELP ok (624 ms) · IMPORT SIDE EFFECT (KNOWN) (5039 ms)
+PASS: check-seedling-wasm-pages.mjs — HELP ok (663 ms) · IMPORT SIDE EFFECT (KNOWN) (858 ms)
+PASS: check-seedling-wasm-pins.mjs — HELP ok (174 ms) · IMPORT SIDE EFFECT (KNOWN) (2479 ms)
+PASS: check-seedling-wasm-ship.mjs — HELP ok (220 ms) · IMPORT SIDE EFFECT (KNOWN) (553 ms)
+PASS: check-sidecar-fields.mjs — HELP ok (151 ms) · IMPORT ok (319 ms)
+PASS: check-slice-records.mjs — HELP ok (163 ms) · IMPORT ok (107 ms)
+PASS: check-sphere-batch-stepping.mjs — HELP ok (710 ms) · IMPORT SIDE EFFECT (KNOWN) (5042 ms)
+PASS: check-sphere-envelope-resume.mjs — HELP ok (669 ms) · IMPORT SIDE EFFECT (KNOWN) (5032 ms)
+PASS: check-sphere-growth-ui.mjs — HELP ok (861 ms) · IMPORT SIDE EFFECT (KNOWN) (5062 ms)
+PASS: check-sphere-steps-ui.mjs — HELP ok (1120 ms) · IMPORT SIDE EFFECT (KNOWN) (5038 ms)
+PASS: check-spiral-byteidentity.mjs — HELP ok (674 ms) · IMPORT SIDE EFFECT (KNOWN) (1371 ms)
+PASS: check-spiral-steps-ui.mjs — HELP ok (1045 ms) · IMPORT SIDE EFFECT (KNOWN) (1397 ms)
+PASS: check-ta-mana-leg.mjs — HELP ok (1098 ms) · IMPORT SIDE EFFECT (KNOWN) (5019 ms)
+PASS: check-topdown-steps-ui.mjs — HELP ok (1265 ms) · IMPORT SIDE EFFECT (KNOWN) (5034 ms)
+PASS: check-topdown-steps.mjs — HELP ok (462 ms) · IMPORT SIDE EFFECT (KNOWN) (1034 ms)
+PASS: check-world-persistence-reload.mjs — HELP ok (584 ms) · IMPORT SIDE EFFECT (KNOWN) (5013 ms)
+PASS: check-worldgen-package-sidecars.mjs — HELP ok (147 ms) · IMPORT ok (96 ms)
+PASS: ci-expected-red.mjs — HELP ok (124 ms) · IMPORT ok (73 ms)
+PASS: ci-gates.mjs — HELP ok (285 ms) · IMPORT SIDE EFFECT (KNOWN) (5014 ms)
+PASS: ci-producer-checks.mjs — HELP ok (149 ms) · IMPORT ok (41 ms)
+PASS: ci-summary.mjs — HELP ok (234 ms) · IMPORT SIDE EFFECT (KNOWN) (751 ms)
+PASS: ci-vitest-summary.mjs — HELP ok (194 ms) · IMPORT SIDE EFFECT (KNOWN) (642 ms)
+PASS: cloudberrySite.mjs — HELP ok (96 ms) · IMPORT ok (154 ms)
+PASS: derive-seedling-tick0.mjs — HELP ok (179 ms) · IMPORT SIDE EFFECT (KNOWN) (539 ms)
+PASS: dump-dj-traces.mjs — HELP ok (189 ms) · IMPORT SIDE EFFECT (KNOWN) (95 ms)
+PASS: dump-maze-byteidentity.mjs — HELP ok (149 ms) · IMPORT SIDE EFFECT (KNOWN) (1602 ms)
+PASS: dump-seedling-gen-capacity.mjs — HELP ok (120 ms) · IMPORT ok (104 ms)
+PASS: dump-seedling-kind-pairs.mjs — HELP ok (356 ms) · IMPORT SIDE EFFECT (KNOWN) (5012 ms)
+PASS: dump-sphere-byteidentity.mjs — HELP ok (514 ms) · IMPORT SIDE EFFECT (KNOWN) (2204 ms)
+PASS: dump-topdown-byteidentity.mjs — HELP ok (396 ms) · IMPORT SIDE EFFECT (KNOWN) (668 ms)
+PASS: export-seedling-level-set.mjs — HELP ok (165 ms) · IMPORT SIDE EFFECT (KNOWN) (2387 ms)
+PASS: export-seedling-view.mjs — HELP ok (584 ms) · IMPORT SIDE EFFECT (KNOWN) (982 ms)
+PASS: extract-seedling-art-packs.mjs — HELP ok (113 ms) · IMPORT ok (98 ms)
+PASS: extract-seedling-damage-sites.mjs — HELP ok (112 ms) · IMPORT SIDE EFFECT (KNOWN) (139 ms)
+PASS: extract-seedling-map.mjs — HELP ok (160 ms) · IMPORT ok (71 ms)
+PASS: extract-seedling-masks.mjs — HELP ok (148 ms) · IMPORT ok (49 ms)
+PASS: extract-seedling-music-pack.mjs — HELP ok (140 ms) · IMPORT ok (56 ms)
+PASS: extract-seedling-sfx-pack.mjs — HELP ok (142 ms) · IMPORT ok (66 ms)
+PASS: find-seedling-seeds.mjs — HELP ok (75 ms) · IMPORT SIDE EFFECT (KNOWN) (250 ms)
+PASS: gates.mjs — HELP ok (108 ms) · IMPORT SIDE EFFECT (KNOWN) (48 ms)
+PASS: generate-envelope-schemas.mjs — HELP ok (104 ms) · IMPORT ok (38 ms)
+PASS: generate-maze-level.mjs — HELP ok (118 ms) · IMPORT SIDE EFFECT (KNOWN) (132 ms)
+PASS: generate-procgen-reference.mjs — HELP ok (415 ms) · IMPORT SIDE EFFECT (KNOWN) (5016 ms)
+PASS: generate-seedling-level.mjs — HELP ok (289 ms) · IMPORT SIDE EFFECT (KNOWN) (754 ms)
+PASS: generate-tape-index.mjs — HELP ok (116 ms) · IMPORT SIDE EFFECT (KNOWN) (58 ms)
+PASS: harvest-procgen-terms.mjs — HELP ok (124 ms) · IMPORT SIDE EFFECT (KNOWN) (626 ms)
+PASS: help.mjs — HELP ok (136 ms) · IMPORT SIDE EFFECT (KNOWN) (5007 ms)
+PASS: inventory-menu-identity.mjs — HELP ok (425 ms) · IMPORT ok (180 ms)
+PASS: lint-gate-labels.mjs — HELP ok (107 ms) · IMPORT ok (55 ms)
+PASS: loadJSZipNode.mjs — HELP ok (96 ms) · IMPORT ok (33 ms)
+PASS: make-demo-bounce-pack.mjs — HELP ok (98 ms) · IMPORT SIDE EFFECT (KNOWN) (623 ms)
+PASS: make-demo-cloudberry-pack.mjs — HELP ok (796 ms) · IMPORT ok (579 ms)
+PASS: make-seedling-entity-colliders.mjs — HELP ok (169 ms) · IMPORT ok (108 ms)
+PASS: make-seedling-er-preset.mjs — HELP ok (135 ms) · IMPORT ok (201 ms)
+PASS: make-seedling-font.mjs — HELP ok (175 ms) · IMPORT ok (128 ms)
+PASS: make-seedling-playthrough-maze.mjs — HELP ok (628 ms) · IMPORT ok (447 ms)
+PASS: make-seedling-playthrough-rules.mjs — HELP ok (248 ms) · IMPORT ok (609 ms)
+PASS: make-seedling-sphere-order.mjs — HELP ok (118 ms) · IMPORT ok (76 ms)
+PASS: make-seedling-spiral-room-preset.mjs — HELP ok (106 ms) · IMPORT ok (53 ms)
+PASS: make-seedling-starter-atlas.mjs — HELP ok (98 ms) · IMPORT ok (153 ms)
+PASS: make-seedling-subregion-partition.mjs — HELP ok (125 ms) · IMPORT ok (96 ms)
+PASS: make-seedling-vanilla-overlay.mjs — HELP ok (113 ms) · IMPORT ok (183 ms)
+PASS: measure-apworld-raw-view.mjs — HELP ok (533 ms) · IMPORT ok (619 ms)
+PASS: measure-bot-route-orders.mjs — HELP ok (66 ms) · IMPORT ok (135 ms)
+PASS: measure-seedling-cleartag-patch.mjs — HELP ok (889 ms) · IMPORT ok (325 ms)
+PASS: measure-seedling-cleartag.mjs — HELP ok (598 ms) · IMPORT ok (331 ms)
+PASS: measure-seedling-escape-kernel.mjs — HELP ok (103 ms) · IMPORT ok (57 ms)
+PASS: measure-seedling-killlock-tag.mjs — HELP ok (67 ms) · IMPORT SIDE EFFECT (KNOWN) (102 ms)
+PASS: measure-seedling-l18-live-gap.mjs — HELP ok (98 ms) · IMPORT ok (64 ms)
+PASS: measure-seedling-solver-surface.mjs — HELP ok (113 ms) · IMPORT ok (121 ms)
+PASS: migrate-per-player-blocks.mjs — HELP ok (92 ms) · IMPORT ok (88 ms)
+PASS: mine-seedling-roster-history.mjs — HELP ok (83 ms) · IMPORT SIDE EFFECT (KNOWN) (111 ms)
+PASS: plan-seedling-axe-witness.mjs — HELP ok (128 ms) · IMPORT ok (111 ms)
+PASS: plan-seedling-binding-witness.mjs — HELP ok (116 ms) · IMPORT ok (96 ms)
+PASS: plan-seedling-bobsoldier.mjs — HELP ok (77 ms) · IMPORT ok (85 ms)
+PASS: plan-seedling-bobsoldier2.mjs — HELP ok (124 ms) · IMPORT ok (119 ms)
+PASS: plan-seedling-bulb.mjs — HELP ok (136 ms) · IMPORT ok (111 ms)
+PASS: plan-seedling-burn-witness.mjs — HELP ok (105 ms) · IMPORT ok (99 ms)
+PASS: plan-seedling-c1-static-sword.mjs — HELP ok (128 ms) · IMPORT ok (100 ms)
+PASS: plan-seedling-crusher-witness.mjs — HELP ok (134 ms) · IMPORT ok (98 ms)
+PASS: plan-seedling-encounters.mjs — HELP ok (100 ms) · IMPORT ok (77 ms)
+PASS: plan-seedling-f1-l5-lock.mjs — HELP ok (108 ms) · IMPORT ok (69 ms)
+PASS: plan-seedling-f1-l5-open-lock.mjs — HELP ok (87 ms) · IMPORT ok (97 ms)
+PASS: plan-seedling-f1c-l18-lock.mjs — HELP ok (90 ms) · IMPORT ok (89 ms)
+PASS: plan-seedling-f1c-l18-phase.mjs — HELP ok (97 ms) · IMPORT ok (106 ms)
+PASS: plan-seedling-f4-l8-sandtraps.mjs — HELP ok (51 ms) · IMPORT ok (67 ms)
+PASS: plan-seedling-f6-reentry.mjs — HELP ok (61 ms) · IMPORT ok (52 ms)
+PASS: plan-seedling-f7-reentry.mjs — HELP ok (85 ms) · IMPORT ok (104 ms)
+PASS: plan-seedling-frontier3-witness.mjs — HELP ok (116 ms) · IMPORT ok (71 ms)
+PASS: plan-seedling-ghostmotion.mjs — HELP ok (86 ms) · IMPORT ok (116 ms)
+PASS: plan-seedling-ghostsword.mjs — HELP ok (94 ms) · IMPORT ok (69 ms)
+PASS: plan-seedling-hammer-a-escape.mjs — HELP ok (124 ms) · IMPORT ok (90 ms)
+PASS: plan-seedling-hammer-b1-approach.mjs — HELP ok (75 ms) · IMPORT ok (68 ms)
+PASS: plan-seedling-hammer-b2-fight.mjs — HELP ok (70 ms) · IMPORT ok (113 ms)
+PASS: plan-seedling-hammer-bw-bombstand.mjs — HELP ok (113 ms) · IMPORT ok (64 ms)
+PASS: plan-seedling-hammer-c2-ghost.mjs — HELP ok (123 ms) · IMPORT ok (109 ms)
+PASS: plan-seedling-hammer-d-ghostwall.mjs — HELP ok (95 ms) · IMPORT ok (104 ms)
+PASS: plan-seedling-hammer-dd-walkkill.mjs — HELP ok (132 ms) · IMPORT ok (98 ms)
+PASS: plan-seedling-hammer-g1-ghostkill.mjs — HELP ok (115 ms) · IMPORT ok (99 ms)
+PASS: plan-seedling-hammer-sf-strikefloor.mjs — HELP ok (117 ms) · IMPORT ok (105 ms)
+PASS: plan-seedling-l100-witness.mjs — HELP ok (110 ms) · IMPORT ok (88 ms)
+PASS: plan-seedling-l12doors-witness.mjs — HELP ok (125 ms) · IMPORT ok (105 ms)
+PASS: plan-seedling-l12keyline-witness.mjs — HELP ok (88 ms) · IMPORT ok (83 ms)
+PASS: plan-seedling-l14-swordless.mjs — HELP ok (60 ms) · IMPORT ok (95 ms)
+PASS: plan-seedling-l30keylock.mjs — HELP ok (111 ms) · IMPORT ok (50 ms)
+PASS: plan-seedling-l40button-witness.mjs — HELP ok (104 ms) · IMPORT ok (96 ms)
+PASS: plan-seedling-ladder2-witness.mjs — HELP ok (111 ms) · IMPORT ok (77 ms)
+PASS: plan-seedling-lightpole-witness.mjs — HELP ok (90 ms) · IMPORT ok (74 ms)
+PASS: plan-seedling-proximity-witness.mjs — HELP ok (100 ms) · IMPORT ok (81 ms)
+PASS: plan-seedling-pushblock-witness.mjs — HELP ok (124 ms) · IMPORT ok (94 ms)
+PASS: plan-seedling-r1-dark-suit.mjs — HELP ok (122 ms) · IMPORT ok (68 ms)
+PASS: plan-seedling-r1-route.mjs — HELP ok (133 ms) · IMPORT SIDE EFFECT (KNOWN) (1184 ms)
+PASS: plan-seedling-r2-route.mjs — HELP ok (150 ms) · IMPORT SIDE EFFECT (KNOWN) (5008 ms)
+PASS: plan-seedling-r2-singles.mjs — HELP ok (98 ms) · IMPORT ok (75 ms)
+PASS: plan-seedling-r2-wallflyer.mjs — HELP ok (117 ms) · IMPORT ok (66 ms)
+PASS: plan-seedling-r3-death.mjs — HELP ok (81 ms) · IMPORT ok (63 ms)
+PASS: plan-seedling-r3-route.mjs — HELP ok (105 ms) · IMPORT SIDE EFFECT (KNOWN) (3864 ms)
+PASS: plan-seedling-r4-route.mjs — HELP ok (117 ms) · IMPORT SIDE EFFECT (KNOWN) (3524 ms)
+PASS: plan-seedling-r4.mjs — HELP ok (131 ms) · IMPORT ok (43 ms)
+PASS: plan-seedling-r5-bobboss.mjs — HELP ok (131 ms) · IMPORT SIDE EFFECT (KNOWN) (138 ms)
+PASS: plan-seedling-r5-bosskey.mjs — HELP ok (73 ms) · IMPORT SIDE EFFECT (KNOWN) (561 ms)
+PASS: plan-seedling-r5-conch.mjs — HELP ok (128 ms) · IMPORT SIDE EFFECT (KNOWN) (2234 ms)
+PASS: plan-seedling-r5-feather.mjs — HELP ok (113 ms) · IMPORT SIDE EFFECT (KNOWN) (2937 ms)
+PASS: plan-seedling-r5-karlore.mjs — HELP ok (87 ms) · IMPORT SIDE EFFECT (KNOWN) (742 ms)
+PASS: plan-seedling-r5-l37-burn.mjs — HELP ok (134 ms) · IMPORT SIDE EFFECT (KNOWN) (1330 ms)
+PASS: plan-seedling-r5-l40-join.mjs — HELP ok (137 ms) · IMPORT SIDE EFFECT (KNOWN) (3078 ms)
+PASS: plan-seedling-r5-l40-part0.mjs — HELP ok (125 ms) · IMPORT SIDE EFFECT (KNOWN) (3258 ms)
+PASS: plan-seedling-r5-l40-part1.mjs — HELP ok (106 ms) · IMPORT SIDE EFFECT (KNOWN) (1544 ms)
+PASS: plan-seedling-r5-l40-part5.mjs — HELP ok (106 ms) · IMPORT SIDE EFFECT (KNOWN) (4400 ms)
+PASS: plan-seedling-r5-l41-part3.mjs — HELP ok (165 ms) · IMPORT SIDE EFFECT (KNOWN) (3497 ms)
+PASS: plan-seedling-r5-l42-part4.mjs — HELP ok (124 ms) · IMPORT SIDE EFFECT (KNOWN) (3207 ms)
+PASS: plan-seedling-r5-l43-wand.mjs — HELP ok (154 ms) · IMPORT SIDE EFFECT (KNOWN) (430 ms)
+PASS: plan-seedling-r5-l60-kill.mjs — HELP ok (177 ms) · IMPORT SIDE EFFECT (KNOWN) (322 ms)
+PASS: plan-seedling-r5-shaft.mjs — HELP ok (80 ms) · IMPORT SIDE EFFECT (KNOWN) (3519 ms)
+PASS: plan-seedling-r5-swim.mjs — HELP ok (92 ms) · IMPORT SIDE EFFECT (KNOWN) (408 ms)
+PASS: plan-seedling-r5-totem-entrance.mjs — HELP ok (117 ms) · IMPORT SIDE EFFECT (KNOWN) (1426 ms)
+PASS: plan-seedling-r5-waterfall.mjs — HELP ok (147 ms) · IMPORT SIDE EFFECT (KNOWN) (498 ms)
+PASS: plan-seedling-r6-shieldboss.mjs — HELP ok (139 ms) · IMPORT SIDE EFFECT (KNOWN) (984 ms)
+PASS: plan-seedling-r6-wblood.mjs — HELP ok (112 ms) · IMPORT SIDE EFFECT (KNOWN) (1211 ms)
+PASS: plan-seedling-r6-wdoor.mjs — HELP ok (84 ms) · IMPORT SIDE EFFECT (KNOWN) (413 ms)
+PASS: plan-seedling-r6-wowl.mjs — HELP ok (87 ms) · IMPORT SIDE EFFECT (KNOWN) (1220 ms)
+PASS: plan-seedling-r6-wseed.mjs — HELP ok (115 ms) · IMPORT SIDE EFFECT (KNOWN) (280 ms)
+PASS: plan-seedling-r6-wtalk.mjs — HELP ok (91 ms) · IMPORT SIDE EFFECT (KNOWN) (197 ms)
+PASS: plan-seedling-r7-attribution.mjs — HELP ok (69 ms) · IMPORT SIDE EFFECT (KNOWN) (5016 ms)
+PASS: plan-seedling-r7-ends-meet.mjs — HELP ok (480 ms) · IMPORT SIDE EFFECT (KNOWN) (5014 ms)
+PASS: plan-seedling-r8-hammer-pair.mjs — HELP ok (136 ms) · IMPORT SIDE EFFECT (KNOWN) (814 ms)
+PASS: plan-seedling-r8-l18-spinner.mjs — HELP ok (74 ms) · IMPORT SIDE EFFECT (KNOWN) (386 ms)
+PASS: plan-seedling-r9-l0-sword-dash.mjs — HELP ok (118 ms) · IMPORT SIDE EFFECT (KNOWN) (198 ms)
+PASS: plan-seedling-r9-l6-bob-press.mjs — HELP ok (112 ms) · IMPORT SIDE EFFECT (KNOWN) (243 ms)
+PASS: plan-seedling-r9-l6-harmless-window.mjs — HELP ok (127 ms) · IMPORT SIDE EFFECT (KNOWN) (399 ms)
+PASS: plan-seedling-r9-l6-sword-dash-hit.mjs — HELP ok (134 ms) · IMPORT SIDE EFFECT (KNOWN) (296 ms)
+PASS: plan-seedling-return-l15.mjs — HELP ok (70 ms) · IMPORT ok (34 ms)
+PASS: plan-seedling-rulesref-witness.mjs — HELP ok (60 ms) · IMPORT ok (35 ms)
+PASS: plan-seedling-sealdoor-witness.mjs — HELP ok (129 ms) · IMPORT ok (67 ms)
+PASS: plan-seedling-slots-witness.mjs — HELP ok (92 ms) · IMPORT ok (43 ms)
+PASS: plan-seedling-stance-witness.mjs — HELP ok (120 ms) · IMPORT ok (63 ms)
+PASS: plan-seedling-u10-puncher-dwell.mjs — HELP ok (75 ms) · IMPORT ok (57 ms)
+PASS: plan-seedling-u11-dark-shield.mjs — HELP ok (110 ms) · IMPORT ok (59 ms)
+PASS: plan-seedling-u11-facing.mjs — HELP ok (99 ms) · IMPORT ok (66 ms)
+PASS: plan-seedling-u12-pull.mjs — HELP ok (96 ms) · IMPORT ok (68 ms)
+PASS: plan-seedling-u14-moonrock.mjs — HELP ok (152 ms) · IMPORT ok (65 ms)
+PASS: plan-seedling-u15-turret.mjs — HELP ok (96 ms) · IMPORT ok (41 ms)
+PASS: plan-seedling-u7-puncher.mjs — HELP ok (109 ms) · IMPORT ok (69 ms)
+PASS: plan-seedling-u9-shield-bump.mjs — HELP ok (95 ms) · IMPORT ok (64 ms)
+PASS: plan-seedling-wallflyer.mjs — HELP ok (121 ms) · IMPORT ok (59 ms)
+PASS: plan-seedling-wand-witness.mjs — HELP ok (87 ms) · IMPORT ok (120 ms)
+PASS: plan-seedling-watcher-witness.mjs — HELP ok (161 ms) · IMPORT ok (147 ms)
+PASS: plan-seedling-watchertalk-witness.mjs — HELP ok (173 ms) · IMPORT ok (58 ms)
+PASS: probe-cloudberry-status-strip.mjs — HELP ok (651 ms) · IMPORT ok (654 ms)
+PASS: probe-cloudberry-touch-up.mjs — HELP ok (694 ms) · IMPORT ok (547 ms)
+PASS: probe-seedling-arrival-escape.mjs — HELP ok (670 ms) · IMPORT ok (690 ms)
+PASS: probe-seedling-arrival-solid.mjs — HELP ok (1064 ms) · IMPORT ok (982 ms)
+PASS: probe-seedling-axe-phase.mjs — HELP ok (1097 ms) · IMPORT ok (1017 ms)
+PASS: probe-seedling-bobiframe.mjs — HELP ok (1041 ms) · IMPORT ok (774 ms)
+PASS: probe-seedling-bobsoldier-mobiles.mjs — HELP ok (1148 ms) · IMPORT ok (647 ms)
+PASS: probe-seedling-bomb-blast-body.mjs — HELP ok (1102 ms) · IMPORT ok (782 ms)
+PASS: probe-seedling-bombpusher.mjs — HELP ok (928 ms) · IMPORT ok (1007 ms)
+PASS: probe-seedling-boot-clock.mjs — HELP ok (1191 ms) · IMPORT SIDE EFFECT (KNOWN) (5039 ms)
+PASS: probe-seedling-boot-reset.mjs — HELP ok (1158 ms) · IMPORT SIDE EFFECT (KNOWN) (5039 ms)
+PASS: probe-seedling-bosskills.mjs — HELP ok (1207 ms) · IMPORT ok (1188 ms)
+PASS: probe-seedling-bosslock-latch.mjs — HELP ok (947 ms) · IMPORT ok (785 ms)
+PASS: probe-seedling-bridge.mjs — HELP ok (960 ms) · IMPORT SIDE EFFECT (KNOWN) (5023 ms)
+PASS: probe-seedling-build-cost.mjs — HELP ok (972 ms) · IMPORT SIDE EFFECT (KNOWN) (5026 ms)
+PASS: probe-seedling-burn-write.mjs — HELP ok (592 ms) · IMPORT ok (733 ms)
+PASS: probe-seedling-calib-levels.mjs — HELP ok (83 ms) · IMPORT ok (41 ms)
+PASS: probe-seedling-ceremony.mjs — HELP ok (969 ms) · IMPORT SIDE EFFECT (KNOWN) (5013 ms)
+PASS: probe-seedling-ceremony126.mjs — HELP ok (627 ms) · IMPORT ok (685 ms)
+PASS: probe-seedling-certifier-tail.mjs — HELP ok (936 ms) · IMPORT ok (994 ms)
+PASS: probe-seedling-chaser-mobiles.mjs — HELP ok (828 ms) · IMPORT ok (766 ms)
+PASS: probe-seedling-chest-incidental.mjs — HELP ok (1144 ms) · IMPORT ok (1115 ms)
+PASS: probe-seedling-chestseal.mjs — HELP ok (1133 ms) · IMPORT ok (831 ms)
+PASS: probe-seedling-cleartag.mjs — HELP ok (991 ms) · IMPORT ok (1078 ms)
+PASS: probe-seedling-collider-cells.mjs — HELP ok (1118 ms) · IMPORT ok (994 ms)
+PASS: probe-seedling-contact-divergence.mjs — HELP ok (1088 ms) · IMPORT ok (921 ms)
+PASS: probe-seedling-corpse-bump.mjs — HELP ok (914 ms) · IMPORT ok (826 ms)
+PASS: probe-seedling-cross-room-button.mjs — HELP ok (944 ms) · IMPORT ok (608 ms)
+PASS: probe-seedling-crusher-press.mjs — HELP ok (786 ms) · IMPORT ok (781 ms)
+PASS: probe-seedling-ctor-args.mjs — HELP ok (80 ms) · IMPORT SIDE EFFECT (KNOWN) (155 ms)
+PASS: probe-seedling-darktrap-mobiles.mjs — HELP ok (925 ms) · IMPORT ok (767 ms)
+PASS: probe-seedling-dash-window.mjs — HELP ok (643 ms) · IMPORT ok (831 ms)
+PASS: probe-seedling-deadframe-band.mjs — HELP ok (114 ms) · IMPORT SIDE EFFECT (KNOWN) (311 ms)
+PASS: probe-seedling-deadframes.mjs — HELP ok (157 ms) · IMPORT SIDE EFFECT (KNOWN) (973 ms)
+PASS: probe-seedling-derived-rules.mjs — HELP ok (126 ms) · IMPORT ok (52 ms)
+PASS: probe-seedling-descent.mjs — HELP ok (624 ms) · IMPORT ok (448 ms)
+PASS: probe-seedling-divergence-sweep.mjs — HELP ok (774 ms) · IMPORT ok (484 ms)
+PASS: probe-seedling-drill-kill.mjs — HELP ok (820 ms) · IMPORT ok (408 ms)
+PASS: probe-seedling-drill-mixed.mjs — HELP ok (914 ms) · IMPORT ok (470 ms)
+PASS: probe-seedling-drill-water.mjs — HELP ok (1068 ms) · IMPORT ok (1042 ms)
+PASS: probe-seedling-encounter-latch.mjs — HELP ok (1076 ms) · IMPORT ok (724 ms)
+PASS: probe-seedling-encounter-ticks.mjs — HELP ok (775 ms) · IMPORT ok (1128 ms)
+PASS: probe-seedling-er-landings.mjs — HELP ok (1028 ms) · IMPORT ok (922 ms)
+PASS: probe-seedling-f2-apitem.mjs — HELP ok (1033 ms) · IMPORT ok (967 ms)
+PASS: probe-seedling-f2-boundary.mjs — HELP ok (1034 ms) · IMPORT ok (1140 ms)
+PASS: probe-seedling-f6-reentry.mjs — HELP ok (810 ms) · IMPORT ok (1108 ms)
+PASS: probe-seedling-f7-reentry.mjs — HELP ok (1037 ms) · IMPORT ok (1054 ms)
+PASS: probe-seedling-fire-break.mjs — HELP ok (622 ms) · IMPORT ok (1083 ms)
+PASS: probe-seedling-fire-move.mjs — HELP ok (1046 ms) · IMPORT ok (1238 ms)
+PASS: probe-seedling-fire-push.mjs — HELP ok (1104 ms) · IMPORT ok (1212 ms)
+PASS: probe-seedling-fire-spinner.mjs — HELP ok (995 ms) · IMPORT ok (905 ms)
+PASS: probe-seedling-frozen-press.mjs — HELP ok (673 ms) · IMPORT ok (542 ms)
+PASS: probe-seedling-gen-arrowtrap-rooms.mjs — HELP ok (69 ms) · IMPORT ok (118 ms)
+PASS: probe-seedling-gen-chest-rooms.mjs — HELP ok (74 ms) · IMPORT ok (119 ms)
+PASS: probe-seedling-ghost-rope.mjs — HELP ok (657 ms) · IMPORT ok (564 ms)
+PASS: probe-seedling-ghostsword-items.mjs — HELP ok (609 ms) · IMPORT ok (590 ms)
+PASS: probe-seedling-help-frame.mjs — HELP ok (294 ms) · IMPORT SIDE EFFECT (KNOWN) (321 ms)
+PASS: probe-seedling-hold.mjs — HELP ok (316 ms) · IMPORT ok (171 ms)
+PASS: probe-seedling-iceturret-spear.mjs — HELP ok (982 ms) · IMPORT ok (900 ms)
+PASS: probe-seedling-inroom-darktraps.mjs — HELP ok (896 ms) · IMPORT ok (695 ms)
+PASS: probe-seedling-inventory-menu.mjs — HELP ok (1038 ms) · IMPORT ok (845 ms)
+PASS: probe-seedling-inventory.mjs — HELP ok (1026 ms) · IMPORT SIDE EFFECT (KNOWN) (5015 ms)
+PASS: probe-seedling-js-vs-wasm-tape.mjs — HELP ok (774 ms) · IMPORT ok (947 ms)
+PASS: probe-seedling-killlock-arms.mjs — HELP ok (920 ms) · IMPORT ok (916 ms)
+PASS: probe-seedling-killlock-span1.mjs — HELP ok (80 ms) · IMPORT SIDE EFFECT (KNOWN) (71 ms)
+PASS: probe-seedling-killlock.mjs — HELP ok (891 ms) · IMPORT ok (995 ms)
+PASS: probe-seedling-l0-tighter.mjs — HELP ok (1005 ms) · IMPORT ok (618 ms)
+PASS: probe-seedling-l107-lane.mjs — HELP ok (798 ms) · IMPORT ok (683 ms)
+PASS: probe-seedling-l12-bosslock.mjs — HELP ok (977 ms) · IMPORT ok (741 ms)
+PASS: probe-seedling-l12doors.mjs — HELP ok (974 ms) · IMPORT ok (754 ms)
+PASS: probe-seedling-l14-swordless.mjs — HELP ok (114 ms) · IMPORT ok (49 ms)
+PASS: probe-seedling-l15-block-path.mjs — HELP ok (814 ms) · IMPORT ok (732 ms)
+PASS: probe-seedling-l15-chest-line.mjs — HELP ok (849 ms) · IMPORT ok (950 ms)
+PASS: probe-seedling-l16-corner-pit.mjs — HELP ok (1004 ms) · IMPORT ok (744 ms)
+PASS: probe-seedling-l16-holder-bobs.mjs — HELP ok (895 ms) · IMPORT ok (926 ms)
+PASS: probe-seedling-l19-bosskey.mjs — HELP ok (1125 ms) · IMPORT ok (1024 ms)
+PASS: probe-seedling-l25-apitem.mjs — HELP ok (1043 ms) · IMPORT ok (855 ms)
+PASS: probe-seedling-l3-water-door.mjs — HELP ok (846 ms) · IMPORT ok (1044 ms)
+PASS: probe-seedling-l32-rock-move.mjs — HELP ok (1079 ms) · IMPORT ok (1066 ms)
+PASS: probe-seedling-l37-fallrock.mjs — HELP ok (1095 ms) · IMPORT ok (1086 ms)
+PASS: probe-seedling-l39-pulser-kill.mjs — HELP ok (811 ms) · IMPORT ok (923 ms)
+PASS: probe-seedling-l39-pulser.mjs — HELP ok (1017 ms) · IMPORT ok (911 ms)
+PASS: probe-seedling-l39-shaft.mjs — HELP ok (980 ms) · IMPORT ok (892 ms)
+PASS: probe-seedling-l40-flag12-lock.mjs — HELP ok (813 ms) · IMPORT ok (621 ms)
+PASS: probe-seedling-l40bk2.mjs — HELP ok (918 ms) · IMPORT ok (805 ms)
+PASS: probe-seedling-l40bk2b.mjs — HELP ok (832 ms) · IMPORT ok (855 ms)
+PASS: probe-seedling-l40button.mjs — HELP ok (80 ms) · IMPORT ok (91 ms)
+PASS: probe-seedling-l40latch.mjs — HELP ok (1062 ms) · IMPORT ok (877 ms)
+PASS: probe-seedling-l55-waterfall.mjs — HELP ok (914 ms) · IMPORT ok (997 ms)
+PASS: probe-seedling-l59-l67.mjs — HELP ok (1019 ms) · IMPORT SIDE EFFECT (KNOWN) (5007 ms)
+PASS: probe-seedling-l63-darktrap.mjs — HELP ok (1193 ms) · IMPORT ok (1047 ms)
+PASS: probe-seedling-l63-spear-block.mjs — HELP ok (1213 ms) · IMPORT ok (1010 ms)
+PASS: probe-seedling-l65-bob-block.mjs — HELP ok (942 ms) · IMPORT ok (778 ms)
+PASS: probe-seedling-l65-breach.mjs — HELP ok (834 ms) · IMPORT SIDE EFFECT (KNOWN) (5017 ms)
+PASS: probe-seedling-l65.mjs — HELP ok (1148 ms) · IMPORT SIDE EFFECT (KNOWN) (5007 ms)
+PASS: probe-seedling-l66-door.mjs — HELP ok (1100 ms) · IMPORT ok (1030 ms)
+PASS: probe-seedling-l67-reach2.mjs — HELP ok (1052 ms) · IMPORT SIDE EFFECT (KNOWN) (5020 ms)
+PASS: probe-seedling-l78-pull-order.mjs — HELP ok (849 ms) · IMPORT ok (789 ms)
+PASS: probe-seedling-l89-waterfall.mjs — HELP ok (1001 ms) · IMPORT ok (1018 ms)
+PASS: probe-seedling-l93-door.mjs — HELP ok (902 ms) · IMPORT ok (878 ms)
+PASS: probe-seedling-ladder2-phase.mjs — HELP ok (598 ms) · IMPORT ok (948 ms)
+PASS: probe-seedling-landing-contact.mjs — HELP ok (951 ms) · IMPORT ok (733 ms)
+PASS: probe-seedling-lethal-landings.mjs — HELP ok (932 ms) · IMPORT ok (875 ms)
+PASS: probe-seedling-level-set-transport.mjs — HELP ok (219 ms) · IMPORT SIDE EFFECT (KNOWN) (316 ms)
+PASS: probe-seedling-lights.mjs — HELP ok (935 ms) · IMPORT ok (762 ms)
+PASS: probe-seedling-loop-restart.mjs — HELP ok (800 ms) · IMPORT ok (1078 ms)
+PASS: probe-seedling-mask-lines.mjs — HELP ok (1162 ms) · IMPORT ok (895 ms)
+PASS: probe-seedling-mobile-fit.mjs — HELP ok (824 ms) · IMPORT ok (1073 ms)
+PASS: probe-seedling-moonrock.mjs — HELP ok (1098 ms) · IMPORT ok (972 ms)
+PASS: probe-seedling-music-pair.mjs — HELP ok (1106 ms) · IMPORT SIDE EFFECT (KNOWN) (5029 ms)
+PASS: probe-seedling-obstacle-events.mjs — HELP ok (997 ms) · IMPORT ok (1037 ms)
+PASS: probe-seedling-oneway-census.mjs — HELP ok (934 ms) · IMPORT ok (811 ms)
+PASS: probe-seedling-persistence-rebuild.mjs — HELP ok (722 ms) · IMPORT ok (683 ms)
+PASS: probe-seedling-pit-doors.mjs — HELP ok (675 ms) · IMPORT ok (743 ms)
+PASS: probe-seedling-pushblock-weapon.mjs — HELP ok (756 ms) · IMPORT ok (740 ms)
+PASS: probe-seedling-r1-suit-census.mjs — HELP ok (107 ms) · IMPORT ok (57 ms)
+PASS: probe-seedling-r2-census.mjs — HELP ok (74 ms) · IMPORT ok (203 ms)
+PASS: probe-seedling-r5-feather.mjs — HELP ok (152 ms) · IMPORT SIDE EFFECT (KNOWN) (2429 ms)
+PASS: probe-seedling-r5-l38-chain.mjs — HELP ok (125 ms) · IMPORT SIDE EFFECT (KNOWN) (651 ms)
+PASS: probe-seedling-r5-l38-entrance.mjs — HELP ok (239 ms) · IMPORT SIDE EFFECT (KNOWN) (183 ms)
+PASS: probe-seedling-r5-l40-bumps.mjs — HELP ok (138 ms) · IMPORT SIDE EFFECT (KNOWN) (143 ms)
+PASS: probe-seedling-r5-l40-corpse.mjs — HELP ok (87 ms) · IMPORT SIDE EFFECT (KNOWN) (363 ms)
+PASS: probe-seedling-r5-l40-holder.mjs — HELP ok (94 ms) · IMPORT SIDE EFFECT (KNOWN) (1617 ms)
+PASS: probe-seedling-r5-l40-kill.mjs — HELP ok (174 ms) · IMPORT SIDE EFFECT (KNOWN) (887 ms)
+PASS: probe-seedling-r5-l40-link4.mjs — HELP ok (124 ms) · IMPORT SIDE EFFECT (KNOWN) (1142 ms)
+PASS: probe-seedling-r5-l40.mjs — HELP ok (145 ms) · IMPORT SIDE EFFECT (KNOWN) (1856 ms)
+PASS: probe-seedling-r5-l42-chain3.mjs — HELP ok (161 ms) · IMPORT SIDE EFFECT (KNOWN) (879 ms)
+PASS: probe-seedling-r5-l42-escape.mjs — HELP ok (128 ms) · IMPORT SIDE EFFECT (KNOWN) (856 ms)
+PASS: probe-seedling-r5-l42-solver.mjs — HELP ok (142 ms) · IMPORT SIDE EFFECT (KNOWN) (5009 ms)
+PASS: probe-seedling-r5-l42.mjs — HELP ok (91 ms) · IMPORT SIDE EFFECT (KNOWN) (1544 ms)
+PASS: probe-seedling-r5-l43-boss-wake.mjs — HELP ok (120 ms) · IMPORT SIDE EFFECT (KNOWN) (182 ms)
+PASS: probe-seedling-r5-l43-replay.mjs — HELP ok (595 ms) · IMPORT SIDE EFFECT (KNOWN) (5031 ms)
+PASS: probe-seedling-r5-l43-wand-window.mjs — HELP ok (134 ms) · IMPORT SIDE EFFECT (KNOWN) (478 ms)
+PASS: probe-seedling-r5-mobiles.mjs — HELP ok (603 ms) · IMPORT SIDE EFFECT (KNOWN) (5036 ms)
+PASS: probe-seedling-r5-shaft-solver.mjs — HELP ok (146 ms) · IMPORT SIDE EFFECT (KNOWN) (5035 ms)
+PASS: probe-seedling-r5-spinner.mjs — HELP ok (106 ms) · IMPORT SIDE EFFECT (KNOWN) (1458 ms)
+PASS: probe-seedling-r5-totem-entrance.mjs — HELP ok (83 ms) · IMPORT SIDE EFFECT (KNOWN) (852 ms)
+PASS: probe-seedling-r5-totem-shaft.mjs — HELP ok (125 ms) · IMPORT SIDE EFFECT (KNOWN) (471 ms)
+PASS: probe-seedling-r6-boss-rooms.mjs — HELP ok (678 ms) · IMPORT SIDE EFFECT (KNOWN) (5063 ms)
+PASS: probe-seedling-r6-owl-prefix.mjs — HELP ok (630 ms) · IMPORT SIDE EFFECT (KNOWN) (5084 ms)
+PASS: probe-seedling-r6-owl-rng.mjs — HELP ok (711 ms) · IMPORT SIDE EFFECT (KNOWN) (5021 ms)
+PASS: probe-seedling-r7-l4-block.mjs — HELP ok (163 ms) · IMPORT SIDE EFFECT (KNOWN) (831 ms)
+PASS: probe-seedling-r7-l40-holder.mjs — HELP ok (102 ms) · IMPORT SIDE EFFECT (KNOWN) (5007 ms)
+PASS: probe-seedling-r7-l5-arrows.mjs — HELP ok (140 ms) · IMPORT SIDE EFFECT (KNOWN) (515 ms)
+PASS: probe-seedling-r7-l6-bait.mjs — HELP ok (158 ms) · IMPORT SIDE EFFECT (KNOWN) (401 ms)
+PASS: probe-seedling-r7-l8-blocks.mjs — HELP ok (185 ms) · IMPORT SIDE EFFECT (KNOWN) (909 ms)
+PASS: probe-seedling-r7-map-triggers.mjs — HELP ok (138 ms) · IMPORT SIDE EFFECT (KNOWN) (73 ms)
+PASS: probe-seedling-r7-rules-frontier.mjs — HELP ok (102 ms) · IMPORT SIDE EFFECT (KNOWN) (219 ms)
+PASS: probe-seedling-r9-bob-press-mobiles.mjs — HELP ok (103 ms) · IMPORT SIDE EFFECT (KNOWN) (449 ms)
+PASS: probe-seedling-r9-dash-rect-mobiles.mjs — HELP ok (118 ms) · IMPORT SIDE EFFECT (KNOWN) (441 ms)
+PASS: probe-seedling-r9-harmless-window-mobiles.mjs — HELP ok (172 ms) · IMPORT SIDE EFFECT (KNOWN) (548 ms)
+PASS: probe-seedling-rect-inputs.mjs — HELP ok (217 ms) · IMPORT ok (158 ms)
+PASS: probe-seedling-restart-held-items.mjs — HELP ok (619 ms) · IMPORT ok (641 ms)
+PASS: probe-seedling-restart-route.mjs — HELP ok (1185 ms) · IMPORT ok (870 ms)
+PASS: probe-seedling-restart-warp.mjs — HELP ok (1158 ms) · IMPORT ok (835 ms)
+PASS: probe-seedling-rng.mjs — HELP ok (1197 ms) · IMPORT SIDE EFFECT (KNOWN) (5007 ms)
+PASS: probe-seedling-rock-button.mjs — HELP ok (1205 ms) · IMPORT ok (1078 ms)
+PASS: probe-seedling-rock-fire.mjs — HELP ok (938 ms) · IMPORT ok (854 ms)
+PASS: probe-seedling-rock-gone.mjs — HELP ok (999 ms) · IMPORT ok (1149 ms)
+PASS: probe-seedling-rock-remove.mjs — HELP ok (844 ms) · IMPORT ok (1041 ms)
+PASS: probe-seedling-rope-events.mjs — HELP ok (1173 ms) · IMPORT ok (958 ms)
+PASS: probe-seedling-rope-stance.mjs — HELP ok (785 ms) · IMPORT ok (1103 ms)
+PASS: probe-seedling-rope-verb.mjs — HELP ok (1155 ms) · IMPORT ok (967 ms)
+PASS: probe-seedling-seal-delivery.mjs — HELP ok (1172 ms) · IMPORT ok (1108 ms)
+PASS: probe-seedling-seam-chain.mjs — HELP ok (953 ms) · IMPORT SIDE EFFECT (KNOWN) (5027 ms)
+PASS: probe-seedling-secondary-use.mjs — HELP ok (734 ms) · IMPORT ok (910 ms)
+PASS: probe-seedling-shake-exact.mjs — HELP ok (757 ms) · IMPORT ok (918 ms)
+PASS: probe-seedling-shortcut-grade.mjs — HELP ok (117 ms) · IMPORT SIDE EFFECT (KNOWN) (1080 ms)
+PASS: probe-seedling-since-begin.mjs — HELP ok (685 ms) · IMPORT ok (1203 ms)
+PASS: probe-seedling-skin-swing.mjs — HELP ok (1015 ms) · IMPORT ok (998 ms)
+PASS: probe-seedling-slot-order.mjs — HELP ok (890 ms) · IMPORT ok (897 ms)
+PASS: probe-seedling-solve-progress.mjs — HELP ok (88 ms) · IMPORT ok (113 ms)
+PASS: probe-seedling-solve-sites.mjs — HELP ok (78 ms) · IMPORT ok (77 ms)
+PASS: probe-seedling-span-ceiling.mjs — HELP ok (798 ms) · IMPORT SIDE EFFECT (KNOWN) (5008 ms)
+PASS: probe-seedling-spearrect.mjs — HELP ok (740 ms) · IMPORT ok (776 ms)
+PASS: probe-seedling-staged-hits.mjs — HELP ok (898 ms) · IMPORT ok (974 ms)
+PASS: probe-seedling-static-sword-mobiles.mjs — HELP ok (674 ms) · IMPORT ok (832 ms)
+PASS: probe-seedling-stepoff.mjs — HELP ok (1090 ms) · IMPORT ok (1065 ms)
+PASS: probe-seedling-swim-sound.mjs — HELP ok (811 ms) · IMPORT SIDE EFFECT (KNOWN) (5012 ms)
+PASS: probe-seedling-tentacle-mouth.mjs — HELP ok (968 ms) · IMPORT ok (941 ms)
+PASS: probe-seedling-timed-pass.mjs — HELP ok (895 ms) · IMPORT ok (1176 ms)
+PASS: probe-seedling-turret-circle.mjs — HELP ok (1157 ms) · IMPORT ok (1192 ms)
+PASS: probe-seedling-turret-snap.mjs — HELP ok (1102 ms) · IMPORT ok (968 ms)
+PASS: probe-seedling-u11-wall5.mjs — HELP ok (131 ms) · IMPORT ok (88 ms)
+PASS: probe-seedling-u15-turret-mobiles.mjs — HELP ok (1066 ms) · IMPORT ok (673 ms)
+PASS: probe-seedling-u7-puncher-mobiles.mjs — HELP ok (807 ms) · IMPORT ok (1122 ms)
+PASS: probe-seedling-u9-shield-mobiles.mjs — HELP ok (779 ms) · IMPORT ok (728 ms)
+PASS: probe-seedling-v8-seam.mjs — HELP ok (1002 ms) · IMPORT SIDE EFFECT (KNOWN) (5020 ms)
+PASS: probe-seedling-walk-order.mjs — HELP ok (736 ms) · IMPORT ok (962 ms)
+PASS: probe-seedling-wallflyer-mobiles.mjs — HELP ok (1120 ms) · IMPORT ok (1028 ms)
+PASS: probe-seedling-wallflyer-nohit.mjs — HELP ok (1092 ms) · IMPORT ok (822 ms)
+PASS: probe-seedling-wand-mobiles.mjs — HELP ok (1065 ms) · IMPORT ok (978 ms)
+PASS: probe-seedling-wasm-adopt.mjs — HELP ok (774 ms) · IMPORT ok (908 ms)
+PASS: probe-seedling-wasm-arrival-composites.mjs — HELP ok (1007 ms) · IMPORT ok (982 ms)
+PASS: probe-seedling-wasm-arrival-solve.mjs — HELP ok (1110 ms) · IMPORT ok (909 ms)
+PASS: probe-seedling-wasm-continuation.mjs — HELP ok (1291 ms) · IMPORT ok (1065 ms)
+PASS: probe-seedling-wasm-er-retarget.mjs — HELP ok (1267 ms) · IMPORT ok (828 ms)
+PASS: probe-seedling-wasm-generated-playback.mjs — HELP ok (956 ms) · IMPORT ok (1064 ms)
+PASS: probe-seedling-wasm-host-tape.mjs — HELP ok (1238 ms) · IMPORT ok (785 ms)
+PASS: probe-seedling-wasm-level0.mjs — HELP ok (1205 ms) · IMPORT ok (1103 ms)
+PASS: probe-seedling-wasm-logical-links.mjs — HELP ok (873 ms) · IMPORT ok (1063 ms)
+PASS: probe-seedling-wasm-midroom-replan.mjs — HELP ok (762 ms) · IMPORT ok (871 ms)
+PASS: probe-seedling-wasm-playback.mjs — HELP ok (1086 ms) · IMPORT ok (938 ms)
+PASS: probe-seedling-wasm-vanilla-map.mjs — HELP ok (1017 ms) · IMPORT ok (682 ms)
+PASS: probe-seedling-watch-page.mjs — HELP ok (806 ms) · IMPORT SIDE EFFECT (KNOWN) (5010 ms)
+PASS: probe-seedling-weapon-reach.mjs — HELP ok (779 ms) · IMPORT ok (590 ms)
+PASS: probe-seedling-whole-game-certify.mjs — HELP ok (215 ms) · IMPORT ok (150 ms)
+PASS: probe-seedling-yeti.mjs — HELP ok (547 ms) · IMPORT ok (539 ms)
+PASS: probe-solver-hook-gaps.mjs — HELP ok (88 ms) · IMPORT ok (89 ms)
+PASS: profile-seedling-hammer-approach.mjs — HELP ok (149 ms) · IMPORT ok (83 ms)
+PASS: profile-seedling-hammer-escape.mjs — HELP ok (125 ms) · IMPORT ok (70 ms)
+PASS: prove-seedling-procgen-seam.mjs — HELP ok (72 ms) · IMPORT SIDE EFFECT (KNOWN) (429 ms)
+PASS: reach-seedling-change.mjs — HELP ok (126 ms) · IMPORT SIDE EFFECT (KNOWN) (77 ms)
+PASS: recon-seedling-pushes.mjs — HELP ok (152 ms) · IMPORT SIDE EFFECT (KNOWN) (2216 ms)
+PASS: recon-seedling-r3.mjs — HELP ok (95 ms) · IMPORT SIDE EFFECT (KNOWN) (2776 ms)
+PASS: recon-seedling-r4.mjs — HELP ok (88 ms) · IMPORT SIDE EFFECT (KNOWN) (170 ms)
+PASS: recon-seedling-r5.mjs — HELP ok (133 ms) · IMPORT SIDE EFFECT (KNOWN) (104 ms)
+PASS: recon-seedling-r7.mjs — HELP ok (168 ms) · IMPORT SIDE EFFECT (KNOWN) (47 ms)
+PASS: record-slice.mjs — HELP ok (150 ms) · IMPORT ok (106 ms)
+PASS: record-standing-value.mjs — HELP ok (342 ms) · IMPORT SIDE EFFECT (KNOWN) (118 ms)
+PASS: region-atlas-analyze.mjs — HELP ok (183 ms) · IMPORT SIDE EFFECT (KNOWN) (214 ms)
+PASS: region-atlas-compile.mjs — HELP ok (249 ms) · IMPORT SIDE EFFECT (KNOWN) (159 ms)
+PASS: region-atlas-pool.mjs — HELP ok (209 ms) · IMPORT SIDE EFFECT (KNOWN) (203 ms)
+PASS: region-atlas-validate.mjs — HELP ok (317 ms) · IMPORT SIDE EFFECT (KNOWN) (104 ms)
+PASS: region-library-validate.mjs — HELP ok (413 ms) · IMPORT SIDE EFFECT (KNOWN) (284 ms)
+PASS: replay-seedling-contact-capture.mjs — HELP ok (72 ms) · IMPORT ok (75 ms)
+PASS: replay-seedling-solve-request.mjs — HELP ok (106 ms) · IMPORT ok (66 ms)
+PASS: report-pack-provenance.mjs — HELP ok (127 ms) · IMPORT ok (73 ms)
+PASS: rerecord-seedling-campaign.mjs — HELP ok (456 ms) · IMPORT SIDE EFFECT (KNOWN) (5020 ms)
+PASS: run-seedling-director.mjs — HELP ok (159 ms) · IMPORT SIDE EFFECT (KNOWN) (169 ms)
+PASS: run-seedling-tape.mjs — HELP ok (89 ms) · IMPORT ok (78 ms)
+PASS: seedling-atlas-goals.mjs — HELP ok (168 ms) · IMPORT ok (51 ms)
+PASS: seedling-control-for.mjs — HELP ok (67 ms) · IMPORT ok (75 ms)
+PASS: seedling-divergence-bare.mjs — HELP ok (186 ms) · IMPORT ok (70 ms)
+PASS: seedling-divergence-legs.mjs — HELP ok (164 ms) · IMPORT ok (70 ms)
+PASS: seedling-solve-progress-hook.mjs — HELP ok (140 ms) · IMPORT ok (59 ms)
+PASS: seedling-wasm-readme.mjs — HELP ok (176 ms) · IMPORT ok (44 ms)
+PASS: seedlingEntranceShuffleHooks.mjs — HELP ok (94 ms) · IMPORT ok (36 ms)
+PASS: seedlingProfileLoader.mjs — HELP ok (62 ms) · IMPORT ok (36 ms)
+PASS: seedlingRouteGraph.mjs — HELP ok (105 ms) · IMPORT ok (161 ms)
+PASS: shot-loaded-composite-map.mjs — HELP ok (523 ms) · IMPORT ok (436 ms)
+PASS: show-seedling-trace.mjs — HELP ok (241 ms) · IMPORT SIDE EFFECT (KNOWN) (126 ms)
+PASS: solve-seedling-r8-battery.mjs — HELP ok (317 ms) · IMPORT SIDE EFFECT (KNOWN) (695 ms)
+PASS: solve-seedling-r8-d2-chain.mjs — HELP ok (584 ms) · IMPORT SIDE EFFECT (KNOWN) (3432 ms)
+PASS: solve-seedling-r8-d2.mjs — HELP ok (324 ms) · IMPORT SIDE EFFECT (KNOWN) (507 ms)
+PASS: solve-seedling-r8-l18.mjs — HELP ok (457 ms) · IMPORT SIDE EFFECT (KNOWN) (2575 ms)
+PASS: solve-seedling-r8-tail.mjs — HELP ok (480 ms) · IMPORT SIDE EFFECT (KNOWN) (504 ms)
+PASS: solve-seedling-r9-campaign.mjs — HELP ok (534 ms) · IMPORT SIDE EFFECT (KNOWN) (397 ms)
+PASS: solve-seedling-r9-l3.mjs — HELP ok (258 ms) · IMPORT SIDE EFFECT (KNOWN) (471 ms)
+PASS: stamp-seedling-vanilla-set.mjs — HELP ok (271 ms) · IMPORT SIDE EFFECT (KNOWN) (68 ms)
+PASS: standing-values.mjs — HELP ok (225 ms) · IMPORT SIDE EFFECT (KNOWN) (5005 ms)
+PASS: survey-seedling-route.mjs — HELP ok (378 ms) · IMPORT SIDE EFFECT (KNOWN) (5012 ms)
+PASS: survey-seedling-shards.mjs — HELP ok (144 ms) · IMPORT ok (58 ms)
+PASS: sweep-seedling-anchor-search.mjs — HELP ok (123 ms) · IMPORT SIDE EFFECT (KNOWN) (35 ms)
+PASS: sweep-seedling-directed-bound.mjs — HELP ok (125 ms) · IMPORT SIDE EFFECT (KNOWN) (36 ms)
+PASS: sweep-seedling-killarm-inertness.mjs — HELP ok (187 ms) · IMPORT SIDE EFFECT (KNOWN) (1829 ms)
+PASS: sweep-seedling-killlock.mjs — HELP ok (411 ms) · IMPORT SIDE EFFECT (KNOWN) (293 ms)
+PASS: sweep-seedling-l18-residues.mjs — HELP ok (157 ms) · IMPORT ok (104 ms)
+PASS: sweep-seedling-wave1-domains.mjs — HELP ok (92 ms) · IMPORT SIDE EFFECT (KNOWN) (2271 ms)
+PASS: sweep-yield-table.mjs — HELP ok (158 ms) · IMPORT SIDE EFFECT (KNOWN) (221 ms)
+PASS: witness-seedling-entities.mjs — HELP ok (130 ms) · IMPORT ok (97 ms)
+PASS: witness-seedling-press-forecast.mjs — HELP ok (71 ms) · IMPORT ok (35 ms)
+PASS: witness-seedling-profile.mjs — HELP ok (63 ms) · IMPORT ok (37 ms)
+
+## 554 instrument(s), `--doors=all`, 6 at a time in 476.7 s; 243 on the import-door baseline. Slowest: check-preset-bundle-load.mjs (5084 ms; kill deadlines 15000 ms, 5000 ms for a baselined IMPORT door).
+## tree: THROWAWAY WORKTREE /tmp/procgen-help-tree-M2HHO2 at HEAD f2ef58c47 — the children run there, both disk observers are scoped to it, 9 submodule(s) initialised (8 cloned from the primary's own stores; ⚠ FETCHED over the network, the primary has no store: frontend/modules/swfRecompilerPanel/browser), and it is removed on exit and on signal (a killed child's git locks live under its own private gitdir and die with it).
+## ⛓ The ceiling is a PROXY — the assertions that decide a row are the porcelain, the mtime sweep, the child's own cache, its exit code, its stderr, and for the help door that stdout IS the derived help text.
+
+ALL PASS — `--doors=all`: 554 instrument(s) answer `--help` with no side effect this gate can observe; 243 are on the import-door baseline as module-scope workers and every import door was asked

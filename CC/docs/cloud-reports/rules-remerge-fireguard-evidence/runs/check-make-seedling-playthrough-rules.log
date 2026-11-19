@@ -1,0 +1,606 @@
+ANALYSIS: level_22: NO-HIT DIRECTIONAL GATE (per-room table, to be re-examined): moving N across wallflyer@48,112 + wallflyer@144,112 costs hasSword | hasSpear | hasShield (witnesses l22-25-29-none, l22-25-21-none, l22-30-21-none, l22-30-29-none, l22-25-29-sword, l22-25-29-spear, l22-25-29-shield)
+ANALYSIS: level_25: NO-HIT DIRECTIONAL GATE (per-room table, to be re-examined): moving E across wallflyer@48,48 + wallflyer@64,48 costs hasSword | hasSpear | hasShield (witnesses l25-26-22-none, l25-26-22-sword, l25-26-22-spear, l25-26-22-shield)
+ANALYSIS: level_110: pit [4,4] CHAINS — lands in L0 [16,17], the descent fires stairs@256,272 at t39, the fall ends in L2 [3,2] (fidelityDescent.censusFallsOntoDoors)
+ANALYSIS: L57 out_tentaclebeast_80_48 -> L58 in_tentacle_beast_mouth_L57_56_96: the `tentacle_beast_mouth` warp (Enemies/TentacleBeast.as:213)
+ANALYSIS: L69 out_lightbosscontroller_72_72 -> L36 in_light_boss_exit_L69_112_96: the `light_boss_exit` warp (Enemies/LightBossController.as:104)
+ANALYSIS: level_12: location "Level 012 - Witch" GUARDED — the Witch trades the Dark Sword FOR the Wand. The trade is a dialogue in a room nothing gates, so no crossing can ever carry it. (NPCs/Witch.as:47-52 — `doneTalking()` spawns the DarkSword only under `Main.hasWand && !Main.hasDarkSword`)
+ANALYSIS: level_19: location "Level 019 - Shieldspire" GUARDED — the ShieldBoss dies to strikes while its shield is moved; the overlay rules the sword the only reachable arm in D2. (Enemies/ShieldBoss.as:130-150 (hit) + Player.as:1099 — the overlay's `shieldboss` row)
+ANALYSIS: level_32: location "Level 032 - Bob Boss" GUARDED — Fire is a boss DROP in an arena you walk into freely, so the fight is the gate and the location is the only place to hang it. (Enemies/BobBoss.as:185-199 — the THIRD BobBoss's death is what adds the Fire; the fight is started by `FallRockLarge.as:115-117`)
+ANALYSIS: level_32: location "Level 032 - Times" GUARDED — the third BobBoss's death IS the kill; the Fire drop (`fire@L32`) is priced the same. (Enemies/BobBoss.as:167-179 (hit, no `onlyHitBy`) + :181-199 (the third death) — as `fire@L32`)
+ANALYSIS: level_43: location "Level 043 - Wand" GUARDED — the vanilla Wand cannot be taken until all five parts are held, and it lies in the totem's arena, so this is a location guard and not a crossing. The weapon half is kept as it stood (stricter than the source; R4b changes no existing guard's condition here). (Pickups/Wand.as:78 (inert until `Player.hasAllTotemParts()`) + Dungeon4/Boss.oel:238 — the Wand and the totem share one arena)
+ANALYSIS: level_43: location "Level 043 - Totem of Lacste" GUARDED — the fight starts only with all five parts, and only a Wand shot damages the totem. (Enemies/BossTotem.as:262 (`onlyHitBy = "Wand"`) + Enemy.as:149 + r4-boss-report ccdf189 (the fight waits for `Player.hasAllTotemParts()`); upstream Rules.py:660-667)
+ANALYSIS: level_57: location "Level 057 - Tentacled Beast" GUARDED — the beast dies when its eight tentacles are cut — the sword, the spear or a wand shot (`TENTACLE_ARENA`). (Enemies/TentacleBeast.as:93-104 (`maxTentacles <= 0` → dead) + Enemies/Tentacle.as:52,66 (hitsMax 1, `canHit` while sitting; no `onlyHitBy`))
+ANALYSIS: level_69: location "Level 069 - Lights" GUARDED — every LightBoss flier dies to the sword, the spear or a wand shot (`LIGHTS_ARENA`); the controller clears its tag when the last goes. (Enemies/LightBoss.as:47 (hitsMax 3; no `onlyHitBy`) + LightBossController.as:102-108 (endState))
+ANALYSIS: level_82: location "Level 082 - King of Fire" GUARDED — the King of Fire is hurt only after its own LavaBall is struck back into it; a strike needs a weapon. (Enemies/LavaBoss.as:143-160 (hit needs a LavaBall first) + Projectiles/LavaBall.as:45-53,75 + Player.as:1129-1132 (a strike reflects the ball))
+ANALYSIS: level_112: location "Level 112 - Owl" GUARDED — the Owl only takes damage from lava, and the player drives it there by the knockback of any strike; a strike needs a weapon. (Enemies/FinalBoss.as:61 (`onlyHitBy = "Lava"`) + :116-123 (a lava tile hits it) + Enemy.as:173-178 (a filtered hit still knocks back) — the overlay's `finalboss` row)
+ANALYSIS: level_81: DROPPED — no link in the whole map reaches it and it holds nothing
+ANALYSIS: level_0: exit "out_teleporter_240_0" at [15,0] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (3 candidates at distance 3)
+ANALYSIS: level_0: exit "in_L1_64_112" at [5,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_0: exit "in_L12_0_80" at [18,11] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_0: exit "in_L89_160_304" at [15,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (3 candidates at distance 2)
+ANALYSIS: level_2: exit "out_stairsup_48_16" at [3,1] bound to "r1c2" by the physics model — tile is not walkable in the transcription and no component reaches it through the crossing material; the physics model's flood from it reaches this component first (at [2,1], the 2th tile it enters)
+ANALYSIS: level_3: exit "out_teleporter_0_64" at [0,4] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 2)
+ANALYSIS: level_3: exit "in_L111_304_176" at [1,4] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_3: exit "out_teleporter_0_64" at [0,4] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (flag:hasGhostSword); the rest of its approach stays uncharged (permissive)
+ANALYSIS: level_5: exit "in_L12_96_240" at [1,2] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_12: exit "out_teleporter_32_848" at [2,53] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 2)
+ANALYSIS: level_12: exit "out_pit_5_5" at [36,43] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_12: exit "in_L83_32_64" at [2,54] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_16: exit "out_pit_7_2" at [12,3] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_16: exit "out_pit_8_2" at [13,3] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_16: exit "out_pit_9_2" at [14,3] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_16: exit "out_pit_7_3" at [12,4] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_16: exit "out_pit_8_3" at [13,4] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (1 candidate at distance 2) — a finding, not a placement
+ANALYSIS: level_16: exit "out_pit_9_3" at [14,4] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_16: exit "out_pit_8_4" at [13,5] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_19: location "Level 019 - Boss Key 0" at [6,4] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (3 candidates at distance 1)
+ANALYSIS: level_19: location "Level 019 - Boss Key 0" at [6,4] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (flag:hasSword)
+ANALYSIS: level_24: exit "out_teleporter_32_144" at [2,9] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (flag:hasFire)
+ANALYSIS: level_24: exit "out_teleporter_48_144" at [3,9] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (flag:hasFire)
+ANALYSIS: level_30: exit "out_pit_3_34" at [3,14] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_30: exit "out_pit_3_34" at [3,14] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (any(flag:hasFire|flag:hasSpear|flag:hasSword))
+ANALYSIS: level_32: exit "out_pit_14_5" at [4,0] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (flag:hasFire)
+ANALYSIS: level_32: exit "out_pit_15_5" at [5,0] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (flag:hasFire)
+ANALYSIS: level_34: exit "out_teleporter_128_0" at [8,0] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_34: exit "out_teleporter_128_0" at [8,0] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (any(flag:hasFireWand|flag:hasWand))
+ANALYSIS: level_40: exit "out_pit_4_20" at [14,27] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_5_20" at [15,27] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_13_20" at [23,27] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_14_20" at [24,27] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_4_21" at [14,28] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_5_21" at [15,28] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_13_21" at [23,28] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_14_21" at [24,28] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_4_22" at [14,29] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_5_22" at [15,29] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_4_23" at [14,30] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_40: exit "out_pit_5_23" at [15,30] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_43: exit "out_teleporter_144_64" at [9,4] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_48: exit "out_pit_2_2" at [11,3] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_48: exit "in_L53_208_64" at [1,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_50: no binding reaches a dry component — FLOORED by its entry gate {"flag":"canSwim"} (1 sub-region(s); the gate is charged on every way in)
+ANALYSIS: level_51: exit "in_L50_48_304" at [9,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (4 candidates at distance 3)
+ANALYSIS: level_51: exit "out_teleporter_144_0" at [9,0] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (4 candidates at distance 4)
+ANALYSIS: level_51: exit "out_teleporter_256_256" at [16,16] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 4)
+ANALYSIS: level_51: exit "in_L52_0_112" at [15,16] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 3)
+ANALYSIS: level_52: no binding reaches a dry component — FLOORED by its entry gate {"flag":"canSwim"} (5 sub-region(s); the gate is charged on every way in)
+ANALYSIS: level_54: exit "in_L52_112_0" at [8,28] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (3 candidates at distance 1)
+ANALYSIS: level_54: exit "in_L53_144_240" at [9,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (8 candidates at distance 1)
+ANALYSIS: level_54: exit "out_teleporter_128_464" at [8,29] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (3 candidates at distance 2)
+ANALYSIS: level_54: exit "out_teleporter_144_0" at [9,0] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (8 candidates at distance 2)
+ANALYSIS: level_56: exit "in_L52_224_112" at [1,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 3)
+ANALYSIS: level_56: exit "out_teleporter_0_112" at [0,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 4)
+ANALYSIS: level_56: exit "out_pit_6_10" at [6,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_56: exit "out_pit_6_10" at [6,1] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (key:3)
+ANALYSIS: level_57: exit "in_pit_L56_6_10" binds to NO walkable component — no walkable component is reachable from this tile
+ANALYSIS: level_57: exit "in_L58_48_112" binds to NO walkable component — no walkable component is reachable from this tile
+ANALYSIS: level_57: exit "in_L58_64_112" binds to NO walkable component — no walkable component is reachable from this tile
+ANALYSIS: level_57: exit "out_tentaclebeast_80_48" binds to NO walkable component — no walkable component is reachable from this tile
+ANALYSIS: level_57: location "Level 057 - Tentacled Beast" binds to NO walkable component — no walkable component is reachable from this tile
+ANALYSIS: level_58: exit "out_teleporter_48_112" at [3,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (4 candidates at distance 2)
+ANALYSIS: level_58: exit "out_teleporter_64_112" at [4,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (4 candidates at distance 2)
+ANALYSIS: level_58: exit "out_teleporter_80_16" at [5,1] tile is not walkable; assigned to the component that reaches it freely (2 candidates at distance 1)
+ANALYSIS: level_58: exit "in_tentacle_beast_mouth_L57_56_96" at [3,6] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (4 candidates at distance 1)
+ANALYSIS: level_66: exit "out_teleporter_72_64" at [4,4] tile is not walkable; assigned to the component that reaches it through material with no derivable rule (entity building8: per-pixel collision mask (Scenery/Building.as:22) covers this tile in part, and a tile grid cannot hold the remainder — the physics model decides the crossing) (1 candidate at distance 1)
+ANALYSIS: level_66: exit "out_teleporter_72_64" at [4,4] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (key:4); the rest of its approach stays uncharged (permissive)
+ANALYSIS: level_70: exit "out_pit_3_8" at [2,2] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_71: exit "out_pit_10_17" at [12,13] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_71: exit "in_L76_0_80" at [18,16] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_80: 2 LavaTrap lift(s) added, one-way and gated on the Dark Suit — the tongue reels the player onto the trap's own tile with onGround false, so it crosses a pit; the Dark Suit is what makes the arrival survivable rather than a death. (Enemies/LavaTrap.as:22,56-72,82-90 + Player.as:718 (the pit branch is `if (onGround)`))
+ANALYSIS: level_83: exit "out_pit_2_2" at [2,1] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_84: exit "in_pit_L83_2_2" at [2,2] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (1 candidate at distance 2) — a finding, not a placement
+ANALYSIS: level_84: exit "out_pit_2_3" at [1,1] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_84: exit "out_pit_3_3" at [2,1] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (1 candidate at distance 2) — a finding, not a placement
+ANALYSIS: level_84: exit "out_pit_4_3" at [3,1] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (1 candidate at distance 2) — a finding, not a placement
+ANALYSIS: level_84: exit "out_pit_2_4" at [1,2] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (3 candidates at distance 2) — a finding, not a placement
+ANALYSIS: level_84: exit "out_pit_3_4" at [2,2] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (1 candidate at distance 2) — a finding, not a placement
+ANALYSIS: level_84: exit "out_pit_4_4" at [3,2] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_84: exit "out_pit_2_5" at [1,3] tile is not walkable; assigned to the component that reaches it freely (2 candidates at distance 1)
+ANALYSIS: level_84: exit "out_pit_3_5" at [2,3] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (2 candidates at distance 2) — a finding, not a placement
+ANALYSIS: level_84: exit "out_pit_4_5" at [3,3] tile is not walkable and NO component can reach it through the crossing material; assigned to the nearest one by proximity (1 candidate at distance 2) — a finding, not a placement
+ANALYSIS: level_87: exit "out_teleporter_16_32" at [1,2] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_89: exit "in_L0_240_0" at [10,18] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (6 candidates at distance 4)
+ANALYSIS: level_89: exit "out_teleporter_160_304" at [10,19] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (6 candidates at distance 5)
+ANALYSIS: level_89: exit "out_teleporter_208_0" at [13,0] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (6 candidates at distance 4)
+ANALYSIS: level_89: exit "out_teleporter_256_0" at [16,0] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_89: exit "in_L91_16_144" at [13,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (6 candidates at distance 3)
+ANALYSIS: level_89: location "Level 089 - Feather" at [10,6] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (6 candidates at distance 6)
+ANALYSIS: level_89: location "Level 089 - Feather" at [10,6] — REBOUND from r9c6 (nearest) to r1c10, whose way pays only what every way pays (flag:canSwim): CHARGED; every other way onto the tile reaches it first
+ANALYSIS: level_89: exit "out_teleporter_208_0" at [13,0] is reached only by moving a direction-gated way — CHARGED flag:hasFeather (every way onto the tile pays it)
+ANALYSIS: level_91: exit "in_L89_208_0" at [1,8] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 2)
+ANALYSIS: level_91: exit "out_teleporter_16_144" at [1,9] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 3)
+ANALYSIS: level_91: exit "out_teleporter_240_48" at [15,3] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_93: exit "in_L98_112_192" at [7,6] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_93: r1c0 -> r1c13 through entity building7: per-pixel collision mask (Scenery/Building.as:22) covers this tile in part, and a tile grid cannot hold the remainder — the physics model decides the crossing — the physics model's flood walks it: an analyzer row costing flag:canSwim (0 way(s) sealed)
+ANALYSIS: level_93: r1c13 -> r1c0 through entity building7: per-pixel collision mask (Scenery/Building.as:22) covers this tile in part, and a tile grid cannot hold the remainder — the physics model decides the crossing — the physics model's flood walks it: an analyzer row costing flag:canSwim (0 way(s) sealed)
+ANALYSIS: level_94: r2c16 -> r3c4 through entity treelarge: TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask's bounding box, and the physics model decides each crossing — the physics model's flood walks it: an analyzer row costing free (0 way(s) sealed)
+ANALYSIS: level_94: r2c16 -> r9c4 through entity treelarge: TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask's bounding box, and the physics model decides each crossing — the physics model's flood cannot walk any way of it: NO crossing (was a True_ hand-authoring default)
+ANALYSIS: level_94: r3c4 -> r2c16 through entity treelarge: TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask's bounding box, and the physics model decides each crossing — the physics model's flood walks it: an analyzer row costing free (0 way(s) sealed)
+ANALYSIS: level_94: r3c4 -> r9c4 through entity treelarge: TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask's bounding box, and the physics model decides each crossing — the physics model's flood cannot walk any way of it: NO crossing (was a True_ hand-authoring default)
+ANALYSIS: level_94: r9c4 -> r2c16 through entity treelarge: TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask's bounding box, and the physics model decides each crossing — the physics model's flood cannot walk any way of it: NO crossing (was a True_ hand-authoring default)
+ANALYSIS: level_94: r9c4 -> r3c4 through entity treelarge: TreeLarge collides through a per-pixel mask (Scenery/TreeLarge.as:22-30); its footprint is the mask's bounding box, and the physics model decides each crossing — the physics model's flood cannot walk any way of it: NO crossing (was a True_ hand-authoring default)
+ANALYSIS: level_98: exit "out_stairsup_112_112" at [7,7] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_98: exit "out_stairsup_112_112" at [7,7] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (any(flag:hasDarkShield|flag:hasSpear|flag:hasSword|flag:hasWand))
+ANALYSIS: level_100: exit "out_teleporter_288_96" at [18,6] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_108: 3 LavaTrap lift(s) added, one-way and gated on the Dark Suit — the tongue reels the player onto the trap's own tile with onGround false, so it crosses a pit; the Dark Suit is what makes the arrival survivable rather than a death. (Enemies/LavaTrap.as:22,56-72,82-90 + Player.as:718 (the pit branch is `if (onGround)`))
+ANALYSIS: level_111: exit "out_teleporter_128_48" at [8,3] tile is not walkable; assigned to the component that reaches it freely (1 candidate at distance 1)
+ANALYSIS: level_112: exit "in_L113_64_144" at [7,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_112: exit "in_L113_80_144" at [7,1] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (2 candidates at distance 1)
+ANALYSIS: level_112: location "Level 112 - Owl" at [4,6] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (1 candidate at distance 1)
+ANALYSIS: level_113: exit "out_teleporter_112_0" at [7,0] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (unknown:{"seals":16})
+ANALYSIS: level_113: exit "out_teleporter_128_0" at [8,0] sits INSIDE an item-gated solid (the physics model has no place for the body on it) — CHARGED its own cell (unknown:{"seals":16})
+ANALYSIS: level_115: exit "in_L113_112_0" at [4,8] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (7 candidates at distance 1)
+ANALYSIS: level_115: exit "in_L113_128_0" at [5,8] tile is not walkable; assigned to the component that reaches it only through 1 gated way(s) (7 candidates at distance 1)
+ANALYSIS: level_40: 4 fire-gated crossing(s) strengthened to fire AND a weapon — the second holder is a BLOCK (`pushableblockfire@480,480`, 34 fire presses to the t5 button) and the corpse takes t2 in two — so the half costs FIRE and a kill, and nothing else an item can buy. (R7 kickoff §12.2-12.4 (probe-seedling-r7-l40-holder.mjs, 12 claims) + Dungeon4/2.oel)
+ANALYSIS: level_12: out_teleporter_32_848 CHARGED its approach by hand — the door to L83 stands on a cave tile whose only approach crosses the stacked key-4-and-wand lock, so using it costs what the lock costs. (Dungeon-side region1.oel:2969-2971 + the stacked bosslock{keyType 4} + magicallock at L12 (2,54) + worlds/seedling/Rules.py Dark Shield)
+ANALYSIS: level_82: out_teleporter_144_0 CHARGED its approach by hand — the way OUT of the arena: the arena is left only across lava (the Dark Suit) and past the LavaBoss, which dies only to reflected LavaBalls and a follow-up hit (a weapon); its ctor puts every arrival on the arena floor. (Enemies/LavaBoss.as:53,143-165 + Projectiles/LavaBall.as:45-53 + Player.as:1129 + Dungeon7 L82 teleporter@144,0 behind the lava corridor + R7 kickoff §2.4 + ⚖ RULES (B) 2026-10-04)
+ANALYSIS: level_96: out_teleporter_32_64 CHARGED its approach by hand — the way INTO the arena from L96, gated the same so it is never a trap: the arena is left only across lava (the Dark Suit) and past the LavaBoss, which dies only to reflected LavaBalls and a follow-up hit (a weapon); its ctor puts every arrival on the arena floor. (Enemies/LavaBoss.as:53,143-165 + Projectiles/LavaBall.as:45-53 + Player.as:1129 + Dungeon7 L82 teleporter@144,0 behind the lava corridor + R7 kickoff §2.4 + ⚖ RULES (B) 2026-10-04)
+ANALYSIS: level_56: out_pit_6_10 -> level_57/in_pit_L56_6_10 CHARGED the L57 arena — the arena is left only by the mouth the beast's death creates, and it dies when eight tentacles are cut — by the sword, the spear or a wand shot, while each sits. (Enemies/TentacleBeast.as:29,93-103,213 + Enemies/Tentacle.as:52,66,77-88 + Enemies/Enemy.as:141-160 + Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-06 (lift L57 like L82))
+ANALYSIS: level_58: out_teleporter_48_112 -> level_57/in_L58_48_112 CHARGED the L57 arena — the arena is left only by the mouth the beast's death creates, and it dies when eight tentacles are cut — by the sword, the spear or a wand shot, while each sits. (Enemies/TentacleBeast.as:29,93-103,213 + Enemies/Tentacle.as:52,66,77-88 + Enemies/Enemy.as:141-160 + Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-06 (lift L57 like L82))
+ANALYSIS: level_58: out_teleporter_64_112 -> level_57/in_L58_64_112 CHARGED the L57 arena — the arena is left only by the mouth the beast's death creates, and it dies when eight tentacles are cut — by the sword, the spear or a wand shot, while each sits. (Enemies/TentacleBeast.as:29,93-103,213 + Enemies/Tentacle.as:52,66,77-88 + Enemies/Enemy.as:141-160 + Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-06 (lift L57 like L82))
+ANALYSIS: level_57: out_tentaclebeast_80_48 -> level_58/in_tentacle_beast_mouth_L57_56_96 CHARGED the L57 arena — the arena is left only by the mouth the beast's death creates, and it dies when eight tentacles are cut — by the sword, the spear or a wand shot, while each sits. (Enemies/TentacleBeast.as:29,93-103,213 + Enemies/Tentacle.as:52,66,77-88 + Enemies/Enemy.as:141-160 + Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-06 (lift L57 like L82))
+ANALYSIS: level_70: out_pit_3_8 -> level_69/in_pit_L70_3_8 CHARGED the L69 arena — the arena is left only by the teleporter the last flier's death creates, and a flier dies to the sword, the spear or a wand shot. (Enemies/LightBossController.as:79,102-108 + Enemies/LightBoss.as:47 + Enemies/Enemy.as:141-160 + Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-19 ("All 7 bosses"))
+ANALYSIS: level_69: out_lightbosscontroller_72_72 -> level_36/in_light_boss_exit_L69_112_96 CHARGED the L69 arena — the arena is left only by the teleporter the last flier's death creates, and a flier dies to the sword, the spear or a wand shot. (Enemies/LightBossController.as:79,102-108 + Enemies/LightBoss.as:47 + Enemies/Enemy.as:141-160 + Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-19 ("All 7 bosses"))
+ANALYSIS: igneous tiles: ruled OPEN everywhere — the tile is walkable until eight frames of standing next to it plus a whole animation convert it, and the conversion is per-Tile state a level entry rebuilds — so no reachability question ever meets the converted tile. (Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 (loadlevel rebuilds every Tile)). ⛔ This REFUTES the level_76 Dark Suit row shipped at R7 §13.5; the refutation log carries it.
+ANALYSIS: level_0: exit "out_teleporter_240_0" at [15,0] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_3: exit "out_teleporter_0_64" at [0,4] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_49: exit "out_teleporter_32_128" at [2,8] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_51: exit "out_teleporter_144_0" at [9,0] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_51: exit "out_teleporter_256_256" at [16,16] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_54: exit "out_teleporter_128_464" at [8,29] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_54: exit "out_teleporter_144_0" at [9,0] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_55: exit "out_teleporter_80_48" at [5,3] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_56: exit "out_teleporter_0_112" at [0,7] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_58: exit "out_teleporter_48_112" at [3,7] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_58: exit "out_teleporter_64_112" at [4,7] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_89: exit "out_teleporter_160_304" at [10,19] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+ANALYSIS: level_91: exit "out_teleporter_16_144" at [1,9] — every way onto its tile pays flag:canSwim: CHARGED (no longer permissive)
+OK: frontend/modules/flashPanel/atlases/seedling-playthrough.json matches a fresh build
+OK: frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json matches a fresh build
+seedling-630fbc4c — 115 regions, 207 sub-regions, 640 exits, 48 locations, 320 one-way connections; 307 computed internal exit(s), 9 awaiting a hand-written rule
+derived-rule table: 108 element(s) overridden in AP_1, 4 atlas row(s); composed ≠ table: 0; 6 exact element(s) excluded by name
+rules.json — 266 AP regions, 829 exits, 48 locations, 0 unwired exit(s)
+315 departure-door spawn(s) moved off the door tile (no game link lands there, or the model cannot stand there)
+  level_0/out_teleporter_240_0: (240, 0) is a door tile no game link lands on → return-link (240, 16)
+  level_0/out_teleporter_80_96: (80, 96) is a door tile no game link lands on → return-link (80, 112)
+  level_0/out_teleporter_0_128: (0, 128) is a door tile no game link lands on → return-link (16, 128)
+  level_0/out_teleporter_0_144: (0, 144) is a door tile no game link lands on → return-link (16, 144)
+  level_0/out_stairsdown_32_192: (32, 192) is a door tile no game link lands on → return-link (48, 192)
+  level_0/out_teleporter_160_272: (160, 272) is a door tile no game link lands on → return-link (160, 288)
+  level_0/out_stairsdown_256_272: (256, 272) is a door tile no game link lands on → return-link (256, 256)
+  level_0/out_teleporter_304_176: (304, 176) is a door tile no game link lands on → return-link (288, 176)
+  level_1/out_teleporter_64_112: (64, 112) is a door tile no game link lands on → return-link (64, 96)
+  level_2/out_stairsup_48_16: (48, 16) is a door tile no game link lands on → return-link (48, 32)
+  level_2/out_teleporter_48_96: (48, 96) is a door tile no game link lands on → return-link (48, 80)
+  level_3/out_teleporter_0_64: (0, 64) is inside a solid (BreakableRock) → return-link (16, 64)
+  level_3/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_3/out_teleporter_128_48: (128, 48) is a door tile no game link lands on → return-link (112, 48)
+  level_4/out_teleporter_0_16: (0, 16) is a door tile no game link lands on → return-link (16, 16)
+  level_4/out_stairsdown_64_16: (64, 16) is a door tile no game link lands on → return-link (64, 32)
+  level_5/out_stairsup_16_16: (16, 16) is a door tile no game link lands on → return-link (16, 32)
+  level_5/out_teleporter_48_112: (48, 112) is inside a solid (Lock) → return-link (48, 96)
+  level_5/out_stairsup_80_16: (80, 16) is a door tile no game link lands on → return-link (80, 32)
+  level_6/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_6/out_stairsup_224_32: (224, 32) is a door tile no game link lands on → return-link (208, 32)
+  level_7/out_stairsdown_16_32: (16, 32) is a door tile no game link lands on → return-link (32, 32)
+  level_7/out_stairsdown_192_32: (192, 32) is a door tile no game link lands on → return-link (176, 32)
+  level_8/out_teleporter_96_192: (96, 192) is a door tile no game link lands on → return-link (96, 176)
+  level_8/out_stairsup_144_32: (144, 32) is a door tile no game link lands on → return-link (144, 48)
+  level_9/out_teleporter_16_0: (16, 0) is a door tile no game link lands on → return-link (16, 16)
+  level_9/out_teleporter_144_0: (144, 0) is a door tile no game link lands on → return-link (144, 16)
+  level_10/out_stairsup_48_16: (48, 16) is a door tile no game link lands on → return-link (48, 32)
+  level_10/out_teleporter_48_96: (48, 96) is a door tile no game link lands on → return-link (48, 80)
+  level_11/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_11/out_stairsdown_32_80: (32, 80) is a door tile no game link lands on → return-link (32, 64)
+  level_12/out_teleporter_0_80: (0, 80) is a door tile no game link lands on → return-link (16, 80)
+  level_12/out_teleporter_0_352: (0, 352) is a door tile no game link lands on → return-link (16, 352)
+  level_12/out_teleporter_0_368: (0, 368) is a door tile no game link lands on → return-link (16, 368)
+  level_12/out_teleporter_112_96: (112, 96) is a door tile no game link lands on → return-link (112, 112)
+  level_12/out_teleporter_168_368: (160, 368) is inside a solid (OpenTree) → return-link (168, 384)
+  level_12/out_teleporter_304_0: (304, 0) is a door tile no game link lands on → return-link (304, 16)
+  level_12/out_teleporter_432_352: (432, 352) is a door tile no game link lands on → return-link (432, 368)
+  level_12/out_teleporter_592_0: (592, 0) is a door tile no game link lands on → return-link (592, 16)
+  level_12/out_pit_5_5: (576, 688) is over a pit at tile (36, 43) → approach (576, 672)
+  level_12/out_stairsdown_96_240: (96, 240) is a door tile no game link lands on → return-link (96, 224)
+  level_12/out_teleporter_40_688: (32, 688) is inside a solid (OpenTree) → return-link (40, 704)
+  level_12/out_teleporter_32_848: (32, 848) is a door tile no game link lands on → return-link (32, 864)
+  level_12/out_teleporter_336_688: (336, 688) is a door tile no game link lands on → return-link (336, 704)
+  level_13/out_stairsdown_32_32: (32, 32) is a door tile no game link lands on → return-link (32, 48)
+  level_13/out_stairsup_64_144: (64, 144) is a door tile no game link lands on → return-link (64, 128)
+  level_13/out_stairsdown_96_32: (96, 32) is a door tile no game link lands on → return-link (96, 48)
+  level_14/out_stairsdown_32_64: (32, 64) is a door tile no game link lands on → return-link (48, 64)
+  level_14/out_stairsup_176_64: (176, 64) is a door tile no game link lands on → return-link (160, 64)
+  level_15/out_stairsup_32_64: (32, 64) is a door tile no game link lands on → return-link (48, 64)
+  level_15/out_stairsdown_144_16: (144, 16) is a door tile no game link lands on → return-link (144, 32)
+  level_16/out_stairsup_16_64: (16, 64) is a door tile no game link lands on → return-link (32, 64)
+  level_16/out_pit_7_2: (192, 48) is over a pit at tile (12, 3) → approach (192, 32)
+  level_16/out_pit_8_2: (208, 48) is over a pit at tile (13, 3) → approach (208, 32)
+  level_16/out_pit_9_2: (224, 48) is over a pit at tile (14, 3) → approach (224, 32)
+  level_16/out_pit_7_3: (192, 64) is over a pit at tile (12, 4) → approach (176, 64)
+  level_16/out_pit_8_3: (208, 64) is over a pit at tile (13, 4) → approach (192, 80)
+  level_16/out_pit_9_3: (224, 64) is over a pit at tile (14, 4) → approach (240, 64)
+  level_16/out_pit_8_4: (208, 80) is over a pit at tile (13, 5) → approach (192, 80)
+  level_16/out_stairsdown_112_64: (112, 64) is a door tile no game link lands on → return-link (112, 48)
+  level_16/out_stairsup_352_80: (352, 80) is a door tile no game link lands on → return-link (352, 96)
+  level_17/out_stairsup_32_48: (32, 48) is a door tile no game link lands on → return-link (48, 48)
+  level_18/out_stairsdown_16_16: (16, 16) is a door tile no game link lands on → return-link (16, 32)
+  level_18/out_teleporter_176_112: (176, 112) is a door tile no game link lands on → return-link (160, 112)
+  level_19/out_stairsup_16_96: (16, 96) is a door tile no game link lands on → return-link (16, 80)
+  level_19/out_teleporter_0_144: (0, 144) is a door tile no game link lands on → return-link (16, 144)
+  level_20/out_stairsdown_192_48: (192, 48) is a door tile no game link lands on → return-link (192, 64)
+  level_20/out_stairsup_16_48: (16, 48) is a door tile no game link lands on → return-link (32, 48)
+  level_21/out_teleporter_0_80: (0, 80) is a door tile no game link lands on → return-link (16, 80)
+  level_21/out_teleporter_80_160: (80, 160) is a door tile no game link lands on → return-link (80, 144)
+  level_21/out_teleporter_160_80: (160, 80) is a door tile no game link lands on → return-link (144, 80)
+  level_22/out_teleporter_96_0: (96, 0) is a door tile no game link lands on → return-link (96, 16)
+  level_22/out_teleporter_192_64: (192, 64) is a door tile no game link lands on → return-link (176, 64)
+  level_22/out_teleporter_0_128: (0, 128) is a door tile no game link lands on → return-link (16, 128)
+  level_22/out_teleporter_96_192: (96, 192) is a door tile no game link lands on → return-link (96, 176)
+  level_23/out_stairsup_32_32: (32, 32) is a door tile no game link lands on → return-link (48, 32)
+  level_23/out_teleporter_80_32: (80, 32) is a door tile no game link lands on → return-link (64, 32)
+  level_24/out_teleporter_32_144: (32, 144) is inside a solid (BurnableTree) → return-link (48, 128)
+  level_24/out_teleporter_48_144: (48, 144) is inside a solid (BurnableTree) → return-link (48, 128)
+  level_24/out_stairsdown_96_96: (96, 96) is a door tile no game link lands on → return-link (96, 80)
+  level_25/out_teleporter_96_128: (96, 128) is a door tile no game link lands on → return-link (96, 112)
+  level_25/out_teleporter_144_32: (144, 32) is a door tile no game link lands on → return-link (128, 32)
+  level_25/out_teleporter_0_96: (0, 96) is a door tile no game link lands on → return-link (16, 96)
+  level_26/out_teleporter_64_304: (64, 304) is a door tile no game link lands on → return-link (64, 288)
+  level_26/out_teleporter_144_32: (144, 32) is a door tile no game link lands on → return-link (128, 32)
+  level_26/out_teleporter_144_208: (144, 208) is a door tile no game link lands on → return-link (128, 208)
+  level_27/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_27/out_teleporter_168_16: (160, 16) is inside a solid (OpenTree) → return-link (168, 32)
+  level_28/out_teleporter_0_96: (0, 96) is a door tile no game link lands on → return-link (16, 96)
+  level_28/out_teleporter_96_0: (96, 0) is a door tile no game link lands on → return-link (96, 16)
+  level_28/out_teleporter_304_16: (304, 16) is a door tile no game link lands on → return-link (288, 16)
+  level_28/out_teleporter_128_304: (128, 304) is a door tile no game link lands on → return-link (128, 288)
+  level_29/out_teleporter_0_224: (0, 224) is a door tile no game link lands on → return-link (16, 224)
+  level_29/out_stairsdown_112_32: (112, 32) is a door tile no game link lands on → return-link (96, 32)
+  level_29/out_teleporter_0_80: (0, 80) is a door tile no game link lands on → return-link (16, 80)
+  level_30/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_30/out_teleporter_0_128: (0, 128) is a door tile no game link lands on → return-link (16, 128)
+  level_30/out_stairsdown_192_48: (192, 48) is a door tile no game link lands on → return-link (176, 48)
+  level_30/out_pit_3_34: (48, 224) is inside a solid (BreakableRock) → approach (48, 208)
+  level_30/out_stairsup_224_160: (224, 160) is a door tile no game link lands on → return-link (224, 176)
+  level_31/out_stairsup_384_96: (384, 96) is a door tile no game link lands on → return-link (384, 112)
+  level_31/out_stairsup_160_384: (160, 384) is a door tile no game link lands on → return-link (160, 400)
+  level_32/out_stairsdown_72_136: (64, 128) is a door tile no game link lands on → return-link (72, 120)
+  level_32/out_pit_14_5: (64, 0) is inside a solid (BurnableTree) → approach (64, 32)
+  level_32/out_pit_15_5: (80, 0) is inside a solid (BurnableTree) → approach (80, 32)
+  level_33/out_teleporter_32_64: (32, 64) is a door tile no game link lands on → return-link (32, 48)
+  level_34/out_teleporter_32_144: (32, 144) is a door tile no game link lands on → return-link (32, 128)
+  level_34/out_teleporter_128_0: (128, 0) is inside a solid (MagicalLock) → approach (128, 16)
+  level_35/out_teleporter_32_64: (32, 64) is a door tile no game link lands on → return-link (32, 48)
+  level_36/out_teleporter_32_128: (32, 128) is a door tile no game link lands on → return-link (32, 112)
+  level_37/out_teleporter_288_0: (288, 0) is a door tile no game link lands on → return-link (288, 16)
+  level_37/out_teleporter_0_256: (0, 256) is a door tile no game link lands on → return-link (16, 256)
+  level_37/out_teleporter_32_304: (32, 304) is a door tile no game link lands on → return-link (32, 288)
+  level_38/out_teleporter_144_0: (144, 0) is a door tile no game link lands on → return-link (144, 16)
+  level_38/out_teleporter_144_304: (144, 304) is a door tile no game link lands on → return-link (144, 288)
+  level_39/out_teleporter_144_0: (144, 0) is a door tile no game link lands on → return-link (144, 16)
+  level_39/out_teleporter_144_624: (144, 624) is a door tile no game link lands on → return-link (144, 608)
+  level_40/out_teleporter_848_0: (848, 0) is a door tile no game link lands on → return-link (848, 16)
+  level_40/out_teleporter_944_96: (944, 96) is a door tile no game link lands on → return-link (928, 96)
+  level_40/out_stairsdown_320_576: (320, 576) is a door tile no game link lands on → return-link (320, 592)
+  level_40/out_teleporter_480_912: (480, 912) is a door tile no game link lands on → return-link (480, 896)
+  level_40/out_pit_4_20: (224, 432) is over a pit at tile (14, 27) → approach (224, 416)
+  level_40/out_pit_5_20: (240, 432) is over a pit at tile (15, 27) → approach (240, 416)
+  level_40/out_pit_13_20: (368, 432) is over a pit at tile (23, 27) → approach (368, 416)
+  level_40/out_pit_14_20: (384, 432) is over a pit at tile (24, 27) → approach (384, 416)
+  level_40/out_pit_4_21: (224, 448) is over a pit at tile (14, 28) → approach (208, 448)
+  level_40/out_pit_5_21: (240, 448) is over a pit at tile (15, 28) → approach (256, 448)
+  level_40/out_pit_13_21: (368, 448) is over a pit at tile (23, 28) → approach (352, 448)
+  level_40/out_pit_14_21: (384, 448) is over a pit at tile (24, 28) → approach (400, 448)
+  level_40/out_pit_4_22: (224, 464) is over a pit at tile (14, 29) → approach (208, 464)
+  level_40/out_pit_5_22: (240, 464) is over a pit at tile (15, 29) → approach (256, 464)
+  level_40/out_pit_4_23: (224, 480) is over a pit at tile (14, 30) → approach (208, 480)
+  level_40/out_pit_5_23: (240, 480) is over a pit at tile (15, 30) → approach (256, 480)
+  level_41/out_teleporter_0_160: (0, 160) is a door tile no game link lands on → return-link (16, 160)
+  level_42/out_teleporter_240_336: (240, 336) is a door tile no game link lands on → return-link (240, 320)
+  level_43/out_teleporter_144_64: (144, 64) is over a pit at tile (9, 4) → approach (144, 48)
+  level_43/out_stairsup_176_464: (176, 464) is a door tile no game link lands on → return-link (176, 448)
+  level_44/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_44/out_teleporter_0_80: (0, 80) is a door tile no game link lands on → return-link (16, 80)
+  level_44/out_teleporter_144_128: (144, 128) is a door tile no game link lands on → return-link (128, 128)
+  level_45/out_teleporter_112_0: (112, 0) is a door tile no game link lands on → return-link (112, 16)
+  level_45/out_teleporter_112_304: (112, 304) is a door tile no game link lands on → return-link (112, 288)
+  level_46/out_teleporter_176_0: (176, 0) is a door tile no game link lands on → return-link (176, 16)
+  level_46/out_teleporter_240_464: (240, 464) is a door tile no game link lands on → return-link (240, 448)
+  level_47/out_teleporter_216_112: (208, 112) is inside a solid (SnowHill) → return-link (216, 128)
+  level_47/out_teleporter_240_464: (240, 464) is a door tile no game link lands on → return-link (240, 448)
+  level_48/out_pit_2_2: (176, 48) is over a pit at tile (11, 3) → approach (176, 32)
+  level_48/out_teleporter_0_112: (0, 112) is a door tile no game link lands on → return-link (16, 112)
+  level_48/out_teleporter_112_304: (112, 304) is a door tile no game link lands on → return-link (112, 288)
+  level_49/out_teleporter_32_128: (32, 128) is a door tile no game link lands on → return-link (32, 112)
+  level_50/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_50/out_teleporter_48_304: (48, 304) is a door tile no game link lands on → return-link (48, 288)
+  level_51/out_teleporter_144_0: (144, 0) is a door tile no game link lands on → return-link (144, 16)
+  level_51/out_stairsup_176_144: (176, 144) is a door tile no game link lands on → return-link (160, 144)
+  level_51/out_teleporter_256_256: (256, 256) is a door tile no game link lands on → return-link (240, 256)
+  level_52/out_teleporter_112_0: (112, 0) is a door tile no game link lands on → return-link (112, 16)
+  level_52/out_teleporter_0_48: (0, 48) is a door tile no game link lands on → return-link (16, 48)
+  level_52/out_teleporter_0_112: (0, 112) is a door tile no game link lands on → return-link (16, 112)
+  level_52/out_teleporter_224_112: (224, 112) is a door tile no game link lands on → return-link (208, 112)
+  level_53/out_stairsdown_32_144: (32, 144) is a door tile no game link lands on → return-link (48, 144)
+  level_53/out_teleporter_208_64: (208, 64) is a door tile no game link lands on → return-link (192, 64)
+  level_53/out_teleporter_144_240: (144, 240) is a door tile no game link lands on → return-link (144, 224)
+  level_54/out_teleporter_144_0: (144, 0) is a door tile no game link lands on → return-link (144, 16)
+  level_54/out_teleporter_128_464: (128, 464) is a door tile no game link lands on → return-link (128, 448)
+  level_55/out_teleporter_80_48: (80, 48) is a door tile no game link lands on → return-link (64, 48)
+  level_56/out_teleporter_0_112: (0, 112) is a door tile no game link lands on → return-link (16, 112)
+  level_56/out_pit_6_10: (96, 16) is inside a solid (BossLock) → approach (96, 32)
+  level_58/out_teleporter_80_16: (80, 16) is over a pit at tile (5, 1) → approach (64, 16)
+  level_58/out_teleporter_48_112: (48, 112) is a door tile no game link lands on → approach (32, 96)
+  level_58/out_teleporter_64_112: (64, 112) is a door tile no game link lands on → approach (80, 96)
+  level_59/out_teleporter_0_128: (0, 128) is a door tile no game link lands on → return-link (16, 128)
+  level_59/out_teleporter_144_304: (144, 304) is a door tile no game link lands on → return-link (144, 288)
+  level_59/out_teleporter_160_304: (160, 304) is a door tile no game link lands on → return-link (160, 288)
+  level_59/out_teleporter_304_128: (304, 128) is a door tile no game link lands on → return-link (288, 128)
+  level_60/out_teleporter_0_80: (0, 80) is a door tile no game link lands on → return-link (16, 80)
+  level_60/out_teleporter_160_80: (160, 80) is a door tile no game link lands on → return-link (144, 80)
+  level_61/out_teleporter_0_160: (0, 160) is a door tile no game link lands on → return-link (16, 160)
+  level_61/out_teleporter_112_0: (112, 0) is a door tile no game link lands on → return-link (112, 16)
+  level_61/out_teleporter_224_96: (224, 96) is a door tile no game link lands on → return-link (208, 96)
+  level_61/out_teleporter_160_0: (160, 0) is a door tile no game link lands on → return-link (160, 16)
+  level_61/out_teleporter_224_48: (224, 48) is a door tile no game link lands on → return-link (208, 48)
+  level_61/out_teleporter_224_208: (224, 208) is a door tile no game link lands on → return-link (208, 208)
+  level_62/out_teleporter_48_304: (48, 304) is a door tile no game link lands on → return-link (48, 288)
+  level_62/out_teleporter_96_304: (96, 304) is a door tile no game link lands on → return-link (96, 288)
+  level_62/out_teleporter_112_64: (112, 64) is inside a solid (Building) → return-link (112, 80)
+  level_62/out_teleporter_192_304: (192, 304) is a door tile no game link lands on → return-link (192, 288)
+  level_62/out_teleporter_240_304: (240, 304) is a door tile no game link lands on → return-link (240, 288)
+  level_63/out_teleporter_0_48: (0, 48) is a door tile no game link lands on → return-link (16, 48)
+  level_63/out_teleporter_0_96: (0, 96) is a door tile no game link lands on → return-link (16, 96)
+  level_63/out_teleporter_16_0: (16, 0) is a door tile no game link lands on → return-link (16, 16)
+  level_63/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_63/out_teleporter_128_304: (128, 304) is a door tile no game link lands on → return-link (128, 288)
+  level_63/out_teleporter_0_208: (0, 208) is a door tile no game link lands on → return-link (16, 208)
+  level_63/out_teleporter_32_304: (32, 304) is a door tile no game link lands on → return-link (32, 288)
+  level_64/out_teleporter_32_96: (32, 96) is a door tile no game link lands on → return-link (32, 80)
+  level_65/out_teleporter_0_128: (0, 128) is a door tile no game link lands on → return-link (16, 128)
+  level_65/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_65/out_teleporter_128_0: (128, 0) is a door tile no game link lands on → return-link (128, 16)
+  level_65/out_teleporter_184_64: (176, 64) is inside a solid (OpenTree) → return-link (185, 80)
+  level_66/out_teleporter_72_64: (64, 64) is inside a solid (Building) → return-link (72, 80)
+  level_66/out_teleporter_144_144: (144, 144) is a door tile no game link lands on → return-link (128, 144)
+  level_67/out_teleporter_224_112: (224, 112) is a door tile no game link lands on → return-link (208, 112)
+  level_68/out_teleporter_16_80: (16, 80) is a door tile no game link lands on → return-link (16, 64)
+  level_69/out_lightbosscontroller_72_72: (64, 64) is inside a solid (lightbosstotem) → approach (64, 48)
+  level_70/out_teleporter_32_64: (32, 64) is a door tile no game link lands on → return-link (32, 48)
+  level_70/out_pit_3_8: (32, 32) is over a pit at tile (2, 2) → approach (32, 16)
+  level_71/out_teleporter_96_0: (96, 0) is a door tile no game link lands on → return-link (96, 16)
+  level_71/out_teleporter_224_304: (224, 304) is a door tile no game link lands on → return-link (224, 288)
+  level_71/out_teleporter_304_96: (304, 96) is a door tile no game link lands on → return-link (288, 96)
+  level_71/out_teleporter_16_304: (16, 304) is a door tile no game link lands on → return-link (16, 288)
+  level_71/out_pit_10_17: (192, 208) is over a pit at tile (12, 13) → approach (192, 224)
+  level_71/out_teleporter_304_256: (304, 256) is a door tile no game link lands on → return-link (288, 256)
+  level_72/out_teleporter_0_256: (0, 256) is a door tile no game link lands on → return-link (16, 256)
+  level_72/out_teleporter_176_0: (176, 0) is a door tile no game link lands on → return-link (176, 16)
+  level_73/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_73/out_teleporter_32_144: (32, 144) is a door tile no game link lands on → return-link (32, 128)
+  level_74/out_teleporter_16_144: (16, 144) is a door tile no game link lands on → return-link (16, 128)
+  level_74/out_teleporter_288_144: (288, 144) is a door tile no game link lands on → return-link (288, 128)
+  level_75/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_75/out_teleporter_64_224: (64, 224) is a door tile no game link lands on → return-link (64, 208)
+  level_76/out_teleporter_0_80: (0, 80) is a door tile no game link lands on → return-link (16, 80)
+  level_76/out_teleporter_304_112: (304, 112) is a door tile no game link lands on → return-link (288, 112)
+  level_77/out_teleporter_0_32: (0, 32) is a door tile no game link lands on → return-link (16, 32)
+  level_77/out_teleporter_96_304: (96, 304) is a door tile no game link lands on → return-link (96, 288)
+  level_78/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_78/out_teleporter_256_0: (256, 0) is a door tile no game link lands on → return-link (256, 16)
+  level_79/out_teleporter_64_0: (64, 0) is a door tile no game link lands on → return-link (64, 16)
+  level_79/out_teleporter_64_224: (64, 224) is a door tile no game link lands on → return-link (64, 208)
+  level_80/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_80/out_teleporter_32_304: (32, 304) is a door tile no game link lands on → return-link (40, 288)
+  level_80/out_teleporter_48_304: (48, 304) is a door tile no game link lands on → return-link (40, 288)
+  level_82/out_teleporter_144_0: (144, 0) is a door tile no game link lands on → return-link (144, 16)
+  level_83/out_teleporter_32_64: (32, 64) is a door tile no game link lands on → return-link (32, 48)
+  level_83/out_pit_2_2: (32, 16) is over a pit at tile (2, 1) → approach (32, 32)
+  level_84/out_pit_2_3: (16, 16) is over a pit at tile (1, 1) → approach (16, 0)
+  level_84/out_pit_3_3: (32, 16) is over a pit at tile (2, 1) → approach (16, 0)
+  level_84/out_pit_2_4: (16, 32) is over a pit at tile (1, 2) → approach (16, 0)
+  level_84/out_pit_4_3: (48, 16) is over a pit at tile (3, 1) → approach (64, 32)
+  level_84/out_pit_3_4: (32, 32) is over a pit at tile (2, 2) → approach (64, 32)
+  level_84/out_pit_4_4: (48, 32) is over a pit at tile (3, 2) → approach (64, 32)
+  level_84/out_pit_4_5: (48, 48) is over a pit at tile (3, 3) → approach (64, 32)
+  level_84/out_pit_2_5: (16, 48) is over a pit at tile (1, 3) → approach (0, 48)
+  level_84/out_pit_3_5: (32, 48) is over a pit at tile (2, 3) → approach (0, 48)
+  level_85/out_teleporter_80_0: (80, 0) is a door tile no game link lands on → return-link (80, 16)
+  level_86/out_teleporter_48_64: (48, 64) is a door tile no game link lands on → return-link (48, 48)
+  level_87/out_teleporter_368_0: (368, 0) is a door tile no game link lands on → return-link (368, 16)
+  level_87/out_teleporter_0_144: (0, 144) is a door tile no game link lands on → return-link (16, 144)
+  level_87/out_teleporter_16_32: (16, 32) is a door tile no game link lands on → return-link (16, 48)
+  level_87/out_teleporter_272_304: (272, 304) is a door tile no game link lands on → return-link (272, 288)
+  level_87/out_teleporter_464_272: (464, 272) is a door tile no game link lands on → return-link (448, 272)
+  level_88/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_88/out_teleporter_96_304: (96, 304) is a door tile no game link lands on → return-link (96, 288)
+  level_88/out_teleporter_192_0: (192, 0) is a door tile no game link lands on → return-link (192, 16)
+  level_89/out_teleporter_208_0: (208, 0) is a door tile no game link lands on → return-link (208, 16)
+  level_89/out_teleporter_256_0: (256, 0) is a door tile no game link lands on → return-link (256, 16)
+  level_89/out_teleporter_160_304: (160, 304) is a door tile no game link lands on → return-link (160, 288)
+  level_89/out_teleporter_288_240: (288, 240) is a door tile no game link lands on → return-link (272, 240)
+  level_90/out_teleporter_48_96: (48, 96) is a door tile no game link lands on → return-link (48, 80)
+  level_91/out_teleporter_16_144: (16, 144) is a door tile no game link lands on → return-link (16, 128)
+  level_91/out_teleporter_240_48: (240, 48) is a door tile no game link lands on → return-link (240, 64)
+  level_92/out_teleporter_32_144: (32, 144) is a door tile no game link lands on → return-link (32, 128)
+  level_92/out_teleporter_272_144: (272, 144) is a door tile no game link lands on → return-link (272, 128)
+  level_93/out_teleporter_112_80: (112, 80) is a door tile no game link lands on → return-link (112, 96)
+  level_93/out_teleporter_112_272: (112, 272) is a door tile no game link lands on → return-link (112, 256)
+  level_94/out_teleporter_304_160: (304, 160) is a door tile no game link lands on → return-link (288, 160)
+  level_94/out_teleporter_304_176: (304, 176) is a door tile no game link lands on → return-link (288, 176)
+  level_95/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_95/out_teleporter_48_0: (48, 0) is a door tile no game link lands on → return-link (48, 16)
+  level_95/out_teleporter_624_64: (624, 64) is a door tile no game link lands on → return-link (608, 64)
+  level_95/out_teleporter_624_80: (624, 80) is a door tile no game link lands on → return-link (608, 80)
+  level_96/out_stairsup_32_32: (32, 32) is a door tile no game link lands on → return-link (32, 48)
+  level_96/out_teleporter_32_64: (32, 64) is a door tile no game link lands on → return-link (32, 48)
+  level_97/out_stairsup_32_16: (32, 16) is a door tile no game link lands on → return-link (32, 32)
+  level_97/out_stairsdown_32_48: (32, 48) is a door tile no game link lands on → return-link (32, 32)
+  level_98/out_stairsup_112_112: (112, 112) is inside a solid (Lock) → return-link (96, 112)
+  level_98/out_teleporter_112_192: (112, 192) is a door tile no game link lands on → return-link (112, 176)
+  level_99/out_stairsup_48_96: (48, 96) is a door tile no game link lands on → return-link (32, 96)
+  level_99/out_stairsdown_112_112: (112, 112) is a door tile no game link lands on → return-link (96, 112)
+  level_100/out_stairsdown_48_96: (48, 96) is a door tile no game link lands on → return-link (32, 96)
+  level_100/out_teleporter_288_96: (288, 96) is over a pit at tile (18, 6) → approach (288, 80)
+  level_101/out_teleporter_104_24: (96, 16) is a door tile no game link lands on → approach (96, 0)
+  level_101/out_stairsup_48_96: (48, 96) is a door tile no game link lands on → return-link (32, 96)
+  level_101/out_stairsup_144_96: (144, 96) is a door tile no game link lands on → return-link (144, 80)
+  level_102/out_teleporter_0_96: (0, 96) is a door tile no game link lands on → return-link (16, 96)
+  level_102/out_stairsdown_64_96: (64, 96) is a door tile no game link lands on → return-link (48, 96)
+  level_102/out_stairsdown_160_96: (160, 96) is a door tile no game link lands on → return-link (176, 96)
+  level_103/out_teleporter_0_64: (0, 64) is a door tile no game link lands on → return-link (16, 64)
+  level_103/out_teleporter_304_144: (304, 144) is a door tile no game link lands on → return-link (288, 144)
+  level_104/out_teleporter_0_16: (0, 16) is a door tile no game link lands on → return-link (16, 16)
+  level_104/out_teleporter_144_128: (144, 128) is a door tile no game link lands on → return-link (128, 128)
+  level_105/out_teleporter_80_144: (80, 144) is a door tile no game link lands on → return-link (80, 128)
+  level_105/out_teleporter_224_64: (224, 64) is a door tile no game link lands on → return-link (208, 64)
+  level_106/out_teleporter_64_48: (64, 48) is a door tile no game link lands on → approach (48, 48)
+  level_106/out_teleporter_256_0: (256, 0) is a door tile no game link lands on → return-link (256, 16)
+  level_107/out_teleporter_0_48: (0, 48) is a door tile no game link lands on → return-link (16, 48)
+  level_107/out_teleporter_304_176: (304, 176) is a door tile no game link lands on → return-link (288, 176)
+  level_108/out_teleporter_0_32: (0, 32) is a door tile no game link lands on → return-link (16, 32)
+  level_108/out_teleporter_224_224: (224, 224) is a door tile no game link lands on → return-link (208, 224)
+  level_109/out_teleporter_0_112: (0, 112) is a door tile no game link lands on → return-link (16, 112)
+  level_109/out_teleporter_160_48: (160, 48) is a door tile no game link lands on → approach (144, 48)
+  level_110/out_pit_3_2: (64, 64) is over a pit at tile (4, 4) → approach (64, 48)
+  level_111/out_teleporter_128_48: (128, 48) is a door tile no game link lands on → return-link (128, 64)
+  level_111/out_teleporter_304_176: (304, 176) is a door tile no game link lands on → return-link (288, 176)
+  level_112/out_teleporter_112_0: (112, 0) is a door tile no game link lands on → return-link (112, 16)
+  level_112/out_teleporter_32_224: (32, 224) is a door tile no game link lands on → return-link (32, 208)
+  level_113/out_teleporter_16_0: (16, 0) is a door tile no game link lands on → return-link (16, 16)
+  level_113/out_teleporter_32_0: (32, 0) is a door tile no game link lands on → return-link (32, 16)
+  level_113/out_teleporter_64_144: (64, 144) is a door tile no game link lands on → return-link (72, 128)
+  level_113/out_teleporter_80_144: (80, 144) is a door tile no game link lands on → return-link (72, 128)
+  level_113/out_teleporter_112_0: (112, 0) is inside a solid (FinalDoor) → return-link (112, 16)
+  level_113/out_teleporter_128_0: (128, 0) is inside a solid (FinalDoor) → return-link (128, 16)
+  level_114/out_teleporter_64_144: (64, 144) is a door tile no game link lands on → return-link (64, 128)
+  level_114/out_teleporter_80_144: (80, 144) is a door tile no game link lands on → return-link (80, 128)
+  level_115/out_teleporter_64_144: (64, 144) is a door tile no game link lands on → return-link (64, 128)
+  level_115/out_teleporter_80_144: (80, 144) is a door tile no game link lands on → return-link (80, 128)
+8 obstacle event(s), 9 landing edge(s) gated
+  flag:L0:1 L0 flag 1: breakablerock@288,176 cleared @ level_0__r7c6
+  flag:L0:4 L0 flag 4: breakablerock@80,112 cleared @ level_0__r7c6
+  flag:L12:7 L12 flag 7: magicallock@32,864 cleared @ level_12__r42c28
+  flag:L12:12 L12 flag 12: bosslock@32,864 cleared @ level_12__r42c28
+  flag:L24:0 L24 flag 0: burnabletree@32,128 cleared @ level_24
+  flag:L71:2 L71 flag 2: shieldlock@288,256 cleared @ level_71__r0c6
+  flag:L112:1 L112 flag 1: rocklock@112,16 cleared @ level_112__r2c2
+  flag:L113:0 L113 flag 0: finaldoor@112,0 cleared @ level_113
+18 lock event(s), 18 far-side return(s) priced as their event (flag:L71:2 reused from the obstacle events)
+  flag:L12:3 L12 flag 3: bosslock@80,656 cleared @ level_12__r40c4 across [level_12__r0c19] rule {"rule":"Has","args":{"item_name":"Green Key"}}
+  flag:L12:4 L12 flag 4: bosslock@416,240 cleared @ level_12__r0c19 across [level_12__r0c37] rule {"rule":"Has","args":{"item_name":"Red Key"}}
+  flag:L12:5 L12 flag 5: bosslock@432,240 cleared @ level_12__r0c19 across [level_12__r0c37] rule {"rule":"Has","args":{"item_name":"Red Key"}}
+  flag:L12:10 L12 flag 10: shieldlocknorm@288,704 cleared @ level_12__r0c19 across [level_12__r43c21] rule {"rule":"Has","args":{"item_name":"Progressive Shield"}}
+  flag:L12:11 L12 flag 11: bosslock@112,192 cleared @ level_12__r13c6 across [level_12__r0c19] rule {"rule":"Has","args":{"item_name":"Yellow Key"}}
+  flag:L18:0 L18 flag 0: lock@144,112 cleared @ level_18__r1c1 across [level_18__r7c10] rule {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]}
+  flag:L19:1 L19 flag 1: bosslock@48,32 cleared @ level_19__r3c3 across [level_19__r1c1] rule {"rule":"Has","args":{"item_name":"Red Key"}}
+  flag:L20:0 L20 flag 0: shieldlocknorm@176,16 cleared @ level_20__r1c4 across [level_20__r1c12] rule {"rule":"Has","args":{"item_name":"Progressive Shield"}}
+  flag:L26:0 L26 flag 0: rocklock@112,208 cleared @ level_26__r2c4 across [level_26__r13c8] rule {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]}
+  flag:L30:0 L30 flag 0: bosslock@64,32 cleared @ level_30__r2c10 across [level_30__r0c4] rule {"rule":"Has","args":{"item_name":"Green Key"}}
+  flag:L30:2 L30 flag 2: bosslock@224,208 cleared @ level_30__r2c10 across [level_30__r8c13] rule {"rule":"Has","args":{"item_name":"Green Key"}}
+  flag:L31:0 L31 flag 0: bosslock@192,432 cleared @ level_31__r5c24 across [level_31__r24c10] rule {"rule":"Has","args":{"item_name":"Green Key"}}
+  flag:L40:8 L40 flag 8: bosslock@480,352 cleared @ level_40__r23c29 across [level_40__r0c53] rule {"rule":"Has","args":{"item_name":"Purple Key"}}
+  flag:L48:1 L48 flag 1: bosslock@48,144 cleared @ level_48__r2c10 across [level_48__r4c3] rule {"rule":"Has","args":{"item_name":"Blue Key"}}
+  flag:L53:2 L53 flag 2: lock@144,208 cleared @ level_53__r9c10 across [level_53__r14c9] rule {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]}
+  flag:L60:0 L60 flag 0: lock@128,80 cleared @ level_60__r5c0 across [level_60__r5c9] rule {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Swim"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]}]}
+  flag:L68:0 L68 flag 0: bosslock@16,32 cleared @ level_68__r3c1 across [level_68__r1c1] rule {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Yellow Key"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire Wand Fusion"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Fire"}}]}]}]}
+  flag:L99:0 L99 flag 0: lock@80,96 cleared @ level_99__r2c7 across [level_99__r2c4] rule {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  level_12 r0c19 -> r13c6: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L12 flag 11: bosslock@112,192 cleared"}},{"rule":"Has","args":{"item_name":"Yellow Key"}}]}
+  level_12 r0c19 -> r40c4: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L12 flag 3: bosslock@80,656 cleared"}},{"rule":"Has","args":{"item_name":"Green Key"}}]}
+  level_12 r0c37 -> r0c19: {"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Red Key"}},{"rule":"Has","args":{"item_name":"L12 flag 5: bosslock@432,240 cleared"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Red Key"}},{"rule":"Has","args":{"item_name":"L12 flag 4: bosslock@416,240 cleared"}}]}]}
+  level_12 r43c21 -> r0c19: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Shield"}},{"rule":"Has","args":{"item_name":"L12 flag 10: shieldlocknorm@288,704 cleared"}}]}
+  level_18 r7c10 -> r1c1: {"rule":"And","children":[{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]},{"rule":"Has","args":{"item_name":"L18 flag 0: lock@144,112 cleared"}}]}
+  level_19 r1c1 -> r3c3: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L19 flag 1: bosslock@48,32 cleared"}},{"rule":"Has","args":{"item_name":"Red Key"}}]}
+  level_20 r1c12 -> r1c4: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Shield"}},{"rule":"Has","args":{"item_name":"L20 flag 0: shieldlocknorm@176,16 cleared"}}]}
+  level_26 r13c8 -> r2c4: {"rule":"And","children":[{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]},{"rule":"Has","args":{"item_name":"L26 flag 0: rocklock@112,208 cleared"}}]}
+  level_30 r0c4 -> r2c10: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L30 flag 0: bosslock@64,32 cleared"}},{"rule":"Has","args":{"item_name":"Green Key"}}]}
+  level_30 r8c13 -> r2c10: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Green Key"}},{"rule":"Has","args":{"item_name":"L30 flag 2: bosslock@224,208 cleared"}}]}
+  level_31 r24c10 -> r5c24: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Green Key"}},{"rule":"Has","args":{"item_name":"L31 flag 0: bosslock@192,432 cleared"}}]}
+  level_40 r0c53 -> r23c29: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L40 flag 8: bosslock@480,352 cleared"}},{"rule":"Has","args":{"item_name":"Purple Key"}}]}
+  level_48 r4c3 -> r2c10: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Blue Key"}},{"rule":"Has","args":{"item_name":"L48 flag 1: bosslock@48,144 cleared"}}]}
+  level_53 r14c9 -> r9c10: {"rule":"And","children":[{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]},{"rule":"Has","args":{"item_name":"L53 flag 2: lock@144,208 cleared"}}]}
+  level_60 r5c9 -> r5c0: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Swim"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Wand"}}]},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L60 flag 0: lock@128,80 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  level_68 r1c1 -> r3c1: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L68 flag 0: bosslock@16,32 cleared"}},{"rule":"Has","args":{"item_name":"Yellow Key"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire Wand Fusion"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Fire"}}]}]}]}
+  level_71 r16c19 -> r0c6: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Shield","count":2}},{"rule":"Has","args":{"item_name":"L71 flag 2: shieldlock@288,256 cleared"}}]}
+  level_99 r2c4 -> r2c7: {"rule":"And","children":[{"rule":"Has","args":{"item_name":"L99 flag 0: lock@80,96 cleared"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+7 button event(s), 6 crossing(s) through their targets gated, 0 internal crossing(s) through an in-room latch's lock gated
+  flag:L20:4 L20 flag 4: lock@32,80 cleared @ level_20__r1c12 (pressed at L20 buttonroom@192,16)
+  flag:L39:8 L39 flag 8: wandlock@144,592 cleared @ level_38 (pressed at L38 buttonroom@32,48)
+  flag:L40:1 L40 flag 1: wandlock@176,80 cleared @ level_40__r4c4 (pressed at L40 buttonroom@160,128)
+  flag:L40:7 L40 flag 7: wandlock@208,128 cleared @ level_40__r0c53 (pressed at L40 buttonroom@272,208)
+  flag:L40:12 L40 flag 12: wandlock@480,560 cleared @ level_40__r48c54 (pressed at L40 buttonroom@880,768)
+  flag:L62:0 L62 flag 0: lightpole@120,200 cleared @ level_63__r0c1 (pressed at L63 buttonroom@32,64)
+  flag:L63:1 L63 flag 1: lightpole@64,88 cleared @ level_61__r0c10 (pressed at L61 buttonroom@176,40)
+  gated level_38/out_teleporter_144_0
+  gated level_39/out_teleporter_144_624
+  gated level_62/out_teleporter_112_64
+  gated level_62/out_teleporter_240_304
+  gated level_63/out_teleporter_64_0
+  gated level_64/out_teleporter_32_96; 4 skipped: L38 buttonroom@144,288 -> {37,4}: no entity of L37 carries tag 4; L38 buttonroom@208,224 -> {38,3} pulser@80,224: solid in neither state (pulser: not a Lock opened by the group's publish (response 'undefined', publish true)); L38 buttonroom@144,128 -> {38,0} cover@208,224: solid in neither state (cover: not a Lock opened by the group's publish (response 'undefined', publish true)); L107 buttonroom@288,176 -> {107,1} pulser@80,32: solid in neither state (pulser: not a Lock opened by the group's publish (response 'undefined', publish true))
+4 in-room pole event(s), 8 crossing(s) through the bodies they kill gated
+  flag:L63:6 L63 flag 6: lightpole@48,272 cleared @ level_63__r10c2
+  flag:L63:7 L63 flag 7: lightpole@112,272 cleared @ level_63__r6c9
+  flag:L65:0 L65 flag 0: lightpole@128,168 cleared @ level_65__r0c8
+  flag:L101:0 L101 flag 0: lightpole@144,64 cleared @ level_101__r4c2
+  gated level_63/out_teleporter_32_304: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 6: lightpole@48,272 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  gated level_63/out_teleporter_128_304: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 7: lightpole@112,272 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  gated level_63/out_teleporter_128_304: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L65 flag 0: lightpole@128,168 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  gated level_65/out_teleporter_32_0: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 6: lightpole@48,272 cleared"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+  gated level_65/out_teleporter_128_0: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 7: lightpole@112,272 cleared"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+  gated level_65/out_teleporter_128_0: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L65 flag 0: lightpole@128,168 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}
+  gated level_101/out_stairsup_144_96: {"rule":"Has","args":{"item_name":"L101 flag 0: lightpole@144,64 cleared"}}
+  gated level_102/out_stairsdown_160_96: {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L101 flag 0: lightpole@144,64 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}; 14 skipped: L65 lightpole@176,120 {65,2}: its light kills no body; L66 lightpole@96,80 {66,2}: its light kills no body; L66 lightpole@48,80 {66,3}: its light kills no body; L67 lightpole@160,104 {67,1}: its light kills no body; L70 lightpole@32,16 {70,0}: its light kills no body; L74 lightpole@48,24 {74,1}: its light kills no body; L93 lightpole@80,144 {93,0}: its light kills no body; L93 lightpole@144,144 {93,1}: its light kills no body; L102 lightpole@80,104 {102,0}: its light kills no body; L102 lightpole@144,104 {102,1}: its light kills no body; L106 lightpole@32,56 {106,1}: its light kills no body; L106 lightpole@96,56 {106,2}: its light kills no body; L109 lightpole@128,56 {109,1}: its light kills no body; L109 lightpole@192,56 {109,2}: its light kills no body
+2 rope cut event(s) [L16 flag 0: rope@32,16 cleared @ level_16__r1c1; L28 flag 0: rope@160,64 cleared @ level_28__r0c6]; 2 departure(s) through a doorway whose landing stands in a lane gated
+  gated level_17/out_stairsup_32_48
+  gated level_16/out_stairsdown_112_64; 1 rope(s) refused
+  refused L39 rope@96,384 {39,9}: pulser@64,96 arms (pulser: the cut arms it (pulser-arm; its pushes are not placed by the model))
+2 cross-room prerequisite event(s), 3 crossing(s) and 1 event(s) gated on them
+  flag:L114:0 L114 flag 0: watcher@72,72 cleared @ level_114 (talk; gates L113 finaldoor@112,0)
+  flag:L58:1 L58 flag 1: yeti@56,56 cleared @ level_58__r3c3 (talk; gates L58 teleporter@80,16)
+  gated level_58/out_teleporter_80_16
+  gated level_113/out_teleporter_112_0
+  gated level_113/out_teleporter_128_0
+  gated event flag:L113:0
+15 landing edge(s) gated on the lethal terrain they land on; 12 lethal-terrain landing(s) not gated
+  not gated level_0/out_teleporter_240_0 -> L89 (160, 288): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  GATED level_12/out_stairsdown_96_240 -> L5 (16, 32): water at [1,2]; idle die@31:drown
+  not gated level_49/out_teleporter_32_128 -> L50 (32, 16): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  GATED level_50/out_teleporter_32_0 -> L49 (32, 112): water at [2,7]; idle die@31:drown
+  GATED level_50/out_teleporter_48_304 -> L51 (144, 16): water at [9,1]; idle die@31:drown
+  not gated level_51/out_teleporter_144_0 -> L50 (48, 288): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_51/out_teleporter_256_256 -> L52 (16, 112): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  GATED level_52/out_teleporter_0_48 -> L55 (64, 48): water at [4,3]; idle die@31:drown
+  GATED level_52/out_teleporter_0_112 -> L51 (240, 256): water at [15,16]; idle die@31:drown
+  GATED level_52/out_teleporter_112_0 -> L54 (128, 448): water at [8,28]; idle die@31:drown
+  GATED level_52/out_teleporter_224_112 -> L56 (16, 112): water at [1,7]; idle die@31:drown
+  GATED level_53/out_teleporter_144_240 -> L54 (144, 16): water at [9,1]; idle die@31:drown
+  GATED level_53/out_teleporter_208_64 -> L48 (16, 112): water at [1,7]; idle die@31:drown
+  not gated level_54/out_teleporter_128_464 -> L52 (112, 16): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_55/out_teleporter_80_48 -> L52 (16, 48): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_56/out_teleporter_0_112 -> L52 (208, 112): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  GATED level_56/out_pit_6_10 -> L57 (96, 160): water at [6,10]; idle die@31:drown
+  not gated level_58/out_teleporter_48_112 -> L57 (96, 64): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_58/out_teleporter_64_112 -> L57 (96, 64): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_89/out_teleporter_160_304 -> L0 (240, 16): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_89/out_teleporter_208_0 -> L91 (16, 128): the departure already requires {"rule":"Has","args":{"item_name":"Progressive Swim"}}
+  not gated level_96/out_teleporter_32_64 -> L82 (144, 16): the departure already requires {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  GATED level_98/out_teleporter_112_192 -> L93 (112, 96): water at [7,6]; idle die@31:drown
+  GATED level_111/out_teleporter_304_176 -> L3 (16, 64): water at [1,4]; idle die@31:drown
+  GATED level_113/out_teleporter_112_0 -> L115 (64, 128): water at [4,8]; idle die@31:drown
+  GATED level_113/out_teleporter_128_0 -> L115 (80, 128): water at [5,8]; idle die@31:drown
+  GATED level_57/out_tentaclebeast_80_48 -> L58 (48, 96): water at [3,6]; idle die@31:drown
+13 departure(s) charged what every way onto their tile pays
+  level_0/out_teleporter_240_0
+  level_3/out_teleporter_0_64
+  level_49/out_teleporter_32_128
+  level_51/out_teleporter_144_0
+  level_51/out_teleporter_256_256
+  level_54/out_teleporter_128_464
+  level_54/out_teleporter_144_0
+  level_55/out_teleporter_80_48
+  level_56/out_teleporter_0_112
+  level_58/out_teleporter_48_112
+  level_58/out_teleporter_64_112
+  level_89/out_teleporter_160_304
+  level_91/out_teleporter_16_144
+0 departure(s) charged the solids that alone open their pocket
+157 analysis note(s)

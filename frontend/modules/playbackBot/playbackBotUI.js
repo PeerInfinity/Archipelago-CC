@@ -58,6 +58,10 @@ const LS_WALK_ORDER_KEY = 'playbackBot_walkOrder';
 // ⛓ ROUTE EVENTS (slice seedling-walk-route-events) — before a goal, walk to the game-state events the AP route collected
 // earlier that the goal's room reads (routeEvents.js). OFF by default ('true' = on): OFF, the walk is byte-identical.
 const LS_ROUTE_EVENTS_KEY = 'playbackBot_routeEvents';
+// ⛓ LOG REASONING (ActionNodes AN-3a, design §7) — a substrate's own loop plan (`loopBot.planLoop`) explains every
+// decision in lines: with this on they go to the log (`getLog()`) and the console. OFF by default ('true' = on); the
+// status line shows each loop's reason either way.
+const LS_LOG_REASONING_KEY = 'playbackBot_logReasoning';
 export { WALK_ORDERS };
 const COLLECT_NEVER = 'never';
 const COLLECT_ALWAYS = 'always';
@@ -263,6 +267,7 @@ export class PlaybackBotUI {
         // ⛓ ROUTE EVENTS — the opt-in (LS), the slot's plan (goal → its route events; built with the queue), the
         // (goal, event) pairs given up this run (no route / rule not held / the walk to it failed), and the steps taken.
         this._routeEvents = loadRouteEventsFromLS();
+        this._logReasoning = loadFlagFromLS(LS_LOG_REASONING_KEY);
         this._routeEventPlan = null;
         this._routeEventSkips = new Set();
         this._routeEventSteps = [];
@@ -988,6 +993,27 @@ export class PlaybackBotUI {
         return this._routeEvents;
     }
 
+    /** ⛓ LOG REASONING — are a substrate plan's reasoning lines logged (and printed to the console)? */
+    getLogReasoning() { return this._logReasoning; }
+
+    /** ⛓ LOG REASONING — turn it on or off (persisted). */
+    setLogReasoning(on) {
+        this._logReasoning = on === true;
+        saveFlagToLS(LS_LOG_REASONING_KEY, this._logReasoning);
+        if (this._logReasoningCheckbox) this._logReasoningCheckbox.checked = this._logReasoning;
+        this._render();
+        return this._logReasoning;
+    }
+
+    /** A substrate plan's reasoning lines (the loop runner's `onReasoning`): to the log and the console when on. */
+    _onReasoning(lines) {
+        if (!this._logReasoning) return;
+        for (const line of lines) {
+            this._log.push(line);
+            console.log(`[playbackBot] ${line}`);
+        }
+    }
+
     /** ⛓ ROUTE EVENTS — the steps taken this run (`{goal, event, eventId, how}`) and the pairs given up (`goal|event`). */
     getRouteEventState() {
         return { on: this._routeEvents, steps: this._routeEventSteps.map((s) => ({ ...s })), skipped: [...this._routeEventSkips] };
@@ -1179,6 +1205,7 @@ export class PlaybackBotUI {
                 nextTarget: () => this._nextLoopTarget(),
                 getStrategy: () => this._manaStrategy,
                 onStatus: (text) => { this._setStatus(text); this._render(); },
+                onReasoning: (lines) => this._onReasoning(lines),
                 onFinished: () => { this._isActive = false; this._render(); },
             });
         }
@@ -2065,6 +2092,7 @@ export class PlaybackBotUI {
         root.appendChild(this._mountTargetSource());
         root.appendChild(this._mountWalkOrder());
         root.appendChild(this._mountRouteEvents());
+        root.appendChild(this._mountLogReasoning());
         root.appendChild(this._mountInterceptToggle());
         root.appendChild(this._mountManaStrategy());
 
@@ -2204,6 +2232,23 @@ export class PlaybackBotUI {
         text.textContent = ' Clear the route\'s events first';
         wrap.appendChild(text);
         this._routeEventsCheckbox = cb;
+        return wrap;
+    }
+
+    /** ⛓ LOG REASONING — the opt-in checkbox (OFF by default). */
+    _mountLogReasoning() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-log-reasoning';
+        wrap.title = 'Loop mode, a substrate that plans its own loops (ActionNodes): log why each loop was chosen, and print it to the console.';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = this._logReasoning;
+        cb.addEventListener('change', () => this.setLogReasoning(cb.checked));
+        wrap.appendChild(cb);
+        const text = document.createElement('span');
+        text.textContent = ' Log the loop plan\'s reasoning';
+        wrap.appendChild(text);
+        this._logReasoningCheckbox = cb;
         return wrap;
     }
 
@@ -2492,6 +2537,20 @@ function loadRouteEventsFromLS() {
     } catch (_e) {
         return false;
     }
+}
+
+function loadFlagFromLS(key) {
+    try {
+        return typeof localStorage !== 'undefined' && localStorage.getItem(key) === 'true';
+    } catch (_e) {
+        return false;
+    }
+}
+
+function saveFlagToLS(key, on) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(key, on ? 'true' : 'false');
+    } catch (_e) { /* storage unavailable */ }
 }
 
 function saveRouteEventsToLS(on) {

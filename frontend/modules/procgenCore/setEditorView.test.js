@@ -2126,6 +2126,64 @@ describe('⛓⛓ Seedling editor E3 — the MAP on the same overview canvas (the
     });
 
     /**
+     * ⛓⛓ lab-map-camera — the opening view is HOME: the canvas is the provider's frame, the cells are its cells, and
+     * the paint does not transform at all. MUTANT: transform even at home (a `setTransform` lands in the paint).
+     */
+    it('the opening MAP is HOME — the frame\'s own canvas and cells, and no transform', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const m = h.ui.map();
+        const c = $(h, 'editSetOverview');
+        expect(m.camera).toMatchObject({ zoom: 1, engaged: false });
+        expect(m.viewport).toEqual({ w: m.frame.width, h: m.frame.height });
+        expect([c.width, c.height]).toEqual([m.frame.width, m.frame.height]);
+        expect(m.start).toBe(0);
+        expect(c.calls.some((k) => k.startsWith('setTransform('))).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ lab-map-camera — after `+` the map is drawn through the camera, and a click on a room AS DRAWN selects that
+     * room. MUTANT: the picker reads the canvas point as a frame point — it lands on another room or none.
+     */
+    it('after a zoom, a click on a room as DRAWN selects THAT room (the picker reads through the camera)', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const home = h.ui.map().cells;
+        const c = $(h, 'editSetOverview');
+        const key = (k) => c.dispatch('keydown', { key: k, stopPropagation() {}, preventDefault() {} });
+        key('+');
+        key('+');
+        const m = h.ui.map();
+        expect(m.camera).toMatchObject({ zoom: 1.5625, engaged: true });
+        expect(c.calls.some((k) => k.startsWith('setTransform('))).toBe(true);
+        const under = (cells, p) => cells.findIndex(([x, y, w, hh]) => p.clientX >= x && p.clientX < x + w
+            && p.clientY >= y && p.clientY < y + hh);
+        const target = m.cells.findIndex((cell, i) => i !== 0 && cell[0] > 0 && cell[0] + cell[2] < m.viewport.w
+            && under(home, centre(cell)) !== i);
+        expect(target).toBeGreaterThan(0);
+        c.dispatch('mousedown', { ...centre(m.cells[target]), button: 0 });
+        c.dispatch('click', centre(m.cells[target]));
+        expect(h.ui.selected).toBe(target);
+        expect(h.session.ops().length).toBe(0);
+    });
+
+    /** ⛓ lab-map-camera — a press that moves past the threshold pans the camera by exactly the drag. */
+    it('a DRAG pans the camera by the drag; a move under the threshold does not', () => {
+        const h = seedlingHarness({ overviewMapOn: true });
+        const c = $(h, 'editSetOverview');
+        const panel = c.parentNode;
+        const m0 = h.ui.map();
+        const ev = (x, y) => ({ clientX: x, clientY: y, button: 0, stopPropagation() {}, preventDefault() {} });
+        c.dispatch('mousedown', ev(50, 40));
+        panel.dispatch('mousemove', ev(52, 41));
+        expect(h.ui.map().camera).toEqual(m0.camera);
+        panel.dispatch('mousemove', ev(80, 30));
+        const m1 = h.ui.map();
+        expect(m1.camera.engaged).toBe(true);
+        expect(m1.camera.x).toBe(m0.camera.x - 30);
+        expect(m1.camera.y).toBe(m0.camera.y + 10);
+        expect(m1.cells[1]).toEqual([m0.cells[1][0] + 30, m0.cells[1][1] - 10, m0.cells[1][2], m0.cells[1][3]]);
+    });
+
+    /**
      * ⛓ seedling-map-unreachable — the map marks the rooms the LAST REPORT finds unreachable, and only while the set
      * is the one that REPORT ran over. MUTANTS: the provider's `unreachableOf` removed (nothing marked); the stale
      * rule dropped (the marks survive the undo); the marks painted before REPORT runs (the `none` assertion).

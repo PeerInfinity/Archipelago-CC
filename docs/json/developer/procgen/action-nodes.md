@@ -51,10 +51,10 @@ One JSON document, kind `action-graph`, schema version 1, validated by `actionGr
 
 - **What it keeps.** Per loop: each node's performances. Through the host ledger (`resourceChannels/resourceLedger.js`): the stats and resources. Across loops, until the next world load: the checks it has sent and the nodes whose exits it has revealed.
 - **The `act` verb.** A Loops queue entry `{type: 'customAction', actionName: 'act', params: {nodeId, label}, sourceRegion}`. The named-action table (`shared/procgen/loopCustomActions.js`) prices it at the node's `loop_costs[p].regions[<node>].actions.act` (then the region-XP discount, as every cost), labels it by the node's name, and on completion publishes `loop:actionCompleted` on the event bus; the runtime then performs the node. There is no explore in ActionNodes (below).
-- **The start gate** (`loopSupport.actionGate`). Before the generic executor starts an entry of an ActionNodes region it asks the runtime. An `act` is refused when its node is not reached this loop, its limit is used up, a requirement is not met, or a result would take a resource below 0; a move over a FORWARD exit is refused until its node is cleared this loop (the start always is; code `not-cleared`); a move over a REVERSE exit is open whenever its target is reached this loop, which for a node reached through a one-member `after` set is always (`target-not-reached` otherwise). So a multi-hop move between reached nodes is never refused and costs 0; reachability resets with the loop. Any custom action but `act` is refused (`action-not-offered`). The refusal stops the queue at that entry and the Loops panel names the entry and the reason ([Loop Recording](./loop-recording.md#the-start-gate)). Mana is not part of the gate: a node started short of mana drains what is left into region XP and the loop ends, as every Loops action does.
+- **The start gate** (`loopSupport.actionGate`). Before the generic executor starts an entry of an ActionNodes region it asks the runtime. An `act` is refused when its node is not reached this loop, its limit is used up, a requirement is not met, or a result would take a resource below 0; a move is governed by the MULTI-ENTRY RULE (AN-3a): every exit, forward or reverse, is open iff its TARGET is reached this loop — the start, or a node one of whose `after` sets is fully cleared. On a one-member set that is "the source is cleared" (code `not-cleared`, with the count); on `after: [[A, B]]` both A→N and B→N stay shut until A and B are cleared (refused with A cleared: `target-not-reached`, naming B); on `after: [[A], [B]]` either cleared opens both. A move that names no exit of the node keeps "the source is cleared". The compiler's forward-exit rule is already the target's reach rule, so the example preset is unchanged. So a multi-hop move between reached nodes is never refused and costs 0; reachability resets with the loop. Any custom action but `act` is refused (`action-not-offered`). The refusal stops the queue at that entry and the Loops panel names the entry and the reason ([Loop Recording](./loop-recording.md#the-start-gate)). Mana is not part of the gate: a node started short of mana drains what is left into region XP and the loop ends, as every Loops action does.
 - **One performance.** The results go to the ledger (all or nothing), `results.mana` to the pool. The first time a node is cleared, its forward exits are revealed (below); discovery is never reset by a loop. A check or goal node sends its location once (`user:locationCheck`); in later loops the action repeats without it.
 - **Outside Loop mode** the panel's **Act** performs at once: the runtime charges the shared pool the XP-adjusted price (`chargeMana`), and at zero fires the loop-reset teleport. Short of mana, what is left is spent and the action does not complete. In Loop mode the button is **Queue act**: it appends an `act` entry when the queue ends at the node.
-- **Boosts (A4).** An item named in `boosts` adds its stats and resources to the ledger at once when received and again at every loop's start. Its `mana` is that item's starting mana, through the per-item table in `gameState` (an item with no row adds `mana_per_item_default`); a received boost's mana is also gained at once. The first state snapshot after a load is the baseline, so items already held are not gained twice.
+- **Boosts (A4).** An item named in `boosts` adds its stats and resources to the ledger at once when received and again at every loop's start. Its `mana` is that item's starting mana, through the per-item table in `gameState` (an item with no row adds `mana_per_item_default`); a received boost's mana is also gained at once. The first state snapshot after a load is the baseline, so items already held are not gained twice. A baseline that arrives after the loop's first performance (nothing guarantees a snapshot between a load and a check) does not restart the loop: what it holds was received during the loop and applies at once (AN-3a; before, it wiped the loop's counts mid-loop).
 - **Both resets.** `gameState:loopReset` and `loopState:loopReset` each start a new loop: counts to zero, the ledger to its base plus every held boost.
 - **Cross-substrate items.** The resources are also declared under `sharing.items`, so a grant to `action_nodes/<resource>` lands in the ledger.
 - **Costs are authored.** The entry declares `loopSupport.authoredCosts`, the cost class `authored`: the Loops panel's Generate Costs and the pipeline's cost pass copy each node's entry as compiled. `xpGainScale` on a region entry scales the region XP earned there (default 1, so every other world is unchanged).
@@ -73,6 +73,22 @@ The user, 2026-11-16: the start node starts fully discovered; the nodes connecte
 - **The order trap.** The override applier writes `regionDiscoveryTrigger` before `autoDiscoverLocations`, so the start cascade runs with locations off; `settingsChangeSteps` re-runs its location step when they turn on.
 - **Loop reset.** Nothing clears discovery: no module publishes `loop:reset` (`revealCore.test.js` holds that).
 
+### The node states and the node card
+
+`nodeStates.js` gives every node exactly one state, by one pure function over the node data and a loop state, in this precedence:
+
+| State | Meaning |
+|---|---|
+| `undiscovered` | the discovery module has not discovered its region: the card shows the discovery placeholder |
+| `not-reached` | no `after` set is cleared this loop |
+| `done` | its limit is used up this loop (the start, cleared from the beginning, is always `done`) |
+| `blocked` | reached, performances left, a requirement unmet (named). Short ONLY of mana: `blocked`, "not enough mana" (it can still be queued) |
+| `ready` | reached, performances left, every requirement met, the mana covers its live price |
+
+While the Loops queue is being planned the states are for its END (`queueEndState` applies every uncompleted `act` entry and stops where the queue would); while it runs they follow the live state (`viewStateOf`; `runtime.nodeStates({running, queue, isDiscovered})`).
+
+**The card** (`nodeCard.js`) is a Region Graph node overlay. `nodeCardOverlay.js` registers it (`regionGraph` public `registerNodeOverlayProvider`) while an ActionNodes world is loaded and removes it on unload (`unregisterNodeOverlayProvider`, added for this in AN-3a), so no other world sees it; it refreshes on the queue, the ledger, mana, discovery and checks. It shows the name, a check mark once its location is checked (a goal mark on the goal), `used/limit`, the live mana price, needs and gives with the unmet line marked, and takes its state's border. An undiscovered node shows `???` only; one with no way in from a discovered node is not drawn (the view model's rule). It has NO click code: the click (perform once) and the **perform all remaining** button of a repeatable node are AN-3b, after the click-actions series; the button's place is the card's empty, hidden `.an-card__actions[data-slot="perform-all-remaining"]`. Known limit: a provider registered before the Region Graph panel exists waits in one pending slot that the first panel takes, so a closed and reopened panel shows no card until the next world load.
+
 The Resources panel (`resourceChannels/resourcesPanel.js`) shows the mana line, the ledger's stats and resources, and the boosts in effect, for every substrate of the loaded world that declares a sharing category.
 
 ## The bot planner
@@ -81,10 +97,12 @@ The Resources panel (`resourceChannels/resourcesPanel.js`) shows the mana line, 
 
 `playToGoal(model, {placements, xpGainScale})` plays a compiled world with it: an item arrives the moment its check is performed and the bot plans the rest of the loop again from there.
 
+**The live bot** (AN-3a). The registry entry declares `loopBot.planLoop(context)` (`actionLoopBot.js` `planLiveLoop`): `planLoop` over the runtime's model with the live inventory, checks, region XP and pool, written as a Loops path — `Menu → start`, then for each performance the free hops from where the player is (a shortest path over exits whose target is reached at that point of the plan, so the start gate never refuses one), then the `act` entry; an attempt is the last act. The Playback Bot's loop runner asks it for the whole loop when every region of the world is an ActionNodes node ([Playback and Debugging](./playback-and-debugging.md#the-playback-bot-frontendmodulesplaybackbot)); its reasoning lines go to the bot's log and the console behind the bot's **Log the loop plan's reasoning** setting. `actionLiveSim.js` `playLiveToGoal(rules)` plays those paths headless through the real runtime gate, pool and checks.
+
 ## The scripts
 
 - `scripts/procgen/action-nodes-compile.mjs [<graph>] [-o out] [--seed N] [--exists id,id] [--check]` compiles a graph; `--exists` names the packs the graph is the resolved structure of (recorded in `provenance[p]`). With no graph it compiles the example to the committed preset, naming its pack `example-village`, and the check mode is a byte-identity gate.
-- `scripts/procgen/action-nodes-play.mjs [<rules.json>]` plays a compiled world to its goal with the planner and prints every loop with its reasoning, at the graph's XP scale and at 0.
+- `scripts/procgen/action-nodes-play.mjs [<rules.json>] [--live-only]` plays a compiled world to its goal with the planner and prints every loop with its reasoning, at the graph's XP scale and at 0; then the live bot's path (`playLiveToGoal`), where a refused hop or act fails the run.
 
 ## The example
 
@@ -97,10 +115,11 @@ The Resources panel (`resourceChannels/resourcesPanel.js`) shows the mana line, 
 - `fillRules`: the content-pack fill rules it applies (`procgenCore/fillRules.js` `fillRulesOf`).
 - `loopSupport`: `queueActions: ['regionMove', 'act']`, `strictQueueActions: true`, `actionGate`, `authoredCosts: true`, `manual: false`. Not `manual`: a Manual block parks the queue for live play, and in Loop mode every performance is a queue entry, so a park would wait for nothing. Not `record` / `playback` (the strict action gate's pair: the start gate does that job), and no `executeVia` until the playback controller exists.
 - `sharing`: `mana`, `items` (its resources), `stats` and `resources`, each list read from the loaded world.
+- `loopBot.planLoop`: the live bot's loop plan (above).
 
-It declares no playback controller yet (slice 3), so the capability chart shows ✗ for a Bot block.
+It declares no playback controller (the live bot plays through the Loops queue), so the capability chart shows ✗ for a Bot block.
 
-Unit tests: `frontend/modules/actionNodes/*.test.js`; in the browser, the category "ActionNodes" of the substrates test mode (batch `fast`).
+Unit tests: `frontend/modules/actionNodes/*.test.js`; in the browser, the category "ActionNodes" of the substrates test mode (batch `fast`), and `an-bot-plays-to-goal` in the category "Playback Bot" (batch `playback-bot`).
 
 ## Related documentation
 

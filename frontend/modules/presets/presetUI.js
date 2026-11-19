@@ -6,6 +6,7 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { JSZIP_SCRIPT, loadJSZipBrowser } from './loadJSZipBrowser.js';
 import { describeBundle, gunzipIfNeeded, readBundle } from './documentBundle.js';
+import { putAtlases } from '../procgenCore/atlasCache.js';
 import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
@@ -1714,17 +1715,27 @@ export class PresetUI {
       const JSZip = await this.loadJSZip();
       const { members, notes } = await readBundle(bytes, { jszip: JSZip });
       const rules = members.find((m) => m.kind === 'rules');
-      const others = members.filter((m) => m.kind !== 'rules');
       const summary = describeBundle({ members, notes });
       if (!rules) {
         throw new Error(`${file.name} carries no rules.json — ${summary}`);
       }
       log('info', `Bundle ${file.name}: ${summary}`);
-      if (others.length || notes.length) {
+      /**
+       * ⛓ region-map atlas-cache — **THE BUNDLE'S REGION ATLAS GOES TO THE HOST CACHE**, keyed by its own
+       * `atlas_id`, BEFORE the rules are published: the rules name that id in `region_atlas[p]` and carry no
+       * body, so this is the one moment the host holds both (`procgenCore/atlasCache.js`; the Region Map reads it).
+       */
+      const atlases = members.filter((m) => m.kind === 'region-atlas');
+      putAtlases(atlases.map((m) => m.doc));
+      const others = members.filter((m) => m.kind !== 'rules' && m.kind !== 'region-atlas');
+      if (others.length || notes.length || atlases.length) {
+        const cached = atlases.map((m) => `${m.kind} (\`${m.name}\`) as ${m.doc.atlas_id}`);
+        const skipped = [...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes];
         this.eventBus.publish('ui:notification', {
           type: 'info',
-          message: `${file.name}: loaded the rules member; NOT loaded — `
-            + `${[...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes].join(', ')}`,
+          message: `${file.name}: loaded the rules member`
+            + `${cached.length ? `; CACHED for the Region Map — ${cached.join(', ')}` : ''}`
+            + `${skipped.length ? `; NOT loaded — ${skipped.join(', ')}` : ''}`,
         });
       }
       this.displayLoadedJsonFileDetails(rules.doc, `${file.name} → ${rules.name}`,

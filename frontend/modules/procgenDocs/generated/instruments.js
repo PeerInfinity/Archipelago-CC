@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 157,
-            "count": 209,
+            "browser": 158,
+            "count": 210,
             "id": "probe"
         },
         {
@@ -244,18 +244,23 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "walk"
+        },
+        {
+            "browser": 0,
             "count": 3,
             "id": "witness"
         }
     ],
     "counts": {
-        "blockStyle": 535,
-        "browser": 227,
-        "cited": 293,
-        "files": 557,
+        "blockStyle": 537,
+        "browser": 228,
+        "cited": 295,
+        "files": 559,
         "lineStyle": 22,
-        "withDocblock": 557,
-        "withFlags": 474
+        "withDocblock": 559,
+        "withFlags": 476
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -357,6 +362,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "live-only"
                 },
                 {
                     "how": [
@@ -2682,7 +2693,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/maze-lab.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-maze-world-map.mjs",
@@ -16595,6 +16608,81 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "also",
+                "host",
+                "near",
+                "only",
+                "out",
+                "ticks",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-landing-contact.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "also"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "near"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "screen-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ticks"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling LANDING CONTACT, THE GAME'S WAY (rules `rules-landing-contact-census`).",
+            "path": "scripts/procgen/probe-seedling-landing-contact.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
                 "cross",
                 "host",
                 "only",
@@ -24191,6 +24279,98 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a carved room, per skeleton kind, per room size, per seed, on BOTH substrates.",
             "path": "scripts/procgen/sweep-yield-table.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "walk",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "log",
+                "min",
+                "port",
+                "python",
+                "runtime",
+                "seed",
+                "skip-refusals",
+                "stall-s",
+                "wait-for-box"
+            ],
+            "file": "walk-seedling-whole-game.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "log"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "min"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "python"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "runtime"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "seed"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "skip-refusals"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "stall-s"
+                },
+                {
+                    "how": [
+                        "case"
+                    ],
+                    "name": "wait-for-box"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The whole-game Seedling walk, as a measure: N/48 and where it stopped.",
+            "path": "scripts/procgen/walk-seedling-whole-game.mjs"
         },
         {
             "argvHelpers": [

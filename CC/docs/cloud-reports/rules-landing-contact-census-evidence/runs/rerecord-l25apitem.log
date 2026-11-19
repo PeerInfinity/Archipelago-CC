@@ -1,0 +1,13 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-ap-record-6d7e278d · vanilla seedling-vanilla-record-23510f80 · model takenAt 48
+# box lock: TAKEN by probe-seedling-l25-apitem.mjs (browser, pid 11961) — head c1927ba30, 11 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: the model takes the delivered apitem on some tick, and the vanilla room holds none — {"t":48,"id":"apitem@96,96","tag":0,"at":{"x":109.3770292269908,"y":99.07297077300917}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"source":"probe-seedling-l25-apitem.mjs --record (seedling fidelity L25APITEM)","build":"seedling_bot_ap_p4g","tape":"frontend/modules/seedlingDemo/fixtures/l25apitem-witness/step34-on.tape.json","delivered_set":"seedling-ap-record-6d7e278d","vanilla_set":"seedling-vanilla-record-23510f80","slot":"25,0","takenAt":48,"delivered":{"mounted":"seedling-ap-record-6d7e278d","observations":109,"cleared":true,"end":{"level":22,"x":24,"y":136},"hits":0,"positions":{"compared":109,"worst":0}},"take":{"ticks":49,"cleared":true},"before":{"ticks":48,"cleared":false},"takenAtGame":{"level":25,"x":109.3770292269908,"y":99.07297077300917},"vanilla":{"mounted":"seedling-vanilla-record-23510f80","observations":109,"cleared":false,"end":{"level":22,"x":23.2,"y":136},"positions":{"compared":109,"worst":0}},"firstDrift":{"delivered":null,"vanilla":null}}
+PASS: DELIVERED: the game ran the whole tape on the delivered set — 109 obs, seedling-ap-record-6d7e278d
+PASS: DELIVERED: the apitem is taken ({25,0} cleared) and the tape ends in L22 — {"mounted":"seedling-ap-record-6d7e278d","observations":109,"cleared":true,"end":{"level":22,"x":24,"y":136},"hits":0,"positions":{"compared":109,"worst":0}}
+PASS: DELIVERED: the model replays the game at 0 px — {"compared":109,"worst":0,"first":null}
+PASS: TAKE: 49 ticks clear {25,0} — {"ticks":49,"cleared":true}
+PASS: BEFORE: 48 ticks do NOT — {"ticks":48,"cleared":false}
+PASS: VANILLA (control): the Chest stays Solid — {25,0} set — and the model's bottom-line room is the game's at 0 px — {"mounted":"seedling-vanilla-record-23510f80","observations":109,"cleared":false,"end":{"level":22,"x":23.2,"y":136},"positions":{"compared":109,"worst":0},"first":null}
+RECORDED: /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/l25apitem-witness/oracle.json
+ALL CHECKS PASSED

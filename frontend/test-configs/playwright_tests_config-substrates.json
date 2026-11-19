@@ -46,6 +46,18 @@
             "category": "ActionNodes"
         },
         {
+            "id": "an-node-states",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3a: every node's state (ready / blocked / not-reached / done / undiscovered) derived from the preset, at load, at a planned queue's END, after it ran (live), after a loop reset."
+        },
+        {
+            "id": "an-node-card",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-3a: the Region Graph node card (undiscovered placeholder; a check node's fields + check mark + the reserved perform-all slot; the goal mark); then another world's node sizes and arrows are as before and no card is left (planner ruling (a): unregisterNodeOverlayProvider)."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2031,6 +2043,12 @@
             "_comment": "REGION MAP step 3b (2026-11-15): follow player re-centres after a region move; a pan turns follow off. Batch playback-bot (on push)."
         },
         {
+            "id": "region-map-custom-set-atlas",
+            "enabled": true,
+            "category": "Region Map: Seedling",
+            "_comment": "REGION MAP atlas-cache (2026-11-17): a custom Seedling set (the vanilla rooms + the vanilla overlay, compiled in the page by the set editor's own rulesJsonOf) loaded as a BUNDLE through the Presets panel's loadDocumentFile: its region-atlas member lands in procgenCore/atlasCache, and the panel shows real extents in every cell, N/N squares on their tiles, and its warps. Batch playback-bot (on push). Counts derived at run time. Reloads the world loaded before."
+        },
+        {
             "id": "region-map-discovery",
             "enabled": true,
             "category": "Region Map: Seedling",
@@ -2248,6 +2266,12 @@
             "_comment": "loop-mode-bot S3 (⚖ first target): Adventure in Loop mode, no procgen. Generate Costs (enters Loop mode), Loops queue on Instant, bot Play: the bot writes the Loops queue one loop at a time (explore until found, then check) until every sphere-log location is checked."
         },
         {
+            "id": "an-bot-plays-to-goal",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-3a (design §7): the ActionNodes example in Loop mode; the runner asks the entry's loopBot.planLoop for each loop (free hops + acts) until the goal is checked; each loop's reason is in the log (logReasoning on); loop count = the headless live path's."
+        },
+        {
             "id": "playback-bot-loop-mode-maze",
             "enabled": true,
             "category": "Playback Bot",
@@ -2311,7 +2335,7 @@
             "id": "seedling-js-runtime-graphics-puzzles",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "GRAPHICS G7. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 8: the stairs, both pushable blocks and both sand traps drawn from the seedling pack; then an item flag (a reboot in place on the JS runtime) holds no dead frame and owes or shows no cover (one fade per new Game; before G7 it faded in from black again); every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+            "_comment": "GRAPHICS G7. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 8: the stairs, both pushable blocks and both sand traps drawn from the seedling pack; then an item flag (written into the live run since seedling-js-item-live-delivery; a reboot in place before it) boots nothing, holds no dead frame and owes or shows no cover (one fade per new Game; before G7 it faded in from black again); every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-graphics-solids",

@@ -18,6 +18,9 @@
  *      `named_rooms` arrival are not exits. Each refusal edits nothing.
  *   6. **PAN / ZOOM / TOGGLE / RE-LAYOUT** — `+`/`-` change the zoom and the canvas; the strip is one toggle away (and
  *      `?setView=strip` opens on it); RE-LAYOUT is the canonical layout.
+ *   8. **THE CAMERA** (slice `lab-map-camera`, `setMapCameraClaims.js`) — the vanilla 116 opens HOME (node's frame at
+ *      zoom 1); a drag pans and is not a click; Ctrl+wheel zooms around the cursor; a click after a pan selects THAT
+ *      room; `0` fits both axes; CENTRE ON START centres the start room.
  *   7. **UNREACHABLE ROOMS** (slice `seedling-map-unreachable`) — a DISCONNECT on the map cuts a room off; nothing is
  *      marked until REPORT runs; then exactly the rooms node's `unreachableRoomsOf` finds over node's own report of the
  *      same set are hatched (ink in that cell, none in the start's) with a legend line; Ctrl+Z (the door back) clears
@@ -38,6 +41,7 @@ import { fileURLToPath } from 'node:url';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { setMapCameraClaims } from './setMapCameraClaims.js';
 
 argvHelp(import.meta.url);
 
@@ -63,6 +67,7 @@ async function main() {
     const { createSeedlingSetAdapter, setRecord } = await M('seedlingDemo/seedlingSetAdapter.js');
     const { assembleGeneratedSeedlingSet } = await M('seedlingDemo/seedlingGeneratedSet.js');
     const { canonicalLayout, layoutGraphOf, mapLinksOf } = await M('seedlingDemo/seedlingSetMap.js');
+    const { frameOf } = await M('procgenCore/setMapLayout.js');
     const { disconnectEffectOf, editorVanillaSet, reportOf, roomRowsOf } = await M('seedlingDemo/watchSetEditor.js');
     const { unreachableRoomsOf } = await M('seedlingDemo/seedlingSetMapUnreachable.js');
     const { compileRegionAtlas } = await M('procgenPipeline/regionAtlasCompiler.js');
@@ -389,7 +394,7 @@ async function main() {
         const w0 = (await set()).map.frame.width;
         await mapKey('+');
         const z1 = (await set()).map;
-        check(z1.zoom > 1 && z1.frame.width > w0, '6 `+` ZOOMS IN: the canvas grows', `${w0} → ${z1.frame.width}`);
+        check(z1.zoom > 1 && z1.frame.width > w0, '6 `+` ZOOMS IN: the drawn map grows', `${w0} → ${z1.frame.width}`);
         await mapKey('-');
         check((await set()).map.frame.width === w0, '6 `-` zooms back out');
         await page.uncheck('#editSetMapView');
@@ -459,6 +464,22 @@ async function main() {
         await loadSet(SMALL, 4);
         check((await set()).map === null && !(await page.isChecked('#editSetMapView')),
             '5 `?setView=strip` opens on the STRIP');
+
+        /* ── 8. THE CAMERA (lab-map-camera) ──────────────────────────────── */
+        await open();
+        await page.click('#editLoadVanilla');
+        await page.waitForFunction(() => window.__editorEdit?.set?.rooms === 116 && window.__editorEdit.set.map,
+            null, { timeout: 120000 });
+        {
+            const rec = setRecord(vanillaSet, emptyOverlay());
+            const f = frameOf(layoutOf(vanillaSet).map(([gx, gy]) => ({ gx, gy })), mapLinksOf(rec, DEPS).sizes, 1);
+            await setMapCameraClaims({
+                page, check, tag: '8',
+                mapOf: async () => (await set()).map,
+                homeCells: f.cells.map((c) => [c.x, c.y, c.w, c.h]),
+                shot: (name) => shot(`8-${name}`, '#editSetOverviewWrap'),
+            });
+        }
 
         check(errors.length === 0, 'no page errors', errors.slice(0, 3).join(' | '));
     } catch (e) {

@@ -1,0 +1,25 @@
+e1 ⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+   red: vanilla: every item is held by the live run once loading finished, exactly once 107ms
+   red: mounted: every item is held by the live run once loading finished, exactly once 29ms
+   red: sameBoot: every item is held by the live run once loading finished, exactly once 26ms
+   red: restore: every item is held by the live run once loading finished, exactly once 22ms
+   red: restoreHeld: every item is held by the live run once loading finished, exactly once 21ms
+   red: vanilla: the items written into the vanilla first frame stay the new save's (the mount keeps the host's, not the old runs') 6ms
+   red: vanilla: every item is held by the live run, exactly once 18ms
+   red: mounted: every item is held by the live run, exactly once 22ms
+   red: sameBoot: every item is held by the live run, exactly once 18ms
+   red: restore: every item is held by the live run, exactly once 18ms
+   red: restoreHeld: every item is held by the live run, exactly once 16ms
+e2 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+   red: vanilla: every item is held by the live run once loading finished, exactly once 86ms
+   red: vanilla: the items written into the vanilla first frame stay the new save's (the mount keeps the host's, not the old runs') 6ms
+   red: a key the run picked up itself and a restored save's key go at the mount; the host's key stays 7ms
+e3 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+   red: restore: every item is held by the live run once loading finished, exactly once 29ms
+e4 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+   red: restoreHeld: every item is held by the live run once loading finished, exactly once 33ms
+   red: restoreHeld: every item is held by the live run, exactly once 22ms
+e5 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+   red: vanilla: every item is held by the live run once loading finished, exactly once 92ms
+   red: restore: every item is held by the live run once loading finished, exactly once 26ms
+   red: vanilla: the items written into the vanilla first frame stay the new save's (the mount keeps the host's, not the old runs') 6ms

@@ -189,7 +189,9 @@ describe('one fade per crossing (the JS page)', () => {
 
     it('the host answering a slot late, with an item delivery beside its teleport: still ONE ramp each', () => {
         const { rows, rt } = play(script(), SLOTS, { hostDelay: 2, extra: [{ class: 'Main', property: 'hasShield', value: true }] });
-        expect(rt.events.some((e) => e.type === 'boot' && e.why === IN_PLACE_REBOOT_WHY), 'the delivery rebooted in place').toBe(true);
+        // ⛓ seedling-js-item-live-delivery — restated from "the delivery rebooted in place": it is written live
+        expect(rt.events.some((e) => e.type === 'delivery' && e.changed && e.property === 'hasShield'), 'the delivery landed live').toBe(true);
+        expect(rt.events.some((e) => e.type === 'boot' && e.why === IN_PLACE_REBOOT_WHY), 'nothing rebooted in place').toBe(false);
         expectOneRampEach(rows, 3);
     });
 

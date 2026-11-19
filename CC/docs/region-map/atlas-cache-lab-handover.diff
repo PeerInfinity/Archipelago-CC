@@ -1,0 +1,202 @@
+diff --git a/frontend/modules/procgenCore/labBridge.js b/frontend/modules/procgenCore/labBridge.js
+index eba4cfc469..24606bba42 100644
+--- a/frontend/modules/procgenCore/labBridge.js
++++ b/frontend/modules/procgenCore/labBridge.js
+@@ -201,9 +201,9 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
+      *
+      * @returns {boolean} whether the message went out (`false` = disposed).
+      */
+-    function openInApworldEditor(rules, source) {
++    function openInApworldEditor(rules, source, atlases = []) {
+         return Boolean(publish(LAB_EVENTS.openInApworldEditor,
+-            { ...address(), rules, source }, assertOpenInApworldEditor));
++            { ...address(), rules, source, atlases }, assertOpenInApworldEditor));
+     }
+ 
+     /* ── 3 + 4. READY ─────────────────────────────────────────────────── */
+diff --git a/frontend/modules/procgenCore/labProtocol.js b/frontend/modules/procgenCore/labProtocol.js
+index 28f919c543..2557302914 100644
+--- a/frontend/modules/procgenCore/labProtocol.js
++++ b/frontend/modules/procgenCore/labProtocol.js
+@@ -120,7 +120,7 @@ export const LAB_PAYLOAD_FIELDS = Object.freeze({
+         'url', 'source', 'seed', 'step', 'identity', 'certified', 'edits', 'directives']),
+     [LAB_EVENTS.levelChanged]: Object.freeze([...ADDRESS_FIELDS, 'payload']),
+     [LAB_EVENTS.selectTile]: Object.freeze([...ADDRESS_FIELDS, 'tx', 'ty']),
+-    [LAB_EVENTS.openInApworldEditor]: Object.freeze([...ADDRESS_FIELDS, 'rules', 'source']),
++    [LAB_EVENTS.openInApworldEditor]: Object.freeze([...ADDRESS_FIELDS, 'rules', 'source', 'atlases']),
+ });
+ 
+ /* ══════════════════════════════════════════════════════════════════════
+@@ -324,6 +324,16 @@ export function assertOpenInApworldEditor(payload) {
+             + 'hub files this document under, and an empty one is a document with no story '
+             + 'about where it came from.');
+     }
++    /**
++     * ⛓ region-map atlas-cache — `atlases`: the region atlas(es) the page compiled `rules` FROM (an array, `[]`
++     * when it has none to give). The rules name an atlas by `region_atlas[p].atlas_id` and carry no body; the host
++     * puts these in its `procgenCore/atlasCache.js` so the Region Map can read the one the rules name.
++     */
++    if (!Array.isArray(payload.atlases)
++        || !payload.atlases.every((a) => a && typeof a === 'object' && typeof a.atlas_id === 'string' && a.atlas_id !== '')) {
++        fail(`labProtocol: ${e}.atlases must be an array of region atlases (each with a non-empty atlas_id) — `
++            + `got ${JSON.stringify(payload.atlases)?.slice(0, 120)}. Send [] when the page has none.`);
++    }
+     return payload;
+ }
+ 
+diff --git a/frontend/modules/procgenCore/labProtocol.test.js b/frontend/modules/procgenCore/labProtocol.test.js
+index 604fcffaa9..3cc1561fe8 100644
+--- a/frontend/modules/procgenCore/labProtocol.test.js
++++ b/frontend/modules/procgenCore/labProtocol.test.js
+@@ -55,6 +55,7 @@ const GOOD = Object.freeze({
+         substrate: 'maze', iframeId: 'procgenLab-maze-1',
+         rules: { game_name: 'Maze Library', regions: {} },
+         source: 'the maze lab (SET arm)',
++        atlases: [],
+     },
+ });
+ 
+@@ -255,6 +256,15 @@ describe('labProtocol — the per-field types', () => {
+             .toThrow(/must be a string/);
+         expect(() => assertOpenInApworldEditor({ ...good })).not.toThrow();
+     });
++
++    it('⛓ openInApworldEditor.atlases is an ARRAY of atlases (region-map atlas-cache)', () => {
++        const good = GOOD[LAB_EVENTS.openInApworldEditor];
++        expect(() => assertOpenInApworldEditor({ ...good, atlases: [{ atlas_id: 'a', regions: [] }] })).not.toThrow();
++        expect(() => assertOpenInApworldEditor({ ...good, atlases: null })).toThrow(/atlases must be an array/);
++        expect(() => assertOpenInApworldEditor({ ...good, atlases: [{ regions: [] }] })).toThrow(/atlas_id/);
++        const { atlases: _a, ...missing } = good;
++        expect(() => assertOpenInApworldEditor(missing)).toThrow(/missing "atlases"/);
++    });
+ });
+ 
+ describe('labProtocol — addressedTo is the ONE routing predicate', () => {
+diff --git a/frontend/modules/procgenCore/setEditorView.js b/frontend/modules/procgenCore/setEditorView.js
+index 1d568bb117..8e01706c6c 100644
+--- a/frontend/modules/procgenCore/setEditorView.js
++++ b/frontend/modules/procgenCore/setEditorView.js
+@@ -1951,7 +1951,7 @@ export function mountSetEditor({
+             setNote(rep.download.rules.why, true);
+             return;
+         }
+-        const sent = apworldEditor.open(rep.rules) === true;
++        const sent = apworldEditor.open(rep.rules, rep.atlas ? [rep.atlas] : []) === true;
+         globalThis.__editorSetApworldOut = rep.rules;
+         setNote(sent
+             ? `OPENED in the APWorld Editor — ${rep.report.ap_regions} AP region(s), `
+diff --git a/frontend/modules/procgenLabPanel/procgenLabPanel.test.js b/frontend/modules/procgenLabPanel/procgenLabPanel.test.js
+index 3c23f1cdf0..0a3b354a6b 100644
+--- a/frontend/modules/procgenLabPanel/procgenLabPanel.test.js
++++ b/frontend/modules/procgenLabPanel/procgenLabPanel.test.js
+@@ -86,6 +86,7 @@ let LAB_EVENTS;
+ let PAGE_TO_HOST;
+ let moduleIndex;
+ let eventBus;
++let atlasCache;
+ 
+ beforeEach(async () => {
+     globalThis.document = {
+@@ -109,6 +110,7 @@ beforeEach(async () => {
+         ProcgenLabPanelUI, LAB_PAGES, nextLabIframeId, standaloneUrlFrom,
+     } = await import('./procgenLabPanelUI.js'));
+     ({ LAB_EVENTS, PAGE_TO_HOST } = await import('../procgenCore/labProtocol.js'));
++    ({ atlasCache } = await import('../procgenCore/atlasCache.js'));
+     moduleIndex = await import('./index.js');
+ });
+ 
+@@ -422,7 +424,7 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
+             const seen = watchForward();
+             publishAs(LAB_EVENTS.openInApworldEditor, {
+                 substrate: 'maze', iframeId: panel.iframeId,
+-                rules: RULES, source: 'the maze lab (SET arm)',
++                rules: RULES, source: 'the maze lab (SET arm)', atlases: [],
+             }, `iframe_${panel.iframeId}`);
+             expect(seen.map((s) => s.name))
+                 .toEqual(['apworldEditor:loadRules', 'ui:activatePanel']);
+@@ -434,6 +436,30 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
+                 .toMatch(/opened in the APWorld editor — the maze lab \(SET arm\)/);
+         });
+ 
++    /**
++     * ⛓ region-map atlas-cache — THE HOST-SIDE WRITER. The page's atlases land in the host's `atlasCache` BEFORE
++     * the rules are forwarded, and a re-hand-over under the SAME `atlas_id` replaces the cached one.
++     */
++    it('puts the page\'s atlases in the host atlasCache before forwarding; a re-hand-over replaces them', () => {
++        atlasCache.clear();
++        const panel = mountPanel('seedling');
++        let heldAtForward = null;
++        const off = eventBus.subscribe('apworldEditor:loadRules', () => { heldAtForward = atlasCache.get('set-x'); }, 'test');
++        const v1 = { atlas_id: 'set-x', regions: [{ region_id: 'r1' }] };
++        const v2 = { atlas_id: 'set-x', regions: [{ region_id: 'r1' }, { region_id: 'r2' }] };
++        const hand = (atlas) => publishAs(LAB_EVENTS.openInApworldEditor, {
++            substrate: 'seedling', iframeId: panel.iframeId,
++            rules: RULES, source: 'the Seedling watch page (SET arm)', atlases: [atlas],
++        }, `iframe_${panel.iframeId}`);
++        hand(v1);
++        expect(heldAtForward).toBe(v1);
++        hand(v2);
++        expect(heldAtForward).toBe(v2);
++        expect(atlasCache.get('set-x')).toBe(v2);
++        off?.();
++        atlasCache.clear();
++    });
++
+     /**
+      * ⛔ THE ADDRESS IS THE WHOLE ROUTING CLAIM, one message later. Two lab
+      * panels share one host bus, so a reverse link from the Seedling frame must
+@@ -446,7 +472,7 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
+         const seen = watchForward();
+         publishAs(LAB_EVENTS.openInApworldEditor, {
+             substrate: 'seedling', iframeId: seedling.iframeId,
+-            rules: RULES, source: 'the Seedling watch page (SET arm)',
++            rules: RULES, source: 'the Seedling watch page (SET arm)', atlases: [],
+         }, `iframe_${seedling.iframeId}`);
+         expect(seen).toHaveLength(2);
+         expect(byRole(maze.getRootElement(), 'note').textContent ?? '')
+@@ -470,7 +496,7 @@ describe('procgenLabPanel — a page\'s "open in the APWorld editor"', () => {
+         const panel = mountPanel('maze');
+         const seen = watchForward();
+         publishAs(LAB_EVENTS.openInApworldEditor, {
+-            substrate: 'maze', iframeId: panel.iframeId, rules: RULES, source: '',
++            substrate: 'maze', iframeId: panel.iframeId, rules: RULES, source: '', atlases: [],
+         }, `iframe_${panel.iframeId}`);
+         expect(seen).toEqual([]);
+         const note = byRole(panel.getRootElement(), 'note');
+diff --git a/frontend/modules/procgenLabPanel/procgenLabPanelUI.js b/frontend/modules/procgenLabPanel/procgenLabPanelUI.js
+index e9cb0408f0..a28475061a 100644
+--- a/frontend/modules/procgenLabPanel/procgenLabPanelUI.js
++++ b/frontend/modules/procgenLabPanel/procgenLabPanelUI.js
+@@ -46,6 +46,7 @@ import {
+     LAB_EVENTS, SUBSTRATES, addressedTo, assertLoad, assertNavigate,
+     assertOpenInApworldEditor, assertRequestState,
+ } from '../procgenCore/labProtocol.js';
++import { putAtlases } from '../procgenCore/atlasCache.js';
+ import {
+     registerAppEventBus, registerLabPanelInstance, unregisterLabPanelInstance,
+ } from './labRoomEditor.js';
+@@ -392,6 +393,9 @@ export class ProcgenLabPanelUI {
+                 this._render();
+                 return;
+             }
++            // ⛓ region-map atlas-cache — the HOST-side writer: the atlases the page compiled from, keyed by
++            // `atlas_id`, BEFORE the rules move on (put overwrites, so a re-hand-over replaces the old atlas).
++            putAtlases(data.atlases);
+             eventBus.publish(APWORLD_EDITOR_LOAD_RULES,
+                 { jsonData: data.rules, source: data.source }, MODULE_ID);
+             eventBus.publish('ui:activatePanel',
+diff --git a/frontend/modules/seedlingDemo/watchViewer.js b/frontend/modules/seedlingDemo/watchViewer.js
+index f95c1ae85b..889776325b 100644
+--- a/frontend/modules/seedlingDemo/watchViewer.js
++++ b/frontend/modules/seedlingDemo/watchViewer.js
+@@ -9920,8 +9920,8 @@ async function runEditor(params, lifetime) {
+              */
+             apworldEditor: {
+                 available: () => hostBridge?.connected === true,
+-                open: (rules) => hostBridge?.openInApworldEditor(
+-                    rules, 'the Seedling watch page (SET arm)') === true,
++                open: (rules, atlases = []) => hostBridge?.openInApworldEditor(
++                    rules, 'the Seedling watch page (SET arm)', atlases) === true,
+             },
+             recordToOel,
+             drawRoomStill,

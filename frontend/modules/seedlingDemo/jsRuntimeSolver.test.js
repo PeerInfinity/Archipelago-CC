@@ -197,12 +197,14 @@ describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
         expect(rt.events.filter((e) => e.type === 'solver').map((e) => e.solver)).toEqual(['declined']);
     });
 
-    it('a forced mismatch (an item re-boot mid-plan) refutes the plan and RE-SOLVES from the live state to the crossing', () => {
+    it('a forced mismatch (a re-boot in place mid-plan) refutes the plan and RE-SOLVES from the live state to the crossing', () => {
+        // ⛓ seedling-js-item-live-delivery — restated from "an item re-boot mid-plan": an item is written into the live
+        // run now and re-boots nothing, so the re-boot is the one in place left, the RE2 restore.
         const { rt } = midRoom({ region: 'level_6', fromId: 'in_L5_48_112', toId: 'out_stairsup_224_32', walkTicks: 150 });
         rt.playback.setSolverWalk(true);
         const firstRun = rt.run;
         const { crossings } = settle(rt, {
-            each: (t) => { if (t === 40) rt.queueItems([{ class: 'Main', property: 'hasFeather', value: true }]); },
+            each: (t) => { if (t === 40) expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true }); },
         });
         expect(rt.run).not.toBe(firstRun);
         const s = rt.playback.solverStats;
@@ -256,8 +258,9 @@ describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
         const { rt } = midRoom({ region: 'level_4', fromId: 'in_L3_128_48', toId: 'out_stairsdown_64_16', walkTicks: 40, kit: true });
         rt.playback.setSolverWalk(true);
         let flip = false;
-        // Re-boot the room every 5 ticks: every plan is refuted.
-        settle(rt, { each: (t) => { if (t % 5 === 4) { flip = !flip; rt.queueItems([{ class: 'Main', property: 'hasTorch', value: flip }]); } } });
+        // Re-boot the room every 5 ticks: every plan is refuted. ⛓ seedling-js-item-live-delivery — restated from an
+        // item flag toggled every 5 ticks (an item re-boots nothing now): the RE2 restore, the one reboot in place left.
+        settle(rt, { each: (t) => { if (t % 5 === 4) { flip = !flip; expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true }); } } });
         expect(rt.playback.state).toBe(WALK_STATES.FAILED);
         expect(rt.playback.reason).toMatch(new RegExp(`refuted ${MAX_REFUTATIONS} time\\(s\\) — last: the run was re-booted`));
         expect(rt.playback.solverStats.refutations).toBe(MAX_REFUTATIONS);

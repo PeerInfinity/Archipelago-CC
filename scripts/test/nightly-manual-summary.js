@@ -19,7 +19,12 @@
  *   - nightly-manual-summary.json, the machine-readable form a planner reads
  *     in the morning: { runId, sha, ref, red, batches: { <batch>: {...} } }.
  *
- * Exit 1 when any batch is red, so the nightly run itself reads red in the
+ * It also folds in the `seedling-checks` job (⚖ Robert 2026-11-17, "Train tier +
+ * nightly": the wallflyer no-hit cross-check and the Seedling map extractor's
+ * --check, run as their *.train.test.js files) off the same jobs.json: its
+ * conclusion becomes `checks` in the JSON and one line under the table.
+ *
+ * Exit 1 when any batch is red, or the checks job concluded other than success, so the nightly run itself reads red in the
  * Actions list; exit 0 otherwise.
  *
  * Usage:
@@ -35,6 +40,8 @@ import { assessRun, defaultBudgetMs, unfinishedRows } from './check-batch-headro
 const MODE = 'test-substrates';
 /** The job name test-substrates-manual.yml gives a batch job (a caller prefixes "<job> / "). */
 const JOB_NAME = /Substrate tests — (\S+) batch/;
+/** The nightly's train-checks job (test-substrates-nightly.yml `seedling-checks`; rename both together). */
+export const CHECKS_JOB_NAME = 'Seedling train checks';
 
 /** The newest graded results file of one batch inside its artifact, or null. */
 export function newestResults(artifactsDir, batch) {
@@ -58,6 +65,19 @@ export function jobConclusions(jobsPayload) {
         if (m) out[m[1]] = j.conclusion || j.status || 'unknown';
     }
     return out;
+}
+
+/**
+ * The train-checks job's entry off a `gh api …/jobs` payload. With no payload it is
+ * ungraded (null conclusion, not red: the batches' rule for a missing jobs.json). A job
+ * absent from a payload that HAS jobs is red: the nightly always runs it.
+ */
+export function checksEntry(jobsPayload) {
+    if (!jobsPayload) return { job: CHECKS_JOB_NAME, conclusion: null, red: false, reason: 'not graded: the job list could not be read' };
+    const j = ((jobsPayload && jobsPayload.jobs) || []).find((x) => (x.name || '') === CHECKS_JOB_NAME);
+    if (!j) return { job: CHECKS_JOB_NAME, conclusion: 'missing', red: true, reason: `no '${CHECKS_JOB_NAME}' job in this run` };
+    const conclusion = j.conclusion || j.status || 'unknown';
+    return { job: CHECKS_JOB_NAME, conclusion, red: conclusion !== 'success', reason: null };
 }
 
 /** One batch's entry: the counts, the failing/unfinished rows, the headroom verdict, red or not. */
@@ -87,9 +107,11 @@ export function buildSummary({ batches, artifactsDir, jobs, runId, sha, ref, bud
     const conclusions = jobConclusions(jobs);
     const out = {};
     for (const b of batches) out[b] = summarizeBatch(b, newestResults(artifactsDir, b), conclusions[b], budgetFallbackMs);
+    const checks = checksEntry(jobs);
     return {
         kind: 'nightly-manual-summary', signalOnly: true, runId: runId || null, sha: sha || null, ref: ref || null,
-        red: Object.values(out).some((e) => e.red), redBatches: Object.values(out).filter((e) => e.red).map((e) => e.batch),
+        red: Object.values(out).some((e) => e.red) || checks.red, redBatches: Object.values(out).filter((e) => e.red).map((e) => e.batch),
+        checks,
         batches: out,
     };
 }
@@ -97,8 +119,10 @@ export function buildSummary({ batches, artifactsDir, jobs, runId, sha, ref, bud
 const cap = (ids) => (ids.length > 6 ? `${ids.slice(0, 6).join(', ')} … (+${ids.length - 6})` : ids.join(', '));
 
 export function formatMarkdown(summary) {
+    const redNames = [...summary.redBatches, ...(summary.checks?.red ? ['train checks'] : [])];
+    const c = summary.checks;
     const lines = [
-        `## Nightly manual batches — ${summary.red ? `🔴 RED (${summary.redBatches.join(', ')})` : '🟢 green'}`,
+        `## Nightly manual batches — ${summary.red ? `🔴 RED (${redNames.join(', ')})` : '🟢 green'}`,
         '',
         `Run ${summary.runId ?? '?'} at \`${(summary.sha || '?').slice(0, 10)}\` (${summary.ref ?? '?'}). `
             + '⚖ A SIGNAL only — never landing evidence for any SHA (README § the nightly).',
@@ -111,6 +135,11 @@ export function formatMarkdown(summary) {
         const unfinished = [e.neverStarted.length ? `NEVER STARTED ${e.neverStarted.length}` : '', e.cutOff.length ? `CUT OFF ${cap(e.cutOff)}` : '']
             .filter(Boolean).join('; ') || '0';
         lines.push(`| ${e.batch} | ${e.red ? '🔴' : '🟢'} ${e.result} | ${e.passed}/${e.total} | ${cap(e.failing) || '—'} | ${unfinished} | ${h} | ${e.job ?? '?'} |`);
+    }
+    if (c) {
+        lines.push('', `**${c.job}** (wallflyer no-hit cross-check + seedling-map extractor --check): `
+            + `${c.red ? '🔴' : c.conclusion ? '🟢' : '⚪'} ${c.conclusion ?? 'not graded'}${c.reason ? ` — ${c.reason}` : ''}`
+            + (c.red ? ' — the failing check and its disagreeing crossing / differing field are in that job\'s log.' : ''));
     }
     const notes = Object.values(summary.batches).filter((e) => e.reasons.length);
     if (notes.length) {

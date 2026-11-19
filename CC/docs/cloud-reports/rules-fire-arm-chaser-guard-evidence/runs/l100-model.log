@@ -1,0 +1,4 @@
+MODEL l100-fire {"ticks":427,"end":{"t":427,"level":100,"x":296,"y":88,"hits":3,"chasers":["flyer@224,96(241.2,101.6)","
+MODEL l100-fire-out {"ticks":520,"end":{"t":520,"level":101,"x":296,"y":263.29,"hits":3,"chasers":["flyer@288,96(296.0,1
+MODEL l100-sword-out {"ticks":595,"end":{"t":595,"level":101,"x":296,"y":263.29,"hits":3,"chasers":["flyer@288,96(296.0,
+MODEL l100-idle {"ticks":200,"end":{"t":200,"level":100,"x":296,"y":88,"hits":2,"chasers":["flyer@224,96(278.7,88.3)","j

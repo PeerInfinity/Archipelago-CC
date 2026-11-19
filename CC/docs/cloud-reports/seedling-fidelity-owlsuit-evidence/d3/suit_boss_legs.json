@@ -1,0 +1,26 @@
+[
+{
+"id": 786,
+"key": "level_112__r0c7 <- in_L113_64_144 -> exit:out_teleporter_112_0",
+"level": 112,
+"sphere": "13.6"
+},
+{
+"id": 787,
+"key": "level_112__r2c2 <- in_L111_128_48 -> exit:out_teleporter_32_224",
+"level": 112,
+"sphere": "13.6"
+},
+{
+"id": 788,
+"key": "level_112__r2c2 <- in_L111_128_48 -> location:Level 112 - Owl",
+"level": 112,
+"sphere": "13.6"
+},
+{
+"id": 789,
+"key": "level_112__r2c2 <- in_L111_128_48 -> location:L112 flag 1: rocklock@112,16 cleared",
+"level": 112,
+"sphere": "13.6"
+}
+]

@@ -65,6 +65,10 @@ import {
 import { ruleSchemaErrors } from './jsonSchemaCheck.js';
 import { UNDO_COMMAND_ID, mountEditorView } from './editorView.js';
 import { createLifetime } from './pageLifetime.js';
+import {
+    DRAG_THRESHOLD_PX, centreOnRect, engagedView, fitFrame, homeView, panScreen, rectToScreen, toScreen, toWorld,
+    transformOf, zoomAt, zoomAtCentre,
+} from './setMapCamera.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import {
     BUNDLE_KINDS, DEFAULT_RULES_JSON_INDENT, writeBundle,
@@ -439,6 +443,20 @@ export function mountSetEditor({
     let mapOn = overviewMap !== null && overviewMapOn === true;
     /** The map's last frame — what `cellAt` and the shapes are measured against. */
     let mapFrame = null;
+    /**
+     * ⛓⛓⛓ THE MAP'S CAMERA (slice `lab-map-camera`, `setMapCamera.js`). `mapCam` maps the frame (the WORLD) onto the
+     * canvas (the SCREEN), `mapVp` is the canvas size. ⛔ Until a gesture ENGAGES it the view is AT HOME: the canvas
+     * is the frame's size, the camera is the identity over it, and nothing below transforms — the pre-camera code
+     * path, so the opening picture is byte-identical to before (⚖ "the default picture stays unchanged").
+     */
+    let mapCam = null;
+    let mapVp = null;
+    let mapEngaged = false;
+    /** Whether the paint transforms: never at home (see above). */
+    const camMoved = () => mapEngaged && mapCam !== null;
+    const mapToScreen = (p) => (camMoved() ? toScreen(mapCam, mapVp, p) : p);
+    const mapToWorld = (p) => (camMoved() ? toWorld(mapCam, mapVp, p) : p);
+    const mapRect = (r) => (camMoved() ? rectToScreen(mapCam, mapVp, r) : [r.x, r.y, r.w, r.h]);
     /** A DISCONNECT picked on the map and waiting for its confirming click: `{room, value, link}`. */
     let disconnectPick = null;
     /**
@@ -497,15 +515,22 @@ export function mountSetEditor({
     const paintMap = () => {
         const layout = overviewMap.frame(record());
         mapFrame = layout;
-        overview.width = layout.width;
-        overview.height = layout.height;
-        overview.style.width = `${layout.width}px`;
-        overview.style.height = `${layout.height}px`;
+        if (!mapEngaged) ({ cam: mapCam, vp: mapVp } = homeView(layout));
+        overview.width = mapVp.w;
+        overview.height = mapVp.h;
+        overview.style.width = `${mapVp.w}px`;
+        overview.style.height = `${mapVp.h}px`;
         const ctx = overview.getContext ? overview.getContext('2d') : null;
         if (!ctx) return;
-        ctx.clearRect(0, 0, layout.width, layout.height);
+        ctx.clearRect(0, 0, mapVp.w, mapVp.h);
         ctx.fillStyle = '#0c0c0c';
-        ctx.fillRect(0, 0, layout.width, layout.height);
+        ctx.fillRect(0, 0, mapVp.w, mapVp.h);
+        // ⛓ engaged: everything below is drawn in FRAME px through the camera; at home, no transform at all.
+        const moved = camMoved();
+        if (moved && typeof ctx.setTransform === 'function') {
+            const t = transformOf(mapCam, mapVp);
+            ctx.setTransform(t.a, 0, 0, t.d, t.e, t.f);
+        }
         for (let i = 0; i < roomCount(); i += 1) {
             const cell = adapterFns.readSetCell(record(), i, 0);
             const r = layout.cells[i];
@@ -534,6 +559,7 @@ export function mountSetEditor({
         }
         mapMarks = marksNow().filter((m) => layout.cells[m.room]);
         for (const m of mapMarks) paintUnreachable(ctx, layout.cells[m.room], m.partial);
+        if (moved && typeof ctx.setTransform === 'function') ctx.setTransform(1, 0, 0, 1, 0, 0);
         renderUnreachableLegend();
     };
 
@@ -547,16 +573,23 @@ export function mountSetEditor({
         };
     };
 
+    /** A pointer event as a point in the map's FRAME (world) pixels — through the camera once it is engaged. */
+    const mapWorldPoint = (ev) => {
+        const p = mapPoint(ev);
+        return p ? mapToWorld(p) : null;
+    };
+
     /**
      * ⛓ The map's shapes, in the overlay's CELL space. `editorView` scales a shape by the adapter's bounds
      * (`{w: rooms, h: 1}`), so a canvas pixel `(x, y)` is cell `(x·n/width, y/height)`. The provider's `link` and
-     * `marker` fields are its own and are stripped here.
+     * `marker` fields are its own and are stripped here. ⛓ (lab-map-camera) a point is taken through the camera to
+     * the canvas first; at home that is no conversion at all and the canvas IS the frame.
      */
     const mapShapes = () => {
-        if (!mapFrame || !(mapFrame.width > 0)) return [];
+        if (!mapFrame || !(mapFrame.width > 0) || !mapVp || !(mapVp.w > 0)) return [];
         const n = Math.max(1, roomCount());
-        const sx = n / mapFrame.width;
-        const sy = 1 / mapFrame.height;
+        const sx = n / mapVp.w;
+        const sy = 1 / mapVp.h;
         return overviewMap.shapes(record(), mapFrame, { selected }).map((sh) => {
             const { link, marker, ...rest } = sh;
             const pick = disconnectPick && link && link.kind === disconnectPick.link.kind
@@ -564,7 +597,7 @@ export function mountSetEditor({
             return {
                 ...rest,
                 ...(pick ? { highlight: true, label: `✂ ${rest.label ?? 'DISCONNECT?'}` } : {}),
-                points: rest.points.map((pt) => ({ x: pt.x * sx, y: pt.y * sy })),
+                points: rest.points.map((pt) => mapToScreen(pt)).map((pt) => ({ x: pt.x * sx, y: pt.y * sy })),
             };
         });
     };
@@ -582,6 +615,8 @@ export function mountSetEditor({
         if (mapOn) { paintMap(); return; }
         mapFrame = null;
         mapMarks = [];
+        // ⛓ (lab-map-camera) the strip has no camera; the map's comes back home when it is shown again.
+        mapEngaged = false;
         renderUnreachableLegend();
         const layout = layoutNow();
         overview.width = layout.width;
@@ -683,7 +718,8 @@ export function mountSetEditor({
     const cellAt = (ev) => {
         if (mapOn) {
             // ⛓ E3: a map click is still answered in the adapter's own coordinates — `{tx: room, ty: 0}`.
-            const p = mapPoint(ev);
+            // ⛓ (lab-map-camera) `point` is in FRAME px: every picker below reads the provider's frame.
+            const p = mapWorldPoint(ev);
             const room = p && mapFrame ? overviewMap.roomAt(record(), mapFrame, p) : null;
             /**
              * ⛔ A LINK LIES BETWEEN ROOMS, so with DISCONNECT armed a click in the gap is still a press: it is
@@ -1004,20 +1040,50 @@ export function mountSetEditor({
 
     /* ── E3: THE MAP'S OWN CONTROLS — zoom, the view toggle, re-layout, select and open ── */
 
+    /**
+     * ⛓⛓ ENGAGE THE CAMERA (lab-map-camera): the canvas becomes the part of the home canvas its scrolling panel
+     * shows, the camera centred where that window's centre was, and the panel's scroll goes back to 0 — so nothing
+     * moves on screen at the switch. A no-op once engaged.
+     */
+    function engageCamera() {
+        if (mapEngaged || !mapOn || !mapFrame) return;
+        const panel = overview?.parentNode ?? {};
+        ({ cam: mapCam, vp: mapVp } = engagedView(mapFrame, panel));
+        mapEngaged = true;
+        if (Number.isFinite(panel.scrollLeft)) panel.scrollLeft = 0;
+        if (Number.isFinite(panel.scrollTop)) panel.scrollTop = 0;
+    }
+    /** Repaint the map and its overlay only — a camera move changes no row, list or form. */
+    function repaintMap() {
+        paintStrip();
+        view.repaint();
+    }
+    /** `+`/`-`/the buttons: zoom about the VIEW's centre. */
     function zoomBy(k) {
-        if (!overviewMap) return;
-        const before = overviewMap.zoom;
-        const z = overviewMap.setZoom(before * k);
-        say(`MAP zoom ${z.toFixed(2)}×${z === before ? ' (at the limit)' : ''}`);
+        if (!overviewMap || !mapOn || !mapFrame) return;
+        engageCamera();
+        const before = mapCam.zoom;
+        mapCam = zoomAtCentre(mapCam, mapVp, k);
+        say(`MAP zoom ${mapCam.zoom.toFixed(2)}×${mapCam.zoom === before ? ' (at the limit)' : ''}`);
         render();
     }
+    /** `0`/FIT: every room inside the view — BOTH axes. */
     function zoomFit() {
-        if (!overviewMap || !mapOn) return;
-        overviewMap.setZoom(1);
-        const f = overviewMap.frame(record());
-        const avail = overview?.parentNode?.clientWidth ?? f.width;
-        const z = overviewMap.setZoom(Math.max(0.01, avail / f.width));
-        say(`MAP fitted to the panel: zoom ${z.toFixed(2)}×`);
+        if (!overviewMap || !mapOn || !mapFrame) return;
+        engageCamera();
+        mapCam = fitFrame(mapFrame, mapVp);
+        say(`MAP fitted to the panel (both axes): zoom ${mapCam.zoom.toFixed(2)}×`);
+        render();
+    }
+    /** CENTRE ON START: the start room at the view's centre, the zoom kept. */
+    function centreOnStart() {
+        if (!overviewMap || !mapOn || !mapFrame) return;
+        const start = typeof overviewMap.startOf === 'function' ? overviewMap.startOf(record()) : 0;
+        const cell = mapFrame.cells[start];
+        if (!cell) { say('the map has no start room to centre on', true); return; }
+        engageCamera();
+        mapCam = centreOnRect(mapCam, cell);
+        say(`MAP centred on the start room (room ${start})`);
         render();
     }
     const openRoomFromMap = (i) => {
@@ -1061,11 +1127,77 @@ export function mountSetEditor({
             const c = cellAt(ev);
             if (c) openRoomFromMap(c.tx);
         });
+        /**
+         * ⛓⛓ CTRL+WHEEL ZOOMS AROUND THE CURSOR (lab-map-camera). ⚖ Ctrl, not the plain wheel: the map sits in a
+         * long scrolling page, and a plain wheel taken by the map would trap the page's scroll whenever the pointer
+         * crossed it. Ctrl+wheel is also what a trackpad pinch sends. The plain wheel scrolls the page, as before.
+         */
         mine.on(overview, 'wheel', (ev) => {
-            if (!mapOn || !(ev.ctrlKey || ev.metaKey)) return;
+            if (!mapOn || !(ev.ctrlKey || ev.metaKey) || !mapFrame) return;
             ev.preventDefault();
-            zoomBy(ev.deltaY < 0 ? MAP_ZOOM_STEP : 1 / MAP_ZOOM_STEP);
+            engageCamera();
+            repaintMap();
+            const p = mapPoint(ev);
+            if (!p) return;
+            const before = mapCam.zoom;
+            mapCam = zoomAt(mapCam, mapVp, p.x, p.y, ev.deltaY < 0 ? MAP_ZOOM_STEP : 1 / MAP_ZOOM_STEP);
+            say(`MAP zoom ${mapCam.zoom.toFixed(2)}× at the cursor${mapCam.zoom === before ? ' (at the limit)' : ''}`);
+            repaintMap();
         });
+        /**
+         * ⛓⛓ DRAG TO PAN (lab-map-camera). A press that moves DRAG_THRESHOLD_PX or more is a drag: it moves the
+         * camera, and its click is swallowed (in the capture phase on the panel, before `editorView` or the select
+         * handler see it). A press that moves less is still a click. While the button is down on the map, the
+         * pointer's moves never reach `editorView` — a set has no brush, so a stroke there could only be refused.
+         */
+        const panel = overview.parentNode;
+        let press = null;
+        let swallowDragClick = false;
+        mine.on(overview, 'mousedown', (ev) => {
+            swallowDragClick = false;
+            press = mapOn && ev.button === 0 ? { x: ev.clientX, y: ev.clientY, cam: null, dragging: false } : null;
+        });
+        const dragMove = (ev) => {
+            if (!press || !mapOn) return;
+            const dx = ev.clientX - press.x;
+            const dy = ev.clientY - press.y;
+            if (!press.dragging) {
+                if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return;
+                engageCamera();
+                repaintMap();
+                press.dragging = true;
+                press.cam = mapCam;
+            }
+            const rect = overview.getBoundingClientRect();
+            const kx = rect.width > 0 ? overview.width / rect.width : 1;
+            const ky = rect.height > 0 ? overview.height / rect.height : 1;
+            mapCam = panScreen(press.cam, dx * kx, dy * ky);
+            repaintMap();
+        };
+        if (panel && typeof panel.addEventListener === 'function') {
+            mine.on(panel, 'mousemove', (ev) => {
+                if (press && mapOn) ev.stopPropagation();
+                dragMove(ev);
+            }, { capture: true });
+            mine.on(panel, 'click', (ev) => {
+                if (!swallowDragClick) return;
+                swallowDragClick = false;
+                ev.stopPropagation();
+                ev.preventDefault();
+            }, { capture: true });
+        }
+        if (doc && typeof doc.addEventListener === 'function') {
+            // ⛓ a drag that leaves the panel keeps following the pointer (inside it, the capture above has it).
+            mine.on(doc, 'mousemove', dragMove);
+            mine.on(doc, 'mouseup', () => {
+                if (press?.dragging) {
+                    swallowDragClick = true;
+                    say(`MAP panned — drag to move it, Ctrl+wheel zooms at the cursor, 0 fits, `
+                        + 'CENTRE ON START finds the start');
+                }
+                press = null;
+            });
+        }
         const toggle = $('editSetMapView');
         if (toggle) {
             toggle.checked = mapOn;
@@ -1079,6 +1211,7 @@ export function mountSetEditor({
         }
         for (const [id, run] of [['editSetZoomIn', () => zoomBy(MAP_ZOOM_STEP)],
             ['editSetZoomOut', () => zoomBy(1 / MAP_ZOOM_STEP)], ['editSetZoomFit', zoomFit],
+            ['editSetCentreStart', centreOnStart],
             ['editSetMapRelayout', () => {
                 overviewMap.reset();
                 say('MAP re-laid out — the canonical layout of this set (positions are derived; none are stored)');
@@ -2102,8 +2235,19 @@ export function mountSetEditor({
          */
         map: () => (overviewMap && mapOn ? {
             ...overviewMap.state(record()),
-            frame: mapFrame ? { width: mapFrame.width, height: mapFrame.height } : null,
-            cells: mapFrame ? mapFrame.cells.map((c) => [c.x, c.y, c.w, c.h]) : [],
+            /**
+             * ⛓⛓ (lab-map-camera) `zoom`, `frame` and `cells` are AS DRAWN on the canvas: the camera's zoom, the frame
+             * at that zoom, each cell's canvas rect. At home they are the provider's own numbers, unconverted.
+             * `camera` is the camera itself (`x`, `y`: the FRAME point at the canvas centre), `viewport` the canvas.
+             */
+            zoom: mapCam && mapEngaged ? mapCam.zoom : overviewMap.state(record()).zoom,
+            frame: mapFrame ? (camMoved()
+                ? { width: mapFrame.width * mapCam.zoom, height: mapFrame.height * mapCam.zoom }
+                : { width: mapFrame.width, height: mapFrame.height }) : null,
+            cells: mapFrame ? mapFrame.cells.map((c) => mapRect(c)) : [],
+            camera: mapCam ? { x: mapCam.x, y: mapCam.y, zoom: mapCam.zoom, engaged: mapEngaged } : null,
+            start: typeof overviewMap.startOf === 'function' ? overviewMap.startOf(record()) : null,
+            viewport: mapVp ? { w: mapVp.w, h: mapVp.h } : null,
             picked: disconnectPick ? { room: disconnectPick.room, value: disconnectPick.value } : null,
             /**
              * ⛓ (seedling-map-unreachable) present only with a provider that has `unreachableOf`: the room indices
@@ -2114,9 +2258,7 @@ export function mountSetEditor({
                 unreachable: mapMarks.map((m) => m.room),
                 unreachableMarks: mapMarks.map((m) => ({
                     room: m.room, partial: m.partial, regions: [...m.regions],
-                    cell: mapFrame?.cells[m.room]
-                        ? [mapFrame.cells[m.room].x, mapFrame.cells[m.room].y,
-                            mapFrame.cells[m.room].w, mapFrame.cells[m.room].h] : null,
+                    cell: mapFrame?.cells[m.room] ? mapRect(mapFrame.cells[m.room]) : null,
                 })),
                 unreachableReport: reportMarks === null ? 'none'
                     : reportMarks.record === record() ? 'current' : 'stale',

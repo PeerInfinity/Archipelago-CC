@@ -1,7 +1,9 @@
 // client/core/upstreamGoal.js
 //
 // Goal reporting for a slot whose rules came from the host's Upstream Rules Add-on
-// (worlds/upstream_rules_addon/; `source: "upstream_rules_addon"` on the envelope).
+// (worlds/upstream_rules_addon/; `source: "upstream_rules_addon"` on the envelope),
+// or from a committed preset matched to the room by its exact seed, for a world that
+// doesn't report its goal another way (reportsOwnGoal; sdc-preset-goal-report).
 // Design: the server-data arc's design-upstream-goal-report.
 //
 // An upstream world's goal is an EVENT: an ID-less location holding an ID-less goal
@@ -23,6 +25,23 @@
 // Every test here fails closed: a missed report is acceptable, a false one is not.
 
 import { evaluateRuleWithInventory } from '../../shared/procgen/library.js';
+import { reportsGoalByServerItem } from './goalCheck.js';
+
+/**
+ * Whether `player`'s world already reports its own goal through another path, so a
+ * preset of it gets no upstream goal record (sdc-preset-goal-report): one of our
+ * generated worlds or a world declaring `reports_goal_by_server_item` (goalCheck.js,
+ * the server-delivered goal item), or a proof/graph world (MetaMath, DepGraph) whose
+ * proof modules publish `user:goalReached` when the proof completes. The proof marker
+ * is proofShared/proofModuleHelpers.js `hasStructureData`, inlined here because that
+ * module imports the state manager.
+ */
+export function reportsOwnGoal(doc, player) {
+  const p = String(player);
+  if (reportsGoalByServerItem(doc, p)) return true;
+  const slotData = doc?.world?.[p]?.slot_data;
+  return !!(slotData?.proof_structure || slotData?.graph_structure);
+}
 
 /** The event_kind the client puts on an add-on slot's derived goal location. */
 export const GOAL_EVENT_KIND = 'goal';

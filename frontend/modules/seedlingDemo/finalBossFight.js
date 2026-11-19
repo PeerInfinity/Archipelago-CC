@@ -512,6 +512,14 @@ export function stepFinalBoss(b, ctx) {
         // `!destroy` arm. ⚠ NOT freeze-gated: `Enemy.update` calls it after
         // `mobileUpdate`, which is where the freeze test lives.
         if (b.hitsTimer > 0) b.hitsTimer -= 1;
+        // ⛓ fidelity OWLSUIT D2 (the caller's `CONTACT_FIDELITY.owlContactInStep`) — `hitPlayer()`, the LAST call of
+        // `Enemy.update`'s `!destroy` arm (`Enemies/Enemy.as:107-111`): below `hitUpdate`, and ABOVE every line
+        // `FinalBoss.update` runs after `super.update()` (`Enemies/FinalBoss.as:110`) — the lava test (`:116-124`),
+        // the cap and the phase arms (`:126-182`), which read the Owl's `v`/`hitsTimer` and the player's `v` that a
+        // contact writes. Its own gate is `!destroy && currentAnim != "die" && hitsTimer <= 0` (`Enemy.as:213`); the
+        // box test and the bill are the caller's, and `frozen` is `Game.freezeObjects` (`Player.hit`'s gate,
+        // `Player.as:1382`), the intro's freeze included. Absent (OFF), nothing here changes.
+        if (ctx.onHitPlayer && b.anim !== 'die' && b.hitsTimer <= 0) ctx.onHitPlayer({ frozen: worldFrozen });
     }
 
     if (worldFrozen || b.destroy) {

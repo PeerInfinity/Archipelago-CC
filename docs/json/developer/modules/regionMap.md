@@ -15,7 +15,7 @@ The as-built report is `CC/docs/region-map/step3b-panel.md`.
 | `regionMapSettings.js` | The settings schema (its defaults are the defaults) and the live-panel set. It is a separate module so that `index.js` and `regionMapUI.js` never read each other's bindings while the modules are loading. |
 | `regionMapModel.js` | **Pure.** `buildRegionMapModel({rules, player, registry, hookCtx, rule})` returns the layout, then per display region: its members, the region object its painter draws, its extent, and its location tiles. It also returns the links between groups and the locations that are not on the map. |
 | `regionMapFrames.js` | **Pure.** `cellFrames(positions, extents, mode)` turns signed layout cells into world-px rectangles. Also `visibleFrames` (the cull), `frameAt` and `tileCentre`. |
-| `regionMapCamera.js` | **Pure.** The camera math: `screen = (world − camera) · zoom + viewport/2`. It has zoom around a point, pan, fit, centring and easing. |
+| `../procgenCore/mapCamera.js` | **Pure.** The camera math, shared with the labs' set maps: `screen = (world − camera) · zoom + viewport/2`. It has zoom around a point, pan, fit, centring and easing. See [the procgenCore modules table](../procgen/editing-core.md). |
 | `regionMapOverlay.js` | **Pure.** The location squares (centred on the tile, never under `minSquarePx`), the colour rule (`squareColorKey`), generic square places, and square hit-testing. |
 | `regionMapUI.js` | The panel: its DOM, the settings, the camera, pointer input and painting. |
 

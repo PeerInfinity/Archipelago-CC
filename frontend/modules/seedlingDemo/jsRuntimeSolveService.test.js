@@ -282,8 +282,10 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
         const firstRun = rt.run;
         rt.tick();
         expect(rt.playback.solving).toBe(true);
-        // A host item flag lands mid-solve: the core re-boots the room on the next tick (the hold drains the queue).
-        rt.queueItems([{ class: 'Main', property: 'hasFeather', value: true }]);
+        // A re-boot lands mid-solve: the core re-boots the room on the next tick (the hold drains the queue).
+        // ⛓ seedling-js-item-live-delivery — restated from "a host item flag lands mid-solve": an item is written into
+        // the live run now and re-boots nothing; the RE2 restore is the one reboot in place left.
+        expect(rt.restoreSave(rt.exportSave())).toEqual({ ok: true });
         const out = await settleAsync(rt);
         const s = rt.playback.solverStats;
         expect(rt.run).not.toBe(firstRun);

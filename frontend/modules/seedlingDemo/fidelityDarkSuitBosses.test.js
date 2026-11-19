@@ -65,10 +65,12 @@ const OWL = { tape: 'r6-owl-kill', ticks: 816, sources: ['owlBody'] };
 
 describe('DARKSUITBOSSES — the key', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_DARK_SUIT_BOSS_RETALIATION)(
-        'ships OFF, appended last, with a worker env name', () => {
+        'ships OFF, appended before OWLSUIT, with a worker env name', () => {
             expect(CONTACT_FIDELITY_DEFAULTS[KEY]).toBe(false);
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe(KEY);
+            // ⛓ wave 49: OWLSUIT `owlContactInStep` was appended after this key.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['owlContactInStep', 'turretSuitRetaliation']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DARK_SUIT_BOSS_RETALIATION');
         });
 });

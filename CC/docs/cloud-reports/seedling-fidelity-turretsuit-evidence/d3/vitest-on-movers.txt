@@ -1,0 +1,11 @@
+     ✓ L37 + L43 certify clean; Wand and Totem of Lacste each need Totem Shard ×5  434ms
+     ✓ the BACKSTOP (default 300000 ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played  335ms
+     ✓ Stop mid-solve (the REAL worker): terminated, the goal FAILS by name, the game steps again, and the next solve gets a FRESH worker and solves  459ms
+     ✓ the 3rd refutation of one goal FAILS it by name  858ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests | 1 skipped) 2057ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretSuit.test.js (9 tests | 1 skipped) 162ms
+     × Turret (L29 `turret@128,192`): refused ON as OFF, and ON the refusal names the D1 reason 15ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityDarkSuitStatic.test.js > DARKSUITSTATIC — the class D1 leaves undeclared > Turret (L29 `turret@128,192`): refused ON as OFF, and ON the refusal names the D1 reason
+ Test Files  1 failed | 132 passed (133)
+      Tests  1 failed | 3937 passed | 2 skipped (3940)

@@ -6,7 +6,10 @@
  * per loop (design `action-nodes.md`). A world is compiled from a graph document by `actionGraphCompiler.js`, not
  * grown by a layout driver, so this entry declares no build-time hooks.
  *
- * ⛓ WHAT THIS ENTRY DECLARES (AN-2), each backed by `actionNodesRuntime.js`:
+ * ⛓ WHAT THIS ENTRY DECLARES (AN-2, AN-3a), each backed by `actionNodesRuntime.js`:
+ *   - `loopBot.planLoop(context)` (AN-3a): the whole loop's plan for the Playback Bot's loop runner, when every region
+ *     of the loaded world is an ActionNodes node (`actionLoopBot.js`; the runner's seam,
+ *     `playbackBot/substrateLoopPlanner.js`).
  *   - `loopSupport`: the queue verbs `regionMove` and `act`, ENFORCED (`strictQueueActions`, AN-1b: no explore);
  *     `actionGate`, the start gate Loops asks before an entry
  *     starts; `authoredCosts`, so a cost pass (the pipeline's, the Loops panel's Generate Costs) copies the
@@ -19,7 +22,8 @@
  *     from the loaded world.
  *
  * ⛓ WHAT IT DOES NOT DECLARE YET:
- *   - `getPlaybackController`, `regionClick`, `loopBot.planLoop`: slice 3, with click-to-play and the live bot.
+ *   - `getPlaybackController`: not needed by the live bot (it plays through the Loops queue).
+ *   - The click: AN-3b, a registered click action (after the click-actions series), not a `regionClick` hook.
  *   - `compositeMap.layoutGraph`: with the Region Map panel's click step (the panel is not on main).
  *   - `rulesJsonBlocks`: the `action_nodes[p]` block is graph-dependent and written by the compiler, which is the
  *     only producer; no pipeline driver realises an ActionNodes region.
@@ -35,6 +39,7 @@ import { envelopeExitNames, REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidec
 import { ACTION_NODE_KINDS } from './actionGraph.js';
 import { ACTION_NODES_SUBSTRATE_ID, ACT_ACTION } from './actionGraphCompiler.js';
 import { getActionNodesRuntime } from './actionNodesRuntime.js';
+import { planLiveLoop } from './actionLoopBot.js';
 
 const NAMED_AMOUNTS = Object.freeze({
     type: 'object',
@@ -156,6 +161,14 @@ export const substrateRegistryEntry = Object.freeze({
         manual: false,
         authoredCosts: true,
         actionGate: (action) => getActionNodesRuntime().gate(action),
+    }),
+    // ⛓ The live bot (design §7, AN-3a). `context`: {startRegion, maxMana, inventory, checkedLocations, regionXp}.
+    loopBot: Object.freeze({
+        planLoop: (context = {}) => {
+            const rt = getActionNodesRuntime();
+            if (!rt.isLoaded()) return { kind: 'unreachable', reason: 'no ActionNodes world is loaded', path: [], lines: [] };
+            return planLiveLoop({ ...context, model: rt.model });
+        },
     }),
     sharing: Object.freeze({
         mana: Object.freeze({}),
