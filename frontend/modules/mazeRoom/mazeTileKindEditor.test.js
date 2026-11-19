@@ -3,7 +3,8 @@
  * 2026-11-17: "Editor first, then generator"; "placed kinds are walkable" for now).
  *
  *   1. The op (`setTileKind`) and the TILE KIND palette entry, and every refusal by name: no packs loaded, a kind no
- *      loaded pack declares, a wall-based kind, a wall cell, an occupied cell. A cell holding a kind takes no entity
+ *      loaded pack declares, a wall-based kind that is not blocked (⛓ PASS-1: the look/logic rule), a wall cell, an
+ *      occupied cell. A cell holding a kind takes no entity
  *      and no wall; `clearEntity` removes it. A wall-based kind is not offered.
  *   2. The adapter carries a kind through copy/paste (`readMazeCell` / `mazeWriteOps`).
  *   3. ⛓ THE PROOF, on a REAL committed world (the meta trial's maze region with a thing), with a TEST-ONLY fixture
@@ -44,7 +45,11 @@ const [REGION_ID, PAYLOAD] = Object.entries(META.preset_sidecars['1'])
     .map(([id, sc]) => [id, sc.playable_payload])[0];
 const PX = 16;
 
-/** ⛔ THE FIXTURE PACK — test-only, in memory. A marker-based kind no theme has art for, and a wall-based one. */
+/**
+ * ⛔ THE FIXTURE PACK — test-only, in memory. A marker-based kind no theme has art for, and a wall-based one that
+ * presents no terrain entry, so it is walkable and its wall look lies (⛓ PASS-1 keeps refusing it; a BLOCKED wall-based
+ * kind is `mazeTilePass.test.js`'s).
+ */
 const FIXTURE = 'tile3-fixture';
 const LANTERN = `${FIXTURE}:object/lantern`;
 const PILLAR = `${FIXTURE}:object/pillar`;
@@ -115,7 +120,7 @@ describe('1. the op, the palette entry, and every refusal by name', () => {
         const at = (cell, kind, declared = tileKinds) => applyEditOp(w, { op: 'setTileKind', ...cell, kind }, { tileKinds: declared });
         expect(at(a, LANTERN, null)).toMatchObject({ ok: false, reason: 'no-tile-kinds' });
         expect(at(a, 'other:object/x')).toMatchObject({ ok: false, reason: 'undeclared-tile-kind', description: tileKindRefusal('other:object/x', tileKinds).description });
-        expect(at(a, PILLAR)).toMatchObject({ ok: false, reason: 'wall-base-tile-kind', description: TILE_KIND_REFUSALS.wallBase(PILLAR) });
+        expect(at(a, PILLAR)).toMatchObject({ ok: false, reason: 'wall-base-tile-kind', description: TILE_KIND_REFUSALS.wallBase(PILLAR, 'walkable') });
         expect(at(wall, LANTERN)).toMatchObject({ ok: false, reason: 'wall-tile' });
         expect(at(w.entrance, LANTERN)).toMatchObject({ ok: false, reason: 'occupied', description: TILE_KIND_REFUSALS.occupied(w.entrance.x, w.entrance.y) });
         const thing = w.things[0];

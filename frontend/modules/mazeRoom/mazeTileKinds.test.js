@@ -2,8 +2,9 @@
  * CONTENT SETS TILE-3 — **THE `tileKinds` FIELD** (`mazeTileKinds.js`): a pack-declared tile kind placed on a floor
  * cell, look-only and walkable (⚖ the user, 2026-11-17).
  *
- *   1. The payload check refuses by name: malformed, out of bounds, not floor, two on a cell. The declared-kind check
- *      refuses by name: undeclared, wall-based.
+ *   1. The payload check refuses by name: malformed, out of bounds, a cell that does not match its baked pass (⛓
+ *      PASS-1; was "not floor"), two on a cell. The declared-kind check refuses by name: undeclared, a wall-based kind
+ *      that is not blocked (⛓ PASS-1's look/logic rule; the blocked side is `mazeTilePass.test.js`'s).
  *   2. The field travels: serializer → registry deserializer → serializer is the identity; a world without kinds
  *      writes no key; `cloneWorld` copies the Map and `worldsEqual` sees a kind.
  *   3. ⛔ No logic: a world's extracted paths and compiled region are the same with and without placed kinds.
@@ -91,25 +92,26 @@ describe('1. refused by name', () => {
         expect(refusal(() => tileKindsFromList([{ x: world.width, y: 0, kind: KIND }], opts)).message)
             .toBe(TILE_KIND_REFUSALS.outOfBounds(world.width, 0));
     });
-    it('a cell that is not floor', () => {
-        expect(refusal(() => tileKindsFromList([{ ...wall, kind: KIND }], opts)).message).toBe(TILE_KIND_REFUSALS.notFloor(wall.x, wall.y, KIND));
+    it('a cell that does not match its baked pass (⛓ PASS-1: walkable stands on floor, blocked on a wall)', () => {
+        expect(refusal(() => tileKindsFromList([{ ...wall, kind: KIND }], opts)).message).toBe(TILE_KIND_REFUSALS.passMismatch(wall.x, wall.y, KIND, 'walkable'));
+        expect(refusal(() => tileKindsFromList([{ ...a, kind: KIND, pass: 'blocked' }], opts)).message).toBe(TILE_KIND_REFUSALS.passMismatch(a.x, a.y, KIND, 'blocked'));
     });
     it('two kinds on one cell', () => {
         expect(refusal(() => tileKindsFromList([{ ...a, kind: KIND }, { ...a, kind: KIND }], opts)).message).toBe(TILE_KIND_REFUSALS.duplicate(a.x, a.y));
     });
     it('the registry deserializer refuses a payload whose kind is on a wall, by name', () => {
         const p = { ...fresh(), [TILE_KINDS_FIELD]: [{ ...wall, kind: KIND }] };
-        expect(() => substrateRegistryEntry.deserializeWorld(p)).toThrow(TILE_KIND_REFUSALS.notFloor(wall.x, wall.y, KIND));
+        expect(() => substrateRegistryEntry.deserializeWorld(p)).toThrow(TILE_KIND_REFUSALS.passMismatch(wall.x, wall.y, KIND, 'walkable'));
     });
 
-    it('a kind no loaded pack declares, and a wall-based kind', () => {
+    it('a kind no loaded pack declares, and a wall-based kind that is not blocked', () => {
         expect(tileKindRefusal(KIND, DECLARED)).toBeNull();
         expect(tileKindRefusal('other:object/x', DECLARED)).toEqual({
             reason: 'undeclared-tile-kind', description: TILE_KIND_REFUSALS.undeclared('other:object/x', Object.keys(DECLARED)),
         });
         expect(tileKindRefusal('other:object/x', null).description).toMatch(/the stack declares none/);
         expect(tileKindRefusal('tile3-fixture:object/pillar', DECLARED)).toEqual({
-            reason: 'wall-base-tile-kind', description: TILE_KIND_REFUSALS.wallBase('tile3-fixture:object/pillar'),
+            reason: 'wall-base-tile-kind', description: TILE_KIND_REFUSALS.wallBase('tile3-fixture:object/pillar', 'walkable'),
         });
         const w = withTileKinds(deserializeMazeWorld(fresh()), { tileKinds: [{ ...a, kind: KIND }, { ...b, kind: 'other:object/x' }] });
         expect(placedTileKindRefusals(w, DECLARED)).toEqual([{ ...b, kind: 'other:object/x', ...tileKindRefusal('other:object/x', DECLARED) }]);
@@ -153,7 +155,7 @@ describe('2. the field travels, and its absence is byte-equal', () => {
     });
 });
 
-describe('3. ⛔ no logic: placed kinds are walkable and reachability never sees them', () => {
+describe('3. ⛔ no logic for a WALKABLE kind: reachability never sees it (⛓ PASS-1 restates: a blocked kind is a wall, `mazeTilePass.test.js`)', () => {
     it('the extracted paths and the compiled region are the same with every free cell holding a kind', () => {
         const plain = deserializeMazeWorld(fresh());
         const cells = freeCells(plain);

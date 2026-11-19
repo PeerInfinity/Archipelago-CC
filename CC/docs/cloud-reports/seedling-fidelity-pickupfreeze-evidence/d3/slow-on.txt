@@ -1,0 +1,12 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/strategySwitchApproach.slow.test.js (1 test) 18124ms
+     ✓ TURRET_APPROACH ON + disable:[kill] refuses STRATEGY_DISABLED at weigh:approachKillForCorpse, approaching nothing  18122ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  03:23:42
+   Duration  20.71s (transform 1.84s, setup 175ms, import 2.31s, tests 18.12s, environment 0ms)
+
+EXIT 0

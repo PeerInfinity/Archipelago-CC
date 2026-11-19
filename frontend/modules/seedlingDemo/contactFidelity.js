@@ -2170,6 +2170,53 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_TURRET_SUIT_RETALIATION=0|1`. ⛔ OFF by default (no flip licence).
      */
     turretSuitRetaliation: false,
+    /**
+     * fidelity PICKUPFREEZE D2 (wave 51) — A PICKUP'S FIRST FRAME FREEZES THE FAMILIES THAT UPDATE AFTER IT.
+     * `Game.loadlevel` adds `drill` (`Game.as:2290`), `turret` (`:2295`), `iceturret` (`:2296`) and `beamtower`
+     * (`:2297`) BEFORE every placed pickup (`:2330-2351`), and `World.addUpdate` PREPENDS (`net/flashpunk/World.as:937-
+     * 947`), so a pickup updates first. On its first frame `Pickup.update` → `pick_up()` sets `Game.freezeObjects =
+     * true` for a `special` pickup (`Pickups/Pickup.as:78-95`), and each of the four returns on it before its own
+     * update (`Turret.as:48`, `IceTurret.as:58`, `BeamTower.as:54`, `Drill.as:54`; the graphic still steps). The bot
+     * gates at frame START (`Bot.as:3201`), so the model's collecting tick T stands for frames F..F+150: F (the touch),
+     * the 149 frames `specialTimer` runs out on, and F+150, where a TEXT-LESS pickup's `pick_up` lowers the freeze
+     * (`:106-112`) BEFORE the four update, and a texted one's NPC keeps it up. The model detected the touch AFTER the
+     * four stepped (`frozen: ceremony !== null`, so UNFROZEN on T), then ran the turrets' 150 frozen frames
+     * (`stepShootersThroughFreeze`). ON: the touch is predicted before the four step (the detection's own pure tests,
+     * re-checked at the detection; a disagreement is refused by name). The turrets step FROZEN on T; their lump is 150
+     * frozen frames for a texted pickup, and 149 frozen plus one UNFROZEN release frame (spits frozen, then the turrets,
+     * with wave 50's slot contact when `turretSuitRetaliation` is ON) for a text-less one. The ice turret, the beam
+     * tower and the drill have no lump in this model, so their T step is frozen for a texted pickup and is left as the
+     * release frame for a text-less one. With `turretSuitRetaliation` ON the T slot bills nothing (the game's
+     * `Player.hit` is refused by `!Game.freezeObjects`), so wave 50's pickup-freeze refusal is never reached.
+     * A dialogue's FIRST frame does not freeze (`NPC.talk` raises the flag only once `talking`, `NPCs/NPC.as:193-195`)
+     * and is not touched. OFF: byte-identical. `SEEDLING_PICKUP_TICK_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    pickupTickFreeze: false,
+    /**
+     * fidelity DIALOGUEFREEZE D2 (wave 52) — A DIALOGUE'S LATER FRAMES FREEZE THE FAMILIES THAT UPDATE AFTER THE NPC.
+     * `Game.loadlevel` adds `drill` (`Game.as:2290`), `turret` (`:2295`), `iceturret` (`:2296`) and `beamtower`
+     * (`:2297`) BEFORE every texted NPC (`introchar :2389` … `watcher :2394` … `sign :2400`, `statue :2405-2406`), and
+     * `World.addUpdate` PREPENDS, so the NPC updates first. `NPC.update` is `super.update(); talk();`
+     * (`NPCs/NPC.as:128-132`), and `talk()` raises `Game.freezeObjects` only inside `if (talking)` (`:193-195`): NOT on
+     * the frame `startTalking()` runs (`talking` was false at that test; the setter writes `Game.talking` only,
+     * `:264-271`), and on the LAST frame the same block lowers it again before the families update (`talking = false`
+     * → the setter's `Game.freezeObjects = false`, `:207-214`, `:253-255`; and the out-of-range arm, `:230-236`).
+     * `Game.update`'s tail lowers it on every dialogue frame (`!canInventory()` → `inventory.open = false`, `Game.as:
+     * 1044-1050`, `Inventory.as:151-154`), so every dialogue frame is a LIVE tape tick (`Bot.as:3201`). The model
+     * stepped the four UNFROZEN in their main-tick slots on every dialogue tick (`frozen: ceremony !== null`; a
+     * dialogue is not a ceremony) and then `return runFrozenTick(…)`, which stepped the beam tower a SECOND time
+     * (frozen). ON: each slot asks a pure prediction of the talker and watcher arms (`dialogueFreezeAheadNow`: an NPC
+     * already `talking` whose `stepNpcDialogue` this tick would not close it), re-checked against the arms' answer
+     * (a disagreement is refused by name, as is a predicted dialogue frame another freeze pre-empts). On a predicted
+     * frame the drill, the ice turret and the turret (no aim, no `shootTimer`, no shot, no `hitPlayer` bill: `Player.hit`
+     * is refused under the freeze) step FROZEN, and the beam tower's main slot does not step at all: `runFrozenTick`'s
+     * step is its one frozen update, in the game's place (after the NPC). The start frame and the closing frame are
+     * untouched (unfrozen, as the game). Composes with `pickupTickFreeze` (a slot is frozen if either says so; a
+     * dialogue and a ceremony up together stay refused by name) and with `turretSuitRetaliation` (the frozen slot bills
+     * nothing, so wave 50's refusal is never reached for a dialogue). OFF: byte-identical.
+     * `SEEDLING_DIALOGUE_FRAME_FREEZE=0|1`. ⛔ OFF by default (no flip licence).
+     */
+    dialogueFrameFreeze: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2591,6 +2638,12 @@ if (globalThis.process?.env?.SEEDLING_OWL_CONTACT_IN_STEP === '0') CONTACT_FIDEL
 // ⛓ fidelity TURRETSUIT D2: `SEEDLING_TURRET_SUIT_RETALIATION=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_TURRET_SUIT_RETALIATION === '1') CONTACT_FIDELITY.turretSuitRetaliation = true;
 if (globalThis.process?.env?.SEEDLING_TURRET_SUIT_RETALIATION === '0') CONTACT_FIDELITY.turretSuitRetaliation = false;
+// ⛓ fidelity PICKUPFREEZE D2: `SEEDLING_PICKUP_TICK_FREEZE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PICKUP_TICK_FREEZE === '1') CONTACT_FIDELITY.pickupTickFreeze = true;
+if (globalThis.process?.env?.SEEDLING_PICKUP_TICK_FREEZE === '0') CONTACT_FIDELITY.pickupTickFreeze = false;
+// ⛓ fidelity DIALOGUEFREEZE D2: `SEEDLING_DIALOGUE_FRAME_FREEZE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DIALOGUE_FRAME_FREEZE === '1') CONTACT_FIDELITY.dialogueFrameFreeze = true;
+if (globalThis.process?.env?.SEEDLING_DIALOGUE_FRAME_FREEZE === '0') CONTACT_FIDELITY.dialogueFrameFreeze = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

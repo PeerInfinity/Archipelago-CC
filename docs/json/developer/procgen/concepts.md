@@ -190,11 +190,13 @@ Content packs PL-1 added three pack layers for the shared task shape, which the 
 
 | Layer | Holds | Reader |
 |---|---|---|
-| `structure` | what EXISTS: entries of kind `task`, `stat`, `resource`, `boon` and `place`, as ids and links only (no number, no name, no native id) | `createStructure(stack)` |
+| `structure` | what EXISTS: entries of kind `task`, `stat`, `resource`, `boon`, `place` and `terrain`, as ids and links only (no number, no name, no native id) | `createStructure(stack)` |
 | `numbers` | magnitudes, keyed by structure id and value path, one set per game (the `sets` key is a substrate id, its `exists` the pack it prices). Under Z7 these are DEFAULTS | `createNumbers(stack)` |
 | `bindings` | per game, keyed by structure id: what only that game needs (JtA's slot numbers, omsi's multipart segments, a native effect) | `createBindings(stack)` |
 
 A structure key is `<pack>:<kind>/<slug>`, and its namespace must be its pack's id, so packs added together cannot collide. A task has a `place` (optional), a `time` (the clock resource), `requires` (a list of SETS: any one set, all of its members, each `{stat}` or `{resource, consume?}`), `results` (each one of `{stat}`, `{resource, sign}`, `{boon}`, `{opens}`, with `when`: `each`, `last` or `every_nth`), a `limit` (`true`, or `{grows_with: <stat>}`), `after` (sets of task ids) and free `tags`. A stat may have an `owner` and `max: true`; a stat, resource or boon may say which task part it `modifies` (`time`, `limit`, `results.<id>`, `requires.<id>`; `entry: "*"` for every task that has the part; `lasts`: `loop` or `always`). Every id an entry names must be an entry of the stack, of the right kind. A malformed entry is refused by name: the pack, the key and the field.
+
+A `terrain` entry (content sets PASS-1) declares a maze tile kind's passability: `pass`, one of `TERRAIN_PASSES` (`walkable`, `blocked`; a closed list that grows one value per slice). The tile kind's concept, of kind `terrain`, presents it, and `packStructure.terrainPassOf` reads it (`walkable` when the concept presents none). The maze bakes and lowers it at placement (maze.md, *Declared passability*).
 
 A boon may list `results` too (content packs PL-2, an addition to the Z write-up): what holding it gives, each `{stat}` or `{resource, sign}`, with no `when`. Its amounts are numbers, like a task's.
 

@@ -35,11 +35,34 @@ import { ContentPackError, KEY_PATTERN, mergeKeyed } from '../contentPacks/conte
  * layer (`packStructure/`), so a pack concept that NAMES a task (presents a
  * structure entry) has kind `task`. `object` stays for scenery; something
  * counted is a `resource`; a `boon` is something kept.
+ *
+ * ⛓ PASS-1: `terrain` — a tile kind whose passability a `structure` terrain entry
+ * declares (it presents that entry; `STRUCTURE_KINDS`).
  */
-export const PACK_CONCEPT_KINDS = Object.freeze(['character', 'place', 'object', 'info', 'task', 'stat', 'resource', 'boon']);
+export const PACK_CONCEPT_KINDS = Object.freeze(['character', 'place', 'object', 'info', 'task', 'stat', 'resource', 'boon', 'terrain']);
 
-/** The kinds a structure entry may have (`packStructure` re-uses this list): the four of S6, and `place`. */
-export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon', 'place']);
+/**
+ * The kinds a structure entry may have (`packStructure` re-uses this list): the four of S6, and `place`.
+ *
+ * ⛓ CONTENT SETS PASS-1 (declared passability; ⚖ the user 2026-11-18: "Pack declares, world copies"): `terrain`, a
+ * TILE KIND's passability (`pass`, one of `TERRAIN_PASSES`). It is LOGIC, so it lives here in `structure` and never on
+ * the concept row (Z.1): a tile-kind concept of kind `terrain` PRESENTS a terrain entry, and a concept that presents
+ * none is `walkable`.
+ */
+export const STRUCTURE_KINDS = Object.freeze(['task', 'stat', 'resource', 'boon', 'place', 'terrain']);
+
+/**
+ * ⛓ PASS-1 — **THE PASSABILITY VALUES A TERRAIN ENTRY MAY DECLARE**, a closed list that grows ONE VALUE PER SLICE
+ * (⚖ the user 2026-11-18: "One per slice"): `needs` (PASS-2) and `one-way` (PASS-3) join it, each with its lowering
+ * into a maze primitive and its reachability pin. This module OWNS the names (as it owns `PACK_TILE_BASES`); the
+ * structure parser refuses any other, and the maze payload's `tileKinds[].pass` enum is this list.
+ *   · `walkable` — enter and leave freely (the default: TILE-3's "placed kinds are walkable");
+ *   · `blocked`  — never entered: the editor lowers it to a wall under the kind.
+ */
+export const TERRAIN_PASSES = Object.freeze(['walkable', 'blocked']);
+
+/** ⛓ PASS-1 — the value of a tile kind that presents no terrain entry, and the one a world never writes. */
+export const DEFAULT_TERRAIN_PASS = 'walkable';
 
 /**
  * The fields an entry may carry; any other is refused. `src` names the entry's
@@ -67,7 +90,7 @@ export const PACK_TILE_BASES = Object.freeze(['floor', 'wall', 'marker', 'charac
  * whose kind is one of `STRUCTURE_KINDS` and the presenting concept's own kind.
  * The one-presenter-per-pack rule and latest-pack-wins hold for both.
  */
-export const STRUCTURE_ID_PATTERN = /^([a-z][a-z0-9-]*):(task|stat|resource|boon|place)\/([a-z0-9][a-z0-9-]*)$/;
+export const STRUCTURE_ID_PATTERN = new RegExp(`^([a-z][a-z0-9-]*):(${STRUCTURE_KINDS.join('|')})\\/([a-z0-9][a-z0-9-]*)$`);
 
 /** True when a `presents` value is the namespaced (structure) form. */
 export const presentsStructure = (presents) => typeof presents === 'string' && presents.includes(':');
