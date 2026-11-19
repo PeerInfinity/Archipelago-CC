@@ -12,3 +12,4 @@ census/   step 5: node census of every leg (tools/census-leg.mjs, both switches 
           (tools/phase-leg.mjs, k 0..30 idle ticks, no budget: 1 hit at every k); pit7-hit-rows.jsonl (the hit row).
 w0/rows-pit7.jsonl, w0/cap/cap-pit7.jsonl.gz: the four L16 out_pit_7 legs on the page at base.
 vitest-bounded*.txt: the bounded vitest file list and log.
+survey/   survey-seedling-route.mjs --through=end OFF vs both switches ON: compare-off-on.txt, off.log, on.log.
