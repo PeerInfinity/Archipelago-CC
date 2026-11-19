@@ -504,6 +504,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Every numeric literal in Seedling's JS simulation — the static import closure of frontend/modules/seedlingDemo/levelRun.js — is one row of a generated census…"
     },
     {
+        "path": "docs/json/developer/procgen/seedling-derived-rules.md",
+        "title": "The Seedling Derived-Rule Table",
+        "section": "developer/procgen",
+        "summary": "The derived-rule table (frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json) holds the access rules that the maze worlds derive from Seedling's tiles, for the elements where…"
+    },
+    {
         "path": "docs/json/developer/procgen/seedling-editor.md",
         "title": "The Seedling Editor",
         "section": "developer/procgen",
@@ -1685,6 +1691,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/seedling-bot-log.md",
             "docs/json/developer/procgen/seedling-bot.md",
             "docs/json/developer/procgen/seedling-constants.md",
+            "docs/json/developer/procgen/seedling-derived-rules.md",
             "docs/json/developer/procgen/seedling-editor.md",
             "docs/json/developer/procgen/seedling-solve-progress.md",
             "docs/json/developer/procgen/seedling-solver-surface.md",
