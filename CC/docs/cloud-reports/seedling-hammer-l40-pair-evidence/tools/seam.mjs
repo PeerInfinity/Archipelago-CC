@@ -19,7 +19,8 @@ if (PW?.PRESS_PHASE_WAIT_TRACE) PW.PRESS_PHASE_WAIT_TRACE.sink = (x) => { waits.
 const FX = { 'flag12-L39': 'hammer-cleartag-chain/leg871-l39-l40-request.json.gz',
     'flag12-L43': 'hammer-cleartag-chain/leg872-l43-l40-request.json.gz',
     'chest-L39': 'hammer-l40-spinner-walls/chest-L39-request.json.gz' };
-const fix = JSON.parse(gunzipSync(readFileSync(join(R, 'frontend/modules/seedlingDemo/fixtures', FX[arg('fx')]))).toString('utf8'));
+// L40-PAIR: --file=<fixture.json.gz> reads any committed request (its own seam unless --seam=); --fx names it in the row.
+const fix = JSON.parse(gunzipSync(readFileSync(arg('file') ?? join(R, 'frontend/modules/seedlingDemo/fixtures', FX[arg('fx')]))).toString('utf8'));
 const c0 = fix.requests[0].request;
 const seam = arg('seam') === null ? c0.staging.seam.time : Number(arg('seam'));
 const { passes = JR.ANYTIME_PASSES, source, budgetWork, upgradeWindowWork, ...tape } = restoreRequest({ ...c0,
