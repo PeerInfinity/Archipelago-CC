@@ -4,7 +4,8 @@ A Link to the Past's prizes (Crystal 1–7, the three Pendants) carry a tuple of
 ``ItemData.item_code``; the exporter copied it into ``items[p][name].id`` (``"id": [2, 52, 100, 64, 127, 6]``).
 They are events on ID-less prize locations (ALttP gives an AP id only to int codes,
 ``worlds/alttp/__init__.py``), so the exporter now writes ``null``, through one helper,
-``exporter.games.base.utilities.int_id_or_none``. An int id is unchanged.
+``exporter.games.base.utilities.int_id_or_none``, and marks them ``event: true`` (Robert 2026-11-19). An int id
+is unchanged.
 """
 
 import pytest
@@ -68,3 +69,17 @@ def test_int_ids_are_unchanged(room):
     for name, code in table.items():
         if name in items:
             assert items[name]["id"] == code, name
+
+
+def test_a_non_int_coded_item_is_marked_an_event(room):
+    """Robert 2026-11-19 ("Mark prizes as events everywhere"): no AP id = an event, as for a None code."""
+    _, items = room
+    assert items["Fake Crystal"].get("event") is True
+    assert items["Fake Pendant"].get("event") is True
+
+
+def test_an_int_id_item_is_not_marked_an_event(room):
+    multiworld, items = room
+    for name in multiworld.worlds[1].item_name_to_id:
+        if name in items:
+            assert items[name].get("event") is not True, name

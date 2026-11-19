@@ -2311,7 +2311,7 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry['id'] = int_id_or_none(getattr(location.item, 'code', None))
                 item_entry['groups'] = []
                 item_entry['classification'] = classification_to_string(item_classification)
-                if getattr(location.item, 'code', None) is None:
+                if item_entry['id'] is None:  # no AP id (code None, or not an int: int_id_or_none) = an event
                     item_entry['event'] = True
                 item_entry['type'] = item_type
                 item_entry['max_count'] = 1
@@ -2359,7 +2359,7 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 item_entry['id'] = int_id_or_none(getattr(item, 'code', None))
                 item_entry['groups'] = []
                 item_entry['classification'] = classification_to_string(item_classification)
-                if getattr(item, 'code', None) is None:
+                if item_entry['id'] is None:  # no AP id (code None, or not an int: int_id_or_none) = an event
                     item_entry['event'] = True
                 item_entry['type'] = item_type
                 item_entry['max_count'] = 1
