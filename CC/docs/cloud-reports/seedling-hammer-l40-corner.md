@@ -13,7 +13,7 @@ planner.
 | Rows | `b63365e637` (`hammerL40Corner.train.test.js`; the phase-wait patch and its measurements as evidence) |
 | Game witness | `3017f22cd2` (p4g play of the {40,12} plan) |
 | Survey | `1f5e0c995f` (`--through=end` OFF vs ON) |
-| Head | the commit carrying this report (evidence included) |
+| Report | `4621050fbe` (this report and the remaining evidence), then the commit carrying this line, which drops two raw survey JSONs the `.gz` copies already hold (`survey/end-*.json.gz`) |
 | Branch | `claude/seedling-l40-corner-press-eexmol` (the harness's designated branch) |
 
 No planner follow-up arrived (`ReadNotifications` empty, checked twice). I followed the brief alone.
