@@ -53,6 +53,14 @@ const SAMPLE_OPS = {
     setButton: { op: 'setButton', x: 3, y: 3, index: null },
     setFlag: { op: 'setFlag', x: 3, y: 3, index: null },
     clearEntity: { op: 'clearEntity', x: 5, y: 3 },
+    // ⛓ CONTENT SETS TILE-3 — a pack-declared tile kind; it is checked against the loaded packs' declared kinds,
+    //   which the op's row hands both paths (`SAMPLE_OPTS`).
+    setTileKind: { op: 'setTileKind', x: 3, y: 3, kind: 'fixture:object/lantern' },
+};
+
+/** ⛓ TILE-3 — the options an op needs beyond the op itself, given to the direct call AND the adapter alike. */
+const SAMPLE_OPTS = {
+    setTileKind: { tileKinds: { 'fixture:object/lantern': { artKey: null, base: 'marker', pack: 'fixture' } } },
 };
 
 describe('⛓ the adapter speaks the editor\'s OWN vocabulary', () => {
@@ -74,10 +82,10 @@ describe('⛓ the adapter speaks the editor\'s OWN vocabulary', () => {
         const op = SAMPLE_OPS[name];
         const base = world();
         const direct = cloneWorld(base);
-        const ref = applyEditOp(direct, op);
+        const ref = applyEditOp(direct, op, SAMPLE_OPTS[name]);
         expect(ref.ok).toBe(true);
 
-        const s = createEditSession(mazeEditAdapter, base);
+        const s = createEditSession(SAMPLE_OPTS[name] ? createMazeEditAdapter(SAMPLE_OPTS[name]) : mazeEditAdapter, base);
         const res = s.apply(op);
         expect(res.ok).toBe(true);
         expect(res.op).toEqual(ref.op);

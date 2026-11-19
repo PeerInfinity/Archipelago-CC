@@ -53,6 +53,7 @@ import {
 import { TILE_PX, COLORS, compositeMapIdOf } from '../procgenCore/compositeMapRenderer.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
 import { conceptArtFrame, drawConceptArt, drawMazeTile, loadMazeTileArt } from './mazeTileArt.js';
+import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
 import { drawMazeThings } from './mazeThingOverlay.js';
 import {
     CONCEPT_ART_CLEARED_ALPHA, drawArrowTraps, drawConsumableTile, drawLiveMarkers,
@@ -130,7 +131,8 @@ function tileArtForStack(stack, requestRedraw, contentRoles) {
                 entry.loaded = loaded;
                 const waiters = [...entry.waiters];
                 entry.waiters.clear();
-                if (loaded.tileArt) for (const redraw of waiters) redraw();
+                // ⛓ TILE-3: a stack that declares tile kinds redraws too (a placed kind's base is known now).
+                if (loaded.tileArt || Object.keys(loaded.tileKinds ?? {}).length) for (const redraw of waiters) redraw();
             }, (err) => {
                 if (artCache.get(key) !== entry) return;
                 console.error(`[mazeCompositeMap] the art did not load (drawn in the maze's own colours): ${err.message}`);
@@ -168,6 +170,18 @@ export function mazeCompositeArtStatus(stack) {
 export function mazeCompositeTileArt(stack) {
     const entry = artCache.get(stack.join(','));
     return entry?.status === 'ready' ? entry.loaded.tileArt : null;
+}
+
+/**
+ * ⛓ TILE-3 — the stack's declared tile kinds (`mazeTileArt.tileKindKeys`), or undefined while its load is in flight
+ * (draw no placed kind yet, rather than a placeholder the load would replace). An empty stack, a failed load and a host
+ * that cannot load answer `{}`: every placed kind is then undeclared and draws the placeholder.
+ */
+function tileKindsForStack(stack) {
+    if (stack.length === 0) return {};
+    const entry = artCache.get(stack.join(','));
+    if (!entry || entry.status === 'loading') return undefined;
+    return entry.loaded?.tileKinds ?? {};
 }
 
 /** Resolves once the stack's load (if one started) has landed, either way. */
@@ -221,7 +235,7 @@ export const MAZE_COMPOSITE_UNDRAWN = Object.freeze({
  */
 export function drawMazeCompositeRegion(ctx, region, {
     offX, offY, tilePx = TILE_PX, colors = COLORS, source = null, requestRedraw = null,
-    registry = substrateRegistry, tileArt: heldArt = undefined,
+    registry = substrateRegistry, tileArt: heldArt = undefined, tileKinds: heldKinds = undefined,
 } = {}) {
     const world = region?.playable_payload;
     if (!world) return;
@@ -362,6 +376,18 @@ export function drawMazeCompositeRegion(ctx, region, {
     };
     drawArrowTraps(ctx, world, markerView);
     drawLiveMarkers(ctx, world, markerView);
+
+    // ⛓ TILE-3: the region's placed tile kinds (`mazeTileKindOverlay.drawMazeTileKinds`, the panel's own pass), by the
+    //   stack's declared kinds (a host may pass them as `geom.tileKinds`, as `geom.tileArt`). A world with none draws
+    //   nothing here.
+    if (world.tileKinds instanceof Map && world.tileKinds.size > 0 && !world.atlas) {
+        const declared = heldKinds !== undefined ? heldKinds : tileKindsForStack(mazeCompositeStackOf(region, source, registry));
+        if (declared !== undefined) {
+            drawMazeTileKinds(ctx, world, {
+                tilePx, offX, offY, playerPos: null, fogEnabled: false, isTileVisible: () => true, tileArt, tileKinds: declared,
+            });
+        }
+    }
 
     // ⛓ S2: the region's things (`mazeThingOverlay.drawMazeThings`, the panel's own pass): art by their pack concept,
     //   else the sign / the baked look. No fog and no player on the composite map. A world with none draws nothing.

@@ -22,7 +22,7 @@
     "frontend/modules/procgenDocs/generated.test.js::name-over-a-roster::⛓⛓ the P3a findings, pinned — FOUR OF FIVE FIXED by P5",
     "frontend/modules/procgenDocs/glossary.test.js::name-over-a-roster::declares 8 areas and leaves none of them empty",
     "frontend/modules/procgenDocs/glossary.test.js::roster-length-pinned::AREAS → toHaveLength(8)",
-    "frontend/modules/procgenDocs/glossary.test.js::roster-length-pinned::TERMS → toHaveLength(166)",
+    "frontend/modules/procgenDocs/glossary.test.js::roster-length-pinned::TERMS → toHaveLength(167)",
     "frontend/modules/seedlingDemo/activators.test.js::roster-length-pinned::L39 → toHaveLength(3)",
     "frontend/modules/seedlingDemo/chest.test.js::roster-length-pinned::SEAL_DRAW → toHaveLength(2)",
     "frontend/modules/seedlingDemo/combatVerbs.test.js::roster-length-pinned::HITABLE_TYPES → toHaveLength(11)",

@@ -69,6 +69,7 @@ import { captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
 import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from './mazeSerializer.js';
 import { reseatThings } from './mazeThings.js';
+import { TILE_KINDS_FIELD, deserializeMazeWorldWithKinds } from './mazeTileKinds.js';
 
 /** ⛓ The three deps the capture path takes — the maze's own, in one place. */
 const CAPTURE_DEPS = Object.freeze({
@@ -125,7 +126,8 @@ const obstacleLibOf = (payload) => (payload?.obstacleLib
  * from a world, and a second assembly would drift the day capture's does.
  */
 function open({ regionId, payload }) {
-    const world = deserializeMazeWorld(payload);
+    // ⛓ CONTENT SETS TILE-3 — with its placed tile kinds, so the room the lab opens shows (and can edit) them.
+    const world = deserializeMazeWorldWithKinds(payload);
     const entry = captureTileGridLibraryEntry(
         { region_id: regionId, playable_payload: world },
         { entry_id: regionId, name: regionId },
@@ -175,6 +177,7 @@ function save(saved, { regionId, payload }) {
     // ⛓ CONTENT SETS S2 — the region's `things` (not a tile, so the lab never sees them): `restamp` carries the
     //   document's back, and `reseatThings` keeps each on its cell while that is still free floor, moving one the
     //   edit covered by the hash rule (none where no cell is free). A re-derive (an unedited save) moves nothing.
+    refuseTileKindOnThing(edited, payload, regionId);
     const next = reseatThings(restamp(edited, payload), regionId);
     const world = deserializeMazeWorld(next);
     const extracted = extractPathsAndObstacles(world, { regionId });
@@ -237,8 +240,27 @@ function restamp(edited, original) {
     //   committed maze payloads: `fogEnabled` is the only one — but the rule is
     //   written as "whatever the original had and the round trip does not", so
     //   a serializer that stops emitting a second field cannot lose it silently.
-    for (const [k, v] of Object.entries(original ?? {})) if (!(k in next)) next[k] = v;
+    // ⛓ CONTENT SETS TILE-3 — EXCEPT the placed tile kinds: the LAB owns them (it shows and edits them), so an edit
+    //   that removed the last one saves a payload with no `tileKinds`, and copying the document's back would undo it.
+    for (const [k, v] of Object.entries(original ?? {})) if (!(k in next) && k !== TILE_KINDS_FIELD) next[k] = v;
     return next;
+}
+
+/**
+ * ⛓ CONTENT SETS TILE-3 — **A PLACED KIND MAY NOT COVER A THING.** The lab never sees the region's `things` (they come
+ * back from the document), so it cannot refuse a press onto a thing's cell; the save does, by name, rather than
+ * `reseatThings` silently moving the thing off the kind.
+ */
+function refuseTileKindOnThing(edited, original, regionId) {
+    const things = new Map((original?.things ?? []).map((t) => [tileKey(t), t]));
+    for (const k of edited?.[TILE_KINDS_FIELD] ?? []) {
+        const t = things.get(tileKey(k));
+        if (t) {
+            throw new Error(`mazeRegionRoundTrip: "${regionId}" places the tile kind "${k.kind}" on (${k.x},${k.y}), `
+                + `where the region's thing "${t.name ?? t.id}" stands: a tile kind goes on an empty floor cell. `
+                + 'Place it elsewhere.');
+        }
+    }
 }
 
 /**
