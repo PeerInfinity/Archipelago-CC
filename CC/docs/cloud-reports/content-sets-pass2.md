@@ -211,6 +211,25 @@ A gate altered in memory (its rule set to `True_`) is named `tile-kind-gate-mism
 - feature-checks 44551754245.
 - Gitlinks changed: 0.
 
+### 6.2 After the merge (`7d8eaca1ba`, main `6e9ec5de97`: PASS-1 landed in trains 159 and 162)
+
+- Merged once. The only conflicts were the generated `procgen/README.md` and `docsIndex.js`; both were regenerated
+  (`--write`). `generate-procgen-reference --check`: ALL MATCH.
+- `--print-engine-closure`: still `engineMd5 bec369878feb67081187edca62baa951` (42 files).
+- **Op-log probe, main `6e9ec5de97` vs the merged tip** (a `git archive` export, the same `shared` commit): 38
+  documents, 1,188 regions, 4,815,966 ops on both sides, with the same hashes as § 5.
+- Against main: no preset or pack data byte differs (only `frontend/packs/README.md`), and **0** gitlinks changed.
+- Both spiral-room `--check` runs OK; `action-nodes-compile --check` OK; `check-sidecar-fields` ALL PASS (2,264, 0
+  issues); `check-procgen-docs` and `check-maze-lab` ALL CHECKS PASSED (waited for the box).
+- The doc-link census is main's 446 (main moved from 440); PASS-2 adds no markdown link.
+- Bounded vitest (the same dirs as § 6): 228 files, 2 reds, both timeouts with the machine's load average near 19 from
+  other sessions:
+  - `apworldEditor/reverseLinks.test.js`: hook timed out in 10 s;
+  - `tileSpike/certifyEventLocations.test.js`: test timed out in 60 s.
+
+  Both files re-run alone: 36/36 passed. Neither touches this diff (the engine closure is unchanged).
+- CI at the final tip is quoted in the report back to the planner, and in the project memory.
+
 ## 7. Test paths
 
 - `frontend/modules/mazeRoom/mazeTileNeeds.test.js` (new): the lookup, every refusal, the realisation, the editor,
