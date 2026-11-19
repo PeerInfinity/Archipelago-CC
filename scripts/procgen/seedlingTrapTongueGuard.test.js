@@ -24,7 +24,7 @@ import { PLAYTHROUGH_MAP, playthroughGridFor, playthroughTrapTongues, playthroug
 import { collideLineSolid } from '../../frontend/modules/seedlingDemo/crusher.js';
 import { playerBoxAt } from '../../frontend/modules/seedlingDemo/playerPhysicsV2.js';
 import { rectsOverlap } from '../../frontend/modules/seedlingDemo/levelWorld.js';
-import { LAVATRAP_PULL, lavaTrapPulls } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
+import { LAVATRAP_PULL, KILL_ARM_CONDITION, lavaTrapPulls } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { ENEMY_CLASSES } from '../../frontend/modules/seedlingDemo/combat.js';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -280,7 +280,9 @@ describe('rule T — the delivered set (through the producer)', () => {
         expect(t.traps.map((r) => [r.trap, r.arms])).toEqual([[[6, 12], ['hasSpear']]]);
         // the north landing (1,2) to the south door's landing (6,18)
         expect(walks(grid, [1, 2], [6, 18])).toBe(false);
-        expect(walks(grid, [1, 2], [6, 18], [SPEAR_GATE])).toBe(true);
+        // ⛓ rules-k-pursuit-speed: rule K's runner cut lies on this walk too; the Spear is one of its arms
+        // (KILL_ARM_CONDITION), so the Spear alone pays both gates
+        expect(walks(grid, [1, 2], [6, 18], [SPEAR_GATE, KILL_ARM_CONDITION])).toBe(true);
     });
 
     it('L78: every disc takes the Spear (9,6 then 6,5 from the L77 side), from both landings', () => {
