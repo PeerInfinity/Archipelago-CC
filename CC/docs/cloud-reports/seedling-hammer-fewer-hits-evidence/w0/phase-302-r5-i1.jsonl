@@ -1,0 +1,13 @@
+{"id":302,"i":1,"k":0,"idleHits":0,"ms":115,"ok":true,"shipped":{"pass":"full","ticks":101,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,103,5,"1h0d"],["full",true,101,14,"1h0d"]]}
+{"id":302,"i":1,"k":1,"idleHits":0,"ms":74,"ok":true,"shipped":{"pass":"dashless","ticks":97,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,96,4,"0h0d"],["full",true,96,49,"0h0d"]]}
+{"id":302,"i":1,"k":2,"idleHits":0,"ms":46,"ok":true,"shipped":{"pass":"full","ticks":103,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,104,5,"1h0d"],["full",true,101,14,"1h0d"]]}
+{"id":302,"i":1,"k":3,"idleHits":0,"ms":52,"ok":true,"shipped":{"pass":"dashless","ticks":100,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,97,5,"0h0d"],["full",true,97,54,"0h0d"]]}
+{"id":302,"i":1,"k":4,"idleHits":0,"ms":34,"ok":true,"shipped":{"pass":"dashless","ticks":102,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,98,5,"1h0d"],["full",true,98,54,"1h0d"]]}
+{"id":302,"i":1,"k":5,"idleHits":0,"ms":25,"ok":true,"shipped":{"pass":"dashless","ticks":99,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,94,4,"0h0d"],["full",true,94,41,"0h0d"]]}
+{"id":302,"i":1,"k":6,"idleHits":0,"ms":37,"ok":true,"shipped":{"pass":"dashless","ticks":103,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,97,5,"1h0d"],["full",true,97,50,"1h0d"]]}
+{"id":302,"i":1,"k":7,"idleHits":0,"ms":31,"ok":true,"shipped":{"pass":"dashless","ticks":101,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,94,4,"1h0d"],["full",true,94,41,"1h0d"]]}
+{"id":302,"i":1,"k":8,"idleHits":0,"ms":46,"ok":true,"shipped":{"pass":"dashless","ticks":107,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,99,5,"1h0d"],["full",true,99,62,"1h0d"]]}
+{"id":302,"i":1,"k":9,"idleHits":0,"ms":35,"ok":true,"shipped":{"pass":"dashless","ticks":107,"modelHits":{"hits":1,"deaths":0}},"passes":[["dashless",true,98,5,"1h0d"],["full",true,98,58,"1h0d"]]}
+{"id":302,"i":1,"k":10,"idleHits":0,"ms":35,"ok":true,"shipped":{"pass":"dashless","ticks":90,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,80,4,"0h0d"],["full",true,80,57,"0h0d"]]}
+{"id":302,"i":1,"k":11,"idleHits":0,"ms":47,"ok":true,"shipped":{"pass":"dashless","ticks":90,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,79,6,"0h0d"],["full",true,79,92,"0h0d"]]}
+{"id":302,"i":1,"k":12,"idleHits":0,"ms":37,"ok":true,"shipped":{"pass":"dashless","ticks":90,"modelHits":{"hits":0,"deaths":0}},"passes":[["dashless",true,78,6,"0h0d"],["full",true,78,92,"0h0d"]]}

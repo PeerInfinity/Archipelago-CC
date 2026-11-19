@@ -1,0 +1,5 @@
+survey-seedling-route.mjs --through=end, OFF vs SEEDLING_HIT_AVOID_PASS=1 SEEDLING_FEWER_HITS_RANK=1 (code head 5fe05e3941)
+keys of a row: ['agreesWithKnown', 'boot', 'clock', 'declarations', 'family', 'goals', 'knownAnswer', 'knownTicks', 'level', 'ms', 'passes', 'refusal', 'replans', 'replay', 'step', 'ticks', 'traceRows', 'verdict', 'views', 'visit', 'withCommittedDeclarations']
+OFF {'SOLVED': 224, 'REFUSED': 26} ON {'SOLVED': 224, 'REFUSED': 26} rows 250 250
+rows that differ in any field (ms fields excluded below): 245
+rows that differ outside timing fields: []
