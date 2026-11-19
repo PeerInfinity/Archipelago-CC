@@ -2,7 +2,7 @@ import { registerTest } from '../testRegistry.js';
 import { stateManagerProxySingleton } from '../../stateManager/index.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { PICKER } from '../../regionGraph/nodePicker.js';
-import { locationState } from '../../regionView/regionViewModel.js';
+import { locationState, isRegionReachable } from '../../regionView/regionViewModel.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 
 const PANEL_ID = 'regionGraphPanel';
@@ -556,17 +556,25 @@ async function pathEnd() {
 }
 
 /**
- * A region one ACCESSIBLE exit away from where the path ends (an accessible region is not necessarily reachable
- * from there: ALTTP's Menu is accessible but has no walk back from Overworld), sorted for a stable pick.
+ * A REACHABLE region one exit away from where the path ends, sorted for a stable pick. (An accessible region is not
+ * necessarily walkable from there — ALTTP's Menu is reachable, but has no walk back from Overworld — so the pick
+ * follows an exit out of the path end.) Reachability is read from the snapshot, not from the graph's colour
+ * classes, which a cold build applies a moment later. Polled: the first snapshot can arrive after the build.
  */
-async function accessibleTarget(cy) {
-  const end = await pathEnd();
-  const from = cy.getElementById(end);
-  if (!from?.length) return null;
-  return from.connectedEdges('.accessible').filter((e) => e.source().id() === end).targets()
-    .filter((n) => n.id() !== end && n.hasClass('region') && !n.hasClass('player') && !n.hasClass('location-node')
-      && !n.hasClass('discovery-hidden'))
-    .sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+async function accessibleTarget(testController, cy) {
+  let found = null;
+  await testController.pollForCondition(async () => {
+    const end = await pathEnd();
+    const from = cy.getElementById(end);
+    const snapshot = stateManagerProxySingleton.getLatestStateSnapshot?.();
+    if (!from?.length || !snapshot) return false;
+    found = from.connectedEdges().filter((e) => e.source().id() === end).targets()
+      .filter((n) => n.id() !== end && !n.hasClass('player') && !n.hasClass('location-node')
+        && !n.hasClass('discovery-hidden') && isRegionReachable(snapshot, n.id()))
+      .sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
+    return !!found;
+  }, 'a reachable region one exit from the path end', MAX_WAIT_TIME, 100);
+  return found;
 }
 
 /** Record the given events (and their payloads) until `stop()`. */
@@ -587,8 +595,8 @@ export async function testRegionGraphClickDefault(testController) {
   try {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
     const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), 'On click: extend path · Regions — location: check');
-    const target = await accessibleTarget(cy);
-    if (!target) throw new Error('no region one accessible exit from the path end');
+    const target = await accessibleTarget(testController, cy);
+    if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
     const region = target.id();
     // Recorded from here: the row's own panel activation (the setup) is not the click's.
     rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
@@ -627,8 +635,8 @@ export async function testRegionGraphClickMasterOff(testController) {
     const cy = await clickActionsSetUp(testController, ctx, { ...defaultClickActions(), enabled: false }, 'On click: ⏸ paused');
     const master = document.querySelector('.region-graph-panel-container .click-actions-strip-master');
     testController.reportCondition('the collapsed strip shows the master switch, paused (▶)', master?.textContent === '▶');
-    const target = await accessibleTarget(cy);
-    if (!target) throw new Error('no region one accessible exit from the path end');
+    const target = await accessibleTarget(testController, cy);
+    if (!target) throw new Error(`no reachable region one exit from the path end (${await pathEnd()})`);
     const region = target.id();
     const endBefore = await pathEnd();
     const { getGameStateSingleton } = await import('../../gameState/singleton.js');
