@@ -30,9 +30,9 @@ import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTile
 import { computeLongestShortestPath } from './mazeGeometry.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { REQUIRED_ENVELOPE_FIELD, envelopeExitNames } from '../procgenCore/sidecarFields.js';
-import { isConceptRow } from '../procgenCore/concepts.js';
+import { CONCEPTS, conceptOfItem, isConceptRow } from '../procgenCore/concepts.js';
 import { GOAL_ITEM } from '../procgenCore/goalItem.js';
-import { DEFAULT_TERRAIN_PASS, TERRAIN_PASSES } from '../packConcepts/packConcepts.js';
+import { DEFAULT_TERRAIN_PASS, NEEDS_PASS, TERRAIN_PASSES } from '../packConcepts/packConcepts.js';
 
 const xy = Object.freeze({ x: Object.freeze({ type: 'integer' }), y: Object.freeze({ type: 'integer' }) });
 const atXY = (extra = {}, required = []) => Object.freeze({
@@ -86,10 +86,33 @@ export const BLOCKED_PASS = 'blocked';
 /** The `pass` values a payload may write: every built value but the default, which is never written. */
 export const WRITTEN_TILE_KIND_PASSES = Object.freeze(TERRAIN_PASSES.filter((p) => p !== DEFAULT_TERRAIN_PASS));
 
-/** ⛓ PASS-1 — the baked pass of a placed kind's cell, read off the grid (the lowering above). */
+/**
+ * ⛓ PASS-2 (⚖ planner 2026-11-19: the obstacle id is DERIVED from the cell, not stored) — the id of the rule obstacle
+ * a `needs` kind lowers to on (x, y): one name per cell, in a namespace no other placer mints (`logic_gate_<n>`,
+ * `<concept>_gate_<n>`, the base library's ids). A reload finds the kind's gate from its cell alone.
+ */
+export const tileKindGateId = (x, y) => `tilekind_gate_${x}_${y}`;
+
+/**
+ * ⛓ PASS-2 — the mechanic concept a cell's owned gate realises: the concept whose unparameterised item is the gate
+ * rule's one `Has` (`procgenCore/concepts.conceptOfItem`), or null when the cell holds no such gate.
+ */
+export function tileKindNeedsAt(world, x, y) {
+    const id = tileKindGateId(x, y);
+    if (world?.obstacles?.get?.(`${x},${y}`) !== id) return null;
+    const rule = world.obstacleLib?.[id]?.clear_rule;
+    if (rule?.rule !== 'Has' || typeof rule.args?.item_name !== 'string' || 'count' in rule.args) return null;
+    return conceptOfItem(rule.args.item_name, CONCEPTS);
+}
+
+/**
+ * ⛓ PASS-1 — the baked pass of a placed kind's cell, read off the grid (the lowering above): a wall is `blocked`;
+ * ⛓ PASS-2: the cell's own derived gate (`tileKindGateId`) is `needs`; anything else `walkable`.
+ */
 export function tileKindPassAt(world, x, y) {
     const tiles = world?.tiles;
-    return tiles && tiles[y * world.width + x] === TILE_WALL ? BLOCKED_PASS : DEFAULT_TERRAIN_PASS;
+    if (tiles && tiles[y * world.width + x] === TILE_WALL) return BLOCKED_PASS;
+    return world?.obstacles?.get?.(`${x},${y}`) === tileKindGateId(x, y) ? NEEDS_PASS : DEFAULT_TERRAIN_PASS;
 }
 
 /**
@@ -106,7 +129,10 @@ export function tileKindsList(world) {
     return [...map].map(([key, kind]) => {
         const [x, y] = key.split(',').map(Number);
         const pass = tileKindPassAt(world, x, y);
-        return pass === DEFAULT_TERRAIN_PASS ? { x, y, kind } : { x, y, kind, pass };
+        if (pass === DEFAULT_TERRAIN_PASS) return { x, y, kind };
+        // ⛓ PASS-2 — a `needs` kind writes its concept beside its pass (null when its gate realises none: the load
+        //   then refuses the entry by name, `mazeTileKinds.TILE_KIND_REFUSALS`).
+        return pass === NEEDS_PASS ? { x, y, kind, pass, needs: tileKindNeedsAt(world, x, y) } : { x, y, kind, pass };
     }).sort((a, b) => (a.y - b.y) || (a.x - b.x));
 }
 
@@ -244,7 +270,9 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'key whose row declares a tile `base` (`packConcepts.PACK_TILE_BASES`). Each stands on a cell no other '
             + 'record names. `pass` (content sets PASS-1, ⚖ the user 2026-11-18) is the kind\'s declared passability, '
             + 'BAKED when it was placed and LOWERED onto the grid: `blocked` stands on a wall cell (the editor wrote it), '
-            + 'and an absent `pass` is `walkable`, on a floor cell. So no rule, location or reachability reader sees the '
+            + 'and an absent `pass` is `walkable`, on a floor cell. `pass: "needs"` (PASS-2) carries `needs`, a mechanic '
+            + 'concept id, and stands on a floor cell holding the rule obstacle `tilekind_gate_<x>_<y>` whose rule is '
+            + 'that concept\'s item. So no rule, location or reachability reader sees the '
             + 'field itself: they see the wall. Written by the maze editor (`setTileKind`); drawn through the tile '
             + 'fallback chain. `serializeMazeWorld` OMITS the key when there are none, and `pass` when it is walkable, '
             + 'so a world without kinds, or with walkable ones only, is byte-equal (`mazeTileKinds.js`).',
@@ -256,6 +284,7 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
                 properties: Object.freeze({
                     ...xy, kind: THING_TEXT,
                     pass: Object.freeze({ type: 'string', enum: WRITTEN_TILE_KIND_PASSES }),
+                    needs: THING_TEXT,
                 }),
             }),
         }),
