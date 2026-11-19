@@ -127,7 +127,9 @@ describe('2. a fixture pack declares a kind no theme has art for', () => {
         const pc = await fixtureConcepts();
         const declared = Object.entries(FIXTURE_CONCEPTS.concepts).filter(([, c]) => 'base' in c).map(([k]) => k);
         expect(Object.keys(tileKindKeys(pc))).toEqual(declared);
-        expect(tileKindKeys(pc)[LANTERN]).toEqual({ artKey: FIXTURE_CONCEPTS.concepts[LANTERN].art, base: 'marker', pack: FIXTURE_ID });
+        expect(tileKindKeys(pc)[LANTERN]).toEqual({ artKey: FIXTURE_CONCEPTS.concepts[LANTERN].art, base: 'marker', pack: FIXTURE_ID,
+            // ⛓ PASS-1: a concept that presents no terrain entry is walkable (`mazeTilePass.test.js` pins the rest).
+            pass: 'walkable' });
         expect(Object.isFrozen(tileKindKeys(pc))).toBe(true);
         expect(tileKindKeys(null)).toEqual({});
     });

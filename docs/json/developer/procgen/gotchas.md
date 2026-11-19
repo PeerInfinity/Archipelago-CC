@@ -37,6 +37,13 @@ A flood fill (`componentsOf` in `scripts/procgen/seedlingRouteGraph.mjs`) treats
 - Check with a directed flood (the same BFS with the edge predicate) against the undirected one.
 - Two one-way branches can be mutually exclusive; sweep each opener alone and all together before reporting a route.
 
+### The engine's `entry_gates` are invisible to the extractor and the autopather
+
+The maze engine's one-way primitive, `entry_gates` (`{x, y, dir, gate}`; `gate: null` means no entry that way), is honoured by `step`, `whyBlocked` and `bfsSolver`, but **not** by the generic extractor's geometry and set search (`ghostStep`, `minimalObstacleSets` in `extractPathsAndObstacles`) or by the autopather's `_bfsToGoal`. On a plain 5×3 corridor with one `null` gate, the extractor reports the exit reachable with no rule while `bfsSolver` refuses the walk (measured by content sets PASS-D). It is latent: the one committed world with entry gates, `seedling_playthrough_maze`, takes its rules from the derived-rule table, not the extractor, so no committed world is wrong today.
+
+- Do not put `entry_gates` on a non-Seedling maze and trust its extracted rules or its click-to-move.
+- Declared passability lowers `blocked` to a wall for exactly this reason; `one-way` waits for the fix (content sets PASS-3), which moves the engine closure.
+
 ### A minimal-set search over an item lattice assumes monotonicity, and the learning walk cannot check it
 
 The maze certifier's lattice walks (`deriveLevelWorldLogic.js`) take for granted that holding more items never loses a target: the rank walk's superset skip, the top-point skip, the latch sandwich, and above 4,096 points the learning walk (`learnLattice.js`), which decides a whole down-set from one negative point. The learner gives NO signal when the premise breaks: over all 236 non-monotone predicates on 3 items it refused none and answered all (session tile-l12-level-world). So the guard is static: `assertMonotoneWorld` refuses any rule node other than Has / And / Or and any trap armed by an axis item before the first search. A new rule kind or an item that ARMS something is refused there by name; do not route around the refusal, price the mechanic first. An event target's own event is the one admitted exception, learned on the axis without it.

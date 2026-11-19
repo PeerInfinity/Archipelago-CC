@@ -1745,7 +1745,6 @@ frontend/modules/seedlingDemo/drill.js|stepDrill|h4b02baf0|0|0,rule,bound,,Image
 frontend/modules/seedlingDemo/drill.js|stepDrill|h5b4e3662|0|1,rule,bound,,alpha <= 0 ends the pit fall (destroy + fell)
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h379c4c3e|1|0,rule,magnitude,Enemies/Enemy.as:damage,ICE_TURRET_CONTACT: Enemy.damage = 1; the live turret body's contact damage (Enemy.hitPlayer)
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|he88721a0|0|0,rule,bound,Enemies/Enemy.as:hitPlayer,hitsTimer <= 0 gate on the live body's contact (Enemy.hitPlayer)
-frontend/modules/seedlingDemo/levelRun.js|terrainAt|hb402bd13|0|0,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h4f0b044e|3|0,rule,magnitude,Enemies/Enemy.as:hitPlayer,ICE_TURRET_CONTACT: the live body's contact force (p.hit(this; 3; ...))
 frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|ha14438b8|0|0,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|ha14438b8|0|1,structural,,,
@@ -2005,6 +2004,7 @@ frontend/modules/seedlingDemo/tentacleBeast.js|tentacleStreamRefusal|tentacleStr
 frontend/modules/seedlingDemo/tentacleBeast.js|tentacleSwipeRect|tentacleSwipeRect,rule,derivation,Enemies/Tentacle.as:hitRect,the swipe rect's arithmetic (bosskills D3)
 frontend/modules/seedlingDemo/tentacleBeast.js|whirlpoolRect|whirlpoolRect,rule,derivation,Puzzlements/Whirlpool.as:spinRate,the whirlpool box arithmetic (bosskills D3)
 frontend/modules/seedlingDemo/levelWorld.js|withRuntimeTeleporters|withRuntimeTeleporters,structural,,,an empty runtime-teleporter list is a no-op (bosskills D3)
+frontend/modules/seedlingDemo/levelRun.js|terrainAt|h424d5e72|0|0,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

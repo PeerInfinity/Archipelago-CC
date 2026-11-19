@@ -64,11 +64,17 @@ import {
  * (which imports nothing substrate-side) and `procgenMaze` re-exports them.
  */
 import { flagIdFor, guardIdsFor } from '../procgenCore/elements.js';
-import { TILE_KIND_REFUSALS, occupiedWorldCells, tileKindRefusal } from './mazeTileKinds.js';
+import {
+    BLOCKED_PASS, TILE_KIND_REFUSALS, declaredPassOf, occupiedWorldCells, tileKindRefusal, tileUnderPass,
+} from './mazeTileKinds.js';
 
-/** ⛓ TILE-3 — the declared kinds the palette offers: every one but a wall-based kind (a placed kind is walkable). */
+/**
+ * ⛓ TILE-3 — the declared kinds the palette offers: every one the loaded packs do not refuse
+ * (`mazeTileKinds.tileKindRefusal`; ⛓ PASS-1: a wall-based kind is offered when it is blocked, and a kind whose look
+ * lies about its pass, or whose pass cannot be read, is not).
+ */
 export function placeableTileKinds(declared) {
-    return Object.entries(declared ?? {}).filter(([, d]) => d?.base !== 'wall').map(([k]) => k);
+    return Object.keys(declared ?? {}).filter((k) => tileKindRefusal(k, declared) === null);
 }
 
 export const PALETTE_TYPES = Object.freeze({
@@ -215,13 +221,19 @@ export function applyEditOp(world, op, { locationNameFormat = DEFAULT_LOCATION_N
     }
     const ed = new MazeRoomEditor({ locationNameFormat });
     /**
-     * ⛓ TILE-3 — a cell holding a placed tile kind takes nothing else (the kind stands on an EMPTY floor cell, and
-     * walling it would put a walkable look on a wall): every op but `setTileKind`, `clearEntity` and `setTile floor`
-     * is refused there, by name.
+     * ⛓ TILE-3 — a cell holding a placed tile kind takes nothing else (the kind stands on an EMPTY cell, and walling
+     * it would change its pass under its look): every op but `setTileKind`, `clearEntity` and `setTile floor` is
+     * refused there, by name.
+     * ⛓ PASS-1 — and `setTile floor` only on a walkable kind (a no-op there): on a BLOCKED kind it would open the wall
+     * the kind lowered to while the kind still says blocked, so it is refused by name — erase the kind first.
      */
-    if (world.tileKinds?.has(`${x},${y}`) && !['setTileKind', 'clearEntity'].includes(op.op)
+    const heldKind = world.tileKinds?.get(`${x},${y}`);
+    if (heldKind && op.op === 'setTile' && op.tile === 'floor' && getTile(world, x, y) === TILE_WALL) {
+        return notOk('blocked-tile-kind', TILE_KIND_REFUSALS.floorOverBlocked(x, y, heldKind));
+    }
+    if (heldKind && !['setTileKind', 'clearEntity'].includes(op.op)
         && !(op.op === 'setTile' && op.tile === 'floor')) {
-        return notOk('occupied-tile-kind', `Tile (${x},${y}) holds the tile kind "${world.tileKinds.get(`${x},${y}`)}"; `
+        return notOk('occupied-tile-kind', `Tile (${x},${y}) holds the tile kind "${heldKind}"; `
             + 'erase it first.');
     }
     switch (op.op) {
@@ -566,8 +578,13 @@ export class MazeRoomEditor {
      */
     /**
      * ⛓ TILE-3 — place a pack-declared tile kind on (x,y). Refused by name: no loaded pack declares tile kinds, the
-     * kind is undeclared or wall-based (`mazeTileKinds.tileKindRefusal`), the cell is a wall, or anything else names
-     * the cell (`occupiedWorldCells`). A kind already there is replaced.
+     * kind is undeclared or its look lies about its pass (`mazeTileKinds.tileKindRefusal`), the cell is a wall, or
+     * anything else names the cell (`occupiedWorldCells`). A kind already there is replaced.
+     *
+     * ⛓ PASS-1 — the kind's DECLARED pass is BAKED and LOWERED in this one op: a `blocked` kind writes `TILE_WALL`
+     * under itself, any other leaves (or, replacing a blocked kind, restores) floor. The cell it takes must be FLOOR
+     * (or one a kind already holds, which it owns): a blocked kind is never laid on a painted wall, so erasing it
+     * always gives back the floor it took.
      */
     _setTileKind(world, x, y, kind, declared) {
         const op = { op: 'setTileKind', x, y, kind };
@@ -577,13 +594,16 @@ export class MazeRoomEditor {
         }
         const refused = tileKindRefusal(kind, declared);
         if (refused) return notOk(refused.reason, refused.description);
-        if (getTile(world, x, y) !== TILE_FLOOR) return notOk('wall-tile', 'A tile kind must be on a floor tile.');
-        if (occupiedWorldCells(world).has(`${x},${y}`)) return notOk('occupied', TILE_KIND_REFUSALS.occupied(x, y));
         const before = world.tileKinds?.get(`${x},${y}`);
-        if (before === kind) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
+        if (!before && getTile(world, x, y) !== TILE_FLOOR) return notOk('wall-tile', 'A tile kind must be on a floor tile.');
+        if (occupiedWorldCells(world).has(`${x},${y}`)) return notOk('occupied', TILE_KIND_REFUSALS.occupied(x, y));
+        const pass = declaredPassOf(declared[kind]);
+        const under = tileUnderPass(pass);
+        if (before === kind && getTile(world, x, y) === under) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
         if (!world.tileKinds) world.tileKinds = new Map();
         world.tileKinds.set(`${x},${y}`, kind);
-        return ok('tileKind', `Placed tile kind ${kind} at (${x},${y}).`, op);
+        setTile(world, x, y, under);
+        return ok('tileKind', `Placed tile kind ${kind} at (${x},${y})${pass === BLOCKED_PASS ? ' (blocked: a wall under it)' : ''}.`, op);
     }
 
     _eraseEntity(world, x, y) {
@@ -599,6 +619,8 @@ export class MazeRoomEditor {
         if (removedKind) {
             world.tileKinds.delete(`${x},${y}`);
             if (world.tileKinds.size === 0) delete world.tileKinds;
+            // ⛓ PASS-1 — the kind took a floor cell; a blocked one lowered it to a wall, which goes with it.
+            setTile(world, x, y, TILE_FLOOR);
         }
         if (removedItem) {
             clearItem(world, x, y);

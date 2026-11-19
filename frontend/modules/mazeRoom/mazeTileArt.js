@@ -20,7 +20,8 @@
  *     draws that key — or nothing, and the painter draws the row's baked colour and symbol, as before. Nothing is
  *     baked (⚖ Q8: art resolves by key at play), so no world document moves.
  *   · `loadMazeTileArt` — THE PLAY-TIME LOAD: the ART layer of a world's content stack (`loadPackStack(ids,
- *     { only: ['art'] })`, as `mazeSeedlingSkin.loadSeedlingArt` loads `graphics.seedling`), the library, the
+ *     { only: ['art'] })` — with roles, also `concepts` and (⛓ PASS-1) `structure`, the tile kinds' declared
+ *     passability — as `mazeSeedlingSkin.loadSeedlingArt` loads `graphics.seedling`), the library, the
  *     decoded sheets. A later pack in the stack overriding `maze:tile/wall` wins: that is `mergeKeyed`, the pack
  *     stack's own rule — ⛔ no second merge lives here (⚖ "If there is an existing system for this, I want to use
  *     that instead of making a new one").
@@ -38,6 +39,7 @@
 import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 import { PACK_TILE_BASES, createPackConcepts } from '../packConcepts/packConcepts.js';
+import { createStructure, terrainPassOf } from '../packStructure/packStructure.js';
 
 /** The art keys' namespace: the maze's own, like `seedling:*` is the Seedling pack's. */
 export const MAZE_ART_NAMESPACE = 'maze';
@@ -101,7 +103,7 @@ export function tileArtRefusal(tileArt) {
         return 'tileArt.thingArt must be { conceptKey: { key } } (mazeTileArt.thingArtKeys)';
     }
     if (tileArt.tileKinds !== undefined && (!tileArt.tileKinds || typeof tileArt.tileKinds !== 'object' || Array.isArray(tileArt.tileKinds))) {
-        return 'tileArt.tileKinds must be { conceptKey: { artKey, base } } (mazeTileArt.tileKindKeys)';
+        return 'tileArt.tileKinds must be { conceptKey: { artKey, base, pass } } (mazeTileArt.tileKindKeys)';
     }
     return null;
 }
@@ -277,17 +279,30 @@ export function drawMazeTile(ctx, tileArt, kind, x0, y0, px, { own = null, base 
 /**
  * ⛓ THE PACK-DECLARED KINDS of a world's stack: every pack concept that carries a `base`
  * (`packConcepts.PACK_TILE_BASES`; the parser refused any other at load), by its concept key →
- * `{ artKey, base, pack }` (frozen). `artKey` is the concept's `art` key, or null. As `thingArtKeys`, the key is
+ * `{ artKey, base, pack, pass }` (frozen). `artKey` is the concept's `art` key, or null. As `thingArtKeys`, the key is
  * not checked against the art library here: one the stack's art does not resolve falls through to the base.
  * A concept with no `base` is not a declared kind; asked for by its key, it resolves with no base
  * (`mazeTileKind`), and the chain draws the placeholder.
+ *
+ * ⛓ CONTENT SETS PASS-1 — `pass` is the kind's DECLARED PASSABILITY, read through the structure layer
+ * (`packStructure.terrainPassOf`: the pass of the terrain entry the concept presents, `walkable` when it presents
+ * none). `structure` is the stack's `createStructure` reader, or null when the stack carries no structure layer. A
+ * kind whose pass cannot be read (it presents a terrain entry no loaded structure holds) gets `pass: null` and
+ * `passError`, the refusal's sentence: the editor refuses to place it by name (`mazeTileKinds.tileKindRefusal`), and a
+ * draw is unaffected (the look never depends on the logic).
  */
-export function tileKindKeys(packConcepts) {
+export function tileKindKeys(packConcepts, structure = null) {
     const out = {};
     for (const key of packConcepts?.keys() ?? []) {
         const c = packConcepts.get(key);
         if (typeof c.base === 'string') {
-            out[key] = Object.freeze({ artKey: typeof c.art === 'string' ? c.art : null, base: c.base, pack: c.pack });
+            let pass = null;
+            let passError = null;
+            try { pass = terrainPassOf(c, structure); } catch (e) { passError = e.message; }
+            out[key] = Object.freeze({
+                artKey: typeof c.art === 'string' ? c.art : null, base: c.base, pack: c.pack, pass,
+                ...(passError ? { passError } : {}),
+            });
         }
     }
     return Object.freeze(out);
@@ -435,7 +450,9 @@ export function drawThingArt(ctx, tileArt, conceptKey, dx, dy, dw, dh) {
  */
 export async function loadMazeTileArt(ids, { base, readJson, decode, rasterise = null, contentRoles = null }) {
     if (!Array.isArray(ids) || ids.length === 0) return { ids: [], tileArt: null, failed: [], keyed: {}, conceptArt: {}, thingArt: {}, tileKinds: {} };
-    const stack = await loadPackStack(ids, { base, readJson, only: contentRoles ? ['art', 'concepts'] : ['art'] });
+    // ⛓ PASS-1: with roles, the `structure` layer too — the tile kinds' declared passability (`tileKindKeys`). It
+    //   feeds the editor's bake and the views' drift report only: nothing re-derives a world's logic from it.
+    const stack = await loadPackStack(ids, { base, readJson, only: contentRoles ? ['art', 'concepts', 'structure'] : ['art'] });
     const art = createArtLibrary(stack);
     const keyed = keyedThings(art);
     const packConcepts = contentRoles ? createPackConcepts(stack) : null;
@@ -443,7 +460,8 @@ export async function loadMazeTileArt(ids, { base, readJson, decode, rasterise =
     // ⛓ S2: and each region thing's art key, by its pack concept.
     const thingArt = contentRoles ? thingArtKeys(contentRoles, packConcepts) : Object.freeze({});
     // ⛓ TILE-2: and each pack-declared tile kind's art key and base (`tileKindKeys`; `mazeTileKind` reads it).
-    const tileKinds = contentRoles ? tileKindKeys(packConcepts) : Object.freeze({});
+    const structure = contentRoles && stack.some((l) => l.layers?.structure) ? createStructure(stack) : null;
+    const tileKinds = contentRoles ? tileKindKeys(packConcepts, structure) : Object.freeze({});
     const conceptKeys = [
         ...Object.values(conceptArt).flatMap((m) => Object.values(m).map((e) => e.key)),
         ...Object.values(thingArt).map((e) => e.key),

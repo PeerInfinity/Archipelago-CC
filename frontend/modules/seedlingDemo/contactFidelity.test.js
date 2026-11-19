@@ -95,6 +95,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_WALLFLYER_CORPSE_GONE
         || !!process.env.SEEDLING_DARK_SUIT_STATIC_RETALIATION || !!process.env.SEEDLING_DARK_SUIT_BOSS_RETALIATION
         || !!process.env.SEEDLING_OWL_CONTACT_IN_STEP || !!process.env.SEEDLING_TURRET_SUIT_RETALIATION
+        || !!process.env.SEEDLING_PICKUP_TICK_FREEZE || !!process.env.SEEDLING_DIALOGUE_FRAME_FREEZE
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
@@ -420,7 +421,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity OWLSUIT D2 (wave 49): the Owl's body contact is billed at its AS3 slot, with its "Suit" retaliation — OFF.
             owlContactInStep: false,
             // ⛓ fidelity TURRETSUIT D2 (wave 50): a Turret's body contact is billed at its AS3 slot, with its "Suit" retaliation — OFF.
-            turretSuitRetaliation: false });
+            turretSuitRetaliation: false,
+            // ⛓ fidelity PICKUPFREEZE D2 (wave 51): a pickup's first frame freezes the families that update after it — OFF.
+            pickupTickFreeze: false,
+            // ⛓ fidelity DIALOGUEFREEZE D2 (wave 52): a dialogue's later frames freeze the families that update after the NPC — OFF.
+            dialogueFrameFreeze: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

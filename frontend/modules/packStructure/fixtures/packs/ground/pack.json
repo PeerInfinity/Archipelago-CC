@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "ground",
+  "title": "A test fixture: two tile kinds whose passability a terrain entry declares (content sets PASS-1)",
+  "licence": "test fixture",
+  "layers": {
+    "structure": "structure/manifest.json",
+    "concepts": "concepts/manifest.json"
+  }
+}
