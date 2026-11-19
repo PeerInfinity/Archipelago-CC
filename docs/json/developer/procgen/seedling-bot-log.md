@@ -28419,3 +28419,16 @@ verdict alone; otherwise the old rule stands. The switch reads `SEEDLING_HIT_AWA
 It runs only inside `solveAnytime` (the solve worker, or node), so the worker's env channel
 `?seedlingSolverEnv=SEEDLING_HIT_AWARE_ANSWER=0` is the whole page opt-out. `hammerHitTiebreak.test.js` pins the
 default and both arms. Its OFF rows wrap `withHitAwareAnswer(false, …)`.
+
+### Seedling hammer-phase L28 FLIP — `RESTING_HOLDER` + `KILL_STANCE_SIGHT` ON by default
+
+⚖ The user, 2026-11-19: *"Flip both, sweeps now (Recommended)"*. Seed 2's whole-game walk stopped in L28 with "no
+REACHABLE stance inside button@112,240". In the game, a rope drops `fallrock@112,240` onto that button, and the rock holds
+`grasslock@176,208` open. Three switches together solve the leg hitless. Fidelity's `fallRockHoldsButton` (already ON)
+makes the model count the landed rock as a presser. ROCK-HOLDER-WAIT's `RESTING_HOLDER` makes the solver wait out the
+lock's fade instead of looking for a press. L28-BOBSOLDIER's `KILL_STANCE_SIGHT` prices the chaser arm's kill stances
+with the sword's own Solid line test, so the bobsoldier beyond the lock dies from a stance the swing really reaches:
+L30 at t448, 0 hits, and 0 diverging samples on p4g. Both solver switches now read `SEEDLING_<NAME> !== '0'`, default
+`true`. They run in the solve worker, so the env channel is the page opt-out. `hammerRockHolderWait.test.js` and
+`hammerKillStanceSight.test.js` pin the defaults. The rows that pin another switch's behaviour (the wait alone, and
+L53's `KILLLOCK_CHASER_REWIND`) now hold `KILL_STANCE_SIGHT` OFF explicitly. ON, 9002's plan goes from 959 to 750 t, still hitless.

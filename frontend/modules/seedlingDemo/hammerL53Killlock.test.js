@@ -26,7 +26,7 @@ import { gunzipSync } from 'node:zlib';
 
 import {
     KILLLOCK_CHASER_REWIND, KILLLOCK_CHASER_REWIND_COUNTS, KILLLOCK_CHASER_REWIND_DEFAULT, KILLLOCK_CHASER_REWIND_TRIES,
-    resetKillLockChaserRewindCounts, withKillLockChaserRewind, withKillLockLineStance,
+    resetKillLockChaserRewindCounts, withKillLockChaserRewind, withKillLockLineStance, withKillStanceSight,
 } from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -41,14 +41,16 @@ const LEG_9002 = FIX('leg9002-l48-l53-retry2560-request.json.gz');
 const LEG_482 = FIX('leg482-l54-l53-request.json.gz');
 
 /** A captured leg solved as the worker does, under the switch; the plan re-driven on a fresh run for its hits.
- *  `KILLLOCK_LINE_STANCE` is held OFF explicitly (it ships OFF; ⚖ the user 2026-11-14): these rows pin REWIND alone. */
+ *  `KILLLOCK_LINE_STANCE` is held OFF explicitly (it ships OFF; ⚖ the user 2026-11-14): these rows pin REWIND alone.
+ *  `KILL_STANCE_SIGHT` is held OFF too (ON by default since the L28 flip, 2026-11-19; ON it moves 9002's plan 959 → 750 t,
+ *  still hitless — `seedling-hammer-l28-bobsoldier.md` §5): these pins predate it and keep pinning REWIND. */
 function solveLeg(leg, { on, dashlessOnly = true }) {
     const req = restoreRequest(leg.requests[0].request);
     const { passes: asked = ANYTIME_PASSES, source, ...tape } = req;
     const passes = dashlessOnly ? asked.filter((p) => p.pass === 'dashless') : asked;
     const levelSource = levelSourceFromAtlas(source.records);
     resetKillLockChaserRewindCounts();
-    const answer = withKillLockLineStance(false, () => withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes })));
+    const answer = withKillStanceSight(false, () => withKillLockLineStance(false, () => withKillLockChaserRewind(on, () => solveAnytime({ ...tape, source, levelSource }, { passes }))));
     const tries = KILLLOCK_CHASER_REWIND_COUNTS.tries.map(({ id, t, stance, verdict }) => ({ id, t, stance, verdict }));
     if (!answer.ok) return { ok: false, message: String(answer.message ?? ''), tries };
     const fresh = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
@@ -143,9 +145,9 @@ describe('hammer-phase L53-KILLLOCK — the L53 kill-lock\'s chaser arm (`KILLLO
         const req = restoreRequest(LEG_9001.requests[0].request);
         const { passes: asked, source, ...tape } = req;
         resetKillLockChaserRewindCounts();
-        const answer = withKillLockLineStance(false, () => withKillLockChaserRewind(true, () => solveAnytime(
+        const answer = withKillStanceSight(false, () => withKillLockLineStance(false, () => withKillLockChaserRewind(true, () => solveAnytime(
             { ...tape, budgetWork: 960, source, levelSource: levelSourceFromAtlas(source.records) },
-            { passes: asked.filter((p) => p.pass === 'dashless') })));
+            { passes: asked.filter((p) => p.pass === 'dashless') }))));
         expect(answer.ok).toBe(false);
         expect(String(answer.message)).toMatch(/^solverBot\(wasm-exit-53\): the caller's anytime deadline \(`shouldStop`\) was reached at the `walk` site/);
         expect(String(answer.message)).not.toMatch(/each rewound/);
