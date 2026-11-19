@@ -233,6 +233,20 @@ draws it then. This was measured by reading the code, not in a browser.
 - feature-checks 44369847143.
 - Gitlinks changed: 0.
 
+### 6.2 After the merge (`ed4eb6f60f`, main `427ccd5c93`: TILE-3 and AN-3a landed in trains 154, 158 and 161)
+
+- Merged once. The only conflicts were the generated `procgen/README.md` and `docsIndex.js`; both were regenerated
+  (`--write`), not hand-merged. `generate-procgen-reference --check`: ALL MATCH.
+- `--print-engine-closure`: still `engineMd5 bec369878feb67081187edca62baa951` (42 files).
+- **Op-log probe, main `427ccd5c93` vs the merged tip.** Main is a `git archive` export with the same `shared` commit.
+  Both sides: 38 documents, 1,188 regions, 4,815,966 ops, and the same hashes as § 5.
+- Against main: no preset or pack data byte differs (only `frontend/packs/README.md`), and **0** gitlinks changed.
+- Both spiral-room `--check` runs OK; `action-nodes-compile --check` OK; `check-sidecar-fields` ALL PASS (2,264
+  entries, 0 issues); `check-procgen-docs` and `check-maze-lab` ALL CHECKS PASSED.
+- Bounded vitest (the same dirs as § 6): 227 files, 6,523 tests, all passed. The doc-link census stays at main's 440:
+  PASS-1's docs add no markdown link.
+- CI at the final tip is quoted in the report back to the planner, and in the project memory.
+
 ## 7. Test paths
 
 - `frontend/modules/mazeRoom/mazeTilePass.test.js` (new): the lookup, every refusal, the editor, the payload, the proof,
