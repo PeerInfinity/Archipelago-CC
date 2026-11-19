@@ -555,10 +555,17 @@ async function pathEnd() {
   return gs.getLastRegionInPath?.() || gs.getCurrentRegion?.();
 }
 
-/** An accessible region node that is not where the path ends, sorted for a stable pick. */
+/**
+ * A region one ACCESSIBLE exit away from where the path ends (an accessible region is not necessarily reachable
+ * from there: ALTTP's Menu is accessible but has no walk back from Overworld), sorted for a stable pick.
+ */
 async function accessibleTarget(cy) {
   const end = await pathEnd();
-  return regionNodes(cy).filter((n) => n.hasClass('accessible') && n.id() !== end && !n.hasClass('discovery-hidden'))
+  const from = cy.getElementById(end);
+  if (!from?.length) return null;
+  return from.connectedEdges('.accessible').filter((e) => e.source().id() === end).targets()
+    .filter((n) => n.id() !== end && n.hasClass('region') && !n.hasClass('player') && !n.hasClass('location-node')
+      && !n.hasClass('discovery-hidden'))
     .sort((a, b) => (a.id() < b.id() ? -1 : 1))[0] ?? null;
 }
 
@@ -576,13 +583,15 @@ function recordEvents(testController, names) {
 export async function testRegionGraphClickDefault(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
-  const rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
+  let rec = null;
   try {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
     const cy = await clickActionsSetUp(testController, ctx, defaultClickActions(), 'On click: extend path · Regions — location: check');
     const target = await accessibleTarget(cy);
-    if (!target) throw new Error('no accessible region to click');
+    if (!target) throw new Error('no region one accessible exit from the path end');
     const region = target.id();
+    // Recorded from here: the row's own panel activation (the setup) is not the click's.
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
     target.emit('tap');
     const extended = await testController.pollForCondition(async () => (await pathEnd()) === region,
       `the path ends at ${region}`, 5000, 50);
@@ -597,7 +606,7 @@ export async function testRegionGraphClickDefault(testController) {
   } catch (error) {
     testController.reportCondition(`default click test error-free: ${error.message}`, false);
   } finally {
-    rec.stop();
+    rec?.stop();
     await ctx.restoreSettings();
     await restoreWorld(testController, ctx, before, { always: true });
     ctx.dispose();
@@ -612,18 +621,20 @@ export async function testRegionGraphClickDefault(testController) {
 export async function testRegionGraphClickMasterOff(testController) {
   const ctx = buildContext({ eventBus: testController.eventBus });
   const before = ctx.rulesSource();
-  const rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
+  let rec = null;
   try {
     const { defaultClickActions } = await import('../../regionView/clickActions.js');
     const cy = await clickActionsSetUp(testController, ctx, { ...defaultClickActions(), enabled: false }, 'On click: ⏸ paused');
     const master = document.querySelector('.region-graph-panel-container .click-actions-strip-master');
     testController.reportCondition('the collapsed strip shows the master switch, paused (▶)', master?.textContent === '▶');
     const target = await accessibleTarget(cy);
-    if (!target) throw new Error('no accessible region to click');
+    if (!target) throw new Error('no region one accessible exit from the path end');
     const region = target.id();
     const endBefore = await pathEnd();
     const { getGameStateSingleton } = await import('../../gameState/singleton.js');
     const pathBefore = JSON.stringify(getGameStateSingleton().getPath?.() ?? []);
+    // Recorded from here: the row's own panel activation (the setup) is not the click's.
+    rec = recordEvents(testController, ['regionGraph:nodeSelected', 'ui:activatePanel', 'ui:navigateToRegion']);
     target.emit('tap');
     const selected = await testController.pollForCondition(
       () => rec.seen.some(([n, d]) => n === 'regionGraph:nodeSelected' && d?.nodeId === region), 'regionGraph:nodeSelected', 3000, 50);
@@ -636,7 +647,7 @@ export async function testRegionGraphClickMasterOff(testController) {
   } catch (error) {
     testController.reportCondition(`master-off click test error-free: ${error.message}`, false);
   } finally {
-    rec.stop();
+    rec?.stop();
     await ctx.restoreSettings();
     await restoreWorld(testController, ctx, before, { always: true });
     ctx.dispose();
