@@ -24,6 +24,7 @@ import { CONTACT_FIDELITY } from './contactFidelity.js';
 import {
     DRIVE_DEATH_REFUSED_COUNTS, KILLLOCK_STANDOUT_GUARD_COUNTS, resetDriveDeathRefusedCounts,
     resetKillLockStandOutGuardCounts, withDriveDeathRefused, withKillLockLineStance, withKillLockStandOutGuard,
+    withKillStanceSight,
 } from './solverBot.js';
 import { patchedMapDocument } from './seedlingSetPatches.js';
 import { parseTape } from './tapeFormat.js';
@@ -50,8 +51,10 @@ async function solveStep(step, { line = false, standOut = false, death = false }
         boot: staging.boot, persistence: staging.persistence, log: () => {} });
     let solved;
     try {
-        solved = await withKillLockLineStance(line, () => withKillLockStandOutGuard(standOut,
-            () => withDriveDeathRefused(death, solve)));
+        // KILL_STANCE_SIGHT held OFF: it is ON by default since the L28 flip (2026-11-19) and moves these plans (ticks only,
+        // measured by the flip's sweeps); these rows predate it and keep pinning their own switch.
+        solved = await withKillStanceSight(false, () => withKillLockLineStance(line, () => withKillLockStandOutGuard(standOut,
+            () => withDriveDeathRefused(death, solve))));
     } catch (e) {
         return { ok: false, message: String(e.message), obstacle: e.obstacle ?? null,
             standOut: [...KILLLOCK_STANDOUT_GUARD_COUNTS.rows], deaths: [...DRIVE_DEATH_REFUSED_COUNTS.rows] };
