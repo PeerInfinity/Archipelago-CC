@@ -645,4 +645,64 @@ wrote /home/user/Archipelago-CC/.cache/seedling-survey/through-end/route.json
 
 == step 132 — L38 ... SOLVED 265 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1418 ms
 
-== step 133 — L39 ... 
+== step 133 — L39 ... SOLVED 2624 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 9082 ms
+
+== step 134 — L40 ... REFUSED — solverBot(survey-step-134) reach-exit (944,96)->L41 -> keylock stance (bosslock@480,352): the combat ladder is EXHAUSTED. The corridor passes through danger at 
+
+== step 135 — L41 ... SOLVED 2112 ticks, 12 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8158 ms
+
+== step 136 — L40 ... SOLVED 70 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1326 ms
+
+== step 139 — L12 ... SOLVED 274 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2143 ms
+
+== step 142 — L67 ... SOLVED 957 ticks, 8 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2882 ms
+
+== step 145 — L12 ... SOLVED 957 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4470 ms
+
+== step 147 — L38 ... SOLVED 265 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1173 ms
+
+== step 148 — L39 ... SOLVED 2624 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 10865 ms
+
+== step 149 — L40 ... REFUSED — solverBot(survey-step-149) collect (64,144) stance (ladder-routed: no corridor from (280.3669873047385,216.60071614521746) to a stance that can collect totempar
+
+== step 151 — L12 ... SOLVED 274 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1568 ms
+
+== step 156 — L63 ... SOLVED 89 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 494 ms
+
+== step 162 — L12 ... SOLVED 1040 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3933 ms
+
+== step 164 — L38 ... SOLVED 265 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 752 ms
+
+== step 165 — L39 ... SOLVED 2624 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 7331 ms
+
+== step 166 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3158 ms
+
+== step 169 — L12 ... SOLVED 2987 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3782 ms
+
+== step 171 — L38 ... SOLVED 265 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 713 ms
+
+== step 172 — L39 ... SOLVED 2626 ticks, 23 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8660 ms
+
+== step 173 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2908 ms
+
+== step 176 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3370 ms
+
+== step 181 — L63 ... SOLVED 497 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3789 ms
+
+== step 185 — L12 ... SOLVED 1825 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2699 ms
+
+== step 191 — L74 ... SOLVED 321 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1124 ms
+
+== step 206 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3577 ms
+
+== step 211 — L63 ... SOLVED 464 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4244 ms
+
+== step 213 — L12 ... SOLVED 1825 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2127 ms
+
+wrote /home/user/Archipelago-CC/CC/docs/cloud-reports/seedling-fidelity-frozentick-evidence/d3/survey-off.rows.json
+
+## HEADLINE: 44/48 route steps SOLVE today
+  step 66 L40: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 96 L40: REFUSED — unclassified — see the refusal text
+  step 134 L40: REFUSED — LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons
+  step 149 L40: REFUSED — BOMB — the wait stands still inside bombpusher@112,128's reach (a standing player is always hit; no verb waits while moving)
