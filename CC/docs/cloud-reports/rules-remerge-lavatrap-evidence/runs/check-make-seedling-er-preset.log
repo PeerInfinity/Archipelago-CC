@@ -1,0 +1,3 @@
+[discoveryState] [DiscoveryState] Constructed
+seedling_er: seed 1, 50 placements, 48 exit(s) moved, draws 1 (0 shuffle-refused, 0 unbeatable, 0 check-rejected), 90 sphere states; source atlas seedling-ea1ef5ba
+OK: frontend/presets/seedling_er/AP_1/AP_1_rules.json matches a fresh build

@@ -1,0 +1,1 @@
+{"row": {"verdict": "left->L77@893", "firstHit": null, "hitsInBoot": 0, "restarts": 0, "levels": [78, 77]}, "traps": {"152,104": {"closestWhileAlive": [35.06, 568], "lastSeenAlive": 631}, "152,56": {"closestWhileAlive": [33.57, 754], "lastSeenAlive": 892}, "104,88": {"closestWhileAlive": [33.53, 93], "lastSeenAlive": 212}}}

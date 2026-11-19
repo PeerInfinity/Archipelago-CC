@@ -114,9 +114,13 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
         // ⛓ tile-fire-breaks-rocks: `rockFireRaw` (the flame-stance census) reads every landing INTO a rock level (its isolated-landing arm: L3's L11
         // pocket), 12 of them through stairs — ARRIVAL-side, named here for the ER arc (a shuffle that moved where a level is
         // landed in would move a stance only where the landing tile is isolated).
+        // ⛓ rules-lavatrap-neck: `playthroughTrapKillArms` (rule T's kill-arm walk) builds the trap level's world; its domain
+        // is the room's own links (DEPARTURE side), its stairs rows the scanner's static all-landings scope, so a coupled
+        // shuffle (which retargets where a door leads, never where it stands) recomputes nothing for it.
         expect(exposed).toEqual([
             'rockFireRaw:buildRockFireSides', 'rockFireRaw:doorLandingTiles', 'rockFireSides:buildRockFireSides', 'rockFireSides:buildRockFireSides',
-            'doorTilesOf:gameLandings', 'doorwaysBesideLanding:returnSpawnTable', 'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
+            'doorTilesOf:gameLandings', 'doorwaysBesideLanding:returnSpawnTable', 'playthroughTrapKillArms:buildLevelWorld',
+            'derivePlaythroughLayer:deriveAtlas', 'pitChainsFor:censusFallsOntoDoors',
             'playthroughBlockStoppers:poleKillsOf', 'barrierAnalysis:poleKillsOf', 'barrierAnalysis:buildLevelWorld', 'barrierAnalysis:gameLandings',
             'playthroughRopeEvents:gameLandings', 'RETURN_SPAWNS:returnSpawnTable', 'arrivalSpawnFor:returnSpawnTable',
             'playthroughLandingGates:returnSpawnTable',

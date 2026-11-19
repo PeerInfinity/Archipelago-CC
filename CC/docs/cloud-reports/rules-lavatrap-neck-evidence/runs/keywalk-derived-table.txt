@@ -1,0 +1,25 @@
+## frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json vs 2b66279e52: 8 change(s)
+CHG /counts/regions
+    - 51
+    + 50
+CHG /counts/rows
+    - 108
+    + 106
+CHG /inputs/payloadMd5
+    - "c03264c5ea36abb186d30f5f7cc9769a"
+    + "1f1a4d535c1663e6ea9976ca17d7969d"
+CHG /measuredAt
+    - "70852378c2"
+    + "49632ae45b"
+DEL /rows/name=level_76 -> level_77
+    - {"arrival": "landing 1,5", "atlas": {"exit_id": "out_teleporter_304_112", "region_id": "level_76"}, "key": "level_76|level_76 -> level_77", "kind": "exit", "name": "level_76 -> level_77", "region": "level_76", "rule": {"rule": "True_"}}
+    + null
+ADD /rows/name=level_76 -> level_77__r2c0
+    - null
+    + {"arrival": "landing 1,5", "atlas": {"exit_id": "out_teleporter_304_112", "region_id": "level_76"}, "key": "level_76|level_76 -> level_77__r2c0", "kind": "exit", "name": "level_76 -> level_77__r2c0", "region": "level_76", "rule": {"rule": "True_"}}
+DEL /rows/name=level_77 -> level_76
+    - {"arrival": "entrance", "atlas": {"exit_id": "out_teleporter_0_32", "region_id": "level_77"}, "key": "level_77|level_77 -> level_76", "kind": "exit", "name": "level_77 -> level_76", "region": "level_77", "rule": {"rule": "True_"}}
+    + null
+DEL /rows/name=level_77 -> level_78__r0c16
+    - {"arrival": "entrance", "atlas": {"exit_id": "out_teleporter_96_304", "region_id": "level_77"}, "key": "level_77|level_77 -> level_78__r0c16", "kind": "exit", "name": "level_77 -> level_78__r0c16", "region": "level_77", "rule": {"rule": "True_"}}
+    + null

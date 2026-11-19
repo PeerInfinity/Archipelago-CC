@@ -2133,13 +2133,358 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_77__r2c0 -> level_77__r12c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r2c0 -> level_77__r15c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r2c0 -> level_77__r12c6 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r12c6 -> level_77__r15c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r12c6 -> level_77__r2c0", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r15c6 -> level_77__r12c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r15c6 -> level_77__r12c6 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_77__r15c6 -> level_77__r2c0", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_78__r0c2 -> level_78__r0c16", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c2 -> level_78__r1c10", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c2 -> level_78__r3c1", player),
         HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear')
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_78__r0c2 -> level_78__r3c9", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c2 -> level_78__r4c4", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c2 -> level_78__r5c6", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c2 -> level_78__r6c9", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_78__r0c16 -> level_78__r0c2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r1c10", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r3c1", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r3c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r3c9 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r4c4", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r5c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r6c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r0c16 -> level_78__r6c9 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r0c16", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r0c2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r3c1", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r3c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r3c9 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r4c4", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r5c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r1c10 -> level_78__r6c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r0c16", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r0c2", player),
         HasAny('Dark Suit', 'Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r1c10", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r3c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r4c4", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r5c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r5c6 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c1 -> level_78__r6c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r0c16", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r0c2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r1c10", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r3c1", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r4c4", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r5c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r6c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r3c9 -> level_78__r6c9 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r0c16", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r0c2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r1c10", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r3c1", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r3c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r5c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r5c6 #2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r4c4 -> level_78__r6c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r0c16", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r0c2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r1c10", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r3c1", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r3c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r4c4", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r5c6 -> level_78__r6c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r0c16", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r0c2", player),
+        Has('Dark Suit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r1c10", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r3c1", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r3c9", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r4c4", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r5c6", player),
+        HasAny('Dark Suit', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_78__r6c9 -> level_78__r3c9 #2", player),
+        Has('Dark Suit', 1)
     )
 
     world.set_rule(

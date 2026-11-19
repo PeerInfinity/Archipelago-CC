@@ -1,0 +1,27 @@
+== m1 discsSeal ignored (every disc stamped)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the charge > a trap with a path outside its reach charges nothing (the discs seal no anchor pair)
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the delivered set (through the producer) > L80 and L108: their discs seal nothing, so nothing is stamped
+      Tests  2 failed | 13 passed (15)
+== m2 the flood does not avoid live reaches
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > a spot reachable only through the disc (from one landing) does not qualify: Suit only
+      Tests  1 failed | 14 passed (15)
+== m3 a killed trap stays live
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > a spearable trap: the Spear arm appears, from both landings, and the gate is Or(Dark Suit, Ghost Spear)
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > the Wand: the spot is computed, the arm is not granted (its kill time is the chase question, named)
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > a spot reachable only through the disc (from one landing) does not qualify: Suit only
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > discs killed in order (the L78 shape): both take the Spear, and the second dies only after the first
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the delivered set (through the producer) > L78: every disc takes the Spear (9,6 then 6,5 from the L77 side), from both landings
+      Tests  5 failed | 10 passed (15)
+== m4 the spot search starts inside the disc
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > a spearable trap: the Spear arm appears, from both landings, and the gate is Or(Dark Suit, Ghost Spear)
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — the arms (derived from the weapons' own hit tests and Enemy.hit) > the Sword never qualifies (derived, not listed): its reach ends inside the disc, and so do the Ghost Sword and the Dark Shield
+      Tests  2 failed | 13 passed (15)
+== m5 tongueKills ignores the class table
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/seedlingTrapTongueGuard.test.js > rule T — which traps > a trap class that does not kill charges nothing (SandTrap on the neck)
+      Tests  1 failed | 14 passed (15)
+module restored

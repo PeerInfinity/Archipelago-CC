@@ -138,9 +138,11 @@ describe('L78: the step into two discs goes to the disc entered first', () => {
         const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions });
         expect(native.problems).toEqual([]);
         expect(native.accepted).toEqual([]);
+        // ⛓ rules-lavatrap-neck (rule T): (6,5)'s disc seals the L77 <-> L79 neck and only the Spear kills it from outside its
+        //   reach, so the Sword arm leaves the crossing both ways (was [["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]).
         expect(native.lines).toEqual(expect.arrayContaining([
-            'level_78__r0c2>level_78__r0c16=[["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]',
-            'level_78__r0c16>level_78__r0c2=[["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]',
+            'level_78__r0c2>level_78__r0c16=[["Dark Suit"],["Ghost Spear"]]',
+            'level_78__r0c16>level_78__r0c2=[["Dark Suit"],["Ghost Spear"]]',
         ]));
         const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false, atlas: ATLAS, regions });
         expect(scripted.problems).toEqual([]);

@@ -1,0 +1,5 @@
+SET delivered: seedling-vanilla-record-23510f80
+# box lock: TAKEN by rules-arrival-chase-witness play.mjs (browser, pid 7343) — head 9bc1fcfed, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only (asserted)
+ROW {"tape":"l78r-kill65r","set":"seedling-vanilla-record-23510f80","ticks":523,"finished":true,"verdict":"clear","firstHit":null,"hitsInBoot":0,"restarts":0,"levels":[78],"end":{"level":78,"x":82.28,"y":86.59,"t":523},"lastInBoot":{"t":523,"x":82.28,"y":86.59,"mob":["Grenade(240.0,32.0)","LavaTrap(152.0,104.0)","LavaTrap(152.0,56.0)","LavaRunner(200.0,152.0)"]},"firstMob":["Grenade(240.0,32.0)","LavaTrap(152.0,104.0)","LavaTrap(152.0,56.0)","LavaTrap(104.0,88.0)","LavaRunner(120.0,144.0)","LavaRunner(64.0,128.0)","LavaRunner(104.0,40.0)","LavaRunner(152.0,80.0)","LavaRunner(200.0,152.0)"],"polled":2478}
