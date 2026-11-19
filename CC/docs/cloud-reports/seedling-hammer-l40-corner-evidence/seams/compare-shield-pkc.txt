@@ -1,0 +1,46 @@
+flag12-L39 5213    1346t/0h/9cf9d4ccd252                    1346t/0h/9cf9d4ccd252 
+flag12-L39 5214    1364t/0h/5a40036045ce                    1364t/0h/5a40036045ce 
+flag12-L39 5215    1264t/0h/d143cdeb85f1                    1261t/0h/84aeef638e5d   ~ moved
+flag12-L39 5216    1262t/0h/cece0fe6e7ad                    1262t/0h/cece0fe6e7ad 
+flag12-L39 5217    1262t/0h/cece0fe6e7ad                    1262t/0h/cece0fe6e7ad 
+flag12-L39 5218    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5219    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5220    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5221    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5222    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5223    1324t/0h/51e5518f0060                    1324t/0h/51e5518f0060 
+flag12-L39 5224    1364t/0h/6a72f5614041                    1364t/0h/6a72f5614041 
+flag12-L39 5225    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5226    1385t/0h/b772f4aa1428                    1261t/0h/c8ffbffff1a4   ~ moved
+flag12-L39 5227    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5228    REF@496:kill (spinner@880,848)           REF@496:kill (spinner@880,848) 
+flag12-L39 5229    1353t/0h/138ecb05283b                    1353t/0h/138ecb05283b 
+flag12-L39 5230    1314t/0h/b7dde2d4d30c                    1314t/0h/b7dde2d4d30c 
+flag12-L39 5231    1294t/0h/0901d3e2b7ea                    1294t/0h/0901d3e2b7ea 
+flag12-L39 5232    1292t/0h/56478e718666                    1292t/0h/56478e718666 
+flag12-L39 5233    1417t/0h/78b21f550d37                    1417t/0h/78b21f550d37 
+flag12-L39 5234    1307t/0h/21331339ac20                    1391t/0h/e88db23e5684   ~ moved
+flag12-L39 5235    1307t/0h/21331339ac20                    1391t/0h/e88db23e5684   ~ moved
+flag12-L39 5236    1381t/0h/81f4e7af5114                    1367t/0h/483185898962   ~ moved
+flag12-L39 5237    1381t/0h/81f4e7af5114                    1348t/0h/9f1b835122ca   ~ moved
+flag12-L39 5238    1229t/0h/e9df2640e745                    1229t/0h/e9df2640e745 
+flag12-L39 5239    1347t/0h/7b6f8ef787fd                    1363t/0h/f0fd29d407d0   ~ moved
+flag12-L39 5240    1360t/0h/e49aa6486649                    1294t/0h/7fd2e4b4a608   ~ moved
+flag12-L39 5241    REF@724:kill (spinner@816,848)           1110t/0h/106c40080ca0   >> NEW
+flag12-L39 5242    REF@724:kill (spinner@816,848)           1169t/0h/ed9ae605061d   >> NEW
+flag12-L39 5243    1203t/0h/c366f00a3bb8                    1323t/0h/8b5d7c74eb32   ~ moved
+flag12-L39 5244    1313t/0h/d3eeb18ea0f7                    1123t/0h/cd766ef92ea4   ~ moved
+flag12-L39 5245    1313t/0h/786dcdeff8a2                    1141t/0h/a3861e7ecdb4   ~ moved
+flag12-L39 5246    1143t/0h/f4da79b260c0                    1335t/0h/7f0c5dea9e17   ~ moved
+flag12-L39 5247    1147t/0h/e67fe428bb04                    1180t/0h/d85072e032fd   ~ moved
+flag12-L39 5248    1115t/0h/d17f410c015b                    1127t/0h/4ae3f04e35c9   ~ moved
+flag12-L39 5249    1227t/0h/399e28645226                    1112t/0h/940b91c64edd   ~ moved
+flag12-L39 5250    1101t/0h/2e4ae7cbf0c3                    REF@1758:EXHAUSTED   << LOST
+flag12-L39 5251    1120t/0h/7cfe7ac7f0ad                    1111t/0h/5700d7eda4d3   ~ moved
+flag12-L39 5252    1262t/0h/c375cd0426f4                    1091t/0h/64a02f27e2f8   ~ moved
+flag12-L39 5253    1338t/0h/53ec3df6e283                    1356t/0h/f76f96aa142a   ~ moved
+flag12-L39 5254    1343t/0h/1660cead6451                    1356t/0h/f76f96aa142a   ~ moved
+flag12-L39 5255    1338t/0h/53ec3df6e283                    1418t/0h/b45dcca34a78   ~ moved
+flag12-L39 5256    1419t/0h/6a9e9c618e2f                    1418t/0h/b45dcca34a78   ~ moved
+flag12-L39 5257    1364t/0h/9b2806d566de                    1364t/0h/9b2806d566de 
+flag12-L39: 45 clocks — OFF 40 solved (0 with a hit) / 5 refused; ON 41 solved (0 with a hit) / 4 refused
