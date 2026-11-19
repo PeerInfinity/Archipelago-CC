@@ -93,7 +93,7 @@ import {
 import { resolveMazeArrival } from './mazeArrival.js';
 import { loadMazeTileArt } from './mazeTileArt.js';
 import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
-import { placedTileKindRefusals } from './mazeTileKinds.js';
+import { placedTileKindDrift, placedTileKindRefusals } from './mazeTileKinds.js';
 import { drawMazeThings, mazeThingLines, thingAt } from './mazeThingOverlay.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
@@ -4098,6 +4098,9 @@ export class MazeRoomUI {
                 isTileVisible: view.isTileVisible, tileArt: view.tileArt, tileKinds: this._tileArt?.tileKinds ?? null,
             })
             : [];
+        // ⛓ CONTENT SETS PASS-1 — a placed kind's baked pass that the loaded packs now declare differently is DRIFT:
+        //   warned once per world and stack, by name, and listed by `getTileKindStatus`. Never re-lowered.
+        if (this._tileKindDraws.length) this._warnTileKindDrift();
         // ⛓ CONTENT SETS S2 — the region's thing, beside drawWorld (`mazeThingOverlay.js`). Never on a Seedling-atlas
         //   world (the Seedling skin draws there), as the tile art is not.
         this._thingDraws = this._thingsShown()
@@ -4121,7 +4124,7 @@ export class MazeRoomUI {
 
     /**
      * ⛓ TILE-3 — what the in-app row reads: the placed kinds, how each was last drawn (the chain's step), and the
-     * placed kinds the world's loaded packs refuse (`mazeTileKinds.placedTileKindRefusals`: undeclared, or wall-based;
+     * placed kinds the world's loaded packs refuse (`mazeTileKinds.placedTileKindRefusals`: undeclared, or a lying look;
      * each still DRAWS — the placeholder or its base — and never throws).
      */
     getTileKindStatus() {
@@ -4131,7 +4134,19 @@ export class MazeRoomUI {
             ready,
             draws: JSON.parse(JSON.stringify(this._tileKindDraws ?? [])),
             refusals: ready ? placedTileKindRefusals(this.world, this._tileArt?.tileKinds ?? {}) : [],
+            // ⛓ PASS-1 — the placed kinds whose baked pass the loaded packs now declare differently (by name; kept).
+            drift: ready ? placedTileKindDrift(this.world, this._tileArt?.tileKinds ?? {}) : [],
         };
+    }
+
+    /** ⛓ PASS-1 — the drift `getTileKindStatus` lists, warned on the console once per (world, stack). */
+    _warnTileKindDrift() {
+        const drift = placedTileKindDrift(this.world, this._tileArt?.tileKinds ?? {});
+        const key = drift.length ? `${this._tileArt?.key}|${JSON.stringify(drift)}` : null;
+        if (key && key !== this._tileKindDriftWarned) {
+            for (const d of drift) console.warn(`[mazeRoomUI] ${d.description}`);
+        }
+        this._tileKindDriftWarned = key;
     }
 
     /** ⛓ S2 — whether this world's things are drawn and read: it has some, and it is not a Seedling-atlas world. */

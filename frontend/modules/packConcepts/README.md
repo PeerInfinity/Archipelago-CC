@@ -13,9 +13,11 @@ content-pack stack (`../contentPacks/`), merged so that a later pack wins per ke
   - `keys()`: every key, in stack order and then declaration order. An overridden key keeps the position where it
     first appeared.
 - `PACK_CONCEPT_KINDS` is `character`, `place`, `object` and `info` (a piece of information, such as a clue), and
-  since content packs PL-1 `task`, `stat`, `resource` and `boon` (the structure layer's kinds). This module owns the
-  list; the roles contract imports it. `STRUCTURE_KINDS` (the four, and `place`) and `STRUCTURE_ID_PATTERN` are the
-  structure layer's (`../packStructure/`).
+  since content packs PL-1 `task`, `stat`, `resource` and `boon` (the structure layer's kinds), and since content
+  sets PASS-1 `terrain` (a tile kind whose passability a structure terrain entry declares). This module owns the
+  list; the roles contract imports it. `STRUCTURE_KINDS` (the four, `place` and `terrain`), `STRUCTURE_ID_PATTERN`
+  (built from them) and `TERRAIN_PASSES` (`walkable`, `blocked`; one value per slice) are the structure layer's
+  (`../packStructure/`).
 - `presents` takes two forms: a bare mechanic id (`guardian`), or a namespaced STRUCTURE id
   (`<pack>:<kind>/<slug>`) whose kind is the concept's own. `presenting(id)` answers either. An entry may carry
   `src`, its provenance source (`../contentPacks/provenance.js`).

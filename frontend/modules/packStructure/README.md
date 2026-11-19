@@ -4,7 +4,8 @@ The readers for three content-pack layers (⛓ content packs PL-1; the shared ta
 2026-11-15). All three carry LOGIC, so the words setting never reads them (`procgenPipeline/worldContent.js`
 `CONTENT_LAYERS` is `concepts` and `text`).
 
-- `packStructure.js`: the `structure` layer. Entries of kind `task`, `stat`, `resource`, `boon` and `place`, keyed
+- `packStructure.js`: the `structure` layer. Entries of kind `task`, `stat`, `resource`, `boon`, `place` and (content
+  sets PASS-1) `terrain` — a maze tile kind's declared `pass`, one of `TERRAIN_PASSES`, read by `terrainPassOf` — keyed
   `<pack>:<kind>/<slug>` (the namespace is the pack's id), holding ids and links only. `createStructure(stack)`
   adds the packs together and resolves every id an entry names. `assertPresentsStructure(packConcepts, structure)`
   checks that every namespaced `presents` in the words names a real entry.
