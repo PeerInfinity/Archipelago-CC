@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { buildSummary, formatMarkdown, jobConclusions } from './nightly-manual-summary.js';
+import { buildSummary, CHECKS_JOB_NAME, formatMarkdown, jobConclusions } from './nightly-manual-summary.js';
 
 const BUDGET = 600_000;
 const t0 = Date.parse('2026-11-12T10:40:00Z');
@@ -38,7 +38,11 @@ function put(batch, name, data) {
 beforeEach(() => { dir = mkdtempSync(path.join(tmpdir(), 'nightly-summary-')); });
 afterEach(() => { rmSync(dir, { recursive: true, force: true }); });
 
-const jobs = (pairs) => ({ jobs: pairs.map(([b, c]) => ({ name: `manual / Substrate tests — ${b} batch`, conclusion: c })) });
+// The nightly always runs the train-checks job too; `checks` sets its conclusion (null = leave it out).
+const jobs = (pairs, checks = 'success') => ({ jobs: [
+    ...pairs.map(([b, c]) => ({ name: `manual / Substrate tests — ${b} batch`, conclusion: c })),
+    ...(checks === null ? [] : [{ name: CHECKS_JOB_NAME, conclusion: checks }]),
+] });
 
 describe('jobConclusions', () => {
     it('maps the called workflow\'s job names (caller prefix and all) to batches; ignores other jobs', () => {
@@ -85,6 +89,31 @@ describe('buildSummary', () => {
         put('noiz2sa', 'test-results-2026-11-12T10-53-00.json', results('noiz2sa', [row('a', 'failed', 0, 5)], [], { flavour: 'bundled' }));
         const s = buildSummary({ batches: ['noiz2sa'], artifactsDir: dir, jobs: null, budgetFallbackMs: BUDGET });
         expect(s.batches.noiz2sa).toMatchObject({ red: false, file: 'test-results-2026-11-12T10-51-00.json' });
+    });
+});
+
+describe('the Seedling train checks job (⚖ Robert 2026-11-17, "Train tier + nightly")', () => {
+    it('a red checks job makes the nightly red with every batch green, and the markdown names it', () => {
+        put('noiz2sa', 'test-results-2026-11-12T10-50-00.json', results('noiz2sa', [row('a', 'passed', 0, 10)]));
+        const s = buildSummary({ batches: ['noiz2sa'], artifactsDir: dir, jobs: jobs([['noiz2sa', 'success']], 'failure'), budgetFallbackMs: BUDGET });
+        expect(s.redBatches).toEqual([]);
+        expect(s.checks).toMatchObject({ conclusion: 'failure', red: true });
+        expect(s.red).toBe(true);
+        const md = formatMarkdown(s);
+        expect(md).toContain('RED (train checks)');
+        expect(md).toContain(`**${CHECKS_JOB_NAME}**`);
+    });
+
+    it('checks alone (`only=seedling-checks`: no batches) is green on a green job', () => {
+        const s = buildSummary({ batches: [], artifactsDir: dir, jobs: jobs([]), budgetFallbackMs: BUDGET });
+        expect(s).toMatchObject({ red: false, checks: { conclusion: 'success', red: false } });
+    });
+
+    it('missing from a job list that was read is red; no job list at all is ungraded, not red', () => {
+        expect(buildSummary({ batches: [], artifactsDir: dir, jobs: jobs([], null), budgetFallbackMs: BUDGET }).checks)
+            .toMatchObject({ conclusion: 'missing', red: true });
+        expect(buildSummary({ batches: [], artifactsDir: dir, jobs: null, budgetFallbackMs: BUDGET }).checks)
+            .toMatchObject({ conclusion: null, red: false });
     });
 });
 
