@@ -65,7 +65,7 @@ import {
  */
 import { flagIdFor, guardIdsFor } from '../procgenCore/elements.js';
 import {
-    BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, TILE_KIND_REFUSALS, declaredPassOf, liftTileKind, lowerTileKind, needsRealisationRefusal,
+    BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, ONE_WAY_PASS, TERRAIN_DIRS, TILE_KIND_REFUSALS, tileKindDirsAt, declaredPassOf, liftTileKind, lowerTileKind, needsRealisationRefusal,
     occupiedWorldCells, passLabel, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindRefusal,
 } from './mazeTileKinds.js';
 
@@ -602,21 +602,26 @@ export class MazeRoomEditor {
         if (!before && getTile(world, x, y) !== TILE_FLOOR) return notOk('wall-tile', 'A tile kind must be on a floor tile.');
         // ⛓ PASS-2 — a kind already here owns its derived gate, which is not "something else" on the cell.
         if (occupiedWorldCells(withoutOwnedGate(world, x, y)).has(key)) return notOk('occupied', TILE_KIND_REFUSALS.occupied(x, y));
+        // ⛓ PASS-3 — nor may a kind take a cell carrying entry gates of the world's own (a kind here owns its own).
+        if (!before && TERRAIN_DIRS.some((dir) => world.entryGates?.has(`${x},${y},${dir}`))) {
+            return notOk('foreign-entry-gates', TILE_KIND_REFUSALS.foreignEntryGates(x, y));
+        }
         const d = declared[kind];
         const pass = declaredPassOf(d);
         if (pass === NEEDS_PASS) {
             const why = needsRealisationRefusal(world, kind, d.needs);
             if (why) return notOk('unrealisable-needs-tile-kind', why);
         }
-        const baked = before ? passLabel(tileKindPassAt(world, x, y), tileKindNeedsAt(world, x, y)) : null;
-        if (before === kind && baked === passLabel(pass, d.needs)) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
+        const baked = before ? passLabel(tileKindPassAt(world, x, y), tileKindNeedsAt(world, x, y), tileKindDirsAt(world, x, y)) : null;
+        if (before === kind && baked === passLabel(pass, d.needs, d.dirs)) return ok('tileKind', `Tile (${x},${y}) already holds tile kind ${kind}.`, op);
         // ⛓ PASS-1/PASS-2 — bake and lower in this one op: lift what a kind here lowered, then lower the declared pass.
         liftTileKind(world, x, y);
         if (!world.tileKinds) world.tileKinds = new Map();
         world.tileKinds.set(key, kind);
         lowerTileKind(world, x, y, d);
         const said = pass === BLOCKED_PASS ? ' (blocked: a wall under it)'
-            : pass === NEEDS_PASS ? ` (needs ${d.needs}: the rule obstacle ${tileKindGateId(x, y)} under it)` : '';
+            : pass === NEEDS_PASS ? ` (needs ${d.needs}: the rule obstacle ${tileKindGateId(x, y)} under it)`
+                : pass === ONE_WAY_PASS ? ` (one-way: entered moving ${d.dirs.join(' or ')} only)` : '';
         return ok('tileKind', `Placed tile kind ${kind} at (${x},${y})${said}.`, op);
     }
 
