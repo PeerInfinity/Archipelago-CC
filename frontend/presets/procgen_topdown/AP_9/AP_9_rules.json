@@ -17794,6 +17794,7 @@
           "Pendants"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18010,6 +18011,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18061,6 +18063,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18150,6 +18153,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18181,6 +18185,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18337,6 +18342,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18469,6 +18475,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18600,6 +18607,7 @@
           "Crystals"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18631,6 +18639,7 @@
           "Pendants"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
@@ -18652,6 +18661,7 @@
           "Pendants"
         ],
         "classification": "progression",
+        "event": true,
         "type": "Crystal",
         "max_count": 1
       },
