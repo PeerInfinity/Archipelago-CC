@@ -197,7 +197,7 @@ describe('fidelity CORRIDORFLIP D2 — the corridor forecast memoises its frozen
             expect(CONTACT_FIDELITY_DEFAULTS.corridorForecastMemo).toBe(true);
             // ⛓ wave 45: WALLFLYERCORPSE `wallFlyerCorpseGone` appended after it; wave 46: DARKSUITSTATIC `darkSuitStaticRetaliation` after that; wave 47: L39HIT `pulserForecastPulse` after that; wave 48: DARKSUITBOSSES `darkSuitBossRetaliation` after that.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf('corridorForecastMemo') + 1)).toEqual(['wallFlyerCorpseGone', 'darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation']);
+            expect(keys.slice(keys.indexOf('corridorForecastMemo') + 1)).toEqual(['wallFlyerCorpseGone', 'darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CORRIDOR_FORECAST_MEMO');
         });
 

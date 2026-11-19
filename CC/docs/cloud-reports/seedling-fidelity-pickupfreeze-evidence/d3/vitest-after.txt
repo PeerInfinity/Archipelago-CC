@@ -1,0 +1,6 @@
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > (v) the profile — the census and PROFILE_FIELDS agree (engine prep A2) > the fields table's profile rows are exactly what --profile-rows generates from PROFILE_FIELDS
+ Test Files  1 failed | 191 passed (192)
+      Tests  1 failed | 5282 passed (5283)
+EXIT 1

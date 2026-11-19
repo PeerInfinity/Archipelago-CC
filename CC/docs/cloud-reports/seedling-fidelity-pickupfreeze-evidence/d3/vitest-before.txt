@@ -1,0 +1,8 @@
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+ FAIL  frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal (generated set, synthetic arrival)
+ FAIL  frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ LOOT CHESTS — the wasm engine solves and ships a loot-chest goal (generated set, synthetic arrival)
+Error: registerBackend: duplicate id 'empty'
+     33|         throw new Error(`registerBackend: duplicate id '${backend.id}'…
+ Test Files  1 failed | 190 passed (191)
+      Tests  5269 passed | 2 skipped (5271)
+EXIT 1

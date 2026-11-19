@@ -109,6 +109,7 @@ import { describeOps } from '../procgenCore/editCore.js';
 import { createMazeEditAdapter } from './mazeEditAdapter.js';
 import { placeableTileKinds } from './mazeRoomEditor.js';
 import { loadMazeTileArt } from './mazeTileArt.js';
+import { placedTileKindDrift } from './mazeTileKinds.js';
 import { drawMazeTileKinds } from './mazeTileKindOverlay.js';
 import { MAZE_CONTENT_ROLES } from './mazeContent.js';
 import { browserPackIo } from '../procgenPipeline/worldContent.js';
@@ -863,6 +864,13 @@ export function main() {
             tilePx: TILE_PX, playerPos: shownFrame()?.player ?? null, fogEnabled: false, isTileVisible: () => true,
             tileArt: labTileArt, tileKinds: labTileKinds ?? {},
         });
+        // ⛓ CONTENT SETS PASS-1 — a placed kind whose baked pass differs from what `?packs=` declares now is DRIFT,
+        //   said by name beside the picker (`mazeTileKinds.placedTileKindDrift`). Never re-lowered: the world is kept.
+        const driftNote = $('labTileKindNote');
+        if (driftNote && labTileKinds) {
+            const drift = placedTileKindDrift(w, labTileKinds);
+            driftNote.textContent = [labPackNote, ...drift.map((d) => `⚠ ${d.description}`)].join(' ');
+        }
         /**
          * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,
          * AND THEY DO NOT DRAW OVER A LIBRARY ROOM.** The area graph, the

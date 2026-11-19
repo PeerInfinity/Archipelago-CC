@@ -1,0 +1,368 @@
+{
+ "0": {
+  "npcs": [
+   "introchar@144,288",
+   "statue2@184,160"
+  ],
+  "four": [],
+  "others": {
+   "building": 1,
+   "pole": 36,
+   "tree": 25,
+   "teleporter": 6,
+   "breakablerock": 3,
+   "stairsdown": 2,
+   "brickpole": 3,
+   "building1": 1,
+   "daynight": 1,
+   "brickwell": 1,
+   "moonrock": 1,
+   "rock": 1,
+   "torch": 2
+  }
+ },
+ "1": {
+  "npcs": [
+   "oracle@64,32"
+  ],
+  "four": [],
+  "others": {
+   "teleporter": 1,
+   "lightalpha": 1,
+   "dungeonspire": 2,
+   "torch": 2,
+   "oraclestatue": 2
+  }
+ },
+ "12": {
+  "npcs": [
+   "witch@416,384",
+   "watcher@296,104",
+   "introchar@560,608"
+  ],
+  "four": [],
+  "others": {
+   "tree": 255,
+   "pole": 14,
+   "torch": 13,
+   "teleporter": 11,
+   "lightalpha": 1,
+   "control": 1,
+   "building2": 1,
+   "littlestones": 2,
+   "building4": 1,
+   "dungeonspire": 5,
+   "rock": 6,
+   "rock2": 3,
+   "brickwell": 2,
+   "building5": 1,
+   "bosslock": 5,
+   "puncher": 1,
+   "pull": 14,
+   "burnabletree": 1,
+   "opentree": 2,
+   "chest": 1,
+   "shieldlocknorm": 1,
+   "stairsdown": 1,
+   "magicallock": 1
+  }
+ },
+ "19": {
+  "npcs": [
+   "sign@64,128"
+  ],
+  "four": [],
+  "others": {
+   "stairsup": 1,
+   "teleporter": 1,
+   "shieldboss": 1,
+   "bosskey": 1,
+   "orb": 2,
+   "lightalpha": 1,
+   "bosslock": 1
+  }
+ },
+ "32": {
+  "npcs": [
+   "watcher@8,48"
+  ],
+  "four": [],
+  "others": {
+   "tree": 14,
+   "lightalpha": 1,
+   "stairsdown": 1,
+   "fallrocklarge": 1,
+   "control": 1,
+   "burnabletree": 1
+  }
+ },
+ "34": {
+  "npcs": [
+   "introchar@24,72",
+   "forestchar@96,72",
+   "adnanchar@56,48"
+  ],
+  "four": [],
+  "others": {
+   "teleporter": 2,
+   "lightalpha": 1,
+   "torch": 4,
+   "bar": 2,
+   "dresser": 1,
+   "barstool": 2,
+   "pole": 2,
+   "magicallock": 1
+  }
+ },
+ "35": {
+  "npcs": [
+   "forestchar@56,16"
+  ],
+  "four": [],
+  "others": {
+   "bar": 1,
+   "dresser": 1,
+   "lightalpha": 1,
+   "teleporter": 1,
+   "torch": 2,
+   "orb": 1
+  }
+ },
+ "36": {
+  "npcs": [
+   "adnanchar@112,16"
+  ],
+  "four": [],
+  "others": {
+   "teleporter": 1,
+   "chest": 1,
+   "sandtrap": 5,
+   "rock": 1,
+   "lightalpha": 1,
+   "rock2": 1,
+   "bonetorch": 1
+  }
+ },
+ "37": {
+  "npcs": [
+   "totem@280,80",
+   "watcher@104,264",
+   "hermit@264,152"
+  ],
+  "four": [],
+  "others": {
+   "tree": 36,
+   "ruinedpillar": 2,
+   "rock": 1,
+   "burnabletree": 1,
+   "teleporter": 3,
+   "orb": 2,
+   "daynight": 1,
+   "stairsdown": 1,
+   "fallrock": 1
+  }
+ },
+ "43": {
+  "npcs": [
+   "watcher@200,280"
+  ],
+  "four": [],
+  "others": {
+   "lightalpha": 1,
+   "dungeonspire": 3,
+   "orb": 2,
+   "fallrock": 3,
+   "wand": 1,
+   "bosstotem": 1,
+   "stairsup": 1,
+   "rock": 1,
+   "magicallock": 1,
+   "teleporter": 1
+  }
+ },
+ "48": {
+  "npcs": [
+   "karlore@112,272"
+  ],
+  "four": [],
+  "others": {
+   "chest": 1,
+   "lightalpha": 1,
+   "spinningaxe": 1,
+   "rock4": 1,
+   "teleporter": 2,
+   "control": 1,
+   "shadow": 25,
+   "bosslock": 1
+  }
+ },
+ "57": {
+  "npcs": [
+   "watcher@48,32"
+  ],
+  "four": [],
+  "others": {
+   "shadow": 7,
+   "lightalpha": 1,
+   "orb": 2,
+   "tentaclebeast": 1
+  }
+ },
+ "58": {
+  "npcs": [
+   "yeti@56,56"
+  ],
+  "four": [],
+  "others": {
+   "orb": 1,
+   "teleporter": 3,
+   "droplet": 1,
+   "lightalpha": 1
+  }
+ },
+ "64": {
+  "npcs": [
+   "sensei@32,48"
+  ],
+  "four": [],
+  "others": {
+   "bed": 1,
+   "barstool": 1,
+   "torch": 1,
+   "ghostspear": 1,
+   "teleporter": 1,
+   "lightalpha": 1
+  }
+ },
+ "69": {
+  "npcs": [
+   "watcher@144,144"
+  ],
+  "four": [],
+  "others": {
+   "lightalpha": 1,
+   "droplet": 1,
+   "lightbosscontroller": 1
+  }
+ },
+ "82": {
+  "npcs": [
+   "watcher@72,96"
+  ],
+  "four": [],
+  "others": {
+   "lavaboss": 1,
+   "lightalpha": 1,
+   "fallrocklarge": 1,
+   "teleporter": 1,
+   "lock": 1,
+   "button": 1
+  }
+ },
+ "87": {
+  "npcs": [
+   "statue1@224,176",
+   "adnanchar@208,224"
+  ],
+  "four": [],
+  "others": {
+   "tree": 50,
+   "treebare": 1,
+   "pole": 14,
+   "teleporter": 6,
+   "daynight": 1
+  }
+ },
+ "88": {
+  "npcs": [
+   "introchar@56,104"
+  ],
+  "four": [
+   "drill@128,160"
+  ],
+  "others": {
+   "tree": 36,
+   "rock2": 1,
+   "drill": 1,
+   "teleporter": 3,
+   "pole": 1,
+   "torch": 2,
+   "daynight": 1,
+   "lightalpha": 1
+  }
+ },
+ "89": {
+  "npcs": [
+   "watcher@248,176",
+   "forestchar@80,96"
+  ],
+  "four": [],
+  "others": {
+   "tree": 55,
+   "pole": 1,
+   "teleporter": 4,
+   "daynight": 1,
+   "feather": 1
+  }
+ },
+ "94": {
+  "npcs": [
+   "watcher@152,128",
+   "adnanchar@240,160",
+   "rekcahdam@168,192"
+  ],
+  "four": [],
+  "others": {
+   "tree": 23,
+   "orb": 2,
+   "treelarge": 1,
+   "rock2": 1,
+   "teleporter": 2,
+   "daynight": 1
+  }
+ },
+ "103": {
+  "npcs": [
+   "watcher@120,24"
+  ],
+  "four": [
+   "beamtower@208,248",
+   "beamtower@144,200"
+  ],
+  "others": {
+   "beamtower": 2,
+   "blur": 1,
+   "spinningaxe": 1,
+   "flyer": 1,
+   "teleporter": 2
+  }
+ },
+ "111": {
+  "npcs": [
+   "sign@208,168"
+  ],
+  "four": [],
+  "others": {
+   "lightalpha": 1,
+   "teleporter": 2,
+   "frozenboss": 1,
+   "orb": 3,
+   "torch": 1
+  }
+ },
+ "114": {
+  "npcs": [
+   "watcher@72,72"
+  ],
+  "four": [],
+  "others": {
+   "ruinedpillar": 2,
+   "dungeonspire": 2,
+   "torch": 2,
+   "lightalpha": 1,
+   "teleporter": 2,
+   "brickpole": 4,
+   "orb": 2
+  }
+ }
+}

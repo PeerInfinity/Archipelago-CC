@@ -90,9 +90,9 @@ describe('the manifest, read through loadPackStack', () => {
         expect(Object.isFrozen(e) && Object.isFrozen(e.look) && Object.isFrozen(e.text)).toBe(true);
     });
 
-    it('PACK_CONCEPT_KINDS is frozen and carries the four kinds of Q2 and the four of S6 (⛓ PL-1)', () => {
+    it('PACK_CONCEPT_KINDS is frozen and carries the four kinds of Q2, the four of S6 (⛓ PL-1) and terrain (⛓ PASS-1)', () => {
         expect(Object.isFrozen(PACK_CONCEPT_KINDS)).toBe(true);
-        expect([...PACK_CONCEPT_KINDS].sort()).toEqual(['boon', 'character', 'info', 'object', 'place', 'resource', 'stat', 'task']);
+        expect([...PACK_CONCEPT_KINDS].sort()).toEqual(['boon', 'character', 'info', 'object', 'place', 'resource', 'stat', 'task', 'terrain']);
     });
 });
 
