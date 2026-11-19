@@ -101,7 +101,7 @@ export class MazeTileKindError extends Error {
 const cellKey = (x, y) => `${x},${y}`;
 
 /** The world's placed kinds as the payload writes them (`mazeSerializer.tileKindsList`, re-exported). */
-export { BLOCKED_PASS, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindsList };
+export { BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindsList };
 
 /**
  * ⛓ THE PAYLOAD CHECK — `list` (a payload's `tileKinds`) against the grid it sits on; returns the `Map("x,y" → kind)`
