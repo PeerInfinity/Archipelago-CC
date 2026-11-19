@@ -7,7 +7,7 @@
  * lists, in a section of the controls that starts folded (⚖ the user,
  * 2026-10-10: "both regions and locations, in a collapsible section that's
  * collapsed by default"). Choosing a name does EXACTLY what tapping its node
- * does — the same handler, so the "On Region Node Click" options apply — and
+ * does — the same handler, so the panel's "On click" actions apply — and
  * centres the view on it.
  *
  * Regions are the graph's own region nodes (what the graph shows, so

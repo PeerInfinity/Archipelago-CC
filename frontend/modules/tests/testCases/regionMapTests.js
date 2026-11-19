@@ -545,59 +545,41 @@ async function reloadIfChecked(testController, ctx, names, { before = null, rest
 }
 
 /**
- * The Region Graph's control panel drives Region Map clicks (⚖ planner, option A): untick its "Add to path" and
- * "Move player directly" boxes (the boxes' own change handlers save the settings) → a Region Map region click moves
- * nobody; tick "Move player directly" → the same click moves the player (a `regionMap-direct` move). The boxes are
- * put back by clicking them again, so the Region Graph's DOM and its settings agree after.
+ * The Region Map follows the stored `moduleSettings.regionGraph.*` click keys (⚖ planner, option A; interim until
+ * CA-S3). Since CA-S2 the Region Graph has no checkboxes for them (its clicks run its own `clickActions`, set in its
+ * "On click" strip), so the leg writes the keys itself, session-only: "Add to path", "Overwrite path", "Move one step"
+ * and "Move directly" all off → a Region Map region click moves nobody; "Move directly" on → the same click moves the
+ * player (a `regionMap-direct` move). `ctx.restoreSettings()` puts them back.
  */
-async function rgToggleLeg(testController, label) {
-  testController.eventBus.publish('ui:activatePanel', { panelId: 'regionGraphPanel' }, 'tests');
-  let box = (id) => document.querySelector(`#${id}`);
-  let made = false;
-  if (!await testController.pollForCondition(() => !!box('movePlayerDirectly'), `${label}: the Region Graph panel's controls`, 4000, 50)) {
-    await panelManager.createPanelForComponent('regionGraphPanel', 'Region Graph', 2);
-    made = true;
-  }
-  const have = await testController.pollForCondition(() => !!box('movePlayerDirectly') && !!box('addToPath') && !!box('overwritePath')
-    && !!box('movePlayerOneStep'), `${label}: the Region Graph panel's click checkboxes`, 8000, 50);
-  testController.reportCondition(`${label}: the Region Graph panel's click checkboxes are present`, have);
-  if (!have) return;
+async function rgToggleLeg(testController, label, ctx) {
   const ids = ['addToPath', 'overwritePath', 'movePlayerOneStep', 'movePlayerDirectly'];
-  const orig = Object.fromEntries(ids.map((id) => [id, box(id).checked]));
-  const setBox = async (id, want) => {
-    if (box(id).checked === want) return;
-    box(id).click();
+  const setKey = async (id, want) => {
+    await ctx.setSetting(`${CLICK_OPTIONS_PREFIX}.${id}`, want);
     await testController.pollForCondition(async () => (await settingsManager.getSetting(`${CLICK_OPTIONS_PREFIX}.${id}`)) === want,
-      `${label}: the Region Graph saved ${id}=${want}`, 3000, 25);
+      `${label}: ${id}=${want} is the setting`, 3000, 25);
   };
   try {
     testController.eventBus.publish('ui:activatePanel', { panelId: COMPONENT }, 'tests');
     panel().follow = false;
     panel().controls.follow.checked = false;
-    for (const id of ids) await setBox(id, false);
+    for (const id of ids) await setKey(id, false);
     await fitAllAndSettle(testController, `${label}: fit all (toggles)`);
     const t = await reachableTarget(testController);
     testController.reportCondition(`${label}: a reachable target for the toggle leg (${t?.region ?? 'none'})`, !!t);
     if (!t) return;
     const before = gameStateRegion();
-    let c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (all move boxes off)`);
+    let c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (all move keys off)`);
     await nextFrames(4);
-    testController.reportCondition(`${label}: Region Graph boxes "Add to path", "Overwrite path", "Move one step", "Move directly" all OFF → the Region Map click moves nobody (${gameStateRegion()})`,
+    testController.reportCondition(`${label}: regionGraph.* keys "addToPath", "overwritePath", "movePlayerOneStep", "movePlayerDirectly" all OFF → the Region Map click moves nobody (${gameStateRegion()})`,
       c?.target === 'region' && c.result.moves.length === 0 && gameStateRegion() === before);
-    await setBox('movePlayerDirectly', true);
-    c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (Move directly on)`);
+    await setKey('movePlayerDirectly', true);
+    c = await clickCanvas(testController, t.point.x, t.point.y, `cell ${t.key} (movePlayerDirectly on)`);
     const moved = await testController.pollForCondition(() => gameStateRegion() === t.region, `${label}: moved directly`, 5000, 50);
-    testController.reportCondition(`${label}: tick the Region Graph's "Move player directly" → the same Region Map click moves the player (a ${c?.result?.moves?.[0]?.kind} move to ${gameStateRegion()})`,
+    testController.reportCondition(`${label}: regionGraph.movePlayerDirectly ON → the same Region Map click moves the player (a ${c?.result?.moves?.[0]?.kind} move to ${gameStateRegion()})`,
       moved && c?.result?.moves?.length === 1 && c.result.moves[0].kind === 'direct');
   } finally {
-    for (const id of ['movePlayerDirectly', 'movePlayerOneStep', 'overwritePath', 'addToPath']) {
-      if (orig[id] === false) await setBox(id, false);
-    }
-    for (const id of ['addToPath', 'overwritePath', 'movePlayerOneStep', 'movePlayerDirectly']) {
-      if (orig[id] === true) await setBox(id, true);
-    }
-    testController.reportCondition(`${label}: the Region Graph's boxes are put back`, ids.every((id) => box(id)?.checked === orig[id]));
-    if (made) { try { await panelManager.destroyPanelByComponentType('regionGraphPanel'); } catch { /* gone */ } }
+    await ctx.restoreSettings();
+    testController.reportCondition(`${label}: the regionGraph.* keys are put back`, ctx.settingsRestored());
   }
 }
 
@@ -614,7 +596,7 @@ export async function testRegionMapClicksGenerated(testController) {
     restorePlayer = savePlayer();
     checked = await clickLegs(testController, GENERATED);
     await s.ctx.restoreSettings();
-    await rgToggleLeg(testController, GENERATED);
+    await rgToggleLeg(testController, GENERATED, s.ctx);
   } catch (error) {
     testController.reportCondition(`generated-world clicks row error-free: ${error.message}`, false);
   } finally {
@@ -892,7 +874,7 @@ registerTest({
   category: 'Region Map',
   testFunction: testRegionMapClicksGenerated,
   enabled: false,
-  description: 'Step 4: a cell click moves the player, a green square click checks it, the hover names it; the Region Graph panel\'s own boxes change what a Region Map click does',
+  description: 'Step 4: a cell click moves the player, a green square click checks it, the hover names it; the stored regionGraph.* click keys change what a Region Map click does (interim, until CA-S3)',
 });
 registerTest({
   id: 'region-map-clicks-seedling',

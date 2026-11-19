@@ -5,16 +5,15 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import * as actions from '../regionView/regionActions.js';
-import { REGION_GRAPH_SOURCES } from './regionGraphOriginators.js';
 
 const logger = createUniversalLogger('regionGraph');
 
 const menuPanelRestart = () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.();
 
 /**
- * NavigationManager - the Region Graph's movement: the player node, path labels, and the click actions. The actions
- * themselves live in `regionView/regionActions.js` (shared with the Region Map); this class supplies the Region
- * Graph's handles (ITS dispatcher, read lazily from './index.js' as before) and shows the results (status, flash).
+ * NavigationManager - the Region Graph's movement: the player node, path labels, and the handles the click actions
+ * run with (`_handles`; the actions live in `regionView/regionActions.js` and `regionView/clickActions.js`, shared with
+ * the Region Map), plus the status flash and the Regions panel's "Show All Regions" box.
  */
 export class NavigationManager {
   constructor(ui) {
@@ -281,47 +280,9 @@ export class NavigationManager {
     return actions.currentRegionOf(this._handles(), { onError: (error) => logger.warn('Error getting player location:', error) });
   }
 
-  attemptMovePlayerOneStepToRegion(targetRegion) {
-    const plan = actions.planOneStepMove(this._handles(), targetRegion,
-      { onError: (error) => logger.warn('Error getting player location:', error) });
-    if (!plan.ok) {
-      if (plan.reason === 'no-current') logger.warn('Cannot determine current player location');
-      else if (plan.reason === 'already-there') logger.debug(`Player is already in target region: ${targetRegion}`);
-      else if (plan.reason === 'no-path') {
-        logger.warn(`No accessible path found from ${plan.from} to ${targetRegion}`);
-        this._flashNoPath(`No path to ${targetRegion}`);
-      } else if (plan.reason === 'no-next-exit') logger.warn('Path found but no next exit determined');
-      return;
-    }
-
-    // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): one step toward the target from where the player stands.
-    // When no walk exists but the slot declares return_to_menu and the start has one, the step IS the Menu
-    // panel's Restart (its own path) — never an exit. planOneStepMove has already taken it.
-    if (plan.kind === 'restart') {
-      this._reportRestart(plan.from, targetRegion, plan.region);
-      return;
-    }
-
-    const { path, move } = plan;
-    logger.info('Moving player via path', { steps: path.steps, nextExit: path.nextExit });
-
-    // Execute the first step of the path using moduleDispatcher
-    import('./index.js').then(({ moduleDispatcher }) => {
-      if (moduleDispatcher) {
-        actions.publishRegionMove(this._handles(moduleDispatcher), move, REGION_GRAPH_SOURCES.oneStep);
-        logger.debug(`Published user:regionMove via dispatcher from ${move.sourceRegion} to ${move.targetRegion}`);
-      } else {
-        logger.warn('moduleDispatcher not available for publishing user:regionMove');
-      }
-    });
-
-    // Show path info in status
-    if (path.length === 1) {
-      this.ui.updateStatus(`Moving to ${targetRegion}`);
-    } else {
-      this.ui.updateStatus(`Moving to ${targetRegion} (${path.length} steps via ${path.steps[1]})`);
-    }
-  }
+  // The click moves (one step / direct / add to path / overwrite path) left this class in CA-S2: a click runs the
+  // panel's click actions (`regionView/clickActions.js` `runClickActions`, see `graphInteractionManager.js`), and the
+  // status texts are `clickActions.routeStatusText`. ⚖ "Move player one step" is removed (user, 2026-11-17).
 
   _reportRestart(from, to, region) {
     logger.info(`No walk from ${from} to ${to}: Restart (→ ${region})`);
@@ -337,91 +298,6 @@ export class NavigationManager {
     if (!r.ok) return false;
     this._reportRestart(from, to, r.region);
     return true;
-  }
-
-  attemptMovePlayerDirectlyToRegion(targetRegion) {
-    const plan = actions.planDirectMove(this._handles(), targetRegion,
-      { onError: (error) => logger.warn('Error getting player location:', error) });
-    if (!plan.ok) {
-      if (plan.reason === 'no-current') logger.warn('Cannot determine current player location');
-      else if (plan.reason === 'already-there') logger.debug(`Player is already in target region: ${targetRegion}`);
-      else if (plan.reason === 'no-path') {
-        logger.warn(`No accessible path found from ${plan.from} to ${targetRegion}`);
-        this._flashNoPath(`No path to ${targetRegion}`);
-      } else if (plan.reason === 'no-final-exit') logger.warn('Could not determine final exit name for direct move');
-      return;
-    }
-
-    const { path, move } = plan;
-    logger.info(`Moving player directly to ${targetRegion} via final exit: ${move.exitName}`);
-
-    // Execute the final step of the path directly
-    import('./index.js').then(({ moduleDispatcher }) => {
-      if (moduleDispatcher) {
-        actions.publishRegionMove(this._handles(moduleDispatcher), move, REGION_GRAPH_SOURCES.direct);
-        logger.debug(`Published direct user:regionMove via dispatcher from ${move.sourceRegion} to ${targetRegion}`);
-      } else {
-        logger.warn('moduleDispatcher not available for publishing user:regionMove');
-      }
-    });
-
-    // Show path info in status
-    if (path.length === 1) {
-      this.ui.updateStatus(`Moving directly to ${targetRegion}`);
-    } else {
-      this.ui.updateStatus(`Moving directly to ${targetRegion} (skipping ${path.length - 1} steps)`);
-    }
-  }
-
-  async addToPath(targetRegion, moveOnlyOneStep = false) {
-    const { moduleDispatcher } = await import('./index.js');
-    if (!moduleDispatcher) {
-      logger.warn('moduleDispatcher not available for publishing user:regionMove');
-      return;
-    }
-    const r = actions.addToPath(this._handles(moduleDispatcher), targetRegion, {
-      moveOnlyOneStep,
-      source: REGION_GRAPH_SOURCES.addToPath,
-      // Disable "Show All Regions" before executing moves
-      beforeExecute: () => this.setShowAllRegions(false),
-    });
-    if (!r.ok) {
-      if (r.reason === 'already-there') logger.debug(`Target region ${targetRegion} is already at end of path`);
-      else if (r.reason === 'no-path') {
-        logger.warn(`No accessible path found from ${r.from} to ${targetRegion}`);
-        this.ui.updateStatus(`No path from ${r.from} to ${targetRegion}`);
-      }
-      return;
-    }
-    if (r.kind === 'path') {
-      logger.info(`Adding to path: ${r.regions.join(' → ')}`);
-      this.ui.updateStatus(`Added ${r.dispatched} region(s) to path`);
-    }
-  }
-
-  async overwritePath(targetRegion, moveOnlyOneStep = false) {
-    const { moduleDispatcher } = await import('./index.js');
-    if (!moduleDispatcher) {
-      logger.warn('moduleDispatcher not available for publishing user:regionMove');
-      return;
-    }
-    // Resets the player to the start region and trims the path back to it, then walks.
-    const r = actions.overwritePath(this._handles(moduleDispatcher), targetRegion, {
-      moveOnlyOneStep,
-      source: REGION_GRAPH_SOURCES.overwritePath,
-      // Disable "Show All Regions" before executing moves
-      beforeExecute: () => this.setShowAllRegions(false),
-    });
-    if (!r.ok) {
-      if (r.reason === 'already-there') logger.debug(`Target region is ${r.from}, path already reset`);
-      else if (r.reason === 'no-path') {
-        logger.warn(`No accessible path found from ${r.from} to ${targetRegion}`);
-        this.ui.updateStatus(`No path from ${r.from} to ${targetRegion}`);
-      }
-      return;
-    }
-    logger.info(`Creating new path: ${r.from} → ${r.regions.join(' → ')}`);
-    this.ui.updateStatus(`Created path: ${r.from} → ${targetRegion} (${r.dispatched} steps)`);
   }
 
   /**
