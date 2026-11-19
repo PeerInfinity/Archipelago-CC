@@ -4017,10 +4017,14 @@ export function createLevelRun({
                 { cleared: true, ...(spanOn ? { screen: { width: SCREEN_W, height: SCREEN_H } } : {}) });
             s = r.state;
             frames = i;
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): the turrets after the rock (`:2295`), frozen; unfrozen on the release.
+            stepRockSpanShootersNow(r.unfroze);
             if (spanOn) fallRockFrozenFrame(r, i);
             // ⛓ fidelity FROZENTICK D2 (ON only): the chasers after it (`:2276-2301`), frozen on every frame but the
             // release frame (the rock lowers the flag before they update: unfrozen there, not stepped — named).
             if (!r.unfroze && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): …and that release frame's one unfrozen update.
+            if (r.unfroze) stepRockReleaseBodiesNow('a rope-dropped fallrock', { drills: false });
             // ⛓ fidelity ROCKBUTTON D1: the span's activator frames — all but the RELEASE frame, whose activator update
             // is the pull tick's own end-of-tick `stepActivators` (it runs after this collapsed span, with the rock
             // landed). Measured: stepping the release frame here too opens L28's lock one tick early (game t166).
@@ -4095,9 +4099,15 @@ export function createLevelRun({
                 // per-rock loop that runs to its own end.
                 if (r.unfroze) unfroze = true;
             }
-            stepDrillGraphicsFrozen();
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): the turrets after the rocks, frozen; unfrozen on the release frame.
+            stepRockSpanShootersNow(unfroze);
+            const releaseOn = unfroze && CONTACT_FIDELITY.freezeEdgeFrames && !noclip;
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): on the release frame the drills take their whole update (below).
+            if (!(releaseOn && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive)) stepDrillGraphicsFrozen();
             // ⛓ fidelity FROZENTICK D2 (ON only): the chasers, frozen on every frame but the release frame (named).
             if (!unfroze && CONTACT_FIDELITY.frozenTickUngated && !noclip) stepChasersFrozenNow();
+            // ⛓ fidelity CEREMONYTOWER D2 (ON only): …and the release frame's one unfrozen update, drills then chasers.
+            if (releaseOn) stepRockReleaseBodiesNow('a fallrock dropped together', { drills: true });
             for (const b of bosses) {
                 // ⛓ R6 SLICE 4: and `render()` runs on every frozen frame
                 // too — it is outside `Game.update` entirely. Without this
@@ -4115,7 +4125,8 @@ export function createLevelRun({
                     // there — which cannot matter, because the rest arm is
                     // behind `fullyActivated` and that lands 30 ticks after
                     // this span ends. Named rather than relied on.
-                    freezeObjects: true,
+                    // ⛓ fidelity CEREMONYTOWER D2 (ON only): the release frame reads it down, as the game does.
+                    freezeObjects: !releaseOn,
                     playerY: null,
                 });
             }
@@ -14729,6 +14740,62 @@ export function createLevelRun({
         const pushState = pushableStateFor(level);
         if (pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
     }
+    /**
+     * ⛓⛓ fidelity CEREMONYTOWER D2 (`CONTACT_FIDELITY.freezeEdgeFrames`, ON only) — THE TURRETS THROUGH A ROCK'S SPAN,
+     * AND ON ITS RELEASE FRAME. The spits are runtime adds (they update ahead of every placed entity, the rock
+     * included); the turrets (`Game.as:2295`) update after the `FallRock` (`:2353`). So on every frozen frame of the span
+     * (and on a button-dropped rock's frame A) both are frozen — `Turret.update` returns on the flag, its anim runs
+     * (`Turret.as:48-51`) — and on the RELEASE frame, which the rock unfreezes first (`Scenery/FallRock.as:92-96`), the
+     * spits are still frozen and the turrets are NOT: their aim, `shootTimer`, fire gate and, with wave 50's slot,
+     * `hitPlayer` (`stepShooterReleaseFrameNow`, the text-less pickup's F+150 shape). The freeze is held for the call
+     * (`FROZEN_TICK_FREEZE`) and every outer reader's state is restored, `turretSlotContact` included (the frame is
+     * dead: no later slot of a tick answers its contact).
+     *
+     * @param {boolean} release the rock's release frame (else one frozen frame)
+     */
+    function stepRockSpanShootersNow(release) {
+        if (!CONTACT_FIDELITY.freezeEdgeFrames || noclip) return;
+        if (shooterStateFor(level).size === 0 && spitsFor(level).length === 0) return;
+        const held = ceremony;
+        const slot = turretSlotContact;
+        if (held === null) ceremony = FROZEN_TICK_FREEZE;
+        try {
+            if (release) stepShooterReleaseFrameNow();
+            else stepShootersThroughFreeze(1);
+        } finally {
+            ceremony = held;
+            turretSlotContact = slot;
+        }
+    }
+    /**
+     * ⛓⛓ fidelity CEREMONYTOWER D2 (ON only) — A ROCK'S RELEASE FRAME, BELOW THE TURRETS: the drills (`Game.as:2290`,
+     * when `drills`: `dropRock`'s release already steps them under `drillTimedPass`) and the chasers (`:2276-2301`), all
+     * after the rock, all UNFROZEN — the flag is held DOWN for the call (a wand's rocks fall inside its ceremony's
+     * finishing tick, `ceremony` still set) and restored. Their move, chase blocks and `hitPlayer` (`Player.hit` is no
+     * longer refused) run against the player as the span left it: the player updates after them
+     * (`pendingFreeSteps`). An ice turret (`:2296`) or a beam tower (`:2297`) would update there too: not transcribed,
+     * so a rock room holding one is REFUSED by name (no shipped rock room does).
+     *
+     * @param {string} what the rock's source, for the refusal
+     * @param {{drills: boolean}} opts
+     */
+    function stepRockReleaseBodiesNow(what, { drills }) {
+        if (!CONTACT_FIDELITY.freezeEdgeFrames || noclip) return;
+        if (turretStateFor(level).size > 0 || beamTowerStateFor(level).size > 0) {
+            throw new Error(`levelRun: ${what}'s release frame at tick ${ticksCompleted} in level ${level} meets `
+                + `${turretStateFor(level).size > 0 ? 'an IceTurret' : 'a BeamTower'}, which updates after the rock `
+                + '(`Game.as:2296-2297` vs `:2353`) and so takes one UNFROZEN update on that dead frame. Not '
+                + 'transcribed; refused by name (fidelity CEREMONYTOWER).');
+        }
+        const held = ceremony;
+        ceremony = null;
+        try {
+            if (drills && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive) stepDrillsNow();
+            stepChasersNow();
+        } finally {
+            ceremony = held;
+        }
+    }
     /** ONE dead frame: the chasers' frozen update, then the player's ungated lines (`Player.update`'s order). */
     function stepCeremonyDeadFrameNow() {
         // ⛓ fidelity FROZENTICK D2 (ON only): the blocks first (`Game.as:2382-2384`, added after every chaser).
@@ -16232,6 +16299,8 @@ export function createLevelRun({
         pickupFreezeAhead.slots.push(slot);
         return start;
     }
+    /** ⛓ fidelity CEREMONYTOWER D2: the tower slot's prediction for this tick (`{t, level, holds}`); null OFF. */
+    let ceremonyHoldAhead = null;
     function predictPickupCeremonyStart() {
         if (ceremony !== null) return null;
         if (runtimeSeedUnderfoot()) return { tag: 'seed', textless: false };
@@ -16251,6 +16320,34 @@ export function createLevelRun({
     function pickupFreezesFamilyNow(slot, { lump }) {
         const start = pickupFreezeAheadNow(slot);
         return start !== null && (lump || !start.textless);
+    }
+    /**
+     * ⛓⛓ fidelity CEREMONYTOWER D2 (`CONTACT_FIDELITY.freezeEdgeFrames`, ON only) — DOES A TEXTED CEREMONY HOLD THROUGH
+     * THIS TICK? On such a tick the ceremony branch returns through `runFrozenTick(…, 'a pickup ceremony')`, whose frozen
+     * tower step is the frame's one update (`Pickup.update` re-raises the flag before the tower every frame,
+     * `Pickups/Pickup.as:57-60,95`). Read off a CLONE of the ceremony's dialogue with the tick's own talk-key release
+     * (`stepDialogue`, the branch's step; `prevHeld` is not written between the slot and the branch on any path that
+     * reaches it). `assertCeremonyHoldAheadHeld` re-checks the answer at the branch. OFF: false, nothing recorded.
+     *
+     * @param {Set<string>} keysHeld the tick's held keys
+     * @returns {boolean}
+     */
+    function ceremonyHoldsThroughNow(keysHeld) {
+        if (!CONTACT_FIDELITY.freezeEdgeFrames || noclip || ceremony === null || !ceremony.dialogue) return false;
+        const c = structuredClone(ceremony.dialogue);
+        stepDialogue(c, releasedThisTick(keysHeld, TALK_KEY));
+        ceremonyHoldAhead = { t: ticksCompleted, level, holds: !c.done };
+        return !c.done;
+    }
+    /** ⛓ fidelity CEREMONYTOWER D2: the branch's answer against the slot's prediction; the record is spent. */
+    function assertCeremonyHoldAheadHeld(finishing) {
+        const rec = ceremonyHoldAhead;
+        if (rec === null || rec.t !== ticksCompleted || rec.level !== level) return;
+        ceremonyHoldAhead = null;
+        if (rec.holds === !finishing) return;
+        throw new Error(`levelRun: the beam tower's slot read tick ${ticksCompleted} in level ${level} as a ceremony `
+            + `frame that ${rec.holds ? 'holds through' : 'finishes'}, and the ceremony then `
+            + `${finishing ? 'finished' : 'held'}. Refused by name rather than stepped on a guess (fidelity CEREMONYTOWER).`);
     }
     /**
      * ⛓ fidelity PICKUPFREEZE D2: the detection's answer against the slots' prediction. A slot that stepped its family
@@ -22837,6 +22934,8 @@ export function createLevelRun({
                 pendingButtonFalls = null;
                 prevHeld = new Set(held);
                 buttonFallsInFlight = new Set(ids);
+                // ⛓ fidelity CEREMONYTOWER D2 (ON only): frame A is frozen to the turrets too (`:2295` vs the Button's `:2341`).
+                stepRockSpanShootersNow(false);
                 const tick = runFrozenTick(activators, 'a button-dropped fallrock', { chasers: true });
                 buttonFallsInFlight = new Set();
                 resolveButtonFalls(ids);
@@ -22969,7 +23068,11 @@ export function createLevelRun({
             if (!noclip && beamTowersStepped() && !(CONTACT_FIDELITY.dialogueFrameFreeze
                 && beamTowerStateFor(level).size > 0 && dialogueFreezeAheadNow('beamtower'))) {
                 if (!(CONTACT_FIDELITY.pickupTickFreeze && beamTowerStateFor(level).size > 0
-                    && pickupFreezesFamilyNow('beamtower', { lump: false }))) {
+                    && pickupFreezesFamilyNow('beamtower', { lump: false }))
+                    // ⛓ fidelity CEREMONYTOWER D2 (`freezeEdgeFrames` ON only): and on a texted ceremony's later tick that
+                    // holds through — it returns through `runFrozenTick`, whose frozen step is the frame's one update.
+                    && !(CONTACT_FIDELITY.freezeEdgeFrames && beamTowerStateFor(level).size > 0
+                        && ceremonyHoldsThroughNow(held))) {
                     stepBeamTowersNow({ frozen: ceremony !== null });
                 }
             }
@@ -23588,6 +23691,8 @@ export function createLevelRun({
                 prevHeld = new Set(held);
                 if (ceremony.dialogue) stepDialogue(ceremony.dialogue, released);
                 const finishing = ceremony.dialogue === null || ceremony.dialogue.done;
+                // ⛓ fidelity CEREMONYTOWER D2 (ON only): the tower slot's prediction against the branch.
+                if (ceremonyHoldAhead !== null) assertCeremonyHoldAheadHeld(finishing);
                 // ⛓ CEREMONYSHOVE D2: ON, the last dead frame, before the release (`stepCeremonyReleaseFrameNow`).
                 if (finishing && ceremony.shoveLump) stepCeremonyReleaseFrameNow();
                 if (finishing && ceremony.seed) {
