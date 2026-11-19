@@ -21,9 +21,9 @@ import {
   discoveryContext, enteredFromDiscoveredIndex, exitDiscovery, locationDiscovery, regionDiscovery,
 } from '../../regionView/regionViewModel.js';
 import { getPanelInstances } from '../../regionMap/index.js';
-import { MIN_ZOOM } from '../../regionMap/regionMapCamera.js';
+import { MIN_ZOOM } from '../../procgenCore/mapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
-import { worldToScreen } from '../../regionMap/regionMapCamera.js';
+import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
 import { CLICK_OPTION_DEFAULTS, CLICK_OPTIONS_PREFIX, regionOfCell } from '../../regionMap/regionMapClicks.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';

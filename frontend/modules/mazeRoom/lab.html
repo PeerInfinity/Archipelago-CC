@@ -806,8 +806,9 @@
         ⛓ MAZE WORLD MAP (step A) — the same canvas shows the STRIP (one cell per room, in index order: the adapter's
         own grid, and what RECT/PASTE between sets addresses) or the MAP (a 2D layout DERIVED from the overlay's links
         and each exit's side; nothing about it is stored). The strip is this page's default; `?setView=map` opens on
-        the map. A WORLD session has no map yet and says so in `#labSetMapWhy`. Pan: scroll the panel. Zoom: + / − / 0
-        on the focused map, the buttons, or Ctrl+wheel.
+        the map. A WORLD session has no map yet and says so in `#labSetMapWhy`. Pan: drag the map. Zoom: + / − (about
+        the view's centre) on the focused map or the buttons, Ctrl+wheel at the cursor; 0 / fit shows every room;
+        "centre on start" puts the start room in the middle (lab-map-camera).
       -->
       <div class="line">
         <label for="editSetMapView">map view</label>
@@ -815,6 +816,7 @@
         <button id="editSetZoomOut">−</button>
         <button id="editSetZoomIn">+</button>
         <button id="editSetZoomFit">fit</button>
+        <button id="editSetCentreStart" title="put the start room at the centre of the map">centre on start</button>
         <button id="editSetMapRelayout">RE-LAYOUT</button>
         <button id="editSetDisconnectTool">DISCONNECT on the map (d)</button>
         <span id="labSetMapWhy" class="note">on the map: click a room to select it, double-click to open it</span>

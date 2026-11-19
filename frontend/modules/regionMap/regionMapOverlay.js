@@ -4,7 +4,7 @@
  * The art is static (the substrate's painter, cached); the overlay is the part that changes with every snapshot:
  * the location squares, their colours, and the links between groups. It is drawn generically, for every substrate.
  */
-import { worldToScreen } from './regionMapCamera.js';
+import { worldToScreen } from '../procgenCore/mapCamera.js';
 import { tileCentre } from './regionMapFrames.js';
 
 /** The smallest on-screen side of a location square (CSS px), at any zoom (⚖ user: a minimum visible size). */
