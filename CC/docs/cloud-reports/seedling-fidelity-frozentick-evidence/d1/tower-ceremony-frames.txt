@@ -1,0 +1,3 @@
+{} [[0,"feather"]] t1F:[false,true] t2F:[true,true] t3F:[true,true] t4F:[true,true] t5F:[true,true] t6F:[true,true] t7F:[true,true] t8F:[true,true]
+{"pickupTickFreeze":true} [[0,"feather"]] t1F:[true] t2F:[true,true] t3F:[true,true] t4F:[true,true] t5F:[true,true] t6F:[true,true] t7F:[true,true] t8F:[true,true]
+{"pickupTickFreeze":true,"frozenTickUngated":true} [[0,"feather"]] t1F:[true] t2F:[true,true] t3F:[true,true] t4F:[true,true] t5F:[true,true] t6F:[true,true] t7F:[true,true] t8F:[true,true]

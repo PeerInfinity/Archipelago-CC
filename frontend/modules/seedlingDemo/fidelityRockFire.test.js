@@ -49,7 +49,7 @@ describe('fidelity ROCKFIRE — the key', () => {
             expect(CONTACT_FIDELITY.fireRockArm).toBe(true);
             // ⛓ wave 40: FIREBREAK `fireBreakArm`, then FENCEPOST `spinnerRemoveRead`, landed after it.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf('fireRockArm') + 1)).toEqual(['fireBreakArm', 'spinnerRemoveRead', 'fallRockHoldsButton', 'corridorForecastMemo', 'wallFlyerCorpseGone', 'darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze']); // ⛓ wave 41: ROCKBUTTON
+            expect(keys.slice(keys.indexOf('fireRockArm') + 1)).toEqual(['fireBreakArm', 'spinnerRemoveRead', 'fallRockHoldsButton', 'corridorForecastMemo', 'wallFlyerCorpseGone', 'darkSuitStaticRetaliation', 'pulserForecastPulse', 'darkSuitBossRetaliation', 'owlContactInStep', 'turretSuitRetaliation', 'pickupTickFreeze', 'dialogueFrameFreeze', 'frozenTickUngated']); // ⛓ wave 41: ROCKBUTTON
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FIRE_ROCK_ARM');
             expect(FIRE_ARM_POLICY.BreakableRock.policy).toBe('modelled');
         });
