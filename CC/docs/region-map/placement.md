@@ -264,6 +264,6 @@ CI run ids and the batch headroom go in the packet to js-21.
 ## Residue
 
 1. **A maze `layoutGraph` hook.** The maze worlds resolve generically, so every link is an unclassifiable `join`. Their atlas exits already say `edge` or `teleporter`.
-2. **Custom-world atlas to the panel** (3b item 9). Until it lands, a custom Seedling set's warps stay `join` in the panel.
-3. **The 5 groups still placed right** (`level_57`, `69`, `84`, `99`, `101`) have a source over them. A rule for "a group whose only placed-group links in are warps" would move `level_57` and `level_101` too. That is a wording question for the user, not a defect.
+2. **Custom-world atlas to the panel** (3b item 9). Until it lands, a custom Seedling set's warps stay `join` in the panel. ⛓ 2026-11-17: landed host-side for a set loaded as a bundle ([`atlas-cache.md`](atlas-cache.md): the 59 warps are classified); the lab hand-over and the watch page's own sets are that report's residue.
+3. **The 5 groups still placed right** (`level_57`, `69`, `84`, `99`, `101`) have a source over them. A rule for "a group whose only placed-group links in are warps" would move `level_57` and `level_101` too. That is a wording question for the user, not a defect. ⚖ Closed 2026-11-17: the user ruled *"Leave as is"* ([`atlas-cache.md`](atlas-cache.md) § Rulings since).
 4. **`EDGE_ARRIVAL_TILES` = 1** is measured on two compiles of the vanilla rooms: 0–1 tiles against ≥ 2, with one case at exactly 2. A hand-made set could put an edge arrival 2 tiles in. It would then read as a warp: drawn, but not joined.
