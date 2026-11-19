@@ -8,6 +8,7 @@
     "ground:terrain/rug": { "kind": "terrain", "name": "Rug", "base": "marker", "presents": "ground:terrain/rug" },
     "ground:terrain/pillar": { "kind": "terrain", "name": "Pillar", "base": "wall", "presents": "ground:terrain/pillar" },
     "ground:terrain/pool": { "kind": "terrain", "name": "Pool", "base": "marker", "presents": "ground:terrain/pool" },
+    "ground:terrain/ledge": { "kind": "terrain", "name": "Ledge", "base": "marker", "presents": "ground:terrain/ledge" },
     "ground:object/lamp": { "kind": "object", "name": "Lamp", "base": "marker" }
   }
 }

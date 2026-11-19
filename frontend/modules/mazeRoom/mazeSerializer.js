@@ -32,7 +32,7 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { REQUIRED_ENVELOPE_FIELD, envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import { CONCEPTS, conceptOfItem, isConceptRow } from '../procgenCore/concepts.js';
 import { GOAL_ITEM } from '../procgenCore/goalItem.js';
-import { DEFAULT_TERRAIN_PASS, NEEDS_PASS, TERRAIN_PASSES } from '../packConcepts/packConcepts.js';
+import { DEFAULT_TERRAIN_PASS, NEEDS_PASS, ONE_WAY_PASS, TERRAIN_DIRS, TERRAIN_PASSES } from '../packConcepts/packConcepts.js';
 
 const xy = Object.freeze({ x: Object.freeze({ type: 'integer' }), y: Object.freeze({ type: 'integer' }) });
 const atXY = (extra = {}, required = []) => Object.freeze({
@@ -112,7 +112,34 @@ export function tileKindNeedsAt(world, x, y) {
 export function tileKindPassAt(world, x, y) {
     const tiles = world?.tiles;
     if (tiles && tiles[y * world.width + x] === TILE_WALL) return BLOCKED_PASS;
-    return world?.obstacles?.get?.(`${x},${y}`) === tileKindGateId(x, y) ? NEEDS_PASS : DEFAULT_TERRAIN_PASS;
+    if (world?.obstacles?.get?.(`${x},${y}`) === tileKindGateId(x, y)) return NEEDS_PASS;
+    // ⛓ PASS-3 — a cell some move may not enter (an entry gate of `null`) is one-way.
+    return TERRAIN_DIRS.some((d) => entryGateOf(world, x, y, d) === null) ? ONE_WAY_PASS : DEFAULT_TERRAIN_PASS;
+}
+
+/** ⛓ PASS-3 — the entry gate on entering (x, y) moving `d`: `undefined` (none), `null` (no entry that way), or a gate id. */
+export function entryGateOf(world, x, y, d) {
+    const key = `${x},${y},${d}`;
+    return world?.entryGates?.has?.(key) ? world.entryGates.get(key) : undefined;
+}
+
+/** ⛓ PASS-3 — the move directions that may enter (x, y): every `TERRAIN_DIRS` direction without a `null` entry gate. */
+export function tileKindDirsAt(world, x, y) {
+    return TERRAIN_DIRS.filter((d) => entryGateOf(world, x, y, d) !== null);
+}
+
+/**
+ * ⛓ PASS-3 — does a placed kind OWN entry gates in `world`? The registry's serializer writes `entry_gates` only for
+ * such a world: a one-way kind's lowering IS its gates, and every other world (the committed Seedling levels among
+ * them) keeps writing exactly what it wrote before.
+ */
+export function tileKindsOwnEntryGates(world) {
+    if (!(world?.tileKinds instanceof Map) || !world.entryGates?.size) return false;
+    for (const key of world.tileKinds.keys()) {
+        const [x, y] = key.split(',').map(Number);
+        if (TERRAIN_DIRS.some((d) => entryGateOf(world, x, y, d) !== undefined)) return true;
+    }
+    return false;
 }
 
 /**
@@ -132,7 +159,10 @@ export function tileKindsList(world) {
         if (pass === DEFAULT_TERRAIN_PASS) return { x, y, kind };
         // ⛓ PASS-2 — a `needs` kind writes its concept beside its pass (null when its gate realises none: the load
         //   then refuses the entry by name, `mazeTileKinds.TILE_KIND_REFUSALS`).
-        return pass === NEEDS_PASS ? { x, y, kind, pass, needs: tileKindNeedsAt(world, x, y) } : { x, y, kind, pass };
+        if (pass === NEEDS_PASS) return { x, y, kind, pass, needs: tileKindNeedsAt(world, x, y) };
+        // ⛓ PASS-3 — a one-way kind writes the directions that may enter, read back off its gates.
+        if (pass === ONE_WAY_PASS) return { x, y, kind, pass, dirs: tileKindDirsAt(world, x, y) };
+        return { x, y, kind, pass };
     }).sort((a, b) => (a.y - b.y) || (a.x - b.x));
 }
 
@@ -272,7 +302,9 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'BAKED when it was placed and LOWERED onto the grid: `blocked` stands on a wall cell (the editor wrote it), '
             + 'and an absent `pass` is `walkable`, on a floor cell. `pass: "needs"` (PASS-2) carries `needs`, a mechanic '
             + 'concept id, and stands on a floor cell holding the rule obstacle `tilekind_gate_<x>_<y>` whose rule is '
-            + 'that concept\'s item. So no rule, location or reachability reader sees the '
+            + 'that concept\'s item. `pass: "one-way"` (PASS-3) carries `dirs`, the move directions that may enter, '
+            + 'and the cell holds an `entry_gates` row of `gate: null` for every other direction. So no rule, location or '
+            + 'reachability reader sees the '
             + 'field itself: they see the wall. Written by the maze editor (`setTileKind`); drawn through the tile '
             + 'fallback chain. `serializeMazeWorld` OMITS the key when there are none, and `pass` when it is walkable, '
             + 'so a world without kinds, or with walkable ones only, is byte-equal (`mazeTileKinds.js`).',
@@ -285,6 +317,7 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
                     ...xy, kind: THING_TEXT,
                     pass: Object.freeze({ type: 'string', enum: WRITTEN_TILE_KIND_PASSES }),
                     needs: THING_TEXT,
+                    dirs: Object.freeze({ type: 'array', items: Object.freeze({ enum: TERRAIN_DIRS }) }),
                 }),
             }),
         }),
@@ -353,7 +386,8 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
         description: 'Entry gates (session tile-primitives-water-exits) `{x, y, dir, gate}`: entering cell (x, y) MOVING '
             + '`dir` (N/S/E/W) needs the clearance of `obstacleLib.<gate>`, or is refused outright when `gate` is null — '
             + 'the game\'s direction physics (a waterfall climbed north, a cliff face) as the region analyzer prices a step. '
-            + 'Read through `checkEntryGates`. Written by `projectLevelWorld` from the analysis grid; omitted when there are none.',
+            + 'Read through `checkEntryGates`. Written by `projectLevelWorld` from the analysis grid, and (content sets PASS-3) '
+            + 'by `serializeMazeWorld` for a world whose placed one-way tile kinds own gates; omitted when there are none.',
         schema: Object.freeze({
             items: atXY({
                 dir: Object.freeze({ type: 'string' }),
@@ -618,6 +652,15 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         : null;
 
     const tileKindsOut = tileKindsList(world);
+    // ⛓ CONTENT SETS PASS-3 — a world whose placed kinds own entry gates (a one-way kind's lowering) writes the world's
+    //   `entry_gates`, in the engine's own spelling (`serializeMazeEntities`). Every other world writes what it wrote
+    //   before: no committed world places a kind, so no committed payload moves.
+    const entryGatesOut = tileKindsOwnEntryGates(world)
+        ? [...world.entryGates].map(([key, gate]) => {
+            const [x, y, dir] = key.split(',');
+            return { x: Number(x), y: Number(y), dir, gate };
+        })
+        : null;
 
     return {
         width: world.width,
@@ -635,6 +678,7 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         ...(manaTilesOut ? { manaTiles: manaTilesOut } : {}),
         // ⛓ TILE-3: the placed tile kinds, omitted when there are none.
         ...(tileKindsOut ? { tileKinds: tileKindsOut } : {}),
+        ...(entryGatesOut ? { entry_gates: entryGatesOut } : {}),
         // A room that says how it is entered keeps saying it (an editor
         // regenerate round-trips it); generation stamps it at compile.
         ...(world.arrival ? { arrival: world.arrival } : {}),

@@ -40,7 +40,7 @@
  * sibling, `mazeTileKindOverlay.js`, so this half imports no art code (the editor and the generator import it).
  */
 import { KEY_PATTERN } from '../contentPacks/contentPacks.js';
-import { DEFAULT_TERRAIN_PASS, NEEDS_PASS } from '../packConcepts/packConcepts.js';
+import { DEFAULT_TERRAIN_PASS, NEEDS_PASS, ONE_WAY_PASS, TERRAIN_DIRS } from '../packConcepts/packConcepts.js';
 import { CONCEPTS, itemIdOfNeed } from '../procgenCore/concepts.js';
 import { ruleFor } from '../procgenPipeline/conceptSelection.js';
 import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -49,7 +49,8 @@ import {
     TILE_FLOOR, TILE_WALL, clearObstacle, deserializeMazeWorld, getTile, setObstacle, setTile,
 } from './mazeRoomEngine.js';
 import {
-    BLOCKED_PASS, WRITTEN_TILE_KIND_PASSES, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindsList,
+    BLOCKED_PASS, WRITTEN_TILE_KIND_PASSES, entryGateOf, tileKindDirsAt, tileKindGateId, tileKindNeedsAt, tileKindPassAt,
+    tileKindsList,
 } from './mazeSerializer.js';
 
 /** The payload field. */
@@ -83,6 +84,13 @@ export const TILE_KIND_REFUSALS = Object.freeze({
         + 'obstacle (clear_set_type "rule")',
     gateRuleMismatch: (x, y, kind, id, needs) => `tileKinds: "${kind}" at (${x},${y}) is baked needs "${needs}", but its `
         + `obstacle "${id}" carries a different rule (the concept's item is ${JSON.stringify(itemIdOfNeed(needs, CONCEPTS))})`,
+    // ⛓ PASS-3 — `one-way`
+    entryGatesMismatch: (x, y, kind, dirs, found) => `tileKinds: "${kind}" at (${x},${y}) is baked one-way ${dirs.join(',')}, `
+        + `but the cell's entry gates are ${found} (a one-way kind owns exactly a gate:null entry for every other direction)`,
+    entryGatesUnowned: (x, y, kind, pass) => `tileKinds: "${kind}" at (${x},${y}) is ${pass}, but the cell holds entry gates `
+        + '(only a one-way kind owns a cell\'s entry gates)',
+    foreignEntryGates: (x, y) => `cell (${x},${y}) carries entry gates of its own (the world's direction physics): a tile `
+        + 'kind goes on a cell without any',
     gateRealisesNone: (x, y, kind, id) => `tileKinds: "${kind}" at (${x},${y}) owns obstacle "${id}", whose rule `
         + 'realises no mechanic concept (one Has of an unparameterised concept item)',
     gateUnowned: (x, y, kind, id) => `tileKinds: "${kind}" at (${x},${y}) is walkable, but the cell holds its derived `
@@ -101,7 +109,7 @@ export class MazeTileKindError extends Error {
 const cellKey = (x, y) => `${x},${y}`;
 
 /** The world's placed kinds as the payload writes them (`mazeSerializer.tileKindsList`, re-exported). */
-export { BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindsList };
+export { BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, ONE_WAY_PASS, TERRAIN_DIRS, tileKindDirsAt, tileKindGateId, tileKindNeedsAt, tileKindPassAt, tileKindsList };
 
 /**
  * ⛓ THE PAYLOAD CHECK — `list` (a payload's `tileKinds`) against the grid it sits on; returns the `Map("x,y" → kind)`
@@ -109,15 +117,15 @@ export { BLOCKED_PASS, DEFAULT_TERRAIN_PASS, NEEDS_PASS, tileKindGateId, tileKin
  * ⛓ PASS-1: each entry's baked `pass` must match its cell (`blocked` ⇒ wall, else floor); the Map keeps the kind only,
  * because the grid is the bake (`mazeSerializer.tileKindPassAt` reads it back).
  */
-export function tileKindsFromList(list, { width, height, isFloor, gateRefusal = null }) {
+export function tileKindsFromList(list, { width, height, isFloor, gateRefusal = null, entryGatesRefusal = null }) {
     if (!Array.isArray(list)) throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`must be an array, got ${JSON.stringify(list)}`));
     const out = new Map();
     for (const [i, rec] of list.entries()) {
         if (!rec || typeof rec !== 'object' || Array.isArray(rec)) {
             throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i} is not an object`));
         }
-        const extra = Object.keys(rec).filter((k) => !['x', 'y', 'kind', 'pass', 'needs'].includes(k));
-        if (extra.length) throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i} has unknown field "${extra[0]}" (x, y, kind, pass, needs)`));
+        const extra = Object.keys(rec).filter((k) => !['x', 'y', 'kind', 'pass', 'needs', 'dirs'].includes(k));
+        if (extra.length) throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i} has unknown field "${extra[0]}" (x, y, kind, pass, needs, dirs)`));
         const { x, y, kind } = rec;
         if ('pass' in rec && !WRITTEN_TILE_KIND_PASSES.includes(rec.pass)) {
             throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i}: pass ${JSON.stringify(rec.pass)} is not one `
@@ -127,6 +135,14 @@ export function tileKindsFromList(list, { width, height, isFloor, gateRefusal = 
         if ((pass === NEEDS_PASS) !== ('needs' in rec)) {
             throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i}: needs is written with pass "needs", and only there`));
         }
+        if ((pass === ONE_WAY_PASS) !== ('dirs' in rec)) {
+            throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i}: dirs is written with pass "one-way", and only there`));
+        }
+        if (pass === ONE_WAY_PASS && (!Array.isArray(rec.dirs) || !rec.dirs.length || rec.dirs.length >= TERRAIN_DIRS.length
+            || canonicalDirs(rec.dirs).join() !== rec.dirs.join())) {
+            throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i}: dirs ${JSON.stringify(rec.dirs)} is not a `
+                + `proper subset of ${TERRAIN_DIRS.join(', ')} written in that order`));
+        }
         if (!Number.isInteger(x) || !Number.isInteger(y)) throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i} has no integer x, y`));
         if (typeof kind !== 'string' || !KEY_PATTERN.test(kind)) {
             throw new MazeTileKindError(TILE_KIND_REFUSALS.malformed(`entry ${i}: kind ${JSON.stringify(kind)} is not a pack concept key`));
@@ -134,7 +150,8 @@ export function tileKindsFromList(list, { width, height, isFloor, gateRefusal = 
         if (x < 0 || y < 0 || x >= width || y >= height) throw new MazeTileKindError(TILE_KIND_REFUSALS.outOfBounds(x, y));
         if (isFloor(x, y) === (pass === BLOCKED_PASS)) throw new MazeTileKindError(TILE_KIND_REFUSALS.passMismatch(x, y, kind, pass));
         // ⛓ PASS-2 — a needs kind's gate: derived from the cell, a rule obstacle, carrying the concept's realisation.
-        const gate = gateRefusal?.(x, y, kind, pass === NEEDS_PASS ? rec.needs : null);
+        const gate = gateRefusal?.(x, y, kind, pass === NEEDS_PASS ? rec.needs : null)
+            ?? entryGatesRefusal?.(x, y, kind, pass, pass === ONE_WAY_PASS ? rec.dirs : null);
         if (gate) throw new MazeTileKindError(gate);
         if (out.has(cellKey(x, y))) throw new MazeTileKindError(TILE_KIND_REFUSALS.duplicate(x, y));
         out.set(cellKey(x, y), kind);
@@ -152,6 +169,7 @@ export function withTileKinds(world, payload) {
     const map = tileKindsFromList(list, {
         width: world.width, height: world.height, isFloor: (x, y) => getTile(world, x, y) === TILE_FLOOR,
         gateRefusal: (x, y, kind, needs) => ownedGateRefusal(world, x, y, kind, needs),
+        entryGatesRefusal: (x, y, kind, pass, dirs) => ownedEntryGatesRefusal(world, x, y, kind, pass, dirs),
     });
     if (map.size) world.tileKinds = map;
     return world;
@@ -254,6 +272,14 @@ export function lowerTileKind(world, x, y, d) {
     const pass = declaredPassOf(d);
     if (pass === BLOCKED_PASS) { setTile(world, x, y, TILE_WALL); return; }
     setTile(world, x, y, TILE_FLOOR);
+    if (pass === ONE_WAY_PASS) {
+        // ⛓ PASS-3 — a `gate: null` entry for every direction the kind does not let in (copy-on-write: `cloneWorld`
+        //   shares `entryGates` by reference).
+        const gates = new Map(world.entryGates ?? []);
+        for (const dir of TERRAIN_DIRS) if (!d.dirs.includes(dir)) gates.set(`${x},${y},${dir}`, null);
+        world.entryGates = gates;
+        return;
+    }
     if (pass === NEEDS_PASS) {
         const def = tileKindGateDef(x, y, needsRuleOf(d.needs));
         world.obstacleLib = { ...(world.obstacleLib ?? {}), [def.id]: def };
@@ -269,7 +295,30 @@ export function liftTileKind(world, x, y) {
         const { [id]: _gone, ...rest } = world.obstacleLib;
         world.obstacleLib = rest;
     }
+    // ⛓ PASS-3 — a one-way kind's entry gates (a placed kind's cell holds no others: `foreignEntryGates`).
+    if (TERRAIN_DIRS.some((dir) => entryGateOf(world, x, y, dir) !== undefined)) {
+        const gates = new Map(world.entryGates);
+        for (const dir of TERRAIN_DIRS) gates.delete(`${x},${y},${dir}`);
+        if (gates.size) world.entryGates = gates; else delete world.entryGates;
+    }
     setTile(world, x, y, TILE_FLOOR);
+}
+
+/** ⛓ PASS-3 — `dirs` in the engine's order (`TERRAIN_DIRS`), the one spelling a payload writes. */
+export const canonicalDirs = (dirs) => TERRAIN_DIRS.filter((d) => dirs.includes(d));
+
+/**
+ * ⛓ PASS-3 — THE OWNERSHIP CHECK of (x, y)'s entry gates. A one-way kind (baked `dirs`) owns exactly a `gate: null`
+ * entry for every direction not in `dirs`, and nothing else on its cell; any other kind's cell holds no entry gate at
+ * all. Returns the refusal's sentence, or null.
+ */
+export function ownedEntryGatesRefusal(world, x, y, kind, pass, dirs) {
+    const found = TERRAIN_DIRS.map((d) => [d, entryGateOf(world, x, y, d)]).filter(([, g]) => g !== undefined);
+    if (pass !== ONE_WAY_PASS) return found.length ? TILE_KIND_REFUSALS.entryGatesUnowned(x, y, kind, pass) : null;
+    const want = TERRAIN_DIRS.filter((d) => !dirs.includes(d));
+    const ok = found.length === want.length && found.every(([d, g]) => g === null && want.includes(d));
+    return ok ? null : TILE_KIND_REFUSALS.entryGatesMismatch(x, y, kind, dirs,
+        found.length ? found.map(([d, g]) => `${d}:${g === null ? 'null' : g}`).join(' ') : 'none');
 }
 
 /**
@@ -287,7 +336,7 @@ export function declaredPassOf(d) {
  * load is not refused. A kind the packs do not declare (or whose pass is unreadable) is `placedTileKindRefusals`'.
  */
 export function placedTileKindDrift(world, declared) {
-    return (tileKindsList(world) ?? []).flatMap(({ x, y, kind, pass = DEFAULT_TERRAIN_PASS, needs = null }) => {
+    return (tileKindsList(world) ?? []).flatMap(({ x, y, kind, pass = DEFAULT_TERRAIN_PASS, needs = null, dirs = null }) => {
         // ⛓ PASS-2 — first the world's own copy: a needs kind's owned gate, checked by name (a world edited by hand
         //   in memory can lose it; the load refuses that, the report names it).
         if (pass === NEEDS_PASS) {
@@ -297,8 +346,11 @@ export function placedTileKindDrift(world, declared) {
         }
         const d = declared && Object.prototype.hasOwnProperty.call(declared, kind) ? declared[kind] : null;
         if (!d || d.passError) return [];
-        const baked = passLabel(pass, needs);
-        const now = passLabel(declaredPassOf(d), d.needs);
+        // ⛓ PASS-3 — a one-way kind's gates are checked by name first, as a needs kind's gate is.
+        const ownGates = ownedEntryGatesRefusal(world, x, y, kind, pass, dirs);
+        if (ownGates) return [{ x, y, kind, reason: 'tile-kind-gate-mismatch', description: ownGates }];
+        const baked = passLabel(pass, needs, dirs);
+        const now = passLabel(declaredPassOf(d), d.needs, d.dirs);
         return now === baked ? [] : [{
             x, y, kind, baked, declared: now, reason: 'tile-kind-pass-drift', description: TILE_KIND_REFUSALS.drift(x, y, kind, baked, now),
         }];
@@ -306,7 +358,8 @@ export function placedTileKindDrift(world, declared) {
 }
 
 /** ⛓ PASS-2 — a pass as drift names it: `blocked`, `walkable`, or `needs swim` (the concept is part of the value). */
-export const passLabel = (pass, needs) => (pass === NEEDS_PASS ? `${pass} ${needs}` : pass);
+export const passLabel = (pass, needs, dirs) => (pass === NEEDS_PASS ? `${pass} ${needs}`
+    : pass === ONE_WAY_PASS ? `${pass} ${canonicalDirs(dirs ?? []).join(',')}` : pass);
 
 /** ⛓ PASS-1 — the grid tile a placed kind of pass `pass` stands on (the lowering). */
 export const tileUnderPass = (pass) => (pass === BLOCKED_PASS ? TILE_WALL : TILE_FLOOR);
