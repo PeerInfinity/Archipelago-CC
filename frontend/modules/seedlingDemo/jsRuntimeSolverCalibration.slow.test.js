@@ -65,7 +65,9 @@ function leg({ level, at, tiles, sword }) {
         scratchPersistence: true });
 }
 const atDefaults = (req) => solveAnytime({ ...req, budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: SOLVER_UPGRADE_WINDOW_WORK });
-const rows = (r) => r.passes.map(({ ms, ...row }) => row);
+// `modelHits` (HIT_AWARE_ANSWER, ON since the HIT-FLIP) is the plan's hit verdict, pinned in `hammerHitTiebreak.test.js`;
+// these rows pin the passes' windows and budgets, so it drops with the wall-clock `ms`.
+const rows = (r) => r.passes.map(({ ms, modelHits, ...row }) => row);
 
 describe('⛓ RECALIBRATE — the anchor legs at the shipped defaults (fine units)', () => {
     it('the constants are counted in fine units', () => {

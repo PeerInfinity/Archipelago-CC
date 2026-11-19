@@ -47,7 +47,9 @@ function l4StairsSword() {
         solverGoal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } }, scratchPersistence: rt.run.scratchPersistence === true };
 }
 const counter = () => { let n = 0; return () => n++; };
-const rows = (r) => r.passes.map(({ ms, ...row }) => row);
+// `modelHits` (HIT_AWARE_ANSWER, ON since the HIT-FLIP) is the plan's hit verdict, pinned in `hammerHitTiebreak.test.js`;
+// these rows pin the passes' windows and budgets, so it drops with the wall-clock `ms`.
+const rows = (r) => r.passes.map(({ ms, modelHits, ...row }) => row);
 const keys = (r) => r.plan.solution.map((k) => [...k].sort());
 
 describe('⛓ SOLVER LIMIT OFF — the knobs (one rule for every runtime)', () => {
