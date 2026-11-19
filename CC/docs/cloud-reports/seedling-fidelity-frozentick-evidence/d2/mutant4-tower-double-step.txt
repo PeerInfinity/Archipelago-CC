@@ -1,0 +1,6 @@
+[31m     [31m×[31m beam tower, texted: ON the tower steps ONCE on T, frozen (`runFrozenTick`'s step; the main slot skips)[39m[32m 43[2mms[22m[39m
+[31m     [31m×[31m one trace row on T: OFF `[false, true]`; with `pickupTickFreeze` ON `[true]` (one frozen update, not two)[39m[32m 67[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mAssertionError[22m: expected [ true, true ] to deeply equal [ true ][39m
+[31m[1mAssertionError[22m: expected [ true, true ] to deeply equal [ true ][39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m19 passed[39m[22m[90m (21)[39m

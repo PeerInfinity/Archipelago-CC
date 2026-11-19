@@ -82,7 +82,7 @@ describe('PICKUPFREEZE — the key', () => {
             expect(CONTACT_FIDELITY[KEY]).toBe(false);
             // ⛓ wave 52: DIALOGUEFREEZE `dialogueFrameFreeze` was appended after this key.
             const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
-            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['dialogueFrameFreeze']);
+            expect(keys.slice(keys.indexOf(KEY) + 1)).toEqual(['dialogueFrameFreeze', 'frozenTickUngated']);
             expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PICKUP_TICK_FREEZE');
         });
 });
@@ -143,14 +143,16 @@ describe('PICKUPFREEZE — the lump-less families (L59, its turret swapped out)'
         expect(off.drillAt1).toEqual([['drill@120,64', 144, 56, 'drill']]);
         expect(on.drillAt1).toEqual([['drill@120,64', 128, 72, 'sit']]);
     });
-    it('beam tower, texted: the tower\'s own slot on T is frozen ON (the frozen tick\'s second step is as OFF)', () => {
+    // ⛓ fidelity FROZENTICK D2 (wave 53): ON the main slot skips the tower on a texted T; `runFrozenTick`'s frozen step
+    // is the frame's one update (wave 51 pinned `[true, true]`: two updates for one frame).
+    it('beam tower, texted: ON the tower steps ONCE on T, frozen (`runFrozenTick`\'s step; the main slot skips)', () => {
         const s = at([{ type: 'beamtower', x: 112, y: 40, attrs: { direction: '0', rate: '1', speed: '1' } },
             TEXTED(144, 48)]);
         const off = stage(s, { [KEY]: false });
         const on = stage(s, { [KEY]: true });
         expect([off.thrown, on.thrown]).toEqual([null, null]);
         expect(off.beamAt1).toEqual([false, true]);
-        expect(on.beamAt1).toEqual([true, true]);
+        expect(on.beamAt1).toEqual([true]);
     });
 });
 
