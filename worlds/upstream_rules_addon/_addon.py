@@ -85,10 +85,14 @@ def ids_the_server_knows(doc: Dict[str, Any]) -> Dict[str, Any]:
     """An item ``id`` that is not an integer becomes ``None``, as an event's is.
 
     AP item IDs are integers. A Link to the Past's prizes (Crystal 1–7, the three Pendants) are events placed on
-    ID-less prize locations, but the exporter writes their ``ItemData`` code, a tuple of ROM bytes, as ``id``. The
+    ID-less prize locations, but the exporter wrote their ``ItemData`` code, a tuple of ROM bytes, as ``id``. The
     client's ID check compares every non-null ``id`` with the room's DataPackage and refused the whole document:
     "10 item ID(s) differ from the server's: Crystal 1, …" (measured live, ALttP at slot 2, this slice). The client's
     procgen code already reads an array ``id`` as no ID (procgenPipelineEngine.js).
+
+    Since sdc-nonint-item-ids (2026-11-19) the exporter writes ``None`` itself (``int_id_or_none`` in
+    ``exporter/games/base/utilities.py``), so on the vendored exporter this changes nothing. It stays as a guard for
+    any other world whose item code is not an int.
     """
     for items in (doc.get("items") or {}).values():
         for item in (items.values() if isinstance(items, dict) else ()):

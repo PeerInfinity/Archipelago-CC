@@ -27,6 +27,7 @@ from exporter.games.base.utilities import (
     extract_closure_vars,
     count_rule_nodes,
     sanitize_helper_name,
+    int_id_or_none,
 )
 
 logger = logging.getLogger(__name__)
@@ -1301,7 +1302,7 @@ class BaseGameExportHandler(
                 # Build item data with actual classification string (preserves compound types)
                 item_entry = {
                     'name': item_name,
-                    'id': item_id,
+                    'id': int_id_or_none(item_id),
                     'groups': sorted(groups),
                     'classification': self._classification_to_string(item_classification),
                     'advancement': is_advancement,
